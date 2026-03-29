@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
+import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Company {
@@ -136,6 +137,7 @@ const FacetGroup = ({
 };
 
 export const CompaniesView = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedSectors, setSelectedSectors] = useState<Set<string>>(new Set());
   const [selectedLocations, setSelectedLocations] = useState<Set<string>>(new Set());
@@ -200,6 +202,11 @@ export const CompaniesView = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsLoading(false), 450);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const safeCurrentPage = Math.min(currentPage, totalPages);
@@ -298,6 +305,10 @@ export const CompaniesView = () => {
       setSortDir("desc");
     }
   };
+
+  if (isLoading) {
+    return <ViewSkeleton />;
+  }
 
   return (
     <div className="space-y-5">

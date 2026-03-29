@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import {
   Users, Search, Filter, Crown, Briefcase, Building2, Mail, Phone,
@@ -282,7 +282,7 @@ export const StakeholderFinderView = () => {
           </div>
 
           {isLoading ? (
-            <TableSkeleton />
+            <ViewSkeleton />
           ) : filtered.length === 0 ? (
             <div className="glass rounded-lg p-12 text-center">
               <UserX className="h-10 w-10 text-muted-foreground/30 mx-auto" />

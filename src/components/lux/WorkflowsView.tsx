@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StepProgress } from "@/components/lux/StepProgress";
 import {
@@ -223,7 +223,7 @@ export const WorkflowsView = () => {
 
       {/* Loading state */}
       {isLoading ? (
-        <TableSkeleton />
+        <ViewSkeleton />
       ) : workflows.length === 0 ? (
         <div className="glass rounded-lg p-8 text-center">
           <Zap className="h-8 w-8 mx-auto mb-2 text-primary/30" />
