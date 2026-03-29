@@ -16,9 +16,10 @@ import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
 import { CompaniesMapView } from "@/components/lux/CompaniesMapView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
+import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
+import { CommandPalette } from "@/components/lux/CommandPalette";
+import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
-
-type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders";
 
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
@@ -36,7 +37,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
 ];
 
 const Index = () => {
-  const [activeView, setActiveView] = useState<View>("dashboard");
+  const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const unreadCount = useNotificationCount();
@@ -44,12 +45,13 @@ const Index = () => {
   let currentSection = "";
 
   const handleNav = (id: View) => {
-    setActiveView(id);
+    navigate(id);
     setSidebarOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-background flex">
+      <CommandPalette onNavigate={handleNav} />
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -134,17 +136,17 @@ const Index = () => {
       <div className="flex-1 lg:ml-64">
         <header className="border-b border-border/50 glass sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
               <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground">
                 <Menu className="h-5 w-5" />
               </button>
-              <div className="flex items-center gap-3 flex-1 max-w-md">
-                <Search className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                <Input
-                  placeholder="Buscar empresas, automações, sinais..."
-                  className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm h-8 placeholder:text-muted-foreground/50 hidden sm:block"
-                />
-              </div>
+              <AppBreadcrumbs
+                breadcrumbs={breadcrumbs}
+                canGoBack={canGoBack}
+                onGoBack={goBack}
+                onNavigate={handleNav}
+                currentLabel={currentLabel}
+              />
             </div>
             <div className="flex items-center gap-2 relative">
               <Button
@@ -177,25 +179,28 @@ const Index = () => {
         </header>
 
         <main className="p-4 lg:p-6">
-          <motion.div
-            key={activeView}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {activeView === "dashboard" && <DashboardView />}
-            {activeView === "icp" && <ICPConfigView />}
-            {activeView === "workflows" && <WorkflowsView />}
-            {activeView === "companies" && <CompaniesView />}
-            {activeView === "intent" && <IntentSignalsView />}
-            {activeView === "campaigns" && <CampaignsView />}
-            {activeView === "ai-agent" && <AIAgentView />}
-            {activeView === "analytics" && <AnalyticsView />}
-            {activeView === "settings" && <SettingsView />}
-            {activeView === "gmaps" && <GmapsScraperView />}
-            {activeView === "map" && <CompaniesMapView />}
-            {activeView === "stakeholders" && <StakeholderFinderView />}
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeView}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            >
+              {activeView === "dashboard" && <DashboardView />}
+              {activeView === "icp" && <ICPConfigView />}
+              {activeView === "workflows" && <WorkflowsView />}
+              {activeView === "companies" && <CompaniesView />}
+              {activeView === "intent" && <IntentSignalsView />}
+              {activeView === "campaigns" && <CampaignsView />}
+              {activeView === "ai-agent" && <AIAgentView />}
+              {activeView === "analytics" && <AnalyticsView />}
+              {activeView === "settings" && <SettingsView />}
+              {activeView === "gmaps" && <GmapsScraperView />}
+              {activeView === "map" && <CompaniesMapView />}
+              {activeView === "stakeholders" && <StakeholderFinderView />}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>
