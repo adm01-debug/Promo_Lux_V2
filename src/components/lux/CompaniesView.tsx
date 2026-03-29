@@ -306,6 +306,10 @@ export const CompaniesView = () => {
     }
   };
 
+  if (isLoading) {
+    return <ViewSkeleton />;
+  }
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
