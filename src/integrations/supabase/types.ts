@@ -14,7 +14,177 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      companies: {
+        Row: {
+          created_at: string
+          email: string | null
+          employees: string | null
+          enriched: boolean | null
+          id: string
+          ipc_score: number | null
+          location: string | null
+          name: string
+          phone: string | null
+          raw_data: Json | null
+          revenue: string | null
+          sector: string | null
+          source: string
+          starred: boolean | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          employees?: string | null
+          enriched?: boolean | null
+          id?: string
+          ipc_score?: number | null
+          location?: string | null
+          name: string
+          phone?: string | null
+          raw_data?: Json | null
+          revenue?: string | null
+          sector?: string | null
+          source?: string
+          starred?: boolean | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          employees?: string | null
+          enriched?: boolean | null
+          id?: string
+          ipc_score?: number | null
+          location?: string | null
+          name?: string
+          phone?: string | null
+          raw_data?: Json | null
+          revenue?: string | null
+          sector?: string | null
+          source?: string
+          starred?: boolean | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      ipc_config: {
+        Row: {
+          created_at: string
+          criteria: Json
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          criteria?: Json
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          criteria?: Json
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scrape_jobs: {
+        Row: {
+          completed_at: string | null
+          config: Json
+          created_at: string
+          error_message: string | null
+          external_id: string | null
+          id: string
+          name: string
+          results_count: number | null
+          source: string
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          config?: Json
+          created_at?: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          name: string
+          results_count?: number | null
+          source?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          config?: Json
+          created_at?: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          name?: string
+          results_count?: number | null
+          source?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scrape_results: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          id: string
+          job_id: string
+          processed: boolean | null
+          raw_data: Json
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          id?: string
+          job_id: string
+          processed?: boolean | null
+          raw_data?: Json
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          id?: string
+          job_id?: string
+          processed?: boolean | null
+          raw_data?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scrape_results_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scrape_results_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "scrape_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
