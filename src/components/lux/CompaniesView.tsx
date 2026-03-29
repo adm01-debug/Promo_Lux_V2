@@ -203,6 +203,11 @@ export const CompaniesView = () => {
     setCurrentPage(1);
   }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores]);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsLoading(false), 450);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedItems = filtered.slice((safeCurrentPage - 1) * itemsPerPage, safeCurrentPage * itemsPerPage);
