@@ -209,6 +209,7 @@ const Index = () => {
                 currentLabel={currentLabel}
               />
               <button
+                data-tour="search"
                 onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
                 className="hidden sm:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer ml-2"
               >
