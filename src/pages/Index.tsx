@@ -99,7 +99,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-background/90 z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -110,12 +110,12 @@ const Index = () => {
         aria-label="Navegação principal"
         role="navigation"
         className={cn(
-          "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
+          "w-64 border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
           "lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
-        <div className="p-5 border-b border-border/50">
+        <div className="p-5 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
               <Sparkles className="h-5 w-5 text-primary" />
@@ -141,7 +141,7 @@ const Index = () => {
             return (
               <div key={item.id}>
                 {showSection && (
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 px-3 pt-4 pb-1.5 font-medium">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-3 pt-4 pb-1.5 font-medium">
                     {item.section}
                   </p>
                 )}
@@ -161,7 +161,7 @@ const Index = () => {
                       {item.icon}
                       {item.label}
                       {shortcut && (
-                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground/40 hidden lg:inline">{shortcut}</kbd>
+                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline">{shortcut}</kbd>
                       )}
                       {item.id === "intent" && (
                         <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
@@ -172,7 +172,7 @@ const Index = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>{btn}</TooltipTrigger>
                       <TooltipContent side="right" className="text-xs">
-                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">{shortcut}</kbd>
+                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted text-[10px] font-mono border border-border">{shortcut}</kbd>
                       </TooltipContent>
                     </Tooltip>
                   ) : btn;
@@ -182,7 +182,7 @@ const Index = () => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-border/50">
+        <div className="p-4 border-t border-border">
           <div className="glass rounded-lg p-3">
             <p className="text-xs text-muted-foreground">Status do Sistema</p>
             <div className="flex items-center gap-2 mt-1">
@@ -195,7 +195,7 @@ const Index = () => {
 
       {/* Main area */}
       <div className="flex-1 lg:ml-64">
-        <header className="border-b border-border/50 glass sticky top-0 z-30">
+        <header className="border-b border-border glass sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 lg:px-6">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground" aria-label="Abrir menu">
