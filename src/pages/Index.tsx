@@ -56,10 +56,9 @@ const Index = () => {
   const unreadCount = useNotificationCount();
 
   // Mobile swipe gestures
-  useSwipeGesture({
-    onSwipeRight: useCallback(() => setSidebarOpen(true), []),
-    onSwipeLeft: useCallback(() => setSidebarOpen(false), []),
-  });
+  const onSwipeRight = useCallback(() => setSidebarOpen(true), []);
+  const onSwipeLeft = useCallback(() => setSidebarOpen(false), []);
+  useSwipeGesture({ onSwipeRight, onSwipeLeft });
 
   // Track view transitions for progress bar
   useEffect(() => {
