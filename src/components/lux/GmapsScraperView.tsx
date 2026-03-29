@@ -38,6 +38,8 @@ export const GmapsScraperView = () => {
     queryKey: ["gmaps-jobs"],
     queryFn: gmapsApi.listJobs,
     refetchInterval: 10000,
+    retry: 2,
+    retryDelay: 3000,
   });
 
   const createMutation = useMutation({
