@@ -27,6 +27,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "intent", label: "Sinais de Intenção", icon: <Radar className="h-4 w-4" /> },
   { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
   { id: "gmaps", label: "Google Maps", icon: <MapPin className="h-4 w-4" /> },
+  { id: "map", label: "Mapa de Empresas", icon: <Globe className="h-4 w-4" /> },
   { id: "campaigns", label: "Campanhas", icon: <Mail className="h-4 w-4" /> },
   { id: "ai-agent", label: "Agente IA", icon: <Bot className="h-4 w-4" /> },
   { id: "settings", label: "Configurações", icon: <Settings className="h-4 w-4" />, section: "Sistema" },
