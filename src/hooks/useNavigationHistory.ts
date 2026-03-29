@@ -35,6 +35,9 @@ const VIEW_SECTIONS: Record<View, string> = {
 
 const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders"];
 
+// Alt+1..9 shortcuts map to top nav items
+const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
+
 function isValidView(v: string | null): v is View {
   return !!v && ALL_VIEWS.includes(v as View);
 }
@@ -65,7 +68,24 @@ export function useNavigationHistory() {
     });
     setHistoryIndex((prev) => prev + 1);
     setActiveView(view);
+    // Scroll to top on navigation
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [historyIndex]);
+
+  // Keyboard shortcuts: Alt+1..9
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.altKey && e.key >= "1" && e.key <= "9") {
+        const idx = parseInt(e.key) - 1;
+        if (idx < SHORTCUT_VIEWS.length) {
+          e.preventDefault();
+          navigate(SHORTCUT_VIEWS[idx]);
+        }
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [navigate]);
 
   const goBack = useCallback(() => {
     if (historyIndex > 0) {

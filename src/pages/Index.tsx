@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { DashboardView } from "@/components/lux/DashboardView";
 import { ICPConfigView } from "@/components/lux/ICPConfigView";
@@ -147,6 +146,14 @@ const Index = () => {
                 onNavigate={handleNav}
                 currentLabel={currentLabel}
               />
+              <button
+                onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+                className="hidden sm:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer ml-2"
+              >
+                <Search className="h-3.5 w-3.5" />
+                <span>Buscar...</span>
+                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
+              </button>
             </div>
             <div className="flex items-center gap-2 relative">
               <Button

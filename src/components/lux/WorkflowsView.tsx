@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TableSkeleton } from "@/components/lux/ViewSkeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Play, Pause, Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, Globe, Linkedin,
@@ -214,10 +215,7 @@ export const WorkflowsView = () => {
 
       {/* Loading state */}
       {isLoading ? (
-        <div className="glass rounded-lg p-8 text-center">
-          <Loader2 className="h-6 w-6 animate-spin text-primary mx-auto" />
-          <p className="text-sm text-muted-foreground mt-2">Carregando workflows...</p>
-        </div>
+        <TableSkeleton />
       ) : workflows.length === 0 ? (
         <div className="glass rounded-lg p-8 text-center">
           <Zap className="h-8 w-8 mx-auto mb-2 text-primary/30" />
