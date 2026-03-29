@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { DashboardView } from "@/components/lux/DashboardView";
 import { ICPConfigView } from "@/components/lux/ICPConfigView";
@@ -20,6 +22,8 @@ import { CommandPalette } from "@/components/lux/CommandPalette";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 
+const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
+
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
   { id: "analytics", label: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
@@ -35,11 +39,22 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "settings", label: "Configurações", icon: <Settings className="h-4 w-4" />, section: "Sistema" },
 ];
 
+const getShortcut = (id: View): string | null => {
+  const idx = SHORTCUT_VIEWS.indexOf(id);
+  return idx >= 0 ? `Alt+${idx + 1}` : null;
+};
+
 const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const unreadCount = useNotificationCount();
+
+  // Mobile swipe gestures
+  useSwipeGesture({
+    onSwipeRight: useCallback(() => setSidebarOpen(true), []),
+    onSwipeLeft: useCallback(() => setSidebarOpen(false), []),
+  });
 
   let currentSection = "";
 
@@ -65,11 +80,15 @@ const Index = () => {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className={cn(
-        "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
-        "lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      )}>
+      <aside
+        aria-label="Navegação principal"
+        role="navigation"
+        className={cn(
+          "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
+          "lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+      >
         <div className="p-5 border-b border-border/50">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
@@ -83,7 +102,7 @@ const Index = () => {
                 Sales Intelligence Platform
               </p>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground">
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground" aria-label="Fechar menu">
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -100,21 +119,37 @@ const Index = () => {
                     {item.section}
                   </p>
                 )}
-                <button
-                  onClick={() => handleNav(item.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
-                    activeView === item.id
-                      ? "bg-primary/10 text-primary glow-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                  )}
-                >
-                  {item.icon}
-                  {item.label}
-                  {item.id === "intent" && (
-                    <span className="ml-auto text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold">5</span>
-                  )}
-                </button>
+                {(() => {
+                  const shortcut = getShortcut(item.id);
+                  const btn = (
+                    <button
+                      onClick={() => handleNav(item.id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                        activeView === item.id
+                          ? "bg-primary/10 text-primary glow-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      {item.icon}
+                      {item.label}
+                      {shortcut && (
+                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground/40 hidden lg:inline">{shortcut}</kbd>
+                      )}
+                      {item.id === "intent" && (
+                        <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
+                      )}
+                    </button>
+                  );
+                  return shortcut ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>{btn}</TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs">
+                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">{shortcut}</kbd>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : btn;
+                })()}
               </div>
             );
           })}
@@ -136,7 +171,7 @@ const Index = () => {
         <header className="border-b border-border/50 glass sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 lg:px-6">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground">
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground" aria-label="Abrir menu">
                 <Menu className="h-5 w-5" />
               </button>
               <AppBreadcrumbs
@@ -185,7 +220,7 @@ const Index = () => {
           </div>
         </header>
 
-        <main className="p-4 lg:p-6">
+        <main className="p-4 lg:p-6" aria-label={currentLabel}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
