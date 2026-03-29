@@ -33,10 +33,29 @@ const VIEW_SECTIONS: Record<View, string> = {
   settings: "Sistema",
 };
 
-export function useNavigationHistory(initialView: View = "dashboard") {
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders"];
+
+function isValidView(v: string | null): v is View {
+  return !!v && ALL_VIEWS.includes(v as View);
+}
+
+export function useNavigationHistory() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramView = searchParams.get("view");
+  const initialView: View = isValidView(paramView) ? paramView : "dashboard";
+
   const [activeView, setActiveView] = useState<View>(initialView);
   const [history, setHistory] = useState<View[]>([initialView]);
   const [historyIndex, setHistoryIndex] = useState(0);
+
+  // Sync URL when view changes
+  useEffect(() => {
+    const current = searchParams.get("view");
+    if (activeView === "dashboard" && !current) return;
+    if (current !== activeView) {
+      setSearchParams(activeView === "dashboard" ? {} : { view: activeView }, { replace: true });
+    }
+  }, [activeView]);
 
   const navigate = useCallback((view: View) => {
     setHistory((prev) => {
