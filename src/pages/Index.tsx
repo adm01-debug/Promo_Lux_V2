@@ -161,7 +161,7 @@ const Index = () => {
                       {item.icon}
                       {item.label}
                       {shortcut && (
-                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground/40 hidden lg:inline">{shortcut}</kbd>
+                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline">{shortcut}</kbd>
                       )}
                       {item.id === "intent" && (
                         <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
