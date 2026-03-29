@@ -78,6 +78,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} />
       {/* Mobile overlay */}
       <AnimatePresence>
