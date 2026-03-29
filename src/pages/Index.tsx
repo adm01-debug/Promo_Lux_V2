@@ -134,7 +134,7 @@ const Index = () => {
       <div className="flex-1 lg:ml-64">
         <header className="border-b border-border/50 glass sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
               <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground">
                 <Menu className="h-5 w-5" />
               </button>
@@ -145,14 +145,6 @@ const Index = () => {
                 onNavigate={handleNav}
                 currentLabel={currentLabel}
               />
-            </div>
-            <div className="flex items-center gap-2 flex-1 max-w-xs ml-4">
-              <Search className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Input
-                placeholder="Buscar..."
-                className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm h-8 placeholder:text-muted-foreground/50 hidden sm:block"
-              />
-              </div>
             </div>
             <div className="flex items-center gap-2 relative">
               <Button
