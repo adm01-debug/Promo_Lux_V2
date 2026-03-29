@@ -172,7 +172,7 @@ const Index = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>{btn}</TooltipTrigger>
                       <TooltipContent side="right" className="text-xs">
-                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">{shortcut}</kbd>
+                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted text-[10px] font-mono border border-border">{shortcut}</kbd>
                       </TooltipContent>
                     </Tooltip>
                   ) : btn;
