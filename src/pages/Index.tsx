@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 import { DashboardView } from "@/components/lux/DashboardView";
 import { ICPConfigView } from "@/components/lux/ICPConfigView";
 import { WorkflowsView } from "@/components/lux/WorkflowsView";
