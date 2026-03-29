@@ -1,25 +1,32 @@
-const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
+import { supabase } from "@/integrations/supabase/client";
 
-export interface GmapsJobData {
-  keywords: string[];
-  lang: string;
-  zoom: number;
-  lat: string;
-  lon: string;
-  fast_mode: boolean;
-  radius: number;
-  depth: number;
-  email: boolean;
-  max_time: number;
-  proxies: string[] | null;
-}
+const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmaps-proxy`;
 
-export interface GmapsJob {
-  ID: string;
-  Name: string;
-  Date: string;
-  Status: string;
-  Data: GmapsJobData;
+export interface ScrapeJob {
+  id: string;
+  external_id: string | null;
+  name: string;
+  status: string;
+  source: string;
+  config: {
+    keywords: string[];
+    lang: string;
+    radius: number;
+    depth: number;
+    email: boolean;
+    fast_mode: boolean;
+    zoom?: number;
+    lat?: string;
+    lon?: string;
+    max_time?: number;
+    proxies?: string[];
+  };
+  results_count: number;
+  error_message: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CreateJobRequest {
@@ -37,48 +44,43 @@ export interface CreateJobRequest {
   proxies?: string[];
 }
 
+async function callProxy(action: string, options: RequestInit = {}, params: Record<string, string> = {}) {
+  const searchParams = new URLSearchParams({ action, ...params });
+  const res = await fetch(`${FUNCTIONS_URL}?${searchParams}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      ...options.headers,
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+    throw new Error(err.error || `Request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
 export const gmapsApi = {
-  async listJobs(): Promise<GmapsJob[]> {
-    const res = await fetch(`${GMAPS_API_BASE}/jobs`);
-    if (!res.ok) throw new Error(`Failed to list jobs: ${res.status}`);
-    return res.json();
+  async listJobs(): Promise<{ jobs: ScrapeJob[]; api_online: boolean }> {
+    return callProxy("list");
   },
 
-  async getJob(id: string): Promise<GmapsJob> {
-    const res = await fetch(`${GMAPS_API_BASE}/jobs/${id}`);
-    if (!res.ok) throw new Error(`Failed to get job: ${res.status}`);
-    return res.json();
-  },
-
-  async createJob(data: CreateJobRequest): Promise<{ id: string }> {
-    const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
+  async createJob(data: CreateJobRequest): Promise<{ id: string; external_id: string | null; status: string }> {
+    return callProxy("create", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: data.name,
-        keywords: data.keywords,
-        lang: data.lang || "pt",
-        zoom: data.zoom || 15,
-        lat: data.lat || "0",
-        lon: data.lon || "0",
-        fast_mode: data.fast_mode ?? false,
-        radius: data.radius || 10000,
-        depth: data.depth || 1,
-        email: data.email ?? true,
-        max_time: data.max_time || 480000000000,
-        proxies: data.proxies || [],
-      }),
+      body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error(`Failed to create job: ${res.status}`);
-    return res.json();
   },
 
   async deleteJob(id: string): Promise<void> {
-    const res = await fetch(`${GMAPS_API_BASE}/jobs/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error(`Failed to delete job: ${res.status}`);
+    await callProxy("delete", { method: "DELETE" }, { id });
   },
 
-  getDownloadUrl(id: string): string {
-    return `${GMAPS_API_BASE}/jobs/${id}/download`;
+  async syncResults(jobId: string): Promise<{ companies_created: number; total_results: number }> {
+    return callProxy("sync-results", {
+      method: "POST",
+      body: JSON.stringify({ job_id: jobId }),
+    });
   },
 };
