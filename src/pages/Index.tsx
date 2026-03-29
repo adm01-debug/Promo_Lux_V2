@@ -195,7 +195,7 @@ const Index = () => {
 
       {/* Main area */}
       <div className="flex-1 lg:ml-64">
-        <header className="border-b border-border/50 glass sticky top-0 z-30">
+        <header className="border-b border-border glass sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 lg:px-6">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground" aria-label="Abrir menu">
