@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Building2, ExternalLink, MapPin, Tag, Search, SlidersHorizontal, Download, Star, Eye } from "lucide-react";
+import { Building2, ExternalLink, MapPin, Tag, Search, SlidersHorizontal, Download, Star, Eye, Filter, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
+import { motion } from "framer-motion";
 
 interface Company {
   id: string;
@@ -49,22 +51,51 @@ const getScoreBg = (score: number) => {
 export const CompaniesView = () => {
   const [search, setSearch] = useState("");
   const [sectorFilter, setSectorFilter] = useState("all");
+  const [scoreFilter, setScoreFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const filtered = mockCompanies.filter(c => {
-    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.sector.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.sector.toLowerCase().includes(search.toLowerCase()) || c.location.toLowerCase().includes(search.toLowerCase());
     const matchSector = sectorFilter === "all" || c.sector === sectorFilter;
-    return matchSearch && matchSector;
+    const matchScore = scoreFilter === "all" ||
+      (scoreFilter === "90+" && c.ipcScore >= 90) ||
+      (scoreFilter === "75-89" && c.ipcScore >= 75 && c.ipcScore < 90) ||
+      (scoreFilter === "60-74" && c.ipcScore >= 60 && c.ipcScore < 75) ||
+      (scoreFilter === "<60" && c.ipcScore < 60);
+    const matchStatus = statusFilter === "all" ||
+      (statusFilter === "enriched" && c.enriched) ||
+      (statusFilter === "pending" && !c.enriched);
+    const matchSource = sourceFilter === "all" || c.source === sourceFilter;
+    return matchSearch && matchSector && matchScore && matchStatus && matchSource;
   });
 
   const sectors = [...new Set(mockCompanies.map(c => c.sector))];
+  const sources = [...new Set(mockCompanies.map(c => c.source))];
+  const activeFilters = [sectorFilter, scoreFilter, statusFilter, sourceFilter].filter(f => f !== "all").length;
+
+  const clearFilters = () => {
+    setSectorFilter("all");
+    setScoreFilter("all");
+    setStatusFilter("all");
+    setSourceFilter("all");
+    setSearch("");
+  };
+
+  const openCompany = (company: Company) => {
+    setSelectedCompany(company);
+    setModalOpen(true);
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Empresas Identificadas</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {mockCompanies.length} empresas encontradas — {mockCompanies.filter(c => c.enriched).length} enriquecidas
+            {filtered.length} de {mockCompanies.length} empresas — {mockCompanies.filter(c => c.enriched).length} enriquecidas
           </p>
         </div>
         <Button variant="outline" className="gap-2 text-sm">
@@ -74,28 +105,70 @@ export const CompaniesView = () => {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-3 items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar empresa ou setor..."
-            className="pl-9 h-9 text-sm"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      <div className="glass rounded-lg p-4 space-y-3">
+        <div className="flex items-center gap-2 mb-1">
+          <Filter className="h-4 w-4 text-primary" />
+          <span className="text-xs font-medium text-foreground uppercase tracking-wider">Filtros</span>
+          {activeFilters > 0 && (
+            <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30">{activeFilters} ativo{activeFilters > 1 ? "s" : ""}</Badge>
+          )}
+          {activeFilters > 0 && (
+            <button onClick={clearFilters} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 ml-auto">
+              <X className="h-3 w-3" /> Limpar
+            </button>
+          )}
         </div>
-        <Select value={sectorFilter} onValueChange={setSectorFilter}>
-          <SelectTrigger className="w-[180px] h-9 text-sm">
-            <SlidersHorizontal className="h-3.5 w-3.5 mr-2" />
-            <SelectValue placeholder="Setor" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os setores</SelectItem>
-            {sectors.map(s => (
-              <SelectItem key={s} value={s}>{s}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-3 items-center flex-wrap">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar empresa, setor ou cidade..."
+              className="pl-9 h-9 text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Select value={sectorFilter} onValueChange={setSectorFilter}>
+            <SelectTrigger className="w-[160px] h-9 text-sm">
+              <SelectValue placeholder="Setor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os setores</SelectItem>
+              {sectors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={scoreFilter} onValueChange={setScoreFilter}>
+            <SelectTrigger className="w-[140px] h-9 text-sm">
+              <SelectValue placeholder="Score" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos scores</SelectItem>
+              <SelectItem value="90+">90+ (Excelente)</SelectItem>
+              <SelectItem value="75-89">75-89 (Bom)</SelectItem>
+              <SelectItem value="60-74">60-74 (Médio)</SelectItem>
+              <SelectItem value="<60">{"<60 (Baixo)"}</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[150px] h-9 text-sm">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos status</SelectItem>
+              <SelectItem value="enriched">Enriquecido</SelectItem>
+              <SelectItem value="pending">Pendente</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={sourceFilter} onValueChange={setSourceFilter}>
+            <SelectTrigger className="w-[140px] h-9 text-sm">
+              <SelectValue placeholder="Fonte" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas fontes</SelectItem>
+              {sources.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Table */}
@@ -106,19 +179,26 @@ export const CompaniesView = () => {
               <tr className="border-b border-border/30">
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium w-8"></th>
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa</th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Setor</th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Localização</th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Funcionários</th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Faturamento</th>
+                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden md:table-cell">Setor</th>
+                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden lg:table-cell">Localização</th>
+                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden xl:table-cell">Funcionários</th>
+                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden xl:table-cell">Faturamento</th>
                 <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Score</th>
-                <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Status</th>
+                <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden sm:table-cell">Status</th>
                 <th className="text-right p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20">
-              {filtered.map((company) => (
-                <tr key={company.id} className="hover:bg-secondary/20 transition-colors group">
-                  <td className="p-3">
+              {filtered.map((company, i) => (
+                <motion.tr
+                  key={company.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.03 }}
+                  className="hover:bg-secondary/20 transition-colors group cursor-pointer"
+                  onClick={() => openCompany(company)}
+                >
+                  <td className="p-3" onClick={(e) => e.stopPropagation()}>
                     <Star className={`h-4 w-4 cursor-pointer transition-colors ${company.starred ? "text-primary fill-primary" : "text-muted-foreground/30 hover:text-primary/50"}`} />
                   </td>
                   <td className="p-3">
@@ -132,26 +212,26 @@ export const CompaniesView = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="p-3">
+                  <td className="p-3 hidden md:table-cell">
                     <Badge variant="outline" className="text-xs gap-1 bg-secondary/50">
                       <Tag className="h-3 w-3" />
                       {company.sector}
                     </Badge>
                   </td>
-                  <td className="p-3 text-muted-foreground text-xs">
+                  <td className="p-3 text-muted-foreground text-xs hidden lg:table-cell">
                     <span className="flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
                       {company.location}
                     </span>
                   </td>
-                  <td className="p-3 text-xs text-muted-foreground font-mono">{company.employees}</td>
-                  <td className="p-3 text-xs text-muted-foreground font-mono">{company.revenue}</td>
+                  <td className="p-3 text-xs text-muted-foreground font-mono hidden xl:table-cell">{company.employees}</td>
+                  <td className="p-3 text-xs text-muted-foreground font-mono hidden xl:table-cell">{company.revenue}</td>
                   <td className="p-3 text-center">
                     <span className={`inline-flex items-center justify-center h-8 w-8 rounded-lg font-mono font-bold text-sm ${getScoreColor(company.ipcScore)} ${getScoreBg(company.ipcScore)}`}>
                       {company.ipcScore}
                     </span>
                   </td>
-                  <td className="p-3 text-center">
+                  <td className="p-3 text-center hidden sm:table-cell">
                     {company.enriched ? (
                       <Badge variant="outline" className="text-[10px] bg-success/10 text-success border-success/30">Enriquecido</Badge>
                     ) : (
@@ -163,12 +243,21 @@ export const CompaniesView = () => {
                       <Eye className="h-3.5 w-3.5" />
                     </Button>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
         </div>
+        {filtered.length === 0 && (
+          <div className="p-12 text-center text-muted-foreground">
+            <Building2 className="h-8 w-8 mx-auto mb-2 opacity-30" />
+            <p className="text-sm">Nenhuma empresa encontrada com os filtros selecionados</p>
+            <button onClick={clearFilters} className="text-xs text-primary hover:underline mt-1">Limpar filtros</button>
+          </div>
+        )}
       </div>
+
+      <CompanyDetailModal company={selectedCompany} open={modalOpen} onOpenChange={setModalOpen} />
     </div>
   );
 };

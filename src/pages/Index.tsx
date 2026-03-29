@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot } from "lucide-react";
+import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import { IntentSignalsView } from "@/components/lux/IntentSignalsView";
 import { CampaignsView } from "@/components/lux/CampaignsView";
 import { AIAgentView } from "@/components/lux/AIAgentView";
 import { AnalyticsView } from "@/components/lux/AnalyticsView";
+import { AnimatePresence, motion } from "framer-motion";
 
 type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics";
 
@@ -27,13 +28,36 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
 
 const Index = () => {
   const [activeView, setActiveView] = useState<View>("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   let currentSection = "";
 
+  const handleNav = (id: View) => {
+    setActiveView(id);
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-background flex">
+      {/* Mobile overlay */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
-      <aside className="w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50">
+      <aside className={cn(
+        "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
+        "lg:translate-x-0",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
         <div className="p-5 border-b border-border/50">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
@@ -47,6 +71,9 @@ const Index = () => {
                 Sales Intelligence Platform
               </p>
             </div>
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground">
+              <X className="h-5 w-5" />
+            </button>
           </div>
         </div>
 
@@ -62,7 +89,7 @@ const Index = () => {
                   </p>
                 )}
                 <button
-                  onClick={() => setActiveView(item.id)}
+                  onClick={() => handleNav(item.id)}
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
                     activeView === item.id
@@ -93,15 +120,20 @@ const Index = () => {
       </aside>
 
       {/* Main area */}
-      <div className="flex-1 ml-64">
-        <header className="border-b border-border/50 glass sticky top-0 z-40">
-          <div className="flex items-center justify-between h-14 px-6">
-            <div className="flex items-center gap-3 flex-1 max-w-md">
-              <Search className="h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar empresas, automações, sinais..."
-                className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm h-8 placeholder:text-muted-foreground/50"
-              />
+      <div className="flex-1 lg:ml-64">
+        <header className="border-b border-border/50 glass sticky top-0 z-30">
+          <div className="flex items-center justify-between h-14 px-4 lg:px-6">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground">
+                <Menu className="h-5 w-5" />
+              </button>
+              <div className="flex items-center gap-3 flex-1 max-w-md">
+                <Search className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                <Input
+                  placeholder="Buscar empresas, automações, sinais..."
+                  className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm h-8 placeholder:text-muted-foreground/50 hidden sm:block"
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground relative">
@@ -118,15 +150,22 @@ const Index = () => {
           </div>
         </header>
 
-        <main className="p-6">
-          {activeView === "dashboard" && <DashboardView />}
-          {activeView === "icp" && <ICPConfigView />}
-          {activeView === "workflows" && <WorkflowsView />}
-          {activeView === "companies" && <CompaniesView />}
-          {activeView === "intent" && <IntentSignalsView />}
-          {activeView === "campaigns" && <CampaignsView />}
-          {activeView === "ai-agent" && <AIAgentView />}
-          {activeView === "analytics" && <AnalyticsView />}
+        <main className="p-4 lg:p-6">
+          <motion.div
+            key={activeView}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {activeView === "dashboard" && <DashboardView />}
+            {activeView === "icp" && <ICPConfigView />}
+            {activeView === "workflows" && <WorkflowsView />}
+            {activeView === "companies" && <CompaniesView />}
+            {activeView === "intent" && <IntentSignalsView />}
+            {activeView === "campaigns" && <CampaignsView />}
+            {activeView === "ai-agent" && <AIAgentView />}
+            {activeView === "analytics" && <AnalyticsView />}
+          </motion.div>
         </main>
       </div>
     </div>
