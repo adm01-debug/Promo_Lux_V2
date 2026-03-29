@@ -193,11 +193,13 @@ export const CompaniesView = () => {
       return sortDir === "desc" ? -cmp : cmp;
     });
 
-    // Reset to page 1 when filters change
-    setCurrentPage(1);
-
     return result;
   }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores, sortBy, sortDir]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const safeCurrentPage = Math.min(currentPage, totalPages);
