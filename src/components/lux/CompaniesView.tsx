@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Building2, MapPin, Tag, Search, Download, Star, Eye, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Building2, MapPin, Tag, Search, Download, Star, Eye, Filter, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
