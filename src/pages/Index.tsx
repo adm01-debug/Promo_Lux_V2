@@ -149,6 +149,7 @@ const Index = () => {
                   const shortcut = getShortcut(item.id);
                   const btn = (
                     <button
+                      data-tour={item.id}
                       onClick={() => handleNav(item.id)}
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
