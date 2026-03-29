@@ -49,6 +49,8 @@ const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const prevView = useRef(activeView);
   const unreadCount = useNotificationCount();
 
   // Mobile swipe gestures
