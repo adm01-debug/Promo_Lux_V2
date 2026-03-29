@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X } from "lucide-react";
+import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -12,10 +12,11 @@ import { CampaignsView } from "@/components/lux/CampaignsView";
 import { AIAgentView } from "@/components/lux/AIAgentView";
 import { AnalyticsView } from "@/components/lux/AnalyticsView";
 import { SettingsView } from "@/components/lux/SettingsView";
+import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { AnimatePresence, motion } from "framer-motion";
 
-type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings";
+type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps";
 
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
@@ -24,6 +25,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "companies", label: "Empresas", icon: <Building2 className="h-4 w-4" /> },
   { id: "intent", label: "Sinais de Intenção", icon: <Radar className="h-4 w-4" /> },
   { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
+  { id: "gmaps", label: "Google Maps", icon: <MapPin className="h-4 w-4" /> },
   { id: "campaigns", label: "Campanhas", icon: <Mail className="h-4 w-4" /> },
   { id: "ai-agent", label: "Agente IA", icon: <Bot className="h-4 w-4" /> },
   { id: "settings", label: "Configurações", icon: <Settings className="h-4 w-4" />, section: "Sistema" },
@@ -186,6 +188,7 @@ const Index = () => {
             {activeView === "ai-agent" && <AIAgentView />}
             {activeView === "analytics" && <AnalyticsView />}
             {activeView === "settings" && <SettingsView />}
+            {activeView === "gmaps" && <GmapsScraperView />}
           </motion.div>
         </main>
       </div>
