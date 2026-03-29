@@ -26,6 +26,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "icp", label: "Configurar IPC", icon: <Target className="h-4 w-4" />, section: "Prospecção" },
   { id: "companies", label: "Empresas", icon: <Building2 className="h-4 w-4" /> },
   { id: "intent", label: "Sinais de Intenção", icon: <Radar className="h-4 w-4" /> },
+  { id: "stakeholders", label: "Stakeholders", icon: <Users className="h-4 w-4" /> },
   { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
   { id: "gmaps", label: "Google Maps", icon: <MapPin className="h-4 w-4" /> },
   { id: "map", label: "Mapa de Empresas", icon: <Globe className="h-4 w-4" /> },
