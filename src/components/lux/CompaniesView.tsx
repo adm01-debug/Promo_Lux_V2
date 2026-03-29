@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Building2, MapPin, Tag, Search, Download, Star, Eye, Filter, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -193,11 +193,13 @@ export const CompaniesView = () => {
       return sortDir === "desc" ? -cmp : cmp;
     });
 
-    // Reset to page 1 when filters change
-    setCurrentPage(1);
-
     return result;
   }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores, sortBy, sortDir]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const safeCurrentPage = Math.min(currentPage, totalPages);
