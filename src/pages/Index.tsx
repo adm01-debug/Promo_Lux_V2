@@ -177,25 +177,28 @@ const Index = () => {
         </header>
 
         <main className="p-4 lg:p-6">
-          <motion.div
-            key={activeView}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {activeView === "dashboard" && <DashboardView />}
-            {activeView === "icp" && <ICPConfigView />}
-            {activeView === "workflows" && <WorkflowsView />}
-            {activeView === "companies" && <CompaniesView />}
-            {activeView === "intent" && <IntentSignalsView />}
-            {activeView === "campaigns" && <CampaignsView />}
-            {activeView === "ai-agent" && <AIAgentView />}
-            {activeView === "analytics" && <AnalyticsView />}
-            {activeView === "settings" && <SettingsView />}
-            {activeView === "gmaps" && <GmapsScraperView />}
-            {activeView === "map" && <CompaniesMapView />}
-            {activeView === "stakeholders" && <StakeholderFinderView />}
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeView}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            >
+              {activeView === "dashboard" && <DashboardView />}
+              {activeView === "icp" && <ICPConfigView />}
+              {activeView === "workflows" && <WorkflowsView />}
+              {activeView === "companies" && <CompaniesView />}
+              {activeView === "intent" && <IntentSignalsView />}
+              {activeView === "campaigns" && <CampaignsView />}
+              {activeView === "ai-agent" && <AIAgentView />}
+              {activeView === "analytics" && <AnalyticsView />}
+              {activeView === "settings" && <SettingsView />}
+              {activeView === "gmaps" && <GmapsScraperView />}
+              {activeView === "map" && <CompaniesMapView />}
+              {activeView === "stakeholders" && <StakeholderFinderView />}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>
