@@ -185,6 +185,95 @@ export type Database = {
           },
         ]
       }
+      workflow_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_step: string | null
+          error_message: string | null
+          id: string
+          results: Json | null
+          started_at: string | null
+          status: string
+          workflow_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_step?: string | null
+          error_message?: string | null
+          id?: string
+          results?: Json | null
+          started_at?: string | null
+          status?: string
+          workflow_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_step?: string | null
+          error_message?: string | null
+          id?: string
+          results?: Json | null
+          started_at?: string | null
+          status?: string
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_runs_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflows: {
+        Row: {
+          config: Json
+          created_at: string
+          description: string | null
+          id: string
+          last_run_at: string | null
+          leads_processed: number | null
+          leads_qualified: number | null
+          name: string
+          status: string
+          steps: Json
+          success_rate: number | null
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_run_at?: string | null
+          leads_processed?: number | null
+          leads_qualified?: number | null
+          name: string
+          status?: string
+          steps?: Json
+          success_rate?: number | null
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_run_at?: string | null
+          leads_processed?: number | null
+          leads_qualified?: number | null
+          name?: string
+          status?: string
+          steps?: Json
+          success_rate?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
