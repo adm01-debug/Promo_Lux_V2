@@ -6,6 +6,7 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, Calendar } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const performanceData = [
   { day: "Seg", raspadas: 120, qualificadas: 85 },
@@ -34,6 +35,14 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export const DashboardView = () => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  const gridColor = isDark ? "hsl(222, 14%, 16%)" : "hsl(42, 14%, 88%)";
+  const axisColor = isDark ? "hsl(215, 14%, 52%)" : "hsl(222, 12%, 40%)";
+  const primaryStroke = isDark ? "hsl(45, 100%, 58%)" : "hsl(40, 95%, 35%)";
+  const successStroke = isDark ? "hsl(142, 71%, 45%)" : "hsl(142, 72%, 28%)";
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -67,20 +76,20 @@ export const DashboardView = () => {
             <AreaChart data={performanceData}>
               <defs>
                 <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(45, 100%, 58%)" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="hsl(45, 100%, 58%)" stopOpacity={0} />
+                  <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.3} />
+                  <stop offset="100%" stopColor={primaryStroke} stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0} />
+                  <stop offset="0%" stopColor={successStroke} stopOpacity={0.3} />
+                  <stop offset="100%" stopColor={successStroke} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 14%, 14%)" />
-              <XAxis dataKey="day" stroke="hsl(215, 12%, 50%)" fontSize={11} tickLine={false} axisLine={false} />
-              <YAxis stroke="hsl(215, 12%, 50%)" fontSize={11} tickLine={false} axisLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+              <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+              <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="raspadas" stroke="hsl(45, 100%, 58%)" fill="url(#gradientRaspadas)" strokeWidth={2} />
-              <Area type="monotone" dataKey="qualificadas" stroke="hsl(142, 71%, 45%)" fill="url(#gradientQualificadas)" strokeWidth={2} />
+              <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2} />
+              <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
