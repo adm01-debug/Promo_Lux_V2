@@ -154,6 +154,13 @@ export const WorkflowsView = () => {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
+              {/* Step progress indicator */}
+              <StepProgress
+                steps={defaultSteps.map(s => s.label)}
+                currentStep={createMutation.isPending ? defaultSteps.length : 0}
+                className="py-2"
+              />
+
               {/* Pipeline preview */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2">
                 {defaultSteps.map((step, i) => (
