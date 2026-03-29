@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-export type Skin = "gold" | "blue" | "green" | "red";
+export type Skin = "gold" | "blue" | "green" | "red" | "purple" | "orange";
 
 const SKIN_KEY = "lux-skin";
 
