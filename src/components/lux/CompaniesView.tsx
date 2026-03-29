@@ -137,6 +137,7 @@ const FacetGroup = ({
 };
 
 export const CompaniesView = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedSectors, setSelectedSectors] = useState<Set<string>>(new Set());
   const [selectedLocations, setSelectedLocations] = useState<Set<string>>(new Set());
