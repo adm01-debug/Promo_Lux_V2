@@ -17,6 +17,7 @@ import { CompaniesMapView } from "@/components/lux/CompaniesMapView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
+import { CommandPalette } from "@/components/lux/CommandPalette";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 
