@@ -59,6 +59,16 @@ const Index = () => {
     onSwipeLeft: useCallback(() => setSidebarOpen(false), []),
   });
 
+  // Track view transitions for progress bar
+  useEffect(() => {
+    if (activeView !== prevView.current) {
+      setIsTransitioning(true);
+      prevView.current = activeView;
+      const timer = setTimeout(() => setIsTransitioning(false), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [activeView]);
+
   let currentSection = "";
 
   const handleNav = (id: View) => {
