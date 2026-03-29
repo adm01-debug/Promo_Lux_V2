@@ -206,7 +206,8 @@ const Index = () => {
                 <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
               </button>
             </div>
-            <div className="flex items-center gap-2 relative">
+            <div className="flex items-center gap-1.5 relative">
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 size="icon"
