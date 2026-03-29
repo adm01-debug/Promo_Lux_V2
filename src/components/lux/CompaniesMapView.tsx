@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-// Force Vite dep re-optimization after react-leaflet downgrade
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
