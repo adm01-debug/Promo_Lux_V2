@@ -108,21 +108,37 @@ const Index = () => {
                     {item.section}
                   </p>
                 )}
-                <button
-                  onClick={() => handleNav(item.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
-                    activeView === item.id
-                      ? "bg-primary/10 text-primary glow-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                  )}
-                >
-                  {item.icon}
-                  {item.label}
-                  {item.id === "intent" && (
-                    <span className="ml-auto text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold">5</span>
-                  )}
-                </button>
+                {(() => {
+                  const shortcut = getShortcut(item.id);
+                  const btn = (
+                    <button
+                      onClick={() => handleNav(item.id)}
+                      className={cn(
+                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                        activeView === item.id
+                          ? "bg-primary/10 text-primary glow-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      {item.icon}
+                      {item.label}
+                      {shortcut && (
+                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground/40 hidden lg:inline">{shortcut}</kbd>
+                      )}
+                      {item.id === "intent" && (
+                        <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
+                      )}
+                    </button>
+                  );
+                  return shortcut ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>{btn}</TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs">
+                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">{shortcut}</kbd>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : btn;
+                })()}
               </div>
             );
           })}
