@@ -6,6 +6,7 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, Calendar } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const performanceData = [
   { day: "Seg", raspadas: 120, qualificadas: 85 },
