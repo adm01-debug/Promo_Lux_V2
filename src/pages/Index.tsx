@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe } from "lucide-react";
+import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -15,9 +15,10 @@ import { SettingsView } from "@/components/lux/SettingsView";
 import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
 import { CompaniesMapView } from "@/components/lux/CompaniesMapView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
+import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
 import { AnimatePresence, motion } from "framer-motion";
 
-type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map";
+type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders";
 
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
@@ -25,6 +26,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "icp", label: "Configurar IPC", icon: <Target className="h-4 w-4" />, section: "Prospecção" },
   { id: "companies", label: "Empresas", icon: <Building2 className="h-4 w-4" /> },
   { id: "intent", label: "Sinais de Intenção", icon: <Radar className="h-4 w-4" /> },
+  { id: "stakeholders", label: "Stakeholders", icon: <Users className="h-4 w-4" /> },
   { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
   { id: "gmaps", label: "Google Maps", icon: <MapPin className="h-4 w-4" /> },
   { id: "map", label: "Mapa de Empresas", icon: <Globe className="h-4 w-4" /> },
@@ -192,6 +194,7 @@ const Index = () => {
             {activeView === "settings" && <SettingsView />}
             {activeView === "gmaps" && <GmapsScraperView />}
             {activeView === "map" && <CompaniesMapView />}
+            {activeView === "stakeholders" && <StakeholderFinderView />}
           </motion.div>
         </main>
       </div>
