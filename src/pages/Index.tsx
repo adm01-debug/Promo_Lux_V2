@@ -20,6 +20,7 @@ import { NotificationsPanel, useNotificationCount } from "@/components/lux/Notif
 import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { CommandPalette } from "@/components/lux/CommandPalette";
+import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 
