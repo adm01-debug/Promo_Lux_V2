@@ -53,6 +53,7 @@ const getShortcut = (id: View): string | null => {
 
 const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
+  const { user, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
