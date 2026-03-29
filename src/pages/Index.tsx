@@ -247,7 +247,7 @@ const Index = () => {
           </div>
         </header>
 
-        <main className="p-4 lg:p-6" aria-label={currentLabel}>
+        <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel} role="main">
           <Suspense fallback={<ViewSkeleton />}>
             <AnimatePresence mode="wait">
               <motion.div
