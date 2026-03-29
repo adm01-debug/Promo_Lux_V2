@@ -282,10 +282,7 @@ export const StakeholderFinderView = () => {
           </div>
 
           {isLoading ? (
-            <div className="glass rounded-lg p-12 text-center">
-              <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-sm text-muted-foreground mt-3">Buscando stakeholders...</p>
-            </div>
+            <TableSkeleton />
           ) : filtered.length === 0 ? (
             <div className="glass rounded-lg p-12 text-center">
               <UserX className="h-10 w-10 text-muted-foreground/30 mx-auto" />
