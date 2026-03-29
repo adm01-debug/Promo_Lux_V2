@@ -115,7 +115,7 @@ const Index = () => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
-        <div className="p-5 border-b border-border/50">
+        <div className="p-5 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
               <Sparkles className="h-5 w-5 text-primary" />
