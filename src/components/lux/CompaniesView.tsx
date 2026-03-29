@@ -146,6 +146,8 @@ export const CompaniesView = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "name" | "sector">("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const toggleSet = <T extends string>(set: Set<T>, value: T, setter: (s: Set<T>) => void) => {
     const next = new Set(set);
