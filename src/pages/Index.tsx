@@ -20,6 +20,8 @@ import { CommandPalette } from "@/components/lux/CommandPalette";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 
+const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
+
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
   { id: "analytics", label: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
@@ -34,6 +36,11 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "ai-agent", label: "Agente IA", icon: <Bot className="h-4 w-4" /> },
   { id: "settings", label: "Configurações", icon: <Settings className="h-4 w-4" />, section: "Sistema" },
 ];
+
+const getShortcut = (id: View): string | null => {
+  const idx = SHORTCUT_VIEWS.indexOf(id);
+  return idx >= 0 ? `Alt+${idx + 1}` : null;
+};
 
 const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
