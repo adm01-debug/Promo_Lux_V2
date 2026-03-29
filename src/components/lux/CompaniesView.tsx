@@ -514,6 +514,57 @@ export const CompaniesView = () => {
                 </button>
               </div>
             )}
+
+            {/* Pagination */}
+            {filtered.length > 0 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-border/30">
+                <span className="text-xs text-muted-foreground">
+                  Mostrando {(safeCurrentPage - 1) * itemsPerPage + 1}–{Math.min(safeCurrentPage * itemsPerPage, filtered.length)} de {filtered.length} empresas
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    disabled={safeCurrentPage <= 1}
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === totalPages || Math.abs(p - safeCurrentPage) <= 1)
+                    .reduce<(number | "...")[]>((acc, p, idx, arr) => {
+                      if (idx > 0 && p - (arr[idx - 1]) > 1) acc.push("...");
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((p, i) =>
+                      p === "..." ? (
+                        <span key={`dot-${i}`} className="px-1 text-xs text-muted-foreground">…</span>
+                      ) : (
+                        <Button
+                          key={p}
+                          variant={p === safeCurrentPage ? "default" : "ghost"}
+                          size="icon"
+                          className="h-7 w-7 text-xs"
+                          onClick={() => setCurrentPage(p as number)}
+                        >
+                          {p}
+                        </Button>
+                      )
+                    )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    disabled={safeCurrentPage >= totalPages}
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
