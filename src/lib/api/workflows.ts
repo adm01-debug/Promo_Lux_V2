@@ -1,0 +1,74 @@
+const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/workflow-engine`;
+
+export interface WorkflowStep {
+  id: string;
+  type: "source" | "enrich" | "filter" | "action";
+  label: string;
+  provider?: string;
+}
+
+export interface WorkflowRun {
+  id: string;
+  status: string;
+  started_at: string;
+  completed_at: string | null;
+  results: Record<string, any>;
+}
+
+export interface Workflow {
+  id: string;
+  name: string;
+  description: string | null;
+  status: string;
+  steps: WorkflowStep[];
+  config: Record<string, any>;
+  leads_processed: number;
+  leads_qualified: number;
+  success_rate: number;
+  last_run_at: string | null;
+  created_at: string;
+  updated_at: string;
+  workflow_runs?: WorkflowRun[];
+}
+
+async function callWorkflowApi(action: string, options: RequestInit = {}, params: Record<string, string> = {}) {
+  const searchParams = new URLSearchParams({ action, ...params });
+  const res = await fetch(`${FUNCTIONS_URL}?${searchParams}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      ...options.headers,
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+    throw new Error(err.error || `Request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export const workflowApi = {
+  async list(): Promise<Workflow[]> {
+    return callWorkflowApi("list");
+  },
+
+  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, any> }): Promise<Workflow> {
+    return callWorkflowApi("create", { method: "POST", body: JSON.stringify(data) });
+  },
+
+  async run(workflowId: string): Promise<{ run_id: string; results: Record<string, any> }> {
+    return callWorkflowApi("run", { method: "POST", body: JSON.stringify({ workflow_id: workflowId }) });
+  },
+
+  async toggleStatus(workflowId: string, newStatus: string): Promise<void> {
+    await callWorkflowApi("toggle-status", {
+      method: "POST",
+      body: JSON.stringify({ workflow_id: workflowId, new_status: newStatus }),
+    });
+  },
+
+  async delete(workflowId: string): Promise<void> {
+    await callWorkflowApi("delete", { method: "DELETE" }, { id: workflowId });
+  },
+};
