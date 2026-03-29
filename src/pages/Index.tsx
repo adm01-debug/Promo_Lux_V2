@@ -16,7 +16,7 @@ import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { AnimatePresence, motion } from "framer-motion";
 
-type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings";
+type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps";
 
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
