@@ -13,6 +13,7 @@ import { AIAgentView } from "@/components/lux/AIAgentView";
 import { AnalyticsView } from "@/components/lux/AnalyticsView";
 import { SettingsView } from "@/components/lux/SettingsView";
 import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
+import { CompaniesMapView } from "@/components/lux/CompaniesMapView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { AnimatePresence, motion } from "framer-motion";
 
