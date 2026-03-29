@@ -182,7 +182,7 @@ const Index = () => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-border/50">
+        <div className="p-4 border-t border-border">
           <div className="glass rounded-lg p-3">
             <p className="text-xs text-muted-foreground">Status do Sistema</p>
             <div className="flex items-center gap-2 mt-1">
