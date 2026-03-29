@@ -185,6 +185,77 @@ export type Database = {
           },
         ]
       }
+      stakeholders: {
+        Row: {
+          avatar_url: string | null
+          company_id: string | null
+          confidence_score: number | null
+          created_at: string
+          department: string | null
+          email: string | null
+          full_name: string
+          id: string
+          last_contacted_at: string | null
+          linkedin_url: string | null
+          notes: string | null
+          phone: string | null
+          raw_data: Json | null
+          role: string | null
+          seniority: string | null
+          source: string | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          company_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          last_contacted_at?: string | null
+          linkedin_url?: string | null
+          notes?: string | null
+          phone?: string | null
+          raw_data?: Json | null
+          role?: string | null
+          seniority?: string | null
+          source?: string | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          company_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          department?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          last_contacted_at?: string | null
+          linkedin_url?: string | null
+          notes?: string | null
+          phone?: string | null
+          raw_data?: Json | null
+          role?: string | null
+          seniority?: string | null
+          source?: string | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stakeholders_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workflow_runs: {
         Row: {
           completed_at: string | null
