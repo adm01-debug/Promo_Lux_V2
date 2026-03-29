@@ -12,6 +12,7 @@ import { CampaignsView } from "@/components/lux/CampaignsView";
 import { AIAgentView } from "@/components/lux/AIAgentView";
 import { AnalyticsView } from "@/components/lux/AnalyticsView";
 import { SettingsView } from "@/components/lux/SettingsView";
+import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { AnimatePresence, motion } from "framer-motion";
 
