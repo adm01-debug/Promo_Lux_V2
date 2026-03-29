@@ -13,6 +13,7 @@ import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Lazy-loaded views for code splitting
 const DashboardView = lazy(() => import("@/components/lux/DashboardView").then(m => ({ default: m.DashboardView })));
