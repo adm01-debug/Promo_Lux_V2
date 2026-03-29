@@ -50,6 +50,12 @@ const Index = () => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const unreadCount = useNotificationCount();
 
+  // Mobile swipe gestures
+  useSwipeGesture({
+    onSwipeRight: useCallback(() => setSidebarOpen(true), []),
+    onSwipeLeft: useCallback(() => setSidebarOpen(false), []),
+  });
+
   let currentSection = "";
 
   const handleNav = (id: View) => {
