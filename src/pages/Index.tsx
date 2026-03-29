@@ -11,9 +11,11 @@ import { IntentSignalsView } from "@/components/lux/IntentSignalsView";
 import { CampaignsView } from "@/components/lux/CampaignsView";
 import { AIAgentView } from "@/components/lux/AIAgentView";
 import { AnalyticsView } from "@/components/lux/AnalyticsView";
+import { SettingsView } from "@/components/lux/SettingsView";
+import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { AnimatePresence, motion } from "framer-motion";
 
-type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics";
+type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings";
 
 const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
@@ -24,11 +26,14 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
   { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
   { id: "campaigns", label: "Campanhas", icon: <Mail className="h-4 w-4" /> },
   { id: "ai-agent", label: "Agente IA", icon: <Bot className="h-4 w-4" /> },
+  { id: "settings", label: "Configurações", icon: <Settings className="h-4 w-4" />, section: "Sistema" },
 ];
 
 const Index = () => {
   const [activeView, setActiveView] = useState<View>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const unreadCount = useNotificationCount();
 
   let currentSection = "";
 
@@ -135,12 +140,27 @@ const Index = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground relative">
+            <div className="flex items-center gap-2 relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground relative"
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+              >
                 <Bell className="h-4 w-4" />
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+              <NotificationsPanel open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                onClick={() => handleNav("settings")}
+              >
                 <Settings className="h-4 w-4" />
               </Button>
               <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary ml-2">
@@ -165,6 +185,7 @@ const Index = () => {
             {activeView === "campaigns" && <CampaignsView />}
             {activeView === "ai-agent" && <AIAgentView />}
             {activeView === "analytics" && <AnalyticsView />}
+            {activeView === "settings" && <SettingsView />}
           </motion.div>
         </main>
       </div>

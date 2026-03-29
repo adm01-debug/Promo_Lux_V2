@@ -1,11 +1,12 @@
 import { useState } from "react";
 import {
   Play, Pause, Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, Globe, Linkedin,
-  Database, Mail, Filter, RotateCcw, Settings, ChevronRight
+  Database, Mail, Filter, RotateCcw, Settings, ChevronRight, Zap, TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 type WorkflowStatus = "active" | "paused" | "draft" | "error";
 
@@ -26,6 +27,7 @@ interface Workflow {
   leadsProcessed: number;
   leadsQualified: number;
   lastRun: string;
+  successRate: number;
 }
 
 const statusConfig: Record<WorkflowStatus, { label: string; color: string; icon: React.ReactNode }> = {
@@ -39,7 +41,7 @@ const mockWorkflows: Workflow[] = [
   {
     id: "1",
     name: "Prospecção LinkedIn → Enriquecimento → CRM",
-    description: "Baseado em PhantomBuster: extrai perfis do LinkedIn, enriquece com dados de contato e sincroniza com o CRM",
+    description: "Extrai perfis do LinkedIn, enriquece com dados de contato e sincroniza com o CRM",
     status: "active",
     steps: [
       { id: "s1", type: "source", label: "LinkedIn Scraper", icon: <Linkedin className="h-3.5 w-3.5" />, provider: "PhantomBuster" },
@@ -50,11 +52,12 @@ const mockWorkflows: Workflow[] = [
     leadsProcessed: 1243,
     leadsQualified: 892,
     lastRun: "Agora",
+    successRate: 72,
   },
   {
     id: "2",
     name: "Google Maps → Waterfall Enrichment",
-    description: "Inspirado em Clay: busca empresas no Google Maps e aplica enriquecimento em cascata com múltiplos provedores",
+    description: "Busca empresas no Google Maps e aplica enriquecimento em cascata",
     status: "active",
     steps: [
       { id: "s1", type: "source", label: "Google Maps", icon: <Globe className="h-3.5 w-3.5" /> },
@@ -65,11 +68,12 @@ const mockWorkflows: Workflow[] = [
     leadsProcessed: 567,
     leadsQualified: 412,
     lastRun: "2h atrás",
+    successRate: 73,
   },
   {
     id: "3",
     name: "Monitoramento Contínuo IPC",
-    description: "Inspirado em Lusha Auto-Search: monitora novos matches do IPC automaticamente e os exporta",
+    description: "Monitora novos matches do IPC automaticamente e os exporta",
     status: "paused",
     steps: [
       { id: "s1", type: "source", label: "IPC Monitor", icon: <Filter className="h-3.5 w-3.5" />, provider: "Lusha-style" },
@@ -79,6 +83,23 @@ const mockWorkflows: Workflow[] = [
     leadsProcessed: 0,
     leadsQualified: 0,
     lastRun: "Nunca",
+    successRate: 0,
+  },
+  {
+    id: "4",
+    name: "Scraper Multi-Fonte → Dedup → Score",
+    description: "Combina dados de múltiplas fontes, remove duplicatas e pontua automaticamente",
+    status: "draft",
+    steps: [
+      { id: "s1", type: "source", label: "Multi-Source", icon: <Globe className="h-3.5 w-3.5" /> },
+      { id: "s2", type: "filter", label: "Dedup AI", icon: <Zap className="h-3.5 w-3.5" />, provider: "LUX IA" },
+      { id: "s3", type: "enrich", label: "Auto Score", icon: <TrendingUp className="h-3.5 w-3.5" /> },
+      { id: "s4", type: "action", label: "CRM Sync", icon: <Database className="h-3.5 w-3.5" /> },
+    ],
+    leadsProcessed: 0,
+    leadsQualified: 0,
+    lastRun: "Nunca",
+    successRate: 0,
   },
 ];
 
@@ -92,13 +113,16 @@ const stepColors: Record<string, string> = {
 export const WorkflowsView = () => {
   const [expandedId, setExpandedId] = useState<string | null>("1");
 
+  const activeCount = mockWorkflows.filter(w => w.status === "active").length;
+  const totalProcessed = mockWorkflows.reduce((a, w) => a + w.leadsProcessed, 0);
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Workflows de Automação</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Pipelines visuais inspirados em Clay, PhantomBuster e Lusha
+            {activeCount} ativos — {totalProcessed.toLocaleString()} leads processados
           </p>
         </div>
         <Button className="gap-2">
@@ -107,25 +131,46 @@ export const WorkflowsView = () => {
         </Button>
       </div>
 
+      {/* Quick stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          { label: "Ativos", value: activeCount, color: "text-success" },
+          { label: "Total", value: mockWorkflows.length, color: "text-foreground" },
+          { label: "Processados", value: totalProcessed.toLocaleString(), color: "text-primary" },
+          { label: "Taxa Média", value: `${Math.round(mockWorkflows.filter(w => w.successRate > 0).reduce((a, w) => a + w.successRate, 0) / Math.max(mockWorkflows.filter(w => w.successRate > 0).length, 1))}%`, color: "text-primary" },
+        ].map(stat => (
+          <div key={stat.label} className="glass rounded-lg p-3">
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{stat.label}</span>
+            <p className={`text-xl font-bold font-mono mt-1 ${stat.color}`}>{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
       <div className="space-y-4">
-        {mockWorkflows.map((wf) => {
+        {mockWorkflows.map((wf, i) => {
           const config = statusConfig[wf.status];
           const isExpanded = expandedId === wf.id;
 
           return (
-            <div key={wf.id} className="glass rounded-lg overflow-hidden">
+            <motion.div
+              key={wf.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className="glass rounded-lg overflow-hidden"
+            >
               <button
                 className="w-full p-5 text-left flex items-center justify-between hover:bg-secondary/20 transition-colors"
                 onClick={() => setExpandedId(isExpanded ? null : wf.id)}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-wrap">
                   <div className="flex items-center gap-1">
-                    {wf.steps.map((step, i) => (
+                    {wf.steps.map((step, si) => (
                       <div key={step.id} className="flex items-center gap-1">
                         <div className={cn("h-7 w-7 rounded-md flex items-center justify-center border", stepColors[step.type])}>
                           {step.icon}
                         </div>
-                        {i < wf.steps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/50" />}
+                        {si < wf.steps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/50" />}
                       </div>
                     ))}
                   </div>
@@ -134,7 +179,7 @@ export const WorkflowsView = () => {
                     <p className="text-xs text-muted-foreground mt-0.5">{wf.description}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-shrink-0">
                   <Badge variant="outline" className={`text-xs ${config.color} gap-1`}>
                     {config.icon}
                     {config.label}
@@ -143,70 +188,96 @@ export const WorkflowsView = () => {
                 </div>
               </button>
 
-              {isExpanded && (
-                <div className="border-t border-border/30 p-5 space-y-4">
-                  {/* Visual pipeline */}
-                  <div className="flex items-center gap-3 overflow-x-auto pb-2">
-                    {wf.steps.map((step, i) => (
-                      <div key={step.id} className="flex items-center gap-3">
-                        <div className={cn("rounded-lg border p-3 min-w-[140px]", stepColors[step.type])}>
-                          <div className="flex items-center gap-2 mb-1">
-                            {step.icon}
-                            <span className="text-xs font-medium">{step.label}</span>
-                          </div>
-                          {step.provider && (
-                            <p className="text-[10px] opacity-70">{step.provider}</p>
-                          )}
-                        </div>
-                        {i < wf.steps.length - 1 && (
-                          <ArrowRight className="h-4 w-4 text-muted-foreground/40 flex-shrink-0" />
-                        )}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="border-t border-border/30 p-5 space-y-4">
+                      {/* Visual pipeline */}
+                      <div className="flex items-center gap-3 overflow-x-auto pb-2">
+                        {wf.steps.map((step, si) => (
+                          <motion.div
+                            key={step.id}
+                            initial={{ opacity: 0, x: -12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: si * 0.08 }}
+                            className="flex items-center gap-3"
+                          >
+                            <div className={cn("rounded-lg border p-3 min-w-[140px]", stepColors[step.type])}>
+                              <div className="flex items-center gap-2 mb-1">
+                                {step.icon}
+                                <span className="text-xs font-medium">{step.label}</span>
+                              </div>
+                              {step.provider && <p className="text-[10px] opacity-70">{step.provider}</p>}
+                            </div>
+                            {si < wf.steps.length - 1 && (
+                              <ArrowRight className="h-4 w-4 text-muted-foreground/40 flex-shrink-0" />
+                            )}
+                          </motion.div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
 
-                  {/* Stats */}
-                  <div className="flex items-center gap-6 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Processados:</span>
-                      <span className="ml-2 font-mono font-bold text-foreground">{wf.leadsProcessed.toLocaleString()}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Qualificados:</span>
-                      <span className="ml-2 font-mono font-bold text-success">{wf.leadsQualified.toLocaleString()}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Taxa:</span>
-                      <span className="ml-2 font-mono font-bold text-primary">
-                        {wf.leadsProcessed > 0 ? Math.round((wf.leadsQualified / wf.leadsProcessed) * 100) : 0}%
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Último run:</span>
-                      <span className="ml-2 text-foreground">{wf.lastRun}</span>
-                    </div>
-                  </div>
+                      {/* Stats */}
+                      <div className="flex items-center gap-6 text-sm flex-wrap">
+                        <div>
+                          <span className="text-muted-foreground">Processados:</span>
+                          <span className="ml-2 font-mono font-bold text-foreground">{wf.leadsProcessed.toLocaleString()}</span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Qualificados:</span>
+                          <span className="ml-2 font-mono font-bold text-success">{wf.leadsQualified.toLocaleString()}</span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Taxa:</span>
+                          <span className="ml-2 font-mono font-bold text-primary">
+                            {wf.leadsProcessed > 0 ? Math.round((wf.leadsQualified / wf.leadsProcessed) * 100) : 0}%
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Último run:</span>
+                          <span className="ml-2 text-foreground">{wf.lastRun}</span>
+                        </div>
+                      </div>
 
-                  <div className="flex gap-2">
-                    {wf.status === "active" ? (
-                      <Button size="sm" variant="outline" className="gap-1 text-xs">
-                        <Pause className="h-3 w-3" /> Pausar
-                      </Button>
-                    ) : (
-                      <Button size="sm" className="gap-1 text-xs">
-                        <Play className="h-3 w-3" /> Executar
-                      </Button>
-                    )}
-                    <Button size="sm" variant="outline" className="gap-1 text-xs">
-                      <RotateCcw className="h-3 w-3" /> Re-executar
-                    </Button>
-                    <Button size="sm" variant="outline" className="gap-1 text-xs">
-                      <Settings className="h-3 w-3" /> Configurar
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+                      {/* Progress bar */}
+                      {wf.successRate > 0 && (
+                        <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                          <motion.div
+                            className="h-full bg-primary rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${wf.successRate}%` }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex gap-2 flex-wrap">
+                        {wf.status === "active" ? (
+                          <Button size="sm" variant="outline" className="gap-1 text-xs">
+                            <Pause className="h-3 w-3" /> Pausar
+                          </Button>
+                        ) : (
+                          <Button size="sm" className="gap-1 text-xs">
+                            <Play className="h-3 w-3" /> Executar
+                          </Button>
+                        )}
+                        <Button size="sm" variant="outline" className="gap-1 text-xs">
+                          <RotateCcw className="h-3 w-3" /> Re-executar
+                        </Button>
+                        <Button size="sm" variant="outline" className="gap-1 text-xs">
+                          <Settings className="h-3 w-3" /> Configurar
+                        </Button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           );
         })}
       </div>
