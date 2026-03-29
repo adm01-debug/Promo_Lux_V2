@@ -141,7 +141,7 @@ const Index = () => {
             return (
               <div key={item.id}>
                 {showSection && (
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 px-3 pt-4 pb-1.5 font-medium">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-3 pt-4 pb-1.5 font-medium">
                     {item.section}
                   </p>
                 )}
