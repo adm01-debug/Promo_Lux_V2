@@ -36,7 +36,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; section?: stri
 ];
 
 const Index = () => {
-  const [activeView, setActiveView] = useState<View>("dashboard");
+  const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const unreadCount = useNotificationCount();
@@ -44,7 +44,7 @@ const Index = () => {
   let currentSection = "";
 
   const handleNav = (id: View) => {
-    setActiveView(id);
+    navigate(id);
     setSidebarOpen(false);
   };
 
