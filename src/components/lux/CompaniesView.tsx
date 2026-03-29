@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Building2, MapPin, Tag, Search, Download, Star, Eye, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Building2, MapPin, Tag, Search, Download, Star, Eye, Filter, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -146,6 +146,8 @@ export const CompaniesView = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "name" | "sector">("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const toggleSet = <T extends string>(set: Set<T>, value: T, setter: (s: Set<T>) => void) => {
     const next = new Set(set);
@@ -191,8 +193,15 @@ export const CompaniesView = () => {
       return sortDir === "desc" ? -cmp : cmp;
     });
 
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
+
     return result;
   }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores, sortBy, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedItems = filtered.slice((safeCurrentPage - 1) * itemsPerPage, safeCurrentPage * itemsPerPage);
 
   // Facet counts based on current data (not filtered, so user sees total)
   const sectorFacets: FacetItem[] = useMemo(() => {
@@ -426,7 +435,7 @@ export const CompaniesView = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/20">
-                  {filtered.map((company, i) => (
+                  {paginatedItems.map((company, i) => (
                     <motion.tr
                       key={company.id}
                       initial={{ opacity: 0 }}
@@ -503,6 +512,57 @@ export const CompaniesView = () => {
                 <button onClick={clearAllFilters} className="text-xs text-primary hover:underline mt-1">
                   Limpar filtros
                 </button>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {filtered.length > 0 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-border/30">
+                <span className="text-xs text-muted-foreground">
+                  Mostrando {(safeCurrentPage - 1) * itemsPerPage + 1}–{Math.min(safeCurrentPage * itemsPerPage, filtered.length)} de {filtered.length} empresas
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    disabled={safeCurrentPage <= 1}
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === totalPages || Math.abs(p - safeCurrentPage) <= 1)
+                    .reduce<(number | "...")[]>((acc, p, idx, arr) => {
+                      if (idx > 0 && p - (arr[idx - 1]) > 1) acc.push("...");
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((p, i) =>
+                      p === "..." ? (
+                        <span key={`dot-${i}`} className="px-1 text-xs text-muted-foreground">…</span>
+                      ) : (
+                        <Button
+                          key={p}
+                          variant={p === safeCurrentPage ? "default" : "ghost"}
+                          size="icon"
+                          className="h-7 w-7 text-xs"
+                          onClick={() => setCurrentPage(p as number)}
+                        >
+                          {p}
+                        </Button>
+                      )
+                    )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    disabled={safeCurrentPage >= totalPages}
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             )}
           </div>
