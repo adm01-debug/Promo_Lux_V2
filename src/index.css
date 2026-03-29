@@ -84,5 +84,53 @@
     background: hsl(var(--lux-surface) / 0.6);
     backdrop-filter: blur(12px);
     border: 1px solid hsl(var(--border) / 0.5);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .glass:hover {
+    border-color: hsl(var(--border) / 0.8);
+  }
+
+  .glass-interactive {
+    background: hsl(var(--lux-surface) / 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .glass-interactive:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 24px -8px hsl(var(--primary) / 0.15);
+    transform: translateY(-1px);
+  }
+
+  .glass-interactive:active {
+    transform: translateY(0);
+  }
+
+  /* Focus ring for accessibility */
+  .focus-ring {
+    @apply outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  /* Smooth card lift on hover */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -12px hsl(var(--primary) / 0.2);
+  }
+
+  /* Subtle pulse for live indicators */
+  .live-indicator {
+    animation: live-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
 }
