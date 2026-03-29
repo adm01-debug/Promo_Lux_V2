@@ -10,39 +10,39 @@
   }
 
   .dark {
-    --background: 222 28% 4%;
-    --foreground: 45 10% 95%;
-    --card: 222 24% 8%;
-    --card-foreground: 45 10% 95%;
-    --popover: 222 24% 8%;
-    --popover-foreground: 45 10% 95%;
-    --primary: 45 100% 58%;
-    --primary-foreground: 222 28% 4%;
-    --secondary: 222 20% 14%;
-    --secondary-foreground: 45 10% 90%;
-    --muted: 222 18% 12%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 45 90% 50%;
-    --accent-foreground: 222 28% 4%;
-    --destructive: 0 80% 55%;
+    --background: 225 30% 3%;
+    --foreground: 48 20% 96%;
+    --card: 225 26% 7%;
+    --card-foreground: 48 20% 96%;
+    --popover: 225 26% 7%;
+    --popover-foreground: 48 20% 96%;
+    --primary: 45 100% 55%;
+    --primary-foreground: 225 30% 3%;
+    --secondary: 225 22% 13%;
+    --secondary-foreground: 48 15% 92%;
+    --muted: 225 20% 10%;
+    --muted-foreground: 220 15% 60%;
+    --accent: 45 100% 50%;
+    --accent-foreground: 225 30% 3%;
+    --destructive: 0 85% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 18% 18%;
-    --input: 222 18% 18%;
-    --ring: 45 100% 58%;
-    --success: 142 76% 48%;
-    --success-foreground: 222 28% 4%;
-    --warning: 38 95% 52%;
-    --warning-foreground: 222 28% 4%;
-    --lux-glow: 45 100% 58%;
-    --lux-surface: 222 24% 8%;
-    --sidebar-background: 222 28% 5%;
-    --sidebar-foreground: 45 10% 90%;
-    --sidebar-primary: 45 100% 58%;
-    --sidebar-primary-foreground: 222 28% 4%;
-    --sidebar-accent: 222 20% 14%;
-    --sidebar-accent-foreground: 45 10% 90%;
-    --sidebar-border: 222 18% 18%;
-    --sidebar-ring: 45 100% 58%;
+    --border: 225 20% 20%;
+    --input: 225 20% 20%;
+    --ring: 45 100% 55%;
+    --success: 142 80% 50%;
+    --success-foreground: 225 30% 3%;
+    --warning: 38 100% 55%;
+    --warning-foreground: 225 30% 3%;
+    --lux-glow: 45 100% 55%;
+    --lux-surface: 225 26% 7%;
+    --sidebar-background: 225 30% 4%;
+    --sidebar-foreground: 48 15% 92%;
+    --sidebar-primary: 45 100% 55%;
+    --sidebar-primary-foreground: 225 30% 3%;
+    --sidebar-accent: 225 22% 13%;
+    --sidebar-accent-foreground: 48 15% 92%;
+    --sidebar-border: 225 20% 20%;
+    --sidebar-ring: 45 100% 55%;
   }
 
   .light {
