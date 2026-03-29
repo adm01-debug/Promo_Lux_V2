@@ -51,6 +51,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <CommandPalette onNavigate={handleNav} />
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
