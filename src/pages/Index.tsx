@@ -188,6 +188,7 @@ const Index = () => {
             {activeView === "ai-agent" && <AIAgentView />}
             {activeView === "analytics" && <AnalyticsView />}
             {activeView === "settings" && <SettingsView />}
+            {activeView === "gmaps" && <GmapsScraperView />}
           </motion.div>
         </main>
       </div>
