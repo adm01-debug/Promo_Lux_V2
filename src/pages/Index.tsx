@@ -110,7 +110,7 @@ const Index = () => {
         aria-label="Navegação principal"
         role="navigation"
         className={cn(
-          "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
+          "w-64 border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
           "lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
