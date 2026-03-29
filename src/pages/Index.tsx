@@ -220,7 +220,7 @@ const Index = () => {
           </div>
         </header>
 
-        <main className="p-4 lg:p-6">
+        <main className="p-4 lg:p-6" aria-label={currentLabel}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
