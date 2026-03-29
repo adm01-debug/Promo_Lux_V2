@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
+import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -19,6 +20,8 @@ import { NotificationsPanel, useNotificationCount } from "@/components/lux/Notif
 import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { CommandPalette } from "@/components/lux/CommandPalette";
+import { OnboardingTour } from "@/components/lux/OnboardingTour";
+import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -48,6 +51,8 @@ const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const prevView = useRef(activeView);
   const unreadCount = useNotificationCount();
 
   // Mobile swipe gestures
@@ -55,6 +60,16 @@ const Index = () => {
     onSwipeRight: useCallback(() => setSidebarOpen(true), []),
     onSwipeLeft: useCallback(() => setSidebarOpen(false), []),
   });
+
+  // Track view transitions for progress bar
+  useEffect(() => {
+    if (activeView !== prevView.current) {
+      setIsTransitioning(true);
+      prevView.current = activeView;
+      const timer = setTimeout(() => setIsTransitioning(false), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [activeView]);
 
   let currentSection = "";
 
@@ -65,7 +80,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} />
+      <OnboardingTour />
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -190,7 +207,8 @@ const Index = () => {
                 <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
               </button>
             </div>
-            <div className="flex items-center gap-2 relative">
+            <div className="flex items-center gap-1.5 relative">
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 size="icon"

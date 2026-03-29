@@ -54,7 +54,55 @@
     --sidebar-border: 220 14% 14%;
     --sidebar-ring: 45 100% 58%;
   }
-}
+  }
+
+  .light {
+    --background: 40 20% 96%;
+    --foreground: 220 20% 10%;
+
+    --card: 40 15% 93%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 40 15% 93%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 45 100% 42%;
+    --primary-foreground: 40 20% 98%;
+
+    --secondary: 40 10% 88%;
+    --secondary-foreground: 220 16% 25%;
+
+    --muted: 40 10% 90%;
+    --muted-foreground: 215 10% 42%;
+
+    --accent: 45 80% 38%;
+    --accent-foreground: 40 20% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 40 10% 82%;
+    --input: 40 10% 82%;
+    --ring: 45 100% 42%;
+
+    --success: 142 71% 35%;
+    --success-foreground: 40 20% 98%;
+
+    --warning: 38 92% 45%;
+    --warning-foreground: 220 20% 10%;
+
+    --lux-glow: 45 100% 42%;
+    --lux-surface: 40 15% 95%;
+
+    --sidebar-background: 40 15% 94%;
+    --sidebar-foreground: 220 16% 25%;
+    --sidebar-primary: 45 100% 42%;
+    --sidebar-primary-foreground: 40 20% 98%;
+    --sidebar-accent: 40 10% 88%;
+    --sidebar-accent-foreground: 220 16% 25%;
+    --sidebar-border: 40 10% 82%;
+    --sidebar-ring: 45 100% 42%;
+  }
 
 @layer base {
   * {
@@ -84,5 +132,53 @@
     background: hsl(var(--lux-surface) / 0.6);
     backdrop-filter: blur(12px);
     border: 1px solid hsl(var(--border) / 0.5);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .glass:hover {
+    border-color: hsl(var(--border) / 0.8);
+  }
+
+  .glass-interactive {
+    background: hsl(var(--lux-surface) / 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .glass-interactive:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 24px -8px hsl(var(--primary) / 0.15);
+    transform: translateY(-1px);
+  }
+
+  .glass-interactive:active {
+    transform: translateY(0);
+  }
+
+  /* Focus ring for accessibility */
+  .focus-ring {
+    @apply outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  /* Smooth card lift on hover */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -12px hsl(var(--primary) / 0.2);
+  }
+
+  /* Subtle pulse for live indicators */
+  .live-indicator {
+    animation: live-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
 }

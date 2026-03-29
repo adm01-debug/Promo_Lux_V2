@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TableSkeleton } from "@/components/lux/ViewSkeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { StepProgress } from "@/components/lux/StepProgress";
 import {
   Play, Pause, Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, Globe, Linkedin,
   Database, Mail, Filter, RotateCcw, Settings, ChevronRight, Zap, TrendingUp,
@@ -153,6 +154,13 @@ export const WorkflowsView = () => {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
+              {/* Step progress indicator */}
+              <StepProgress
+                steps={defaultSteps.map(s => s.label)}
+                currentStep={createMutation.isPending ? defaultSteps.length : 0}
+                className="py-2"
+              />
+
               {/* Pipeline preview */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2">
                 {defaultSteps.map((step, i) => (
