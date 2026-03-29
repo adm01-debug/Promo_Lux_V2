@@ -21,6 +21,7 @@ import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { CommandPalette } from "@/components/lux/CommandPalette";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
+import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 
