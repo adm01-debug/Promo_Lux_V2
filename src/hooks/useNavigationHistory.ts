@@ -68,7 +68,24 @@ export function useNavigationHistory() {
     });
     setHistoryIndex((prev) => prev + 1);
     setActiveView(view);
+    // Scroll to top on navigation
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [historyIndex]);
+
+  // Keyboard shortcuts: Alt+1..9
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.altKey && e.key >= "1" && e.key <= "9") {
+        const idx = parseInt(e.key) - 1;
+        if (idx < SHORTCUT_VIEWS.length) {
+          e.preventDefault();
+          navigate(SHORTCUT_VIEWS[idx]);
+        }
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [navigate]);
 
   const goBack = useCallback(() => {
     if (historyIndex > 0) {
