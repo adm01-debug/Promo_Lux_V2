@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search } from "lucide-react";
+import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -7,18 +7,28 @@ import { DashboardView } from "@/components/lux/DashboardView";
 import { ICPConfigView } from "@/components/lux/ICPConfigView";
 import { WorkflowsView } from "@/components/lux/WorkflowsView";
 import { CompaniesView } from "@/components/lux/CompaniesView";
+import { IntentSignalsView } from "@/components/lux/IntentSignalsView";
+import { CampaignsView } from "@/components/lux/CampaignsView";
+import { AIAgentView } from "@/components/lux/AIAgentView";
+import { AnalyticsView } from "@/components/lux/AnalyticsView";
 
-type View = "dashboard" | "icp" | "workflows" | "companies";
+type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics";
 
-const navItems: { id: View; label: string; icon: React.ReactNode }[] = [
-  { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
-  { id: "icp", label: "Configurar IPC", icon: <Target className="h-4 w-4" /> },
-  { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" /> },
+const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
+  { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
+  { id: "analytics", label: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
+  { id: "icp", label: "Configurar IPC", icon: <Target className="h-4 w-4" />, section: "Prospecção" },
   { id: "companies", label: "Empresas", icon: <Building2 className="h-4 w-4" /> },
+  { id: "intent", label: "Sinais de Intenção", icon: <Radar className="h-4 w-4" /> },
+  { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
+  { id: "campaigns", label: "Campanhas", icon: <Mail className="h-4 w-4" /> },
+  { id: "ai-agent", label: "Agente IA", icon: <Bot className="h-4 w-4" /> },
 ];
 
 const Index = () => {
   const [activeView, setActiveView] = useState<View>("dashboard");
+
+  let currentSection = "";
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -34,28 +44,41 @@ const Index = () => {
                 LUX <span className="text-primary glow-text">IA</span>
               </h1>
               <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-                Automação & Prospecção
+                Sales Intelligence Platform
               </p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveView(item.id)}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
-                activeView === item.id
-                  ? "bg-primary/10 text-primary glow-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-              )}
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          ))}
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          {navItems.map((item) => {
+            const showSection = item.section && item.section !== currentSection;
+            if (item.section) currentSection = item.section;
+            return (
+              <div key={item.id}>
+                {showSection && (
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 px-3 pt-4 pb-1.5 font-medium">
+                    {item.section}
+                  </p>
+                )}
+                <button
+                  onClick={() => setActiveView(item.id)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                    activeView === item.id
+                      ? "bg-primary/10 text-primary glow-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  )}
+                >
+                  {item.icon}
+                  {item.label}
+                  {item.id === "intent" && (
+                    <span className="ml-auto text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold">5</span>
+                  )}
+                </button>
+              </div>
+            );
+          })}
         </nav>
 
         <div className="p-4 border-t border-border/50">
@@ -63,7 +86,7 @@ const Index = () => {
             <p className="text-xs text-muted-foreground">Status do Sistema</p>
             <div className="flex items-center gap-2 mt-1">
               <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs text-success font-medium">Online — 3 automações ativas</span>
+              <span className="text-xs text-success font-medium">Online — 3 workflows ativos</span>
             </div>
           </div>
         </div>
@@ -71,13 +94,12 @@ const Index = () => {
 
       {/* Main area */}
       <div className="flex-1 ml-64">
-        {/* Top bar */}
         <header className="border-b border-border/50 glass sticky top-0 z-40">
           <div className="flex items-center justify-between h-14 px-6">
             <div className="flex items-center gap-3 flex-1 max-w-md">
               <Search className="h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar empresas, automações..."
+                placeholder="Buscar empresas, automações, sinais..."
                 className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm h-8 placeholder:text-muted-foreground/50"
               />
             </div>
@@ -101,6 +123,10 @@ const Index = () => {
           {activeView === "icp" && <ICPConfigView />}
           {activeView === "workflows" && <WorkflowsView />}
           {activeView === "companies" && <CompaniesView />}
+          {activeView === "intent" && <IntentSignalsView />}
+          {activeView === "campaigns" && <CampaignsView />}
+          {activeView === "ai-agent" && <AIAgentView />}
+          {activeView === "analytics" && <AnalyticsView />}
         </main>
       </div>
     </div>
