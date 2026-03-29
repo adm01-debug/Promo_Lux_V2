@@ -149,6 +149,7 @@ const Index = () => {
                   const shortcut = getShortcut(item.id);
                   const btn = (
                     <button
+                      data-tour={item.id}
                       onClick={() => handleNav(item.id)}
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
@@ -208,6 +209,7 @@ const Index = () => {
                 currentLabel={currentLabel}
               />
               <button
+                data-tour="search"
                 onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
                 className="hidden sm:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer ml-2"
               >
@@ -216,7 +218,7 @@ const Index = () => {
                 <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
               </button>
             </div>
-            <div className="flex items-center gap-1.5 relative">
+            <div data-tour="header-actions" className="flex items-center gap-1.5 relative">
               <ThemeToggle />
               <Button
                 variant="ghost"
