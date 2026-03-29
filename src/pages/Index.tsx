@@ -80,11 +80,15 @@ const Index = () => {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className={cn(
-        "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
-        "lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      )}>
+      <aside
+        aria-label="Navegação principal"
+        role="navigation"
+        className={cn(
+          "w-64 border-r border-border/50 glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
+          "lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+      >
         <div className="p-5 border-b border-border/50">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
