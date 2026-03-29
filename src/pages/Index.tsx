@@ -102,7 +102,7 @@ const Index = () => {
                 Sales Intelligence Platform
               </p>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground">
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground" aria-label="Fechar menu">
               <X className="h-5 w-5" />
             </button>
           </div>
