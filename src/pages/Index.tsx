@@ -1,29 +1,32 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { DashboardView } from "@/components/lux/DashboardView";
-import { ICPConfigView } from "@/components/lux/ICPConfigView";
-import { WorkflowsView } from "@/components/lux/WorkflowsView";
-import { CompaniesView } from "@/components/lux/CompaniesView";
-import { IntentSignalsView } from "@/components/lux/IntentSignalsView";
-import { CampaignsView } from "@/components/lux/CampaignsView";
-import { AIAgentView } from "@/components/lux/AIAgentView";
-import { AnalyticsView } from "@/components/lux/AnalyticsView";
-import { SettingsView } from "@/components/lux/SettingsView";
-import { GmapsScraperView } from "@/components/lux/GmapsScraperView";
-import { CompaniesMapView } from "@/components/lux/CompaniesMapView";
+import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
-import { StakeholderFinderView } from "@/components/lux/StakeholderFinderView";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { CommandPalette } from "@/components/lux/CommandPalette";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
+
+// Lazy-loaded views for code splitting
+const DashboardView = lazy(() => import("@/components/lux/DashboardView").then(m => ({ default: m.DashboardView })));
+const ICPConfigView = lazy(() => import("@/components/lux/ICPConfigView").then(m => ({ default: m.ICPConfigView })));
+const WorkflowsView = lazy(() => import("@/components/lux/WorkflowsView").then(m => ({ default: m.WorkflowsView })));
+const CompaniesView = lazy(() => import("@/components/lux/CompaniesView").then(m => ({ default: m.CompaniesView })));
+const IntentSignalsView = lazy(() => import("@/components/lux/IntentSignalsView").then(m => ({ default: m.IntentSignalsView })));
+const CampaignsView = lazy(() => import("@/components/lux/CampaignsView").then(m => ({ default: m.CampaignsView })));
+const AIAgentView = lazy(() => import("@/components/lux/AIAgentView").then(m => ({ default: m.AIAgentView })));
+const AnalyticsView = lazy(() => import("@/components/lux/AnalyticsView").then(m => ({ default: m.AnalyticsView })));
+const SettingsView = lazy(() => import("@/components/lux/SettingsView").then(m => ({ default: m.SettingsView })));
+const GmapsScraperView = lazy(() => import("@/components/lux/GmapsScraperView").then(m => ({ default: m.GmapsScraperView })));
+const CompaniesMapView = lazy(() => import("@/components/lux/CompaniesMapView").then(m => ({ default: m.CompaniesMapView })));
+const StakeholderFinderView = lazy(() => import("@/components/lux/StakeholderFinderView").then(m => ({ default: m.StakeholderFinderView })));
 
 const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
 
