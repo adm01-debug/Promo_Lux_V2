@@ -80,6 +80,7 @@ const Index = () => {
     <div className="min-h-screen bg-background flex">
       <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} />
+      <OnboardingTour />
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
