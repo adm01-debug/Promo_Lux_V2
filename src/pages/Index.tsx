@@ -147,15 +147,16 @@ const Index = () => {
                 onNavigate={handleNav}
                 currentLabel={currentLabel}
               />
-            <button
-              onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-              className="hidden sm:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-            >
-              <Search className="h-3.5 w-3.5" />
-              <span>Buscar...</span>
-              <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
-            </button>
+              <button
+                onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+                className="hidden sm:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer ml-2"
+              >
+                <Search className="h-3.5 w-3.5" />
+                <span>Buscar...</span>
+                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
+              </button>
             </div>
+            <div className="flex items-center gap-2 relative">
               <Button
                 variant="ghost"
                 size="icon"
