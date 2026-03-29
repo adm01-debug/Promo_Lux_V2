@@ -244,9 +244,21 @@ const Index = () => {
               >
                 <Settings className="h-4 w-4" />
               </Button>
-              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary ml-2">
-                LX
-              </div>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={signOut}>
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Sair</TooltipContent>
+              </Tooltip>
+              {user?.user_metadata?.avatar_url ? (
+                <img src={user.user_metadata.avatar_url} alt="Avatar" className="h-8 w-8 rounded-full ml-2" />
+              ) : (
+                <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary ml-2">
+                  {user?.email?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )}
             </div>
           </div>
         </header>
