@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StepProgress } from "@/components/lux/StepProgress";
 import {

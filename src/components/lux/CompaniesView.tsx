@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
+import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Company {
