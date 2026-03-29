@@ -435,7 +435,7 @@ export const CompaniesView = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/20">
-                  {filtered.map((company, i) => (
+                  {paginatedItems.map((company, i) => (
                     <motion.tr
                       key={company.id}
                       initial={{ opacity: 0 }}
