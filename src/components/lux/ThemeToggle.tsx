@@ -11,6 +11,8 @@ const skins: { id: Skin; label: string; color: string }[] = [
   { id: "blue", label: "Azul Neon", color: "bg-[hsl(210,100%,58%)]" },
   { id: "green", label: "Esmeralda", color: "bg-[hsl(155,85%,50%)]" },
   { id: "red", label: "Rubi", color: "bg-[hsl(0,85%,58%)]" },
+  { id: "purple", label: "Roxo", color: "bg-[hsl(270,85%,60%)]" },
+  { id: "orange", label: "Laranja", color: "bg-[hsl(25,95%,55%)]" },
 ];
 
 export const ThemeToggle = () => {
