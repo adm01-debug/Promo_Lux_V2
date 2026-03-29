@@ -35,6 +35,9 @@ const VIEW_SECTIONS: Record<View, string> = {
 
 const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders"];
 
+// Alt+1..9 shortcuts map to top nav items
+const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
+
 function isValidView(v: string | null): v is View {
   return !!v && ALL_VIEWS.includes(v as View);
 }
