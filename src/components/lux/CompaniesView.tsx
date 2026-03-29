@@ -193,8 +193,15 @@ export const CompaniesView = () => {
       return sortDir === "desc" ? -cmp : cmp;
     });
 
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
+
     return result;
   }, [search, selectedSectors, selectedLocations, selectedSources, selectedStatus, selectedScores, sortBy, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedItems = filtered.slice((safeCurrentPage - 1) * itemsPerPage, safeCurrentPage * itemsPerPage);
 
   // Facet counts based on current data (not filtered, so user sees total)
   const sectorFacets: FacetItem[] = useMemo(() => {
