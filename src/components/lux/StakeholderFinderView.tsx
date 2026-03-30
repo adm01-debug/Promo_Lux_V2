@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { DataError } from "@/components/lux/DataError";
 import { useQuery } from "@tanstack/react-query";
 import {
   Users, Search, Filter, Crown, Briefcase, Building2, Mail, Phone,
@@ -64,7 +65,7 @@ export const StakeholderFinderView = () => {
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const { data: stakeholders = [], isLoading } = useQuery({
+  const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
     queryKey: ["stakeholders"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -281,7 +282,9 @@ export const StakeholderFinderView = () => {
             </span>
           </div>
 
-          {isLoading ? (
+          {stakeholdersError ? (
+            <DataError message={stakeholdersError.message} onRetry={() => refetch()} />
+          ) : isLoading ? (
             <ViewSkeleton />
           ) : filtered.length === 0 ? (
             <div className="glass rounded-lg p-12 text-center">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StepProgress } from "@/components/lux/StepProgress";
 import {
@@ -63,7 +64,7 @@ export const WorkflowsView = () => {
   const [radius, setRadius] = useState(10000);
   const [extractEmail, setExtractEmail] = useState(true);
 
-  const { data: workflows = [], isLoading } = useQuery({
+  const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
     queryKey: ["workflows"],
     queryFn: workflowApi.list,
     refetchInterval: 5000,
@@ -221,8 +222,9 @@ export const WorkflowsView = () => {
         ))}
       </div>
 
-      {/* Loading state */}
-      {isLoading ? (
+      {workflowsError ? (
+        <DataError message={workflowsError.message} onRetry={() => refetch()} />
+      ) : isLoading ? (
         <ViewSkeleton />
       ) : workflows.length === 0 ? (
         <div className="glass rounded-lg p-8 text-center">

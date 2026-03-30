@@ -8,6 +8,7 @@ import { CompanyFilters, CompanyFiltersState, getScoreRange, getCity } from "@/c
 import { CompanyPagination } from "@/components/lux/CompanyPagination";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
+import { DataError } from "@/components/lux/DataError";
 import { motion } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,7 +67,7 @@ export const CompaniesView = () => {
   const queryClient = useQueryClient();
   const itemsPerPage = 20;
 
-  const { data: rawCompanies, isLoading } = useQuery({
+  const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery({
     queryKey: ["companies-list"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -242,6 +243,7 @@ export const CompaniesView = () => {
   filters.selectedScores.forEach((v) => activeFilterChips.push({ label: `Score ${v}`, onRemove: () => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v) })) }));
 
   if (isLoading) return <ViewSkeleton />;
+  if (companiesError) return <DataError message={companiesError.message} onRetry={() => refetch()} />;
 
   return (
     <div className="space-y-5">
