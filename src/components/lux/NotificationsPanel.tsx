@@ -111,33 +111,38 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
     return notifications.filter((n) => n.type === activeTab);
   }, [notifications, activeTab]);
 
+  const invalidateAll = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+    queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+  }, [queryClient]);
+
   const markAllRead = useCallback(async () => {
     const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
     if (unreadIds.length === 0) return;
     await supabase.from("notifications").update({ read: true }).in("id", unreadIds);
-    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
-  }, [notifications, queryClient]);
+    invalidateAll();
+  }, [notifications, invalidateAll]);
 
   const markRead = useCallback(
     async (id: string) => {
       await supabase.from("notifications").update({ read: true }).eq("id", id);
-      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+      invalidateAll();
     },
-    [queryClient]
+    [invalidateAll]
   );
 
   const dismiss = useCallback(
     async (id: string) => {
       await supabase.from("notifications").delete().eq("id", id);
-      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+      invalidateAll();
     },
-    [queryClient]
+    [invalidateAll]
   );
 
   const clearAll = useCallback(async () => {
     await supabase.from("notifications").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
-  }, [queryClient]);
+    invalidateAll();
+  }, [invalidateAll]);
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
