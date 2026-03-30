@@ -155,7 +155,7 @@ const Index = () => {
         Pular para o conteúdo
       </a>
       <TopProgressBar isAnimating={isTransitioning} />
-      <CommandPalette onNavigate={(id) => handleNav(id)} />
+      <CommandPalette onNavigate={(id) => handleNav(id)} recentViews={recentViews} />
       <OnboardingTour />
 
       {/* Unsaved changes dialog */}
