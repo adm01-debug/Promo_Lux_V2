@@ -77,6 +77,7 @@ const Index = () => {
 
   const mainMargin = collapsed ? "lg:ml-16" : "lg:ml-64";
   const ActiveComponent = VIEW_MAP[activeView];
+  const ActiveSkeleton = getViewSkeleton(activeView);
 
   return (
     <div className="min-h-screen bg-background flex">
