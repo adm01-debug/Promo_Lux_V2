@@ -205,10 +205,10 @@ function CollapsedNavButton({
           onClick={onClick}
           onMouseEnter={onPrefetch}
           className={cn(
-            "w-full flex items-center justify-center p-2 rounded-lg transition-all",
+            "w-full flex items-center justify-center p-2 rounded-lg transition-all duration-200 active:scale-95",
             isActive
-              ? "bg-primary/15 text-primary border border-primary/25"
-              : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+              ? "bg-primary/15 text-primary border border-primary/25 shadow-[0_0_8px_hsl(var(--primary)/0.15)]"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 hover:scale-105"
           )}
         >
           <Icon className="h-4 w-4" />
