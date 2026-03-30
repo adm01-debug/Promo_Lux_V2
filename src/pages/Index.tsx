@@ -121,6 +121,7 @@ const Index = () => {
 
   const handleNav = (id: View) => {
     confirmNavigation(() => {
+      trackView(id);
       navigate(id);
       setSidebarOpen(false);
     });
