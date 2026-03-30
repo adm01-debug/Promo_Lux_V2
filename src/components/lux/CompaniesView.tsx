@@ -66,7 +66,7 @@ export const CompaniesView = () => {
   const queryClient = useQueryClient();
   const itemsPerPage = 20;
 
-  const { data: rawCompanies, isLoading } = useQuery({
+  const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery({
     queryKey: ["companies-list"],
     queryFn: async () => {
       const { data, error } = await supabase

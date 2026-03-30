@@ -64,7 +64,7 @@ export const StakeholderFinderView = () => {
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const { data: stakeholders = [], isLoading } = useQuery({
+  const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
     queryKey: ["stakeholders"],
     queryFn: async () => {
       const { data, error } = await supabase

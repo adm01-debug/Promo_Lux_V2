@@ -63,7 +63,7 @@ export const WorkflowsView = () => {
   const [radius, setRadius] = useState(10000);
   const [extractEmail, setExtractEmail] = useState(true);
 
-  const { data: workflows = [], isLoading } = useQuery({
+  const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
     queryKey: ["workflows"],
     queryFn: workflowApi.list,
     refetchInterval: 5000,
