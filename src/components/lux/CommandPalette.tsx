@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -22,9 +22,15 @@ import {
   Users,
   Settings,
   Clock,
+  Plus,
+  Search,
+  Loader2,
 } from "lucide-react";
 import { View } from "@/hooks/useNavigationHistory";
 import { RecentView } from "@/hooks/useRecentViews";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
 
 interface CommandPaletteProps {
   onNavigate: (view: View) => void;
@@ -96,8 +102,88 @@ const sections = [
   },
 ];
 
+interface QuickAction {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  action: () => void;
+}
+
 export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteProps) => {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  // Fetch companies for search
+  const { data: companies = [], isLoading: companiesLoading } = useQuery({
+    queryKey: ["command-palette-companies"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("companies")
+        .select("id, name, sector, location, ipc_score")
+        .order("ipc_score", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: open,
+    staleTime: 30_000,
+  });
+
+  // Filter companies by search term
+  const filteredCompanies = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    const q = search.toLowerCase();
+    return companies
+      .filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) ||
+          c.sector?.toLowerCase().includes(q) ||
+          c.location?.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
+  }, [companies, search]);
+
+  // Quick actions
+  const quickActions: QuickAction[] = useMemo(
+    () => [
+      {
+        id: "new-workflow",
+        label: "Criar Workflow",
+        icon: Workflow,
+        action: () => {
+          onNavigate("workflows");
+          toast({ title: "Novo Workflow", description: "Navegando para criar workflow..." });
+        },
+      },
+      {
+        id: "new-campaign",
+        label: "Nova Campanha",
+        icon: Mail,
+        action: () => {
+          onNavigate("campaigns");
+          toast({ title: "Nova Campanha", description: "Navegando para campanhas..." });
+        },
+      },
+      {
+        id: "new-scrape",
+        label: "Nova Raspagem Google Maps",
+        icon: MapPin,
+        action: () => {
+          onNavigate("gmaps");
+          toast({ title: "Nova Raspagem", description: "Navegando para Google Maps Scraper..." });
+        },
+      },
+      {
+        id: "configure-ipc",
+        label: "Configurar IPC",
+        icon: Target,
+        action: () => {
+          onNavigate("icp");
+        },
+      },
+    ],
+    [onNavigate]
+  );
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -110,37 +196,112 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  // Reset search when closing
+  useEffect(() => {
+    if (!open) setSearch("");
+  }, [open]);
+
   const handleSelect = (view: View) => {
     onNavigate(view);
     setOpen(false);
   };
 
+  const handleAction = (action: () => void) => {
+    action();
+    setOpen(false);
+  };
+
+  const handleCompanySelect = (companyName: string) => {
+    onNavigate("companies");
+    setOpen(false);
+    toast({
+      title: "Empresa selecionada",
+      description: `Navegando para "${companyName}"`,
+    });
+  };
+
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Buscar seções, empresas, ações..." />
+      <CommandInput
+        placeholder="Buscar seções, empresas, ações..."
+        value={search}
+        onValueChange={setSearch}
+      />
       <CommandList>
         <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-        {recentViews.length > 0 && (
+
+        {/* Quick Actions */}
+        <CommandGroup heading="Ações Rápidas">
+          {quickActions.map((action) => (
+            <CommandItem
+              key={action.id}
+              value={`ação ${action.label}`}
+              onSelect={() => handleAction(action.action)}
+              className="cursor-pointer"
+            >
+              <Plus className="mr-2 h-4 w-4 text-primary" />
+              <span>{action.label}</span>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+        <CommandSeparator />
+
+        {/* Company search results */}
+        {filteredCompanies.length > 0 && (
           <>
-            <CommandGroup heading="Recentes">
-              {recentViews.map((rv) => {
-                const Icon = VIEW_ICONS[rv.id];
-                return (
-                  <CommandItem
-                    key={rv.id}
-                    value={`recente ${VIEW_LABELS[rv.id]}`}
-                    onSelect={() => handleSelect(rv.id)}
-                    className="cursor-pointer"
-                  >
-                    <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                    <span>{VIEW_LABELS[rv.id]}</span>
-                  </CommandItem>
-                );
-              })}
+            <CommandGroup heading="Empresas encontradas">
+              {filteredCompanies.map((company) => (
+                <CommandItem
+                  key={company.id}
+                  value={`empresa ${company.name} ${company.sector ?? ""} ${company.location ?? ""}`}
+                  onSelect={() => handleCompanySelect(company.name)}
+                  className="cursor-pointer"
+                >
+                  <Building2 className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <div className="flex flex-col">
+                    <span className="text-sm">{company.name}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {[company.sector, company.location, company.ipc_score ? `Score: ${company.ipc_score}` : null]
+                        .filter(Boolean)
+                        .join(" • ")}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
             </CommandGroup>
             <CommandSeparator />
           </>
         )}
+
+        {/* Loading indicator for companies */}
+        {companiesLoading && search.length >= 2 && (
+          <div className="py-3 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            Buscando empresas...
+          </div>
+        )}
+
+        {/* Recent views */}
+        {recentViews.length > 0 && (
+          <>
+            <CommandGroup heading="Recentes">
+              {recentViews.map((rv) => (
+                <CommandItem
+                  key={rv.id}
+                  value={`recente ${VIEW_LABELS[rv.id]}`}
+                  onSelect={() => handleSelect(rv.id)}
+                  className="cursor-pointer"
+                >
+                  <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <span>{VIEW_LABELS[rv.id]}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {/* Navigation sections */}
         {sections.map((section, i) => (
           <div key={section.label}>
             {i > 0 && <CommandSeparator />}
