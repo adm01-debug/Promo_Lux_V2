@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
+import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { View } from "@/hooks/useNavigationHistory";
 import { useState } from "react";
