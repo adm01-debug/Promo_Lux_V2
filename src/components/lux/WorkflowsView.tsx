@@ -222,8 +222,9 @@ export const WorkflowsView = () => {
         ))}
       </div>
 
-      {/* Loading state */}
-      {isLoading ? (
+      {workflowsError ? (
+        <DataError message={workflowsError.message} onRetry={() => refetch()} />
+      ) : isLoading ? (
         <ViewSkeleton />
       ) : workflows.length === 0 ? (
         <div className="glass rounded-lg p-8 text-center">

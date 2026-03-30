@@ -243,6 +243,7 @@ export const CompaniesView = () => {
   filters.selectedScores.forEach((v) => activeFilterChips.push({ label: `Score ${v}`, onRemove: () => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v) })) }));
 
   if (isLoading) return <ViewSkeleton />;
+  if (companiesError) return <DataError message={companiesError.message} onRetry={() => refetch()} />;
 
   return (
     <div className="space-y-5">

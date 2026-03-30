@@ -282,7 +282,9 @@ export const StakeholderFinderView = () => {
             </span>
           </div>
 
-          {isLoading ? (
+          {stakeholdersError ? (
+            <DataError message={stakeholdersError.message} onRetry={() => refetch()} />
+          ) : isLoading ? (
             <ViewSkeleton />
           ) : filtered.length === 0 ? (
             <div className="glass rounded-lg p-12 text-center">
