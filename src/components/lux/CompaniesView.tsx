@@ -46,7 +46,7 @@ const getScoreBg = (score: number) => {
 
 export const CompaniesView = () => {
   const { toast } = useToast();
-  const [filters, setFilters] = useState<CompanyFiltersState>({
+  const [filters, setFilters, resetFilters] = usePersistedFilters<CompanyFiltersState>("companies", {
     search: "",
     selectedSectors: new Set(),
     selectedLocations: new Set(),
