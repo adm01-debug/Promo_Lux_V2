@@ -156,7 +156,7 @@ const Index = () => {
                 exit="exit"
                 transition={{ duration: 0.2, ease: "easeInOut" }}
               >
-                <ActiveComponent />
+                <ActiveComponent onNavigate={handleNav} />
               </motion.div>
             </AnimatePresence>
           </Suspense>
