@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2 } from "lucide-react";
+import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
@@ -8,9 +8,10 @@ import { CompanyPagination } from "@/components/lux/CompanyPagination";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Company {
   id: string;
@@ -58,6 +59,10 @@ export const CompaniesView = () => {
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkEnriching, setIsBulkEnriching] = useState(false);
+  const queryClient = useQueryClient();
   const itemsPerPage = 20;
 
   const { data: rawCompanies, isLoading } = useQuery({
@@ -168,6 +173,56 @@ export const CompaniesView = () => {
 
   const openCompany = (company: Company) => { setSelectedCompany(company); setModalOpen(true); };
 
+  const toggleSelectId = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === paginatedItems.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(paginatedItems.map((c) => c.id)));
+    }
+  };
+
+  const handleBulkDelete = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const { error } = await supabase.from("companies").delete().in("id", Array.from(selectedIds));
+      if (error) throw error;
+      toast({ title: "Empresas removidas", description: `${selectedIds.size} empresa(s) removida(s) com sucesso.` });
+      setSelectedIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch {
+      toast({ title: "Erro ao remover", description: "Não foi possível remover as empresas.", variant: "destructive" });
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  }, [selectedIds, toast, queryClient]);
+
+  const handleBulkEnrich = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    setIsBulkEnriching(true);
+    try {
+      const { error } = await supabase.from("companies").update({ enriched: true }).in("id", Array.from(selectedIds));
+      if (error) throw error;
+      toast({ title: "Empresas enriquecidas", description: `${selectedIds.size} empresa(s) marcada(s) como enriquecida(s).` });
+      setSelectedIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch {
+      toast({ title: "Erro ao enriquecer", description: "Não foi possível atualizar as empresas.", variant: "destructive" });
+    } finally {
+      setIsBulkEnriching(false);
+    }
+  }, [selectedIds, toast, queryClient]);
+
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];
   filters.selectedSectors.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedSectors: toggleSet(f.selectedSectors, v) })) }));
   filters.selectedLocations.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) })) }));
@@ -187,10 +242,28 @@ export const CompaniesView = () => {
             {totalActiveFilters > 0 && ` — ${totalActiveFilters} filtro${totalActiveFilters > 1 ? "s" : ""} ativo${totalActiveFilters > 1 ? "s" : ""}`}
           </p>
         </div>
-        <Button variant="outline" className="gap-2 text-sm" onClick={handleExport} disabled={isExporting}>
-          {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-          {isExporting ? "Exportando..." : "Exportar CSV"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <>
+              <span className="text-xs text-muted-foreground">{selectedIds.size} selecionada(s)</span>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={handleBulkEnrich} disabled={isBulkEnriching}>
+                {isBulkEnriching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                Enriquecer
+              </Button>
+              <Button variant="destructive" size="sm" className="gap-1.5 text-xs" onClick={handleBulkDelete} disabled={isBulkDeleting}>
+                {isBulkDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                Remover
+              </Button>
+              <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSelectedIds(new Set())}>
+                Limpar seleção
+              </Button>
+            </>
+          )}
+          <Button variant="outline" className="gap-2 text-sm" onClick={handleExport} disabled={isExporting}>
+            {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            {isExporting ? "Exportando..." : "Exportar CSV"}
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-5 flex-col lg:flex-row">
@@ -236,6 +309,13 @@ export const CompaniesView = () => {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border/30">
+                    <th className="p-3 w-8" onClick={(e) => e.stopPropagation()}>
+                      <Checkbox
+                        checked={paginatedItems.length > 0 && selectedIds.size === paginatedItems.length}
+                        onCheckedChange={toggleSelectAll}
+                        className="h-4 w-4"
+                      />
+                    </th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium w-8"></th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden md:table-cell">Setor</th>
@@ -248,7 +328,14 @@ export const CompaniesView = () => {
                 </thead>
                 <tbody className="divide-y divide-border/20">
                   {paginatedItems.map((company, i) => (
-                    <motion.tr key={company.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-secondary/20 transition-colors group cursor-pointer" onClick={() => openCompany(company)}>
+                    <motion.tr key={company.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className={`hover:bg-secondary/20 transition-colors group cursor-pointer ${selectedIds.has(company.id) ? "bg-primary/5" : ""}`} onClick={() => openCompany(company)}>
+                      <td className="p-3" onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={selectedIds.has(company.id)}
+                          onCheckedChange={() => toggleSelectId(company.id)}
+                          className="h-4 w-4"
+                        />
+                      </td>
                       <td className="p-3" onClick={(e) => e.stopPropagation()}>
                         <Star className={`h-4 w-4 cursor-pointer transition-colors ${company.starred ? "text-primary fill-primary" : "text-muted-foreground/30 hover:text-primary/50"}`} />
                       </td>
