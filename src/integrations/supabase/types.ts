@@ -22,6 +22,8 @@ export type Database = {
           enriched: boolean | null
           id: string
           ipc_score: number | null
+          lat: number | null
+          lng: number | null
           location: string | null
           name: string
           phone: string | null
@@ -40,6 +42,8 @@ export type Database = {
           enriched?: boolean | null
           id?: string
           ipc_score?: number | null
+          lat?: number | null
+          lng?: number | null
           location?: string | null
           name: string
           phone?: string | null
@@ -58,6 +62,8 @@ export type Database = {
           enriched?: boolean | null
           id?: string
           ipc_score?: number | null
+          lat?: number | null
+          lng?: number | null
           location?: string | null
           name?: string
           phone?: string | null
