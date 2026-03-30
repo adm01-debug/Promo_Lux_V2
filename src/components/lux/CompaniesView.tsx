@@ -223,6 +223,17 @@ export const CompaniesView = () => {
     }
   }, [selectedIds, toast, queryClient]);
 
+  const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
+    queryClient.setQueryData(["companies-list"], (old: any) =>
+      old?.map((c: any) => (c.id === id ? { ...c, starred } : c))
+    );
+    const { error } = await supabase.from("companies").update({ starred }).eq("id", id);
+    if (error) {
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      toast({ title: "Erro ao favoritar", variant: "destructive" });
+    }
+  }, [queryClient, toast]);
+
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];
   filters.selectedSectors.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedSectors: toggleSet(f.selectedSectors, v) })) }));
   filters.selectedLocations.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) })) }));
