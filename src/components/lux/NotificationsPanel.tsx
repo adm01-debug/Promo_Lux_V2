@@ -86,6 +86,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
         { event: "*", schema: "public", table: "notifications" },
         (payload) => {
           queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+          queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
 
           if (payload.eventType === "INSERT") {
             const n = payload.new as Notification;
