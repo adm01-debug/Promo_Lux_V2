@@ -9,7 +9,7 @@ import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { CommandPalette } from "@/components/lux/CommandPalette";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
-import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
+import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
 import { Header } from "@/components/lux/layout/Header";
 import { AnimatePresence, motion } from "framer-motion";
@@ -77,6 +77,7 @@ const Index = () => {
 
   const mainMargin = collapsed ? "lg:ml-16" : "lg:ml-64";
   const ActiveComponent = VIEW_MAP[activeView];
+  const ActiveSkeleton = getViewSkeleton(activeView);
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -145,7 +146,7 @@ const Index = () => {
         />
 
         <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel} role="main">
-          <Suspense fallback={<ViewSkeleton />}>
+          <Suspense fallback={<ActiveSkeleton />}>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={activeView}
