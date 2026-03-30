@@ -54,7 +54,7 @@ describe("Header", () => {
 
   it("renders avatar image when provided", () => {
     renderHeader({ userAvatarUrl: "https://example.com/avatar.png" });
-    expect(screen.getByAlt("Avatar")).toBeInTheDocument();
+    expect(screen.getByAltText("Avatar")).toBeInTheDocument();
   });
 
   it("calls onOpenMobileSidebar on menu click", () => {
