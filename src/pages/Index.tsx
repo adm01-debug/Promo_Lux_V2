@@ -67,6 +67,7 @@ const SIDEBAR_COLLAPSED_KEY = "lux-sidebar-collapsed";
 
 const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel, direction } = useNavigationHistory();
+  const { recentViews, trackView } = useRecentViews();
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   const [sidebarOpen, setSidebarOpen] = useState(false);
