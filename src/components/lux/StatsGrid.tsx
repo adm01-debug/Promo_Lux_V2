@@ -12,6 +12,7 @@ interface StatCardProps {
   trendUp?: boolean;
   progress?: number;
   onClick?: () => void;
+  featured?: boolean;
 }
 
 const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progress, onClick }: StatCardProps) => (
