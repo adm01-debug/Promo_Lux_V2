@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { DataError } from "@/components/lux/DataError";
 import { useQuery } from "@tanstack/react-query";
 import {
   Users, Search, Filter, Crown, Briefcase, Building2, Mail, Phone,
