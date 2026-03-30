@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Bell, Radar, Zap, Building2, CheckCircle2, X, Filter, Trash2, Clock } from "lucide-react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Bell, Radar, Zap, Building2, CheckCircle2, X, Trash2, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sheet,
@@ -13,78 +13,130 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 type NotificationType = "signal" | "scrape" | "enrichment" | "system";
 
 interface Notification {
   id: string;
-  type: NotificationType;
+  type: string;
   title: string;
   message: string;
-  time: string;
   read: boolean;
-  timestamp: Date;
+  created_at: string;
+  metadata: Record<string, unknown> | null;
 }
 
-const iconMap: Record<NotificationType, React.ReactNode> = {
+const iconMap: Record<string, React.ReactNode> = {
   signal: <Radar className="h-4 w-4 text-primary" />,
   scrape: <Zap className="h-4 w-4 text-success" />,
   enrichment: <Building2 className="h-4 w-4 text-accent-foreground" />,
   system: <CheckCircle2 className="h-4 w-4 text-muted-foreground" />,
 };
 
-const typeLabels: Record<NotificationType, string> = {
+const typeLabels: Record<string, string> = {
   signal: "Sinal",
   scrape: "Raspagem",
   enrichment: "Enriquecimento",
   system: "Sistema",
 };
 
-const now = new Date();
-const minutesAgo = (m: number) => new Date(now.getTime() - m * 60_000);
-
-const initialNotifications: Notification[] = [
-  { id: "1", type: "signal", title: "Sinal de alta intenção", message: "TechNova Solutions visitou pricing 3x em 24h — score subiu para 92", time: "Agora", read: false, timestamp: minutesAgo(0) },
-  { id: "2", type: "scrape", title: "Raspagem concluída", message: "142 empresas encontradas via LinkedIn • 89% com email válido", time: "2 min", read: false, timestamp: minutesAgo(2) },
-  { id: "3", type: "enrichment", title: "Enriquecimento finalizado", message: "89 emails verificados via waterfall — 12 bounce detectados", time: "5 min", read: false, timestamp: minutesAgo(5) },
-  { id: "4", type: "system", title: "Workflow ativado", message: "Google Maps → Enrichment pipeline está rodando", time: "10 min", read: true, timestamp: minutesAgo(10) },
-  { id: "5", type: "signal", title: "Nova empresa detectada", message: "CloudBridge Inc — Score IPC 85 • Setor: SaaS B2B", time: "15 min", read: true, timestamp: minutesAgo(15) },
-  { id: "6", type: "scrape", title: "Google Maps finalizado", message: "78 restaurantes em São Paulo coletados com sucesso", time: "32 min", read: true, timestamp: minutesAgo(32) },
-  { id: "7", type: "system", title: "Campanha enviada", message: "Cold outreach lote #4 — 230 emails despachados", time: "1h", read: true, timestamp: minutesAgo(60) },
-  { id: "8", type: "enrichment", title: "Stakeholders encontrados", message: "14 decisores mapeados para TechNova Solutions", time: "2h", read: true, timestamp: minutesAgo(120) },
-];
+function timeAgo(dateStr: string) {
+  try {
+    return formatDistanceToNow(new Date(dateStr), { addSuffix: false, locale: ptBR });
+  } catch {
+    return "";
+  }
+}
 
 interface NotificationsPanelProps {
   open: boolean;
   onClose: () => void;
 }
 
-export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) => {
-  const [notifications, setNotifications] = useState(initialNotifications);
-  const [activeTab, setActiveTab] = useState<"all" | NotificationType>("all");
+const NOTIFICATIONS_KEY = ["notifications"];
 
-  const unreadCount = useMemo(() => notifications.filter(n => !n.read).length, [notifications]);
+export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) => {
+  const [activeTab, setActiveTab] = useState<"all" | NotificationType>("all");
+  const queryClient = useQueryClient();
+
+  const { data: notifications = [], isLoading } = useQuery({
+    queryKey: NOTIFICATIONS_KEY,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return (data ?? []) as Notification[];
+    },
+  });
+
+  // Realtime subscription
+  useEffect(() => {
+    const channel = supabase
+      .channel("notifications-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "notifications" },
+        (payload) => {
+          queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+
+          if (payload.eventType === "INSERT") {
+            const n = payload.new as Notification;
+            toast({
+              title: n.title,
+              description: n.message,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
+  const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
   const filtered = useMemo(() => {
     if (activeTab === "all") return notifications;
-    return notifications.filter(n => n.type === activeTab);
+    return notifications.filter((n) => n.type === activeTab);
   }, [notifications, activeTab]);
 
-  const markAllRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
+  const markAllRead = useCallback(async () => {
+    const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
+    if (unreadIds.length === 0) return;
+    await supabase.from("notifications").update({ read: true }).in("id", unreadIds);
+    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+  }, [notifications, queryClient]);
 
-  const markRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-  };
+  const markRead = useCallback(
+    async (id: string) => {
+      await supabase.from("notifications").update({ read: true }).eq("id", id);
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+    },
+    [queryClient]
+  );
 
-  const dismiss = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-  };
+  const dismiss = useCallback(
+    async (id: string) => {
+      await supabase.from("notifications").delete().eq("id", id);
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+    },
+    [queryClient]
+  );
 
-  const clearAll = () => {
-    setNotifications([]);
-  };
+  const clearAll = useCallback(async () => {
+    await supabase.from("notifications").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+  }, [queryClient]);
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
@@ -129,12 +181,13 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
           <ScrollArea className="flex-1 min-h-0">
             <TabsContent value={activeTab} className="mt-0 p-0">
               <AnimatePresence mode="popLayout">
-                {filtered.length === 0 ? (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-12 text-center"
-                  >
+                {isLoading ? (
+                  <div className="p-12 text-center">
+                    <div className="h-6 w-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">Carregando...</p>
+                  </div>
+                ) : filtered.length === 0 ? (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-12 text-center">
                     <Bell className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
                     <p className="text-sm text-muted-foreground">Nenhuma notificação</p>
                     <p className="text-[11px] text-muted-foreground/60 mt-1">Atividades do workspace aparecerão aqui</p>
@@ -149,7 +202,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        onClick={() => markRead(n.id)}
+                        onClick={() => !n.read && markRead(n.id)}
                         className={cn(
                           "p-4 flex items-start gap-3 cursor-pointer transition-colors group",
                           "hover:bg-secondary/20",
@@ -157,31 +210,37 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
                         )}
                       >
                         <div className="mt-0.5 flex-shrink-0 rounded-lg bg-secondary/40 p-2">
-                          {iconMap[n.type]}
+                          {iconMap[n.type] ?? iconMap.system}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className={cn(
-                              "text-xs font-medium truncate",
-                              !n.read ? "text-foreground" : "text-muted-foreground"
-                            )}>
+                            <p
+                              className={cn(
+                                "text-xs font-medium truncate",
+                                !n.read ? "text-foreground" : "text-muted-foreground"
+                              )}
+                            >
                               {n.title}
                             </p>
-                            {!n.read && (
-                              <div className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                            )}
+                            {!n.read && <div className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />}
                           </div>
                           <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2">{n.message}</p>
                           <div className="flex items-center gap-2 mt-1.5">
                             <Clock className="h-3 w-3 text-muted-foreground/50" />
-                            <span className="text-[10px] text-muted-foreground/60">{n.time}</span>
-                            <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-border/30 text-muted-foreground/60">
-                              {typeLabels[n.type]}
+                            <span className="text-[10px] text-muted-foreground/60">{timeAgo(n.created_at)}</span>
+                            <Badge
+                              variant="outline"
+                              className="text-[9px] px-1 py-0 h-4 border-border/30 text-muted-foreground/60"
+                            >
+                              {typeLabels[n.type] ?? n.type}
                             </Badge>
                           </div>
                         </div>
                         <button
-                          onClick={(e) => { e.stopPropagation(); dismiss(n.id); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            dismiss(n.id);
+                          }}
                           className="text-muted-foreground/30 hover:text-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <X className="h-3.5 w-3.5" />
@@ -200,5 +259,17 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 };
 
 export const useNotificationCount = () => {
-  return initialNotifications.filter(n => !n.read).length;
+  const { data } = useQuery({
+    queryKey: NOTIFICATIONS_KEY,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("id, read")
+        .eq("read", false);
+      if (error) throw error;
+      return data?.length ?? 0;
+    },
+    refetchInterval: 30_000,
+  });
+  return data ?? 0;
 };
