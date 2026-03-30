@@ -56,7 +56,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
   const [activeTab, setActiveTab] = useState<"all" | NotificationType>("all");
   const queryClient = useQueryClient();
 
-  const { data: notifications = [], isLoading } = useQuery({
+  const { data: rawNotifications, isLoading } = useQuery({
     queryKey: NOTIFICATIONS_KEY,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -68,6 +68,9 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
       return (data ?? []) as Notification[];
     },
   });
+
+  // Ensure notifications is always an array (guards against cache pollution)
+  const notifications = Array.isArray(rawNotifications) ? rawNotifications : [];
 
   // Realtime subscription
   useEffect(() => {
