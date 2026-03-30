@@ -146,7 +146,7 @@ const Index = () => {
         />
 
         <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel} role="main">
-          <Suspense fallback={<ViewSkeleton />}>
+          <Suspense fallback={<ActiveSkeleton />}>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={activeView}
