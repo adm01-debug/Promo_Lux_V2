@@ -129,6 +129,38 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
     staleTime: 30_000,
   });
 
+  // Fetch stakeholders for search
+  const { data: stakeholders = [] } = useQuery({
+    queryKey: ["command-palette-stakeholders"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stakeholders")
+        .select("id, full_name, role, company_id, email")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: open,
+    staleTime: 30_000,
+  });
+
+  // Fetch workflows for search
+  const { data: workflows = [] } = useQuery({
+    queryKey: ["command-palette-workflows"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("workflows")
+        .select("id, name, status, description")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: open,
+    staleTime: 30_000,
+  });
+
   // Filter companies by search term
   const filteredCompanies = useMemo(() => {
     if (!search || search.length < 2) return [];
@@ -142,6 +174,33 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
       )
       .slice(0, 5);
   }, [companies, search]);
+
+  // Filter stakeholders
+  const filteredStakeholders = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    const q = search.toLowerCase();
+    return stakeholders
+      .filter(
+        (s) =>
+          s.full_name.toLowerCase().includes(q) ||
+          s.role?.toLowerCase().includes(q) ||
+          s.email?.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
+  }, [stakeholders, search]);
+
+  // Filter workflows
+  const filteredWorkflows = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    const q = search.toLowerCase();
+    return workflows
+      .filter(
+        (w) =>
+          w.name.toLowerCase().includes(q) ||
+          w.description?.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
+  }, [workflows, search]);
 
   // Quick actions
   const quickActions: QuickAction[] = useMemo(
