@@ -263,12 +263,12 @@ export const useNotificationCount = () => {
   const { data } = useQuery({
     queryKey: ["notifications-count"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from("notifications")
-        .select("id", { count: "exact", head: true })
+        .select("*", { count: "exact", head: true })
         .eq("read", false);
       if (error) throw error;
-      return data?.length ?? 0;
+      return count ?? 0;
     },
     refetchInterval: 30_000,
   });
