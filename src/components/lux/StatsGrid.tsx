@@ -15,18 +15,33 @@ interface StatCardProps {
   featured?: boolean;
 }
 
-const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progress, onClick }: StatCardProps) => (
+const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progress, onClick, featured }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
     onClick={onClick}
-    className={`glass rounded-lg p-5 group hover:glow-primary transition-all duration-300 ${onClick ? "cursor-pointer" : ""}`}
+    className={cn(
+      "glass rounded-lg p-5 group transition-all duration-300",
+      onClick && "cursor-pointer",
+      featured
+        ? "border-primary/40 shadow-[0_0_24px_-6px_hsl(var(--primary)/0.25)] hover:shadow-[0_0_32px_-4px_hsl(var(--primary)/0.35)]"
+        : "hover:glow-primary"
+    )}
   >
     <div className="flex items-start justify-between mb-3">
-      <span className="text-muted-foreground text-xs uppercase tracking-widest">{title}</span>
-      <div className="text-primary/70 group-hover:text-primary transition-colors">{icon}</div>
+      <span className={cn(
+        "text-xs uppercase tracking-widest",
+        featured ? "text-primary font-semibold" : "text-muted-foreground"
+      )}>{title}</span>
+      <div className={cn(
+        "transition-colors",
+        featured ? "text-primary" : "text-primary/70 group-hover:text-primary"
+      )}>{icon}</div>
     </div>
-    <p className="text-3xl font-bold text-foreground tracking-tight font-mono">{value}</p>
+    <p className={cn(
+      "font-bold text-foreground tracking-tight font-mono",
+      featured ? "text-4xl" : "text-3xl"
+    )}>{value}</p>
     <div className="flex items-center gap-2 mt-1">
       <span className="text-muted-foreground text-sm">{subtitle}</span>
       {trend && (
