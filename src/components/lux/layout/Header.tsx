@@ -112,13 +112,12 @@ export const Header = ({
             </TooltipTrigger>
             <TooltipContent>Sair</TooltipContent>
           </Tooltip>
-          {userAvatarUrl ? (
-            <img src={userAvatarUrl} alt="Avatar" className="h-8 w-8 rounded-full ml-2" />
-          ) : (
-            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary ml-2">
-              {userEmail?.charAt(0).toUpperCase() || "U"}
-            </div>
-          )}
+          <GradientAvatar
+            src={userAvatarUrl}
+            email={userEmail}
+            size="md"
+            className="ml-2"
+          />
         </div>
       </div>
     </header>
