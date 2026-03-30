@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Settings, User, Bell, Link2, Key, Shield, Moon, Sun, Save, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +7,9 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";
 
@@ -27,11 +30,55 @@ const integrations = [
 ];
 
 export const SettingsView = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  // Account fields
+  const [fullName, setFullName] = useState("");
+  const [company, setCompany] = useState("LUX IA");
+  const [role, setRole] = useState("CEO & Founder");
+
+  // Notification prefs
   const [emailNotifs, setEmailNotifs] = useState(true);
   const [signalNotifs, setSignalNotifs] = useState(true);
   const [scrapeNotifs, setScrapeNotifs] = useState(true);
   const [weeklyReport, setWeeklyReport] = useState(false);
+
+  // Load profile data
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.full_name) setFullName(data.full_name);
+      });
+  }, [user]);
+
+  const handleSaveAccount = async () => {
+    if (!user) return;
+    setSaving(true);
+    setSaved(false);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ full_name: fullName })
+        .eq("id", user.id);
+
+      if (error) throw error;
+      setSaved(true);
+      toast({ title: "Salvo!", description: "Informações atualizadas com sucesso." });
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err: any) {
+      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -70,19 +117,19 @@ export const SettingsView = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">Nome</Label>
-                  <Input defaultValue="Lucas Xavier" className="h-9 text-sm" />
+                  <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="h-9 text-sm" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">Email</Label>
-                  <Input defaultValue="lucas@luxia.com.br" className="h-9 text-sm" />
+                  <Input value={user?.email || ""} disabled className="h-9 text-sm opacity-60" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">Empresa</Label>
-                  <Input defaultValue="LUX IA" className="h-9 text-sm" />
+                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="h-9 text-sm" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">Cargo</Label>
-                  <Input defaultValue="CEO & Founder" className="h-9 text-sm" />
+                  <Input value={role} onChange={(e) => setRole(e.target.value)} className="h-9 text-sm" />
                 </div>
               </div>
               <Separator className="bg-border/30" />
@@ -101,8 +148,15 @@ export const SettingsView = () => {
                   </div>
                 </div>
               </div>
-              <Button className="gap-2">
-                <Save className="h-4 w-4" /> Salvar Alterações
+              <Button onClick={handleSaveAccount} disabled={saving} className="gap-2">
+                {saving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : saved ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                {saving ? "Salvando..." : saved ? "Salvo!" : "Salvar Alterações"}
               </Button>
             </div>
           )}
