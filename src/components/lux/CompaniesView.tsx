@@ -148,16 +148,24 @@ export const CompaniesView = () => {
     }
     setIsExporting(true);
     try {
-      const headers = ["Nome", "Setor", "Localização", "Score IPC", "Fonte", "Email", "Telefone", "Status"];
-      const rows = filtered.map((c) => [c.name, c.sector, c.location, c.ipcScore, c.source, c.email ?? "", c.phone ?? "", c.enriched ? "Enriquecido" : "Pendente"].join(","));
-      const csv = [headers.join(","), ...rows].join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `empresas_${new Date().toISOString().split("T")[0]}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
+      const { downloadCSV } = await import("@/lib/exportCSV");
+      downloadCSV(
+        filtered.map((c) => ({
+          Nome: c.name,
+          Setor: c.sector,
+          Localização: c.location,
+          "Score IPC": c.ipcScore,
+          Fonte: c.source,
+          Email: c.email ?? "",
+          Telefone: c.phone ?? "",
+          Website: c.website ?? "",
+          Funcionários: c.employees,
+          Receita: c.revenue,
+          Status: c.enriched ? "Enriquecido" : "Pendente",
+          Favorito: c.starred ? "Sim" : "Não",
+        })),
+        `empresas_${new Date().toISOString().split("T")[0]}.csv`
+      );
       toast({ title: "Exportação concluída", description: `${filtered.length} empresas exportadas com sucesso.` });
     } catch {
       toast({ title: "Erro na exportação", description: "Não foi possível gerar o arquivo.", variant: "destructive" });
