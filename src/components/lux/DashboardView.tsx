@@ -6,7 +6,7 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, Calendar } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 const performanceData = [
   { day: "Seg", raspadas: 120, qualificadas: 85 },
@@ -39,13 +39,12 @@ interface DashboardViewProps {
 }
 
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const colors = useThemeColors();
 
-  const gridColor = isDark ? "hsl(222, 14%, 16%)" : "hsl(42, 14%, 88%)";
-  const axisColor = isDark ? "hsl(215, 14%, 52%)" : "hsl(222, 12%, 40%)";
-  const primaryStroke = isDark ? "hsl(45, 100%, 58%)" : "hsl(40, 95%, 35%)";
-  const successStroke = isDark ? "hsl(142, 71%, 45%)" : "hsl(142, 72%, 28%)";
+  const gridColor = colors.border;
+  const axisColor = colors.mutedFg;
+  const primaryStroke = colors.primary;
+  const successStroke = colors.success;
 
   return (
     <div className="space-y-6">

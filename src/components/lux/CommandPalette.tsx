@@ -129,6 +129,38 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
     staleTime: 30_000,
   });
 
+  // Fetch stakeholders for search
+  const { data: stakeholders = [] } = useQuery({
+    queryKey: ["command-palette-stakeholders"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stakeholders")
+        .select("id, full_name, role, company_id, email")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: open,
+    staleTime: 30_000,
+  });
+
+  // Fetch workflows for search
+  const { data: workflows = [] } = useQuery({
+    queryKey: ["command-palette-workflows"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("workflows")
+        .select("id, name, status, description")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: open,
+    staleTime: 30_000,
+  });
+
   // Filter companies by search term
   const filteredCompanies = useMemo(() => {
     if (!search || search.length < 2) return [];
@@ -142,6 +174,33 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
       )
       .slice(0, 5);
   }, [companies, search]);
+
+  // Filter stakeholders
+  const filteredStakeholders = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    const q = search.toLowerCase();
+    return stakeholders
+      .filter(
+        (s) =>
+          s.full_name.toLowerCase().includes(q) ||
+          s.role?.toLowerCase().includes(q) ||
+          s.email?.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
+  }, [stakeholders, search]);
+
+  // Filter workflows
+  const filteredWorkflows = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    const q = search.toLowerCase();
+    return workflows
+      .filter(
+        (w) =>
+          w.name.toLowerCase().includes(q) ||
+          w.description?.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
+  }, [workflows, search]);
 
   // Quick actions
   const quickActions: QuickAction[] = useMemo(
@@ -273,11 +332,69 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
           </>
         )}
 
-        {/* Loading indicator for companies */}
+        {/* Stakeholder search results */}
+        {filteredStakeholders.length > 0 && (
+          <>
+            <CommandGroup heading="Stakeholders encontrados">
+              {filteredStakeholders.map((s) => (
+                <CommandItem
+                  key={s.id}
+                  value={`stakeholder ${s.full_name} ${s.role ?? ""} ${s.email ?? ""}`}
+                  onSelect={() => {
+                    onNavigate("stakeholders");
+                    setOpen(false);
+                    toast({ title: "Stakeholder", description: `Navegando para "${s.full_name}"` });
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Users className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <div className="flex flex-col">
+                    <span className="text-sm">{s.full_name}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {[s.role, s.email].filter(Boolean).join(" • ")}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {/* Workflow search results */}
+        {filteredWorkflows.length > 0 && (
+          <>
+            <CommandGroup heading="Workflows encontrados">
+              {filteredWorkflows.map((w) => (
+                <CommandItem
+                  key={w.id}
+                  value={`workflow ${w.name} ${w.description ?? ""}`}
+                  onSelect={() => {
+                    onNavigate("workflows");
+                    setOpen(false);
+                    toast({ title: "Workflow", description: `Navegando para "${w.name}"` });
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Workflow className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <div className="flex flex-col">
+                    <span className="text-sm">{w.name}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {[w.status, w.description?.slice(0, 40)].filter(Boolean).join(" • ")}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {/* Loading indicator */}
         {companiesLoading && search.length >= 2 && (
           <div className="py-3 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
             <Loader2 className="h-3 w-3 animate-spin" />
-            Buscando empresas...
+            Buscando...
           </div>
         )}
 

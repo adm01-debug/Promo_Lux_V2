@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
+import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { View } from "@/hooks/useNavigationHistory";
 import { useState } from "react";
@@ -111,13 +112,12 @@ export const Header = ({
             </TooltipTrigger>
             <TooltipContent>Sair</TooltipContent>
           </Tooltip>
-          {userAvatarUrl ? (
-            <img src={userAvatarUrl} alt="Avatar" className="h-8 w-8 rounded-full ml-2" />
-          ) : (
-            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary ml-2">
-              {userEmail?.charAt(0).toUpperCase() || "U"}
-            </div>
-          )}
+          <GradientAvatar
+            src={userAvatarUrl}
+            email={userEmail}
+            size="md"
+            className="ml-2"
+          />
         </div>
       </div>
     </header>

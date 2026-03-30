@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MapPin, Plus, Trash2, Download, RefreshCw, Search, Globe, Mail, Clock, CheckCircle2, AlertCircle, Loader2, Zap, Eye, DatabaseIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { gmapsApi, type ScrapeJob } from "@/lib/api/gmaps";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   completed: { label: "Concluído", color: "bg-success/20 text-success border-success/30", icon: <CheckCircle2 className="h-3 w-3" /> },
@@ -42,6 +43,21 @@ export const GmapsScraperView = () => {
     retry: 2,
     retryDelay: 3000,
   });
+
+  // Realtime subscription for scrape_jobs
+  useEffect(() => {
+    const channel = supabase
+      .channel("scrape-jobs-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "scrape_jobs" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["gmaps-jobs"] });
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [queryClient]);
 
   const jobs = data?.jobs || [];
   const apiOnline = data?.api_online ?? false;
