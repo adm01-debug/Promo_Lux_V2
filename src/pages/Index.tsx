@@ -1,21 +1,19 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
-import { TopProgressBar } from "@/components/lux/TopProgressBar";
-import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users, LogOut, PanelLeftClose, PanelLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
-import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
-import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
-import { CommandPalette } from "@/components/lux/CommandPalette";
-import { OnboardingTour } from "@/components/lux/OnboardingTour";
-import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { useRecentViews } from "@/hooks/useRecentViews";
-import { AnimatePresence, motion } from "framer-motion";
+import { useSidebarState } from "@/hooks/useSidebarState";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { TopProgressBar } from "@/components/lux/TopProgressBar";
+import { CommandPalette } from "@/components/lux/CommandPalette";
+import { OnboardingTour } from "@/components/lux/OnboardingTour";
+import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
+import { Sidebar } from "@/components/lux/layout/Sidebar";
+import { Header } from "@/components/lux/layout/Header";
+import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-// Lazy-loaded views for code splitting
+// Lazy-loaded views
 const DashboardView = lazy(() => import("@/components/lux/DashboardView").then(m => ({ default: m.DashboardView })));
 const ICPConfigView = lazy(() => import("@/components/lux/ICPConfigView").then(m => ({ default: m.ICPConfigView })));
 const WorkflowsView = lazy(() => import("@/components/lux/WorkflowsView").then(m => ({ default: m.WorkflowsView })));
@@ -41,51 +39,59 @@ const GmapsScraperView = lazy(() => import("@/components/lux/GmapsScraperView").
 const CompaniesMapView = lazy(() => import("@/components/lux/CompaniesMapView").then(m => ({ default: m.CompaniesMapView })));
 const StakeholderFinderView = lazy(() => import("@/components/lux/StakeholderFinderView").then(m => ({ default: m.StakeholderFinderView })));
 
-const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
-
-const navItems: { id: View; label: string; icon: React.ReactNode; section?: string }[] = [
-  { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, section: "Principal" },
-  { id: "analytics", label: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
-  { id: "icp", label: "Configurar IPC", icon: <Target className="h-4 w-4" />, section: "Prospecção" },
-  { id: "companies", label: "Empresas", icon: <Building2 className="h-4 w-4" /> },
-  { id: "intent", label: "Sinais de Intenção", icon: <Radar className="h-4 w-4" /> },
-  { id: "stakeholders", label: "Stakeholders", icon: <Users className="h-4 w-4" /> },
-  { id: "workflows", label: "Workflows", icon: <Workflow className="h-4 w-4" />, section: "Automação" },
-  { id: "gmaps", label: "Google Maps", icon: <MapPin className="h-4 w-4" /> },
-  { id: "map", label: "Mapa de Empresas", icon: <Globe className="h-4 w-4" /> },
-  { id: "campaigns", label: "Campanhas", icon: <Mail className="h-4 w-4" /> },
-  { id: "ai-agent", label: "Agente IA", icon: <Bot className="h-4 w-4" /> },
-  { id: "settings", label: "Configurações", icon: <Settings className="h-4 w-4" />, section: "Sistema" },
-];
-
-const getShortcut = (id: View): string | null => {
-  const idx = SHORTCUT_VIEWS.indexOf(id);
-  return idx >= 0 ? `Alt+${idx + 1}` : null;
+const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentType>> = {
+  dashboard: DashboardView,
+  icp: ICPConfigView,
+  workflows: WorkflowsView,
+  companies: CompaniesView,
+  intent: IntentSignalsView,
+  campaigns: CampaignsView,
+  "ai-agent": AIAgentView,
+  analytics: AnalyticsView,
+  settings: SettingsView,
+  gmaps: GmapsScraperView,
+  map: CompaniesMapView,
+  stakeholders: StakeholderFinderView,
 };
 
-const SIDEBAR_COLLAPSED_KEY = "lux-sidebar-collapsed";
+const slideVariants = {
+  initial: (dir: string) => ({ opacity: 0, x: dir === "forward" ? 40 : -40 }),
+  animate: { opacity: 1, x: 0 },
+  exit: (dir: string) => ({ opacity: 0, x: dir === "forward" ? -20 : 20 }),
+};
 
 const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel, direction } = useNavigationHistory();
   const { recentViews, trackView } = useRecentViews();
+  const { collapsed, mobileOpen, toggleCollapse, openMobile, closeMobile } = useSidebarState();
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
-    }
-    return false;
-  });
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
-  const unreadCount = useNotificationCount();
 
-  // Mobile swipe gestures
-  const onSwipeRight = useCallback(() => setSidebarOpen(true), []);
-  const onSwipeLeft = useCallback(() => setSidebarOpen(false), []);
-  useSwipeGesture({ onSwipeRight, onSwipeLeft });
+  // Swipe gestures for mobile
+  useSwipeGesture({
+    onSwipeRight: openMobile,
+    onSwipeLeft: closeMobile,
+  });
+
+  // Keyboard shortcuts (Ctrl+B, Alt+1-9)
+  const handleNav = useCallback(
+    (id: View) => {
+      confirmNavigation(() => {
+        trackView(id);
+        navigate(id);
+        closeMobile();
+      });
+    },
+    [confirmNavigation, trackView, navigate, closeMobile]
+  );
+
+  useKeyboardShortcuts({
+    onNavigate: handleNav,
+    onToggleSidebar: toggleCollapse,
+  });
 
   // Track view transitions for progress bar
   useEffect(() => {
@@ -97,54 +103,8 @@ const Index = () => {
     }
   }, [activeView]);
 
-  const toggleSidebarCollapse = useCallback(() => {
-    setSidebarCollapsed(prev => {
-      const next = !prev;
-      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(next));
-      return next;
-    });
-  }, []);
-
-  // Ctrl+B to toggle sidebar
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
-        e.preventDefault();
-        toggleSidebarCollapse();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [toggleSidebarCollapse]);
-
-  let currentSection = "";
-
-  const handleNav = (id: View) => {
-    confirmNavigation(() => {
-      trackView(id);
-      navigate(id);
-      setSidebarOpen(false);
-    });
-  };
-
-  const sidebarWidth = sidebarCollapsed ? "w-16" : "w-64";
-  const mainMargin = sidebarCollapsed ? "lg:ml-16" : "lg:ml-64";
-
-  // Directional transition variants
-  const slideVariants = {
-    initial: (dir: string) => ({
-      opacity: 0,
-      x: dir === "forward" ? 40 : -40,
-    }),
-    animate: {
-      opacity: 1,
-      x: 0,
-    },
-    exit: (dir: string) => ({
-      opacity: 0,
-      x: dir === "forward" ? -20 : 20,
-    }),
-  };
+  const mainMargin = collapsed ? "lg:ml-16" : "lg:ml-64";
+  const ActiveComponent = VIEW_MAP[activeView];
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -154,8 +114,9 @@ const Index = () => {
       >
         Pular para o conteúdo
       </a>
+
       <TopProgressBar isAnimating={isTransitioning} />
-      <CommandPalette onNavigate={(id) => handleNav(id)} recentViews={recentViews} />
+      <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
       <OnboardingTour />
 
       {/* Unsaved changes dialog */}
@@ -176,210 +137,40 @@ const Index = () => {
 
       {/* Mobile overlay */}
       <AnimatePresence>
-        {sidebarOpen && (
+        {mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-background/90 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
+            onClick={closeMobile}
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside
-        aria-label="Navegação principal"
-        role="navigation"
-        className={cn(
-          "border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-all duration-300",
-          sidebarWidth,
-          "lg:translate-x-0",
-          sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0"
-        )}
-      >
-        <div className={cn("p-5 border-b border-border", sidebarCollapsed && "p-3")}>
-          <div className="flex items-center gap-3">
-            <div className={cn("rounded-xl bg-primary/10 flex items-center justify-center glow-primary shrink-0", sidebarCollapsed ? "h-8 w-8" : "h-10 w-10")}>
-              <Sparkles className={cn(sidebarCollapsed ? "h-4 w-4" : "h-5 w-5", "text-primary")} />
-            </div>
-            {!sidebarCollapsed && (
-              <div className="min-w-0">
-                <h1 className="text-lg font-bold tracking-tight text-foreground">
-                  LUX <span className="text-primary glow-text">IA</span>
-                </h1>
-                <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Sales Intelligence Platform
-                </p>
-              </div>
-            )}
-            <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground" aria-label="Fechar menu">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-
-        <nav className={cn("flex-1 overflow-y-auto", sidebarCollapsed ? "p-2 space-y-1" : "p-3 space-y-0.5")}>
-          {navItems.map((item) => {
-            const showSection = item.section && item.section !== currentSection;
-            if (item.section) currentSection = item.section;
-            return (
-              <div key={item.id}>
-                {showSection && !sidebarCollapsed && (
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-3 pt-4 pb-1.5 font-medium">
-                    {item.section}
-                  </p>
-                )}
-                {sidebarCollapsed ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        data-tour={item.id}
-                        onClick={() => handleNav(item.id)}
-                        className={cn(
-                          "w-full flex items-center justify-center p-2 rounded-lg transition-all",
-                          activeView === item.id
-                            ? "bg-primary/15 text-primary border border-primary/25"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                        )}
-                      >
-                        {item.icon}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right">{item.label}</TooltipContent>
-                  </Tooltip>
-                ) : (
-                  (() => {
-                    const shortcut = getShortcut(item.id);
-                    const btn = (
-                      <button
-                        data-tour={item.id}
-                        onClick={() => handleNav(item.id)}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
-                          activeView === item.id
-                            ? "bg-primary/15 text-primary border border-primary/25"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                        )}
-                      >
-                        {item.icon}
-                        {item.label}
-                        {shortcut && (
-                          <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline">{shortcut}</kbd>
-                        )}
-                        {item.id === "intent" && (
-                          <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
-                        )}
-                      </button>
-                    );
-                    return shortcut ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>{btn}</TooltipTrigger>
-                        <TooltipContent side="right" className="text-xs">
-                          {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted text-[10px] font-mono border border-border">{shortcut}</kbd>
-                        </TooltipContent>
-                      </Tooltip>
-                    ) : btn;
-                  })()
-                )}
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Collapse toggle + status */}
-        <div className={cn("border-t border-border", sidebarCollapsed ? "p-2" : "p-4")}>
-          {!sidebarCollapsed && (
-            <div className="glass rounded-lg p-3 mb-3">
-              <p className="text-xs text-muted-foreground">Status do Sistema</p>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-                <span className="text-xs text-success font-medium">Online — 3 workflows ativos</span>
-              </div>
-            </div>
-          )}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={toggleSidebarCollapse}
-                className="hidden lg:flex w-full items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
-              >
-                {sidebarCollapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-                {!sidebarCollapsed && <span>Recolher</span>}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="right">{sidebarCollapsed ? "Expandir sidebar" : "Recolher sidebar"}</TooltipContent>
-          </Tooltip>
-        </div>
-      </aside>
+      <Sidebar
+        activeView={activeView}
+        collapsed={collapsed}
+        mobileOpen={mobileOpen}
+        onNavigate={handleNav}
+        onMobileClose={closeMobile}
+        onToggleCollapse={toggleCollapse}
+      />
 
       {/* Main area */}
       <div className={cn("flex-1 transition-all duration-300", mainMargin)}>
-        <header className="border-b border-border glass sticky top-0 z-30">
-          <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground" aria-label="Abrir menu">
-                <Menu className="h-5 w-5" />
-              </button>
-              <AppBreadcrumbs
-                breadcrumbs={breadcrumbs}
-                canGoBack={canGoBack}
-                onGoBack={goBack}
-                onNavigate={(id) => handleNav(id)}
-                currentLabel={currentLabel}
-              />
-              <button
-                data-tour="search"
-                onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-                className="hidden sm:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer ml-2"
-              >
-                <Search className="h-3.5 w-3.5" />
-                <span>Buscar...</span>
-                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted/50 text-[10px] font-mono border border-border/50">⌘K</kbd>
-              </button>
-            </div>
-            <div data-tour="header-actions" className="flex items-center gap-1.5">
-              <ThemeToggle />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground relative"
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-              >
-                <Bell className="h-4 w-4" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center">
-                    {unreadCount}
-                  </span>
-                )}
-              </Button>
-              <NotificationsPanel open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                onClick={() => handleNav("settings")}
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={signOut}>
-                    <LogOut className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Sair</TooltipContent>
-              </Tooltip>
-              {user?.user_metadata?.avatar_url ? (
-                <img src={user.user_metadata.avatar_url} alt="Avatar" className="h-8 w-8 rounded-full ml-2" />
-              ) : (
-                <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary ml-2">
-                  {user?.email?.charAt(0).toUpperCase() || "U"}
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
+        <Header
+          breadcrumbs={breadcrumbs}
+          canGoBack={canGoBack}
+          currentLabel={currentLabel}
+          userEmail={user?.email ?? undefined}
+          userAvatarUrl={user?.user_metadata?.avatar_url}
+          onGoBack={goBack}
+          onNavigate={handleNav}
+          onOpenMobileSidebar={openMobile}
+          onSignOut={signOut}
+        />
 
         <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel} role="main">
           <Suspense fallback={<ViewSkeleton />}>
@@ -393,18 +184,7 @@ const Index = () => {
                 exit="exit"
                 transition={{ duration: 0.2, ease: "easeInOut" }}
               >
-                {activeView === "dashboard" && <DashboardView />}
-                {activeView === "icp" && <ICPConfigView />}
-                {activeView === "workflows" && <WorkflowsView />}
-                {activeView === "companies" && <CompaniesView />}
-                {activeView === "intent" && <IntentSignalsView />}
-                {activeView === "campaigns" && <CampaignsView />}
-                {activeView === "ai-agent" && <AIAgentView />}
-                {activeView === "analytics" && <AnalyticsView />}
-                {activeView === "settings" && <SettingsView />}
-                {activeView === "gmaps" && <GmapsScraperView />}
-                {activeView === "map" && <CompaniesMapView />}
-                {activeView === "stakeholders" && <StakeholderFinderView />}
+                <ActiveComponent />
               </motion.div>
             </AnimatePresence>
           </Suspense>
