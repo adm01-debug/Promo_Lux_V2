@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
-import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
+import { Responsive, Layout } from "react-grid-layout";
+import WidthProvider from "react-grid-layout/lib/components/WidthProvider";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { StatsGrid } from "@/components/lux/StatsGrid";
