@@ -103,6 +103,18 @@ const Index = () => {
     });
   }, []);
 
+  // Ctrl+B to toggle sidebar
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+        e.preventDefault();
+        toggleSidebarCollapse();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [toggleSidebarCollapse]);
+
   let currentSection = "";
 
   const handleNav = (id: View) => {
