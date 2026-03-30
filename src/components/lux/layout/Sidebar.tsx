@@ -139,12 +139,14 @@ export const Sidebar = ({
                 item={item}
                 isActive={activeView === item.id}
                 onClick={() => onNavigate(item.id)}
+                onPrefetch={() => prefetchView(item.id)}
               />
             ) : (
               <ExpandedNavButton
                 item={item}
                 isActive={activeView === item.id}
                 onClick={() => onNavigate(item.id)}
+                onPrefetch={() => prefetchView(item.id)}
               />
             )}
           </div>
