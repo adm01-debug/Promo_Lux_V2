@@ -29,8 +29,8 @@ interface Notification {
 const iconMap: Record<NotificationType, React.ReactNode> = {
   signal: <Radar className="h-4 w-4 text-primary" />,
   scrape: <Zap className="h-4 w-4 text-success" />,
-  enrichment: <Building2 className="h-4 w-4 text-purple-400" />,
-  system: <CheckCircle2 className="h-4 w-4 text-blue-400" />,
+  enrichment: <Building2 className="h-4 w-4 text-accent-foreground" />,
+  system: <CheckCircle2 className="h-4 w-4 text-muted-foreground" />,
 };
 
 const typeLabels: Record<NotificationType, string> = {
