@@ -12,6 +12,7 @@ import { CommandPalette } from "@/components/lux/CommandPalette";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
+import { useRecentViews } from "@/hooks/useRecentViews";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
@@ -66,6 +67,7 @@ const SIDEBAR_COLLAPSED_KEY = "lux-sidebar-collapsed";
 
 const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel, direction } = useNavigationHistory();
+  const { recentViews, trackView } = useRecentViews();
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -119,6 +121,7 @@ const Index = () => {
 
   const handleNav = (id: View) => {
     confirmNavigation(() => {
+      trackView(id);
       navigate(id);
       setSidebarOpen(false);
     });
@@ -152,7 +155,7 @@ const Index = () => {
         Pular para o conteúdo
       </a>
       <TopProgressBar isAnimating={isTransitioning} />
-      <CommandPalette onNavigate={(id) => handleNav(id)} />
+      <CommandPalette onNavigate={(id) => handleNav(id)} recentViews={recentViews} />
       <OnboardingTour />
 
       {/* Unsaved changes dialog */}

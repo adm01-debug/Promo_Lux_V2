@@ -21,12 +21,45 @@ import {
   Globe,
   Users,
   Settings,
+  Clock,
 } from "lucide-react";
 import { View } from "@/hooks/useNavigationHistory";
+import { RecentView } from "@/hooks/useRecentViews";
 
 interface CommandPaletteProps {
   onNavigate: (view: View) => void;
+  recentViews?: RecentView[];
 }
+
+const VIEW_ICONS: Record<View, React.ElementType> = {
+  dashboard: LayoutDashboard,
+  analytics: BarChart3,
+  icp: Target,
+  companies: Building2,
+  intent: Radar,
+  stakeholders: Users,
+  workflows: Workflow,
+  gmaps: MapPin,
+  map: Globe,
+  campaigns: Mail,
+  "ai-agent": Bot,
+  settings: Settings,
+};
+
+const VIEW_LABELS: Record<View, string> = {
+  dashboard: "Dashboard",
+  analytics: "Analytics",
+  icp: "Configurar IPC",
+  companies: "Empresas",
+  intent: "Sinais de Intenção",
+  stakeholders: "Stakeholders",
+  workflows: "Workflows",
+  gmaps: "Google Maps",
+  map: "Mapa de Empresas",
+  campaigns: "Campanhas",
+  "ai-agent": "Agente IA",
+  settings: "Configurações",
+};
 
 const sections = [
   {
@@ -63,7 +96,7 @@ const sections = [
   },
 ];
 
-export const CommandPalette = ({ onNavigate }: CommandPaletteProps) => {
+export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteProps) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -87,6 +120,27 @@ export const CommandPalette = ({ onNavigate }: CommandPaletteProps) => {
       <CommandInput placeholder="Buscar seções, empresas, ações..." />
       <CommandList>
         <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+        {recentViews.length > 0 && (
+          <>
+            <CommandGroup heading="Recentes">
+              {recentViews.map((rv) => {
+                const Icon = VIEW_ICONS[rv.id];
+                return (
+                  <CommandItem
+                    key={rv.id}
+                    value={`recente ${VIEW_LABELS[rv.id]}`}
+                    onSelect={() => handleSelect(rv.id)}
+                    className="cursor-pointer"
+                  >
+                    <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <span>{VIEW_LABELS[rv.id]}</span>
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
         {sections.map((section, i) => (
           <div key={section.label}>
             {i > 0 && <CommandSeparator />}
