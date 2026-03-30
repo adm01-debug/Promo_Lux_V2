@@ -34,7 +34,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export const DashboardView = () => {
+interface DashboardViewProps {
+  onNavigate?: (view: string) => void;
+}
+
+export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -58,7 +62,7 @@ export const DashboardView = () => {
         </div>
       </div>
 
-      <StatsGrid />
+      <StatsGrid onNavigate={onNavigate} />
 
       {/* Performance chart */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass rounded-lg overflow-hidden">

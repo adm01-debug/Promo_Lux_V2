@@ -1,5 +1,7 @@
-import { Activity, Zap, Building2, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Activity, Zap, Building2, TrendingUp, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useDashboardStats } from "@/hooks/useDashboardData";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface StatCardProps {
   title: string;
@@ -9,13 +11,15 @@ interface StatCardProps {
   trend?: string;
   trendUp?: boolean;
   progress?: number;
+  onClick?: () => void;
 }
 
-const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progress }: StatCardProps) => (
+const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progress, onClick }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-lg p-5 group hover:glow-primary transition-all duration-300"
+    onClick={onClick}
+    className={`glass rounded-lg p-5 group hover:glow-primary transition-all duration-300 ${onClick ? "cursor-pointer" : ""}`}
   >
     <div className="flex items-start justify-between mb-3">
       <span className="text-muted-foreground text-xs uppercase tracking-widest">{title}</span>
@@ -25,8 +29,8 @@ const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progres
     <div className="flex items-center gap-2 mt-1">
       <span className="text-muted-foreground text-sm">{subtitle}</span>
       {trend && (
-        <span className={`text-xs font-medium flex items-center gap-0.5 ${trendUp ? "text-success" : "text-destructive"}`}>
-          {trendUp ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+        <span className="text-xs font-medium flex items-center gap-0.5 text-success">
+          <ArrowUpRight className="h-3 w-3" />
           {trend}
         </span>
       )}
@@ -44,39 +48,66 @@ const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progres
   </motion.div>
 );
 
-export const StatsGrid = () => {
+const StatSkeleton = () => (
+  <div className="glass rounded-lg p-5 space-y-3">
+    <div className="flex items-start justify-between">
+      <Skeleton className="h-3 w-24" />
+      <Skeleton className="h-5 w-5 rounded" />
+    </div>
+    <Skeleton className="h-8 w-16" />
+    <Skeleton className="h-3 w-32" />
+  </div>
+);
+
+interface StatsGridProps {
+  onNavigate?: (view: string) => void;
+}
+
+export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
+  const { data, isLoading } = useDashboardStats();
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
+      </div>
+    );
+  }
+
+  const s = data!;
+  const matchRate = s.totalCompanies > 0 ? Math.round((s.enrichedCompanies / s.totalCompanies) * 100) : 0;
+  const scrapeProgress = s.totalScrapeJobs > 0 ? Math.round((s.completedScrapeJobs / s.totalScrapeJobs) * 100) : 0;
+
   const stats: StatCardProps[] = [
     {
-      title: "Automações Ativas",
-      value: 12,
-      subtitle: "3 em execução agora",
+      title: "Workflows Ativos",
+      value: s.activeWorkflows,
+      subtitle: `${s.runningWorkflows} em execução agora`,
       icon: <Zap className="h-5 w-5" />,
-      trend: "+2 hoje",
-      trendUp: true,
+      onClick: () => onNavigate?.("workflows"),
     },
     {
       title: "Empresas Encontradas",
-      value: "1.847",
-      subtitle: "Últimas 24h",
+      value: s.totalCompanies.toLocaleString("pt-BR"),
+      subtitle: `${s.enrichedCompanies} enriquecidas`,
       icon: <Building2 className="h-5 w-5" />,
-      trend: "+324",
-      trendUp: true,
+      onClick: () => onNavigate?.("companies"),
     },
     {
-      title: "Taxa de Match IPC",
-      value: "73%",
-      subtitle: "Acima da média",
+      title: "Taxa de Enriquecimento",
+      value: `${matchRate}%`,
+      subtitle: matchRate >= 50 ? "Acima da média" : "Abaixo da média",
       icon: <TrendingUp className="h-5 w-5" />,
-      trend: "+5%",
-      trendUp: true,
-      progress: 73,
+      progress: matchRate,
+      onClick: () => onNavigate?.("companies"),
     },
     {
       title: "Raspagens Hoje",
-      value: "48/60",
-      subtitle: "80% concluído",
+      value: `${s.todayScrapeJobs}`,
+      subtitle: `${scrapeProgress}% concluído`,
       icon: <Activity className="h-5 w-5" />,
-      progress: 80,
+      progress: scrapeProgress,
+      onClick: () => onNavigate?.("gmaps"),
     },
   ];
 
