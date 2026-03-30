@@ -1,24 +1,17 @@
-import { useState, useCallback, useRef } from "react";
-import {
-  Responsive,
-  useContainerWidth,
-  Layout,
-  type ResponsiveLayouts,
-} from "react-grid-layout";
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
+import { useState, useCallback } from "react";
 import { StatsGrid } from "@/components/lux/StatsGrid";
 import { AutomationsList } from "@/components/lux/AutomationsList";
 import { CompanyTable } from "@/components/lux/CompanyTable";
 import { ActivityFeed } from "@/components/lux/ActivityFeed";
 import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
+import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 
-const LAYOUT_KEY = "lux-dashboard-layout";
+const LAYOUT_KEY = "lux-dashboard-widget-order";
 
 const performanceData = [
   { day: "Seg", raspadas: 120, qualificadas: 85 },
@@ -46,71 +39,17 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const DEFAULT_LAYOUTS: ResponsiveLayouts = {
-  lg: [
-    { i: "stats", x: 0, y: 0, w: 12, h: 3, isResizable: false },
-    { i: "chart", x: 0, y: 3, w: 12, h: 6 },
-    { i: "funnel", x: 0, y: 9, w: 4, h: 7 },
-    { i: "automations", x: 4, y: 9, w: 8, h: 7 },
-    { i: "companies", x: 0, y: 16, w: 8, h: 8 },
-    { i: "activity", x: 8, y: 16, w: 4, h: 8 },
-  ],
-  md: [
-    { i: "stats", x: 0, y: 0, w: 10, h: 3, isResizable: false },
-    { i: "chart", x: 0, y: 3, w: 10, h: 6 },
-    { i: "funnel", x: 0, y: 9, w: 4, h: 7 },
-    { i: "automations", x: 4, y: 9, w: 6, h: 7 },
-    { i: "companies", x: 0, y: 16, w: 6, h: 8 },
-    { i: "activity", x: 6, y: 16, w: 4, h: 8 },
-  ],
-  sm: [
-    { i: "stats", x: 0, y: 0, w: 6, h: 3, isResizable: false },
-    { i: "chart", x: 0, y: 3, w: 6, h: 6 },
-    { i: "funnel", x: 0, y: 9, w: 6, h: 6 },
-    { i: "automations", x: 0, y: 15, w: 6, h: 7 },
-    { i: "companies", x: 0, y: 22, w: 6, h: 8 },
-    { i: "activity", x: 0, y: 30, w: 6, h: 7 },
-  ],
-};
+type WidgetId = "chart" | "funnel-automations" | "companies-activity";
 
-function loadLayouts(): ResponsiveLayouts {
+const DEFAULT_ORDER: WidgetId[] = ["chart", "funnel-automations", "companies-activity"];
+
+function loadOrder(): WidgetId[] {
   try {
     const stored = localStorage.getItem(LAYOUT_KEY);
     if (stored) return JSON.parse(stored);
   } catch {}
-  return DEFAULT_LAYOUTS;
+  return DEFAULT_ORDER;
 }
-
-function saveLayouts(layouts: ResponsiveLayouts) {
-  try {
-    localStorage.setItem(LAYOUT_KEY, JSON.stringify(layouts));
-  } catch {}
-}
-
-interface WidgetWrapperProps {
-  title: string;
-  editing: boolean;
-  children: React.ReactNode;
-  className?: string;
-}
-
-const WidgetWrapper = ({ title, editing, children, className }: WidgetWrapperProps) => (
-  <div className={cn(
-    "h-full glass rounded-lg overflow-hidden flex flex-col",
-    editing && "ring-1 ring-primary/20 ring-offset-1 ring-offset-background",
-    className
-  )}>
-    {editing && (
-      <div className="drag-handle flex items-center gap-2 px-3 py-1.5 bg-primary/5 border-b border-border/30 cursor-grab active:cursor-grabbing shrink-0">
-        <GripVertical className="h-3.5 w-3.5 text-primary/50" />
-        <span className="text-[10px] font-medium text-primary/70 uppercase tracking-wider">{title}</span>
-      </div>
-    )}
-    <div className="flex-1 overflow-auto">
-      {children}
-    </div>
-  </div>
-);
 
 interface DashboardViewProps {
   onNavigate?: (view: string) => void;
@@ -119,27 +58,115 @@ interface DashboardViewProps {
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const colors = useThemeColors();
   const [editing, setEditing] = useState(false);
-  const [layouts, setLayouts] = useState<ResponsiveLayouts>(loadLayouts);
-  const { width, mounted, containerRef } = useContainerWidth();
-
-  const handleLayoutChange = useCallback((_layout: any, allLayouts: any) => {
-    setLayouts(allLayouts);
-    saveLayouts(allLayouts);
-  }, []);
-
-  const resetLayout = useCallback(() => {
-    setLayouts(DEFAULT_LAYOUTS);
-    saveLayouts(DEFAULT_LAYOUTS);
-  }, []);
+  const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(loadOrder);
+  const [dragOver, setDragOver] = useState<number | null>(null);
+  const [dragging, setDragging] = useState<number | null>(null);
 
   const gridColor = colors.border;
   const axisColor = colors.mutedFg;
   const primaryStroke = colors.primary;
   const successStroke = colors.success;
 
+  const handleDragStart = useCallback((idx: number) => {
+    setDragging(idx);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent, idx: number) => {
+    e.preventDefault();
+    setDragOver(idx);
+  }, []);
+
+  const handleDrop = useCallback((targetIdx: number) => {
+    if (dragging === null || dragging === targetIdx) {
+      setDragOver(null);
+      setDragging(null);
+      return;
+    }
+    setWidgetOrder((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(dragging, 1);
+      next.splice(targetIdx, 0, moved);
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify(next));
+      return next;
+    });
+    setDragOver(null);
+    setDragging(null);
+  }, [dragging]);
+
+  const resetOrder = useCallback(() => {
+    setWidgetOrder(DEFAULT_ORDER);
+    localStorage.setItem(LAYOUT_KEY, JSON.stringify(DEFAULT_ORDER));
+  }, []);
+
+  const widgets: Record<WidgetId, { title: string; content: React.ReactNode }> = {
+    chart: {
+      title: "Performance Semanal",
+      content: (
+        <div className="glass rounded-lg overflow-hidden">
+          <div className="p-5 border-b border-border/50 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                Performance Semanal
+              </h3>
+              <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas</p>
+            </div>
+          </div>
+          <div className="p-5">
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={performanceData}>
+                <defs>
+                  <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={primaryStroke} stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={successStroke} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={successStroke} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2} />
+                <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      ),
+    },
+    "funnel-automations": {
+      title: "Funil & Automações",
+      content: (
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-1">
+            <EnrichmentFunnel />
+          </div>
+          <div className="xl:col-span-2">
+            <AutomationsList />
+          </div>
+        </div>
+      ),
+    },
+    "companies-activity": {
+      title: "Empresas & Atividade",
+      content: (
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            <CompanyTable />
+          </div>
+          <div className="xl:col-span-1">
+            <ActivityFeed />
+          </div>
+        </div>
+      ),
+    },
+  };
+
   return (
-    <div className="space-y-4">
-      {/* Header */}
+    <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
@@ -159,10 +186,10 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             onClick={() => setEditing(!editing)}
           >
             {editing ? <Unlock className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            {editing ? "Salvar Layout" : "Editar Layout"}
+            {editing ? "Salvar" : "Editar Layout"}
           </Button>
           {editing && (
-            <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8" onClick={resetLayout}>
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8" onClick={resetOrder}>
               <RotateCcw className="h-3.5 w-3.5" />
               Reset
             </Button>
@@ -170,91 +197,39 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
         </div>
       </div>
 
-      {/* Grid layout */}
-      <div ref={containerRef}>
-        {mounted && (
-          <Responsive
-            className="layout"
-            layouts={layouts}
-            breakpoints={{ lg: 1200, md: 996, sm: 0 }}
-            cols={{ lg: 12, md: 10, sm: 6 }}
-            rowHeight={40}
-            width={width}
-            isDraggable={editing}
-            isResizable={editing}
-            draggableHandle=".drag-handle"
-            onLayoutChange={handleLayoutChange}
-            compactType="vertical"
-            margin={[16, 16]}
+      <StatsGrid onNavigate={onNavigate} />
+
+      {widgetOrder.map((id, idx) => {
+        const widget = widgets[id];
+        return (
+          <motion.div
+            key={id}
+            layout={editing}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 + idx * 0.08 }}
+            draggable={editing}
+            onDragStart={() => handleDragStart(idx)}
+            onDragOver={(e) => handleDragOver(e, idx)}
+            onDragEnd={() => { setDragOver(null); setDragging(null); }}
+            onDrop={() => handleDrop(idx)}
+            className={cn(
+              "relative transition-all",
+              editing && "cursor-grab active:cursor-grabbing",
+              dragOver === idx && dragging !== idx && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background rounded-lg",
+              dragging === idx && "opacity-50"
+            )}
           >
-            <div key="stats">
-              <WidgetWrapper title="Estatísticas" editing={editing}>
-                <StatsGrid onNavigate={onNavigate} />
-              </WidgetWrapper>
-            </div>
-
-            <div key="chart">
-              <WidgetWrapper title="Performance" editing={editing}>
-                <div className="p-5 border-b border-border/50 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-primary" />
-                      Performance Semanal
-                    </h3>
-                    <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas</p>
-                  </div>
-                </div>
-                <div className="p-5 flex-1">
-                  <ResponsiveContainer width="100%" height="100%" minHeight={180}>
-                    <AreaChart data={performanceData}>
-                      <defs>
-                        <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.3} />
-                          <stop offset="100%" stopColor={primaryStroke} stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={successStroke} stopOpacity={0.3} />
-                          <stop offset="100%" stopColor={successStroke} stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                      <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                      <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2} />
-                      <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </WidgetWrapper>
-            </div>
-
-            <div key="funnel">
-              <WidgetWrapper title="Funil de Enriquecimento" editing={editing}>
-                <EnrichmentFunnel />
-              </WidgetWrapper>
-            </div>
-
-            <div key="automations">
-              <WidgetWrapper title="Automações" editing={editing}>
-                <AutomationsList />
-              </WidgetWrapper>
-            </div>
-
-            <div key="companies">
-              <WidgetWrapper title="Empresas" editing={editing}>
-                <CompanyTable />
-              </WidgetWrapper>
-            </div>
-
-            <div key="activity">
-              <WidgetWrapper title="Atividade" editing={editing}>
-                <ActivityFeed />
-              </WidgetWrapper>
-            </div>
-          </Responsive>
-        )}
-      </div>
+            {editing && (
+              <div className="absolute -top-2 left-4 z-10 flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-2.5 py-0.5">
+                <GripVertical className="h-3 w-3 text-primary/60" />
+                <span className="text-[9px] font-medium text-primary/80 uppercase tracking-wider">{widget.title}</span>
+              </div>
+            )}
+            {widget.content}
+          </motion.div>
+        );
+      })}
     </div>
   );
 };
