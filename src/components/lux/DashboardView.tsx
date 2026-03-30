@@ -120,8 +120,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const colors = useThemeColors();
   const [editing, setEditing] = useState(false);
   const [layouts, setLayouts] = useState<ResponsiveLayouts>(loadLayouts);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { width, mounted } = useContainerWidth({ containerRef });
+  const { width, mounted, containerRef } = useContainerWidth();
 
   const handleLayoutChange = useCallback((_: Layout[], allLayouts: ResponsiveLayouts) => {
     setLayouts(allLayouts);
