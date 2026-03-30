@@ -69,6 +69,9 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
     },
   });
 
+  // Ensure notifications is always an array (guards against cache pollution)
+  const notifications = Array.isArray(rawNotifications) ? rawNotifications : [];
+
   // Realtime subscription
   useEffect(() => {
     const channel = supabase
