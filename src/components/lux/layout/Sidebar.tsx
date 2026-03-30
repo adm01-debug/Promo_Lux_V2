@@ -203,6 +203,7 @@ function CollapsedNavButton({
         <button
           data-tour={item.id}
           onClick={onClick}
+          onMouseEnter={onPrefetch}
           className={cn(
             "w-full flex items-center justify-center p-2 rounded-lg transition-all",
             isActive
