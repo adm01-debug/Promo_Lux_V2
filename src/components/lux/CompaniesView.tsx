@@ -131,16 +131,7 @@ export const CompaniesView = () => {
 
   const totalActiveFilters = filters.selectedSectors.size + filters.selectedLocations.size + filters.selectedSources.size + filters.selectedStatus.size + filters.selectedScores.size;
 
-  const clearAllFilters = () => {
-    setFilters({
-      search: "",
-      selectedSectors: new Set(),
-      selectedLocations: new Set(),
-      selectedSources: new Set(),
-      selectedStatus: new Set(),
-      selectedScores: new Set(),
-    });
-  };
+  const clearAllFilters = () => resetFilters();
 
   const handleExport = useCallback(async () => {
     if (filtered.length === 0) {
