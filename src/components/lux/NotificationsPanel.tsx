@@ -260,11 +260,11 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 
 export const useNotificationCount = () => {
   const { data } = useQuery({
-    queryKey: NOTIFICATIONS_KEY,
+    queryKey: ["notifications-count"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("notifications")
-        .select("id, read")
+        .select("id", { count: "exact", head: true })
         .eq("read", false);
       if (error) throw error;
       return data?.length ?? 0;
