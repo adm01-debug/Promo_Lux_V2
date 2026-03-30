@@ -59,6 +59,10 @@ export const CompaniesView = () => {
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isBulkEnriching, setIsBulkEnriching] = useState(false);
+  const queryClient = useQueryClient();
   const itemsPerPage = 20;
 
   const { data: rawCompanies, isLoading } = useQuery({
