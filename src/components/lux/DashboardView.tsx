@@ -1,6 +1,10 @@
-import { useState, useCallback, useMemo } from "react";
-import { Responsive, Layout } from "react-grid-layout";
-import WidthProvider from "react-grid-layout/lib/components/WidthProvider";
+import { useState, useCallback, useRef } from "react";
+import {
+  Responsive,
+  useContainerWidth,
+  Layout,
+  type ResponsiveLayouts,
+} from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { StatsGrid } from "@/components/lux/StatsGrid";
@@ -13,8 +17,6 @@ import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical } from "luc
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const LAYOUT_KEY = "lux-dashboard-layout";
 
@@ -44,7 +46,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const DEFAULT_LAYOUTS: Layouts = {
+const DEFAULT_LAYOUTS: ResponsiveLayouts = {
   lg: [
     { i: "stats", x: 0, y: 0, w: 12, h: 3, isResizable: false },
     { i: "chart", x: 0, y: 3, w: 12, h: 6 },
@@ -71,7 +73,7 @@ const DEFAULT_LAYOUTS: Layouts = {
   ],
 };
 
-function loadLayouts(): Layouts {
+function loadLayouts(): ResponsiveLayouts {
   try {
     const stored = localStorage.getItem(LAYOUT_KEY);
     if (stored) return JSON.parse(stored);
@@ -79,7 +81,7 @@ function loadLayouts(): Layouts {
   return DEFAULT_LAYOUTS;
 }
 
-function saveLayouts(layouts: Layouts) {
+function saveLayouts(layouts: ResponsiveLayouts) {
   try {
     localStorage.setItem(LAYOUT_KEY, JSON.stringify(layouts));
   } catch {}
@@ -90,10 +92,9 @@ interface WidgetWrapperProps {
   editing: boolean;
   children: React.ReactNode;
   className?: string;
-  noPadding?: boolean;
 }
 
-const WidgetWrapper = ({ title, editing, children, className, noPadding }: WidgetWrapperProps) => (
+const WidgetWrapper = ({ title, editing, children, className }: WidgetWrapperProps) => (
   <div className={cn(
     "h-full glass rounded-lg overflow-hidden flex flex-col",
     editing && "ring-1 ring-primary/20 ring-offset-1 ring-offset-background",
@@ -105,7 +106,7 @@ const WidgetWrapper = ({ title, editing, children, className, noPadding }: Widge
         <span className="text-[10px] font-medium text-primary/70 uppercase tracking-wider">{title}</span>
       </div>
     )}
-    <div className={cn("flex-1 overflow-auto", !noPadding && "p-0")}>
+    <div className="flex-1 overflow-auto">
       {children}
     </div>
   </div>
@@ -118,9 +119,11 @@ interface DashboardViewProps {
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const colors = useThemeColors();
   const [editing, setEditing] = useState(false);
-  const [layouts, setLayouts] = useState<Layouts>(loadLayouts);
+  const [layouts, setLayouts] = useState<ResponsiveLayouts>(loadLayouts);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { width, mounted } = useContainerWidth({ containerRef });
 
-  const handleLayoutChange = useCallback((_: Layout[], allLayouts: Layouts) => {
+  const handleLayoutChange = useCallback((_: Layout[], allLayouts: ResponsiveLayouts) => {
     setLayouts(allLayouts);
     saveLayouts(allLayouts);
   }, []);
@@ -169,85 +172,90 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
       </div>
 
       {/* Grid layout */}
-      <ResponsiveGridLayout
-        className="layout"
-        layouts={layouts}
-        breakpoints={{ lg: 1200, md: 996, sm: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6 }}
-        rowHeight={40}
-        isDraggable={editing}
-        isResizable={editing}
-        draggableHandle=".drag-handle"
-        onLayoutChange={handleLayoutChange}
-        compactType="vertical"
-        margin={[16, 16]}
-      >
-        <div key="stats">
-          <WidgetWrapper title="Estatísticas" editing={editing}>
-            <StatsGrid onNavigate={onNavigate} />
-          </WidgetWrapper>
-        </div>
-
-        <div key="chart">
-          <WidgetWrapper title="Performance" editing={editing}>
-            <div className="p-5 border-b border-border/50 flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
-                  Performance Semanal
-                </h3>
-                <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas</p>
-              </div>
+      <div ref={containerRef}>
+        {mounted && (
+          <Responsive
+            className="layout"
+            layouts={layouts}
+            breakpoints={{ lg: 1200, md: 996, sm: 0 }}
+            cols={{ lg: 12, md: 10, sm: 6 }}
+            rowHeight={40}
+            width={width}
+            isDraggable={editing}
+            isResizable={editing}
+            draggableHandle=".drag-handle"
+            onLayoutChange={handleLayoutChange}
+            compactType="vertical"
+            margin={[16, 16]}
+          >
+            <div key="stats">
+              <WidgetWrapper title="Estatísticas" editing={editing}>
+                <StatsGrid onNavigate={onNavigate} />
+              </WidgetWrapper>
             </div>
-            <div className="p-5 flex-1">
-              <ResponsiveContainer width="100%" height="100%" minHeight={180}>
-                <AreaChart data={performanceData}>
-                  <defs>
-                    <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.3} />
-                      <stop offset="100%" stopColor={primaryStroke} stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={successStroke} stopOpacity={0.3} />
-                      <stop offset="100%" stopColor={successStroke} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2} />
-                  <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2} />
-                </AreaChart>
-              </ResponsiveContainer>
+
+            <div key="chart">
+              <WidgetWrapper title="Performance" editing={editing}>
+                <div className="p-5 border-b border-border/50 flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      Performance Semanal
+                    </h3>
+                    <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas</p>
+                  </div>
+                </div>
+                <div className="p-5 flex-1">
+                  <ResponsiveContainer width="100%" height="100%" minHeight={180}>
+                    <AreaChart data={performanceData}>
+                      <defs>
+                        <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.3} />
+                          <stop offset="100%" stopColor={primaryStroke} stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={successStroke} stopOpacity={0.3} />
+                          <stop offset="100%" stopColor={successStroke} stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                      <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                      <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2} />
+                      <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </WidgetWrapper>
             </div>
-          </WidgetWrapper>
-        </div>
 
-        <div key="funnel">
-          <WidgetWrapper title="Funil de Enriquecimento" editing={editing}>
-            <EnrichmentFunnel />
-          </WidgetWrapper>
-        </div>
+            <div key="funnel">
+              <WidgetWrapper title="Funil de Enriquecimento" editing={editing}>
+                <EnrichmentFunnel />
+              </WidgetWrapper>
+            </div>
 
-        <div key="automations">
-          <WidgetWrapper title="Automações" editing={editing}>
-            <AutomationsList />
-          </WidgetWrapper>
-        </div>
+            <div key="automations">
+              <WidgetWrapper title="Automações" editing={editing}>
+                <AutomationsList />
+              </WidgetWrapper>
+            </div>
 
-        <div key="companies">
-          <WidgetWrapper title="Empresas" editing={editing}>
-            <CompanyTable />
-          </WidgetWrapper>
-        </div>
+            <div key="companies">
+              <WidgetWrapper title="Empresas" editing={editing}>
+                <CompanyTable />
+              </WidgetWrapper>
+            </div>
 
-        <div key="activity">
-          <WidgetWrapper title="Atividade" editing={editing}>
-            <ActivityFeed />
-          </WidgetWrapper>
-        </div>
-      </ResponsiveGridLayout>
+            <div key="activity">
+              <WidgetWrapper title="Atividade" editing={editing}>
+                <ActivityFeed />
+              </WidgetWrapper>
+            </div>
+          </Responsive>
+        )}
+      </div>
     </div>
   );
 };
