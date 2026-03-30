@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { useRecentViews } from "@/hooks/useRecentViews";
@@ -14,6 +14,7 @@ import { Sidebar } from "@/components/lux/layout/Sidebar";
 import { Header } from "@/components/lux/layout/Header";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { VIEW_MAP } from "@/lib/viewRegistry";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,35 +25,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-// Lazy-loaded views
-const DashboardView = lazy(() => import("@/components/lux/DashboardView").then(m => ({ default: m.DashboardView })));
-const ICPConfigView = lazy(() => import("@/components/lux/ICPConfigView").then(m => ({ default: m.ICPConfigView })));
-const WorkflowsView = lazy(() => import("@/components/lux/WorkflowsView").then(m => ({ default: m.WorkflowsView })));
-const CompaniesView = lazy(() => import("@/components/lux/CompaniesView").then(m => ({ default: m.CompaniesView })));
-const IntentSignalsView = lazy(() => import("@/components/lux/IntentSignalsView").then(m => ({ default: m.IntentSignalsView })));
-const CampaignsView = lazy(() => import("@/components/lux/CampaignsView").then(m => ({ default: m.CampaignsView })));
-const AIAgentView = lazy(() => import("@/components/lux/AIAgentView").then(m => ({ default: m.AIAgentView })));
-const AnalyticsView = lazy(() => import("@/components/lux/AnalyticsView").then(m => ({ default: m.AnalyticsView })));
-const SettingsView = lazy(() => import("@/components/lux/SettingsView").then(m => ({ default: m.SettingsView })));
-const GmapsScraperView = lazy(() => import("@/components/lux/GmapsScraperView").then(m => ({ default: m.GmapsScraperView })));
-const CompaniesMapView = lazy(() => import("@/components/lux/CompaniesMapView").then(m => ({ default: m.CompaniesMapView })));
-const StakeholderFinderView = lazy(() => import("@/components/lux/StakeholderFinderView").then(m => ({ default: m.StakeholderFinderView })));
-
-const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentType>> = {
-  dashboard: DashboardView,
-  icp: ICPConfigView,
-  workflows: WorkflowsView,
-  companies: CompaniesView,
-  intent: IntentSignalsView,
-  campaigns: CampaignsView,
-  "ai-agent": AIAgentView,
-  analytics: AnalyticsView,
-  settings: SettingsView,
-  gmaps: GmapsScraperView,
-  map: CompaniesMapView,
-  stakeholders: StakeholderFinderView,
-};
 
 const slideVariants = {
   initial: (dir: string) => ({ opacity: 0, x: dir === "forward" ? 40 : -40 }),

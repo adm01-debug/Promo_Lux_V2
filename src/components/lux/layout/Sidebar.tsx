@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
+import { prefetchView } from "@/lib/viewRegistry";
 import {
   Sparkles,
   LayoutDashboard,
@@ -138,12 +139,14 @@ export const Sidebar = ({
                 item={item}
                 isActive={activeView === item.id}
                 onClick={() => onNavigate(item.id)}
+                onPrefetch={() => prefetchView(item.id)}
               />
             ) : (
               <ExpandedNavButton
                 item={item}
                 isActive={activeView === item.id}
                 onClick={() => onNavigate(item.id)}
+                onPrefetch={() => prefetchView(item.id)}
               />
             )}
           </div>
@@ -186,10 +189,12 @@ function CollapsedNavButton({
   item,
   isActive,
   onClick,
+  onPrefetch,
 }: {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
+  onPrefetch: () => void;
 }) {
   const Icon = item.icon;
   return (
@@ -198,6 +203,7 @@ function CollapsedNavButton({
         <button
           data-tour={item.id}
           onClick={onClick}
+          onMouseEnter={onPrefetch}
           className={cn(
             "w-full flex items-center justify-center p-2 rounded-lg transition-all",
             isActive
@@ -217,10 +223,12 @@ function ExpandedNavButton({
   item,
   isActive,
   onClick,
+  onPrefetch,
 }: {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
+  onPrefetch: () => void;
 }) {
   const Icon = item.icon;
   const shortcut = getShortcut(item.id);
@@ -229,6 +237,7 @@ function ExpandedNavButton({
     <button
       data-tour={item.id}
       onClick={onClick}
+      onMouseEnter={onPrefetch}
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
         isActive
