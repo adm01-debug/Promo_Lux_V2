@@ -189,10 +189,12 @@ function CollapsedNavButton({
   item,
   isActive,
   onClick,
+  onPrefetch,
 }: {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
+  onPrefetch: () => void;
 }) {
   const Icon = item.icon;
   return (
