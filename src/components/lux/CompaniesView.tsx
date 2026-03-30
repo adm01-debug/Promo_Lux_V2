@@ -328,7 +328,14 @@ export const CompaniesView = () => {
                 </thead>
                 <tbody className="divide-y divide-border/20">
                   {paginatedItems.map((company, i) => (
-                    <motion.tr key={company.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className="hover:bg-secondary/20 transition-colors group cursor-pointer" onClick={() => openCompany(company)}>
+                    <motion.tr key={company.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className={`hover:bg-secondary/20 transition-colors group cursor-pointer ${selectedIds.has(company.id) ? "bg-primary/5" : ""}`} onClick={() => openCompany(company)}>
+                      <td className="p-3" onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={selectedIds.has(company.id)}
+                          onCheckedChange={() => toggleSelectId(company.id)}
+                          className="h-4 w-4"
+                        />
+                      </td>
                       <td className="p-3" onClick={(e) => e.stopPropagation()}>
                         <Star className={`h-4 w-4 cursor-pointer transition-colors ${company.starred ? "text-primary fill-primary" : "text-muted-foreground/30 hover:text-primary/50"}`} />
                       </td>
