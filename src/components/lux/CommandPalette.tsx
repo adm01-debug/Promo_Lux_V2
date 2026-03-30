@@ -332,11 +332,69 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
           </>
         )}
 
-        {/* Loading indicator for companies */}
+        {/* Stakeholder search results */}
+        {filteredStakeholders.length > 0 && (
+          <>
+            <CommandGroup heading="Stakeholders encontrados">
+              {filteredStakeholders.map((s) => (
+                <CommandItem
+                  key={s.id}
+                  value={`stakeholder ${s.full_name} ${s.role ?? ""} ${s.email ?? ""}`}
+                  onSelect={() => {
+                    onNavigate("stakeholders");
+                    setOpen(false);
+                    toast({ title: "Stakeholder", description: `Navegando para "${s.full_name}"` });
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Users className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <div className="flex flex-col">
+                    <span className="text-sm">{s.full_name}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {[s.role, s.email].filter(Boolean).join(" • ")}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {/* Workflow search results */}
+        {filteredWorkflows.length > 0 && (
+          <>
+            <CommandGroup heading="Workflows encontrados">
+              {filteredWorkflows.map((w) => (
+                <CommandItem
+                  key={w.id}
+                  value={`workflow ${w.name} ${w.description ?? ""}`}
+                  onSelect={() => {
+                    onNavigate("workflows");
+                    setOpen(false);
+                    toast({ title: "Workflow", description: `Navegando para "${w.name}"` });
+                  }}
+                  className="cursor-pointer"
+                >
+                  <Workflow className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <div className="flex flex-col">
+                    <span className="text-sm">{w.name}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {[w.status, w.description?.slice(0, 40)].filter(Boolean).join(" • ")}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {/* Loading indicator */}
         {companiesLoading && search.length >= 2 && (
           <div className="py-3 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
             <Loader2 className="h-3 w-3 animate-spin" />
-            Buscando empresas...
+            Buscando...
           </div>
         )}
 
