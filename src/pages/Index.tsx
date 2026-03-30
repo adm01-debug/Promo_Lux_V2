@@ -12,6 +12,7 @@ import { CommandPalette } from "@/components/lux/CommandPalette";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
+import { useRecentViews } from "@/hooks/useRecentViews";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
