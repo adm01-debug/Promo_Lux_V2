@@ -1,7 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders";
+
+export type NavigationDirection = "forward" | "back";
 
 const VIEW_LABELS: Record<View, string> = {
   dashboard: "Dashboard",
@@ -35,7 +37,6 @@ const VIEW_SECTIONS: Record<View, string> = {
 
 const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders"];
 
-// Alt+1..9 shortcuts map to top nav items
 const SHORTCUT_VIEWS: View[] = ["dashboard", "analytics", "icp", "companies", "intent", "stakeholders", "workflows", "gmaps", "settings"];
 
 function isValidView(v: string | null): v is View {
@@ -50,17 +51,44 @@ export function useNavigationHistory() {
   const [activeView, setActiveView] = useState<View>(initialView);
   const [history, setHistory] = useState<View[]>([initialView]);
   const [historyIndex, setHistoryIndex] = useState(0);
+  const [direction, setDirection] = useState<NavigationDirection>("forward");
+  const isPopState = useRef(false);
 
-  // Sync URL when view changes
+  // Sync URL → state on popstate (browser back/forward)
   useEffect(() => {
+    const onPopState = () => {
+      const url = new URL(window.location.href);
+      const view = url.searchParams.get("view");
+      if (isValidView(view) && view !== activeView) {
+        isPopState.current = true;
+        setDirection("back");
+        setActiveView(view);
+      } else if (!view && activeView !== "dashboard") {
+        isPopState.current = true;
+        setDirection("back");
+        setActiveView("dashboard");
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [activeView]);
+
+  // Sync state → URL (push, not replace, for browser history)
+  useEffect(() => {
+    if (isPopState.current) {
+      isPopState.current = false;
+      return;
+    }
     const current = searchParams.get("view");
-    if (activeView === "dashboard" && !current) return;
-    if (current !== activeView) {
-      setSearchParams(activeView === "dashboard" ? {} : { view: activeView }, { replace: true });
+    const target = activeView === "dashboard" ? null : activeView;
+    if (current !== target) {
+      const params = target ? { view: target } : {};
+      setSearchParams(params, { replace: false });
     }
   }, [activeView]);
 
   const navigate = useCallback((view: View) => {
+    setDirection("forward");
     setHistory((prev) => {
       const newHistory = prev.slice(0, historyIndex + 1);
       newHistory.push(view);
@@ -68,11 +96,9 @@ export function useNavigationHistory() {
     });
     setHistoryIndex((prev) => prev + 1);
     setActiveView(view);
-    // Scroll to top on navigation
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [historyIndex]);
 
-  // Keyboard shortcuts: Alt+1..9
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.altKey && e.key >= "1" && e.key <= "9") {
@@ -89,6 +115,7 @@ export function useNavigationHistory() {
 
   const goBack = useCallback(() => {
     if (historyIndex > 0) {
+      setDirection("back");
       const newIndex = historyIndex - 1;
       setHistoryIndex(newIndex);
       setActiveView(history[newIndex]);
@@ -115,5 +142,6 @@ export function useNavigationHistory() {
     breadcrumbs,
     currentLabel: VIEW_LABELS[activeView],
     currentSection: VIEW_SECTIONS[activeView],
+    direction,
   };
 }

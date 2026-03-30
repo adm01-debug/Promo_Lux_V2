@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
-import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users, LogOut } from "lucide-react";
+import { Sparkles, Settings, Bell, LayoutDashboard, Target, Workflow, Building2, BarChart3, Search, Radar, Mail, Bot, Menu, X, MapPin, Globe, Users, LogOut, PanelLeftClose, PanelLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,17 @@ import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Lazy-loaded views for code splitting
 const DashboardView = lazy(() => import("@/components/lux/DashboardView").then(m => ({ default: m.DashboardView })));
@@ -51,10 +62,19 @@ const getShortcut = (id: View): string | null => {
   return idx >= 0 ? `Alt+${idx + 1}` : null;
 };
 
+const SIDEBAR_COLLAPSED_KEY = "lux-sidebar-collapsed";
+
 const Index = () => {
-  const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel } = useNavigationHistory();
+  const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel, direction } = useNavigationHistory();
   const { user, signOut } = useAuth();
+  const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
+    }
+    return false;
+  });
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
@@ -75,16 +95,44 @@ const Index = () => {
     }
   }, [activeView]);
 
+  const toggleSidebarCollapse = useCallback(() => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(next));
+      return next;
+    });
+  }, []);
+
   let currentSection = "";
 
   const handleNav = (id: View) => {
-    navigate(id);
-    setSidebarOpen(false);
+    confirmNavigation(() => {
+      navigate(id);
+      setSidebarOpen(false);
+    });
+  };
+
+  const sidebarWidth = sidebarCollapsed ? "w-16" : "w-64";
+  const mainMargin = sidebarCollapsed ? "lg:ml-16" : "lg:ml-64";
+
+  // Directional transition variants
+  const slideVariants = {
+    initial: (dir: string) => ({
+      opacity: 0,
+      x: dir === "forward" ? 40 : -40,
+    }),
+    animate: {
+      opacity: 1,
+      x: 0,
+    },
+    exit: (dir: string) => ({
+      opacity: 0,
+      x: dir === "forward" ? -20 : 20,
+    }),
   };
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Skip to content for keyboard users */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:text-sm focus:font-medium"
@@ -92,8 +140,25 @@ const Index = () => {
         Pular para o conteúdo
       </a>
       <TopProgressBar isAnimating={isTransitioning} />
-      <CommandPalette onNavigate={handleNav} />
+      <CommandPalette onNavigate={(id) => handleNav(id)} />
       <OnboardingTour />
+
+      {/* Unsaved changes dialog */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={(open) => !open && handleCancel()}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Alterações não salvas</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem alterações que não foram salvas. Deseja sair sem salvar?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancel}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirm}>Sair sem salvar</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -112,91 +177,129 @@ const Index = () => {
         aria-label="Navegação principal"
         role="navigation"
         className={cn(
-          "w-64 border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-transform duration-300",
+          "border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-all duration-300",
+          sidebarWidth,
           "lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0"
         )}
       >
-        <div className="p-5 border-b border-border">
+        <div className={cn("p-5 border-b border-border", sidebarCollapsed && "p-3")}>
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
-              <Sparkles className="h-5 w-5 text-primary" />
+            <div className={cn("rounded-xl bg-primary/10 flex items-center justify-center glow-primary shrink-0", sidebarCollapsed ? "h-8 w-8" : "h-10 w-10")}>
+              <Sparkles className={cn(sidebarCollapsed ? "h-4 w-4" : "h-5 w-5", "text-primary")} />
             </div>
-            <div>
-              <h1 className="text-lg font-bold tracking-tight text-foreground">
-                LUX <span className="text-primary glow-text">IA</span>
-              </h1>
-              <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-                Sales Intelligence Platform
-              </p>
-            </div>
+            {!sidebarCollapsed && (
+              <div className="min-w-0">
+                <h1 className="text-lg font-bold tracking-tight text-foreground">
+                  LUX <span className="text-primary glow-text">IA</span>
+                </h1>
+                <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Sales Intelligence Platform
+                </p>
+              </div>
+            )}
             <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto text-muted-foreground hover:text-foreground" aria-label="Fechar menu">
               <X className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+        <nav className={cn("flex-1 overflow-y-auto", sidebarCollapsed ? "p-2 space-y-1" : "p-3 space-y-0.5")}>
           {navItems.map((item) => {
             const showSection = item.section && item.section !== currentSection;
             if (item.section) currentSection = item.section;
             return (
               <div key={item.id}>
-                {showSection && (
+                {showSection && !sidebarCollapsed && (
                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-3 pt-4 pb-1.5 font-medium">
                     {item.section}
                   </p>
                 )}
-                {(() => {
-                  const shortcut = getShortcut(item.id);
-                  const btn = (
-                    <button
-                      data-tour={item.id}
-                      onClick={() => handleNav(item.id)}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
-                        activeView === item.id
-                          ? "bg-primary/15 text-primary border border-primary/25"
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                      )}
-                    >
-                      {item.icon}
-                      {item.label}
-                      {shortcut && (
-                        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline">{shortcut}</kbd>
-                      )}
-                      {item.id === "intent" && (
-                        <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
-                      )}
-                    </button>
-                  );
-                  return shortcut ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>{btn}</TooltipTrigger>
-                      <TooltipContent side="right" className="text-xs">
-                        {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted text-[10px] font-mono border border-border">{shortcut}</kbd>
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : btn;
-                })()}
+                {sidebarCollapsed ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        data-tour={item.id}
+                        onClick={() => handleNav(item.id)}
+                        className={cn(
+                          "w-full flex items-center justify-center p-2 rounded-lg transition-all",
+                          activeView === item.id
+                            ? "bg-primary/15 text-primary border border-primary/25"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                        )}
+                      >
+                        {item.icon}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">{item.label}</TooltipContent>
+                  </Tooltip>
+                ) : (
+                  (() => {
+                    const shortcut = getShortcut(item.id);
+                    const btn = (
+                      <button
+                        data-tour={item.id}
+                        onClick={() => handleNav(item.id)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+                          activeView === item.id
+                            ? "bg-primary/15 text-primary border border-primary/25"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                        )}
+                      >
+                        {item.icon}
+                        {item.label}
+                        {shortcut && (
+                          <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline">{shortcut}</kbd>
+                        )}
+                        {item.id === "intent" && (
+                          <span className={cn("text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold", shortcut ? "" : "ml-auto")}>5</span>
+                        )}
+                      </button>
+                    );
+                    return shortcut ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>{btn}</TooltipTrigger>
+                        <TooltipContent side="right" className="text-xs">
+                          {item.label} <kbd className="ml-1 px-1 py-0.5 rounded bg-muted text-[10px] font-mono border border-border">{shortcut}</kbd>
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : btn;
+                  })()
+                )}
               </div>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-border">
-          <div className="glass rounded-lg p-3">
-            <p className="text-xs text-muted-foreground">Status do Sistema</p>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs text-success font-medium">Online — 3 workflows ativos</span>
+        {/* Collapse toggle + status */}
+        <div className={cn("border-t border-border", sidebarCollapsed ? "p-2" : "p-4")}>
+          {!sidebarCollapsed && (
+            <div className="glass rounded-lg p-3 mb-3">
+              <p className="text-xs text-muted-foreground">Status do Sistema</p>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+                <span className="text-xs text-success font-medium">Online — 3 workflows ativos</span>
+              </div>
             </div>
-          </div>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={toggleSidebarCollapse}
+                className="hidden lg:flex w-full items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+              >
+                {sidebarCollapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+                {!sidebarCollapsed && <span>Recolher</span>}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">{sidebarCollapsed ? "Expandir sidebar" : "Recolher sidebar"}</TooltipContent>
+          </Tooltip>
         </div>
       </aside>
 
       {/* Main area */}
-      <div className="flex-1 lg:ml-64">
+      <div className={cn("flex-1 transition-all duration-300", mainMargin)}>
         <header className="border-b border-border glass sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 lg:px-6">
             <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -207,7 +310,7 @@ const Index = () => {
                 breadcrumbs={breadcrumbs}
                 canGoBack={canGoBack}
                 onGoBack={goBack}
-                onNavigate={handleNav}
+                onNavigate={(id) => handleNav(id)}
                 currentLabel={currentLabel}
               />
               <button
@@ -265,12 +368,14 @@ const Index = () => {
 
         <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel} role="main">
           <Suspense fallback={<ViewSkeleton />}>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={activeView}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
+                custom={direction}
+                variants={slideVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
                 transition={{ duration: 0.2, ease: "easeInOut" }}
               >
                 {activeView === "dashboard" && <DashboardView />}
