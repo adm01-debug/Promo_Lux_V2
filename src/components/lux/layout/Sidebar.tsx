@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
+import { prefetchView } from "@/lib/viewRegistry";
 import {
   Sparkles,
   LayoutDashboard,
