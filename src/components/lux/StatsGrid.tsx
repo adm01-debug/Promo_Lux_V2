@@ -2,6 +2,7 @@ import { Activity, Zap, Building2, TrendingUp, ArrowUpRight } from "lucide-react
 import { motion } from "framer-motion";
 import { useDashboardStats } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 interface StatCardProps {
   title: string;
