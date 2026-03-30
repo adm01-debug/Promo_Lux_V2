@@ -122,7 +122,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const [layouts, setLayouts] = useState<ResponsiveLayouts>(loadLayouts);
   const { width, mounted, containerRef } = useContainerWidth();
 
-  const handleLayoutChange = useCallback((_: Layout[], allLayouts: ResponsiveLayouts) => {
+  const handleLayoutChange = useCallback((_layout: any, allLayouts: any) => {
     setLayouts(allLayouts);
     saveLayouts(allLayouts);
   }, []);
