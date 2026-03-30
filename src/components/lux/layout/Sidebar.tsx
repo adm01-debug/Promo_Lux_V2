@@ -222,10 +222,12 @@ function ExpandedNavButton({
   item,
   isActive,
   onClick,
+  onPrefetch,
 }: {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
+  onPrefetch: () => void;
 }) {
   const Icon = item.icon;
   const shortcut = getShortcut(item.id);
