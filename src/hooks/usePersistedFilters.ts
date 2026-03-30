@@ -6,7 +6,7 @@ const PREFIX = "lux-filters-";
  * Persists filter state to localStorage, keyed by view name.
  * Supports Sets (serialized as arrays) and primitives.
  */
-export function usePersistedFilters<T extends Record<string, unknown>>(
+export function usePersistedFilters<T extends object>(
   viewKey: string,
   defaultState: T
 ): [T, (updater: T | ((prev: T) => T)) => void, () => void] {
