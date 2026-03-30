@@ -1,0 +1,1 @@
+CREATE POLICY "Companies can be deleted by anyone" ON public.companies FOR DELETE TO public USING (true);
