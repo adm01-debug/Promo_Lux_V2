@@ -564,3 +564,15 @@
     color: hsl(var(--foreground));
   }
 }
+
+/* Leaflet MarkerCluster dark theme overrides */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: transparent !important;
+}
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: transparent !important;
+}
