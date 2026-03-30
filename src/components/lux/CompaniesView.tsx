@@ -309,6 +309,13 @@ export const CompaniesView = () => {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border/30">
+                    <th className="p-3 w-8" onClick={(e) => e.stopPropagation()}>
+                      <Checkbox
+                        checked={paginatedItems.length > 0 && selectedIds.size === paginatedItems.length}
+                        onCheckedChange={toggleSelectAll}
+                        className="h-4 w-4"
+                      />
+                    </th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium w-8"></th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden md:table-cell">Setor</th>
