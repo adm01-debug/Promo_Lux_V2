@@ -242,10 +242,28 @@ export const CompaniesView = () => {
             {totalActiveFilters > 0 && ` — ${totalActiveFilters} filtro${totalActiveFilters > 1 ? "s" : ""} ativo${totalActiveFilters > 1 ? "s" : ""}`}
           </p>
         </div>
-        <Button variant="outline" className="gap-2 text-sm" onClick={handleExport} disabled={isExporting}>
-          {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-          {isExporting ? "Exportando..." : "Exportar CSV"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <>
+              <span className="text-xs text-muted-foreground">{selectedIds.size} selecionada(s)</span>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={handleBulkEnrich} disabled={isBulkEnriching}>
+                {isBulkEnriching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                Enriquecer
+              </Button>
+              <Button variant="destructive" size="sm" className="gap-1.5 text-xs" onClick={handleBulkDelete} disabled={isBulkDeleting}>
+                {isBulkDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                Remover
+              </Button>
+              <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSelectedIds(new Set())}>
+                Limpar seleção
+              </Button>
+            </>
+          )}
+          <Button variant="outline" className="gap-2 text-sm" onClick={handleExport} disabled={isExporting}>
+            {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            {isExporting ? "Exportando..." : "Exportar CSV"}
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-5 flex-col lg:flex-row">
