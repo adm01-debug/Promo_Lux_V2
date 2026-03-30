@@ -111,12 +111,6 @@ export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
       featured: true,
       onClick: () => onNavigate?.("companies"),
     },
-      title: "Empresas Encontradas",
-      value: s.totalCompanies.toLocaleString("pt-BR"),
-      subtitle: `${s.enrichedCompanies} enriquecidas`,
-      icon: <Building2 className="h-5 w-5" />,
-      onClick: () => onNavigate?.("companies"),
-    },
     {
       title: "Taxa de Enriquecimento",
       value: `${matchRate}%`,
