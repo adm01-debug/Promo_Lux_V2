@@ -239,10 +239,10 @@ function ExpandedNavButton({
       onClick={onClick}
       onMouseEnter={onPrefetch}
       className={cn(
-        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
+        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98]",
         isActive
-          ? "bg-primary/15 text-primary border border-primary/25"
-          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+          ? "bg-primary/15 text-primary border border-primary/25 shadow-[0_0_8px_hsl(var(--primary)/0.15)]"
+          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 hover:translate-x-0.5"
       )}
     >
       <Icon className="h-4 w-4" />
