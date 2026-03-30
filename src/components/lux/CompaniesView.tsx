@@ -173,6 +173,56 @@ export const CompaniesView = () => {
 
   const openCompany = (company: Company) => { setSelectedCompany(company); setModalOpen(true); };
 
+  const toggleSelectId = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === paginatedItems.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(paginatedItems.map((c) => c.id)));
+    }
+  };
+
+  const handleBulkDelete = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const { error } = await supabase.from("companies").delete().in("id", Array.from(selectedIds));
+      if (error) throw error;
+      toast({ title: "Empresas removidas", description: `${selectedIds.size} empresa(s) removida(s) com sucesso.` });
+      setSelectedIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch {
+      toast({ title: "Erro ao remover", description: "Não foi possível remover as empresas.", variant: "destructive" });
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  }, [selectedIds, toast, queryClient]);
+
+  const handleBulkEnrich = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    setIsBulkEnriching(true);
+    try {
+      const { error } = await supabase.from("companies").update({ enriched: true }).in("id", Array.from(selectedIds));
+      if (error) throw error;
+      toast({ title: "Empresas enriquecidas", description: `${selectedIds.size} empresa(s) marcada(s) como enriquecida(s).` });
+      setSelectedIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch {
+      toast({ title: "Erro ao enriquecer", description: "Não foi possível atualizar as empresas.", variant: "destructive" });
+    } finally {
+      setIsBulkEnriching(false);
+    }
+  }, [selectedIds, toast, queryClient]);
+
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];
   filters.selectedSectors.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedSectors: toggleSet(f.selectedSectors, v) })) }));
   filters.selectedLocations.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) })) }));
