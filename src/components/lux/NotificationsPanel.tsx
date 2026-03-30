@@ -18,18 +18,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import type { Tables } from "@/integrations/supabase/types";
 
 type NotificationType = "signal" | "scrape" | "enrichment" | "system";
-
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  read: boolean;
-  created_at: string;
-  metadata: Record<string, unknown> | null;
-}
+type Notification = Tables<"notifications">;
 
 const iconMap: Record<string, React.ReactNode> = {
   signal: <Radar className="h-4 w-4 text-primary" />,
