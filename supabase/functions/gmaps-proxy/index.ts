@@ -281,6 +281,20 @@ serve(async (req) => {
         .update({ results_count: companiesCreated, status: "completed", completed_at: new Date().toISOString() })
         .eq("id", job_id);
 
+      // Create a single grouped notification
+      if (companiesCreated > 0) {
+        await supabase.from("notifications").insert({
+          type: "scrape",
+          title: companiesCreated === 1
+            ? "Nova empresa importada"
+            : `${companiesCreated} novas empresas importadas`,
+          message: companiesCreated === 1
+            ? `1 empresa foi importada via Google Maps.`
+            : `${companiesCreated} empresas foram importadas via Google Maps.`,
+          metadata: { job_id, job_name: job.name, companies_created: companiesCreated, total_results: results.length },
+        });
+      }
+
       return new Response(
         JSON.stringify({ companies_created: companiesCreated, total_results: results.length }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
