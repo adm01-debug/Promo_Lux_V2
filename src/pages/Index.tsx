@@ -40,6 +40,7 @@ const Index = () => {
   const { collapsed, mobileOpen, toggleCollapse, openMobile, closeMobile } = useSidebarState();
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
+  useRealtimeCompanies();
 
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
