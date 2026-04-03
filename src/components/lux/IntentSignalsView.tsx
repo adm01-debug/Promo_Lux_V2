@@ -117,7 +117,7 @@ export const IntentSignalsView = () => {
     },
   });
 
-  const openEdit = (s: any) => {
+  const openEdit = (s: Tables<"intent_signals">) => {
     setEditingSignal(s);
     setCompanyName(s.company_name);
     setType(s.type as SignalType);
@@ -127,9 +127,9 @@ export const IntentSignalsView = () => {
     setEditOpen(true);
   };
 
-  const highCount = signals.filter((s: any) => s.strength === "high").length;
-  const medCount = signals.filter((s: any) => s.strength === "medium").length;
-  const lowCount = signals.filter((s: any) => s.strength === "low").length;
+  const highCount = signals.filter((s) => s.strength === "high").length;
+  const medCount = signals.filter((s) => s.strength === "medium").length;
+  const lowCount = signals.filter((s) => s.strength === "low").length;
 
   const FormFields = ({ isEdit = false }: { isEdit?: boolean }) => (
     <div className="space-y-4 mt-2">
