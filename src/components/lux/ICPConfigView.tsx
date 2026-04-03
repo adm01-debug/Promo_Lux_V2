@@ -220,7 +220,7 @@ export const ICPConfigView = () => {
                     onChange={(e) => {
                       const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
                       updateCriteria((prev) =>
-                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [val, cr.value[1]] } : cr)
+                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [val, (cr.value as number[])[1]] } : cr)
                       );
                     }}
                   />
