@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Loader2, Building2 } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+
+type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
 export const AddCompanyDialog = () => {
   const { toast } = useToast();
@@ -24,9 +26,14 @@ export const AddCompanyDialog = () => {
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
 
+  const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const reset = () => {
     setName(""); setSector(""); setLocation(""); setEmail("");
     setPhone(""); setWebsite(""); setEmployees(""); setRevenue("");
+    setGeoStatus("idle"); setGeoCoords(null);
   };
 
   const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
