@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { CommandPalette } from "@/components/lux/CommandPalette";
+import { KeyboardShortcutsDialog } from "@/components/lux/KeyboardShortcutsDialog";
+import { useRealtimeCompanies } from "@/hooks/useRealtimeCompanies";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
