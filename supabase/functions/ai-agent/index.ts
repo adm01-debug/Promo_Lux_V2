@@ -69,14 +69,14 @@ serve(async (req) => {
       { data: ipcConfig },
       { data: sectorStats },
     ] = await Promise.all([
-      supabase.from("companies").select("*", { count: "exact", head: true }),
-      supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
-      supabase.from("companies").select("name, sector, location, ipc_score, email, phone, website, enriched").order("ipc_score", { ascending: false }).limit(10),
-      supabase.from("companies").select("name, sector, location, ipc_score, source, created_at").order("created_at", { ascending: false }).limit(5),
-      supabase.from("workflows").select("*", { count: "exact", head: true }),
-      supabase.from("scrape_jobs").select("*", { count: "exact", head: true }),
-      supabase.from("ipc_config").select("criteria").eq("is_active", true).limit(1).maybeSingle(),
-      supabase.from("companies").select("sector"),
+      supabase.from("companies").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true).eq("user_id", userId),
+      supabase.from("companies").select("name, sector, location, ipc_score, email, phone, website, enriched").eq("user_id", userId).order("ipc_score", { ascending: false }).limit(10),
+      supabase.from("companies").select("name, sector, location, ipc_score, source, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(5),
+      supabase.from("workflows").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      supabase.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      supabase.from("ipc_config").select("criteria").eq("is_active", true).eq("user_id", userId).limit(1).maybeSingle(),
+      supabase.from("companies").select("sector").eq("user_id", userId),
     ]);
 
     // Build sector distribution
