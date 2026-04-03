@@ -1,4 +1,4 @@
-import { Bell, Menu, Search, Settings, LogOut } from "lucide-react";
+import { Bell, Menu, Search, Settings, LogOut, Keyboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
