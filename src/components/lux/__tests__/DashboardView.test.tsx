@@ -31,14 +31,18 @@ vi.mock("@/hooks/useThemeColors", () => ({
 }));
 
 vi.mock("framer-motion", () => {
-  const handler = {
-    get: (_: any, prop: string) => ({ children, ...props }: any) => {
-      const Tag = ["h1","h2","h3","h4","h5","h6","p","span","tr","td","th","li","ul","section","article","main","nav","footer","header","aside","form","button","a","img","svg","table","tbody","thead","tfoot"].includes(prop) ? prop : "div";
-      return <Tag>{children}</Tag>;
+  const motionProxy = new Proxy({}, {
+    get: (_: any, prop: string) => {
+      return (props: any) => {
+        const { children, ...rest } = props || {};
+        const validTags = ["h1","h2","h3","h4","h5","h6","p","span","tr","td","th","div","section","button","a"];
+        const Tag = validTags.includes(prop) ? prop : "div";
+        return <Tag>{children}</Tag>;
+      };
     },
-  };
+  });
   return {
-    motion: new Proxy({}, handler),
+    motion: motionProxy,
     useMotionValue: () => ({ get: () => 0, set: () => {} }),
     useTransform: () => ({ get: () => 0 }),
     animate: (_mv: any, _to: any, opts: any) => {
