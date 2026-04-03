@@ -55,6 +55,7 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message, variant: "destructive" });
 
             await supabase.from("notifications").insert({
+              user_id: user?.id,
               title,
               message,
               type: "scrape",
