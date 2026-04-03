@@ -5,7 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 
 /**
  * Subscribe to realtime changes on the companies table.
- * Auto-invalidates relevant queries and shows a toast on inserts.
+ * Auto-invalidates relevant queries, shows a toast, and
+ * persists a notification when scraped companies arrive.
  */
 export function useRealtimeCompanies() {
   const queryClient = useQueryClient();
@@ -17,16 +18,42 @@ export function useRealtimeCompanies() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "companies" },
-        (payload) => {
+        async (payload) => {
           queryClient.invalidateQueries({ queryKey: ["companies-list"] });
           queryClient.invalidateQueries({ queryKey: ["companies-map"] });
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+          queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
 
           if (payload.eventType === "INSERT") {
-            const name = (payload.new as any)?.name ?? "Nova empresa";
-            toast({
-              title: "Nova empresa detectada",
-              description: `"${name}" foi adicionada ao sistema.`,
+            const company = payload.new as any;
+            const name = company?.name ?? "Nova empresa";
+            const source = company?.source ?? "manual";
+            const sector = company?.sector ?? "";
+            const location = company?.location ?? "";
+
+            const isScraped = source !== "manual";
+
+            const title = isScraped
+              ? "🔍 Nova empresa raspada"
+              : "🏢 Nova empresa adicionada";
+
+            const details = [sector, location].filter(Boolean).join(" · ");
+            const description = `"${name}"${details ? ` — ${details}` : ""}`;
+
+            toast({ title, description });
+
+            // Persist notification in DB for the notifications panel
+            await supabase.from("notifications").insert({
+              title,
+              message: description,
+              type: isScraped ? "scrape" : "system",
+              metadata: {
+                company_id: company?.id,
+                company_name: name,
+                source,
+                sector,
+                location,
+              },
             });
           }
         }
