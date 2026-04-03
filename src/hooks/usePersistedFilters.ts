@@ -28,7 +28,7 @@ export function usePersistedFilters<T extends object>(
       setStateRaw((prev) => {
         const next = typeof updater === "function" ? (updater as (p: T) => T)(prev) : updater;
         try {
-          localStorage.setItem(storageKey, JSON.stringify(serialize(next as any)));
+          localStorage.setItem(storageKey, JSON.stringify(serialize(next as Record<string, unknown>)));
         } catch {}
         return next;
       });
