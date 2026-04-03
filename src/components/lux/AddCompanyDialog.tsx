@@ -134,8 +134,22 @@ export const AddCompanyDialog = () => {
             <Input placeholder="Ex: SaaS B2B" value={sector} onChange={(e) => setSector(e.target.value)} className="mt-1" />
           </div>
           <div>
-            <Label>Localização</Label>
-            <Input placeholder="Ex: São Paulo - SP" value={location} onChange={(e) => setLocation(e.target.value)} className="mt-1" />
+            <Label className="flex items-center gap-1.5">
+              Localização
+              {geoStatus === "checking" && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+              {geoStatus === "found" && <CheckCircle2 className="h-3 w-3 text-green-500" />}
+              {geoStatus === "not_found" && <XCircle className="h-3 w-3 text-destructive" />}
+            </Label>
+            <Input placeholder="Ex: São Paulo - SP" value={location} onChange={(e) => handleLocationChange(e.target.value)} className="mt-1" />
+            {geoStatus === "found" && geoCoords && (
+              <p className="text-[10px] text-green-500 mt-1 flex items-center gap-1 font-mono">
+                <MapPin className="h-2.5 w-2.5" />
+                {geoCoords.lat.toFixed(4)}, {geoCoords.lng.toFixed(4)}
+              </p>
+            )}
+            {geoStatus === "not_found" && (
+              <p className="text-[10px] text-destructive mt-1">Localização não encontrada no mapa</p>
+            )}
           </div>
           <div>
             <Label>Email</Label>
