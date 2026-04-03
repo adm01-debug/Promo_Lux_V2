@@ -9,19 +9,11 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useWeeklyPerformance } from "@/hooks/useWeeklyPerformance";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 const LAYOUT_KEY = "lux-dashboard-widget-order";
-
-const performanceData = [
-  { day: "Seg", raspadas: 120, qualificadas: 85 },
-  { day: "Ter", raspadas: 210, qualificadas: 142 },
-  { day: "Qua", raspadas: 180, qualificadas: 120 },
-  { day: "Qui", raspadas: 340, qualificadas: 245 },
-  { day: "Sex", raspadas: 280, qualificadas: 198 },
-  { day: "Sáb", raspadas: 150, qualificadas: 95 },
-  { day: "Dom", raspadas: 90, qualificadas: 62 },
-];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
