@@ -45,19 +45,19 @@ export function useRealtimeCompanies() {
             toast({ title, description });
 
             // Persist notification in DB for the notifications panel
-            await supabase.from("notifications").insert({
-              user_id: user?.id,
+            await supabase.from("notifications").insert([{
+              user_id: user?.id ?? null,
               title,
               message: description,
               type: isScraped ? "scrape" : "system",
               metadata: {
-                company_id: company?.id,
+                company_id: (company?.id as string) ?? null,
                 company_name: name,
                 source,
                 sector,
                 location,
               },
-            });
+            }]);
           }
         }
       )

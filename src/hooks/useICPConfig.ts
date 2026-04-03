@@ -4,11 +4,13 @@ import { toast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
 
+export type ICPValue = string | string[] | number[];
+
 export interface ICPCriterion {
   id: string;
   label: string;
   type: "select" | "range" | "tags" | "text";
-  value: string | string[] | number[];
+  value: ICPValue;
   weight: number;
 }
 

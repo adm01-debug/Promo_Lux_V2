@@ -245,7 +245,7 @@ export const ICPConfigView = () => {
             {/* Select */}
             {c.type === "select" && (
               <Select
-                defaultValue={c.value}
+                defaultValue={c.value as string}
                 onValueChange={(val) => {
                   updateCriteria((prev) =>
                     prev.map((cr) => cr.id === c.id ? { ...cr, value: val } : cr)

@@ -82,7 +82,7 @@ export function useNavigationHistory() {
     const current = searchParams.get("view");
     const target = activeView === "dashboard" ? null : activeView;
     if (current !== target) {
-      const params = target ? { view: target } : {};
+      const params: Record<string, string> = target ? { view: target } : {};
       setSearchParams(params, { replace: false });
     }
   }, [activeView]);
