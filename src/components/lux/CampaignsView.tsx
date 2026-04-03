@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2 } from "lucide-react";
+import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
-import { cn } from "@/lib/utils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -23,11 +22,100 @@ const statusConfig: Record<CampaignStatus, { label: string; color: string; icon:
   completed: { label: "Concluída", color: "bg-primary/20 text-primary border-primary/30", icon: <CheckCircle2 className="h-3 w-3" /> },
 };
 
+type SequenceStep = { id: string; type: string; label: string };
+
+const defaultSequence: SequenceStep[] = [
+  { id: "s1", type: "email", label: "Email inicial" },
+  { id: "s2", type: "wait", label: "Aguardar 3 dias" },
+  { id: "s3", type: "email", label: "Follow-up" },
+  { id: "s4", type: "wait", label: "Aguardar 5 dias" },
+  { id: "s5", type: "email", label: "Último contato" },
+];
+
+const CampaignFormFields = ({
+  name, setName, prospects, setProspects, sequence, setSequence, isEdit = false,
+}: {
+  name: string; setName: (v: string) => void;
+  prospects: string; setProspects: (v: string) => void;
+  sequence: SequenceStep[]; setSequence: (v: SequenceStep[]) => void;
+  isEdit?: boolean;
+}) => (
+  <div className="space-y-4 mt-2">
+    <div className="space-y-2">
+      <Label className="text-xs text-muted-foreground">Nome da Campanha</Label>
+      <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Outreach SaaS Q2" className="h-9 text-sm" />
+    </div>
+    <div className="space-y-2">
+      <Label className="text-xs text-muted-foreground">Nº de Prospects</Label>
+      <Input value={prospects} onChange={(e) => setProspects(e.target.value)} type="number" className="h-9 text-sm" />
+    </div>
+    <div className="space-y-2">
+      <Label className="text-xs text-muted-foreground">Sequência</Label>
+      <div className="space-y-2">
+        {sequence.map((step, idx) => (
+          <div key={step.id} className="flex items-center gap-2">
+            <Badge variant="outline" className="text-[10px] shrink-0">
+              {step.type === "email" ? "📧" : "⏳"} {idx + 1}
+            </Badge>
+            <Input
+              value={step.label}
+              onChange={(e) => {
+                const updated = [...sequence];
+                updated[idx] = { ...step, label: e.target.value };
+                setSequence(updated);
+              }}
+              className="h-8 text-xs"
+            />
+            {sequence.length > 1 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-destructive hover:text-destructive shrink-0"
+                onClick={() => setSequence(sequence.filter((_, i) => i !== idx))}
+              >
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-xs h-7 gap-1"
+          onClick={() => setSequence([...sequence, { id: `s${Date.now()}`, type: "email", label: "Novo email" }])}
+        >
+          <Plus className="h-3 w-3" /> Email
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-xs h-7 gap-1"
+          onClick={() => setSequence([...sequence, { id: `s${Date.now()}`, type: "wait", label: "Aguardar 3 dias" }])}
+        >
+          <Plus className="h-3 w-3" /> Espera
+        </Button>
+      </div>
+    </div>
+  </div>
+);
+
 export const CampaignsView = () => {
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newProspects, setNewProspects] = useState("50");
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingCampaign, setEditingCampaign] = useState<any>(null);
+
+  const [formName, setFormName] = useState("");
+  const [formProspects, setFormProspects] = useState("50");
+  const [formSequence, setFormSequence] = useState<SequenceStep[]>(defaultSequence);
+
+  const resetForm = () => {
+    setFormName("");
+    setFormProspects("50");
+    setFormSequence([...defaultSequence]);
+  };
 
   const { data: campaigns = [], isLoading } = useQuery({
     queryKey: ["campaigns"],
@@ -45,16 +133,10 @@ export const CampaignsView = () => {
   const createMutation = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("campaigns").insert({
-        name: newName.trim(),
-        prospects: parseInt(newProspects) || 50,
+        name: formName.trim(),
+        prospects: parseInt(formProspects) || 50,
         status: "draft",
-        sequence: [
-          { id: "s1", type: "email", label: "Email inicial" },
-          { id: "s2", type: "wait", label: "Aguardar 3 dias" },
-          { id: "s3", type: "email", label: "Follow-up" },
-          { id: "s4", type: "wait", label: "Aguardar 5 dias" },
-          { id: "s5", type: "email", label: "Último contato" },
-        ],
+        sequence: formSequence,
       });
       if (error) throw error;
     },
@@ -62,9 +144,29 @@ export const CampaignsView = () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
       toast({ title: "Campanha criada!" });
       setCreateOpen(false);
-      setNewName("");
+      resetForm();
     },
     onError: (err) => toast({ title: "Erro", description: err.message, variant: "destructive" }),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      if (!editingCampaign) return;
+      const { error } = await supabase.from("campaigns").update({
+        name: formName.trim(),
+        prospects: parseInt(formProspects) || 50,
+        sequence: formSequence,
+      }).eq("id", editingCampaign.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      toast({ title: "Campanha atualizada!" });
+      setEditOpen(false);
+      setEditingCampaign(null);
+      resetForm();
+    },
+    onError: (err) => toast({ title: "Erro ao atualizar", description: err.message, variant: "destructive" }),
   });
 
   const toggleMutation = useMutation({
@@ -87,6 +189,15 @@ export const CampaignsView = () => {
     },
   });
 
+  const openEdit = (campaign: any) => {
+    setEditingCampaign(campaign);
+    setFormName(campaign.name);
+    setFormProspects(String(campaign.prospects));
+    const seq = Array.isArray(campaign.sequence) ? campaign.sequence as SequenceStep[] : defaultSequence;
+    setFormSequence(seq);
+    setEditOpen(true);
+  };
+
   const activeCount = campaigns.filter((c: any) => c.status === "active").length;
   const totalSent = campaigns.reduce((a: number, c: any) => a + (c.sent || 0), 0);
 
@@ -102,7 +213,7 @@ export const CampaignsView = () => {
             {activeCount} ativas — {totalSent} emails enviados
           </p>
         </div>
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <Dialog open={createOpen} onOpenChange={(v) => { setCreateOpen(v); if (!v) resetForm(); }}>
           <DialogTrigger asChild>
             <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Campanha</Button>
           </DialogTrigger>
@@ -112,33 +223,39 @@ export const CampaignsView = () => {
                 <Mail className="h-5 w-5 text-primary" /> Nova Campanha
               </DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 mt-2">
-              <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Nome da Campanha</Label>
-                <Input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Ex: Outreach SaaS Q2" className="h-9 text-sm" />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Nº de Prospects</Label>
-                <Input value={newProspects} onChange={(e) => setNewProspects(e.target.value)} type="number" className="h-9 text-sm" />
-              </div>
-              <div className="glass rounded-lg p-3">
-                <p className="text-[10px] uppercase text-muted-foreground tracking-wider mb-2">Sequência padrão</p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Badge variant="outline" className="text-[10px]">📧 Email</Badge> →
-                  <Badge variant="outline" className="text-[10px]">⏳ 3d</Badge> →
-                  <Badge variant="outline" className="text-[10px]">📧 Follow-up</Badge> →
-                  <Badge variant="outline" className="text-[10px]">⏳ 5d</Badge> →
-                  <Badge variant="outline" className="text-[10px]">📧 Final</Badge>
-                </div>
-              </div>
-              <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !newName.trim()} className="w-full gap-2">
-                {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-                Criar Campanha
-              </Button>
-            </div>
+            <CampaignFormFields
+              name={formName} setName={setFormName}
+              prospects={formProspects} setProspects={setFormProspects}
+              sequence={formSequence} setSequence={setFormSequence}
+            />
+            <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !formName.trim()} className="w-full gap-2">
+              {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+              Criar Campanha
+            </Button>
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editOpen} onOpenChange={(v) => { setEditOpen(v); if (!v) { setEditingCampaign(null); resetForm(); } }}>
+        <DialogContent className="bg-card border-border/50">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil className="h-5 w-5 text-primary" /> Editar Campanha
+            </DialogTitle>
+          </DialogHeader>
+          <CampaignFormFields
+            name={formName} setName={setFormName}
+            prospects={formProspects} setProspects={setFormProspects}
+            sequence={formSequence} setSequence={setFormSequence}
+            isEdit
+          />
+          <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending || !formName.trim()} className="w-full gap-2">
+            {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
+            Salvar Alterações
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       {/* Quick stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -196,6 +313,14 @@ export const CampaignsView = () => {
                     </p>
                   </div>
                   <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1 text-xs h-8"
+                      onClick={() => openEdit(campaign)}
+                    >
+                      <Pencil className="h-3 w-3" /> Editar
+                    </Button>
                     <Button
                       size="sm"
                       variant="outline"
