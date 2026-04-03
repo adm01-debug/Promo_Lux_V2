@@ -126,6 +126,7 @@ export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
     {
       title: "Workflows Ativos",
       value: s.activeWorkflows,
+      rawNumber: s.activeWorkflows,
       subtitle: `${s.runningWorkflows} em execução agora`,
       icon: <Zap className="h-5 w-5" />,
       onClick: () => onNavigate?.("workflows"),
@@ -133,6 +134,7 @@ export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
     {
       title: "Empresas Encontradas",
       value: s.totalCompanies.toLocaleString("pt-BR"),
+      rawNumber: s.totalCompanies,
       subtitle: `${s.enrichedCompanies} enriquecidas`,
       icon: <Building2 className="h-5 w-5" />,
       featured: true,
@@ -141,6 +143,8 @@ export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
     {
       title: "Taxa de Enriquecimento",
       value: `${matchRate}%`,
+      rawNumber: matchRate,
+      suffix: "%",
       subtitle: matchRate >= 50 ? "Acima da média" : "Abaixo da média",
       icon: <TrendingUp className="h-5 w-5" />,
       progress: matchRate,
@@ -149,6 +153,7 @@ export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
     {
       title: "Raspagens Hoje",
       value: `${s.todayScrapeJobs}`,
+      rawNumber: s.todayScrapeJobs,
       subtitle: `${scrapeProgress}% concluído`,
       icon: <Activity className="h-5 w-5" />,
       progress: scrapeProgress,
