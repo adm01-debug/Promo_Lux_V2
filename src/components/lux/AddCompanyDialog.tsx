@@ -105,7 +105,7 @@ export const AddCompanyDialog = () => {
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       reset();
       setOpen(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({ title: "Erro ao criar empresa", description: err.message, variant: "destructive" });
     } finally {
       setSaving(false);
