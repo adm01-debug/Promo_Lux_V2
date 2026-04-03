@@ -56,11 +56,13 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
   <motion.div
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
-    whileHover={{ y: -2, transition: { duration: 0.2 } }}
+    whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.2, ease: "easeOut" } }}
+    whileTap={{ scale: 0.98 }}
     onClick={onClick}
     className={cn(
       "glass rounded-lg p-5 group transition-all duration-300",
       onClick && "cursor-pointer",
+      featured && "breathe-glow",
       CARD_STYLES[title] || "hover:glow-primary"
     )}
   >
