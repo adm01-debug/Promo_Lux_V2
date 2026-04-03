@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Loader2, Building2 } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+
+type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
 export const AddCompanyDialog = () => {
   const { toast } = useToast();
@@ -24,9 +26,14 @@ export const AddCompanyDialog = () => {
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
 
+  const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const reset = () => {
     setName(""); setSector(""); setLocation(""); setEmail("");
     setPhone(""); setWebsite(""); setEmployees(""); setRevenue("");
+    setGeoStatus("idle"); setGeoCoords(null);
   };
 
   const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
@@ -45,6 +52,27 @@ export const AddCompanyDialog = () => {
     }
   };
 
+  // Debounced geocode on location change
+  const handleLocationChange = useCallback((value: string) => {
+    setLocation(value);
+    setGeoCoords(null);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!value.trim()) {
+      setGeoStatus("idle");
+      return;
+    }
+    setGeoStatus("checking");
+    debounceRef.current = setTimeout(async () => {
+      const coords = await geocodeLocation(value.trim());
+      if (coords) {
+        setGeoStatus("found");
+        setGeoCoords(coords);
+      } else {
+        setGeoStatus("not_found");
+      }
+    }, 800);
+  }, []);
+
   const handleSave = async () => {
     if (!name.trim()) {
       toast({ title: "Nome obrigatório", variant: "destructive" });
@@ -52,17 +80,6 @@ export const AddCompanyDialog = () => {
     }
     setSaving(true);
     try {
-      // Geocode location automatically
-      let lat: number | null = null;
-      let lng: number | null = null;
-      if (location.trim()) {
-        const coords = await geocodeLocation(location.trim());
-        if (coords) {
-          lat = coords.lat;
-          lng = coords.lng;
-        }
-      }
-
       const { error } = await supabase.from("companies").insert({
         name: name.trim(),
         sector: sector || null,
@@ -73,12 +90,12 @@ export const AddCompanyDialog = () => {
         employees: employees || null,
         revenue: revenue || null,
         source: "manual",
-        lat,
-        lng,
+        lat: geoCoords?.lat ?? null,
+        lng: geoCoords?.lng ?? null,
       });
       if (error) throw error;
 
-      const geoMsg = lat ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
+      const geoMsg = geoCoords ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
       toast({ title: "Empresa adicionada!", description: `"${name}" foi criada com sucesso.${geoMsg}` });
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
       queryClient.invalidateQueries({ queryKey: ["companies-map"] });
@@ -117,8 +134,22 @@ export const AddCompanyDialog = () => {
             <Input placeholder="Ex: SaaS B2B" value={sector} onChange={(e) => setSector(e.target.value)} className="mt-1" />
           </div>
           <div>
-            <Label>Localização</Label>
-            <Input placeholder="Ex: São Paulo - SP" value={location} onChange={(e) => setLocation(e.target.value)} className="mt-1" />
+            <Label className="flex items-center gap-1.5">
+              Localização
+              {geoStatus === "checking" && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+              {geoStatus === "found" && <CheckCircle2 className="h-3 w-3 text-green-500" />}
+              {geoStatus === "not_found" && <XCircle className="h-3 w-3 text-destructive" />}
+            </Label>
+            <Input placeholder="Ex: São Paulo - SP" value={location} onChange={(e) => handleLocationChange(e.target.value)} className="mt-1" />
+            {geoStatus === "found" && geoCoords && (
+              <p className="text-[10px] text-green-500 mt-1 flex items-center gap-1 font-mono">
+                <MapPin className="h-2.5 w-2.5" />
+                {geoCoords.lat.toFixed(4)}, {geoCoords.lng.toFixed(4)}
+              </p>
+            )}
+            {geoStatus === "not_found" && (
+              <p className="text-[10px] text-destructive mt-1">Localização não encontrada no mapa</p>
+            )}
           </div>
           <div>
             <Label>Email</Label>
