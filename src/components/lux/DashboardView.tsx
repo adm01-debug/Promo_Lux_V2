@@ -215,10 +215,10 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
           <motion.div
             key={id}
             layout={editing}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 + idx * 0.08 }}
-            draggable={editing}
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.15 + idx * 0.1, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={!editing ? { y: -1, transition: { duration: 0.2 } } : undefined}
             onDragStart={() => handleDragStart(idx)}
             onDragOver={(e) => handleDragOver(e, idx)}
             onDragEnd={() => { setDragOver(null); setDragging(null); }}
