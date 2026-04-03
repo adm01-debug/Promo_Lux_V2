@@ -184,6 +184,7 @@ function MarkerClusterGroup({ companies }: { companies: CompanyWithCoords[] }) {
 export const CompaniesMapView = () => {
   const [minScore, setMinScore] = useState(0);
   const [selectedSector, setSelectedSector] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [geocodingCount, setGeocodingCount] = useState(0);
   const [isGeocoding, setIsGeocoding] = useState(false);
