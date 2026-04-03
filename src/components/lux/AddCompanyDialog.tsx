@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
 export const AddCompanyDialog = () => {
+  const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
