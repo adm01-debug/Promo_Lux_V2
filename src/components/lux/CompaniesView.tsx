@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
-import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare } from "lucide-react";
+import { EditCompanyDialog } from "@/components/lux/EditCompanyDialog";
+import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
@@ -15,6 +16,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Company {
   id: string;
@@ -58,6 +63,10 @@ export const CompaniesView = () => {
   });
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editCompany, setEditCompany] = useState<Company | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "name" | "sector">("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
@@ -174,6 +183,24 @@ export const CompaniesView = () => {
   };
 
   const openCompany = (company: Company) => { setSelectedCompany(company); setModalOpen(true); };
+
+  const handleSingleDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase.from("companies").delete().eq("id", deleteTarget.id);
+      if (error) throw error;
+      toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida com sucesso.` });
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-map"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch {
+      toast({ title: "Erro ao remover", variant: "destructive" });
+    } finally {
+      setIsDeleting(false);
+      setDeleteTarget(null);
+    }
+  }, [deleteTarget, toast, queryClient]);
 
   const toggleSelectId = (id: string) => {
     setSelectedIds((prev) => {
@@ -385,9 +412,17 @@ export const CompaniesView = () => {
                         )}
                       </td>
                       <td className="p-3 text-right">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Eye className="h-3.5 w-3.5" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes">
+                            <Eye className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={(e) => { e.stopPropagation(); setEditCompany(company); setEditOpen(true); }}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={(e) => { e.stopPropagation(); setDeleteTarget(company); }}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
                       </td>
                     </motion.tr>
                   ))}
@@ -419,6 +454,25 @@ export const CompaniesView = () => {
       </div>
 
       <CompanyDetailModal company={selectedCompany} open={modalOpen} onOpenChange={setModalOpen} />
+      <EditCompanyDialog company={editCompany} open={editOpen} onOpenChange={setEditOpen} />
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir empresa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir <strong>"{deleteTarget?.name}"</strong>? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSingleDelete} disabled={isDeleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {isDeleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

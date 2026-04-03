@@ -11,8 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, Globe, MapPin, Filter, X, Loader2 } from "lucide-react";
+import { Mail, Phone, Globe, MapPin, Filter, X, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 // Fix default marker icon issue with bundlers
@@ -183,6 +184,7 @@ function MarkerClusterGroup({ companies }: { companies: CompanyWithCoords[] }) {
 export const CompaniesMapView = () => {
   const [minScore, setMinScore] = useState(0);
   const [selectedSector, setSelectedSector] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [geocodingCount, setGeocodingCount] = useState(0);
   const [isGeocoding, setIsGeocoding] = useState(false);
@@ -259,12 +261,14 @@ export const CompaniesMapView = () => {
   }, [allMappable]);
 
   const filtered = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
     return allMappable.filter((c) => {
       if ((c.ipc_score ?? 0) < minScore) return false;
       if (selectedSector !== "all" && c.sector !== selectedSector) return false;
+      if (q && !c.name.toLowerCase().includes(q) && !(c.location ?? "").toLowerCase().includes(q) && !(c.sector ?? "").toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [allMappable, minScore, selectedSector]);
+  }, [allMappable, minScore, selectedSector, searchQuery]);
 
   const totalCompanies = companies?.length ?? 0;
   const unmappable = totalCompanies - allMappable.length;
@@ -272,9 +276,10 @@ export const CompaniesMapView = () => {
   const clearFilters = () => {
     setMinScore(0);
     setSelectedSector("all");
+    setSearchQuery("");
   };
 
-  const hasActiveFilters = minScore > 0 || selectedSector !== "all";
+  const hasActiveFilters = minScore > 0 || selectedSector !== "all" || searchQuery.trim() !== "";
 
   return (
     <div className="space-y-4">
@@ -321,6 +326,15 @@ export const CompaniesMapView = () => {
 
       {showFilters && (
         <div className="glass rounded-lg p-4 space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input
+              placeholder="Buscar empresa por nome, localização ou setor..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9 text-sm"
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">
@@ -361,7 +375,7 @@ export const CompaniesMapView = () => {
         </div>
       )}
 
-      <div className="glass rounded-lg overflow-hidden" style={{ height: "500px" }}>
+      <div className="glass rounded-lg overflow-hidden" style={{ height: "clamp(350px, 60vh, 600px)" }}>
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
             <p className="text-sm text-muted-foreground animate-pulse">Carregando mapa...</p>
