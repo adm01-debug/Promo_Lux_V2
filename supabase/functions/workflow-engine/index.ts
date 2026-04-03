@@ -59,6 +59,7 @@ serve(async (req) => {
       const { data, error } = await supabase
         .from("workflows")
         .select("*, workflow_runs(id, status, started_at, completed_at, results)")
+        .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return new Response(JSON.stringify(data), {
@@ -72,6 +73,7 @@ serve(async (req) => {
       const { data, error } = await supabase
         .from("workflows")
         .insert({
+          user_id: userId,
           name: body.name,
           description: body.description,
           status: "active",
@@ -100,7 +102,7 @@ serve(async (req) => {
       // Create run record
       const { data: run, error: runError } = await supabase
         .from("workflow_runs")
-        .insert({ workflow_id, status: "running", current_step: "scrape" })
+        .insert({ workflow_id, user_id: userId, status: "running", current_step: "scrape" })
         .select()
         .single();
       if (runError) throw runError;
@@ -126,6 +128,7 @@ serve(async (req) => {
         const { data: scrapeJob } = await supabase
           .from("scrape_jobs")
           .insert({
+            user_id: userId,
             name: `WF: ${workflow.name}`,
             status: "pending",
             source: "gmaps",
@@ -247,6 +250,7 @@ serve(async (req) => {
                 const { data: company } = await supabase
                   .from("companies")
                   .insert({
+                    user_id: userId,
                     name: obj.name || obj.title || "Unknown",
                     sector: obj.category || obj.type || "Não classificado",
                     location: obj.address || obj.city || "",
@@ -262,6 +266,7 @@ serve(async (req) => {
 
                 if (company) {
                   await supabase.from("scrape_results").insert({
+                    user_id: userId,
                     job_id: job.id,
                     company_id: company.id,
                     raw_data: obj,
