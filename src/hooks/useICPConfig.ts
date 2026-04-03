@@ -7,7 +7,7 @@ export interface ICPCriterion {
   id: string;
   label: string;
   type: "select" | "range" | "tags" | "text";
-  value: any;
+  value: string | string[] | number[];
   weight: number;
 }
 
