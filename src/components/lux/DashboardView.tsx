@@ -219,6 +219,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.15 + idx * 0.1, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             whileHover={!editing ? { y: -1, transition: { duration: 0.2 } } : undefined}
+            draggable={editing}
             onDragStart={() => handleDragStart(idx)}
             onDragOver={(e) => handleDragOver(e, idx)}
             onDragEnd={() => { setDragOver(null); setDragging(null); }}
