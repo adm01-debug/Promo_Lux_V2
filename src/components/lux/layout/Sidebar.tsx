@@ -156,16 +156,7 @@ export const Sidebar = ({
       </nav>
 
       {/* Footer */}
-      <div className={cn("border-t border-border", collapsed ? "p-2" : "p-4")}>
-        {!collapsed && (
-          <div className="glass rounded-lg p-3 mb-3">
-            <p className="text-xs text-muted-foreground">Status do Sistema</p>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs text-success font-medium">Online — 3 workflows ativos</span>
-            </div>
-          </div>
-        )}
+      <SidebarFooter collapsed={collapsed} onToggleCollapse={onToggleCollapse} />
         <Tooltip>
           <TooltipTrigger asChild>
             <button
