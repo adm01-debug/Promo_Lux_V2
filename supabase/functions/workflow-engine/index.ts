@@ -13,7 +13,7 @@ const corsHeaders = {
 function badRequest(req: Request, details: unknown) {
   return new Response(JSON.stringify({ error: "Invalid input", details }), {
     status: 400,
-    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 }
 
@@ -39,7 +39,7 @@ const ActionSchema = z.enum(["list", "create", "run", "toggle-status", "delete"]
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: getCorsHeaders(req) });
+    return new Response(null, { headers: corsHeaders });
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -51,7 +51,7 @@ serve(async (req) => {
   if (!authHeader?.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
   const anonClient = createClient(supabaseUrl, anonKey, {
@@ -61,7 +61,7 @@ serve(async (req) => {
   if (claimsError || !claimsData?.claims) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
-      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
   const userId = claimsData.claims.sub as string;
@@ -87,7 +87,7 @@ serve(async (req) => {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return new Response(JSON.stringify(data), {
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -113,7 +113,7 @@ serve(async (req) => {
         .single();
       if (error) throw error;
       return new Response(JSON.stringify(data), {
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -405,7 +405,7 @@ serve(async (req) => {
         .eq("id", run.id);
 
       return new Response(JSON.stringify({ run_id: run.id, results }), {
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -423,7 +423,7 @@ serve(async (req) => {
         .eq("id", workflow_id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -436,19 +436,19 @@ serve(async (req) => {
       const { error } = await supabase.from("workflows").delete().eq("id", id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
-        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     return new Response(JSON.stringify({ error: "Unknown action" }), {
       status: 400,
-      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
     console.error("Workflow engine error:", err);
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
-      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
