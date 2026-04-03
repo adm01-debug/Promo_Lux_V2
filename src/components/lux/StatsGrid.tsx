@@ -1,12 +1,33 @@
 import { Activity, Zap, Building2, TrendingUp, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useDashboardStats } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+
+/* ── Animated number counter ── */
+const AnimatedNumber = ({ value, duration = 1.2 }: { value: number; duration?: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const motionVal = useMotionValue(0);
+
+  useEffect(() => {
+    const controls = animate(motionVal, value, {
+      duration,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        if (ref.current) ref.current.textContent = Math.round(latest).toLocaleString("pt-BR");
+      },
+    });
+    return () => controls.stop();
+  }, [value, duration, motionVal]);
+
+  return <span ref={ref}>0</span>;
+};
 
 interface StatCardProps {
   title: string;
   value: string | number;
+  rawNumber?: number;
   subtitle: string;
   icon: React.ReactNode;
   trend?: string;
@@ -14,12 +35,14 @@ interface StatCardProps {
   progress?: number;
   onClick?: () => void;
   featured?: boolean;
+  suffix?: string;
 }
 
-const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progress, onClick, featured }: StatCardProps) => (
+const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = true, progress, onClick, featured, suffix }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
+    whileHover={{ y: -2, transition: { duration: 0.2 } }}
     onClick={onClick}
     className={cn(
       "glass rounded-lg p-5 group transition-all duration-300",
@@ -42,7 +65,11 @@ const StatCard = ({ title, value, subtitle, icon, trend, trendUp = true, progres
     <p className={cn(
       "font-bold text-foreground tracking-tight font-mono",
       featured ? "text-4xl" : "text-3xl"
-    )}>{value}</p>
+    )}>
+      {rawNumber !== undefined ? (
+        <><AnimatedNumber value={rawNumber} />{suffix ?? ""}</>
+      ) : value}
+    </p>
     <div className="flex items-center gap-2 mt-1">
       <span className="text-muted-foreground text-sm">{subtitle}</span>
       {trend && (
