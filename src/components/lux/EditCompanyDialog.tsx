@@ -91,7 +91,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     }
     setSaving(true);
     try {
-      const updateData: Record<string, any> = {
+      const updateData: Record<string, string | number | null> = {
         name: name.trim(),
         sector: sector || null,
         location: location || null,
