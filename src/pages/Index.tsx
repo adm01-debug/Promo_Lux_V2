@@ -42,6 +42,7 @@ const Index = () => {
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   useRealtimeCompanies();
+  useRealtimeScrapeJobs();
 
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
