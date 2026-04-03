@@ -26,6 +26,28 @@ serve(async (req) => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+  // Validate JWT
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+    });
+  }
+  const anonClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: authHeader } },
+  });
+  const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
+  if (claimsError || !claimsData?.claims) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+    });
+  }
+  const userId = claimsData.claims.sub as string;
+
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const url = new URL(req.url);
@@ -55,6 +77,7 @@ serve(async (req) => {
 
             if (!existing) {
               await supabase.from("scrape_jobs").insert({
+                user_id: userId,
                 external_id: job.ID,
                 name: job.Name,
                 status: job.Status === "ok" ? "completed" : job.Status,
@@ -79,6 +102,7 @@ serve(async (req) => {
         .from("scrape_jobs")
         .select("*")
         .eq("source", "gmaps")
+        .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -96,6 +120,7 @@ serve(async (req) => {
       const { data: dbJob, error: dbError } = await supabase
         .from("scrape_jobs")
         .insert({
+          user_id: userId,
           name: body.name,
           status: "pending",
           source: "gmaps",
@@ -260,6 +285,7 @@ serve(async (req) => {
         const { data: company, error: compError } = await supabase
           .from("companies")
           .upsert({
+            user_id: userId,
             name: result.name || result.title || "Unknown",
             sector: result.category || result.type || "Não classificado",
             location: result.address || result.city || "",
@@ -278,6 +304,7 @@ serve(async (req) => {
           companiesCreated++;
           // Save scrape result linked to job and company
           await supabase.from("scrape_results").insert({
+            user_id: userId,
             job_id: job_id,
             company_id: company.id,
             raw_data: result,
@@ -295,6 +322,7 @@ serve(async (req) => {
       // Create a single grouped notification
       if (companiesCreated > 0) {
         await supabase.from("notifications").insert({
+          user_id: userId,
           type: "scrape",
           title: companiesCreated === 1
             ? "Nova empresa importada"

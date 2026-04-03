@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 /**
  * Subscribe to realtime changes on the companies table.
@@ -11,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 export function useRealtimeCompanies() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     const channel = supabase
@@ -44,6 +46,7 @@ export function useRealtimeCompanies() {
 
             // Persist notification in DB for the notifications panel
             await supabase.from("notifications").insert({
+              user_id: user?.id,
               title,
               message: description,
               type: isScraped ? "scrape" : "system",

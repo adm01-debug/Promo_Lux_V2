@@ -1,3 +1,5 @@
+import { supabase } from "@/integrations/supabase/client";
+
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/workflow-engine`;
 
 export interface WorkflowStep {
@@ -32,12 +34,16 @@ export interface Workflow {
 }
 
 async function callWorkflowApi(action: string, options: RequestInit = {}, params: Record<string, string> = {}) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.access_token) throw new Error("Not authenticated");
+
   const searchParams = new URLSearchParams({ action, ...params });
   const res = await fetch(`${FUNCTIONS_URL}?${searchParams}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
       apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      Authorization: `Bearer ${session.access_token}`,
       ...options.headers,
     },
   });

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 /**
  * Subscribe to realtime changes on scrape_jobs.
@@ -10,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 export function useRealtimeScrapeJobs() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     const channel = supabase
@@ -35,6 +37,7 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message });
 
             await supabase.from("notifications").insert({
+              user_id: user?.id,
               title,
               message,
               type: "scrape",
@@ -52,6 +55,7 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message, variant: "destructive" });
 
             await supabase.from("notifications").insert({
+              user_id: user?.id,
               title,
               message,
               type: "scrape",

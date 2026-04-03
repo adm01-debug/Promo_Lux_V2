@@ -8,10 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
 export const AddCompanyDialog = () => {
+  const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -81,6 +83,7 @@ export const AddCompanyDialog = () => {
     setSaving(true);
     try {
       const { error } = await supabase.from("companies").insert({
+        user_id: user?.id,
         name: name.trim(),
         sector: sector || null,
         location: location || null,

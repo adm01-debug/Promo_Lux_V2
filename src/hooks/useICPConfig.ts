@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface ICPCriterion {
   id: string;
@@ -29,6 +30,7 @@ const DEFAULT_CRITERIA: ICPCriterion[] = [
 
 export function useICPConfig() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const query = useQuery({
     queryKey: ["ipc-config"],
@@ -80,7 +82,7 @@ export function useICPConfig() {
         // Insert new
         const { error } = await supabase
           .from("ipc_config")
-          .insert({ name, criteria: criteria as any, is_active: true });
+          .insert({ user_id: user?.id, name, criteria: criteria as any, is_active: true });
         if (error) throw error;
       }
     },

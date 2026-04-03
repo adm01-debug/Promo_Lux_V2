@@ -25,7 +25,29 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
+
+    // Validate JWT
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+    const anonClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+    const userId = claimsData.claims.sub as string;
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { message } = await req.json();
@@ -47,14 +69,14 @@ serve(async (req) => {
       { data: ipcConfig },
       { data: sectorStats },
     ] = await Promise.all([
-      supabase.from("companies").select("*", { count: "exact", head: true }),
-      supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
-      supabase.from("companies").select("name, sector, location, ipc_score, email, phone, website, enriched").order("ipc_score", { ascending: false }).limit(10),
-      supabase.from("companies").select("name, sector, location, ipc_score, source, created_at").order("created_at", { ascending: false }).limit(5),
-      supabase.from("workflows").select("*", { count: "exact", head: true }),
-      supabase.from("scrape_jobs").select("*", { count: "exact", head: true }),
-      supabase.from("ipc_config").select("criteria").eq("is_active", true).limit(1).maybeSingle(),
-      supabase.from("companies").select("sector"),
+      supabase.from("companies").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true).eq("user_id", userId),
+      supabase.from("companies").select("name, sector, location, ipc_score, email, phone, website, enriched").eq("user_id", userId).order("ipc_score", { ascending: false }).limit(10),
+      supabase.from("companies").select("name, sector, location, ipc_score, source, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(5),
+      supabase.from("workflows").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      supabase.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("user_id", userId),
+      supabase.from("ipc_config").select("criteria").eq("is_active", true).eq("user_id", userId).limit(1).maybeSingle(),
+      supabase.from("companies").select("sector").eq("user_id", userId),
     ]);
 
     // Build sector distribution

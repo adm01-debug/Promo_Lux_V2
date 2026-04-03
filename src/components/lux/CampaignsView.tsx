@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/lux/EmptyState";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 
 type CampaignStatus = "active" | "paused" | "draft" | "completed";
@@ -102,6 +103,7 @@ const CampaignFormFields = ({
 );
 
 export const CampaignsView = () => {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -133,6 +135,7 @@ export const CampaignsView = () => {
   const createMutation = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("campaigns").insert({
+        user_id: user?.id,
         name: formName.trim(),
         prospects: parseInt(formProspects) || 50,
         status: "draft",
