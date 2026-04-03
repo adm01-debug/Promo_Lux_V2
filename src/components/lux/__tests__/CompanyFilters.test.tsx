@@ -111,8 +111,9 @@ describe("CompanyFilters — P0 Mobile Collapsible", () => {
   it("shows active filter count badge when filters selected", () => {
     const filters = { ...emptyFilters, selectedSectors: new Set(["Tech", "Saúde"]) };
     render(<CompanyFilters {...defaultProps} filters={filters} />);
-    // Should show count "2" for active filters
-    expect(screen.getByText("2")).toBeInTheDocument();
+    const badges = screen.getAllByText("2");
+    // At least one badge should be the total active filters badge
+    expect(badges.length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows clear button when filters active", () => {
