@@ -106,7 +106,7 @@ export const AddCompanyDialog = () => {
       reset();
       setOpen(false);
     } catch (err: unknown) {
-      toast({ title: "Erro ao criar empresa", description: err.message, variant: "destructive" });
+      toast({ title: "Erro ao criar empresa", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSaving(false);
     }

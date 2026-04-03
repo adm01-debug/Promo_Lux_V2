@@ -266,7 +266,7 @@ export const IntentSignalsView = () => {
           />
         ) : (
           <div className="divide-y divide-border/20">
-            {signals.map((sig: any, i: number) => {
+            {signals.map((sig, i) => {
               const config = signalConfig[sig.type as SignalType] || signalConfig.website_visit;
               return (
                 <motion.div

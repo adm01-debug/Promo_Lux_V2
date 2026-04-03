@@ -59,8 +59,8 @@ function serialize(obj: Record<string, unknown>): Record<string, unknown> {
 function deserialize(parsed: Record<string, unknown>, defaults: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...defaults };
   for (const [k, v] of Object.entries(parsed)) {
-    if (v && typeof v === "object" && "__set" in (v as any)) {
-      out[k] = new Set((v as any).__set);
+    if (v && typeof v === "object" && "__set" in (v as Record<string, unknown>)) {
+      out[k] = new Set((v as Record<string, unknown>).__set as unknown[]);
     } else if (k in defaults) {
       out[k] = v;
     }

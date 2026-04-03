@@ -116,8 +116,8 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       queryClient.invalidateQueries({ queryKey: ["companies-map"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       onOpenChange(false);
-    } catch (err: any) {
-      toast({ title: "Erro ao atualizar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro ao atualizar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSaving(false);
     }

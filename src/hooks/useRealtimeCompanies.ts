@@ -27,11 +27,11 @@ export function useRealtimeCompanies() {
           queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
 
           if (payload.eventType === "INSERT") {
-            const company = payload.new as any;
-            const name = company?.name ?? "Nova empresa";
-            const source = company?.source ?? "manual";
-            const sector = company?.sector ?? "";
-            const location = company?.location ?? "";
+            const company = payload.new as Record<string, unknown>;
+            const name = (company?.name as string) ?? "Nova empresa";
+            const source = (company?.source as string) ?? "manual";
+            const sector = (company?.sector as string) ?? "";
+            const location = (company?.location as string) ?? "";
 
             const isScraped = source !== "manual";
 

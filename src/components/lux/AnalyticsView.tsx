@@ -342,7 +342,7 @@ export const AnalyticsView = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {d.allCampaigns.map((c: any) => {
+                    {d.allCampaigns.map((c) => {
                       const openRate = c.sent > 0 ? Math.round((c.opened / c.sent) * 100) : 0;
                       const replyRate = c.sent > 0 ? Math.round((c.replied / c.sent) * 100) : 0;
                       const convRate = c.prospects > 0 ? ((c.meetings / c.prospects) * 100).toFixed(1) : "0";
