@@ -178,13 +178,46 @@ export const CompanyFilters = ({
     }));
   }, [companies]);
 
+  const filterContent = (
+    <>
+      <div className="relative mb-3">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+        <Input
+          placeholder="Buscar..."
+          className="pl-8 h-8 text-xs"
+          value={filters.search}
+          onChange={(e) => onSearchChange(e.target.value)}
+        />
+      </div>
+
+      <div className="divide-y divide-border/20">
+        <FacetGroup title="Setor" icon={<Tag className="h-3 w-3" />} items={sectorFacets} selected={filters.selectedSectors} onToggle={onToggleSector} />
+        <FacetGroup title="Score IPC" items={scoreFacets} selected={filters.selectedScores as Set<string>} onToggle={onToggleScore} />
+        <FacetGroup title="Localização" icon={<MapPin className="h-3 w-3" />} items={locationFacets} selected={filters.selectedLocations} onToggle={onToggleLocation} />
+        <FacetGroup title="Status" items={statusFacets} selected={filters.selectedStatus} onToggle={onToggleStatus} />
+        <FacetGroup title="Fonte" items={sourceFacets} selected={filters.selectedSources} onToggle={onToggleSource} />
+      </div>
+    </>
+  );
+
   return (
     <div className="lg:w-60 flex-shrink-0">
       <div className="glass rounded-lg p-4 space-y-1 sticky top-20">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+          <button
+            className="text-xs font-semibold text-foreground flex items-center gap-1.5 lg:cursor-default"
+            onClick={() => isMobile && setMobileExpanded(!mobileExpanded)}
+          >
             <Filter className="h-3.5 w-3.5 text-primary" /> Filtros
-          </span>
+            {totalActiveFilters > 0 && (
+              <span className="text-[9px] bg-primary/20 text-primary rounded-full px-1.5 py-0.5 font-bold">
+                {totalActiveFilters}
+              </span>
+            )}
+            {isMobile && (
+              mobileExpanded ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+            )}
+          </button>
           {totalActiveFilters > 0 && (
             <button onClick={onClearAll} className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
               <X className="h-3 w-3" /> Limpar ({totalActiveFilters})
@@ -192,23 +225,22 @@ export const CompanyFilters = ({
           )}
         </div>
 
-        <div className="relative mb-3">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-          <Input
-            placeholder="Buscar..."
-            className="pl-8 h-8 text-xs"
-            value={filters.search}
-            onChange={(e) => onSearchChange(e.target.value)}
-          />
+        {/* Desktop: always show. Mobile: collapsible */}
+        <div className="hidden lg:block">
+          {filterContent}
         </div>
-
-        <div className="divide-y divide-border/20">
-          <FacetGroup title="Setor" icon={<Tag className="h-3 w-3" />} items={sectorFacets} selected={filters.selectedSectors} onToggle={onToggleSector} />
-          <FacetGroup title="Score IPC" items={scoreFacets} selected={filters.selectedScores as Set<string>} onToggle={onToggleScore} />
-          <FacetGroup title="Localização" icon={<MapPin className="h-3 w-3" />} items={locationFacets} selected={filters.selectedLocations} onToggle={onToggleLocation} />
-          <FacetGroup title="Status" items={statusFacets} selected={filters.selectedStatus} onToggle={onToggleStatus} />
-          <FacetGroup title="Fonte" items={sourceFacets} selected={filters.selectedSources} onToggle={onToggleSource} />
-        </div>
+        <AnimatePresence>
+          {isMobile && mobileExpanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden lg:hidden"
+            >
+              {filterContent}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

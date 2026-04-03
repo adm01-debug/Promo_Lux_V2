@@ -38,6 +38,20 @@ interface StatCardProps {
   suffix?: string;
 }
 
+const CARD_STYLES: Record<string, string> = {
+  "Workflows Ativos": "border-violet-500/20 hover:shadow-[0_0_24px_-6px_hsl(270_60%_50%/0.25)]",
+  "Empresas Encontradas": "border-primary/40 shadow-[0_0_24px_-6px_hsl(var(--primary)/0.25)] hover:shadow-[0_0_32px_-4px_hsl(var(--primary)/0.35)]",
+  "Taxa de Enriquecimento": "border-emerald-500/20 hover:shadow-[0_0_24px_-6px_hsl(145_60%_40%/0.25)]",
+  "Raspagens Hoje": "border-sky-500/20 hover:shadow-[0_0_24px_-6px_hsl(200_60%_50%/0.25)]",
+};
+
+const ICON_BG: Record<string, string> = {
+  "Workflows Ativos": "bg-violet-500/10 text-violet-400",
+  "Empresas Encontradas": "bg-primary/10 text-primary",
+  "Taxa de Enriquecimento": "bg-emerald-500/10 text-emerald-400",
+  "Raspagens Hoje": "bg-sky-500/10 text-sky-400",
+};
+
 const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = true, progress, onClick, featured, suffix }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 12 }}
@@ -47,9 +61,7 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
     className={cn(
       "glass rounded-lg p-5 group transition-all duration-300",
       onClick && "cursor-pointer",
-      featured
-        ? "border-primary/40 shadow-[0_0_24px_-6px_hsl(var(--primary)/0.25)] hover:shadow-[0_0_32px_-4px_hsl(var(--primary)/0.35)]"
-        : "hover:glow-primary"
+      CARD_STYLES[title] || "hover:glow-primary"
     )}
   >
     <div className="flex items-start justify-between mb-3">
@@ -58,8 +70,8 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
         featured ? "text-primary font-semibold" : "text-muted-foreground"
       )}>{title}</span>
       <div className={cn(
-        "transition-colors",
-        featured ? "text-primary" : "text-primary/70 group-hover:text-primary"
+        "h-9 w-9 rounded-lg flex items-center justify-center transition-colors",
+        ICON_BG[title] || "bg-primary/10 text-primary"
       )}>{icon}</div>
     </div>
     <p className={cn(
@@ -82,7 +94,7 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
     {progress !== undefined && (
       <div className="mt-3 h-1.5 bg-secondary rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-primary rounded-full"
+          className={cn("h-full rounded-full", title === "Taxa de Enriquecimento" ? "bg-emerald-500" : title === "Raspagens Hoje" ? "bg-sky-500" : "bg-primary")}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 1, delay: 0.3 }}
@@ -91,7 +103,6 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
     )}
   </motion.div>
 );
-
 const StatSkeleton = () => (
   <div className="glass rounded-lg p-5 space-y-3">
     <div className="flex items-start justify-between">

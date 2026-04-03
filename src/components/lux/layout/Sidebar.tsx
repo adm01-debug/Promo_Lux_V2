@@ -207,8 +207,6 @@ function SidebarFooter({ collapsed, onToggleCollapse }: { collapsed: boolean; on
     </div>
   );
 }
-    </aside>
-  );
 };
 
 /* Sub-components */

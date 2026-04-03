@@ -417,17 +417,39 @@ export const CompaniesView = () => {
                           <Badge variant="outline" className="text-[10px] bg-muted text-muted-foreground">Pendente</Badge>
                         )}
                       </td>
-                      <td className="p-3 text-right">
-                        <div className="flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <td className="p-3 text-right" onClick={(e) => e.stopPropagation()}>
+                        {/* Desktop: inline buttons on hover */}
+                        <div className="hidden sm:flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes">
                             <Eye className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={(e) => { e.stopPropagation(); setEditCompany(company); setEditOpen(true); }}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={() => { setEditCompany(company); setEditOpen(true); }}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={(e) => { e.stopPropagation(); setDeleteTarget(company); }}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={() => setDeleteTarget(company)}>
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
+                        </div>
+                        {/* Mobile: always-visible dropdown */}
+                        <div className="sm:hidden">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openCompany(company)}>
+                                <Eye className="h-3.5 w-3.5 mr-2" /> Ver detalhes
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => { setEditCompany(company); setEditOpen(true); }}>
+                                <Pencil className="h-3.5 w-3.5 mr-2" /> Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => setDeleteTarget(company)}>
+                                <Trash2 className="h-3.5 w-3.5 mr-2" /> Excluir
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </td>
                     </motion.tr>

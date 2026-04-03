@@ -48,7 +48,20 @@ export const CompanyTable = () => {
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa</th>
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Setor</th>
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Localização</th>
-                <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Score IPC</th>
+                <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-flex items-center gap-1 cursor-help">
+                        Score IPC
+                        <HelpCircle className="h-3 w-3 text-muted-foreground/50" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[220px] text-xs">
+                      <p className="font-semibold mb-1">Score do Perfil de Cliente Ideal</p>
+                      <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo. Baseado em setor, porte, localização e sinais de intenção.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </th>
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Fonte</th>
               </tr>
             </thead>

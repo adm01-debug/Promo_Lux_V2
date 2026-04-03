@@ -7,6 +7,14 @@ import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { View } from "@/hooks/useNavigationHistory";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface BreadcrumbItem {
   label: string;
@@ -104,33 +112,34 @@ export const Header = ({
             open={notificationsOpen}
             onClose={() => setNotificationsOpen(false)}
           />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-            onClick={() => onNavigate("settings")}
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                onClick={onSignOut}
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Sair</TooltipContent>
-          </Tooltip>
-          <GradientAvatar
-            src={userAvatarUrl}
-            email={userEmail}
-            size="md"
-            className="ml-2"
-          />
+
+          {/* Avatar dropdown with settings + logout */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="ml-1 rounded-full ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <GradientAvatar
+                  src={userAvatarUrl}
+                  email={userEmail}
+                  size="md"
+                />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel className="font-normal">
+                <p className="text-xs text-muted-foreground truncate">{userEmail ?? "Usuário"}</p>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onNavigate("settings")}>
+                <Settings className="h-4 w-4 mr-2" />
+                Configurações
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onSignOut} className="text-destructive focus:text-destructive">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
