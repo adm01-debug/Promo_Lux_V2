@@ -77,6 +77,50 @@ export type Database = {
         }
         Relationships: []
       }
+      intent_signals: {
+        Row: {
+          company_id: string | null
+          company_name: string
+          created_at: string
+          details: string | null
+          id: string
+          metadata: Json | null
+          signal: string
+          strength: string
+          type: string
+        }
+        Insert: {
+          company_id?: string | null
+          company_name: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          metadata?: Json | null
+          signal: string
+          strength?: string
+          type?: string
+        }
+        Update: {
+          company_id?: string | null
+          company_name?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          metadata?: Json | null
+          signal?: string
+          strength?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intent_signals_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ipc_config: {
         Row: {
           created_at: string
