@@ -266,7 +266,7 @@ export const CampaignsView = () => {
           { label: "Campanhas", value: campaigns.length, color: "text-foreground" },
           { label: "Ativas", value: activeCount, color: "text-success" },
           { label: "Enviados", value: totalSent, color: "text-primary" },
-          { label: "Reuniões", value: campaigns.reduce((a: number, c: any) => a + (c.meetings || 0), 0), color: "text-primary" },
+          { label: "Reuniões", value: campaigns.reduce((a, c) => a + (c.meetings || 0), 0), color: "text-primary" },
         ].map((stat) => (
           <div key={stat.label} className="glass rounded-lg p-3">
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{stat.label}</span>
