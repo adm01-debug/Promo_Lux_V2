@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import type { Tables } from "@/integrations/supabase/types";
 import { motion } from "framer-motion";
 
 type CampaignStatus = "active" | "paused" | "draft" | "completed";
@@ -107,7 +108,7 @@ export const CampaignsView = () => {
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [editingCampaign, setEditingCampaign] = useState<any>(null);
+  const [editingCampaign, setEditingCampaign] = useState<Tables<"campaigns"> | null>(null);
 
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
@@ -192,7 +193,7 @@ export const CampaignsView = () => {
     },
   });
 
-  const openEdit = (campaign: any) => {
+  const openEdit = (campaign: Tables<"campaigns">) => {
     setEditingCampaign(campaign);
     setFormName(campaign.name);
     setFormProspects(String(campaign.prospects));
@@ -201,8 +202,8 @@ export const CampaignsView = () => {
     setEditOpen(true);
   };
 
-  const activeCount = campaigns.filter((c: any) => c.status === "active").length;
-  const totalSent = campaigns.reduce((a: number, c: any) => a + (c.sent || 0), 0);
+  const activeCount = campaigns.filter((c) => c.status === "active").length;
+  const totalSent = campaigns.reduce((a, c) => a + (c.sent || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -266,7 +267,7 @@ export const CampaignsView = () => {
           { label: "Campanhas", value: campaigns.length, color: "text-foreground" },
           { label: "Ativas", value: activeCount, color: "text-success" },
           { label: "Enviados", value: totalSent, color: "text-primary" },
-          { label: "Reuniões", value: campaigns.reduce((a: number, c: any) => a + (c.meetings || 0), 0), color: "text-primary" },
+          { label: "Reuniões", value: campaigns.reduce((a, c) => a + (c.meetings || 0), 0), color: "text-primary" },
         ].map((stat) => (
           <div key={stat.label} className="glass rounded-lg p-3">
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{stat.label}</span>
@@ -290,7 +291,7 @@ export const CampaignsView = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {campaigns.map((campaign: any, i: number) => {
+          {campaigns.map((campaign, i) => {
             const status = statusConfig[(campaign.status as CampaignStatus) || "draft"] || statusConfig.draft;
             const openRate = campaign.sent > 0 ? Math.round((campaign.opened / campaign.sent) * 100) : 0;
             const replyRate = campaign.sent > 0 ? Math.round((campaign.replied / campaign.sent) * 100) : 0;

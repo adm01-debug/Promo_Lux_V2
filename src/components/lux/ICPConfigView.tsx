@@ -44,7 +44,9 @@ export const ICPConfigView = () => {
   const removeTag = (criteriaId: string, tag: string) => {
     updateCriteria((prev) =>
       prev.map((c) =>
-        c.id === criteriaId ? { ...c, value: c.value.filter((t: string) => t !== tag) } : c
+        c.id === criteriaId && Array.isArray(c.value)
+          ? { ...c, value: (c.value as string[]).filter((t) => t !== tag) }
+          : c
       )
     );
   };
@@ -53,7 +55,9 @@ export const ICPConfigView = () => {
     if (!newTag.trim()) return;
     updateCriteria((prev) =>
       prev.map((c) =>
-        c.id === criteriaId ? { ...c, value: [...c.value, newTag.trim()] } : c
+        c.id === criteriaId && Array.isArray(c.value)
+          ? { ...c, value: [...(c.value as string[]), newTag.trim()] }
+          : c
       )
     );
     setNewTag("");
@@ -178,7 +182,7 @@ export const ICPConfigView = () => {
             {c.type === "tags" && (
               <div className="space-y-2">
                 <div className="flex flex-wrap gap-1.5">
-                  {c.value.map((tag: string) => (
+                  {(c.value as string[]).map((tag: string) => (
                     <Badge
                       key={tag}
                       variant="outline"
@@ -212,11 +216,11 @@ export const ICPConfigView = () => {
                   <Label className="text-muted-foreground">Mínimo</Label>
                   <Input
                     className="h-8 text-xs mt-1 font-mono"
-                    defaultValue={c.value[0]?.toLocaleString("pt-BR")}
+                    defaultValue={(c.value as number[])[0]?.toLocaleString("pt-BR")}
                     onChange={(e) => {
                       const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
                       updateCriteria((prev) =>
-                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [val, cr.value[1]] } : cr)
+                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [val, (cr.value as number[])[1]] } : cr)
                       );
                     }}
                   />
@@ -226,11 +230,11 @@ export const ICPConfigView = () => {
                   <Label className="text-muted-foreground">Máximo</Label>
                   <Input
                     className="h-8 text-xs mt-1 font-mono"
-                    defaultValue={c.value[1]?.toLocaleString("pt-BR")}
+                    defaultValue={(c.value as number[])[1]?.toLocaleString("pt-BR")}
                     onChange={(e) => {
                       const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
                       updateCriteria((prev) =>
-                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [cr.value[0], val] } : cr)
+                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [(cr.value as number[])[0], val] } : cr)
                       );
                     }}
                   />
@@ -241,7 +245,7 @@ export const ICPConfigView = () => {
             {/* Select */}
             {c.type === "select" && (
               <Select
-                defaultValue={c.value}
+                defaultValue={c.value as string}
                 onValueChange={(val) => {
                   updateCriteria((prev) =>
                     prev.map((cr) => cr.id === c.id ? { ...cr, value: val } : cr)

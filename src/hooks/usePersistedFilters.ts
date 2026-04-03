@@ -17,7 +17,7 @@ export function usePersistedFilters<T extends object>(
       const stored = localStorage.getItem(storageKey);
       if (!stored) return defaultState;
       const parsed = JSON.parse(stored);
-      return deserialize(parsed, defaultState as any) as T;
+      return deserialize(parsed, defaultState as Record<string, unknown>) as T;
     } catch {
       return defaultState;
     }
@@ -28,7 +28,7 @@ export function usePersistedFilters<T extends object>(
       setStateRaw((prev) => {
         const next = typeof updater === "function" ? (updater as (p: T) => T)(prev) : updater;
         try {
-          localStorage.setItem(storageKey, JSON.stringify(serialize(next as any)));
+          localStorage.setItem(storageKey, JSON.stringify(serialize(next as Record<string, unknown>)));
         } catch {}
         return next;
       });
@@ -59,8 +59,8 @@ function serialize(obj: Record<string, unknown>): Record<string, unknown> {
 function deserialize(parsed: Record<string, unknown>, defaults: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...defaults };
   for (const [k, v] of Object.entries(parsed)) {
-    if (v && typeof v === "object" && "__set" in (v as any)) {
-      out[k] = new Set((v as any).__set);
+    if (v && typeof v === "object" && "__set" in (v as Record<string, unknown>)) {
+      out[k] = new Set((v as Record<string, unknown>).__set as unknown[]);
     } else if (k in defaults) {
       out[k] = v;
     }

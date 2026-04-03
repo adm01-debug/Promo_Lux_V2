@@ -81,13 +81,13 @@ export const AIAgentView = () => {
           timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setMessages((prev) => [
         ...prev,
         {
           id: crypto.randomUUID(),
           role: "agent",
-          content: `❌ Erro ao processar: ${err.message}\n\nTente novamente em alguns segundos.`,
+          content: `❌ Erro ao processar: ${err instanceof Error ? err.message : "Erro desconhecido"}\n\nTente novamente em alguns segundos.`,
           timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
         },
       ]);

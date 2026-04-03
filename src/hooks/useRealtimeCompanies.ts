@@ -27,11 +27,11 @@ export function useRealtimeCompanies() {
           queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
 
           if (payload.eventType === "INSERT") {
-            const company = payload.new as any;
-            const name = company?.name ?? "Nova empresa";
-            const source = company?.source ?? "manual";
-            const sector = company?.sector ?? "";
-            const location = company?.location ?? "";
+            const company = payload.new as Record<string, unknown>;
+            const name = (company?.name as string) ?? "Nova empresa";
+            const source = (company?.source as string) ?? "manual";
+            const sector = (company?.sector as string) ?? "";
+            const location = (company?.location as string) ?? "";
 
             const isScraped = source !== "manual";
 
@@ -45,19 +45,19 @@ export function useRealtimeCompanies() {
             toast({ title, description });
 
             // Persist notification in DB for the notifications panel
-            await supabase.from("notifications").insert({
-              user_id: user?.id,
+            await supabase.from("notifications").insert([{
+              user_id: user?.id ?? null,
               title,
               message: description,
               type: isScraped ? "scrape" : "system",
               metadata: {
-                company_id: company?.id,
+                company_id: (company?.id as string) ?? null,
                 company_name: name,
                 source,
                 sector,
                 location,
               },
-            });
+            }]);
           }
         }
       )

@@ -1,13 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
+
+export type ICPValue = string | string[] | number[];
 
 export interface ICPCriterion {
   id: string;
   label: string;
   type: "select" | "range" | "tags" | "text";
-  value: any;
+  value: ICPValue;
   weight: number;
 }
 
@@ -75,14 +78,14 @@ export function useICPConfig() {
         // Update existing
         const { error } = await supabase
           .from("ipc_config")
-          .update({ criteria: criteria as any, name, updated_at: new Date().toISOString() })
+          .update({ criteria: criteria as unknown as Json, name, updated_at: new Date().toISOString() })
           .eq("id", id);
         if (error) throw error;
       } else {
         // Insert new
         const { error } = await supabase
           .from("ipc_config")
-          .insert({ user_id: user?.id, name, criteria: criteria as any, is_active: true });
+          .insert({ user_id: user?.id, name, criteria: criteria as unknown as Json, is_active: true });
         if (error) throw error;
       }
     },

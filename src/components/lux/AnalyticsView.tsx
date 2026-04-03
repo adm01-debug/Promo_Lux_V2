@@ -19,12 +19,18 @@ const COLORS = [
   "hsl(215, 12%, 50%)",
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipPayloadItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: TooltipPayloadItem[]; label?: string }) => {
   if (!active || !payload) return null;
   return (
     <div className="glass rounded-lg p-2.5 border border-border/50 text-xs shadow-xl">
       <p className="font-medium text-foreground mb-1">{label}</p>
-      {payload.map((p: any) => (
+      {payload.map((p) => (
         <p key={p.name} style={{ color: p.color }} className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: p.color }} />
           {p.name}: <span className="font-mono font-bold">{p.value}</span>
@@ -336,7 +342,7 @@ export const AnalyticsView = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {d.allCampaigns.map((c: any) => {
+                    {d.allCampaigns.map((c) => {
                       const openRate = c.sent > 0 ? Math.round((c.opened / c.sent) * 100) : 0;
                       const replyRate = c.sent > 0 ? Math.round((c.replied / c.sent) * 100) : 0;
                       const convRate = c.prospects > 0 ? ((c.meetings / c.prospects) * 100).toFixed(1) : "0";

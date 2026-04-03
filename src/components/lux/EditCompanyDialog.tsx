@@ -91,7 +91,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     }
     setSaving(true);
     try {
-      const updateData: Record<string, any> = {
+      const updateData: Record<string, string | number | null> = {
         name: name.trim(),
         sector: sector || null,
         location: location || null,
@@ -116,8 +116,8 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       queryClient.invalidateQueries({ queryKey: ["companies-map"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       onOpenChange(false);
-    } catch (err: any) {
-      toast({ title: "Erro ao atualizar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro ao atualizar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSaving(false);
     }

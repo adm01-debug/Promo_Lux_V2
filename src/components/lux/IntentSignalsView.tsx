@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import type { Tables } from "@/integrations/supabase/types";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion } from "framer-motion";
@@ -37,7 +38,7 @@ export const IntentSignalsView = () => {
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [editingSignal, setEditingSignal] = useState<any>(null);
+  const [editingSignal, setEditingSignal] = useState<Tables<"intent_signals"> | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [type, setType] = useState<SignalType>("website_visit");
   const [signal, setSignal] = useState("");
@@ -116,7 +117,7 @@ export const IntentSignalsView = () => {
     },
   });
 
-  const openEdit = (s: any) => {
+  const openEdit = (s: Tables<"intent_signals">) => {
     setEditingSignal(s);
     setCompanyName(s.company_name);
     setType(s.type as SignalType);
@@ -126,9 +127,9 @@ export const IntentSignalsView = () => {
     setEditOpen(true);
   };
 
-  const highCount = signals.filter((s: any) => s.strength === "high").length;
-  const medCount = signals.filter((s: any) => s.strength === "medium").length;
-  const lowCount = signals.filter((s: any) => s.strength === "low").length;
+  const highCount = signals.filter((s) => s.strength === "high").length;
+  const medCount = signals.filter((s) => s.strength === "medium").length;
+  const lowCount = signals.filter((s) => s.strength === "low").length;
 
   const FormFields = ({ isEdit = false }: { isEdit?: boolean }) => (
     <div className="space-y-4 mt-2">
@@ -265,7 +266,7 @@ export const IntentSignalsView = () => {
           />
         ) : (
           <div className="divide-y divide-border/20">
-            {signals.map((sig: any, i: number) => {
+            {signals.map((sig, i) => {
               const config = signalConfig[sig.type as SignalType] || signalConfig.website_visit;
               return (
                 <motion.div
