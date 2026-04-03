@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export function useRealtimeScrapeJobs() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     const channel = supabase
