@@ -82,7 +82,7 @@ export function useICPConfig() {
         // Insert new
         const { error } = await supabase
           .from("ipc_config")
-          .insert({ user_id: user?.id, name, criteria: criteria as any, is_active: true });
+          .insert({ user_id: user?.id, name, criteria: criteria as unknown as Json, is_active: true });
         if (error) throw error;
       }
     },
