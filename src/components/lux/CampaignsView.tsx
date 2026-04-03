@@ -107,7 +107,7 @@ export const CampaignsView = () => {
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [editingCampaign, setEditingCampaign] = useState<any>(null);
+  const [editingCampaign, setEditingCampaign] = useState<Tables<"campaigns"> | null>(null);
 
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
