@@ -108,11 +108,12 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
 const StatSkeleton = () => (
   <div className="glass rounded-lg p-5 space-y-3">
     <div className="flex items-start justify-between">
-      <Skeleton className="h-3 w-24" />
-      <Skeleton className="h-5 w-5 rounded" />
+      <div className="skeleton-shimmer h-3 w-24 rounded" />
+      <div className="skeleton-shimmer h-9 w-9 rounded-lg" />
     </div>
-    <Skeleton className="h-8 w-16" />
-    <Skeleton className="h-3 w-32" />
+    <div className="skeleton-shimmer h-8 w-16 rounded" />
+    <div className="skeleton-shimmer h-3 w-32 rounded" />
+    <div className="skeleton-shimmer h-1.5 w-full rounded-full mt-1" />
   </div>
 );
 

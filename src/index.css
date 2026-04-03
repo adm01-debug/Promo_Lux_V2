@@ -565,6 +565,31 @@
   }
 }
 
+/* ── Shimmer skeleton effect ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted) / 0.3) 25%,
+    hsl(var(--muted) / 0.5) 50%,
+    hsl(var(--muted) / 0.3) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* ── Subtle breathing glow for featured cards ── */
+@keyframes breathe-glow {
+  0%, 100% { box-shadow: 0 0 20px -8px hsl(var(--primary) / 0.15); }
+  50% { box-shadow: 0 0 28px -4px hsl(var(--primary) / 0.3); }
+}
+.breathe-glow {
+  animation: breathe-glow 3s ease-in-out infinite;
+}
+
 /* Leaflet MarkerCluster dark theme overrides */
 .marker-cluster-small,
 .marker-cluster-medium,
