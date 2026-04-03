@@ -19,7 +19,7 @@ function getCorsHeaders(req: Request) {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   try {
@@ -32,7 +32,7 @@ serve(async (req) => {
     if (!message || typeof message !== "string") {
       return new Response(JSON.stringify({ error: "Message is required" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -122,13 +122,13 @@ Se o usuário pedir algo que requer ação (criar workflow, raspar, etc.), descr
     const reply = aiResult.choices?.[0]?.message?.content ?? "Desculpe, não consegui processar sua mensagem.";
 
     return new Response(JSON.stringify({ reply }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (err) {
     console.error("AI Agent error:", err);
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });

@@ -21,7 +21,7 @@ function getCorsHeaders(req: Request) {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -40,7 +40,7 @@ serve(async (req) => {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -60,7 +60,7 @@ serve(async (req) => {
         .single();
       if (error) throw error;
       return new Response(JSON.stringify(data), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -408,7 +408,7 @@ serve(async (req) => {
         .eq("id", run.id);
 
       return new Response(JSON.stringify({ run_id: run.id, results }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -421,7 +421,7 @@ serve(async (req) => {
         .eq("id", workflow_id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
@@ -432,19 +432,19 @@ serve(async (req) => {
       const { error } = await supabase.from("workflows").delete().eq("id", id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
     return new Response(JSON.stringify({ error: "Unknown action" }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (err) {
     console.error("Workflow engine error:", err);
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   }
 });
