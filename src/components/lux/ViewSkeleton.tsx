@@ -28,12 +28,12 @@ const ChartSkeleton = ({ height = 220 }: { height?: number }) => (
 const TableRowSkeleton = ({ rows = 5 }: { rows?: number }) => (
   <div className="glass rounded-lg overflow-hidden">
     <div className="p-5 border-b border-border/50 flex items-center justify-between">
-      <Skeleton className="h-5 w-32 bg-muted/40" />
-      <Skeleton className="h-8 w-24 bg-muted/30 rounded-md" />
+      <div className="skeleton-shimmer h-5 w-32 rounded" />
+      <div className="skeleton-shimmer h-8 w-24 rounded-md" />
     </div>
     <div className="p-4 space-y-2">
       {Array.from({ length: rows }).map((_, i) => (
-        <Skeleton key={i} className="h-12 w-full bg-muted/20 rounded" />
+        <div key={i} className="skeleton-shimmer h-12 w-full rounded" style={{ animationDelay: `${i * 0.1}s` }} />
       ))}
     </div>
   </div>
