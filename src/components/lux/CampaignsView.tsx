@@ -192,7 +192,7 @@ export const CampaignsView = () => {
     },
   });
 
-  const openEdit = (campaign: any) => {
+  const openEdit = (campaign: Tables<"campaigns">) => {
     setEditingCampaign(campaign);
     setFormName(campaign.name);
     setFormProspects(String(campaign.prospects));
@@ -201,8 +201,8 @@ export const CampaignsView = () => {
     setEditOpen(true);
   };
 
-  const activeCount = campaigns.filter((c: any) => c.status === "active").length;
-  const totalSent = campaigns.reduce((a: number, c: any) => a + (c.sent || 0), 0);
+  const activeCount = campaigns.filter((c) => c.status === "active").length;
+  const totalSent = campaigns.reduce((a, c) => a + (c.sent || 0), 0);
 
   return (
     <div className="space-y-6">
