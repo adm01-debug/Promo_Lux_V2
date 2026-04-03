@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface DashboardStats {
@@ -54,6 +55,30 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
 }
 
 export function useDashboardStats() {
+  const queryClient = useQueryClient();
+
+  // Realtime: auto-refresh when companies/workflows/notifications change
+  useEffect(() => {
+    const channel = supabase
+      .channel("dashboard-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
+        queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [queryClient]);
+
   return useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: fetchDashboardStats,
