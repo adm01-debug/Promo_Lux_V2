@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://esm.sh/zod@3.23.8";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -18,6 +19,33 @@ function getCorsHeaders(req: Request) {
     "Vary": "Origin",
   };
 }
+
+function badRequest(req: Request, details: unknown) {
+  return new Response(JSON.stringify({ error: "Invalid input", details }), {
+    status: 400,
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+  });
+}
+
+// ── Schemas ──
+
+const CreateWorkflowSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().max(1000).optional().default(""),
+  steps: z.array(z.record(z.unknown())).min(1).max(20),
+  config: z.record(z.unknown()).default({}),
+});
+
+const RunWorkflowSchema = z.object({
+  workflow_id: z.string().uuid("Invalid workflow_id"),
+});
+
+const ToggleStatusSchema = z.object({
+  workflow_id: z.string().uuid("Invalid workflow_id"),
+  new_status: z.enum(["active", "paused", "draft"]),
+});
+
+const ActionSchema = z.enum(["list", "create", "run", "toggle-status", "delete"]);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -51,7 +79,13 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const url = new URL(req.url);
-  const action = url.searchParams.get("action");
+  const actionRaw = url.searchParams.get("action");
+
+  const actionParsed = ActionSchema.safeParse(actionRaw);
+  if (!actionParsed.success) {
+    return badRequest(req, { action: "Must be one of: list, create, run, toggle-status, delete" });
+  }
+  const action = actionParsed.data;
 
   try {
     // LIST workflows
@@ -69,7 +103,12 @@ serve(async (req) => {
 
     // CREATE workflow
     if (action === "create" && req.method === "POST") {
-      const body = await req.json();
+      const parsed = CreateWorkflowSchema.safeParse(await req.json());
+      if (!parsed.success) {
+        return badRequest(req, parsed.error.flatten().fieldErrors);
+      }
+      const body = parsed.data;
+
       const { data, error } = await supabase
         .from("workflows")
         .insert({
@@ -78,7 +117,7 @@ serve(async (req) => {
           description: body.description,
           status: "active",
           steps: body.steps,
-          config: body.config || {},
+          config: body.config,
         })
         .select()
         .single();
@@ -88,9 +127,13 @@ serve(async (req) => {
       });
     }
 
-    // RUN workflow — executes the full pipeline
+    // RUN workflow
     if (action === "run" && req.method === "POST") {
-      const { workflow_id } = await req.json();
+      const parsed = RunWorkflowSchema.safeParse(await req.json());
+      if (!parsed.success) {
+        return badRequest(req, parsed.error.flatten().fieldErrors);
+      }
+      const { workflow_id } = parsed.data;
 
       const { data: workflow, error: wfError } = await supabase
         .from("workflows")
@@ -107,24 +150,26 @@ serve(async (req) => {
         .single();
       if (runError) throw runError;
 
-      // Update workflow status
       await supabase
         .from("workflows")
         .update({ status: "active", last_run_at: new Date().toISOString() })
         .eq("id", workflow_id);
 
-      const config = workflow.config as Record<string, any>;
-      const results: Record<string, any> = {};
+      const config = workflow.config as Record<string, unknown>;
+      const results: Record<string, unknown> = {};
 
-      // ===== STEP 1: SCRAPE (Google Maps) =====
-      await supabase
-        .from("workflow_runs")
-        .update({ current_step: "scrape" })
-        .eq("id", run.id);
+      // ===== STEP 1: SCRAPE =====
+      await supabase.from("workflow_runs").update({ current_step: "scrape" }).eq("id", run.id);
 
       let scrapeJobId: string | null = null;
       try {
-        // Create scrape job in DB
+        const keywords = (config.keywords as string[]) || ["empresas"];
+        const lang = (config.lang as string) || "pt";
+        const radius = (config.radius as number) || 10000;
+        const depth = (config.depth as number) || 1;
+        const emailFlag = config.email !== undefined ? Boolean(config.email) : true;
+        const fastMode = Boolean(config.fast_mode);
+
         const { data: scrapeJob } = await supabase
           .from("scrape_jobs")
           .insert({
@@ -133,25 +178,17 @@ serve(async (req) => {
             status: "pending",
             source: "gmaps",
             config: {
-              keywords: config.keywords || ["empresas"],
-              lang: config.lang || "pt",
-              radius: config.radius || 10000,
-              depth: config.depth || 1,
-              email: config.email ?? true,
-              fast_mode: config.fast_mode ?? false,
-              zoom: 15,
-              lat: config.lat || "0",
-              lon: config.lon || "0",
-              max_time: 480000000000,
-              proxies: [],
+              keywords, lang, radius, depth,
+              email: emailFlag, fast_mode: fastMode,
+              zoom: 15, lat: "0", lon: "0",
+              max_time: 480000000000, proxies: [],
             },
           })
           .select()
           .single();
 
-        scrapeJobId = scrapeJob?.id;
+        scrapeJobId = scrapeJob?.id ?? null;
 
-        // Try external API
         let externalId: string | null = null;
         try {
           const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
@@ -159,17 +196,10 @@ serve(async (req) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: `WF: ${workflow.name}`,
-              keywords: config.keywords || ["empresas"],
-              lang: config.lang || "pt",
-              radius: config.radius || 10000,
-              depth: config.depth || 1,
-              email: config.email ?? true,
-              fast_mode: config.fast_mode ?? false,
-              zoom: 15,
-              lat: "0",
-              lon: "0",
-              max_time: 480000000000,
-              proxies: [],
+              keywords, lang, radius, depth,
+              email: emailFlag, fast_mode: fastMode,
+              zoom: 15, lat: "0", lon: "0",
+              max_time: 480000000000, proxies: [],
             }),
             signal: AbortSignal.timeout(10000),
           });
@@ -182,10 +212,7 @@ serve(async (req) => {
         if (scrapeJobId) {
           await supabase
             .from("scrape_jobs")
-            .update({
-              external_id: externalId,
-              status: externalId ? "running" : "pending",
-            })
+            .update({ external_id: externalId, status: externalId ? "running" : "pending" })
             .eq("id", scrapeJobId);
         }
 
@@ -193,21 +220,17 @@ serve(async (req) => {
           job_id: scrapeJobId,
           external_id: externalId,
           status: externalId ? "submitted" : "queued_locally",
-          keywords: config.keywords,
+          keywords,
         };
       } catch (err) {
-        results.scrape = { error: err.message };
+        results.scrape = { error: (err as Error).message };
       }
 
-      // ===== STEP 2: ENRICH (check existing unprocessed results) =====
-      await supabase
-        .from("workflow_runs")
-        .update({ current_step: "enrich" })
-        .eq("id", run.id);
+      // ===== STEP 2: ENRICH =====
+      await supabase.from("workflow_runs").update({ current_step: "enrich" }).eq("id", run.id);
 
       let enrichedCount = 0;
       try {
-        // Look for completed scrape jobs that have results not yet processed
         const { data: completedJobs } = await supabase
           .from("scrape_jobs")
           .select("id, external_id")
@@ -220,7 +243,6 @@ serve(async (req) => {
           for (const job of completedJobs) {
             if (!job.external_id) continue;
 
-            // Check if already has results
             const { count } = await supabase
               .from("scrape_results")
               .select("id", { count: "exact", head: true })
@@ -228,7 +250,6 @@ serve(async (req) => {
 
             if ((count || 0) > 0) continue;
 
-            // Try to download and process results
             try {
               const res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
                 signal: AbortSignal.timeout(15000),
@@ -246,7 +267,6 @@ serve(async (req) => {
                 const obj: Record<string, string> = {};
                 headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
 
-                // Create company
                 const { data: company } = await supabase
                   .from("companies")
                   .insert({
@@ -284,23 +304,16 @@ serve(async (req) => {
           }
         }
 
-        results.enrich = {
-          companies_imported: enrichedCount,
-          status: "completed",
-        };
+        results.enrich = { companies_imported: enrichedCount, status: "completed" };
       } catch (err) {
-        results.enrich = { error: err.message };
+        results.enrich = { error: (err as Error).message };
       }
 
       // ===== STEP 3: IPC SCORING =====
-      await supabase
-        .from("workflow_runs")
-        .update({ current_step: "ipc_score" })
-        .eq("id", run.id);
+      await supabase.from("workflow_runs").update({ current_step: "ipc_score" }).eq("id", run.id);
 
       let scoredCount = 0;
       try {
-        // Get IPC config
         const { data: ipcConfig } = await supabase
           .from("ipc_config")
           .select("*")
@@ -308,9 +321,10 @@ serve(async (req) => {
           .limit(1)
           .maybeSingle();
 
-        const criteria = (ipcConfig?.criteria || {}) as Record<string, any>;
+        const criteria = (ipcConfig?.criteria || {}) as Record<string, unknown>;
+        const criterSectors = (criteria.sectors || []) as string[];
+        const criterLocations = (criteria.locations || []) as string[];
 
-        // Score all unscored companies (ipc_score = 0)
         const { data: unscoredCompanies } = await supabase
           .from("companies")
           .select("*")
@@ -321,9 +335,8 @@ serve(async (req) => {
           for (const company of unscoredCompanies) {
             let score = 0;
 
-            // Sector match
-            if (criteria.sectors && criteria.sectors.length > 0) {
-              const matches = criteria.sectors.some((s: string) =>
+            if (criterSectors.length > 0) {
+              const matches = criterSectors.some((s) =>
                 company.sector?.toLowerCase().includes(s.toLowerCase())
               );
               score += matches ? 30 : 5;
@@ -331,9 +344,8 @@ serve(async (req) => {
               score += 15;
             }
 
-            // Location match
-            if (criteria.locations && criteria.locations.length > 0) {
-              const matches = criteria.locations.some((l: string) =>
+            if (criterLocations.length > 0) {
+              const matches = criterLocations.some((l) =>
                 company.location?.toLowerCase().includes(l.toLowerCase())
               );
               score += matches ? 25 : 5;
@@ -341,28 +353,21 @@ serve(async (req) => {
               score += 10;
             }
 
-            // Data completeness
             if (company.email) score += 15;
             if (company.phone) score += 10;
             if (company.website) score += 10;
 
-            // Raw data quality
-            const raw = (company.raw_data || {}) as Record<string, any>;
-            if (raw.rating && parseFloat(raw.rating) >= 4.0) score += 10;
-            if (raw.reviews_count && parseInt(raw.reviews_count) > 50) score += 5;
+            const raw = (company.raw_data || {}) as Record<string, unknown>;
+            if (raw.rating && parseFloat(String(raw.rating)) >= 4.0) score += 10;
+            if (raw.reviews_count && parseInt(String(raw.reviews_count)) > 50) score += 5;
 
             score = Math.min(score, 100);
 
-            await supabase
-              .from("companies")
-              .update({ ipc_score: score })
-              .eq("id", company.id);
-
+            await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id);
             scoredCount++;
           }
         }
 
-        // Mark scrape results as processed
         const { data: unprocessedResults } = await supabase
           .from("scrape_results")
           .select("id")
@@ -371,27 +376,17 @@ serve(async (req) => {
 
         if (unprocessedResults && unprocessedResults.length > 0) {
           const ids = unprocessedResults.map(r => r.id);
-          await supabase
-            .from("scrape_results")
-            .update({ processed: true })
-            .in("id", ids);
+          await supabase.from("scrape_results").update({ processed: true }).in("id", ids);
         }
 
-        results.ipc_score = {
-          companies_scored: scoredCount,
-          status: "completed",
-        };
+        results.ipc_score = { companies_scored: scoredCount, status: "completed" };
       } catch (err) {
-        results.ipc_score = { error: err.message };
+        results.ipc_score = { error: (err as Error).message };
       }
 
       // ===== STEP 4: FINALIZE =====
-      await supabase
-        .from("workflow_runs")
-        .update({ current_step: "save" })
-        .eq("id", run.id);
+      await supabase.from("workflow_runs").update({ current_step: "save" }).eq("id", run.id);
 
-      // Get qualified count (score >= 70)
       const { count: qualifiedCount } = await supabase
         .from("companies")
         .select("id", { count: "exact", head: true })
@@ -401,37 +396,22 @@ serve(async (req) => {
         .from("companies")
         .select("id", { count: "exact", head: true });
 
-      const totalProcessed = (totalCount || 0);
-      const totalQualified = (qualifiedCount || 0);
+      const totalProcessed = totalCount || 0;
+      const totalQualified = qualifiedCount || 0;
       const successRate = totalProcessed > 0
         ? Math.round((totalQualified / totalProcessed) * 100)
         : 0;
 
-      // Update workflow stats
       await supabase
         .from("workflows")
-        .update({
-          leads_processed: totalProcessed,
-          leads_qualified: totalQualified,
-          success_rate: successRate,
-        })
+        .update({ leads_processed: totalProcessed, leads_qualified: totalQualified, success_rate: successRate })
         .eq("id", workflow_id);
 
-      results.summary = {
-        total_companies: totalProcessed,
-        qualified: totalQualified,
-        success_rate: successRate,
-      };
+      results.summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
 
-      // Complete the run
       await supabase
         .from("workflow_runs")
-        .update({
-          status: "completed",
-          current_step: null,
-          results,
-          completed_at: new Date().toISOString(),
-        })
+        .update({ status: "completed", current_step: null, results, completed_at: new Date().toISOString() })
         .eq("id", run.id);
 
       return new Response(JSON.stringify({ run_id: run.id, results }), {
@@ -441,7 +421,12 @@ serve(async (req) => {
 
     // PAUSE / RESUME workflow
     if (action === "toggle-status" && req.method === "POST") {
-      const { workflow_id, new_status } = await req.json();
+      const parsed = ToggleStatusSchema.safeParse(await req.json());
+      if (!parsed.success) {
+        return badRequest(req, parsed.error.flatten().fieldErrors);
+      }
+      const { workflow_id, new_status } = parsed.data;
+
       const { error } = await supabase
         .from("workflows")
         .update({ status: new_status })
@@ -455,7 +440,9 @@ serve(async (req) => {
     // DELETE workflow
     if (action === "delete" && req.method === "DELETE") {
       const id = url.searchParams.get("id");
-      if (!id) throw new Error("Missing workflow id");
+      if (!id || !z.string().uuid().safeParse(id).success) {
+        return badRequest(req, { id: "Valid UUID required" });
+      }
       const { error } = await supabase.from("workflows").delete().eq("id", id);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
@@ -469,7 +456,7 @@ serve(async (req) => {
     });
   } catch (err) {
     console.error("Workflow engine error:", err);
-    return new Response(JSON.stringify({ error: err.message }), {
+    return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });

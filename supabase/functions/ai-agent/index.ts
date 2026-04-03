@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://esm.sh/zod@3.23.8";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -16,6 +17,10 @@ function getCorsHeaders(req: Request) {
     "Vary": "Origin",
   };
 }
+
+const MessageSchema = z.object({
+  message: z.string().min(1, "Message is required").max(2000, "Message too long"),
+});
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -50,13 +55,15 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { message } = await req.json();
-    if (!message || typeof message !== "string") {
-      return new Response(JSON.stringify({ error: "Message is required" }), {
+    // Validate input with Zod
+    const parsed = MessageSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
         status: 400,
         headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+    const { message } = parsed.data;
 
     // Gather context from database
     const [
@@ -81,7 +88,7 @@ serve(async (req) => {
 
     // Build sector distribution
     const sectorMap = new Map<string, number>();
-    (sectorStats ?? []).forEach((c: any) => {
+    (sectorStats ?? []).forEach((c: { sector: string | null }) => {
       const s = c.sector ?? "Outros";
       sectorMap.set(s, (sectorMap.get(s) || 0) + 1);
     });
@@ -103,10 +110,10 @@ DADOS ATUAIS DO SISTEMA:
 - Critérios IPC ativos: ${ipcConfig?.criteria ? JSON.stringify(ipcConfig.criteria) : "padrão"}
 
 TOP 10 EMPRESAS POR SCORE IPC:
-${(topCompanies ?? []).map((c: any, i: number) => `${i + 1}. ${c.name} — Score ${c.ipc_score} — ${c.sector ?? "?"} — ${c.location ?? "?"} — ${c.enriched ? "✅ Enriquecida" : "⬜ Não enriquecida"}`).join("\n")}
+${(topCompanies ?? []).map((c: Record<string, unknown>, i: number) => `${i + 1}. ${c.name} — Score ${c.ipc_score} — ${c.sector ?? "?"} — ${c.location ?? "?"} — ${c.enriched ? "✅ Enriquecida" : "⬜ Não enriquecida"}`).join("\n")}
 
 ÚLTIMAS EMPRESAS ADICIONADAS:
-${(recentCompanies ?? []).map((c: any) => `- ${c.name} (${c.source}) — Score ${c.ipc_score}`).join("\n")}
+${(recentCompanies ?? []).map((c: Record<string, unknown>) => `- ${c.name} (${c.source}) — Score ${c.ipc_score}`).join("\n")}
 
 Você pode:
 1. Responder perguntas sobre as empresas do banco
@@ -148,7 +155,7 @@ Se o usuário pedir algo que requer ação (criar workflow, raspar, etc.), descr
     });
   } catch (err) {
     console.error("AI Agent error:", err);
-    return new Response(JSON.stringify({ error: err.message }), {
+    return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://esm.sh/zod@3.23.8";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -18,6 +19,36 @@ function getCorsHeaders(req: Request) {
     "Vary": "Origin",
   };
 }
+
+function badRequest(req: Request, details: unknown) {
+  return new Response(JSON.stringify({ error: "Invalid input", details }), {
+    status: 400,
+    headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+  });
+}
+
+// ── Schemas ──
+
+const CreateJobSchema = z.object({
+  name: z.string().min(1).max(255),
+  keywords: z.array(z.string().min(1).max(200)).min(1).max(20),
+  lang: z.string().min(2).max(5).default("pt"),
+  zoom: z.number().int().min(1).max(21).default(15),
+  lat: z.string().max(30).default("0"),
+  lon: z.string().max(30).default("0"),
+  fast_mode: z.boolean().default(false),
+  radius: z.number().int().min(100).max(100000).default(10000),
+  depth: z.number().int().min(1).max(10).default(1),
+  email: z.boolean().default(true),
+  max_time: z.number().int().positive().default(480000000000),
+  proxies: z.array(z.string().max(500)).max(10).default([]),
+});
+
+const SyncResultsSchema = z.object({
+  job_id: z.string().uuid("Invalid job_id"),
+});
+
+const ActionSchema = z.enum(["list", "create", "delete", "sync-results"]);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -51,13 +82,19 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const url = new URL(req.url);
-  const action = url.searchParams.get("action");
+  const actionRaw = url.searchParams.get("action");
+
+  // Validate action param
+  const actionParsed = ActionSchema.safeParse(actionRaw);
+  if (!actionParsed.success) {
+    return badRequest(req, { action: "Must be one of: list, create, delete, sync-results" });
+  }
+  const action = actionParsed.data;
 
   try {
-    // LIST JOBS — fetches from external API and syncs to DB
+    // LIST JOBS
     if (action === "list" && req.method === "GET") {
-      // Try external API first
-      let externalJobs: any[] = [];
+      let externalJobs: Record<string, unknown>[] = [];
       let apiOnline = false;
       try {
         const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
@@ -67,37 +104,35 @@ serve(async (req) => {
           externalJobs = await res.json();
           apiOnline = true;
 
-          // Sync external jobs to DB
           for (const job of externalJobs) {
             const { data: existing } = await supabase
               .from("scrape_jobs")
               .select("id")
-              .eq("external_id", job.ID)
+              .eq("external_id", job.ID as string)
               .maybeSingle();
 
             if (!existing) {
               await supabase.from("scrape_jobs").insert({
                 user_id: userId,
-                external_id: job.ID,
-                name: job.Name,
-                status: job.Status === "ok" ? "completed" : job.Status,
+                external_id: job.ID as string,
+                name: job.Name as string,
+                status: (job.Status as string) === "ok" ? "completed" : job.Status as string,
                 source: "gmaps",
-                config: job.Data,
-                started_at: job.Date,
+                config: job.Data as Record<string, unknown>,
+                started_at: job.Date as string,
               });
             } else {
               await supabase
                 .from("scrape_jobs")
-                .update({ status: job.Status === "ok" ? "completed" : job.Status })
-                .eq("external_id", job.ID);
+                .update({ status: (job.Status as string) === "ok" ? "completed" : job.Status as string })
+                .eq("external_id", job.ID as string);
             }
           }
         }
       } catch (_) {
-        // API offline, fall through to DB
+        // API offline
       }
 
-      // Return jobs from DB (source of truth)
       const { data: dbJobs, error } = await supabase
         .from("scrape_jobs")
         .select("*")
@@ -112,11 +147,14 @@ serve(async (req) => {
       });
     }
 
-    // CREATE JOB — sends to external API and saves to DB
+    // CREATE JOB
     if (action === "create" && req.method === "POST") {
-      const body = await req.json();
+      const parsed = CreateJobSchema.safeParse(await req.json());
+      if (!parsed.success) {
+        return badRequest(req, parsed.error.flatten().fieldErrors);
+      }
+      const body = parsed.data;
 
-      // Save to DB first
       const { data: dbJob, error: dbError } = await supabase
         .from("scrape_jobs")
         .insert({
@@ -126,16 +164,16 @@ serve(async (req) => {
           source: "gmaps",
           config: {
             keywords: body.keywords,
-            lang: body.lang || "pt",
-            zoom: body.zoom || 15,
-            lat: body.lat || "0",
-            lon: body.lon || "0",
-            fast_mode: body.fast_mode ?? false,
-            radius: body.radius || 10000,
-            depth: body.depth || 1,
-            email: body.email ?? true,
-            max_time: body.max_time || 480000000000,
-            proxies: body.proxies || [],
+            lang: body.lang,
+            zoom: body.zoom,
+            lat: body.lat,
+            lon: body.lon,
+            fast_mode: body.fast_mode,
+            radius: body.radius,
+            depth: body.depth,
+            email: body.email,
+            max_time: body.max_time,
+            proxies: body.proxies,
           },
         })
         .select()
@@ -143,7 +181,6 @@ serve(async (req) => {
 
       if (dbError) throw dbError;
 
-      // Try to send to external API
       let externalId: string | null = null;
       try {
         const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
@@ -152,16 +189,16 @@ serve(async (req) => {
           body: JSON.stringify({
             name: body.name,
             keywords: body.keywords,
-            lang: body.lang || "pt",
-            zoom: body.zoom || 15,
-            lat: body.lat || "0",
-            lon: body.lon || "0",
-            fast_mode: body.fast_mode ?? false,
-            radius: body.radius || 10000,
-            depth: body.depth || 1,
-            email: body.email ?? true,
-            max_time: body.max_time || 480000000000,
-            proxies: body.proxies || [],
+            lang: body.lang,
+            zoom: body.zoom,
+            lat: body.lat,
+            lon: body.lon,
+            fast_mode: body.fast_mode,
+            radius: body.radius,
+            depth: body.depth,
+            email: body.email,
+            max_time: body.max_time,
+            proxies: body.proxies,
           }),
           signal: AbortSignal.timeout(10000),
         });
@@ -176,7 +213,7 @@ serve(async (req) => {
             .eq("id", dbJob.id);
         }
       } catch (_) {
-        // API offline — job saved locally with pending status
+        // API offline
       }
 
       return new Response(
@@ -188,9 +225,10 @@ serve(async (req) => {
     // DELETE JOB
     if (action === "delete" && req.method === "DELETE") {
       const jobId = url.searchParams.get("id");
-      if (!jobId) throw new Error("Missing job id");
+      if (!jobId || !z.string().uuid().safeParse(jobId).success) {
+        return badRequest(req, { id: "Valid UUID required" });
+      }
 
-      // Get external ID to delete from API too
       const { data: job } = await supabase
         .from("scrape_jobs")
         .select("external_id")
@@ -214,9 +252,13 @@ serve(async (req) => {
       });
     }
 
-    // SYNC RESULTS — imports scrape results and creates companies
+    // SYNC RESULTS
     if (action === "sync-results" && req.method === "POST") {
-      const { job_id } = await req.json();
+      const parsed = SyncResultsSchema.safeParse(await req.json());
+      if (!parsed.success) {
+        return badRequest(req, parsed.error.flatten().fieldErrors);
+      }
+      const { job_id } = parsed.data;
 
       const { data: job } = await supabase
         .from("scrape_jobs")
@@ -226,15 +268,13 @@ serve(async (req) => {
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
 
-      // Download CSV from external API
-      let results: any[] = [];
+      let results: Record<string, string>[] = [];
       try {
         const res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
           signal: AbortSignal.timeout(30000),
         });
         if (res.ok) {
           const text = await res.text();
-          // Parse CSV to JSON (simple parser)
           const lines = text.split("\n").filter(Boolean);
           if (lines.length > 1) {
             const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
@@ -250,7 +290,6 @@ serve(async (req) => {
         throw new Error("Failed to download results from external API");
       }
 
-      // Get active IPC config for scoring
       const { data: ipcConfig } = await supabase
         .from("ipc_config")
         .select("*")
@@ -261,19 +300,18 @@ serve(async (req) => {
       let companiesCreated = 0;
 
       for (const result of results) {
-        // Calculate IPC score based on config criteria
         let ipcScore = 0;
         if (ipcConfig?.criteria) {
-          const criteria = ipcConfig.criteria as Record<string, any>;
-          // Simple scoring: check if company matches criteria
-          if (criteria.sectors?.includes(result.category || result.type)) ipcScore += 30;
-          if (criteria.locations?.includes(result.city || result.address)) ipcScore += 20;
+          const criteria = ipcConfig.criteria as Record<string, unknown>;
+          const sectors = criteria.sectors as string[] | undefined;
+          const locations = criteria.locations as string[] | undefined;
+          if (sectors?.includes(result.category || result.type)) ipcScore += 30;
+          if (locations?.includes(result.city || result.address)) ipcScore += 20;
           if (result.email) ipcScore += 15;
           if (result.phone) ipcScore += 10;
           if (result.website) ipcScore += 10;
           if (result.rating && parseFloat(result.rating) >= 4) ipcScore += 15;
         } else {
-          // Default scoring without IPC config
           ipcScore = 50;
           if (result.email) ipcScore += 15;
           if (result.phone) ipcScore += 10;
@@ -281,8 +319,7 @@ serve(async (req) => {
           if (result.rating && parseFloat(result.rating) >= 4) ipcScore += 15;
         }
 
-        // Create company
-        const { data: company, error: compError } = await supabase
+        const { data: company } = await supabase
           .from("companies")
           .upsert({
             user_id: userId,
@@ -302,7 +339,6 @@ serve(async (req) => {
 
         if (company) {
           companiesCreated++;
-          // Save scrape result linked to job and company
           await supabase.from("scrape_results").insert({
             user_id: userId,
             job_id: job_id,
@@ -313,13 +349,11 @@ serve(async (req) => {
         }
       }
 
-      // Update job with results count
       await supabase
         .from("scrape_jobs")
         .update({ results_count: companiesCreated, status: "completed", completed_at: new Date().toISOString() })
         .eq("id", job_id);
 
-      // Create a single grouped notification
       if (companiesCreated > 0) {
         await supabase.from("notifications").insert({
           user_id: userId,
@@ -345,7 +379,7 @@ serve(async (req) => {
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+    return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
