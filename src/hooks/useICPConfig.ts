@@ -75,7 +75,7 @@ export function useICPConfig() {
         // Update existing
         const { error } = await supabase
           .from("ipc_config")
-          .update({ criteria: criteria as any, name, updated_at: new Date().toISOString() })
+          .update({ criteria: criteria as unknown as Json, name, updated_at: new Date().toISOString() })
           .eq("id", id);
         if (error) throw error;
       } else {
