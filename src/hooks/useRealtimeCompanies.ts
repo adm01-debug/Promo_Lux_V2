@@ -46,6 +46,7 @@ export function useRealtimeCompanies() {
 
             // Persist notification in DB for the notifications panel
             await supabase.from("notifications").insert({
+              user_id: user?.id,
               title,
               message: description,
               type: isScraped ? "scrape" : "system",
