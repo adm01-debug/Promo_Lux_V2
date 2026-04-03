@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export function useRealtimeCompanies() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   useEffect(() => {
     const channel = supabase
