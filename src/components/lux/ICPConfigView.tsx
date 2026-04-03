@@ -55,7 +55,9 @@ export const ICPConfigView = () => {
     if (!newTag.trim()) return;
     updateCriteria((prev) =>
       prev.map((c) =>
-        c.id === criteriaId ? { ...c, value: [...c.value, newTag.trim()] } : c
+        c.id === criteriaId && Array.isArray(c.value)
+          ? { ...c, value: [...(c.value as string[]), newTag.trim()] }
+          : c
       )
     );
     setNewTag("");
