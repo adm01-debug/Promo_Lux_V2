@@ -103,6 +103,7 @@ const CampaignFormFields = ({
 );
 
 export const CampaignsView = () => {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
