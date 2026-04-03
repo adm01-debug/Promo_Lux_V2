@@ -84,7 +84,7 @@ Você pode:
 Se o usuário pedir algo que requer ação (criar workflow, raspar, etc.), descreva os passos e sugira usar a interface correspondente.`;
 
     // Call Lovable AI (Google Gemini)
-    const aiResponse = await fetch("https://api.lovable.dev/v1/chat/completions", {
+    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
