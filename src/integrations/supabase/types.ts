@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      campaigns: {
+        Row: {
+          created_at: string
+          id: string
+          meetings: number
+          name: string
+          opened: number
+          prospects: number
+          replied: number
+          sent: number
+          sequence: Json
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meetings?: number
+          name: string
+          opened?: number
+          prospects?: number
+          replied?: number
+          sent?: number
+          sequence?: Json
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meetings?: number
+          name?: string
+          opened?: number
+          prospects?: number
+          replied?: number
+          sent?: number
+          sequence?: Json
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           created_at: string
