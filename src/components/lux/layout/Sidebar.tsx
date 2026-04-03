@@ -1,4 +1,6 @@
 import { useMemo, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { prefetchView } from "@/lib/viewRegistry";
 import {
   Sparkles,
@@ -154,34 +156,57 @@ export const Sidebar = ({
       </nav>
 
       {/* Footer */}
-      <div className={cn("border-t border-border", collapsed ? "p-2" : "p-4")}>
-        {!collapsed && (
-          <div className="glass rounded-lg p-3 mb-3">
-            <p className="text-xs text-muted-foreground">Status do Sistema</p>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs text-success font-medium">Online — 3 workflows ativos</span>
-            </div>
-          </div>
-        )}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={onToggleCollapse}
-              className="hidden lg:flex w-full items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
-            >
-              {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-              {!collapsed && <span>Recolher</span>}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="right">
-            {collapsed ? "Expandir sidebar" : "Recolher sidebar"}
-          </TooltipContent>
-        </Tooltip>
-      </div>
+      <SidebarFooter collapsed={collapsed} onToggleCollapse={onToggleCollapse} />
     </aside>
   );
 };
+
+/* Dynamic footer with live workflow count */
+function SidebarFooter({ collapsed, onToggleCollapse }: { collapsed: boolean; onToggleCollapse: () => void }) {
+  const { data: activeCount = 0 } = useQuery({
+    queryKey: ["active-workflows-count"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("workflows")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "active");
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
+
+  return (
+    <div className={cn("border-t border-border", collapsed ? "p-2" : "p-4")}>
+      {!collapsed && (
+        <div className="glass rounded-lg p-3 mb-3">
+          <p className="text-xs text-muted-foreground">Status do Sistema</p>
+          <div className="flex items-center gap-2 mt-1">
+            <div className={cn("h-2 w-2 rounded-full animate-pulse", activeCount > 0 ? "bg-success" : "bg-muted-foreground")} />
+            <span className={cn("text-xs font-medium", activeCount > 0 ? "text-success" : "text-muted-foreground")}>
+              {activeCount > 0 ? `Online — ${activeCount} workflow${activeCount !== 1 ? "s" : ""} ativo${activeCount !== 1 ? "s" : ""}` : "Nenhum workflow ativo"}
+            </span>
+          </div>
+        </div>
+      )}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={onToggleCollapse}
+            className="hidden lg:flex w-full items-center justify-center gap-2 px-2 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+          >
+            {collapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+            {!collapsed && <span>Recolher</span>}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          {collapsed ? "Expandir sidebar" : "Recolher sidebar"}
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  );
+}
 
 /* Sub-components */
 

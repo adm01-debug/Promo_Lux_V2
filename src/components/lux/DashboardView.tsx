@@ -125,8 +125,8 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
                   <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2} />
-                  <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2.5} dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }} activeDot={{ r: 5, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }} />
+                  <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2.5} dot={{ r: 3, fill: successStroke, strokeWidth: 0 }} activeDot={{ r: 5, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }} />
                 </AreaChart>
               </ResponsiveContainer>
             )}

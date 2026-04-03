@@ -2,7 +2,9 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
 import { EditCompanyDialog } from "@/components/lux/EditCompanyDialog";
-import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare, Pencil } from "lucide-react";
+import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare, Pencil, MoreHorizontal, HelpCircle } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
@@ -368,7 +370,17 @@ export const CompaniesView = () => {
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden md:table-cell">Setor</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden lg:table-cell">Localização</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden xl:table-cell">Fonte</th>
-                    <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Score</th>
+                    <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="inline-flex items-center gap-1 cursor-help">Score <HelpCircle className="h-3 w-3 text-muted-foreground/50" /></span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-[220px] text-xs">
+                          <p className="font-semibold mb-1">Score IPC</p>
+                          <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo. Baseado em setor, porte e sinais de intenção.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </th>
                     <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden sm:table-cell">Status</th>
                     <th className="text-right p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium"></th>
                   </tr>
@@ -416,17 +428,39 @@ export const CompaniesView = () => {
                           <Badge variant="outline" className="text-[10px] bg-muted text-muted-foreground">Pendente</Badge>
                         )}
                       </td>
-                      <td className="p-3 text-right">
-                        <div className="flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <td className="p-3 text-right" onClick={(e) => e.stopPropagation()}>
+                        {/* Desktop: inline buttons on hover */}
+                        <div className="hidden sm:flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes">
                             <Eye className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={(e) => { e.stopPropagation(); setEditCompany(company); setEditOpen(true); }}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={() => { setEditCompany(company); setEditOpen(true); }}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={(e) => { e.stopPropagation(); setDeleteTarget(company); }}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={() => setDeleteTarget(company)}>
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
+                        </div>
+                        {/* Mobile: always-visible dropdown */}
+                        <div className="sm:hidden">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openCompany(company)}>
+                                <Eye className="h-3.5 w-3.5 mr-2" /> Ver detalhes
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => { setEditCompany(company); setEditOpen(true); }}>
+                                <Pencil className="h-3.5 w-3.5 mr-2" /> Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => setDeleteTarget(company)}>
+                                <Trash2 className="h-3.5 w-3.5 mr-2" /> Excluir
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </td>
                     </motion.tr>
