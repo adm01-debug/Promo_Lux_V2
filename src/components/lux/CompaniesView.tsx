@@ -63,6 +63,10 @@ export const CompaniesView = () => {
   });
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editCompany, setEditCompany] = useState<Company | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [sortBy, setSortBy] = useState<"score" | "name" | "sector">("score");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
