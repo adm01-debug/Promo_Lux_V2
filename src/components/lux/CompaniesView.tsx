@@ -417,8 +417,8 @@ export const CompaniesView = () => {
                             <Building2 className="h-4 w-4 text-primary" />
                           </div>
                           <div>
-                            <span className="font-medium text-foreground">{company.name}</span>
-                            {company.email && <p className="text-[10px] text-muted-foreground">{company.email}</p>}
+                            <span className="font-medium text-foreground"><HighlightText text={company.name} query={filters.search} /></span>
+                            {company.email && <p className="text-[10px] text-muted-foreground"><HighlightText text={company.email} query={filters.search} /></p>}
                           </div>
                         </div>
                       </td>
