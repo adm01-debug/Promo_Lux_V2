@@ -63,7 +63,7 @@ export const SettingsView = () => {
       .then(({ data }) => {
         if (data?.full_name) setFullName(data.full_name);
         if (data?.notification_prefs) {
-          setNotifPrefs({ ...DEFAULT_PREFS, ...(data.notification_prefs as NotifPrefs) });
+          setNotifPrefs({ ...DEFAULT_PREFS, ...(data.notification_prefs as unknown as NotifPrefs) });
         }
       });
   }, [user]);
