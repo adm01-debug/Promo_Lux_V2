@@ -29,6 +29,22 @@ export const AddCompanyDialog = () => {
     setPhone(""); setWebsite(""); setEmployees(""); setRevenue("");
   };
 
+  const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(loc)}`,
+        { headers: { "User-Agent": "LUX-IA-SalesPlatform/1.0" } }
+      );
+      const data = await res.json();
+      if (data.length > 0) {
+        return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  };
+
   const handleSave = async () => {
     if (!name.trim()) {
       toast({ title: "Nome obrigatório", variant: "destructive" });
@@ -36,6 +52,17 @@ export const AddCompanyDialog = () => {
     }
     setSaving(true);
     try {
+      // Geocode location automatically
+      let lat: number | null = null;
+      let lng: number | null = null;
+      if (location.trim()) {
+        const coords = await geocodeLocation(location.trim());
+        if (coords) {
+          lat = coords.lat;
+          lng = coords.lng;
+        }
+      }
+
       const { error } = await supabase.from("companies").insert({
         name: name.trim(),
         sector: sector || null,
@@ -46,10 +73,15 @@ export const AddCompanyDialog = () => {
         employees: employees || null,
         revenue: revenue || null,
         source: "manual",
+        lat,
+        lng,
       });
       if (error) throw error;
-      toast({ title: "Empresa adicionada!", description: `"${name}" foi criada com sucesso.` });
+
+      const geoMsg = lat ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
+      toast({ title: "Empresa adicionada!", description: `"${name}" foi criada com sucesso.${geoMsg}` });
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-map"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       reset();
       setOpen(false);
