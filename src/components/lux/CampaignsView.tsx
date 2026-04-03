@@ -290,7 +290,7 @@ export const CampaignsView = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {campaigns.map((campaign: any, i: number) => {
+          {campaigns.map((campaign, i) => {
             const status = statusConfig[(campaign.status as CampaignStatus) || "draft"] || statusConfig.draft;
             const openRate = campaign.sent > 0 ? Math.round((campaign.opened / campaign.sent) * 100) : 0;
             const replyRate = campaign.sent > 0 ? Math.round((campaign.replied / campaign.sent) * 100) : 0;
