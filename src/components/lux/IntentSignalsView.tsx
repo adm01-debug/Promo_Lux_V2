@@ -33,6 +33,7 @@ const strengthColors: Record<string, string> = {
 };
 
 export const IntentSignalsView = () => {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
