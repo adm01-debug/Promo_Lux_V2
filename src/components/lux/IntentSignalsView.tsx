@@ -1,18 +1,21 @@
-import { Radar, TrendingUp, Eye, Globe, Briefcase, ChevronRight, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Radar, TrendingUp, Eye, Globe, Briefcase, ChevronRight, Plus, Loader2, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/lux/EmptyState";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { motion } from "framer-motion";
 
 type SignalType = "website_visit" | "hiring" | "funding" | "tech_adoption" | "content_engagement";
-
-interface IntentSignal {
-  id: string;
-  company: string;
-  type: SignalType;
-  signal: string;
-  strength: "high" | "medium" | "low";
-  timestamp: string;
-  details: string;
-}
 
 const signalConfig: Record<SignalType, { label: string; icon: React.ReactNode; color: string }> = {
   website_visit: { label: "Visita ao Site", icon: <Eye className="h-3.5 w-3.5" />, color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
@@ -28,92 +31,229 @@ const strengthColors: Record<string, string> = {
   low: "bg-muted-foreground/20 text-muted-foreground border-muted-foreground/30",
 };
 
-const mockSignals: IntentSignal[] = [
-  { id: "1", company: "TechNova Solutions", type: "website_visit", signal: "Visitou página de pricing 3x", strength: "high", timestamp: "5 min atrás", details: "3 visitas na página de preços nos últimos 2 dias, vindas de 2 IPs diferentes" },
-  { id: "2", company: "DataFlow Analytics", type: "hiring", signal: "Contratando Head de Tecnologia", strength: "high", timestamp: "1h atrás", details: "Vaga publicada no LinkedIn para Head de Tecnologia — indica expansão" },
-  { id: "3", company: "CloudBridge Inc", type: "funding", signal: "Série B — R$ 30M", strength: "high", timestamp: "2h atrás", details: "Anúncio de rodada Série B liderada por Softbank Latin America" },
-  { id: "4", company: "FinEdge Pay", type: "tech_adoption", signal: "Adotou Kubernetes + AWS", strength: "medium", timestamp: "3h atrás", details: "Stack tecnológico atualizado detectado via BuiltWith" },
-  { id: "5", company: "MedConnect Health", type: "content_engagement", signal: "Download de whitepaper", strength: "medium", timestamp: "4h atrás", details: "Baixou o whitepaper 'Automação em Saúde 2025'" },
-  { id: "6", company: "LogiTrack Systems", type: "hiring", signal: "5 vagas abertas em TI", strength: "medium", timestamp: "6h atrás", details: "Vagas publicadas para dev backend, frontend, devops, QA e PM" },
-  { id: "7", company: "EduPlatform BR", type: "website_visit", signal: "Visitou blog 2x", strength: "low", timestamp: "8h atrás", details: "2 visitas ao blog sobre integração de APIs" },
-  { id: "8", company: "AgriSmart Tech", type: "tech_adoption", signal: "Migrou para cloud GCP", strength: "low", timestamp: "12h atrás", details: "Detectada migração de infraestrutura on-premise para Google Cloud" },
-];
-
 export const IntentSignalsView = () => {
+  const queryClient = useQueryClient();
+  const [createOpen, setCreateOpen] = useState(false);
+  const [newCompanyName, setNewCompanyName] = useState("");
+  const [newType, setNewType] = useState<SignalType>("website_visit");
+  const [newSignal, setNewSignal] = useState("");
+  const [newStrength, setNewStrength] = useState<string>("medium");
+  const [newDetails, setNewDetails] = useState("");
+
+  const { data: signals = [], isLoading } = useQuery({
+    queryKey: ["intent-signals"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("intent_signals")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data ?? [];
+    },
+    refetchInterval: 15_000,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("intent_signals").insert({
+        company_name: newCompanyName.trim(),
+        type: newType,
+        signal: newSignal.trim(),
+        strength: newStrength,
+        details: newDetails.trim() || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      toast({ title: "Sinal registrado!" });
+      setCreateOpen(false);
+      setNewCompanyName("");
+      setNewSignal("");
+      setNewDetails("");
+    },
+    onError: (err) => toast({ title: "Erro", description: err.message, variant: "destructive" }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("intent_signals").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      toast({ title: "Sinal removido" });
+    },
+  });
+
+  const highCount = signals.filter((s: any) => s.strength === "high").length;
+  const medCount = signals.filter((s: any) => s.strength === "medium").length;
+  const lowCount = signals.filter((s: any) => s.strength === "low").length;
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Radar className="h-6 w-6 text-primary" />
             Sinais de Intenção de Compra
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Inspirado em ZoomInfo/Cognism — monitore sinais que indicam propensão de compra
+            Monitore sinais que indicam propensão de compra — {signals.length} sinais registrados
           </p>
         </div>
-        <Button variant="outline" className="gap-2 text-sm">
-          <Radar className="h-4 w-4" />
-          Configurar Sinais
-        </Button>
+        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" /> Registrar Sinal
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-card border-border/50">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Radar className="h-5 w-5 text-primary" /> Novo Sinal de Intenção
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-2">
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Empresa</Label>
+                <Input value={newCompanyName} onChange={(e) => setNewCompanyName(e.target.value)} placeholder="Nome da empresa" className="h-9 text-sm" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">Tipo</Label>
+                  <Select value={newType} onValueChange={(v) => setNewType(v as SignalType)}>
+                    <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(signalConfig).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">Intensidade</Label>
+                  <Select value={newStrength} onValueChange={setNewStrength}>
+                    <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="high">🔥 Alta</SelectItem>
+                      <SelectItem value="medium">Média</SelectItem>
+                      <SelectItem value="low">Baixa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Sinal</Label>
+                <Input value={newSignal} onChange={(e) => setNewSignal(e.target.value)} placeholder="Ex: Visitou página de pricing 3x" className="h-9 text-sm" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Detalhes (opcional)</Label>
+                <Input value={newDetails} onChange={(e) => setNewDetails(e.target.value)} placeholder="Contexto adicional" className="h-9 text-sm" />
+              </div>
+              <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !newCompanyName.trim() || !newSignal.trim()} className="w-full gap-2">
+                {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Radar className="h-4 w-4" />}
+                Registrar Sinal
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Signal strength summary */}
+      {/* Strength summary */}
       <div className="grid grid-cols-3 gap-4">
-        {(["high", "medium", "low"] as const).map((str) => {
-          const count = mockSignals.filter(s => s.strength === str).length;
-          const labels = { high: "Alta Intenção", medium: "Média Intenção", low: "Baixa Intenção" };
-          return (
-            <div key={str} className="glass rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">{labels[str]}</span>
-                <Badge variant="outline" className={`text-xs ${strengthColors[str]}`}>{count}</Badge>
-              </div>
-              <p className="text-2xl font-bold font-mono text-foreground mt-2">{count}</p>
-              <p className="text-xs text-muted-foreground">sinais detectados</p>
+        {([
+          { key: "high", count: highCount, label: "Alta Intenção" },
+          { key: "medium", count: medCount, label: "Média Intenção" },
+          { key: "low", count: lowCount, label: "Baixa Intenção" },
+        ] as const).map(({ key, count, label }) => (
+          <div key={key} className="glass rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">{label}</span>
+              <Badge variant="outline" className={`text-xs ${strengthColors[key]}`}>{count}</Badge>
             </div>
-          );
-        })}
+            <p className="text-2xl font-bold font-mono text-foreground mt-2">{count}</p>
+            <p className="text-xs text-muted-foreground">sinais detectados</p>
+          </div>
+        ))}
       </div>
 
       {/* Signals list */}
       <div className="glass rounded-lg overflow-hidden">
         <div className="p-4 border-b border-border/50">
-          <h3 className="font-semibold text-foreground text-sm">Feed de Sinais em Tempo Real</h3>
+          <h3 className="font-semibold text-foreground text-sm">Feed de Sinais</h3>
         </div>
-        <div className="divide-y divide-border/20">
-          {mockSignals.map((signal) => {
-            const config = signalConfig[signal.type];
-            return (
-              <div key={signal.id} className="p-4 hover:bg-secondary/20 transition-colors group">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
-                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center border ${config.color} flex-shrink-0 mt-0.5`}>
-                      {config.icon}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm text-foreground">{signal.company}</span>
-                        <Badge variant="outline" className={`text-[10px] ${strengthColors[signal.strength]}`}>
-                          {signal.strength === "high" ? "🔥 Alta" : signal.strength === "medium" ? "Média" : "Baixa"}
-                        </Badge>
-                        <Badge variant="outline" className={`text-[10px] ${config.color}`}>
-                          {config.label}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-foreground">{signal.signal}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{signal.details}</p>
-                      <p className="text-[10px] text-muted-foreground/60 mt-1">{signal.timestamp}</p>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity gap-1 text-xs">
-                    Ver empresa <ChevronRight className="h-3 w-3" />
-                  </Button>
+
+        {isLoading ? (
+          <div className="p-4 space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex gap-3">
+                <Skeleton className="h-8 w-8 rounded-lg" />
+                <div className="flex-1 space-y-1">
+                  <Skeleton className="h-4 w-48" />
+                  <Skeleton className="h-3 w-64" />
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : signals.length === 0 ? (
+          <EmptyState
+            icon={Radar}
+            title="Nenhum sinal registrado"
+            description="Sinais de intenção aparecerão aqui. Clique em 'Registrar Sinal' para adicionar manualmente."
+          />
+        ) : (
+          <div className="divide-y divide-border/20">
+            {signals.map((signal: any, i: number) => {
+              const config = signalConfig[signal.type as SignalType] || signalConfig.website_visit;
+              return (
+                <motion.div
+                  key={signal.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.03 }}
+                  className="p-4 hover:bg-secondary/20 transition-colors group"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3">
+                      <div className={`h-8 w-8 rounded-lg flex items-center justify-center border ${config.color} flex-shrink-0 mt-0.5`}>
+                        {config.icon}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="font-medium text-sm text-foreground">{signal.company_name}</span>
+                          <Badge variant="outline" className={`text-[10px] ${strengthColors[signal.strength] || strengthColors.medium}`}>
+                            {signal.strength === "high" ? "🔥 Alta" : signal.strength === "medium" ? "Média" : "Baixa"}
+                          </Badge>
+                          <Badge variant="outline" className={`text-[10px] ${config.color}`}>
+                            {config.label}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-foreground">{signal.signal}</p>
+                        {signal.details && <p className="text-xs text-muted-foreground mt-1">{signal.details}</p>}
+                        <p className="text-[10px] text-muted-foreground/60 mt-1">
+                          {(() => {
+                            try { return formatDistanceToNow(new Date(signal.created_at), { addSuffix: true, locale: ptBR }); }
+                            catch { return signal.created_at; }
+                          })()}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive"
+                      onClick={() => deleteMutation.mutate(signal.id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
