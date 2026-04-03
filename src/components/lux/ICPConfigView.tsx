@@ -44,7 +44,9 @@ export const ICPConfigView = () => {
   const removeTag = (criteriaId: string, tag: string) => {
     updateCriteria((prev) =>
       prev.map((c) =>
-        c.id === criteriaId ? { ...c, value: c.value.filter((t: string) => t !== tag) } : c
+        c.id === criteriaId && Array.isArray(c.value)
+          ? { ...c, value: (c.value as string[]).filter((t) => t !== tag) }
+          : c
       )
     );
   };
