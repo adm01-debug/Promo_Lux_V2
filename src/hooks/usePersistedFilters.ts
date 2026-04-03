@@ -17,7 +17,7 @@ export function usePersistedFilters<T extends object>(
       const stored = localStorage.getItem(storageKey);
       if (!stored) return defaultState;
       const parsed = JSON.parse(stored);
-      return deserialize(parsed, defaultState as any) as T;
+      return deserialize(parsed, defaultState as Record<string, unknown>) as T;
     } catch {
       return defaultState;
     }
