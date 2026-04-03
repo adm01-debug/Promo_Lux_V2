@@ -17,10 +17,10 @@ const StatCardSkeleton = () => (
 const ChartSkeleton = ({ height = 220 }: { height?: number }) => (
   <div className="glass rounded-lg overflow-hidden">
     <div className="p-5 border-b border-border/50">
-      <Skeleton className="h-5 w-40 bg-muted/40" />
+      <div className="skeleton-shimmer h-5 w-40 rounded" />
     </div>
     <div className="p-5">
-      <Skeleton className={`w-full bg-muted/20 rounded-md`} style={{ height }} />
+      <div className="skeleton-shimmer w-full rounded-md" style={{ height }} />
     </div>
   </div>
 );
