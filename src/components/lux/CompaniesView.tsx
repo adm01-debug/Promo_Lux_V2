@@ -253,15 +253,20 @@ export const CompaniesView = () => {
   }, [selectedIds, toast, queryClient]);
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
+    const company = companies.find((c) => c.id === id);
     queryClient.setQueryData(["companies-list"], (old: any) =>
       old?.map((c: any) => (c.id === id ? { ...c, starred } : c))
     );
+    toast({
+      title: starred ? "⭐ Empresa favoritada" : "Favorito removido",
+      description: company ? `"${company.name}" ${starred ? "adicionada aos" : "removida dos"} favoritos.` : undefined,
+    });
     const { error } = await supabase.from("companies").update({ starred }).eq("id", id);
     if (error) {
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
       toast({ title: "Erro ao favoritar", variant: "destructive" });
     }
-  }, [queryClient, toast]);
+  }, [companies, queryClient, toast]);
 
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];
   filters.selectedSectors.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedSectors: toggleSet(f.selectedSectors, v) })) }));

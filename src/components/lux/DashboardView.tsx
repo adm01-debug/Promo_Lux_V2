@@ -162,11 +162,24 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
     },
   };
 
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 12) return "Bom dia";
+    if (h < 18) return "Boa tarde";
+    return "Boa noite";
+  })();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
+          <motion.h2
+            className="text-2xl font-bold text-foreground"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {greeting} 👋
+          </motion.h2>
           <p className="text-sm text-muted-foreground mt-1">
             Visão geral das automações e empresas identificadas pelo IPC
           </p>

@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { CommandPalette } from "@/components/lux/CommandPalette";
+import { KeyboardShortcutsDialog } from "@/components/lux/KeyboardShortcutsDialog";
+import { useRealtimeCompanies } from "@/hooks/useRealtimeCompanies";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
@@ -38,6 +40,7 @@ const Index = () => {
   const { collapsed, mobileOpen, toggleCollapse, openMobile, closeMobile } = useSidebarState();
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
+  useRealtimeCompanies();
 
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
@@ -90,6 +93,7 @@ const Index = () => {
 
       <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
+      <KeyboardShortcutsDialog />
       <OnboardingTour />
 
       {/* Unsaved changes dialog */}
