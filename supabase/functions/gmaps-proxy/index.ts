@@ -259,7 +259,7 @@ serve(async (req) => {
         // Create company
         const { data: company, error: compError } = await supabase
           .from("companies")
-          .insert({
+          .upsert({
             name: result.name || result.title || "Unknown",
             sector: result.category || result.type || "Não classificado",
             location: result.address || result.city || "",
@@ -270,7 +270,7 @@ serve(async (req) => {
             ipc_score: Math.min(ipcScore, 100),
             enriched: !!(result.email || result.phone),
             raw_data: result,
-          })
+          }, { onConflict: "name,source" })
           .select()
           .single();
 
