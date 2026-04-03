@@ -182,7 +182,7 @@ export const ICPConfigView = () => {
             {c.type === "tags" && (
               <div className="space-y-2">
                 <div className="flex flex-wrap gap-1.5">
-                  {c.value.map((tag: string) => (
+                  {(c.value as string[]).map((tag: string) => (
                     <Badge
                       key={tag}
                       variant="outline"
