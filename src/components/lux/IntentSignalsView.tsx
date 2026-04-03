@@ -37,7 +37,7 @@ export const IntentSignalsView = () => {
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [editingSignal, setEditingSignal] = useState<any>(null);
+  const [editingSignal, setEditingSignal] = useState<Tables<"intent_signals"> | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [type, setType] = useState<SignalType>("website_visit");
   const [signal, setSignal] = useState("");
