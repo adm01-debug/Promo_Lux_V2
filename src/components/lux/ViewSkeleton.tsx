@@ -6,11 +6,11 @@ import type { View } from "@/hooks/useNavigationHistory";
 const StatCardSkeleton = () => (
   <div className="glass rounded-lg p-5 space-y-3">
     <div className="flex items-center justify-between">
-      <Skeleton className="h-4 w-24 bg-muted/40" />
-      <Skeleton className="h-8 w-8 rounded-md bg-muted/30" />
+      <div className="skeleton-shimmer h-4 w-24 rounded" />
+      <div className="skeleton-shimmer h-8 w-8 rounded-md" />
     </div>
-    <Skeleton className="h-8 w-20 bg-muted/50" />
-    <Skeleton className="h-3 w-32 bg-muted/20" />
+    <div className="skeleton-shimmer h-8 w-20 rounded" />
+    <div className="skeleton-shimmer h-3 w-32 rounded" />
   </div>
 );
 
