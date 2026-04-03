@@ -2,6 +2,23 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Sidebar, NAV_ITEMS } from "../Sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+vi.mock("@/integrations/supabase/client", () => ({
+  supabase: {
+    from: () => ({
+      select: () => ({
+        eq: () => Promise.resolve({ count: 0, error: null }),
+      }),
+    }),
+  },
+}));
+
+vi.mock("@/lib/viewRegistry", () => ({
+  prefetchView: vi.fn(),
+}));
+
+const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 const defaultProps = {
   activeView: "dashboard" as const,
@@ -14,9 +31,11 @@ const defaultProps = {
 
 const renderSidebar = (overrides = {}) =>
   render(
-    <TooltipProvider>
-      <Sidebar {...defaultProps} {...overrides} />
-    </TooltipProvider>
+    <QueryClientProvider client={qc}>
+      <TooltipProvider>
+        <Sidebar {...defaultProps} {...overrides} />
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 
 describe("Sidebar", () => {
