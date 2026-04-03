@@ -375,7 +375,7 @@ export const CompaniesMapView = () => {
         </div>
       )}
 
-      <div className="glass rounded-lg overflow-hidden" style={{ height: "500px" }}>
+      <div className="glass rounded-lg overflow-hidden" style={{ height: "clamp(350px, 60vh, 600px)" }}>
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
             <p className="text-sm text-muted-foreground animate-pulse">Carregando mapa...</p>
