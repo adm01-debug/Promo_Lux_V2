@@ -10,6 +10,7 @@ import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { CommandPalette } from "@/components/lux/CommandPalette";
 import { KeyboardShortcutsDialog } from "@/components/lux/KeyboardShortcutsDialog";
 import { useRealtimeCompanies } from "@/hooks/useRealtimeCompanies";
+import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
