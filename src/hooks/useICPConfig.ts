@@ -30,6 +30,7 @@ const DEFAULT_CRITERIA: ICPCriterion[] = [
 
 export function useICPConfig() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const query = useQuery({
     queryKey: ["ipc-config"],
