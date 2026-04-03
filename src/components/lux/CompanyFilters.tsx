@@ -55,11 +55,14 @@ const FacetGroup = ({
             className="overflow-hidden"
           >
             <div className="space-y-0.5 pb-3">
-              {items.map((item) => {
+              {items.map((item, i) => {
                 const isSelected = selected.has(item.value);
                 return (
-                  <button
+                  <motion.button
                     key={item.value}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.03, duration: 0.2 }}
                     onClick={() => onToggle(item.value)}
                     className={`w-full flex items-center justify-between px-2 py-1.5 rounded-md text-xs transition-all ${
                       isSelected
@@ -68,17 +71,21 @@ const FacetGroup = ({
                     }`}
                   >
                     <span className="flex items-center gap-2">
-                      <div className={`h-3 w-3 rounded border transition-colors flex items-center justify-center ${
-                        isSelected ? "bg-primary border-primary" : "border-muted-foreground/30"
-                      }`}>
+                      <motion.div
+                        animate={isSelected ? { scale: [1, 1.2, 1], backgroundColor: "hsl(var(--primary))" } : { scale: 1 }}
+                        transition={{ duration: 0.2 }}
+                        className={`h-3 w-3 rounded border transition-colors flex items-center justify-center ${
+                          isSelected ? "bg-primary border-primary" : "border-muted-foreground/30"
+                        }`}
+                      >
                         {isSelected && <span className="text-[8px] text-primary-foreground font-bold">✓</span>}
-                      </div>
+                      </motion.div>
                       {item.label}
                     </span>
                     <span className={`font-mono text-[10px] ${isSelected ? "text-primary" : "text-muted-foreground/50"}`}>
                       {item.count}
                     </span>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>

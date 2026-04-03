@@ -6,21 +6,21 @@ import type { View } from "@/hooks/useNavigationHistory";
 const StatCardSkeleton = () => (
   <div className="glass rounded-lg p-5 space-y-3">
     <div className="flex items-center justify-between">
-      <Skeleton className="h-4 w-24 bg-muted/40" />
-      <Skeleton className="h-8 w-8 rounded-md bg-muted/30" />
+      <div className="skeleton-shimmer h-4 w-24 rounded" />
+      <div className="skeleton-shimmer h-8 w-8 rounded-md" />
     </div>
-    <Skeleton className="h-8 w-20 bg-muted/50" />
-    <Skeleton className="h-3 w-32 bg-muted/20" />
+    <div className="skeleton-shimmer h-8 w-20 rounded" />
+    <div className="skeleton-shimmer h-3 w-32 rounded" />
   </div>
 );
 
 const ChartSkeleton = ({ height = 220 }: { height?: number }) => (
   <div className="glass rounded-lg overflow-hidden">
     <div className="p-5 border-b border-border/50">
-      <Skeleton className="h-5 w-40 bg-muted/40" />
+      <div className="skeleton-shimmer h-5 w-40 rounded" />
     </div>
     <div className="p-5">
-      <Skeleton className={`w-full bg-muted/20 rounded-md`} style={{ height }} />
+      <div className="skeleton-shimmer w-full rounded-md" style={{ height }} />
     </div>
   </div>
 );
@@ -28,12 +28,12 @@ const ChartSkeleton = ({ height = 220 }: { height?: number }) => (
 const TableRowSkeleton = ({ rows = 5 }: { rows?: number }) => (
   <div className="glass rounded-lg overflow-hidden">
     <div className="p-5 border-b border-border/50 flex items-center justify-between">
-      <Skeleton className="h-5 w-32 bg-muted/40" />
-      <Skeleton className="h-8 w-24 bg-muted/30 rounded-md" />
+      <div className="skeleton-shimmer h-5 w-32 rounded" />
+      <div className="skeleton-shimmer h-8 w-24 rounded-md" />
     </div>
     <div className="p-4 space-y-2">
       {Array.from({ length: rows }).map((_, i) => (
-        <Skeleton key={i} className="h-12 w-full bg-muted/20 rounded" />
+        <div key={i} className="skeleton-shimmer h-12 w-full rounded" style={{ animationDelay: `${i * 0.1}s` }} />
       ))}
     </div>
   </div>
