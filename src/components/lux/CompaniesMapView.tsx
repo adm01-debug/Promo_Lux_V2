@@ -261,12 +261,14 @@ export const CompaniesMapView = () => {
   }, [allMappable]);
 
   const filtered = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
     return allMappable.filter((c) => {
       if ((c.ipc_score ?? 0) < minScore) return false;
       if (selectedSector !== "all" && c.sector !== selectedSector) return false;
+      if (q && !c.name.toLowerCase().includes(q) && !(c.location ?? "").toLowerCase().includes(q) && !(c.sector ?? "").toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [allMappable, minScore, selectedSector]);
+  }, [allMappable, minScore, selectedSector, searchQuery]);
 
   const totalCompanies = companies?.length ?? 0;
   const unmappable = totalCompanies - allMappable.length;
