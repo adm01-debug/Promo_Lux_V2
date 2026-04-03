@@ -21,13 +21,19 @@ const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
 ];
 
 const integrations = [
-  { name: "LinkedIn Sales Navigator", status: "connected", icon: "🔗" },
-  { name: "Hunter.io", status: "connected", icon: "📧" },
-  { name: "Google Maps API", status: "connected", icon: "🗺️" },
-  { name: "HubSpot CRM", status: "disconnected", icon: "🔶" },
-  { name: "Slack", status: "disconnected", icon: "💬" },
-  { name: "Receita Federal (CNPJ)", status: "connected", icon: "🏛️" },
+  { name: "Google Maps Scraper", status: "connected", icon: "🗺️", desc: "Raspagem automatizada de empresas" },
+  { name: "Lovable AI Agent", status: "connected", icon: "🤖", desc: "Agente IA para consultas inteligentes" },
+  { name: "Lovable Cloud", status: "connected", icon: "☁️", desc: "Backend, banco de dados e auth" },
 ];
+
+interface NotifPrefs {
+  email_notifs: boolean;
+  signal_notifs: boolean;
+  scrape_notifs: boolean;
+  weekly_report: boolean;
+}
+
+const DEFAULT_PREFS: NotifPrefs = { email_notifs: true, signal_notifs: true, scrape_notifs: true, weekly_report: false };
 
 export const SettingsView = () => {
   const { user } = useAuth();
@@ -37,25 +43,28 @@ export const SettingsView = () => {
 
   // Account fields
   const [fullName, setFullName] = useState("");
-  const [company, setCompany] = useState("LUX IA");
-  const [role, setRole] = useState("CEO & Founder");
+
+  // Password
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // Notification prefs
-  const [emailNotifs, setEmailNotifs] = useState(true);
-  const [signalNotifs, setSignalNotifs] = useState(true);
-  const [scrapeNotifs, setScrapeNotifs] = useState(true);
-  const [weeklyReport, setWeeklyReport] = useState(false);
+  const [notifPrefs, setNotifPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
+  const [savingNotifs, setSavingNotifs] = useState(false);
 
   // Load profile data
   useEffect(() => {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("full_name")
+      .select("full_name, notification_prefs")
       .eq("id", user.id)
       .single()
       .then(({ data }) => {
         if (data?.full_name) setFullName(data.full_name);
+        if (data?.notification_prefs) {
+          setNotifPrefs({ ...DEFAULT_PREFS, ...(data.notification_prefs as unknown as NotifPrefs) });
+        }
       });
   }, [user]);
 
@@ -68,8 +77,26 @@ export const SettingsView = () => {
         .from("profiles")
         .update({ full_name: fullName })
         .eq("id", user.id);
-
       if (error) throw error;
+
+      // Password change
+      if (newPassword) {
+        if (newPassword !== confirmPassword) {
+          toast({ title: "Erro", description: "As senhas não coincidem.", variant: "destructive" });
+          setSaving(false);
+          return;
+        }
+        if (newPassword.length < 8) {
+          toast({ title: "Erro", description: "A senha deve ter pelo menos 8 caracteres.", variant: "destructive" });
+          setSaving(false);
+          return;
+        }
+        const { error: pwError } = await supabase.auth.updateUser({ password: newPassword });
+        if (pwError) throw pwError;
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+
       setSaved(true);
       toast({ title: "Salvo!", description: "Informações atualizadas com sucesso." });
       setTimeout(() => setSaved(false), 2000);
@@ -78,6 +105,27 @@ export const SettingsView = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSaveNotifs = async () => {
+    if (!user) return;
+    setSavingNotifs(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ notification_prefs: notifPrefs as any })
+        .eq("id", user.id);
+      if (error) throw error;
+      toast({ title: "Preferências salvas!", description: "Notificações atualizadas." });
+    } catch (err: any) {
+      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    } finally {
+      setSavingNotifs(false);
+    }
+  };
+
+  const updateNotifPref = (key: keyof NotifPrefs, value: boolean) => {
+    setNotifPrefs((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -94,7 +142,7 @@ export const SettingsView = () => {
         {/* Tab nav */}
         <div className="lg:w-56 flex-shrink-0">
           <div className="glass rounded-lg p-2 flex lg:flex-col gap-1">
-            {tabs.map(tab => (
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -123,39 +171,37 @@ export const SettingsView = () => {
                   <Label className="text-xs text-muted-foreground">Email</Label>
                   <Input value={user?.email || ""} disabled className="h-9 text-sm opacity-60" />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">Empresa</Label>
-                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="h-9 text-sm" />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">Cargo</Label>
-                  <Input value={role} onChange={(e) => setRole(e.target.value)} className="h-9 text-sm" />
-                </div>
               </div>
               <Separator className="bg-border/30" />
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-primary" /> Segurança
+                  <Shield className="h-4 w-4 text-primary" /> Alterar Senha
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Senha Atual</Label>
-                    <Input type="password" placeholder="••••••••" className="h-9 text-sm" />
+                    <Label className="text-xs text-muted-foreground">Nova Senha</Label>
+                    <Input
+                      type="password"
+                      placeholder="Mín. 8 caracteres"
+                      className="h-9 text-sm"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Nova Senha</Label>
-                    <Input type="password" placeholder="••••••••" className="h-9 text-sm" />
+                    <Label className="text-xs text-muted-foreground">Confirmar Senha</Label>
+                    <Input
+                      type="password"
+                      placeholder="Repita a senha"
+                      className="h-9 text-sm"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
                   </div>
                 </div>
               </div>
               <Button onClick={handleSaveAccount} disabled={saving} className="gap-2">
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : saved ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
                 {saving ? "Salvando..." : saved ? "Salvo!" : "Salvar Alterações"}
               </Button>
             </div>
@@ -166,41 +212,43 @@ export const SettingsView = () => {
               <h3 className="text-lg font-semibold text-foreground">Preferências de Notificação</h3>
               <div className="space-y-4">
                 {[
-                  { label: "Notificações por email", desc: "Receba alertas importantes no seu email", checked: emailNotifs, onChange: setEmailNotifs },
-                  { label: "Sinais de intenção", desc: "Alerta quando um sinal de alta intenção é detectado", checked: signalNotifs, onChange: setSignalNotifs },
-                  { label: "Raspagens concluídas", desc: "Notifique quando uma raspagem terminar", checked: scrapeNotifs, onChange: setScrapeNotifs },
-                  { label: "Relatório semanal", desc: "Resumo semanal dos resultados por email", checked: weeklyReport, onChange: setWeeklyReport },
-                ].map(item => (
-                  <div key={item.label} className="flex items-center justify-between py-3 border-b border-border/20 last:border-0">
+                  { key: "email_notifs" as const, label: "Notificações por email", desc: "Receba alertas importantes no seu email" },
+                  { key: "signal_notifs" as const, label: "Sinais de intenção", desc: "Alerta quando um sinal de alta intenção é detectado" },
+                  { key: "scrape_notifs" as const, label: "Raspagens concluídas", desc: "Notifique quando uma raspagem terminar" },
+                  { key: "weekly_report" as const, label: "Relatório semanal", desc: "Resumo semanal dos resultados por email" },
+                ].map((item) => (
+                  <div key={item.key} className="flex items-center justify-between py-3 border-b border-border/20 last:border-0">
                     <div>
                       <p className="text-sm font-medium text-foreground">{item.label}</p>
                       <p className="text-xs text-muted-foreground">{item.desc}</p>
                     </div>
-                    <Switch checked={item.checked} onCheckedChange={item.onChange} />
+                    <Switch checked={notifPrefs[item.key]} onCheckedChange={(v) => updateNotifPref(item.key, v)} />
                   </div>
                 ))}
               </div>
+              <Button onClick={handleSaveNotifs} disabled={savingNotifs} className="gap-2">
+                {savingNotifs ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                {savingNotifs ? "Salvando..." : "Salvar Preferências"}
+              </Button>
             </div>
           )}
 
           {activeTab === "integrations" && (
             <div className="glass rounded-lg p-6 space-y-6">
-              <h3 className="text-lg font-semibold text-foreground">Integrações</h3>
+              <h3 className="text-lg font-semibold text-foreground">Integrações Ativas</h3>
               <div className="space-y-3">
-                {integrations.map(int => (
+                {integrations.map((int) => (
                   <div key={int.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/20">
                     <div className="flex items-center gap-3">
                       <span className="text-xl">{int.icon}</span>
                       <div>
                         <p className="text-sm font-medium text-foreground">{int.name}</p>
-                        <Badge variant="outline" className={`text-[10px] ${int.status === "connected" ? "bg-success/10 text-success border-success/30" : "bg-muted text-muted-foreground"}`}>
-                          {int.status === "connected" ? "Conectado" : "Desconectado"}
-                        </Badge>
+                        <p className="text-xs text-muted-foreground">{int.desc}</p>
                       </div>
                     </div>
-                    <Button size="sm" variant={int.status === "connected" ? "outline" : "default"} className="text-xs h-8">
-                      {int.status === "connected" ? "Configurar" : "Conectar"}
-                    </Button>
+                    <Badge variant="outline" className="text-[10px] bg-success/10 text-success border-success/30">
+                      Conectado
+                    </Badge>
                   </div>
                 ))}
               </div>
@@ -209,25 +257,22 @@ export const SettingsView = () => {
 
           {activeTab === "api" && (
             <div className="glass rounded-lg p-6 space-y-6">
-              <h3 className="text-lg font-semibold text-foreground">API Keys</h3>
-              <p className="text-sm text-muted-foreground">Gerencie suas chaves de API para integrações externas</p>
+              <h3 className="text-lg font-semibold text-foreground">Informações do Projeto</h3>
+              <p className="text-sm text-muted-foreground">Dados da sua instância para integrações externas</p>
               <div className="space-y-4">
-                {[
-                  { name: "LUX IA API Key", key: "lux_sk_••••••••••••7f3a", created: "10 Mar 2025" },
-                  { name: "Webhook Secret", key: "whsec_••••••••••••9b2d", created: "15 Mar 2025" },
-                ].map(apiKey => (
-                  <div key={apiKey.name} className="p-4 rounded-lg bg-secondary/30 border border-border/20 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-foreground">{apiKey.name}</p>
-                      <Badge variant="outline" className="text-[10px] bg-success/10 text-success border-success/30">Ativa</Badge>
-                    </div>
-                    <p className="text-xs font-mono text-muted-foreground bg-background/50 rounded px-2 py-1">{apiKey.key}</p>
-                    <p className="text-[10px] text-muted-foreground">Criada em {apiKey.created}</p>
-                  </div>
-                ))}
-                <Button variant="outline" className="gap-2 text-sm">
-                  <Key className="h-4 w-4" /> Gerar Nova Chave
-                </Button>
+                <div className="p-4 rounded-lg bg-secondary/30 border border-border/20 space-y-2">
+                  <p className="text-sm font-medium text-foreground">URL da API</p>
+                  <p className="text-xs font-mono text-muted-foreground bg-background/50 rounded px-2 py-1 select-all">
+                    {import.meta.env.VITE_SUPABASE_URL}/functions/v1/
+                  </p>
+                </div>
+                <div className="p-4 rounded-lg bg-secondary/30 border border-border/20 space-y-2">
+                  <p className="text-sm font-medium text-foreground">Chave Pública (anon)</p>
+                  <p className="text-xs font-mono text-muted-foreground bg-background/50 rounded px-2 py-1 break-all select-all">
+                    {import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.slice(0, 30)}••••••
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">Use esta chave no header <code>apikey</code> para chamar as edge functions</p>
+                </div>
               </div>
             </div>
           )}

@@ -1,140 +1,208 @@
-import { useState } from "react";
-import { Bot, Send, Sparkles, Loader2, Search, Database, Globe, Brain } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Bot, Send, Sparkles, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface AgentMessage {
   id: string;
   role: "user" | "agent";
   content: string;
   timestamp: string;
-  actions?: { label: string; type: string }[];
 }
 
-const mockConversation: AgentMessage[] = [
-  {
-    id: "1",
-    role: "user",
-    content: "Encontre empresas de SaaS B2B em São Paulo com mais de 50 funcionários que receberam investimento nos últimos 6 meses",
-    timestamp: "14:32",
-  },
-  {
-    id: "2",
-    role: "agent",
-    content: "🔍 Analisando sua solicitação...\n\n✅ Critérios identificados:\n• Setor: SaaS B2B\n• Localização: São Paulo\n• Funcionários: >50\n• Sinal: Investimento recente (6 meses)\n\nEncontrei **23 empresas** que correspondem aos critérios. As 5 com maior score IPC:\n\n1. **TechNova Solutions** — Score 94 — Série A R$15M (Fev 2025)\n2. **CloudBridge Inc** — Score 85 — Seed R$3M (Jan 2025)\n3. **DataPipeline.io** — Score 82 — Série B R$40M (Dez 2024)\n4. **APIHub Brasil** — Score 78 — Pre-Seed R$1.2M (Mar 2025)\n5. **SaaSMetrics** — Score 75 — Série A R$8M (Jan 2025)\n\nDeseja que eu enriqueça os dados dessas empresas ou inicie uma campanha de outreach?",
-    timestamp: "14:32",
-    actions: [
-      { label: "Enriquecer todas", type: "enrich" },
-      { label: "Criar campanha", type: "campaign" },
-      { label: "Adicionar ao CRM", type: "crm" },
-      { label: "Exportar CSV", type: "export" },
-    ],
-  },
-  {
-    id: "3",
-    role: "user",
-    content: "Enriqueça as top 5 e me diga quem são os decision makers",
-    timestamp: "14:33",
-  },
-  {
-    id: "4",
-    role: "agent",
-    content: "🔄 Executando waterfall enrichment nas 5 empresas...\n\n**TechNova Solutions:**\n• CEO: Ana Silva — ana@technova.com.br — LinkedIn ✓\n• CTO: Pedro Santos — pedro@technova.com.br — LinkedIn ✓\n• VP Sales: Maria Costa — maria@technova.com.br\n\n**CloudBridge Inc:**\n• CEO: João Pereira — joao@cloudbridge.io — LinkedIn ✓\n• Head of Growth: Lucas Mendes — lucas@cloudbridge.io\n\n**DataPipeline.io:**\n• CEO/Founder: Roberto Lima — roberto@datapipeline.io — LinkedIn ✓\n• COO: Fernanda Alves — fernanda@datapipeline.io\n\n📊 **Resumo:** 12 contatos encontrados, 8 com email verificado, 5 com LinkedIn confirmado.\n\nPróximos passos recomendados: Criar sequência de outreach personalizada para os C-levels.",
-    timestamp: "14:34",
-    actions: [
-      { label: "Criar sequência de email", type: "sequence" },
-      { label: "Conectar no LinkedIn", type: "linkedin" },
-      { label: "Ver perfis completos", type: "profiles" },
-    ],
-  },
-];
-
-const capabilities = [
-  { icon: <Search className="h-4 w-4" />, label: "Busca inteligente de empresas por critérios naturais" },
-  { icon: <Database className="h-4 w-4" />, label: "Enriquecimento em cascata com múltiplos provedores" },
-  { icon: <Globe className="h-4 w-4" />, label: "Raspagem web com AI para dados de contato" },
-  { icon: <Brain className="h-4 w-4" />, label: "Análise de sinais de intenção e scoring automático" },
-];
+const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-agent`;
 
 export const AIAgentView = () => {
+  const [messages, setMessages] = useState<AgentMessage[]>([
+    {
+      id: "welcome",
+      role: "agent",
+      content: "👋 Olá! Sou o Agente IA do **LUX IA**.\n\nPosso ajudar com:\n- 📊 Analisar empresas do banco\n- 🎯 Consultar scores IPC\n- 🔍 Encontrar empresas por setor/localização\n- 💡 Sugerir ações de prospecção\n\nO que você precisa?",
+      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+    },
+  ]);
   const [input, setInput] = useState("");
-  const [messages] = useState(mockConversation);
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const sendMessage = async () => {
+    const text = input.trim();
+    if (!text || isLoading) return;
+
+    const userMsg: AgentMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: text,
+      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(FUNCTIONS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({ message: text }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(err.error || `Erro ${res.status}`);
+      }
+
+      const { reply } = await res.json();
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          role: "agent",
+          content: reply,
+          timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
+    } catch (err: any) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          role: "agent",
+          content: `❌ Erro ao processar: ${err.message}\n\nTente novamente em alguns segundos.`,
+          timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+      inputRef.current?.focus();
+    }
+  };
+
+  const clearChat = () => {
+    setMessages([
+      {
+        id: "welcome",
+        role: "agent",
+        content: "🔄 Chat reiniciado. Como posso ajudar?",
+        timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      },
+    ]);
+  };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <Bot className="h-6 w-6 text-primary" />
-          Agente IA — Claygent Style
-        </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Inspirado no Claygent/Prospectory — converse em linguagem natural para prospectar
-        </p>
-      </div>
-
-      {/* Capabilities */}
-      <div className="grid grid-cols-4 gap-3">
-        {capabilities.map((cap) => (
-          <div key={cap.label} className="glass rounded-lg p-3 flex items-center gap-2.5">
-            <div className="text-primary/70">{cap.icon}</div>
-            <span className="text-xs text-muted-foreground">{cap.label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Chat */}
-      <div className="glass rounded-lg overflow-hidden flex flex-col" style={{ height: "calc(100vh - 340px)" }}>
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] ${msg.role === "user" ? "bg-primary/10 border-primary/20" : "bg-secondary/50 border-border/30"} border rounded-lg p-4`}>
-                {msg.role === "agent" && (
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <Sparkles className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-xs font-medium text-primary">LUX IA Agent</span>
-                  </div>
-                )}
-                <div className="text-sm text-foreground whitespace-pre-line leading-relaxed">{msg.content}</div>
-                {msg.actions && (
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {msg.actions.map((a) => (
-                      <Button key={a.label} size="sm" variant="outline" className="text-xs h-7 gap-1">
-                        {a.label}
-                      </Button>
-                    ))}
-                  </div>
-                )}
-                <p className="text-[10px] text-muted-foreground mt-2">{msg.timestamp}</p>
-              </div>
-            </div>
-          ))}
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <Bot className="h-6 w-6 text-primary" />
+            Agente IA
+            <Badge variant="outline" className="text-xs bg-success/20 text-success border-success/30 gap-1">
+              <Sparkles className="h-3 w-3" /> Online
+            </Badge>
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Consulte seus dados, analise empresas e receba recomendações inteligentes
+          </p>
         </div>
+        <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={clearChat}>
+          <Trash2 className="h-3.5 w-3.5" /> Limpar
+        </Button>
+      </div>
 
-        <div className="border-t border-border/50 p-4">
-          <div className="flex gap-2">
+      {/* Chat area */}
+      <div className="glass rounded-lg overflow-hidden flex flex-col" style={{ height: "calc(100vh - 240px)" }}>
+        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+          <div className="space-y-4 max-w-3xl mx-auto">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}
+              >
+                {msg.role === "agent" && (
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <Bot className="h-4 w-4 text-primary" />
+                  </div>
+                )}
+                <div
+                  className={cn(
+                    "rounded-lg px-4 py-3 max-w-[80%]",
+                    msg.role === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary/50 text-foreground"
+                  )}
+                >
+                  <div className="text-sm whitespace-pre-wrap leading-relaxed prose-sm">
+                    {msg.content.split("\n").map((line, i) => {
+                      // Basic markdown: bold
+                      const parts = line.split(/\*\*(.*?)\*\*/g);
+                      return (
+                        <p key={i} className={i > 0 ? "mt-1" : ""}>
+                          {parts.map((part, j) =>
+                            j % 2 === 1 ? (
+                              <strong key={j} className="font-semibold">{part}</strong>
+                            ) : (
+                              <span key={j}>{part}</span>
+                            )
+                          )}
+                        </p>
+                      );
+                    })}
+                  </div>
+                  <span className="text-[10px] opacity-50 mt-1.5 block">{msg.timestamp}</span>
+                </div>
+              </div>
+            ))}
+
+            {isLoading && (
+              <div className="flex gap-3 items-start">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Bot className="h-4 w-4 text-primary" />
+                </div>
+                <div className="bg-secondary/50 rounded-lg px-4 py-3 flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  <span className="text-sm text-muted-foreground">Analisando...</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+
+        {/* Input */}
+        <div className="border-t border-border/30 p-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendMessage();
+            }}
+            className="flex gap-2 max-w-3xl mx-auto"
+          >
             <Input
-              placeholder="Ex: Encontre fintechs em Curitiba com +100 funcionários..."
+              ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="text-sm"
-              onKeyDown={(e) => e.key === "Enter" && setInput("")}
+              placeholder="Pergunte sobre suas empresas, IPC, workflows..."
+              className="flex-1"
+              disabled={isLoading}
             />
-            <Button size="icon" className="flex-shrink-0">
-              <Send className="h-4 w-4" />
+            <Button type="submit" disabled={isLoading || !input.trim()} className="gap-1.5">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              Enviar
             </Button>
-          </div>
-          <div className="flex gap-2 mt-2">
-            {["Encontre empresas de...", "Enriqueça os dados de...", "Crie uma campanha para..."].map((sug) => (
-              <button
-                key={sug}
-                onClick={() => setInput(sug)}
-                className="text-[10px] text-muted-foreground bg-secondary/50 rounded-full px-3 py-1 hover:text-foreground hover:bg-secondary transition-colors"
-              >
-                {sug}
-              </button>
-            ))}
-          </div>
+          </form>
         </div>
       </div>
     </div>

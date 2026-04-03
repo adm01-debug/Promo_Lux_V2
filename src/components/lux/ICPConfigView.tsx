@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Target, Plus, Trash2, Save, Sliders, Building2, MapPin, Users, DollarSign, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Target, Plus, Trash2, Save, Sliders, Building2, MapPin, Users, DollarSign, Globe, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,32 +7,43 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useICPConfig, type ICPCriterion } from "@/hooks/useICPConfig";
 
-interface ICPCriteria {
-  id: string;
-  label: string;
-  type: "select" | "range" | "tags" | "text";
-  icon: React.ReactNode;
-  value: any;
-  weight: number;
-}
-
-const defaultCriteria: ICPCriteria[] = [
-  { id: "sector", label: "Setor / Indústria", type: "tags", icon: <Building2 className="h-4 w-4" />, value: ["SaaS B2B", "Fintech", "E-commerce"], weight: 90 },
-  { id: "location", label: "Localização", type: "tags", icon: <MapPin className="h-4 w-4" />, value: ["São Paulo", "Rio de Janeiro", "Belo Horizonte"], weight: 70 },
-  { id: "employees", label: "Nº de Funcionários", type: "range", icon: <Users className="h-4 w-4" />, value: [10, 500], weight: 60 },
-  { id: "revenue", label: "Faturamento Anual (R$)", type: "range", icon: <DollarSign className="h-4 w-4" />, value: [500000, 50000000], weight: 85 },
-  { id: "online_presence", label: "Presença Online", type: "select", icon: <Globe className="h-4 w-4" />, value: "strong", weight: 40 },
-];
+const iconMap: Record<string, React.ReactNode> = {
+  sector: <Building2 className="h-4 w-4" />,
+  location: <MapPin className="h-4 w-4" />,
+  employees: <Users className="h-4 w-4" />,
+  revenue: <DollarSign className="h-4 w-4" />,
+  online_presence: <Globe className="h-4 w-4" />,
+};
 
 export const ICPConfigView = () => {
-  const [criteria, setCriteria] = useState(defaultCriteria);
+  const { config, isLoading, save, isSaving } = useICPConfig();
+  const [criteria, setCriteria] = useState<ICPCriterion[]>([]);
   const [newTag, setNewTag] = useState("");
   const [activeAutoSearch, setActiveAutoSearch] = useState(true);
+  const [dirty, setDirty] = useState(false);
+
+  // Sync from DB when loaded
+  useEffect(() => {
+    if (config?.criteria) {
+      setCriteria(config.criteria);
+      setDirty(false);
+    }
+  }, [config]);
+
+  const updateCriteria = (updater: (prev: ICPCriterion[]) => ICPCriterion[]) => {
+    setCriteria((prev) => {
+      const next = updater(prev);
+      setDirty(true);
+      return next;
+    });
+  };
 
   const removeTag = (criteriaId: string, tag: string) => {
-    setCriteria(prev =>
-      prev.map(c =>
+    updateCriteria((prev) =>
+      prev.map((c) =>
         c.id === criteriaId ? { ...c, value: c.value.filter((t: string) => t !== tag) } : c
       )
     );
@@ -40,8 +51,8 @@ export const ICPConfigView = () => {
 
   const addTag = (criteriaId: string) => {
     if (!newTag.trim()) return;
-    setCriteria(prev =>
-      prev.map(c =>
+    updateCriteria((prev) =>
+      prev.map((c) =>
         c.id === criteriaId ? { ...c, value: [...c.value, newTag.trim()] } : c
       )
     );
@@ -49,10 +60,33 @@ export const ICPConfigView = () => {
   };
 
   const updateWeight = (criteriaId: string, weight: number) => {
-    setCriteria(prev =>
-      prev.map(c => (c.id === criteriaId ? { ...c, weight } : c))
+    updateCriteria((prev) =>
+      prev.map((c) => (c.id === criteriaId ? { ...c, weight } : c))
     );
   };
+
+  const handleSave = () => {
+    save({
+      id: config?.id || "",
+      name: config?.name || "default",
+      criteria,
+    });
+    setDirty(false);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-32 w-full" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-48 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -71,9 +105,15 @@ export const ICPConfigView = () => {
             <span className="text-sm text-muted-foreground">Auto-busca</span>
             <Switch checked={activeAutoSearch} onCheckedChange={setActiveAutoSearch} />
           </div>
-          <Button className="gap-2">
-            <Save className="h-4 w-4" />
-            Salvar IPC
+          <Button className="gap-2" onClick={handleSave} disabled={isSaving || !dirty}>
+            {isSaving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : dirty ? (
+              <Save className="h-4 w-4" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4" />
+            )}
+            {isSaving ? "Salvando..." : dirty ? "Salvar IPC" : "Salvo"}
           </Button>
         </div>
       </div>
@@ -88,7 +128,9 @@ export const ICPConfigView = () => {
             </p>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold font-mono text-primary">{Math.round(criteria.reduce((a, c) => a + c.weight, 0) / criteria.length)}</p>
+            <p className="text-3xl font-bold font-mono text-primary">
+              {criteria.length > 0 ? Math.round(criteria.reduce((a, c) => a + c.weight, 0) / criteria.length) : 0}
+            </p>
             <p className="text-xs text-muted-foreground">Score médio</p>
           </div>
         </div>
@@ -110,7 +152,7 @@ export const ICPConfigView = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary">
-                  {c.icon}
+                  {iconMap[c.id] || <Sliders className="h-4 w-4" />}
                 </div>
                 <div>
                   <h4 className="font-medium text-sm text-foreground">{c.label}</h4>
@@ -168,19 +210,44 @@ export const ICPConfigView = () => {
               <div className="flex items-center gap-3 text-xs">
                 <div className="flex-1">
                   <Label className="text-muted-foreground">Mínimo</Label>
-                  <Input className="h-8 text-xs mt-1 font-mono" defaultValue={c.value[0].toLocaleString("pt-BR")} />
+                  <Input
+                    className="h-8 text-xs mt-1 font-mono"
+                    defaultValue={c.value[0]?.toLocaleString("pt-BR")}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
+                      updateCriteria((prev) =>
+                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [val, cr.value[1]] } : cr)
+                      );
+                    }}
+                  />
                 </div>
                 <span className="text-muted-foreground mt-5">—</span>
                 <div className="flex-1">
                   <Label className="text-muted-foreground">Máximo</Label>
-                  <Input className="h-8 text-xs mt-1 font-mono" defaultValue={c.value[1].toLocaleString("pt-BR")} />
+                  <Input
+                    className="h-8 text-xs mt-1 font-mono"
+                    defaultValue={c.value[1]?.toLocaleString("pt-BR")}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
+                      updateCriteria((prev) =>
+                        prev.map((cr) => cr.id === c.id ? { ...cr, value: [cr.value[0], val] } : cr)
+                      );
+                    }}
+                  />
                 </div>
               </div>
             )}
 
             {/* Select */}
             {c.type === "select" && (
-              <Select defaultValue={c.value}>
+              <Select
+                defaultValue={c.value}
+                onValueChange={(val) => {
+                  updateCriteria((prev) =>
+                    prev.map((cr) => cr.id === c.id ? { ...cr, value: val } : cr)
+                  );
+                }}
+              >
                 <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
