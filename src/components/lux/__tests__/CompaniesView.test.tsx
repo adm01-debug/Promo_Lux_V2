@@ -53,7 +53,7 @@ const wrapper = ({ children }: any) => (
 describe("CompaniesView — P0 Mobile Actions & P1 Score Tooltip", () => {
   it("renders the view title", async () => {
     render(<CompaniesView />, { wrapper });
-    expect(await screen.findByText("Empresas")).toBeInTheDocument();
+    expect(await screen.findByText("Empresas Identificadas")).toBeInTheDocument();
   });
 
   it("renders Score column header with HelpCircle tooltip", async () => {
