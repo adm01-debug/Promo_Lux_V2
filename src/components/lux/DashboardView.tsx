@@ -49,6 +49,7 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const colors = useThemeColors();
+  const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
   const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(loadOrder);
   const [dragOver, setDragOver] = useState<number | null>(null);
