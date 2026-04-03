@@ -86,15 +86,15 @@ describe("Sidebar — P1 Dynamic Footer", () => {
     expect(dot).toBeInTheDocument();
   });
 
-  it("renders LUX IA branding", () => {
+  it("renders LUX branding text", () => {
     render(<Sidebar {...defaultProps} />, { wrapper });
-    expect(screen.getByText("LUX IA")).toBeInTheDocument();
+    expect(screen.getByText("LUX", { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("IA")).toBeInTheDocument();
   });
 
   it("renders Sparkles icon in branding", () => {
     const { container } = render(<Sidebar {...defaultProps} />, { wrapper });
-    // Sparkles icon is in the branding area
-    const brandArea = screen.getByText("LUX IA").closest("div");
-    expect(brandArea?.querySelector("svg")).toBeInTheDocument();
+    const sparkles = container.querySelector(".lucide-sparkles");
+    expect(sparkles).toBeInTheDocument();
   });
 });
