@@ -216,7 +216,7 @@ export const ICPConfigView = () => {
                   <Label className="text-muted-foreground">Mínimo</Label>
                   <Input
                     className="h-8 text-xs mt-1 font-mono"
-                    defaultValue={c.value[0]?.toLocaleString("pt-BR")}
+                    defaultValue={(c.value as number[])[0]?.toLocaleString("pt-BR")}
                     onChange={(e) => {
                       const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
                       updateCriteria((prev) =>
