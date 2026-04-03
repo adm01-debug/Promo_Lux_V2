@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
 import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
