@@ -140,6 +140,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          notification_prefs: Json
           skin: string
           updated_at: string
         }
@@ -148,6 +149,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          notification_prefs?: Json
           skin?: string
           updated_at?: string
         }
@@ -156,6 +158,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          notification_prefs?: Json
           skin?: string
           updated_at?: string
         }
