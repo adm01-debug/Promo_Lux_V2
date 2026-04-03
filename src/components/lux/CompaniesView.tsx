@@ -369,7 +369,17 @@ export const CompaniesView = () => {
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden md:table-cell">Setor</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden lg:table-cell">Localização</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden xl:table-cell">Fonte</th>
-                    <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Score</th>
+                    <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="inline-flex items-center gap-1 cursor-help">Score <HelpCircle className="h-3 w-3 text-muted-foreground/50" /></span>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-[220px] text-xs">
+                          <p className="font-semibold mb-1">Score IPC</p>
+                          <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo. Baseado em setor, porte e sinais de intenção.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </th>
                     <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden sm:table-cell">Status</th>
                     <th className="text-right p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium"></th>
                   </tr>
