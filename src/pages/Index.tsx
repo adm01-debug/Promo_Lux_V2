@@ -93,6 +93,7 @@ const Index = () => {
 
       <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
+      <KeyboardShortcutsDialog />
       <OnboardingTour />
 
       {/* Unsaved changes dialog */}
