@@ -276,9 +276,10 @@ export const CompaniesMapView = () => {
   const clearFilters = () => {
     setMinScore(0);
     setSelectedSector("all");
+    setSearchQuery("");
   };
 
-  const hasActiveFilters = minScore > 0 || selectedSector !== "all";
+  const hasActiveFilters = minScore > 0 || selectedSector !== "all" || searchQuery.trim() !== "";
 
   return (
     <div className="space-y-4">
