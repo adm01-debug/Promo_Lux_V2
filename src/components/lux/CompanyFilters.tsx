@@ -130,6 +130,8 @@ export const CompanyFilters = ({
   onClearAll,
   companies,
 }: CompanyFiltersProps) => {
+  const isMobile = useIsMobile();
+  const [mobileExpanded, setMobileExpanded] = useState(false);
   const totalActiveFilters =
     filters.selectedSectors.size +
     filters.selectedLocations.size +
