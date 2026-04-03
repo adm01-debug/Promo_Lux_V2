@@ -135,6 +135,7 @@ export const CampaignsView = () => {
   const createMutation = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("campaigns").insert({
+        user_id: user?.id,
         name: formName.trim(),
         prospects: parseInt(formProspects) || 50,
         status: "draft",

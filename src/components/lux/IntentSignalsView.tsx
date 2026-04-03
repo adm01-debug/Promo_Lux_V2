@@ -65,6 +65,7 @@ export const IntentSignalsView = () => {
   const createMutation = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("intent_signals").insert({
+        user_id: user?.id,
         company_name: companyName.trim(),
         type,
         signal: signal.trim(),
