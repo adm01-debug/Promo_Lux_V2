@@ -184,6 +184,24 @@ export const CompaniesView = () => {
 
   const openCompany = (company: Company) => { setSelectedCompany(company); setModalOpen(true); };
 
+  const handleSingleDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase.from("companies").delete().eq("id", deleteTarget.id);
+      if (error) throw error;
+      toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida com sucesso.` });
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-map"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch {
+      toast({ title: "Erro ao remover", variant: "destructive" });
+    } finally {
+      setIsDeleting(false);
+      setDeleteTarget(null);
+    }
+  }, [deleteTarget, toast, queryClient]);
+
   const toggleSelectId = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
