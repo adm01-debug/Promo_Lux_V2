@@ -117,7 +117,7 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
   it("navigates to workflows on Workflows card click", () => {
     const onNavigate = vi.fn();
     render(<StatsGrid onNavigate={onNavigate} />, { wrapper });
-    screen.getByText("Workflows Ativos").closest("[class*=glass]")?.click();
+    (screen.getByText("Workflows Ativos").closest("[class*=glass]") as HTMLElement)?.click();
   });
 
   it("renders in 4-column grid on large screens", () => {
