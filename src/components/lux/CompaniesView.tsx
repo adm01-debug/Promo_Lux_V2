@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
-import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare } from "lucide-react";
+import { EditCompanyDialog } from "@/components/lux/EditCompanyDialog";
+import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, CheckSquare, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
@@ -15,6 +16,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Company {
   id: string;
