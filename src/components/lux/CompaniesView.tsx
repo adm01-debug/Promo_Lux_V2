@@ -426,7 +426,7 @@ export const CompaniesView = () => {
                         <Badge variant="outline" className="text-xs gap-1 bg-secondary/50"><Tag className="h-3 w-3" /><HighlightText text={company.sector} query={filters.search} /></Badge>
                       </td>
                       <td className="p-3 text-muted-foreground text-xs hidden lg:table-cell">
-                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{company.location}</span>
+                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /><HighlightText text={company.location} query={filters.search} /></span>
                       </td>
                       <td className="p-3 text-xs text-muted-foreground hidden xl:table-cell">{company.source}</td>
                       <td className="p-3 text-center">
