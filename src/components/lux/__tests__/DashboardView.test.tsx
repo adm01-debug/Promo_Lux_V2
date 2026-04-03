@@ -30,17 +30,24 @@ vi.mock("@/hooks/useThemeColors", () => ({
   }),
 }));
 
-vi.mock("framer-motion", () => ({
-  motion: {
-    div: ({ children, ...props }: any) => <div>{children}</div>,
-  },
-  useMotionValue: () => ({ get: () => 0, set: () => {} }),
-  useTransform: () => ({ get: () => 0 }),
-  animate: (_mv: any, _to: any, opts: any) => {
-    opts?.onUpdate?.(_to);
-    return { stop: () => {} };
-  },
-}));
+vi.mock("framer-motion", () => {
+  const handler = {
+    get: (_: any, prop: string) => ({ children, ...props }: any) => {
+      const Tag = ["h1","h2","h3","h4","h5","h6","p","span","tr","td","th","li","ul","section","article","main","nav","footer","header","aside","form","button","a","img","svg","table","tbody","thead","tfoot"].includes(prop) ? prop : "div";
+      return <Tag>{children}</Tag>;
+    },
+  };
+  return {
+    motion: new Proxy({}, handler),
+    useMotionValue: () => ({ get: () => 0, set: () => {} }),
+    useTransform: () => ({ get: () => 0 }),
+    animate: (_mv: any, _to: any, opts: any) => {
+      opts?.onUpdate?.(_to);
+      return { stop: () => {} };
+    },
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+  };
+});
 
 vi.mock("recharts", () => ({
   ResponsiveContainer: ({ children }: any) => <div data-testid="chart-container">{children}</div>,
@@ -64,6 +71,18 @@ vi.mock("@/integrations/supabase/client", () => ({
       }),
     }),
   },
+}));
+
+vi.mock("../EnrichmentFunnel", () => ({
+  EnrichmentFunnel: () => <div data-testid="enrichment-funnel" />,
+}));
+
+vi.mock("../AutomationsList", () => ({
+  AutomationsList: () => <div data-testid="automations-list" />,
+}));
+
+vi.mock("../ActivityFeed", () => ({
+  ActivityFeed: () => <div data-testid="activity-feed" />,
 }));
 
 const { DashboardView } = await import("../DashboardView");
@@ -106,10 +125,8 @@ describe("DashboardView — P1 Chart Legibility", () => {
     expect(screen.getByText("Empresas Encontradas")).toBeInTheDocument();
   });
 
-  it("renders widget order controls", () => {
+  it("renders greeting message", () => {
     render(<DashboardView />, { wrapper });
-    // Should have lock/unlock button
-    const buttons = screen.getAllByRole("button");
-    expect(buttons.length).toBeGreaterThan(0);
+    expect(screen.getByText(/👋/)).toBeInTheDocument();
   });
 });
