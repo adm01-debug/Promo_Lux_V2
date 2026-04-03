@@ -52,6 +52,27 @@ export const AddCompanyDialog = () => {
     }
   };
 
+  // Debounced geocode on location change
+  const handleLocationChange = useCallback((value: string) => {
+    setLocation(value);
+    setGeoCoords(null);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!value.trim()) {
+      setGeoStatus("idle");
+      return;
+    }
+    setGeoStatus("checking");
+    debounceRef.current = setTimeout(async () => {
+      const coords = await geocodeLocation(value.trim());
+      if (coords) {
+        setGeoStatus("found");
+        setGeoCoords(coords);
+      } else {
+        setGeoStatus("not_found");
+      }
+    }, 800);
+  }, []);
+
   const handleSave = async () => {
     if (!name.trim()) {
       toast({ title: "Nome obrigatório", variant: "destructive" });
@@ -59,17 +80,6 @@ export const AddCompanyDialog = () => {
     }
     setSaving(true);
     try {
-      // Geocode location automatically
-      let lat: number | null = null;
-      let lng: number | null = null;
-      if (location.trim()) {
-        const coords = await geocodeLocation(location.trim());
-        if (coords) {
-          lat = coords.lat;
-          lng = coords.lng;
-        }
-      }
-
       const { error } = await supabase.from("companies").insert({
         name: name.trim(),
         sector: sector || null,
@@ -80,12 +90,12 @@ export const AddCompanyDialog = () => {
         employees: employees || null,
         revenue: revenue || null,
         source: "manual",
-        lat,
-        lng,
+        lat: geoCoords?.lat ?? null,
+        lng: geoCoords?.lng ?? null,
       });
       if (error) throw error;
 
-      const geoMsg = lat ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
+      const geoMsg = geoCoords ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
       toast({ title: "Empresa adicionada!", description: `"${name}" foi criada com sucesso.${geoMsg}` });
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
       queryClient.invalidateQueries({ queryKey: ["companies-map"] });
