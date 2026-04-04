@@ -35,7 +35,7 @@ const defaultSequence: SequenceStep[] = [
 ];
 
 const CampaignFormFields = ({
-  name, setName, prospects, setProspects, sequence, setSequence, isEdit = false,
+  name, setName, prospects, setProspects, sequence, setSequence, isEdit: _isEdit = false,
 }: {
   name: string; setName: (v: string) => void;
   prospects: string; setProspects: (v: string) => void;

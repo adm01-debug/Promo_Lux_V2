@@ -8,7 +8,7 @@ import { EmptyState } from "@/components/lux/EmptyState";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-type AutomationStatus = "running" | "paused" | "active" | "completed" | "error" | "draft";
+type _AutomationStatus = "running" | "paused" | "active" | "completed" | "error" | "draft";
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   running: { label: "Executando", color: "bg-success/20 text-success border-success/30", icon: <Play className="h-3 w-3" /> },
