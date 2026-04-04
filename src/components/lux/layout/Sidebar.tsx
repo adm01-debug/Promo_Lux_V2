@@ -73,6 +73,20 @@ export const Sidebar = ({
   onMobileClose,
   onToggleCollapse,
 }: SidebarProps) => {
+  // Live intent signal count for badge
+  const { data: intentCount = 0 } = useQuery({
+    queryKey: ["intent-signals-unread-count"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("intent_signals")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
   // Pre-compute grouped nav items to avoid mutable variable during render
   const groupedItems = useMemo(() => {
     let lastSection = "";
