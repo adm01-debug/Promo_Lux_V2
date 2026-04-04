@@ -16,6 +16,7 @@ import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
 import { Header } from "@/components/lux/layout/Header";
+import { MobileBottomNav } from "@/components/lux/layout/MobileBottomNav";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { VIEW_MAP } from "@/lib/viewRegistry";
