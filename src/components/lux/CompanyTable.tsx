@@ -67,7 +67,7 @@ export const CompanyTable = () => {
             </thead>
             <tbody className="divide-y divide-border/20">
               {companies.map((company) => (
-                <tr key={company.id} className="hover:bg-secondary/20 transition-colors">
+                <tr key={company.id} className="hover:bg-primary/5 transition-all duration-200 hover:shadow-[inset_3px_0_0_hsl(var(--primary)/0.5)] cursor-pointer group">
                   <td className="p-3">
                     <div className="flex items-center gap-2">
                       <div className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center">
