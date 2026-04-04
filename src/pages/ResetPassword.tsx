@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, Lock, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { PasswordInput } from "@/components/lux/auth/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
+import { newPasswordSchema } from "@/lib/schemas/auth";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -38,13 +38,9 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password.length < 8) {
-      toast({ title: "Senha fraca", description: "A senha deve ter pelo menos 8 caracteres.", variant: "destructive" });
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast({ title: "Senhas diferentes", description: "As senhas não coincidem.", variant: "destructive" });
+    const result = newPasswordSchema.safeParse({ password, confirmPassword });
+    if (!result.success) {
+      toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
 

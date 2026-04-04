@@ -614,3 +614,20 @@
   50% { transform: translateX(150%); }
   100% { transform: translateX(-100%); }
 }
+
+/* ── Enhanced focus-visible for keyboard navigation ── */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+/* ── Reduced motion preferences ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

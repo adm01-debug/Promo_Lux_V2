@@ -14,6 +14,7 @@ import { GoogleLoginButton } from "@/components/lux/auth/GoogleLoginButton";
 import { ForgotPasswordOverlay } from "@/components/lux/auth/ForgotPasswordOverlay";
 import { RateLimitWarning } from "@/components/lux/auth/RateLimitWarning";
 import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
+import { loginSchema, signupSchema } from "@/lib/schemas/auth";
 
 export default function LoginPage() {
   const { checkAndRecord, isLocked } = useRateLimit({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
@@ -52,11 +53,16 @@ export default function LoginPage() {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (guardRate()) return;
-    if (!email.trim() || !password) return;
+
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      const { error } = await supabase.auth.signInWithPassword({ email: result.data.email, password: result.data.password });
       if (error) {
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
       }
@@ -68,18 +74,18 @@ export default function LoginPage() {
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (guardRate()) return;
-    if (!email.trim() || !password) return;
 
-    if (password.length < 8) {
-      toast({ title: "Senha fraca", description: "A senha deve ter pelo menos 8 caracteres.", variant: "destructive" });
+    const result = signupSchema.safeParse({ email, password });
+    if (!result.success) {
+      toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
 
     setIsSubmitting(true);
     try {
       const { error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
+        email: result.data.email,
+        password: result.data.password,
         options: { emailRedirectTo: window.location.origin },
       });
       if (error) {
@@ -87,7 +93,7 @@ export default function LoginPage() {
       } else {
         toast({
           title: "Verifique seu email ✉️",
-          description: "Enviamos um link de confirmação para " + email.trim(),
+          description: "Enviamos um link de confirmação para " + result.data.email,
         });
         setAuthTab("login");
         setPassword("");
