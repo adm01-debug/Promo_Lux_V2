@@ -90,6 +90,7 @@ export function useLoginForm() {
         options: { emailRedirectTo: window.location.origin },
       });
       if (error) {
+        triggerShake();
         toast({ title: "Erro no cadastro", description: error.message, variant: "destructive" });
       } else {
         toast({
