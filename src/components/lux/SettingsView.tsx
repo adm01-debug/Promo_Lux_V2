@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2 } from "lucide-react";
+import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -200,10 +200,46 @@ export const SettingsView = () => {
                   </div>
                 </div>
               </div>
-              <Button onClick={handleSaveAccount} disabled={saving} className="gap-2">
-                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
-                {saving ? "Salvando..." : saved ? "Salvo!" : "Salvar Alterações"}
-              </Button>
+              <div className="flex items-center gap-3 flex-wrap">
+                <Button onClick={handleSaveAccount} disabled={saving} className="gap-2">
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
+                  {saving ? "Salvando..." : saved ? "Salvo!" : "Salvar Alterações"}
+                </Button>
+              </div>
+
+              <Separator className="bg-border/30" />
+
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <RotateCcw className="h-4 w-4 text-primary" /> Tour de Onboarding
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  Reveja o tour interativo que apresenta as funcionalidades principais da plataforma.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => {
+                    localStorage.removeItem("lux-onboarding-done");
+                    if (user) {
+                      supabase
+                        .from("profiles")
+                        .update({ onboarding_completed: false } as Record<string, unknown>)
+                        .eq("id", user.id)
+                        .then(() => {
+                          toast({ title: "Tour reiniciado!", description: "Recarregue a página para iniciar o tour." });
+                          setTimeout(() => window.location.reload(), 1000);
+                        });
+                    } else {
+                      window.location.reload();
+                    }
+                  }}
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Reiniciar Tour
+                </Button>
+              </div>
             </div>
           )}
 
