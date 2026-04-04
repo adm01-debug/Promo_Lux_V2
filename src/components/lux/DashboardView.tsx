@@ -216,21 +216,49 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <motion.h2
-            className="text-2xl font-bold text-foreground"
+            className="text-2xl font-bold"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            {greeting} 👋
+            <span className="bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
+              {greeting}
+            </span>
+            <motion.span
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, type: "spring", stiffness: 400 }}
+              className="inline-block ml-2"
+            >
+              👋
+            </motion.span>
           </motion.h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <motion.p
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="text-sm text-muted-foreground mt-1 flex items-center gap-2"
+          >
             Visão geral das automações e empresas identificadas pelo IPC
-          </p>
+            <span className="inline-flex items-center gap-1 text-[10px] bg-success/10 text-success px-2 py-0.5 rounded-full font-medium">
+              <motion.span
+                className="h-1.5 w-1.5 rounded-full bg-success"
+                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              Online
+            </span>
+          </motion.p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground">
-            <Calendar className="h-3.5 w-3.5" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-xs text-muted-foreground"
+          >
+            <Calendar className="h-3.5 w-3.5 text-primary" />
             Últimos 7 dias
-          </div>
+          </motion.div>
           <Button
             variant={editing ? "default" : "outline"}
             size="sm"
