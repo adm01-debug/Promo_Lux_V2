@@ -26,6 +26,7 @@ export default function LoginPage() {
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const locked = isLocked();
 
