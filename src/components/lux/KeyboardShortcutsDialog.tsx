@@ -10,7 +10,7 @@ const shortcuts = [
   { keys: ["?"], description: "Mostrar atalhos de teclado" },
 ];
 
-export const KeyboardShortcutsDialog = () => {
+export const KeyboardShortcutsDialog = forwardRef<HTMLDivElement>((_, ref) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
