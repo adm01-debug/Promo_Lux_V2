@@ -9,6 +9,7 @@ vi.mock("@/hooks/use-mobile", () => ({
 vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, className, ...props }: any) => <div className={className}>{children}</div>,
+    button: ({ children, className, onClick, ...props }: any) => <button className={className} onClick={onClick}>{children}</button>,
   },
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
