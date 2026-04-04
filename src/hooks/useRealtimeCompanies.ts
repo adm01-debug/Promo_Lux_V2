@@ -15,11 +15,12 @@ export function useRealtimeCompanies() {
   const { user } = useAuth();
 
   useEffect(() => {
+    if (!user?.id) return;
     const channel = supabase
-      .channel("companies-realtime")
+      .channel(`private:${user.id}:companies`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "companies" },
+        { event: "*", schema: "public", table: "companies", filter: `user_id=eq.${user.id}` },
         async (payload) => {
           queryClient.invalidateQueries({ queryKey: ["companies-list"] });
           queryClient.invalidateQueries({ queryKey: ["companies-map"] });
@@ -67,5 +68,5 @@ export function useRealtimeCompanies() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, toast]);
+  }, [queryClient, toast, user?.id]);
 }

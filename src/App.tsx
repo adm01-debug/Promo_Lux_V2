@@ -17,8 +17,18 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 2, // 2 min
-      retry: 2,
+      retry: (failureCount, error) => {
+        // Don't retry on 401/403 (auth issues)
+        if (error && typeof error === "object" && "status" in error) {
+          const status = (error as { status: number }).status;
+          if (status === 401 || status === 403) return false;
+        }
+        return failureCount < 2;
+      },
       refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: false,
     },
   },
 });

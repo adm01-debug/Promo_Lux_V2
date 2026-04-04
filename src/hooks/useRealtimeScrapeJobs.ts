@@ -14,11 +14,12 @@ export function useRealtimeScrapeJobs() {
   const { user } = useAuth();
 
   useEffect(() => {
+    if (!user?.id) return;
     const channel = supabase
-      .channel("scrape-jobs-realtime")
+      .channel(`private:${user.id}:scrape-jobs`)
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "scrape_jobs" },
+        { event: "UPDATE", schema: "public", table: "scrape_jobs", filter: `user_id=eq.${user.id}` },
         async (payload) => {
           const job = payload.new as Record<string, unknown>;
           const oldJob = payload.old as Record<string, unknown>;
@@ -77,5 +78,5 @@ export function useRealtimeScrapeJobs() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, toast]);
+  }, [queryClient, toast, user?.id]);
 }
