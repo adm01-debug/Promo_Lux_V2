@@ -59,7 +59,7 @@ export const workflowApi = {
     return callWorkflowApi("list");
   },
 
-  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, any> }): Promise<Workflow> {
+  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown> }): Promise<Workflow> {
     return callWorkflowApi("create", { method: "POST", body: JSON.stringify(data) });
   },
 
