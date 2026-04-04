@@ -127,9 +127,9 @@ export const Header = memo(({
             className="h-8 w-8 text-muted-foreground hover:text-foreground relative"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
           >
-            <Bell className="h-4 w-4" />
+            <Bell className={`h-4 w-4 transition-transform ${unreadCount > 0 ? "animate-[wiggle_0.5s_ease-in-out]" : ""}`} />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center animate-pulse shadow-[0_0_8px_hsl(var(--primary)/0.4)]">
                 {unreadCount}
               </span>
             )}
