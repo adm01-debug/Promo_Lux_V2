@@ -71,7 +71,7 @@ export const workflowApi = {
     return callWorkflowApi("create", { method: "POST", body: JSON.stringify(data) });
   },
 
-  async run(workflowId: string): Promise<{ run_id: string; results: Record<string, unknown> }> {
+  async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> {
     return callWorkflowApi("run", { method: "POST", body: JSON.stringify({ workflow_id: workflowId }) });
   },
 
