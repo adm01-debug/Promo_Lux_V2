@@ -38,19 +38,19 @@ const stagger = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.07 },
+    transition: { staggerChildren: 0.09, delayChildren: 0.1 },
   },
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.4, ease: "easeOut" as const } },
 };
 
 const tabSlide = {
-  initial: { opacity: 0, x: 8 },
-  animate: { opacity: 1, x: 0, transition: { duration: 0.25, ease: "easeOut" as const } },
-  exit: { opacity: 0, x: -8, transition: { duration: 0.15 } },
+  initial: { opacity: 0, x: 12, filter: "blur(3px)" },
+  animate: { opacity: 1, x: 0, filter: "blur(0px)", transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const } },
+  exit: { opacity: 0, x: -12, filter: "blur(3px)", transition: { duration: 0.15 } },
 };
 
 export function LoginCard(props: LoginCardProps) {
