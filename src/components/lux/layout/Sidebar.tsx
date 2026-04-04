@@ -65,7 +65,7 @@ interface SidebarProps {
   onToggleCollapse: () => void;
 }
 
-export const Sidebar = ({
+export const Sidebar = memo(({
   activeView,
   collapsed,
   mobileOpen,
