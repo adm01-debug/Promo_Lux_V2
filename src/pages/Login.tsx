@@ -74,18 +74,18 @@ export default function LoginPage() {
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (guardRate()) return;
-    if (!email.trim() || !password) return;
 
-    if (password.length < 8) {
-      toast({ title: "Senha fraca", description: "A senha deve ter pelo menos 8 caracteres.", variant: "destructive" });
+    const result = signupSchema.safeParse({ email, password });
+    if (!result.success) {
+      toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
 
     setIsSubmitting(true);
     try {
       const { error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
+        email: result.data.email,
+        password: result.data.password,
         options: { emailRedirectTo: window.location.origin },
       });
       if (error) {
@@ -93,7 +93,7 @@ export default function LoginPage() {
       } else {
         toast({
           title: "Verifique seu email ✉️",
-          description: "Enviamos um link de confirmação para " + email.trim(),
+          description: "Enviamos um link de confirmação para " + result.data.email,
         });
         setAuthTab("login");
         setPassword("");
