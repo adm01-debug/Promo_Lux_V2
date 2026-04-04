@@ -183,14 +183,22 @@ export const CompanyFilters = ({
 
   const filterContent = (
     <>
-      <div className="relative mb-3">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+      <div className="relative mb-3 group">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors duration-200" />
         <Input
-          placeholder="Buscar..."
-          className="pl-8 h-8 text-xs"
+          placeholder="Buscar empresas..."
+          className="pl-8 h-8 text-xs transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 focus:shadow-[0_0_12px_hsl(var(--primary)/0.1)]"
           value={filters.search}
           onChange={(e) => onSearchChange(e.target.value)}
         />
+        {filters.search && (
+          <button
+            onClick={() => onSearchChange("")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-muted flex items-center justify-center hover:bg-destructive/20 transition-colors"
+          >
+            <X className="h-2.5 w-2.5 text-muted-foreground" />
+          </button>
+        )}
       </div>
 
       <div className="divide-y divide-border/20">
