@@ -147,9 +147,12 @@ export const Sidebar = memo(({
         {groupedItems.map((item) => (
           <div key={item.id}>
             {item.showSection && !collapsed && (
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-3 pt-4 pb-1.5 font-medium">
-                {item.section}
-              </p>
+              <div className="px-3 pt-5 pb-2 flex items-center gap-2">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/70 font-semibold">
+                  {item.section}
+                </p>
+                <div className="flex-1 h-px bg-border/30" />
+              </div>
             )}
             {collapsed ? (
               <CollapsedNavButton
