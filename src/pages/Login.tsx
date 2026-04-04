@@ -215,6 +215,13 @@ export default function LoginPage() {
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
                 Entrar
               </Button>
+              <button
+                type="button"
+                onClick={() => { setShowForgotPassword(true); setResetEmail(email); }}
+                className="w-full text-xs text-muted-foreground hover:text-primary transition-colors text-center"
+              >
+                Esqueceu a senha?
+              </button>
             </form>
           </TabsContent>
 
