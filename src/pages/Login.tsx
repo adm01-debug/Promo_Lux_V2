@@ -44,12 +44,15 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     if (guardRate()) return;
-    const { error } = await lovable.auth.signInWithOAuth("google", {
+    setGoogleLoading(true);
+    const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
-    if (error) {
-      toast({ title: "Erro no login", description: String(error), variant: "destructive" });
+    if (result.error) {
+      setGoogleLoading(false);
+      toast({ title: "Erro no login", description: String(result.error), variant: "destructive" });
     }
+    // If redirected, keep loading state (page will navigate away)
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
