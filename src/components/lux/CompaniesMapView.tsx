@@ -100,7 +100,8 @@ async function geocodeLocation(location: string): Promise<{ lat: number; lng: nu
 
 /* ── Marker Cluster Layer ── */
 
-function MarkerClusterGroup({ companies }: { companies: CompanyWithCoords[] }) {
+// eslint-disable-next-line react/display-name
+const MarkerClusterLayer = ({ companies }: { companies: CompanyWithCoords[] }) => {
   const map = useMap();
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
 
