@@ -105,10 +105,10 @@ export const Sidebar = memo(({
       aria-label="Navegação principal"
       role="navigation"
       className={cn(
-        "border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-all duration-300",
+        "border-r border-border/40 bg-sidebar-background/95 backdrop-blur-xl flex flex-col fixed inset-y-0 left-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
         sidebarWidth,
         "lg:translate-x-0",
-        mobileOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0"
+        mobileOpen ? "translate-x-0 w-64 shadow-2xl shadow-background/80" : "-translate-x-full lg:translate-x-0"
       )}
     >
       {/* Logo */}
