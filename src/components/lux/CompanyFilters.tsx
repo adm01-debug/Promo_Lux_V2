@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, forwardRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tag, Search, MapPin, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
