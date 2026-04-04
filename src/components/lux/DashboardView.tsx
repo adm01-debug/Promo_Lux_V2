@@ -61,6 +61,7 @@ interface DashboardViewProps {
 }
 
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
+  const { user } = useAuth();
   const colors = useThemeColors();
   const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
