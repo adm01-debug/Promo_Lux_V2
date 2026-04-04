@@ -38,13 +38,9 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password.length < 8) {
-      toast({ title: "Senha fraca", description: "A senha deve ter pelo menos 8 caracteres.", variant: "destructive" });
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast({ title: "Senhas diferentes", description: "As senhas não coincidem.", variant: "destructive" });
+    const result = newPasswordSchema.safeParse({ password, confirmPassword });
+    if (!result.success) {
+      toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
 
