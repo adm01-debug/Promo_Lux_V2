@@ -56,6 +56,7 @@ const NOTIFICATIONS_KEY = ["notifications"];
 export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) => {
   const [activeTab, setActiveTab] = useState<"all" | NotificationType>("all");
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const { data: rawNotifications, isLoading } = useQuery({
     queryKey: NOTIFICATIONS_KEY,
