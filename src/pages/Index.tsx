@@ -199,6 +199,15 @@ const Index = () => {
           </Suspense>
         </main>
       </div>
+
+      {/* Mobile bottom navigation */}
+      {!focusMode && (
+        <MobileBottomNav
+          activeView={activeView}
+          onNavigate={handleNav}
+          onOpenMenu={openMobile}
+        />
+      )}
     </div>
   );
 };
