@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, forwardRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, ChevronLeft, Sparkles, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -114,7 +114,7 @@ function getTooltipPosition(
   return { top, left, arrowSide };
 }
 
-export const OnboardingTour = forwardRef<HTMLDivElement>((_, _ref) => {
+export const OnboardingTour = () => {
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState<TooltipPosition | null>(null);
@@ -373,5 +373,4 @@ export const OnboardingTour = forwardRef<HTMLDivElement>((_, _ref) => {
       )}
     </AnimatePresence>
   );
-});
-OnboardingTour.displayName = "OnboardingTour";
+};
