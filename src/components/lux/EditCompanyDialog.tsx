@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { validateCompany } from "@/lib/schemas/company";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -30,6 +31,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [name, setName] = useState("");
   const [sector, setSector] = useState("");
@@ -56,6 +58,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       setRevenue(company.revenue === "—" ? "" : company.revenue);
       setGeoStatus("idle");
       setGeoCoords(null);
+      setFieldErrors({});
     }
   }, [company, open]);
 
@@ -74,6 +77,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const handleLocationChange = useCallback((value: string) => {
     setLocation(value);
     setGeoCoords(null);
+    setFieldErrors((prev) => { const { location: _, ...rest } = prev; return rest; });
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!value.trim()) { setGeoStatus("idle"); return; }
     setGeoStatus("checking");
@@ -85,10 +89,15 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   }, []);
 
   const handleSave = async () => {
-    if (!company || !name.trim()) {
-      toast({ title: "Nome obrigatório", variant: "destructive" });
+    if (!company) return;
+
+    const result = validateCompany({ name, sector, location, email, phone, website, employees, revenue });
+    if (!result.success) {
+      setFieldErrors(result.errors);
+      toast({ title: "Corrija os campos inválidos", variant: "destructive" });
       return;
     }
+    setFieldErrors({});
     setSaving(true);
     try {
       const updateData: Record<string, string | number | null> = {
@@ -102,7 +111,6 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         revenue: revenue || null,
       };
 
-      // Only update coords if location changed and we have new coords
       if (geoCoords) {
         updateData.lat = geoCoords.lat;
         updateData.lng = geoCoords.lng;
@@ -123,6 +131,11 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     }
   };
 
+  const FieldError = ({ field }: { field: string }) =>
+    fieldErrors[field] ? <p className="text-[11px] text-destructive mt-0.5">{fieldErrors[field]}</p> : null;
+
+  const clearError = (field: string) => setFieldErrors((prev) => { const { [field]: _, ...rest } = prev; return rest; });
+
   if (!company) return null;
 
   return (
@@ -137,11 +150,13 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="col-span-2">
             <Label>Nome *</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
+            <Input value={name} onChange={(e) => { setName(e.target.value); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
+            <FieldError field="name" />
           </div>
           <div>
             <Label>Setor</Label>
-            <Input value={sector} onChange={(e) => setSector(e.target.value)} className="mt-1" />
+            <Input value={sector} onChange={(e) => { setSector(e.target.value); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
+            <FieldError field="sector" />
           </div>
           <div>
             <Label className="flex items-center gap-1.5">
@@ -150,7 +165,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
               {geoStatus === "found" && <CheckCircle2 className="h-3 w-3 text-green-500" />}
               {geoStatus === "not_found" && <XCircle className="h-3 w-3 text-destructive" />}
             </Label>
-            <Input value={location} onChange={(e) => handleLocationChange(e.target.value)} className="mt-1" />
+            <Input value={location} onChange={(e) => handleLocationChange(e.target.value)} className={`mt-1 ${fieldErrors.location ? "border-destructive" : ""}`} />
             {geoStatus === "found" && geoCoords && (
               <p className="text-[10px] text-green-500 mt-1 flex items-center gap-1 font-mono">
                 <MapPin className="h-2.5 w-2.5" />
@@ -160,26 +175,32 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
             {geoStatus === "not_found" && (
               <p className="text-[10px] text-destructive mt-1">Localização não encontrada no mapa</p>
             )}
+            <FieldError field="location" />
           </div>
           <div>
             <Label>Email</Label>
-            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
+            <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
+            <FieldError field="email" />
           </div>
           <div>
             <Label>Telefone</Label>
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1" />
+            <Input value={phone} onChange={(e) => { setPhone(e.target.value); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
+            <FieldError field="phone" />
           </div>
           <div>
             <Label>Website</Label>
-            <Input value={website} onChange={(e) => setWebsite(e.target.value)} className="mt-1" />
+            <Input value={website} onChange={(e) => { setWebsite(e.target.value); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
+            <FieldError field="website" />
           </div>
           <div>
             <Label>Funcionários</Label>
-            <Input value={employees} onChange={(e) => setEmployees(e.target.value)} className="mt-1" />
+            <Input value={employees} onChange={(e) => { setEmployees(e.target.value); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
+            <FieldError field="employees" />
           </div>
           <div className="col-span-2">
             <Label>Faturamento</Label>
-            <Input value={revenue} onChange={(e) => setRevenue(e.target.value)} className="mt-1" />
+            <Input value={revenue} onChange={(e) => { setRevenue(e.target.value); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
+            <FieldError field="revenue" />
           </div>
         </div>
         <Button className="w-full mt-4 gap-2" onClick={handleSave} disabled={saving}>
