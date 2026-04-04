@@ -44,6 +44,7 @@ export const Header = ({
   onNavigate,
   onOpenMobileSidebar,
   onSignOut,
+  onToggleFocusMode,
 }: HeaderProps) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const unreadCount = useNotificationCount();
