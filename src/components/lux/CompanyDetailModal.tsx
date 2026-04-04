@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {
-  Building2, MapPin, Tag, Globe, Mail, Phone, TrendingUp, Radar, Calendar, ExternalLink,
-  Briefcase, DollarSign, Users, Linkedin, Star, Copy, Check, MessageSquare, Send,
-  Eye, Clock, Zap, Database, ChevronRight, User, Shield
+  Building2, MapPin, Tag, Globe, Mail, Phone, TrendingUp, Radar, ExternalLink,
+  Briefcase, DollarSign, Users, Linkedin, Star, Copy, Check, Send,
+  Eye, Clock, Zap, Database, User, Shield
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

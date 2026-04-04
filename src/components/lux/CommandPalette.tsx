@@ -23,7 +23,7 @@ import {
   Settings,
   Clock,
   Plus,
-  Search,
+  
   Loader2,
 } from "lucide-react";
 import { View } from "@/hooks/useNavigationHistory";
@@ -37,7 +37,7 @@ interface CommandPaletteProps {
   recentViews?: RecentView[];
 }
 
-const VIEW_ICONS: Record<View, React.ElementType> = {
+const _VIEW_ICONS: Record<View, React.ElementType> = {
   dashboard: LayoutDashboard,
   analytics: BarChart3,
   icp: Target,

@@ -4,13 +4,23 @@ import { z } from "https://esm.sh/zod@3.23.8";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-};
+const ALLOWED_ORIGINS = [
+  "https://lux-ai-company-finder.lovable.app",
+  "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+];
 
-function badRequest(req: Request, details: unknown) {
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    "Vary": "Origin",
+  };
+}
+
+function badRequest(corsHeaders: Record<string, string>, details: unknown) {
   return new Response(JSON.stringify({ error: "Invalid input", details }), {
     status: 400,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -38,6 +48,8 @@ const ToggleStatusSchema = z.object({
 const ActionSchema = z.enum(["list", "create", "run", "toggle-status", "delete"]);
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -73,7 +85,7 @@ serve(async (req) => {
 
   const actionParsed = ActionSchema.safeParse(actionRaw);
   if (!actionParsed.success) {
-    return badRequest(req, { action: "Must be one of: list, create, run, toggle-status, delete" });
+    return badRequest(corsHeaders, { action: "Must be one of: list, create, run, toggle-status, delete" });
   }
   const action = actionParsed.data;
 
@@ -95,7 +107,7 @@ serve(async (req) => {
     if (action === "create" && req.method === "POST") {
       const parsed = CreateWorkflowSchema.safeParse(await req.json());
       if (!parsed.success) {
-        return badRequest(req, parsed.error.flatten().fieldErrors);
+        return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
       const body = parsed.data;
 
@@ -121,7 +133,7 @@ serve(async (req) => {
     if (action === "run" && req.method === "POST") {
       const parsed = RunWorkflowSchema.safeParse(await req.json());
       if (!parsed.success) {
-        return badRequest(req, parsed.error.flatten().fieldErrors);
+        return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
       const { workflow_id } = parsed.data;
 
@@ -129,6 +141,7 @@ serve(async (req) => {
         .from("workflows")
         .select("*")
         .eq("id", workflow_id)
+        .eq("user_id", userId)
         .single();
       if (wfError || !workflow) throw new Error("Workflow not found");
 
@@ -143,7 +156,8 @@ serve(async (req) => {
       await supabase
         .from("workflows")
         .update({ status: "active", last_run_at: new Date().toISOString() })
-        .eq("id", workflow_id);
+        .eq("id", workflow_id)
+        .eq("user_id", userId);
 
       const config = workflow.config as Record<string, unknown>;
       const results: Record<string, unknown> = {};
@@ -197,7 +211,9 @@ serve(async (req) => {
             const result = await res.json();
             externalId = result.id || result.ID;
           }
-        } catch (_) {}
+        } catch (err) {
+          console.error("GMaps API scrape error:", err);
+        }
 
         if (scrapeJobId) {
           await supabase
@@ -213,6 +229,7 @@ serve(async (req) => {
           keywords,
         };
       } catch (err) {
+        console.error("Workflow scrape step error:", err);
         results.scrape = { error: (err as Error).message };
       }
 
@@ -226,6 +243,7 @@ serve(async (req) => {
           .select("id, external_id")
           .eq("status", "completed")
           .eq("source", "gmaps")
+          .eq("user_id", userId)
           .order("created_at", { ascending: false })
           .limit(5);
 
@@ -290,12 +308,15 @@ serve(async (req) => {
                 .from("scrape_jobs")
                 .update({ results_count: enrichedCount })
                 .eq("id", job.id);
-            } catch (_) {}
+            } catch (err) {
+              console.error("Workflow enrich download error:", err);
+            }
           }
         }
 
         results.enrich = { companies_imported: enrichedCount, status: "completed" };
       } catch (err) {
+        console.error("Workflow enrich step error:", err);
         results.enrich = { error: (err as Error).message };
       }
 
@@ -308,6 +329,7 @@ serve(async (req) => {
           .from("ipc_config")
           .select("*")
           .eq("is_active", true)
+          .eq("user_id", userId)
           .limit(1)
           .maybeSingle();
 
@@ -319,6 +341,7 @@ serve(async (req) => {
           .from("companies")
           .select("*")
           .eq("ipc_score", 0)
+          .eq("user_id", userId)
           .limit(500);
 
         if (unscoredCompanies) {
@@ -353,7 +376,7 @@ serve(async (req) => {
 
             score = Math.min(score, 100);
 
-            await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id);
+            await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id).eq("user_id", userId);
             scoredCount++;
           }
         }
@@ -362,6 +385,7 @@ serve(async (req) => {
           .from("scrape_results")
           .select("id")
           .eq("processed", false)
+          .eq("user_id", userId)
           .limit(500);
 
         if (unprocessedResults && unprocessedResults.length > 0) {
@@ -371,6 +395,7 @@ serve(async (req) => {
 
         results.ipc_score = { companies_scored: scoredCount, status: "completed" };
       } catch (err) {
+        console.error("Workflow IPC scoring error:", err);
         results.ipc_score = { error: (err as Error).message };
       }
 
@@ -380,11 +405,13 @@ serve(async (req) => {
       const { count: qualifiedCount } = await supabase
         .from("companies")
         .select("id", { count: "exact", head: true })
-        .gte("ipc_score", 70);
+        .gte("ipc_score", 70)
+        .eq("user_id", userId);
 
       const { count: totalCount } = await supabase
         .from("companies")
-        .select("id", { count: "exact", head: true });
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId);
 
       const totalProcessed = totalCount || 0;
       const totalQualified = qualifiedCount || 0;
@@ -395,7 +422,8 @@ serve(async (req) => {
       await supabase
         .from("workflows")
         .update({ leads_processed: totalProcessed, leads_qualified: totalQualified, success_rate: successRate })
-        .eq("id", workflow_id);
+        .eq("id", workflow_id)
+        .eq("user_id", userId);
 
       results.summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
 
@@ -413,14 +441,15 @@ serve(async (req) => {
     if (action === "toggle-status" && req.method === "POST") {
       const parsed = ToggleStatusSchema.safeParse(await req.json());
       if (!parsed.success) {
-        return badRequest(req, parsed.error.flatten().fieldErrors);
+        return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
       const { workflow_id, new_status } = parsed.data;
 
       const { error } = await supabase
         .from("workflows")
         .update({ status: new_status })
-        .eq("id", workflow_id);
+        .eq("id", workflow_id)
+        .eq("user_id", userId);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -431,9 +460,9 @@ serve(async (req) => {
     if (action === "delete" && req.method === "DELETE") {
       const id = url.searchParams.get("id");
       if (!id || !z.string().uuid().safeParse(id).success) {
-        return badRequest(req, { id: "Valid UUID required" });
+        return badRequest(corsHeaders, { id: "Valid UUID required" });
       }
-      const { error } = await supabase.from("workflows").delete().eq("id", id);
+      const { error } = await supabase.from("workflows").delete().eq("id", id).eq("user_id", userId);
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

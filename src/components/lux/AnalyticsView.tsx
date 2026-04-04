@@ -161,7 +161,7 @@ const cardVariants = {
 
 export const AnalyticsView = () => {
   const { data, isLoading } = useAnalyticsData();
-  const colors = useThemeColors();
+  useThemeColors();
   const [exporting, setExporting] = useState(false);
 
   const handleExport = async () => {

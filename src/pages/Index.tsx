@@ -19,7 +19,7 @@ import { Header } from "@/components/lux/layout/Header";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { VIEW_MAP } from "@/lib/viewRegistry";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { Minimize2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   AlertDialog,
