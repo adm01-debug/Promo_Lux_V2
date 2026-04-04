@@ -45,7 +45,7 @@ export function useSkin() {
         .update({ skin: s })
         .eq("id", user.id)
         .then(({ error }) => {
-          if (error) console.error("Failed to save skin:", error);
+          // Skin save failure is non-critical; handled silently
         });
     }
   }, [user]);

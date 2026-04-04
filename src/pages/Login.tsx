@@ -23,7 +23,6 @@ export default function LoginPage() {
       redirect_uri: window.location.origin,
     });
     if (error) {
-      console.error("Login error:", error);
       toast({ title: "Erro no login", description: String(error), variant: "destructive" });
     }
   };
