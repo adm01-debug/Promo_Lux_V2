@@ -32,7 +32,7 @@ export const GmapsScraperView = () => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [jobName, setJobName] = useState("");
   const [keywords, setKeywords] = useState("");
-  const [lang, setLang] = useState("pt");
+  const [lang, setLang] = useState<"pt" | "en" | "es">("pt");
   const [radius, setRadius] = useState(10000);
   const [depth, setDepth] = useState(1);
   const [extractEmail, setExtractEmail] = useState(true);
