@@ -23,7 +23,7 @@ import {
   Settings,
   Clock,
   Plus,
-  Search as _Search,
+  
   Loader2,
 } from "lucide-react";
 import { View } from "@/hooks/useNavigationHistory";

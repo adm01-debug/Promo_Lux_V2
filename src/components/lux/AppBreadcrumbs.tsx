@@ -26,7 +26,7 @@ interface AppBreadcrumbsProps {
 }
 
 export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
-  ({ breadcrumbs, canGoBack, onGoBack, onNavigate, currentLabel: _currentLabel }, ref) => {
+  ({ breadcrumbs, canGoBack, onGoBack, onNavigate }, ref) => {
     return (
       <div ref={ref} className="flex items-center gap-2">
         {canGoBack && (
