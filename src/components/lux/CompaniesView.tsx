@@ -336,7 +336,7 @@ export const CompaniesView = () => {
           onToggleLocation={(v) => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) }))}
           onToggleSource={(v) => setFilters((f) => ({ ...f, selectedSources: toggleSet(f.selectedSources, v) }))}
           onToggleStatus={(v) => setFilters((f) => ({ ...f, selectedStatus: toggleSet(f.selectedStatus, v) }))}
-          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as ScoreRange) }))}
+          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as "all" | "90+" | "75-89" | "60-74" | "<60") }))}
           onClearAll={clearAllFilters}
           companies={companies}
         />

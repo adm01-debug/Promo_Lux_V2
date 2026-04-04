@@ -113,7 +113,7 @@ export const SettingsView = () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ notification_prefs: notifPrefs as Record<string, boolean> })
+        .update({ notification_prefs: notifPrefs as unknown as Record<string, boolean> })
         .eq("id", user.id);
       if (error) throw error;
       toast({ title: "Preferências salvas!", description: "Notificações atualizadas." });

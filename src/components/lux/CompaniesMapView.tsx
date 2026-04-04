@@ -54,13 +54,15 @@ interface CompanyWithCoords {
   lng: number;
 }
 
-function extractCoords(raw: Record<string, unknown> | null | undefined, lat?: number | null, lng?: number | null): { lat: number; lng: number } | null {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractCoords(raw: any, lat?: number | null, lng?: number | null): { lat: number; lng: number } | null {
   // First try dedicated lat/lng columns
   if (lat != null && lng != null && !isNaN(lat) && !isNaN(lng) && lat !== 0) return { lat, lng };
   // Fallback to raw_data
-  if (!raw) return null;
-  const la = parseFloat(raw.latitude || raw.lat || raw.Latitude || raw.geo?.lat);
-  const lo = parseFloat(raw.longitude || raw.lng || raw.lon || raw.Longitude || raw.geo?.lng || raw.geo?.lon);
+  if (!raw || typeof raw !== "object") return null;
+  const geo = raw.geo as Record<string, unknown> | undefined;
+  const la = parseFloat(String(raw.latitude ?? raw.lat ?? raw.Latitude ?? geo?.lat ?? ""));
+  const lo = parseFloat(String(raw.longitude ?? raw.lng ?? raw.lon ?? raw.Longitude ?? geo?.lng ?? geo?.lon ?? ""));
   if (!isNaN(la) && !isNaN(lo) && la !== 0 && lo !== 0) return { lat: la, lng: lo };
   return null;
 }
