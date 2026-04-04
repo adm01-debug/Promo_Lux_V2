@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2 } from "lucide-react";
+import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
