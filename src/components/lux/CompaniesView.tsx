@@ -269,8 +269,8 @@ export const CompaniesView = () => {
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
     const company = companies.find((c) => c.id === id);
-    queryClient.setQueryData(["companies-list"], (old: any) =>
-      old?.map((c: any) => (c.id === id ? { ...c, starred } : c))
+    queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) =>
+      old?.map((c) => (c.id === id ? { ...c, starred } : c))
     );
     toast({
       title: starred ? "⭐ Empresa favoritada" : "Favorito removido",
@@ -336,7 +336,7 @@ export const CompaniesView = () => {
           onToggleLocation={(v) => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) }))}
           onToggleSource={(v) => setFilters((f) => ({ ...f, selectedSources: toggleSet(f.selectedSources, v) }))}
           onToggleStatus={(v) => setFilters((f) => ({ ...f, selectedStatus: toggleSet(f.selectedStatus, v) }))}
-          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as any) }))}
+          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as "all" | "90+" | "75-89" | "60-74" | "<60") }))}
           onClearAll={clearAllFilters}
           companies={companies}
         />

@@ -100,8 +100,8 @@ export const SettingsView = () => {
       setSaved(true);
       toast({ title: "Salvo!", description: "Informações atualizadas com sucesso." });
       setTimeout(() => setSaved(false), 2000);
-    } catch (err: any) {
-      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro ao salvar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSaving(false);
     }
@@ -113,12 +113,12 @@ export const SettingsView = () => {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ notification_prefs: notifPrefs as any })
+        .update({ notification_prefs: notifPrefs as unknown as Record<string, boolean> })
         .eq("id", user.id);
       if (error) throw error;
       toast({ title: "Preferências salvas!", description: "Notificações atualizadas." });
-    } catch (err: any) {
-      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSavingNotifs(false);
     }

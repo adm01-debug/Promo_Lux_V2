@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 // Fix default marker icon issue with bundlers
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -54,13 +54,15 @@ interface CompanyWithCoords {
   lng: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractCoords(raw: any, lat?: number | null, lng?: number | null): { lat: number; lng: number } | null {
   // First try dedicated lat/lng columns
   if (lat != null && lng != null && !isNaN(lat) && !isNaN(lng) && lat !== 0) return { lat, lng };
   // Fallback to raw_data
-  if (!raw) return null;
-  const la = parseFloat(raw.latitude || raw.lat || raw.Latitude || raw.geo?.lat);
-  const lo = parseFloat(raw.longitude || raw.lng || raw.lon || raw.Longitude || raw.geo?.lng || raw.geo?.lon);
+  if (!raw || typeof raw !== "object") return null;
+  const geo = raw.geo as Record<string, unknown> | undefined;
+  const la = parseFloat(String(raw.latitude ?? raw.lat ?? raw.Latitude ?? geo?.lat ?? ""));
+  const lo = parseFloat(String(raw.longitude ?? raw.lng ?? raw.lon ?? raw.Longitude ?? geo?.lng ?? geo?.lon ?? ""));
   if (!isNaN(la) && !isNaN(lo) && la !== 0 && lo !== 0) return { lat: la, lng: lo };
   return null;
 }

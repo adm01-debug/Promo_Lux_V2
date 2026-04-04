@@ -9,12 +9,20 @@ export interface WorkflowStep {
   provider?: string;
 }
 
+export interface WorkflowRunResults {
+  scrape?: { status?: string; [key: string]: unknown };
+  enrich?: { companies_imported?: number; [key: string]: unknown };
+  ipc_score?: { companies_scored?: number; [key: string]: unknown };
+  summary?: { total_companies?: number; qualified?: number; success_rate?: number; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
 export interface WorkflowRun {
   id: string;
   status: string;
   started_at: string;
   completed_at: string | null;
-  results: Record<string, any>;
+  results: WorkflowRunResults;
 }
 
 export interface Workflow {
@@ -23,7 +31,7 @@ export interface Workflow {
   description: string | null;
   status: string;
   steps: WorkflowStep[];
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   leads_processed: number;
   leads_qualified: number;
   success_rate: number;
@@ -59,11 +67,11 @@ export const workflowApi = {
     return callWorkflowApi("list");
   },
 
-  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, any> }): Promise<Workflow> {
+  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown> }): Promise<Workflow> {
     return callWorkflowApi("create", { method: "POST", body: JSON.stringify(data) });
   },
 
-  async run(workflowId: string): Promise<{ run_id: string; results: Record<string, any> }> {
+  async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> {
     return callWorkflowApi("run", { method: "POST", body: JSON.stringify({ workflow_id: workflowId }) });
   },
 
