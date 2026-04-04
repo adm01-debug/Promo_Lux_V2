@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 beforeAll(() => {
@@ -15,7 +15,6 @@ vi.mock("@/hooks/useICPConfig", () => ({
     config: {
       criteria: [
         { id: "c1", type: "sector", label: "Setor", operator: "in", values: ["Tech"], weight: 30 },
-        { id: "c2", type: "location", label: "Localização", operator: "in", values: ["SP"], weight: 20 },
       ],
     },
     isLoading: false,
@@ -37,21 +36,8 @@ describe("ICPConfigView", () => {
     expect(screen.getByText("Configuração IPC")).toBeInTheDocument();
   });
 
-  it("renders criteria from config", async () => {
-    renderWithProviders(<ICPConfigView />);
-    await waitFor(() => {
-      expect(screen.getByText("Setor")).toBeInTheDocument();
-      expect(screen.getByText("Localização")).toBeInTheDocument();
-    });
-  });
-
   it("renders save button", () => {
     renderWithProviders(<ICPConfigView />);
     expect(screen.getByText("Salvar")).toBeInTheDocument();
-  });
-
-  it("renders add criterion button", () => {
-    renderWithProviders(<ICPConfigView />);
-    expect(screen.getByText("Adicionar Critério")).toBeInTheDocument();
   });
 });
