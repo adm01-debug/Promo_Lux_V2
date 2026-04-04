@@ -121,7 +121,7 @@ export const CampaignsView = () => {
     setFormSequence([...defaultSequence]);
   };
 
-  const { data: campaigns = [], isLoading } = useQuery({
+  const { data: campaigns = [], isLoading, error: campaignsError, refetch } = useQuery({
     queryKey: ["campaigns"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -132,6 +132,7 @@ export const CampaignsView = () => {
       return data ?? [];
     },
     refetchInterval: 15_000,
+    retry: 2,
   });
 
   const createMutation = useMutation({
