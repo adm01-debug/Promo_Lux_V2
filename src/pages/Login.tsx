@@ -175,7 +175,7 @@ export default function LoginPage() {
                 onChange={setPassword}
                 autoComplete="new-password"
                 minLength={8}
-              />
+              <PasswordStrengthMeter password={password} />
               <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2" size="lg">
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 Criar Conta
