@@ -37,18 +37,18 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message });
 
             if (user?.id) {
-              await supabase.from("notifications").insert({
+              await supabase.from("notifications").insert([{
                 user_id: user.id,
                 title,
                 message,
                 type: "scrape",
                 metadata: {
-                  job_id: job.id,
-                  job_name: job.name,
-                  results_count: count,
-                  source: job.source,
+                  job_id: String(job.id ?? ""),
+                  job_name: String(job.name ?? ""),
+                  results_count: Number(count),
+                  source: String(job.source ?? ""),
                 },
-              });
+              }]);
             }
           } else if (job.status === "failed") {
             const title = "❌ Raspagem falhou";
