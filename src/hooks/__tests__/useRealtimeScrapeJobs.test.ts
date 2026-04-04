@@ -4,6 +4,9 @@ const mockInvalidateQueries = vi.fn();
 const mockToast = vi.fn();
 const mockInsert = vi.fn().mockResolvedValue({ error: null });
 let subscribeCb: any = null;
+let capturedChannelName: string | null = null;
+let capturedOnConfig: any = null;
+const mockRemoveChannel = vi.fn();
 
 vi.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({ invalidateQueries: mockInvalidateQueries }),
@@ -13,19 +16,26 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: mockToast }),
 }));
 
+const mockUser = { id: "test-user-id" };
+let currentUser: typeof mockUser | null = mockUser;
+
 vi.mock("@/contexts/AuthContext", () => ({
-  useAuth: () => ({ user: { id: "test-user-id" } }),
+  useAuth: () => ({ user: currentUser }),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    channel: () => ({
-      on: (_event: string, _config: any, cb: any) => {
-        subscribeCb = cb;
-        return { subscribe: () => ({}) };
-      },
-    }),
-    removeChannel: vi.fn(),
+    channel: (name: string) => {
+      capturedChannelName = name;
+      return {
+        on: (_event: string, config: any, cb: any) => {
+          capturedOnConfig = config;
+          subscribeCb = cb;
+          return { subscribe: () => ({}) };
+        },
+      };
+    },
+    removeChannel: mockRemoveChannel,
     from: () => ({ insert: mockInsert }),
   },
 }));
@@ -37,7 +47,42 @@ describe("useRealtimeScrapeJobs", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     subscribeCb = null;
+    capturedChannelName = null;
+    capturedOnConfig = null;
+    currentUser = mockUser;
   });
+
+  // --- Private channel tests ---
+
+  it("uses private channel name scoped to user id", () => {
+    renderHook(() => useRealtimeScrapeJobs());
+    expect(capturedChannelName).toBe("private:test-user-id:scrape-jobs");
+  });
+
+  it("applies user_id filter for UPDATE events only", () => {
+    renderHook(() => useRealtimeScrapeJobs());
+    expect(capturedOnConfig).toMatchObject({
+      event: "UPDATE",
+      schema: "public",
+      table: "scrape_jobs",
+      filter: "user_id=eq.test-user-id",
+    });
+  });
+
+  it("does not subscribe when user is null", () => {
+    currentUser = null;
+    renderHook(() => useRealtimeScrapeJobs());
+    expect(capturedChannelName).toBeNull();
+    expect(subscribeCb).toBeNull();
+  });
+
+  it("removes channel on unmount", () => {
+    const { unmount } = renderHook(() => useRealtimeScrapeJobs());
+    unmount();
+    expect(mockRemoveChannel).toHaveBeenCalled();
+  });
+
+  // --- Existing behavior tests ---
 
   it("subscribes to realtime channel on mount", () => {
     renderHook(() => useRealtimeScrapeJobs());
