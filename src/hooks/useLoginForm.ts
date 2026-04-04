@@ -77,6 +77,7 @@ export function useLoginForm() {
 
     const result = signupSchema.safeParse({ email, password });
     if (!result.success) {
+      triggerShake();
       toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
