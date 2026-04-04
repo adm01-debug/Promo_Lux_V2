@@ -22,7 +22,6 @@ import { VIEW_MAP } from "@/lib/viewRegistry";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
