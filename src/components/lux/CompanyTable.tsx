@@ -1,14 +1,38 @@
-import { Building2, ExternalLink, MapPin, Tag, HelpCircle } from "lucide-react";
+import { Building2, ExternalLink, MapPin, Tag, HelpCircle, Sparkles } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { useRecentCompanies } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const getScoreColor = (score: number) => {
   if (score >= 90) return "text-success";
   if (score >= 75) return "text-primary";
-  return "text-warning";
+  if (score >= 60) return "text-warning";
+  return "text-muted-foreground";
+};
+
+const getScoreBg = (score: number) => {
+  if (score >= 90) return "bg-success/10 ring-success/20";
+  if (score >= 75) return "bg-primary/10 ring-primary/20";
+  if (score >= 60) return "bg-warning/10 ring-warning/20";
+  return "bg-muted/10 ring-muted/20";
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, x: -16, scale: 0.98 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.06,
+      duration: 0.35,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  }),
 };
 
 export const CompanyTable = () => {
@@ -16,9 +40,21 @@ export const CompanyTable = () => {
 
   return (
     <div className="glass rounded-lg overflow-hidden">
-      <div className="p-5 border-b border-border/50">
-        <h2 className="text-lg font-semibold text-foreground">Empresas Identificadas</h2>
-        <p className="text-sm text-muted-foreground">Últimas empresas que se encaixam no IPC</p>
+      <div className="p-5 border-b border-border/50 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">Empresas Identificadas</h2>
+          <p className="text-sm text-muted-foreground">Últimas empresas que se encaixam no IPC</p>
+        </div>
+        {companies && companies.length > 0 && (
+          <motion.span
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 20 }}
+            className="text-[9px] font-mono text-primary bg-primary/10 px-2.5 py-1 rounded-full font-medium"
+          >
+            {companies.length} recentes
+          </motion.span>
+        )}
       </div>
 
       {isLoading ? (
@@ -58,7 +94,7 @@ export const CompanyTable = () => {
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-[220px] text-xs">
                       <p className="font-semibold mb-1">Score do Perfil de Cliente Ideal</p>
-                      <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo. Baseado em setor, porte, localização e sinais de intenção.</p>
+                      <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo.</p>
                     </TooltipContent>
                   </Tooltip>
                 </th>
@@ -66,21 +102,44 @@ export const CompanyTable = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20">
-              {companies.map((company) => (
-                <tr key={company.id} className="hover:bg-primary/5 transition-all duration-200 hover:shadow-[inset_3px_0_0_hsl(var(--primary)/0.5)] cursor-pointer group">
+              {companies.map((company, i) => (
+                <motion.tr
+                  key={company.id}
+                  custom={i}
+                  variants={rowVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={{
+                    backgroundColor: "hsl(var(--primary) / 0.04)",
+                    x: 2,
+                    transition: { duration: 0.2 },
+                  }}
+                  className="cursor-pointer group transition-all duration-200"
+                >
                   <td className="p-3">
-                    <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center">
+                    <div className="flex items-center gap-2.5">
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 4 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                        className="h-9 w-9 rounded-lg bg-secondary/80 flex items-center justify-center ring-1 ring-border/30 group-hover:ring-primary/30 transition-all"
+                      >
                         <Building2 className="h-4 w-4 text-primary" />
-                      </div>
+                      </motion.div>
                       <div>
-                        <span className="font-medium text-foreground group-hover:text-primary transition-colors">{company.name}</span>
-                        {company.website && <ExternalLink className="inline h-3 w-3 ml-1.5 text-muted-foreground group-hover:text-primary/60 transition-colors" />}
+                        <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-200">
+                          {company.name}
+                        </span>
+                        {company.website && (
+                          <ExternalLink className="inline h-3 w-3 ml-1.5 text-muted-foreground group-hover:text-primary/60 transition-colors" />
+                        )}
+                        {company.enriched && (
+                          <Sparkles className="inline h-3 w-3 ml-1 text-primary/50" />
+                        )}
                       </div>
                     </div>
                   </td>
                   <td className="p-3">
-                    <Badge variant="outline" className="text-xs gap-1 bg-secondary/50">
+                    <Badge variant="outline" className="text-xs gap-1 bg-secondary/50 group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
                       <Tag className="h-3 w-3" />
                       {company.sector ?? "—"}
                     </Badge>
@@ -92,12 +151,21 @@ export const CompanyTable = () => {
                     </span>
                   </td>
                   <td className="p-3 text-center">
-                    <span className={`font-mono font-bold text-lg ${getScoreColor(company.ipc_score ?? 0)}`}>
-                      {company.ipc_score ?? 0}
+                    <div className={cn(
+                      "inline-flex items-center justify-center h-8 w-12 rounded-lg ring-1 transition-all duration-200",
+                      getScoreBg(company.ipc_score ?? 0)
+                    )}>
+                      <span className={cn("font-mono font-bold text-sm", getScoreColor(company.ipc_score ?? 0))}>
+                        {company.ipc_score ?? 0}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="p-3">
+                    <span className="text-muted-foreground text-xs bg-secondary/30 px-2 py-0.5 rounded-full">
+                      {company.source}
                     </span>
                   </td>
-                  <td className="p-3 text-muted-foreground text-xs">{company.source}</td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
