@@ -15,6 +15,7 @@ import { ForgotPasswordOverlay } from "@/components/lux/auth/ForgotPasswordOverl
 import { RateLimitWarning } from "@/components/lux/auth/RateLimitWarning";
 import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
+import { FloatingParticles } from "@/components/lux/auth/FloatingParticles";
 
 export default function LoginPage() {
   const { checkAndRecord, isLocked } = useRateLimit({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
