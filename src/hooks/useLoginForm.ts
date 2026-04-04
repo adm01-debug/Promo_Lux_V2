@@ -143,6 +143,7 @@ export function useLoginForm() {
     googleLoading,
     locked,
     rateLimitMsg,
+    shakeError,
     handleGoogleLogin,
     handleEmailLogin,
     handleEmailSignup,
