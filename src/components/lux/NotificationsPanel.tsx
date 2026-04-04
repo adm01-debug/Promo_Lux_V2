@@ -203,12 +203,26 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
               <AnimatePresence mode="popLayout">
                 {isLoading ? (
                   <div className="p-12 text-center">
-                    <div className="h-6 w-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-3" />
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="h-6 w-6 border-2 border-primary/30 border-t-primary rounded-full mx-auto mb-3"
+                    />
                     <p className="text-sm text-muted-foreground">Carregando...</p>
                   </div>
                 ) : filtered.length === 0 ? (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-12 text-center">
-                    <Bell className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="p-12 text-center"
+                  >
+                    <motion.div
+                      animate={{ scale: [1, 1.05, 1], rotate: [0, 3, -3, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Bell className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
+                    </motion.div>
                     <p className="text-sm text-muted-foreground">Nenhuma notificação</p>
                     <p className="text-[11px] text-muted-foreground/60 mt-1">Atividades do workspace aparecerão aqui</p>
                   </motion.div>
