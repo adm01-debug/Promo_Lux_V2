@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, forwardRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tag, Search, MapPin, Filter, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -13,24 +13,18 @@ interface FacetItem {
   count: number;
 }
 
-const FacetGroup = ({
-  title,
-  items,
-  selected,
-  onToggle,
-  icon,
-}: {
+const FacetGroup = forwardRef<HTMLDivElement, {
   title: string;
   items: FacetItem[];
   selected: Set<string>;
   onToggle: (value: string) => void;
   icon?: React.ReactNode;
-}) => {
+}>(({ title, items, selected, onToggle, icon }, ref) => {
   const [expanded, setExpanded] = useState(true);
   const hasSelection = selected.size > 0;
 
   return (
-    <div>
+    <div ref={ref}>
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between py-2 text-xs font-medium uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
@@ -94,7 +88,9 @@ const FacetGroup = ({
       </AnimatePresence>
     </div>
   );
-};
+});
+
+FacetGroup.displayName = "FacetGroup";
 
 export interface CompanyFiltersState {
   search: string;
