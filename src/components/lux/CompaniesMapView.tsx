@@ -100,7 +100,8 @@ async function geocodeLocation(location: string): Promise<{ lat: number; lng: nu
 
 /* ── Marker Cluster Layer ── */
 
-function MarkerClusterGroup({ companies }: { companies: CompanyWithCoords[] }) {
+// eslint-disable-next-line react/display-name
+const MarkerClusterLayer = ({ companies }: { companies: CompanyWithCoords[] }) => {
   const map = useMap();
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
 
@@ -394,7 +395,7 @@ export const CompaniesMapView = () => {
               attribution='&copy; <a href="https://carto.com/">CARTO</a>'
               url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
             />
-            <MarkerClusterGroup companies={filtered} />
+            <MarkerClusterLayer companies={filtered} />
           </MapContainer>
         )}
       </div>

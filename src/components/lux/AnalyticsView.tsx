@@ -1,4 +1,5 @@
-import { BarChart3, TrendingUp, Building2, Target, DollarSign, Filter } from "lucide-react";
+import { BarChart3, TrendingUp, Building2, Target, DollarSign, Filter, FileDown, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, FunnelChart, Funnel, LabelList,
@@ -9,7 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { useThemeColors } from "@/hooks/useThemeColors";
-
+import { exportAnalyticsPDF } from "@/lib/exportAnalyticsPDF";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 const COLORS = [
   "hsl(45, 100%, 58%)",
   "hsl(142, 71%, 45%)",
@@ -159,6 +162,19 @@ const cardVariants = {
 export const AnalyticsView = () => {
   const { data, isLoading } = useAnalyticsData();
   const colors = useThemeColors();
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      await exportAnalyticsPDF();
+      toast({ title: "Relatório exportado", description: "O arquivo foi baixado com sucesso." });
+    } catch {
+      toast({ title: "Erro ao exportar", variant: "destructive" });
+    } finally {
+      setExporting(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -192,14 +208,20 @@ export const AnalyticsView = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <BarChart3 className="h-6 w-6 text-primary" />
-          Analytics & Relatórios
-        </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Métricas de desempenho de raspagem, enriquecimento e conversão
-        </p>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <BarChart3 className="h-6 w-6 text-primary" />
+            Analytics & Relatórios
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Métricas de desempenho de raspagem, enriquecimento e conversão
+          </p>
+        </div>
+        <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExport} disabled={exporting}>
+          {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+          Exportar Relatório
+        </Button>
       </div>
 
       {/* Summary cards */}
