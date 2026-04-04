@@ -208,14 +208,20 @@ export const AnalyticsView = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <BarChart3 className="h-6 w-6 text-primary" />
-          Analytics & Relatórios
-        </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Métricas de desempenho de raspagem, enriquecimento e conversão
-        </p>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <BarChart3 className="h-6 w-6 text-primary" />
+            Analytics & Relatórios
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Métricas de desempenho de raspagem, enriquecimento e conversão
+          </p>
+        </div>
+        <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExport} disabled={exporting}>
+          {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+          Exportar Relatório
+        </Button>
       </div>
 
       {/* Summary cards */}
