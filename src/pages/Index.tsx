@@ -4,6 +4,7 @@ import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
 import { useRecentViews } from "@/hooks/useRecentViews";
 import { useSidebarState } from "@/hooks/useSidebarState";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useFocusMode } from "@/hooks/useFocusMode";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
@@ -18,6 +19,9 @@ import { Header } from "@/components/lux/layout/Header";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { VIEW_MAP } from "@/lib/viewRegistry";
+import { Maximize2, Minimize2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
 import {
   AlertDialog,
   AlertDialogAction,
