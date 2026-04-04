@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Keyboard } from "lucide-react";
 
@@ -10,7 +10,7 @@ const shortcuts = [
   { keys: ["?"], description: "Mostrar atalhos de teclado" },
 ];
 
-export const KeyboardShortcutsDialog = () => {
+export const KeyboardShortcutsDialog = forwardRef<HTMLDivElement>((_, ref) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -62,4 +62,5 @@ export const KeyboardShortcutsDialog = () => {
       </DialogContent>
     </Dialog>
   );
-};
+});
+KeyboardShortcutsDialog.displayName = "KeyboardShortcutsDialog";

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, forwardRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
@@ -33,11 +33,12 @@ const queryClient = new QueryClient({
   },
 });
 
-const PageLoader = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
+const PageLoader = forwardRef<HTMLDivElement>((_, ref) => (
+  <div ref={ref} className="min-h-screen bg-background flex items-center justify-center">
     <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
   </div>
-);
+));
+PageLoader.displayName = "PageLoader";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();

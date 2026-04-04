@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, forwardRef } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -109,7 +109,7 @@ interface QuickAction {
   action: () => void;
 }
 
-export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteProps) => {
+export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(({ onNavigate, recentViews = [] }, ref) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -440,4 +440,5 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
       </CommandList>
     </CommandDialog>
   );
-};
+});
+CommandPalette.displayName = "CommandPalette";
