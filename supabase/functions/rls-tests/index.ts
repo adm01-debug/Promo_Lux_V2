@@ -1,9 +1,19 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = [
+  "https://lux-ai-company-finder.lovable.app",
+  "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
 
 interface TestResult {
   name: string;
@@ -12,6 +22,7 @@ interface TestResult {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -62,7 +73,7 @@ Deno.serve(async (req) => {
 
     // 3. Test: anon cannot insert into any table
     for (const table of tables) {
-      const { error } = await anon.from(table).insert({ name: "anon-test" } as any);
+      const { error } = await anon.from(table).insert({ name: "anon-test" } as Record<string, unknown>);
       results.push({ name: `anon_cannot_insert_${table}`, passed: !!error, detail: error?.message ?? "insert succeeded (BAD)" });
     }
 
@@ -74,8 +85,7 @@ Deno.serve(async (req) => {
     results.push({ name: "userB_cannot_see_userA_company", passed: (bSeesA?.length === 0), detail: `rows: ${bSeesA?.length}` });
 
     // 5. User B cannot update User A's company
-    const { error: updateErr } = await clientB.from("companies").update({ name: "hacked" }).eq("id", companyIdA!);
-    // Check it wasn't actually updated
+    await clientB.from("companies").update({ name: "hacked" }).eq("id", companyIdA!);
     const { data: checkUpdate } = await clientA.from("companies").select("name").eq("id", companyIdA!).single();
     results.push({ name: "userB_cannot_update_userA_company", passed: checkUpdate?.name === "RLS-Test-A-Co", detail: `name after attempt: ${checkUpdate?.name}` });
 

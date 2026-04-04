@@ -4,13 +4,23 @@ import { z } from "https://esm.sh/zod@3.23.8";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-};
+const ALLOWED_ORIGINS = [
+  "https://lux-ai-company-finder.lovable.app",
+  "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+];
 
-function badRequest(req: Request, details: unknown) {
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    "Vary": "Origin",
+  };
+}
+
+function badRequest(corsHeaders: Record<string, string>, details: unknown) {
   return new Response(JSON.stringify({ error: "Invalid input", details }), {
     status: 400,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -41,6 +51,8 @@ const SyncResultsSchema = z.object({
 const ActionSchema = z.enum(["list", "create", "delete", "sync-results"]);
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -77,7 +89,7 @@ serve(async (req) => {
   // Validate action param
   const actionParsed = ActionSchema.safeParse(actionRaw);
   if (!actionParsed.success) {
-    return badRequest(req, { action: "Must be one of: list, create, delete, sync-results" });
+    return badRequest(corsHeaders, { action: "Must be one of: list, create, delete, sync-results" });
   }
   const action = actionParsed.data;
 
@@ -99,6 +111,7 @@ serve(async (req) => {
               .from("scrape_jobs")
               .select("id")
               .eq("external_id", job.ID as string)
+              .eq("user_id", userId)
               .maybeSingle();
 
             if (!existing) {
@@ -115,12 +128,13 @@ serve(async (req) => {
               await supabase
                 .from("scrape_jobs")
                 .update({ status: (job.Status as string) === "ok" ? "completed" : job.Status as string })
-                .eq("external_id", job.ID as string);
+                .eq("external_id", job.ID as string)
+                .eq("user_id", userId);
             }
           }
         }
-      } catch (_) {
-        // API offline
+      } catch (err) {
+        console.error("GMaps API list error:", err);
       }
 
       const { data: dbJobs, error } = await supabase
@@ -141,7 +155,7 @@ serve(async (req) => {
     if (action === "create" && req.method === "POST") {
       const parsed = CreateJobSchema.safeParse(await req.json());
       if (!parsed.success) {
-        return badRequest(req, parsed.error.flatten().fieldErrors);
+        return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
       const body = parsed.data;
 
@@ -202,8 +216,8 @@ serve(async (req) => {
             .update({ external_id: externalId, status: "running" })
             .eq("id", dbJob.id);
         }
-      } catch (_) {
-        // API offline
+      } catch (err) {
+        console.error("GMaps API create error:", err);
       }
 
       return new Response(
@@ -216,13 +230,14 @@ serve(async (req) => {
     if (action === "delete" && req.method === "DELETE") {
       const jobId = url.searchParams.get("id");
       if (!jobId || !z.string().uuid().safeParse(jobId).success) {
-        return badRequest(req, { id: "Valid UUID required" });
+        return badRequest(corsHeaders, { id: "Valid UUID required" });
       }
 
       const { data: job } = await supabase
         .from("scrape_jobs")
         .select("external_id")
         .eq("id", jobId)
+        .eq("user_id", userId)
         .single();
 
       if (job?.external_id) {
@@ -231,10 +246,12 @@ serve(async (req) => {
             method: "DELETE",
             signal: AbortSignal.timeout(5000),
           });
-        } catch (_) {}
+        } catch (err) {
+          console.error("GMaps API delete error:", err);
+        }
       }
 
-      const { error } = await supabase.from("scrape_jobs").delete().eq("id", jobId);
+      const { error } = await supabase.from("scrape_jobs").delete().eq("id", jobId).eq("user_id", userId);
       if (error) throw error;
 
       return new Response(JSON.stringify({ success: true }), {
@@ -246,7 +263,7 @@ serve(async (req) => {
     if (action === "sync-results" && req.method === "POST") {
       const parsed = SyncResultsSchema.safeParse(await req.json());
       if (!parsed.success) {
-        return badRequest(req, parsed.error.flatten().fieldErrors);
+        return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
       const { job_id } = parsed.data;
 
@@ -254,6 +271,7 @@ serve(async (req) => {
         .from("scrape_jobs")
         .select("*")
         .eq("id", job_id)
+        .eq("user_id", userId)
         .single();
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
@@ -276,7 +294,8 @@ serve(async (req) => {
             });
           }
         }
-      } catch (_) {
+      } catch (err) {
+        console.error("GMaps API download error:", err);
         throw new Error("Failed to download results from external API");
       }
 
@@ -284,6 +303,7 @@ serve(async (req) => {
         .from("ipc_config")
         .select("*")
         .eq("is_active", true)
+        .eq("user_id", userId)
         .limit(1)
         .maybeSingle();
 
@@ -342,7 +362,8 @@ serve(async (req) => {
       await supabase
         .from("scrape_jobs")
         .update({ results_count: companiesCreated, status: "completed", completed_at: new Date().toISOString() })
-        .eq("id", job_id);
+        .eq("id", job_id)
+        .eq("user_id", userId);
 
       if (companiesCreated > 0) {
         await supabase.from("notifications").insert({
@@ -369,6 +390,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
+    console.error("GMaps proxy error:", err);
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
