@@ -156,6 +156,7 @@ const Index = () => {
             onNavigate={handleNav}
             onOpenMobileSidebar={openMobile}
             onSignOut={signOut}
+            onToggleFocusMode={toggleFocusMode}
           />
         )}
 
