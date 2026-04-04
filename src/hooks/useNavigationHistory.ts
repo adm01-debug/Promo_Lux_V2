@@ -98,6 +98,11 @@ export function useNavigationHistory() {
     setHistoryIndex((prev) => prev + 1);
     setActiveView(view);
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Prefetch adjacent views for instant navigation
+    const idx = ALL_VIEWS.indexOf(view);
+    if (idx > 0) prefetchView(ALL_VIEWS[idx - 1]);
+    if (idx < ALL_VIEWS.length - 1) prefetchView(ALL_VIEWS[idx + 1]);
   }, [historyIndex]);
 
   // Alt+N shortcuts moved to useKeyboardShortcuts hook
