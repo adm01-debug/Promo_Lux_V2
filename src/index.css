@@ -451,7 +451,13 @@
 @layer base {
   * {
     @apply border-border;
-    transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Opt-in transitions only on interactive elements, not globally on * */
+  button, a, input, select, textarea,
+  [role="button"], [role="tab"], [role="menuitem"],
+  .glass, .glass-interactive, .card-hover {
+    transition: background-color 0.2s ease, color 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   *:focus-visible {
