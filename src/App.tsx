@@ -76,12 +76,7 @@ const App = () => (
             <BrowserRouter>
               <UnsavedChangesProvider>
                 <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
+                  <AnimatedRoutes />
                 </Suspense>
               </UnsavedChangesProvider>
             </BrowserRouter>
