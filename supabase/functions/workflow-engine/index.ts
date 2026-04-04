@@ -20,6 +20,19 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// ── Structured Logger ──
+function createLogger(requestId: string) {
+  const base = { function: "workflow-engine", request_id: requestId };
+  return {
+    info: (msg: string, data?: Record<string, unknown>) =>
+      console.log(JSON.stringify({ ...base, level: "info", msg, ...data, ts: new Date().toISOString() })),
+    warn: (msg: string, data?: Record<string, unknown>) =>
+      console.warn(JSON.stringify({ ...base, level: "warn", msg, ...data, ts: new Date().toISOString() })),
+    error: (msg: string, data?: Record<string, unknown>) =>
+      console.error(JSON.stringify({ ...base, level: "error", msg, ...data, ts: new Date().toISOString() })),
+  };
+}
+
 function badRequest(corsHeaders: Record<string, string>, details: unknown) {
   return new Response(JSON.stringify({ error: "Invalid input", details }), {
     status: 400,
@@ -48,11 +61,15 @@ const ToggleStatusSchema = z.object({
 const ActionSchema = z.enum(["list", "create", "run", "toggle-status", "delete"]);
 
 serve(async (req) => {
+  const requestId = crypto.randomUUID();
+  const log = createLogger(requestId);
   const corsHeaders = getCorsHeaders(req);
 
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const start = performance.now();
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -61,6 +78,7 @@ serve(async (req) => {
   // Validate JWT
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
+    log.warn("auth_missing");
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -71,6 +89,7 @@ serve(async (req) => {
   });
   const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
   if (claimsError || !claimsData?.claims) {
+    log.warn("auth_invalid", { error: claimsError?.message });
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -89,6 +108,8 @@ serve(async (req) => {
   }
   const action = actionParsed.data;
 
+  log.info("request_start", { method: req.method, action, user_id: userId });
+
   try {
     // LIST workflows
     if (action === "list" && req.method === "GET") {
@@ -98,6 +119,10 @@ serve(async (req) => {
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (error) throw error;
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, count: data?.length ?? 0 });
+
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -124,6 +149,10 @@ serve(async (req) => {
         .select()
         .single();
       if (error) throw error;
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, workflow_id: data.id });
+
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -144,6 +173,8 @@ serve(async (req) => {
         .eq("user_id", userId)
         .single();
       if (wfError || !workflow) throw new Error("Workflow not found");
+
+      log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name });
 
       // Create run record
       const { data: run, error: runError } = await supabase
@@ -212,7 +243,7 @@ serve(async (req) => {
             externalId = result.id || result.ID;
           }
         } catch (err) {
-          console.error("GMaps API scrape error:", err);
+          log.error("step_scrape_api_error", { error: (err as Error).message, workflow_id });
         }
 
         if (scrapeJobId) {
@@ -229,7 +260,7 @@ serve(async (req) => {
           keywords,
         };
       } catch (err) {
-        console.error("Workflow scrape step error:", err);
+        log.error("step_scrape_error", { error: (err as Error).message, workflow_id });
         results.scrape = { error: (err as Error).message };
       }
 
@@ -309,14 +340,14 @@ serve(async (req) => {
                 .update({ results_count: enrichedCount })
                 .eq("id", job.id);
             } catch (err) {
-              console.error("Workflow enrich download error:", err);
+              log.error("step_enrich_download_error", { error: (err as Error).message, job_id: job.id });
             }
           }
         }
 
         results.enrich = { companies_imported: enrichedCount, status: "completed" };
       } catch (err) {
-        console.error("Workflow enrich step error:", err);
+        log.error("step_enrich_error", { error: (err as Error).message, workflow_id });
         results.enrich = { error: (err as Error).message };
       }
 
@@ -395,7 +426,7 @@ serve(async (req) => {
 
         results.ipc_score = { companies_scored: scoredCount, status: "completed" };
       } catch (err) {
-        console.error("Workflow IPC scoring error:", err);
+        log.error("step_ipc_score_error", { error: (err as Error).message, workflow_id });
         results.ipc_score = { error: (err as Error).message };
       }
 
@@ -432,6 +463,12 @@ serve(async (req) => {
         .update({ status: "completed", current_step: null, results, completed_at: new Date().toISOString() })
         .eq("id", run.id);
 
+      const duration = Math.round(performance.now() - start);
+      log.info("workflow_run_complete", {
+        workflow_id, run_id: run.id, duration_ms: duration,
+        enriched: enrichedCount, scored: scoredCount, qualified: totalQualified,
+      });
+
       return new Response(JSON.stringify({ run_id: run.id, results }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -451,6 +488,10 @@ serve(async (req) => {
         .eq("id", workflow_id)
         .eq("user_id", userId);
       if (error) throw error;
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, workflow_id, new_status });
+
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -464,6 +505,10 @@ serve(async (req) => {
       }
       const { error } = await supabase.from("workflows").delete().eq("id", id).eq("user_id", userId);
       if (error) throw error;
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, workflow_id: id });
+
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -474,7 +519,8 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("Workflow engine error:", err);
+    const duration = Math.round(performance.now() - start);
+    log.error("request_failed", { error: (err as Error).message, action, duration_ms: duration });
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
