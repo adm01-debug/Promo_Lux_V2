@@ -221,7 +221,7 @@ function SidebarFooter({ collapsed, onToggleCollapse, ref }: { collapsed: boolea
       </Tooltip>
     </div>
   );
-});
+}
 
 /* Sub-components */
 
