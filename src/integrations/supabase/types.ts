@@ -269,6 +269,7 @@ export type Database = {
           full_name: string | null
           id: string
           notification_prefs: Json
+          onboarding_completed: boolean
           skin: string
           updated_at: string
         }
@@ -278,6 +279,7 @@ export type Database = {
           full_name?: string | null
           id: string
           notification_prefs?: Json
+          onboarding_completed?: boolean
           skin?: string
           updated_at?: string
         }
@@ -287,6 +289,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           notification_prefs?: Json
+          onboarding_completed?: boolean
           skin?: string
           updated_at?: string
         }
