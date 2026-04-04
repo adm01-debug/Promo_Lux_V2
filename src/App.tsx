@@ -33,12 +33,13 @@ const queryClient = new QueryClient({
   },
 });
 
-const PageLoader = forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} className="min-h-screen bg-background flex items-center justify-center">
-    <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-  </div>
-));
-PageLoader.displayName = "PageLoader";
+function PageLoader({ ref }: { ref?: React.Ref<HTMLDivElement> }) {
+  return (
+    <div ref={ref} className="min-h-screen bg-background flex items-center justify-center">
+      <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+    </div>
+  );
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
