@@ -52,7 +52,7 @@ export function useRealtimeScrapeJobs() {
             }
           } else if (job.status === "failed") {
             const title = "❌ Raspagem falhou";
-            const message = `"${job.name}" falhou: ${job.error_message ?? "erro desconhecido"}.`;
+            const message = `"${String(job.name ?? "")}" falhou: ${String(job.error_message ?? "erro desconhecido")}.`;
 
             toast({ title, description: message, variant: "destructive" });
 
