@@ -100,8 +100,8 @@ export const SettingsView = () => {
       setSaved(true);
       toast({ title: "Salvo!", description: "Informações atualizadas com sucesso." });
       setTimeout(() => setSaved(false), 2000);
-    } catch (err: any) {
-      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro ao salvar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSaving(false);
     }
