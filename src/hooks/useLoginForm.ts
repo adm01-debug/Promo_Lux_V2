@@ -16,6 +16,7 @@ export function useLoginForm() {
   const [resetEmail, setResetEmail] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
   const [shakeError, setShakeError] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const triggerShake = useCallback(() => {
     setShakeError(true);
@@ -66,6 +67,7 @@ export function useLoginForm() {
         triggerShake();
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
       } else {
+        setShowConfetti(true);
         toast({ title: "Bem-vindo de volta! 🎉", description: "Login realizado com sucesso." });
       }
     } finally {
@@ -146,6 +148,7 @@ export function useLoginForm() {
     locked,
     rateLimitMsg,
     shakeError,
+    showConfetti, setShowConfetti,
     handleGoogleLogin,
     handleEmailLogin,
     handleEmailSignup,

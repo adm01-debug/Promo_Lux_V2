@@ -696,6 +696,12 @@
   z-index: 0;
 }
 
+/* ── Auth input gold glow focus ── */
+.auth-card-glow input:focus {
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.15), 0 0 12px hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary) / 0.5) !important;
+}
+
 /* ── Shake animation for error feedback ── */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
@@ -705,6 +711,20 @@
 
 .animate-shake {
   animation: shake 0.4s ease-in-out;
+}
+
+/* ── Auth button press micro-interaction ── */
+.auth-card-glow button[type="submit"]:active:not(:disabled) {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+.auth-card-glow button[type="submit"] {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.auth-card-glow button[type="submit"]:hover:not(:disabled) {
+  box-shadow: 0 4px 16px hsl(var(--primary) / 0.25);
 }
 
 /* Leaflet MarkerCluster dark theme overrides */
