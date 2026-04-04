@@ -117,8 +117,8 @@ export const SettingsView = () => {
         .eq("id", user.id);
       if (error) throw error;
       toast({ title: "Preferências salvas!", description: "Notificações atualizadas." });
-    } catch (err: any) {
-      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
     } finally {
       setSavingNotifs(false);
     }

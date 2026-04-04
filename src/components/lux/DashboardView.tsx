@@ -15,12 +15,24 @@ import { cn } from "@/lib/utils";
 
 const LAYOUT_KEY = "lux-dashboard-widget-order";
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipPayloadItem {
+  dataKey: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadItem[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass rounded-lg p-3 border border-border/50 shadow-xl">
         <p className="text-xs font-medium text-foreground mb-1">{label}</p>
-        {payload.map((p: any) => (
+        {payload.map((p) => (
           <p key={p.dataKey} className="text-[11px]" style={{ color: p.color }}>
             {p.dataKey === "raspadas" ? "Raspadas" : "Qualificadas"}: <span className="font-mono font-bold">{p.value}</span>
           </p>

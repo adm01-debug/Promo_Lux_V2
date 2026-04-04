@@ -54,7 +54,7 @@ interface CompanyWithCoords {
   lng: number;
 }
 
-function extractCoords(raw: any, lat?: number | null, lng?: number | null): { lat: number; lng: number } | null {
+function extractCoords(raw: Record<string, unknown> | null | undefined, lat?: number | null, lng?: number | null): { lat: number; lng: number } | null {
   // First try dedicated lat/lng columns
   if (lat != null && lng != null && !isNaN(lat) && !isNaN(lng) && lat !== 0) return { lat, lng };
   // Fallback to raw_data
