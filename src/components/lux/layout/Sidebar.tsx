@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { prefetchView } from "@/lib/viewRegistry";
@@ -73,6 +73,20 @@ export const Sidebar = ({
   onMobileClose,
   onToggleCollapse,
 }: SidebarProps) => {
+  // Live intent signal count for badge
+  const { data: intentCount = 0 } = useQuery({
+    queryKey: ["intent-signals-unread-count"],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("intent_signals")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+      if (error) throw error;
+      return count ?? 0;
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
   // Pre-compute grouped nav items to avoid mutable variable during render
   const groupedItems = useMemo(() => {
     let lastSection = "";
@@ -149,6 +163,7 @@ export const Sidebar = ({
                 isActive={activeView === item.id}
                 onClick={() => onNavigate(item.id)}
                 onPrefetch={() => prefetchView(item.id)}
+                intentCount={item.id === "intent" ? intentCount : 0}
               />
             )}
           </div>
@@ -229,6 +244,7 @@ function CollapsedNavButton({
           data-tour={item.id}
           onClick={onClick}
           onMouseEnter={onPrefetch}
+          aria-current={isActive ? "page" : undefined}
           className={cn(
             "w-full flex items-center justify-center p-2 rounded-lg transition-all duration-200 active:scale-95",
             isActive
@@ -249,11 +265,13 @@ function ExpandedNavButton({
   isActive,
   onClick,
   onPrefetch,
+  intentCount = 0,
 }: {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
   onPrefetch: () => void;
+  intentCount?: number;
 }) {
   const Icon = item.icon;
   const shortcut = getShortcut(item.id);
@@ -263,6 +281,7 @@ function ExpandedNavButton({
       data-tour={item.id}
       onClick={onClick}
       onMouseEnter={onPrefetch}
+      aria-current={isActive ? "page" : undefined}
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98]",
         isActive
@@ -277,14 +296,14 @@ function ExpandedNavButton({
           {shortcut}
         </kbd>
       )}
-      {item.id === "intent" && (
+      {item.id === "intent" && intentCount > 0 && (
         <span
           className={cn(
             "text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold",
             shortcut ? "" : "ml-auto"
           )}
         >
-          5
+          {intentCount}
         </span>
       )}
     </button>

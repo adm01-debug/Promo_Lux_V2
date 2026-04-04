@@ -22,7 +22,7 @@
     --secondary: 225 22% 13%;
     --secondary-foreground: 48 15% 92%;
     --muted: 225 20% 10%;
-    --muted-foreground: 220 15% 60%;
+    --muted-foreground: 220 15% 65%;
     --accent: 45 100% 50%;
     --accent-foreground: 225 30% 3%;
     --destructive: 0 85% 58%;
@@ -95,7 +95,7 @@
     --secondary: 222 22% 13%;
     --secondary-foreground: 210 15% 92%;
     --muted: 222 20% 10%;
-    --muted-foreground: 215 15% 60%;
+    --muted-foreground: 215 15% 65%;
     --accent: 200 100% 50%;
     --accent-foreground: 222 30% 3%;
     --destructive: 0 85% 58%;
@@ -168,7 +168,7 @@
     --secondary: 160 22% 13%;
     --secondary-foreground: 150 15% 92%;
     --muted: 160 20% 10%;
-    --muted-foreground: 155 15% 55%;
+    --muted-foreground: 155 15% 60%;
     --accent: 145 90% 45%;
     --accent-foreground: 160 30% 3%;
     --destructive: 0 85% 58%;
@@ -241,7 +241,7 @@
     --secondary: 0 18% 13%;
     --secondary-foreground: 0 12% 92%;
     --muted: 0 16% 10%;
-    --muted-foreground: 0 12% 55%;
+    --muted-foreground: 0 12% 60%;
     --accent: 350 90% 52%;
     --accent-foreground: 0 0% 100%;
     --destructive: 30 85% 55%;
@@ -314,7 +314,7 @@
     --secondary: 270 22% 13%;
     --secondary-foreground: 260 15% 92%;
     --muted: 270 20% 10%;
-    --muted-foreground: 265 15% 55%;
+    --muted-foreground: 265 15% 60%;
     --accent: 280 90% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 85% 58%;
@@ -387,7 +387,7 @@
     --secondary: 20 22% 13%;
     --secondary-foreground: 25 15% 92%;
     --muted: 20 20% 10%;
-    --muted-foreground: 20 15% 55%;
+    --muted-foreground: 20 15% 60%;
     --accent: 15 100% 50%;
     --accent-foreground: 20 30% 3%;
     --destructive: 0 85% 58%;
@@ -451,7 +451,13 @@
 @layer base {
   * {
     @apply border-border;
-    transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Opt-in transitions only on interactive elements, not globally on * */
+  button, a, input, select, textarea,
+  [role="button"], [role="tab"], [role="menuitem"],
+  .glass, .glass-interactive, .card-hover {
+    transition: background-color 0.2s ease, color 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   *:focus-visible {

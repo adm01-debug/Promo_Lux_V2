@@ -6,6 +6,7 @@ const shortcuts = [
   { keys: ["⌘", "K"], description: "Abrir busca rápida" },
   { keys: ["Alt", "1-9"], description: "Navegar entre seções" },
   { keys: ["Ctrl", "B"], description: "Recolher/expandir sidebar" },
+  { keys: ["⌘", "⇧", "F"], description: "Modo Foco (ocultar sidebar/header)" },
   { keys: ["?"], description: "Mostrar atalhos de teclado" },
 ];
 
