@@ -269,8 +269,8 @@ export const CompaniesView = () => {
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
     const company = companies.find((c) => c.id === id);
-    queryClient.setQueryData(["companies-list"], (old: any) =>
-      old?.map((c: any) => (c.id === id ? { ...c, starred } : c))
+    queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) =>
+      old?.map((c) => (c.id === id ? { ...c, starred } : c))
     );
     toast({
       title: starred ? "⭐ Empresa favoritada" : "Favorito removido",
