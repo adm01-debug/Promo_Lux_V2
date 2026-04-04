@@ -244,20 +244,23 @@ function CollapsedNavButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
+        <motion.button
           data-tour={item.id}
           onClick={onClick}
           onMouseEnter={onPrefetch}
           aria-current={isActive ? "page" : undefined}
+          whileHover={{ scale: 1.12 }}
+          whileTap={{ scale: 0.92 }}
+          transition={{ type: "spring" as const, stiffness: 400, damping: 20 }}
           className={cn(
-            "w-full flex items-center justify-center p-2 rounded-lg transition-all duration-200 active:scale-95",
+            "w-full flex items-center justify-center p-2 rounded-lg transition-all duration-200",
             isActive
-              ? "bg-primary/15 text-primary border border-primary/25 shadow-[0_0_8px_hsl(var(--primary)/0.15)]"
-              : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 hover:scale-105"
+              ? "bg-primary/15 text-primary border border-primary/25 shadow-[0_0_12px_hsl(var(--primary)/0.2)]"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
           )}
         >
           <Icon className="h-4 w-4" />
-        </button>
+        </motion.button>
       </TooltipTrigger>
       <TooltipContent side="right">{item.label}</TooltipContent>
     </Tooltip>
