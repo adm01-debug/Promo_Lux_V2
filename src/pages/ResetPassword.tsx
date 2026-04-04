@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, Lock, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { PasswordInput } from "@/components/lux/auth/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
+import { newPasswordSchema } from "@/lib/schemas/auth";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
