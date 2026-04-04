@@ -2,6 +2,8 @@ import { useLoginForm } from "@/hooks/useLoginForm";
 import { FloatingParticles } from "@/components/lux/auth/FloatingParticles";
 import { GoogleLoadingOverlay } from "@/components/lux/auth/GoogleLoadingOverlay";
 import { LoginCard } from "@/components/lux/auth/LoginCard";
+import { GoldConfetti } from "@/components/lux/auth/GoldConfetti";
+import { AnimatePresence } from "framer-motion";
 
 export default function LoginPage() {
   const form = useLoginForm();
@@ -9,6 +11,11 @@ export default function LoginPage() {
   return (
     <>
       {form.googleLoading && <GoogleLoadingOverlay />}
+      <AnimatePresence>
+        {form.showConfetti && (
+          <GoldConfetti onComplete={() => form.setShowConfetti(false)} />
+        )}
+      </AnimatePresence>
       <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
         {/* Ambient glow */}
         <div
