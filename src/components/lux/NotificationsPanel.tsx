@@ -232,10 +232,10 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
                       <motion.div
                         key={n.id}
                         layout
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20, height: 0 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ opacity: 0, x: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: -20, height: 0, scale: 0.95 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                         onClick={() => !n.read && markRead(n.id)}
                         className={cn(
                           "p-4 flex items-start gap-3 cursor-pointer transition-colors group",
