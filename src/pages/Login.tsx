@@ -1,25 +1,30 @@
 import { useState } from "react";
 import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, ShieldAlert, Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
+import { Mail, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { toast } from "@/hooks/use-toast";
+import { AuthLogo } from "@/components/lux/auth/AuthLogo";
+import { EmailInput } from "@/components/lux/auth/EmailInput";
+import { PasswordInput } from "@/components/lux/auth/PasswordInput";
+import { GoogleLoginButton } from "@/components/lux/auth/GoogleLoginButton";
+import { ForgotPasswordOverlay } from "@/components/lux/auth/ForgotPasswordOverlay";
+import { RateLimitWarning } from "@/components/lux/auth/RateLimitWarning";
 
 export default function LoginPage() {
   const { checkAndRecord, isLocked } = useRateLimit({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
   const [lockMsg, setLockMsg] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+
+  const locked = isLocked();
 
   const guardRate = () => {
     const status = checkAndRecord();
@@ -117,44 +122,16 @@ export default function LoginPage() {
     }
   };
 
-  const locked = isLocked();
+  const rateLimitMsg = lockMsg || (locked.locked ? `Bloqueado. Tente em ${locked.remainingSec}s.` : null);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 relative">
-        {/* Logo */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center">
-            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
-              <Sparkles className="h-6 w-6 text-primary" />
-            </div>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              LUX <span className="text-primary glow-text">IA</span>
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">Sales Intelligence Platform</p>
-          </div>
-        </div>
+      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 relative" role="main">
+        <AuthLogo />
 
-        {/* Rate limit warning */}
-        {(lockMsg || locked.locked) && (
-          <div className="flex items-center gap-2 text-destructive text-xs bg-destructive/10 rounded-lg p-3">
-            <ShieldAlert className="h-4 w-4 flex-shrink-0" />
-            <span>{lockMsg || `Bloqueado. Tente em ${locked.remainingSec}s.`}</span>
-          </div>
-        )}
+        {rateLimitMsg && <RateLimitWarning message={rateLimitMsg} />}
 
-        {/* Google OAuth */}
-        <Button onClick={handleGoogleLogin} disabled={locked.locked} variant="outline" className="w-full gap-2" size="lg">
-          <svg className="h-5 w-5" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
-            <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-            <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-          </svg>
-          Entrar com Google
-        </Button>
+        <GoogleLoginButton onClick={handleGoogleLogin} disabled={locked.locked} />
 
         <div className="relative">
           <Separator className="bg-border/30" />
@@ -163,7 +140,6 @@ export default function LoginPage() {
           </span>
         </div>
 
-        {/* Email/Password form */}
         <Tabs value={authTab} onValueChange={(v) => setAuthTab(v as "login" | "signup")} className="w-full">
           <TabsList className="w-full bg-secondary/50">
             <TabsTrigger value="login" className="flex-1 text-xs">Entrar</TabsTrigger>
@@ -172,45 +148,8 @@ export default function LoginPage() {
 
           <TabsContent value="login" className="mt-4">
             <form onSubmit={handleEmailLogin} className="space-y-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="login-email" className="text-xs text-muted-foreground">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 bg-secondary/30 border-border/30"
-                    required
-                    autoComplete="email"
-                  />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="login-password" className="text-xs text-muted-foreground">Senha</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                  <Input
-                    id="login-password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 bg-secondary/30 border-border/30"
-                    required
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
+              <EmailInput id="login-email" value={email} onChange={setEmail} />
+              <PasswordInput id="login-password" label="Senha" value={password} onChange={setPassword} />
               <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2" size="lg">
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
                 Entrar
@@ -227,46 +166,15 @@ export default function LoginPage() {
 
           <TabsContent value="signup" className="mt-4">
             <form onSubmit={handleEmailSignup} className="space-y-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="signup-email" className="text-xs text-muted-foreground">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 bg-secondary/30 border-border/30"
-                    required
-                    autoComplete="email"
-                  />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="signup-password" className="text-xs text-muted-foreground">Senha (mín. 8 caracteres)</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                  <Input
-                    id="signup-password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 bg-secondary/30 border-border/30"
-                    required
-                    minLength={8}
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
+              <EmailInput id="signup-email" value={email} onChange={setEmail} />
+              <PasswordInput
+                id="signup-password"
+                label="Senha (mín. 8 caracteres)"
+                value={password}
+                onChange={setPassword}
+                autoComplete="new-password"
+                minLength={8}
+              />
               <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2" size="lg">
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 Criar Conta
@@ -279,44 +187,15 @@ export default function LoginPage() {
           Ao entrar, você concorda com nossos termos de uso.
         </p>
 
-        {/* Forgot Password Overlay */}
         {showForgotPassword && (
-          <div className="absolute inset-0 bg-background/95 backdrop-blur-sm rounded-2xl p-8 flex flex-col justify-center space-y-4 z-10">
-            <button
-              type="button"
-              onClick={() => setShowForgotPassword(false)}
-              className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <div className="text-center space-y-1">
-              <h2 className="text-lg font-bold text-foreground">Redefinir senha</h2>
-              <p className="text-xs text-muted-foreground">Enviaremos um link para redefinir sua senha.</p>
-            </div>
-            <form onSubmit={handleForgotPassword} className="space-y-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="reset-email" className="text-xs text-muted-foreground">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    className="pl-10 bg-secondary/30 border-border/30"
-                    required
-                    autoComplete="email"
-                    autoFocus
-                  />
-                </div>
-              </div>
-              <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2" size="lg">
-                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-                Enviar link
-              </Button>
-            </form>
-          </div>
+          <ForgotPasswordOverlay
+            resetEmail={resetEmail}
+            onResetEmailChange={setResetEmail}
+            onSubmit={handleForgotPassword}
+            onBack={() => setShowForgotPassword(false)}
+            isSubmitting={isSubmitting}
+            disabled={locked.locked}
+          />
         )}
       </div>
     </div>
