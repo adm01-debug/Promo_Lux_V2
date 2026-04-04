@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { StatsGrid } from "@/components/lux/StatsGrid";
 import { AutomationsList } from "@/components/lux/AutomationsList";
 import { CompanyTable } from "@/components/lux/CompanyTable";
