@@ -1,0 +1,5 @@
+DELETE FROM workflows WHERE id IN (
+  '05daefc5-1053-45d4-884d-4ad7595b54b2',
+  '5766317e-3592-448d-9fd0-ba9683b48922',
+  'a1fd8592-a614-471a-8df7-d62216752314'
+);
