@@ -32,13 +32,19 @@ interface CustomTooltipProps {
 const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="glass rounded-lg p-3 border border-border/50 shadow-xl">
-        <p className="text-xs font-medium text-foreground mb-1">{label}</p>
-        {payload.map((p) => (
-          <p key={p.dataKey} className="text-[11px]" style={{ color: p.color }}>
-            {p.dataKey === "raspadas" ? "Raspadas" : "Qualificadas"}: <span className="font-mono font-bold">{p.value}</span>
-          </p>
-        ))}
+      <div className="glass rounded-xl p-3.5 border border-primary/20 shadow-[0_8px_32px_rgba(0,0,0,0.3),0_0_20px_hsl(var(--primary)/0.08)] backdrop-blur-xl">
+        <p className="text-[10px] font-semibold text-primary uppercase tracking-widest mb-2">{label}</p>
+        <div className="space-y-1.5">
+          {payload.map((p) => (
+            <div key={p.dataKey} className="flex items-center gap-2.5">
+              <div className="h-2 w-2 rounded-full shadow-sm" style={{ backgroundColor: p.color, boxShadow: `0 0 6px ${p.color}40` }} />
+              <span className="text-[11px] text-muted-foreground">
+                {p.dataKey === "raspadas" ? "Raspadas" : "Qualificadas"}
+              </span>
+              <span className="font-mono font-bold text-xs text-foreground ml-auto">{p.value}</span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
