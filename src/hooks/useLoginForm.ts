@@ -148,6 +148,7 @@ export function useLoginForm() {
     locked,
     rateLimitMsg,
     shakeError,
+    showConfetti, setShowConfetti,
     handleGoogleLogin,
     handleEmailLogin,
     handleEmailSignup,
