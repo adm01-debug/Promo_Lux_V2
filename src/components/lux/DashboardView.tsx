@@ -5,6 +5,7 @@ import { AutomationsList } from "@/components/lux/AutomationsList";
 import { CompanyTable } from "@/components/lux/CompanyTable";
 import { ActivityFeed } from "@/components/lux/ActivityFeed";
 import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
+import { QuickActions } from "@/components/lux/QuickActions";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical } from "lucide-react";
@@ -124,23 +125,44 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
               <Skeleton className="h-[220px] w-full rounded-lg" />
             ) : (
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={performanceData}>
+                <AreaChart data={performanceData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
                   <defs>
                     <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.3} />
-                      <stop offset="100%" stopColor={primaryStroke} stopOpacity={0} />
+                      <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.35} />
+                      <stop offset="100%" stopColor={primaryStroke} stopOpacity={0.02} />
                     </linearGradient>
                     <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={successStroke} stopOpacity={0.3} />
-                      <stop offset="100%" stopColor={successStroke} stopOpacity={0} />
+                      <stop offset="0%" stopColor={successStroke} stopOpacity={0.35} />
+                      <stop offset="100%" stopColor={successStroke} stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
                   <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} width={35} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="raspadas" stroke={primaryStroke} fill="url(#gradientRaspadas)" strokeWidth={2.5} dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }} activeDot={{ r: 5, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }} />
-                  <Area type="monotone" dataKey="qualificadas" stroke={successStroke} fill="url(#gradientQualificadas)" strokeWidth={2.5} dot={{ r: 3, fill: successStroke, strokeWidth: 0 }} activeDot={{ r: 5, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }} />
+                  <Area
+                    type="monotone"
+                    dataKey="raspadas"
+                    stroke={primaryStroke}
+                    fill="url(#gradientRaspadas)"
+                    strokeWidth={2.5}
+                    dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }}
+                    activeDot={{ r: 6, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }}
+                    animationDuration={1200}
+                    animationEasing="ease-out"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="qualificadas"
+                    stroke={successStroke}
+                    fill="url(#gradientQualificadas)"
+                    strokeWidth={2.5}
+                    dot={{ r: 3, fill: successStroke, strokeWidth: 0 }}
+                    activeDot={{ r: 6, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }}
+                    animationDuration={1400}
+                    animationEasing="ease-out"
+                    animationBegin={200}
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             )}
@@ -220,6 +242,8 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
           )}
         </div>
       </div>
+
+      <QuickActions onNavigate={(v) => onNavigate?.(v)} />
 
       <StatsGrid onNavigate={onNavigate} />
 

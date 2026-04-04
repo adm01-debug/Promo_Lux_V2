@@ -47,39 +47,39 @@
   }
 
   .light[data-skin="gold"], .light:not([data-skin]) {
-    --background: 45 20% 97%;
-    --foreground: 222 35% 8%;
+    --background: 43 25% 97%;
+    --foreground: 225 30% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 222 35% 8%;
+    --card-foreground: 225 30% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 35% 8%;
-    --primary: 40 95% 35%;
+    --popover-foreground: 225 30% 10%;
+    --primary: 40 90% 38%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 42 16% 90%;
-    --secondary-foreground: 222 25% 15%;
-    --muted: 42 14% 92%;
-    --muted-foreground: 222 14% 38%;
-    --accent: 40 90% 30%;
+    --secondary: 42 20% 92%;
+    --secondary-foreground: 225 25% 15%;
+    --muted: 42 18% 93%;
+    --muted-foreground: 225 12% 42%;
+    --accent: 40 85% 32%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 75% 45%;
+    --destructive: 0 72% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 42 16% 78%;
-    --input: 42 16% 78%;
-    --ring: 40 95% 35%;
-    --success: 142 72% 28%;
+    --border: 42 20% 82%;
+    --input: 42 20% 82%;
+    --ring: 40 90% 38%;
+    --success: 142 68% 32%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 38%;
-    --warning-foreground: 222 35% 8%;
-    --lux-glow: 40 95% 35%;
-    --lux-surface: 42 16% 94%;
-    --sidebar-background: 42 18% 95%;
-    --sidebar-foreground: 222 25% 15%;
-    --sidebar-primary: 40 95% 35%;
+    --warning: 38 88% 42%;
+    --warning-foreground: 225 30% 10%;
+    --lux-glow: 40 90% 38%;
+    --lux-surface: 42 18% 95%;
+    --sidebar-background: 43 22% 96%;
+    --sidebar-foreground: 225 25% 15%;
+    --sidebar-primary: 40 90% 38%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 42 16% 88%;
-    --sidebar-accent-foreground: 222 25% 15%;
-    --sidebar-border: 42 16% 78%;
-    --sidebar-ring: 40 95% 35%;
+    --sidebar-accent: 42 22% 90%;
+    --sidebar-accent-foreground: 225 25% 15%;
+    --sidebar-border: 42 20% 82%;
+    --sidebar-ring: 40 90% 38%;
   }
 
   /* ===== BLUE NEON SKIN ===== */
@@ -532,15 +532,27 @@
   }
 
   .light .glass {
-    box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05);
+    box-shadow: 0 1px 4px 0 hsl(var(--foreground) / 0.06),
+                0 0 0 1px hsl(var(--border) / 0.5);
+    border-color: hsl(var(--border) / 0.6);
   }
 
   .light .glass-interactive {
-    box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05);
+    box-shadow: 0 1px 4px 0 hsl(var(--foreground) / 0.06);
   }
 
   .light .glass-interactive:hover {
-    box-shadow: 0 4px 16px -4px hsl(var(--primary) / 0.15);
+    box-shadow: 0 6px 20px -6px hsl(var(--primary) / 0.18);
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  .light .glow-primary {
+    box-shadow: 0 4px 14px -4px hsl(var(--primary) / 0.2);
+  }
+
+  .light .glow-text {
+    text-shadow: none;
+    color: hsl(var(--primary));
   }
 
   .focus-ring {

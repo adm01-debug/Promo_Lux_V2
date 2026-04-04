@@ -88,8 +88,24 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 
           if (payload.eventType === "INSERT") {
             const n = payload.new as Notification;
+
+            // Play subtle notification sound
+            try {
+              const audioCtx = new AudioContext();
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.15);
+              gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+              osc.start(audioCtx.currentTime);
+              osc.stop(audioCtx.currentTime + 0.3);
+            } catch {}
+
             toast({
-              title: n.title,
+              title: `${typeLabels[n.type] ?? "Notificação"}: ${n.title}`,
               description: n.message,
             });
           }
