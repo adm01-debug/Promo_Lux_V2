@@ -74,8 +74,8 @@ export const CompanyTable = () => {
                         <Building2 className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <span className="font-medium text-foreground">{company.name}</span>
-                        {company.website && <ExternalLink className="inline h-3 w-3 ml-1.5 text-muted-foreground" />}
+                        <span className="font-medium text-foreground group-hover:text-primary transition-colors">{company.name}</span>
+                        {company.website && <ExternalLink className="inline h-3 w-3 ml-1.5 text-muted-foreground group-hover:text-primary/60 transition-colors" />}
                       </div>
                     </div>
                   </td>
