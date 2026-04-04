@@ -13,6 +13,10 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: mockToast }),
 }));
 
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuth: () => ({ user: { id: "test-user-id" } }),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     channel: () => ({
@@ -79,12 +83,12 @@ describe("useRealtimeCompanies", () => {
       eventType: "INSERT",
       new: { id: "abc", name: "PersistCo", source: "gmaps", sector: "IT", location: "RJ" },
     });
-    expect(mockInsert).toHaveBeenCalledWith(
+    expect(mockInsert).toHaveBeenCalledWith([
       expect.objectContaining({
         type: "scrape",
         metadata: expect.objectContaining({ company_name: "PersistCo" }),
-      })
-    );
+      }),
+    ]);
   });
 
   it("does not toast or persist on UPDATE event", async () => {

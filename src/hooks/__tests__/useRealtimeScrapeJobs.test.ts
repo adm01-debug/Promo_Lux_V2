@@ -13,6 +13,10 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: mockToast }),
 }));
 
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuth: () => ({ user: { id: "test-user-id" } }),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     channel: () => ({
@@ -63,9 +67,9 @@ describe("useRealtimeScrapeJobs", () => {
       new: { status: "completed", name: "Job2", results_count: 10, id: "j2", source: "gmaps" },
       old: { status: "running" },
     });
-    expect(mockInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "scrape", title: expect.stringContaining("concluída") })
-    );
+    expect(mockInsert).toHaveBeenCalledWith([
+      expect.objectContaining({ type: "scrape", title: expect.stringContaining("concluída") }),
+    ]);
   });
 
   it("toasts on failed job with destructive variant", async () => {
@@ -85,9 +89,9 @@ describe("useRealtimeScrapeJobs", () => {
       new: { status: "failed", name: "Job4", error_message: "err", id: "j4" },
       old: { status: "running" },
     });
-    expect(mockInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "scrape", title: expect.stringContaining("falhou") })
-    );
+    expect(mockInsert).toHaveBeenCalledWith([
+      expect.objectContaining({ type: "scrape", title: expect.stringContaining("falhou") }),
+    ]);
   });
 
   it("invalidates scrape-jobs and dashboard queries", async () => {
