@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
 import { useRateLimit } from "@/hooks/useRateLimit";
@@ -15,6 +15,12 @@ export function useLoginForm() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [shakeError, setShakeError] = useState(false);
+
+  const triggerShake = useCallback(() => {
+    setShakeError(true);
+    setTimeout(() => setShakeError(false), 500);
+  }, []);
 
   const locked = isLocked();
 
@@ -48,6 +54,7 @@ export function useLoginForm() {
 
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
+      triggerShake();
       toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
@@ -56,6 +63,7 @@ export function useLoginForm() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email: result.data.email, password: result.data.password });
       if (error) {
+        triggerShake();
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
       }
     } finally {
@@ -69,6 +77,7 @@ export function useLoginForm() {
 
     const result = signupSchema.safeParse({ email, password });
     if (!result.success) {
+      triggerShake();
       toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
       return;
     }
@@ -81,6 +90,7 @@ export function useLoginForm() {
         options: { emailRedirectTo: window.location.origin },
       });
       if (error) {
+        triggerShake();
         toast({ title: "Erro no cadastro", description: error.message, variant: "destructive" });
       } else {
         toast({
@@ -133,6 +143,7 @@ export function useLoginForm() {
     googleLoading,
     locked,
     rateLimitMsg,
+    shakeError,
     handleGoogleLogin,
     handleEmailLogin,
     handleEmailSignup,
