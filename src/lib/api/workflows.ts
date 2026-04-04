@@ -23,7 +23,7 @@ export interface Workflow {
   description: string | null;
   status: string;
   steps: WorkflowStep[];
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   leads_processed: number;
   leads_qualified: number;
   success_rate: number;
