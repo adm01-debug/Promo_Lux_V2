@@ -211,7 +211,13 @@ const Index = () => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  duration: 0.36,
+                  ease: [0.22, 1, 0.36, 1],
+                  opacity: { duration: 0.22 },
+                  filter: { duration: 0.28 },
+                  scale: { type: "spring", stiffness: 300, damping: 30 },
+                }}
               >
                 <ActiveComponent />
               </motion.div>
