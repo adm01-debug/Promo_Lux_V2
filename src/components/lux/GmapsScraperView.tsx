@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { validateScrapeJob } from "@/lib/schemas/scrapeJob";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MapPin, Plus, Trash2, Download, RefreshCw, Search, Globe, Mail, Clock, CheckCircle2, AlertCircle, Loader2, Zap, Eye, DatabaseIcon } from "lucide-react";
@@ -31,7 +32,7 @@ export const GmapsScraperView = () => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [jobName, setJobName] = useState("");
   const [keywords, setKeywords] = useState("");
-  const [lang, setLang] = useState("pt");
+  const [lang, setLang] = useState<"pt" | "en" | "es">("pt");
   const [radius, setRadius] = useState(10000);
   const [depth, setDepth] = useState(1);
   const [extractEmail, setExtractEmail] = useState(true);
@@ -102,7 +103,20 @@ export const GmapsScraperView = () => {
   });
 
   const handleCreate = () => {
-    if (!jobName.trim() || !keywords.trim()) return;
+    const result = validateScrapeJob({
+      name: jobName,
+      keywords,
+      lang,
+      radius,
+      depth,
+      email: extractEmail,
+      fast_mode: fastMode,
+    });
+    if (!result.success) {
+      const firstError = Object.values(result.errors)[0];
+      toast({ title: "Corrija os campos", description: firstError, variant: "destructive" });
+      return;
+    }
     createMutation.mutate({
       name: jobName.trim(),
       keywords: keywords.split(",").map(k => k.trim()).filter(Boolean),
@@ -157,7 +171,7 @@ export const GmapsScraperView = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="text-xs text-muted-foreground">Idioma</Label>
-                    <Select value={lang} onValueChange={setLang}>
+                    <Select value={lang} onValueChange={(v) => setLang(v as "pt" | "en" | "es")}>
                       <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="pt">Português</SelectItem>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { validateCampaign } from "@/lib/schemas/campaign";
 import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
+import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -120,7 +122,7 @@ export const CampaignsView = () => {
     setFormSequence([...defaultSequence]);
   };
 
-  const { data: campaigns = [], isLoading } = useQuery({
+  const { data: campaigns = [], isLoading, error: campaignsError, refetch } = useQuery({
     queryKey: ["campaigns"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -131,10 +133,16 @@ export const CampaignsView = () => {
       return data ?? [];
     },
     refetchInterval: 15_000,
+    retry: 2,
   });
 
   const createMutation = useMutation({
     mutationFn: async () => {
+      const result = validateCampaign({ name: formName, prospects: parseInt(formProspects) || 0 });
+      if (!result.success) {
+        const msg = Object.values(result.errors)[0];
+        throw new Error(msg);
+      }
       const { error } = await supabase.from("campaigns").insert({
         user_id: user?.id,
         name: formName.trim(),
@@ -277,7 +285,9 @@ export const CampaignsView = () => {
       </div>
 
       {/* Campaign list */}
-      {isLoading ? (
+      {campaignsError ? (
+        <DataError message={campaignsError.message} onRetry={() => refetch()} />
+      ) : isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-32 w-full rounded-lg" />)}
         </div>

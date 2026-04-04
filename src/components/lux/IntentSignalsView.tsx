@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
+import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -49,7 +50,7 @@ export const IntentSignalsView = () => {
     setCompanyName(""); setType("website_visit"); setSignal(""); setStrength("medium"); setDetails("");
   };
 
-  const { data: signals = [], isLoading } = useQuery({
+  const { data: signals = [], isLoading, error: signalsError, refetch } = useQuery({
     queryKey: ["intent-signals"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -61,6 +62,7 @@ export const IntentSignalsView = () => {
       return data ?? [];
     },
     refetchInterval: 15_000,
+    retry: 2,
   });
 
   const createMutation = useMutation({
@@ -246,7 +248,11 @@ export const IntentSignalsView = () => {
           <h3 className="font-semibold text-foreground text-sm">Feed de Sinais</h3>
         </div>
 
-        {isLoading ? (
+        {signalsError ? (
+          <div className="p-4">
+            <DataError message={signalsError.message} onRetry={() => refetch()} />
+          </div>
+        ) : isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex gap-3">
