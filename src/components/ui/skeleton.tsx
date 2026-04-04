@@ -4,7 +4,7 @@ function Skeleton({ className, ref, ...props }: React.HTMLAttributes<HTMLDivElem
   return (
     <div
       ref={ref}
-      className={cn("animate-pulse rounded-md bg-muted", className)}
+      className={cn("rounded-md skeleton-gold", className)}
       {...props}
     />
   );

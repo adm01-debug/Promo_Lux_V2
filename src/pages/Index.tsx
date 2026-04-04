@@ -35,9 +35,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const slideVariants = {
-  initial: (dir: string) => ({ opacity: 0, x: dir === "forward" ? 40 : -40 }),
-  animate: { opacity: 1, x: 0 },
-  exit: (dir: string) => ({ opacity: 0, x: dir === "forward" ? -20 : 20 }),
+  initial: (dir: string) => ({ opacity: 0, x: dir === "forward" ? 30 : -30, scale: 0.98, filter: "blur(4px)" }),
+  animate: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)" },
+  exit: (dir: string) => ({ opacity: 0, x: dir === "forward" ? -15 : 15, scale: 0.98, filter: "blur(3px)" }),
 };
 
 const Index = () => {
@@ -193,7 +193,7 @@ const Index = () => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ActiveComponent />
               </motion.div>

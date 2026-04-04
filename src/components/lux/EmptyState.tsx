@@ -53,6 +53,20 @@ export const EmptyState = ({
     >
       {/* Animated icon with double ring */}
       <motion.div variants={fadeUp} className="relative mb-8">
+        {/* Outer pulsing ring */}
+        <motion.div
+          animate={{ scale: [1, 1.25, 1], opacity: [0.1, 0.25, 0.1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -inset-6 rounded-3xl border border-primary/10"
+          aria-hidden="true"
+        />
+        {/* Inner breathing ring */}
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="absolute -inset-3 rounded-2xl border border-primary/10"
+          aria-hidden="true"
+        />
         <motion.div
           animate={{ scale: [1, 1.06, 1], rotate: [0, 2, -2, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -60,12 +74,21 @@ export const EmptyState = ({
         >
           <Icon className="h-10 w-10 text-primary/80 drop-shadow-[0_0_6px_hsl(var(--primary)/0.3)]" />
         </motion.div>
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.3, 0.15] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -inset-3 rounded-2xl border border-primary/10"
-          aria-hidden="true"
-        />
+        {/* Floating particles */}
+        {[...Array(3)].map((_, j) => (
+          <motion.div
+            key={j}
+            animate={{
+              y: [0, -12, 0],
+              x: [0, j === 1 ? 8 : -8, 0],
+              opacity: [0, 0.6, 0],
+            }}
+            transition={{ duration: 3, repeat: Infinity, delay: j * 0.8, ease: "easeInOut" }}
+            className="absolute h-1 w-1 rounded-full bg-primary/40"
+            style={{ top: `${20 + j * 20}%`, left: `${15 + j * 30}%` }}
+            aria-hidden="true"
+          />
+        ))}
       </motion.div>
 
       <motion.h3 variants={fadeUp} className="text-lg font-semibold text-foreground mb-1.5">
