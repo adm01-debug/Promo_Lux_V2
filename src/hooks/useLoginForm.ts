@@ -67,6 +67,7 @@ export function useLoginForm() {
         triggerShake();
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
       } else {
+        setShowConfetti(true);
         toast({ title: "Bem-vindo de volta! 🎉", description: "Login realizado com sucesso." });
       }
     } finally {
