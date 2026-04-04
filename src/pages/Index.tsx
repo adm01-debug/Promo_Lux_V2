@@ -43,6 +43,7 @@ const Index = () => {
   const { activeView, navigate, goBack, canGoBack, breadcrumbs, currentLabel, direction } = useNavigationHistory();
   const { recentViews, trackView } = useRecentViews();
   const { collapsed, mobileOpen, toggleCollapse, openMobile, closeMobile } = useSidebarState();
+  const { focusMode, toggleFocusMode } = useFocusMode();
   const { user, signOut } = useAuth();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   useRealtimeCompanies();
