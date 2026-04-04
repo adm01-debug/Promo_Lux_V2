@@ -293,14 +293,14 @@ function ExpandedNavButton({
           {shortcut}
         </kbd>
       )}
-      {item.id === "intent" && (
+      {item.id === "intent" && intentCount > 0 && (
         <span
           className={cn(
             "text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold",
             shortcut ? "" : "ml-auto"
           )}
         >
-          5
+          {intentCount}
         </span>
       )}
     </button>
