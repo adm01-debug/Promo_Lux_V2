@@ -118,44 +118,68 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Mobile overlay */}
+      {/* Mobile overlay with backdrop blur */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/90 z-40 lg:hidden"
+            className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40 lg:hidden"
             onClick={closeMobile}
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
-      <Sidebar
-        activeView={activeView}
-        collapsed={collapsed}
-        mobileOpen={mobileOpen}
-        onNavigate={handleNav}
-        onMobileClose={closeMobile}
-        onToggleCollapse={toggleCollapse}
-      />
+      {/* Sidebar — hidden in focus mode on desktop */}
+      {!focusMode && (
+        <Sidebar
+          activeView={activeView}
+          collapsed={collapsed}
+          mobileOpen={mobileOpen}
+          onNavigate={handleNav}
+          onMobileClose={closeMobile}
+          onToggleCollapse={toggleCollapse}
+        />
+      )}
 
       {/* Main area */}
-      <div className={cn("flex-1 transition-all duration-300", mainMargin)}>
-        <Header
-          breadcrumbs={breadcrumbs}
-          canGoBack={canGoBack}
-          currentLabel={currentLabel}
-          userEmail={user?.email ?? undefined}
-          userAvatarUrl={user?.user_metadata?.avatar_url}
-          onGoBack={goBack}
-          onNavigate={handleNav}
-          onOpenMobileSidebar={openMobile}
-          onSignOut={signOut}
-        />
+      <div className={cn("flex-1 transition-all duration-300", !focusMode && mainMargin)}>
+        {!focusMode && (
+          <Header
+            breadcrumbs={breadcrumbs}
+            canGoBack={canGoBack}
+            currentLabel={currentLabel}
+            userEmail={user?.email ?? undefined}
+            userAvatarUrl={user?.user_metadata?.avatar_url}
+            onGoBack={goBack}
+            onNavigate={handleNav}
+            onOpenMobileSidebar={openMobile}
+            onSignOut={signOut}
+          />
+        )}
 
-        <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel} role="main">
+        {/* Focus mode exit bar */}
+        {focusMode && (
+          <div className="sticky top-0 z-30 flex items-center justify-between px-4 py-2 border-b border-border bg-card/80 backdrop-blur-sm">
+            <span className="text-xs text-muted-foreground font-medium">
+              Modo Foco — <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono border border-border/50">⌘⇧F</kbd> para sair
+            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={toggleFocusMode}
+                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+                >
+                  <Minimize2 className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Sair do Modo Foco</TooltipContent>
+            </Tooltip>
+          </div>
+        )}
+
+        <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel}>
           <Suspense fallback={<ActiveSkeleton />}>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
