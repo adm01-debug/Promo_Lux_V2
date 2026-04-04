@@ -114,7 +114,7 @@ function getTooltipPosition(
   return { top, left, arrowSide };
 }
 
-export const OnboardingTour = () => {
+export const OnboardingTour = forwardRef<HTMLDivElement>((_, _ref) => {
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState<TooltipPosition | null>(null);
