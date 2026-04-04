@@ -1,9 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const mockInvalidateQueries = vi.fn();
-const mockToast = vi.fn();
-const mockInsert = vi.fn().mockResolvedValue({ error: null });
+const { mockInvalidateQueries, mockToast, mockInsert, mockRemoveChannel } = vi.hoisted(() => ({
+  mockInvalidateQueries: vi.fn(),
+  mockToast: vi.fn(),
+  mockInsert: vi.fn().mockResolvedValue({ error: null }),
+  mockRemoveChannel: vi.fn(),
+}));
 let subscribeCb: any = null;
+let capturedChannelName: string | null = null;
+let capturedOnConfig: any = null;
 
 vi.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({ invalidateQueries: mockInvalidateQueries }),
@@ -13,21 +18,26 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: mockToast }),
 }));
 
+const mockUser = { id: "test-user-id" };
+let currentUser: typeof mockUser | null = mockUser;
+
 vi.mock("@/contexts/AuthContext", () => ({
-  useAuth: () => ({ user: { id: "test-user-id" } }),
+  useAuth: () => ({ user: currentUser }),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    channel: () => ({
-      on: (_event: string, _config: any, cb: any) => {
-        subscribeCb = cb;
-        return {
-          subscribe: () => ({}),
-        };
-      },
-    }),
-    removeChannel: vi.fn(),
+    channel: (name: string) => {
+      capturedChannelName = name;
+      return {
+        on: (_event: string, config: any, cb: any) => {
+          capturedOnConfig = config;
+          subscribeCb = cb;
+          return { subscribe: () => ({}) };
+        },
+      };
+    },
+    removeChannel: mockRemoveChannel,
     from: () => ({ insert: mockInsert }),
   },
 }));
@@ -39,7 +49,42 @@ describe("useRealtimeCompanies", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     subscribeCb = null;
+    capturedChannelName = null;
+    capturedOnConfig = null;
+    currentUser = mockUser;
   });
+
+  // --- Private channel tests ---
+
+  it("uses private channel name scoped to user id", () => {
+    renderHook(() => useRealtimeCompanies());
+    expect(capturedChannelName).toBe("private:test-user-id:companies");
+  });
+
+  it("applies user_id filter in subscription config", () => {
+    renderHook(() => useRealtimeCompanies());
+    expect(capturedOnConfig).toMatchObject({
+      event: "*",
+      schema: "public",
+      table: "companies",
+      filter: "user_id=eq.test-user-id",
+    });
+  });
+
+  it("does not subscribe when user is null", () => {
+    currentUser = null;
+    renderHook(() => useRealtimeCompanies());
+    expect(capturedChannelName).toBeNull();
+    expect(subscribeCb).toBeNull();
+  });
+
+  it("removes channel on unmount", () => {
+    const { unmount } = renderHook(() => useRealtimeCompanies());
+    unmount();
+    expect(mockRemoveChannel).toHaveBeenCalled();
+  });
+
+  // --- Existing behavior tests ---
 
   it("subscribes to realtime channel on mount", () => {
     renderHook(() => useRealtimeCompanies());
@@ -55,7 +100,7 @@ describe("useRealtimeCompanies", () => {
     expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ["recent-companies"] });
   });
 
-  it("shows toast on INSERT event", async () => {
+  it("shows toast on INSERT event for scraped company", async () => {
     renderHook(() => useRealtimeCompanies());
     await subscribeCb({
       eventType: "INSERT",
