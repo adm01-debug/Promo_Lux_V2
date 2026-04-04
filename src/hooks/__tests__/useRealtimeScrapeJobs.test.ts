@@ -1,12 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const mockInvalidateQueries = vi.fn();
-const mockToast = vi.fn();
-const mockInsert = vi.fn().mockResolvedValue({ error: null });
+const { mockInvalidateQueries, mockToast, mockInsert, mockRemoveChannel } = vi.hoisted(() => ({
+  mockInvalidateQueries: vi.fn(),
+  mockToast: vi.fn(),
+  mockInsert: vi.fn().mockResolvedValue({ error: null }),
+  mockRemoveChannel: vi.fn(),
+}));
 let subscribeCb: any = null;
 let capturedChannelName: string | null = null;
 let capturedOnConfig: any = null;
-const mockRemoveChannel = vi.fn();
 
 vi.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({ invalidateQueries: mockInvalidateQueries }),
