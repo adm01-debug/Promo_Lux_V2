@@ -11,8 +11,15 @@ export function AuthLogo() {
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
           className="relative"
         >
-          <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
-            <Sparkles className="h-7 w-7 text-primary" />
+          <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center glow-primary relative overflow-hidden">
+            <Sparkles className="h-7 w-7 text-primary relative z-10" />
+            {/* Inner shimmer */}
+            <motion.div
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent"
+              aria-hidden="true"
+            />
           </div>
           <motion.div
             animate={{ rotate: 360 }}
@@ -30,7 +37,7 @@ export function AuthLogo() {
         <h1 className="text-2xl font-bold text-foreground tracking-tight">
           LUX <span className="text-primary glow-text">IA</span>
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-[13px] text-muted-foreground mt-1 tracking-wide">
           Sales Intelligence Platform
         </p>
       </motion.div>
