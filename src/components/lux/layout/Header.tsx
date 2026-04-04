@@ -96,6 +96,21 @@ export const Header = ({
             </TooltipTrigger>
             <TooltipContent>Atalhos de teclado (?)</TooltipContent>
           </Tooltip>
+          {onToggleFocusMode && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground hidden sm:inline-flex"
+                  onClick={onToggleFocusMode}
+                >
+                  <Maximize2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Modo Foco (⌘⇧F)</TooltipContent>
+            </Tooltip>
+          )}
           <ThemeToggle />
           <Button
             variant="ghost"
