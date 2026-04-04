@@ -60,14 +60,22 @@ export const ActivityFeed = () => {
           description="Notificações e eventos aparecerão aqui conforme o sistema operar."
         />
       ) : (
-        <div className="relative max-h-[420px] overflow-y-auto">
+        <div className="relative max-h-[420px] overflow-y-auto scrollbar-thin">
           {/* Animated vertical timeline line */}
           <motion.div
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
-            transition={{ duration: 0.6 }}
-            className="absolute left-[23px] top-4 bottom-4 w-px bg-gradient-to-b from-primary/40 via-border/30 to-transparent origin-top"
-          />
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="absolute left-[23px] top-4 bottom-4 w-px origin-top"
+          >
+            <div className="h-full w-full bg-gradient-to-b from-primary/50 via-primary/20 to-transparent" />
+            {/* Animated pulse traveling down the line */}
+            <motion.div
+              className="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-primary/60 to-transparent"
+              animate={{ top: ["0%", "100%"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
 
           <div className="py-3">
             {activities.map((a, i) => {
