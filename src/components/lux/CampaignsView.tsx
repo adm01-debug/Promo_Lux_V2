@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { validateCampaign } from "@/lib/schemas/campaign";
 import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
