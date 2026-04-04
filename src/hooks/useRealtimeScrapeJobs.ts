@@ -20,8 +20,8 @@ export function useRealtimeScrapeJobs() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "scrape_jobs" },
         async (payload) => {
-          const job = payload.new as any;
-          const oldJob = payload.old as any;
+          const job = payload.new as Record<string, unknown>;
+          const oldJob = payload.old as Record<string, unknown>;
 
           // Only notify on status transitions to completed/failed
           if (oldJob?.status === job?.status) return;
