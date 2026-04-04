@@ -66,8 +66,22 @@ export const WorkflowsView = () => {
 
   const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
     queryKey: ["workflows"],
-    queryFn: workflowApi.list,
-    refetchInterval: 5000,
+    queryFn: async () => {
+      try {
+        return await workflowApi.list();
+      } catch {
+        // Fallback: query directly from database if edge function is unavailable
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { data, error } = await supabase
+          .from("workflows")
+          .select("*, workflow_runs(id, status, started_at, completed_at, results)")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return (data ?? []) as Workflow[];
+      }
+    },
+    refetchInterval: 15000,
+    retry: 1,
   });
 
   const createMutation = useMutation({
