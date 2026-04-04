@@ -55,7 +55,11 @@ export const GradientAvatar = ({ email, name, src, size = "md", className }: Gra
       <img
         src={src}
         alt={name || email || "Avatar"}
-        className={cn("rounded-full object-cover", SIZE_MAP[size], className)}
+        className={cn(
+          "rounded-full object-cover ring-2 ring-primary/20 ring-offset-1 ring-offset-background",
+          SIZE_MAP[size],
+          className
+        )}
       />
     );
   }
@@ -64,6 +68,7 @@ export const GradientAvatar = ({ email, name, src, size = "md", className }: Gra
     <div
       className={cn(
         "rounded-full bg-gradient-to-br flex items-center justify-center font-bold text-white shadow-inner",
+        "ring-2 ring-primary/20 ring-offset-1 ring-offset-background",
         GRADIENTS[gradientIndex],
         SIZE_MAP[size],
         className
