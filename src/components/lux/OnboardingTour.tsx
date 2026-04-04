@@ -373,5 +373,4 @@ export const OnboardingTour = () => {
       )}
     </AnimatePresence>
   );
-});
-OnboardingTour.displayName = "OnboardingTour";
+};

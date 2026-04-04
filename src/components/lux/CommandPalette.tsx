@@ -440,5 +440,4 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
       </CommandList>
     </CommandDialog>
   );
-});
-CommandPalette.displayName = "CommandPalette";
+};

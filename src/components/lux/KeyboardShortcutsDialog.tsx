@@ -62,5 +62,4 @@ export const KeyboardShortcutsDialog = () => {
       </DialogContent>
     </Dialog>
   );
-});
-KeyboardShortcutsDialog.displayName = "KeyboardShortcutsDialog";
+};
