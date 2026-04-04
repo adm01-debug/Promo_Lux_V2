@@ -27,6 +27,7 @@ interface LoginCardProps {
   googleLoading: boolean;
   locked: { locked: boolean; remainingSec: number };
   rateLimitMsg: string | null;
+  shakeError: boolean;
   handleGoogleLogin: () => void;
   handleEmailLogin: (e: React.FormEvent) => void;
   handleEmailSignup: (e: React.FormEvent) => void;
