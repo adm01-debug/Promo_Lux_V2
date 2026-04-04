@@ -53,11 +53,16 @@ export default function LoginPage() {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (guardRate()) return;
-    if (!email.trim() || !password) return;
+
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      toast({ title: "Dados inválidos", description: result.error.issues[0].message, variant: "destructive" });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      const { error } = await supabase.auth.signInWithPassword({ email: result.data.email, password: result.data.password });
       if (error) {
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
       }
