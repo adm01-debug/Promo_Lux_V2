@@ -135,16 +135,34 @@ export const WorkflowsView = () => {
   });
 
   const toggleMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: string }) => workflowApi.toggleStatus(id, status),
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      try {
+        await workflowApi.toggleStatus(id, status);
+      } catch {
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { error } = await supabase.from("workflows").update({ status }).eq("id", id);
+        if (error) throw error;
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workflows"] });
+      queryClient.invalidateQueries({ queryKey: ["active-workflows-count"] });
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: workflowApi.delete,
+    mutationFn: async (id: string) => {
+      try {
+        await workflowApi.delete(id);
+      } catch {
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { error } = await supabase.from("workflows").delete().eq("id", id);
+        if (error) throw error;
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workflows"] });
+      queryClient.invalidateQueries({ queryKey: ["active-workflows-count"] });
       toast({ title: "Workflow removido" });
     },
   });
