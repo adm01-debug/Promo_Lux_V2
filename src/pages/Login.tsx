@@ -91,6 +91,32 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (guardRate()) return;
+    const trimmed = resetEmail.trim();
+    if (!trimmed) return;
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
+        redirectTo: window.location.origin,
+      });
+      if (error) {
+        toast({ title: "Erro", description: error.message, variant: "destructive" });
+      } else {
+        toast({
+          title: "Email enviado ✉️",
+          description: "Verifique sua caixa de entrada para redefinir a senha.",
+        });
+        setShowForgotPassword(false);
+        setResetEmail("");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const locked = isLocked();
 
   return (
