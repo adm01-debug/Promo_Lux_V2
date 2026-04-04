@@ -59,8 +59,12 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
     whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.2, ease: "easeOut" } }}
     whileTap={{ scale: 0.98 }}
     onClick={onClick}
+    onKeyDown={(e) => { if (onClick && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onClick(); } }}
+    role={onClick ? "button" : undefined}
+    tabIndex={onClick ? 0 : undefined}
+    aria-label={`${title}: ${rawNumber !== undefined ? rawNumber : value}${suffix ?? ""}. ${subtitle}`}
     className={cn(
-      "glass rounded-lg p-5 group transition-all duration-300",
+      "glass rounded-lg p-5 group transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
       onClick && "cursor-pointer",
       featured && "breathe-glow",
       CARD_STYLES[title] || "hover:glow-primary"
