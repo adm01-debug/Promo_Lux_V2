@@ -532,15 +532,27 @@
   }
 
   .light .glass {
-    box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05);
+    box-shadow: 0 1px 4px 0 hsl(var(--foreground) / 0.06),
+                0 0 0 1px hsl(var(--border) / 0.5);
+    border-color: hsl(var(--border) / 0.6);
   }
 
   .light .glass-interactive {
-    box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05);
+    box-shadow: 0 1px 4px 0 hsl(var(--foreground) / 0.06);
   }
 
   .light .glass-interactive:hover {
-    box-shadow: 0 4px 16px -4px hsl(var(--primary) / 0.15);
+    box-shadow: 0 6px 20px -6px hsl(var(--primary) / 0.18);
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  .light .glow-primary {
+    box-shadow: 0 4px 14px -4px hsl(var(--primary) / 0.2);
+  }
+
+  .light .glow-text {
+    text-shadow: none;
+    color: hsl(var(--primary));
   }
 
   .focus-ring {
