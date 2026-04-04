@@ -1,6 +1,19 @@
 /**
  * Converts an array of objects to a CSV string and triggers download.
+ * Includes CSV injection protection against formula injection attacks.
  */
+
+const DANGEROUS_PREFIXES = ["=", "+", "-", "@", "\t", "\r"];
+
+function sanitizeCell(value: unknown): string {
+  const str = value === null || value === undefined ? "" : String(value);
+  // Prevent CSV injection: prefix dangerous chars with a single quote
+  if (str.length > 0 && DANGEROUS_PREFIXES.some((p) => str.startsWith(p))) {
+    return `'${str}`;
+  }
+  return str;
+}
+
 export function downloadCSV(rows: Record<string, unknown>[], filename: string) {
   if (rows.length === 0) return;
 
@@ -10,8 +23,7 @@ export function downloadCSV(rows: Record<string, unknown>[], filename: string) {
     ...rows.map((row) =>
       headers
         .map((h) => {
-          const val = row[h];
-          const str = val === null || val === undefined ? "" : String(val);
+          const str = sanitizeCell(row[h]);
           // Escape quotes and wrap in quotes if contains comma/newline/quote
           if (str.includes(",") || str.includes("\n") || str.includes('"')) {
             return `"${str.replace(/"/g, '""')}"`;
