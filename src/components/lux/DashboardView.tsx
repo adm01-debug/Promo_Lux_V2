@@ -5,6 +5,7 @@ import { AutomationsList } from "@/components/lux/AutomationsList";
 import { CompanyTable } from "@/components/lux/CompanyTable";
 import { ActivityFeed } from "@/components/lux/ActivityFeed";
 import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
+import { QuickActions } from "@/components/lux/QuickActions";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical } from "lucide-react";
