@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Bot, Send, Sparkles, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface AgentMessage {
   id: string;
@@ -16,19 +17,86 @@ interface AgentMessage {
 
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-agent`;
 
+const WELCOME_MSG: AgentMessage = {
+  id: "welcome",
+  role: "agent",
+  content: "👋 Olá! Sou o Agente IA do **LUX IA**.\n\nPosso ajudar com:\n- 📊 Analisar empresas do banco\n- 🎯 Consultar scores IPC\n- 🔍 Encontrar empresas por setor/localização\n- 💡 Sugerir ações de prospecção\n\nO que você precisa?",
+  timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+};
+
+function formatTime(dateStr?: string) {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
+
+function MessageBubble({ msg }: { msg: AgentMessage }) {
+  return (
+    <div className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
+      {msg.role === "agent" && (
+        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+          <Bot className="h-4 w-4 text-primary" />
+        </div>
+      )}
+      <div
+        className={cn(
+          "rounded-lg px-4 py-3 max-w-[80%]",
+          msg.role === "user"
+            ? "bg-primary text-primary-foreground"
+            : "bg-secondary/50 text-foreground"
+        )}
+      >
+        <div className="text-sm whitespace-pre-wrap leading-relaxed prose-sm">
+          {msg.content.split("\n").map((line, i) => {
+            const parts = line.split(/\*\*(.*?)\*\*/g);
+            return (
+              <p key={i} className={i > 0 ? "mt-1" : ""}>
+                {parts.map((part, j) =>
+                  j % 2 === 1 ? (
+                    <strong key={j} className="font-semibold">{part}</strong>
+                  ) : (
+                    <span key={j}>{part}</span>
+                  )
+                )}
+              </p>
+            );
+          })}
+        </div>
+        <span className="text-[10px] opacity-50 mt-1.5 block">{msg.timestamp}</span>
+      </div>
+    </div>
+  );
+}
+
 export const AIAgentView = () => {
-  const [messages, setMessages] = useState<AgentMessage[]>([
-    {
-      id: "welcome",
-      role: "agent",
-      content: "👋 Olá! Sou o Agente IA do **LUX IA**.\n\nPosso ajudar com:\n- 📊 Analisar empresas do banco\n- 🎯 Consultar scores IPC\n- 🔍 Encontrar empresas por setor/localização\n- 💡 Sugerir ações de prospecção\n\nO que você precisa?",
-      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-    },
-  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+
+  // Load persisted messages
+  const { data: persistedMessages } = useQuery({
+    queryKey: ["agent-chat-messages"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("agent_chat_messages")
+        .select("id, role, content, created_at")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((m) => ({
+        id: m.id,
+        role: m.role as "user" | "agent",
+        content: m.content,
+        timestamp: formatTime(m.created_at),
+      }));
+    },
+    staleTime: 60_000,
+  });
+
+  const messages: AgentMessage[] =
+    persistedMessages && persistedMessages.length > 0
+      ? persistedMessages
+      : [WELCOME_MSG];
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -36,20 +104,23 @@ export const AIAgentView = () => {
     }
   }, [messages]);
 
+  const persistMsg = useCallback(
+    async (role: "user" | "agent", content: string) => {
+      await supabase.from("agent_chat_messages").insert({ role, content });
+    },
+    []
+  );
+
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
 
-    const userMsg: AgentMessage = {
-      id: crypto.randomUUID(),
-      role: "user",
-      content: text,
-      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+
+    // Persist user message
+    await persistMsg("user", text);
+    queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -71,42 +142,25 @@ export const AIAgentView = () => {
       }
 
       const { reply } = await res.json();
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          role: "agent",
-          content: reply,
-          timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-        },
-      ]);
+      await persistMsg("agent", reply);
     } catch (err: unknown) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          role: "agent",
-          content: `❌ Erro ao processar: ${err instanceof Error ? err.message : "Erro desconhecido"}\n\nTente novamente em alguns segundos.`,
-          timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-        },
-      ]);
+      const errorMsg = `❌ Erro ao processar: ${err instanceof Error ? err.message : "Erro desconhecido"}\n\nTente novamente em alguns segundos.`;
+      await persistMsg("agent", errorMsg);
     } finally {
       setIsLoading(false);
+      queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
       inputRef.current?.focus();
     }
   };
 
-  const clearChat = () => {
-    setMessages([
-      {
-        id: "welcome",
-        role: "agent",
-        content: "🔄 Chat reiniciado. Como posso ajudar?",
-        timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
-      },
-    ]);
-  };
+  const clearMutation = useMutation({
+    mutationFn: async () => {
+      await supabase.from("agent_chat_messages").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
+    },
+  });
 
   return (
     <div className="space-y-4">
@@ -123,53 +177,16 @@ export const AIAgentView = () => {
             Consulte seus dados, analise empresas e receba recomendações inteligentes
           </p>
         </div>
-        <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={clearChat}>
+        <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={() => clearMutation.mutate()}>
           <Trash2 className="h-3.5 w-3.5" /> Limpar
         </Button>
       </div>
 
-      {/* Chat area */}
       <div className="glass rounded-lg overflow-hidden flex flex-col" style={{ height: "calc(100vh - 240px)" }}>
         <ScrollArea className="flex-1 p-4" ref={scrollRef}>
           <div className="space-y-4 max-w-3xl mx-auto">
             {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}
-              >
-                {msg.role === "agent" && (
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
-                    <Bot className="h-4 w-4 text-primary" />
-                  </div>
-                )}
-                <div
-                  className={cn(
-                    "rounded-lg px-4 py-3 max-w-[80%]",
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary/50 text-foreground"
-                  )}
-                >
-                  <div className="text-sm whitespace-pre-wrap leading-relaxed prose-sm">
-                    {msg.content.split("\n").map((line, i) => {
-                      // Basic markdown: bold
-                      const parts = line.split(/\*\*(.*?)\*\*/g);
-                      return (
-                        <p key={i} className={i > 0 ? "mt-1" : ""}>
-                          {parts.map((part, j) =>
-                            j % 2 === 1 ? (
-                              <strong key={j} className="font-semibold">{part}</strong>
-                            ) : (
-                              <span key={j}>{part}</span>
-                            )
-                          )}
-                        </p>
-                      );
-                    })}
-                  </div>
-                  <span className="text-[10px] opacity-50 mt-1.5 block">{msg.timestamp}</span>
-                </div>
-              </div>
+              <MessageBubble key={msg.id} msg={msg} />
             ))}
 
             {isLoading && (
@@ -186,7 +203,6 @@ export const AIAgentView = () => {
           </div>
         </ScrollArea>
 
-        {/* Input */}
         <div className="border-t border-border/30 p-4">
           <form
             onSubmit={(e) => {
