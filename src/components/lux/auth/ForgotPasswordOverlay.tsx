@@ -1,4 +1,5 @@
 import { ArrowLeft, Mail, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { EmailInput } from "./EmailInput";
 
@@ -20,11 +21,20 @@ export function ForgotPasswordOverlay({
   disabled,
 }: ForgotPasswordOverlayProps) {
   return (
-    <div className="absolute inset-0 bg-background/95 backdrop-blur-sm rounded-2xl p-8 flex flex-col justify-center space-y-4 z-10">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="absolute inset-0 bg-background/95 backdrop-blur-sm rounded-2xl p-8 flex flex-col justify-center space-y-4 z-10"
+      role="dialog"
+      aria-label="Redefinir senha"
+      aria-modal="true"
+    >
       <button
         type="button"
         onClick={onBack}
-        className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
+        className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors rounded-lg p-1.5 hover:bg-secondary/50"
         aria-label="Voltar ao login"
       >
         <ArrowLeft className="h-5 w-5" />
@@ -45,7 +55,7 @@ export function ForgotPasswordOverlay({
         <Button
           type="submit"
           disabled={disabled || isSubmitting}
-          className="w-full gap-2"
+          className="w-full gap-2 h-11"
           size="lg"
         >
           {isSubmitting ? (
@@ -56,6 +66,6 @@ export function ForgotPasswordOverlay({
           Enviar link
         </Button>
       </form>
-    </div>
+    </motion.div>
   );
 }
