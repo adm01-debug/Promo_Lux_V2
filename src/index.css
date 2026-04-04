@@ -665,6 +665,17 @@
   100% { transform: translateX(-100%); }
 }
 
+/* ── Safe area for mobile bottom nav ── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@media (max-width: 1023px) {
+  main {
+    padding-bottom: 4rem;
+  }
+}
+
 /* ── Enhanced focus-visible for keyboard navigation ── */
 *:focus-visible {
   outline: 2px solid hsl(var(--ring));
