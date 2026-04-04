@@ -85,9 +85,30 @@ export const WorkflowsView = () => {
   });
 
   const createMutation = useMutation({
-    mutationFn: workflowApi.create,
+    mutationFn: async (data: Parameters<typeof workflowApi.create>[0]) => {
+      try {
+        return await workflowApi.create(data);
+      } catch {
+        // Fallback: insert directly via DB if edge function is unavailable
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { data: row, error } = await supabase
+          .from("workflows")
+          .insert({
+            name: data.name,
+            description: data.description,
+            status: "active",
+            steps: data.steps as unknown as import("@/integrations/supabase/types").Json,
+            config: data.config as unknown as import("@/integrations/supabase/types").Json,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return row as unknown as Workflow;
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workflows"] });
+      queryClient.invalidateQueries({ queryKey: ["active-workflows-count"] });
       toast({ title: "Workflow criado!", description: "Pipeline configurado com sucesso." });
       setCreateOpen(false);
     },
