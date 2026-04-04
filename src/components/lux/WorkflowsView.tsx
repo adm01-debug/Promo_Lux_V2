@@ -300,10 +300,10 @@ export const WorkflowsView = () => {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06 }}
-                className="glass rounded-lg overflow-hidden"
+                className="glass rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.2)] hover:border-primary/20 border border-transparent"
               >
                 <button
-                  className="w-full p-5 text-left flex items-center justify-between hover:bg-secondary/20 transition-colors"
+                  className="w-full p-5 text-left flex items-center justify-between hover:bg-primary/5 transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : wf.id)}
                 >
                   <div className="flex items-center gap-4 flex-wrap">
