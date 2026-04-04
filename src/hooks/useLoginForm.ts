@@ -16,6 +16,7 @@ export function useLoginForm() {
   const [resetEmail, setResetEmail] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
   const [shakeError, setShakeError] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const triggerShake = useCallback(() => {
     setShakeError(true);
