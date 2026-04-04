@@ -35,9 +35,27 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const slideVariants = {
-  initial: (dir: string) => ({ opacity: 0, x: dir === "forward" ? 30 : -30, scale: 0.98, filter: "blur(4px)" }),
-  animate: { opacity: 1, x: 0, scale: 1, filter: "blur(0px)" },
-  exit: (dir: string) => ({ opacity: 0, x: dir === "forward" ? -15 : 15, scale: 0.98, filter: "blur(3px)" }),
+  initial: (dir: string) => ({
+    opacity: 0,
+    x: dir === "forward" ? 40 : -40,
+    y: 6,
+    scale: 0.97,
+    filter: "blur(6px)",
+  }),
+  animate: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+  },
+  exit: (dir: string) => ({
+    opacity: 0,
+    x: dir === "forward" ? -20 : 20,
+    y: -4,
+    scale: 0.98,
+    filter: "blur(4px)",
+  }),
 };
 
 const Index = () => {
