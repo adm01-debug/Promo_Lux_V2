@@ -178,9 +178,9 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
 
   const greeting = (() => {
     const h = new Date().getHours();
-    if (h < 12) return "Bom dia";
-    if (h < 18) return "Boa tarde";
-    return "Boa noite";
+    const name = user?.user_metadata?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "";
+    const timeGreeting = h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
+    return name ? `${timeGreeting}, ${name}` : timeGreeting;
   })();
 
   return (
