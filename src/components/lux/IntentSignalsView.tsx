@@ -50,7 +50,7 @@ export const IntentSignalsView = () => {
     setCompanyName(""); setType("website_visit"); setSignal(""); setStrength("medium"); setDetails("");
   };
 
-  const { data: signals = [], isLoading } = useQuery({
+  const { data: signals = [], isLoading, error: signalsError, refetch } = useQuery({
     queryKey: ["intent-signals"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -62,6 +62,7 @@ export const IntentSignalsView = () => {
       return data ?? [];
     },
     refetchInterval: 15_000,
+    retry: 2,
   });
 
   const createMutation = useMutation({
