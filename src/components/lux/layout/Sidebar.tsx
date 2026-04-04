@@ -284,27 +284,36 @@ function ExpandedNavButton({
   const shortcut = getShortcut(item.id);
 
   const btn = (
-    <button
+    <motion.button
       data-tour={item.id}
       onClick={onClick}
       onMouseEnter={onPrefetch}
       aria-current={isActive ? "page" : undefined}
+      whileHover={{ x: 3 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring" as const, stiffness: 400, damping: 25 }}
       className={cn(
-        "relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.97]",
+        "relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200",
         isActive
           ? "text-primary"
-          : "text-muted-foreground hover:text-foreground hover:bg-secondary/30 hover:translate-x-0.5"
+          : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
       )}
     >
       {isActive && (
         <motion.div
           layoutId="sidebar-active-bg"
-          className="absolute inset-0 rounded-lg bg-primary/15 border border-primary/25 shadow-[0_0_12px_hsl(var(--primary)/0.15)]"
-          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          className="absolute inset-0 rounded-lg bg-primary/15 border border-primary/25 shadow-[0_0_16px_hsl(var(--primary)/0.18)]"
+          transition={{ type: "spring" as const, stiffness: 350, damping: 30 }}
           aria-hidden="true"
         />
       )}
-      <Icon className="h-4 w-4 relative z-10" />
+      <motion.div
+        className="relative z-10"
+        animate={isActive ? { rotate: [0, -8, 8, 0] } : {}}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <Icon className="h-4 w-4" />
+      </motion.div>
       <span className="relative z-10">{item.label}</span>
       {shortcut && (
         <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline relative z-10">
@@ -312,16 +321,19 @@ function ExpandedNavButton({
         </kbd>
       )}
       {item.id === "intent" && intentCount > 0 && (
-        <span
+        <motion.span
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring" as const, stiffness: 500, damping: 20 }}
           className={cn(
             "text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold relative z-10",
             shortcut ? "" : "ml-auto"
           )}
         >
           {intentCount}
-        </span>
+        </motion.span>
       )}
-    </button>
+    </motion.button>
   );
 
   if (shortcut) {
