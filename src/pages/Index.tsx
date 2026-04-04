@@ -99,6 +99,7 @@ const Index = () => {
         Pular para o conteúdo
       </a>
 
+      <ConnectionStatus />
       <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
       <KeyboardShortcutsDialog />
