@@ -171,7 +171,7 @@ export const GmapsScraperView = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="text-xs text-muted-foreground">Idioma</Label>
-                    <Select value={lang} onValueChange={setLang}>
+                    <Select value={lang} onValueChange={(v) => setLang(v as "pt" | "en" | "es")}>
                       <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="pt">Português</SelectItem>
