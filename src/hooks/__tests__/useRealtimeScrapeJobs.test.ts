@@ -89,9 +89,9 @@ describe("useRealtimeScrapeJobs", () => {
       new: { status: "failed", name: "Job4", error_message: "err", id: "j4" },
       old: { status: "running" },
     });
-    expect(mockInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "scrape", title: expect.stringContaining("falhou") })
-    );
+    expect(mockInsert).toHaveBeenCalledWith([
+      expect.objectContaining({ type: "scrape", title: expect.stringContaining("falhou") }),
+    ]);
   });
 
   it("invalidates scrape-jobs and dashboard queries", async () => {
