@@ -163,6 +163,7 @@ export const Sidebar = ({
                 isActive={activeView === item.id}
                 onClick={() => onNavigate(item.id)}
                 onPrefetch={() => prefetchView(item.id)}
+                intentCount={item.id === "intent" ? intentCount : 0}
               />
             )}
           </div>
