@@ -10,6 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { View } from "@/hooks/useNavigationHistory";
+import { NAV_ITEMS } from "@/components/lux/layout/Sidebar";
 import { motion } from "framer-motion";
 
 interface BreadcrumbEntry {
@@ -23,6 +24,14 @@ interface AppBreadcrumbsProps {
   onGoBack: () => void;
   onNavigate: (view: View) => void;
   currentLabel: string;
+}
+
+function getViewIcon(view?: View) {
+  if (!view) return null;
+  const item = NAV_ITEMS.find((n) => n.id === view);
+  if (!item) return null;
+  const Icon = item.icon;
+  return <Icon className="h-3.5 w-3.5" />;
 }
 
 export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
@@ -51,22 +60,26 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
           <BreadcrumbList>
             {breadcrumbs.map((crumb, i) => {
               const isLast = i === breadcrumbs.length - 1;
+              const icon = getViewIcon(crumb.view);
               return (
                 <BreadcrumbItem key={i}>
                   {i > 0 && <BreadcrumbSeparator />}
                   {isLast ? (
-                    <BreadcrumbPage className="text-foreground font-semibold text-sm">
+                    <BreadcrumbPage className="text-foreground font-semibold text-sm flex items-center gap-1.5">
+                      {icon && <span className="text-primary">{icon}</span>}
                       {crumb.label}
                     </BreadcrumbPage>
                   ) : crumb.view ? (
                     <BreadcrumbLink
-                      className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
+                      className="cursor-pointer text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
                       onClick={() => onNavigate(crumb.view!)}
                     >
+                      {icon && <span className="text-muted-foreground/60">{icon}</span>}
                       {crumb.label}
                     </BreadcrumbLink>
                   ) : (
-                    <span className="text-xs text-muted-foreground/60">
+                    <span className="text-xs text-muted-foreground/60 flex items-center gap-1.5">
+                      {icon}
                       {crumb.label}
                     </span>
                   )}
