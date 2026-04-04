@@ -373,4 +373,5 @@ export const OnboardingTour = forwardRef<HTMLDivElement>((_, _ref) => {
       )}
     </AnimatePresence>
   );
-};
+});
+OnboardingTour.displayName = "OnboardingTour";
