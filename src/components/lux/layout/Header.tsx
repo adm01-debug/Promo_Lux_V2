@@ -34,7 +34,7 @@ interface HeaderProps {
   onToggleFocusMode?: () => void;
 }
 
-export const Header = ({
+export const Header = memo(({
   breadcrumbs,
   canGoBack,
   currentLabel,
