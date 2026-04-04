@@ -109,7 +109,7 @@ interface QuickAction {
   action: () => void;
 }
 
-export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(({ onNavigate, recentViews = [] }, ref) => {
+export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
