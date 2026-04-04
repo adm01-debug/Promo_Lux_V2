@@ -36,18 +36,20 @@ export function useRealtimeScrapeJobs() {
 
             toast({ title, description: message });
 
-            await supabase.from("notifications").insert({
-              user_id: user?.id,
-              title,
-              message,
-              type: "scrape",
-              metadata: {
-                job_id: job.id,
-                job_name: job.name,
-                results_count: count,
-                source: job.source,
-              },
-            });
+            if (user?.id) {
+              await supabase.from("notifications").insert({
+                user_id: user.id,
+                title,
+                message,
+                type: "scrape",
+                metadata: {
+                  job_id: job.id,
+                  job_name: job.name,
+                  results_count: count,
+                  source: job.source,
+                },
+              });
+            }
           } else if (job.status === "failed") {
             const title = "❌ Raspagem falhou";
             const message = `"${job.name}" falhou: ${job.error_message ?? "erro desconhecido"}.`;
