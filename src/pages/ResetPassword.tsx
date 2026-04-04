@@ -1,29 +1,26 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Lock, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
+import { Sparkles, Lock, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { PasswordInput } from "@/components/lux/auth/PasswordInput";
+import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isValidSession, setIsValidSession] = useState(false);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    // Check if user arrived via a recovery link
     const handleRecovery = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setIsValidSession(true);
-      }
+      if (session) setIsValidSession(true);
       setChecking(false);
     };
 
@@ -68,7 +65,7 @@ export default function ResetPasswordPage() {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center" role="status" aria-label="Carregando">
         <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       </div>
     );
@@ -77,9 +74,9 @@ export default function ResetPasswordPage() {
   if (!isValidSession) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 text-center">
+        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 text-center" role="main">
           <div className="h-12 w-12 rounded-xl bg-destructive/10 flex items-center justify-center mx-auto">
-            <Lock className="h-6 w-6 text-destructive" />
+            <Lock className="h-6 w-6 text-destructive" aria-hidden="true" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">Link inválido</h1>
@@ -98,9 +95,9 @@ export default function ResetPasswordPage() {
   if (isSuccess) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 text-center">
+        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 text-center" role="status">
           <div className="h-12 w-12 rounded-xl bg-success/10 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="h-6 w-6 text-success" />
+            <CheckCircle2 className="h-6 w-6 text-success" aria-hidden="true" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">Senha redefinida!</h1>
@@ -113,11 +110,11 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6">
+      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6" role="main">
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center">
             <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center glow-primary">
-              <Sparkles className="h-6 w-6 text-primary" />
+              <Sparkles className="h-6 w-6 text-primary" aria-hidden="true" />
             </div>
           </div>
           <div>
@@ -127,52 +124,27 @@ export default function ResetPasswordPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="new-password" className="text-xs text-muted-foreground">Nova senha (mín. 8 caracteres)</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-              <Input
-                id="new-password"
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10 bg-secondary/30 border-border/30"
-                required
-                minLength={8}
-                autoComplete="new-password"
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
+          <PasswordInput
+            id="new-password"
+            label="Nova senha (mín. 8 caracteres)"
+            value={password}
+            onChange={setPassword}
+            autoComplete="new-password"
+            minLength={8}
+          />
+          <PasswordStrengthMeter password={password} />
 
-          <div className="space-y-1.5">
-            <Label htmlFor="confirm-password" className="text-xs text-muted-foreground">Confirmar senha</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-              <Input
-                id="confirm-password"
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="pl-10 bg-secondary/30 border-border/30"
-                required
-                minLength={8}
-                autoComplete="new-password"
-              />
-            </div>
-          </div>
+          <PasswordInput
+            id="confirm-password"
+            label="Confirmar senha"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+            autoComplete="new-password"
+            minLength={8}
+          />
 
           {password && confirmPassword && password !== confirmPassword && (
-            <p className="text-xs text-destructive">As senhas não coincidem.</p>
+            <p className="text-xs text-destructive" role="alert">As senhas não coincidem.</p>
           )}
 
           <Button type="submit" disabled={isSubmitting || !password || !confirmPassword} className="w-full gap-2" size="lg">
