@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { View } from "@/hooks/useNavigationHistory";
-import { useState } from "react";
+import { useState, memo } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
