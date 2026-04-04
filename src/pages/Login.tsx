@@ -9,7 +9,7 @@ export default function LoginPage() {
   return (
     <>
       {form.googleLoading && <GoogleLoadingOverlay />}
-      <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
         {/* Ambient glow */}
         <div
           className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[120px] pointer-events-none"
