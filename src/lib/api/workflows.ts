@@ -14,7 +14,7 @@ export interface WorkflowRun {
   status: string;
   started_at: string;
   completed_at: string | null;
-  results: Record<string, any>;
+  results: Record<string, unknown>;
 }
 
 export interface Workflow {
