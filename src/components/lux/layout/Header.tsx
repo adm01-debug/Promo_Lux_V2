@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
 import { View } from "@/hooks/useNavigationHistory";
-import { useState, memo } from "react";
+import { useState, useEffect, memo } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,10 +47,19 @@ export const Header = memo(({
   onToggleFocusMode,
 }: HeaderProps) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const unreadCount = useNotificationCount();
 
+  useEffect(() => {
+    const main = document.querySelector("main");
+    if (!main) return;
+    const handler = () => setScrolled(main.scrollTop > 8);
+    main.addEventListener("scroll", handler, { passive: true });
+    return () => main.removeEventListener("scroll", handler);
+  }, []);
+
   return (
-    <header className="border-b border-border glass sticky top-0 z-30">
+    <header className={`border-b border-border glass sticky top-0 z-30 transition-all duration-300 ${scrolled ? "shadow-lg shadow-black/10 backdrop-blur-xl bg-background/80" : "backdrop-blur-md"}`}>
       <div className="flex items-center justify-between h-14 px-4 lg:px-6">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <button
@@ -118,9 +127,9 @@ export const Header = memo(({
             className="h-8 w-8 text-muted-foreground hover:text-foreground relative"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
           >
-            <Bell className="h-4 w-4" />
+            <Bell className={`h-4 w-4 transition-transform ${unreadCount > 0 ? "animate-[wiggle_0.5s_ease-in-out]" : ""}`} />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center animate-pulse shadow-[0_0_8px_hsl(var(--primary)/0.4)]">
                 {unreadCount}
               </span>
             )}
