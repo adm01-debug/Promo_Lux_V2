@@ -27,6 +27,7 @@ const getStatus = (status: string) => statusConfig[status] || statusConfig["pend
 
 export const GmapsScraperView = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [jobName, setJobName] = useState("");
   const [keywords, setKeywords] = useState("");
