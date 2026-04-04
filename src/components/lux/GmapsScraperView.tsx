@@ -48,18 +48,19 @@ export const GmapsScraperView = () => {
 
   // Realtime subscription for scrape_jobs
   useEffect(() => {
+    if (!user?.id) return;
     const channel = supabase
-      .channel("scrape-jobs-realtime")
+      .channel(`private:${user.id}:gmaps-jobs`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "scrape_jobs" },
+        { event: "*", schema: "public", table: "scrape_jobs", filter: `user_id=eq.${user.id}` },
         () => {
           queryClient.invalidateQueries({ queryKey: ["gmaps-jobs"] });
         }
       )
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [queryClient]);
+  }, [queryClient, user?.id]);
 
   const jobs = data?.jobs || [];
   const apiOnline = data?.api_online ?? false;

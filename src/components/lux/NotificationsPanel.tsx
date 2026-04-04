@@ -76,11 +76,12 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 
   // Realtime subscription
   useEffect(() => {
+    if (!user?.id) return;
     const channel = supabase
-      .channel("notifications-realtime")
+      .channel(`private:${user.id}:notifications`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "notifications" },
+        { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
         (payload) => {
           queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
           queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
@@ -99,7 +100,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient]);
+  }, [queryClient, user?.id]);
 
   const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
