@@ -18,16 +18,34 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// ── Structured Logger ──
+function createLogger(requestId: string) {
+  const base = { function: "ai-agent", request_id: requestId };
+  return {
+    info: (msg: string, data?: Record<string, unknown>) =>
+      console.log(JSON.stringify({ ...base, level: "info", msg, ...data, ts: new Date().toISOString() })),
+    warn: (msg: string, data?: Record<string, unknown>) =>
+      console.warn(JSON.stringify({ ...base, level: "warn", msg, ...data, ts: new Date().toISOString() })),
+    error: (msg: string, data?: Record<string, unknown>) =>
+      console.error(JSON.stringify({ ...base, level: "error", msg, ...data, ts: new Date().toISOString() })),
+  };
+}
+
 const MessageSchema = z.object({
   message: z.string().min(1, "Message is required").max(2000, "Message too long"),
 });
 
 serve(async (req) => {
+  const requestId = crypto.randomUUID();
+  const log = createLogger(requestId);
   const corsHeaders = getCorsHeaders(req);
 
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const start = performance.now();
+  log.info("request_start", { method: req.method });
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -38,6 +56,7 @@ serve(async (req) => {
     // Validate JWT
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
+      log.warn("auth_missing");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -48,6 +67,7 @@ serve(async (req) => {
     });
     const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
     if (claimsError || !claimsData?.claims) {
+      log.warn("auth_invalid", { error: claimsError?.message });
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -60,6 +80,7 @@ serve(async (req) => {
     // Validate input with Zod
     const parsed = MessageSchema.safeParse(await req.json());
     if (!parsed.success) {
+      log.warn("validation_failed", { errors: parsed.error.flatten().fieldErrors });
       return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -145,18 +166,22 @@ Se o usuário pedir algo que requer ação (criar workflow, raspar, etc.), descr
 
     if (!aiResponse.ok) {
       const errBody = await aiResponse.text();
-      console.error("AI API error:", aiResponse.status, errBody);
+      log.error("ai_api_error", { status: aiResponse.status, body: errBody.slice(0, 500) });
       throw new Error(`AI API error: ${aiResponse.status}`);
     }
 
     const aiResult = await aiResponse.json();
     const reply = aiResult.choices?.[0]?.message?.content ?? "Desculpe, não consegui processar sua mensagem.";
 
+    const duration = Math.round(performance.now() - start);
+    log.info("request_complete", { duration_ms: duration, user_id: userId });
+
     return new Response(JSON.stringify({ reply }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("AI Agent error:", err);
+    const duration = Math.round(performance.now() - start);
+    log.error("request_failed", { error: (err as Error).message, duration_ms: duration });
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

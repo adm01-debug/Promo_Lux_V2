@@ -15,6 +15,17 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// ── Structured Logger ──
+function createLogger(requestId: string) {
+  const base = { function: "rls-tests", request_id: requestId };
+  return {
+    info: (msg: string, data?: Record<string, unknown>) =>
+      console.log(JSON.stringify({ ...base, level: "info", msg, ...data, ts: new Date().toISOString() })),
+    error: (msg: string, data?: Record<string, unknown>) =>
+      console.error(JSON.stringify({ ...base, level: "error", msg, ...data, ts: new Date().toISOString() })),
+  };
+}
+
 interface TestResult {
   name: string;
   passed: boolean;
@@ -22,8 +33,13 @@ interface TestResult {
 }
 
 Deno.serve(async (req) => {
+  const requestId = crypto.randomUUID();
+  const log = createLogger(requestId);
   const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  const start = performance.now();
+  log.info("rls_test_start");
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -115,10 +131,18 @@ Deno.serve(async (req) => {
     await admin.auth.admin.deleteUser(userB.id);
 
   } catch (err) {
+    log.error("rls_test_setup_error", { error: (err as Error).message });
     results.push({ name: "SETUP_ERROR", passed: false, detail: (err as Error).message });
   }
 
   const allPassed = results.every(r => r.passed);
+  const duration = Math.round(performance.now() - start);
+  log.info("rls_test_complete", {
+    duration_ms: duration,
+    total: results.length,
+    passed: results.filter(r => r.passed).length,
+    failed: results.filter(r => !r.passed).length,
+  });
 
   return new Response(
     JSON.stringify({ allPassed, total: results.length, passed: results.filter(r => r.passed).length, failed: results.filter(r => !r.passed).length, results }, null, 2),

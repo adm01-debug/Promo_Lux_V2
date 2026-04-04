@@ -20,6 +20,19 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// ── Structured Logger ──
+function createLogger(requestId: string) {
+  const base = { function: "gmaps-proxy", request_id: requestId };
+  return {
+    info: (msg: string, data?: Record<string, unknown>) =>
+      console.log(JSON.stringify({ ...base, level: "info", msg, ...data, ts: new Date().toISOString() })),
+    warn: (msg: string, data?: Record<string, unknown>) =>
+      console.warn(JSON.stringify({ ...base, level: "warn", msg, ...data, ts: new Date().toISOString() })),
+    error: (msg: string, data?: Record<string, unknown>) =>
+      console.error(JSON.stringify({ ...base, level: "error", msg, ...data, ts: new Date().toISOString() })),
+  };
+}
+
 function badRequest(corsHeaders: Record<string, string>, details: unknown) {
   return new Response(JSON.stringify({ error: "Invalid input", details }), {
     status: 400,
@@ -51,11 +64,15 @@ const SyncResultsSchema = z.object({
 const ActionSchema = z.enum(["list", "create", "delete", "sync-results"]);
 
 serve(async (req) => {
+  const requestId = crypto.randomUUID();
+  const log = createLogger(requestId);
   const corsHeaders = getCorsHeaders(req);
 
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const start = performance.now();
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -64,6 +81,7 @@ serve(async (req) => {
   // Validate JWT
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
+    log.warn("auth_missing");
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -74,6 +92,7 @@ serve(async (req) => {
   });
   const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
   if (claimsError || !claimsData?.claims) {
+    log.warn("auth_invalid", { error: claimsError?.message });
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -92,6 +111,8 @@ serve(async (req) => {
     return badRequest(corsHeaders, { action: "Must be one of: list, create, delete, sync-results" });
   }
   const action = actionParsed.data;
+
+  log.info("request_start", { method: req.method, action, user_id: userId });
 
   try {
     // LIST JOBS
@@ -134,7 +155,7 @@ serve(async (req) => {
           }
         }
       } catch (err) {
-        console.error("GMaps API list error:", err);
+        log.error("gmaps_api_list_error", { error: (err as Error).message });
       }
 
       const { data: dbJobs, error } = await supabase
@@ -145,6 +166,9 @@ serve(async (req) => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, jobs_count: dbJobs?.length ?? 0 });
 
       return new Response(JSON.stringify({ jobs: dbJobs, api_online: apiOnline }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -217,8 +241,11 @@ serve(async (req) => {
             .eq("id", dbJob.id);
         }
       } catch (err) {
-        console.error("GMaps API create error:", err);
+        log.error("gmaps_api_create_error", { error: (err as Error).message });
       }
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, job_id: dbJob.id, external_id: externalId });
 
       return new Response(
         JSON.stringify({ id: dbJob.id, external_id: externalId, status: externalId ? "running" : "pending" }),
@@ -247,12 +274,15 @@ serve(async (req) => {
             signal: AbortSignal.timeout(5000),
           });
         } catch (err) {
-          console.error("GMaps API delete error:", err);
+          log.error("gmaps_api_delete_error", { error: (err as Error).message, job_id: jobId });
         }
       }
 
       const { error } = await supabase.from("scrape_jobs").delete().eq("id", jobId).eq("user_id", userId);
       if (error) throw error;
+
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, job_id: jobId });
 
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -295,7 +325,7 @@ serve(async (req) => {
           }
         }
       } catch (err) {
-        console.error("GMaps API download error:", err);
+        log.error("gmaps_api_download_error", { error: (err as Error).message, job_id });
         throw new Error("Failed to download results from external API");
       }
 
@@ -379,6 +409,9 @@ serve(async (req) => {
         });
       }
 
+      const duration = Math.round(performance.now() - start);
+      log.info("request_complete", { action, duration_ms: duration, companies_created: companiesCreated, total_results: results.length });
+
       return new Response(
         JSON.stringify({ companies_created: companiesCreated, total_results: results.length }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -390,7 +423,8 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("GMaps proxy error:", err);
+    const duration = Math.round(performance.now() - start);
+    log.error("request_failed", { error: (err as Error).message, action, duration_ms: duration });
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
