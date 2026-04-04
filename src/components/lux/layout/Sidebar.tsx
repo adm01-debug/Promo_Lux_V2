@@ -229,6 +229,7 @@ function CollapsedNavButton({
           data-tour={item.id}
           onClick={onClick}
           onMouseEnter={onPrefetch}
+          aria-current={isActive ? "page" : undefined}
           className={cn(
             "w-full flex items-center justify-center p-2 rounded-lg transition-all duration-200 active:scale-95",
             isActive
