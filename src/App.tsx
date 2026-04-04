@@ -36,8 +36,15 @@ const queryClient = new QueryClient({
 
 function PageLoader({ ref }: { ref?: React.Ref<HTMLDivElement> }) {
   return (
-    <div ref={ref} className="min-h-screen bg-background flex items-center justify-center">
-      <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+    <div ref={ref} className="min-h-screen bg-background flex flex-col items-center justify-center gap-4" role="status" aria-label="Carregando">
+      <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center animate-pulse">
+        <svg className="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <path d="M12 3l1.912 5.813L20 10.125l-4.587 3.89L16.824 20 12 16.5 7.176 20l1.411-6.172L4 10.125l6.088-1.312z" />
+        </svg>
+      </div>
+      <div className="h-1 w-32 rounded-full bg-muted overflow-hidden">
+        <div className="h-full bg-primary rounded-full animate-[loading_1.5s_ease-in-out_infinite]" style={{ width: "40%" }} />
+      </div>
     </div>
   );
 }
