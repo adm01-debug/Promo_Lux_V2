@@ -4,9 +4,10 @@ import { DataError } from "@/components/lux/DataError";
 import { useQuery } from "@tanstack/react-query";
 import {
   Users, Search, Filter, Crown, Briefcase, Building2, Mail, Phone,
-  Linkedin, ChevronDown, ChevronUp, X, ExternalLink, Star, Zap,
+  ChevronDown, ChevronUp, X, ExternalLink, Star, Zap,
   UserCheck, UserX, Shield, Target, TrendingUp, Eye, Copy, Check
 } from "lucide-react";
+import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

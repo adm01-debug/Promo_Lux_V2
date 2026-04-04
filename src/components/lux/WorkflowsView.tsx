@@ -4,10 +4,11 @@ import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StepProgress } from "@/components/lux/StepProgress";
 import {
-  Play, Pause, Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, Globe, Linkedin,
+  Play, Pause, Plus, Clock, CheckCircle2, AlertCircle, ArrowRight, Globe,
   Database, Mail, Filter, RotateCcw, Settings, ChevronRight, Zap, TrendingUp,
   Loader2, MapPin, Trash2, Radar
 } from "lucide-react";
+import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";

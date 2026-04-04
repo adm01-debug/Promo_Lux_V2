@@ -1,9 +1,10 @@
 import { useState } from "react";
 import {
   Building2, MapPin, Tag, Globe, Mail, Phone, TrendingUp, Radar, ExternalLink,
-  Briefcase, DollarSign, Users, Linkedin, Star, Copy, Check, Send,
+  Briefcase, DollarSign, Users, Star, Copy, Check, Send,
   Eye, Clock, Zap, Database, User, Shield
 } from "lucide-react";
+import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
