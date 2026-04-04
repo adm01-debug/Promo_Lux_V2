@@ -160,7 +160,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col border-border/50 bg-background">
+      <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col border-border/50 bg-background/95 backdrop-blur-xl">
         <SheetHeader className="p-4 pb-3 border-b border-border/30 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
