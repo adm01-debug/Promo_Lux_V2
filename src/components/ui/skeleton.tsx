@@ -1,18 +1,13 @@
-import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-const Skeleton = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn("animate-pulse rounded-md bg-muted", className)}
-        {...props}
-      />
-    );
-  }
-);
-
-Skeleton.displayName = "Skeleton";
+function Skeleton({ className, ref, ...props }: React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }) {
+  return (
+    <div
+      ref={ref}
+      className={cn("animate-pulse rounded-md bg-muted", className)}
+      {...props}
+    />
+  );
+}
 
 export { Skeleton };
