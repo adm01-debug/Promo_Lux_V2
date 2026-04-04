@@ -174,7 +174,7 @@ export const Sidebar = memo(({
       <SidebarFooter collapsed={collapsed} onToggleCollapse={onToggleCollapse} />
     </aside>
   );
-};
+});
 
 /* Dynamic footer with live workflow count */
 function SidebarFooter({ collapsed, onToggleCollapse, ref }: { collapsed: boolean; onToggleCollapse: () => void; ref?: React.Ref<HTMLDivElement> }) {
