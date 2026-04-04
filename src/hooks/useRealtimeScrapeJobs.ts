@@ -78,5 +78,5 @@ export function useRealtimeScrapeJobs() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, toast]);
+  }, [queryClient, toast, user?.id]);
 }

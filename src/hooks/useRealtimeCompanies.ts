@@ -68,5 +68,5 @@ export function useRealtimeCompanies() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, toast]);
+  }, [queryClient, toast, user?.id]);
 }
