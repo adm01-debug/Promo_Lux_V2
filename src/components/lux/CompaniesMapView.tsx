@@ -384,6 +384,7 @@ export const CompaniesMapView = () => {
           </div>
         ) : (
           <MapContainer
+            key={`map-${filtered.length}-${filtered[0]?.lat ?? 0}-${filtered[0]?.lng ?? 0}`}
             center={filtered.length > 0 ? [filtered[0].lat, filtered[0].lng] : [-14.235, -51.925]}
             zoom={4}
             style={{ height: "100%", width: "100%" }}
