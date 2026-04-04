@@ -153,7 +153,14 @@ export function LoginCard(props: LoginCardProps) {
       </motion.div>
 
       <motion.p variants={fadeUp} className="text-[11px] text-muted-foreground/70 text-center leading-relaxed">
-        Ao entrar, você concorda com nossos termos de uso.
+        Ao entrar, você concorda com nossos{" "}
+        <button type="button" className="underline underline-offset-2 hover:text-primary transition-colors duration-200 cursor-pointer">
+          termos de uso
+        </button>{" "}
+        e{" "}
+        <button type="button" className="underline underline-offset-2 hover:text-primary transition-colors duration-200 cursor-pointer">
+          política de privacidade
+        </button>.
       </motion.p>
 
       <AnimatePresence>
