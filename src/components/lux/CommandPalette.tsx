@@ -286,8 +286,13 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
         value={search}
         onValueChange={setSearch}
       />
-      <CommandList>
-        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+      <CommandList className="max-h-[400px]">
+        <CommandEmpty>
+          <div className="flex flex-col items-center gap-2 py-6">
+            <p className="text-sm text-muted-foreground">Nenhum resultado encontrado.</p>
+            <p className="text-[10px] text-muted-foreground/60">Tente buscar por nome de empresa, seção ou ação</p>
+          </div>
+        </CommandEmpty>
 
         {/* Quick Actions */}
         <CommandGroup heading="Ações Rápidas">
