@@ -57,17 +57,17 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message, variant: "destructive" });
 
             if (user?.id) {
-              await supabase.from("notifications").insert({
+              await supabase.from("notifications").insert([{
                 user_id: user.id,
                 title,
                 message,
                 type: "scrape",
                 metadata: {
-                  job_id: job.id,
-                  job_name: job.name,
-                  error: job.error_message,
+                  job_id: String(job.id ?? ""),
+                  job_name: String(job.name ?? ""),
+                  error: String(job.error_message ?? ""),
                 },
-              });
+              }]);
             }
           }
         }
