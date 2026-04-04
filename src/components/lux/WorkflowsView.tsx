@@ -77,7 +77,7 @@ export const WorkflowsView = () => {
           .select("*, workflow_runs(id, status, started_at, completed_at, results)")
           .order("created_at", { ascending: false });
         if (error) throw error;
-        return (data ?? []) as Workflow[];
+        return (data ?? []) as unknown as Workflow[];
       }
     },
     refetchInterval: 15000,
