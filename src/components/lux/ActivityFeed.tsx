@@ -11,31 +11,7 @@ const iconMap: Record<string, { icon: React.ReactNode; bg: string; ring: string 
   success: { icon: <CheckCircle2 className="h-3.5 w-3.5 text-success" />, bg: "bg-success/10", ring: "ring-success/30" },
   error: { icon: <AlertCircle className="h-3.5 w-3.5 text-destructive" />, bg: "bg-destructive/10", ring: "ring-destructive/30" },
   system: { icon: <Zap className="h-3.5 w-3.5 text-primary" />, bg: "bg-primary/10", ring: "ring-primary/30" },
-  enrichment: { icon: <Database className="h-3.5 w-3.5 text-violet-400" />, bg: "bg-violet-500/10", ring: "ring-violet-400/30" },
-};
-
-const timelineLineVariants = {
-  hidden: { scaleY: 0 },
-  visible: { scaleY: 1, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -16, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    transition: { delay: i * 0.07, duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
-
-const dotVariants = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: (i: number) => ({
-    scale: 1,
-    opacity: 1,
-    transition: { delay: i * 0.07 + 0.1, type: "spring", stiffness: 400, damping: 15 },
-  }),
+  enrichment: { icon: <Database className="h-3.5 w-3.5 text-accent-foreground" />, bg: "bg-accent/10", ring: "ring-accent/30" },
 };
 
 export const ActivityFeed = () => {
@@ -57,7 +33,7 @@ export const ActivityFeed = () => {
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
+            transition={{ type: "spring" as const, stiffness: 500, damping: 20 }}
             className="text-[9px] font-mono text-primary bg-primary/10 px-2.5 py-1 rounded-full font-medium"
           >
             {activities.length} eventos
@@ -87,42 +63,39 @@ export const ActivityFeed = () => {
         <div className="relative max-h-[420px] overflow-y-auto">
           {/* Animated vertical timeline line */}
           <motion.div
-            variants={timelineLineVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.6 }}
             className="absolute left-[23px] top-4 bottom-4 w-px bg-gradient-to-b from-primary/40 via-border/30 to-transparent origin-top"
           />
 
           <div className="py-3">
             {activities.map((a, i) => {
               const entry = iconMap[a.type] ?? iconMap.system;
-              const seed = a.id ?? `activity-${i}`;
               const isFirst = i === 0;
 
               return (
                 <motion.div
                   key={a.id}
-                  custom={i}
-                  variants={itemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  whileHover={{ x: 4, backgroundColor: "hsl(var(--secondary) / 0.15)" }}
-                  className="relative flex items-start gap-3 px-4 py-3 transition-colors group cursor-default"
+                  initial={{ opacity: 0, x: -16, scale: 0.95 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ delay: i * 0.07, duration: 0.35 }}
+                  whileHover={{ x: 4 }}
+                  className="relative flex items-start gap-3 px-4 py-3 hover:bg-secondary/15 transition-colors group cursor-default"
                 >
                   {/* Timeline dot */}
                   <div className="relative z-10 flex flex-col items-center">
                     <motion.div
-                      custom={i}
-                      variants={dotVariants}
-                      initial="hidden"
-                      animate="visible"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: i * 0.07 + 0.1, type: "spring" as const, stiffness: 400, damping: 15 }}
                       className={`h-[10px] w-[10px] rounded-full ring-2 ${entry.ring} ${entry.bg} shrink-0 mt-1.5`}
                     >
                       {isFirst && (
                         <motion.div
                           className="absolute inset-0 rounded-full bg-primary/30"
                           animate={{ scale: [1, 2, 1], opacity: [0.5, 0, 0.5] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                          transition={{ duration: 2, repeat: Infinity }}
                         />
                       )}
                     </motion.div>
@@ -132,11 +105,11 @@ export const ActivityFeed = () => {
                   <motion.div
                     initial={{ scale: 0, rotate: -90 }}
                     animate={{ scale: 1, rotate: 0 }}
-                    transition={{ delay: i * 0.07 + 0.15, type: "spring", stiffness: 300, damping: 20 }}
+                    transition={{ delay: i * 0.07 + 0.15, type: "spring" as const, stiffness: 300, damping: 20 }}
                     className="shrink-0"
                   >
                     <div className="relative">
-                      <GradientAvatar seed={seed} size={32} className="ring-1 ring-border/30" />
+                      <GradientAvatar name={a.title || a.type} size="sm" className="ring-1 ring-border/30" />
                       <div className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full flex items-center justify-center ${entry.bg} ring-1 ring-background`}>
                         {entry.icon}
                       </div>
@@ -152,7 +125,7 @@ export const ActivityFeed = () => {
                       <p className="text-[10px] text-muted-foreground">
                         {formatDistanceToNow(new Date(a.created_at), { addSuffix: true, locale: ptBR })}
                       </p>
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${entry.bg} ${entry.ring.replace("ring-", "text-").replace("/30", "")}`}>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${entry.bg} text-muted-foreground`}>
                         {a.type}
                       </span>
                     </div>
