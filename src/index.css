@@ -556,6 +556,56 @@
     box-shadow: 0 8px 30px -12px hsl(var(--primary) / 0.25);
   }
 
+  .card-hover:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  /* Premium button press effect */
+  .btn-press {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+
+  /* Gradient border glow for featured elements */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.4),
+      transparent 40%,
+      transparent 60%,
+      hsl(var(--primary) / 0.2)
+    );
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gradient-border:hover::before {
+    opacity: 1;
+  }
+
+  /* Stagger animation for lists */
+  .stagger-item {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: stagger-in 0.3s ease forwards;
+  }
+
+  @keyframes stagger-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .live-indicator {
     animation: live-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
@@ -613,6 +663,17 @@
   0% { transform: translateX(-100%); }
   50% { transform: translateX(150%); }
   100% { transform: translateX(-100%); }
+}
+
+/* ── Safe area for mobile bottom nav ── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@media (max-width: 1023px) {
+  main {
+    padding-bottom: 4rem;
+  }
 }
 
 /* ── Enhanced focus-visible for keyboard navigation ── */

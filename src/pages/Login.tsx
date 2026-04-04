@@ -15,6 +15,7 @@ import { ForgotPasswordOverlay } from "@/components/lux/auth/ForgotPasswordOverl
 import { RateLimitWarning } from "@/components/lux/auth/RateLimitWarning";
 import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
+import { FloatingParticles } from "@/components/lux/auth/FloatingParticles";
 
 export default function LoginPage() {
   const { checkAndRecord, isLocked } = useRateLimit({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
@@ -132,8 +133,11 @@ export default function LoginPage() {
   const rateLimitMsg = lockMsg || (locked.locked ? `Bloqueado. Tente em ${locked.remainingSec}s.` : null);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 relative" role="main">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" aria-hidden="true" />
+      <FloatingParticles />
+      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 relative z-10 border border-border/30 shadow-2xl shadow-primary/5" role="main">
         <AuthLogo />
 
         {rateLimitMsg && <RateLimitWarning message={rateLimitMsg} />}

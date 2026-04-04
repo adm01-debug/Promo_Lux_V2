@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { prefetchView } from "@/lib/viewRegistry";
@@ -65,7 +65,7 @@ interface SidebarProps {
   onToggleCollapse: () => void;
 }
 
-export const Sidebar = ({
+export const Sidebar = memo(({
   activeView,
   collapsed,
   mobileOpen,
@@ -174,7 +174,7 @@ export const Sidebar = ({
       <SidebarFooter collapsed={collapsed} onToggleCollapse={onToggleCollapse} />
     </aside>
   );
-};
+});
 
 /* Dynamic footer with live workflow count */
 function SidebarFooter({ collapsed, onToggleCollapse, ref }: { collapsed: boolean; onToggleCollapse: () => void; ref?: React.Ref<HTMLDivElement> }) {

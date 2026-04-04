@@ -16,6 +16,8 @@ import { OnboardingTour } from "@/components/lux/OnboardingTour";
 import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
 import { Header } from "@/components/lux/layout/Header";
+import { MobileBottomNav } from "@/components/lux/layout/MobileBottomNav";
+import { ConnectionStatus } from "@/components/lux/ConnectionStatus";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { VIEW_MAP } from "@/lib/viewRegistry";
@@ -97,6 +99,7 @@ const Index = () => {
         Pular para o conteúdo
       </a>
 
+      <ConnectionStatus />
       <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
       <KeyboardShortcutsDialog />
@@ -198,6 +201,15 @@ const Index = () => {
           </Suspense>
         </main>
       </div>
+
+      {/* Mobile bottom navigation */}
+      {!focusMode && (
+        <MobileBottomNav
+          activeView={activeView}
+          onNavigate={handleNav}
+          onOpenMenu={openMobile}
+        />
+      )}
     </div>
   );
 };
