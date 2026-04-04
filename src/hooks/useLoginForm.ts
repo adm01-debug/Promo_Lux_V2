@@ -63,6 +63,7 @@ export function useLoginForm() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email: result.data.email, password: result.data.password });
       if (error) {
+        triggerShake();
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
       }
     } finally {
