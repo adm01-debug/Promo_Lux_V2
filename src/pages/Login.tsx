@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, ShieldAlert, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Sparkles, ShieldAlert, Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "signup">("login");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
 
   const guardRate = () => {
     const status = checkAndRecord();
@@ -89,11 +91,37 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (guardRate()) return;
+    const trimmed = resetEmail.trim();
+    if (!trimmed) return;
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
+        redirectTo: window.location.origin,
+      });
+      if (error) {
+        toast({ title: "Erro", description: error.message, variant: "destructive" });
+      } else {
+        toast({
+          title: "Email enviado ✉️",
+          description: "Verifique sua caixa de entrada para redefinir a senha.",
+        });
+        setShowForgotPassword(false);
+        setResetEmail("");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const locked = isLocked();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6">
+      <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 relative">
         {/* Logo */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center">
@@ -187,6 +215,13 @@ export default function LoginPage() {
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
                 Entrar
               </Button>
+              <button
+                type="button"
+                onClick={() => { setShowForgotPassword(true); setResetEmail(email); }}
+                className="w-full text-xs text-muted-foreground hover:text-primary transition-colors text-center"
+              >
+                Esqueceu a senha?
+              </button>
             </form>
           </TabsContent>
 
@@ -243,6 +278,46 @@ export default function LoginPage() {
         <p className="text-xs text-muted-foreground text-center">
           Ao entrar, você concorda com nossos termos de uso.
         </p>
+
+        {/* Forgot Password Overlay */}
+        {showForgotPassword && (
+          <div className="absolute inset-0 bg-background/95 backdrop-blur-sm rounded-2xl p-8 flex flex-col justify-center space-y-4 z-10">
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(false)}
+              className="absolute top-4 left-4 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="text-center space-y-1">
+              <h2 className="text-lg font-bold text-foreground">Redefinir senha</h2>
+              <p className="text-xs text-muted-foreground">Enviaremos um link para redefinir sua senha.</p>
+            </div>
+            <form onSubmit={handleForgotPassword} className="space-y-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="reset-email" className="text-xs text-muted-foreground">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    className="pl-10 bg-secondary/30 border-border/30"
+                    required
+                    autoComplete="email"
+                    autoFocus
+                  />
+                </div>
+              </div>
+              <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2" size="lg">
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                Enviar link
+              </Button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

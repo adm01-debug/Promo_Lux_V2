@@ -1,4 +1,4 @@
-import { useMemo, forwardRef } from "react";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { prefetchView } from "@/lib/viewRegistry";
@@ -177,7 +177,7 @@ export const Sidebar = ({
 };
 
 /* Dynamic footer with live workflow count */
-const SidebarFooter = forwardRef<HTMLDivElement, { collapsed: boolean; onToggleCollapse: () => void }>(function SidebarFooter({ collapsed, onToggleCollapse }, ref) {
+function SidebarFooter({ collapsed, onToggleCollapse, ref }: { collapsed: boolean; onToggleCollapse: () => void; ref?: React.Ref<HTMLDivElement> }) {
   const { data: activeCount = 0 } = useQuery({
     queryKey: ["active-workflows-count"],
     queryFn: async () => {
@@ -221,7 +221,7 @@ const SidebarFooter = forwardRef<HTMLDivElement, { collapsed: boolean; onToggleC
       </Tooltip>
     </div>
   );
-});
+}
 
 /* Sub-components */
 
