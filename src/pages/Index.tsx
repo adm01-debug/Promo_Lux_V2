@@ -193,7 +193,7 @@ const Index = () => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ActiveComponent />
               </motion.div>
