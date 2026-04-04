@@ -103,7 +103,20 @@ export const GmapsScraperView = () => {
   });
 
   const handleCreate = () => {
-    if (!jobName.trim() || !keywords.trim()) return;
+    const result = validateScrapeJob({
+      name: jobName,
+      keywords,
+      lang,
+      radius,
+      depth,
+      email: extractEmail,
+      fast_mode: fastMode,
+    });
+    if (!result.success) {
+      const firstError = Object.values(result.errors)[0];
+      toast({ title: "Corrija os campos", description: firstError, variant: "destructive" });
+      return;
+    }
     createMutation.mutate({
       name: jobName.trim(),
       keywords: keywords.split(",").map(k => k.trim()).filter(Boolean),
