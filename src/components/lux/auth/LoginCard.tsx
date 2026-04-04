@@ -1,8 +1,8 @@
 import { Mail, Sparkles } from "lucide-react";
 import { Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { AuthLogo } from "@/components/lux/auth/AuthLogo";
 import { EmailInput } from "@/components/lux/auth/EmailInput";
@@ -46,6 +46,12 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
 };
 
+const tabSlide = {
+  initial: { opacity: 0, x: 8 },
+  animate: { opacity: 1, x: 0, transition: { duration: 0.25, ease: "easeOut" as const } },
+  exit: { opacity: 0, x: -8, transition: { duration: 0.15 } },
+};
+
 export function LoginCard(props: LoginCardProps) {
   const {
     email, setEmail, password, setPassword,
@@ -69,11 +75,18 @@ export function LoginCard(props: LoginCardProps) {
         <AuthLogo />
       </motion.div>
 
-      {rateLimitMsg && (
-        <motion.div variants={fadeUp}>
-          <RateLimitWarning message={rateLimitMsg} />
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {rateLimitMsg && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <RateLimitWarning message={rateLimitMsg} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.div variants={fadeUp}>
         <GoogleLoginButton onClick={handleGoogleLogin} disabled={locked.locked || googleLoading} loading={googleLoading} />
@@ -89,46 +102,52 @@ export function LoginCard(props: LoginCardProps) {
       <motion.div variants={fadeUp}>
         <Tabs value={authTab} onValueChange={(v) => setAuthTab(v as "login" | "signup")} className="w-full">
           <TabsList className="w-full bg-secondary/50">
-            <TabsTrigger value="login" className="flex-1 text-xs">Entrar</TabsTrigger>
-            <TabsTrigger value="signup" className="flex-1 text-xs">Criar Conta</TabsTrigger>
+            <TabsTrigger value="login" className="flex-1 text-xs font-medium">Entrar</TabsTrigger>
+            <TabsTrigger value="signup" className="flex-1 text-xs font-medium">Criar Conta</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="login" className="mt-4">
-            <form onSubmit={handleEmailLogin} className="space-y-3">
-              <EmailInput id="login-email" value={email} onChange={setEmail} />
-              <PasswordInput id="login-password" label="Senha" value={password} onChange={setPassword} />
-              <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11" size="lg">
-                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-                Entrar
-              </Button>
-              <button
-                type="button"
-                onClick={() => { setShowForgotPassword(true); setResetEmail(email); }}
-                className="w-full text-xs text-muted-foreground hover:text-primary transition-colors text-center py-1"
-              >
-                Esqueceu a senha?
-              </button>
-            </form>
-          </TabsContent>
-
-          <TabsContent value="signup" className="mt-4">
-            <form onSubmit={handleEmailSignup} className="space-y-3">
-              <EmailInput id="signup-email" value={email} onChange={setEmail} />
-              <PasswordInput
-                id="signup-password"
-                label="Senha (mín. 8 caracteres)"
-                value={password}
-                onChange={setPassword}
-                autoComplete="new-password"
-                minLength={8}
-              />
-              <PasswordStrengthMeter password={password} />
-              <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11" size="lg">
-                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                Criar Conta
-              </Button>
-            </form>
-          </TabsContent>
+          <div className="mt-4 relative overflow-hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              {authTab === "login" ? (
+                <motion.div key="login" {...tabSlide}>
+                  <form onSubmit={handleEmailLogin} className="space-y-3">
+                    <EmailInput id="login-email" value={email} onChange={setEmail} />
+                    <PasswordInput id="login-password" label="Senha" value={password} onChange={setPassword} />
+                    <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11" size="lg">
+                      {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                      Entrar
+                    </Button>
+                    <button
+                      type="button"
+                      onClick={() => { setShowForgotPassword(true); setResetEmail(email); }}
+                      className="w-full text-xs text-muted-foreground hover:text-primary transition-colors text-center py-1"
+                    >
+                      Esqueceu a senha?
+                    </button>
+                  </form>
+                </motion.div>
+              ) : (
+                <motion.div key="signup" {...tabSlide}>
+                  <form onSubmit={handleEmailSignup} className="space-y-3">
+                    <EmailInput id="signup-email" value={email} onChange={setEmail} />
+                    <PasswordInput
+                      id="signup-password"
+                      label="Senha (mín. 8 caracteres)"
+                      value={password}
+                      onChange={setPassword}
+                      autoComplete="new-password"
+                      minLength={8}
+                    />
+                    <PasswordStrengthMeter password={password} />
+                    <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11" size="lg">
+                      {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                      Criar Conta
+                    </Button>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </Tabs>
       </motion.div>
 
@@ -136,16 +155,18 @@ export function LoginCard(props: LoginCardProps) {
         Ao entrar, você concorda com nossos termos de uso.
       </motion.p>
 
-      {showForgotPassword && (
-        <ForgotPasswordOverlay
-          resetEmail={resetEmail}
-          onResetEmailChange={setResetEmail}
-          onSubmit={handleForgotPassword}
-          onBack={() => setShowForgotPassword(false)}
-          isSubmitting={isSubmitting}
-          disabled={locked.locked}
-        />
-      )}
+      <AnimatePresence>
+        {showForgotPassword && (
+          <ForgotPasswordOverlay
+            resetEmail={resetEmail}
+            onResetEmailChange={setResetEmail}
+            onSubmit={handleForgotPassword}
+            onBack={() => setShowForgotPassword(false)}
+            isSubmitting={isSubmitting}
+            disabled={locked.locked}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
