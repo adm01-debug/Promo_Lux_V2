@@ -13,6 +13,10 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: mockToast }),
 }));
 
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuth: () => ({ user: { id: "test-user-id" } }),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     channel: () => ({
