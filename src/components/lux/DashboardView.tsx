@@ -222,6 +222,8 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
         </div>
       </div>
 
+      <QuickActions onNavigate={(v) => onNavigate?.(v)} />
+
       <StatsGrid onNavigate={onNavigate} />
 
       {widgetOrder.map((id, idx) => {
