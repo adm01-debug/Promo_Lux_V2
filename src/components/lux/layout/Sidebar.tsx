@@ -193,7 +193,7 @@ const SidebarFooter = forwardRef<HTMLDivElement, { collapsed: boolean; onToggleC
   });
 
   return (
-    <div className={cn("border-t border-border", collapsed ? "p-2" : "p-4")}>
+    <div ref={ref} className={cn("border-t border-border", collapsed ? "p-2" : "p-4")}>
       {!collapsed && (
         <div className="glass rounded-lg p-3 mb-3">
           <p className="text-xs text-muted-foreground">Status do Sistema</p>
@@ -221,7 +221,7 @@ const SidebarFooter = forwardRef<HTMLDivElement, { collapsed: boolean; onToggleC
       </Tooltip>
     </div>
   );
-}
+});
 
 /* Sub-components */
 
