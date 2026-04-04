@@ -177,7 +177,7 @@ export const Sidebar = ({
 };
 
 /* Dynamic footer with live workflow count */
-function SidebarFooter({ collapsed, onToggleCollapse }: { collapsed: boolean; onToggleCollapse: () => void }) {
+const SidebarFooter = forwardRef<HTMLDivElement, { collapsed: boolean; onToggleCollapse: () => void }>(function SidebarFooter({ collapsed, onToggleCollapse }, ref) {
   const { data: activeCount = 0 } = useQuery({
     queryKey: ["active-workflows-count"],
     queryFn: async () => {
