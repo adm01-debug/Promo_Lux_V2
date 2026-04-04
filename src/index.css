@@ -765,6 +765,25 @@
   border-radius: var(--radius);
 }
 
+/* ── Gold shimmer skeleton ── */
+@keyframes gold-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-gold {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--primary) / 0.08) 40%,
+    hsl(var(--primary) / 0.15) 50%,
+    hsl(var(--primary) / 0.08) 60%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 1.8s ease-in-out infinite;
+}
+
 /* ── Reduced motion preferences ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
