@@ -265,11 +265,13 @@ function ExpandedNavButton({
   isActive,
   onClick,
   onPrefetch,
+  intentCount = 0,
 }: {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
   onPrefetch: () => void;
+  intentCount?: number;
 }) {
   const Icon = item.icon;
   const shortcut = getShortcut(item.id);
