@@ -67,9 +67,9 @@ describe("useRealtimeScrapeJobs", () => {
       new: { status: "completed", name: "Job2", results_count: 10, id: "j2", source: "gmaps" },
       old: { status: "running" },
     });
-    expect(mockInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "scrape", title: expect.stringContaining("concluída") })
-    );
+    expect(mockInsert).toHaveBeenCalledWith([
+      expect.objectContaining({ type: "scrape", title: expect.stringContaining("concluída") }),
+    ]);
   });
 
   it("toasts on failed job with destructive variant", async () => {
