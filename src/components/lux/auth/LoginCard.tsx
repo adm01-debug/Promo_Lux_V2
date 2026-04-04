@@ -68,7 +68,7 @@ export function LoginCard(props: LoginCardProps) {
       variants={stagger}
       initial="hidden"
       animate="show"
-      className={`auth-card-glow glass rounded-2xl p-6 sm:p-8 w-full max-w-sm space-y-5 sm:space-y-6 relative z-10 border border-border/30 shadow-2xl shadow-primary/5 ${shakeError ? "animate-shake" : ""}`}
+      className={`auth-card-glow glass rounded-2xl p-6 sm:p-8 w-full max-w-[380px] space-y-5 sm:space-y-6 relative z-10 border border-border/20 shadow-2xl shadow-primary/10 backdrop-blur-2xl ${shakeError ? "animate-shake" : ""}`}
       role="main"
       aria-label="Formulário de autenticação"
     >
