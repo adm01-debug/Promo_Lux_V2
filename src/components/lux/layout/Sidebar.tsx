@@ -105,10 +105,10 @@ export const Sidebar = memo(({
       aria-label="Navegação principal"
       role="navigation"
       className={cn(
-        "border-r border-border glass flex flex-col fixed inset-y-0 left-0 z-50 transition-all duration-300",
+        "border-r border-border/40 bg-sidebar-background/95 backdrop-blur-xl flex flex-col fixed inset-y-0 left-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
         sidebarWidth,
         "lg:translate-x-0",
-        mobileOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0"
+        mobileOpen ? "translate-x-0 w-64 shadow-2xl shadow-background/80" : "-translate-x-full lg:translate-x-0"
       )}
     >
       {/* Logo */}
@@ -147,9 +147,12 @@ export const Sidebar = memo(({
         {groupedItems.map((item) => (
           <div key={item.id}>
             {item.showSection && !collapsed && (
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground px-3 pt-4 pb-1.5 font-medium">
-                {item.section}
-              </p>
+              <div className="px-3 pt-5 pb-2 flex items-center gap-2">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/70 font-semibold">
+                  {item.section}
+                </p>
+                <div className="flex-1 h-px bg-border/30" />
+              </div>
             )}
             {collapsed ? (
               <CollapsedNavButton
@@ -284,10 +287,10 @@ function ExpandedNavButton({
       onMouseEnter={onPrefetch}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98]",
+        "relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.97]",
         isActive
           ? "text-primary"
-          : "text-muted-foreground hover:text-foreground hover:translate-x-0.5"
+          : "text-muted-foreground hover:text-foreground hover:bg-secondary/30 hover:translate-x-0.5"
       )}
     >
       {isActive && (
