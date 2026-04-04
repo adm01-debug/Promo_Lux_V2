@@ -67,7 +67,7 @@ describe("WorkflowsView", () => {
   it("renders heading", async () => {
     renderWithProviders(<WorkflowsView />);
     await waitFor(() => {
-      expect(screen.getByText("Workflows de Prospecção")).toBeInTheDocument();
+      expect(screen.getByText("Workflows de Automação")).toBeInTheDocument();
     });
   });
 

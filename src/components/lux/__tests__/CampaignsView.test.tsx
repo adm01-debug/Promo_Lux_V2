@@ -64,7 +64,7 @@ describe("CampaignsView", () => {
   it("renders heading", async () => {
     renderWithProviders(<CampaignsView />);
     await waitFor(() => {
-      expect(screen.getByText("Campanhas de Email")).toBeInTheDocument();
+      expect(screen.getByText("Campanhas de Outreach")).toBeInTheDocument();
     });
   });
 
