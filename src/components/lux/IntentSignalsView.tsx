@@ -248,7 +248,11 @@ export const IntentSignalsView = () => {
           <h3 className="font-semibold text-foreground text-sm">Feed de Sinais</h3>
         </div>
 
-        {isLoading ? (
+        {signalsError ? (
+          <div className="p-4">
+            <DataError message={signalsError.message} onRetry={() => refetch()} />
+          </div>
+        ) : isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex gap-3">
