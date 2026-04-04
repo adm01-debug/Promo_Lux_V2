@@ -31,6 +31,7 @@ interface HeaderProps {
   onNavigate: (view: View) => void;
   onOpenMobileSidebar: () => void;
   onSignOut: () => void;
+  onToggleFocusMode?: () => void;
 }
 
 export const Header = ({
