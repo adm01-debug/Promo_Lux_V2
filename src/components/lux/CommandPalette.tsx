@@ -440,4 +440,5 @@ export const CommandPalette = forwardRef<HTMLDivElement, CommandPaletteProps>(({
       </CommandList>
     </CommandDialog>
   );
-};
+});
+CommandPalette.displayName = "CommandPalette";
