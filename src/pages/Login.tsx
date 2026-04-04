@@ -146,7 +146,7 @@ export default function LoginPage() {
 
         {rateLimitMsg && <RateLimitWarning message={rateLimitMsg} />}
 
-        <GoogleLoginButton onClick={handleGoogleLogin} disabled={locked.locked} />
+        <GoogleLoginButton onClick={handleGoogleLogin} disabled={locked.locked || googleLoading} loading={googleLoading} />
 
         <div className="relative">
           <Separator className="bg-border/30" />
