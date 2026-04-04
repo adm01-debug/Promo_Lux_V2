@@ -11,6 +11,7 @@ import { ErrorBoundary } from "@/components/lux/ErrorBoundary";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -68,6 +69,7 @@ const App = () => (
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
