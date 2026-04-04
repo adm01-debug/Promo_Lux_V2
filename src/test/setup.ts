@@ -2,17 +2,16 @@ import "@testing-library/jest-dom";
 
 // Suppress known harmless warnings in test output
 const originalError = console.error;
-console.error = (...args: unknown[]) => {
-  const msg = typeof args[0] === "string" ? args[0] : "";
-  // Suppress framer-motion prop warnings (whileHover, whileTap) and SVG casing warnings in jsdom
-  if (
-    msg.includes("whileHover") ||
-    msg.includes("whileTap") ||
-    msg.includes("is using incorrect casing") ||
-    msg.includes("is unrecognized in this browser")
-  ) return;
-  originalError.apply(console, args);
+const originalWarn = console.warn;
+const SUPPRESSED = [
+  "whileHover", "whileTap", "incorrect casing", "unrecognized in this browser",
+];
+const shouldSuppress = (...args: unknown[]) => {
+  const msg = args.map(a => typeof a === "string" ? a : "").join(" ");
+  return SUPPRESSED.some(s => msg.includes(s));
 };
+console.error = (...args: unknown[]) => { if (!shouldSuppress(...args)) originalError.apply(console, args); };
+console.warn = (...args: unknown[]) => { if (!shouldSuppress(...args)) originalWarn.apply(console, args); };
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
