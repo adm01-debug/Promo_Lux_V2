@@ -10,7 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { useThemeColors } from "@/hooks/useThemeColors";
-
+import { exportAnalyticsPDF } from "@/lib/exportAnalyticsPDF";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 const COLORS = [
   "hsl(45, 100%, 58%)",
   "hsl(142, 71%, 45%)",
