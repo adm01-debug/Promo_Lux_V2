@@ -9,12 +9,20 @@ export interface WorkflowStep {
   provider?: string;
 }
 
+export interface WorkflowRunResults {
+  scrape?: { status?: string; [key: string]: unknown };
+  enrich?: { companies_imported?: number; [key: string]: unknown };
+  ipc_score?: { companies_scored?: number; [key: string]: unknown };
+  summary?: { total_companies?: number; qualified?: number; success_rate?: number; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
 export interface WorkflowRun {
   id: string;
   status: string;
   started_at: string;
   completed_at: string | null;
-  results: Record<string, unknown>;
+  results: WorkflowRunResults;
 }
 
 export interface Workflow {
