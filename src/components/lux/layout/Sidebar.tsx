@@ -1,5 +1,6 @@
 import { useMemo, memo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { prefetchView } from "@/lib/viewRegistry";
 import {
@@ -283,23 +284,31 @@ function ExpandedNavButton({
       onMouseEnter={onPrefetch}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98]",
+        "relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98]",
         isActive
-          ? "bg-primary/15 text-primary border border-primary/25 shadow-[0_0_8px_hsl(var(--primary)/0.15)]"
-          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 hover:translate-x-0.5"
+          ? "text-primary"
+          : "text-muted-foreground hover:text-foreground hover:translate-x-0.5"
       )}
     >
-      <Icon className="h-4 w-4" />
-      {item.label}
+      {isActive && (
+        <motion.div
+          layoutId="sidebar-active-bg"
+          className="absolute inset-0 rounded-lg bg-primary/15 border border-primary/25 shadow-[0_0_12px_hsl(var(--primary)/0.15)]"
+          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          aria-hidden="true"
+        />
+      )}
+      <Icon className="h-4 w-4 relative z-10" />
+      <span className="relative z-10">{item.label}</span>
       {shortcut && (
-        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline">
+        <kbd className="ml-auto text-[9px] font-mono text-muted-foreground hidden lg:inline relative z-10">
           {shortcut}
         </kbd>
       )}
       {item.id === "intent" && intentCount > 0 && (
         <span
           className={cn(
-            "text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold",
+            "text-[9px] bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-bold relative z-10",
             shortcut ? "" : "ml-auto"
           )}
         >
