@@ -162,6 +162,19 @@ const cardVariants = {
 export const AnalyticsView = () => {
   const { data, isLoading } = useAnalyticsData();
   const colors = useThemeColors();
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      await exportAnalyticsPDF();
+      toast({ title: "Relatório exportado", description: "O arquivo foi baixado com sucesso." });
+    } catch {
+      toast({ title: "Erro ao exportar", variant: "destructive" });
+    } finally {
+      setExporting(false);
+    }
+  };
 
   if (isLoading) {
     return (
