@@ -57,28 +57,30 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
 
 export function useDashboardStats() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   // Realtime: auto-refresh when companies/workflows/notifications change
   useEffect(() => {
+    if (!user?.id) return;
     const channel = supabase
-      .channel("dashboard-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, () => {
+      .channel(`private:${user.id}:dashboard`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "companies", filter: `user_id=eq.${user.id}` }, () => {
         queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
         queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
         queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, () => {
+      .on("postgres_changes", { event: "*", schema: "public", table: "workflows", filter: `user_id=eq.${user.id}` }, () => {
         queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
         queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, () => {
+      .on("postgres_changes", { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, () => {
         queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
         queryClient.invalidateQueries({ queryKey: ["notifications"] });
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [queryClient]);
+  }, [queryClient, user?.id]);
 
   return useQuery({
     queryKey: ["dashboard-stats"],
