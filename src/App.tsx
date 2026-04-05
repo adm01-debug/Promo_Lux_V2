@@ -37,7 +37,7 @@ const queryClient = new QueryClient({
   },
 });
 
-function PageLoader({ ref }: { ref?: React.Ref<HTMLDivElement> }) {
+function PageLoader() {
   return (
     <div ref={ref} className="min-h-screen bg-background flex flex-col items-center justify-center gap-4" role="status" aria-label="Carregando">
       <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center animate-pulse">
