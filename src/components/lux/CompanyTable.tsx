@@ -178,14 +178,19 @@ export const CompanyTable = () => {
                     </span>
                   </td>
                   <td className="p-3 text-center">
-                    <div className={cn(
-                      "inline-flex items-center justify-center h-8 w-12 rounded-lg ring-1 transition-all duration-200",
-                      getScoreBg(company.ipc_score ?? 0)
-                    )}>
+                    <motion.div
+                      whileHover={{ scale: 1.15 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className={cn(
+                        "inline-flex items-center justify-center h-8 w-12 rounded-lg ring-1 transition-all duration-200",
+                        getScoreBg(company.ipc_score ?? 0),
+                        getScoreGlow(company.ipc_score ?? 0)
+                      )}
+                    >
                       <span className={cn("font-mono font-bold text-sm", getScoreColor(company.ipc_score ?? 0))}>
-                        {company.ipc_score ?? 0}
+                        <AnimatedScore value={company.ipc_score ?? 0} />
                       </span>
-                    </div>
+                    </motion.div>
                   </td>
                   <td className="p-3">
                     <span className="text-muted-foreground text-xs bg-secondary/30 px-2 py-0.5 rounded-full">
