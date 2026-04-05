@@ -114,14 +114,16 @@ export const Sidebar = memo(({
       {/* Logo */}
       <div className={cn("p-5 border-b border-border", collapsed && "p-3")}>
         <div className="flex items-center gap-3">
-          <div
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             className={cn(
               "rounded-xl bg-primary/10 flex items-center justify-center glow-primary shrink-0",
               collapsed ? "h-8 w-8" : "h-10 w-10"
             )}
           >
             <Sparkles className={cn(collapsed ? "h-4 w-4" : "h-5 w-5", "text-primary")} />
-          </div>
+          </motion.div>
           {!collapsed && (
             <div className="min-w-0">
               <h1 className="text-lg font-bold tracking-tight text-foreground">
