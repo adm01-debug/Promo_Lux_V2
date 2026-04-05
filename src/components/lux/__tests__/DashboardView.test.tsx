@@ -83,6 +83,14 @@ vi.mock("../ActivityFeed", () => ({
   ActivityFeed: () => <div data-testid="activity-feed" />,
 }));
 
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuth: () => ({ user: { email: "test@test.com" }, loading: false, signOut: vi.fn() }),
+}));
+
+vi.mock("@/contexts/DemoContext", () => ({
+  useDemo: () => ({ isDemoMode: false, exitDemo: vi.fn() }),
+}));
+
 const { DashboardView } = await import("../DashboardView");
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
