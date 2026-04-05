@@ -213,10 +213,22 @@ export const Header = memo(({
               className="h-8 w-8 text-muted-foreground hover:text-foreground relative"
               onClick={() => setNotificationsOpen(!notificationsOpen)}
             >
-              <Bell className={cn(
-                "h-4 w-4 transition-all duration-300",
-                unreadCount > 0 && "text-primary"
-              )} />
+              <motion.div
+                animate={unreadCount > 0 ? {
+                  rotate: [0, -15, 12, -10, 8, -4, 0],
+                } : {}}
+                transition={{
+                  duration: 0.6,
+                  delay: 1.5,
+                  repeat: unreadCount > 0 ? Infinity : 0,
+                  repeatDelay: 8,
+                }}
+              >
+                <Bell className={cn(
+                  "h-4 w-4 transition-all duration-300",
+                  unreadCount > 0 && "text-primary"
+                )} />
+              </motion.div>
             </Button>
             <AnimatePresence>
               {unreadCount > 0 && (
