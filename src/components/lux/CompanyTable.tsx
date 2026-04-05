@@ -4,8 +4,29 @@ import { Badge } from "@/components/ui/badge";
 import { useRecentCompanies } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+
+/* Animated score that counts up */
+const AnimatedScore = ({ value }: { value: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(containerRef, { once: true });
+  const motionVal = useMotionValue(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const controls = animate(motionVal, value, {
+      duration: 0.8,
+      ease: "easeOut",
+      onUpdate: (v) => { if (ref.current) ref.current.textContent = String(Math.round(v)); },
+    });
+    return () => controls.stop();
+  }, [value, isInView, motionVal]);
+
+  return <span ref={containerRef}><span ref={ref}>0</span></span>;
+};
 
 const getScoreColor = (score: number) => {
   if (score >= 90) return "text-success";
@@ -19,6 +40,12 @@ const getScoreBg = (score: number) => {
   if (score >= 75) return "bg-primary/10 ring-primary/20";
   if (score >= 60) return "bg-warning/10 ring-warning/20";
   return "bg-muted/10 ring-muted/20";
+};
+
+const getScoreGlow = (score: number) => {
+  if (score >= 90) return "group-hover:shadow-[0_0_12px_hsl(var(--success)/0.3)]";
+  if (score >= 75) return "group-hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)]";
+  return "";
 };
 
 const rowVariants = {
