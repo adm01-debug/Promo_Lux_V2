@@ -7,6 +7,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { DemoProvider, useDemo } from "@/contexts/DemoContext";
 import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
 import { ErrorBoundary } from "@/components/lux/ErrorBoundary";
 import { PageTransition } from "@/components/lux/PageTransition";
@@ -84,15 +85,17 @@ const App = () => (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <AuthProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <UnsavedChangesProvider>
-                <Suspense fallback={<PageLoader />}>
-                  <AnimatedRoutes />
-                </Suspense>
-              </UnsavedChangesProvider>
-            </BrowserRouter>
+            <DemoProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <UnsavedChangesProvider>
+                  <Suspense fallback={<PageLoader />}>
+                    <AnimatedRoutes />
+                  </Suspense>
+                </UnsavedChangesProvider>
+              </BrowserRouter>
+            </DemoProvider>
           </AuthProvider>
         </TooltipProvider>
       </QueryClientProvider>
