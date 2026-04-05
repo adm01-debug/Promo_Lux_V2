@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemo } from "@/contexts/DemoContext";
 import { StatsGrid } from "@/components/lux/StatsGrid";
 import { AutomationsList } from "@/components/lux/AutomationsList";
 import { CompanyTable } from "@/components/lux/CompanyTable";
@@ -8,12 +9,13 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { QuickActions } from "@/components/lux/QuickActions";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical } from "lucide-react";
+import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, Eye, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useWeeklyPerformance } from "@/hooks/useWeeklyPerformance";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const LAYOUT_KEY = "lux-dashboard-widget-order";
 
@@ -69,7 +71,8 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const { user } = useAuth();
-  const colors = useThemeColors();
+  const { isDemoMode, exitDemo } = useDemo();
+  const navigate = useNavigate();
   const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
   const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(loadOrder);
