@@ -6,31 +6,9 @@ vi.mock("@/hooks/useDashboardData", () => ({
   useDashboardStats: vi.fn(),
 }));
 
-vi.mock("framer-motion", () => {
-  const comp = ({ children, className, onClick, style }: any) => {
-    const Tag = "div";
-    return <Tag className={className} onClick={onClick} style={style}>{children}</Tag>;
-  };
-  const svgComp = (props: any) => <circle />;
-  const pathComp = (props: any) => <path />;
-  const spanComp = ({ children, className, style }: any) => <span className={className} style={style}>{children}</span>;
-  const handler = {
-    get: (_: any, prop: string) => {
-      if (prop === "span") return spanComp;
-      if (prop === "circle") return svgComp;
-      if (prop === "path") return pathComp;
-      return comp;
-    },
-  };
-  return {
-    motion: new Proxy({}, handler),
-    useMotionValue: () => ({ get: () => 0, set: () => {} }),
-    useTransform: () => ({ get: () => 0 }),
-    animate: (_mv: any, _to: any, opts: any) => {
-      opts?.onUpdate?.(_to);
-      return { stop: () => {} };
-    },
-  };
+vi.mock("framer-motion", async () => {
+  const { mockFramerMotion } = await import("@/test/mockFramerMotion");
+  return mockFramerMotion();
 });
 
 import { StatsGrid } from "../StatsGrid";

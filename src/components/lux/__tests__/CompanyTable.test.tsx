@@ -4,28 +4,9 @@ import { CompanyTable } from "../CompanyTable";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-vi.mock("framer-motion", () => {
-  const comp = ({ children, className }: any) => children != null ? <div className={className}>{children}</div> : <div />;
-  const trComp = ({ children }: any) => children != null ? <tr>{children}</tr> : <tr />;
-  const spanComp = ({ children, className }: any) => <span className={className}>{children}</span>;
-  const handler = {
-    get: (_: any, prop: string) => {
-      if (prop === "tr") return trComp;
-      if (prop === "span") return spanComp;
-      return comp;
-    },
-  };
-  return {
-    motion: new Proxy({}, handler),
-    AnimatePresence: ({ children }: any) => <>{children}</>,
-    useInView: () => true,
-    useMotionValue: () => ({ get: () => 0, set: () => {} }),
-    useTransform: () => ({ get: () => 0 }),
-    animate: (_mv: any, _to: any, opts: any) => {
-      opts?.onUpdate?.(_to);
-      return { stop: () => {} };
-    },
-  };
+vi.mock("framer-motion", async () => {
+  const { mockFramerMotion } = await import("@/test/mockFramerMotion");
+  return mockFramerMotion();
 });
 
 vi.mock("@/hooks/useDashboardData", () => ({
