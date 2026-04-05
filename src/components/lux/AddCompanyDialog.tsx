@@ -91,7 +91,7 @@ export const AddCompanyDialog = () => {
         source: "manual",
         lat: geoCoords?.lat ?? null,
         lng: geoCoords?.lng ?? null,
-      });
+      }]);
       if (error) throw error;
 
       const geoMsg = geoCoords ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
