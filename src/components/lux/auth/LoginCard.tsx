@@ -114,10 +114,12 @@ export function LoginCard(props: LoginCardProps) {
                   <form onSubmit={handleEmailLogin} className="space-y-3">
                     <EmailInput id="login-email" value={email} onChange={setEmail} />
                     <PasswordInput id="login-password" label="Senha" value={password} onChange={setPassword} />
-                    <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11" size="lg">
-                      {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-                      Entrar
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                      <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11 shadow-[0_4px_20px_hsl(var(--primary)/0.25)] hover:shadow-[0_6px_28px_hsl(var(--primary)/0.35)] transition-shadow" size="lg">
+                        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                        Entrar
+                      </Button>
+                    </motion.div>
                     <button
                       type="button"
                       onClick={() => { setShowForgotPassword(true); setResetEmail(email); }}
@@ -140,10 +142,12 @@ export function LoginCard(props: LoginCardProps) {
                       minLength={8}
                     />
                     <PasswordStrengthMeter password={password} />
-                    <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11" size="lg">
-                      {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                      Criar Conta
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                      <Button type="submit" disabled={locked.locked || isSubmitting} className="w-full gap-2 h-11 shadow-[0_4px_20px_hsl(var(--primary)/0.25)] hover:shadow-[0_6px_28px_hsl(var(--primary)/0.35)] transition-shadow" size="lg">
+                        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                        Criar Conta
+                      </Button>
+                    </motion.div>
                   </form>
                 </motion.div>
               )}
