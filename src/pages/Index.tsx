@@ -109,12 +109,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:text-sm focus:font-medium"
-      >
-        Pular para o conteúdo
-      </a>
+      {/* Skip nav is in index.html — no duplicate needed here */}
 
       <ConnectionStatus />
       <TopProgressBar isAnimating={isTransitioning} />
