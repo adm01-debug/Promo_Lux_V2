@@ -102,7 +102,8 @@ describe("CompanyFilters — P0 Mobile Collapsible", () => {
     const onToggleSector = vi.fn();
     render(<CompanyFilters {...defaultProps} onToggleSector={onToggleSector} />);
     const techButtons = screen.getAllByText("Tech");
-    fireEvent.click(techButtons[0].closest("button")!);
+    const clickTarget = techButtons[0].closest("button") || techButtons[0].closest("[class]") || techButtons[0];
+    fireEvent.click(clickTarget);
     expect(onToggleSector).toHaveBeenCalledWith("Tech");
   });
 
