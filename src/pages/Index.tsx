@@ -159,7 +159,7 @@ const Index = () => {
       )}
 
       {/* Main area */}
-      <div id="main-content" className={cn("flex-1 transition-all duration-300", !focusMode && mainMargin)}>
+      <div className={cn("flex-1 transition-all duration-300", !focusMode && mainMargin)}>
         {!focusMode && (
           <Header
             breadcrumbs={breadcrumbs}
