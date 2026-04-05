@@ -31,20 +31,9 @@ vi.mock("@/hooks/useThemeColors", () => ({
   }),
 }));
 
-const MotionComponent = ({ children }: any) => <div>{children}</div>;
-
-vi.mock("framer-motion", () => {
-  const comp = ({ children }: any) => children != null ? <div>{children}</div> : <div />;
-  return {
-    motion: new Proxy({}, { get: () => comp }),
-    useMotionValue: () => ({ get: () => 0, set: () => {} }),
-    useTransform: () => ({ get: () => 0 }),
-    animate: (_mv: any, _to: any, opts: any) => {
-      opts?.onUpdate?.(_to);
-      return { stop: () => {} };
-    },
-    AnimatePresence: ({ children }: any) => <>{children}</>,
-  };
+vi.mock("framer-motion", async () => {
+  const { mockFramerMotion } = await import("@/test/mockFramerMotion");
+  return mockFramerMotion();
 });
 
 vi.mock("recharts", () => ({

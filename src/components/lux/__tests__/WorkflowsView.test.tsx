@@ -49,12 +49,9 @@ vi.mock("@/hooks/use-toast", () => ({
   toast: vi.fn(),
 }));
 
-vi.mock("framer-motion", () => {
-  const comp = ({ children, className }: any) => <div className={className}>{children}</div>;
-  return {
-    motion: new Proxy({}, { get: () => comp }),
-    AnimatePresence: ({ children }: any) => <>{children}</>,
-  };
+vi.mock("framer-motion", async () => {
+  const { mockFramerMotion } = await import("@/test/mockFramerMotion");
+  return mockFramerMotion();
 });
 
 import { WorkflowsView } from "../WorkflowsView";

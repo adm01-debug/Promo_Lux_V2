@@ -17,16 +17,9 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-vi.mock("framer-motion", () => {
-  const comp = ({ children }: any) => children != null ? <div>{children}</div> : <div />;
-  const tableComp = ({ children }: any) => children != null ? <tr>{children}</tr> : <tr />;
-  const handler = {
-    get: (_: any, prop: string) => prop === "tr" ? tableComp : comp,
-  };
-  return {
-    motion: new Proxy({}, handler),
-    AnimatePresence: ({ children }: any) => <>{children}</>,
-  };
+vi.mock("framer-motion", async () => {
+  const { mockFramerMotion } = await import("@/test/mockFramerMotion");
+  return mockFramerMotion();
 });
 
 vi.mock("@/hooks/use-mobile", () => ({
