@@ -52,17 +52,21 @@ export const AutomationsList = () => {
 
   const { data: workflows, isLoading } = useQuery({
     queryKey: ["dashboard-workflows", isDemoMode],
-    queryFn: isDemoMode
-      ? () => DEMO_WORKFLOWS
-      : async () => {
-          const { data, error } = await supabase
-            .from("workflows")
-            .select("*")
-            .order("updated_at", { ascending: false })
-            .limit(5);
-          if (error) throw error;
-          return data ?? [];
-        },
+    queryFn: async () => {
+      if (isDemoMode) return DEMO_WORKFLOWS;
+      const { data, error } = await supabase
+        .from("workflows")
+        .select("*")
+        .order("updated_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return (data ?? []) as Array<{
+        id: string; name: string; status: string; success_rate: number | null;
+        last_run_at: string | null; leads_processed: number | null; leads_qualified: number | null;
+        description: string | null; config: Record<string, unknown>; steps: Array<{ id: string; type: string; label: string; provider: string }>;
+        created_at: string; updated_at: string; user_id: string;
+      }>;
+    },
     staleTime: isDemoMode ? Infinity : 15_000,
   });
 

@@ -80,7 +80,6 @@ export const AddCompanyDialog = () => {
     setSaving(true);
     try {
       const { error } = await supabase.from("companies").insert({
-        user_id: user?.id,
         name: name.trim(),
         sector: sector || null,
         location: location || null,
@@ -88,7 +87,7 @@ export const AddCompanyDialog = () => {
         phone: phone || null,
         website: website || null,
         employees: employees || null,
-        revenue: revenue || null,
+        revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) || null : null,
         source: "manual",
         lat: geoCoords?.lat ?? null,
         lng: geoCoords?.lng ?? null,

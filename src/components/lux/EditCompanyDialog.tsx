@@ -21,7 +21,7 @@ interface EditCompanyDialogProps {
     phone?: string;
     website?: string;
     employees: string;
-    revenue: string;
+    revenue: string | number | null;
   } | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -55,7 +55,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       setPhone(company.phone ?? "");
       setWebsite(company.website ?? "");
       setEmployees(company.employees === "—" ? "" : company.employees);
-      setRevenue(company.revenue === "—" ? "" : company.revenue);
+      setRevenue(company.revenue === "—" ? "" : String(company.revenue ?? ""));
       setGeoStatus("idle");
       setGeoCoords(null);
       setFieldErrors({});
@@ -108,7 +108,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         phone: phone || null,
         website: website || null,
         employees: employees || null,
-        revenue: revenue || null,
+        revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) || null : null,
       };
 
       if (geoCoords) {
