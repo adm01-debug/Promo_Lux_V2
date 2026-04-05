@@ -195,7 +195,7 @@ const Index = () => {
           </div>
         )}
 
-        <main id="main-content" className="p-4 lg:p-6" role="main" aria-label={currentLabel} aria-live="polite">
+        <main id="main-content" className="p-4 lg:p-6 pb-24 lg:pb-6" role="main" aria-label={currentLabel} aria-live="polite">
           <Suspense fallback={
             <motion.div
               initial={{ opacity: 0 }}
