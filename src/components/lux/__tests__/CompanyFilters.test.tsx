@@ -92,14 +92,14 @@ describe("CompanyFilters — P0 Mobile Collapsible", () => {
 
   it("renders search input", () => {
     render(<CompanyFilters {...defaultProps} />);
-    const searchInputs = screen.getAllByPlaceholderText("Buscar...");
+    const searchInputs = screen.getAllByPlaceholderText(/Buscar/);
     expect(searchInputs.length).toBeGreaterThanOrEqual(1);
   });
 
   it("calls onSearchChange on input", () => {
     const onSearchChange = vi.fn();
     render(<CompanyFilters {...defaultProps} onSearchChange={onSearchChange} />);
-    const inputs = screen.getAllByPlaceholderText("Buscar...");
+    const inputs = screen.getAllByPlaceholderText(/Buscar/);
     fireEvent.change(inputs[0], { target: { value: "test" } });
     expect(onSearchChange).toHaveBeenCalledWith("test");
   });
