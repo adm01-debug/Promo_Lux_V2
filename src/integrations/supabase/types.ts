@@ -50,7 +50,7 @@ export type Database = {
           sent: number
           sequence: Json
           start_date: string | null
-          status: string
+          status: Database["public"]["Enums"]["campaign_status"]
           updated_at: string
           user_id: string
         }
@@ -65,7 +65,7 @@ export type Database = {
           sent?: number
           sequence?: Json
           start_date?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["campaign_status"]
           updated_at?: string
           user_id?: string
         }
@@ -80,7 +80,7 @@ export type Database = {
           sent?: number
           sequence?: Json
           start_date?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["campaign_status"]
           updated_at?: string
           user_id?: string
         }
@@ -100,7 +100,7 @@ export type Database = {
           name: string
           phone: string | null
           raw_data: Json | null
-          revenue: string | null
+          revenue: number | null
           sector: string | null
           source: string
           starred: boolean | null
@@ -121,7 +121,7 @@ export type Database = {
           name: string
           phone?: string | null
           raw_data?: Json | null
-          revenue?: string | null
+          revenue?: number | null
           sector?: string | null
           source?: string
           starred?: boolean | null
@@ -142,7 +142,7 @@ export type Database = {
           name?: string
           phone?: string | null
           raw_data?: Json | null
-          revenue?: string | null
+          revenue?: number | null
           sector?: string | null
           source?: string
           starred?: boolean | null
@@ -307,7 +307,7 @@ export type Database = {
           results_count: number | null
           source: string
           started_at: string | null
-          status: string
+          status: Database["public"]["Enums"]["scrape_job_status"]
           updated_at: string
           user_id: string
         }
@@ -322,7 +322,7 @@ export type Database = {
           results_count?: number | null
           source?: string
           started_at?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["scrape_job_status"]
           updated_at?: string
           user_id?: string
         }
@@ -337,7 +337,7 @@ export type Database = {
           results_count?: number | null
           source?: string
           started_at?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["scrape_job_status"]
           updated_at?: string
           user_id?: string
         }
@@ -519,7 +519,7 @@ export type Database = {
           leads_processed: number | null
           leads_qualified: number | null
           name: string
-          status: string
+          status: Database["public"]["Enums"]["workflow_status"]
           steps: Json
           success_rate: number | null
           updated_at: string
@@ -534,7 +534,7 @@ export type Database = {
           leads_processed?: number | null
           leads_qualified?: number | null
           name: string
-          status?: string
+          status?: Database["public"]["Enums"]["workflow_status"]
           steps?: Json
           success_rate?: number | null
           updated_at?: string
@@ -549,7 +549,7 @@ export type Database = {
           leads_processed?: number | null
           leads_qualified?: number | null
           name?: string
-          status?: string
+          status?: Database["public"]["Enums"]["workflow_status"]
           steps?: Json
           success_rate?: number | null
           updated_at?: string
@@ -565,7 +565,22 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      campaign_status: "draft" | "active" | "paused" | "completed" | "archived"
+      scrape_job_status:
+        | "pending"
+        | "running"
+        | "working"
+        | "completed"
+        | "failed"
+        | "cancelled"
+      workflow_status:
+        | "draft"
+        | "active"
+        | "paused"
+        | "completed"
+        | "failed"
+        | "running"
+        | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -692,6 +707,25 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      campaign_status: ["draft", "active", "paused", "completed", "archived"],
+      scrape_job_status: [
+        "pending",
+        "running",
+        "working",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
+      workflow_status: [
+        "draft",
+        "active",
+        "paused",
+        "completed",
+        "failed",
+        "running",
+        "archived",
+      ],
+    },
   },
 } as const
