@@ -5,6 +5,8 @@ interface UseSwipeGestureOptions {
   onSwipeRight?: () => void;
   threshold?: number;
   edgeSize?: number;
+  /** If true, swipe triggers anywhere (not just from edge) */
+  anywhere?: boolean;
 }
 
 export function useSwipeGesture({
@@ -12,6 +14,7 @@ export function useSwipeGesture({
   onSwipeRight,
   threshold = 80,
   edgeSize = 30,
+  anywhere = false,
 }: UseSwipeGestureOptions) {
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const touchStartedAtEdge = useRef(false);
@@ -31,9 +34,9 @@ export function useSwipeGesture({
 
       // Only trigger if horizontal swipe is dominant
       if (Math.abs(deltaX) > threshold && deltaY < Math.abs(deltaX) * 0.7) {
-        if (deltaX > 0 && touchStartedAtEdge.current) {
+        if (deltaX > 0 && (anywhere || touchStartedAtEdge.current)) {
           onSwipeRight?.();
-        } else if (deltaX < 0) {
+        } else if (deltaX < 0 && (anywhere || true)) {
           onSwipeLeft?.();
         }
       }
@@ -47,5 +50,5 @@ export function useSwipeGesture({
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [onSwipeLeft, onSwipeRight, threshold, edgeSize]);
+  }, [onSwipeLeft, onSwipeRight, threshold, edgeSize, anywhere]);
 }
