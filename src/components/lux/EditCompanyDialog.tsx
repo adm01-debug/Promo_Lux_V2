@@ -55,7 +55,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       setPhone(company.phone ?? "");
       setWebsite(company.website ?? "");
       setEmployees(company.employees === "—" ? "" : company.employees);
-      setRevenue(company.revenue === "—" ? "" : company.revenue);
+      setRevenue(company.revenue === "—" ? "" : String(company.revenue ?? ""));
       setGeoStatus("idle");
       setGeoCoords(null);
       setFieldErrors({});
