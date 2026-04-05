@@ -1,5 +1,5 @@
 import { CheckCircle2, AlertCircle, Zap, Database, Bell, Clock } from "lucide-react";
-import { useRecentActivity } from "@/hooks/useDashboardData";
+import { useRecentActivity, type ActivityItem } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { formatDistanceToNow } from "date-fns";

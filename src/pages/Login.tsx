@@ -4,9 +4,20 @@ import { GoogleLoadingOverlay } from "@/components/lux/auth/GoogleLoadingOverlay
 import { LoginCard } from "@/components/lux/auth/LoginCard";
 import { GoldConfetti } from "@/components/lux/auth/GoldConfetti";
 import { AnimatePresence, motion } from "framer-motion";
+import { useDemo } from "@/contexts/DemoContext";
+import { useNavigate } from "react-router-dom";
+import { Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const form = useLoginForm();
+  const { enterDemo } = useDemo();
+  const navigate = useNavigate();
+
+  const handleDemo = () => {
+    enterDemo();
+    navigate("/");
+  };
 
   return (
     <>
@@ -37,7 +48,31 @@ export default function LoginPage() {
           aria-hidden="true"
         />
         <FloatingParticles />
-        <LoginCard {...form} />
+
+        <div className="relative z-10 flex flex-col items-center gap-4 w-full max-w-md">
+          <LoginCard {...form} />
+
+          {/* Demo mode button */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="w-full"
+          >
+            <Button
+              variant="outline"
+              className="w-full gap-2 glass border-primary/20 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground hover:text-foreground transition-all duration-300 group"
+              onClick={handleDemo}
+            >
+              <Play className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
+              <span>Explorar em modo demonstração</span>
+              <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium ml-auto">
+                sem login
+              </span>
+            </Button>
+          </motion.div>
+        </div>
+
         {/* Footer branding */}
         <motion.p
           initial={{ opacity: 0 }}

@@ -6,6 +6,7 @@ import { useSidebarState } from "@/hooks/useSidebarState";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useFocusMode } from "@/hooks/useFocusMode";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemo } from "@/contexts/DemoContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { TopProgressBar } from "@/components/lux/TopProgressBar";
 import { CommandPalette } from "@/components/lux/CommandPalette";
@@ -64,6 +65,7 @@ const Index = () => {
   const { collapsed, mobileOpen, toggleCollapse, openMobile, closeMobile } = useSidebarState();
   const { focusMode, toggleFocusMode } = useFocusMode();
   const { user, signOut } = useAuth();
+  const { isDemoMode } = useDemo();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   useRealtimeCompanies();
   useRealtimeScrapeJobs();
@@ -171,8 +173,8 @@ const Index = () => {
             breadcrumbs={breadcrumbs}
             canGoBack={canGoBack}
             currentLabel={currentLabel}
-            userEmail={user?.email ?? undefined}
-            userAvatarUrl={user?.user_metadata?.avatar_url}
+            userEmail={isDemoMode ? "demo@luxia.app" : (user?.email ?? undefined)}
+            userAvatarUrl={isDemoMode ? undefined : user?.user_metadata?.avatar_url}
             onGoBack={goBack}
             onNavigate={handleNav}
             onOpenMobileSidebar={openMobile}
