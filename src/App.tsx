@@ -54,6 +54,8 @@ function PageLoader({ ref }: { ref?: React.Ref<HTMLDivElement> }) {
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const { isDemoMode } = useDemo();
+  if (isDemoMode) return <>{children}</>;
   if (loading) return <PageLoader />;
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
@@ -61,6 +63,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const { isDemoMode } = useDemo();
+  if (isDemoMode) return <Navigate to="/" replace />;
   if (loading) return <PageLoader />;
   if (user) return <Navigate to="/" replace />;
   return <>{children}</>;
