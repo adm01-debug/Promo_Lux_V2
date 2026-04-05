@@ -93,11 +93,15 @@ const Index = () => {
     onToggleSidebar: toggleCollapse,
   });
 
-  // Track view transitions for progress bar
+  // Track view transitions for progress bar + scroll to top
   useEffect(() => {
     if (activeView !== prevView.current) {
       setIsTransitioning(true);
       prevView.current = activeView;
+      // Scroll main content to top on view change
+      const main = document.getElementById("main-content");
+      if (main) main.scrollTo({ top: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, behavior: "instant" });
       const timer = setTimeout(() => setIsTransitioning(false), 350);
       return () => clearTimeout(timer);
     }
