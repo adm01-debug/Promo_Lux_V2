@@ -1,4 +1,5 @@
 import { BarChart3, TrendingUp, Building2, Target, DollarSign, Filter, FileDown, Loader2 } from "lucide-react";
+import { DataError } from "@/components/lux/DataError";
 import { Button } from "@/components/ui/button";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -278,7 +279,7 @@ const cardVariants = {
 };
 
 export const AnalyticsView = () => {
-  const { data, isLoading } = useAnalyticsData();
+  const { data, isLoading, error, refetch } = useAnalyticsData();
   useThemeColors();
   const [exporting, setExporting] = useState(false);
 
@@ -309,6 +310,10 @@ export const AnalyticsView = () => {
         </div>
       </div>
     );
+  }
+
+  if (error) {
+    return <DataError message={error.message} onRetry={() => refetch()} />;
   }
 
   const d = data!;

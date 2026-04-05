@@ -243,10 +243,8 @@ export const GmapsScraperView = () => {
         </div>
 
         {error ? (
-          <div className="p-8 text-center">
-            <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
-            <p className="text-sm text-destructive">Erro ao carregar jobs</p>
-            <p className="text-xs text-muted-foreground mt-1">Verifique a conexão com o backend</p>
+          <div className="p-4">
+            <DataError message={error.message} onRetry={() => refetch()} />
           </div>
         ) : isLoading ? (
           <div className="p-8 text-center">
