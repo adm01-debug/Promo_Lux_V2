@@ -79,8 +79,7 @@ export const AddCompanyDialog = () => {
     setFieldErrors({});
     setSaving(true);
     try {
-      const { error } = await supabase.from("companies").insert({
-        user_id: user?.id,
+      const { error } = await supabase.from("companies").insert([{
         name: name.trim(),
         sector: sector || null,
         location: location || null,
