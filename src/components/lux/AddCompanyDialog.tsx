@@ -87,7 +87,7 @@ export const AddCompanyDialog = () => {
         phone: phone || null,
         website: website || null,
         employees: employees || null,
-        revenue: revenue || null,
+        revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) : null,
         source: "manual",
         lat: geoCoords?.lat ?? null,
         lng: geoCoords?.lng ?? null,
