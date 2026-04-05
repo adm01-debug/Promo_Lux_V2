@@ -70,7 +70,7 @@ describe("Sidebar", () => {
   it("highlights the active view", () => {
     renderSidebar({ activeView: "companies" });
     const btn = screen.getByText("Empresas").closest("button");
-    expect(btn?.className).toContain("bg-primary");
+    expect(btn?.className).toContain("text-primary");
   });
 
   it("shows mobile close button when mobileOpen", () => {

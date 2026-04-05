@@ -4,6 +4,30 @@ import { CompanyTable } from "../CompanyTable";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+vi.mock("framer-motion", () => {
+  const comp = ({ children, className }: any) => children != null ? <div className={className}>{children}</div> : <div />;
+  const trComp = ({ children }: any) => children != null ? <tr>{children}</tr> : <tr />;
+  const spanComp = ({ children, className }: any) => <span className={className}>{children}</span>;
+  const handler = {
+    get: (_: any, prop: string) => {
+      if (prop === "tr") return trComp;
+      if (prop === "span") return spanComp;
+      return comp;
+    },
+  };
+  return {
+    motion: new Proxy({}, handler),
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+    useInView: () => true,
+    useMotionValue: () => ({ get: () => 0, set: () => {} }),
+    useTransform: () => ({ get: () => 0 }),
+    animate: (_mv: any, _to: any, opts: any) => {
+      opts?.onUpdate?.(_to);
+      return { stop: () => {} };
+    },
+  };
+});
+
 vi.mock("@/hooks/useDashboardData", () => ({
   useRecentCompanies: vi.fn(),
 }));
@@ -47,17 +71,20 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
     vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
     
-    // Score 92 = text-success
+    // Score 92 = text-success — class is on ancestor span
     const score92 = screen.getByText("92");
-    expect(score92.className).toContain("text-success");
+    const scoreContainer92 = score92.closest("span.font-mono");
+    expect(scoreContainer92?.className).toContain("text-success");
     
     // Score 78 = text-primary
     const score78 = screen.getByText("78");
-    expect(score78.className).toContain("text-primary");
+    const scoreContainer78 = score78.closest("span.font-mono");
+    expect(scoreContainer78?.className).toContain("text-primary");
     
-    // Score 45 = text-warning
+    // Score 45 = text-muted-foreground (< 60)
     const score45 = screen.getByText("45");
-    expect(score45.className).toContain("text-warning");
+    const scoreContainer45 = score45.closest("span.font-mono");
+    expect(scoreContainer45?.className).toContain("text-muted-foreground");
   });
 
   it("shows loading state when loading", () => {

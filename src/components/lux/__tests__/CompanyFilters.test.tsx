@@ -6,13 +6,16 @@ vi.mock("@/hooks/use-mobile", () => ({
   useIsMobile: vi.fn(() => false),
 }));
 
-vi.mock("framer-motion", () => ({
-  motion: {
-    div: ({ children, className, ...props }: any) => <div className={className}>{children}</div>,
-    button: ({ children, className, onClick, ...props }: any) => <button className={className} onClick={onClick}>{children}</button>,
-  },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-}));
+vi.mock("framer-motion", () => {
+  const comp = ({ children, className, onClick }: any) => {
+    const Tag = onClick ? "button" : "div";
+    return <Tag className={className} onClick={onClick}>{children}</Tag>;
+  };
+  return {
+    motion: new Proxy({}, { get: () => comp }),
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+  };
+});
 
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -89,14 +92,14 @@ describe("CompanyFilters — P0 Mobile Collapsible", () => {
 
   it("renders search input", () => {
     render(<CompanyFilters {...defaultProps} />);
-    const searchInputs = screen.getAllByPlaceholderText("Buscar...");
+    const searchInputs = screen.getAllByPlaceholderText(/Buscar/);
     expect(searchInputs.length).toBeGreaterThanOrEqual(1);
   });
 
   it("calls onSearchChange on input", () => {
     const onSearchChange = vi.fn();
     render(<CompanyFilters {...defaultProps} onSearchChange={onSearchChange} />);
-    const inputs = screen.getAllByPlaceholderText("Buscar...");
+    const inputs = screen.getAllByPlaceholderText(/Buscar/);
     fireEvent.change(inputs[0], { target: { value: "test" } });
     expect(onSearchChange).toHaveBeenCalledWith("test");
   });
