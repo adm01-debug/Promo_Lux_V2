@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
 
 interface AgentMessage {
   id: string;
@@ -159,6 +160,10 @@ export const AIAgentView = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
+      toast({ title: "Conversa limpa", description: "Histórico do chat foi apagado." });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Erro ao limpar", description: err.message, variant: "destructive" });
     },
   });
 

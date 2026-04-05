@@ -93,15 +93,24 @@ const Index = () => {
     onToggleSidebar: toggleCollapse,
   });
 
-  // Track view transitions for progress bar
+  // Track view transitions for progress bar + scroll to top + dynamic title
   useEffect(() => {
     if (activeView !== prevView.current) {
       setIsTransitioning(true);
       prevView.current = activeView;
+      const main = document.getElementById("main-content");
+      if (main) main.scrollTo({ top: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, behavior: "instant" });
       const timer = setTimeout(() => setIsTransitioning(false), 350);
       return () => clearTimeout(timer);
     }
   }, [activeView]);
+
+  // Dynamic document title
+  useEffect(() => {
+    document.title = `${currentLabel} — LUX IA`;
+    return () => { document.title = "LUX IA — Sales Intelligence Platform"; };
+  }, [currentLabel]);
 
   const mainMargin = collapsed ? "lg:ml-16" : "lg:ml-64";
   const ActiveComponent = VIEW_MAP[activeView];

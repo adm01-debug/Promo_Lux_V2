@@ -147,10 +147,10 @@ export const Sidebar = memo(({
       {/* Navigation */}
       <nav className={cn("flex-1 overflow-y-auto", collapsed ? "p-2 space-y-1" : "p-3 space-y-0.5")}>
         {groupedItems.map((item) => (
-          <div key={item.id}>
+          <div key={item.id} role={item.showSection ? "group" : undefined} aria-label={item.showSection && !collapsed ? item.section : undefined}>
             {item.showSection && !collapsed && (
-              <div className="px-3 pt-5 pb-2 flex items-center gap-2">
-                <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/70 font-semibold">
+              <div className="px-3 pt-5 pb-2 flex items-center gap-2" role="presentation">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/70 font-semibold" id={`nav-section-${item.section?.replace(/\s/g, "-").toLowerCase()}`}>
                   {item.section}
                 </p>
                 <div className="flex-1 h-px bg-border/30" />
