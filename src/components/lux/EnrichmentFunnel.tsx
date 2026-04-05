@@ -1,10 +1,31 @@
 import { ArrowDown, Database, Filter, CheckCircle2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_FUNNEL } from "@/lib/demoData";
+import { useEffect, useRef } from "react";
+
+/* Animated number counter */
+const FunnelCounter = ({ value }: { value: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(containerRef, { once: true });
+  const motionVal = useMotionValue(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const controls = animate(motionVal, value, {
+      duration: 1,
+      ease: "easeOut",
+      onUpdate: (v) => { if (ref.current) ref.current.textContent = Math.round(v).toLocaleString("pt-BR"); },
+    });
+    return () => controls.stop();
+  }, [value, isInView, motionVal]);
+
+  return <span ref={containerRef}><span ref={ref}>0</span></span>;
+};
 
 export const EnrichmentFunnel = () => {
   const { isDemoMode } = useDemo();
