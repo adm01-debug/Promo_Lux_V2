@@ -3,6 +3,7 @@ import { validateScrapeJob } from "@/lib/schemas/scrapeJob";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MapPin, Plus, Trash2, Download, RefreshCw, Search, Globe, Mail, Clock, CheckCircle2, AlertCircle, Loader2, Zap, Eye, DatabaseIcon } from "lucide-react";
+import { DataError } from "@/components/lux/DataError";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,7 +40,7 @@ export const GmapsScraperView = () => {
   const [fastMode, setFastMode] = useState(false);
   const [expandedJob, setExpandedJob] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["gmaps-jobs"],
     queryFn: gmapsApi.listJobs,
     refetchInterval: 10000,
