@@ -382,11 +382,15 @@ export const AnalyticsView = () => {
               const pct = d.totalProspects > 0 ? Math.round((step.value / d.totalProspects) * 100) : 0;
               return (
                 <motion.div key={step.name} custom={i} variants={cardVariants} initial="hidden" animate="visible"
-                  className="glass rounded-lg p-3 text-center"
+                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  className="glass rounded-lg p-3 flex flex-col items-center gap-2"
                 >
                   <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{step.name}</span>
-                  <p className="text-xl font-bold font-mono text-foreground mt-1">{step.value}</p>
-                  <p className="text-[10px] text-muted-foreground">{pct}%</p>
+                  <MiniDonut percentage={pct} color={step.fill} />
+                  <p className="text-lg font-bold font-mono text-foreground">
+                    <AnimatedCounter value={step.value} />
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-mono">{pct}%</p>
                 </motion.div>
               );
             })}
