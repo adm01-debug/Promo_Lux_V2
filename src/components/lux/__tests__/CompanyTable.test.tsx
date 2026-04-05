@@ -71,17 +71,20 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
     vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
     
-    // Score 92 = text-success
+    // Score 92 = text-success — class is on ancestor span
     const score92 = screen.getByText("92");
-    expect(score92.className).toContain("text-success");
+    const scoreContainer92 = score92.closest("span.font-mono");
+    expect(scoreContainer92?.className).toContain("text-success");
     
     // Score 78 = text-primary
     const score78 = screen.getByText("78");
-    expect(score78.className).toContain("text-primary");
+    const scoreContainer78 = score78.closest("span.font-mono");
+    expect(scoreContainer78?.className).toContain("text-primary");
     
     // Score 45 = text-warning
     const score45 = screen.getByText("45");
-    expect(score45.className).toContain("text-warning");
+    const scoreContainer45 = score45.closest("span.font-mono");
+    expect(scoreContainer45?.className).toContain("text-warning");
   });
 
   it("shows loading state when loading", () => {
