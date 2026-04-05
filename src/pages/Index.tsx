@@ -195,8 +195,17 @@ const Index = () => {
           </div>
         )}
 
-        <main id="main-content" className="p-4 lg:p-6" role="main" aria-label={currentLabel} aria-live="polite">
-          <Suspense fallback={<ActiveSkeleton />}>
+        <main id="main-content" className="p-4 lg:p-6 pb-24 lg:pb-6" role="main" aria-label={currentLabel} aria-live="polite">
+          <Suspense fallback={
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ActiveSkeleton />
+            </motion.div>
+          }>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={activeView}

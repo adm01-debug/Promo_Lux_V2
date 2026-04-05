@@ -386,9 +386,26 @@ const SKELETON_MAP: Record<View, React.FC> = {
   map: MapSkeleton,
 };
 
-/** Render a view-specific skeleton. Falls back to DashboardSkeleton. */
+/** Wrapper that adds accessibility attributes to skeleton regions */
+function AccessibleSkeleton({ children }: { children: React.ReactNode }) {
+  return (
+    <div role="status" aria-busy="true" aria-label="Carregando conteúdo">
+      <span className="sr-only">Carregando…</span>
+      {children}
+    </div>
+  );
+}
+
+/** Render a view-specific skeleton with accessibility. Falls back to DashboardSkeleton. */
 export function getViewSkeleton(view: View): React.FC {
-  return SKELETON_MAP[view] ?? DashboardSkeleton;
+  const Skeleton = SKELETON_MAP[view] ?? DashboardSkeleton;
+  return function ViewSkeletonWrapper() {
+    return (
+      <AccessibleSkeleton>
+        <Skeleton />
+      </AccessibleSkeleton>
+    );
+  };
 }
 
 /** Default generic skeleton (kept for backward compat) */
