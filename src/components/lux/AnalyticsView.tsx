@@ -588,26 +588,14 @@ export const AnalyticsView = () => {
               <h3 className="text-sm font-semibold text-foreground mb-1">Taxa de Enriquecimento</h3>
               <p className="text-xs text-muted-foreground mb-6">Percentual de empresas com dados completos</p>
               <div className="flex items-center justify-center">
-                <div className="relative h-32 w-32">
-                  <svg className="h-32 w-32 -rotate-90" viewBox="0 0 120 120">
-                    <circle cx="60" cy="60" r="52" fill="none" stroke="hsl(var(--secondary))" strokeWidth="10" />
-                    <circle
-                      cx="60" cy="60" r="52" fill="none"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth="10"
-                      strokeLinecap="round"
-                      strokeDasharray={`${(d.totalCompanies > 0 ? (d.enrichedCount / d.totalCompanies) : 0) * 326.73} 326.73`}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold font-mono text-foreground">
-                      {d.totalCompanies > 0 ? Math.round((d.enrichedCount / d.totalCompanies) * 100) : 0}%
-                    </span>
-                  </div>
-                </div>
+                <AnimatedDonut
+                  percentage={d.totalCompanies > 0 ? Math.round((d.enrichedCount / d.totalCompanies) * 100) : 0}
+                  size={140}
+                  strokeWidth={12}
+                />
               </div>
               <p className="text-center text-xs text-muted-foreground mt-4">
-                {d.enrichedCount.toLocaleString()} de {d.totalCompanies.toLocaleString()} empresas enriquecidas
+                <AnimatedCounter value={d.enrichedCount} /> de <AnimatedCounter value={d.totalCompanies} /> empresas enriquecidas
               </p>
             </motion.div>
           </div>
