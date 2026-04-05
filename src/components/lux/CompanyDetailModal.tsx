@@ -22,7 +22,7 @@ interface Company {
   source: string;
   website?: string;
   employees: string;
-  revenue: string;
+  revenue: string | number | null;
   email?: string;
   phone?: string;
   enriched: boolean;

@@ -21,7 +21,7 @@ interface EditCompanyDialogProps {
     phone?: string;
     website?: string;
     employees: string;
-    revenue: string;
+    revenue: string | number | null;
   } | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
