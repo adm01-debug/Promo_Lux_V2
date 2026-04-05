@@ -109,12 +109,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:text-sm focus:font-medium"
-      >
-        Pular para o conteúdo
-      </a>
+      {/* Skip nav is in index.html — no duplicate needed here */}
 
       <ConnectionStatus />
       <TopProgressBar isAnimating={isTransitioning} />
@@ -164,7 +159,7 @@ const Index = () => {
       )}
 
       {/* Main area */}
-      <div id="main-content" className={cn("flex-1 transition-all duration-300", !focusMode && mainMargin)}>
+      <div className={cn("flex-1 transition-all duration-300", !focusMode && mainMargin)}>
         {!focusMode && (
           <Header
             breadcrumbs={breadcrumbs}
@@ -200,7 +195,7 @@ const Index = () => {
           </div>
         )}
 
-        <main id="main-content" className="p-4 lg:p-6" aria-label={currentLabel}>
+        <main id="main-content" className="p-4 lg:p-6" role="main" aria-label={currentLabel} aria-live="polite">
           <Suspense fallback={<ActiveSkeleton />}>
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div

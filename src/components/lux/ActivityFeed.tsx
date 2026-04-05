@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { CheckCircle2, AlertCircle, Zap, Database, Bell, Clock } from "lucide-react";
 import { useRecentActivity, type ActivityItem } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,7 +15,7 @@ const iconMap: Record<string, { icon: React.ReactNode; bg: string; ring: string 
   enrichment: { icon: <Database className="h-3.5 w-3.5 text-accent-foreground" />, bg: "bg-accent/10", ring: "ring-accent/30" },
 };
 
-export const ActivityFeed = () => {
+export const ActivityFeed = memo(() => {
   const { data: activities, isLoading } = useRecentActivity();
 
   return (
@@ -146,4 +147,4 @@ export const ActivityFeed = () => {
       )}
     </div>
   );
-};
+});
