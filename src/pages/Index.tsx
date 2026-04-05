@@ -173,8 +173,8 @@ const Index = () => {
             breadcrumbs={breadcrumbs}
             canGoBack={canGoBack}
             currentLabel={currentLabel}
-            userEmail={user?.email ?? undefined}
-            userAvatarUrl={user?.user_metadata?.avatar_url}
+            userEmail={isDemoMode ? "demo@luxia.app" : (user?.email ?? undefined)}
+            userAvatarUrl={isDemoMode ? undefined : user?.user_metadata?.avatar_url}
             onGoBack={goBack}
             onNavigate={handleNav}
             onOpenMobileSidebar={openMobile}
