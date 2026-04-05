@@ -3,16 +3,40 @@
   "short_name": "LUX IA",
   "description": "Plataforma de inteligência comercial com IA para prospecção B2B automatizada",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0A0D14",
-  "theme_color": "#0A0D14",
+  "theme_color": "#D4A520",
   "orientation": "any",
+  "categories": ["business", "productivity"],
+  "lang": "pt-BR",
   "icons": [
     {
       "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/?view=dashboard",
+      "icons": []
+    },
+    {
+      "name": "Empresas",
+      "short_name": "Empresas",
+      "url": "/?view=companies",
+      "icons": []
     }
   ]
 }
