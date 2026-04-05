@@ -118,7 +118,7 @@ export const EnrichmentFunnel = () => {
                 <span className="text-xs font-medium text-foreground">{stage.label}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-sm font-bold text-foreground">{stage.value.toLocaleString()}</span>
+                <span className="font-mono text-sm font-bold text-foreground"><FunnelCounter value={stage.value} /></span>
                 {i > 0 && (
                   <span className="text-[10px] text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded-full">
                     {stage.pct}%
