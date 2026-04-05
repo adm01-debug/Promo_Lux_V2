@@ -225,6 +225,150 @@ const AIAgentSkeleton = () => (
   </div>
 );
 
+const IntentSignalsSkeleton = () => (
+  <div className="space-y-4 animate-fade-in">
+    <div className="flex items-center justify-between">
+      <div className="space-y-2">
+        <Skeleton className="h-7 w-44 bg-muted/50" />
+        <Skeleton className="h-4 w-64 bg-muted/30" />
+      </div>
+      <Skeleton className="h-9 w-36 rounded-lg bg-muted/30" />
+    </div>
+    {/* Signal cards */}
+    <div className="space-y-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="glass rounded-lg p-4 flex items-center gap-4" style={{ animationDelay: `${i * 0.08}s` }}>
+          <Skeleton className="h-10 w-10 rounded-lg bg-muted/30" />
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-4 w-32 bg-muted/40" />
+              <Skeleton className="h-5 w-20 rounded-full bg-muted/20" />
+              <Skeleton className="h-5 w-16 rounded-full bg-muted/20" />
+            </div>
+            <Skeleton className="h-3 w-3/4 bg-muted/20" />
+          </div>
+          <Skeleton className="h-3 w-20 bg-muted/15" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const StakeholdersSkeleton = () => (
+  <div className="space-y-4 animate-fade-in">
+    <div className="flex items-center justify-between">
+      <div className="space-y-2">
+        <Skeleton className="h-7 w-48 bg-muted/50" />
+        <Skeleton className="h-4 w-72 bg-muted/30" />
+      </div>
+      <div className="flex gap-2">
+        <Skeleton className="h-9 w-40 rounded-lg bg-muted/20" />
+        <Skeleton className="h-9 w-24 rounded-lg bg-muted/20" />
+      </div>
+    </div>
+    {/* Search & filters */}
+    <div className="flex gap-2">
+      <Skeleton className="h-10 flex-1 rounded-lg bg-muted/15" />
+      <Skeleton className="h-10 w-32 rounded-lg bg-muted/15" />
+    </div>
+    {/* Stakeholder cards grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="glass rounded-lg p-4 space-y-3">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-full bg-muted/30" />
+            <div className="flex-1 space-y-1.5">
+              <Skeleton className="h-4 w-28 bg-muted/40" />
+              <Skeleton className="h-3 w-20 bg-muted/20" />
+            </div>
+            <Skeleton className="h-6 w-14 rounded-full bg-muted/20" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-16 rounded-full bg-muted/15" />
+            <Skeleton className="h-5 w-20 rounded-full bg-muted/15" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-4 w-4 rounded bg-muted/20" />
+            <Skeleton className="h-3 w-32 bg-muted/15" />
+          </div>
+          <Skeleton className="h-2 w-full rounded-full bg-muted/10" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const GmapsScraperSkeleton = () => (
+  <div className="space-y-4 animate-fade-in">
+    <div className="flex items-center justify-between">
+      <div className="space-y-2">
+        <Skeleton className="h-7 w-48 bg-muted/50" />
+        <Skeleton className="h-4 w-72 bg-muted/30" />
+      </div>
+      <Skeleton className="h-9 w-36 rounded-lg bg-muted/30" />
+    </div>
+    {/* Job cards */}
+    <div className="space-y-3">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="glass rounded-lg p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-9 w-9 rounded-lg bg-muted/30" />
+              <div className="space-y-1.5">
+                <Skeleton className="h-4 w-40 bg-muted/40" />
+                <Skeleton className="h-3 w-24 bg-muted/20" />
+              </div>
+            </div>
+            <Skeleton className="h-6 w-20 rounded-full bg-muted/20" />
+          </div>
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-3 w-20 bg-muted/15" />
+            <Skeleton className="h-3 w-24 bg-muted/15" />
+            <Skeleton className="h-3 w-16 bg-muted/15" />
+          </div>
+          <Skeleton className="h-2 w-full rounded-full bg-muted/10" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const SettingsSkeleton = () => (
+  <div className="space-y-6 animate-fade-in max-w-3xl">
+    <div className="space-y-2">
+      <Skeleton className="h-7 w-40 bg-muted/50" />
+      <Skeleton className="h-4 w-64 bg-muted/30" />
+    </div>
+    {/* Tabs */}
+    <div className="flex gap-1 border-b border-border/30 pb-1">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton key={i} className="h-9 w-24 rounded-t-lg bg-muted/20" />
+      ))}
+    </div>
+    {/* Settings form */}
+    <div className="glass rounded-lg p-6 space-y-5">
+      <div className="flex items-center gap-4">
+        <Skeleton className="h-16 w-16 rounded-full bg-muted/30" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-32 bg-muted/30" />
+          <Skeleton className="h-3 w-48 bg-muted/20" />
+        </div>
+      </div>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <Skeleton className="h-4 w-28 bg-muted/30" />
+          <Skeleton className="h-10 w-full rounded-lg bg-muted/20" />
+        </div>
+      ))}
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-4 w-40 bg-muted/25" />
+        <Skeleton className="h-6 w-11 rounded-full bg-muted/20" />
+      </div>
+      <Skeleton className="h-10 w-32 rounded-lg bg-primary/20 mt-4" />
+    </div>
+  </div>
+);
+
 /* ── View → Skeleton mapping ──────────────────────────────── */
 
 const SKELETON_MAP: Record<View, React.FC> = {
@@ -232,13 +376,13 @@ const SKELETON_MAP: Record<View, React.FC> = {
   analytics: AnalyticsSkeleton,
   companies: CompaniesSkeleton,
   icp: FormViewSkeleton,
-  settings: FormViewSkeleton,
+  settings: SettingsSkeleton,
   workflows: WorkflowsSkeleton,
-  intent: CompaniesSkeleton,
-  stakeholders: CompaniesSkeleton,
+  intent: IntentSignalsSkeleton,
+  stakeholders: StakeholdersSkeleton,
   campaigns: CampaignsSkeleton,
   "ai-agent": AIAgentSkeleton,
-  gmaps: FormViewSkeleton,
+  gmaps: GmapsScraperSkeleton,
   map: MapSkeleton,
 };
 
