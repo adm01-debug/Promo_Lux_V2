@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 vi.mock("framer-motion", () => {
-  const comp = ({ children }: any) => children != null ? <div>{children}</div> : <div />;
+  const comp = ({ children, className }: any) => children != null ? <div className={className}>{children}</div> : <div />;
   const trComp = ({ children }: any) => children != null ? <tr>{children}</tr> : <tr />;
   const spanComp = ({ children, className }: any) => <span className={className}>{children}</span>;
   const handler = {
@@ -18,6 +18,13 @@ vi.mock("framer-motion", () => {
   return {
     motion: new Proxy({}, handler),
     AnimatePresence: ({ children }: any) => <>{children}</>,
+    useInView: () => true,
+    useMotionValue: () => ({ get: () => 0, set: () => {} }),
+    useTransform: () => ({ get: () => 0 }),
+    animate: (_mv: any, _to: any, opts: any) => {
+      opts?.onUpdate?.(_to);
+      return { stop: () => {} };
+    },
   };
 });
 

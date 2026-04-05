@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { MemoryRouter } from "react-router-dom";
 
 vi.mock("@/hooks/useDashboardData", () => ({
   useDashboardStats: () => ({
@@ -86,9 +87,11 @@ const { DashboardView } = await import("../DashboardView");
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 const wrapper = ({ children }: any) => (
-  <QueryClientProvider client={qc}>
-    <TooltipProvider>{children}</TooltipProvider>
-  </QueryClientProvider>
+  <MemoryRouter>
+    <QueryClientProvider client={qc}>
+      <TooltipProvider>{children}</TooltipProvider>
+    </QueryClientProvider>
+  </MemoryRouter>
 );
 
 describe("DashboardView — P1 Chart Legibility", () => {
