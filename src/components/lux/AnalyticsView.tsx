@@ -346,13 +346,20 @@ export const AnalyticsView = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {summaryStats.map((stat, i) => (
           <motion.div key={stat.label} custom={i} variants={cardVariants} initial="hidden" animate="visible"
+            whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.2 } }}
             className="glass rounded-lg p-4 group hover:glow-primary transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-muted-foreground text-xs uppercase tracking-widest">{stat.label}</span>
-              <stat.icon className="h-4 w-4 text-primary/60 group-hover:text-primary transition-colors" />
+              <motion.div whileHover={{ rotate: 8, scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
+                <stat.icon className="h-4 w-4 text-primary/60 group-hover:text-primary transition-colors" />
+              </motion.div>
             </div>
-            <p className="text-2xl font-bold text-foreground font-mono">{stat.value}</p>
+            <p className="text-2xl font-bold text-foreground font-mono">
+              {stat.rawValue !== undefined ? (
+                <AnimatedCounter value={stat.rawValue} suffix={stat.suffix} />
+              ) : stat.value}
+            </p>
           </motion.div>
         ))}
       </div>
