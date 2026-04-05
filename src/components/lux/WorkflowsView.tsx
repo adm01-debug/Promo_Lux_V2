@@ -140,7 +140,7 @@ export const WorkflowsView = () => {
   });
 
   const toggleMutation = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: "draft" | "active" | "paused" | "completed" | "failed" | "running" | "archived" }) => {
       try {
         await workflowApi.toggleStatus(id, status);
       } catch {

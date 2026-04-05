@@ -108,7 +108,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         phone: phone || null,
         website: website || null,
         employees: employees || null,
-        revenue: revenue || null,
+        revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) || null : null,
       };
 
       if (geoCoords) {
