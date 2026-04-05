@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { validateCampaign } from "@/lib/schemas/campaign";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_CAMPAIGNS } from "@/lib/demoData";
 import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -106,6 +108,7 @@ const CampaignFormFields = ({
 );
 
 export const CampaignsView = () => {
+  const { isDemoMode } = useDemo();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
@@ -124,14 +127,16 @@ export const CampaignsView = () => {
 
   const { data: campaigns = [], isLoading, error: campaignsError, refetch } = useQuery({
     queryKey: ["campaigns"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("campaigns")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data ?? [];
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_CAMPAIGNS as unknown as Tables<"campaigns">[]
+      : async () => {
+          const { data, error } = await supabase
+            .from("campaigns")
+            .select("*")
+            .order("created_at", { ascending: false });
+          if (error) throw error;
+          return data ?? [];
+        },
     refetchInterval: 15_000,
     retry: 2,
   });

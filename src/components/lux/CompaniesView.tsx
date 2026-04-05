@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_COMPANIES_FULL } from "@/lib/demoData";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
 import { EditCompanyDialog } from "@/components/lux/EditCompanyDialog";
 import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, Pencil, MoreHorizontal, HelpCircle } from "lucide-react";
@@ -67,6 +69,7 @@ const HighlightText = ({ text, query }: { text: string; query: string }) => {
 };
 
 export const CompaniesView = () => {
+  const { isDemoMode } = useDemo();
   const { toast } = useToast();
   const [filters, setFilters, resetFilters] = usePersistedFilters<CompanyFiltersState>("companies", {
     search: "",
@@ -94,28 +97,30 @@ export const CompaniesView = () => {
 
   const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery({
     queryKey: ["companies-list"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("companies")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []).map((c) => ({
-        id: c.id,
-        name: c.name,
-        sector: c.sector ?? "—",
-        location: c.location ?? "—",
-        ipcScore: c.ipc_score ?? 0,
-        source: c.source,
-        website: c.website ?? undefined,
-        employees: c.employees ?? "—",
-        revenue: c.revenue ?? "—",
-        email: c.email ?? undefined,
-        phone: c.phone ?? undefined,
-        enriched: c.enriched ?? false,
-        starred: c.starred ?? false,
-      })) as Company[];
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_COMPANIES_FULL
+      : async () => {
+          const { data, error } = await supabase
+            .from("companies")
+            .select("*")
+            .order("created_at", { ascending: false });
+          if (error) throw error;
+          return (data ?? []).map((c) => ({
+            id: c.id,
+            name: c.name,
+            sector: c.sector ?? "—",
+            location: c.location ?? "—",
+            ipcScore: c.ipc_score ?? 0,
+            source: c.source,
+            website: c.website ?? undefined,
+            employees: c.employees ?? "—",
+            revenue: c.revenue ?? "—",
+            email: c.email ?? undefined,
+            phone: c.phone ?? undefined,
+            enriched: c.enriched ?? false,
+            starred: c.starred ?? false,
+          })) as Company[];
+        },
     staleTime: 15_000,
   });
 

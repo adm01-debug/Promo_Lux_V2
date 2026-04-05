@@ -19,6 +19,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { workflowApi, type Workflow } from "@/lib/api/workflows";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
 
 type WorkflowStatus = "active" | "paused" | "draft" | "error" | "running";
@@ -56,6 +58,7 @@ const defaultSteps = [
 ];
 
 export const WorkflowsView = () => {
+  const { isDemoMode } = useDemo();
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
@@ -67,20 +70,21 @@ export const WorkflowsView = () => {
 
   const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
     queryKey: ["workflows"],
-    queryFn: async () => {
-      try {
-        return await workflowApi.list();
-      } catch {
-        // Fallback: query directly from database if edge function is unavailable
-        const { supabase } = await import("@/integrations/supabase/client");
-        const { data, error } = await supabase
-          .from("workflows")
-          .select("*, workflow_runs(id, status, started_at, completed_at, results)")
-          .order("created_at", { ascending: false });
-        if (error) throw error;
-        return (data ?? []) as unknown as Workflow[];
-      }
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_WORKFLOWS as unknown as Workflow[]
+      : async () => {
+          try {
+            return await workflowApi.list();
+          } catch {
+            const { supabase } = await import("@/integrations/supabase/client");
+            const { data, error } = await supabase
+              .from("workflows")
+              .select("*, workflow_runs(id, status, started_at, completed_at, results)")
+              .order("created_at", { ascending: false });
+            if (error) throw error;
+            return (data ?? []) as unknown as Workflow[];
+          }
+        },
     refetchInterval: 15000,
     retry: 1,
   });

@@ -6,6 +6,8 @@ import {
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_COMPANIES_FULL, DEMO_CAMPAIGNS, DEMO_WORKFLOWS } from "@/lib/demoData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
@@ -44,20 +46,38 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 };
 
 function useAnalyticsData() {
+  const { isDemoMode } = useDemo();
   return useQuery({
-    queryKey: ["analytics-data"],
+    queryKey: ["analytics-data", isDemoMode],
     queryFn: async () => {
-      const [
-        { data: companies },
-        { data: scrapeJobs },
-        { data: workflows },
-        { data: campaigns },
-      ] = await Promise.all([
-        supabase.from("companies").select("sector, ipc_score, enriched, source, created_at"),
-        supabase.from("scrape_jobs").select("status, results_count, source, created_at"),
-        supabase.from("workflows").select("status, leads_processed, leads_qualified, success_rate"),
-        supabase.from("campaigns").select("*").order("created_at", { ascending: false }),
-      ]);
+      let companies: any[] | null;
+      let scrapeJobs: any[] | null;
+      let workflows: any[] | null;
+      let campaigns: any[] | null;
+
+      if (isDemoMode) {
+        companies = DEMO_COMPANIES_FULL.map(c => ({ sector: c.sector, ipc_score: c.ipcScore, enriched: c.enriched, source: c.source, created_at: new Date().toISOString() }));
+        scrapeJobs = [
+          { status: "completed", results_count: 87, source: "gmaps", created_at: new Date().toISOString() },
+          { status: "completed", results_count: 43, source: "gmaps", created_at: new Date().toISOString() },
+          { status: "running", results_count: 31, source: "gmaps", created_at: new Date().toISOString() },
+          { status: "completed", results_count: 22, source: "gmaps", created_at: new Date().toISOString() },
+          { status: "pending", results_count: 0, source: "gmaps", created_at: new Date().toISOString() },
+        ];
+        workflows = DEMO_WORKFLOWS.map(w => ({ status: w.status, leads_processed: w.leads_processed, leads_qualified: w.leads_qualified, success_rate: w.success_rate }));
+        campaigns = DEMO_CAMPAIGNS as any[];
+      } else {
+        const [r1, r2, r3, r4] = await Promise.all([
+          supabase.from("companies").select("sector, ipc_score, enriched, source, created_at"),
+          supabase.from("scrape_jobs").select("status, results_count, source, created_at"),
+          supabase.from("workflows").select("status, leads_processed, leads_qualified, success_rate"),
+          supabase.from("campaigns").select("*").order("created_at", { ascending: false }),
+        ]);
+        companies = r1.data;
+        scrapeJobs = r2.data;
+        workflows = r3.data;
+        campaigns = r4.data;
+      }
 
       // Sector distribution
       const sectorMap = new Map<string, number>();

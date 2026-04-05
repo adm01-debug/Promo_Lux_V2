@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { ViewSkeleton, TableSkeleton } from "@/components/lux/ViewSkeleton";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_STAKEHOLDERS } from "@/lib/demoData";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -59,6 +61,7 @@ const getInitials = (name: string) => {
 };
 
 export const StakeholderFinderView = () => {
+  const { isDemoMode } = useDemo();
   const [search, setSearch] = useState("");
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
   const [selectedSeniority, setSelectedSeniority] = useState<Set<string>>(new Set());
@@ -68,14 +71,16 @@ export const StakeholderFinderView = () => {
 
   const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
     queryKey: ["stakeholders"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("stakeholders")
-        .select("*")
-        .order("confidence_score", { ascending: false });
-      if (error) throw error;
-      return data as Stakeholder[];
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_STAKEHOLDERS as Stakeholder[]
+      : async () => {
+          const { data, error } = await supabase
+            .from("stakeholders")
+            .select("*")
+            .order("confidence_score", { ascending: false });
+          if (error) throw error;
+          return data as Stakeholder[];
+        },
   });
 
   const departments = useMemo(() => {

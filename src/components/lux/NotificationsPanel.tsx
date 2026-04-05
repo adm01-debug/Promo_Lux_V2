@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_NOTIFICATIONS } from "@/lib/demoData";
 import { Bell, Radar, Zap, Building2, CheckCircle2, X, Trash2, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -54,21 +56,24 @@ interface NotificationsPanelProps {
 const NOTIFICATIONS_KEY = ["notifications"];
 
 export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) => {
+  const { isDemoMode } = useDemo();
   const [activeTab, setActiveTab] = useState<"all" | NotificationType>("all");
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
   const { data: rawNotifications, isLoading } = useQuery({
     queryKey: NOTIFICATIONS_KEY,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(50);
-      if (error) throw error;
-      return (data ?? []) as Notification[];
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_NOTIFICATIONS as unknown as Notification[]
+      : async () => {
+          const { data, error } = await supabase
+            .from("notifications")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(50);
+          if (error) throw error;
+          return (data ?? []) as Notification[];
+        },
   });
 
   // Ensure notifications is always an array (guards against cache pollution)
@@ -293,16 +298,19 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 };
 
 export const useNotificationCount = () => {
+  const { isDemoMode } = useDemo();
   const { data } = useQuery({
-    queryKey: ["notifications-count"],
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from("notifications")
-        .select("*", { count: "exact", head: true })
-        .eq("read", false);
-      if (error) throw error;
-      return count ?? 0;
-    },
+    queryKey: ["notifications-count", isDemoMode],
+    queryFn: isDemoMode
+      ? () => DEMO_NOTIFICATIONS.filter(n => !n.read).length
+      : async () => {
+          const { count, error } = await supabase
+            .from("notifications")
+            .select("*", { count: "exact", head: true })
+            .eq("read", false);
+          if (error) throw error;
+          return count ?? 0;
+        },
     refetchInterval: 30_000,
   });
   return data ?? 0;
