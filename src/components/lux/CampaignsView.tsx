@@ -128,7 +128,7 @@ export const CampaignsView = () => {
   const { data: campaigns = [], isLoading, error: campaignsError, refetch } = useQuery({
     queryKey: ["campaigns"],
     queryFn: isDemoMode
-      ? () => DEMO_CAMPAIGNS as any
+      ? () => DEMO_CAMPAIGNS as unknown as Tables<"campaigns">[]
       : async () => {
           const { data, error } = await supabase
             .from("campaigns")

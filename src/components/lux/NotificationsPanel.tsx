@@ -64,7 +64,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
   const { data: rawNotifications, isLoading } = useQuery({
     queryKey: NOTIFICATIONS_KEY,
     queryFn: isDemoMode
-      ? () => DEMO_NOTIFICATIONS as any as Notification[]
+      ? () => DEMO_NOTIFICATIONS as unknown as Notification[]
       : async () => {
           const { data, error } = await supabase
             .from("notifications")

@@ -56,7 +56,7 @@ export const IntentSignalsView = () => {
   const { data: signals = [], isLoading, error: signalsError, refetch } = useQuery({
     queryKey: ["intent-signals"],
     queryFn: isDemoMode
-      ? () => DEMO_INTENT_SIGNALS as any
+      ? () => DEMO_INTENT_SIGNALS as unknown as Tables<"intent_signals">[]
       : async () => {
           const { data, error } = await supabase
             .from("intent_signals")
