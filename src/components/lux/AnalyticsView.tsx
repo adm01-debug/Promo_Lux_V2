@@ -314,10 +314,10 @@ export const AnalyticsView = () => {
   const d = data!;
 
   const summaryStats = [
-    { label: "Total Empresas", value: d.totalCompanies.toLocaleString("pt-BR"), icon: Building2 },
-    { label: "Enriquecidas", value: d.enrichedCount.toLocaleString("pt-BR"), icon: TrendingUp },
-    { label: "Score Médio", value: `${d.avgScore}`, icon: Target },
-    { label: "Raspagens", value: `${d.completedJobs}/${d.totalJobs}`, icon: BarChart3 },
+    { label: "Total Empresas", value: d.totalCompanies.toLocaleString("pt-BR"), rawValue: d.totalCompanies, suffix: "", icon: Building2 },
+    { label: "Enriquecidas", value: d.enrichedCount.toLocaleString("pt-BR"), rawValue: d.enrichedCount, suffix: "", icon: TrendingUp },
+    { label: "Score Médio", value: `${d.avgScore}`, rawValue: d.avgScore, suffix: "", icon: Target },
+    { label: "Raspagens", value: `${d.completedJobs}/${d.totalJobs}`, rawValue: undefined, suffix: "", icon: BarChart3 },
   ];
 
   const conversionRate = d.totalProspects > 0
