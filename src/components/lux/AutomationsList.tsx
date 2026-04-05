@@ -9,6 +9,8 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_WORKFLOWS } from "@/lib/demoData";
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode; glow: string }> = {
   running: { label: "Executando", color: "bg-success/20 text-success border-success/30", icon: <Play className="h-3 w-3" />, glow: "shadow-[0_0_12px_hsl(var(--success)/0.2)]" },
@@ -46,18 +48,22 @@ const ProgressRing = ({ value, size = 28, stroke = 2.5 }: { value: number; size?
 };
 
 export const AutomationsList = () => {
+  const { isDemoMode } = useDemo();
+
   const { data: workflows, isLoading } = useQuery({
-    queryKey: ["dashboard-workflows"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("workflows")
-        .select("*")
-        .order("updated_at", { ascending: false })
-        .limit(5);
-      if (error) throw error;
-      return data ?? [];
-    },
-    staleTime: 15_000,
+    queryKey: ["dashboard-workflows", isDemoMode],
+    queryFn: isDemoMode
+      ? () => DEMO_WORKFLOWS
+      : async () => {
+          const { data, error } = await supabase
+            .from("workflows")
+            .select("*")
+            .order("updated_at", { ascending: false })
+            .limit(5);
+          if (error) throw error;
+          return data ?? [];
+        },
+    staleTime: isDemoMode ? Infinity : 15_000,
   });
 
   return (

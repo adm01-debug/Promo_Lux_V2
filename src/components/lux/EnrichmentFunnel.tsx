@@ -3,30 +3,36 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_FUNNEL } from "@/lib/demoData";
 
 export const EnrichmentFunnel = () => {
+  const { isDemoMode } = useDemo();
+
   const { data, isLoading } = useQuery({
-    queryKey: ["enrichment-funnel"],
-    queryFn: async () => {
-      const [
-        { count: total },
-        { count: enriched },
-        { count: highScore },
-        { count: qualified },
-      ] = await Promise.all([
-        supabase.from("companies").select("*", { count: "exact", head: true }),
-        supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
-        supabase.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 60),
-        supabase.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 75),
-      ]);
-      return {
-        total: total ?? 0,
-        enriched: enriched ?? 0,
-        highScore: highScore ?? 0,
-        qualified: qualified ?? 0,
-      };
-    },
-    staleTime: 15_000,
+    queryKey: ["enrichment-funnel", isDemoMode],
+    queryFn: isDemoMode
+      ? () => DEMO_FUNNEL
+      : async () => {
+          const [
+            { count: total },
+            { count: enriched },
+            { count: highScore },
+            { count: qualified },
+          ] = await Promise.all([
+            supabase.from("companies").select("*", { count: "exact", head: true }),
+            supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
+            supabase.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 60),
+            supabase.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 75),
+          ]);
+          return {
+            total: total ?? 0,
+            enriched: enriched ?? 0,
+            highScore: highScore ?? 0,
+            qualified: qualified ?? 0,
+          };
+        },
+    staleTime: isDemoMode ? Infinity : 15_000,
   });
 
   if (isLoading) {
