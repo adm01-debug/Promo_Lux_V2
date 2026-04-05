@@ -92,7 +92,7 @@ const App = () => (
             <DemoProvider>
               <Toaster />
               <Sonner />
-              <BrowserRouter>
+              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <UnsavedChangesProvider>
                   <Suspense fallback={<PageLoader />}>
                     <AnimatedRoutes />
