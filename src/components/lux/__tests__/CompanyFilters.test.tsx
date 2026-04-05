@@ -6,15 +6,9 @@ vi.mock("@/hooks/use-mobile", () => ({
   useIsMobile: vi.fn(() => false),
 }));
 
-vi.mock("framer-motion", () => {
-  const comp = ({ children, className, onClick }: any) => {
-    const Tag = onClick ? "button" : "div";
-    return <Tag className={className} onClick={onClick}>{children}</Tag>;
-  };
-  return {
-    motion: new Proxy({}, { get: () => comp }),
-    AnimatePresence: ({ children }: any) => <>{children}</>,
-  };
+vi.mock("framer-motion", async () => {
+  const { mockFramerMotion } = await import("@/test/mockFramerMotion");
+  return mockFramerMotion();
 });
 
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -108,7 +102,8 @@ describe("CompanyFilters — P0 Mobile Collapsible", () => {
     const onToggleSector = vi.fn();
     render(<CompanyFilters {...defaultProps} onToggleSector={onToggleSector} />);
     const techButtons = screen.getAllByText("Tech");
-    fireEvent.click(techButtons[0].closest("button")!);
+    const clickTarget = techButtons[0].closest("button") || techButtons[0].closest("[class]") || techButtons[0];
+    fireEvent.click(clickTarget);
     expect(onToggleSector).toHaveBeenCalledWith("Tech");
   });
 
