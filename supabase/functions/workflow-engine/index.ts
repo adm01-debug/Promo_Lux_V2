@@ -20,6 +20,30 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// ── Rate Limiter (in-memory token bucket per user) ──
+const rateLimitStore = new Map<string, { tokens: number; lastRefill: number }>();
+const RATE_LIMIT = { maxTokens: 15, refillRate: 5, windowMs: 60_000 }; // 15 req/min
+
+function checkRateLimit(userId: string): { allowed: boolean; retryAfterMs: number } {
+  const now = Date.now();
+  let bucket = rateLimitStore.get(userId);
+  if (!bucket) {
+    bucket = { tokens: RATE_LIMIT.maxTokens, lastRefill: now };
+    rateLimitStore.set(userId, bucket);
+  }
+  const elapsed = now - bucket.lastRefill;
+  const refill = Math.floor(elapsed / RATE_LIMIT.windowMs) * RATE_LIMIT.refillRate;
+  if (refill > 0) {
+    bucket.tokens = Math.min(RATE_LIMIT.maxTokens, bucket.tokens + refill);
+    bucket.lastRefill = now;
+  }
+  if (bucket.tokens <= 0) {
+    return { allowed: false, retryAfterMs: RATE_LIMIT.windowMs - (now - bucket.lastRefill) };
+  }
+  bucket.tokens--;
+  return { allowed: true, retryAfterMs: 0 };
+}
+
 // ── Structured Logger ──
 function createLogger(requestId: string) {
   const base = { function: "workflow-engine", request_id: requestId };
@@ -97,6 +121,20 @@ serve(async (req) => {
   }
   const userId = user.id;
 
+  // Rate limit check
+  const rl = checkRateLimit(userId);
+  if (!rl.allowed) {
+    log.warn("rate_limited", { user_id: userId });
+    return new Response(JSON.stringify({ error: "Too many requests. Please wait before trying again." }), {
+      status: 429,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+        "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)),
+      },
+    });
+  }
+
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const url = new URL(req.url);
@@ -172,7 +210,12 @@ serve(async (req) => {
         .eq("id", workflow_id)
         .eq("user_id", userId)
         .single();
-      if (wfError || !workflow) throw new Error("Workflow not found");
+      if (wfError || !workflow) {
+        return new Response(JSON.stringify({ error: "Workflow not found" }), {
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name });
 
@@ -261,7 +304,7 @@ serve(async (req) => {
         };
       } catch (err) {
         log.error("step_scrape_error", { error: (err as Error).message, workflow_id });
-        results.scrape = { error: (err as Error).message };
+        results.scrape = { status: "error" };
       }
 
       // ===== STEP 2: ENRICH =====
@@ -348,7 +391,7 @@ serve(async (req) => {
         results.enrich = { companies_imported: enrichedCount, status: "completed" };
       } catch (err) {
         log.error("step_enrich_error", { error: (err as Error).message, workflow_id });
-        results.enrich = { error: (err as Error).message };
+        results.enrich = { status: "error" };
       }
 
       // ===== STEP 3: IPC SCORING =====
@@ -427,7 +470,7 @@ serve(async (req) => {
         results.ipc_score = { companies_scored: scoredCount, status: "completed" };
       } catch (err) {
         log.error("step_ipc_score_error", { error: (err as Error).message, workflow_id });
-        results.ipc_score = { error: (err as Error).message };
+        results.ipc_score = { status: "error" };
       }
 
       // ===== STEP 4: FINALIZE =====
@@ -520,8 +563,8 @@ serve(async (req) => {
     });
   } catch (err) {
     const duration = Math.round(performance.now() - start);
-    log.error("request_failed", { error: (err as Error).message, action, duration_ms: duration });
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
+    log.error("request_failed", { error: (err as Error).message, stack: (err as Error).stack, action, duration_ms: duration });
+    return new Response(JSON.stringify({ error: "Internal server error. Please try again later.", request_id: requestId }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

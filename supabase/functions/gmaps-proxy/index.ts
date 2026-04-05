@@ -20,6 +20,30 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// ── Rate Limiter (in-memory token bucket per user) ──
+const rateLimitStore = new Map<string, { tokens: number; lastRefill: number }>();
+const RATE_LIMIT = { maxTokens: 20, refillRate: 5, windowMs: 60_000 }; // 20 req/min
+
+function checkRateLimit(userId: string): { allowed: boolean; retryAfterMs: number } {
+  const now = Date.now();
+  let bucket = rateLimitStore.get(userId);
+  if (!bucket) {
+    bucket = { tokens: RATE_LIMIT.maxTokens, lastRefill: now };
+    rateLimitStore.set(userId, bucket);
+  }
+  const elapsed = now - bucket.lastRefill;
+  const refill = Math.floor(elapsed / RATE_LIMIT.windowMs) * RATE_LIMIT.refillRate;
+  if (refill > 0) {
+    bucket.tokens = Math.min(RATE_LIMIT.maxTokens, bucket.tokens + refill);
+    bucket.lastRefill = now;
+  }
+  if (bucket.tokens <= 0) {
+    return { allowed: false, retryAfterMs: RATE_LIMIT.windowMs - (now - bucket.lastRefill) };
+  }
+  bucket.tokens--;
+  return { allowed: true, retryAfterMs: 0 };
+}
+
 // ── Structured Logger ──
 function createLogger(requestId: string) {
   const base = { function: "gmaps-proxy", request_id: requestId };
@@ -37,6 +61,17 @@ function badRequest(corsHeaders: Record<string, string>, details: unknown) {
   return new Response(JSON.stringify({ error: "Invalid input", details }), {
     status: 400,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+function rateLimitedResponse(corsHeaders: Record<string, string>, retryAfterMs: number) {
+  return new Response(JSON.stringify({ error: "Too many requests. Please wait before trying again." }), {
+    status: 429,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+      "Retry-After": String(Math.ceil(retryAfterMs / 1000)),
+    },
   });
 }
 
@@ -99,6 +134,13 @@ serve(async (req) => {
     });
   }
   const userId = user.id;
+
+  // Rate limit check
+  const rl = checkRateLimit(userId);
+  if (!rl.allowed) {
+    log.warn("rate_limited", { user_id: userId });
+    return rateLimitedResponse(corsHeaders, rl.retryAfterMs);
+  }
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -304,7 +346,12 @@ serve(async (req) => {
         .eq("user_id", userId)
         .single();
 
-      if (!job?.external_id) throw new Error("Job not found or has no external ID");
+      if (!job?.external_id) {
+        return new Response(JSON.stringify({ error: "Job not found or has no external ID" }), {
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       let results: Record<string, string>[] = [];
       try {
@@ -326,7 +373,10 @@ serve(async (req) => {
         }
       } catch (err) {
         log.error("gmaps_api_download_error", { error: (err as Error).message, job_id });
-        throw new Error("Failed to download results from external API");
+        return new Response(JSON.stringify({ error: "Failed to download results from external service." }), {
+          status: 502,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       const { data: ipcConfig } = await supabase
@@ -424,8 +474,8 @@ serve(async (req) => {
     });
   } catch (err) {
     const duration = Math.round(performance.now() - start);
-    log.error("request_failed", { error: (err as Error).message, action, duration_ms: duration });
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
+    log.error("request_failed", { error: (err as Error).message, stack: (err as Error).stack, duration_ms: duration });
+    return new Response(JSON.stringify({ error: "Internal server error. Please try again later.", request_id: requestId }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
