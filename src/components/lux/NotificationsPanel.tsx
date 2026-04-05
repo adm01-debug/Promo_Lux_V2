@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_NOTIFICATIONS } from "@/lib/demoData";
 import { Bell, Radar, Zap, Building2, CheckCircle2, X, Trash2, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -54,21 +56,24 @@ interface NotificationsPanelProps {
 const NOTIFICATIONS_KEY = ["notifications"];
 
 export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) => {
+  const { isDemoMode } = useDemo();
   const [activeTab, setActiveTab] = useState<"all" | NotificationType>("all");
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
   const { data: rawNotifications, isLoading } = useQuery({
     queryKey: NOTIFICATIONS_KEY,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(50);
-      if (error) throw error;
-      return (data ?? []) as Notification[];
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_NOTIFICATIONS as any as Notification[]
+      : async () => {
+          const { data, error } = await supabase
+            .from("notifications")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(50);
+          if (error) throw error;
+          return (data ?? []) as Notification[];
+        },
   });
 
   // Ensure notifications is always an array (guards against cache pollution)

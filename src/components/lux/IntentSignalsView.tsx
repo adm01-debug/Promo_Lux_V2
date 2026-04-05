@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_INTENT_SIGNALS } from "@/lib/demoData";
 import { Radar, TrendingUp, Eye, Globe, Briefcase, Plus, Loader2, Trash2, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,6 +37,7 @@ const strengthColors: Record<string, string> = {
 };
 
 export const IntentSignalsView = () => {
+  const { isDemoMode } = useDemo();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
@@ -52,15 +55,17 @@ export const IntentSignalsView = () => {
 
   const { data: signals = [], isLoading, error: signalsError, refetch } = useQuery({
     queryKey: ["intent-signals"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("intent_signals")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(50);
-      if (error) throw error;
-      return data ?? [];
-    },
+    queryFn: isDemoMode
+      ? () => DEMO_INTENT_SIGNALS as any
+      : async () => {
+          const { data, error } = await supabase
+            .from("intent_signals")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(50);
+          if (error) throw error;
+          return data ?? [];
+        },
     refetchInterval: 15_000,
     retry: 2,
   });
