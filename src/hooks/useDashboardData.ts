@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemo } from "@/contexts/DemoContext";
+import { DEMO_STATS, DEMO_COMPANIES, DEMO_ACTIVITY } from "@/lib/demoData";
 
 export interface DashboardStats {
   activeWorkflows: number;
@@ -58,10 +60,10 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
 export function useDashboardStats() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { isDemoMode } = useDemo();
 
-  // Realtime: auto-refresh when companies/workflows/notifications change
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || isDemoMode) return;
     const channel = supabase
       .channel(`private:${user.id}:dashboard`)
       .on("postgres_changes", { event: "*", schema: "public", table: "companies", filter: `user_id=eq.${user.id}` }, () => {
@@ -80,13 +82,13 @@ export function useDashboardStats() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [queryClient, user?.id]);
+  }, [queryClient, user?.id, isDemoMode]);
 
   return useQuery({
-    queryKey: ["dashboard-stats"],
-    queryFn: fetchDashboardStats,
-    refetchInterval: 30_000,
-    staleTime: 10_000,
+    queryKey: ["dashboard-stats", isDemoMode],
+    queryFn: isDemoMode ? () => DEMO_STATS : fetchDashboardStats,
+    refetchInterval: isDemoMode ? false : 30_000,
+    staleTime: isDemoMode ? Infinity : 10_000,
   });
 }
 
@@ -102,33 +104,41 @@ export interface RecentCompany {
 }
 
 export function useRecentCompanies(limit = 6) {
+  const { isDemoMode } = useDemo();
+
   return useQuery({
-    queryKey: ["recent-companies", limit],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("companies")
-        .select("id, name, sector, location, ipc_score, source, website, enriched")
-        .order("created_at", { ascending: false })
-        .limit(limit);
-      if (error) throw error;
-      return (data ?? []) as RecentCompany[];
-    },
-    staleTime: 10_000,
+    queryKey: ["recent-companies", limit, isDemoMode],
+    queryFn: isDemoMode
+      ? () => DEMO_COMPANIES.slice(0, limit)
+      : async () => {
+          const { data, error } = await supabase
+            .from("companies")
+            .select("id, name, sector, location, ipc_score, source, website, enriched")
+            .order("created_at", { ascending: false })
+            .limit(limit);
+          if (error) throw error;
+          return (data ?? []) as RecentCompany[];
+        },
+    staleTime: isDemoMode ? Infinity : 10_000,
   });
 }
 
 export function useRecentActivity() {
+  const { isDemoMode } = useDemo();
+
   return useQuery({
-    queryKey: ["recent-activity"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(10);
-      if (error) throw error;
-      return data ?? [];
-    },
-    staleTime: 10_000,
+    queryKey: ["recent-activity", isDemoMode],
+    queryFn: isDemoMode
+      ? () => DEMO_ACTIVITY
+      : async () => {
+          const { data, error } = await supabase
+            .from("notifications")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(10);
+          if (error) throw error;
+          return data ?? [];
+        },
+    staleTime: isDemoMode ? Infinity : 10_000,
   });
 }
