@@ -10,11 +10,109 @@ import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_COMPANIES_FULL, DEMO_CAMPAIGNS, DEMO_WORKFLOWS } from "@/lib/demoData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { exportAnalyticsPDF } from "@/lib/exportAnalyticsPDF";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "@/hooks/use-toast";
+
+/* ── Animated counter ── */
+const AnimatedCounter = ({ value, suffix = "", duration = 1.2 }: { value: number; suffix?: string; duration?: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(containerRef, { once: true });
+  const motionVal = useMotionValue(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const controls = animate(motionVal, value, {
+      duration,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        if (ref.current) ref.current.textContent = Math.round(latest).toLocaleString("pt-BR") + suffix;
+      },
+    });
+    return () => controls.stop();
+  }, [value, isInView, duration, motionVal, suffix]);
+
+  return <span ref={containerRef}><span ref={ref}>0{suffix}</span></span>;
+};
+
+/* ── Animated donut ring ── */
+const AnimatedDonut = ({
+  percentage,
+  size = 128,
+  strokeWidth = 10,
+  color = "hsl(var(--primary))",
+  bgColor = "hsl(var(--secondary))",
+  label,
+  sublabel,
+}: {
+  percentage: number;
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+  bgColor?: string;
+  label?: string;
+  sublabel?: string;
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true });
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const center = size / 2;
+
+  return (
+    <div ref={containerRef} className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg className="-rotate-90" width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={center} cy={center} r={radius} fill="none" stroke={bgColor} strokeWidth={strokeWidth} />
+        <motion.circle
+          cx={center} cy={center} r={radius} fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={isInView ? { strokeDashoffset: circumference - (percentage / 100) * circumference } : {}}
+          transition={{ duration: 1.4, ease: "easeOut", delay: 0.3 }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-2xl font-bold font-mono text-foreground">
+          <AnimatedCounter value={percentage} suffix="%" duration={1.4} />
+        </span>
+        {label && <span className="text-[9px] text-muted-foreground mt-0.5">{label}</span>}
+      </div>
+    </div>
+  );
+};
+
+/* ── Mini donut for funnel stats ── */
+const MiniDonut = ({ percentage, color, size = 36 }: { percentage: number; color: string; size?: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+  const r = (size - 4) / 2;
+  const c = 2 * Math.PI * r;
+  const center = size / 2;
+
+  return (
+    <div ref={ref} className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={center} cy={center} r={r} fill="none" stroke="hsl(var(--secondary))" strokeWidth={3} />
+        <motion.circle
+          cx={center} cy={center} r={r} fill="none"
+          stroke={color}
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeDasharray={c}
+          initial={{ strokeDashoffset: c }}
+          animate={isInView ? { strokeDashoffset: c - (percentage / 100) * c } : {}}
+          transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+        />
+      </svg>
+    </div>
+  );
+};
 const COLORS = [
   "hsl(45, 100%, 58%)",
   "hsl(142, 71%, 45%)",
@@ -216,10 +314,10 @@ export const AnalyticsView = () => {
   const d = data!;
 
   const summaryStats = [
-    { label: "Total Empresas", value: d.totalCompanies.toLocaleString("pt-BR"), icon: Building2 },
-    { label: "Enriquecidas", value: d.enrichedCount.toLocaleString("pt-BR"), icon: TrendingUp },
-    { label: "Score Médio", value: `${d.avgScore}`, icon: Target },
-    { label: "Raspagens", value: `${d.completedJobs}/${d.totalJobs}`, icon: BarChart3 },
+    { label: "Total Empresas", value: d.totalCompanies.toLocaleString("pt-BR"), rawValue: d.totalCompanies, suffix: "", icon: Building2 },
+    { label: "Enriquecidas", value: d.enrichedCount.toLocaleString("pt-BR"), rawValue: d.enrichedCount, suffix: "", icon: TrendingUp },
+    { label: "Score Médio", value: `${d.avgScore}`, rawValue: d.avgScore, suffix: "", icon: Target },
+    { label: "Raspagens", value: `${d.completedJobs}/${d.totalJobs}`, rawValue: undefined, suffix: "", icon: BarChart3 },
   ];
 
   const conversionRate = d.totalProspects > 0
@@ -248,13 +346,20 @@ export const AnalyticsView = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {summaryStats.map((stat, i) => (
           <motion.div key={stat.label} custom={i} variants={cardVariants} initial="hidden" animate="visible"
+            whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.2 } }}
             className="glass rounded-lg p-4 group hover:glow-primary transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-muted-foreground text-xs uppercase tracking-widest">{stat.label}</span>
-              <stat.icon className="h-4 w-4 text-primary/60 group-hover:text-primary transition-colors" />
+              <motion.div whileHover={{ rotate: 8, scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
+                <stat.icon className="h-4 w-4 text-primary/60 group-hover:text-primary transition-colors" />
+              </motion.div>
             </div>
-            <p className="text-2xl font-bold text-foreground font-mono">{stat.value}</p>
+            <p className="text-2xl font-bold text-foreground font-mono">
+              {stat.rawValue !== undefined ? (
+                <AnimatedCounter value={stat.rawValue} suffix={stat.suffix} />
+              ) : stat.value}
+            </p>
           </motion.div>
         ))}
       </div>
@@ -277,11 +382,15 @@ export const AnalyticsView = () => {
               const pct = d.totalProspects > 0 ? Math.round((step.value / d.totalProspects) * 100) : 0;
               return (
                 <motion.div key={step.name} custom={i} variants={cardVariants} initial="hidden" animate="visible"
-                  className="glass rounded-lg p-3 text-center"
+                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  className="glass rounded-lg p-3 flex flex-col items-center gap-2"
                 >
                   <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{step.name}</span>
-                  <p className="text-xl font-bold font-mono text-foreground mt-1">{step.value}</p>
-                  <p className="text-[10px] text-muted-foreground">{pct}%</p>
+                  <MiniDonut percentage={pct} color={step.fill} />
+                  <p className="text-lg font-bold font-mono text-foreground">
+                    <AnimatedCounter value={step.value} />
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-mono">{pct}%</p>
                 </motion.div>
               );
             })}
@@ -479,26 +588,14 @@ export const AnalyticsView = () => {
               <h3 className="text-sm font-semibold text-foreground mb-1">Taxa de Enriquecimento</h3>
               <p className="text-xs text-muted-foreground mb-6">Percentual de empresas com dados completos</p>
               <div className="flex items-center justify-center">
-                <div className="relative h-32 w-32">
-                  <svg className="h-32 w-32 -rotate-90" viewBox="0 0 120 120">
-                    <circle cx="60" cy="60" r="52" fill="none" stroke="hsl(var(--secondary))" strokeWidth="10" />
-                    <circle
-                      cx="60" cy="60" r="52" fill="none"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth="10"
-                      strokeLinecap="round"
-                      strokeDasharray={`${(d.totalCompanies > 0 ? (d.enrichedCount / d.totalCompanies) : 0) * 326.73} 326.73`}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold font-mono text-foreground">
-                      {d.totalCompanies > 0 ? Math.round((d.enrichedCount / d.totalCompanies) * 100) : 0}%
-                    </span>
-                  </div>
-                </div>
+                <AnimatedDonut
+                  percentage={d.totalCompanies > 0 ? Math.round((d.enrichedCount / d.totalCompanies) * 100) : 0}
+                  size={140}
+                  strokeWidth={12}
+                />
               </div>
               <p className="text-center text-xs text-muted-foreground mt-4">
-                {d.enrichedCount.toLocaleString()} de {d.totalCompanies.toLocaleString()} empresas enriquecidas
+                <AnimatedCounter value={d.enrichedCount} /> de <AnimatedCounter value={d.totalCompanies} /> empresas enriquecidas
               </p>
             </motion.div>
           </div>
