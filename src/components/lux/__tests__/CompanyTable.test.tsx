@@ -81,10 +81,10 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
     const scoreContainer78 = score78.closest("span.font-mono");
     expect(scoreContainer78?.className).toContain("text-primary");
     
-    // Score 45 = text-warning
+    // Score 45 = text-muted-foreground (< 60)
     const score45 = screen.getByText("45");
     const scoreContainer45 = score45.closest("span.font-mono");
-    expect(scoreContainer45?.className).toContain("text-warning");
+    expect(scoreContainer45?.className).toContain("text-muted-foreground");
   });
 
   it("shows loading state when loading", () => {
