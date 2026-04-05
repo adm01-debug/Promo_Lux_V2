@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -62,28 +62,30 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
               const isLast = i === breadcrumbs.length - 1;
               const icon = getViewIcon(crumb.view);
               return (
-                <BreadcrumbItem key={i}>
+                <React.Fragment key={i}>
                   {i > 0 && <BreadcrumbSeparator />}
-                  {isLast ? (
-                    <BreadcrumbPage className="text-foreground font-semibold text-sm flex items-center gap-1.5">
-                      {icon && <span className="text-primary">{icon}</span>}
-                      {crumb.label}
-                    </BreadcrumbPage>
-                  ) : crumb.view ? (
-                    <BreadcrumbLink
-                      className="cursor-pointer text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
-                      onClick={() => onNavigate(crumb.view!)}
-                    >
-                      {icon && <span className="text-muted-foreground/60">{icon}</span>}
-                      {crumb.label}
-                    </BreadcrumbLink>
-                  ) : (
-                    <span className="text-xs text-muted-foreground/60 flex items-center gap-1.5">
-                      {icon}
-                      {crumb.label}
-                    </span>
-                  )}
-                </BreadcrumbItem>
+                  <BreadcrumbItem>
+                    {isLast ? (
+                      <BreadcrumbPage className="text-foreground font-semibold text-sm flex items-center gap-1.5">
+                        {icon && <span className="text-primary">{icon}</span>}
+                        {crumb.label}
+                      </BreadcrumbPage>
+                    ) : crumb.view ? (
+                      <BreadcrumbLink
+                        className="cursor-pointer text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
+                        onClick={() => onNavigate(crumb.view!)}
+                      >
+                        {icon && <span className="text-muted-foreground/60">{icon}</span>}
+                        {crumb.label}
+                      </BreadcrumbLink>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/60 flex items-center gap-1.5">
+                        {icon}
+                        {crumb.label}
+                      </span>
+                    )}
+                  </BreadcrumbItem>
+                </React.Fragment>
               );
             })}
           </BreadcrumbList>
