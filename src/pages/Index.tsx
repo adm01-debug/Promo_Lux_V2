@@ -73,9 +73,6 @@ const Index = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
 
-  // Swipe between bottom-nav tabs on mobile
-  useBottomNavSwipe(activeView, handleNav);
-
   // Keyboard shortcuts (Ctrl+B, Alt+1-9)
   const handleNav = useCallback(
     (id: View) => {
@@ -87,6 +84,9 @@ const Index = () => {
     },
     [confirmNavigation, trackView, navigate, closeMobile]
   );
+
+  // Swipe between bottom-nav tabs on mobile
+  useBottomNavSwipe(activeView, handleNav);
 
   useKeyboardShortcuts({
     onNavigate: handleNav,
