@@ -62,9 +62,9 @@ export const AutomationsList = () => {
       if (error) throw error;
       return (data ?? []) as Array<{
         id: string; name: string; status: string; success_rate: number | null;
-        last_run_at: string | null; leads_processed: number | null; leads_qualified: number | null;
-        description: string | null; config: Record<string, unknown>; steps: Array<{ id: string; type: string; label: string; provider: string }>;
-        created_at: string; updated_at: string; user_id: string;
+        last_run_at: string | null; leads_processed: number | null;
+        leads_qualified: number | null; description: string | null;
+        config: unknown; steps: unknown; created_at: string; updated_at: string; user_id: string;
       }>;
     },
     staleTime: isDemoMode ? Infinity : 15_000,

@@ -18,31 +18,6 @@ function getCorsHeaders(req: Request) {
   };
 }
 
-// ── Rate Limiter (in-memory token bucket per user) ──
-const rateLimitStore = new Map<string, { tokens: number; lastRefill: number }>();
-const RATE_LIMIT = { maxTokens: 10, refillRate: 2, windowMs: 60_000 }; // 10 req/min, refill 2/min
-
-function checkRateLimit(userId: string): { allowed: boolean; retryAfterMs: number } {
-  const now = Date.now();
-  let bucket = rateLimitStore.get(userId);
-  if (!bucket) {
-    bucket = { tokens: RATE_LIMIT.maxTokens, lastRefill: now };
-    rateLimitStore.set(userId, bucket);
-  }
-  const elapsed = now - bucket.lastRefill;
-  const refill = Math.floor(elapsed / RATE_LIMIT.windowMs) * RATE_LIMIT.refillRate;
-  if (refill > 0) {
-    bucket.tokens = Math.min(RATE_LIMIT.maxTokens, bucket.tokens + refill);
-    bucket.lastRefill = now;
-  }
-  if (bucket.tokens <= 0) {
-    const retryAfterMs = RATE_LIMIT.windowMs - (now - bucket.lastRefill);
-    return { allowed: false, retryAfterMs };
-  }
-  bucket.tokens--;
-  return { allowed: true, retryAfterMs: 0 };
-}
-
 // ── Structured Logger ──
 function createLogger(requestId: string) {
   const base = { function: "ai-agent", request_id: requestId };
@@ -99,20 +74,6 @@ serve(async (req) => {
       });
     }
     const userId = user.id;
-
-    // Rate limit check
-    const rl = checkRateLimit(userId);
-    if (!rl.allowed) {
-      log.warn("rate_limited", { user_id: userId, retry_after_ms: rl.retryAfterMs });
-      return new Response(JSON.stringify({ error: "Too many requests. Please wait before trying again." }), {
-        status: 429,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-          "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)),
-        },
-      });
-    }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -206,10 +167,7 @@ Se o usuário pedir algo que requer ação (criar workflow, raspar, etc.), descr
     if (!aiResponse.ok) {
       const errBody = await aiResponse.text();
       log.error("ai_api_error", { status: aiResponse.status, body: errBody.slice(0, 500) });
-      return new Response(JSON.stringify({ error: "AI service temporarily unavailable. Please try again." }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      throw new Error(`AI API error: ${aiResponse.status}`);
     }
 
     const aiResult = await aiResponse.json();
@@ -223,8 +181,8 @@ Se o usuário pedir algo que requer ação (criar workflow, raspar, etc.), descr
     });
   } catch (err) {
     const duration = Math.round(performance.now() - start);
-    log.error("request_failed", { error: (err as Error).message, stack: (err as Error).stack, duration_ms: duration });
-    return new Response(JSON.stringify({ error: "Internal server error. Please try again later.", request_id: requestId }), {
+    log.error("request_failed", { error: (err as Error).message, duration_ms: duration });
+    return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

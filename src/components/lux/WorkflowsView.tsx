@@ -140,12 +140,12 @@ export const WorkflowsView = () => {
   });
 
   const toggleMutation = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: "draft" | "active" | "paused" | "completed" | "failed" | "running" | "archived" }) => {
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
       try {
         await workflowApi.toggleStatus(id, status);
       } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { error } = await supabase.from("workflows").update({ status }).eq("id", id);
+        const { error } = await supabase.from("workflows").update({ status: status as "draft" | "active" | "paused" | "completed" | "failed" | "running" | "archived" }).eq("id", id);
         if (error) throw error;
       }
     },

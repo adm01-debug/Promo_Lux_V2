@@ -79,7 +79,7 @@ export const AddCompanyDialog = () => {
     setFieldErrors({});
     setSaving(true);
     try {
-      const { error } = await supabase.from("companies").insert({
+      const { error } = await supabase.from("companies").insert([{
         name: name.trim(),
         sector: sector || null,
         location: location || null,
@@ -87,11 +87,11 @@ export const AddCompanyDialog = () => {
         phone: phone || null,
         website: website || null,
         employees: employees || null,
-        revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) || null : null,
+        revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) : null,
         source: "manual",
         lat: geoCoords?.lat ?? null,
         lng: geoCoords?.lng ?? null,
-      });
+      }]);
       if (error) throw error;
 
       const geoMsg = geoCoords ? " Coordenadas detectadas automaticamente." : location ? " Não foi possível geocodificar a localização." : "";
