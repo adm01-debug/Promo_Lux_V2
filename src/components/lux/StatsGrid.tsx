@@ -2,7 +2,7 @@ import { Activity, Zap, Building2, TrendingUp, ArrowUpRight } from "lucide-react
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useDashboardStats } from "@/hooks/useDashboardData";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, memo } from "react";
 
 /* ── Animated number counter ── */
 const AnimatedNumber = ({ value, duration = 1.2 }: { value: number; duration?: number }) => {
@@ -273,7 +273,7 @@ interface StatsGridProps {
   onNavigate?: (view: string) => void;
 }
 
-export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
+export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
   const { data, isLoading } = useDashboardStats();
 
   if (isLoading) {
@@ -352,4 +352,4 @@ export const StatsGrid = ({ onNavigate }: StatsGridProps) => {
       ))}
     </div>
   );
-};
+});
