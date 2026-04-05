@@ -215,6 +215,13 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
     return name ? `${timeGreeting}, ${name}` : timeGreeting;
   })();
 
+  const subtitle = (() => {
+    const h = new Date().getHours();
+    if (h < 12) return "Pronto para prospectar? Veja o que aconteceu enquanto você esteve fora.";
+    if (h < 18) return "Confira os resultados das automações e novas oportunidades.";
+    return "Resumo do dia — veja os destaques antes de encerrar.";
+  })();
+
   const handleExitDemo = () => {
     exitDemo();
     navigate("/login");
@@ -269,7 +276,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             transition={{ delay: 0.15 }}
             className="text-sm text-muted-foreground mt-1 flex items-center gap-2"
           >
-            Visão geral das automações e empresas identificadas pelo IPC
+            {subtitle}
             <span className="inline-flex items-center gap-1 text-[10px] bg-success/10 text-success px-2 py-0.5 rounded-full font-medium">
               <motion.span
                 className="h-1.5 w-1.5 rounded-full bg-success"

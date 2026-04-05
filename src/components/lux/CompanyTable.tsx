@@ -4,8 +4,29 @@ import { Badge } from "@/components/ui/badge";
 import { useRecentCompanies } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+
+/* Animated score that counts up */
+const AnimatedScore = ({ value }: { value: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(containerRef, { once: true });
+  const motionVal = useMotionValue(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const controls = animate(motionVal, value, {
+      duration: 0.8,
+      ease: "easeOut",
+      onUpdate: (v) => { if (ref.current) ref.current.textContent = String(Math.round(v)); },
+    });
+    return () => controls.stop();
+  }, [value, isInView, motionVal]);
+
+  return <span ref={containerRef}><span ref={ref}>0</span></span>;
+};
 
 const getScoreColor = (score: number) => {
   if (score >= 90) return "text-success";
@@ -19,6 +40,12 @@ const getScoreBg = (score: number) => {
   if (score >= 75) return "bg-primary/10 ring-primary/20";
   if (score >= 60) return "bg-warning/10 ring-warning/20";
   return "bg-muted/10 ring-muted/20";
+};
+
+const getScoreGlow = (score: number) => {
+  if (score >= 90) return "group-hover:shadow-[0_0_12px_hsl(var(--success)/0.3)]";
+  if (score >= 75) return "group-hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)]";
+  return "";
 };
 
 const rowVariants = {
@@ -151,14 +178,19 @@ export const CompanyTable = () => {
                     </span>
                   </td>
                   <td className="p-3 text-center">
-                    <div className={cn(
-                      "inline-flex items-center justify-center h-8 w-12 rounded-lg ring-1 transition-all duration-200",
-                      getScoreBg(company.ipc_score ?? 0)
-                    )}>
+                    <motion.div
+                      whileHover={{ scale: 1.15 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className={cn(
+                        "inline-flex items-center justify-center h-8 w-12 rounded-lg ring-1 transition-all duration-200",
+                        getScoreBg(company.ipc_score ?? 0),
+                        getScoreGlow(company.ipc_score ?? 0)
+                      )}
+                    >
                       <span className={cn("font-mono font-bold text-sm", getScoreColor(company.ipc_score ?? 0))}>
-                        {company.ipc_score ?? 0}
+                        <AnimatedScore value={company.ipc_score ?? 0} />
                       </span>
-                    </div>
+                    </motion.div>
                   </td>
                   <td className="p-3">
                     <span className="text-muted-foreground text-xs bg-secondary/30 px-2 py-0.5 rounded-full">
