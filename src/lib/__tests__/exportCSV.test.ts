@@ -11,8 +11,9 @@ describe("downloadCSV", () => {
       download: "",
       click: clickSpy,
     } as unknown as HTMLAnchorElement);
-    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:test");
-    vi.spyOn(URL, "revokeObjectURL").mockReturnValue(undefined);
+    // jsdom doesn't have URL.createObjectURL — define it
+    globalThis.URL.createObjectURL = vi.fn().mockReturnValue("blob:test");
+    globalThis.URL.revokeObjectURL = vi.fn();
   });
 
   it("does nothing for empty rows", () => {
