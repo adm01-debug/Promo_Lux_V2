@@ -123,13 +123,23 @@ export function useRecentCompanies(limit = 6) {
   });
 }
 
+export interface ActivityItem {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  created_at: string;
+  read: boolean;
+  metadata: Record<string, unknown> | null;
+}
+
 export function useRecentActivity() {
   const { isDemoMode } = useDemo();
 
-  return useQuery({
+  return useQuery<ActivityItem[]>({
     queryKey: ["recent-activity", isDemoMode],
     queryFn: isDemoMode
-      ? () => DEMO_ACTIVITY
+      ? () => DEMO_ACTIVITY as ActivityItem[]
       : async () => {
           const { data, error } = await supabase
             .from("notifications")
@@ -137,7 +147,7 @@ export function useRecentActivity() {
             .order("created_at", { ascending: false })
             .limit(10);
           if (error) throw error;
-          return data ?? [];
+          return (data ?? []) as ActivityItem[];
         },
     staleTime: isDemoMode ? Infinity : 10_000,
   });
