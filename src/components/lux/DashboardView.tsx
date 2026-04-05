@@ -73,6 +73,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const { user } = useAuth();
   const { isDemoMode, exitDemo } = useDemo();
   const navigate = useNavigate();
+  const colors = useThemeColors();
   const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
   const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(loadOrder);
