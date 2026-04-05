@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, Suspense } from "react";
-import { useSwipeGesture } from "@/hooks/useSwipeGesture";
 import { useNavigationHistory, View } from "@/hooks/useNavigationHistory";
+import { useBottomNavSwipe } from "@/hooks/useBottomNavSwipe";
 import { useRecentViews } from "@/hooks/useRecentViews";
 import { useSidebarState } from "@/hooks/useSidebarState";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -73,11 +73,8 @@ const Index = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const prevView = useRef(activeView);
 
-  // Swipe gestures for mobile
-  useSwipeGesture({
-    onSwipeRight: openMobile,
-    onSwipeLeft: closeMobile,
-  });
+  // Swipe between bottom-nav tabs on mobile
+  useBottomNavSwipe(activeView, handleNav);
 
   // Keyboard shortcuts (Ctrl+B, Alt+1-9)
   const handleNav = useCallback(

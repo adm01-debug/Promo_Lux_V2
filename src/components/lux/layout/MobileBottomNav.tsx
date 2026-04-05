@@ -11,7 +11,7 @@ interface MobileBottomNavProps {
   onOpenMenu: () => void;
 }
 
-const TABS: { id: View; label: string; icon: React.ElementType }[] = [
+export const BOTTOM_NAV_TABS: { id: View; label: string; icon: React.ElementType }[] = [
   { id: "dashboard", label: "Home", icon: LayoutDashboard },
   { id: "companies", label: "Empresas", icon: Building2 },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
@@ -38,8 +38,22 @@ export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBo
       className="fixed bottom-0 inset-x-0 z-40 lg:hidden border-t border-border/30 bg-background/80 safe-area-bottom backdrop-blur-2xl backdrop-saturate-150"
       aria-label="Navegação rápida"
     >
+      {/* Swipe indicator dots */}
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-1.5" aria-hidden="true">
+        {BOTTOM_NAV_TABS.map(({ id }) => (
+          <motion.div
+            key={id}
+            className={cn(
+              "h-1 rounded-full transition-all duration-300",
+              activeView === id ? "w-4 bg-primary" : "w-1 bg-muted-foreground/30"
+            )}
+            layout
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          />
+        ))}
+      </div>
       <div className="flex items-center justify-around h-16 px-1">
-        {TABS.map(({ id, label, icon: Icon }) => {
+        {BOTTOM_NAV_TABS.map(({ id, label, icon: Icon }) => {
           const active = activeView === id;
           const showBadge = id === "dashboard" && (unreadCount ?? 0) > 0;
 
