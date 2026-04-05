@@ -210,13 +210,40 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
 
   const greeting = (() => {
     const h = new Date().getHours();
-    const name = user?.user_metadata?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "";
+    const name = isDemoMode ? "Visitante" : (user?.user_metadata?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "");
     const timeGreeting = h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
     return name ? `${timeGreeting}, ${name}` : timeGreeting;
   })();
 
+  const handleExitDemo = () => {
+    exitDemo();
+    navigate("/login");
+  };
+
   return (
     <div className="space-y-6">
+      {/* Demo mode banner */}
+      {isDemoMode && (
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl glass border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent"
+        >
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+              <Eye className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Modo Demonstração</p>
+              <p className="text-xs text-muted-foreground">Dados fictícios para exploração. Crie uma conta para dados reais.</p>
+            </div>
+          </div>
+          <Button size="sm" className="gap-1.5 text-xs h-8 shrink-0" onClick={handleExitDemo}>
+            <LogIn className="h-3.5 w-3.5" />
+            Criar conta
+          </Button>
+        </motion.div>
+      )}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <motion.h2
