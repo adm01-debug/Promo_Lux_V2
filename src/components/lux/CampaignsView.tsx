@@ -192,7 +192,12 @@ export const CampaignsView = () => {
       const { error } = await supabase.from("campaigns").update({ status: newStatus }).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["campaigns"] }),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      const action = variables.status === "active" ? "pausada" : "ativada";
+      toast({ title: `Campanha ${action}` });
+    },
+    onError: (err: Error) => toast({ title: "Erro ao alternar status", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({

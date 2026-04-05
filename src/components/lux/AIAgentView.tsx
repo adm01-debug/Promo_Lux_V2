@@ -159,6 +159,10 @@ export const AIAgentView = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
+      toast({ title: "Conversa limpa", description: "Histórico do chat foi apagado." });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Erro ao limpar", description: err.message, variant: "destructive" });
     },
   });
 
