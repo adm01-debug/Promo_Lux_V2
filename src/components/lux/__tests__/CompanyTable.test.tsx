@@ -4,6 +4,23 @@ import { CompanyTable } from "../CompanyTable";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+vi.mock("framer-motion", () => {
+  const comp = ({ children }: any) => children != null ? <div>{children}</div> : <div />;
+  const trComp = ({ children }: any) => children != null ? <tr>{children}</tr> : <tr />;
+  const spanComp = ({ children, className }: any) => <span className={className}>{children}</span>;
+  const handler = {
+    get: (_: any, prop: string) => {
+      if (prop === "tr") return trComp;
+      if (prop === "span") return spanComp;
+      return comp;
+    },
+  };
+  return {
+    motion: new Proxy({}, handler),
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+  };
+});
+
 vi.mock("@/hooks/useDashboardData", () => ({
   useRecentCompanies: vi.fn(),
 }));

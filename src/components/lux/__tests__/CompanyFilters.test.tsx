@@ -6,13 +6,16 @@ vi.mock("@/hooks/use-mobile", () => ({
   useIsMobile: vi.fn(() => false),
 }));
 
-vi.mock("framer-motion", () => ({
-  motion: {
-    div: ({ children, className, ...props }: any) => <div className={className}>{children}</div>,
-    button: ({ children, className, onClick, ...props }: any) => <button className={className} onClick={onClick}>{children}</button>,
-  },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-}));
+vi.mock("framer-motion", () => {
+  const comp = ({ children, className, onClick }: any) => {
+    const Tag = onClick ? "button" : "div";
+    return <Tag className={className} onClick={onClick}>{children}</Tag>;
+  };
+  return {
+    motion: new Proxy({}, { get: () => comp }),
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+  };
+});
 
 import { useIsMobile } from "@/hooks/use-mobile";
 

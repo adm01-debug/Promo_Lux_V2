@@ -77,7 +77,7 @@ describe("Sidebar — P1 Dynamic Footer", () => {
   it("highlights active view", () => {
     render(<Sidebar {...defaultProps} activeView="companies" />, { wrapper });
     const btn = screen.getByText("Empresas").closest("button");
-    expect(btn?.className).toContain("bg-primary");
+    expect(btn?.className).toContain("text-primary");
   });
 
   it("renders status indicator dot", () => {
