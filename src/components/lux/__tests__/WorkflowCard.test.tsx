@@ -23,7 +23,6 @@ const mockWorkflow: Workflow = {
   config: {},
   created_at: "",
   updated_at: "",
-  user_id: "",
   workflow_runs: [],
 };
 
