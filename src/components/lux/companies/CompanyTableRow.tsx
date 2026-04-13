@@ -12,7 +12,11 @@ interface Company {
   location: string;
   ipcScore: number;
   source: string;
+  website?: string;
+  employees: string;
+  revenue: string;
   email?: string;
+  phone?: string;
   enriched: boolean;
   starred: boolean;
 }
