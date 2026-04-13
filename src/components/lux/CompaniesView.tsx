@@ -4,8 +4,7 @@ import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_COMPANIES_FULL } from "@/lib/demoData";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
 import { EditCompanyDialog } from "@/components/lux/EditCompanyDialog";
-import { Building2, MapPin, Tag, Download, Star, Eye, X, Loader2, Trash2, Sparkles, Pencil, MoreHorizontal, HelpCircle } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Building2, Download, X, Loader2, Trash2, Sparkles, HelpCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,11 +14,11 @@ import { CompanyPagination } from "@/components/lux/CompanyPagination";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { DataError } from "@/components/lux/DataError";
-import { motion } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CompanyTableRow } from "./companies/CompanyTableRow";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -41,43 +40,12 @@ interface Company {
   starred: boolean;
 }
 
-const getScoreColor = (score: number) => {
-  if (score >= 90) return "text-success";
-  if (score >= 75) return "text-primary";
-  if (score >= 60) return "text-warning";
-  return "text-destructive";
-};
-
-const getScoreBg = (score: number) => {
-  if (score >= 90) return "bg-success/10";
-  if (score >= 75) return "bg-primary/10";
-  if (score >= 60) return "bg-warning/10";
-  return "bg-destructive/10";
-};
-
-const HighlightText = ({ text, query }: { text: string; query: string }) => {
-  if (!query || query.length < 2) return <>{text}</>;
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
-  if (idx === -1) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, idx)}
-      <mark className="bg-primary/25 text-foreground rounded-sm px-0.5">{text.slice(idx, idx + query.length)}</mark>
-      {text.slice(idx + query.length)}
-    </>
-  );
-};
-
 export const CompaniesView = () => {
   const { isDemoMode } = useDemo();
   const { toast } = useToast();
   const [filters, setFilters, resetFilters] = usePersistedFilters<CompanyFiltersState>("companies", {
-    search: "",
-    selectedSectors: new Set(),
-    selectedLocations: new Set(),
-    selectedSources: new Set(),
-    selectedStatus: new Set(),
-    selectedScores: new Set(),
+    search: "", selectedSectors: new Set(), selectedLocations: new Set(),
+    selectedSources: new Set(), selectedStatus: new Set(), selectedScores: new Set(),
   });
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -100,25 +68,13 @@ export const CompaniesView = () => {
     queryFn: isDemoMode
       ? () => DEMO_COMPANIES_FULL
       : async () => {
-          const { data, error } = await supabase
-            .from("companies")
-            .select("*")
-            .order("created_at", { ascending: false });
+          const { data, error } = await supabase.from("companies").select("*").order("created_at", { ascending: false });
           if (error) throw error;
           return (data ?? []).map((c) => ({
-            id: c.id,
-            name: c.name,
-            sector: c.sector ?? "—",
-            location: c.location ?? "—",
-            ipcScore: c.ipc_score ?? 0,
-            source: c.source,
-            website: c.website ?? undefined,
-            employees: c.employees ?? "—",
-            revenue: c.revenue ?? "—",
-            email: c.email ?? undefined,
-            phone: c.phone ?? undefined,
-            enriched: c.enriched ?? false,
-            starred: c.starred ?? false,
+            id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
+            ipcScore: c.ipc_score ?? 0, source: c.source, website: c.website ?? undefined,
+            employees: c.employees ?? "—", revenue: c.revenue ?? "—", email: c.email ?? undefined,
+            phone: c.phone ?? undefined, enriched: c.enriched ?? false, starred: c.starred ?? false,
           })) as Company[];
         },
     staleTime: 15_000,
@@ -128,8 +84,7 @@ export const CompaniesView = () => {
 
   const toggleSet = <T extends string>(set: Set<T>, value: T): Set<T> => {
     const next = new Set(set);
-    if (next.has(value)) next.delete(value);
-    else next.add(value);
+    if (next.has(value)) next.delete(value); else next.add(value);
     return next;
   };
 
@@ -159,42 +114,17 @@ export const CompaniesView = () => {
   const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const safePage = Math.min(currentPage, totalPages);
   const paginatedItems = filtered.slice((safePage - 1) * itemsPerPage, safePage * itemsPerPage);
-
   const totalActiveFilters = filters.selectedSectors.size + filters.selectedLocations.size + filters.selectedSources.size + filters.selectedStatus.size + filters.selectedScores.size;
 
-  const clearAllFilters = () => resetFilters();
-
   const handleExport = useCallback(async () => {
-    if (filtered.length === 0) {
-      toast({ title: "Nada para exportar", description: "Nenhuma empresa nos filtros atuais.", variant: "destructive" });
-      return;
-    }
+    if (filtered.length === 0) { toast({ title: "Nada para exportar", variant: "destructive" }); return; }
     setIsExporting(true);
     try {
       const { downloadCSV } = await import("@/lib/exportCSV");
-      downloadCSV(
-        filtered.map((c) => ({
-          Nome: c.name,
-          Setor: c.sector,
-          Localização: c.location,
-          "Score IPC": c.ipcScore,
-          Fonte: c.source,
-          Email: c.email ?? "",
-          Telefone: c.phone ?? "",
-          Website: c.website ?? "",
-          Funcionários: c.employees,
-          Receita: c.revenue,
-          Status: c.enriched ? "Enriquecido" : "Pendente",
-          Favorito: c.starred ? "Sim" : "Não",
-        })),
-        `empresas_${new Date().toISOString().split("T")[0]}.csv`
-      );
-      toast({ title: "Exportação concluída", description: `${filtered.length} empresas exportadas com sucesso.` });
-    } catch {
-      toast({ title: "Erro na exportação", description: "Não foi possível gerar o arquivo.", variant: "destructive" });
-    } finally {
-      setIsExporting(false);
-    }
+      downloadCSV(filtered.map((c) => ({ Nome: c.name, Setor: c.sector, Localização: c.location, "Score IPC": c.ipcScore, Fonte: c.source, Email: c.email ?? "", Telefone: c.phone ?? "", Website: c.website ?? "", Funcionários: c.employees, Receita: c.revenue, Status: c.enriched ? "Enriquecido" : "Pendente", Favorito: c.starred ? "Sim" : "Não" })), `empresas_${new Date().toISOString().split("T")[0]}.csv`);
+      toast({ title: "Exportação concluída", description: `${filtered.length} empresas exportadas.` });
+    } catch { toast({ title: "Erro na exportação", variant: "destructive" }); }
+    finally { setIsExporting(false); }
   }, [filtered, toast]);
 
   const toggleSort = (col: typeof sortBy) => {
@@ -210,33 +140,15 @@ export const CompaniesView = () => {
     try {
       const { error } = await supabase.from("companies").delete().eq("id", deleteTarget.id);
       if (error) throw error;
-      toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida com sucesso.` });
+      toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida.` });
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
-      queryClient.invalidateQueries({ queryKey: ["companies-map"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    } catch {
-      toast({ title: "Erro ao remover", variant: "destructive" });
-    } finally {
-      setIsDeleting(false);
-      setDeleteTarget(null);
-    }
+    } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
+    finally { setIsDeleting(false); setDeleteTarget(null); }
   }, [deleteTarget, toast, queryClient]);
 
-  const toggleSelectId = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedIds.size === paginatedItems.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(paginatedItems.map((c) => c.id)));
-    }
-  };
+  const toggleSelectId = (id: string) => setSelectedIds((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); return next; });
+  const toggleSelectAll = () => { if (selectedIds.size === paginatedItems.length) setSelectedIds(new Set()); else setSelectedIds(new Set(paginatedItems.map((c) => c.id))); };
 
   const handleBulkDelete = useCallback(async () => {
     if (selectedIds.size === 0) return;
@@ -244,15 +156,11 @@ export const CompaniesView = () => {
     try {
       const { error } = await supabase.from("companies").delete().in("id", Array.from(selectedIds));
       if (error) throw error;
-      toast({ title: "Empresas removidas", description: `${selectedIds.size} empresa(s) removida(s) com sucesso.` });
+      toast({ title: "Empresas removidas", description: `${selectedIds.size} removida(s).` });
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    } catch {
-      toast({ title: "Erro ao remover", description: "Não foi possível remover as empresas.", variant: "destructive" });
-    } finally {
-      setIsBulkDeleting(false);
-    }
+    } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
+    finally { setIsBulkDeleting(false); }
   }, [selectedIds, toast, queryClient]);
 
   const handleBulkEnrich = useCallback(async () => {
@@ -261,31 +169,19 @@ export const CompaniesView = () => {
     try {
       const { error } = await supabase.from("companies").update({ enriched: true }).in("id", Array.from(selectedIds));
       if (error) throw error;
-      toast({ title: "Empresas enriquecidas", description: `${selectedIds.size} empresa(s) marcada(s) como enriquecida(s).` });
+      toast({ title: "Empresas enriquecidas", description: `${selectedIds.size} enriquecida(s).` });
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    } catch {
-      toast({ title: "Erro ao enriquecer", description: "Não foi possível atualizar as empresas.", variant: "destructive" });
-    } finally {
-      setIsBulkEnriching(false);
-    }
+    } catch { toast({ title: "Erro ao enriquecer", variant: "destructive" }); }
+    finally { setIsBulkEnriching(false); }
   }, [selectedIds, toast, queryClient]);
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
     const company = companies.find((c) => c.id === id);
-    queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) =>
-      old?.map((c) => (c.id === id ? { ...c, starred } : c))
-    );
-    toast({
-      title: starred ? "⭐ Empresa favoritada" : "Favorito removido",
-      description: company ? `"${company.name}" ${starred ? "adicionada aos" : "removida dos"} favoritos.` : undefined,
-    });
+    queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) => old?.map((c) => (c.id === id ? { ...c, starred } : c)));
+    toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: company ? `"${company.name}"` : undefined });
     const { error } = await supabase.from("companies").update({ starred }).eq("id", id);
-    if (error) {
-      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
-      toast({ title: "Erro ao favoritar", variant: "destructive" });
-    }
+    if (error) { queryClient.invalidateQueries({ queryKey: ["companies-list"] }); toast({ title: "Erro ao favoritar", variant: "destructive" }); }
   }, [companies, queryClient, toast]);
 
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];
@@ -313,16 +209,12 @@ export const CompaniesView = () => {
             <>
               <span className="text-xs text-muted-foreground">{selectedIds.size} selecionada(s)</span>
               <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={handleBulkEnrich} disabled={isBulkEnriching}>
-                {isBulkEnriching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
-                Enriquecer
+                {isBulkEnriching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />} Enriquecer
               </Button>
               <Button variant="destructive" size="sm" className="gap-1.5 text-xs" onClick={handleBulkDelete} disabled={isBulkDeleting}>
-                {isBulkDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-                Remover
+                {isBulkDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />} Remover
               </Button>
-              <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSelectedIds(new Set())}>
-                Limpar seleção
-              </Button>
+              <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSelectedIds(new Set())}>Limpar seleção</Button>
             </>
           )}
           <Button variant="outline" className="gap-2 text-sm" onClick={handleExport} disabled={isExporting}>
@@ -341,8 +233,8 @@ export const CompaniesView = () => {
           onToggleLocation={(v) => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) }))}
           onToggleSource={(v) => setFilters((f) => ({ ...f, selectedSources: toggleSet(f.selectedSources, v) }))}
           onToggleStatus={(v) => setFilters((f) => ({ ...f, selectedStatus: toggleSet(f.selectedStatus, v) }))}
-          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as "all" | "90+" | "75-89" | "60-74" | "<60") }))}
-          onClearAll={clearAllFilters}
+          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as any) }))}
+          onClearAll={resetFilters}
           companies={companies}
         />
 
@@ -351,11 +243,10 @@ export const CompaniesView = () => {
             <div className="flex flex-wrap gap-1.5">
               {activeFilterChips.map((chip, i) => (
                 <Badge key={i} variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30 gap-1 cursor-pointer hover:bg-primary/20 transition-colors" onClick={chip.onRemove}>
-                  {chip.label}
-                  <X className="h-2.5 w-2.5" />
+                  {chip.label} <X className="h-2.5 w-2.5" />
                 </Badge>
               ))}
-              <button onClick={clearAllFilters} className="text-[10px] text-muted-foreground hover:text-foreground px-2">Limpar tudo</button>
+              <button onClick={resetFilters} className="text-[10px] text-muted-foreground hover:text-foreground px-2">Limpar tudo</button>
             </div>
           )}
 
@@ -377,11 +268,7 @@ export const CompaniesView = () => {
                 <thead>
                   <tr className="border-b border-border/30">
                     <th className="p-3 w-8" onClick={(e) => e.stopPropagation()}>
-                      <Checkbox
-                        checked={paginatedItems.length > 0 && selectedIds.size === paginatedItems.length}
-                        onCheckedChange={toggleSelectAll}
-                        className="h-4 w-4"
-                      />
+                      <Checkbox checked={paginatedItems.length > 0 && selectedIds.size === paginatedItems.length} onCheckedChange={toggleSelectAll} className="h-4 w-4" />
                     </th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium w-8"></th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa</th>
@@ -389,14 +276,8 @@ export const CompaniesView = () => {
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden lg:table-cell">Localização</th>
                     <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden xl:table-cell">Fonte</th>
                     <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="inline-flex items-center gap-1 cursor-help">Score <HelpCircle className="h-3 w-3 text-muted-foreground/50" /></span>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="max-w-[220px] text-xs">
-                          <p className="font-semibold mb-1">Score IPC</p>
-                          <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo. Baseado em setor, porte e sinais de intenção.</p>
-                        </TooltipContent>
+                      <Tooltip><TooltipTrigger asChild><span className="inline-flex items-center gap-1 cursor-help">Score <HelpCircle className="h-3 w-3 text-muted-foreground/50" /></span></TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-[220px] text-xs"><p className="font-semibold mb-1">Score IPC</p><p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo.</p></TooltipContent>
                       </Tooltip>
                     </th>
                     <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium hidden sm:table-cell">Status</th>
@@ -405,106 +286,29 @@ export const CompaniesView = () => {
                 </thead>
                 <tbody className="divide-y divide-border/20">
                   {paginatedItems.map((company, i) => (
-                    <motion.tr key={company.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }} className={`hover:bg-secondary/20 transition-colors group cursor-pointer ${selectedIds.has(company.id) ? "bg-primary/5" : ""}`} onClick={() => openCompany(company)}>
-                      <td className="p-3" onClick={(e) => e.stopPropagation()}>
-                        <Checkbox
-                          checked={selectedIds.has(company.id)}
-                          onCheckedChange={() => toggleSelectId(company.id)}
-                          className="h-4 w-4"
-                        />
-                      </td>
-                      <td className="p-3" onClick={(e) => { e.stopPropagation(); handleToggleStar(company.id, !company.starred); }}>
-                        <Star className={`h-4 w-4 cursor-pointer transition-all duration-200 hover:scale-125 ${company.starred ? "text-primary fill-primary" : "text-muted-foreground/30 hover:text-primary/50"}`} />
-                      </td>
-                      <td className="p-3">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center flex-shrink-0">
-                            <Building2 className="h-4 w-4 text-primary" />
-                          </div>
-                          <div>
-                            <span className="font-medium text-foreground"><HighlightText text={company.name} query={filters.search} /></span>
-                            {company.email && <p className="text-[10px] text-muted-foreground"><HighlightText text={company.email} query={filters.search} /></p>}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-3 hidden md:table-cell">
-                        <Badge variant="outline" className="text-xs gap-1 bg-secondary/50"><Tag className="h-3 w-3" /><HighlightText text={company.sector} query={filters.search} /></Badge>
-                      </td>
-                      <td className="p-3 text-muted-foreground text-xs hidden lg:table-cell">
-                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /><HighlightText text={company.location} query={filters.search} /></span>
-                      </td>
-                      <td className="p-3 text-xs text-muted-foreground hidden xl:table-cell">{company.source}</td>
-                      <td className="p-3 text-center">
-                        <span className={`inline-flex items-center justify-center h-8 w-8 rounded-lg font-mono font-bold text-sm ${getScoreColor(company.ipcScore)} ${getScoreBg(company.ipcScore)}`}>
-                          {company.ipcScore}
-                        </span>
-                      </td>
-                      <td className="p-3 text-center hidden sm:table-cell">
-                        {company.enriched ? (
-                          <Badge variant="outline" className="text-[10px] bg-success/10 text-success border-success/30">Enriquecido</Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-[10px] bg-muted text-muted-foreground">Pendente</Badge>
-                        )}
-                      </td>
-                      <td className="p-3 text-right" onClick={(e) => e.stopPropagation()}>
-                        {/* Desktop: inline buttons on hover */}
-                        <div className="hidden sm:flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes">
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={() => { setEditCompany(company); setEditOpen(true); }}>
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={() => setDeleteTarget(company)}>
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                        {/* Mobile: always-visible dropdown */}
-                        <div className="sm:hidden">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-7 w-7">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => openCompany(company)}>
-                                <Eye className="h-3.5 w-3.5 mr-2" /> Ver detalhes
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => { setEditCompany(company); setEditOpen(true); }}>
-                                <Pencil className="h-3.5 w-3.5 mr-2" /> Editar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => setDeleteTarget(company)}>
-                                <Trash2 className="h-3.5 w-3.5 mr-2" /> Excluir
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    </motion.tr>
+                    <CompanyTableRow
+                      key={company.id}
+                      company={company}
+                      index={i}
+                      isSelected={selectedIds.has(company.id)}
+                      searchQuery={filters.search}
+                      onSelect={() => toggleSelectId(company.id)}
+                      onToggleStar={handleToggleStar}
+                      onOpen={openCompany}
+                      onEdit={(c) => { setEditCompany(c); setEditOpen(true); }}
+                      onDelete={setDeleteTarget}
+                    />
                   ))}
                 </tbody>
               </table>
             </div>
 
             {filtered.length === 0 && (
-              <EmptyState
-                icon={Building2}
-                title="Nenhuma empresa encontrada"
-                description="Tente ajustar os filtros ou busque por outros termos."
-                actionLabel="Limpar filtros"
-                onAction={clearAllFilters}
-              />
+              <EmptyState icon={Building2} title="Nenhuma empresa encontrada" description="Tente ajustar os filtros." actionLabel="Limpar filtros" onAction={resetFilters} />
             )}
 
             {filtered.length > 0 && (
-              <CompanyPagination
-                currentPage={safePage}
-                totalPages={totalPages}
-                totalItems={filtered.length}
-                itemsPerPage={itemsPerPage}
-                onPageChange={setCurrentPage}
-              />
+              <CompanyPagination currentPage={safePage} totalPages={totalPages} totalItems={filtered.length} itemsPerPage={itemsPerPage} onPageChange={setCurrentPage} />
             )}
           </div>
         </div>
@@ -517,15 +321,12 @@ export const CompaniesView = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir empresa</AlertDialogTitle>
-            <AlertDialogDescription>
-              Tem certeza que deseja excluir <strong>"{deleteTarget?.name}"</strong>? Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
+            <AlertDialogDescription>Tem certeza que deseja excluir <strong>"{deleteTarget?.name}"</strong>?</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleSingleDelete} disabled={isDeleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {isDeleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Excluir
+              {isDeleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null} Excluir
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
