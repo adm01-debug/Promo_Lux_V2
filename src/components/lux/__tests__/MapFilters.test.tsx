@@ -1,6 +1,10 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeAll } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { mockFramerMotion } from "@/test/mockFramerMotion";
+
+beforeAll(() => {
+  global.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
+});
 
 vi.mock("framer-motion", () => mockFramerMotion());
 

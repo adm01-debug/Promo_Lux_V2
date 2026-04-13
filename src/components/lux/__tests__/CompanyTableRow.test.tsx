@@ -82,7 +82,9 @@ describe("CompanyTableRow", () => {
   it("calls onOpen when row is clicked", () => {
     const onOpen = vi.fn();
     renderInTable({ ...defaultProps, onOpen });
-    fireEvent.click(screen.getByText("FinEdge Pagamentos"));
+    // Click the row itself (tr element), not a child that stops propagation
+    const row = screen.getByText("FinEdge Pagamentos").closest("tr")!;
+    fireEvent.click(row);
     expect(onOpen).toHaveBeenCalledWith(company);
   });
 
