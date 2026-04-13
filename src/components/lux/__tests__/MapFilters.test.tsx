@@ -30,7 +30,8 @@ describe("MapFilters", () => {
 
   it("displays IPC score label with current value", () => {
     render(<MapFilters {...defaultProps} minScore={50} />);
-    expect(screen.getByText("50")).toBeInTheDocument();
+    const label = screen.getByText(/IPC Score mínimo/);
+    expect(label).toHaveTextContent("50");
   });
 
   it("calls onSearchChange when typing", () => {
