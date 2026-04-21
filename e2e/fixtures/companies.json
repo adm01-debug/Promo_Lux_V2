@@ -1,0 +1,19 @@
+{
+  "valid": {
+    "name": "Empresa Teste E2E",
+    "sector": "Tecnologia",
+    "location": "São Paulo, SP",
+    "email": "contato@teste-e2e.com",
+    "phone": "(11) 98765-4321",
+    "website": "https://teste-e2e.com.br",
+    "employees": "50-200"
+  },
+  "invalid": {
+    "name": "",
+    "email": "not-an-email"
+  },
+  "edited": {
+    "name": "Empresa Teste E2E (Editada)",
+    "sector": "Fintech"
+  }
+}

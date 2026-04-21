@@ -37,3 +37,11 @@ jobs:
       - name: Security audit
         run: bunx npm-audit-ci --moderate
         continue-on-error: true
+
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+        continue-on-error: true
+
+      - name: E2E tests (Playwright)
+        run: bunx playwright test
+        continue-on-error: true
