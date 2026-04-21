@@ -1,6 +1,17 @@
 import { test, expect } from "../playwright-fixture";
 import { enterDemoMode, navigateToView } from "./helpers/auth";
-import companies from "./fixtures/companies.json";
+
+const companies = {
+  valid: {
+    name: "Empresa Teste E2E",
+    sector: "Tecnologia",
+    location: "São Paulo, SP",
+    email: "contato@teste-e2e.com",
+    phone: "(11) 98765-4321",
+    website: "https://teste-e2e.com.br",
+    employees: "50-200",
+  },
+};
 
 test.describe("Companies — CRUD Flow (Demo)", () => {
   test.beforeEach(async ({ page }) => {
