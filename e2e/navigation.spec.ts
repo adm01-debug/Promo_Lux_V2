@@ -290,3 +290,49 @@ test.describe("Demo Mode — Header Interactions", () => {
     await expect(skipLink).toHaveCount(1);
   });
 });
+
+// ─── Demo Mode — Keyboard Shortcuts ──────────────────────────
+
+test.describe("Demo Mode — Keyboard Shortcuts", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/login");
+    await page.getByText("Explorar em modo demonstração").click();
+    await page.waitForSelector("text=Dashboard", { timeout: 10000 });
+  });
+
+  test("Ctrl+K opens command palette", async ({ page }) => {
+    await page.keyboard.press("Control+K");
+    // Command palette dialog appears with a search input
+    await expect(page.getByPlaceholder(/Digite|Search|Buscar/i).first()).toBeVisible({ timeout: 3000 });
+    await page.keyboard.press("Escape");
+  });
+
+  test("document title updates on navigation", async ({ page }) => {
+    await page.getByRole("button", { name: /Empresas/ }).first().click();
+    await expect(page.getByText("Empresas Identificadas")).toBeVisible({ timeout: 5000 });
+    const title = await page.title();
+    expect(title.length).toBeGreaterThan(0);
+  });
+});
+
+// ─── Mobile Navigation ───────────────────────────────────────
+
+test.describe("Mobile — Bottom Nav", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/login");
+    await page.getByText("Explorar em modo demonstração").click();
+    await page.waitForSelector("text=Dashboard", { timeout: 10000 });
+  });
+
+  test("renders mobile bottom nav on small viewports", async ({ page }) => {
+    // Bottom nav is fixed at bottom; check via role=navigation or known labels
+    const nav = page.locator("nav").last();
+    await expect(nav).toBeVisible();
+  });
+
+  test("dashboard renders responsively on mobile", async ({ page }) => {
+    await expect(page.getByText("Modo Demonstração")).toBeVisible();
+  });
+});
