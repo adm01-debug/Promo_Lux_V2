@@ -19,6 +19,7 @@ const VIEW_LABELS: Record<View, string> = {
   map: "Mapa de Empresas",
   campaigns: "Campanhas",
   "ai-agent": "Agente IA",
+  organizations: "Workspaces",
   settings: "Configurações",
 };
 
@@ -35,10 +36,11 @@ const VIEW_SECTIONS: Record<View, string> = {
   map: "Automação",
   campaigns: "Automação",
   "ai-agent": "Automação",
+  organizations: "Sistema",
   settings: "Sistema",
 };
 
-const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results"];
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations"];
 
 // Shortcut views moved to useKeyboardShortcuts
 
