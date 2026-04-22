@@ -15,6 +15,7 @@ export interface Member {
   user_id: string;
   role: AppRole;
   created_at: string;
+  profile?: { full_name: string | null; avatar_url: string | null } | null;
 }
 export interface Invite {
   id: string;
@@ -91,7 +92,22 @@ export function useOrgMembers(orgId: string | null) {
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return data ?? [];
+      const rows = data ?? [];
+      // Best-effort enrich with profile names. RLS on profiles only exposes the current
+      // user's own row, so co-members will fall back to a truncated user_id label.
+      const ids = rows.map(r => r.user_id);
+      if (ids.length === 0) return rows;
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", ids);
+      const byId = new Map((profs ?? []).map(p => [p.id, p]));
+      return rows.map(r => ({
+        ...r,
+        profile: byId.get(r.user_id)
+          ? { full_name: byId.get(r.user_id)!.full_name, avatar_url: byId.get(r.user_id)!.avatar_url }
+          : null,
+      }));
     },
   });
 }
