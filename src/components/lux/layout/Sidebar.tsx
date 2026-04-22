@@ -20,6 +20,7 @@ import {
   Database,
   Settings,
   Kanban,
+  Webhook,
   X,
   PanelLeftClose,
   PanelLeft,
@@ -50,6 +51,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "campaigns", label: "Campanhas", icon: Mail },
   { id: "ai-agent", label: "Agente IA", icon: Bot },
   { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
+  { id: "integrations", label: "API & Webhooks", icon: Webhook },
   { id: "settings", label: "Configurações", icon: Settings },
 ];
 

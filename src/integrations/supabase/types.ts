@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      api_keys: {
+        Row: {
+          active: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          key_hash: string
+          last_used_at: string | null
+          name: string
+          prefix: string
+          scopes: string[]
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash: string
+          last_used_at?: string | null
+          name: string
+          prefix: string
+          scopes?: string[]
+          user_id?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash?: string
+          last_used_at?: string | null
+          name?: string
+          prefix?: string
+          scopes?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: Database["public"]["Enums"]["audit_action"]
@@ -813,6 +852,107 @@ export type Database = {
           },
         ]
       }
+      webhook_deliveries: {
+        Row: {
+          attempts: number
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          event: string
+          id: string
+          next_retry_at: string | null
+          payload: Json
+          response_body: string | null
+          status: string
+          status_code: number | null
+          user_id: string
+          webhook_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event: string
+          id?: string
+          next_retry_at?: string | null
+          payload: Json
+          response_body?: string | null
+          status?: string
+          status_code?: number | null
+          user_id: string
+          webhook_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event?: string
+          id?: string
+          next_retry_at?: string | null
+          payload?: Json
+          response_body?: string | null
+          status?: string
+          status_code?: number | null
+          user_id?: string
+          webhook_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_deliveries_webhook_id_fkey"
+            columns: ["webhook_id"]
+            isOneToOne: false
+            referencedRelation: "webhooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhooks: {
+        Row: {
+          active: boolean
+          created_at: string
+          events: string[]
+          id: string
+          last_triggered_at: string | null
+          name: string
+          secret: string
+          total_failed: number
+          total_sent: number
+          updated_at: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          id?: string
+          last_triggered_at?: string | null
+          name: string
+          secret?: string
+          total_failed?: number
+          total_sent?: number
+          updated_at?: string
+          url: string
+          user_id?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          id?: string
+          last_triggered_at?: string | null
+          name?: string
+          secret?: string
+          total_failed?: number
+          total_sent?: number
+          updated_at?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workflow_runs: {
         Row: {
           completed_at: string | null
@@ -929,6 +1069,15 @@ export type Database = {
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
+      }
+      touch_api_key: { Args: { _key_id: string }; Returns: undefined }
+      verify_api_key: {
+        Args: { _key_hash: string }
+        Returns: {
+          key_id: string
+          scopes: string[]
+          user_id: string
+        }[]
       }
     }
     Enums: {
