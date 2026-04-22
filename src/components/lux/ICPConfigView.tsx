@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useICPConfig, type ICPCriterion } from "@/hooks/useICPConfig";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 const iconMap: Record<string, React.ReactNode> = {
   sector: <Building2 className="h-4 w-4" />,
@@ -20,6 +21,7 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export const ICPConfigView = () => {
   const { config, isLoading, save, isSaving } = useICPConfig();
+  const { setHasUnsavedChanges } = useUnsavedChanges();
   const [criteria, setCriteria] = useState<ICPCriterion[]>([]);
   const [newTag, setNewTag] = useState("");
   const [activeAutoSearch, setActiveAutoSearch] = useState(true);
@@ -32,6 +34,12 @@ export const ICPConfigView = () => {
       setDirty(false);
     }
   }, [config]);
+
+  // Sync dirty flag with global unsaved-changes guard
+  useEffect(() => {
+    setHasUnsavedChanges(dirty);
+    return () => setHasUnsavedChanges(false);
+  }, [dirty, setHasUnsavedChanges]);
 
   const updateCriteria = (updater: (prev: ICPCriterion[]) => ICPCriterion[]) => {
     setCriteria((prev) => {

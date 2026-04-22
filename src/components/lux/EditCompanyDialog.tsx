@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { validateCompany } from "@/lib/schemas/company";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -30,6 +31,7 @@ interface EditCompanyDialogProps {
 export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDialogProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { setHasUnsavedChanges, confirmNavigation } = useUnsavedChanges();
   const [saving, setSaving] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -46,6 +48,9 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [dirty, setDirty] = useState(false);
+  const markDirty = useCallback(() => setDirty(true), []);
+
   useEffect(() => {
     if (company && open) {
       setName(company.name);
@@ -59,8 +64,27 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       setGeoStatus("idle");
       setGeoCoords(null);
       setFieldErrors({});
+      setDirty(false);
     }
   }, [company, open]);
+
+  // Sync local dirty flag with global guard while dialog is open
+  useEffect(() => {
+    setHasUnsavedChanges(open && dirty);
+    return () => setHasUnsavedChanges(false);
+  }, [open, dirty, setHasUnsavedChanges]);
+
+  // Intercept dialog close to confirm if dirty
+  const handleOpenChange = (next: boolean) => {
+    if (!next && dirty) {
+      confirmNavigation(() => {
+        setDirty(false);
+        onOpenChange(false);
+      });
+      return;
+    }
+    onOpenChange(next);
+  };
 
   const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
     try {
@@ -76,6 +100,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
 
   const handleLocationChange = useCallback((value: string) => {
     setLocation(value);
+    setDirty(true);
     setGeoCoords(null);
     setFieldErrors((prev) => { const { location: _, ...rest } = prev; return rest; });
     if (debounceRef.current) clearTimeout(debounceRef.current);
