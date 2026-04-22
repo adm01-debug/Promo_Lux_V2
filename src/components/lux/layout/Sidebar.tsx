@@ -16,6 +16,7 @@ import {
   MapPin,
   Globe,
   Users,
+  Users2,
   Database,
   Settings,
   X,
@@ -46,7 +47,8 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "map", label: "Mapa de Empresas", icon: Globe },
   { id: "campaigns", label: "Campanhas", icon: Mail },
   { id: "ai-agent", label: "Agente IA", icon: Bot },
-  { id: "settings", label: "Configurações", icon: Settings, section: "Sistema" },
+  { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
+  { id: "settings", label: "Configurações", icon: Settings },
 ];
 
 const SHORTCUT_VIEWS: View[] = [
