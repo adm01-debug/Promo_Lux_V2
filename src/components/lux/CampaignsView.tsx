@@ -3,7 +3,8 @@ import { validateCampaign } from "@/lib/schemas/campaign";
 import { useDemo } from "@/contexts/DemoContext";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { DEMO_CAMPAIGNS } from "@/lib/demoData";
-import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil } from "lucide-react";
+import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil, Activity } from "lucide-react";
+import { CampaignTrackingDrawer } from "@/components/lux/campaigns/CampaignTrackingDrawer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -120,6 +121,7 @@ export const CampaignsView = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editingCampaign, setEditingCampaign] = useState<Tables<"campaigns"> | null>(null);
+  const [trackingCampaign, setTrackingCampaign] = useState<Tables<"campaigns"> | null>(null);
 
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
@@ -384,6 +386,14 @@ export const CampaignsView = () => {
                         <Pencil className="h-3 w-3" /> Editar
                       </Button>
                     )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1 text-xs h-8"
+                      onClick={() => setTrackingCampaign(campaign)}
+                    >
+                      <Activity className="h-3 w-3" /> Tracking
+                    </Button>
                     {canEdit && <Button
                       size="sm"
                       variant="outline"
@@ -435,6 +445,13 @@ export const CampaignsView = () => {
           })}
         </div>
       )}
+
+      <CampaignTrackingDrawer
+        campaignId={trackingCampaign?.id ?? null}
+        campaignName={trackingCampaign?.name ?? ""}
+        open={!!trackingCampaign}
+        onOpenChange={(v) => { if (!v) setTrackingCampaign(null); }}
+      />
     </div>
   );
 };
