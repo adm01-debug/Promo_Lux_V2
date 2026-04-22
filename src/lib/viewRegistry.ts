@@ -17,6 +17,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   analytics: () => import("@/components/lux/AnalyticsView"),
   settings: () => import("@/components/lux/SettingsView"),
   gmaps: () => import("@/components/lux/GmapsScraperView"),
+  "scrape-results": () => import("@/components/lux/ScrapeResultsView"),
   map: () => import("@/components/lux/CompaniesMapView"),
   stakeholders: () => import("@/components/lux/StakeholderFinderView"),
 };
@@ -43,6 +44,7 @@ export const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentTyp
   analytics: lazy(() => import("@/components/lux/AnalyticsView").then(m => ({ default: m.AnalyticsView }))),
   settings: lazy(() => import("@/components/lux/SettingsView").then(m => ({ default: m.SettingsView }))),
   gmaps: lazy(() => import("@/components/lux/GmapsScraperView").then(m => ({ default: m.GmapsScraperView }))),
+  "scrape-results": lazy(() => import("@/components/lux/ScrapeResultsView").then(m => ({ default: m.ScrapeResultsView }))),
   map: lazy(() => import("@/components/lux/CompaniesMapView").then(m => ({ default: m.CompaniesMapView }))),
   stakeholders: lazy(() => import("@/components/lux/StakeholderFinderView").then(m => ({ default: m.StakeholderFinderView }))),
 };

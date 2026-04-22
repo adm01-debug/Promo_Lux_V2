@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { prefetchView } from "@/lib/viewRegistry";
 import { useSearchParams } from "react-router-dom";
 
-export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders";
+export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results";
 
 export type NavigationDirection = "forward" | "back";
 
@@ -15,6 +15,7 @@ const VIEW_LABELS: Record<View, string> = {
   stakeholders: "Stakeholders",
   workflows: "Workflows",
   gmaps: "Google Maps",
+  "scrape-results": "Resultados de Raspagem",
   map: "Mapa de Empresas",
   campaigns: "Campanhas",
   "ai-agent": "Agente IA",
@@ -30,13 +31,14 @@ const VIEW_SECTIONS: Record<View, string> = {
   stakeholders: "Prospecção",
   workflows: "Automação",
   gmaps: "Automação",
+  "scrape-results": "Automação",
   map: "Automação",
   campaigns: "Automação",
   "ai-agent": "Automação",
   settings: "Sistema",
 };
 
-const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders"];
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results"];
 
 // Shortcut views moved to useKeyboardShortcuts
 

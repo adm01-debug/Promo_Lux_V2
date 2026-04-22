@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings,
+  Mail, Bot, MapPin, Globe, Users, Settings, Database,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
@@ -13,6 +13,7 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   stakeholders: Users,
   workflows: Workflow,
   gmaps: MapPin,
+  "scrape-results": Database,
   map: Globe,
   campaigns: Mail,
   "ai-agent": Bot,
@@ -28,6 +29,7 @@ export const VIEW_LABELS: Record<View, string> = {
   stakeholders: "Stakeholders",
   workflows: "Workflows",
   gmaps: "Google Maps",
+  "scrape-results": "Resultados de Raspagem",
   map: "Mapa de Empresas",
   campaigns: "Campanhas",
   "ai-agent": "Agente IA",
@@ -56,6 +58,7 @@ export const sections = [
     items: [
       { id: "workflows" as View, label: "Workflows", icon: Workflow },
       { id: "gmaps" as View, label: "Google Maps", icon: MapPin },
+      { id: "scrape-results" as View, label: "Resultados de Raspagem", icon: Database },
       { id: "map" as View, label: "Mapa de Empresas", icon: Globe },
       { id: "campaigns" as View, label: "Campanhas", icon: Mail },
       { id: "ai-agent" as View, label: "Agente IA", icon: Bot },
