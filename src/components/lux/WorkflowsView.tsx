@@ -43,6 +43,9 @@ const defaultSteps = [
 
 export const WorkflowsView = () => {
   const { isDemoMode } = useDemo();
+  const canCreate = useCan("workflows", "create");
+  const canEdit = useCan("workflows", "edit");
+  const canDelete = useCan("workflows", "delete");
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
@@ -125,7 +128,7 @@ export const WorkflowsView = () => {
           <p className="text-sm text-muted-foreground mt-1">{activeCount} ativos — {totalProcessed.toLocaleString()} leads processados</p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" /> Novo Workflow</Button></DialogTrigger>
+          {canCreate && <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" /> Novo Workflow</Button></DialogTrigger>}
           <DialogContent className="bg-card border-border/50">
             <DialogHeader><DialogTitle className="flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Novo Workflow Automático</DialogTitle></DialogHeader>
             <div className="space-y-4 mt-2">
@@ -193,6 +196,8 @@ export const WorkflowsView = () => {
               onRun={(id) => runMutation.mutate(id)}
               onToggleStatus={(id, status) => toggleMutation.mutate({ id, status })}
               onDelete={(id) => deleteMutation.mutate(id)}
+              canEdit={canEdit}
+              canDelete={canDelete}
             />
           ))}
         </div>
