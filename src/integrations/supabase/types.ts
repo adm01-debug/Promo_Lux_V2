@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: Database["public"]["Enums"]["audit_action"]
+          actor_id: string | null
+          created_at: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          record_id: string
+          table_name: string
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["audit_action"]
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id: string
+          table_name: string
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["audit_action"]
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       campaigns: {
         Row: {
           created_at: string
@@ -151,6 +184,218 @@ export type Database = {
           website?: string | null
         }
         Relationships: []
+      }
+      deal_activities: {
+        Row: {
+          content: string | null
+          created_at: string
+          deal_id: string
+          id: string
+          metadata: Json | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          deal_id: string
+          id?: string
+          metadata?: Json | null
+          title: string
+          type?: string
+          user_id?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          deal_id?: string
+          id?: string
+          metadata?: Json | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_activities_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_stages: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          position: number
+          probability: number
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+          probability?: number
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          probability?: number
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      deal_tasks: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          deal_id: string | null
+          description: string | null
+          due_at: string | null
+          id: string
+          priority: string
+          remind_at: string | null
+          reminded: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          priority?: string
+          remind_at?: string | null
+          reminded?: boolean
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          priority?: string
+          remind_at?: string | null
+          reminded?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_tasks_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deals: {
+        Row: {
+          closed_at: string | null
+          company_id: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          expected_close_date: string | null
+          id: string
+          position: number
+          priority: string
+          stage_id: string
+          stakeholder_id: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+          value: number | null
+        }
+        Insert: {
+          closed_at?: string | null
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          expected_close_date?: string | null
+          id?: string
+          position?: number
+          priority?: string
+          stage_id: string
+          stakeholder_id?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id?: string
+          value?: number | null
+        }
+        Update: {
+          closed_at?: string | null
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          expected_close_date?: string | null
+          id?: string
+          position?: number
+          priority?: string
+          stage_id?: string
+          stakeholder_id?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "deal_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_stakeholder_id_fkey"
+            columns: ["stakeholder_id"]
+            isOneToOne: false
+            referencedRelation: "stakeholders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       intent_signals: {
         Row: {
@@ -669,6 +914,10 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      create_default_deal_stages: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
       has_org_role: {
         Args: {
           _min_role: Database["public"]["Enums"]["app_role"]
@@ -684,6 +933,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "sdr" | "viewer"
+      audit_action: "create" | "update" | "delete"
       campaign_status: "draft" | "active" | "paused" | "completed" | "archived"
       scrape_job_status:
         | "pending"
@@ -828,6 +1078,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "sdr", "viewer"],
+      audit_action: ["create", "update", "delete"],
       campaign_status: ["draft", "active", "paused", "completed", "archived"],
       scrape_job_status: [
         "pending",
