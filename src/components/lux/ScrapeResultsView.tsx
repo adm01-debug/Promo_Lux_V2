@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataError } from "@/components/lux/DataError";
 import { EmptyState } from "@/components/lux/EmptyState";
+import type { TablesInsert } from "@/integrations/supabase/types";
 
 type RawData = Record<string, unknown>;
 interface ScrapeResultRow {
@@ -154,15 +155,16 @@ export const ScrapeResultsView = () => {
       const email = pickString(raw, ["email"]);
       const ipc = computeIPC(raw);
 
+      const insertPayload: TablesInsert<"companies"> = {
+        name, sector, location, website, phone, email,
+        source: "gmaps",
+        ipc_score: ipc,
+        enriched: !!(email || phone),
+        raw_data: raw as TablesInsert<"companies">["raw_data"],
+      };
       const { data: company, error: cErr } = await supabase
         .from("companies")
-        .insert({
-          name, sector, location, website, phone, email,
-          source: "gmaps",
-          ipc_score: ipc,
-          enriched: !!(email || phone),
-          raw_data: raw,
-        })
+        .insert(insertPayload)
         .select("id")
         .single();
       if (cErr) throw cErr;
