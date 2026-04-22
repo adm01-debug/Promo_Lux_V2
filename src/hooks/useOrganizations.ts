@@ -47,6 +47,7 @@ export function useMyOrganizations() {
 
 export function useActiveOrganization() {
   const { data: orgs } = useMyOrganizations();
+  const qc = useQueryClient();
   const [activeId, setActiveId] = useState<string | null>(() =>
     typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null
   );
@@ -62,9 +63,14 @@ export function useActiveOrganization() {
   }, [orgs, activeId]);
 
   const setActive = useCallback((id: string) => {
+    if (id === activeId) return;
     setActiveId(id);
     localStorage.setItem(STORAGE_KEY, id);
-  }, []);
+    // Invalidate all workspace-scoped data so it refetches under the new org
+    qc.invalidateQueries();
+    // Notify other tabs / listeners
+    window.dispatchEvent(new CustomEvent("lux:active-org-changed", { detail: { id } }));
+  }, [activeId, qc]);
 
   const active = useMemo(
     () => (orgs ?? []).find(o => o.organization_id === activeId) ?? null,
