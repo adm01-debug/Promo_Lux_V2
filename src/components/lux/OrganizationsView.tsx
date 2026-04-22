@@ -364,6 +364,43 @@ export const OrganizationsView = () => {
           )}
         </>
       )}
+
+      <AlertDialog open={!!removeTarget} onOpenChange={(o) => !o && setRemoveTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {removeTarget?.isMe ? "Sair do workspace?" : "Remover membro?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {removeTarget?.isMe
+                ? `Você perderá acesso a "${activeOrg?.organizations.name}" e a todos os dados deste workspace. Você pode ser convidado novamente por um admin.`
+                : `${removeTarget?.label} perderá acesso a este workspace imediatamente. Esta ação pode ser desfeita gerando um novo convite.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (!removeTarget) return;
+                removeMember.mutate(removeTarget.id, {
+                  onSuccess: () => {
+                    toast({
+                      title: removeTarget.isMe ? "Você saiu do workspace" : "Membro removido",
+                    });
+                  },
+                  onError: (e) => {
+                    toast({ title: "Erro", description: (e as Error).message, variant: "destructive" });
+                  },
+                });
+                setRemoveTarget(null);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {removeTarget?.isMe ? "Sair" : "Remover"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
