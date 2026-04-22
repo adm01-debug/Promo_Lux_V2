@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, ScrollText,
+  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
@@ -18,8 +18,8 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   campaigns: Mail,
   "ai-agent": Bot,
   organizations: Users2,
-  audit: ScrollText,
   settings: Settings,
+  deals: Kanban,
 };
 
 export const VIEW_LABELS: Record<View, string> = {
@@ -36,8 +36,8 @@ export const VIEW_LABELS: Record<View, string> = {
   campaigns: "Campanhas",
   "ai-agent": "Agente IA",
   organizations: "Workspaces",
-  audit: "Audit Log",
   settings: "Configurações",
+  deals: "Pipeline (Deals)",
 };
 
 export const sections = [
@@ -58,6 +58,12 @@ export const sections = [
     ],
   },
   {
+    label: "Vendas",
+    items: [
+      { id: "deals" as View, label: "Pipeline (Deals)", icon: Kanban },
+    ],
+  },
+  {
     label: "Automação",
     items: [
       { id: "workflows" as View, label: "Workflows", icon: Workflow },
@@ -72,7 +78,6 @@ export const sections = [
     label: "Sistema",
     items: [
       { id: "organizations" as View, label: "Workspaces", icon: Users2 },
-      { id: "audit" as View, label: "Audit Log", icon: ScrollText },
       { id: "settings" as View, label: "Configurações", icon: Settings },
     ],
   },

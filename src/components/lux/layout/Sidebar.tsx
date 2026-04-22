@@ -18,8 +18,8 @@ import {
   Users,
   Users2,
   Database,
-  ScrollText,
   Settings,
+  Kanban,
   X,
   PanelLeftClose,
   PanelLeft,
@@ -42,6 +42,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "companies", label: "Empresas", icon: Building2 },
   { id: "intent", label: "Sinais de Intenção", icon: Radar },
   { id: "stakeholders", label: "Stakeholders", icon: Users },
+  { id: "deals", label: "Pipeline (Deals)", icon: Kanban, section: "Vendas" },
   { id: "workflows", label: "Workflows", icon: Workflow, section: "Automação" },
   { id: "gmaps", label: "Google Maps", icon: MapPin },
   { id: "scrape-results", label: "Resultados Raspagem", icon: Database },
@@ -49,7 +50,6 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "campaigns", label: "Campanhas", icon: Mail },
   { id: "ai-agent", label: "Agente IA", icon: Bot },
   { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
-  { id: "audit", label: "Audit Log", icon: ScrollText },
   { id: "settings", label: "Configurações", icon: Settings },
 ];
 
