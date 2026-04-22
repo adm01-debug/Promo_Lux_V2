@@ -58,9 +58,11 @@ interface CompanyTableRowProps {
   onOpen: (company: Company) => void;
   onEdit: (company: Company) => void;
   onDelete: (company: Company) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
-export const CompanyTableRow = ({ company, index, isSelected, searchQuery, onSelect, onToggleStar, onOpen, onEdit, onDelete }: CompanyTableRowProps) => (
+export const CompanyTableRow = ({ company, index, isSelected, searchQuery, onSelect, onToggleStar, onOpen, onEdit, onDelete, canEdit = true, canDelete = true }: CompanyTableRowProps) => (
   <motion.tr
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -109,12 +111,16 @@ export const CompanyTableRow = ({ company, index, isSelected, searchQuery, onSel
         <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes">
           <Eye className="h-3.5 w-3.5" />
         </Button>
-        <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={() => onEdit(company)}>
-          <Pencil className="h-3.5 w-3.5" />
-        </Button>
-        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={() => onDelete(company)}>
-          <Trash2 className="h-3.5 w-3.5" />
-        </Button>
+        {canEdit && (
+          <Button variant="ghost" size="icon" className="h-7 w-7" title="Editar" onClick={() => onEdit(company)}>
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+        )}
+        {canDelete && (
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" title="Excluir" onClick={() => onDelete(company)}>
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
       <div className="sm:hidden">
         <DropdownMenu>
@@ -127,12 +133,16 @@ export const CompanyTableRow = ({ company, index, isSelected, searchQuery, onSel
             <DropdownMenuItem onClick={() => onOpen(company)}>
               <Eye className="h-3.5 w-3.5 mr-2" /> Ver detalhes
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(company)}>
-              <Pencil className="h-3.5 w-3.5 mr-2" /> Editar
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => onDelete(company)}>
-              <Trash2 className="h-3.5 w-3.5 mr-2" /> Excluir
-            </DropdownMenuItem>
+            {canEdit && (
+              <DropdownMenuItem onClick={() => onEdit(company)}>
+                <Pencil className="h-3.5 w-3.5 mr-2" /> Editar
+              </DropdownMenuItem>
+            )}
+            {canDelete && (
+              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => onDelete(company)}>
+                <Trash2 className="h-3.5 w-3.5 mr-2" /> Excluir
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

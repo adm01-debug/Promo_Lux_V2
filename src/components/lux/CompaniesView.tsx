@@ -301,7 +301,8 @@ export const CompaniesView = () => {
                       onToggleStar={handleToggleStar}
                       onOpen={openCompany}
                       onEdit={(c) => { setEditCompany(c); setEditOpen(true); }}
-                      onDelete={canDelete ? setDeleteTarget : undefined as unknown as typeof setDeleteTarget}
+                      onDelete={setDeleteTarget}
+                      canDelete={canDelete}
                     />
                   ))}
                 </tbody>
