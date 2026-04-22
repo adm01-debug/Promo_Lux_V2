@@ -27,7 +27,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
-          organization_id: string
+          organization_id?: string
           role: string
           user_id?: string
         }
@@ -63,7 +63,7 @@ export type Database = {
           key_hash: string
           last_used_at?: string | null
           name: string
-          organization_id: string
+          organization_id?: string
           prefix: string
           scopes?: string[]
           user_id?: string
@@ -142,7 +142,7 @@ export type Database = {
           meetings?: number
           name: string
           opened?: number
-          organization_id: string
+          organization_id?: string
           prospects?: number
           replied?: number
           sent?: number
@@ -204,7 +204,7 @@ export type Database = {
           lng?: number | null
           location?: string | null
           name: string
-          organization_id: string
+          organization_id?: string
           phone?: string | null
           raw_data?: Json | null
           revenue?: number | null
@@ -257,7 +257,7 @@ export type Database = {
           deal_id: string
           id?: string
           metadata?: Json | null
-          organization_id: string
+          organization_id?: string
           title: string
           type?: string
           user_id?: string
@@ -301,7 +301,7 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
-          organization_id: string
+          organization_id?: string
           position?: number
           probability?: number
           type?: string
@@ -347,7 +347,7 @@ export type Database = {
           description?: string | null
           due_at?: string | null
           id?: string
-          organization_id: string
+          organization_id?: string
           priority?: string
           remind_at?: string | null
           reminded?: boolean
@@ -409,7 +409,7 @@ export type Database = {
           description?: string | null
           expected_close_date?: string | null
           id?: string
-          organization_id: string
+          organization_id?: string
           position?: number
           priority?: string
           stage_id: string
@@ -484,7 +484,7 @@ export type Database = {
           details?: string | null
           id?: string
           metadata?: Json | null
-          organization_id: string
+          organization_id?: string
           signal: string
           strength?: string
           type?: string
@@ -530,7 +530,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           name?: string
-          organization_id: string
+          organization_id?: string
           updated_at?: string
           user_id?: string
         }
@@ -563,7 +563,7 @@ export type Database = {
           id?: string
           message: string
           metadata?: Json | null
-          organization_id: string
+          organization_id?: string
           read?: boolean
           title: string
           type?: string
@@ -746,7 +746,7 @@ export type Database = {
           external_id?: string | null
           id?: string
           name: string
-          organization_id: string
+          organization_id?: string
           results_count?: number | null
           source?: string
           started_at?: string | null
@@ -788,7 +788,7 @@ export type Database = {
           created_at?: string
           id?: string
           job_id: string
-          organization_id: string
+          organization_id?: string
           processed?: boolean | null
           raw_data?: Json
           user_id?: string
@@ -855,7 +855,7 @@ export type Database = {
           last_contacted_at?: string | null
           linkedin_url?: string | null
           notes?: string | null
-          organization_id: string
+          organization_id?: string
           phone?: string | null
           raw_data?: Json | null
           role?: string | null
@@ -922,7 +922,7 @@ export type Database = {
           event: string
           id?: string
           next_retry_at?: string | null
-          organization_id: string
+          organization_id?: string
           payload: Json
           response_body?: string | null
           status?: string
@@ -979,7 +979,7 @@ export type Database = {
           id?: string
           last_triggered_at?: string | null
           name: string
-          organization_id: string
+          organization_id?: string
           secret?: string
           total_failed?: number
           total_sent?: number
@@ -1024,7 +1024,7 @@ export type Database = {
           current_step?: string | null
           error_message?: string | null
           id?: string
-          organization_id: string
+          organization_id?: string
           results?: Json | null
           started_at?: string | null
           status?: string
@@ -1080,7 +1080,7 @@ export type Database = {
           leads_processed?: number | null
           leads_qualified?: number | null
           name: string
-          organization_id: string
+          organization_id?: string
           status?: Database["public"]["Enums"]["workflow_status"]
           steps?: Json
           success_rate?: number | null
@@ -1115,6 +1115,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      default_org_for_current_user: { Args: never; Returns: string }
       has_org_role: {
         Args: {
           _min_role: Database["public"]["Enums"]["app_role"]
