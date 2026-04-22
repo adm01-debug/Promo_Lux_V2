@@ -22,6 +22,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   "scrape-results": GmapsScraperSkeleton,
   map: MapSkeleton,
   organizations: SettingsSkeleton,
+  deals: WorkflowsSkeleton,
 };
 
 /** Render a view-specific skeleton with accessibility. Falls back to DashboardSkeleton. */
