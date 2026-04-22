@@ -23,6 +23,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   map: MapSkeleton,
   organizations: SettingsSkeleton,
   deals: WorkflowsSkeleton,
+  integrations: SettingsSkeleton,
 };
 
 /** Render a view-specific skeleton with accessibility. Falls back to DashboardSkeleton. */
