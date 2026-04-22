@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validateCampaign } from "@/lib/schemas/campaign";
 import { useDemo } from "@/contexts/DemoContext";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import { DEMO_CAMPAIGNS } from "@/lib/demoData";
 import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -111,6 +112,7 @@ export const CampaignsView = () => {
   const { isDemoMode } = useDemo();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { setHasUnsavedChanges, confirmNavigation } = useUnsavedChanges();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editingCampaign, setEditingCampaign] = useState<Tables<"campaigns"> | null>(null);
@@ -118,11 +120,37 @@ export const CampaignsView = () => {
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
   const [formSequence, setFormSequence] = useState<SequenceStep[]>(defaultSequence);
+  const [dirty, setDirty] = useState(false);
 
   const resetForm = () => {
     setFormName("");
     setFormProspects("50");
     setFormSequence([...defaultSequence]);
+    setDirty(false);
+  };
+
+  // Sync dirty flag with global guard while a form dialog is open
+  useEffect(() => {
+    setHasUnsavedChanges((createOpen || editOpen) && dirty);
+    return () => setHasUnsavedChanges(false);
+  }, [createOpen, editOpen, dirty, setHasUnsavedChanges]);
+
+  const guardedCloseCreate = (next: boolean) => {
+    if (!next && dirty) {
+      confirmNavigation(() => { setDirty(false); setCreateOpen(false); resetForm(); });
+      return;
+    }
+    setCreateOpen(next);
+    if (!next) resetForm();
+  };
+
+  const guardedCloseEdit = (next: boolean) => {
+    if (!next && dirty) {
+      confirmNavigation(() => { setDirty(false); setEditOpen(false); setEditingCampaign(null); resetForm(); });
+      return;
+    }
+    setEditOpen(next);
+    if (!next) { setEditingCampaign(null); resetForm(); }
   };
 
   const { data: campaigns = [], isLoading, error: campaignsError, refetch } = useQuery({
@@ -160,6 +188,7 @@ export const CampaignsView = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
       toast({ title: "Campanha criada!" });
+      setDirty(false);
       setCreateOpen(false);
       resetForm();
     },
@@ -179,6 +208,7 @@ export const CampaignsView = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
       toast({ title: "Campanha atualizada!" });
+      setDirty(false);
       setEditOpen(false);
       setEditingCampaign(null);
       resetForm();
@@ -217,6 +247,7 @@ export const CampaignsView = () => {
     setFormProspects(String(campaign.prospects));
     const seq = Array.isArray(campaign.sequence) ? campaign.sequence as SequenceStep[] : defaultSequence;
     setFormSequence(seq);
+    setDirty(false);
     setEditOpen(true);
   };
 
@@ -235,7 +266,7 @@ export const CampaignsView = () => {
             {activeCount} ativas — {totalSent} emails enviados
           </p>
         </div>
-        <Dialog open={createOpen} onOpenChange={(v) => { setCreateOpen(v); if (!v) resetForm(); }}>
+        <Dialog open={createOpen} onOpenChange={guardedCloseCreate}>
           <DialogTrigger asChild>
             <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Campanha</Button>
           </DialogTrigger>
@@ -246,9 +277,9 @@ export const CampaignsView = () => {
               </DialogTitle>
             </DialogHeader>
             <CampaignFormFields
-              name={formName} setName={setFormName}
-              prospects={formProspects} setProspects={setFormProspects}
-              sequence={formSequence} setSequence={setFormSequence}
+              name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
+              prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
+              sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
             />
             <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !formName.trim()} className="w-full gap-2">
               {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
@@ -259,7 +290,7 @@ export const CampaignsView = () => {
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={editOpen} onOpenChange={(v) => { setEditOpen(v); if (!v) { setEditingCampaign(null); resetForm(); } }}>
+      <Dialog open={editOpen} onOpenChange={guardedCloseEdit}>
         <DialogContent className="bg-card border-border/50">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -267,9 +298,9 @@ export const CampaignsView = () => {
             </DialogTitle>
           </DialogHeader>
           <CampaignFormFields
-            name={formName} setName={setFormName}
-            prospects={formProspects} setProspects={setFormProspects}
-            sequence={formSequence} setSequence={setFormSequence}
+            name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
+            prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
+            sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
             isEdit
           />
           <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending || !formName.trim()} className="w-full gap-2">

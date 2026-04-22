@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { validateCompany } from "@/lib/schemas/company";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -30,6 +31,7 @@ interface EditCompanyDialogProps {
 export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDialogProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { setHasUnsavedChanges, confirmNavigation } = useUnsavedChanges();
   const [saving, setSaving] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -46,6 +48,9 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [dirty, setDirty] = useState(false);
+  const markDirty = useCallback(() => setDirty(true), []);
+
   useEffect(() => {
     if (company && open) {
       setName(company.name);
@@ -59,8 +64,27 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       setGeoStatus("idle");
       setGeoCoords(null);
       setFieldErrors({});
+      setDirty(false);
     }
   }, [company, open]);
+
+  // Sync local dirty flag with global guard while dialog is open
+  useEffect(() => {
+    setHasUnsavedChanges(open && dirty);
+    return () => setHasUnsavedChanges(false);
+  }, [open, dirty, setHasUnsavedChanges]);
+
+  // Intercept dialog close to confirm if dirty
+  const handleOpenChange = (next: boolean) => {
+    if (!next && dirty) {
+      confirmNavigation(() => {
+        setDirty(false);
+        onOpenChange(false);
+      });
+      return;
+    }
+    onOpenChange(next);
+  };
 
   const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
     try {
@@ -76,6 +100,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
 
   const handleLocationChange = useCallback((value: string) => {
     setLocation(value);
+    setDirty(true);
     setGeoCoords(null);
     setFieldErrors((prev) => { const { location: _, ...rest } = prev; return rest; });
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -123,6 +148,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
       queryClient.invalidateQueries({ queryKey: ["companies-map"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      setDirty(false);
       onOpenChange(false);
     } catch (err: unknown) {
       toast({ title: "Erro ao atualizar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
@@ -139,7 +165,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   if (!company) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -150,12 +176,12 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="col-span-2">
             <Label>Nome *</Label>
-            <Input value={name} onChange={(e) => { setName(e.target.value); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
+            <Input value={name} onChange={(e) => { setName(e.target.value); markDirty(); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
             <FieldError field="name" />
           </div>
           <div>
             <Label>Setor</Label>
-            <Input value={sector} onChange={(e) => { setSector(e.target.value); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
+            <Input value={sector} onChange={(e) => { setSector(e.target.value); markDirty(); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
             <FieldError field="sector" />
           </div>
           <div>
@@ -179,27 +205,27 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
           </div>
           <div>
             <Label>Email</Label>
-            <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
+            <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); markDirty(); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
             <FieldError field="email" />
           </div>
           <div>
             <Label>Telefone</Label>
-            <Input value={phone} onChange={(e) => { setPhone(e.target.value); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
+            <Input value={phone} onChange={(e) => { setPhone(e.target.value); markDirty(); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
             <FieldError field="phone" />
           </div>
           <div>
             <Label>Website</Label>
-            <Input value={website} onChange={(e) => { setWebsite(e.target.value); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
+            <Input value={website} onChange={(e) => { setWebsite(e.target.value); markDirty(); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
             <FieldError field="website" />
           </div>
           <div>
             <Label>Funcionários</Label>
-            <Input value={employees} onChange={(e) => { setEmployees(e.target.value); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
+            <Input value={employees} onChange={(e) => { setEmployees(e.target.value); markDirty(); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
             <FieldError field="employees" />
           </div>
           <div className="col-span-2">
             <Label>Faturamento</Label>
-            <Input value={revenue} onChange={(e) => { setRevenue(e.target.value); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
+            <Input value={revenue} onChange={(e) => { setRevenue(e.target.value); markDirty(); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
             <FieldError field="revenue" />
           </div>
         </div>
