@@ -119,6 +119,154 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_events: {
+        Row: {
+          campaign_id: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          occurred_at: string
+          organization_id: string
+          recipient_id: string
+          url: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          campaign_id: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          occurred_at?: string
+          organization_id: string
+          recipient_id: string
+          url?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          occurred_at?: string
+          organization_id?: string
+          recipient_id?: string
+          url?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_events_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_recipients: {
+        Row: {
+          bounced_at: string | null
+          campaign_id: string
+          click_count: number
+          company_id: string | null
+          created_at: string
+          email: string
+          first_clicked_at: string | null
+          first_opened_at: string | null
+          full_name: string | null
+          id: string
+          last_clicked_at: string | null
+          last_opened_at: string | null
+          open_count: number
+          organization_id: string
+          replied_at: string | null
+          sent_at: string | null
+          stakeholder_id: string | null
+          status: string
+          unsubscribed_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bounced_at?: string | null
+          campaign_id: string
+          click_count?: number
+          company_id?: string | null
+          created_at?: string
+          email: string
+          first_clicked_at?: string | null
+          first_opened_at?: string | null
+          full_name?: string | null
+          id?: string
+          last_clicked_at?: string | null
+          last_opened_at?: string | null
+          open_count?: number
+          organization_id?: string
+          replied_at?: string | null
+          sent_at?: string | null
+          stakeholder_id?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          bounced_at?: string | null
+          campaign_id?: string
+          click_count?: number
+          company_id?: string | null
+          created_at?: string
+          email?: string
+          first_clicked_at?: string | null
+          first_opened_at?: string | null
+          full_name?: string | null
+          id?: string
+          last_clicked_at?: string | null
+          last_opened_at?: string | null
+          open_count?: number
+          organization_id?: string
+          replied_at?: string | null
+          sent_at?: string | null
+          stakeholder_id?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_recipients_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_recipients_stakeholder_id_fkey"
+            columns: ["stakeholder_id"]
+            isOneToOne: false
+            referencedRelation: "stakeholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaigns: {
         Row: {
           created_at: string
@@ -1127,6 +1275,16 @@ export type Database = {
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
+      }
+      record_campaign_event: {
+        Args: {
+          _event_type: string
+          _ip: string
+          _recipient_id: string
+          _ua: string
+          _url: string
+        }
+        Returns: string
       }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
