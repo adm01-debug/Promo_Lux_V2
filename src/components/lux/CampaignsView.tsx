@@ -121,6 +121,7 @@ export const CampaignsView = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editingCampaign, setEditingCampaign] = useState<Tables<"campaigns"> | null>(null);
+  const [trackingCampaign, setTrackingCampaign] = useState<Tables<"campaigns"> | null>(null);
 
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
@@ -385,6 +386,14 @@ export const CampaignsView = () => {
                         <Pencil className="h-3 w-3" /> Editar
                       </Button>
                     )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1 text-xs h-8"
+                      onClick={() => setTrackingCampaign(campaign)}
+                    >
+                      <Activity className="h-3 w-3" /> Tracking
+                    </Button>
                     {canEdit && <Button
                       size="sm"
                       variant="outline"
@@ -436,6 +445,13 @@ export const CampaignsView = () => {
           })}
         </div>
       )}
+
+      <CampaignTrackingDrawer
+        campaignId={trackingCampaign?.id ?? null}
+        campaignName={trackingCampaign?.name ?? ""}
+        open={!!trackingCampaign}
+        onOpenChange={(v) => { if (!v) setTrackingCampaign(null); }}
+      />
     </div>
   );
 };
