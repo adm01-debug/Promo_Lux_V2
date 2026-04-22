@@ -15,6 +15,7 @@ import { PageTransition } from "@/components/lux/PageTransition";
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -66,7 +67,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isDemoMode } = useDemo();
   if (isDemoMode) return <Navigate to="/" replace />;
   if (loading) return <PageLoader />;
-  if (user) return <Navigate to="/" replace />;
+  if (user) {
+    const pendingInvite = sessionStorage.getItem("lux:pending-invite");
+    if (pendingInvite) {
+      sessionStorage.removeItem("lux:pending-invite");
+      return <Navigate to={`/invite/${pendingInvite}`} replace />;
+    }
+    return <Navigate to="/" replace />;
+  }
   return <>{children}</>;
 }
 function AnimatedRoutes() {
@@ -76,6 +84,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<PublicRoute><PageTransition><Login /></PageTransition></PublicRoute>} />
         <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
+        <Route path="/invite/:token" element={<PageTransition><AcceptInvite /></PageTransition>} />
         <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>

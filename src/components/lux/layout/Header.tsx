@@ -5,6 +5,7 @@ import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel, useNotificationCount } from "@/components/lux/NotificationsPanel";
+import { WorkspaceSwitcher } from "@/components/lux/organizations/WorkspaceSwitcher";
 import { View } from "@/hooks/useNavigationHistory";
 import { useState, useEffect, useRef, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -100,6 +101,7 @@ export const Header = memo(({
             onNavigate={onNavigate}
             currentLabel={currentLabel}
           />
+          <WorkspaceSwitcher onManage={() => onNavigate("organizations")} />
         </div>
 
         {/* Center: Search bar */}

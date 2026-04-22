@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings, Database,
+  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
@@ -17,6 +17,7 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   map: Globe,
   campaigns: Mail,
   "ai-agent": Bot,
+  organizations: Users2,
   settings: Settings,
 };
 
@@ -33,6 +34,7 @@ export const VIEW_LABELS: Record<View, string> = {
   map: "Mapa de Empresas",
   campaigns: "Campanhas",
   "ai-agent": "Agente IA",
+  organizations: "Workspaces",
   settings: "Configurações",
 };
 
@@ -67,6 +69,7 @@ export const sections = [
   {
     label: "Sistema",
     items: [
+      { id: "organizations" as View, label: "Workspaces", icon: Users2 },
       { id: "settings" as View, label: "Configurações", icon: Settings },
     ],
   },
