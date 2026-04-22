@@ -21,6 +21,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   map: () => import("@/components/lux/CompaniesMapView"),
   stakeholders: () => import("@/components/lux/StakeholderFinderView"),
   organizations: () => import("@/components/lux/OrganizationsView"),
+  deals: () => import("@/components/lux/DealsView"),
 };
 
 // Cache to avoid double-prefetch
@@ -49,4 +50,5 @@ export const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentTyp
   map: lazy(() => import("@/components/lux/CompaniesMapView").then(m => ({ default: m.CompaniesMapView }))),
   stakeholders: lazy(() => import("@/components/lux/StakeholderFinderView").then(m => ({ default: m.StakeholderFinderView }))),
   organizations: lazy(() => import("@/components/lux/OrganizationsView").then(m => ({ default: m.OrganizationsView }))),
+  deals: lazy(() => import("@/components/lux/DealsView").then(m => ({ default: m.DealsView }))),
 };
