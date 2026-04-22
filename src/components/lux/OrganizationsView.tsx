@@ -48,6 +48,7 @@ export const OrganizationsView = () => {
   const [newOrgName, setNewOrgName] = useState("");
   const [newOrgOpen, setNewOrgOpen] = useState(false);
   const [inviteRole, setInviteRole] = useState<AppRole>("viewer");
+  const [removeTarget, setRemoveTarget] = useState<{ id: string; label: string; isMe: boolean } | null>(null);
 
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
@@ -188,6 +189,10 @@ export const OrganizationsView = () => {
                   {(members ?? []).map((m, i) => {
                     const isOwner = activeOrg.organizations.owner_id === m.user_id;
                     const isMe = m.user_id === user?.id;
+                    const displayName = isMe
+                      ? "Você"
+                      : m.profile?.full_name?.trim() || `${m.user_id.slice(0, 8)}…`;
+                    const initials = (m.profile?.full_name || m.user_id).slice(0, 2).toUpperCase();
                     return (
                       <motion.div
                         key={m.id}
@@ -197,12 +202,16 @@ export const OrganizationsView = () => {
                         className="p-4 flex items-center justify-between gap-3 hover:bg-secondary/20 transition-colors"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <UserCog className="h-4 w-4 text-primary" />
-                          </div>
+                          <Avatar className="h-9 w-9 flex-shrink-0 border border-border/40">
+                            {m.profile?.avatar_url && <AvatarImage src={m.profile.avatar_url} alt={displayName} />}
+                            <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
+                              {m.profile?.full_name ? initials : <UserCog className="h-4 w-4" />}
+                            </AvatarFallback>
+                          </Avatar>
                           <div className="min-w-0">
-                            <p className="font-mono text-xs text-foreground truncate">
-                              {isMe ? "Você" : m.user_id.slice(0, 8) + "…"}
+                            <p className="text-sm font-medium text-foreground truncate">
+                              {displayName}
+                              {isMe && <span className="ml-1.5 text-[10px] text-muted-foreground">(você)</span>}
                             </p>
                             <p className="text-[10px] text-muted-foreground">
                               Entrou em {new Date(m.created_at).toLocaleDateString("pt-BR")}
@@ -238,11 +247,8 @@ export const OrganizationsView = () => {
                               size="icon"
                               className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
                               disabled={isOwner}
-                              onClick={() => {
-                                if (confirm(isMe ? "Sair deste workspace?" : "Remover este membro?")) {
-                                  removeMember.mutate(m.id);
-                                }
-                              }}
+                              onClick={() => setRemoveTarget({ id: m.id, label: displayName, isMe })}
+                              title={isMe ? "Sair do workspace" : "Remover membro"}
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
