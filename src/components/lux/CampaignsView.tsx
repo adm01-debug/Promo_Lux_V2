@@ -266,7 +266,7 @@ export const CampaignsView = () => {
             {activeCount} ativas — {totalSent} emails enviados
           </p>
         </div>
-        <Dialog open={createOpen} onOpenChange={(v) => { setCreateOpen(v); if (!v) resetForm(); }}>
+        <Dialog open={createOpen} onOpenChange={guardedCloseCreate}>
           <DialogTrigger asChild>
             <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Campanha</Button>
           </DialogTrigger>
@@ -277,9 +277,9 @@ export const CampaignsView = () => {
               </DialogTitle>
             </DialogHeader>
             <CampaignFormFields
-              name={formName} setName={setFormName}
-              prospects={formProspects} setProspects={setFormProspects}
-              sequence={formSequence} setSequence={setFormSequence}
+              name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
+              prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
+              sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
             />
             <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !formName.trim()} className="w-full gap-2">
               {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
@@ -290,7 +290,7 @@ export const CampaignsView = () => {
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={editOpen} onOpenChange={(v) => { setEditOpen(v); if (!v) { setEditingCampaign(null); resetForm(); } }}>
+      <Dialog open={editOpen} onOpenChange={guardedCloseEdit}>
         <DialogContent className="bg-card border-border/50">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -298,9 +298,9 @@ export const CampaignsView = () => {
             </DialogTitle>
           </DialogHeader>
           <CampaignFormFields
-            name={formName} setName={setFormName}
-            prospects={formProspects} setProspects={setFormProspects}
-            sequence={formSequence} setSequence={setFormSequence}
+            name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
+            prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
+            sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
             isEdit
           />
           <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending || !formName.trim()} className="w-full gap-2">
