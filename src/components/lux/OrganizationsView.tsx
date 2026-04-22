@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useOrganizations";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
+import { PermissionsMatrix } from "@/components/lux/permissions/PermissionsMatrix";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
@@ -45,6 +46,7 @@ export const OrganizationsView = () => {
 
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
+  const myRole = (myMembership?.role as AppRole | undefined) ?? null;
 
   const handleCreate = async () => {
     const name = newOrgName.trim();
