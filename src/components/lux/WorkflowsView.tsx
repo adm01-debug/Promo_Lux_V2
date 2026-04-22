@@ -18,6 +18,7 @@ import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
 import { WorkflowCard } from "./workflows/WorkflowCard";
+import { useCan } from "@/hooks/usePermissions";
 
 const stepColors: Record<string, string> = {
   source: "bg-blue-500/20 text-blue-400 border-blue-500/30",
