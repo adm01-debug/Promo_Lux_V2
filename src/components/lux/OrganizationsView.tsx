@@ -333,6 +333,22 @@ export const OrganizationsView = () => {
                   </div>
                 </div>
               )}
+
+              {/* Permissions matrix */}
+              <div className="glass rounded-lg overflow-hidden">
+                <div className="p-4 border-b border-border/40">
+                  <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-primary" />
+                    Matriz de permissões
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    O que cada papel pode fazer em cada entidade do sistema.
+                  </p>
+                </div>
+                <div className="p-4">
+                  <PermissionsMatrix currentRole={myRole} />
+                </div>
+              </div>
             </>
           )}
         </>
