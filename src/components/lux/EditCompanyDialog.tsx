@@ -148,6 +148,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
       queryClient.invalidateQueries({ queryKey: ["companies-map"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      setDirty(false);
       onOpenChange(false);
     } catch (err: unknown) {
       toast({ title: "Erro ao atualizar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
@@ -204,27 +205,27 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
           </div>
           <div>
             <Label>Email</Label>
-            <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
+            <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); markDirty(); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
             <FieldError field="email" />
           </div>
           <div>
             <Label>Telefone</Label>
-            <Input value={phone} onChange={(e) => { setPhone(e.target.value); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
+            <Input value={phone} onChange={(e) => { setPhone(e.target.value); markDirty(); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
             <FieldError field="phone" />
           </div>
           <div>
             <Label>Website</Label>
-            <Input value={website} onChange={(e) => { setWebsite(e.target.value); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
+            <Input value={website} onChange={(e) => { setWebsite(e.target.value); markDirty(); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
             <FieldError field="website" />
           </div>
           <div>
             <Label>Funcionários</Label>
-            <Input value={employees} onChange={(e) => { setEmployees(e.target.value); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
+            <Input value={employees} onChange={(e) => { setEmployees(e.target.value); markDirty(); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
             <FieldError field="employees" />
           </div>
           <div className="col-span-2">
             <Label>Faturamento</Label>
-            <Input value={revenue} onChange={(e) => { setRevenue(e.target.value); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
+            <Input value={revenue} onChange={(e) => { setRevenue(e.target.value); markDirty(); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
             <FieldError field="revenue" />
           </div>
         </div>
