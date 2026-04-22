@@ -28,7 +28,6 @@ export function useAuditLogs(filters: AuditFilters = {}) {
   return useQuery({
     queryKey: ["audit-logs", table, action, recordId, limit],
     queryFn: async (): Promise<AuditLog[]> => {
-      // @ts-expect-error - audit_logs not yet in generated types
       let q = supabase.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(limit);
       if (table !== "all") q = q.eq("table_name", table);
       if (action !== "all") q = q.eq("action", action);
