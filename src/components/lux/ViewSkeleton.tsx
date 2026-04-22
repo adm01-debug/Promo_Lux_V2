@@ -19,6 +19,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   campaigns: CampaignsSkeleton,
   "ai-agent": AIAgentSkeleton,
   gmaps: GmapsScraperSkeleton,
+  "scrape-results": GmapsScraperSkeleton,
   map: MapSkeleton,
 };
 
