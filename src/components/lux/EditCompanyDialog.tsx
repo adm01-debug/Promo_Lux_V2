@@ -164,7 +164,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   if (!company) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -175,12 +175,12 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="col-span-2">
             <Label>Nome *</Label>
-            <Input value={name} onChange={(e) => { setName(e.target.value); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
+            <Input value={name} onChange={(e) => { setName(e.target.value); markDirty(); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
             <FieldError field="name" />
           </div>
           <div>
             <Label>Setor</Label>
-            <Input value={sector} onChange={(e) => { setSector(e.target.value); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
+            <Input value={sector} onChange={(e) => { setSector(e.target.value); markDirty(); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
             <FieldError field="sector" />
           </div>
           <div>
