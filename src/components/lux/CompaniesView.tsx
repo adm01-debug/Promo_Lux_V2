@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
+import { useCan } from "@/hooks/usePermissions";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -43,6 +44,8 @@ interface Company {
 export const CompaniesView = () => {
   const { isDemoMode } = useDemo();
   const { toast } = useToast();
+  const canDelete = useCan("companies", "delete");
+  const canCreate = useCan("companies", "create");
   const [filters, setFilters, resetFilters] = usePersistedFilters<CompanyFiltersState>("companies", {
     search: "", selectedSectors: new Set(), selectedLocations: new Set(),
     selectedSources: new Set(), selectedStatus: new Set(), selectedScores: new Set(),
@@ -211,9 +214,11 @@ export const CompaniesView = () => {
               <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={handleBulkEnrich} disabled={isBulkEnriching}>
                 {isBulkEnriching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />} Enriquecer
               </Button>
-              <Button variant="destructive" size="sm" className="gap-1.5 text-xs" onClick={handleBulkDelete} disabled={isBulkDeleting}>
-                {isBulkDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />} Remover
-              </Button>
+              {canDelete && (
+                <Button variant="destructive" size="sm" className="gap-1.5 text-xs" onClick={handleBulkDelete} disabled={isBulkDeleting}>
+                  {isBulkDeleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />} Remover
+                </Button>
+              )}
               <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSelectedIds(new Set())}>Limpar seleção</Button>
             </>
           )}
@@ -221,7 +226,7 @@ export const CompaniesView = () => {
             {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
             {isExporting ? "Exportando..." : "Exportar CSV"}
           </Button>
-          <AddCompanyDialog />
+          {canCreate && <AddCompanyDialog />}
         </div>
       </div>
 
@@ -297,6 +302,7 @@ export const CompaniesView = () => {
                       onOpen={openCompany}
                       onEdit={(c) => { setEditCompany(c); setEditOpen(true); }}
                       onDelete={setDeleteTarget}
+                      canDelete={canDelete}
                     />
                   ))}
                 </tbody>

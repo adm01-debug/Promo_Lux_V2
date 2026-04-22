@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useOrganizations";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
+import { PermissionsMatrix } from "@/components/lux/permissions/PermissionsMatrix";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
@@ -45,6 +46,7 @@ export const OrganizationsView = () => {
 
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
+  const myRole = (myMembership?.role as AppRole | undefined) ?? null;
 
   const handleCreate = async () => {
     const name = newOrgName.trim();
@@ -331,6 +333,22 @@ export const OrganizationsView = () => {
                   </div>
                 </div>
               )}
+
+              {/* Permissions matrix */}
+              <div className="glass rounded-lg overflow-hidden">
+                <div className="p-4 border-b border-border/40">
+                  <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-primary" />
+                    Matriz de permissões
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    O que cada papel pode fazer em cada entidade do sistema.
+                  </p>
+                </div>
+                <div className="p-4">
+                  <PermissionsMatrix currentRole={myRole} />
+                </div>
+              </div>
             </>
           )}
         </>

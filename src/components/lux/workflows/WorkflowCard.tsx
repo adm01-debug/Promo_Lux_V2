@@ -36,6 +36,8 @@ interface WorkflowCardProps {
   onRun: (id: string) => void;
   onToggleStatus: (id: string, status: string) => void;
   onDelete: (id: string) => void;
+  canDelete?: boolean;
+  canEdit?: boolean;
 }
 
 const defaultSteps = [
@@ -45,7 +47,7 @@ const defaultSteps = [
   { id: "s4", type: "action" as const, label: "Salvar no Banco", provider: "Lovable Cloud" },
 ];
 
-export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onToggleExpand, onRun, onToggleStatus, onDelete }: WorkflowCardProps) => {
+export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onToggleExpand, onRun, onToggleStatus, onDelete, canDelete = true, canEdit = true }: WorkflowCardProps) => {
   const config = statusConfig[wf.status] || statusConfig.draft;
   const steps = (wf.steps || defaultSteps) as typeof defaultSteps;
   const lastRun = wf.workflow_runs?.[0];
@@ -140,22 +142,26 @@ export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onTog
               )}
 
               <div className="flex gap-2 flex-wrap">
-                <Button size="sm" className="gap-1.5 text-xs" disabled={isRunning} onClick={(e) => { e.stopPropagation(); onRun(wf.id); }}>
-                  {isRunning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
-                  {isRunning ? "Executando..." : "Executar Agora"}
-                </Button>
-                {wf.status === "active" ? (
+                {canEdit && (
+                  <Button size="sm" className="gap-1.5 text-xs" disabled={isRunning} onClick={(e) => { e.stopPropagation(); onRun(wf.id); }}>
+                    {isRunning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
+                    {isRunning ? "Executando..." : "Executar Agora"}
+                  </Button>
+                )}
+                {canEdit && wf.status === "active" ? (
                   <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={(e) => { e.stopPropagation(); onToggleStatus(wf.id, "paused"); }}>
                     <Pause className="h-3 w-3" /> Pausar
                   </Button>
-                ) : wf.status === "paused" ? (
+                ) : canEdit && wf.status === "paused" ? (
                   <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={(e) => { e.stopPropagation(); onToggleStatus(wf.id, "active"); }}>
                     <Play className="h-3 w-3" /> Ativar
                   </Button>
                 ) : null}
-                <Button size="sm" variant="ghost" className="gap-1 text-xs text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(wf.id); }}>
-                  <Trash2 className="h-3 w-3" /> Remover
-                </Button>
+                {canDelete && (
+                  <Button size="sm" variant="ghost" className="gap-1 text-xs text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(wf.id); }}>
+                    <Trash2 className="h-3 w-3" /> Remover
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>

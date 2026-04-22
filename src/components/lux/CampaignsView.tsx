@@ -17,6 +17,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCan } from "@/hooks/usePermissions";
 import type { Tables } from "@/integrations/supabase/types";
 import { motion } from "framer-motion";
 
@@ -111,6 +112,9 @@ const CampaignFormFields = ({
 export const CampaignsView = () => {
   const { isDemoMode } = useDemo();
   const { user } = useAuth();
+  const canCreate = useCan("campaigns", "create");
+  const canEdit = useCan("campaigns", "edit");
+  const canDelete = useCan("campaigns", "delete");
   const queryClient = useQueryClient();
   const { setHasUnsavedChanges, confirmNavigation } = useUnsavedChanges();
   const [createOpen, setCreateOpen] = useState(false);
@@ -267,9 +271,11 @@ export const CampaignsView = () => {
           </p>
         </div>
         <Dialog open={createOpen} onOpenChange={guardedCloseCreate}>
-          <DialogTrigger asChild>
-            <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Campanha</Button>
-          </DialogTrigger>
+          {canCreate && (
+            <DialogTrigger asChild>
+              <Button className="gap-2"><Plus className="h-4 w-4" /> Nova Campanha</Button>
+            </DialogTrigger>
+          )}
           <DialogContent className="bg-card border-border/50">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
@@ -368,15 +374,17 @@ export const CampaignsView = () => {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-1 text-xs h-8"
-                      onClick={() => openEdit(campaign)}
-                    >
-                      <Pencil className="h-3 w-3" /> Editar
-                    </Button>
-                    <Button
+                    {canEdit && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-1 text-xs h-8"
+                        onClick={() => openEdit(campaign)}
+                      >
+                        <Pencil className="h-3 w-3" /> Editar
+                      </Button>
+                    )}
+                    {canEdit && <Button
                       size="sm"
                       variant="outline"
                       className="gap-1 text-xs h-8"
@@ -384,15 +392,17 @@ export const CampaignsView = () => {
                     >
                       {campaign.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
                       {campaign.status === "active" ? "Pausar" : "Ativar"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-destructive hover:text-destructive h-8"
-                      onClick={() => deleteMutation.mutate(campaign.id)}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                    </Button>}
+                    {canDelete && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive hover:text-destructive h-8"
+                        onClick={() => deleteMutation.mutate(campaign.id)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
                   </div>
                 </div>
 
