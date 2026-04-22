@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: Database["public"]["Enums"]["audit_action"]
+          actor_id: string | null
+          created_at: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          record_id: string
+          table_name: string
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["audit_action"]
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id: string
+          table_name: string
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["audit_action"]
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       campaigns: {
         Row: {
           created_at: string
@@ -684,6 +717,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "sdr" | "viewer"
+      audit_action: "create" | "update" | "delete"
       campaign_status: "draft" | "active" | "paused" | "completed" | "archived"
       scrape_job_status:
         | "pending"
@@ -828,6 +862,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "sdr", "viewer"],
+      audit_action: ["create", "update", "delete"],
       campaign_status: ["draft", "active", "paused", "completed", "archived"],
       scrape_job_status: [
         "pending",
