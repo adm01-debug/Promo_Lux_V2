@@ -19,6 +19,7 @@ import {
   Users2,
   Database,
   Settings,
+  Kanban,
   X,
   PanelLeftClose,
   PanelLeft,
