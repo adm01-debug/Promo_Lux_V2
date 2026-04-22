@@ -18,6 +18,7 @@ import {
   Users,
   Users2,
   Database,
+  ScrollText,
   Settings,
   X,
   PanelLeftClose,
@@ -48,6 +49,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "campaigns", label: "Campanhas", icon: Mail },
   { id: "ai-agent", label: "Agente IA", icon: Bot },
   { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
+  { id: "audit", label: "Audit Log", icon: ScrollText },
   { id: "settings", label: "Configurações", icon: Settings },
 ];
 
