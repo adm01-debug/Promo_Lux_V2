@@ -183,7 +183,7 @@ Deno.serve(async (req) => {
 async function ensureFreshToken(admin: SupabaseClient, acc: EmailAccount): Promise<EmailAccount> {
   const expires = acc.expires_at ? new Date(acc.expires_at).getTime() : 0;
   if (expires > Date.now() + 30_000 && acc.access_token) return acc;
-  if (!acc.refresh_token) throw new Error("No refresh token; reconnect required");
+  if (!acc.refresh_token) throw new RefreshError("No refresh token; reconnect required", true);
 
   let tokenUrl = "", clientId = "", secret = "";
   if (acc.provider === "gmail") {
@@ -203,14 +203,16 @@ async function ensureFreshToken(admin: SupabaseClient, acc: EmailAccount): Promi
     body: new URLSearchParams({ client_id: clientId, client_secret: secret, refresh_token: acc.refresh_token, grant_type: "refresh_token" }),
   });
   const tokens = await r.json();
-  if (!r.ok) throw new Error(`Refresh failed: ${JSON.stringify(tokens)}`);
+  if (!r.ok) throw new RefreshError(`Refresh failed: ${JSON.stringify(tokens)}`, isFatalRefreshError(tokens));
 
   const newExpires = new Date(Date.now() + (tokens.expires_in - 60) * 1000).toISOString();
   await admin.from("email_accounts").update({
     access_token: tokens.access_token,
     expires_at: newExpires,
     refresh_token: tokens.refresh_token ?? acc.refresh_token,
-  }).eq("id", acc.id);
+  })
+    .eq("id", acc.id)
+    .eq("scope_type", acc.scope_type);
 
   return { ...acc, access_token: tokens.access_token, expires_at: newExpires };
 }
