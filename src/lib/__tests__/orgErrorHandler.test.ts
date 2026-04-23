@@ -29,12 +29,31 @@ describe("handleOrgError → toast", () => {
     vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 0));
   });
 
-  it("dispara toast quando recebe MissingOrgContextError", () => {
+  it("dispara toast específico para INSERT sem org", () => {
     const err = new MissingOrgContextError("companies", "insert");
-    const consumed = handleOrgError(err);
-    expect(consumed).toBe(true);
+    expect(handleOrgError(err)).toBe(true);
     expect(toastError).toHaveBeenCalledTimes(1);
-    expect(toastError.mock.calls[0][0]).toMatch(/Nenhuma organização ativa/i);
+    const [title, opts] = toastError.mock.calls[0] as [string, { description: string }];
+    expect(title).toMatch(/Criação bloqueada/i);
+    expect(opts.description).toMatch(/criar.*companies/i);
+  });
+
+  it("dispara toast específico para UPDATE sem org", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 4));
+    const err = new MissingOrgContextError("deals", "update");
+    expect(handleOrgError(err)).toBe(true);
+    const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
+    expect(title).toMatch(/Edição bloqueada/i);
+    expect(opts.description).toMatch(/atualizar.*deals/i);
+  });
+
+  it("dispara toast específico para DELETE sem org", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 6));
+    const err = new MissingOrgContextError("webhooks", "delete");
+    expect(handleOrgError(err)).toBe(true);
+    const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
+    expect(title).toMatch(/Exclusão bloqueada/i);
+    expect(opts.description).toMatch(/remover.*webhooks/i);
   });
 
   it("dispara toast com tabela quando recebe OrgMismatchError", () => {
