@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -167,17 +166,6 @@ export function EmailAccountsPanel() {
       qc.invalidateQueries({ queryKey: ["email-accounts"] });
     },
     onError: (e: Error) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
-  });
-
-  const removeMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await db.from("email_accounts").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast({ title: "Conta removida" });
-      qc.invalidateQueries({ queryKey: ["email-accounts"] });
-    },
   });
 
   return (
