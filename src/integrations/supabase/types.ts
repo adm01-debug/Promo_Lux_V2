@@ -1152,6 +1152,94 @@ export type Database = {
         }
         Relationships: []
       }
+      org_violation_alert_settings: {
+        Row: {
+          cooldown_minutes: number
+          enabled: boolean
+          organization_id: string
+          threshold: number
+          updated_at: string
+          updated_by: string | null
+          window_minutes: number
+        }
+        Insert: {
+          cooldown_minutes?: number
+          enabled?: boolean
+          organization_id: string
+          threshold?: number
+          updated_at?: string
+          updated_by?: string | null
+          window_minutes?: number
+        }
+        Update: {
+          cooldown_minutes?: number
+          enabled?: boolean
+          organization_id?: string
+          threshold?: number
+          updated_at?: string
+          updated_by?: string | null
+          window_minutes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_violation_alert_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_violation_alerts: {
+        Row: {
+          distinct_actors: number
+          distinct_correlations: number
+          id: string
+          notes: string | null
+          organization_id: string
+          threshold: number
+          top_tables: Json
+          triggered_at: string
+          violation_count: number
+          webhook_dispatch: Json
+          window_minutes: number
+        }
+        Insert: {
+          distinct_actors?: number
+          distinct_correlations?: number
+          id?: string
+          notes?: string | null
+          organization_id: string
+          threshold: number
+          top_tables?: Json
+          triggered_at?: string
+          violation_count: number
+          webhook_dispatch?: Json
+          window_minutes: number
+        }
+        Update: {
+          distinct_actors?: number
+          distinct_correlations?: number
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          threshold?: number
+          top_tables?: Json
+          triggered_at?: string
+          violation_count?: number
+          webhook_dispatch?: Json
+          window_minutes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_violation_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_invites: {
         Row: {
           accepted_at: string | null
@@ -1681,11 +1769,35 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      count_recent_org_violations: {
+        Args: { _window_minutes?: number }
+        Returns: {
+          distinct_actors: number
+          distinct_correlations: number
+          organization_id: string
+          top_tables: Json
+          violation_count: number
+        }[]
+      }
       create_default_deal_stages: {
         Args: { _user_id: string }
         Returns: undefined
       }
       default_org_for_current_user: { Args: never; Returns: string }
+      evaluate_org_violation_alerts: {
+        Args: never
+        Returns: {
+          cooldown_minutes: number
+          distinct_actors: number
+          distinct_correlations: number
+          last_alert_at: string
+          organization_id: string
+          threshold: number
+          top_tables: Json
+          violation_count: number
+          window_minutes: number
+        }[]
+      }
       has_org_role: {
         Args: {
           _min_role: Database["public"]["Enums"]["app_role"]
