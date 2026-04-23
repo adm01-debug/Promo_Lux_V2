@@ -137,6 +137,8 @@ export const RLSVerificationPanel = () => {
           passed: Number(d.passed ?? 0),
           failed: Number(d.failed ?? 0),
           duration_ms: Number(d.duration_ms ?? 0),
+          failed_results: Array.isArray(d.failed_results) ? (d.failed_results as TestResult[]) : [],
+          passed_names: Array.isArray(d.passed_names) ? (d.passed_names as string[]) : [],
         };
       });
     const filtered = mapped.filter((h) =>
