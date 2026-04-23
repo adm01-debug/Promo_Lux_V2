@@ -11,6 +11,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { AlertCircle, CheckCircle2, FlaskConical, Loader2, ShieldCheck, Copy, ExternalLink, KeyRound } from "lucide-react";
 import { OAuthSnapshotsPanel } from "./OAuthSnapshotsPanel";
 import type { SaveSnapshotInput } from "@/hooks/useOAuthSandboxSnapshots";
+import { RedirectUriChecklist } from "./RedirectUriChecklist";
 
 type Provider = "gmail" | "outlook";
 type ScopeType = "user" | "organization";
@@ -213,6 +214,9 @@ export function OAuthSandboxPanel() {
                 ? "Google Cloud Console → Credentials → OAuth Client → Authorized redirect URIs"
                 : "Azure Portal → App Registration → Authentication → Redirect URIs (Web)"}.
             </p>
+            <div className="mt-3">
+              <RedirectUriChecklist candidate={result.redirect_uri_normalized} provider={result.provider} />
+            </div>
           </div>
 
           <div>
