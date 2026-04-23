@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter } from "lucide-react";
+import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -119,6 +119,25 @@ export const OrganizationsView = () => {
     const url = `${window.location.origin}/invite/${token}`;
     await navigator.clipboard.writeText(url);
     toast({ title: "Link copiado" });
+  };
+
+  const handleResendInvite = async (inv: { id: string; role: AppRole; revoked: boolean; accepted_at: string | null }) => {
+    try {
+      // Generate a fresh invite with the same role
+      const created = await createInvite.mutateAsync({ role: inv.role });
+      // Revoke the previous one if it was still pending (not accepted, not already revoked)
+      if (!inv.revoked && !inv.accepted_at) {
+        try { await revokeInvite.mutateAsync(inv.id); } catch { /* non-blocking */ }
+      }
+      const url = `${window.location.origin}/invite/${created.token}`;
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "Convite reenviado",
+        description: "Novo link gerado e copiado para a área de transferência.",
+      });
+    } catch (e) {
+      toast({ title: "Erro ao reenviar", description: (e as Error).message, variant: "destructive" });
+    }
   };
 
   if (error) {
@@ -380,6 +399,21 @@ export const OrganizationsView = () => {
                               {!inactive && (
                                 <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => copyInviteLink(inv.token)}>
                                   <Copy className="h-3.5 w-3.5" /> Copiar
+                                </Button>
+                              )}
+                              {!used && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 gap-1.5 text-xs"
+                                  onClick={() => handleResendInvite(inv)}
+                                  disabled={createInvite.isPending}
+                                  title={inactive ? "Gerar novo link com o mesmo papel" : "Substituir por novo link"}
+                                >
+                                  {createInvite.isPending
+                                    ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                    : <RefreshCw className="h-3.5 w-3.5" />}
+                                  Reenviar
                                 </Button>
                               )}
                               {!inv.revoked && !used && (
