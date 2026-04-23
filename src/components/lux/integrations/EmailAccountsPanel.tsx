@@ -381,15 +381,25 @@ export function EmailAccountsPanel() {
                     </Badge>
                   )}
                   {acc.last_error ? (
-                    isAuthError(acc.last_error) ? (
-                      <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/30">
-                        <KeyRound className="h-2.5 w-2.5" /> Token expirado
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/30">
-                        <AlertCircle className="h-2.5 w-2.5" /> Erro de sync
-                      </Badge>
-                    )
+                    (() => {
+                      const info = describeEmailError(acc.last_error)!;
+                      const Icon = info.kind === "auth" ? KeyRound : AlertCircle;
+                      const tone =
+                        info.severity === "warning"
+                          ? "text-warning border-warning/40"
+                          : "text-destructive border-destructive/40";
+                      return (
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] gap-1 ${tone}`}
+                          title={`${info.description} ${info.actionHint}`}
+                        >
+                          <Icon className="h-2.5 w-2.5" />
+                          {info.title}
+                          {info.code && <span className="opacity-60">· {info.code}</span>}
+                        </Badge>
+                      );
+                    })()
                   ) : (
                     <Badge variant="outline" className="text-[10px] gap-1 text-success border-success/30"><CheckCircle2 className="h-2.5 w-2.5" />Ativa</Badge>
                   )}
@@ -407,7 +417,14 @@ export function EmailAccountsPanel() {
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-0.5">
                   {acc.last_polled_at ? `Última sync: ${new Date(acc.last_polled_at).toLocaleString("pt-BR")}` : "Aguardando primeira sync"}
-                  {acc.last_error && <span className="text-destructive ml-2">· {acc.last_error.slice(0, 80)}</span>}
+                  {acc.last_error && (() => {
+                    const info = describeEmailError(acc.last_error)!;
+                    return (
+                      <span className="text-destructive ml-2" title={info.raw}>
+                        · {info.actionHint}
+                      </span>
+                    );
+                  })()}
                   {!canManage && <span className="ml-2 text-warning">· somente leitura</span>}
                 </p>
                 {!acc.reconnect_required && acc.reconnect_next_at && new Date(acc.reconnect_next_at) > new Date() && (
