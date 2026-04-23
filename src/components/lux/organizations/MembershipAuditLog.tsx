@@ -201,8 +201,40 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
         </ul>
       )}
 
-      <div className="px-4 py-2 border-t border-border/30 bg-secondary/10 text-[10px] text-muted-foreground">
-        Registros persistentes (até 50 eventos mais recentes). Apenas administradores podem visualizar.
+      <div className="px-4 py-2 border-t border-border/30 bg-secondary/10 flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-[10px] text-muted-foreground">
+          {(data?.length ?? 0) > 0
+            ? <>Eventos <span className="text-foreground/80 font-medium">{rangeStart}–{rangeEnd}</span>{hasMore || page > 0 ? <> · página {page + 1}</> : null}</>
+            : "Sem registros nesta página."}
+          {filter !== "all" && (data?.length ?? 0) > filtered.length && (
+            <> · <span className="text-warning">{filtered.length} após filtro local</span></>
+          )}
+        </p>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs gap-1"
+            onClick={() => setPage(p => Math.max(0, p - 1))}
+            disabled={page === 0 || isFetching}
+            aria-label="Página anterior"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" /> Anterior
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs gap-1"
+            onClick={() => setPage(p => p + 1)}
+            disabled={!hasMore || isFetching || isPlaceholderData}
+            aria-label="Próxima página"
+          >
+            Próxima
+            {isFetching && isPlaceholderData
+              ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              : <ChevronRight className="h-3.5 w-3.5" />}
+          </Button>
+        </div>
       </div>
     </div>
   );
