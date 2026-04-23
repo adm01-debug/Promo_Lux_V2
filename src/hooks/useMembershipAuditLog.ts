@@ -168,11 +168,10 @@ export function useMembershipAuditLogPaged(
         const oldRole = (oldData?.role ?? null) as AppRole | null;
         const newRole = (newData?.role ?? null) as AppRole | null;
 
-        let action: MembershipAuditAction = "other";
-        if (r.action === "create") action = "added";
-        else if (r.action === "delete") {
-          action = r.actor_id && targetUserId && r.actor_id === targetUserId ? "left" : "removed";
-        } else if (r.action === "update" && oldRole !== newRole) action = "role_changed";
+        const rawAction = r.action as "create" | "update" | "delete";
+        const action = classify(rawAction, r.actor_id, oldData, oldRole, newRole);
+        const oldUserId = (oldData?.user_id ?? null) as string | null;
+        const isSelfAction = !!r.actor_id && !!oldUserId && r.actor_id === oldUserId;
 
         return {
           id: r.id,
@@ -182,10 +181,10 @@ export function useMembershipAuditLogPaged(
           target_user_id: targetUserId,
           old_role: oldRole,
           new_role: newRole,
-          is_self_action: !!r.actor_id && !!targetUserId && r.actor_id === targetUserId,
+          is_self_action: isSelfAction,
           old_data: oldData,
           new_data: newData,
-          raw_action: r.action as "create" | "update" | "delete",
+          raw_action: rawAction,
         };
       });
 
