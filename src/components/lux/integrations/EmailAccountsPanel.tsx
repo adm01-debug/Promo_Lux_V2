@@ -476,6 +476,12 @@ export function EmailAccountsPanel() {
         onOpenChange={(o) => !o && setDisconnectTarget(null)}
       />
 
+      <EmailSyncHistorySheet
+        account={historyTarget ? { id: historyTarget.id, email: historyTarget.email, provider: historyTarget.provider } : null}
+        open={!!historyTarget}
+        onOpenChange={(o) => !o && setHistoryTarget(null)}
+      />
+
       {isAdmin && <EmailAccountsAuditPanel />}
 
       <AlertDialog open={!!scopeChangeTarget} onOpenChange={(o) => !o && setScopeChangeTarget(null)}>
