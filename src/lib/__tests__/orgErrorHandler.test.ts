@@ -2,8 +2,14 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock sonner antes de importar o handler
 const toastError = vi.fn();
+const toastInfo = vi.fn();
+const toastSuccess = vi.fn();
 vi.mock("sonner", () => ({
-  toast: { error: (...args: unknown[]) => toastError(...args) },
+  toast: {
+    error: (...args: unknown[]) => toastError(...args),
+    info: (...args: unknown[]) => toastInfo(...args),
+    success: (...args: unknown[]) => toastSuccess(...args),
+  },
 }));
 
 // Mock supabase client (auth.getUser e from(...).insert) — fire-and-forget
@@ -14,7 +20,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { handleOrgError } from "../orgErrorHandler";
+import { handleOrgError, runWithOrgRetry } from "../orgErrorHandler";
 import {
   OrgMismatchError,
   MissingOrgContextError,
@@ -23,6 +29,8 @@ import {
 describe("handleOrgError → toast", () => {
   beforeEach(() => {
     toastError.mockClear();
+    toastInfo.mockClear();
+    toastSuccess.mockClear();
     // zera throttle interno aguardando o intervalo (1500ms) seria lento;
     // como o módulo mantém estado, espaçamos os testes manualmente alterando Date.now
     vi.useFakeTimers();
