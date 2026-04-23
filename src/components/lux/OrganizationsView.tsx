@@ -121,6 +121,25 @@ export const OrganizationsView = () => {
     toast({ title: "Link copiado" });
   };
 
+  const handleResendInvite = async (inv: { id: string; role: AppRole; revoked: boolean; accepted_at: string | null }) => {
+    try {
+      // Generate a fresh invite with the same role
+      const created = await createInvite.mutateAsync({ role: inv.role });
+      // Revoke the previous one if it was still pending (not accepted, not already revoked)
+      if (!inv.revoked && !inv.accepted_at) {
+        try { await revokeInvite.mutateAsync(inv.id); } catch { /* non-blocking */ }
+      }
+      const url = `${window.location.origin}/invite/${created.token}`;
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "Convite reenviado",
+        description: "Novo link gerado e copiado para a área de transferência.",
+      });
+    } catch (e) {
+      toast({ title: "Erro ao reenviar", description: (e as Error).message, variant: "destructive" });
+    }
+  };
+
   if (error) {
     return <DataError message={(error as Error).message} onRetry={() => refetch()} />;
   }
