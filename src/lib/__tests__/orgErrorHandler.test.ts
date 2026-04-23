@@ -143,8 +143,8 @@ describe("handleOrgError → toast", () => {
     // Aciona o retry — refreshOrgAndRetry é async, aguardamos microtasks.
     vi.useRealTimers();
     opts.action.onClick();
-    // Drena microtasks até a operação completar.
-    for (let i = 0; i < 10 && attempts < 2; i++) {
+    // Drena microtasks até o toast de sucesso aparecer.
+    for (let i = 0; i < 20 && toastSuccess.mock.calls.length === 0; i++) {
       await new Promise((r) => setTimeout(r, 5));
     }
 
