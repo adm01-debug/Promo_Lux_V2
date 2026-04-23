@@ -525,6 +525,18 @@ export const OrganizationsView = () => {
                         const creatorName =
                           inv.created_by_profile?.full_name?.trim() ||
                           `${inv.created_by.slice(0, 8)}…`;
+                        const resends = resendHistory[inv.token] ?? [];
+                        const lastResendAt = resends[0]?.at;
+                        const relTime = (ms: number) => {
+                          const diff = Date.now() - ms;
+                          const m = Math.floor(diff / 60000);
+                          if (m < 1) return "agora mesmo";
+                          if (m < 60) return `há ${m} min`;
+                          const h = Math.floor(m / 60);
+                          if (h < 24) return `há ${h} h`;
+                          const d = Math.floor(h / 24);
+                          return `há ${d} d`;
+                        };
                         return (
                           <div key={inv.id} className="p-4 flex items-center justify-between gap-3 flex-wrap">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
