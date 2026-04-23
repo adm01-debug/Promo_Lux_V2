@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Mail, MousePointerClick, Eye, AlertCircle, Reply, UserMinus } from "lucide-react";
+import { Mail, MousePointerClick, Eye, AlertCircle, Reply, UserMinus, Clock, XCircle } from "lucide-react";
 
 interface Recipient {
   id: string;
@@ -36,6 +36,24 @@ const eventIcon: Record<string, React.ReactNode> = {
   reply: <Reply className="h-3 w-3 text-success" />,
   unsubscribe: <UserMinus className="h-3 w-3 text-warning" />,
   sent: <Mail className="h-3 w-3 text-muted-foreground" />,
+  queued: <Clock className="h-3 w-3 text-muted-foreground" />,
+  failed: <XCircle className="h-3 w-3 text-destructive" />,
+};
+
+const statusBadgeVariant = (status: string): "outline" | "default" | "secondary" | "destructive" => {
+  switch (status) {
+    case "failed":
+    case "bounced":
+      return "destructive";
+    case "sent":
+    case "replied":
+      return "default";
+    case "queued":
+    case "pending":
+      return "secondary";
+    default:
+      return "outline";
+  }
 };
 
 export const CampaignTrackingDrawer = ({
