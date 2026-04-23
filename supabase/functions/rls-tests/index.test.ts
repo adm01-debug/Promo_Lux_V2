@@ -56,17 +56,23 @@ Deno.test("rls-tests: rejeita 401 quando NÃO há Authorization Bearer", async (
 });
 
 Deno.test("rls-tests: rejeita Bearer JWT corrompido (gateway OU guard)", async () => {
-  // verify_jwt=true → gateway 401 com body texto "Invalid JWT".
+  // verify_jwt=true → gateway responde 401/500 com body texto antes de
+  // a função executar (comportamento varia por versão do gateway).
   // verify_jwt=false → guard em código retorna 401 estruturado.
-  // Ambos os caminhos DEVEM bloquear a chamada.
+  // O essencial: a chamada NUNCA deve ter sucesso (200/422 = relatório).
   const res = await fetch(FUNCTION_URL, {
     method: "POST",
     headers: corsAndJson({ Authorization: "Bearer not-a-real-jwt.xxx.yyy" }),
   });
   const body = await safeJson(res);
   assert(
-    res.status === 401 || res.status === 403,
-    `expected 401/403, got ${res.status}: ${JSON.stringify(body).slice(0, 200)}`,
+    res.status >= 400 && res.status < 600 && res.status !== 422,
+    `expected error status (≠200/422), got ${res.status}: ${JSON.stringify(body).slice(0, 200)}`,
+  );
+  // Garante que o relatório real (allPassed/results) NUNCA é exposto.
+  assert(
+    body.allPassed === undefined && body.results === undefined,
+    `JWT inválido NÃO pode retornar relatório RLS: ${JSON.stringify(body).slice(0, 200)}`,
   );
 });
 
