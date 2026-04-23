@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
+import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";
 
@@ -247,6 +248,7 @@ export const SettingsView = () => {
               {isAdmin && (
                 <>
                   <Separator className="bg-border/30" />
+                  <RLSRegistryCoverage />
                   <RLSVerificationPanel />
                 </>
               )}
