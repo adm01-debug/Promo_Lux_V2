@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw } from "lucide-react";
+import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw, History, Undo2, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,6 +52,21 @@ export const OrganizationsView = () => {
   const [removeTarget, setRemoveTarget] = useState<{ id: string; label: string; isMe: boolean } | null>(null);
   const [memberFilter, setMemberFilter] = useState<"all" | "active">("all");
   const [inviteFilter, setInviteFilter] = useState<"all" | "pending" | "accepted" | "revoked" | "expired">("all");
+
+  type ActivityEntry = {
+    id: string;
+    at: number;
+    icon: "role" | "revoke" | "resend" | "remove" | "create";
+    title: string;
+    detail: string;
+  };
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
+  const pushActivity = (entry: Omit<ActivityEntry, "id" | "at">) => {
+    setActivity(prev => [
+      { id: crypto.randomUUID(), at: Date.now(), ...entry },
+      ...prev,
+    ].slice(0, 12));
+  };
 
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
