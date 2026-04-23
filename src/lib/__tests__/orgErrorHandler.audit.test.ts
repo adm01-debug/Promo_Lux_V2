@@ -56,6 +56,7 @@ describe("recordOrgViolation — resiliência fire-and-forget", () => {
   let unhandled: unknown[] = [];
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
   let consoleDebugSpy: ReturnType<typeof vi.spyOn>;
+  let testCounter = 0;
   const onUnhandled = (ev: PromiseRejectionEvent | { reason: unknown }) => {
     unhandled.push((ev as { reason: unknown }).reason);
   };
