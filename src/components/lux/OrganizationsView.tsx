@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X } from "lucide-react";
+import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
@@ -49,10 +50,42 @@ export const OrganizationsView = () => {
   const [newOrgOpen, setNewOrgOpen] = useState(false);
   const [inviteRole, setInviteRole] = useState<AppRole>("viewer");
   const [removeTarget, setRemoveTarget] = useState<{ id: string; label: string; isMe: boolean } | null>(null);
+  const [memberFilter, setMemberFilter] = useState<"all" | "active">("all");
+  const [inviteFilter, setInviteFilter] = useState<"all" | "pending" | "accepted" | "revoked" | "expired">("all");
 
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
   const myRole = (myMembership?.role as AppRole | undefined) ?? null;
+
+  const filteredMembers = (members ?? []).filter(() => {
+    // All current members are "active" — placeholder for future suspended state.
+    return memberFilter === "all" || memberFilter === "active";
+  });
+
+  const now = new Date();
+  const inviteCounts = (invites ?? []).reduce(
+    (acc, inv) => {
+      const expired = new Date(inv.expires_at) < now;
+      const used = !!inv.accepted_at;
+      if (inv.revoked) acc.revoked++;
+      else if (used) acc.accepted++;
+      else if (expired) acc.expired++;
+      else acc.pending++;
+      return acc;
+    },
+    { pending: 0, accepted: 0, revoked: 0, expired: 0 }
+  );
+
+  const filteredInvites = (invites ?? []).filter((inv) => {
+    if (inviteFilter === "all") return true;
+    const expired = new Date(inv.expires_at) < now;
+    const used = !!inv.accepted_at;
+    if (inviteFilter === "revoked") return inv.revoked;
+    if (inviteFilter === "accepted") return !inv.revoked && used;
+    if (inviteFilter === "expired") return !inv.revoked && !used && expired;
+    if (inviteFilter === "pending") return !inv.revoked && !used && !expired;
+    return true;
+  });
 
   const handleCreate = async () => {
     const name = newOrgName.trim();
@@ -179,14 +212,22 @@ export const OrganizationsView = () => {
             <>
               {/* Members */}
               <div className="glass rounded-lg overflow-hidden">
-                <div className="p-4 border-b border-border/40 flex items-center justify-between">
+                <div className="p-4 border-b border-border/40 flex items-center justify-between flex-wrap gap-3">
                   <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
                     Membros ({members?.length ?? 0})
                   </h3>
+                  <Tabs value={memberFilter} onValueChange={(v) => setMemberFilter(v as typeof memberFilter)}>
+                    <TabsList className="h-8">
+                      <TabsTrigger value="all" className="text-xs h-6 px-2.5">Todos ({members?.length ?? 0})</TabsTrigger>
+                      <TabsTrigger value="active" className="text-xs h-6 px-2.5">Ativos ({members?.length ?? 0})</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
                 </div>
                 <div className="divide-y divide-border/20">
-                  {(members ?? []).map((m, i) => {
+                  {filteredMembers.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-muted-foreground">Nenhum membro neste filtro.</div>
+                  ) : filteredMembers.map((m, i) => {
                     const isOwner = activeOrg.organizations.owner_id === m.user_id;
                     const isMe = m.user_id === user?.id;
                     const displayName = isMe
@@ -283,13 +324,29 @@ export const OrganizationsView = () => {
                       </Button>
                     </div>
                   </div>
+                  <div className="px-4 py-2.5 border-b border-border/40 bg-secondary/10 flex items-center gap-2 flex-wrap">
+                    <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                    <Tabs value={inviteFilter} onValueChange={(v) => setInviteFilter(v as typeof inviteFilter)}>
+                      <TabsList className="h-8">
+                        <TabsTrigger value="all" className="text-xs h-6 px-2.5">Todos ({invites?.length ?? 0})</TabsTrigger>
+                        <TabsTrigger value="pending" className="text-xs h-6 px-2.5">Pendentes ({inviteCounts.pending})</TabsTrigger>
+                        <TabsTrigger value="accepted" className="text-xs h-6 px-2.5">Aceitos ({inviteCounts.accepted})</TabsTrigger>
+                        <TabsTrigger value="revoked" className="text-xs h-6 px-2.5">Revogados ({inviteCounts.revoked})</TabsTrigger>
+                        <TabsTrigger value="expired" className="text-xs h-6 px-2.5">Expirados ({inviteCounts.expired})</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
                   <div className="divide-y divide-border/20">
                     {(invites ?? []).length === 0 ? (
                       <div className="p-8 text-center text-sm text-muted-foreground">
                         Nenhum convite ativo. Gere um link acima.
                       </div>
+                    ) : filteredInvites.length === 0 ? (
+                      <div className="p-8 text-center text-sm text-muted-foreground">
+                        Nenhum convite neste filtro.
+                      </div>
                     ) : (
-                      (invites ?? []).map((inv) => {
+                      filteredInvites.map((inv) => {
                         const expired = new Date(inv.expires_at) < new Date();
                         const used = !!inv.accepted_at;
                         const inactive = inv.revoked || expired || used;
