@@ -53,6 +53,8 @@ export const OrganizationsView = () => {
   const [removeTarget, setRemoveTarget] = useState<{ id: string; label: string; isMe: boolean } | null>(null);
   const [memberFilter, setMemberFilter] = useState<"all" | "active">("all");
   const [inviteFilter, setInviteFilter] = useState<"all" | "pending" | "accepted" | "revoked" | "expired">("all");
+  const [revokeTarget, setRevokeTarget] = useState<{ id: string; role: AppRole; token: string } | null>(null);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
 
   type ActivityEntry = {
     id: string;
@@ -220,6 +222,7 @@ export const OrganizationsView = () => {
   };
 
   const handleRevokeInvite = async (inv: { id: string; role: AppRole; token: string }) => {
+    setRevokingId(inv.id);
     try {
       await revokeInvite.mutateAsync(inv.id);
       toast({
@@ -231,12 +234,15 @@ export const OrganizationsView = () => {
         title: "Convite revogado",
         detail: `${ROLE_LABEL[inv.role]} · token ${inv.token.slice(0, 8)}…`,
       });
+      setRevokeTarget(null);
     } catch (e) {
       toast({
         title: "Falha ao revogar",
         description: (e as Error).message,
         variant: "destructive",
       });
+    } finally {
+      setRevokingId(null);
     }
   };
 
@@ -577,10 +583,14 @@ export const OrganizationsView = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                  onClick={() => handleRevokeInvite(inv)}
-                                  title="Revogar"
+                                  onClick={() => setRevokeTarget(inv)}
+                                  disabled={revokingId === inv.id}
+                                  title="Revogar convite"
+                                  aria-label="Revogar convite"
                                 >
-                                  <X className="h-4 w-4" />
+                                  {revokingId === inv.id
+                                    ? <Loader2 className="h-4 w-4 animate-spin" />
+                                    : <X className="h-4 w-4" />}
                                 </Button>
                               )}
                             </div>
@@ -708,6 +718,37 @@ export const OrganizationsView = () => {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {removeTarget?.isMe ? "Sair" : "Remover"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!revokeTarget}
+        onOpenChange={(o) => !o && !revokingId && setRevokeTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Revogar este convite?</AlertDialogTitle>
+            <AlertDialogDescription>
+              O link <span className="font-mono text-foreground/80">{revokeTarget?.token.slice(0, 12)}…</span>{" "}
+              ({revokeTarget ? ROLE_LABEL[revokeTarget.role] : ""}) deixará de funcionar imediatamente.
+              Quem ainda não aceitou não conseguirá entrar pelo link. Esta ação não pode ser desfeita —
+              gere um novo convite se precisar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={!!revokingId}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={!!revokingId}
+              onClick={(e) => {
+                e.preventDefault();
+                if (revokeTarget) handleRevokeInvite(revokeTarget);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 gap-2"
+            >
+              {revokingId ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+              Revogar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
