@@ -17,7 +17,6 @@
  */
 import { supabase } from "./client";
 import type { Database } from "./types";
-import { toast } from "sonner";
 
 type SchemaTables = Database["public"]["Tables"];
 type TableName = keyof SchemaTables;
@@ -103,32 +102,17 @@ export class MissingOrgContextError extends Error {
 }
 
 /**
- * Emite feedback visual amigável quando uma operação é bloqueada por
- * falta de organização ativa ou por tentativa cross-org. Silencioso em
- * ambiente sem `window` (SSR/tests).
+ * Lança o erro disparando também o handler global (toast + ações de
+ * recuperação). O handler é registrado dinamicamente para evitar
+ * dependência circular (`orgErrorHandler` importa esses tipos).
  */
-let lastToastAt = 0;
-function notifyOrgError(err: Error) {
-  if (typeof window === "undefined") return;
-  // Throttle simples: evita spam quando várias queries falham juntas.
-  const now = Date.now();
-  if (now - lastToastAt < 1500) return;
-  lastToastAt = now;
-  if (err instanceof MissingOrgContextError) {
-    toast.error("Nenhuma organização ativa", {
-      description:
-        "Selecione uma organização antes de criar, editar ou remover registros.",
-    });
-  } else if (err instanceof OrgMismatchError) {
-    toast.error("Operação bloqueada por segurança", {
-      description:
-        "Você tentou modificar um registro de outra organização. A ação foi cancelada.",
-    });
-  }
+type OrgErrorListener = (err: Error) => void;
+let orgErrorListener: OrgErrorListener | null = null;
+export function setOrgErrorListener(fn: OrgErrorListener | null) {
+  orgErrorListener = fn;
 }
-
 function raise(err: Error): never {
-  notifyOrgError(err);
+  try { orgErrorListener?.(err); } catch { /* listener nunca pode quebrar a operação */ }
   throw err;
 }
 
