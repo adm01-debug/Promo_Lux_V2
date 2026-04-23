@@ -222,6 +222,7 @@ export const OrganizationsView = () => {
   };
 
   const handleRevokeInvite = async (inv: { id: string; role: AppRole; token: string }) => {
+    setRevokingId(inv.id);
     try {
       await revokeInvite.mutateAsync(inv.id);
       toast({
@@ -233,12 +234,15 @@ export const OrganizationsView = () => {
         title: "Convite revogado",
         detail: `${ROLE_LABEL[inv.role]} · token ${inv.token.slice(0, 8)}…`,
       });
+      setRevokeTarget(null);
     } catch (e) {
       toast({
         title: "Falha ao revogar",
         description: (e as Error).message,
         variant: "destructive",
       });
+    } finally {
+      setRevokingId(null);
     }
   };
 
