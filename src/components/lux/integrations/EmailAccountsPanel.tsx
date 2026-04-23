@@ -10,6 +10,7 @@ import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserI
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
+import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
 
 interface Account {
   id: string;
