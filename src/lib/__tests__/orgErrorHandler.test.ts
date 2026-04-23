@@ -2,8 +2,14 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock sonner antes de importar o handler
 const toastError = vi.fn();
+const toastInfo = vi.fn();
+const toastSuccess = vi.fn();
 vi.mock("sonner", () => ({
-  toast: { error: (...args: unknown[]) => toastError(...args) },
+  toast: {
+    error: (...args: unknown[]) => toastError(...args),
+    info: (...args: unknown[]) => toastInfo(...args),
+    success: (...args: unknown[]) => toastSuccess(...args),
+  },
 }));
 
 // Mock supabase client (auth.getUser e from(...).insert) — fire-and-forget
@@ -14,7 +20,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { handleOrgError } from "../orgErrorHandler";
+import { handleOrgError, runWithOrgRetry } from "../orgErrorHandler";
 import {
   OrgMismatchError,
   MissingOrgContextError,
@@ -23,6 +29,8 @@ import {
 describe("handleOrgError → toast", () => {
   beforeEach(() => {
     toastError.mockClear();
+    toastInfo.mockClear();
+    toastSuccess.mockClear();
     // zera throttle interno aguardando o intervalo (1500ms) seria lento;
     // como o módulo mantém estado, espaçamos os testes manualmente alterando Date.now
     vi.useFakeTimers();
@@ -102,7 +110,53 @@ describe("handleOrgError → toast", () => {
       string,
       { action: { label: string } },
     ];
+    // Sem operação registrada via runWithOrgRetry, fallback é Recarregar.
     expect(opts.action.label).toMatch(/Recarregar/i);
+  });
+
+  it("usa ação 'Tentar novamente' quando há operação registrada via runWithOrgRetry", async () => {
+    // Avança o relógio para escapar do throttle (1.5s) e mantém fake timers
+    // para previsibilidade; usamos setImmediate-equivalente via microtasks.
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 1, 0));
+    // Registra uma operação que falha uma vez (mismatch) e sucede na retry.
+    let attempts = 0;
+    const op = vi.fn(async () => {
+      attempts += 1;
+      if (attempts === 1) {
+        throw new OrgMismatchError("companies", "update", "orgA", "orgB");
+      }
+      return { ok: true };
+    });
+
+    await expect(runWithOrgRetry(op, "Atualizar empresa")).rejects.toBeInstanceOf(
+      OrgMismatchError,
+    );
+
+    // O catch externo (em React Query) chamaria handleOrgError; simulamos:
+    handleOrgError(new OrgMismatchError("companies", "update", "orgA", "orgB"));
+    const [, opts] = toastError.mock.calls.at(-1) as [
+      string,
+      { action: { label: string; onClick: () => void } },
+    ];
+    expect(opts.action.label).toMatch(/Tentar novamente/i);
+
+    // Aciona o retry — refreshOrgAndRetry é async, aguardamos microtasks.
+    vi.useRealTimers();
+    opts.action.onClick();
+    // Drena microtasks até o toast de sucesso aparecer.
+    for (let i = 0; i < 20 && toastSuccess.mock.calls.length === 0; i++) {
+      await new Promise((r) => setTimeout(r, 5));
+    }
+
+    expect(op).toHaveBeenCalledTimes(2);
+    expect(toastInfo).toHaveBeenCalledWith(
+      "Tentando novamente…",
+      expect.objectContaining({ description: "Atualizar empresa" }),
+    );
+    expect(toastSuccess).toHaveBeenCalledWith(
+      "Operação concluída",
+      expect.objectContaining({ description: "Atualizar empresa" }),
+    );
   });
 
   it("retorna false (não consome) para erro genérico", () => {

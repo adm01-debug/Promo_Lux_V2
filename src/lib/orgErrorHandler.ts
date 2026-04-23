@@ -22,6 +22,71 @@ export function registerQueryClient(qc: QueryClient) {
   qcRef = qc;
 }
 
+/* ---------- Última operação para "Tentar novamente" ---------- */
+
+/**
+ * Guarda a última operação executada via `runWithOrgRetry`. Quando um
+ * OrgMismatchError ocorre, o toast oferece a ação "Tentar novamente",
+ * que primeiro recarrega a lista de organizações ativas e depois
+ * reexecuta esta função. O slot é único (last-wins) para evitar
+ * vazamento de closures de operações antigas.
+ */
+type RetryFn = () => Promise<unknown>;
+let lastOperation: { fn: RetryFn; label: string } | null = null;
+
+/**
+ * Envolve uma operação (mutation, fetch direto etc.) registrando-a como
+ * a "última" — usada para o botão "Tentar novamente" no toast de
+ * OrgMismatchError. Se a operação lançar um erro de escopo, o handler
+ * é acionado e devolve o erro ao caller para que React Query / try-catch
+ * locais sigam o fluxo normal.
+ *
+ * Uso:
+ *   await runWithOrgRetry(() => db.from("companies").update(...).eq("id", id), "Atualizar empresa");
+ */
+export async function runWithOrgRetry<T>(
+  fn: () => Promise<T>,
+  label = "Última operação",
+): Promise<T> {
+  lastOperation = { fn: fn as RetryFn, label };
+  return await fn();
+}
+
+/**
+ * Recarrega a organização ativa (refetch de `my-organizations`) e em
+ * seguida reexecuta a última operação registrada. Retorna `true` se
+ * conseguiu acionar a retry, `false` caso contrário.
+ */
+async function refreshOrgAndRetry(): Promise<boolean> {
+  if (!lastOperation) return false;
+  const op = lastOperation;
+  try {
+    if (qcRef) {
+      // Refetch da lista de orgs garante que o valor em memória de
+      // `getActiveOrgId()` esteja consistente com o servidor antes de
+      // tentarmos novamente.
+      await qcRef.refetchQueries({ queryKey: ["my-organizations"] });
+    }
+    toast.info("Tentando novamente…", { description: op.label });
+    await op.fn();
+    toast.success("Operação concluída", { description: op.label });
+    if (qcRef) qcRef.invalidateQueries();
+    emit(null);
+    return true;
+  } catch (err) {
+    // Se ainda houver mismatch, o handler será re-invocado naturalmente
+    // pela própria `fn`. Caso seja outro erro, mostramos um toast neutro.
+    if (err instanceof OrgMismatchError || err instanceof MissingOrgContextError) {
+      handleOrgError(err);
+    } else {
+      toast.error("Falha ao reexecutar", {
+        description: err instanceof Error ? err.message : String(err),
+      });
+    }
+    return false;
+  }
+}
+
 /* ---------- Pub/sub para banners inline globais ---------- */
 
 export interface OrgErrorBannerState {
@@ -283,10 +348,17 @@ export function handleOrgError(err: unknown): boolean {
     const { title, description } = copyForMismatch(err);
     toast.error(title, {
       description,
-      action: {
-        label: "Recarregar dados",
-        onClick: reload,
-      },
+      action: lastOperation
+        ? {
+            label: "Tentar novamente",
+            onClick: () => {
+              void refreshOrgAndRetry();
+            },
+          }
+        : {
+            label: "Recarregar dados",
+            onClick: reload,
+          },
     });
   }
 
