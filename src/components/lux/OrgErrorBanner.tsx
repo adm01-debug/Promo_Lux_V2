@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertTriangle, ShieldAlert, X, RefreshCw } from "lucide-react";
+import { AlertTriangle, ShieldAlert, X, RefreshCw, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   subscribeOrgErrorBanner,
@@ -60,6 +60,22 @@ export function OrgErrorBanner() {
                   </p>
                 )}
                 <div className="mt-2 flex flex-wrap gap-1">
+                  {state.kind === "missing" && (
+                    <Button
+                      size="sm"
+                      variant="default"
+                      className="h-7 gap-1 text-[11px]"
+                      onClick={() => {
+                        clearOrgErrorBanner();
+                        const url = new URL(window.location.href);
+                        url.searchParams.set("view", "organizations");
+                        window.history.pushState({}, "", url.toString());
+                        window.dispatchEvent(new PopStateEvent("popstate"));
+                      }}
+                    >
+                      <Building2 className="h-3 w-3" /> Selecionar organização
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="outline"
