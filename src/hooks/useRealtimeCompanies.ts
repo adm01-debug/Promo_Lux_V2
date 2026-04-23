@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -47,7 +48,7 @@ export function useRealtimeCompanies() {
 
             // Persist notification in DB for the notifications panel
             if (!user?.id) return;
-            await supabase.from("notifications").insert([{
+            await db.from("notifications").insert([{
               user_id: user.id,
               title,
               message: description,

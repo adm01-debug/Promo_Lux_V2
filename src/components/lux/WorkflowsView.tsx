@@ -1,3 +1,4 @@
+import { db } from "@/integrations/supabase/withOrg";
 import { useState } from "react";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { DataError } from "@/components/lux/DataError";
@@ -62,7 +63,7 @@ export const WorkflowsView = () => {
       : async () => {
           try { return await workflowApi.list(); } catch {
             const { supabase } = await import("@/integrations/supabase/client");
-            const { data, error } = await supabase.from("workflows").select("*, workflow_runs(id, status, started_at, completed_at, results)").order("created_at", { ascending: false });
+            const { data, error } = await db.from("workflows").select("*, workflow_runs(id, status, started_at, completed_at, results)").order("created_at", { ascending: false });
             if (error) throw error;
             return (data ?? []) as unknown as Workflow[];
           }
@@ -75,7 +76,7 @@ export const WorkflowsView = () => {
     mutationFn: async (data: Parameters<typeof workflowApi.create>[0]) => {
       try { return await workflowApi.create(data); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { data: row, error } = await supabase.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as any, config: data.config as any }).select().single();
+        const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as any, config: data.config as any }).select().single();
         if (error) throw error;
         return row as unknown as Workflow;
       }
@@ -94,7 +95,7 @@ export const WorkflowsView = () => {
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       try { await workflowApi.toggleStatus(id, status); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { error } = await supabase.from("workflows").update({ status: status as any }).eq("id", id);
+        const { error } = await db.from("workflows").update({ status: status as any }).eq("id", id);
         if (error) throw error;
       }
     },
@@ -105,7 +106,7 @@ export const WorkflowsView = () => {
     mutationFn: async (id: string) => {
       try { await workflowApi.delete(id); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { error } = await supabase.from("workflows").delete().eq("id", id);
+        const { error } = await db.from("workflows").delete().eq("id", id);
         if (error) throw error;
       }
     },

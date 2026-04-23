@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -79,7 +80,7 @@ export const AddCompanyDialog = () => {
     setFieldErrors({});
     setSaving(true);
     try {
-      const { error } = await supabase.from("companies").insert([{
+      const { error } = await db.from("companies").insert([{
         name: name.trim(),
         sector: sector || null,
         location: location || null,

@@ -16,6 +16,7 @@ import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCan } from "@/hooks/usePermissions";
@@ -182,7 +183,7 @@ export const CampaignsView = () => {
         const msg = Object.values(result.errors)[0];
         throw new Error(msg);
       }
-      const { error } = await supabase.from("campaigns").insert({
+      const { error } = await db.from("campaigns").insert({
         user_id: user?.id,
         name: formName.trim(),
         prospects: parseInt(formProspects) || 50,
@@ -204,7 +205,7 @@ export const CampaignsView = () => {
   const updateMutation = useMutation({
     mutationFn: async () => {
       if (!editingCampaign) return;
-      const { error } = await supabase.from("campaigns").update({
+      const { error } = await db.from("campaigns").update({
         name: formName.trim(),
         prospects: parseInt(formProspects) || 50,
         sequence: formSequence,
@@ -225,7 +226,7 @@ export const CampaignsView = () => {
   const toggleMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const newStatus = status === "active" ? "paused" : "active";
-      const { error } = await supabase.from("campaigns").update({ status: newStatus }).eq("id", id);
+      const { error } = await db.from("campaigns").update({ status: newStatus }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: (_data, variables) => {
@@ -238,7 +239,7 @@ export const CampaignsView = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("campaigns").delete().eq("id", id);
+      const { error } = await db.from("campaigns").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

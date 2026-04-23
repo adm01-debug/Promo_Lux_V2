@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_COMPANIES_FULL, DEMO_CAMPAIGNS, DEMO_WORKFLOWS } from "@/lib/demoData";
 import { COLORS } from "./AnalyticsChartTooltip";
@@ -27,10 +28,10 @@ export function useAnalyticsData() {
         campaigns = DEMO_CAMPAIGNS as any[];
       } else {
         const [r1, r2, r3, r4] = await Promise.all([
-          supabase.from("companies").select("sector, ipc_score, enriched, source, created_at"),
-          supabase.from("scrape_jobs").select("status, results_count, source, created_at"),
-          supabase.from("workflows").select("status, leads_processed, leads_qualified, success_rate"),
-          supabase.from("campaigns").select("*").order("created_at", { ascending: false }),
+          db.from("companies").select("sector, ipc_score, enriched, source, created_at"),
+          db.from("scrape_jobs").select("status, results_count, source, created_at"),
+          db.from("workflows").select("status, leads_processed, leads_qualified, success_rate"),
+          db.from("campaigns").select("*").order("created_at", { ascending: false }),
         ]);
         companies = r1.data;
         scrapeJobs = r2.data;

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_STATS, DEMO_COMPANIES, DEMO_ACTIVITY } from "@/lib/demoData";
@@ -31,14 +32,14 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     { count: totalScrapeJobs },
     { count: completedScrapeJobs },
   ] = await Promise.all([
-    supabase.from("workflows").select("*", { count: "exact", head: true }).in("status", ["active", "running"]),
-    supabase.from("workflows").select("*", { count: "exact", head: true }).eq("status", "running"),
-    supabase.from("companies").select("*", { count: "exact", head: true }),
-    supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
-    supabase.from("companies").select("ipc_score"),
-    supabase.from("scrape_jobs").select("*", { count: "exact", head: true }).gte("created_at", today.toISOString()),
-    supabase.from("scrape_jobs").select("*", { count: "exact", head: true }),
-    supabase.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("status", "completed"),
+    db.from("workflows").select("*", { count: "exact", head: true }).in("status", ["active", "running"]),
+    db.from("workflows").select("*", { count: "exact", head: true }).eq("status", "running"),
+    db.from("companies").select("*", { count: "exact", head: true }),
+    db.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
+    db.from("companies").select("ipc_score"),
+    db.from("scrape_jobs").select("*", { count: "exact", head: true }).gte("created_at", today.toISOString()),
+    db.from("scrape_jobs").select("*", { count: "exact", head: true }),
+    db.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("status", "completed"),
   ]);
 
   const scores = (companiesForAvg ?? []).map((c) => c.ipc_score ?? 0).filter((s) => s > 0);

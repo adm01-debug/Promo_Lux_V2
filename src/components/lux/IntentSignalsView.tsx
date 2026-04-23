@@ -13,6 +13,7 @@ import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Tables } from "@/integrations/supabase/types";
@@ -72,7 +73,7 @@ export const IntentSignalsView = () => {
 
   const createMutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("intent_signals").insert({
+      const { error } = await db.from("intent_signals").insert({
         user_id: user?.id,
         company_name: companyName.trim(),
         type,
@@ -94,7 +95,7 @@ export const IntentSignalsView = () => {
   const updateMutation = useMutation({
     mutationFn: async () => {
       if (!editingSignal) return;
-      const { error } = await supabase.from("intent_signals").update({
+      const { error } = await db.from("intent_signals").update({
         company_name: companyName.trim(),
         type,
         signal: signal.trim(),
@@ -115,7 +116,7 @@ export const IntentSignalsView = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("intent_signals").delete().eq("id", id);
+      const { error } = await db.from("intent_signals").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

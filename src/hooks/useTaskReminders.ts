@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -33,7 +34,7 @@ export function useTaskReminders() {
           description: t.title,
           duration: 10000,
         });
-        await supabase.from("deal_tasks").update({ reminded: true }).eq("id", t.id);
+        await db.from("deal_tasks").update({ reminded: true }).eq("id", t.id);
       }
       if (data.length) qc.invalidateQueries({ queryKey: ["deal_tasks"] });
     };

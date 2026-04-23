@@ -1,26 +1,19 @@
 /**
- * Helper único para injetar `organization_id` em INSERT/UPSERT
- * com base na organização ativa, sem precisar repetir o campo
- * em cada chamada.
+ * Helper único de defesa em profundidade para escopo multi-tenant.
+ *
+ * Para tabelas com `organization_id`, o wrapper:
+ *   - INSERT/UPSERT: injeta organization_id da org ativa (se ausente)
+ *                     e bloqueia se o payload trouxer outra org.
+ *   - UPDATE/DELETE: força filtro `.eq("organization_id", activeOrgId)`.
+ *   - SELECT:        aplica `.eq("organization_id", activeOrgId)` automático.
+ *
+ * Tabelas fora da lista (profiles, organizations, organization_members)
+ * passam direto e ficam sob RLS específica.
  *
  * Uso:
  *   import { db } from "@/integrations/supabase/withOrg";
- *
+ *   await db.from("companies").select("*");
  *   await db.from("companies").insert({ name: "Acme" });
- *   // → INSERT inclui organization_id automaticamente
- *
- *   await db.from("deals").upsert({ id, title: "..." });
- *
- * Também funciona em listas:
- *   await db.from("stakeholders").insert([{ full_name: "A" }, { full_name: "B" }]);
- *
- * Para escapar (operações administrativas raras), use o cliente bruto:
- *   import { supabase } from "@/integrations/supabase/client";
- *
- * Nota: o banco já tem `DEFAULT default_org_for_current_user()` em
- * `organization_id`, mas isso só usa a *primeira* org do usuário.
- * Quando o usuário troca de org ativa na UI, queremos que os novos
- * registros caiam na org ativa — esse helper garante isso.
  */
 import { supabase } from "./client";
 import type { Database } from "./types";
@@ -31,22 +24,7 @@ type TableName = keyof SchemaTables;
 const STORAGE_KEY = "lux:active-org";
 let activeOrgIdMem: string | null = null;
 
-/** Erro lançado quando uma mutação cruza fronteiras de organização. */
-export class OrgMismatchError extends Error {
-  constructor(
-    public readonly expected: string,
-    public readonly received: string,
-    public readonly table: string,
-    public readonly op: string,
-  ) {
-    super(
-      `Operação bloqueada: ${op} em "${table}" referencia organização ${received}, mas a ativa é ${expected}.`,
-    );
-    this.name = "OrgMismatchError";
-  }
-}
-
-/** Define a organização ativa em memória (chamado pelo hook useActiveOrganization). */
+/** Define a organização ativa em memória. */
 export function setActiveOrgId(id: string | null) {
   activeOrgIdMem = id;
 }
@@ -64,28 +42,77 @@ export function getActiveOrgId(): string | null {
   return null;
 }
 
-function withOrg<T extends Record<string, unknown>>(row: T, orgId: string): T {
-  // Não sobrescreve se o caller já definiu explicitamente
-  if (row.organization_id) return row;
-  return { ...row, organization_id: orgId };
+/**
+ * Tabelas que possuem coluna `organization_id` e devem ser sempre
+ * escopadas pela org ativa.
+ */
+const ORG_SCOPED_TABLES = new Set<string>([
+  "agent_chat_messages",
+  "api_keys",
+  "api_request_logs",
+  "audit_logs",
+  "campaign_events",
+  "campaign_messages",
+  "campaign_recipients",
+  "campaign_replies",
+  "campaigns",
+  "companies",
+  "deal_activities",
+  "deal_stages",
+  "deal_tasks",
+  "deals",
+  "email_accounts",
+  "intent_signals",
+  "ipc_config",
+  "notifications",
+  "scrape_jobs",
+  "scrape_results",
+  "stakeholders",
+  "webhook_deliveries",
+  "webhooks",
+  "workflow_runs",
+  "workflows",
+]);
+
+export class OrgMismatchError extends Error {
+  constructor(
+    public table: string,
+    public op: string,
+    public expected: string | null,
+    public got: unknown,
+  ) {
+    super(
+      `[withOrg] Cross-org ${op} bloqueado em "${table}". Org ativa=${expected ?? "<none>"} payload=${String(got)}`,
+    );
+    this.name = "OrgMismatchError";
+  }
 }
 
-/** Valida que organization_id do payload bate com a org ativa (quando ambos existem). */
-function assertOrgMatch(
-  values: unknown,
-  activeOrg: string,
-  table: string,
-  op: string,
-) {
-  const check = (v: unknown) => {
-    if (!v || typeof v !== "object") return;
-    const orgId = (v as Record<string, unknown>).organization_id;
-    if (typeof orgId === "string" && orgId !== activeOrg) {
-      throw new OrgMismatchError(activeOrg, orgId, table, op);
+function assertOrgMatch(values: unknown, orgId: string, table: string, op: string) {
+  const check = (row: unknown) => {
+    if (row && typeof row === "object" && "organization_id" in row) {
+      const got = (row as Record<string, unknown>).organization_id;
+      if (got && got !== orgId) {
+        throw new OrgMismatchError(table, op, orgId, got);
+      }
     }
   };
   if (Array.isArray(values)) values.forEach(check);
   else check(values);
+}
+
+/** Verifica se um registro pertence à org ativa (helper de UI). */
+export function ensureSameOrg(
+  record: { organization_id?: string | null } | null | undefined,
+): boolean {
+  const orgId = getActiveOrgId();
+  if (!orgId || !record?.organization_id) return false;
+  return record.organization_id === orgId;
+}
+
+function withOrg<T extends Record<string, unknown>>(row: T, orgId: string): T {
+  if (row.organization_id) return row;
+  return { ...row, organization_id: orgId };
 }
 
 function injectOrg<T>(values: T, orgId: string): T {
@@ -100,51 +127,58 @@ function injectOrg<T>(values: T, orgId: string): T {
   return values;
 }
 
-/**
- * Wrapper sobre supabase.from(table) que intercepta `.insert()` e `.upsert()`
- * para injetar organization_id automaticamente, e `.update()` / `.delete()`
- * para validar (em runtime) que o caller não está mutando registros de outra
- * organização. A validação é best-effort: confia no `organization_id` do
- * payload (update) ou em `.eq("organization_id", x)` (filtro). Como camada
- * extra, RLS no servidor é a defesa final.
- */
 export function fromOrg<T extends TableName>(table: T) {
   const builder = supabase.from(table);
   const tableName = String(table);
+  const isScoped = ORG_SCOPED_TABLES.has(tableName);
+
   return new Proxy(builder, {
     get(target, prop, receiver) {
       const orgId = getActiveOrgId();
 
       if (prop === "insert" || prop === "upsert") {
         return (values: unknown, options?: unknown) => {
-          if (!orgId) {
-            throw new OrgMismatchError("<nenhuma>", "?", tableName, String(prop));
-          }
-          assertOrgMatch(values, orgId, tableName, String(prop));
-          const next = injectOrg(values, orgId);
+          if (orgId && isScoped) assertOrgMatch(values, orgId, tableName, String(prop));
+          const next = orgId && isScoped ? injectOrg(values, orgId) : values;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return (target as any)[prop](next, options);
-        };
-      }
-
-      if (prop === "update") {
-        return (values: unknown, options?: unknown) => {
-          if (orgId) {
-            assertOrgMatch(values, orgId, tableName, "update");
+          return options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const q = (target as any).update(values, options);
-            // Restringe explicitamente o update à org ativa para nunca cruzar fronteiras
-            return q.eq("organization_id", orgId);
-          }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return (target as any).update(values, options);
+            ? (target as any)[prop](next)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (target as any)[prop](next, options);
         };
       }
 
-      if (prop === "delete") {
+      if (prop === "update" && isScoped) {
+        return (values: unknown, options?: unknown) => {
+          if (orgId) assertOrgMatch(values, orgId, tableName, "update");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const q = options === undefined
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? (target as any).update(values)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (target as any).update(values, options);
+          return orgId ? q.eq("organization_id", orgId) : q;
+        };
+      }
+
+      if (prop === "delete" && isScoped) {
         return (options?: unknown) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const q = (target as any).delete(options);
+          const q = options === undefined
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? (target as any).delete()
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (target as any).delete(options);
+          return orgId ? q.eq("organization_id", orgId) : q;
+        };
+      }
+
+      if (prop === "select" && isScoped) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (...args: any[]) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const q = (target as any).select(...args);
           return orgId ? q.eq("organization_id", orgId) : q;
         };
       }
@@ -154,26 +188,7 @@ export function fromOrg<T extends TableName>(table: T) {
   });
 }
 
-/** API conveniente: `db.from("companies").insert({...})`. */
+/** API conveniente: `db.from("companies").select("*")`. */
 export const db = {
   from: fromOrg,
 };
-
-/**
- * Valida manualmente um registro carregado contra a org ativa. Use antes de
- * abrir um modal de edição ou disparar uma ação destrutiva sobre dado que veio
- * de uma sessão/cache potencialmente desatualizado.
- *
- *   ensureSameOrg(company);            // lança OrgMismatchError se divergir
- *   ensureSameOrg(company, { silent }); // retorna boolean
- */
-export function ensureSameOrg(
-  record: { organization_id?: string | null } | null | undefined,
-  opts: { silent?: boolean } = {},
-): boolean {
-  const active = getActiveOrgId();
-  if (!record || !record.organization_id || !active) return true;
-  if (record.organization_id === active) return true;
-  if (opts.silent) return false;
-  throw new OrgMismatchError(active, record.organization_id, "<record>", "guard");
-}

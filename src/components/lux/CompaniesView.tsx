@@ -16,6 +16,7 @@ import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
@@ -71,7 +72,7 @@ export const CompaniesView = () => {
     queryFn: isDemoMode
       ? () => DEMO_COMPANIES_FULL
       : async () => {
-          const { data, error } = await supabase.from("companies").select("*").order("created_at", { ascending: false });
+          const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false });
           if (error) throw error;
           return (data ?? []).map((c) => ({
             id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
@@ -141,7 +142,7 @@ export const CompaniesView = () => {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      const { error } = await supabase.from("companies").delete().eq("id", deleteTarget.id);
+      const { error } = await db.from("companies").delete().eq("id", deleteTarget.id);
       if (error) throw error;
       toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida.` });
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
@@ -157,7 +158,7 @@ export const CompaniesView = () => {
     if (selectedIds.size === 0) return;
     setIsBulkDeleting(true);
     try {
-      const { error } = await supabase.from("companies").delete().in("id", Array.from(selectedIds));
+      const { error } = await db.from("companies").delete().in("id", Array.from(selectedIds));
       if (error) throw error;
       toast({ title: "Empresas removidas", description: `${selectedIds.size} removida(s).` });
       setSelectedIds(new Set());
@@ -170,7 +171,7 @@ export const CompaniesView = () => {
     if (selectedIds.size === 0) return;
     setIsBulkEnriching(true);
     try {
-      const { error } = await supabase.from("companies").update({ enriched: true }).in("id", Array.from(selectedIds));
+      const { error } = await db.from("companies").update({ enriched: true }).in("id", Array.from(selectedIds));
       if (error) throw error;
       toast({ title: "Empresas enriquecidas", description: `${selectedIds.size} enriquecida(s).` });
       setSelectedIds(new Set());
@@ -183,7 +184,7 @@ export const CompaniesView = () => {
     const company = companies.find((c) => c.id === id);
     queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) => old?.map((c) => (c.id === id ? { ...c, starred } : c)));
     toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: company ? `"${company.name}"` : undefined });
-    const { error } = await supabase.from("companies").update({ starred }).eq("id", id);
+    const { error } = await db.from("companies").update({ starred }).eq("id", id);
     if (error) { queryClient.invalidateQueries({ queryKey: ["companies-list"] }); toast({ title: "Erro ao favoritar", variant: "destructive" }); }
   }, [companies, queryClient, toast]);
 

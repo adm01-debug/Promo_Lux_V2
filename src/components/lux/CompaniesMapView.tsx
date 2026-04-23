@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Filter, X, Loader2 } from "lucide-react";
@@ -48,7 +49,7 @@ export const CompaniesMapView = () => {
     for (const company of needsGeocoding) {
       const coords = await geocodeLocation(company.location!);
       if (coords) {
-        await supabase.from("companies").update({ lat: coords.lat, lng: coords.lng }).eq("id", company.id);
+        await db.from("companies").update({ lat: coords.lat, lng: coords.lng }).eq("id", company.id);
         geocoded++;
         setGeocodingCount(geocoded);
       }

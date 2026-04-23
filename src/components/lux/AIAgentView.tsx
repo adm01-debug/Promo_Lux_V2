@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 
@@ -107,7 +108,7 @@ export const AIAgentView = () => {
 
   const persistMsg = useCallback(
     async (role: "user" | "agent", content: string) => {
-      await supabase.from("agent_chat_messages").insert({ role, content });
+      await db.from("agent_chat_messages").insert({ role, content });
     },
     []
   );
@@ -156,7 +157,7 @@ export const AIAgentView = () => {
 
   const clearMutation = useMutation({
     mutationFn: async () => {
-      await supabase.from("agent_chat_messages").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      await db.from("agent_chat_messages").delete().neq("id", "00000000-0000-0000-0000-000000000000");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });

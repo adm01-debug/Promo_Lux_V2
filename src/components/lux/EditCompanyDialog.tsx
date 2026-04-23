@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { validateCompany } from "@/lib/schemas/company";
@@ -141,7 +142,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         updateData.lng = geoCoords.lng;
       }
 
-      const { error } = await supabase.from("companies").update(updateData).eq("id", company.id);
+      const { error } = await db.from("companies").update(updateData).eq("id", company.id);
       if (error) throw error;
 
       toast({ title: "Empresa atualizada!", description: `"${name}" foi atualizada com sucesso.` });

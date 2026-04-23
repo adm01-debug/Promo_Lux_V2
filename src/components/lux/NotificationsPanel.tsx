@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -138,13 +139,13 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
   const markAllRead = useCallback(async () => {
     const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
     if (unreadIds.length === 0) return;
-    await supabase.from("notifications").update({ read: true }).in("id", unreadIds);
+    await db.from("notifications").update({ read: true }).in("id", unreadIds);
     invalidateAll();
   }, [notifications, invalidateAll]);
 
   const markRead = useCallback(
     async (id: string) => {
-      await supabase.from("notifications").update({ read: true }).eq("id", id);
+      await db.from("notifications").update({ read: true }).eq("id", id);
       invalidateAll();
     },
     [invalidateAll]
@@ -152,14 +153,14 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
 
   const dismiss = useCallback(
     async (id: string) => {
-      await supabase.from("notifications").delete().eq("id", id);
+      await db.from("notifications").delete().eq("id", id);
       invalidateAll();
     },
     [invalidateAll]
   );
 
   const clearAll = useCallback(async () => {
-    await supabase.from("notifications").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    await db.from("notifications").delete().neq("id", "00000000-0000-0000-0000-000000000000");
     invalidateAll();
   }, [invalidateAll]);
 

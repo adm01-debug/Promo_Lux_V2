@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -48,7 +49,7 @@ export function useApiKeys() {
     mutationFn: async (input: { name: string; scopes: string[]; expires_at?: string | null }) => {
       const { full, prefix } = generateKey();
       const key_hash = await sha256Hex(full);
-      const { error } = await supabase.from("api_keys").insert({
+      const { error } = await db.from("api_keys").insert({
         name: input.name,
         prefix,
         key_hash,
@@ -64,7 +65,7 @@ export function useApiKeys() {
 
   const revokeKey = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("api_keys").update({ active: false }).eq("id", id);
+      const { error } = await db.from("api_keys").update({ active: false }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -75,7 +76,7 @@ export function useApiKeys() {
 
   const deleteKey = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("api_keys").delete().eq("id", id);
+      const { error } = await db.from("api_keys").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
