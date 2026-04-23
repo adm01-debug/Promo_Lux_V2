@@ -115,7 +115,9 @@ describe("handleOrgError → toast", () => {
   });
 
   it("usa ação 'Tentar novamente' quando há operação registrada via runWithOrgRetry", async () => {
-    vi.useRealTimers();
+    // Avança o relógio para escapar do throttle (1.5s) e mantém fake timers
+    // para previsibilidade; usamos setImmediate-equivalente via microtasks.
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 1, 0));
     // Registra uma operação que falha uma vez (mismatch) e sucede na retry.
     let attempts = 0;
     const op = vi.fn(async () => {
@@ -138,9 +140,13 @@ describe("handleOrgError → toast", () => {
     ];
     expect(opts.action.label).toMatch(/Tentar novamente/i);
 
-    // Aciona o retry e aguarda o ciclo (refetch + reexecução).
+    // Aciona o retry — refreshOrgAndRetry é async, aguardamos microtasks.
+    vi.useRealTimers();
     opts.action.onClick();
-    await new Promise((r) => setTimeout(r, 10));
+    // Drena microtasks até a operação completar.
+    for (let i = 0; i < 10 && attempts < 2; i++) {
+      await new Promise((r) => setTimeout(r, 5));
+    }
 
     expect(op).toHaveBeenCalledTimes(2);
     expect(toastInfo).toHaveBeenCalledWith(
