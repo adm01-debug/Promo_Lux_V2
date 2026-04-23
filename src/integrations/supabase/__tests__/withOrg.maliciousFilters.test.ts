@@ -115,7 +115,10 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
     it("payload com organization_id null não é tratado como bypass (nullish ignorado)", () => {
       // organization_id=null/undefined no payload não deve disparar
       // OrgMismatch; apenas é removido no strip do update.
-      db.from("companies").update({ name: "x", organization_id: null });
+      db.from("companies").update({
+        name: "x",
+        organization_id: null,
+      } as unknown as Record<string, unknown>);
       const updateCall = callOrder.find((c) => c.method === "update");
       expect(updateCall?.args).toEqual([{ name: "x" }]);
       expect(orgEqCalls()[0]?.args).toEqual(["organization_id", ORG_A]);
