@@ -373,6 +373,28 @@ export function EmailAccountsPanel() {
                   <Link2 className="h-3 w-3" /> Reconectar
                 </Button>
               )}
+              {(() => {
+                const wantsOrg = acc.scope_type === "user";
+                const canConvert = isAdmin && (wantsOrg ? acc.user_id === user?.id : true);
+                const reason = !isAdmin
+                  ? "Apenas administradores podem alterar o escopo."
+                  : wantsOrg && acc.user_id !== user?.id
+                  ? "Só o dono atual da caixa pessoal pode promovê-la a compartilhada."
+                  : undefined;
+                return (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 gap-1 text-xs"
+                    disabled={!canConvert || scopeMutation.isPending}
+                    title={reason ?? (wantsOrg ? "Tornar compartilhada (org)" : "Tornar pessoal")}
+                    onClick={() => (canConvert ? setScopeChangeTarget(acc) : toast({ title: "Permissão negada", description: reason ?? "", variant: "destructive" }))}
+                  >
+                    <ArrowLeftRight className="h-3 w-3" />
+                    {wantsOrg ? "→ Org" : "→ Pessoal"}
+                  </Button>
+                );
+              })()}
               <Button
                 size="sm"
                 variant="ghost"
@@ -404,6 +426,56 @@ export function EmailAccountsPanel() {
         open={!!disconnectTarget}
         onOpenChange={(o) => !o && setDisconnectTarget(null)}
       />
+
+      <AlertDialog open={!!scopeChangeTarget} onOpenChange={(o) => !o && setScopeChangeTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {scopeChangeTarget?.scope_type === "user"
+                ? "Tornar caixa compartilhada?"
+                : "Tornar caixa pessoal?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                <p>
+                  <span className="font-medium text-foreground">{scopeChangeTarget?.email}</span> passará de{" "}
+                  <Badge variant="outline" className="text-[10px] mx-1">
+                    {scopeChangeTarget?.scope_type === "user" ? "Pessoal" : "Compartilhada"}
+                  </Badge>
+                  para{" "}
+                  <Badge variant="outline" className="text-[10px] mx-1 border-primary/30 text-primary">
+                    {scopeChangeTarget?.scope_type === "user" ? "Compartilhada" : "Pessoal"}
+                  </Badge>
+                  .
+                </p>
+                {scopeChangeTarget?.scope_type === "user" ? (
+                  <p className="text-muted-foreground">
+                    Todos os membros da organização poderão visualizá-la. Apenas administradores poderão sincronizar,
+                    reconectar ou desconectar.
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground">
+                    A caixa deixará de ser visível para os demais membros e o dono passará a ser você. Tokens OAuth e
+                    histórico de sincronização são preservados.
+                  </p>
+                )}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={scopeMutation.isPending}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={scopeMutation.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                if (scopeChangeTarget) scopeMutation.mutate(scopeChangeTarget);
+              }}
+            >
+              {scopeMutation.isPending ? "Convertendo..." : "Confirmar conversão"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
