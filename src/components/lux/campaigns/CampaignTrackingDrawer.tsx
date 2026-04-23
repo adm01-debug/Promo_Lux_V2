@@ -167,7 +167,7 @@ export const CampaignTrackingDrawer = ({
                   <div className="flex items-center gap-1.5 text-[10px] shrink-0">
                     <Badge variant="outline" className="gap-1 h-5"><Eye className="h-2.5 w-2.5" />{r.open_count}</Badge>
                     <Badge variant="outline" className="gap-1 h-5"><MousePointerClick className="h-2.5 w-2.5" />{r.click_count}</Badge>
-                    <Badge variant="outline" className="h-5 capitalize">{r.status}</Badge>
+                    <Badge variant={statusBadgeVariant(r.status)} className="h-5 capitalize">{r.status}</Badge>
                   </div>
                 </div>
               ))}
