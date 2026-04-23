@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History } from "lucide-react";
+import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History, Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { exportReportCSV, exportReportPDF, exportHistoryCSV, exportHistoryEntryPDF } from "@/lib/exportRLSReport";
 
 interface TestResult {
   name: string;
@@ -251,6 +252,26 @@ export const RLSVerificationPanel = () => {
                 Todos
               </button>
             </div>
+            <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px] gap-1"
+                onClick={() => exportReportCSV(report)}
+              >
+                <Download className="h-3 w-3" /> CSV
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px] gap-1"
+                onClick={() => exportReportPDF(report)}
+              >
+                <FileText className="h-3 w-3" /> PDF
+              </Button>
+            </div>
           </div>
 
           {/* Per-operation summary */}
@@ -353,6 +374,16 @@ export const RLSVerificationPanel = () => {
               </button>
             ))}
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-7 px-2 text-[11px] gap-1"
+            disabled={history.length === 0}
+            onClick={() => exportHistoryCSV(history)}
+          >
+            <Download className="h-3 w-3" /> CSV
+          </Button>
         </div>
         {history.length === 0 ? (
           <p className="text-xs text-muted-foreground px-3 py-4 text-center">
@@ -403,6 +434,20 @@ export const RLSVerificationPanel = () => {
               {selected?.passed}/{selected?.total} passaram · {selected?.failed} falhas · {selected?.duration_ms}ms
             </DialogDescription>
           </DialogHeader>
+
+          {selected && (
+            <div className="flex items-center gap-1.5">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px] gap-1"
+                onClick={() => exportHistoryEntryPDF(selected)}
+              >
+                <FileText className="h-3 w-3" /> Exportar PDF
+              </Button>
+            </div>
+          )}
 
           {selected && (
             <ScrollArea className="flex-1 -mx-2 px-2">
