@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,14 +19,53 @@ interface ApiResponse {
   results: TestResult[];
 }
 
+interface HistoryEntry {
+  id: string;
+  created_at: string;
+  all_passed: boolean;
+  total: number;
+  passed: number;
+  failed: number;
+  duration_ms: number;
+}
+
 /**
  * Painel administrativo: dispara a edge function `rls-tests` que provisiona
  * usuários e organizações temporárias e valida o isolamento RLS multi-tenant.
- * Resultado é exibido em tempo real para auditoria.
+ * Resultado é exibido em tempo real e gravado em `audit_logs` para histórico.
  */
 export const RLSVerificationPanel = () => {
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<ApiResponse | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  const loadHistory = useCallback(async () => {
+    const { data } = await supabase
+      .from("audit_logs")
+      .select("id, created_at, new_data")
+      .eq("table_name", "__rls_verification")
+      .order("created_at", { ascending: false })
+      .limit(10);
+    if (!data) return;
+    setHistory(
+      data.map((row) => {
+        const d = (row.new_data ?? {}) as Record<string, unknown>;
+        return {
+          id: row.id,
+          created_at: row.created_at,
+          all_passed: Boolean(d.all_passed),
+          total: Number(d.total ?? 0),
+          passed: Number(d.passed ?? 0),
+          failed: Number(d.failed ?? 0),
+          duration_ms: Number(d.duration_ms ?? 0),
+        };
+      }),
+    );
+  }, []);
+
+  useEffect(() => {
+    void loadHistory();
+  }, [loadHistory]);
 
   const run = async () => {
     setLoading(true);
@@ -44,6 +83,7 @@ export const RLSVerificationPanel = () => {
           description: `${data?.failed ?? "?"} de ${data?.total ?? "?"} testes falharam`,
         });
       }
+      await loadHistory();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erro desconhecido";
       toast({ variant: "destructive", title: "Falha ao executar verificação", description: message });
@@ -102,6 +142,37 @@ export const RLSVerificationPanel = () => {
               ))}
             </ul>
           </ScrollArea>
+        </div>
+      )}
+
+      {history.length > 0 && (
+        <div className="space-y-2 pt-2 border-t border-border/40">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <History className="h-3.5 w-3.5" />
+            Histórico recente ({history.length})
+          </div>
+          <ul className="space-y-1">
+            {history.map((h) => (
+              <li
+                key={h.id}
+                className="flex items-center justify-between gap-3 px-3 py-2 rounded-md bg-background/40 border border-border/30 text-xs"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  {h.all_passed ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" />
+                  ) : (
+                    <XCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                  )}
+                  <span className="text-foreground truncate">
+                    {new Date(h.created_at).toLocaleString("pt-BR")}
+                  </span>
+                </div>
+                <span className="text-muted-foreground font-mono shrink-0">
+                  {h.passed}/{h.total} · {h.duration_ms}ms
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

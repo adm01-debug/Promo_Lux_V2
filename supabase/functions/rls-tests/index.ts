@@ -312,6 +312,36 @@ Deno.serve(async (req) => {
     failed: results.filter(r => !r.passed).length,
   });
 
+  // ── Persist run in audit_logs for historical querying ──
+  // Uses virtual table_name `__rls_verification`. Failures are kept in full;
+  // successful results are summarized to keep payload small.
+  try {
+    const passedCount = results.filter(r => r.passed).length;
+    const failedResults = results.filter(r => !r.passed);
+    const runId = crypto.randomUUID();
+    await admin.from("audit_logs").insert({
+      action: "create",
+      table_name: "__rls_verification",
+      record_id: runId,
+      actor_id: callerId,
+      organization_id: adminRows[0].id ? null : null, // not tied to a single org
+      new_data: {
+        run_id: runId,
+        all_passed: allPassed,
+        total: results.length,
+        passed: passedCount,
+        failed: failedResults.length,
+        duration_ms: duration,
+        request_id: requestId,
+        failed_results: failedResults,
+        passed_names: results.filter(r => r.passed).map(r => r.name),
+        executed_at: new Date().toISOString(),
+      },
+    });
+  } catch (auditErr) {
+    log.error("rls_test_audit_failed", { error: (auditErr as Error).message });
+  }
+
   return new Response(
     JSON.stringify({ allPassed, total: results.length, passed: results.filter(r => r.passed).length, failed: results.filter(r => !r.passed).length, results }, null, 2),
     { status: allPassed ? 200 : 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
