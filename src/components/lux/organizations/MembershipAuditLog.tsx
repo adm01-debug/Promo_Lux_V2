@@ -1,6 +1,6 @@
 import { memo, useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ScrollText, UserPlus, UserMinus, UserCog, LogOut, Filter, RefreshCw, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { ScrollText, UserPlus, UserMinus, UserCog, LogOut, Filter, RefreshCw, Loader2, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMembershipAuditLogPaged, type MembershipAuditEntry, type MembershipAuditAction, type AppRole } from "@/hooks/useMembershipAuditLog";
@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 
