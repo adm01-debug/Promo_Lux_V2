@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw, History, Undo2, Activity } from "lucide-react";
+import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw, History, Undo2, Activity, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +27,7 @@ import { DataError } from "@/components/lux/DataError";
 import { PermissionsMatrix } from "@/components/lux/permissions/PermissionsMatrix";
 import { MembershipAuditLog } from "@/components/lux/organizations/MembershipAuditLog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { downloadCSV } from "@/lib/exportCSV";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
@@ -212,6 +213,40 @@ export const OrganizationsView = () => {
     } catch (e) {
       toast({ title: "Erro ao reenviar", description: (e as Error).message, variant: "destructive" });
     }
+  };
+
+  const handleExportInvites = () => {
+    const list = filteredInvites ?? [];
+    if (list.length === 0) {
+      toast({ title: "Nada para exportar", description: "Nenhum convite no filtro atual.", variant: "destructive" });
+      return;
+    }
+    const now = new Date();
+    const rows = list.map((inv) => {
+      const expired = new Date(inv.expires_at) < now;
+      const used = !!inv.accepted_at;
+      const status = used ? "aceito" : inv.revoked ? "revogado" : expired ? "expirado" : "pendente";
+      const resends = resendHistory[inv.token] ?? [];
+      return {
+        token: inv.token,
+        role: ROLE_LABEL[inv.role],
+        status,
+        criado_por_nome: inv.created_by_profile?.full_name?.trim() ?? "",
+        criado_por_id: inv.created_by,
+        criado_em: new Date(inv.created_at).toISOString(),
+        expira_em: new Date(inv.expires_at).toISOString(),
+        aceito_por_nome: inv.accepted_by_profile?.full_name?.trim() ?? "",
+        aceito_por_id: inv.accepted_by ?? "",
+        aceito_em: inv.accepted_at ? new Date(inv.accepted_at).toISOString() : "",
+        revogado: inv.revoked ? "sim" : "nao",
+        reenvios: resends.length,
+        ultimo_reenvio_em: resends[0] ? new Date(resends[0].at).toISOString() : "",
+      };
+    });
+    const orgSlug = activeOrg?.organizations.slug ?? "workspace";
+    const stamp = now.toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    downloadCSV(rows, `convites-${orgSlug}-${stamp}.csv`);
+    toast({ title: "CSV exportado", description: `${rows.length} convite${rows.length === 1 ? "" : "s"} no arquivo.` });
   };
 
   const handleRoleChange = async (
@@ -481,6 +516,17 @@ export const OrganizationsView = () => {
                       <Button size="sm" onClick={handleCreateInvite} disabled={createInvite.isPending} className="gap-1.5 text-xs">
                         {createInvite.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
                         Gerar link
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleExportInvites}
+                        disabled={(filteredInvites?.length ?? 0) === 0}
+                        className="gap-1.5 text-xs"
+                        title="Exportar lista atual em CSV (auditoria)"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        CSV
                       </Button>
                     </div>
                   </div>
