@@ -362,12 +362,28 @@ export function EmailAccountsPanel() {
                   ) : (
                     <Badge variant="outline" className="text-[10px] gap-1 text-success border-success/30"><CheckCircle2 className="h-2.5 w-2.5" />Ativa</Badge>
                   )}
+                  {acc.reconnect_required && (
+                    <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/40">
+                      <Link2 className="h-2.5 w-2.5" /> Reconexão manual
+                    </Badge>
+                  )}
+                  {!acc.reconnect_required && acc.reconnect_attempts > 0 && acc.reconnect_next_at && (
+                    <Badge variant="outline" className="text-[10px] gap-1 text-warning border-warning/40">
+                      <RefreshCw className="h-2.5 w-2.5" />
+                      Auto-retry {acc.reconnect_attempts}/{acc.reconnect_max_attempts}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-0.5">
                   {acc.last_polled_at ? `Última sync: ${new Date(acc.last_polled_at).toLocaleString("pt-BR")}` : "Aguardando primeira sync"}
                   {acc.last_error && <span className="text-destructive ml-2">· {acc.last_error.slice(0, 80)}</span>}
                   {!canManage && <span className="ml-2 text-warning">· somente leitura</span>}
                 </p>
+                {!acc.reconnect_required && acc.reconnect_next_at && new Date(acc.reconnect_next_at) > new Date() && (
+                  <p className="text-[10px] text-warning mt-0.5">
+                    Próxima tentativa automática: {new Date(acc.reconnect_next_at).toLocaleString("pt-BR")}
+                  </p>
+                )}
               </div>
               {acc.last_error && isAuthError(acc.last_error) && (
                 <Button
