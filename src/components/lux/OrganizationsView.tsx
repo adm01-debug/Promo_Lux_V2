@@ -188,7 +188,7 @@ export const OrganizationsView = () => {
     toast({ title: "Link copiado" });
   };
 
-  const handleResendInvite = async (inv: { id: string; role: AppRole; revoked: boolean; accepted_at: string | null }) => {
+  const handleResendInvite = async (inv: { id: string; role: AppRole; revoked: boolean; accepted_at: string | null; token: string }) => {
     try {
       // Generate a fresh invite with the same role
       const created = await createInvite.mutateAsync({ role: inv.role });
@@ -196,6 +196,8 @@ export const OrganizationsView = () => {
       if (!inv.revoked && !inv.accepted_at) {
         try { await revokeInvite.mutateAsync(inv.id); } catch { /* non-blocking */ }
       }
+      // Registrar no histórico local de reenvios (chaveado pelo token original).
+      recordResend(inv.token, created.token);
       const url = `${window.location.origin}/invite/${created.token}`;
       await navigator.clipboard.writeText(url);
       toast({
