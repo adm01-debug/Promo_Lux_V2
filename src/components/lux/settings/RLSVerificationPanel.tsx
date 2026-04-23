@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History } from "lucide-react";
+import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History, Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { exportReportCSV, exportReportPDF, exportHistoryCSV, exportHistoryEntryPDF } from "@/lib/exportRLSReport";
 
 interface TestResult {
   name: string;
