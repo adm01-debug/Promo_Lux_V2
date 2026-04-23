@@ -365,7 +365,7 @@ export const OrganizationsView = () => {
                           {isAdmin && !isOwner ? (
                             <Select
                               value={m.role}
-                              onValueChange={(v) => updateRole.mutate({ id: m.id, role: v as AppRole })}
+                              onValueChange={(v) => handleRoleChange(m, v as AppRole)}
                             >
                               <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
                               <SelectContent>
