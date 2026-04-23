@@ -57,6 +57,33 @@ export const OrganizationsView = () => {
   const [revokeTarget, setRevokeTarget] = useState<{ id: string; role: AppRole; token: string } | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
 
+  // Histórico local de reenvios por token original do convite.
+  // Mantido em localStorage por organização, pois o backend não persiste essa relação.
+  type ResendEntry = { at: number; newToken: string };
+  type ResendHistory = Record<string, ResendEntry[]>;
+  const resendStorageKey = activeOrgId ? `lux:invite-resends:${activeOrgId}` : null;
+  const [resendHistory, setResendHistory] = useState<ResendHistory>({});
+  useEffect(() => {
+    if (!resendStorageKey) { setResendHistory({}); return; }
+    try {
+      const raw = localStorage.getItem(resendStorageKey);
+      setResendHistory(raw ? JSON.parse(raw) : {});
+    } catch {
+      setResendHistory({});
+    }
+  }, [resendStorageKey]);
+  const recordResend = (originalToken: string, newToken: string) => {
+    if (!resendStorageKey) return;
+    setResendHistory(prev => {
+      const next = { ...prev };
+      const list = next[originalToken] ? [...next[originalToken]] : [];
+      list.unshift({ at: Date.now(), newToken });
+      next[originalToken] = list.slice(0, 10);
+      try { localStorage.setItem(resendStorageKey, JSON.stringify(next)); } catch { /* quota */ }
+      return next;
+    });
+  };
+
   type ActivityEntry = {
     id: string;
     at: number;
