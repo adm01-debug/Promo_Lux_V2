@@ -64,8 +64,45 @@ describe("handleOrgError → toast", () => {
     expect(consumed).toBe(true);
     expect(toastError).toHaveBeenCalledTimes(1);
     const [title, opts] = toastError.mock.calls[0] as [string, { description: string }];
-    expect(title).toMatch(/bloqueada por segurança/i);
+    expect(title).toMatch(/Edição bloqueada — organização divergente/i);
     expect(opts.description).toMatch(/companies/);
+  });
+
+  it("dispara toast específico para OrgMismatchError em INSERT", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 35));
+    const err = new OrgMismatchError("companies", "insert", "orgA", "orgB");
+    handleOrgError(err);
+    const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
+    expect(title).toMatch(/Criação bloqueada — organização divergente/i);
+    expect(opts.description).toMatch(/criar.*companies/i);
+  });
+
+  it("dispara toast específico para OrgMismatchError em DELETE", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 40));
+    const err = new OrgMismatchError("webhooks", "delete", "orgA", "orgB");
+    handleOrgError(err);
+    const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
+    expect(title).toMatch(/Exclusão bloqueada — organização divergente/i);
+    expect(opts.description).toMatch(/remover.*webhooks/i);
+  });
+
+  it("dispara toast específico para OrgMismatchError em UPSERT", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 45));
+    const err = new OrgMismatchError("deals", "upsert", "orgA", "orgB");
+    handleOrgError(err);
+    const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
+    expect(title).toMatch(/Gravação bloqueada — organização divergente/i);
+    expect(opts.description).toMatch(/inserir\/atualizar.*deals/i);
+  });
+
+  it("ação 'Recarregar dados' está presente no toast de mismatch", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 50));
+    handleOrgError(new OrgMismatchError("companies", "update", "orgA", "orgB"));
+    const [, opts] = toastError.mock.calls.at(-1) as [
+      string,
+      { action: { label: string } },
+    ];
+    expect(opts.action.label).toMatch(/Recarregar/i);
   });
 
   it("retorna false (não consome) para erro genérico", () => {

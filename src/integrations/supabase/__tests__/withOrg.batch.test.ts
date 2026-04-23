@@ -138,10 +138,9 @@ describe("db (withOrg) — batch operations atomic rejection", () => {
     });
 
     it("preserva options (segundo argumento) quando lote válido", () => {
-      db.from("companies").upsert(
-        [{ name: "a" }, { name: "b" }],
-        { onConflict: "id" } as unknown as Parameters<typeof builder.upsert>[1],
-      );
+      db.from("companies").upsert([{ name: "a" }, { name: "b" }], {
+        onConflict: "id",
+      });
       const upsertCall = callOrder.find((c) => c.method === "upsert");
       expect(upsertCall?.args[0]).toEqual([
         { name: "a", organization_id: ORG_A },

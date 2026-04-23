@@ -114,6 +114,47 @@ function copyForMissing(err: MissingOrgContextError): { title: string; descripti
 }
 
 /**
+ * Mensagens específicas por operação para `OrgMismatchError`.
+ * Diferente do MissingOp (sem org ativa), aqui há org ativa mas o
+ * registro/payload aponta para outra — falamos em "cross-org" e damos
+ * pistas concretas do que o usuário deve fazer.
+ */
+const MISMATCH_OP_COPY: Record<
+  string,
+  { title: string; description: (table: string) => string }
+> = {
+  insert: {
+    title: "Criação bloqueada — organização divergente",
+    description: (t) =>
+      `Tentativa de criar registro em "${t}" vinculado a outra organização. Verifique a organização ativa.`,
+  },
+  upsert: {
+    title: "Gravação bloqueada — organização divergente",
+    description: (t) =>
+      `Tentativa de inserir/atualizar registro em "${t}" com organização diferente da ativa. Operação cancelada.`,
+  },
+  update: {
+    title: "Edição bloqueada — organização divergente",
+    description: (t) =>
+      `Tentativa de modificar registro de outra organização em "${t}". Recarregue o registro na organização correta.`,
+  },
+  delete: {
+    title: "Exclusão bloqueada — organização divergente",
+    description: (t) =>
+      `Tentativa de remover registro pertencente a outra organização em "${t}". Operação cancelada.`,
+  },
+};
+
+function copyForMismatch(err: OrgMismatchError): { title: string; description: string } {
+  const entry = MISMATCH_OP_COPY[err.op];
+  if (entry) return { title: entry.title, description: entry.description(err.table) };
+  return {
+    title: "Operação bloqueada por segurança",
+    description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+  };
+}
+
+/**
  * Registra a tentativa bloqueada na trilha de auditoria (`audit_logs`)
  * com `table_name="__org_violation"` para separá-la das mutações reais.
  * Fire-and-forget: erros de inserção (ex.: RLS, offline) são ignorados —
@@ -192,10 +233,11 @@ export function handleOrgError(err: unknown): boolean {
       occurredAt: new Date().toISOString(),
     });
   } else {
+    const { title, description } = copyForMismatch(err);
     emit({
       kind: "mismatch",
-      title: "Operação bloqueada por segurança",
-      description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+      title,
+      description,
       table: err.table,
       op: err.op,
       expected: err.expected ?? null,
@@ -238,8 +280,9 @@ export function handleOrgError(err: unknown): boolean {
     });
   } else {
     // OrgMismatchError
-    toast.error("Operação bloqueada por segurança", {
-      description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+    const { title, description } = copyForMismatch(err);
+    toast.error(title, {
+      description,
       action: {
         label: "Recarregar dados",
         onClick: reload,
