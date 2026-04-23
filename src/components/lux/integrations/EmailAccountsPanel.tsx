@@ -240,6 +240,23 @@ export function EmailAccountsPanel() {
         if (failing.length === 0) return null;
         const authFailing = failing.filter((a) => isAuthError(a.last_error));
         const syncFailing = failing.filter((a) => !isAuthError(a.last_error));
+        // Agrupa por provedor para destacar qual integração está mais impactada.
+        const byProvider: Record<"gmail" | "outlook", { all: Account[]; auth: Account[]; sync: Account[] }> = {
+          gmail: {
+            all: failing.filter((a) => a.provider === "gmail"),
+            auth: authFailing.filter((a) => a.provider === "gmail"),
+            sync: syncFailing.filter((a) => a.provider === "gmail"),
+          },
+          outlook: {
+            all: failing.filter((a) => a.provider === "outlook"),
+            auth: authFailing.filter((a) => a.provider === "outlook"),
+            sync: syncFailing.filter((a) => a.provider === "outlook"),
+          },
+        };
+        const providerLabel: Record<"gmail" | "outlook", string> = {
+          gmail: "Gmail",
+          outlook: "Outlook",
+        };
         return (
           <div className="glass rounded-lg border border-destructive/30 bg-destructive/5 p-3">
             <div className="flex items-start gap-3">
@@ -265,6 +282,36 @@ export function EmailAccountsPanel() {
                     </span>
                   )}
                 </p>
+                {/* Resumo por provedor: identifica rapidamente qual integração está afetada. */}
+                <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                  {(["gmail", "outlook"] as const)
+                    .filter((p) => byProvider[p].all.length > 0)
+                    .map((p) => {
+                      const g = byProvider[p];
+                      return (
+                        <div
+                          key={p}
+                          className="flex items-center gap-2 rounded-md border border-destructive/20 bg-background/40 px-2 py-1.5"
+                        >
+                          <Mail className="h-3.5 w-3.5 text-destructive shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[11px] font-medium text-foreground">
+                              {providerLabel[p]} · {g.all.length} {g.all.length === 1 ? "conta" : "contas"}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              {g.auth.length > 0 && (
+                                <span className="text-destructive">{g.auth.length} reconexão</span>
+                              )}
+                              {g.auth.length > 0 && g.sync.length > 0 && " · "}
+                              {g.sync.length > 0 && (
+                                <span>{g.sync.length} sync</span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {authFailing.slice(0, 3).map((a) => (
                     <Button
