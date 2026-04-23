@@ -164,6 +164,29 @@ export const RLSVerificationPanel = () => {
     }
   };
 
+  const parsed = useMemo<ParsedTest[]>(
+    () => (report?.results ?? []).map(parseTest),
+    [report],
+  );
+
+  const opCounts = useMemo(() => {
+    const acc: Record<RuleOp, { passed: number; failed: number }> = {
+      SELECT: { passed: 0, failed: 0 },
+      INSERT: { passed: 0, failed: 0 },
+      UPDATE: { passed: 0, failed: 0 },
+      DELETE: { passed: 0, failed: 0 },
+      COVERAGE: { passed: 0, failed: 0 },
+      SETUP: { passed: 0, failed: 0 },
+    };
+    for (const p of parsed) acc[p.op][p.passed ? "passed" : "failed"]++;
+    return acc;
+  }, [parsed]);
+
+  const visible = useMemo(
+    () => (filter === "failed" ? parsed.filter((p) => !p.passed) : parsed),
+    [parsed, filter],
+  );
+
   return (
     <div className="glass rounded-lg p-6 space-y-4">
       <div className="flex items-start justify-between gap-4">
@@ -195,24 +218,80 @@ export const RLSVerificationPanel = () => {
             <span className="text-xs text-muted-foreground font-mono">
               {report.passed}/{report.total} OK · {report.failed} falhas
             </span>
+            <div className="ml-auto flex items-center gap-1 rounded-md border border-border/50 bg-background/40 p-0.5">
+              <button
+                type="button"
+                onClick={() => setFilter("failed")}
+                className={`text-[11px] px-2 py-0.5 rounded ${filter === "failed" ? "bg-destructive/20 text-destructive" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                Apenas falhas
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter("all")}
+                className={`text-[11px] px-2 py-0.5 rounded ${filter === "all" ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                Todos
+              </button>
+            </div>
+          </div>
+
+          {/* Per-operation summary */}
+          <div className="flex flex-wrap gap-1.5">
+            {(["SELECT", "INSERT", "UPDATE", "DELETE", "COVERAGE"] as RuleOp[]).map((op) => {
+              const c = opCounts[op];
+              if (c.passed + c.failed === 0) return null;
+              return (
+                <span
+                  key={op}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium border ${OP_STYLES[op]}`}
+                >
+                  {op}
+                  <span className="font-mono opacity-70">
+                    {c.passed}/{c.passed + c.failed}
+                  </span>
+                  {c.failed > 0 && <AlertTriangle className="h-3 w-3" />}
+                </span>
+              );
+            })}
           </div>
 
           <ScrollArea className="h-72 rounded-md border border-border/50 bg-background/40">
-            <ul className="divide-y divide-border/40">
-              {report.results.map((r) => (
-                <li key={r.name} className="px-3 py-2 flex items-start gap-2 text-xs">
-                  {r.passed ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />
-                  ) : (
-                    <XCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-mono text-foreground truncate">{r.name}</p>
-                    <p className="text-muted-foreground text-[11px] truncate">{r.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {visible.length === 0 ? (
+              <div className="px-3 py-8 text-center text-xs text-muted-foreground">
+                {filter === "failed"
+                  ? "Nenhuma regra RLS falhou. ✨"
+                  : "Nenhum resultado para exibir."}
+              </div>
+            ) : (
+              <ul className="divide-y divide-border/40">
+                {visible.map((r) => (
+                  <li key={r.name} className="px-3 py-2.5 flex items-start gap-2.5 text-xs">
+                    {r.passed ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-success mt-0.5 shrink-0" />
+                    ) : (
+                      <XCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span
+                          className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${OP_STYLES[r.op]}`}
+                        >
+                          {r.op}
+                        </span>
+                        {r.table && (
+                          <span className="font-mono text-[11px] text-foreground/90">{r.table}</span>
+                        )}
+                      </div>
+                      <p className="text-foreground/90 leading-snug">{r.description}</p>
+                      <p className="text-muted-foreground text-[10px] font-mono leading-tight">
+                        {r.name} · {r.detail}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </ScrollArea>
         </div>
       )}
