@@ -207,6 +207,64 @@ export function reloadAfterOrgError() {
 let lastToastAt = 0;
 const THROTTLE_MS = 1500;
 
+/* ---------- Rótulos amigáveis (entidade + operação) ---------- */
+
+/**
+ * Mapeia nomes técnicos das tabelas para rótulos amigáveis usados nos
+ * toasts. Mantém o nome no singular/plural natural conforme o contexto
+ * mais comum da mensagem ("ao consultar empresas", "ao criar empresa").
+ * Tabelas não mapeadas caem no nome cru entre aspas.
+ */
+const ENTITY_LABELS: Record<string, { singular: string; plural: string }> = {
+  agent_chat_messages: { singular: "mensagem do agente IA", plural: "mensagens do agente IA" },
+  api_keys: { singular: "chave de API", plural: "chaves de API" },
+  api_request_logs: { singular: "log de requisição", plural: "logs de requisições" },
+  audit_logs: { singular: "registro de auditoria", plural: "trilha de auditoria" },
+  campaign_events: { singular: "evento de campanha", plural: "eventos de campanha" },
+  campaign_messages: { singular: "mensagem de campanha", plural: "mensagens de campanha" },
+  campaign_recipients: { singular: "destinatário", plural: "destinatários da campanha" },
+  campaign_replies: { singular: "resposta de campanha", plural: "respostas de campanha" },
+  campaigns: { singular: "campanha", plural: "campanhas" },
+  companies: { singular: "empresa", plural: "empresas" },
+  deal_activities: { singular: "atividade de negócio", plural: "atividades de negócio" },
+  deal_stages: { singular: "estágio do funil", plural: "estágios do funil" },
+  deal_tasks: { singular: "tarefa", plural: "tarefas de negócio" },
+  deals: { singular: "negócio", plural: "negócios" },
+  email_accounts: { singular: "conta de e-mail", plural: "contas de e-mail" },
+  intent_signals: { singular: "sinal de intenção", plural: "sinais de intenção" },
+  ipc_config: { singular: "configuração de ICP", plural: "configurações de ICP" },
+  notifications: { singular: "notificação", plural: "notificações" },
+  scrape_jobs: { singular: "job de coleta", plural: "jobs de coleta" },
+  scrape_results: { singular: "resultado de coleta", plural: "resultados de coleta" },
+  stakeholders: { singular: "stakeholder", plural: "stakeholders" },
+  webhook_deliveries: { singular: "entrega de webhook", plural: "entregas de webhook" },
+  webhooks: { singular: "webhook", plural: "webhooks" },
+  workflow_runs: { singular: "execução de workflow", plural: "execuções de workflow" },
+  workflows: { singular: "workflow", plural: "workflows" },
+};
+
+function entityLabel(table: string | undefined, form: "singular" | "plural" = "singular"): string {
+  if (!table) return form === "plural" ? "estes recursos" : "este recurso";
+  const e = ENTITY_LABELS[table];
+  if (!e) return `"${table}"`;
+  return e[form];
+}
+
+/** CTA padrão: leva o usuário direto à tela de gestão de workspaces. */
+function selectOrganizationAction() {
+  return {
+    label: "Selecionar organização",
+    onClick: () => {
+      emit(null);
+      if (typeof window === "undefined") return;
+      const url = new URL(window.location.href);
+      url.searchParams.set("view", "organizations");
+      window.history.pushState({}, "", url.toString());
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    },
+  };
+}
+
 /**
  * Mensagens específicas por operação para `MissingOrgContextError`.
  * Mantém o tom direto: o que foi bloqueado + por quê + o que fazer.
