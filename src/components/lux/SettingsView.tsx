@@ -39,7 +39,7 @@ const DEFAULT_PREFS: NotifPrefs = { email_notifs: true, signal_notifs: true, scr
 
 export const SettingsView = () => {
   const { user } = useAuth();
-  const isAdmin = useCan("settings", "manage");
+  const isAdmin = useCan("audit_logs", "view");
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
