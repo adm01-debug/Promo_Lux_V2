@@ -187,7 +187,9 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
           icon={ScrollText}
           title="Sem eventos registrados"
           description={
-            filter === "all"
+            search.trim().length > 0
+              ? `Nenhum evento desta página corresponde a "${search.trim()}". Tente outras páginas ou limpe a busca.`
+              : filter === "all"
               ? "Mudanças de membros aparecerão aqui assim que ocorrerem."
               : "Nenhum evento corresponde ao filtro selecionado."
           }
