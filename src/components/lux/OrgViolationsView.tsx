@@ -31,6 +31,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
+import { OrgViolationAlertsPanel } from "@/components/lux/security/OrgViolationAlertsPanel";
 
 type ViolationKind = "OrgMismatchError" | "MissingOrgContextError";
 type PeriodKey = "24h" | "7d" | "30d" | "90d" | "all";
