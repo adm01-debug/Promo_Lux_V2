@@ -87,6 +87,48 @@ describe("db (withOrg) — multi-tenant guards", () => {
         ]),
       ).toThrow(OrgMismatchError);
     });
+
+    it("lança OrgMismatchError em UPSERT com outra org (e não chama builder)", () => {
+      expect(() =>
+        db.from("companies").upsert({ id: "x", name: "Hack", organization_id: ORG_B }),
+      ).toThrow(OrgMismatchError);
+      expect(calls.upsert).toEqual([]);
+    });
+
+    it("upsert injeta organization_id quando ausente", () => {
+      db.from("companies").upsert({ id: "x", name: "Acme" });
+      expect(calls.upsert[0]).toEqual([{ id: "x", name: "Acme", organization_id: ORG_A }]);
+    });
+
+    it("OrgMismatchError carrega contexto útil (table, op, expected, got)", () => {
+      try {
+        db.from("deals").insert({ title: "x", organization_id: ORG_B });
+        throw new Error("deveria ter lançado");
+      } catch (err) {
+        expect(err).toBeInstanceOf(OrgMismatchError);
+        const e = err as OrgMismatchError;
+        expect(e.table).toBe("deals");
+        expect(e.op).toBe("insert");
+        expect(e.expected).toBe(ORG_A);
+        expect(e.got).toBe(ORG_B);
+      }
+    });
+
+    it("bloqueia DELETE — com outra org no payload via .eq não é interceptado, mas filtro de org é forçado", () => {
+      // delete não recebe payload; o que importa é que .eq('organization_id', ORG_A) é sempre injetado
+      db.from("companies").delete().eq("id", "abc");
+      expect(calls.eq).toContainEqual(["organization_id", ORG_A]);
+    });
+
+    it("cobre múltiplas tabelas escopadas (deals, stakeholders, campaigns)", () => {
+      for (const t of ["deals", "stakeholders", "campaigns"] as const) {
+        reset();
+        expect(() =>
+          db.from(t).insert({ name: "x", title: "x", full_name: "x", organization_id: ORG_B } as never),
+        ).toThrow(OrgMismatchError);
+        expect(calls.insert).toEqual([]);
+      }
+    });
   });
 
   describe("UPDATE força escopo", () => {
