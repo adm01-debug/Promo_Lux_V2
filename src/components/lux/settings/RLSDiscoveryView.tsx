@@ -365,11 +365,24 @@ export const RLSDiscoveryView = () => {
                       </span>
                     )}
                   </div>
-                  <span
-                    className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${BUCKET_STYLES[e.bucket]}`}
-                  >
-                    {BUCKET_LABELS[e.bucket]}
-                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {e.bucket === "missing" && e.inDb && (
+                      <button
+                        type="button"
+                        onClick={() => void openGenerator(e.name)}
+                        className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-primary/40 text-primary hover:bg-primary/10 transition-colors"
+                        title="Gerar payload de insert"
+                      >
+                        <Wand2 className="h-3 w-3" />
+                        Gerar payload
+                      </button>
+                    )}
+                    <span
+                      className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${BUCKET_STYLES[e.bucket]}`}
+                    >
+                      {BUCKET_LABELS[e.bucket]}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
