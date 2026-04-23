@@ -85,7 +85,7 @@ function bypassThrottle() {
 
 describe("orgErrorHandler — E2E switching de org durante edição", () => {
   let qc: QueryClient;
-  let invalidateSpy: ReturnType<typeof vi.spyOn>;
+  let invalidateSpy: ReturnType<typeof vi.fn>;
   let uninstall: (() => void) | undefined;
 
   beforeEach(() => {
@@ -96,7 +96,9 @@ describe("orgErrorHandler — E2E switching de org durante edição", () => {
     if (typeof window !== "undefined") window.localStorage.removeItem("lux:active-org");
 
     qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    invalidateSpy = vi.spyOn(qc, "invalidateQueries");
+    invalidateSpy = vi.fn(() => Promise.resolve());
+    // sobrescreve o método para evitar incompatibilidade de tipos do spyOn com generics
+    (qc as unknown as { invalidateQueries: typeof invalidateSpy }).invalidateQueries = invalidateSpy;
     registerQueryClient(qc);
     uninstall = installGlobalOrgErrorHandler();
   });
