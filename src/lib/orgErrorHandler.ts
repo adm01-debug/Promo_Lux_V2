@@ -75,6 +75,45 @@ let lastToastAt = 0;
 const THROTTLE_MS = 1500;
 
 /**
+ * Mensagens específicas por operação para `MissingOrgContextError`.
+ * Mantém o tom direto: o que foi bloqueado + por quê + o que fazer.
+ */
+const MISSING_OP_COPY: Record<
+  string,
+  { title: string; description: (table: string) => string }
+> = {
+  insert: {
+    title: "Criação bloqueada — sem organização ativa",
+    description: (t) =>
+      `Não foi possível criar o novo registro em "${t}" porque nenhuma organização está selecionada.`,
+  },
+  upsert: {
+    title: "Gravação bloqueada — sem organização ativa",
+    description: (t) =>
+      `Não foi possível salvar (insert/update) em "${t}" porque nenhuma organização está selecionada.`,
+  },
+  update: {
+    title: "Edição bloqueada — sem organização ativa",
+    description: (t) =>
+      `Não foi possível atualizar o registro em "${t}" porque nenhuma organização está selecionada.`,
+  },
+  delete: {
+    title: "Exclusão bloqueada — sem organização ativa",
+    description: (t) =>
+      `Não foi possível remover o registro em "${t}" porque nenhuma organização está selecionada.`,
+  },
+};
+
+function copyForMissing(err: MissingOrgContextError): { title: string; description: string } {
+  const entry = MISSING_OP_COPY[err.op];
+  if (entry) return { title: entry.title, description: entry.description(err.table) };
+  return {
+    title: "Operação bloqueada — sem organização ativa",
+    description: `Não foi possível executar "${err.op}" em "${err.table}" porque nenhuma organização está selecionada.`,
+  };
+}
+
+/**
  * Registra a tentativa bloqueada na trilha de auditoria (`audit_logs`)
  * com `table_name="__org_violation"` para separá-la das mutações reais.
  * Fire-and-forget: erros de inserção (ex.: RLS, offline) são ignorados —
