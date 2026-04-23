@@ -17,6 +17,7 @@
  */
 import { supabase } from "./client";
 import type { Database } from "./types";
+import { toast } from "sonner";
 
 type SchemaTables = Database["public"]["Tables"];
 type TableName = keyof SchemaTables;
@@ -101,12 +102,42 @@ export class MissingOrgContextError extends Error {
   }
 }
 
+/**
+ * Emite feedback visual amigável quando uma operação é bloqueada por
+ * falta de organização ativa ou por tentativa cross-org. Silencioso em
+ * ambiente sem `window` (SSR/tests).
+ */
+let lastToastAt = 0;
+function notifyOrgError(err: Error) {
+  if (typeof window === "undefined") return;
+  // Throttle simples: evita spam quando várias queries falham juntas.
+  const now = Date.now();
+  if (now - lastToastAt < 1500) return;
+  lastToastAt = now;
+  if (err instanceof MissingOrgContextError) {
+    toast.error("Nenhuma organização ativa", {
+      description:
+        "Selecione uma organização antes de criar, editar ou remover registros.",
+    });
+  } else if (err instanceof OrgMismatchError) {
+    toast.error("Operação bloqueada por segurança", {
+      description:
+        "Você tentou modificar um registro de outra organização. A ação foi cancelada.",
+    });
+  }
+}
+
+function raise(err: Error): never {
+  notifyOrgError(err);
+  throw err;
+}
+
 function assertOrgMatch(values: unknown, orgId: string, table: string, op: string) {
   const check = (row: unknown) => {
     if (row && typeof row === "object" && "organization_id" in row) {
       const got = (row as Record<string, unknown>).organization_id;
       if (got && got !== orgId) {
-        throw new OrgMismatchError(table, op, orgId, got);
+        raise(new OrgMismatchError(table, op, orgId, got));
       }
     }
   };
@@ -176,7 +207,7 @@ export function fromOrg<T extends TableName>(table: T) {
       if (prop === "insert" || prop === "upsert") {
         return (values: unknown, options?: unknown) => {
           if (isScoped) {
-            if (!orgId) throw new MissingOrgContextError(tableName, String(prop));
+            if (!orgId) raise(new MissingOrgContextError(tableName, String(prop)));
             assertOrgMatch(values, orgId, tableName, String(prop));
           }
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
@@ -191,7 +222,7 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "update" && isScoped) {
         return (values: unknown, options?: unknown) => {
-          if (!orgId) throw new MissingOrgContextError(tableName, "update");
+          if (!orgId) raise(new MissingOrgContextError(tableName, "update"));
           assertOrgMatch(values, orgId, tableName, "update");
           // Remove organization_id do payload — UPDATE não deve "mover" registros entre orgs
           const sanitized = stripOrgFromUpdate(values);
@@ -207,7 +238,7 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "delete" && isScoped) {
         return (options?: unknown) => {
-          if (!orgId) throw new MissingOrgContextError(tableName, "delete");
+          if (!orgId) raise(new MissingOrgContextError(tableName, "delete"));
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const q = options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
