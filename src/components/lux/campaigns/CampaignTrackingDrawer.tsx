@@ -115,6 +115,9 @@ export const CampaignTrackingDrawer = ({
   const opened = recipients.filter((r) => r.open_count > 0).length;
   const clicked = recipients.filter((r) => r.click_count > 0).length;
   const replied = recipients.filter((r) => r.replied_at).length;
+  const failed = recipients.filter((r) => r.status === "failed").length;
+  const bounced = recipients.filter((r) => r.bounced_at || r.status === "bounced").length;
+  const queued = recipients.filter((r) => r.status === "queued" || r.status === "pending").length;
   const openRate = sent ? Math.round((opened / sent) * 100) : 0;
   const clickRate = sent ? Math.round((clicked / sent) * 100) : 0;
   const replyRate = sent ? Math.round((replied / sent) * 100) : 0;
@@ -135,6 +138,10 @@ export const CampaignTrackingDrawer = ({
             { label: "Open rate", value: `${openRate}%` },
             { label: "Click rate", value: `${clickRate}%` },
             { label: "Reply rate", value: `${replyRate}%` },
+            { label: "Na fila", value: queued },
+            { label: "Falhas", value: failed },
+            { label: "Bounces", value: bounced },
+            { label: "Total", value: recipients.length },
           ].map((s) => (
             <div key={s.label} className="glass rounded-lg p-3">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</span>
