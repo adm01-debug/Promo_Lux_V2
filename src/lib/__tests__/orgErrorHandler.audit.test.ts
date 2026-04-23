@@ -65,13 +65,14 @@ describe("recordOrgViolation — resiliência fire-and-forget", () => {
     toastInfo.mockClear();
     toastSuccess.mockClear();
     unhandled = [];
-    // Reseta correlação e throttle (avançando o relógio para escapar do
-    // throttle de 1s do audit e 1.5s do toast).
     resetCorrelationId();
     vi.useFakeTimers();
-    // Cada teste começa em um instante distinto para evitar throttle entre eles.
+    // Cada teste começa muito depois do anterior para escapar dos
+    // throttles internos (1s para audit, 1.5s para toast). Usar
+    // monotônico crescente é mais confiável que aleatório.
     const base = new Date(2030, 5, 1, 10, 0, 0).getTime();
-    vi.setSystemTime(base + Math.floor(Math.random() * 1_000_000) * 10);
+    testCounter += 1;
+    vi.setSystemTime(base + testCounter * 60_000);
 
     consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     consoleDebugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
