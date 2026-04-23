@@ -13,7 +13,11 @@
  */
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 import { assert, assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
-import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import {
+  createAdminUserFixture,
+  createNonAdminUserFixture,
+  type FixtureContext,
+} from "./_fixtures.ts";
 
 const SUPABASE_URL = Deno.env.get("VITE_SUPABASE_URL") ?? Deno.env.get("SUPABASE_URL")!;
 const ANON_KEY =
@@ -22,11 +26,10 @@ const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/rls-tests`;
 
-// Desliga refresh automático e persistência → evita "leaks: intervals
-// were started but never completed" no test runner do Deno.
-const CLIENT_OPTS = {
-  auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
-} as const;
+/** Empacota credenciais para as fixtures sem repetir nas chamadas. */
+function fixtureCtx(): FixtureContext {
+  return { supabaseUrl: SUPABASE_URL, anonKey: ANON_KEY, serviceKey: SERVICE_KEY! };
+}
 
 function corsAndJson(extra: Record<string, string> = {}) {
   return {
