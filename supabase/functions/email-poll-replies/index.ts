@@ -109,7 +109,9 @@ async function ensureFreshToken(admin: SupabaseClient, acc: EmailAccount): Promi
     access_token: tokens.access_token,
     expires_at: newExpires,
     refresh_token: tokens.refresh_token ?? acc.refresh_token,
-  }).eq("id", acc.id);
+  })
+    .eq("id", acc.id)
+    .eq("scope_type", acc.scope_type);
 
   return { ...acc, access_token: tokens.access_token, expires_at: newExpires };
 }
