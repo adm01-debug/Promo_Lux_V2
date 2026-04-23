@@ -16,7 +16,7 @@ import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
+import { db, ensureSameOrg, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
@@ -40,6 +40,7 @@ interface Company {
   phone?: string;
   enriched: boolean;
   starred: boolean;
+  organization_id?: string | null;
 }
 
 export const CompaniesView = () => {
@@ -79,6 +80,7 @@ export const CompaniesView = () => {
             ipcScore: c.ipc_score ?? 0, source: c.source, website: c.website ?? undefined,
             employees: c.employees ?? "—", revenue: c.revenue ?? "—", email: c.email ?? undefined,
             phone: c.phone ?? undefined, enriched: c.enriched ?? false, starred: c.starred ?? false,
+            organization_id: c.organization_id ?? null,
           })) as Company[];
         },
     staleTime: 15_000,
@@ -136,7 +138,45 @@ export const CompaniesView = () => {
     else { setSortBy(col); setSortDir("desc"); }
   };
 
-  const openCompany = (company: Company) => { setSelectedCompany(company); setModalOpen(true); };
+  const guardOrg = useCallback((company: Company, action: "editar" | "excluir" | "abrir"): boolean => {
+    // Em demo mode os registros não têm organization_id real; libera.
+    if (isDemoMode) return true;
+    // Se a app ainda não carregou a org ativa, bloqueia por segurança.
+    if (!getActiveOrgId()) {
+      toast({
+        title: "Organização não carregada",
+        description: "Aguarde a organização ativa carregar antes de continuar.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (!ensureSameOrg(company)) {
+      toast({
+        title: "Acesso negado",
+        description: `Não é possível ${action} um registro de outra organização.`,
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  }, [isDemoMode, toast]);
+
+  const openCompany = (company: Company) => {
+    if (!guardOrg(company, "abrir")) return;
+    setSelectedCompany(company);
+    setModalOpen(true);
+  };
+
+  const openEdit = (company: Company) => {
+    if (!guardOrg(company, "editar")) return;
+    setEditCompany(company);
+    setEditOpen(true);
+  };
+
+  const requestDelete = (company: Company) => {
+    if (!guardOrg(company, "excluir")) return;
+    setDeleteTarget(company);
+  };
 
   const handleSingleDelete = useCallback(async () => {
     if (!deleteTarget) return;
@@ -301,8 +341,8 @@ export const CompaniesView = () => {
                       onSelect={() => toggleSelectId(company.id)}
                       onToggleStar={handleToggleStar}
                       onOpen={openCompany}
-                      onEdit={(c) => { setEditCompany(c); setEditOpen(true); }}
-                      onDelete={setDeleteTarget}
+                      onEdit={openEdit}
+                      onDelete={requestDelete}
                       canDelete={canDelete}
                     />
                   ))}
