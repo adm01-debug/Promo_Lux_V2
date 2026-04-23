@@ -428,6 +428,8 @@ export function EmailAccountsPanel() {
         onOpenChange={(o) => !o && setDisconnectTarget(null)}
       />
 
+      {isAdmin && <EmailAccountsAuditPanel />}
+
       <AlertDialog open={!!scopeChangeTarget} onOpenChange={(o) => !o && setScopeChangeTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
