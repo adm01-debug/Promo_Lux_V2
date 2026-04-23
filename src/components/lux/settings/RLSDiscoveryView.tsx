@@ -115,8 +115,6 @@ export const RLSDiscoveryView = () => {
 
   const exportFullCSV = () => {
     downloadCSV(
-      `rls-discovery-${new Date().toISOString().slice(0, 10)}.csv`,
-      ["table", "status", "in_database", "in_registry", "in_exempt"],
       entries.map((e) => ({
         table: e.name,
         status: BUCKET_LABELS[e.bucket],
@@ -124,6 +122,7 @@ export const RLSDiscoveryView = () => {
         in_registry: RLS_REGISTRY_TABLES.includes(e.name) ? "yes" : "no",
         in_exempt: RLS_REGISTRY_EXEMPT.includes(e.name) ? "yes" : "no",
       })),
+      `rls-discovery-${new Date().toISOString().slice(0, 10)}.csv`,
     );
     toast({ title: "CSV exportado", description: `${entries.length} tabelas` });
   };
@@ -134,9 +133,8 @@ export const RLSDiscoveryView = () => {
       return;
     }
     downloadCSV(
-      `rls-missing-${new Date().toISOString().slice(0, 10)}.csv`,
-      ["table"],
       missingTables.map((t) => ({ table: t })),
+      `rls-missing-${new Date().toISOString().slice(0, 10)}.csv`,
     );
     toast({ title: "Faltantes exportadas", description: `${missingTables.length} tabelas` });
   };
