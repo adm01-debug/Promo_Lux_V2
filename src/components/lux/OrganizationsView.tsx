@@ -324,13 +324,29 @@ export const OrganizationsView = () => {
                       </Button>
                     </div>
                   </div>
+                  <div className="px-4 py-2.5 border-b border-border/40 bg-secondary/10 flex items-center gap-2 flex-wrap">
+                    <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                    <Tabs value={inviteFilter} onValueChange={(v) => setInviteFilter(v as typeof inviteFilter)}>
+                      <TabsList className="h-8">
+                        <TabsTrigger value="all" className="text-xs h-6 px-2.5">Todos ({invites?.length ?? 0})</TabsTrigger>
+                        <TabsTrigger value="pending" className="text-xs h-6 px-2.5">Pendentes ({inviteCounts.pending})</TabsTrigger>
+                        <TabsTrigger value="accepted" className="text-xs h-6 px-2.5">Aceitos ({inviteCounts.accepted})</TabsTrigger>
+                        <TabsTrigger value="revoked" className="text-xs h-6 px-2.5">Revogados ({inviteCounts.revoked})</TabsTrigger>
+                        <TabsTrigger value="expired" className="text-xs h-6 px-2.5">Expirados ({inviteCounts.expired})</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
                   <div className="divide-y divide-border/20">
                     {(invites ?? []).length === 0 ? (
                       <div className="p-8 text-center text-sm text-muted-foreground">
                         Nenhum convite ativo. Gere um link acima.
                       </div>
+                    ) : filteredInvites.length === 0 ? (
+                      <div className="p-8 text-center text-sm text-muted-foreground">
+                        Nenhum convite neste filtro.
+                      </div>
                     ) : (
-                      (invites ?? []).map((inv) => {
+                      filteredInvites.map((inv) => {
                         const expired = new Date(inv.expires_at) < new Date();
                         const used = !!inv.accepted_at;
                         const inactive = inv.revoked || expired || used;
