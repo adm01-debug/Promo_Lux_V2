@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +29,77 @@ interface HistoryEntry {
   duration_ms: number;
 }
 
+type RuleOp = "SELECT" | "INSERT" | "UPDATE" | "DELETE" | "COVERAGE" | "SETUP";
+
+interface ParsedTest extends TestResult {
+  op: RuleOp;
+  table: string | null;
+  description: string;
+}
+
+const OP_STYLES: Record<RuleOp, string> = {
+  SELECT:   "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  INSERT:   "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  UPDATE:   "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  DELETE:   "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  COVERAGE: "bg-primary/15 text-primary border-primary/30",
+  SETUP:    "bg-muted text-muted-foreground border-border",
+};
+
+/** Parses a raw test name (e.g. `orgA_member_cannot_update_orgB_company`)
+ *  into its operation type, target table and a human-friendly description. */
+function parseTest(t: TestResult): ParsedTest {
+  const n = t.name;
+  const make = (op: RuleOp, table: string | null, description: string): ParsedTest =>
+    ({ ...t, op, table, description });
+
+  if (n === "rls_coverage_complete") {
+    return make("COVERAGE", null, t.passed
+      ? "Todas as tabelas RLS estão cobertas pelo registry."
+      : "Há tabelas RLS sem cobertura no registry compartilhado.");
+  }
+  if (n === "SETUP_ERROR") return make("SETUP", null, "Falha ao preparar ambiente de teste.");
+
+  // anon_cannot_read_<table> / anon_cannot_insert_<table>
+  const anonRead = n.match(/^anon_cannot_read_(.+)$/);
+  if (anonRead) return make("SELECT", anonRead[1],
+    `Usuário anônimo NÃO deve conseguir ler "${anonRead[1]}".`);
+  const anonInsert = n.match(/^anon_cannot_insert_(.+)$/);
+  if (anonInsert) return make("INSERT", anonInsert[1],
+    `Usuário anônimo NÃO deve conseguir inserir em "${anonInsert[1]}".`);
+
+  // userB_cannot_(see|update|delete)_userA_<table>
+  const ub = n.match(/^userB_cannot_(see|update|delete)_userA_(.+)$/);
+  if (ub) {
+    const opMap: Record<string, RuleOp> = { see: "SELECT", update: "UPDATE", delete: "DELETE" };
+    const verb = { see: "ler", update: "alterar", delete: "remover" }[ub[1]];
+    return make(opMap[ub[1]], ub[2], `Usuário B NÃO deve ${verb} ${ub[2]} de outro usuário.`);
+  }
+  if (n === "userA_can_see_own_company") {
+    return make("SELECT", "companies", "Usuário A DEVE conseguir ler sua própria empresa.");
+  }
+  if (n === "userB_sees_only_own_profile") {
+    return make("SELECT", "profiles", "Usuário B só pode enxergar o próprio profile.");
+  }
+
+  // orgA_member_cannot_(read|update|delete|insert_into)_orgB(_<table>)?
+  const org = n.match(/^orgA_member_cannot_(read|update|delete)_orgB_(.+)$/);
+  if (org) {
+    const opMap: Record<string, RuleOp> = { read: "SELECT", update: "UPDATE", delete: "DELETE" };
+    const verb = { read: "ler", update: "alterar", delete: "remover" }[org[1]];
+    return make(opMap[org[1]], org[2], `Membro da org A NÃO deve ${verb} ${org[2]} da org B.`);
+  }
+  if (n === "orgA_member_cannot_insert_into_orgB") {
+    return make("INSERT", "companies",
+      "Membro da org A NÃO deve inserir empresa apontando para org B.");
+  }
+  if (n === "orgB_member_cannot_read_orgA_company") {
+    return make("SELECT", "companies", "Membro da org B NÃO deve ler empresa da org A.");
+  }
+
+  return make("SETUP", null, t.name);
+}
+
 /**
  * Painel administrativo: dispara a edge function `rls-tests` que provisiona
  * usuários e organizações temporárias e valida o isolamento RLS multi-tenant.
@@ -38,6 +109,7 @@ export const RLSVerificationPanel = () => {
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<ApiResponse | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [filter, setFilter] = useState<"failed" | "all">("failed");
 
   const loadHistory = useCallback(async () => {
     const { data } = await supabase
