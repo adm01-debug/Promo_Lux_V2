@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.track-click]
 verify_jwt = false
+
+[functions.email-poll-replies]
+verify_jwt = false
