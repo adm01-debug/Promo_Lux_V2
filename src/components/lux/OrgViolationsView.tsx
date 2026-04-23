@@ -180,6 +180,9 @@ export function OrgViolationsView() {
         </Button>
       </div>
 
+      {/* Painel de configuração de alertas + histórico */}
+      <OrgViolationAlertsPanel />
+
       {/* Filtros */}
       <Card>
         <CardHeader className="pb-3">
