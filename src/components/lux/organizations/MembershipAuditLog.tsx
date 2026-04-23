@@ -113,6 +113,26 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground pointer-events-none" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar nome ou ID…"
+              className="h-8 w-[200px] pl-7 pr-7 text-xs"
+              aria-label="Buscar no audit log por nome ou ID do usuário"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-5 w-5 inline-flex items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-secondary/40"
+                aria-label="Limpar busca"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </div>
           <Select value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
             <SelectTrigger className="h-8 w-[170px] text-xs">
               <Filter className="h-3 w-3 mr-1 text-muted-foreground" />
