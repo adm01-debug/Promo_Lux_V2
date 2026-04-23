@@ -242,8 +242,8 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
           {(data?.length ?? 0) > 0
             ? <>Eventos <span className="text-foreground/80 font-medium">{rangeStart}–{rangeEnd}</span>{hasMore || page > 0 ? <> · página {page + 1}</> : null}</>
             : "Sem registros nesta página."}
-          {filter !== "all" && (data?.length ?? 0) > filtered.length && (
-            <> · <span className="text-warning">{filtered.length} após filtro local</span></>
+          {(filter !== "all" || search.trim().length > 0) && (data?.length ?? 0) !== filtered.length && (
+            <> · <span className="text-warning">{filtered.length} após filtro/busca</span></>
           )}
         </p>
         <div className="flex items-center gap-1">
