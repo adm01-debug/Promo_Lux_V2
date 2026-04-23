@@ -68,6 +68,9 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
           old_role: oldRole,
           new_role: newRole,
           is_self_action: !!r.actor_id && !!targetUserId && r.actor_id === targetUserId,
+          old_data: oldData,
+          new_data: newData,
+          raw_action: r.action as "create" | "update" | "delete",
         };
       });
 
