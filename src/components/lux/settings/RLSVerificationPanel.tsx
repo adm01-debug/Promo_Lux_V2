@@ -110,17 +110,21 @@ export const RLSVerificationPanel = () => {
   const [report, setReport] = useState<ApiResponse | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [filter, setFilter] = useState<"failed" | "all">("failed");
+  const [historyStatus, setHistoryStatus] = useState<"all" | "pass" | "fail">("all");
+  const [historyPeriod, setHistoryPeriod] = useState<"24h" | "7d" | "30d">("7d");
 
   const loadHistory = useCallback(async () => {
+    const hours = historyPeriod === "24h" ? 24 : historyPeriod === "7d" ? 24 * 7 : 24 * 30;
+    const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
     const { data } = await supabase
       .from("audit_logs")
       .select("id, created_at, new_data")
       .eq("table_name", "__rls_verification")
+      .gte("created_at", since)
       .order("created_at", { ascending: false })
-      .limit(10);
+      .limit(50);
     if (!data) return;
-    setHistory(
-      data.map((row) => {
+    const mapped = data.map((row) => {
         const d = (row.new_data ?? {}) as Record<string, unknown>;
         return {
           id: row.id,
@@ -131,9 +135,16 @@ export const RLSVerificationPanel = () => {
           failed: Number(d.failed ?? 0),
           duration_ms: Number(d.duration_ms ?? 0),
         };
-      }),
+      });
+    const filtered = mapped.filter((h) =>
+      historyStatus === "all"
+        ? true
+        : historyStatus === "pass"
+          ? h.all_passed
+          : !h.all_passed,
     );
-  }, []);
+    setHistory(filtered);
+  }, [historyPeriod, historyStatus]);
 
   useEffect(() => {
     void loadHistory();
@@ -296,12 +307,52 @@ export const RLSVerificationPanel = () => {
         </div>
       )}
 
-      {history.length > 0 && (
-        <div className="space-y-2 pt-2 border-t border-border/40">
-          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-            <History className="h-3.5 w-3.5" />
-            Histórico recente ({history.length})
+      <div className="space-y-2 pt-2 border-t border-border/40">
+        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground flex-wrap">
+          <History className="h-3.5 w-3.5" />
+          <span>Histórico ({history.length})</span>
+          <div className="ml-auto flex items-center gap-1 rounded-md border border-border/50 bg-background/40 p-0.5">
+            {(["all", "pass", "fail"] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setHistoryStatus(s)}
+                className={`text-[11px] px-2 py-0.5 rounded ${
+                  historyStatus === s
+                    ? s === "fail"
+                      ? "bg-destructive/20 text-destructive"
+                      : s === "pass"
+                        ? "bg-success/20 text-success"
+                        : "bg-primary/20 text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {s === "all" ? "Todos" : s === "pass" ? "Pass" : "Fail"}
+              </button>
+            ))}
           </div>
+          <div className="flex items-center gap-1 rounded-md border border-border/50 bg-background/40 p-0.5">
+            {(["24h", "7d", "30d"] as const).map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setHistoryPeriod(p)}
+                className={`text-[11px] px-2 py-0.5 rounded ${
+                  historyPeriod === p
+                    ? "bg-primary/20 text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+        {history.length === 0 ? (
+          <p className="text-xs text-muted-foreground px-3 py-4 text-center">
+            Nenhuma execução encontrada para os filtros selecionados.
+          </p>
+        ) : (
           <ul className="space-y-1">
             {history.map((h) => (
               <li
@@ -324,8 +375,8 @@ export const RLSVerificationPanel = () => {
               </li>
             ))}
           </ul>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
