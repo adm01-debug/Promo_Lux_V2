@@ -173,6 +173,79 @@ export type Database = {
           },
         ]
       }
+      campaign_messages: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          email_account_id: string | null
+          id: string
+          organization_id: string
+          provider: string | null
+          provider_message_id: string | null
+          recipient_id: string
+          rfc822_message_id: string | null
+          sent_at: string
+          step_index: number
+          subject: string | null
+          thread_id: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          email_account_id?: string | null
+          id?: string
+          organization_id?: string
+          provider?: string | null
+          provider_message_id?: string | null
+          recipient_id: string
+          rfc822_message_id?: string | null
+          sent_at?: string
+          step_index?: number
+          subject?: string | null
+          thread_id?: string | null
+          user_id?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          email_account_id?: string | null
+          id?: string
+          organization_id?: string
+          provider?: string | null
+          provider_message_id?: string | null
+          recipient_id?: string
+          rfc822_message_id?: string | null
+          sent_at?: string
+          step_index?: number
+          subject?: string | null
+          thread_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_messages_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_messages_email_account_id_fkey"
+            columns: ["email_account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_messages_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_recipients: {
         Row: {
           bounced_at: string | null
@@ -263,6 +336,95 @@ export type Database = {
             columns: ["stakeholder_id"]
             isOneToOne: false
             referencedRelation: "stakeholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_replies: {
+        Row: {
+          body_text: string | null
+          campaign_id: string
+          created_at: string
+          email_account_id: string | null
+          from_email: string | null
+          from_name: string | null
+          id: string
+          in_reply_to: string | null
+          message_id: string | null
+          organization_id: string
+          provider: string
+          provider_message_id: string
+          received_at: string
+          recipient_id: string
+          snippet: string | null
+          subject: string | null
+          thread_id: string | null
+        }
+        Insert: {
+          body_text?: string | null
+          campaign_id: string
+          created_at?: string
+          email_account_id?: string | null
+          from_email?: string | null
+          from_name?: string | null
+          id?: string
+          in_reply_to?: string | null
+          message_id?: string | null
+          organization_id: string
+          provider: string
+          provider_message_id: string
+          received_at: string
+          recipient_id: string
+          snippet?: string | null
+          subject?: string | null
+          thread_id?: string | null
+        }
+        Update: {
+          body_text?: string | null
+          campaign_id?: string
+          created_at?: string
+          email_account_id?: string | null
+          from_email?: string | null
+          from_name?: string | null
+          id?: string
+          in_reply_to?: string | null
+          message_id?: string | null
+          organization_id?: string
+          provider?: string
+          provider_message_id?: string
+          received_at?: string
+          recipient_id?: string
+          snippet?: string | null
+          subject?: string | null
+          thread_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_replies_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_replies_email_account_id_fkey"
+            columns: ["email_account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_replies_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_replies_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_recipients"
             referencedColumns: ["id"]
           },
         ]
@@ -610,6 +772,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_accounts: {
+        Row: {
+          access_token: string | null
+          active: boolean
+          created_at: string
+          delta_link: string | null
+          display_name: string | null
+          email: string
+          expires_at: string | null
+          history_id: string | null
+          id: string
+          last_error: string | null
+          last_polled_at: string | null
+          organization_id: string
+          provider: string
+          refresh_token: string | null
+          scope: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          active?: boolean
+          created_at?: string
+          delta_link?: string | null
+          display_name?: string | null
+          email: string
+          expires_at?: string | null
+          history_id?: string | null
+          id?: string
+          last_error?: string | null
+          last_polled_at?: string | null
+          organization_id?: string
+          provider: string
+          refresh_token?: string | null
+          scope?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          access_token?: string | null
+          active?: boolean
+          created_at?: string
+          delta_link?: string | null
+          display_name?: string | null
+          email?: string
+          expires_at?: string | null
+          history_id?: string | null
+          id?: string
+          last_error?: string | null
+          last_polled_at?: string | null
+          organization_id?: string
+          provider?: string
+          refresh_token?: string | null
+          scope?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       intent_signals: {
         Row: {
@@ -1283,6 +1505,22 @@ export type Database = {
           _recipient_id: string
           _ua: string
           _url: string
+        }
+        Returns: string
+      }
+      record_campaign_reply: {
+        Args: {
+          _body: string
+          _email_account_id: string
+          _from_email: string
+          _from_name: string
+          _in_reply_to: string
+          _provider: string
+          _provider_message_id: string
+          _received_at: string
+          _snippet: string
+          _subject: string
+          _thread_id: string
         }
         Returns: string
       }
