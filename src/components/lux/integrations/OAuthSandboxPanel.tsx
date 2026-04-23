@@ -15,6 +15,8 @@ import { RedirectUriChecklist } from "./RedirectUriChecklist";
 import { AuthUrlConfirmDialog } from "./AuthUrlConfirmDialog";
 import { DryRunLogsPanel } from "./DryRunLogsPanel";
 import { useDryRunLogs } from "@/hooks/useDryRunLogs";
+import { EnvProfilesPanel } from "./EnvProfilesPanel";
+import { useEnvProfiles } from "@/hooks/useEnvProfiles";
 
 type Provider = "gmail" | "outlook";
 type ScopeType = "user" | "organization";
@@ -41,10 +43,12 @@ interface DryRunResult {
 export function OAuthSandboxPanel() {
   const { isAdmin } = usePermissions();
   const { append: appendLog } = useDryRunLogs();
+  const { activeProfile } = useEnvProfiles();
   const [provider, setProvider] = useState<Provider>("gmail");
   const [scopeType, setScopeType] = useState<ScopeType>("user");
   const [redirectUri, setRedirectUri] = useState(
-    typeof window !== "undefined" ? `${window.location.origin}/integrations` : "",
+    activeProfile?.redirect_uri ??
+      (typeof window !== "undefined" ? `${window.location.origin}/integrations` : ""),
   );
   const [result, setResult] = useState<DryRunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -118,6 +122,16 @@ export function OAuthSandboxPanel() {
 
   return (
     <div className="space-y-4">
+      <EnvProfilesPanel
+        currentUri={redirectUri}
+        onApply={(uri) => {
+          setRedirectUri(uri);
+          setResult(null);
+          setError(null);
+          // Dispara validação automática para feedback rápido por perfil
+          setTimeout(() => dryRun.mutate(), 0);
+        }}
+      />
       <div className="glass rounded-lg p-4 space-y-3">
         <div className="flex items-center gap-2">
           <FlaskConical className="h-4 w-4 text-primary" />
