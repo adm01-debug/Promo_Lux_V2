@@ -25,6 +25,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   deals: WorkflowsSkeleton,
   integrations: SettingsSkeleton,
   "org-violations": SettingsSkeleton,
+  "rls-discovery": SettingsSkeleton,
 };
 
 /** Render a view-specific skeleton with accessibility. Falls back to DashboardSkeleton. */
