@@ -46,10 +46,38 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
+  // ── Helper: persiste motivo de bloqueio em audit_logs (best-effort) ──
+  async function recordDenial(
+    reason: "missing_bearer" | "invalid_jwt" | "admin_role_required",
+    extra: Record<string, unknown> = {},
+  ) {
+    try {
+      const denialAdmin = createClient(supabaseUrl, serviceKey);
+      await denialAdmin.from("audit_logs").insert({
+        action: "create",
+        table_name: "__rls_verification_denied",
+        record_id: crypto.randomUUID(),
+        actor_id: (extra.caller as string) ?? null,
+        organization_id: null,
+        new_data: {
+          reason,
+          request_id: requestId,
+          ip: req.headers.get("x-forwarded-for") ?? null,
+          user_agent: req.headers.get("user-agent") ?? null,
+          executed_at: new Date().toISOString(),
+          ...extra,
+        },
+      });
+    } catch (e) {
+      log.error("rls_test_denial_audit_failed", { reason, error: (e as Error).message });
+    }
+  }
+
   // ── Auth guard: precisa de JWT válido E papel admin em alguma org ──
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     log.error("rls_test_unauthorized", { reason: "missing_bearer" });
+    await recordDenial("missing_bearer");
     return new Response(
       JSON.stringify({ error: "Unauthorized", reason: "missing_bearer_token" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
@@ -63,6 +91,7 @@ Deno.serve(async (req) => {
   const { data: claimsData, error: claimsErr } = await authClient.auth.getClaims(token);
   if (claimsErr || !claimsData?.claims?.sub) {
     log.error("rls_test_unauthorized", { reason: "invalid_jwt", err: claimsErr?.message });
+    await recordDenial("invalid_jwt", { jwt_error: claimsErr?.message ?? null });
     return new Response(
       JSON.stringify({ error: "Unauthorized", reason: "invalid_jwt" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
@@ -78,7 +107,8 @@ Deno.serve(async (req) => {
     .eq("role", "admin")
     .limit(1);
   if (!adminRows || adminRows.length === 0) {
-    log.error("rls_test_forbidden", { caller: callerId });
+    log.error("rls_test_forbidden", { caller: callerId, reason: "admin_role_required" });
+    await recordDenial("admin_role_required", { caller: callerId });
     return new Response(
       JSON.stringify({ error: "Forbidden", reason: "admin_role_required" }),
       { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
