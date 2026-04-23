@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { prefetchView } from "@/lib/viewRegistry";
 import { useSearchParams } from "react-router-dom";
 
-export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations";
+export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations" | "rls-discovery";
 
 export type NavigationDirection = "forward" | "back";
 
@@ -24,6 +24,7 @@ const VIEW_LABELS: Record<View, string> = {
   deals: "Pipeline",
   integrations: "Integrações",
   "org-violations": "Violações de Organização",
+  "rls-discovery": "RLS Discovery",
 };
 
 const VIEW_SECTIONS: Record<View, string> = {
@@ -44,9 +45,10 @@ const VIEW_SECTIONS: Record<View, string> = {
   deals: "Vendas",
   integrations: "Sistema",
   "org-violations": "Sistema",
+  "rls-discovery": "Sistema",
 };
 
-const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations"];
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery"];
 
 // Shortcut views moved to useKeyboardShortcuts
 
