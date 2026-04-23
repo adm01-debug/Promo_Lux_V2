@@ -523,8 +523,20 @@ export const OrganizationsView = () => {
                                   </p>
                                   {used ? (
                                     <p>
-                                      Aceito por <span className="text-success">{acceptedName ?? "—"}</span> em{" "}
-                                      <span className="text-foreground/80">{fmt(inv.accepted_at)}</span>
+                                      Aceito por{" "}
+                                      {inv.accepted_by ? (
+                                        <button
+                                          type="button"
+                                          onClick={() => focusMemberByUserId(inv.accepted_by)}
+                                          className="text-success underline-offset-2 hover:underline focus:underline focus:outline-none"
+                                          title="Ver membro no workspace"
+                                        >
+                                          {acceptedName ?? "—"}
+                                        </button>
+                                      ) : (
+                                        <span className="text-success">—</span>
+                                      )}
+                                      {" "}em <span className="text-foreground/80">{fmt(inv.accepted_at)}</span>
                                     </p>
                                   ) : inv.revoked ? (
                                     <p>Revogado · expiraria em {fmt(inv.expires_at)}</p>
