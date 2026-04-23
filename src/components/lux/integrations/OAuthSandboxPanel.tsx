@@ -13,6 +13,8 @@ import { OAuthSnapshotsPanel } from "./OAuthSnapshotsPanel";
 import type { SaveSnapshotInput } from "@/hooks/useOAuthSandboxSnapshots";
 import { RedirectUriChecklist } from "./RedirectUriChecklist";
 import { AuthUrlConfirmDialog } from "./AuthUrlConfirmDialog";
+import { DryRunLogsPanel } from "./DryRunLogsPanel";
+import { useDryRunLogs } from "@/hooks/useDryRunLogs";
 
 type Provider = "gmail" | "outlook";
 type ScopeType = "user" | "organization";
@@ -38,6 +40,7 @@ interface DryRunResult {
  */
 export function OAuthSandboxPanel() {
   const { isAdmin } = usePermissions();
+  const { append: appendLog } = useDryRunLogs();
   const [provider, setProvider] = useState<Provider>("gmail");
   const [scopeType, setScopeType] = useState<ScopeType>("user");
   const [redirectUri, setRedirectUri] = useState(
@@ -59,10 +62,30 @@ export function OAuthSandboxPanel() {
     },
     onSuccess: (d) => {
       setResult(d);
+      appendLog({
+        provider: d.provider,
+        scope_type: d.scope_type,
+        redirect_uri: d.redirect_uri_normalized,
+        scopes: d.scopes,
+        client_id_configured: d.client_id_configured,
+        client_secret_configured: d.client_secret_configured,
+        warnings: d.warnings,
+        error: null,
+      });
       toast({ title: "Validação concluída", description: `Configuração ${d.warnings.length === 0 ? "OK" : "com avisos"}.` });
     },
     onError: (e: Error) => {
       setError(e.message);
+      appendLog({
+        provider,
+        scope_type: scopeType,
+        redirect_uri: redirectUri,
+        scopes: [],
+        client_id_configured: false,
+        client_secret_configured: false,
+        warnings: [],
+        error: e.message,
+      });
       toast({ title: "Validação falhou", description: e.message, variant: "destructive" });
     },
   });
@@ -100,6 +123,9 @@ export function OAuthSandboxPanel() {
           <FlaskConical className="h-4 w-4 text-primary" />
           <h3 className="text-sm font-semibold">Sandbox OAuth</h3>
           <Badge variant="outline" className="text-[10px]">dry-run</Badge>
+          <div className="ml-auto">
+            <DryRunLogsPanel />
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">
           Valide redirect URI, scopes solicitados e permissões da sua conta sem iniciar o fluxo real do provedor.
