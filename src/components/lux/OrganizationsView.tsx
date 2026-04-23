@@ -53,6 +53,8 @@ export const OrganizationsView = () => {
   const [removeTarget, setRemoveTarget] = useState<{ id: string; label: string; isMe: boolean } | null>(null);
   const [memberFilter, setMemberFilter] = useState<"all" | "active">("all");
   const [inviteFilter, setInviteFilter] = useState<"all" | "pending" | "accepted" | "revoked" | "expired">("all");
+  const [revokeTarget, setRevokeTarget] = useState<{ id: string; role: AppRole; token: string } | null>(null);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
 
   type ActivityEntry = {
     id: string;
