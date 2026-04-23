@@ -22,6 +22,55 @@ export function registerQueryClient(qc: QueryClient) {
   qcRef = qc;
 }
 
+/* ---------- Pub/sub para banners inline globais ---------- */
+
+export interface OrgErrorBannerState {
+  kind: "missing" | "mismatch";
+  title: string;
+  description: string;
+  table?: string;
+  op?: string;
+  expected?: string | null;
+  got?: string | null;
+  occurredAt: string;
+}
+
+type Listener = (state: OrgErrorBannerState | null) => void;
+const listeners = new Set<Listener>();
+let currentBanner: OrgErrorBannerState | null = null;
+
+export function subscribeOrgErrorBanner(fn: Listener): () => void {
+  listeners.add(fn);
+  // Empurra o estado atual imediatamente para novos assinantes.
+  fn(currentBanner);
+  return () => listeners.delete(fn);
+}
+
+function emit(state: OrgErrorBannerState | null) {
+  currentBanner = state;
+  listeners.forEach((l) => {
+    try {
+      l(state);
+    } catch {
+      /* listener defensivo */
+    }
+  });
+}
+
+export function clearOrgErrorBanner() {
+  emit(null);
+}
+
+/** Permite reuso da ação "recarregar dados" pelo banner inline. */
+export function reloadAfterOrgError() {
+  if (!qcRef) {
+    if (typeof window !== "undefined") window.location.reload();
+    return;
+  }
+  qcRef.invalidateQueries();
+  emit(null);
+}
+
 let lastToastAt = 0;
 const THROTTLE_MS = 1500;
 
@@ -90,6 +139,31 @@ export function handleOrgError(err: unknown): boolean {
   // Auditoria estruturada — antes do throttle do toast, para que bursts
   // continuem registrados (com throttle próprio mais curto).
   recordOrgViolation(err);
+
+  // Empurra estado para o banner inline (sem throttle — o componente
+  // decide como renderizar e desduplicar visualmente).
+  if (err instanceof MissingOrgContextError) {
+    emit({
+      kind: "missing",
+      title: "Nenhuma organização ativa",
+      description:
+        "Selecione uma organização no seletor antes de criar, editar ou remover registros.",
+      table: err.table,
+      op: err.op,
+      occurredAt: new Date().toISOString(),
+    });
+  } else {
+    emit({
+      kind: "mismatch",
+      title: "Operação bloqueada por segurança",
+      description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+      table: err.table,
+      op: err.op,
+      expected: err.expected ?? null,
+      got: String((err as OrgMismatchError).got ?? ""),
+      occurredAt: new Date().toISOString(),
+    });
+  }
 
   // Throttle simples — várias queries falhando juntas não geram spam.
   const now = Date.now();
