@@ -8,10 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { usePermissions } from "@/hooks/usePermissions";
-import { AlertCircle, CheckCircle2, FlaskConical, Loader2, ShieldCheck, Copy, ExternalLink, KeyRound } from "lucide-react";
+import { AlertCircle, CheckCircle2, FlaskConical, Loader2, ShieldCheck, Copy, ExternalLink, KeyRound, Sparkles } from "lucide-react";
 import { OAuthSnapshotsPanel } from "./OAuthSnapshotsPanel";
 import type { SaveSnapshotInput } from "@/hooks/useOAuthSandboxSnapshots";
 import { RedirectUriChecklist } from "./RedirectUriChecklist";
+import { AuthUrlConfirmDialog } from "./AuthUrlConfirmDialog";
 
 type Provider = "gmail" | "outlook";
 type ScopeType = "user" | "organization";
@@ -44,6 +45,7 @@ export function OAuthSandboxPanel() {
   );
   const [result, setResult] = useState<DryRunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const dryRun = useMutation({
     mutationFn: async () => {
@@ -242,6 +244,14 @@ export function OAuthSandboxPanel() {
           <div className="flex items-center justify-between pt-2 border-t border-border/40">
             <p className="text-[11px] text-muted-foreground">Pré-visualização da auth URL (não navega)</p>
             <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 text-[11px]"
+                onClick={() => setConfirmOpen(true)}
+              >
+                <Sparkles className="h-3 w-3" /> Gerar nonce & confirmar
+              </Button>
               <Button size="sm" variant="ghost" className="h-7 gap-1 text-[11px]" onClick={() => copy(result.auth_url_preview, "Auth URL")}>
                 <Copy className="h-3 w-3" /> Copiar URL
               </Button>
@@ -256,6 +266,17 @@ export function OAuthSandboxPanel() {
       )}
 
       <OAuthSnapshotsPanel pending={pendingSnapshot} />
+
+      {result && (
+        <AuthUrlConfirmDialog
+          open={confirmOpen}
+          onOpenChange={setConfirmOpen}
+          baseAuthUrl={result.auth_url_preview}
+          provider={result.provider}
+          scopeType={result.scope_type}
+          redirectUri={result.redirect_uri_normalized}
+        />
+      )}
     </div>
   );
 }
