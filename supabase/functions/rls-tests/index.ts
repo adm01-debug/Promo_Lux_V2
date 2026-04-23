@@ -45,6 +45,45 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
+  // ── Auth guard: precisa de JWT válido E papel admin em alguma org ──
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    log.error("rls_test_unauthorized", { reason: "missing_bearer" });
+    return new Response(
+      JSON.stringify({ error: "Unauthorized", reason: "missing_bearer_token" }),
+      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
+
+  const authClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: authHeader } },
+  });
+  const token = authHeader.replace("Bearer ", "");
+  const { data: claimsData, error: claimsErr } = await authClient.auth.getClaims(token);
+  if (claimsErr || !claimsData?.claims?.sub) {
+    log.error("rls_test_unauthorized", { reason: "invalid_jwt", err: claimsErr?.message });
+    return new Response(
+      JSON.stringify({ error: "Unauthorized", reason: "invalid_jwt" }),
+      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
+
+  const callerId = claimsData.claims.sub as string;
+  const adminClient = createClient(supabaseUrl, serviceKey);
+  const { data: adminRows } = await adminClient
+    .from("organization_members")
+    .select("id")
+    .eq("user_id", callerId)
+    .eq("role", "admin")
+    .limit(1);
+  if (!adminRows || adminRows.length === 0) {
+    log.error("rls_test_forbidden", { caller: callerId });
+    return new Response(
+      JSON.stringify({ error: "Forbidden", reason: "admin_role_required" }),
+      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
+
   const admin = createClient(supabaseUrl, serviceKey);
   const anon = createClient(supabaseUrl, anonKey);
 
