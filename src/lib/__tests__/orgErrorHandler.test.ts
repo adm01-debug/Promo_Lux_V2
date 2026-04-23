@@ -48,7 +48,8 @@ describe("handleOrgError → toast", () => {
     expect(toastError).toHaveBeenCalledTimes(1);
     const [title, opts] = toastError.mock.calls[0] as [string, { description: string }];
     expect(title).toMatch(/Criação bloqueada/i);
-    expect(opts.description).toMatch(/criar.*companies/i);
+    // entidade amigável: companies → empresa
+    expect(opts.description).toMatch(/criar.*empresa/i);
   });
 
   it("dispara toast específico para UPDATE sem org", () => {
@@ -57,7 +58,7 @@ describe("handleOrgError → toast", () => {
     expect(handleOrgError(err)).toBe(true);
     const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
     expect(title).toMatch(/Edição bloqueada/i);
-    expect(opts.description).toMatch(/atualizar.*deals/i);
+    expect(opts.description).toMatch(/atualizar.*neg[óo]cio/i);
   });
 
   it("dispara toast específico para DELETE sem org", () => {
@@ -66,7 +67,7 @@ describe("handleOrgError → toast", () => {
     expect(handleOrgError(err)).toBe(true);
     const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
     expect(title).toMatch(/Exclusão bloqueada/i);
-    expect(opts.description).toMatch(/remover.*webhooks/i);
+    expect(opts.description).toMatch(/remover.*webhook/i);
   });
 
   it("dispara toast com tabela quando recebe OrgMismatchError", () => {
@@ -78,7 +79,7 @@ describe("handleOrgError → toast", () => {
     expect(toastError).toHaveBeenCalledTimes(1);
     const [title, opts] = toastError.mock.calls[0] as [string, { description: string }];
     expect(title).toMatch(/Edição bloqueada — organização divergente/i);
-    expect(opts.description).toMatch(/companies/);
+    expect(opts.description).toMatch(/empresa/i);
   });
 
   it("dispara toast específico para OrgMismatchError em INSERT", () => {
@@ -87,7 +88,7 @@ describe("handleOrgError → toast", () => {
     handleOrgError(err);
     const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
     expect(title).toMatch(/Criação bloqueada — organização divergente/i);
-    expect(opts.description).toMatch(/criar.*companies/i);
+    expect(opts.description).toMatch(/criar.*empresa/i);
   });
 
   it("dispara toast específico para OrgMismatchError em DELETE", () => {
@@ -96,7 +97,7 @@ describe("handleOrgError → toast", () => {
     handleOrgError(err);
     const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
     expect(title).toMatch(/Exclusão bloqueada — organização divergente/i);
-    expect(opts.description).toMatch(/remover.*webhooks/i);
+    expect(opts.description).toMatch(/remover.*webhook/i);
   });
 
   it("dispara toast específico para OrgMismatchError em UPSERT", () => {
@@ -105,7 +106,7 @@ describe("handleOrgError → toast", () => {
     handleOrgError(err);
     const [title, opts] = toastError.mock.calls.at(-1) as [string, { description: string }];
     expect(title).toMatch(/Gravação bloqueada — organização divergente/i);
-    expect(opts.description).toMatch(/inserir\/atualizar.*deals/i);
+    expect(opts.description).toMatch(/inserir\/atualizar.*neg[óo]cio/i);
   });
 
   it("ação 'Ir para a lista' aparece quando a tabela tem view mapeada (companies)", () => {
@@ -125,7 +126,9 @@ describe("handleOrgError → toast", () => {
       string,
       { action: { label: string } },
     ];
-    expect(opts.action.label).toMatch(/Recarregar/i);
+    // novo CTA padrão quando não há view mapeada nem operação registrada:
+    // "Selecionar organização" (leva direto ao seletor de workspace).
+    expect(opts.action.label).toMatch(/Selecionar organiza/i);
   });
 
   it("viewForTable mapeia tabelas conhecidas e retorna null para desconhecidas", () => {
