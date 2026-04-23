@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.email-poll-replies]
 verify_jwt = false
+
+[functions.org-violation-alerts]
+verify_jwt = false

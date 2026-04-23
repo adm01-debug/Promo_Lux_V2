@@ -35,6 +35,7 @@ export const WEBHOOK_EVENTS = [
   "companies.insert", "companies.update", "companies.delete",
   "deals.insert", "deals.update", "deals.delete",
   "stakeholders.insert", "stakeholders.update", "stakeholders.delete",
+  "security.org_violation_threshold",
 ] as const;
 
 export function useWebhooks() {
