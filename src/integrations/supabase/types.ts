@@ -1816,6 +1816,17 @@ export type Database = {
           table_name: string
         }[]
       }
+      pg_columns_for_insert: {
+        Args: { _table_name: string }
+        Returns: {
+          column_default: string
+          column_name: string
+          data_type: string
+          has_default: boolean
+          is_nullable: boolean
+          udt_name: string
+        }[]
+      }
       record_campaign_event: {
         Args: {
           _event_type: string
