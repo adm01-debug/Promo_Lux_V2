@@ -436,6 +436,20 @@ export const RLSVerificationPanel = () => {
           </DialogHeader>
 
           {selected && (
+            <div className="flex items-center gap-1.5">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px] gap-1"
+                onClick={() => exportHistoryEntryPDF(selected)}
+              >
+                <FileText className="h-3 w-3" /> Exportar PDF
+              </Button>
+            </div>
+          )}
+
+          {selected && (
             <ScrollArea className="flex-1 -mx-2 px-2">
               <div className="space-y-4">
                 {selected.failed_results.length > 0 && (
