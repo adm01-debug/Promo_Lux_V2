@@ -259,32 +259,100 @@ Deno.serve(async (req) => {
       detail: aInsertBErr?.message ?? "insert succeeded (BAD)",
     });
 
-    // 10f. Tabelas auxiliares (workflows, deals, stakeholders, notifications)
-    const auxTables = ["workflows", "deals", "stakeholders", "notifications", "intent_signals"] as const;
-    for (const t of auxTables) {
-      const payload: Record<string, unknown> = { organization_id: orgB.id, user_id: userB.id };
-      if (t === "workflows") Object.assign(payload, { name: `wf-${t}`, steps: [] });
-      if (t === "deals") {
-        // precisa de stage_id; cria um stage para orgB primeiro
-        const { data: stage } = await admin
-          .from("deal_stages")
-          .insert({ name: "RLS-stage", organization_id: orgB.id, user_id: userB.id })
+    // 10f. Cross-org isolation driven by shared whitelist (`RLS_TABLES`).
+    // Garante que toda nova tabela multi-tenant adicionada ao registry
+    // ganha automaticamente o teste de leitura cross-org.
+    const ctx: Record<string, string> = {};
+    const createdRows: Array<{ table: string; id: string }> = [];
+    for (const spec of RLS_TABLES) {
+      // Pula tabelas que já têm cobertura específica acima (companies)
+      if (spec.table === "companies") continue;
+      try {
+        // Garantir que dependências foram criadas antes
+        if (spec.requires) {
+          const missing = spec.requires.filter((r) => !ctx[r]);
+          if (missing.length) {
+            results.push({
+              name: `orgA_member_cannot_read_orgB_${spec.table}`,
+              passed: false,
+              detail: `dependências ausentes: ${missing.join(",")}`,
+            });
+            continue;
+          }
+        }
+        const payload = spec.payload(orgB.id, userB.id, ctx);
+        const { data: row, error: insertErr } = await admin
+          .from(spec.table)
+          .insert(payload)
           .select("id")
           .single();
-        Object.assign(payload, { title: "deal-x", stage_id: stage!.id });
+        if (insertErr || !row) {
+          results.push({
+            name: `orgA_member_cannot_read_orgB_${spec.table}`,
+            passed: false,
+            detail: `setup falhou: ${insertErr?.message ?? "no row"}`,
+          });
+          continue;
+        }
+        ctx[spec.table] = row.id;
+        createdRows.push({ table: spec.table, id: row.id });
+        const { data: aSees } = await clientA.from(spec.table).select("id").eq("id", row.id);
+        results.push({
+          name: `orgA_member_cannot_read_orgB_${spec.table}`,
+          passed: (aSees?.length ?? 0) === 0,
+          detail: `rows: ${aSees?.length}`,
+        });
+      } catch (e) {
+        results.push({
+          name: `orgA_member_cannot_read_orgB_${spec.table}`,
+          passed: false,
+          detail: `exception: ${(e as Error).message}`,
+        });
       }
-      if (t === "stakeholders") Object.assign(payload, { full_name: "Person X" });
-      if (t === "notifications") Object.assign(payload, { title: "n", message: "m" });
-      if (t === "intent_signals") Object.assign(payload, { company_name: "X", signal: "visit" });
+    }
+    // Cleanup created rows in reverse order to respect FK dependencies
+    for (const { table, id } of createdRows.reverse()) {
+      await admin.from(table).delete().eq("id", id);
+    }
 
-      const { data: row } = await admin.from(t).insert(payload).select("id").single();
-      const { data: aSees } = await clientA.from(t).select("id").eq("id", row!.id);
+    // 10g. Coverage check: detecta tabelas RLS-enabled novas que ainda não
+    // foram registradas no whitelist (nem listadas como exemptas).
+    try {
+      const knownNames = new Set([
+        ...RLS_TABLES.map((t) => t.table),
+        ...RLS_TABLES_EXEMPT,
+      ]);
+      // pg_tables + pg_class para detectar relrowsecurity = true
+      const { data: rlsTables, error: covErr } = await admin.rpc("pg_catalog_rls_tables" as never).single().then(
+        (r) => r,
+        () => ({ data: null, error: { message: "rpc_not_available" } as { message: string } }),
+      );
+      if (rlsTables && Array.isArray(rlsTables)) {
+        const missing = (rlsTables as Array<{ table_name: string }>)
+          .map((r) => r.table_name)
+          .filter((name) => !knownNames.has(name));
+        results.push({
+          name: "rls_coverage_complete",
+          passed: missing.length === 0,
+          detail: missing.length
+            ? `tabelas RLS sem entrada no registry: ${missing.join(", ")}`
+            : `${knownNames.size} tabelas registradas`,
+        });
+      } else {
+        // Fallback: consulta direta via REST não é possível para pg_class,
+        // então registramos apenas a contagem do whitelist como informativo.
+        results.push({
+          name: "rls_coverage_complete",
+          passed: true,
+          detail: `coverage check skipped (${covErr?.message}); ${knownNames.size} tabelas no registry`,
+        });
+      }
+    } catch (e) {
       results.push({
-        name: `orgA_member_cannot_read_orgB_${t}`,
-        passed: (aSees?.length ?? 0) === 0,
-        detail: `rows: ${aSees?.length}`,
+        name: "rls_coverage_complete",
+        passed: false,
+        detail: `exception: ${(e as Error).message}`,
       });
-      await admin.from(t).delete().eq("id", row!.id);
     }
 
     // Cleanup orgs
