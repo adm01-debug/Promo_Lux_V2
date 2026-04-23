@@ -62,6 +62,7 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
   const PAGE_SIZE = 50;
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<"all" | MembershipAuditAction>("all");
+  const [search, setSearch] = useState("");
   const { data: pageData, isLoading, error, refetch, isFetching, isPlaceholderData } =
     useMembershipAuditLogPaged(orgId, page, PAGE_SIZE);
   const data = pageData?.entries;
@@ -72,9 +73,21 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
 
   const filtered = useMemo(() => {
     if (!data) return [];
-    if (filter === "all") return data;
-    return data.filter(e => e.action === filter);
-  }, [data, filter]);
+    let out = filter === "all" ? data : data.filter(e => e.action === filter);
+    const q = search.trim().toLowerCase();
+    if (q.length > 0) {
+      out = out.filter(e => {
+        const haystack = [
+          e.actor_profile?.full_name ?? "",
+          e.target_profile?.full_name ?? "",
+          e.actor_id ?? "",
+          e.target_user_id ?? "",
+        ].join(" ").toLowerCase();
+        return haystack.includes(q);
+      });
+    }
+    return out;
+  }, [data, filter, search]);
 
   const counts = useMemo(() => {
     const base = { all: data?.length ?? 0, added: 0, removed: 0, left: 0, role_changed: 0, other: 0 };
