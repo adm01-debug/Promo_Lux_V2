@@ -11,6 +11,7 @@ import { DemoProvider, useDemo } from "@/contexts/DemoContext";
 import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
 import { ErrorBoundary } from "@/components/lux/ErrorBoundary";
 import { PageTransition } from "@/components/lux/PageTransition";
+import { OrgErrorBanner } from "@/components/lux/OrgErrorBanner";
 import { useEffect } from "react";
 import {
   registerQueryClient,
@@ -112,6 +113,7 @@ const App = () => (
           <AuthProvider>
             <DemoProvider>
               <GlobalOrgErrorListener />
+              <OrgErrorBanner />
               <Toaster />
               <Sonner />
               <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
