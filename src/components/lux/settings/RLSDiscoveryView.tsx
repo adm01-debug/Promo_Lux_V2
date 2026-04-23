@@ -112,6 +112,38 @@ export const RLSDiscoveryView = () => {
   const [dbTables, setDbTables] = useState<string[]>([]);
   const [filter, setFilter] = useState<"all" | Bucket>("all");
   const [search, setSearch] = useState("");
+  const [genTable, setGenTable] = useState<string | null>(null);
+  const [genLoading, setGenLoading] = useState(false);
+  const [genColumns, setGenColumns] = useState<ColumnInfo[]>([]);
+  const [genError, setGenError] = useState<string | null>(null);
+
+  const openGenerator = async (table: string) => {
+    setGenTable(table);
+    setGenLoading(true);
+    setGenError(null);
+    setGenColumns([]);
+    const { data, error: err } = await supabase.rpc("pg_columns_for_insert", { _table_name: table });
+    if (err) {
+      setGenError(err.message);
+    } else {
+      setGenColumns((data ?? []) as ColumnInfo[]);
+    }
+    setGenLoading(false);
+  };
+
+  const generatedSnippet = useMemo(() => {
+    if (!genTable) return "";
+    return buildPayloadFromColumns(genTable, genColumns);
+  }, [genTable, genColumns]);
+
+  const copyGenerated = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedSnippet);
+      toast({ title: "Payload copiado", description: `Cole em RLS_TABLES para ${genTable}` });
+    } catch {
+      toast({ variant: "destructive", title: "Falha ao copiar" });
+    }
+  };
 
   const load = async () => {
     setLoading(true);
