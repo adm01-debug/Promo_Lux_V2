@@ -317,8 +317,8 @@ export function OrgViolationsView() {
                     <TableHead>Tabela</TableHead>
                     <TableHead>Operação</TableHead>
                     <TableHead>Esperado / Recebido</TableHead>
-                    <TableHead>Correlation</TableHead>
                     <TableHead className="hidden lg:table-cell">URL</TableHead>
+                    <TableHead>Correlation</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
