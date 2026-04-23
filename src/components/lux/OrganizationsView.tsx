@@ -564,7 +564,41 @@ export const OrganizationsView = () => {
                                   )}
                                 </div>
                                 <div className="mt-1 space-y-0.5 text-[10px] text-muted-foreground">
-                                  <p className="font-mono truncate">{inv.token.slice(0, 16)}…</p>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <p className="font-mono truncate">{inv.token.slice(0, 16)}…</p>
+                                    {resends.length > 0 && (
+                                      <TooltipProvider delayDuration={150}>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <button
+                                              type="button"
+                                              className="inline-flex items-center gap-1 rounded-full border border-info/30 bg-info/10 px-1.5 py-0.5 text-[9px] font-medium text-info hover:bg-info/15 focus:outline-none focus:ring-1 focus:ring-info/40"
+                                              aria-label={`Reenviado ${resends.length} ${resends.length === 1 ? "vez" : "vezes"}`}
+                                            >
+                                              <History className="h-2.5 w-2.5" />
+                                              {resends.length}× · {lastResendAt ? relTime(lastResendAt) : ""}
+                                            </button>
+                                          </TooltipTrigger>
+                                          <TooltipContent side="top" align="start" className="max-w-[260px]">
+                                            <p className="text-[11px] font-semibold mb-1">Histórico de reenvios</p>
+                                            <ul className="space-y-0.5 text-[10px]">
+                                              {resends.slice(0, 5).map((r, i) => (
+                                                <li key={`${r.at}-${i}`} className="flex justify-between gap-3">
+                                                  <span className="text-muted-foreground">
+                                                    {new Date(r.at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                                                  </span>
+                                                  <span className="font-mono opacity-70">{r.newToken.slice(0, 8)}…</span>
+                                                </li>
+                                              ))}
+                                              {resends.length > 5 && (
+                                                <li className="text-muted-foreground italic">+{resends.length - 5} mais</li>
+                                              )}
+                                            </ul>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    )}
+                                  </div>
                                   <p>
                                     Criado por <span className="text-foreground/80">{creatorName}</span> em{" "}
                                     <span className="text-foreground/80">{fmt(inv.created_at)}</span>
