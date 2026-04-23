@@ -141,7 +141,11 @@ export function fromOrg<T extends TableName>(table: T) {
           if (orgId && isScoped) assertOrgMatch(values, orgId, tableName, String(prop));
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return (target as any)[prop](next, options);
+          return options === undefined
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? (target as any)[prop](next)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (target as any)[prop](next, options);
         };
       }
 
@@ -149,7 +153,11 @@ export function fromOrg<T extends TableName>(table: T) {
         return (values: unknown, options?: unknown) => {
           if (orgId) assertOrgMatch(values, orgId, tableName, "update");
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const q = (target as any).update(values, options);
+          const q = options === undefined
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? (target as any).update(values)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (target as any).update(values, options);
           return orgId ? q.eq("organization_id", orgId) : q;
         };
       }
@@ -157,7 +165,11 @@ export function fromOrg<T extends TableName>(table: T) {
       if (prop === "delete" && isScoped) {
         return (options?: unknown) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const q = (target as any).delete(options);
+          const q = options === undefined
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? (target as any).delete()
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : (target as any).delete(options);
           return orgId ? q.eq("organization_id", orgId) : q;
         };
       }
