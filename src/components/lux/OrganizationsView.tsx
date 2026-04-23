@@ -401,6 +401,21 @@ export const OrganizationsView = () => {
                                   <Copy className="h-3.5 w-3.5" /> Copiar
                                 </Button>
                               )}
+                              {!used && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 gap-1.5 text-xs"
+                                  onClick={() => handleResendInvite(inv)}
+                                  disabled={createInvite.isPending}
+                                  title={inactive ? "Gerar novo link com o mesmo papel" : "Substituir por novo link"}
+                                >
+                                  {createInvite.isPending
+                                    ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                    : <RefreshCw className="h-3.5 w-3.5" />}
+                                  Reenviar
+                                </Button>
+                              )}
                               {!inv.revoked && !used && (
                                 <Button
                                   variant="ghost"
