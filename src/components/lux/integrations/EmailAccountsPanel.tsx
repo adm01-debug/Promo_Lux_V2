@@ -6,8 +6,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface Account {
   id: string;
@@ -18,12 +20,16 @@ interface Account {
   last_polled_at: string | null;
   last_error: string | null;
   created_at: string;
+  scope_type: "user" | "organization";
+  user_id: string;
 }
 
 export function EmailAccountsPanel() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [connecting, setConnecting] = useState<"gmail" | "outlook" | null>(null);
+  const [scopeType, setScopeType] = useState<"user" | "organization">("user");
+  const { isAdmin } = usePermissions();
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -31,7 +37,7 @@ export function EmailAccountsPanel() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("email_accounts")
-        .select("id,provider,email,display_name,active,last_polled_at,last_error,created_at")
+        .select("id,provider,email,display_name,active,last_polled_at,last_error,created_at,scope_type,user_id")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as Account[];
@@ -58,12 +64,13 @@ export function EmailAccountsPanel() {
 
     (async () => {
       const { data, error } = await supabase.functions.invoke("email-oauth-callback", {
-        body: { provider, code, redirect_uri: redirectUri },
+        body: { provider, code, redirect_uri: redirectUri, state },
       });
       if (error || data?.error) {
         toast({ title: "Falha ao conectar", description: data?.error ?? error?.message, variant: "destructive" });
       } else {
-        toast({ title: "Conta conectada", description: data?.account?.email });
+        const scope = data?.account?.scope_type === "organization" ? "compartilhada" : "pessoal";
+        toast({ title: "Conta conectada", description: `${data?.account?.email} (${scope})` });
         qc.invalidateQueries({ queryKey: ["email-accounts"] });
       }
     })();
@@ -74,7 +81,7 @@ export function EmailAccountsPanel() {
       setConnecting(provider);
       const redirectUri = `${window.location.origin}${window.location.pathname}`;
       const { data, error } = await supabase.functions.invoke("email-oauth-connect", {
-        body: { provider, redirect_uri: redirectUri },
+        body: { provider, redirect_uri: redirectUri, scope_type: scopeType },
       });
       if (error || data?.error) throw new Error(data?.error ?? error?.message);
       sessionStorage.setItem("oauth_provider", provider);
@@ -116,6 +123,19 @@ export function EmailAccountsPanel() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
+        <Select value={scopeType} onValueChange={(v) => setScopeType(v as "user" | "organization")}>
+          <SelectTrigger className="h-8 w-[200px] text-xs">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="user">
+              <div className="flex items-center gap-2"><UserIcon className="h-3 w-3" /> Caixa pessoal (SDR)</div>
+            </SelectItem>
+            <SelectItem value="organization" disabled={!isAdmin}>
+              <div className="flex items-center gap-2"><Building2 className="h-3 w-3" /> Caixa compartilhada (org){!isAdmin && " · admin"}</div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
         <Button size="sm" disabled={!!connecting} onClick={() => connectMutation.mutate("gmail")} className="gap-2">
           <Plus className="h-3.5 w-3.5" /> Conectar Gmail
         </Button>
@@ -123,7 +143,9 @@ export function EmailAccountsPanel() {
           <Plus className="h-3.5 w-3.5" /> Conectar Outlook
         </Button>
         <p className="text-[11px] text-muted-foreground ml-auto">
-          Replies são sincronizados automaticamente a cada 5 minutos.
+          {scopeType === "organization"
+            ? "Caixa visível a toda a organização — apenas admins gerenciam."
+            : "Caixa visível apenas para você."}
         </p>
       </div>
 
@@ -146,6 +168,15 @@ export function EmailAccountsPanel() {
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-medium truncate">{acc.email}</p>
                   <Badge variant="outline" className="text-[10px] capitalize">{acc.provider}</Badge>
+                  {acc.scope_type === "organization" ? (
+                    <Badge variant="outline" className="text-[10px] gap-1 border-primary/30 text-primary">
+                      <Building2 className="h-2.5 w-2.5" /> Compartilhada
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-[10px] gap-1">
+                      <UserIcon className="h-2.5 w-2.5" /> Pessoal
+                    </Badge>
+                  )}
                   {acc.last_error ? (
                     <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/30"><AlertCircle className="h-2.5 w-2.5" />Erro</Badge>
                   ) : (

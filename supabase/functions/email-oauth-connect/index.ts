@@ -37,15 +37,37 @@ Deno.serve(async (req) => {
     if (cErr || !claims?.claims?.sub) return json({ error: "Unauthorized" }, 401);
     const userId = claims.claims.sub as string;
 
-    const { provider, redirect_uri } = await req.json();
+    const { provider, redirect_uri, scope_type, organization_id } = await req.json();
     if (provider !== "gmail" && provider !== "outlook") {
       return json({ error: "Invalid provider" }, 400);
     }
     if (!redirect_uri || typeof redirect_uri !== "string") {
       return json({ error: "redirect_uri required" }, 400);
     }
+    const scopeType: "user" | "organization" = scope_type === "organization" ? "organization" : "user";
 
-    const state = `${userId}.${crypto.randomUUID()}`;
+    // Resolve organization_id (default org if not provided)
+    let orgId: string | null = organization_id ?? null;
+    if (!orgId) {
+      const { data: defaultOrg } = await supabase.rpc("default_org_for_current_user");
+      orgId = (defaultOrg as string | null) ?? null;
+    }
+    if (!orgId) return json({ error: "No organization context" }, 400);
+
+    // If shared mailbox: enforce admin role
+    if (scopeType === "organization") {
+      const { data: isAdmin, error: roleErr } = await supabase.rpc("has_org_role", {
+        _org_id: orgId,
+        _user_id: userId,
+        _min_role: "admin",
+      });
+      if (roleErr || !isAdmin) {
+        return json({ error: "Apenas admins podem conectar caixas compartilhadas" }, 403);
+      }
+    }
+
+    // State carries: userId.scopeType.orgId.nonce
+    const state = `${userId}.${scopeType}.${orgId}.${crypto.randomUUID()}`;
 
     let authUrl: string;
     if (provider === "gmail") {
