@@ -137,6 +137,9 @@ export function EmailAccountsPanel() {
 
   const connectMutation = useMutation({
     mutationFn: async (provider: "gmail" | "outlook") => {
+      if (scopeType === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem conectar caixas compartilhadas (scope organization).");
+      }
       setConnecting(provider);
       const redirectUri = `${window.location.origin}${window.location.pathname}`;
       const { data, error } = await supabase.functions.invoke("email-oauth-connect", {
@@ -149,12 +152,16 @@ export function EmailAccountsPanel() {
     },
     onError: (e: Error) => {
       setConnecting(null);
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+      toast({ title: "Permissão negada", description: e.message, variant: "destructive" });
     },
   });
 
   const pollMutation = useMutation({
     mutationFn: async (accountId: string) => {
+      const target = accounts.find((a) => a.id === accountId);
+      if (target?.scope_type === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem sincronizar caixas compartilhadas da organização.");
+      }
       const { data, error } = await supabase.functions.invoke("email-poll-replies", {
         body: { account_id: accountId },
       });
@@ -165,7 +172,7 @@ export function EmailAccountsPanel() {
       toast({ title: "Polling concluído", description: `${JSON.stringify(d?.results?.[0] ?? {})}` });
       qc.invalidateQueries({ queryKey: ["email-accounts"] });
     },
-    onError: (e: Error) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
+    onError: (e: Error) => toast({ title: "Permissão negada", description: e.message, variant: "destructive" }),
   });
 
   return (
