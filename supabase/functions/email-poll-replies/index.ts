@@ -152,6 +152,12 @@ Deno.serve(async (req) => {
         .eq("id", acc.id)
         .eq("scope_type", acc.scope_type);
       results.push({ account: acc.email, scope_type: acc.scope_type, ...res });
+      await logSync({
+        status: "success",
+        scanned: (res as { scanned?: number }).scanned ?? null,
+        inserted: (res as { inserted?: number }).inserted ?? null,
+        attempt: 0,
+      });
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       console.error(`Account ${acc.email} failed:`, msg);
@@ -194,6 +200,15 @@ Deno.serve(async (req) => {
           retry_at: nextAt,
           reconnect_required: requireManual,
         });
+        await logSync({
+          status: "refresh_failed",
+          error_message: msg,
+          attempt: nextAttempts,
+          max_attempts: acc.reconnect_max_attempts,
+          next_retry_at: nextAt,
+          reconnect_required: requireManual,
+          fatal: e.fatal,
+        });
       } else {
         // Erro não relacionado a refresh: só atualiza last_error.
         await admin.from("email_accounts")
@@ -201,6 +216,7 @@ Deno.serve(async (req) => {
           .eq("id", acc.id)
           .eq("scope_type", acc.scope_type);
         results.push({ account: acc.email, scope_type: acc.scope_type, error: msg });
+        await logSync({ status: "error", error_message: msg });
       }
     }
   }
