@@ -207,6 +207,64 @@ export function reloadAfterOrgError() {
 let lastToastAt = 0;
 const THROTTLE_MS = 1500;
 
+/* ---------- Rótulos amigáveis (entidade + operação) ---------- */
+
+/**
+ * Mapeia nomes técnicos das tabelas para rótulos amigáveis usados nos
+ * toasts. Mantém o nome no singular/plural natural conforme o contexto
+ * mais comum da mensagem ("ao consultar empresas", "ao criar empresa").
+ * Tabelas não mapeadas caem no nome cru entre aspas.
+ */
+const ENTITY_LABELS: Record<string, { singular: string; plural: string }> = {
+  agent_chat_messages: { singular: "mensagem do agente IA", plural: "mensagens do agente IA" },
+  api_keys: { singular: "chave de API", plural: "chaves de API" },
+  api_request_logs: { singular: "log de requisição", plural: "logs de requisições" },
+  audit_logs: { singular: "registro de auditoria", plural: "trilha de auditoria" },
+  campaign_events: { singular: "evento de campanha", plural: "eventos de campanha" },
+  campaign_messages: { singular: "mensagem de campanha", plural: "mensagens de campanha" },
+  campaign_recipients: { singular: "destinatário", plural: "destinatários da campanha" },
+  campaign_replies: { singular: "resposta de campanha", plural: "respostas de campanha" },
+  campaigns: { singular: "campanha", plural: "campanhas" },
+  companies: { singular: "empresa", plural: "empresas" },
+  deal_activities: { singular: "atividade de negócio", plural: "atividades de negócio" },
+  deal_stages: { singular: "estágio do funil", plural: "estágios do funil" },
+  deal_tasks: { singular: "tarefa", plural: "tarefas de negócio" },
+  deals: { singular: "negócio", plural: "negócios" },
+  email_accounts: { singular: "conta de e-mail", plural: "contas de e-mail" },
+  intent_signals: { singular: "sinal de intenção", plural: "sinais de intenção" },
+  ipc_config: { singular: "configuração de ICP", plural: "configurações de ICP" },
+  notifications: { singular: "notificação", plural: "notificações" },
+  scrape_jobs: { singular: "job de coleta", plural: "jobs de coleta" },
+  scrape_results: { singular: "resultado de coleta", plural: "resultados de coleta" },
+  stakeholders: { singular: "stakeholder", plural: "stakeholders" },
+  webhook_deliveries: { singular: "entrega de webhook", plural: "entregas de webhook" },
+  webhooks: { singular: "webhook", plural: "webhooks" },
+  workflow_runs: { singular: "execução de workflow", plural: "execuções de workflow" },
+  workflows: { singular: "workflow", plural: "workflows" },
+};
+
+function entityLabel(table: string | undefined, form: "singular" | "plural" = "singular"): string {
+  if (!table) return form === "plural" ? "estes recursos" : "este recurso";
+  const e = ENTITY_LABELS[table];
+  if (!e) return `"${table}"`;
+  return e[form];
+}
+
+/** CTA padrão: leva o usuário direto à tela de gestão de workspaces. */
+function selectOrganizationAction() {
+  return {
+    label: "Selecionar organização",
+    onClick: () => {
+      emit(null);
+      if (typeof window === "undefined") return;
+      const url = new URL(window.location.href);
+      url.searchParams.set("view", "organizations");
+      window.history.pushState({}, "", url.toString());
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    },
+  };
+}
+
 /**
  * Mensagens específicas por operação para `MissingOrgContextError`.
  * Mantém o tom direto: o que foi bloqueado + por quê + o que fazer.
@@ -215,25 +273,30 @@ const MISSING_OP_COPY: Record<
   string,
   { title: string; description: (table: string) => string }
 > = {
+  select: {
+    title: "Consulta bloqueada — sem organização ativa",
+    description: (t) =>
+      `Não foi possível carregar ${entityLabel(t, "plural")} porque nenhuma organização está selecionada.`,
+  },
   insert: {
     title: "Criação bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível criar o novo registro em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível criar ${entityLabel(t, "singular")} porque nenhuma organização está selecionada.`,
   },
   upsert: {
     title: "Gravação bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível salvar (insert/update) em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível salvar ${entityLabel(t, "singular")} (insert/update) porque nenhuma organização está selecionada.`,
   },
   update: {
     title: "Edição bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível atualizar o registro em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível atualizar ${entityLabel(t, "singular")} porque nenhuma organização está selecionada.`,
   },
   delete: {
     title: "Exclusão bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível remover o registro em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível remover ${entityLabel(t, "singular")} porque nenhuma organização está selecionada.`,
   },
 };
 
@@ -242,7 +305,7 @@ function copyForMissing(err: MissingOrgContextError): { title: string; descripti
   if (entry) return { title: entry.title, description: entry.description(err.table) };
   return {
     title: "Operação bloqueada — sem organização ativa",
-    description: `Não foi possível executar "${err.op}" em "${err.table}" porque nenhuma organização está selecionada.`,
+    description: `Não foi possível executar "${err.op}" em ${entityLabel(err.table)} porque nenhuma organização está selecionada.`,
   };
 }
 
@@ -256,25 +319,30 @@ const MISMATCH_OP_COPY: Record<
   string,
   { title: string; description: (table: string) => string }
 > = {
+  select: {
+    title: "Consulta bloqueada — organização divergente",
+    description: (t) =>
+      `Tentativa de consultar ${entityLabel(t, "plural")} de outra organização. Confirme o workspace ativo antes de tentar novamente.`,
+  },
   insert: {
     title: "Criação bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de criar registro em "${t}" vinculado a outra organização. Verifique a organização ativa.`,
+      `Tentativa de criar ${entityLabel(t, "singular")} vinculada a outra organização. Verifique o workspace ativo.`,
   },
   upsert: {
     title: "Gravação bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de inserir/atualizar registro em "${t}" com organização diferente da ativa. Operação cancelada.`,
+      `Tentativa de inserir/atualizar ${entityLabel(t, "singular")} com organização diferente da ativa. Operação cancelada.`,
   },
   update: {
     title: "Edição bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de modificar registro de outra organização em "${t}". Recarregue o registro na organização correta.`,
+      `Tentativa de modificar ${entityLabel(t, "singular")} de outra organização. Recarregue o registro no workspace correto.`,
   },
   delete: {
     title: "Exclusão bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de remover registro pertencente a outra organização em "${t}". Operação cancelada.`,
+      `Tentativa de remover ${entityLabel(t, "singular")} pertencente a outra organização. Operação cancelada.`,
   },
 };
 
@@ -283,7 +351,7 @@ function copyForMismatch(err: OrgMismatchError): { title: string; description: s
   if (entry) return { title: entry.title, description: entry.description(err.table) };
   return {
     title: "Operação bloqueada por segurança",
-    description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+    description: `Tentativa de acessar ${entityLabel(err.table)} de outra organização. A ação foi cancelada.`,
   };
 }
 
@@ -384,32 +452,11 @@ export function handleOrgError(err: unknown): boolean {
   if (now - lastToastAt < THROTTLE_MS) return true;
   lastToastAt = now;
 
-  const reload = () => {
-    if (!qcRef) {
-      // Fallback: full reload se não temos QueryClient registrado.
-      if (typeof window !== "undefined") window.location.reload();
-      return;
-    }
-    qcRef.invalidateQueries();
-  };
-
   if (err instanceof MissingOrgContextError) {
     const { title, description } = copyForMissing(err);
     toast.error(title, {
       description,
-      action: {
-        label: "Selecionar organização",
-        onClick: () => {
-          emit(null);
-          if (typeof window !== "undefined") {
-            const url = new URL(window.location.href);
-            url.searchParams.set("view", "organizations");
-            window.history.pushState({}, "", url.toString());
-            // dispara popstate para o useNavigationHistory sincronizar
-            window.dispatchEvent(new PopStateEvent("popstate"));
-          }
-        },
-      },
+      action: selectOrganizationAction(),
     });
   } else {
     // OrgMismatchError
@@ -417,7 +464,7 @@ export function handleOrgError(err: unknown): boolean {
     // Prioridade da ação:
     //  1. Se há operação registrada → "Tentar novamente" (com refresh de org).
     //  2. Se a tabela tem view mapeada → "Ir para <lista>" (recupera contexto).
-    //  3. Fallback genérico → "Recarregar dados".
+    //  3. Fallback → "Selecionar organização" (CTA direto para o switcher).
     const targetView = viewForTable(err.table);
     const action = lastOperation
       ? {
@@ -431,10 +478,7 @@ export function handleOrgError(err: unknown): boolean {
             label: "Ir para a lista",
             onClick: () => navigateAfterOrgMismatch(err.table),
           }
-        : {
-            label: "Recarregar dados",
-            onClick: reload,
-          };
+        : selectOrganizationAction();
     toast.error(title, { description, action });
   }
 

@@ -134,8 +134,11 @@ describe("orgErrorHandler — E2E switching de org durante edição", () => {
     expect(toastError).toHaveBeenCalledTimes(1);
     const [title, opts] = toastError.mock.calls[0] as [string, { description: string; action: { label: string; onClick: () => void } }];
     expect(title).toMatch(/bloqueada/i);
-    expect(opts.description).toContain("companies");
-    expect(opts.action.label).toMatch(/recarregar/i);
+    // Mensagem agora usa rótulo amigável (companies → empresa).
+    expect(opts.description).toMatch(/empresa/i);
+    // CTA por prioridade: como `companies` tem view mapeada, o botão é
+    // "Ir para a lista" (recupera o contexto sem trocar de workspace).
+    expect(opts.action.label).toMatch(/ir para a lista/i);
   });
 
   it("ação 'Recarregar dados' do toast invalida queries no QueryClient", () => {
@@ -193,11 +196,12 @@ describe("orgErrorHandler — E2E switching de org durante edição", () => {
     handleOrgError(caught);
 
     const [title, opts] = toastError.mock.calls[0] as [string, { description: string; action: { label: string; onClick: () => void } }];
-    expect(title).toMatch(/nenhuma organização ativa/i);
-    expect(opts.action.label).toMatch(/recarregar/i);
-
-    opts.action.onClick();
-    expect(invalidateSpy).toHaveBeenCalledTimes(1);
+    // Título por operação: "Edição bloqueada — sem organização ativa".
+    expect(title).toMatch(/sem organiza[çc][ãa]o ativa/i);
+    // Descrição menciona "nenhuma organização" + entidade amigável.
+    expect(opts.description).toMatch(/nenhuma organiza[çc][ãa]o/i);
+    expect(opts.description).toMatch(/empresa/i);
+    expect(opts.action.label).toMatch(/selecionar organiza/i);
   });
 
   it("fluxo completo: switch de org → submit do dialog → toast → recuperação restaura UI", async () => {
