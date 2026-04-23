@@ -414,20 +414,28 @@ export function handleOrgError(err: unknown): boolean {
   } else {
     // OrgMismatchError
     const { title, description } = copyForMismatch(err);
-    toast.error(title, {
-      description,
-      action: lastOperation
+    // Prioridade da ação:
+    //  1. Se há operação registrada → "Tentar novamente" (com refresh de org).
+    //  2. Se a tabela tem view mapeada → "Ir para <lista>" (recupera contexto).
+    //  3. Fallback genérico → "Recarregar dados".
+    const targetView = viewForTable(err.table);
+    const action = lastOperation
+      ? {
+          label: "Tentar novamente",
+          onClick: () => {
+            void refreshOrgAndRetry();
+          },
+        }
+      : targetView
         ? {
-            label: "Tentar novamente",
-            onClick: () => {
-              void refreshOrgAndRetry();
-            },
+            label: "Ir para a lista",
+            onClick: () => navigateAfterOrgMismatch(err.table),
           }
         : {
             label: "Recarregar dados",
             onClick: reload,
-          },
-    });
+          };
+    toast.error(title, { description, action });
   }
 
   // Log estruturado (útil em produção/sentry).
