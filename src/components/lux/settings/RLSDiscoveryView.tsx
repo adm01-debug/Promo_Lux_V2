@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Database, RefreshCw, Loader2, AlertTriangle, CheckCircle2,
-  Download, ClipboardCopy, FileCode2,
+  Download, ClipboardCopy, FileCode2, Wand2, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { downloadCSV } from "@/lib/exportCSV";
@@ -18,6 +19,58 @@ interface DiscoveredTable {
   name: string;
   bucket: Bucket;
   inDb: boolean;
+}
+
+interface ColumnInfo {
+  column_name: string;
+  data_type: string;
+  udt_name: string;
+  is_nullable: boolean;
+  has_default: boolean;
+  column_default: string | null;
+}
+
+/** Colunas que o runner já injeta automaticamente — não precisam estar no payload. */
+const AUTO_COLUMNS = new Set(["id", "created_at", "updated_at", "organization_id", "user_id"]);
+
+/** Sugere um valor literal JS para uma coluna NOT NULL sem default. */
+function sampleValueFor(col: ColumnInfo): string {
+  const u = col.udt_name.toLowerCase();
+  const d = col.data_type.toLowerCase();
+  if (u === "uuid") return `ctx.${col.column_name.replace(/_id$/, "") || "ref"} /* TODO: id de tabela referenciada */`;
+  if (u.startsWith("int") || d.includes("integer") || d.includes("numeric") || d.includes("double") || d.includes("real")) return "0";
+  if (u === "bool") return "false";
+  if (u === "jsonb" || u === "json") return "{}";
+  if (d.includes("array") || u.startsWith("_")) return "[]";
+  if (u === "timestamptz" || u === "timestamp" || d.includes("timestamp")) return "new Date().toISOString()";
+  if (u === "date") return `"${new Date().toISOString().slice(0, 10)}"`;
+  // text / varchar / enum / etc.
+  return `"${col.column_name}-sample"`;
+}
+
+/** Constrói o objeto payload a partir das colunas obrigatórias da tabela. */
+function buildPayloadFromColumns(table: string, cols: ColumnInfo[]): string {
+  const required = cols.filter((c) => !c.is_nullable && !c.has_default && !AUTO_COLUMNS.has(c.column_name));
+  const lines: string[] = [];
+  // Sempre inclui organization_id + user_id (vêm do runner mesmo com default).
+  lines.push(`      organization_id: org,`);
+  lines.push(`      user_id: uid,`);
+  for (const c of required) {
+    lines.push(`      ${c.column_name}: ${sampleValueFor(c)},`);
+  }
+  const requires = required
+    .filter((c) => c.udt_name === "uuid" && c.column_name.endsWith("_id"))
+    .map((c) => c.column_name.replace(/_id$/, ""))
+    .filter(Boolean);
+  const requiresLine = requires.length
+    ? `\n    requires: ${JSON.stringify(requires)},`
+    : "";
+  return `  {
+    table: ${JSON.stringify(table)},${requiresLine}
+    payload: (org, uid${requires.length ? ", ctx" : ""}) => ({
+${lines.join("\n")}
+    }),
+  },`;
 }
 
 const BUCKET_STYLES: Record<Bucket, string> = {
@@ -59,6 +112,38 @@ export const RLSDiscoveryView = () => {
   const [dbTables, setDbTables] = useState<string[]>([]);
   const [filter, setFilter] = useState<"all" | Bucket>("all");
   const [search, setSearch] = useState("");
+  const [genTable, setGenTable] = useState<string | null>(null);
+  const [genLoading, setGenLoading] = useState(false);
+  const [genColumns, setGenColumns] = useState<ColumnInfo[]>([]);
+  const [genError, setGenError] = useState<string | null>(null);
+
+  const openGenerator = async (table: string) => {
+    setGenTable(table);
+    setGenLoading(true);
+    setGenError(null);
+    setGenColumns([]);
+    const { data, error: err } = await supabase.rpc("pg_columns_for_insert", { _table_name: table });
+    if (err) {
+      setGenError(err.message);
+    } else {
+      setGenColumns((data ?? []) as ColumnInfo[]);
+    }
+    setGenLoading(false);
+  };
+
+  const generatedSnippet = useMemo(() => {
+    if (!genTable) return "";
+    return buildPayloadFromColumns(genTable, genColumns);
+  }, [genTable, genColumns]);
+
+  const copyGenerated = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedSnippet);
+      toast({ title: "Payload copiado", description: `Cole em RLS_TABLES para ${genTable}` });
+    } catch {
+      toast({ variant: "destructive", title: "Falha ao copiar" });
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -280,11 +365,24 @@ export const RLSDiscoveryView = () => {
                       </span>
                     )}
                   </div>
-                  <span
-                    className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${BUCKET_STYLES[e.bucket]}`}
-                  >
-                    {BUCKET_LABELS[e.bucket]}
-                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {e.bucket === "missing" && e.inDb && (
+                      <button
+                        type="button"
+                        onClick={() => void openGenerator(e.name)}
+                        className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-primary/40 text-primary hover:bg-primary/10 transition-colors"
+                        title="Gerar payload de insert"
+                      >
+                        <Wand2 className="h-3 w-3" />
+                        Gerar payload
+                      </button>
+                    )}
+                    <span
+                      className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${BUCKET_STYLES[e.bucket]}`}
+                    >
+                      {BUCKET_LABELS[e.bucket]}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -303,6 +401,77 @@ export const RLSDiscoveryView = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={!!genTable} onOpenChange={(open) => !open && setGenTable(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Wand2 className="h-4 w-4 text-primary" />
+              Gerador de payload — <code className="font-mono text-sm">{genTable}</code>
+            </DialogTitle>
+            <DialogDescription>
+              Inspeciona as colunas <code className="font-mono">NOT NULL</code> sem default
+              e gera um objeto pronto para colar em <code className="font-mono">RLS_TABLES</code>.
+              Substitua os <code className="font-mono">TODO</code> por valores reais quando necessário.
+            </DialogDescription>
+          </DialogHeader>
+
+          {genLoading ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground py-6 justify-center">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              Inspecionando colunas…
+            </div>
+          ) : genError ? (
+            <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 border border-destructive/30 rounded-md px-3 py-2">
+              <AlertTriangle className="h-3.5 w-3.5" />
+              {genError}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div className="text-[11px] text-muted-foreground">
+                {genColumns.length} colunas detectadas ·{" "}
+                {genColumns.filter((c) => !c.is_nullable && !c.has_default && !AUTO_COLUMNS.has(c.column_name)).length} obrigatórias
+              </div>
+              <ScrollArea className="h-[140px] rounded-md border border-border/50 bg-background/40">
+                <ul className="divide-y divide-border/40">
+                  {genColumns.map((c) => {
+                    const isAuto = AUTO_COLUMNS.has(c.column_name);
+                    const required = !c.is_nullable && !c.has_default && !isAuto;
+                    return (
+                      <li key={c.column_name} className="px-3 py-1.5 flex items-center justify-between gap-3 text-[11px]">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="font-mono truncate">{c.column_name}</span>
+                          <span className="text-muted-foreground font-mono">{c.udt_name}</span>
+                        </div>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${
+                          required ? "border-destructive/40 text-destructive bg-destructive/10"
+                            : isAuto ? "border-primary/30 text-primary bg-primary/10"
+                            : "border-border text-muted-foreground"
+                        }`}>
+                          {isAuto ? "auto" : required ? "obrigatória" : c.is_nullable ? "opcional" : "default"}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </ScrollArea>
+              <pre className="text-[11px] font-mono bg-background/60 border border-border/40 rounded-md p-3 overflow-x-auto whitespace-pre max-h-[260px]">
+{generatedSnippet}
+              </pre>
+              <div className="flex items-center justify-end gap-2">
+                <Button variant="outline" size="sm" onClick={() => setGenTable(null)} className="gap-1.5">
+                  <X className="h-3.5 w-3.5" />
+                  Fechar
+                </Button>
+                <Button size="sm" onClick={copyGenerated} className="gap-1.5">
+                  <ClipboardCopy className="h-3.5 w-3.5" />
+                  Copiar payload
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
