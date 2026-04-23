@@ -74,6 +74,32 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     };
   }, [open]);
 
+  // Quando o usuário troca de organização ativa com o modal aberto,
+  // fechamos imediatamente: o registro carregado pode pertencer a outra
+  // org e qualquer edição passaria a ser inválida. Mostramos um toast
+  // pedindo para recarregar o registro antes de continuar.
+  const initialOrgRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!open) {
+      initialOrgRef.current = null;
+      return;
+    }
+    if (initialOrgRef.current === null) {
+      initialOrgRef.current = activeOrgId;
+      return;
+    }
+    if (activeOrgId !== initialOrgRef.current) {
+      toast({
+        title: "Organização ativa alterada",
+        description:
+          "O modal foi fechado para evitar edições cruzadas. Recarregue o registro na nova organização antes de continuar.",
+        variant: "destructive",
+      });
+      setDirty(false);
+      onOpenChange(false);
+    }
+  }, [open, activeOrgId, toast, onOpenChange]);
+
   const orgMismatch = useMemo(
     () => Boolean(recordOrgId && activeOrgId && recordOrgId !== activeOrgId),
     [recordOrgId, activeOrgId],
