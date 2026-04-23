@@ -419,16 +419,30 @@ export function EmailAccountsPanel() {
                   </Button>
                 );
               })()}
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 gap-1 text-xs"
-                onClick={() => (canManage ? pollMutation.mutate(acc.id) : blockedToast())}
-                disabled={pollMutation.isPending || !canManage}
-                title={!canManage ? lockReason : undefined}
-              >
-                <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} /> Sincronizar
-              </Button>
+              {(() => {
+                const hasBackoff = !!acc.reconnect_next_at && new Date(acc.reconnect_next_at) > new Date();
+                const label = hasBackoff && !acc.reconnect_required ? "Tentar agora" : "Sincronizar";
+                const titleExtra = hasBackoff && !acc.reconnect_required
+                  ? "Ignora o backoff e força uma nova tentativa imediata."
+                  : undefined;
+                return (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 gap-1 text-xs"
+                    onClick={() =>
+                      canManage
+                        ? pollMutation.mutate({ id: acc.id, force: hasBackoff })
+                        : blockedToast()
+                    }
+                    disabled={pollMutation.isPending || !canManage || acc.reconnect_required}
+                    title={!canManage ? lockReason : titleExtra}
+                  >
+                    <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} />
+                    {label}
+                  </Button>
+                );
+              })()}
               <Button
                 size="sm"
                 variant="ghost"
