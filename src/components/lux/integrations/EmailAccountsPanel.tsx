@@ -5,12 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2, ArrowLeftRight } from "lucide-react";
+import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2, ArrowLeftRight, History } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
 import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
 import { EmailAccountsAuditPanel } from "./EmailAccountsAuditPanel";
+import { EmailSyncHistorySheet } from "./EmailSyncHistorySheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -71,6 +72,7 @@ export function EmailAccountsPanel() {
   const notifiedErrorsRef = useRef<Map<string, string>>(new Map());
   const [disconnectTarget, setDisconnectTarget] = useState<Account | null>(null);
   const [scopeChangeTarget, setScopeChangeTarget] = useState<Account | null>(null);
+  const [historyTarget, setHistoryTarget] = useState<Account | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -446,6 +448,15 @@ export function EmailAccountsPanel() {
               <Button
                 size="sm"
                 variant="ghost"
+                className="h-8 gap-1 text-xs"
+                onClick={() => setHistoryTarget(acc)}
+                title="Ver histórico de sincronizações"
+              >
+                <History className="h-3 w-3" /> Histórico
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
                 className="h-8 text-destructive hover:text-destructive"
                 onClick={() => (canManage ? setDisconnectTarget(acc) : blockedToast())}
                 disabled={!canManage}
@@ -463,6 +474,12 @@ export function EmailAccountsPanel() {
         account={disconnectTarget}
         open={!!disconnectTarget}
         onOpenChange={(o) => !o && setDisconnectTarget(null)}
+      />
+
+      <EmailSyncHistorySheet
+        account={historyTarget ? { id: historyTarget.id, email: historyTarget.email, provider: historyTarget.provider } : null}
+        open={!!historyTarget}
+        onOpenChange={(o) => !o && setHistoryTarget(null)}
       />
 
       {isAdmin && <EmailAccountsAuditPanel />}

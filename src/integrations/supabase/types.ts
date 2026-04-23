@@ -911,6 +911,74 @@ export type Database = {
         }
         Relationships: []
       }
+      email_sync_log: {
+        Row: {
+          attempt: number | null
+          created_at: string
+          duration_ms: number | null
+          email_account_id: string
+          error_message: string | null
+          fatal: boolean | null
+          id: string
+          inserted: number | null
+          max_attempts: number | null
+          next_retry_at: string | null
+          organization_id: string
+          provider: string
+          reconnect_required: boolean
+          scanned: number | null
+          scope_type: string
+          skipped_reason: string | null
+          status: string
+        }
+        Insert: {
+          attempt?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          email_account_id: string
+          error_message?: string | null
+          fatal?: boolean | null
+          id?: string
+          inserted?: number | null
+          max_attempts?: number | null
+          next_retry_at?: string | null
+          organization_id: string
+          provider: string
+          reconnect_required?: boolean
+          scanned?: number | null
+          scope_type: string
+          skipped_reason?: string | null
+          status: string
+        }
+        Update: {
+          attempt?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          email_account_id?: string
+          error_message?: string | null
+          fatal?: boolean | null
+          id?: string
+          inserted?: number | null
+          max_attempts?: number | null
+          next_retry_at?: string | null
+          organization_id?: string
+          provider?: string
+          reconnect_required?: boolean
+          scanned?: number | null
+          scope_type?: string
+          skipped_reason?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_sync_log_email_account_id_fkey"
+            columns: ["email_account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intent_signals: {
         Row: {
           company_id: string | null

@@ -72,14 +72,34 @@ Deno.serve(async (req) => {
 
   const results: Record<string, unknown>[] = [];
   for (const acc of (accounts ?? []) as EmailAccount[]) {
+    const startedAt = Date.now();
+    // Helper para registrar uma linha no histórico de sync. Falhas no log
+    // não devem derrubar o ciclo de polling — capturamos e seguimos.
+    const logSync = async (entry: Record<string, unknown>) => {
+      try {
+        await admin.from("email_sync_log").insert({
+          email_account_id: acc.id,
+          organization_id: acc.organization_id ?? null,
+          scope_type: acc.scope_type,
+          provider: acc.provider,
+          duration_ms: Date.now() - startedAt,
+          ...entry,
+        });
+      } catch (logErr) {
+        console.error("Failed to write email_sync_log:", logErr);
+      }
+    };
+
     // Defesa em profundidade: ignora linhas com scope_type inválido ou
     // organization scope sem organization_id.
     if (acc.scope_type !== "user" && acc.scope_type !== "organization") {
       results.push({ account: acc.email, skipped: "invalid scope_type", scope_type: acc.scope_type });
+      await logSync({ status: "skipped", skipped_reason: `invalid scope_type: ${acc.scope_type}` });
       continue;
     }
     if (acc.scope_type === "organization" && !acc.organization_id) {
       results.push({ account: acc.email, skipped: "org scope without organization_id" });
+      await logSync({ status: "skipped", skipped_reason: "org scope without organization_id" });
       continue;
     }
 
@@ -87,6 +107,7 @@ Deno.serve(async (req) => {
     // reconectar via UI (que zera os flags).
     if (acc.reconnect_required) {
       results.push({ account: acc.email, skipped: "reconnect_required" });
+      await logSync({ status: "skipped", skipped_reason: "reconnect_required", reconnect_required: true });
       continue;
     }
 
@@ -101,6 +122,13 @@ Deno.serve(async (req) => {
         skipped: "backoff",
         retry_at: acc.reconnect_next_at,
         attempts: acc.reconnect_attempts,
+      });
+      await logSync({
+        status: "skipped",
+        skipped_reason: "backoff",
+        attempt: acc.reconnect_attempts,
+        max_attempts: acc.reconnect_max_attempts,
+        next_retry_at: acc.reconnect_next_at,
       });
       continue;
     }
@@ -124,6 +152,12 @@ Deno.serve(async (req) => {
         .eq("id", acc.id)
         .eq("scope_type", acc.scope_type);
       results.push({ account: acc.email, scope_type: acc.scope_type, ...res });
+      await logSync({
+        status: "success",
+        scanned: (res as { scanned?: number }).scanned ?? null,
+        inserted: (res as { inserted?: number }).inserted ?? null,
+        attempt: 0,
+      });
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       console.error(`Account ${acc.email} failed:`, msg);
@@ -166,6 +200,15 @@ Deno.serve(async (req) => {
           retry_at: nextAt,
           reconnect_required: requireManual,
         });
+        await logSync({
+          status: "refresh_failed",
+          error_message: msg,
+          attempt: nextAttempts,
+          max_attempts: acc.reconnect_max_attempts,
+          next_retry_at: nextAt,
+          reconnect_required: requireManual,
+          fatal: e.fatal,
+        });
       } else {
         // Erro não relacionado a refresh: só atualiza last_error.
         await admin.from("email_accounts")
@@ -173,6 +216,7 @@ Deno.serve(async (req) => {
           .eq("id", acc.id)
           .eq("scope_type", acc.scope_type);
         results.push({ account: acc.email, scope_type: acc.scope_type, error: msg });
+        await logSync({ status: "error", error_message: msg });
       }
     }
   }
