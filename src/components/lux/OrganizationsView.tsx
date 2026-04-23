@@ -25,6 +25,7 @@ import {
 import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
 import { PermissionsMatrix } from "@/components/lux/permissions/PermissionsMatrix";
+import { MembershipAuditLog } from "@/components/lux/organizations/MembershipAuditLog";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
