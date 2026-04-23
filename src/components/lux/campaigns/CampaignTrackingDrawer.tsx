@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Mail, MousePointerClick, Eye, AlertCircle, Reply, UserMinus } from "lucide-react";
+import { Mail, MousePointerClick, Eye, AlertCircle, Reply, UserMinus, Clock, XCircle } from "lucide-react";
 
 interface Recipient {
   id: string;
@@ -36,6 +36,24 @@ const eventIcon: Record<string, React.ReactNode> = {
   reply: <Reply className="h-3 w-3 text-success" />,
   unsubscribe: <UserMinus className="h-3 w-3 text-warning" />,
   sent: <Mail className="h-3 w-3 text-muted-foreground" />,
+  queued: <Clock className="h-3 w-3 text-muted-foreground" />,
+  failed: <XCircle className="h-3 w-3 text-destructive" />,
+};
+
+const statusBadgeVariant = (status: string): "outline" | "default" | "secondary" | "destructive" => {
+  switch (status) {
+    case "failed":
+    case "bounced":
+      return "destructive";
+    case "sent":
+    case "replied":
+      return "default";
+    case "queued":
+    case "pending":
+      return "secondary";
+    default:
+      return "outline";
+  }
 };
 
 export const CampaignTrackingDrawer = ({
@@ -97,6 +115,9 @@ export const CampaignTrackingDrawer = ({
   const opened = recipients.filter((r) => r.open_count > 0).length;
   const clicked = recipients.filter((r) => r.click_count > 0).length;
   const replied = recipients.filter((r) => r.replied_at).length;
+  const failed = recipients.filter((r) => r.status === "failed").length;
+  const bounced = recipients.filter((r) => r.bounced_at || r.status === "bounced").length;
+  const queued = recipients.filter((r) => r.status === "queued" || r.status === "pending").length;
   const openRate = sent ? Math.round((opened / sent) * 100) : 0;
   const clickRate = sent ? Math.round((clicked / sent) * 100) : 0;
   const replyRate = sent ? Math.round((replied / sent) * 100) : 0;
@@ -117,6 +138,10 @@ export const CampaignTrackingDrawer = ({
             { label: "Open rate", value: `${openRate}%` },
             { label: "Click rate", value: `${clickRate}%` },
             { label: "Reply rate", value: `${replyRate}%` },
+            { label: "Na fila", value: queued },
+            { label: "Falhas", value: failed },
+            { label: "Bounces", value: bounced },
+            { label: "Total", value: recipients.length },
           ].map((s) => (
             <div key={s.label} className="glass rounded-lg p-3">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</span>
@@ -142,7 +167,7 @@ export const CampaignTrackingDrawer = ({
                   <div className="flex items-center gap-1.5 text-[10px] shrink-0">
                     <Badge variant="outline" className="gap-1 h-5"><Eye className="h-2.5 w-2.5" />{r.open_count}</Badge>
                     <Badge variant="outline" className="gap-1 h-5"><MousePointerClick className="h-2.5 w-2.5" />{r.click_count}</Badge>
-                    <Badge variant="outline" className="h-5 capitalize">{r.status}</Badge>
+                    <Badge variant={statusBadgeVariant(r.status)} className="h-5 capitalize">{r.status}</Badge>
                   </div>
                 </div>
               ))}

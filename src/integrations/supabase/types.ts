@@ -431,7 +431,9 @@ export type Database = {
       }
       campaigns: {
         Row: {
+          bounced: number
           created_at: string
+          failed: number
           id: string
           meetings: number
           name: string
@@ -447,7 +449,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bounced?: number
           created_at?: string
+          failed?: number
           id?: string
           meetings?: number
           name: string
@@ -463,7 +467,9 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          bounced?: number
           created_at?: string
+          failed?: number
           id?: string
           meetings?: number
           name?: string
