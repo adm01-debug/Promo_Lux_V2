@@ -69,6 +69,27 @@ export const OrganizationsView = () => {
     ].slice(0, 12));
   };
 
+  // Quando clicado em "Aceito por X" num convite, destacamos a linha
+  // do membro correspondente na lista acima e fazemos scroll até ela.
+  const [highlightedMemberId, setHighlightedMemberId] = useState<string | null>(null);
+  const focusMemberByUserId = (userId: string | null) => {
+    if (!userId) return;
+    const member = (members ?? []).find((m) => m.user_id === userId);
+    if (!member) {
+      toast({
+        title: "Usuário não está mais neste workspace",
+        description: "O membro pode ter saído ou sido removido.",
+      });
+      return;
+    }
+    setHighlightedMemberId(member.id);
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`org-member-${member.id}`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    window.setTimeout(() => setHighlightedMemberId((id) => (id === member.id ? null : id)), 2400);
+  };
+
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
   const myRole = (myMembership?.role as AppRole | undefined) ?? null;
