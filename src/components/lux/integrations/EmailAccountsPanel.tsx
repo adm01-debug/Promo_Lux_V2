@@ -5,11 +5,21 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2 } from "lucide-react";
+import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2, ArrowLeftRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
 import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Account {
   id: string;
@@ -54,6 +64,7 @@ export function EmailAccountsPanel() {
   const { isAdmin } = usePermissions();
   const notifiedErrorsRef = useRef<Map<string, string>>(new Map());
   const [disconnectTarget, setDisconnectTarget] = useState<Account | null>(null);
+  const [scopeChangeTarget, setScopeChangeTarget] = useState<Account | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -173,6 +184,42 @@ export function EmailAccountsPanel() {
       qc.invalidateQueries({ queryKey: ["email-accounts"] });
     },
     onError: (e: Error) => toast({ title: "Permissão negada", description: e.message, variant: "destructive" }),
+  });
+
+  /**
+   * Converte uma conta entre escopos `user` ↔ `organization`.
+   *
+   * Restrições enforced pela RLS de `email_accounts` (USING + WITH CHECK):
+   * - Personal → Shared: requer que o usuário seja admin da org E dono atual da conta.
+   * - Shared → Personal: requer admin (USING) e reatribui `user_id` para `auth.uid()`
+   *   (WITH CHECK exige `user_id = auth.uid()` quando `scope_type='user'`).
+   */
+  const scopeMutation = useMutation({
+    mutationFn: async (acc: Account) => {
+      if (!user?.id) throw new Error("Não autenticado.");
+      const target: "user" | "organization" = acc.scope_type === "user" ? "organization" : "user";
+      if (target === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem promover uma caixa para compartilhada.");
+      }
+      if (acc.scope_type === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem converter caixas compartilhadas.");
+      }
+      // Quando vira pessoal, o owner passa a ser o admin que está fazendo a conversão.
+      const patch: { scope_type: "user" | "organization"; user_id?: string } =
+        target === "user" ? { scope_type: "user", user_id: user.id } : { scope_type: "organization" };
+      const { error } = await supabase.from("email_accounts").update(patch).eq("id", acc.id);
+      if (error) throw error;
+      return target;
+    },
+    onSuccess: (target, acc) => {
+      const label = target === "organization" ? "compartilhada" : "pessoal";
+      toast({ title: "Conta convertida", description: `${acc.email} agora é ${label}.` });
+      qc.invalidateQueries({ queryKey: ["email-accounts"] });
+      setScopeChangeTarget(null);
+    },
+    onError: (e: Error) => {
+      toast({ title: "Falha ao converter", description: e.message, variant: "destructive" });
+    },
   });
 
   return (
@@ -326,6 +373,28 @@ export function EmailAccountsPanel() {
                   <Link2 className="h-3 w-3" /> Reconectar
                 </Button>
               )}
+              {(() => {
+                const wantsOrg = acc.scope_type === "user";
+                const canConvert = isAdmin && (wantsOrg ? acc.user_id === user?.id : true);
+                const reason = !isAdmin
+                  ? "Apenas administradores podem alterar o escopo."
+                  : wantsOrg && acc.user_id !== user?.id
+                  ? "Só o dono atual da caixa pessoal pode promovê-la a compartilhada."
+                  : undefined;
+                return (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 gap-1 text-xs"
+                    disabled={!canConvert || scopeMutation.isPending}
+                    title={reason ?? (wantsOrg ? "Tornar compartilhada (org)" : "Tornar pessoal")}
+                    onClick={() => (canConvert ? setScopeChangeTarget(acc) : toast({ title: "Permissão negada", description: reason ?? "", variant: "destructive" }))}
+                  >
+                    <ArrowLeftRight className="h-3 w-3" />
+                    {wantsOrg ? "→ Org" : "→ Pessoal"}
+                  </Button>
+                );
+              })()}
               <Button
                 size="sm"
                 variant="ghost"
@@ -357,6 +426,56 @@ export function EmailAccountsPanel() {
         open={!!disconnectTarget}
         onOpenChange={(o) => !o && setDisconnectTarget(null)}
       />
+
+      <AlertDialog open={!!scopeChangeTarget} onOpenChange={(o) => !o && setScopeChangeTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {scopeChangeTarget?.scope_type === "user"
+                ? "Tornar caixa compartilhada?"
+                : "Tornar caixa pessoal?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                <p>
+                  <span className="font-medium text-foreground">{scopeChangeTarget?.email}</span> passará de{" "}
+                  <Badge variant="outline" className="text-[10px] mx-1">
+                    {scopeChangeTarget?.scope_type === "user" ? "Pessoal" : "Compartilhada"}
+                  </Badge>
+                  para{" "}
+                  <Badge variant="outline" className="text-[10px] mx-1 border-primary/30 text-primary">
+                    {scopeChangeTarget?.scope_type === "user" ? "Compartilhada" : "Pessoal"}
+                  </Badge>
+                  .
+                </p>
+                {scopeChangeTarget?.scope_type === "user" ? (
+                  <p className="text-muted-foreground">
+                    Todos os membros da organização poderão visualizá-la. Apenas administradores poderão sincronizar,
+                    reconectar ou desconectar.
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground">
+                    A caixa deixará de ser visível para os demais membros e o dono passará a ser você. Tokens OAuth e
+                    histórico de sincronização são preservados.
+                  </p>
+                )}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={scopeMutation.isPending}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={scopeMutation.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                if (scopeChangeTarget) scopeMutation.mutate(scopeChangeTarget);
+              }}
+            >
+              {scopeMutation.isPending ? "Convertendo..." : "Confirmar conversão"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
