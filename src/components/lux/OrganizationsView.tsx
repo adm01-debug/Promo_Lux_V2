@@ -69,6 +69,27 @@ export const OrganizationsView = () => {
     ].slice(0, 12));
   };
 
+  // Quando clicado em "Aceito por X" num convite, destacamos a linha
+  // do membro correspondente na lista acima e fazemos scroll até ela.
+  const [highlightedMemberId, setHighlightedMemberId] = useState<string | null>(null);
+  const focusMemberByUserId = (userId: string | null) => {
+    if (!userId) return;
+    const member = (members ?? []).find((m) => m.user_id === userId);
+    if (!member) {
+      toast({
+        title: "Usuário não está mais neste workspace",
+        description: "O membro pode ter saído ou sido removido.",
+      });
+      return;
+    }
+    setHighlightedMemberId(member.id);
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`org-member-${member.id}`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    window.setTimeout(() => setHighlightedMemberId((id) => (id === member.id ? null : id)), 2400);
+  };
+
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
   const myRole = (myMembership?.role as AppRole | undefined) ?? null;
@@ -335,10 +356,15 @@ export const OrganizationsView = () => {
                     return (
                       <motion.div
                         key={m.id}
+                        id={`org-member-${m.id}`}
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.03 }}
-                        className="p-4 flex items-center justify-between gap-3 hover:bg-secondary/20 transition-colors"
+                        className={`p-4 flex items-center justify-between gap-3 hover:bg-secondary/20 transition-colors ${
+                          highlightedMemberId === m.id
+                            ? "bg-primary/10 ring-1 ring-primary/40"
+                            : ""
+                        }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <Avatar className="h-9 w-9 flex-shrink-0 border border-border/40">
@@ -497,8 +523,20 @@ export const OrganizationsView = () => {
                                   </p>
                                   {used ? (
                                     <p>
-                                      Aceito por <span className="text-success">{acceptedName ?? "—"}</span> em{" "}
-                                      <span className="text-foreground/80">{fmt(inv.accepted_at)}</span>
+                                      Aceito por{" "}
+                                      {inv.accepted_by ? (
+                                        <button
+                                          type="button"
+                                          onClick={() => focusMemberByUserId(inv.accepted_by)}
+                                          className="text-success underline-offset-2 hover:underline focus:underline focus:outline-none"
+                                          title="Ver membro no workspace"
+                                        >
+                                          {acceptedName ?? "—"}
+                                        </button>
+                                      ) : (
+                                        <span className="text-success">—</span>
+                                      )}
+                                      {" "}em <span className="text-foreground/80">{fmt(inv.accepted_at)}</span>
                                     </p>
                                   ) : inv.revoked ? (
                                     <p>Revogado · expiraria em {fmt(inv.expires_at)}</p>
