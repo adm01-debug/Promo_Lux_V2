@@ -356,10 +356,15 @@ export const OrganizationsView = () => {
                     return (
                       <motion.div
                         key={m.id}
+                        id={`org-member-${m.id}`}
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.03 }}
-                        className="p-4 flex items-center justify-between gap-3 hover:bg-secondary/20 transition-colors"
+                        className={`p-4 flex items-center justify-between gap-3 hover:bg-secondary/20 transition-colors ${
+                          highlightedMemberId === m.id
+                            ? "bg-primary/10 ring-1 ring-primary/40"
+                            : ""
+                        }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <Avatar className="h-9 w-9 flex-shrink-0 border border-border/40">
