@@ -1,5 +1,6 @@
 // Public REST API authenticated via X-API-Key header
 // Endpoints:
+//   GET    /me                  (returns current API key info)
 //   GET    /companies?limit=&offset=
 //   POST   /companies            (write scope)
 //   GET    /companies/:id
@@ -56,7 +57,34 @@ Deno.serve(async (req) => {
     const segs = fnIdx >= 0 ? parts.slice(fnIdx + 1) : parts;
     const [resource, id] = segs;
 
-    if (!resource) return json({ error: "Resource required (companies|deals|stakeholders)" }, 400);
+    if (!resource) return json({ error: "Resource required (me|companies|deals|stakeholders)" }, 400);
+
+    // GET /me — return info about the authenticated API key
+    if (resource === "me") {
+      if (req.method !== "GET") return json({ error: "Method not allowed" }, 405);
+      const { data: keyRow, error: meErr } = await supabase
+        .from("api_keys")
+        .select("id, name, prefix, scopes, active, expires_at, last_used_at, created_at, organization_id")
+        .eq("id", key_id)
+        .maybeSingle();
+      if (meErr) return json({ error: meErr.message }, 500);
+      if (!keyRow) return json({ error: "API key not found" }, 404);
+      return json({
+        data: {
+          id: keyRow.id,
+          name: keyRow.name,
+          prefix: keyRow.prefix,
+          scopes: keyRow.scopes,
+          active: keyRow.active,
+          expires_at: keyRow.expires_at,
+          last_used_at: keyRow.last_used_at,
+          created_at: keyRow.created_at,
+          organization_id: keyRow.organization_id,
+          user_id,
+        },
+      });
+    }
+
     if (!ALLOWED_TABLES.includes(resource as AllowedTable)) {
       return json({ error: "Unknown resource" }, 404);
     }
