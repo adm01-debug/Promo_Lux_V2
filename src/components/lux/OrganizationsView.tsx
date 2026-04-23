@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw } from "lucide-react";
+import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw, History, Undo2, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,6 +52,21 @@ export const OrganizationsView = () => {
   const [removeTarget, setRemoveTarget] = useState<{ id: string; label: string; isMe: boolean } | null>(null);
   const [memberFilter, setMemberFilter] = useState<"all" | "active">("all");
   const [inviteFilter, setInviteFilter] = useState<"all" | "pending" | "accepted" | "revoked" | "expired">("all");
+
+  type ActivityEntry = {
+    id: string;
+    at: number;
+    icon: "role" | "revoke" | "resend" | "remove" | "create";
+    title: string;
+    detail: string;
+  };
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
+  const pushActivity = (entry: Omit<ActivityEntry, "id" | "at">) => {
+    setActivity(prev => [
+      { id: crypto.randomUUID(), at: Date.now(), ...entry },
+      ...prev,
+    ].slice(0, 12));
+  };
 
   const myMembership = (members ?? []).find(m => m.user_id === user?.id);
   const isAdmin = myMembership?.role === "admin";
@@ -135,8 +150,71 @@ export const OrganizationsView = () => {
         title: "Convite reenviado",
         description: "Novo link gerado e copiado para a área de transferência.",
       });
+      pushActivity({
+        icon: "resend",
+        title: "Convite reenviado",
+        detail: `Novo link ${ROLE_LABEL[inv.role]} gerado (anterior revogado).`,
+      });
     } catch (e) {
       toast({ title: "Erro ao reenviar", description: (e as Error).message, variant: "destructive" });
+    }
+  };
+
+  const handleRoleChange = async (
+    member: { id: string; role: AppRole; user_id: string; profile?: { full_name: string | null } | null },
+    newRole: AppRole
+  ) => {
+    if (member.role === newRole) return;
+    const previousRole = member.role;
+    const label = member.user_id === user?.id
+      ? "Você"
+      : member.profile?.full_name?.trim() || `${member.user_id.slice(0, 8)}…`;
+    try {
+      await updateRole.mutateAsync({ id: member.id, role: newRole });
+      toast({
+        title: "Papel atualizado",
+        description: `${label}: ${ROLE_LABEL[previousRole]} → ${ROLE_LABEL[newRole]}`,
+        action: (
+          <button
+            onClick={() => handleRoleChange({ ...member, role: newRole }, previousRole)}
+            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            <Undo2 className="h-3 w-3" /> Desfazer
+          </button>
+        ) as unknown as undefined,
+      });
+      pushActivity({
+        icon: "role",
+        title: "Papel alterado",
+        detail: `${label}: ${ROLE_LABEL[previousRole]} → ${ROLE_LABEL[newRole]}`,
+      });
+    } catch (e) {
+      toast({
+        title: "Falha ao alterar papel",
+        description: (e as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRevokeInvite = async (inv: { id: string; role: AppRole; token: string }) => {
+    try {
+      await revokeInvite.mutateAsync(inv.id);
+      toast({
+        title: "Convite revogado",
+        description: `Link ${ROLE_LABEL[inv.role]} (${inv.token.slice(0, 8)}…) não pode mais ser usado.`,
+      });
+      pushActivity({
+        icon: "revoke",
+        title: "Convite revogado",
+        detail: `${ROLE_LABEL[inv.role]} · token ${inv.token.slice(0, 8)}…`,
+      });
+    } catch (e) {
+      toast({
+        title: "Falha ao revogar",
+        description: (e as Error).message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -287,7 +365,7 @@ export const OrganizationsView = () => {
                           {isAdmin && !isOwner ? (
                             <Select
                               value={m.role}
-                              onValueChange={(v) => updateRole.mutate({ id: m.id, role: v as AppRole })}
+                              onValueChange={(v) => handleRoleChange(m, v as AppRole)}
                             >
                               <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
                               <SelectContent>
@@ -460,7 +538,7 @@ export const OrganizationsView = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                  onClick={() => revokeInvite.mutate(inv.id)}
+                                  onClick={() => handleRevokeInvite(inv)}
                                   title="Revogar"
                                 >
                                   <X className="h-4 w-4" />
@@ -471,6 +549,60 @@ export const OrganizationsView = () => {
                         );
                       })
                     )}
+                  </div>
+                </div>
+              )}
+
+              {/* Activity history (in-memory) */}
+              {activity.length > 0 && (
+                <div className="glass rounded-lg overflow-hidden">
+                  <div className="p-4 border-b border-border/40 flex items-center justify-between">
+                    <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                      <History className="h-4 w-4 text-primary" />
+                      Atividade recente desta sessão
+                    </h3>
+                    <button
+                      onClick={() => setActivity([])}
+                      className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Limpar
+                    </button>
+                  </div>
+                  <ul className="divide-y divide-border/20">
+                    {activity.map((a) => {
+                      const Icon =
+                        a.icon === "role" ? UserCog
+                        : a.icon === "revoke" ? X
+                        : a.icon === "resend" ? RefreshCw
+                        : a.icon === "remove" ? Trash2
+                        : Activity;
+                      const tone =
+                        a.icon === "revoke" || a.icon === "remove" ? "text-destructive bg-destructive/10"
+                        : a.icon === "role" ? "text-info bg-info/10"
+                        : "text-primary bg-primary/10";
+                      return (
+                        <motion.li
+                          key={a.id}
+                          initial={{ opacity: 0, x: -6 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="p-3 flex items-start gap-3"
+                        >
+                          <div className={`h-7 w-7 rounded-md flex items-center justify-center flex-shrink-0 ${tone}`}>
+                            <Icon className="h-3.5 w-3.5" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-medium text-foreground">{a.title}</p>
+                            <p className="text-[11px] text-muted-foreground truncate">{a.detail}</p>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground flex-shrink-0 mt-0.5">
+                            {new Date(a.at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        </motion.li>
+                      );
+                    })}
+                  </ul>
+                  <div className="px-4 py-2 border-t border-border/30 bg-secondary/10 text-[10px] text-muted-foreground">
+                    Histórico em memória (limpa ao recarregar). Para auditoria completa, consulte os logs em Configurações.
                   </div>
                 </div>
               )}
@@ -516,6 +648,11 @@ export const OrganizationsView = () => {
                   onSuccess: () => {
                     toast({
                       title: removeTarget.isMe ? "Você saiu do workspace" : "Membro removido",
+                    });
+                    pushActivity({
+                      icon: "remove",
+                      title: removeTarget.isMe ? "Saída do workspace" : "Membro removido",
+                      detail: removeTarget.label,
                     });
                   },
                   onError: (e) => {
