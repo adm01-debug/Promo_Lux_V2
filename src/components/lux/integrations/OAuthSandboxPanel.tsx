@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { usePermissions } from "@/hooks/usePermissions";
 import { AlertCircle, CheckCircle2, FlaskConical, Loader2, ShieldCheck, Copy, ExternalLink, KeyRound } from "lucide-react";
+import { OAuthSnapshotsPanel } from "./OAuthSnapshotsPanel";
+import type { SaveSnapshotInput } from "@/hooks/useOAuthSandboxSnapshots";
 
 type Provider = "gmail" | "outlook";
 type ScopeType = "user" | "organization";
@@ -72,6 +74,21 @@ export function OAuthSandboxPanel() {
   };
 
   const ok = result && result.client_id_configured && result.client_secret_configured && result.warnings.length === 0 && !error;
+
+  const pendingSnapshot: SaveSnapshotInput | null = result
+    ? {
+        label: "",
+        provider: result.provider,
+        scope_type: result.scope_type,
+        redirect_uri: result.redirect_uri,
+        redirect_uri_normalized: result.redirect_uri_normalized,
+        scopes: result.scopes,
+        client_id_configured: result.client_id_configured,
+        client_secret_configured: result.client_secret_configured,
+        warnings: result.warnings,
+        auth_url_preview: result.auth_url_preview,
+      }
+    : null;
 
   return (
     <div className="space-y-4">
@@ -233,6 +250,8 @@ export function OAuthSandboxPanel() {
           </div>
         </div>
       )}
+
+      <OAuthSnapshotsPanel pending={pendingSnapshot} />
     </div>
   );
 }
