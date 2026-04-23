@@ -143,43 +143,24 @@ Deno.test("rls-tests: retorna 403 quando JWT é válido mas user não é admin",
     console.warn("SUPABASE_SERVICE_ROLE_KEY ausente — pulando teste de role.");
     return;
   }
-  const admin = createClient(SUPABASE_URL, SERVICE_KEY, CLIENT_OPTS);
-  const email = `rls-test-noadmin-${Date.now()}@test.local`;
-  const password = "TestPass123!";
-
-  const { data: created, error: createErr } = await admin.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-  });
-  if (createErr || !created.user) throw new Error(createErr?.message ?? "create user failed");
-  const userId = created.user.id;
-
-  let userClient: SupabaseClient | null = null;
+  // Fixture garante: usuário existe, JWT válido, ZERO memberships.
+  // Independente de triggers que possam auto-vincular usuários a orgs.
+  const fx = await createNonAdminUserFixture(fixtureCtx());
   try {
-    userClient = createClient(SUPABASE_URL, ANON_KEY, CLIENT_OPTS);
-    const { data: signIn, error: signErr } = await userClient.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (signErr || !signIn.session) throw new Error(signErr?.message ?? "sign in failed");
-
     const res = await fetch(FUNCTION_URL, {
       method: "POST",
-      headers: corsAndJson({ Authorization: `Bearer ${signIn.session.access_token}` }),
+      headers: corsAndJson({ Authorization: `Bearer ${fx.accessToken}` }),
     });
     const body = await safeJson(res);
-    // Validação única: aceita 403 (esperado) ou 500 (gateway flapping)
-    // e garante que o relatório nunca aparece.
+    // Aceita 403 (esperado) ou 500 (gateway flapping) e garante que o
+    // relatório nunca aparece.
     assertDeniedWithoutReport(res, body, [403, 500], "no-admin-role");
-    // Quando vier 403 estruturado (caso comum), reforça o contrato da função.
     if (res.status === 403 && body._isJson) {
       assertEquals(body.error, "Forbidden");
       assertEquals(body.reason, "admin_role_required");
     }
   } finally {
-    try { await userClient?.auth.signOut(); } catch { /* ignore */ }
-    await admin.auth.admin.deleteUser(userId);
+    await fx.cleanup();
   }
 });
 
