@@ -83,6 +83,7 @@ export function OrgViolationsView() {
   const [orgFilter, setOrgFilter] = useState<string>("active");
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [periodFilter, setPeriodFilter] = useState<PeriodKey>("7d");
+  const [correlationFilter, setCorrelationFilter] = useState<string>("");
 
   const sinceIso = useMemo(() => {
     const opt = PERIOD_OPTIONS.find((p) => p.value === periodFilter);
@@ -118,9 +119,24 @@ export function OrgViolationsView() {
   // do que via .filter() no PostgREST e mantém o índice por created_at.
   const filtered = useMemo(() => {
     if (!data) return [];
-    if (kindFilter === "all") return data;
-    return data.filter((r) => r.new_data?.kind === kindFilter);
-  }, [data, kindFilter]);
+    let rows = data;
+    if (kindFilter !== "all") rows = rows.filter((r) => r.new_data?.kind === kindFilter);
+    const corr = correlationFilter.trim();
+    if (corr) rows = rows.filter((r) => (r.new_data?.correlation_id ?? "").includes(corr));
+    return rows;
+  }, [data, kindFilter, correlationFilter]);
+
+  // Conta ocorrências por correlation_id no recorte filtrado para
+  // destacar bursts (ex.: "5 falhas no mesmo fluxo").
+  const correlationCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const r of filtered) {
+      const cid = r.new_data?.correlation_id;
+      if (!cid) continue;
+      map.set(cid, (map.get(cid) ?? 0) + 1);
+    }
+    return map;
+  }, [filtered]);
 
   if (!isAdmin) {
     return (
