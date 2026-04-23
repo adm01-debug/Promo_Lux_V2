@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +9,7 @@ import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserI
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
+import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
 
 interface Account {
   id: string;
@@ -53,6 +53,7 @@ export function EmailAccountsPanel() {
   const [scopeType, setScopeType] = useState<"user" | "organization">("user");
   const { isAdmin } = usePermissions();
   const notifiedErrorsRef = useRef<Map<string, string>>(new Map());
+  const [disconnectTarget, setDisconnectTarget] = useState<Account | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -165,17 +166,6 @@ export function EmailAccountsPanel() {
       qc.invalidateQueries({ queryKey: ["email-accounts"] });
     },
     onError: (e: Error) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
-  });
-
-  const removeMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await db.from("email_accounts").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast({ title: "Conta removida" });
-      qc.invalidateQueries({ queryKey: ["email-accounts"] });
-    },
   });
 
   return (
@@ -324,13 +314,25 @@ export function EmailAccountsPanel() {
               <Button size="sm" variant="ghost" className="h-8 gap-1 text-xs" onClick={() => pollMutation.mutate(acc.id)} disabled={pollMutation.isPending}>
                 <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} /> Sincronizar
               </Button>
-              <Button size="sm" variant="ghost" className="h-8 text-destructive hover:text-destructive" onClick={() => removeMutation.mutate(acc.id)}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 text-destructive hover:text-destructive"
+                onClick={() => setDisconnectTarget(acc)}
+                title="Desconectar e revogar tokens"
+              >
                 <Trash2 className="h-3 w-3" />
               </Button>
             </div>
           ))}
         </div>
       )}
+
+      <DisconnectAccountDialog
+        account={disconnectTarget}
+        open={!!disconnectTarget}
+        onOpenChange={(o) => !o && setDisconnectTarget(null)}
+      />
     </div>
   );
 }
