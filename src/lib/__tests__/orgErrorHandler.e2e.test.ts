@@ -76,8 +76,9 @@ function resetCalls() {
 }
 
 /**
- * Avança o tempo do throttle interno (1500ms) entre testes para que cada
- * caso veja seu próprio toast e não seja silenciado.
+ * Avança o relógio para além do throttle interno (1500ms) entre testes
+ * para que cada caso veja seu próprio toast e não seja silenciado pelo
+ * estado de módulo `lastToastAt`/`lastAuditAt`.
  */
 function bypassThrottle() {
   vi.setSystemTime(new Date(Date.now() + 5000));
@@ -90,6 +91,7 @@ describe("orgErrorHandler — E2E switching de org durante edição", () => {
 
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
+    // garante que o throttle do handler (estado de módulo) está expirado
     bypassThrottle();
     resetCalls();
     setActiveOrgId(null);
