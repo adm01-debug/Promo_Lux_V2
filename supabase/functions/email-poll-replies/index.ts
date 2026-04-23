@@ -10,6 +10,36 @@ interface EmailAccount {
   id: string; user_id: string; provider: "gmail" | "outlook"; email: string;
   access_token: string | null; refresh_token: string | null; expires_at: string | null;
   history_id: string | null; delta_link: string | null; last_polled_at: string | null;
+  scope_type: "user" | "organization"; organization_id: string | null;
+  reconnect_attempts: number; reconnect_next_at: string | null;
+  reconnect_max_attempts: number; reconnect_base_delay_seconds: number;
+  reconnect_required: boolean;
+}
+
+/**
+ * Erro fatal de refresh: o servidor OAuth indicou que o refresh_token foi
+ * revogado/expirou definitivamente. Não adianta tentar de novo — marcamos
+ * `reconnect_required = true` e o usuário precisa refazer o consentimento.
+ * Cobre `invalid_grant` (Google) e códigos AADSTS típicos da Microsoft.
+ */
+function isFatalRefreshError(payload: unknown): boolean {
+  const s = JSON.stringify(payload ?? "").toLowerCase();
+  return (
+    s.includes("invalid_grant") ||
+    s.includes("invalid_client") ||
+    s.includes("aadsts70008") ||
+    s.includes("aadsts50173") ||
+    s.includes("aadsts700082")
+  );
+}
+
+class RefreshError extends Error {
+  fatal: boolean;
+  constructor(message: string, fatal: boolean) {
+    super(message);
+    this.fatal = fatal;
+    this.name = "RefreshError";
+  }
 }
 
 Deno.serve(async (req) => {
