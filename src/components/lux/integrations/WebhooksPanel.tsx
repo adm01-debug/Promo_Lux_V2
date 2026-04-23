@@ -145,8 +145,16 @@ function DeliveriesDrawer({ webhook, onClose }: { webhook: Webhook; onClose: () 
                   <code className="text-xs">{d.event}</code>
                   {d.status_code && <span className="text-[10px] text-muted-foreground">HTTP {d.status_code}</span>}
                 </div>
-                <Button size="icon" variant="ghost" onClick={() => replay.mutate(d.id)} title="Reenviar">
-                  <RefreshCw className="h-3.5 w-3.5" />
+                <Button
+                  size="sm"
+                  variant={d.status === "failed" || d.status === "retrying" ? "default" : "ghost"}
+                  onClick={() => replay.mutate(d.id)}
+                  disabled={replay.isPending}
+                  title={`Reencolar entrega ${d.id.slice(0, 8)}`}
+                  className="h-7 gap-1.5 text-[10px]"
+                >
+                  <RefreshCw className={cn("h-3 w-3", replay.isPending && "animate-spin")} />
+                  Replay
                 </Button>
               </div>
               <p className="text-[10px] text-muted-foreground mt-1">

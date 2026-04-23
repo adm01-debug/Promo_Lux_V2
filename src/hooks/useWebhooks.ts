@@ -102,6 +102,22 @@ export function useWebhookDeliveries(webhookId: string | null) {
 
   const replay = useMutation({
     mutationFn: async (deliveryId: string) => {
+      // Reset delivery state so the dispatcher will pick it up even if it
+      // previously hit MAX_ATTEMPTS or was marked as failed.
+      const { error: resetErr } = await supabase
+        .from("webhook_deliveries")
+        .update({
+          status: "pending",
+          attempts: 0,
+          next_retry_at: new Date().toISOString(),
+          error_message: null,
+          status_code: null,
+          response_body: null,
+          delivered_at: null,
+        })
+        .eq("id", deliveryId);
+      if (resetErr) throw resetErr;
+
       const { data, error } = await supabase.functions.invoke("webhook-dispatcher", {
         body: { delivery_id: deliveryId },
       });
