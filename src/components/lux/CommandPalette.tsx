@@ -6,6 +6,7 @@ import { Building2, Users, Workflow, MapPin, Mail, Target, Clock, Plus, Loader2 
 import { View } from "@/hooks/useNavigationHistory";
 import { RecentView } from "@/hooks/useRecentViews";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { VIEW_LABELS, sections } from "./command-palette/commandPaletteData";
@@ -29,7 +30,7 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
     queryKey: ["command-palette-companies"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("companies").select("id, name, sector, location, ipc_score").order("ipc_score", { ascending: false }).limit(100);
+      const { data, error } = await db.from("companies").select("id, name, sector, location, ipc_score").order("ipc_score", { ascending: false }).limit(100);
       if (error) throw error;
       return data ?? [];
     },
@@ -40,7 +41,7 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
   const { data: stakeholders = [] } = useQuery({
     queryKey: ["command-palette-stakeholders"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("stakeholders").select("id, full_name, role, company_id, email").order("created_at", { ascending: false }).limit(100);
+      const { data, error } = await db.from("stakeholders").select("id, full_name, role, company_id, email").order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
       return data ?? [];
     },
@@ -51,7 +52,7 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
   const { data: workflows = [] } = useQuery({
     queryKey: ["command-palette-workflows"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("workflows").select("id, name, status, description").order("created_at", { ascending: false }).limit(50);
+      const { data, error } = await db.from("workflows").select("id, name, status, description").order("created_at", { ascending: false }).limit(50);
       if (error) throw error;
       return data ?? [];
     },

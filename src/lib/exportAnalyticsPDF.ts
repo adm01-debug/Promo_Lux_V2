@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 
 export async function exportAnalyticsPDF() {
   // Gather data
@@ -8,10 +9,10 @@ export async function exportAnalyticsPDF() {
     { data: workflows },
     { data: campaigns },
   ] = await Promise.all([
-    supabase.from("companies").select("sector, ipc_score, enriched, source"),
-    supabase.from("scrape_jobs").select("status, results_count"),
-    supabase.from("workflows").select("leads_processed, leads_qualified, success_rate"),
-    supabase.from("campaigns").select("name, prospects, sent, opened, replied, meetings"),
+    db.from("companies").select("sector, ipc_score, enriched, source"),
+    db.from("scrape_jobs").select("status, results_count"),
+    db.from("workflows").select("leads_processed, leads_qualified, success_rate"),
+    db.from("campaigns").select("name, prospects, sent, opened, replied, meetings"),
   ]);
 
   const totalCompanies = companies?.length ?? 0;

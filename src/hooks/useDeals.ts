@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -84,7 +85,7 @@ export function useDealStages() {
 
   const updateStage = useMutation({
     mutationFn: async ({ id, ...patch }: Partial<DealStage> & { id: string }) => {
-      const { error } = await supabase.from("deal_stages").update(patch).eq("id", id);
+      const { error } = await db.from("deal_stages").update(patch).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["deal_stages", user?.id] }),
@@ -92,7 +93,7 @@ export function useDealStages() {
 
   const deleteStage = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("deal_stages").delete().eq("id", id);
+      const { error } = await db.from("deal_stages").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -152,7 +153,7 @@ export function useDeals() {
 
   const updateDeal = useMutation({
     mutationFn: async ({ id, ...patch }: Partial<Deal> & { id: string }) => {
-      const { error } = await supabase.from("deals").update(patch).eq("id", id);
+      const { error } = await db.from("deals").update(patch).eq("id", id);
       if (error) throw error;
     },
     onMutate: async ({ id, ...patch }) => {
@@ -172,7 +173,7 @@ export function useDeals() {
 
   const deleteDeal = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("deals").delete().eq("id", id);
+      const { error } = await db.from("deals").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -215,7 +216,7 @@ export function useDealActivities(dealId: string | null) {
   const addActivity = useMutation({
     mutationFn: async (input: { type: DealActivity["type"]; title: string; content?: string }) => {
       if (!dealId) throw new Error("No deal selected");
-      const { error } = await supabase.from("deal_activities").insert({
+      const { error } = await db.from("deal_activities").insert({
         deal_id: dealId,
         type: input.type,
         title: input.title,
@@ -253,7 +254,7 @@ export function useDealTasks(dealId?: string | null) {
     queryKey: ["deal_tasks", user?.id, dealId ?? "all"],
     enabled: !!user,
     queryFn: async () => {
-      let q = supabase.from("deal_tasks").select("*").order("due_at", { ascending: true, nullsFirst: false });
+      let q = db.from("deal_tasks").select("*").order("due_at", { ascending: true, nullsFirst: false });
       if (dealId) q = q.eq("deal_id", dealId);
       const { data, error } = await q;
       if (error) throw error;
@@ -263,7 +264,7 @@ export function useDealTasks(dealId?: string | null) {
 
   const createTask = useMutation({
     mutationFn: async (input: Partial<DealTask> & { title: string }) => {
-      const { error } = await supabase.from("deal_tasks").insert({
+      const { error } = await db.from("deal_tasks").insert({
         deal_id: input.deal_id ?? dealId ?? null,
         title: input.title,
         description: input.description ?? null,
@@ -292,7 +293,7 @@ export function useDealTasks(dealId?: string | null) {
 
   const deleteTask = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("deal_tasks").delete().eq("id", id);
+      const { error } = await db.from("deal_tasks").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

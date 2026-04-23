@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { AnimatePresence } from "framer-motion";
@@ -60,7 +61,7 @@ export const StakeholderFinderView = () => {
     queryFn: isDemoMode
       ? () => DEMO_STAKEHOLDERS as Stakeholder[]
       : async () => {
-          const { data, error } = await supabase.from("stakeholders").select("*").order("confidence_score", { ascending: false });
+          const { data, error } = await db.from("stakeholders").select("*").order("confidence_score", { ascending: false });
           if (error) throw error;
           return data as Stakeholder[];
         },

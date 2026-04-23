@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -44,7 +45,7 @@ export function useWebhooks() {
     queryKey: ["webhooks", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase.from("webhooks").select("*").order("created_at", { ascending: false });
+      const { data, error } = await db.from("webhooks").select("*").order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Webhook[];
     },
@@ -52,7 +53,7 @@ export function useWebhooks() {
 
   const createWebhook = useMutation({
     mutationFn: async (input: { name: string; url: string; events: string[] }) => {
-      const { error } = await supabase.from("webhooks").insert({
+      const { error } = await db.from("webhooks").insert({
         name: input.name, url: input.url, events: input.events,
       });
       if (error) throw error;
@@ -63,7 +64,7 @@ export function useWebhooks() {
 
   const updateWebhook = useMutation({
     mutationFn: async ({ id, ...patch }: Partial<Webhook> & { id: string }) => {
-      const { error } = await supabase.from("webhooks").update(patch).eq("id", id);
+      const { error } = await db.from("webhooks").update(patch).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["webhooks", user?.id] }),
@@ -71,7 +72,7 @@ export function useWebhooks() {
 
   const deleteWebhook = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("webhooks").delete().eq("id", id);
+      const { error } = await db.from("webhooks").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["webhooks", user?.id] }); toast.success("Webhook removido"); },

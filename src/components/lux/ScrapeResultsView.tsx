@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -134,7 +135,7 @@ export const ScrapeResultsView = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("scrape_results").delete().eq("id", id);
+      const { error } = await db.from("scrape_results").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

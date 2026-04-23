@@ -2,6 +2,7 @@ import { ArrowDown, Database, Filter, CheckCircle2 } from "lucide-react";
 import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_FUNNEL } from "@/lib/demoData";
@@ -41,10 +42,10 @@ export const EnrichmentFunnel = () => {
             { count: highScore },
             { count: qualified },
           ] = await Promise.all([
-            supabase.from("companies").select("*", { count: "exact", head: true }),
-            supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
-            supabase.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 60),
-            supabase.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 75),
+            db.from("companies").select("*", { count: "exact", head: true }),
+            db.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
+            db.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 60),
+            db.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 75),
           ]);
           return {
             total: total ?? 0,

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -38,7 +39,7 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message });
 
             if (user?.id) {
-              await supabase.from("notifications").insert([{
+              await db.from("notifications").insert([{
                 user_id: user.id,
                 title,
                 message,
@@ -58,7 +59,7 @@ export function useRealtimeScrapeJobs() {
             toast({ title, description: message, variant: "destructive" });
 
             if (user?.id) {
-              await supabase.from("notifications").insert([{
+              await db.from("notifications").insert([{
                 user_id: user.id,
                 title,
                 message,
