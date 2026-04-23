@@ -465,19 +465,7 @@ export function handleOrgError(err: unknown): boolean {
     const { title, description } = copyForMissing(err);
     toast.error(title, {
       description,
-      action: {
-        label: "Selecionar organização",
-        onClick: () => {
-          emit(null);
-          if (typeof window !== "undefined") {
-            const url = new URL(window.location.href);
-            url.searchParams.set("view", "organizations");
-            window.history.pushState({}, "", url.toString());
-            // dispara popstate para o useNavigationHistory sincronizar
-            window.dispatchEvent(new PopStateEvent("popstate"));
-          }
-        },
-      },
+      action: selectOrganizationAction(),
     });
   } else {
     // OrgMismatchError
@@ -485,7 +473,7 @@ export function handleOrgError(err: unknown): boolean {
     // Prioridade da ação:
     //  1. Se há operação registrada → "Tentar novamente" (com refresh de org).
     //  2. Se a tabela tem view mapeada → "Ir para <lista>" (recupera contexto).
-    //  3. Fallback genérico → "Recarregar dados".
+    //  3. Fallback → "Selecionar organização" (CTA direto para o switcher).
     const targetView = viewForTable(err.table);
     const action = lastOperation
       ? {
@@ -499,10 +487,7 @@ export function handleOrgError(err: unknown): boolean {
             label: "Ir para a lista",
             onClick: () => navigateAfterOrgMismatch(err.table),
           }
-        : {
-            label: "Recarregar dados",
-            onClick: reload,
-          };
+        : selectOrganizationAction();
     toast.error(title, { description, action });
   }
 
