@@ -317,6 +317,7 @@ export function OrgViolationsView() {
                     <TableHead>Tabela</TableHead>
                     <TableHead>Operação</TableHead>
                     <TableHead>Esperado / Recebido</TableHead>
+                    <TableHead>Correlation</TableHead>
                     <TableHead className="hidden lg:table-cell">URL</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -324,6 +325,8 @@ export function OrgViolationsView() {
                   {filtered.map((row) => {
                     const p = row.new_data ?? {};
                     const kind = p.kind ?? "—";
+                    const cid = p.correlation_id ?? null;
+                    const cidCount = cid ? correlationCounts.get(cid) ?? 1 : 0;
                     return (
                       <TableRow key={row.id}>
                         <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
@@ -364,6 +367,32 @@ export function OrgViolationsView() {
                         </TableCell>
                         <TableCell className="hidden lg:table-cell text-xs text-muted-foreground max-w-[280px] truncate">
                           {p.url ?? "—"}
+                        </TableCell>
+                        <TableCell className="text-xs">
+                          {cid ? (
+                            <button
+                              type="button"
+                              onClick={() => setCorrelationFilter(cid)}
+                              title={`${cid} (clique para filtrar)`}
+                              className="inline-flex items-center gap-1.5 group"
+                            >
+                              <code className="text-[11px] text-muted-foreground group-hover:text-foreground transition-colors">
+                                {cid.slice(5, 17)}…
+                              </code>
+                              {cidCount > 1 && (
+                                <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                                  ×{cidCount}
+                                </Badge>
+                              )}
+                              {typeof p.correlation_seq === "number" && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  #{p.correlation_seq}
+                                </span>
+                              )}
+                            </button>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
