@@ -452,15 +452,6 @@ export function handleOrgError(err: unknown): boolean {
   if (now - lastToastAt < THROTTLE_MS) return true;
   lastToastAt = now;
 
-  const reload = () => {
-    if (!qcRef) {
-      // Fallback: full reload se não temos QueryClient registrado.
-      if (typeof window !== "undefined") window.location.reload();
-      return;
-    }
-    qcRef.invalidateQueries();
-  };
-
   if (err instanceof MissingOrgContextError) {
     const { title, description } = copyForMissing(err);
     toast.error(title, {
