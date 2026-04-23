@@ -150,8 +150,71 @@ export const OrganizationsView = () => {
         title: "Convite reenviado",
         description: "Novo link gerado e copiado para a área de transferência.",
       });
+      pushActivity({
+        icon: "resend",
+        title: "Convite reenviado",
+        detail: `Novo link ${ROLE_LABEL[inv.role]} gerado (anterior revogado).`,
+      });
     } catch (e) {
       toast({ title: "Erro ao reenviar", description: (e as Error).message, variant: "destructive" });
+    }
+  };
+
+  const handleRoleChange = async (
+    member: { id: string; role: AppRole; user_id: string; profile?: { full_name: string | null } | null },
+    newRole: AppRole
+  ) => {
+    if (member.role === newRole) return;
+    const previousRole = member.role;
+    const label = member.user_id === user?.id
+      ? "Você"
+      : member.profile?.full_name?.trim() || `${member.user_id.slice(0, 8)}…`;
+    try {
+      await updateRole.mutateAsync({ id: member.id, role: newRole });
+      toast({
+        title: "Papel atualizado",
+        description: `${label}: ${ROLE_LABEL[previousRole]} → ${ROLE_LABEL[newRole]}`,
+        action: (
+          <button
+            onClick={() => handleRoleChange({ ...member, role: newRole }, previousRole)}
+            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            <Undo2 className="h-3 w-3" /> Desfazer
+          </button>
+        ) as unknown as undefined,
+      });
+      pushActivity({
+        icon: "role",
+        title: "Papel alterado",
+        detail: `${label}: ${ROLE_LABEL[previousRole]} → ${ROLE_LABEL[newRole]}`,
+      });
+    } catch (e) {
+      toast({
+        title: "Falha ao alterar papel",
+        description: (e as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRevokeInvite = async (inv: { id: string; role: AppRole; token: string }) => {
+    try {
+      await revokeInvite.mutateAsync(inv.id);
+      toast({
+        title: "Convite revogado",
+        description: `Link ${ROLE_LABEL[inv.role]} (${inv.token.slice(0, 8)}…) não pode mais ser usado.`,
+      });
+      pushActivity({
+        icon: "revoke",
+        title: "Convite revogado",
+        detail: `${ROLE_LABEL[inv.role]} · token ${inv.token.slice(0, 8)}…`,
+      });
+    } catch (e) {
+      toast({
+        title: "Falha ao revogar",
+        description: (e as Error).message,
+        variant: "destructive",
+      });
     }
   };
 
