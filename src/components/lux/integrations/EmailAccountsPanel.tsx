@@ -174,13 +174,15 @@ export function EmailAccountsPanel() {
   });
 
   const pollMutation = useMutation({
-    mutationFn: async (accountId: string) => {
+    mutationFn: async (input: string | { id: string; force?: boolean }) => {
+      const accountId = typeof input === "string" ? input : input.id;
+      const force = typeof input === "string" ? false : !!input.force;
       const target = accounts.find((a) => a.id === accountId);
       if (target?.scope_type === "organization" && !isAdmin) {
         throw new Error("Apenas administradores podem sincronizar caixas compartilhadas da organização.");
       }
       const { data, error } = await supabase.functions.invoke("email-poll-replies", {
-        body: { account_id: accountId },
+        body: { account_id: accountId, force_retry: force },
       });
       if (error) throw error;
       return data;
