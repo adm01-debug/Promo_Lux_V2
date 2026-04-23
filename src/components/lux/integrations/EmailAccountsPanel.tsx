@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2 } from "lucide-react";
+import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -22,6 +22,28 @@ interface Account {
   created_at: string;
   scope_type: "user" | "organization";
   user_id: string;
+}
+
+/** Identifica erros que exigem reconexão OAuth (refresh token expirado/revogado). */
+function isAuthError(err: string | null): boolean {
+  if (!err) return false;
+  const e = err.toLowerCase();
+  return (
+    e.includes("invalid_grant") ||
+    e.includes("invalid_token") ||
+    e.includes("token_expired") ||
+    e.includes("refresh") ||
+    e.includes("unauthorized") ||
+    e.includes("401") ||
+    e.includes("403") ||
+    e.includes("revoked") ||
+    e.includes("reconnect")
+  );
+}
+
+function classifyError(err: string | null): "auth" | "sync" | null {
+  if (!err) return null;
+  return isAuthError(err) ? "auth" : "sync";
 }
 
 export function EmailAccountsPanel() {
