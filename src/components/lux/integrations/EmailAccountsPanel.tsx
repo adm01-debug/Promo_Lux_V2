@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
 import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
+import { EmailAccountsAuditPanel } from "./EmailAccountsAuditPanel";
 import {
   AlertDialog,
   AlertDialogAction,
