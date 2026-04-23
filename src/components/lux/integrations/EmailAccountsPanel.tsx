@@ -292,7 +292,15 @@ export function EmailAccountsPanel() {
                     </Badge>
                   )}
                   {acc.last_error ? (
-                    <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/30"><AlertCircle className="h-2.5 w-2.5" />Erro</Badge>
+                    isAuthError(acc.last_error) ? (
+                      <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/30">
+                        <KeyRound className="h-2.5 w-2.5" /> Token expirado
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/30">
+                        <AlertCircle className="h-2.5 w-2.5" /> Erro de sync
+                      </Badge>
+                    )
                   ) : (
                     <Badge variant="outline" className="text-[10px] gap-1 text-success border-success/30"><CheckCircle2 className="h-2.5 w-2.5" />Ativa</Badge>
                   )}
@@ -302,6 +310,17 @@ export function EmailAccountsPanel() {
                   {acc.last_error && <span className="text-destructive ml-2">· {acc.last_error.slice(0, 80)}</span>}
                 </p>
               </div>
+              {acc.last_error && isAuthError(acc.last_error) && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 gap-1 text-xs border-destructive/40 text-destructive hover:bg-destructive/10"
+                  disabled={!!connecting}
+                  onClick={() => connectMutation.mutate(acc.provider)}
+                >
+                  <Link2 className="h-3 w-3" /> Reconectar
+                </Button>
+              )}
               <Button size="sm" variant="ghost" className="h-8 gap-1 text-xs" onClick={() => pollMutation.mutate(acc.id)} disabled={pollMutation.isPending}>
                 <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} /> Sincronizar
               </Button>
