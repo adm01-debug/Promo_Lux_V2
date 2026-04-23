@@ -374,6 +374,16 @@ export const RLSVerificationPanel = () => {
               </button>
             ))}
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-7 px-2 text-[11px] gap-1"
+            disabled={history.length === 0}
+            onClick={() => exportHistoryCSV(history)}
+          >
+            <Download className="h-3 w-3" /> CSV
+          </Button>
         </div>
         {history.length === 0 ? (
           <p className="text-xs text-muted-foreground px-3 py-4 text-center">
