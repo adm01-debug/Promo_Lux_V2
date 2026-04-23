@@ -3,6 +3,7 @@ import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History } 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -27,6 +28,8 @@ interface HistoryEntry {
   passed: number;
   failed: number;
   duration_ms: number;
+  failed_results: TestResult[];
+  passed_names: string[];
 }
 
 type RuleOp = "SELECT" | "INSERT" | "UPDATE" | "DELETE" | "COVERAGE" | "SETUP";
