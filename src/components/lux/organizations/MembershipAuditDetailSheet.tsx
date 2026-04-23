@@ -53,10 +53,10 @@ const copy = async (label: string, value: string | null | undefined) => {
 };
 
 function JsonBlock({ data }: { data: Record<string, unknown> | null }) {
+  const pretty = useMemo(() => (data ? JSON.stringify(data, null, 2) : ""), [data]);
   if (!data) {
     return <p className="text-[11px] italic text-muted-foreground">— vazio —</p>;
   }
-  const pretty = useMemo(() => JSON.stringify(data, null, 2), [data]);
   return (
     <div className="relative group">
       <pre className="text-[11px] font-mono bg-secondary/20 border border-border/40 rounded-md p-3 overflow-x-auto whitespace-pre-wrap break-all max-h-[280px]">
