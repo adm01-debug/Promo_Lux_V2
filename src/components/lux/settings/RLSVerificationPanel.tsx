@@ -252,6 +252,26 @@ export const RLSVerificationPanel = () => {
                 Todos
               </button>
             </div>
+            <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px] gap-1"
+                onClick={() => exportReportCSV(report)}
+              >
+                <Download className="h-3 w-3" /> CSV
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px] gap-1"
+                onClick={() => exportReportPDF(report)}
+              >
+                <FileText className="h-3 w-3" /> PDF
+              </Button>
+            </div>
           </div>
 
           {/* Per-operation summary */}
