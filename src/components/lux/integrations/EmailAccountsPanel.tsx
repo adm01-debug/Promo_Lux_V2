@@ -33,6 +33,11 @@ interface Account {
   created_at: string;
   scope_type: "user" | "organization";
   user_id: string;
+  reconnect_attempts: number;
+  reconnect_next_at: string | null;
+  reconnect_max_attempts: number;
+  reconnect_required: boolean;
+  reconnect_last_error: string | null;
 }
 
 /** Identifica erros que exigem reconexão OAuth (refresh token expirado/revogado). */
