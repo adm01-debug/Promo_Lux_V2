@@ -180,6 +180,62 @@ export function EmailAccountsPanel() {
 
   return (
     <div className="space-y-4">
+      {/* Banner agregando contas com erro */}
+      {(() => {
+        const failing = accounts.filter((a) => a.last_error);
+        if (failing.length === 0) return null;
+        const authFailing = failing.filter((a) => isAuthError(a.last_error));
+        const syncFailing = failing.filter((a) => !isAuthError(a.last_error));
+        return (
+          <div className="glass rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8 rounded-full bg-destructive/15 flex items-center justify-center shrink-0">
+                <AlertCircle className="h-4 w-4 text-destructive" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-destructive">
+                  {failing.length === 1
+                    ? "1 caixa com problemas"
+                    : `${failing.length} caixas com problemas`}
+                </p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  {authFailing.length > 0 && (
+                    <span>
+                      {authFailing.length} {authFailing.length === 1 ? "precisa" : "precisam"} de reconexão
+                      {syncFailing.length > 0 && " · "}
+                    </span>
+                  )}
+                  {syncFailing.length > 0 && (
+                    <span>
+                      {syncFailing.length} {syncFailing.length === 1 ? "com erro" : "com erros"} de sincronização
+                    </span>
+                  )}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {authFailing.slice(0, 3).map((a) => (
+                    <Button
+                      key={a.id}
+                      size="sm"
+                      variant="outline"
+                      className="h-7 gap-1 text-xs border-destructive/40 text-destructive hover:bg-destructive/10"
+                      disabled={!!connecting}
+                      onClick={() => connectMutation.mutate(a.provider)}
+                    >
+                      <Link2 className="h-3 w-3" /> Reconectar {a.email}
+                    </Button>
+                  ))}
+                  {authFailing.length > 3 && (
+                    <span className="text-[11px] text-muted-foreground self-center">
+                      +{authFailing.length - 3} outras
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       <div className="flex flex-wrap items-center gap-2">
         <Select value={scopeType} onValueChange={(v) => setScopeType(v as "user" | "organization")}>
           <SelectTrigger className="h-8 w-[200px] text-xs">
