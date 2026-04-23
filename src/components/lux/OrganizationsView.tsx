@@ -57,6 +57,36 @@ export const OrganizationsView = () => {
   const isAdmin = myMembership?.role === "admin";
   const myRole = (myMembership?.role as AppRole | undefined) ?? null;
 
+  const filteredMembers = (members ?? []).filter(() => {
+    // All current members are "active" — placeholder for future suspended state.
+    return memberFilter === "all" || memberFilter === "active";
+  });
+
+  const now = new Date();
+  const inviteCounts = (invites ?? []).reduce(
+    (acc, inv) => {
+      const expired = new Date(inv.expires_at) < now;
+      const used = !!inv.accepted_at;
+      if (inv.revoked) acc.revoked++;
+      else if (used) acc.accepted++;
+      else if (expired) acc.expired++;
+      else acc.pending++;
+      return acc;
+    },
+    { pending: 0, accepted: 0, revoked: 0, expired: 0 }
+  );
+
+  const filteredInvites = (invites ?? []).filter((inv) => {
+    if (inviteFilter === "all") return true;
+    const expired = new Date(inv.expires_at) < now;
+    const used = !!inv.accepted_at;
+    if (inviteFilter === "revoked") return inv.revoked;
+    if (inviteFilter === "accepted") return !inv.revoked && used;
+    if (inviteFilter === "expired") return !inv.revoked && !used && expired;
+    if (inviteFilter === "pending") return !inv.revoked && !used && !expired;
+    return true;
+  });
+
   const handleCreate = async () => {
     const name = newOrgName.trim();
     if (name.length < 2) {
