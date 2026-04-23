@@ -57,6 +57,27 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const [recordOrgId, setRecordOrgId] = useState<string | null>(null);
   const markDirty = useCallback(() => setDirty(true), []);
 
+  // Re-renderiza quando a org ativa muda (evento global emitido pelo
+  // WorkspaceSwitcher / useOrganizations).
+  const [activeOrgId, setActiveOrgIdState] = useState<string | null>(() => getActiveOrgId());
+  useEffect(() => {
+    if (!open) return;
+    const sync = () => setActiveOrgIdState(getActiveOrgId());
+    sync();
+    window.addEventListener("lux:active-org-changed", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("lux:active-org-changed", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, [open]);
+
+  const orgMismatch = useMemo(
+    () => Boolean(recordOrgId && activeOrgId && recordOrgId !== activeOrgId),
+    [recordOrgId, activeOrgId],
+  );
+  const locked = orgMismatch;
+
   useEffect(() => {
     if (company && open) {
       setName(company.name);
