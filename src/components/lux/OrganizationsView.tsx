@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Building2, Plus, Users, Link2, Copy, Trash2, Shield, UserCog, Check, Loader2, AlertCircle, X, Filter, RefreshCw, History, Undo2, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
 import { PermissionsMatrix } from "@/components/lux/permissions/PermissionsMatrix";
 import { MembershipAuditLog } from "@/components/lux/organizations/MembershipAuditLog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
@@ -55,6 +56,33 @@ export const OrganizationsView = () => {
   const [inviteFilter, setInviteFilter] = useState<"all" | "pending" | "accepted" | "revoked" | "expired">("all");
   const [revokeTarget, setRevokeTarget] = useState<{ id: string; role: AppRole; token: string } | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
+
+  // Histórico local de reenvios por token original do convite.
+  // Mantido em localStorage por organização, pois o backend não persiste essa relação.
+  type ResendEntry = { at: number; newToken: string };
+  type ResendHistory = Record<string, ResendEntry[]>;
+  const resendStorageKey = activeOrgId ? `lux:invite-resends:${activeOrgId}` : null;
+  const [resendHistory, setResendHistory] = useState<ResendHistory>({});
+  useEffect(() => {
+    if (!resendStorageKey) { setResendHistory({}); return; }
+    try {
+      const raw = localStorage.getItem(resendStorageKey);
+      setResendHistory(raw ? JSON.parse(raw) : {});
+    } catch {
+      setResendHistory({});
+    }
+  }, [resendStorageKey]);
+  const recordResend = (originalToken: string, newToken: string) => {
+    if (!resendStorageKey) return;
+    setResendHistory(prev => {
+      const next = { ...prev };
+      const list = next[originalToken] ? [...next[originalToken]] : [];
+      list.unshift({ at: Date.now(), newToken });
+      next[originalToken] = list.slice(0, 10);
+      try { localStorage.setItem(resendStorageKey, JSON.stringify(next)); } catch { /* quota */ }
+      return next;
+    });
+  };
 
   type ActivityEntry = {
     id: string;
@@ -160,7 +188,7 @@ export const OrganizationsView = () => {
     toast({ title: "Link copiado" });
   };
 
-  const handleResendInvite = async (inv: { id: string; role: AppRole; revoked: boolean; accepted_at: string | null }) => {
+  const handleResendInvite = async (inv: { id: string; role: AppRole; revoked: boolean; accepted_at: string | null; token: string }) => {
     try {
       // Generate a fresh invite with the same role
       const created = await createInvite.mutateAsync({ role: inv.role });
@@ -168,6 +196,8 @@ export const OrganizationsView = () => {
       if (!inv.revoked && !inv.accepted_at) {
         try { await revokeInvite.mutateAsync(inv.id); } catch { /* non-blocking */ }
       }
+      // Registrar no histórico local de reenvios (chaveado pelo token original).
+      recordResend(inv.token, created.token);
       const url = `${window.location.origin}/invite/${created.token}`;
       await navigator.clipboard.writeText(url);
       toast({
@@ -495,6 +525,18 @@ export const OrganizationsView = () => {
                         const creatorName =
                           inv.created_by_profile?.full_name?.trim() ||
                           `${inv.created_by.slice(0, 8)}…`;
+                        const resends = resendHistory[inv.token] ?? [];
+                        const lastResendAt = resends[0]?.at;
+                        const relTime = (ms: number) => {
+                          const diff = Date.now() - ms;
+                          const m = Math.floor(diff / 60000);
+                          if (m < 1) return "agora mesmo";
+                          if (m < 60) return `há ${m} min`;
+                          const h = Math.floor(m / 60);
+                          if (h < 24) return `há ${h} h`;
+                          const d = Math.floor(h / 24);
+                          return `há ${d} d`;
+                        };
                         return (
                           <div key={inv.id} className="p-4 flex items-center justify-between gap-3 flex-wrap">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -522,7 +564,41 @@ export const OrganizationsView = () => {
                                   )}
                                 </div>
                                 <div className="mt-1 space-y-0.5 text-[10px] text-muted-foreground">
-                                  <p className="font-mono truncate">{inv.token.slice(0, 16)}…</p>
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <p className="font-mono truncate">{inv.token.slice(0, 16)}…</p>
+                                    {resends.length > 0 && (
+                                      <TooltipProvider delayDuration={150}>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <button
+                                              type="button"
+                                              className="inline-flex items-center gap-1 rounded-full border border-info/30 bg-info/10 px-1.5 py-0.5 text-[9px] font-medium text-info hover:bg-info/15 focus:outline-none focus:ring-1 focus:ring-info/40"
+                                              aria-label={`Reenviado ${resends.length} ${resends.length === 1 ? "vez" : "vezes"}`}
+                                            >
+                                              <History className="h-2.5 w-2.5" />
+                                              {resends.length}× · {lastResendAt ? relTime(lastResendAt) : ""}
+                                            </button>
+                                          </TooltipTrigger>
+                                          <TooltipContent side="top" align="start" className="max-w-[260px]">
+                                            <p className="text-[11px] font-semibold mb-1">Histórico de reenvios</p>
+                                            <ul className="space-y-0.5 text-[10px]">
+                                              {resends.slice(0, 5).map((r, i) => (
+                                                <li key={`${r.at}-${i}`} className="flex justify-between gap-3">
+                                                  <span className="text-muted-foreground">
+                                                    {new Date(r.at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                                                  </span>
+                                                  <span className="font-mono opacity-70">{r.newToken.slice(0, 8)}…</span>
+                                                </li>
+                                              ))}
+                                              {resends.length > 5 && (
+                                                <li className="text-muted-foreground italic">+{resends.length - 5} mais</li>
+                                              )}
+                                            </ul>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    )}
+                                  </div>
                                   <p>
                                     Criado por <span className="text-foreground/80">{creatorName}</span> em{" "}
                                     <span className="text-foreground/80">{fmt(inv.created_at)}</span>
