@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert,
+  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
@@ -22,6 +22,7 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   deals: Kanban,
   integrations: Webhook,
   "org-violations": ShieldAlert,
+  "rls-discovery": ShieldCheck,
 };
 
 export const VIEW_LABELS: Record<View, string> = {
@@ -42,6 +43,7 @@ export const VIEW_LABELS: Record<View, string> = {
   deals: "Pipeline (Deals)",
   integrations: "API & Webhooks",
   "org-violations": "Violações de Organização",
+  "rls-discovery": "RLS Discovery",
 };
 
 export const sections = [
@@ -84,6 +86,7 @@ export const sections = [
       { id: "organizations" as View, label: "Workspaces", icon: Users2 },
       { id: "integrations" as View, label: "API & Webhooks", icon: Webhook },
       { id: "org-violations" as View, label: "Violações de Organização", icon: ShieldAlert },
+      { id: "rls-discovery" as View, label: "RLS Discovery", icon: ShieldCheck },
       { id: "settings" as View, label: "Configurações", icon: Settings },
     ],
   },
