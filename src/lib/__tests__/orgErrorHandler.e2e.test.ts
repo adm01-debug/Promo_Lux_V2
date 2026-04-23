@@ -136,8 +136,9 @@ describe("orgErrorHandler — E2E switching de org durante edição", () => {
     expect(title).toMatch(/bloqueada/i);
     // Mensagem agora usa rótulo amigável (companies → empresa).
     expect(opts.description).toMatch(/empresa/i);
-    // Novo CTA priorizado: leva direto ao seletor de workspace.
-    expect(opts.action.label).toMatch(/selecionar organiza/i);
+    // CTA por prioridade: como `companies` tem view mapeada, o botão é
+    // "Ir para a lista" (recupera o contexto sem trocar de workspace).
+    expect(opts.action.label).toMatch(/ir para a lista/i);
   });
 
   it("ação 'Recarregar dados' do toast invalida queries no QueryClient", () => {
