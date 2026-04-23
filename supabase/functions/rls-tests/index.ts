@@ -322,12 +322,8 @@ Deno.serve(async (req) => {
         ...RLS_TABLES.map((t) => t.table),
         ...RLS_TABLES_EXEMPT,
       ]);
-      // pg_tables + pg_class para detectar relrowsecurity = true
-      const { data: rlsTables, error: covErr } = await admin.rpc("pg_catalog_rls_tables" as never).single().then(
-        (r) => r,
-        () => ({ data: null, error: { message: "rpc_not_available" } as { message: string } }),
-      );
-      if (rlsTables && Array.isArray(rlsTables)) {
+      const { data: rlsTables, error: covErr } = await admin.rpc("pg_catalog_rls_tables");
+      if (!covErr && Array.isArray(rlsTables)) {
         const missing = (rlsTables as Array<{ table_name: string }>)
           .map((r) => r.table_name)
           .filter((name) => !knownNames.has(name));
@@ -339,11 +335,9 @@ Deno.serve(async (req) => {
             : `${knownNames.size} tabelas registradas`,
         });
       } else {
-        // Fallback: consulta direta via REST não é possível para pg_class,
-        // então registramos apenas a contagem do whitelist como informativo.
         results.push({
           name: "rls_coverage_complete",
-          passed: true,
+          passed: false,
           detail: `coverage check skipped (${covErr?.message}); ${knownNames.size} tabelas no registry`,
         });
       }
