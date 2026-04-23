@@ -10,6 +10,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { validateCompany } from "@/lib/schemas/company";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { OrgMismatchError } from "@/integrations/supabase/withOrg";
+import { handleOrgError } from "@/lib/orgErrorHandler";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -77,6 +79,28 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     [recordOrgId, activeOrgId],
   );
   const locked = orgMismatch;
+
+  // Validação imediata ao abrir: se a org do registro não bate com a
+  // org ativa, dispara o pipeline padrão de erro (toast + banner inline +
+  // audit log) ANTES de o usuário poder editar qualquer campo. Os campos
+  // já ficam `disabled` via `locked`, mas o feedback explícito impede
+  // qualquer ambiguidade visual.
+  const validatedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!open || !company) {
+      validatedRef.current = null;
+      return;
+    }
+    // Evita disparar o erro mais de uma vez por abertura/registro.
+    const key = `${company.id}:${activeOrgId ?? ""}`;
+    if (validatedRef.current === key) return;
+    if (recordOrgId && activeOrgId && recordOrgId !== activeOrgId) {
+      validatedRef.current = key;
+      handleOrgError(
+        new OrgMismatchError("companies", "update", activeOrgId, recordOrgId),
+      );
+    }
+  }, [open, company, recordOrgId, activeOrgId]);
 
   useEffect(() => {
     if (company && open) {
