@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertTriangle, ShieldAlert, X, RefreshCw, Building2 } from "lucide-react";
+import { AlertTriangle, ShieldAlert, X, RefreshCw, Building2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   subscribeOrgErrorBanner,
   clearOrgErrorBanner,
   reloadAfterOrgError,
+  navigateAfterOrgMismatch,
+  viewForTable,
   type OrgErrorBannerState,
 } from "@/lib/orgErrorHandler";
 
@@ -74,6 +76,16 @@ export function OrgErrorBanner() {
                       }}
                     >
                       <Building2 className="h-3 w-3" /> Selecionar organização
+                    </Button>
+                  )}
+                  {state.kind === "mismatch" && viewForTable(state.table) && (
+                    <Button
+                      size="sm"
+                      variant="default"
+                      className="h-7 gap-1 text-[11px]"
+                      onClick={() => navigateAfterOrgMismatch(state.table)}
+                    >
+                      <ArrowRight className="h-3 w-3" /> Ir para a lista
                     </Button>
                   )}
                   <Button

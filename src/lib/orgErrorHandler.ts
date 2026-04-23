@@ -22,6 +22,74 @@ export function registerQueryClient(qc: QueryClient) {
   qcRef = qc;
 }
 
+/* ---------- Mapa tabela → view de listagem ---------- */
+
+/**
+ * Quando um OrgMismatchError bloqueia a abertura de um registro (ex.: o
+ * usuário trocou de org enquanto um modal/detail estava aberto), levamos
+ * o usuário de volta para a tela de listagem correspondente — assim ele
+ * recupera o contexto sem ficar olhando para um modal vazio. Tabelas não
+ * mapeadas caem no fallback "dashboard".
+ */
+const TABLE_TO_VIEW: Record<string, string> = {
+  companies: "companies",
+  stakeholders: "stakeholders",
+  deals: "deals",
+  deal_stages: "deals",
+  deal_tasks: "deals",
+  deal_activities: "deals",
+  campaigns: "campaigns",
+  campaign_recipients: "campaigns",
+  campaign_messages: "campaigns",
+  campaign_replies: "campaigns",
+  campaign_events: "campaigns",
+  workflows: "workflows",
+  workflow_runs: "workflows",
+  scrape_jobs: "scrape-results",
+  scrape_results: "scrape-results",
+  intent_signals: "intent",
+  ipc_config: "icp",
+  webhooks: "integrations",
+  webhook_deliveries: "integrations",
+  email_accounts: "integrations",
+  email_sync_log: "integrations",
+  api_keys: "integrations",
+  api_request_logs: "integrations",
+  notifications: "dashboard",
+  organization_members: "organizations",
+  organization_invites: "organizations",
+  organizations: "organizations",
+};
+
+/** Retorna a view alvo para uma tabela (ou null se não mapeada). */
+export function viewForTable(table?: string | null): string | null {
+  if (!table) return null;
+  return TABLE_TO_VIEW[table] ?? null;
+}
+
+/**
+ * Redireciona o usuário para a view de listagem associada à tabela do
+ * erro e dispara `popstate` para o `useNavigationHistory` sincronizar.
+ * Também limpa o banner. Se a tabela não tiver mapeamento, apenas
+ * recarrega os dados (fallback seguro).
+ */
+export function navigateAfterOrgMismatch(table?: string | null) {
+  const view = viewForTable(table);
+  if (typeof window === "undefined") return;
+  if (!view) {
+    reloadAfterOrgError();
+    return;
+  }
+  emit(null);
+  const url = new URL(window.location.href);
+  if (view === "dashboard") url.searchParams.delete("view");
+  else url.searchParams.set("view", view);
+  window.history.pushState({}, "", url.toString());
+  window.dispatchEvent(new PopStateEvent("popstate"));
+  // Recarrega queries para garantir dados frescos da org ativa.
+  if (qcRef) qcRef.invalidateQueries();
+}
+
 /* ---------- Última operação para "Tentar novamente" ---------- */
 
 /**
@@ -346,20 +414,28 @@ export function handleOrgError(err: unknown): boolean {
   } else {
     // OrgMismatchError
     const { title, description } = copyForMismatch(err);
-    toast.error(title, {
-      description,
-      action: lastOperation
+    // Prioridade da ação:
+    //  1. Se há operação registrada → "Tentar novamente" (com refresh de org).
+    //  2. Se a tabela tem view mapeada → "Ir para <lista>" (recupera contexto).
+    //  3. Fallback genérico → "Recarregar dados".
+    const targetView = viewForTable(err.table);
+    const action = lastOperation
+      ? {
+          label: "Tentar novamente",
+          onClick: () => {
+            void refreshOrgAndRetry();
+          },
+        }
+      : targetView
         ? {
-            label: "Tentar novamente",
-            onClick: () => {
-              void refreshOrgAndRetry();
-            },
+            label: "Ir para a lista",
+            onClick: () => navigateAfterOrgMismatch(err.table),
           }
         : {
             label: "Recarregar dados",
             onClick: reload,
-          },
-    });
+          };
+    toast.error(title, { description, action });
   }
 
   // Log estruturado (útil em produção/sentry).

@@ -20,7 +20,12 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { handleOrgError, runWithOrgRetry } from "../orgErrorHandler";
+import {
+  handleOrgError,
+  runWithOrgRetry,
+  viewForTable,
+  navigateAfterOrgMismatch,
+} from "../orgErrorHandler";
 import {
   OrgMismatchError,
   MissingOrgContextError,
@@ -103,15 +108,50 @@ describe("handleOrgError → toast", () => {
     expect(opts.description).toMatch(/inserir\/atualizar.*deals/i);
   });
 
-  it("ação 'Recarregar dados' está presente no toast de mismatch", () => {
+  it("ação 'Ir para a lista' aparece quando a tabela tem view mapeada (companies)", () => {
     vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 50));
     handleOrgError(new OrgMismatchError("companies", "update", "orgA", "orgB"));
     const [, opts] = toastError.mock.calls.at(-1) as [
       string,
       { action: { label: string } },
     ];
-    // Sem operação registrada via runWithOrgRetry, fallback é Recarregar.
+    expect(opts.action.label).toMatch(/Ir para a lista/i);
+  });
+
+  it("fallback 'Recarregar dados' quando tabela não tem view mapeada", () => {
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 55));
+    handleOrgError(new OrgMismatchError("tabela_inexistente", "update", "orgA", "orgB"));
+    const [, opts] = toastError.mock.calls.at(-1) as [
+      string,
+      { action: { label: string } },
+    ];
     expect(opts.action.label).toMatch(/Recarregar/i);
+  });
+
+  it("viewForTable mapeia tabelas conhecidas e retorna null para desconhecidas", () => {
+    expect(viewForTable("companies")).toBe("companies");
+    expect(viewForTable("deal_tasks")).toBe("deals");
+    expect(viewForTable("scrape_results")).toBe("scrape-results");
+    expect(viewForTable("desconhecida")).toBeNull();
+    expect(viewForTable(null)).toBeNull();
+    expect(viewForTable(undefined)).toBeNull();
+  });
+
+  it("navigateAfterOrgMismatch redireciona para a view correta e dispara popstate", () => {
+    vi.useRealTimers();
+    const pushSpy = vi.spyOn(window.history, "pushState");
+    const popListener = vi.fn();
+    window.addEventListener("popstate", popListener);
+
+    navigateAfterOrgMismatch("stakeholders");
+
+    expect(pushSpy).toHaveBeenCalled();
+    const url = new URL((pushSpy.mock.calls.at(-1) as [unknown, string, string])[2], "http://localhost");
+    expect(url.searchParams.get("view")).toBe("stakeholders");
+    expect(popListener).toHaveBeenCalled();
+
+    window.removeEventListener("popstate", popListener);
+    pushSpy.mockRestore();
   });
 
   it("usa ação 'Tentar novamente' quando há operação registrada via runWithOrgRetry", async () => {
