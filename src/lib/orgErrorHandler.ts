@@ -273,25 +273,30 @@ const MISSING_OP_COPY: Record<
   string,
   { title: string; description: (table: string) => string }
 > = {
+  select: {
+    title: "Consulta bloqueada — sem organização ativa",
+    description: (t) =>
+      `Não foi possível carregar ${entityLabel(t, "plural")} porque nenhuma organização está selecionada.`,
+  },
   insert: {
     title: "Criação bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível criar o novo registro em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível criar ${entityLabel(t, "singular")} porque nenhuma organização está selecionada.`,
   },
   upsert: {
     title: "Gravação bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível salvar (insert/update) em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível salvar ${entityLabel(t, "singular")} (insert/update) porque nenhuma organização está selecionada.`,
   },
   update: {
     title: "Edição bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível atualizar o registro em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível atualizar ${entityLabel(t, "singular")} porque nenhuma organização está selecionada.`,
   },
   delete: {
     title: "Exclusão bloqueada — sem organização ativa",
     description: (t) =>
-      `Não foi possível remover o registro em "${t}" porque nenhuma organização está selecionada.`,
+      `Não foi possível remover ${entityLabel(t, "singular")} porque nenhuma organização está selecionada.`,
   },
 };
 
@@ -300,7 +305,7 @@ function copyForMissing(err: MissingOrgContextError): { title: string; descripti
   if (entry) return { title: entry.title, description: entry.description(err.table) };
   return {
     title: "Operação bloqueada — sem organização ativa",
-    description: `Não foi possível executar "${err.op}" em "${err.table}" porque nenhuma organização está selecionada.`,
+    description: `Não foi possível executar "${err.op}" em ${entityLabel(err.table)} porque nenhuma organização está selecionada.`,
   };
 }
 
@@ -314,25 +319,30 @@ const MISMATCH_OP_COPY: Record<
   string,
   { title: string; description: (table: string) => string }
 > = {
+  select: {
+    title: "Consulta bloqueada — organização divergente",
+    description: (t) =>
+      `Tentativa de consultar ${entityLabel(t, "plural")} de outra organização. Confirme o workspace ativo antes de tentar novamente.`,
+  },
   insert: {
     title: "Criação bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de criar registro em "${t}" vinculado a outra organização. Verifique a organização ativa.`,
+      `Tentativa de criar ${entityLabel(t, "singular")} vinculada a outra organização. Verifique o workspace ativo.`,
   },
   upsert: {
     title: "Gravação bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de inserir/atualizar registro em "${t}" com organização diferente da ativa. Operação cancelada.`,
+      `Tentativa de inserir/atualizar ${entityLabel(t, "singular")} com organização diferente da ativa. Operação cancelada.`,
   },
   update: {
     title: "Edição bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de modificar registro de outra organização em "${t}". Recarregue o registro na organização correta.`,
+      `Tentativa de modificar ${entityLabel(t, "singular")} de outra organização. Recarregue o registro no workspace correto.`,
   },
   delete: {
     title: "Exclusão bloqueada — organização divergente",
     description: (t) =>
-      `Tentativa de remover registro pertencente a outra organização em "${t}". Operação cancelada.`,
+      `Tentativa de remover ${entityLabel(t, "singular")} pertencente a outra organização. Operação cancelada.`,
   },
 };
 
@@ -341,7 +351,7 @@ function copyForMismatch(err: OrgMismatchError): { title: string; description: s
   if (entry) return { title: entry.title, description: entry.description(err.table) };
   return {
     title: "Operação bloqueada por segurança",
-    description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+    description: `Tentativa de acessar ${entityLabel(err.table)} de outra organização. A ação foi cancelada.`,
   };
 }
 
