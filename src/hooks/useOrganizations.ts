@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { setActiveOrgId } from "@/integrations/supabase/withOrg";
 import type { Database } from "@/integrations/supabase/types";
 
 export type AppRole = Database["public"]["Enums"]["app_role"];
@@ -60,6 +61,9 @@ export function useActiveOrganization() {
       const first = orgs[0].organization_id;
       setActiveId(first);
       localStorage.setItem(STORAGE_KEY, first);
+      setActiveOrgId(first);
+    } else {
+      setActiveOrgId(activeId);
     }
   }, [orgs, activeId]);
 
@@ -67,6 +71,7 @@ export function useActiveOrganization() {
     if (id === activeId) return;
     setActiveId(id);
     localStorage.setItem(STORAGE_KEY, id);
+    setActiveOrgId(id);
     // Invalidate all workspace-scoped data so it refetches under the new org
     qc.invalidateQueries();
     // Notify other tabs / listeners
