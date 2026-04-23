@@ -33,6 +33,11 @@ interface Account {
   created_at: string;
   scope_type: "user" | "organization";
   user_id: string;
+  reconnect_attempts: number;
+  reconnect_next_at: string | null;
+  reconnect_max_attempts: number;
+  reconnect_required: boolean;
+  reconnect_last_error: string | null;
 }
 
 /** Identifica erros que exigem reconexão OAuth (refresh token expirado/revogado). */
@@ -73,7 +78,7 @@ export function EmailAccountsPanel() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("email_accounts")
-        .select("id,provider,email,display_name,active,last_polled_at,last_error,created_at,scope_type,user_id")
+        .select("id,provider,email,display_name,active,last_polled_at,last_error,created_at,scope_type,user_id,reconnect_attempts,reconnect_next_at,reconnect_max_attempts,reconnect_required,reconnect_last_error")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as Account[];
@@ -169,13 +174,15 @@ export function EmailAccountsPanel() {
   });
 
   const pollMutation = useMutation({
-    mutationFn: async (accountId: string) => {
+    mutationFn: async (input: string | { id: string; force?: boolean }) => {
+      const accountId = typeof input === "string" ? input : input.id;
+      const force = typeof input === "string" ? false : !!input.force;
       const target = accounts.find((a) => a.id === accountId);
       if (target?.scope_type === "organization" && !isAdmin) {
         throw new Error("Apenas administradores podem sincronizar caixas compartilhadas da organização.");
       }
       const { data, error } = await supabase.functions.invoke("email-poll-replies", {
-        body: { account_id: accountId },
+        body: { account_id: accountId, force_retry: force },
       });
       if (error) throw error;
       return data;
@@ -355,12 +362,28 @@ export function EmailAccountsPanel() {
                   ) : (
                     <Badge variant="outline" className="text-[10px] gap-1 text-success border-success/30"><CheckCircle2 className="h-2.5 w-2.5" />Ativa</Badge>
                   )}
+                  {acc.reconnect_required && (
+                    <Badge variant="outline" className="text-[10px] gap-1 text-destructive border-destructive/40">
+                      <Link2 className="h-2.5 w-2.5" /> Reconexão manual
+                    </Badge>
+                  )}
+                  {!acc.reconnect_required && acc.reconnect_attempts > 0 && acc.reconnect_next_at && (
+                    <Badge variant="outline" className="text-[10px] gap-1 text-warning border-warning/40">
+                      <RefreshCw className="h-2.5 w-2.5" />
+                      Auto-retry {acc.reconnect_attempts}/{acc.reconnect_max_attempts}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-0.5">
                   {acc.last_polled_at ? `Última sync: ${new Date(acc.last_polled_at).toLocaleString("pt-BR")}` : "Aguardando primeira sync"}
                   {acc.last_error && <span className="text-destructive ml-2">· {acc.last_error.slice(0, 80)}</span>}
                   {!canManage && <span className="ml-2 text-warning">· somente leitura</span>}
                 </p>
+                {!acc.reconnect_required && acc.reconnect_next_at && new Date(acc.reconnect_next_at) > new Date() && (
+                  <p className="text-[10px] text-warning mt-0.5">
+                    Próxima tentativa automática: {new Date(acc.reconnect_next_at).toLocaleString("pt-BR")}
+                  </p>
+                )}
               </div>
               {acc.last_error && isAuthError(acc.last_error) && (
                 <Button
@@ -396,16 +419,30 @@ export function EmailAccountsPanel() {
                   </Button>
                 );
               })()}
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 gap-1 text-xs"
-                onClick={() => (canManage ? pollMutation.mutate(acc.id) : blockedToast())}
-                disabled={pollMutation.isPending || !canManage}
-                title={!canManage ? lockReason : undefined}
-              >
-                <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} /> Sincronizar
-              </Button>
+              {(() => {
+                const hasBackoff = !!acc.reconnect_next_at && new Date(acc.reconnect_next_at) > new Date();
+                const label = hasBackoff && !acc.reconnect_required ? "Tentar agora" : "Sincronizar";
+                const titleExtra = hasBackoff && !acc.reconnect_required
+                  ? "Ignora o backoff e força uma nova tentativa imediata."
+                  : undefined;
+                return (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 gap-1 text-xs"
+                    onClick={() =>
+                      canManage
+                        ? pollMutation.mutate({ id: acc.id, force: hasBackoff })
+                        : blockedToast()
+                    }
+                    disabled={pollMutation.isPending || !canManage || acc.reconnect_required}
+                    title={!canManage ? lockReason : titleExtra}
+                  >
+                    <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} />
+                    {label}
+                  </Button>
+                );
+              })()}
               <Button
                 size="sm"
                 variant="ghost"

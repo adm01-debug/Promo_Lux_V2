@@ -11,6 +11,35 @@ interface EmailAccount {
   access_token: string | null; refresh_token: string | null; expires_at: string | null;
   history_id: string | null; delta_link: string | null; last_polled_at: string | null;
   scope_type: "user" | "organization"; organization_id: string | null;
+  reconnect_attempts: number; reconnect_next_at: string | null;
+  reconnect_max_attempts: number; reconnect_base_delay_seconds: number;
+  reconnect_required: boolean;
+}
+
+/**
+ * Erro fatal de refresh: o servidor OAuth indicou que o refresh_token foi
+ * revogado/expirou definitivamente. Não adianta tentar de novo — marcamos
+ * `reconnect_required = true` e o usuário precisa refazer o consentimento.
+ * Cobre `invalid_grant` (Google) e códigos AADSTS típicos da Microsoft.
+ */
+function isFatalRefreshError(payload: unknown): boolean {
+  const s = JSON.stringify(payload ?? "").toLowerCase();
+  return (
+    s.includes("invalid_grant") ||
+    s.includes("invalid_client") ||
+    s.includes("aadsts70008") ||
+    s.includes("aadsts50173") ||
+    s.includes("aadsts700082")
+  );
+}
+
+class RefreshError extends Error {
+  fatal: boolean;
+  constructor(message: string, fatal: boolean) {
+    super(message);
+    this.fatal = fatal;
+    this.name = "RefreshError";
+  }
 }
 
 Deno.serve(async (req) => {
@@ -18,17 +47,20 @@ Deno.serve(async (req) => {
 
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-  // Permite filtrar por account_id e/ou scope_type no body (manual trigger) ou processa todas.
-  // O cron sem body processa user + organization, mas cada conta é polled isoladamente
-  // por id — nunca há cross-update entre escopos.
+  // Filtros opcionais por body (manual trigger). O cron sem body processa
+  // todos os escopos, mas cada conta é polled isoladamente por id — nunca
+  // há cross-update entre escopos.
   let accountFilter: string | null = null;
   let scopeFilter: "user" | "organization" | null = null;
+  // `force_retry` ignora o gate de backoff — usado logo após reconexão manual.
+  let forceRetry = false;
   try {
     if (req.method === "POST") {
       const body = await req.json().catch(() => ({}));
       accountFilter = body?.account_id ?? null;
       const s = body?.scope_type;
       if (s === "user" || s === "organization") scopeFilter = s;
+      forceRetry = body?.force_retry === true;
     }
   } catch { /* ignore */ }
 
@@ -41,8 +73,7 @@ Deno.serve(async (req) => {
   const results: Record<string, unknown>[] = [];
   for (const acc of (accounts ?? []) as EmailAccount[]) {
     // Defesa em profundidade: ignora linhas com scope_type inválido ou
-    // organization scope sem organization_id — não devem existir, mas se
-    // existirem evitamos qualquer escrita ambígua.
+    // organization scope sem organization_id.
     if (acc.scope_type !== "user" && acc.scope_type !== "organization") {
       results.push({ account: acc.email, skipped: "invalid scope_type", scope_type: acc.scope_type });
       continue;
@@ -52,27 +83,97 @@ Deno.serve(async (req) => {
       continue;
     }
 
+    // Conta marcada como precisando de reconexão manual — pula até alguém
+    // reconectar via UI (que zera os flags).
+    if (acc.reconnect_required) {
+      results.push({ account: acc.email, skipped: "reconnect_required" });
+      continue;
+    }
+
+    // Backoff: respeita reconnect_next_at salvo se for retry forçado.
+    if (
+      !forceRetry &&
+      acc.reconnect_next_at &&
+      new Date(acc.reconnect_next_at).getTime() > Date.now()
+    ) {
+      results.push({
+        account: acc.email,
+        skipped: "backoff",
+        retry_at: acc.reconnect_next_at,
+        attempts: acc.reconnect_attempts,
+      });
+      continue;
+    }
+
     try {
       const fresh = await ensureFreshToken(admin, acc);
       const res = fresh.provider === "gmail"
         ? await pollGmail(admin, fresh)
         : await pollOutlook(admin, fresh);
-      // Update escopo-safe: id + scope_type garantem que esta linha continua
-      // sendo a mesma classe de conta (impede sobrescrita se scope_type mudou
-      // no meio do poll).
+      // Sucesso: limpa estado de retry pendente. Update escopo-safe via
+      // (id, scope_type) impede sobrescrita se o escopo mudou no meio do poll.
       await admin.from("email_accounts")
-        .update({ last_polled_at: new Date().toISOString(), last_error: null })
+        .update({
+          last_polled_at: new Date().toISOString(),
+          last_error: null,
+          reconnect_attempts: 0,
+          reconnect_next_at: null,
+          reconnect_required: false,
+          reconnect_last_error: null,
+        })
         .eq("id", acc.id)
         .eq("scope_type", acc.scope_type);
       results.push({ account: acc.email, scope_type: acc.scope_type, ...res });
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       console.error(`Account ${acc.email} failed:`, msg);
-      await admin.from("email_accounts")
-        .update({ last_polled_at: new Date().toISOString(), last_error: msg })
-        .eq("id", acc.id)
-        .eq("scope_type", acc.scope_type);
-      results.push({ account: acc.email, scope_type: acc.scope_type, error: msg });
+
+      if (e instanceof RefreshError) {
+        const nextAttempts = acc.reconnect_attempts + 1;
+        const reachedLimit = nextAttempts >= acc.reconnect_max_attempts;
+        const requireManual = e.fatal || reachedLimit;
+
+        // Backoff exponencial com teto de 24h: base * 2^(attempt-1).
+        const baseSec = Math.max(60, acc.reconnect_base_delay_seconds);
+        const delaySec = Math.min(
+          24 * 3600,
+          baseSec * Math.pow(2, Math.max(0, nextAttempts - 1)),
+        );
+        const nextAt = requireManual
+          ? null
+          : new Date(Date.now() + delaySec * 1000).toISOString();
+
+        await admin.from("email_accounts")
+          .update({
+            last_polled_at: new Date().toISOString(),
+            last_error: msg,
+            reconnect_attempts: nextAttempts,
+            reconnect_next_at: nextAt,
+            reconnect_required: requireManual,
+            reconnect_last_error: msg,
+          })
+          .eq("id", acc.id)
+          .eq("scope_type", acc.scope_type);
+
+        results.push({
+          account: acc.email,
+          scope_type: acc.scope_type,
+          error: msg,
+          refresh_failure: true,
+          fatal: e.fatal,
+          attempts: nextAttempts,
+          max_attempts: acc.reconnect_max_attempts,
+          retry_at: nextAt,
+          reconnect_required: requireManual,
+        });
+      } else {
+        // Erro não relacionado a refresh: só atualiza last_error.
+        await admin.from("email_accounts")
+          .update({ last_polled_at: new Date().toISOString(), last_error: msg })
+          .eq("id", acc.id)
+          .eq("scope_type", acc.scope_type);
+        results.push({ account: acc.email, scope_type: acc.scope_type, error: msg });
+      }
     }
   }
 
@@ -82,7 +183,7 @@ Deno.serve(async (req) => {
 async function ensureFreshToken(admin: SupabaseClient, acc: EmailAccount): Promise<EmailAccount> {
   const expires = acc.expires_at ? new Date(acc.expires_at).getTime() : 0;
   if (expires > Date.now() + 30_000 && acc.access_token) return acc;
-  if (!acc.refresh_token) throw new Error("No refresh token; reconnect required");
+  if (!acc.refresh_token) throw new RefreshError("No refresh token; reconnect required", true);
 
   let tokenUrl = "", clientId = "", secret = "";
   if (acc.provider === "gmail") {
@@ -102,7 +203,7 @@ async function ensureFreshToken(admin: SupabaseClient, acc: EmailAccount): Promi
     body: new URLSearchParams({ client_id: clientId, client_secret: secret, refresh_token: acc.refresh_token, grant_type: "refresh_token" }),
   });
   const tokens = await r.json();
-  if (!r.ok) throw new Error(`Refresh failed: ${JSON.stringify(tokens)}`);
+  if (!r.ok) throw new RefreshError(`Refresh failed: ${JSON.stringify(tokens)}`, isFatalRefreshError(tokens));
 
   const newExpires = new Date(Date.now() + (tokens.expires_in - 60) * 1000).toISOString();
   await admin.from("email_accounts").update({
