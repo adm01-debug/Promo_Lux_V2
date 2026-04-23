@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { MembershipAuditDetailSheet } from "@/components/lux/organizations/MembershipAuditDetailSheet";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 
@@ -63,6 +64,7 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<"all" | MembershipAuditAction>("all");
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<MembershipAuditEntry | null>(null);
   const { data: pageData, isLoading, error, refetch, isFetching, isPlaceholderData } =
     useMembershipAuditLogPaged(orgId, page, PAGE_SIZE);
   const data = pageData?.entries;
@@ -208,7 +210,17 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0 }}
-                  className="p-3 flex items-start gap-3 hover:bg-secondary/15 transition-colors"
+                  onClick={() => setSelected(e)}
+                  onKeyDown={(ev) => {
+                    if (ev.key === "Enter" || ev.key === " ") {
+                      ev.preventDefault();
+                      setSelected(e);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Ver detalhes do evento"
+                  className="p-3 flex items-start gap-3 hover:bg-secondary/15 cursor-pointer focus:outline-none focus:bg-secondary/20 focus:ring-1 focus:ring-primary/40 transition-colors"
                 >
                   <div className={`h-8 w-8 rounded-md ring-1 flex items-center justify-center flex-shrink-0 ${meta.tone}`}>
                     <Icon className="h-4 w-4" />
@@ -272,6 +284,13 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
           </Button>
         </div>
       </div>
+
+      <MembershipAuditDetailSheet
+        entry={selected}
+        open={!!selected}
+        onOpenChange={(o) => { if (!o) setSelected(null); }}
+        currentUserId={currentUserId}
+      />
     </div>
   );
 });

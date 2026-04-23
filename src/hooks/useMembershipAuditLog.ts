@@ -14,6 +14,9 @@ export interface MembershipAuditEntry {
   old_role: AppRole | null;
   new_role: AppRole | null;
   is_self_action: boolean;
+  old_data: Record<string, unknown> | null;
+  new_data: Record<string, unknown> | null;
+  raw_action: "create" | "update" | "delete";
   actor_profile?: { full_name: string | null; avatar_url: string | null } | null;
   target_profile?: { full_name: string | null; avatar_url: string | null } | null;
 }
@@ -65,6 +68,9 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
           old_role: oldRole,
           new_role: newRole,
           is_self_action: !!r.actor_id && !!targetUserId && r.actor_id === targetUserId,
+          old_data: oldData,
+          new_data: newData,
+          raw_action: r.action as "create" | "update" | "delete",
         };
       });
 
@@ -145,6 +151,9 @@ export function useMembershipAuditLogPaged(
           old_role: oldRole,
           new_role: newRole,
           is_self_action: !!r.actor_id && !!targetUserId && r.actor_id === targetUserId,
+          old_data: oldData,
+          new_data: newData,
+          raw_action: r.action as "create" | "update" | "delete",
         };
       });
 
