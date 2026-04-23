@@ -57,8 +57,8 @@ describe("handleOrgError → toast", () => {
   });
 
   it("dispara toast com tabela quando recebe OrgMismatchError", () => {
-    // avança 2s para limpar throttle do teste anterior
-    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 2));
+    // avança o relógio para escapar do throttle (1.5s) dos testes anteriores
+    vi.setSystemTime(new Date(2030, 0, 1, 12, 0, 30));
     const err = new OrgMismatchError("companies", "update", "orgA", "orgB");
     const consumed = handleOrgError(err);
     expect(consumed).toBe(true);
