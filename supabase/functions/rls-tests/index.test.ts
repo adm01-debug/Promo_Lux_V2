@@ -169,48 +169,27 @@ Deno.test("rls-tests: retorna relatório estruturado quando admin chama", async 
     console.warn("SUPABASE_SERVICE_ROLE_KEY ausente — pulando teste de admin.");
     return;
   }
-  const admin = createClient(SUPABASE_URL, SERVICE_KEY, CLIENT_OPTS);
-  const email = `rls-test-admin-${Date.now()}@test.local`;
-  const password = "TestPass123!";
-  const slug = `rls-admin-org-${Date.now()}`;
-
-  const { data: created, error: createErr } = await admin.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-  });
-  if (createErr || !created.user) throw new Error(createErr?.message ?? "create user failed");
-  const userId = created.user.id;
-
-  // Trigger `handle_new_organization` adiciona owner como admin automaticamente.
-  const { data: org, error: orgErr } = await admin
-    .from("organizations")
-    .insert({ name: "RLS Admin Test", slug, owner_id: userId })
-    .select("id")
-    .single();
-  if (orgErr || !org) throw new Error(orgErr?.message ?? "create org failed");
-
-  let userClient: SupabaseClient | null = null;
+  // Fixture garante org + linha em organization_members com role='admin',
+  // sem depender do trigger handle_new_organization (faz upsert manual e
+  // valida o invariante antes de retornar).
+  const fx = await createAdminUserFixture(fixtureCtx());
   try {
-    userClient = createClient(SUPABASE_URL, ANON_KEY, CLIENT_OPTS);
-    const { data: signIn, error: signErr } = await userClient.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (signErr || !signIn.session) throw new Error(signErr?.message ?? "sign in failed");
-
     const res = await fetch(FUNCTION_URL, {
       method: "POST",
-      headers: corsAndJson({ Authorization: `Bearer ${signIn.session.access_token}` }),
+      headers: corsAndJson({ Authorization: `Bearer ${fx.accessToken}` }),
     });
     const body = await safeJson(res);
     assert(
       res.status === 200 || res.status === 422,
-      `expected 200/422, got ${res.status}: ${JSON.stringify(body).slice(0, 300)}`,
+      `expected 200/422, got ${res.status}: ${bodySnippet(body, 300)}`,
     );
-    assert(typeof body.allPassed === "boolean", "missing allPassed flag");
-    assert(typeof body.total === "number", "missing total count");
-    assert(Array.isArray(body.results), "missing results array");
+    assert(
+      body._isJson,
+      `relatório deveria vir como JSON, recebeu ${body._contentType}: ${bodySnippet(body, 300)}`,
+    );
+    assert(typeof body.allPassed === "boolean", `missing allPassed flag: ${bodySnippet(body)}`);
+    assert(typeof body.total === "number", `missing total count: ${bodySnippet(body)}`);
+    assert(Array.isArray(body.results), `missing results array: ${bodySnippet(body)}`);
     const results = body.results as Array<{ name: string; passed: boolean }>;
     assert(results.length > 0, "results should not be empty");
     for (const r of results) {
@@ -218,8 +197,6 @@ Deno.test("rls-tests: retorna relatório estruturado quando admin chama", async 
       assert(typeof r.passed === "boolean");
     }
   } finally {
-    try { await userClient?.auth.signOut(); } catch { /* ignore */ }
-    await admin.from("organizations").delete().eq("id", org.id);
-    await admin.auth.admin.deleteUser(userId);
+    await fx.cleanup();
   }
 });
