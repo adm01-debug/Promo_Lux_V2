@@ -140,6 +140,9 @@ async function refreshOrgAndRetry(): Promise<boolean> {
     toast.success("Operação concluída", { description: op.label });
     if (qcRef) qcRef.invalidateQueries();
     emit(null);
+    // Recuperação bem-sucedida encerra o fluxo — próxima falha começa
+    // um novo correlation_id, evitando misturar incidentes distintos.
+    resetCorrelationId();
     return true;
   } catch (err) {
     // Se ainda houver mismatch, o handler será re-invocado naturalmente
