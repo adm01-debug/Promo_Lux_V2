@@ -71,7 +71,8 @@ describe("withOrg — E2E switching de organização ativa", () => {
     db.from("companies").update({ name: "Acme A v2" });
     db.from("companies").delete();
 
-    expect(orgFilters()).toEqual([ORG_A, ORG_A, ORG_A, ORG_A]);
+    // SELECT, UPDATE e DELETE injetam .eq(organization_id); INSERT apenas injeta no payload.
+    expect(orgFilters()).toEqual([ORG_A, ORG_A, ORG_A]);
     expect(calls.insert[0]).toEqual({
       method: "insert",
       args: [{ name: "Acme A", organization_id: ORG_A }],
@@ -85,7 +86,8 @@ describe("withOrg — E2E switching de organização ativa", () => {
     db.from("companies").insert({ name: "Acme B" });
 
     // todas as operações agora usam Org B
-    expect(orgFilters()).toEqual([ORG_B, ORG_B]);
+    // SELECT injeta .eq; INSERT injeta no payload (sem .eq).
+    expect(orgFilters()).toEqual([ORG_B]);
     expect(calls.insert[0]).toEqual({
       method: "insert",
       args: [{ name: "Acme B", organization_id: ORG_B }],
