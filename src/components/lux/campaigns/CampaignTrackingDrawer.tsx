@@ -78,6 +78,21 @@ export const CampaignTrackingDrawer = ({
     },
   });
 
+  const { data: replies = [] } = useQuery({
+    queryKey: ["campaign-replies", campaignId],
+    enabled: !!campaignId && open,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("campaign_replies")
+        .select("id,recipient_id,from_email,from_name,subject,snippet,received_at")
+        .eq("campaign_id", campaignId!)
+        .order("received_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data as Array<{ id: string; recipient_id: string; from_email: string | null; from_name: string | null; subject: string | null; snippet: string | null; received_at: string }>;
+    },
+  });
+
   const sent = recipients.filter((r) => r.sent_at).length;
   const opened = recipients.filter((r) => r.open_count > 0).length;
   const clicked = recipients.filter((r) => r.click_count > 0).length;
@@ -157,6 +172,28 @@ export const CampaignTrackingDrawer = ({
                   </div>
                 );
               })}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-6">
+          <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Respostas ({replies.length})</h3>
+          {replies.length === 0 ? (
+            <p className="text-xs text-muted-foreground py-6 text-center">Sem respostas detectadas. Conecte uma caixa em Integrações → Email Accounts.</p>
+          ) : (
+            <div className="space-y-2 max-h-[40vh] overflow-y-auto">
+              {replies.map((rp) => (
+                <div key={rp.id} className="glass rounded-md p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-medium truncate">{rp.from_name || rp.from_email}</p>
+                    <span className="text-[10px] text-muted-foreground font-mono shrink-0">
+                      {new Date(rp.received_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+                  {rp.subject && <p className="text-[11px] text-muted-foreground truncate mt-0.5">{rp.subject}</p>}
+                  {rp.snippet && <p className="text-[11px] mt-1 line-clamp-2">{rp.snippet}</p>}
+                </div>
+              ))}
             </div>
           )}
         </section>
