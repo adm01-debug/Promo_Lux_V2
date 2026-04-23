@@ -429,6 +429,10 @@ function recordOrgViolation(err: OrgMismatchError | MissingOrgContextError) {
   if (now - lastAuditAt < AUDIT_THROTTLE_MS) return;
   lastAuditAt = now;
 
+  // Toca o correlation_id antes de montar o payload — bursts dentro da
+  // janela compartilham o mesmo id; cada falha recebe um seq monotônico.
+  const { id: correlationId, seq: correlationSeq } = touchCorrelationId();
+
   const payload = {
     kind: err.name,
     table: (err as OrgMismatchError).table,
@@ -439,6 +443,8 @@ function recordOrgViolation(err: OrgMismatchError | MissingOrgContextError) {
     url: typeof window !== "undefined" ? window.location.pathname : null,
     user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
     occurred_at: new Date().toISOString(),
+    correlation_id: correlationId,
+    correlation_seq: correlationSeq,
   };
 
   void supabase.auth.getUser().then(({ data }) => {
