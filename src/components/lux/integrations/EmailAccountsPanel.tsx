@@ -54,6 +54,7 @@ export function EmailAccountsPanel() {
   const [scopeType, setScopeType] = useState<"user" | "organization">("user");
   const { isAdmin } = usePermissions();
   const notifiedErrorsRef = useRef<Map<string, string>>(new Map());
+  const [disconnectTarget, setDisconnectTarget] = useState<Account | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -325,13 +326,25 @@ export function EmailAccountsPanel() {
               <Button size="sm" variant="ghost" className="h-8 gap-1 text-xs" onClick={() => pollMutation.mutate(acc.id)} disabled={pollMutation.isPending}>
                 <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} /> Sincronizar
               </Button>
-              <Button size="sm" variant="ghost" className="h-8 text-destructive hover:text-destructive" onClick={() => removeMutation.mutate(acc.id)}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 text-destructive hover:text-destructive"
+                onClick={() => setDisconnectTarget(acc)}
+                title="Desconectar e revogar tokens"
+              >
                 <Trash2 className="h-3 w-3" />
               </Button>
             </div>
           ))}
         </div>
       )}
+
+      <DisconnectAccountDialog
+        account={disconnectTarget}
+        open={!!disconnectTarget}
+        onOpenChange={(o) => !o && setDisconnectTarget(null)}
+      />
     </div>
   );
 }
