@@ -517,6 +517,17 @@ export const OrganizationsView = () => {
                         {createInvite.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
                         Gerar link
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleExportInvites}
+                        disabled={(filteredInvites?.length ?? 0) === 0}
+                        className="gap-1.5 text-xs"
+                        title="Exportar lista atual em CSV (auditoria)"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        CSV
+                      </Button>
                     </div>
                   </div>
                   <div className="px-4 py-2.5 border-b border-border/40 bg-secondary/10 flex items-center gap-2 flex-wrap">
