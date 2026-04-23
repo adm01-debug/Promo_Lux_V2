@@ -233,10 +233,11 @@ export function handleOrgError(err: unknown): boolean {
       occurredAt: new Date().toISOString(),
     });
   } else {
+    const { title, description } = copyForMismatch(err);
     emit({
       kind: "mismatch",
-      title: "Operação bloqueada por segurança",
-      description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+      title,
+      description,
       table: err.table,
       op: err.op,
       expected: err.expected ?? null,
@@ -279,8 +280,9 @@ export function handleOrgError(err: unknown): boolean {
     });
   } else {
     // OrgMismatchError
-    toast.error("Operação bloqueada por segurança", {
-      description: `Tentativa de modificar registro de outra organização em "${err.table}". A ação foi cancelada.`,
+    const { title, description } = copyForMismatch(err);
+    toast.error(title, {
+      description,
       action: {
         label: "Recarregar dados",
         onClick: reload,
