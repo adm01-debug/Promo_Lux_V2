@@ -595,6 +595,11 @@ export const OrganizationsView = () => {
                     toast({
                       title: removeTarget.isMe ? "Você saiu do workspace" : "Membro removido",
                     });
+                    pushActivity({
+                      icon: "remove",
+                      title: removeTarget.isMe ? "Saída do workspace" : "Membro removido",
+                      detail: removeTarget.label,
+                    });
                   },
                   onError: (e) => {
                     toast({ title: "Erro", description: (e as Error).message, variant: "destructive" });
