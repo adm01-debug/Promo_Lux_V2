@@ -64,6 +64,7 @@ export function EmailAccountsPanel() {
   const { isAdmin } = usePermissions();
   const notifiedErrorsRef = useRef<Map<string, string>>(new Map());
   const [disconnectTarget, setDisconnectTarget] = useState<Account | null>(null);
+  const [scopeChangeTarget, setScopeChangeTarget] = useState<Account | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -183,6 +184,42 @@ export function EmailAccountsPanel() {
       qc.invalidateQueries({ queryKey: ["email-accounts"] });
     },
     onError: (e: Error) => toast({ title: "Permissão negada", description: e.message, variant: "destructive" }),
+  });
+
+  /**
+   * Converte uma conta entre escopos `user` ↔ `organization`.
+   *
+   * Restrições enforced pela RLS de `email_accounts` (USING + WITH CHECK):
+   * - Personal → Shared: requer que o usuário seja admin da org E dono atual da conta.
+   * - Shared → Personal: requer admin (USING) e reatribui `user_id` para `auth.uid()`
+   *   (WITH CHECK exige `user_id = auth.uid()` quando `scope_type='user'`).
+   */
+  const scopeMutation = useMutation({
+    mutationFn: async (acc: Account) => {
+      if (!user?.id) throw new Error("Não autenticado.");
+      const target: "user" | "organization" = acc.scope_type === "user" ? "organization" : "user";
+      if (target === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem promover uma caixa para compartilhada.");
+      }
+      if (acc.scope_type === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem converter caixas compartilhadas.");
+      }
+      // Quando vira pessoal, o owner passa a ser o admin que está fazendo a conversão.
+      const patch: { scope_type: "user" | "organization"; user_id?: string } =
+        target === "user" ? { scope_type: "user", user_id: user.id } : { scope_type: "organization" };
+      const { error } = await supabase.from("email_accounts").update(patch).eq("id", acc.id);
+      if (error) throw error;
+      return target;
+    },
+    onSuccess: (target, acc) => {
+      const label = target === "organization" ? "compartilhada" : "pessoal";
+      toast({ title: "Conta convertida", description: `${acc.email} agora é ${label}.` });
+      qc.invalidateQueries({ queryKey: ["email-accounts"] });
+      setScopeChangeTarget(null);
+    },
+    onError: (e: Error) => {
+      toast({ title: "Falha ao converter", description: e.message, variant: "destructive" });
+    },
   });
 
   return (
