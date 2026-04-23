@@ -284,6 +284,13 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
           </Button>
         </div>
       </div>
+
+      <MembershipAuditDetailSheet
+        entry={selected}
+        open={!!selected}
+        onOpenChange={(o) => { if (!o) setSelected(null); }}
+        currentUserId={currentUserId}
+      />
     </div>
   );
 });
