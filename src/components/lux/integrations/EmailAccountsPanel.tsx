@@ -137,6 +137,9 @@ export function EmailAccountsPanel() {
 
   const connectMutation = useMutation({
     mutationFn: async (provider: "gmail" | "outlook") => {
+      if (scopeType === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem conectar caixas compartilhadas (scope organization).");
+      }
       setConnecting(provider);
       const redirectUri = `${window.location.origin}${window.location.pathname}`;
       const { data, error } = await supabase.functions.invoke("email-oauth-connect", {
@@ -149,12 +152,16 @@ export function EmailAccountsPanel() {
     },
     onError: (e: Error) => {
       setConnecting(null);
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+      toast({ title: "Permissão negada", description: e.message, variant: "destructive" });
     },
   });
 
   const pollMutation = useMutation({
     mutationFn: async (accountId: string) => {
+      const target = accounts.find((a) => a.id === accountId);
+      if (target?.scope_type === "organization" && !isAdmin) {
+        throw new Error("Apenas administradores podem sincronizar caixas compartilhadas da organização.");
+      }
       const { data, error } = await supabase.functions.invoke("email-poll-replies", {
         body: { account_id: accountId },
       });
@@ -165,7 +172,7 @@ export function EmailAccountsPanel() {
       toast({ title: "Polling concluído", description: `${JSON.stringify(d?.results?.[0] ?? {})}` });
       qc.invalidateQueries({ queryKey: ["email-accounts"] });
     },
-    onError: (e: Error) => toast({ title: "Erro", description: e.message, variant: "destructive" }),
+    onError: (e: Error) => toast({ title: "Permissão negada", description: e.message, variant: "destructive" }),
   });
 
   return (
@@ -263,7 +270,13 @@ export function EmailAccountsPanel() {
         </div>
       ) : (
         <div className="space-y-2">
-          {accounts.map((acc) => (
+          {accounts.map((acc) => {
+            const isOrgScoped = acc.scope_type === "organization";
+            const canManage = !isOrgScoped || isAdmin;
+            const lockReason = "Apenas administradores gerenciam caixas compartilhadas.";
+            const blockedToast = () =>
+              toast({ title: "Permissão negada", description: lockReason, variant: "destructive" });
+            return (
             <div key={acc.id} className="glass rounded-lg p-3 flex items-center gap-3">
               <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <Mail className="h-4 w-4 text-primary" />
@@ -298,6 +311,7 @@ export function EmailAccountsPanel() {
                 <p className="text-[10px] text-muted-foreground mt-0.5">
                   {acc.last_polled_at ? `Última sync: ${new Date(acc.last_polled_at).toLocaleString("pt-BR")}` : "Aguardando primeira sync"}
                   {acc.last_error && <span className="text-destructive ml-2">· {acc.last_error.slice(0, 80)}</span>}
+                  {!canManage && <span className="ml-2 text-warning">· somente leitura</span>}
                 </p>
               </div>
               {acc.last_error && isAuthError(acc.last_error) && (
@@ -305,26 +319,36 @@ export function EmailAccountsPanel() {
                   size="sm"
                   variant="outline"
                   className="h-8 gap-1 text-xs border-destructive/40 text-destructive hover:bg-destructive/10"
-                  disabled={!!connecting}
-                  onClick={() => connectMutation.mutate(acc.provider)}
+                  disabled={!!connecting || !canManage}
+                  title={!canManage ? lockReason : undefined}
+                  onClick={() => (canManage ? connectMutation.mutate(acc.provider) : blockedToast())}
                 >
                   <Link2 className="h-3 w-3" /> Reconectar
                 </Button>
               )}
-              <Button size="sm" variant="ghost" className="h-8 gap-1 text-xs" onClick={() => pollMutation.mutate(acc.id)} disabled={pollMutation.isPending}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 gap-1 text-xs"
+                onClick={() => (canManage ? pollMutation.mutate(acc.id) : blockedToast())}
+                disabled={pollMutation.isPending || !canManage}
+                title={!canManage ? lockReason : undefined}
+              >
                 <RefreshCw className={`h-3 w-3 ${pollMutation.isPending ? "animate-spin" : ""}`} /> Sincronizar
               </Button>
               <Button
                 size="sm"
                 variant="ghost"
                 className="h-8 text-destructive hover:text-destructive"
-                onClick={() => setDisconnectTarget(acc)}
-                title="Desconectar e revogar tokens"
+                onClick={() => (canManage ? setDisconnectTarget(acc) : blockedToast())}
+                disabled={!canManage}
+                title={!canManage ? lockReason : "Desconectar e revogar tokens"}
               >
                 <Trash2 className="h-3 w-3" />
               </Button>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
