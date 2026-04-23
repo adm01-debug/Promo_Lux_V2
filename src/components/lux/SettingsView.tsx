@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useCan } from "@/hooks/usePermissions";
+import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";
 
@@ -37,6 +39,7 @@ const DEFAULT_PREFS: NotifPrefs = { email_notifs: true, signal_notifs: true, scr
 
 export const SettingsView = () => {
   const { user } = useAuth();
+  const isAdmin = useCan("audit_logs", "view");
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -240,6 +243,13 @@ export const SettingsView = () => {
                   Reiniciar Tour
                 </Button>
               </div>
+
+              {isAdmin && (
+                <>
+                  <Separator className="bg-border/30" />
+                  <RLSVerificationPanel />
+                </>
+              )}
             </div>
           )}
 

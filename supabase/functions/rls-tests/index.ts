@@ -124,6 +124,135 @@ Deno.serve(async (req) => {
     const seesOnlySelf = profileB?.every(p => p.id === userB.id) ?? false;
     results.push({ name: "userB_sees_only_own_profile", passed: seesOnlySelf, detail: `profiles: ${profileB?.length}` });
 
+    // ─────────────────────────────────────────────
+    // 10. Cross-organization isolation suite
+    // Cria duas organizações distintas (uma owned por A, outra por B)
+    // e valida que membros de uma não enxergam/escrevem na outra.
+    // ─────────────────────────────────────────────
+    const slugA = `rls-org-a-${Date.now()}`;
+    const slugB = `rls-org-b-${Date.now()}`;
+
+    const { data: orgA, error: orgAErr } = await admin
+      .from("organizations")
+      .insert({ name: "RLS Org A", slug: slugA, owner_id: userA.id })
+      .select("id")
+      .single();
+    if (orgAErr) throw new Error(`create orgA: ${orgAErr.message}`);
+
+    const { data: orgB, error: orgBErr } = await admin
+      .from("organizations")
+      .insert({ name: "RLS Org B", slug: slugB, owner_id: userB.id })
+      .select("id")
+      .single();
+    if (orgBErr) throw new Error(`create orgB: ${orgBErr.message}`);
+
+    // Triggers `handle_new_organization` já adiciona o owner como admin.
+    // Inserir uma empresa em cada org via service role (bypass RLS) para o setup:
+    const { data: orgACompany } = await admin
+      .from("companies")
+      .insert({ name: "ORG-A-Company", organization_id: orgA.id, user_id: userA.id })
+      .select("id")
+      .single();
+    const { data: orgBCompany } = await admin
+      .from("companies")
+      .insert({ name: "ORG-B-Company", organization_id: orgB.id, user_id: userB.id })
+      .select("id")
+      .single();
+
+    // 10a. User A (membro de orgA) NÃO vê empresa da orgB
+    const { data: aSeesOrgB } = await clientA
+      .from("companies")
+      .select("id")
+      .eq("id", orgBCompany!.id);
+    results.push({
+      name: "orgA_member_cannot_read_orgB_company",
+      passed: (aSeesOrgB?.length ?? 0) === 0,
+      detail: `rows: ${aSeesOrgB?.length}`,
+    });
+
+    // 10b. User B (membro de orgB) NÃO vê empresa da orgA
+    const { data: bSeesOrgA } = await clientB
+      .from("companies")
+      .select("id")
+      .eq("id", orgACompany!.id);
+    results.push({
+      name: "orgB_member_cannot_read_orgA_company",
+      passed: (bSeesOrgA?.length ?? 0) === 0,
+      detail: `rows: ${bSeesOrgA?.length}`,
+    });
+
+    // 10c. User A NÃO consegue UPDATE em registro da orgB
+    const { error: aUpdateBErr } = await clientA
+      .from("companies")
+      .update({ name: "pwned-by-A" })
+      .eq("id", orgBCompany!.id);
+    const { data: orgBNameCheck } = await admin
+      .from("companies")
+      .select("name")
+      .eq("id", orgBCompany!.id)
+      .single();
+    results.push({
+      name: "orgA_member_cannot_update_orgB_company",
+      passed: orgBNameCheck?.name === "ORG-B-Company",
+      detail: `name="${orgBNameCheck?.name}" rls_error=${aUpdateBErr?.message ?? "none"}`,
+    });
+
+    // 10d. User A NÃO consegue DELETE em registro da orgB
+    await clientA.from("companies").delete().eq("id", orgBCompany!.id);
+    const { data: orgBStillExists } = await admin
+      .from("companies")
+      .select("id")
+      .eq("id", orgBCompany!.id);
+    results.push({
+      name: "orgA_member_cannot_delete_orgB_company",
+      passed: (orgBStillExists?.length ?? 0) === 1,
+      detail: `rows remaining: ${orgBStillExists?.length}`,
+    });
+
+    // 10e. User A NÃO consegue INSERT mirando organization_id da orgB
+    const { error: aInsertBErr } = await clientA
+      .from("companies")
+      .insert({ name: "smuggled", organization_id: orgB.id });
+    results.push({
+      name: "orgA_member_cannot_insert_into_orgB",
+      passed: !!aInsertBErr,
+      detail: aInsertBErr?.message ?? "insert succeeded (BAD)",
+    });
+
+    // 10f. Tabelas auxiliares (workflows, deals, stakeholders, notifications)
+    const auxTables = ["workflows", "deals", "stakeholders", "notifications", "intent_signals"] as const;
+    for (const t of auxTables) {
+      const payload: Record<string, unknown> = { organization_id: orgB.id, user_id: userB.id };
+      if (t === "workflows") Object.assign(payload, { name: `wf-${t}`, steps: [] });
+      if (t === "deals") {
+        // precisa de stage_id; cria um stage para orgB primeiro
+        const { data: stage } = await admin
+          .from("deal_stages")
+          .insert({ name: "RLS-stage", organization_id: orgB.id, user_id: userB.id })
+          .select("id")
+          .single();
+        Object.assign(payload, { title: "deal-x", stage_id: stage!.id });
+      }
+      if (t === "stakeholders") Object.assign(payload, { full_name: "Person X" });
+      if (t === "notifications") Object.assign(payload, { title: "n", message: "m" });
+      if (t === "intent_signals") Object.assign(payload, { company_name: "X", signal: "visit" });
+
+      const { data: row } = await admin.from(t).insert(payload).select("id").single();
+      const { data: aSees } = await clientA.from(t).select("id").eq("id", row!.id);
+      results.push({
+        name: `orgA_member_cannot_read_orgB_${t}`,
+        passed: (aSees?.length ?? 0) === 0,
+        detail: `rows: ${aSees?.length}`,
+      });
+      await admin.from(t).delete().eq("id", row!.id);
+    }
+
+    // Cleanup orgs
+    await admin.from("companies").delete().eq("id", orgACompany!.id);
+    await admin.from("companies").delete().eq("id", orgBCompany!.id);
+    await admin.from("organizations").delete().eq("id", orgA.id);
+    await admin.from("organizations").delete().eq("id", orgB.id);
+
     // Cleanup
     await admin.from("companies").delete().eq("id", companyIdA!);
     if (wfA?.id) await admin.from("workflows").delete().eq("id", wfA.id);

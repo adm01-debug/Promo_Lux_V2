@@ -1,0 +1,125 @@
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+// Capturamos as chamadas feitas no builder para inspeção.
+const calls: Record<string, unknown[]> = { select: [], insert: [], upsert: [], update: [], delete: [], eq: [] };
+
+function makeBuilder() {
+  // Builder fluente que registra chamadas e devolve sempre a si mesmo.
+  const b: Record<string, (...args: unknown[]) => unknown> = {};
+  for (const m of ["select", "insert", "upsert", "update", "delete", "eq"] as const) {
+    b[m] = vi.fn((...args: unknown[]) => {
+      calls[m].push(args);
+      return b;
+    });
+  }
+  return b;
+}
+
+const builder = makeBuilder();
+
+vi.mock("../client", () => ({
+  supabase: {
+    from: vi.fn(() => builder),
+  },
+}));
+
+import { db, setActiveOrgId, ensureSameOrg, OrgMismatchError } from "../withOrg";
+
+const ORG_A = "00000000-0000-0000-0000-0000000000aa";
+const ORG_B = "00000000-0000-0000-0000-0000000000bb";
+
+function reset() {
+  for (const k of Object.keys(calls)) calls[k].length = 0;
+  for (const m of Object.keys(builder)) (builder[m] as unknown as { mockClear: () => void }).mockClear();
+}
+
+describe("db (withOrg) — multi-tenant guards", () => {
+  beforeEach(() => {
+    reset();
+    setActiveOrgId(ORG_A);
+  });
+
+  describe("SELECT auto-scoping", () => {
+    it("aplica .eq('organization_id', activeOrg) em tabelas escopadas", () => {
+      db.from("companies").select("*");
+      expect(calls.select).toEqual([["*"]]);
+      expect(calls.eq).toEqual([["organization_id", ORG_A]]);
+    });
+
+    it("não aplica filtro em tabelas fora do escopo (profiles)", () => {
+      db.from("profiles").select("id, full_name");
+      expect(calls.select).toEqual([["id, full_name"]]);
+      expect(calls.eq).toEqual([]);
+    });
+
+    it("não aplica filtro quando não há org ativa", () => {
+      setActiveOrgId(null);
+      // limpa o fallback do localStorage também
+      if (typeof window !== "undefined") window.localStorage.removeItem("lux:active-org");
+      db.from("companies").select("*");
+      expect(calls.eq).toEqual([]);
+    });
+  });
+
+  describe("INSERT/UPSERT injeção e bloqueio cross-org", () => {
+    it("injeta organization_id da org ativa quando ausente", () => {
+      db.from("companies").insert({ name: "Acme" });
+      expect(calls.insert[0]).toEqual([{ name: "Acme", organization_id: ORG_A }]);
+    });
+
+    it("aceita payload com mesma org explícita", () => {
+      db.from("companies").insert({ name: "Acme", organization_id: ORG_A });
+      expect(calls.insert[0]).toEqual([{ name: "Acme", organization_id: ORG_A }]);
+    });
+
+    it("lança OrgMismatchError em insert com outra org", () => {
+      expect(() =>
+        db.from("companies").insert({ name: "Hack", organization_id: ORG_B }),
+      ).toThrow(OrgMismatchError);
+      expect(calls.insert).toEqual([]);
+    });
+
+    it("bloqueia mesmo dentro de array (bulk)", () => {
+      expect(() =>
+        db.from("companies").insert([
+          { name: "ok" },
+          { name: "bad", organization_id: ORG_B },
+        ]),
+      ).toThrow(OrgMismatchError);
+    });
+  });
+
+  describe("UPDATE força escopo", () => {
+    it("anexa .eq('organization_id', activeOrg) automaticamente", () => {
+      db.from("companies").update({ name: "renamed" });
+      expect(calls.update[0]).toEqual([{ name: "renamed" }]);
+      expect(calls.eq).toEqual([["organization_id", ORG_A]]);
+    });
+
+    it("bloqueia update tentando setar organization_id de outra org", () => {
+      expect(() =>
+        db.from("companies").update({ organization_id: ORG_B }),
+      ).toThrow(OrgMismatchError);
+    });
+  });
+
+  describe("DELETE força escopo", () => {
+    it("anexa filtro de organização", () => {
+      db.from("companies").delete();
+      expect(calls.delete[0]).toEqual([]);
+      expect(calls.eq).toEqual([["organization_id", ORG_A]]);
+    });
+  });
+
+  describe("ensureSameOrg helper", () => {
+    it("retorna true quando a org bate", () => {
+      expect(ensureSameOrg({ organization_id: ORG_A })).toBe(true);
+    });
+    it("retorna false em outra org", () => {
+      expect(ensureSameOrg({ organization_id: ORG_B })).toBe(false);
+    });
+    it("retorna false sem registro", () => {
+      expect(ensureSameOrg(null)).toBe(false);
+    });
+  });
+});
