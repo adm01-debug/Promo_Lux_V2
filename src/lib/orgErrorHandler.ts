@@ -450,27 +450,54 @@ function recordOrgViolation(err: OrgMismatchError | MissingOrgContextError) {
     correlation_seq: correlationSeq,
   };
 
-  void supabase.auth.getUser().then(({ data }) => {
-    const user = data.user;
-    if (!user) return;
-    const orgId = (err as OrgMismatchError).expected ?? null;
-    void supabase
-      .from("audit_logs")
-      .insert({
-        action: "update",
-        table_name: "__org_violation",
-        record_id: user.id,
-        actor_id: user.id,
-        organization_id: orgId,
-        old_data: null,
-        new_data: payload,
-      })
-      .then(({ error }) => {
-        if (error && typeof console !== "undefined") {
-          console.debug("[orgErrorHandler] audit insert skipped:", error.message);
-        }
-      });
-  });
+  // Guard total: nem `getUser`, nem `from(...).insert(...)`, nem o
+  // `.then` da resposta podem propagar erros — auditoria é fire-and-forget
+  // e jamais pode quebrar (ou poluir como `unhandledRejection`) o fluxo
+  // do usuário. Tratamos retorno `{error}`, rejeição da promise e
+  // exceções síncronas do builder do supabase-js.
+  const safeLog = (msg: string, detail: unknown) => {
+    if (typeof console !== "undefined") {
+      console.debug(`[orgErrorHandler] ${msg}`, detail);
+    }
+  };
+  let getUserPromise: Promise<{ data: { user: { id: string } | null } }>;
+  try {
+    getUserPromise = supabase.auth.getUser() as Promise<{
+      data: { user: { id: string } | null };
+    }>;
+  } catch (e) {
+    safeLog("audit getUser threw:", e);
+    return;
+  }
+  void getUserPromise
+    .then(({ data }) => {
+      const user = data.user;
+      if (!user) return;
+      const orgId = (err as OrgMismatchError).expected ?? null;
+      let insertPromise: Promise<{ error: { message?: string } | null }>;
+      try {
+        insertPromise = supabase
+          .from("audit_logs")
+          .insert({
+            action: "update",
+            table_name: "__org_violation",
+            record_id: user.id,
+            actor_id: user.id,
+            organization_id: orgId,
+            old_data: null,
+            new_data: payload,
+          }) as unknown as Promise<{ error: { message?: string } | null }>;
+      } catch (e) {
+        safeLog("audit insert threw:", e);
+        return;
+      }
+      void Promise.resolve(insertPromise)
+        .then(({ error }) => {
+          if (error) safeLog("audit insert skipped:", error.message ?? error);
+        })
+        .catch((e) => safeLog("audit insert rejected:", e));
+    })
+    .catch((e) => safeLog("audit getUser rejected:", e));
 }
 
 /**
