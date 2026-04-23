@@ -448,6 +448,15 @@ export function EmailAccountsPanel() {
               <Button
                 size="sm"
                 variant="ghost"
+                className="h-8 gap-1 text-xs"
+                onClick={() => setHistoryTarget(acc)}
+                title="Ver histórico de sincronizações"
+              >
+                <History className="h-3 w-3" /> Histórico
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
                 className="h-8 text-destructive hover:text-destructive"
                 onClick={() => (canManage ? setDisconnectTarget(acc) : blockedToast())}
                 disabled={!canManage}
