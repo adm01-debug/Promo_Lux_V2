@@ -140,6 +140,9 @@ async function refreshOrgAndRetry(): Promise<boolean> {
     toast.success("Operação concluída", { description: op.label });
     if (qcRef) qcRef.invalidateQueries();
     emit(null);
+    // Recuperação bem-sucedida encerra o fluxo — próxima falha começa
+    // um novo correlation_id, evitando misturar incidentes distintos.
+    resetCorrelationId();
     return true;
   } catch (err) {
     // Se ainda houver mismatch, o handler será re-invocado naturalmente
@@ -206,6 +209,66 @@ export function reloadAfterOrgError() {
 
 let lastToastAt = 0;
 const THROTTLE_MS = 1500;
+
+/* ---------- Correlation ID ---------- */
+
+/**
+ * Identificador que agrupa múltiplas falhas de escopo do mesmo "fluxo de
+ * usuário". Funciona com janela deslizante: cada nova violação dentro de
+ * `CORRELATION_WINDOW_MS` após a última reaproveita o mesmo id; se o
+ * intervalo for maior, gera-se um novo. Também é possível forçar um
+ * reset (ex.: ao trocar de organização ou navegar para outra tela).
+ *
+ * O id é puro client-side (não colide com `request_id` de servidor) e é
+ * persistido no payload `new_data` de cada `__org_violation` registrado
+ * em `audit_logs`, permitindo correlacionar visualmente bursts e fluxos
+ * incompletos na UI de auditoria.
+ */
+const CORRELATION_WINDOW_MS = 5 * 60 * 1000; // 5 min
+let currentCorrelationId: string | null = null;
+let correlationLastTouch = 0;
+let correlationSeq = 0;
+
+function newCorrelationId(): string {
+  // crypto.randomUUID quando disponível; fallback estável para SSR/jsdom.
+  const rand =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
+  const ts = Date.now().toString(36);
+  return `corr_${ts}_${rand}`;
+}
+
+/**
+ * Retorna o correlation_id ativo, criando um novo se não houver ou se a
+ * janela tiver expirado. Cada chamada também incrementa o número de
+ * sequência dentro do flow (útil para ordenar eventos no mesmo id).
+ */
+export function touchCorrelationId(): { id: string; seq: number } {
+  const now = Date.now();
+  if (!currentCorrelationId || now - correlationLastTouch > CORRELATION_WINDOW_MS) {
+    currentCorrelationId = newCorrelationId();
+    correlationSeq = 0;
+  }
+  correlationLastTouch = now;
+  correlationSeq += 1;
+  return { id: currentCorrelationId, seq: correlationSeq };
+}
+
+/** Lê sem mutar — útil em testes e telemetria paralela. */
+export function getCurrentCorrelationId(): string | null {
+  return currentCorrelationId;
+}
+
+/**
+ * Força um novo flow no próximo evento. Chamar ao trocar de organização,
+ * ao recuperar com sucesso (`refreshOrgAndRetry` ok) ou via testes.
+ */
+export function resetCorrelationId() {
+  currentCorrelationId = null;
+  correlationSeq = 0;
+  correlationLastTouch = 0;
+}
 
 /* ---------- Rótulos amigáveis (entidade + operação) ---------- */
 
@@ -369,6 +432,10 @@ function recordOrgViolation(err: OrgMismatchError | MissingOrgContextError) {
   if (now - lastAuditAt < AUDIT_THROTTLE_MS) return;
   lastAuditAt = now;
 
+  // Toca o correlation_id antes de montar o payload — bursts dentro da
+  // janela compartilham o mesmo id; cada falha recebe um seq monotônico.
+  const { id: correlationId, seq: correlationSeq } = touchCorrelationId();
+
   const payload = {
     kind: err.name,
     table: (err as OrgMismatchError).table,
@@ -379,6 +446,8 @@ function recordOrgViolation(err: OrgMismatchError | MissingOrgContextError) {
     url: typeof window !== "undefined" ? window.location.pathname : null,
     user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
     occurred_at: new Date().toISOString(),
+    correlation_id: correlationId,
+    correlation_seq: correlationSeq,
   };
 
   void supabase.auth.getUser().then(({ data }) => {

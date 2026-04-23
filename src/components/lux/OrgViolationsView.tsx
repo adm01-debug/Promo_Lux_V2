@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Shield, AlertTriangle, RefreshCw, Filter } from "lucide-react";
+import { Shield, AlertTriangle, RefreshCw, Filter, Link2, X as XIcon } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -11,6 +11,7 @@ import { useMyOrganizations, useActiveOrganization } from "@/hooks/useOrganizati
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -43,6 +44,8 @@ interface ViolationPayload {
   url?: string | null;
   user_agent?: string | null;
   occurred_at?: string;
+  correlation_id?: string | null;
+  correlation_seq?: number | null;
 }
 
 interface AuditRow {
@@ -80,6 +83,7 @@ export function OrgViolationsView() {
   const [orgFilter, setOrgFilter] = useState<string>("active");
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [periodFilter, setPeriodFilter] = useState<PeriodKey>("7d");
+  const [correlationFilter, setCorrelationFilter] = useState<string>("");
 
   const sinceIso = useMemo(() => {
     const opt = PERIOD_OPTIONS.find((p) => p.value === periodFilter);
@@ -115,9 +119,24 @@ export function OrgViolationsView() {
   // do que via .filter() no PostgREST e mantém o índice por created_at.
   const filtered = useMemo(() => {
     if (!data) return [];
-    if (kindFilter === "all") return data;
-    return data.filter((r) => r.new_data?.kind === kindFilter);
-  }, [data, kindFilter]);
+    let rows = data;
+    if (kindFilter !== "all") rows = rows.filter((r) => r.new_data?.kind === kindFilter);
+    const corr = correlationFilter.trim();
+    if (corr) rows = rows.filter((r) => (r.new_data?.correlation_id ?? "").includes(corr));
+    return rows;
+  }, [data, kindFilter, correlationFilter]);
+
+  // Conta ocorrências por correlation_id no recorte filtrado para
+  // destacar bursts (ex.: "5 falhas no mesmo fluxo").
+  const correlationCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const r of filtered) {
+      const cid = r.new_data?.correlation_id;
+      if (!cid) continue;
+      map.set(cid, (map.get(cid) ?? 0) + 1);
+    }
+    return map;
+  }, [filtered]);
 
   if (!isAdmin) {
     return (
@@ -168,7 +187,7 @@ export function OrgViolationsView() {
             Filtros
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="org-filter" className="text-xs">Organização</Label>
             <Select value={orgFilter} onValueChange={setOrgFilter}>
@@ -223,6 +242,31 @@ export function OrgViolationsView() {
               </SelectContent>
             </Select>
           </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="corr-filter" className="text-xs flex items-center gap-1">
+              <Link2 className="h-3 w-3" /> Correlation ID
+            </Label>
+            <div className="relative">
+              <Input
+                id="corr-filter"
+                value={correlationFilter}
+                onChange={(e) => setCorrelationFilter(e.target.value)}
+                placeholder="corr_xxx_yyy"
+                className="font-mono text-xs pr-8"
+              />
+              {correlationFilter && (
+                <button
+                  type="button"
+                  onClick={() => setCorrelationFilter("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="Limpar filtro"
+                >
+                  <XIcon className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -274,12 +318,15 @@ export function OrgViolationsView() {
                     <TableHead>Operação</TableHead>
                     <TableHead>Esperado / Recebido</TableHead>
                     <TableHead className="hidden lg:table-cell">URL</TableHead>
+                    <TableHead>Correlation</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filtered.map((row) => {
                     const p = row.new_data ?? {};
                     const kind = p.kind ?? "—";
+                    const cid = p.correlation_id ?? null;
+                    const cidCount = cid ? correlationCounts.get(cid) ?? 1 : 0;
                     return (
                       <TableRow key={row.id}>
                         <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
@@ -320,6 +367,32 @@ export function OrgViolationsView() {
                         </TableCell>
                         <TableCell className="hidden lg:table-cell text-xs text-muted-foreground max-w-[280px] truncate">
                           {p.url ?? "—"}
+                        </TableCell>
+                        <TableCell className="text-xs">
+                          {cid ? (
+                            <button
+                              type="button"
+                              onClick={() => setCorrelationFilter(cid)}
+                              title={`${cid} (clique para filtrar)`}
+                              className="inline-flex items-center gap-1.5 group"
+                            >
+                              <code className="text-[11px] text-muted-foreground group-hover:text-foreground transition-colors">
+                                {cid.slice(5, 17)}…
+                              </code>
+                              {cidCount > 1 && (
+                                <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                                  ×{cidCount}
+                                </Badge>
+                              )}
+                              {typeof p.correlation_seq === "number" && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  #{p.correlation_seq}
+                                </span>
+                              )}
+                            </button>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
