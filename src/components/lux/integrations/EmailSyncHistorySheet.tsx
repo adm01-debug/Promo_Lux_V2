@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle2, AlertCircle, KeyRound, Clock, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEmailSyncLog, type EmailSyncLogEntry } from "@/hooks/useEmailSyncLog";
+import { describeEmailError } from "@/lib/emailErrorMessages";
 
 interface AccountLite {
   id: string;
@@ -153,10 +154,28 @@ export function EmailSyncHistorySheet({ account, open, onOpenChange }: Props) {
                           {duration && <span> · {duration}</span>}
                         </p>
                         {e.error_message && (
-                          <p className="text-[11px] text-destructive mt-1 break-words">
-                            {e.error_message.slice(0, 220)}
-                            {e.error_message.length > 220 ? "…" : ""}
-                          </p>
+                          (() => {
+                            const info = describeEmailError(e.error_message)!;
+                            return (
+                              <div className="mt-1 space-y-0.5">
+                                <p className="text-[11px] text-destructive break-words">
+                                  <span className="font-medium">{info.title}</span>
+                                  {info.code && <span className="opacity-70"> · {info.code}</span>}
+                                  {" — "}
+                                  {info.description}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground break-words">
+                                  → {info.actionHint}
+                                </p>
+                                <p
+                                  className="text-[10px] text-muted-foreground/70 break-words font-mono"
+                                  title="Mensagem original do provedor"
+                                >
+                                  {info.raw}
+                                </p>
+                              </div>
+                            );
+                          })()
                         )}
                         {e.next_retry_at && (e.status === "error" || e.status === "refresh_failed") && (
                           <p className="text-[11px] text-warning mt-1">
