@@ -21,6 +21,7 @@ import {
   Settings,
   Kanban,
   Webhook,
+  ShieldAlert,
   X,
   PanelLeftClose,
   PanelLeft,
@@ -52,6 +53,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "ai-agent", label: "Agente IA", icon: Bot },
   { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
   { id: "integrations", label: "API & Webhooks", icon: Webhook },
+  { id: "org-violations", label: "Violações de Org", icon: ShieldAlert },
   { id: "settings", label: "Configurações", icon: Settings },
 ];
 
