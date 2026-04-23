@@ -37,12 +37,21 @@ Deno.serve(async (req) => {
     if (cErr || !claims?.claims?.sub) return json({ error: "Unauthorized" }, 401);
     const userId = claims.claims.sub as string;
 
-    const { provider, redirect_uri, scope_type, organization_id } = await req.json();
+    const { provider, redirect_uri, scope_type, organization_id, dry_run } = await req.json();
     if (provider !== "gmail" && provider !== "outlook") {
       return json({ error: "Invalid provider" }, 400);
     }
     if (!redirect_uri || typeof redirect_uri !== "string") {
       return json({ error: "redirect_uri required" }, 400);
+    }
+    // Validação básica de redirect_uri
+    let redirectParsed: URL | null = null;
+    try { redirectParsed = new URL(redirect_uri); } catch { return json({ error: "redirect_uri inválido (URL malformada)" }, 400); }
+    if (!["https:", "http:"].includes(redirectParsed.protocol)) {
+      return json({ error: "redirect_uri precisa usar http(s)" }, 400);
+    }
+    if (redirectParsed.protocol === "http:" && !["localhost", "127.0.0.1"].includes(redirectParsed.hostname)) {
+      return json({ error: "http só permitido em localhost; use https em produção" }, 400);
     }
     const scopeType: "user" | "organization" = scope_type === "organization" ? "organization" : "user";
 
@@ -68,6 +77,7 @@ Deno.serve(async (req) => {
 
     // State carries: userId.scopeType.orgId.nonce
     const state = `${userId}.${scopeType}.${orgId}.${crypto.randomUUID()}`;
+    const scopes = provider === "gmail" ? GMAIL_SCOPES : OUTLOOK_SCOPES;
 
     let authUrl: string;
     if (provider === "gmail") {
@@ -95,6 +105,27 @@ Deno.serve(async (req) => {
       authUrl = u.toString();
     }
 
+    if (dry_run) {
+      // Modo sandbox: não inicia OAuth real — devolve diagnóstico completo
+      return json({
+        dry_run: true,
+        provider,
+        scope_type: scopeType,
+        organization_id: orgId,
+        redirect_uri,
+        redirect_uri_normalized: redirectParsed.toString(),
+        scopes,
+        client_id_configured: provider === "gmail"
+          ? !!Deno.env.get("GOOGLE_OAUTH_CLIENT_ID")
+          : !!Deno.env.get("MS_OAUTH_CLIENT_ID"),
+        client_secret_configured: provider === "gmail"
+          ? !!Deno.env.get("GOOGLE_OAUTH_CLIENT_SECRET")
+          : !!Deno.env.get("MS_OAUTH_CLIENT_SECRET"),
+        auth_url_preview: authUrl,
+        warnings: buildWarnings(redirectParsed, provider),
+      });
+    }
+
     return json({ url: authUrl, state });
   } catch (e) {
     console.error(e);
@@ -107,4 +138,18 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+}
+
+function buildWarnings(u: URL, provider: "gmail" | "outlook"): string[] {
+  const w: string[] = [];
+  if (u.protocol === "http:") w.push("Usando http — apenas válido localmente.");
+  if (u.hostname.includes("lovable.app") && provider === "gmail") {
+    w.push("Domínio *.lovable.app precisa estar autorizado no Google Cloud Console como Authorized redirect URI.");
+  }
+  if (u.hostname.includes("lovable.app") && provider === "outlook") {
+    w.push("Domínio *.lovable.app precisa estar autorizado no Azure App Registration como Redirect URI (tipo Web).");
+  }
+  if (u.search) w.push("redirect_uri contém query string — alguns provedores rejeitam.");
+  if (u.hash) w.push("redirect_uri contém hash — provedores OAuth ignoram fragmentos.");
+  return w;
 }
