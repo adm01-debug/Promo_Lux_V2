@@ -1558,6 +1558,12 @@ export type Database = {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
       }
+      pg_catalog_rls_tables: {
+        Args: never
+        Returns: {
+          table_name: string
+        }[]
+      }
       record_campaign_event: {
         Args: {
           _event_type: string
