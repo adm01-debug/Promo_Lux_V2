@@ -110,7 +110,47 @@ describe("handleOrgError → toast", () => {
       string,
       { action: { label: string } },
     ];
+    // Sem operação registrada via runWithOrgRetry, fallback é Recarregar.
     expect(opts.action.label).toMatch(/Recarregar/i);
+  });
+
+  it("usa ação 'Tentar novamente' quando há operação registrada via runWithOrgRetry", async () => {
+    vi.useRealTimers();
+    // Registra uma operação que falha uma vez (mismatch) e sucede na retry.
+    let attempts = 0;
+    const op = vi.fn(async () => {
+      attempts += 1;
+      if (attempts === 1) {
+        throw new OrgMismatchError("companies", "update", "orgA", "orgB");
+      }
+      return { ok: true };
+    });
+
+    await expect(runWithOrgRetry(op, "Atualizar empresa")).rejects.toBeInstanceOf(
+      OrgMismatchError,
+    );
+
+    // O catch externo (em React Query) chamaria handleOrgError; simulamos:
+    handleOrgError(new OrgMismatchError("companies", "update", "orgA", "orgB"));
+    const [, opts] = toastError.mock.calls.at(-1) as [
+      string,
+      { action: { label: string; onClick: () => void } },
+    ];
+    expect(opts.action.label).toMatch(/Tentar novamente/i);
+
+    // Aciona o retry e aguarda o ciclo (refetch + reexecução).
+    opts.action.onClick();
+    await new Promise((r) => setTimeout(r, 10));
+
+    expect(op).toHaveBeenCalledTimes(2);
+    expect(toastInfo).toHaveBeenCalledWith(
+      "Tentando novamente…",
+      expect.objectContaining({ description: "Atualizar empresa" }),
+    );
+    expect(toastSuccess).toHaveBeenCalledWith(
+      "Operação concluída",
+      expect.objectContaining({ description: "Atualizar empresa" }),
+    );
   });
 
   it("retorna false (não consome) para erro genérico", () => {
