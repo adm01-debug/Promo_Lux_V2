@@ -182,11 +182,11 @@ export function handleOrgError(err: unknown): boolean {
   // Empurra estado para o banner inline (sem throttle — o componente
   // decide como renderizar e desduplicar visualmente).
   if (err instanceof MissingOrgContextError) {
+    const { title, description } = copyForMissing(err);
     emit({
       kind: "missing",
-      title: "Nenhuma organização ativa",
-      description:
-        "Selecione uma organização no seletor antes de criar, editar ou remover registros.",
+      title,
+      description,
       table: err.table,
       op: err.op,
       occurredAt: new Date().toISOString(),
@@ -219,9 +219,9 @@ export function handleOrgError(err: unknown): boolean {
   };
 
   if (err instanceof MissingOrgContextError) {
-    toast.error("Nenhuma organização ativa", {
-      description:
-        "Selecione uma organização antes de criar, editar ou remover registros.",
+    const { title, description } = copyForMissing(err);
+    toast.error(title, {
+      description,
       action: {
         label: "Selecionar organização",
         onClick: () => {
