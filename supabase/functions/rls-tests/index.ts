@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
     return client;
   }
 
-  const tables = ["companies", "workflows", "campaigns", "notifications", "scrape_jobs", "intent_signals", "stakeholders"] as const;
+  const anonTables = RLS_TABLES.filter((t) => !t.excludeFromAnon).map((t) => t.table);
   const userAEmail = `rls-test-a-${Date.now()}@test.local`;
   const userBEmail = `rls-test-b-${Date.now()}@test.local`;
 
@@ -121,14 +121,14 @@ Deno.serve(async (req) => {
     const clientB = await getAuthClient(userBEmail, "TestPass123!");
 
     // 2. Test: anon cannot read any table
-    for (const table of tables) {
+    for (const table of anonTables) {
       const { data, error } = await anon.from(table).select("id").limit(1);
       const passed = (data?.length === 0 || !!error);
       results.push({ name: `anon_cannot_read_${table}`, passed, detail: error?.message ?? `rows: ${data?.length ?? 0}` });
     }
 
     // 3. Test: anon cannot insert into any table
-    for (const table of tables) {
+    for (const table of anonTables) {
       const { error } = await anon.from(table).insert({ name: "anon-test" } as Record<string, unknown>);
       results.push({ name: `anon_cannot_insert_${table}`, passed: !!error, detail: error?.message ?? "insert succeeded (BAD)" });
     }
