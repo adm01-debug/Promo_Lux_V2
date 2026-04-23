@@ -44,6 +44,8 @@ interface ViolationPayload {
   url?: string | null;
   user_agent?: string | null;
   occurred_at?: string;
+  correlation_id?: string | null;
+  correlation_seq?: number | null;
 }
 
 interface AuditRow {
