@@ -11,6 +11,13 @@ import { DemoProvider, useDemo } from "@/contexts/DemoContext";
 import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
 import { ErrorBoundary } from "@/components/lux/ErrorBoundary";
 import { PageTransition } from "@/components/lux/PageTransition";
+import { useEffect } from "react";
+import {
+  registerQueryClient,
+  installGlobalOrgErrorHandler,
+  handleOrgError,
+} from "@/lib/orgErrorHandler";
+import { setOrgErrorListener } from "@/integrations/supabase/withOrg";
 
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
@@ -37,6 +44,11 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// Registra o QueryClient e conecta o listener síncrono que `withOrg.ts`
+// usa para disparar toasts no momento exato em que a operação é bloqueada.
+registerQueryClient(queryClient);
+setOrgErrorListener((err) => { handleOrgError(err); });
 
 function PageLoader() {
   return (
@@ -99,6 +111,7 @@ const App = () => (
         <TooltipProvider>
           <AuthProvider>
             <DemoProvider>
+              <GlobalOrgErrorListener />
               <Toaster />
               <Sonner />
               <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -117,3 +130,9 @@ const App = () => (
 );
 
 export default App;
+
+/** Instala o listener de unhandledrejection apenas no client. */
+function GlobalOrgErrorListener() {
+  useEffect(() => installGlobalOrgErrorHandler(), []);
+  return null;
+}
