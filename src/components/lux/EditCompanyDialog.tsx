@@ -222,15 +222,30 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
             Editar Empresa
           </DialogTitle>
         </DialogHeader>
+        {locked && (
+          <div
+            role="alert"
+            className="mt-2 flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive"
+          >
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div className="space-y-0.5">
+              <p className="font-medium">Edição bloqueada</p>
+              <p className="text-xs text-destructive/90">
+                Este registro pertence a outra organização. Volte para a organização
+                original para editá-lo.
+              </p>
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="col-span-2">
             <Label>Nome *</Label>
-            <Input value={name} onChange={(e) => { setName(e.target.value); markDirty(); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={name} onChange={(e) => { setName(e.target.value); markDirty(); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
             <FieldError field="name" />
           </div>
           <div>
             <Label>Setor</Label>
-            <Input value={sector} onChange={(e) => { setSector(e.target.value); markDirty(); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={sector} onChange={(e) => { setSector(e.target.value); markDirty(); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
             <FieldError field="sector" />
           </div>
           <div>
@@ -240,7 +255,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
               {geoStatus === "found" && <CheckCircle2 className="h-3 w-3 text-green-500" />}
               {geoStatus === "not_found" && <XCircle className="h-3 w-3 text-destructive" />}
             </Label>
-            <Input value={location} onChange={(e) => handleLocationChange(e.target.value)} className={`mt-1 ${fieldErrors.location ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={location} onChange={(e) => handleLocationChange(e.target.value)} className={`mt-1 ${fieldErrors.location ? "border-destructive" : ""}`} />
             {geoStatus === "found" && geoCoords && (
               <p className="text-[10px] text-green-500 mt-1 flex items-center gap-1 font-mono">
                 <MapPin className="h-2.5 w-2.5" />
@@ -254,33 +269,33 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
           </div>
           <div>
             <Label>Email</Label>
-            <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); markDirty(); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
+            <Input disabled={locked} type="email" value={email} onChange={(e) => { setEmail(e.target.value); markDirty(); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
             <FieldError field="email" />
           </div>
           <div>
             <Label>Telefone</Label>
-            <Input value={phone} onChange={(e) => { setPhone(e.target.value); markDirty(); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={phone} onChange={(e) => { setPhone(e.target.value); markDirty(); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
             <FieldError field="phone" />
           </div>
           <div>
             <Label>Website</Label>
-            <Input value={website} onChange={(e) => { setWebsite(e.target.value); markDirty(); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={website} onChange={(e) => { setWebsite(e.target.value); markDirty(); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
             <FieldError field="website" />
           </div>
           <div>
             <Label>Funcionários</Label>
-            <Input value={employees} onChange={(e) => { setEmployees(e.target.value); markDirty(); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={employees} onChange={(e) => { setEmployees(e.target.value); markDirty(); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
             <FieldError field="employees" />
           </div>
           <div className="col-span-2">
             <Label>Faturamento</Label>
-            <Input value={revenue} onChange={(e) => { setRevenue(e.target.value); markDirty(); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
+            <Input disabled={locked} value={revenue} onChange={(e) => { setRevenue(e.target.value); markDirty(); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
             <FieldError field="revenue" />
           </div>
         </div>
-        <Button className="w-full mt-4 gap-2" onClick={handleSave} disabled={saving}>
+        <Button className="w-full mt-4 gap-2" onClick={handleSave} disabled={saving || locked}>
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          {saving ? "Salvando..." : "Salvar Alterações"}
+          {saving ? "Salvando..." : locked ? "Edição bloqueada" : "Salvar Alterações"}
         </Button>
       </DialogContent>
     </Dialog>
