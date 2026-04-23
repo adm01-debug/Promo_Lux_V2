@@ -187,7 +187,7 @@ export function OrgViolationsView() {
             Filtros
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="org-filter" className="text-xs">Organização</Label>
             <Select value={orgFilter} onValueChange={setOrgFilter}>
@@ -241,6 +241,31 @@ export function OrgViolationsView() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="corr-filter" className="text-xs flex items-center gap-1">
+              <Link2 className="h-3 w-3" /> Correlation ID
+            </Label>
+            <div className="relative">
+              <Input
+                id="corr-filter"
+                value={correlationFilter}
+                onChange={(e) => setCorrelationFilter(e.target.value)}
+                placeholder="corr_xxx_yyy"
+                className="font-mono text-xs pr-8"
+              />
+              {correlationFilter && (
+                <button
+                  type="button"
+                  onClick={() => setCorrelationFilter("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label="Limpar filtro"
+                >
+                  <XIcon className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
