@@ -1098,6 +1098,60 @@ export type Database = {
         }
         Relationships: []
       }
+      oauth_sandbox_snapshots: {
+        Row: {
+          auth_url_preview: string | null
+          client_id_configured: boolean
+          client_secret_configured: boolean
+          created_at: string
+          id: string
+          label: string
+          notes: string | null
+          organization_id: string
+          provider: string
+          redirect_uri: string
+          redirect_uri_normalized: string
+          scope_type: string
+          scopes: string[]
+          user_id: string
+          warnings: string[]
+        }
+        Insert: {
+          auth_url_preview?: string | null
+          client_id_configured: boolean
+          client_secret_configured: boolean
+          created_at?: string
+          id?: string
+          label: string
+          notes?: string | null
+          organization_id?: string
+          provider: string
+          redirect_uri: string
+          redirect_uri_normalized: string
+          scope_type: string
+          scopes?: string[]
+          user_id?: string
+          warnings?: string[]
+        }
+        Update: {
+          auth_url_preview?: string | null
+          client_id_configured?: boolean
+          client_secret_configured?: boolean
+          created_at?: string
+          id?: string
+          label?: string
+          notes?: string | null
+          organization_id?: string
+          provider?: string
+          redirect_uri?: string
+          redirect_uri_normalized?: string
+          scope_type?: string
+          scopes?: string[]
+          user_id?: string
+          warnings?: string[]
+        }
+        Relationships: []
+      }
       organization_invites: {
         Row: {
           accepted_at: string | null
