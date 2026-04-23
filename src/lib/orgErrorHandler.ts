@@ -184,8 +184,17 @@ export function handleOrgError(err: unknown): boolean {
       description:
         "Selecione uma organização antes de criar, editar ou remover registros.",
       action: {
-        label: "Recarregar",
-        onClick: reload,
+        label: "Selecionar organização",
+        onClick: () => {
+          emit(null);
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.set("view", "organizations");
+            window.history.pushState({}, "", url.toString());
+            // dispara popstate para o useNavigationHistory sincronizar
+            window.dispatchEvent(new PopStateEvent("popstate"));
+          }
+        },
       },
     });
   } else {
