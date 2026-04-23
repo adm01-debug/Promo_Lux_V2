@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
 import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
+import { EmailAccountsAuditPanel } from "./EmailAccountsAuditPanel";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -426,6 +427,8 @@ export function EmailAccountsPanel() {
         open={!!disconnectTarget}
         onOpenChange={(o) => !o && setDisconnectTarget(null)}
       />
+
+      {isAdmin && <EmailAccountsAuditPanel />}
 
       <AlertDialog open={!!scopeChangeTarget} onOpenChange={(o) => !o && setScopeChangeTarget(null)}>
         <AlertDialogContent>
