@@ -583,10 +583,14 @@ export const OrganizationsView = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                  onClick={() => handleRevokeInvite(inv)}
-                                  title="Revogar"
+                                  onClick={() => setRevokeTarget(inv)}
+                                  disabled={revokingId === inv.id}
+                                  title="Revogar convite"
+                                  aria-label="Revogar convite"
                                 >
-                                  <X className="h-4 w-4" />
+                                  {revokingId === inv.id
+                                    ? <Loader2 className="h-4 w-4 animate-spin" />
+                                    : <X className="h-4 w-4" />}
                                 </Button>
                               )}
                             </div>
