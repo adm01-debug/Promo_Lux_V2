@@ -144,6 +144,37 @@ export const RLSVerificationPanel = () => {
           </ScrollArea>
         </div>
       )}
+
+      {history.length > 0 && (
+        <div className="space-y-2 pt-2 border-t border-border/40">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <History className="h-3.5 w-3.5" />
+            Histórico recente ({history.length})
+          </div>
+          <ul className="space-y-1">
+            {history.map((h) => (
+              <li
+                key={h.id}
+                className="flex items-center justify-between gap-3 px-3 py-2 rounded-md bg-background/40 border border-border/30 text-xs"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  {h.all_passed ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" />
+                  ) : (
+                    <XCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                  )}
+                  <span className="text-foreground truncate">
+                    {new Date(h.created_at).toLocaleString("pt-BR")}
+                  </span>
+                </div>
+                <span className="text-muted-foreground font-mono shrink-0">
+                  {h.passed}/{h.total} · {h.duration_ms}ms
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
