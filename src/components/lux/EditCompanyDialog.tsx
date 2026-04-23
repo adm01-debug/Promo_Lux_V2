@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
+import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { validateCompany } from "@/lib/schemas/company";
@@ -24,6 +24,7 @@ interface EditCompanyDialogProps {
     website?: string;
     employees: string;
     revenue: string;
+    organization_id?: string | null;
   } | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -50,6 +51,10 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [dirty, setDirty] = useState(false);
+  // Snapshot da organização do registro carregado (hidden field). Usado
+  // para validar no submit que a org ativa não mudou enquanto o usuário
+  // editava — bloqueia salvar registro de outra org.
+  const [recordOrgId, setRecordOrgId] = useState<string | null>(null);
   const markDirty = useCallback(() => setDirty(true), []);
 
   useEffect(() => {
@@ -66,6 +71,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       setGeoCoords(null);
       setFieldErrors({});
       setDirty(false);
+      setRecordOrgId(company.organization_id ?? null);
     }
   }, [company, open]);
 
@@ -116,6 +122,27 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
 
   const handleSave = async () => {
     if (!company) return;
+
+    // Defesa em profundidade: bloqueia salvar se a org do registro
+    // (snapshot no load) não bate com a org ativa no momento do submit.
+    const activeOrg = getActiveOrgId();
+    if (recordOrgId && activeOrg && recordOrgId !== activeOrg) {
+      toast({
+        title: "Organização incompatível",
+        description:
+          "A organização ativa mudou. Recarregue o registro antes de salvar para evitar alterar dados de outra organização.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!activeOrg) {
+      toast({
+        title: "Organização não carregada",
+        description: "Aguarde a organização ativa carregar antes de salvar.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const result = validateCompany({ name, sector, location, email, phone, website, employees, revenue });
     if (!result.success) {
