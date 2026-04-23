@@ -88,6 +88,19 @@ export class OrgMismatchError extends Error {
   }
 }
 
+/**
+ * Lançado quando uma operação que escreve dados (insert/update/delete) é
+ * tentada em uma tabela org-escopada SEM uma organização ativa definida.
+ * Falhar fechado evita que um bug de bootstrap (org ainda carregando)
+ * resulte em escrita ou deleção sem filtro.
+ */
+export class MissingOrgContextError extends Error {
+  constructor(public table: string, public op: string) {
+    super(`[withOrg] Operação "${op}" em "${table}" bloqueada: nenhuma organização ativa.`);
+    this.name = "MissingOrgContextError";
+  }
+}
+
 function assertOrgMatch(values: unknown, orgId: string, table: string, op: string) {
   const check = (row: unknown) => {
     if (row && typeof row === "object" && "organization_id" in row) {
@@ -127,6 +140,30 @@ function injectOrg<T>(values: T, orgId: string): T {
   return values;
 }
 
+/**
+ * Em UPDATE: remove `organization_id` do payload mesmo que igual à org
+ * ativa — registros não devem mudar de org via update normal. Caso o
+ * payload traga uma org diferente da ativa, `assertOrgMatch` já lançou.
+ */
+function stripOrgFromUpdate<T>(values: T): T {
+  const strip = (row: Record<string, unknown>) => {
+    if ("organization_id" in row) {
+      const { organization_id: _omit, ...rest } = row;
+      return rest;
+    }
+    return row;
+  };
+  if (Array.isArray(values)) {
+    return values.map((v) =>
+      v && typeof v === "object" ? strip(v as Record<string, unknown>) : v,
+    ) as unknown as T;
+  }
+  if (values && typeof values === "object") {
+    return strip(values as Record<string, unknown>) as unknown as T;
+  }
+  return values;
+}
+
 export function fromOrg<T extends TableName>(table: T) {
   const builder = supabase.from(table);
   const tableName = String(table);
@@ -138,7 +175,10 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "insert" || prop === "upsert") {
         return (values: unknown, options?: unknown) => {
-          if (orgId && isScoped) assertOrgMatch(values, orgId, tableName, String(prop));
+          if (isScoped) {
+            if (!orgId) throw new MissingOrgContextError(tableName, String(prop));
+            assertOrgMatch(values, orgId, tableName, String(prop));
+          }
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return options === undefined
@@ -151,26 +191,30 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "update" && isScoped) {
         return (values: unknown, options?: unknown) => {
-          if (orgId) assertOrgMatch(values, orgId, tableName, "update");
+          if (!orgId) throw new MissingOrgContextError(tableName, "update");
+          assertOrgMatch(values, orgId, tableName, "update");
+          // Remove organization_id do payload — UPDATE não deve "mover" registros entre orgs
+          const sanitized = stripOrgFromUpdate(values);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const q = options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? (target as any).update(values)
+            ? (target as any).update(sanitized)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            : (target as any).update(values, options);
-          return orgId ? q.eq("organization_id", orgId) : q;
+            : (target as any).update(sanitized, options);
+          return q.eq("organization_id", orgId);
         };
       }
 
       if (prop === "delete" && isScoped) {
         return (options?: unknown) => {
+          if (!orgId) throw new MissingOrgContextError(tableName, "delete");
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const q = options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ? (target as any).delete()
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             : (target as any).delete(options);
-          return orgId ? q.eq("organization_id", orgId) : q;
+          return q.eq("organization_id", orgId);
         };
       }
 

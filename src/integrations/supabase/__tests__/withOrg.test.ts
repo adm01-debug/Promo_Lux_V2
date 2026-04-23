@@ -23,7 +23,7 @@ vi.mock("../client", () => ({
   },
 }));
 
-import { db, setActiveOrgId, ensureSameOrg, OrgMismatchError } from "../withOrg";
+import { db, setActiveOrgId, ensureSameOrg, OrgMismatchError, MissingOrgContextError } from "../withOrg";
 
 const ORG_A = "00000000-0000-0000-0000-0000000000aa";
 const ORG_B = "00000000-0000-0000-0000-0000000000bb";
@@ -101,6 +101,20 @@ describe("db (withOrg) — multi-tenant guards", () => {
         db.from("companies").update({ organization_id: ORG_B }),
       ).toThrow(OrgMismatchError);
     });
+
+    it("strip organization_id do payload mesmo quando bate com a org ativa", () => {
+      db.from("companies").update({ name: "x", organization_id: ORG_A });
+      // organization_id NÃO deve ir no payload de update
+      expect(calls.update[0]).toEqual([{ name: "x" }]);
+      expect(calls.eq).toEqual([["organization_id", ORG_A]]);
+    });
+
+    it("falha fechado se não houver org ativa em UPDATE", () => {
+      setActiveOrgId(null);
+      if (typeof window !== "undefined") window.localStorage.removeItem("lux:active-org");
+      expect(() => db.from("companies").update({ name: "x" })).toThrow(MissingOrgContextError);
+      expect(calls.update).toEqual([]);
+    });
   });
 
   describe("DELETE força escopo", () => {
@@ -108,6 +122,29 @@ describe("db (withOrg) — multi-tenant guards", () => {
       db.from("companies").delete();
       expect(calls.delete[0]).toEqual([]);
       expect(calls.eq).toEqual([["organization_id", ORG_A]]);
+    });
+
+    it("falha fechado se não houver org ativa em DELETE", () => {
+      setActiveOrgId(null);
+      if (typeof window !== "undefined") window.localStorage.removeItem("lux:active-org");
+      expect(() => db.from("companies").delete()).toThrow(MissingOrgContextError);
+      expect(calls.delete).toEqual([]);
+    });
+  });
+
+  describe("INSERT falha fechado sem org", () => {
+    it("lança MissingOrgContextError em insert sem org ativa", () => {
+      setActiveOrgId(null);
+      if (typeof window !== "undefined") window.localStorage.removeItem("lux:active-org");
+      expect(() => db.from("companies").insert({ name: "x" })).toThrow(MissingOrgContextError);
+      expect(calls.insert).toEqual([]);
+    });
+
+    it("permite insert em tabela fora do escopo mesmo sem org", () => {
+      setActiveOrgId(null);
+      if (typeof window !== "undefined") window.localStorage.removeItem("lux:active-org");
+      db.from("profiles").insert({ id: "u1", full_name: "X" });
+      expect(calls.insert[0]).toEqual([{ id: "u1", full_name: "X" }]);
     });
   });
 
