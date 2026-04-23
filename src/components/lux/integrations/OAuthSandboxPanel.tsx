@@ -250,6 +250,8 @@ export function OAuthSandboxPanel() {
           </div>
         </div>
       )}
+
+      <OAuthSnapshotsPanel pending={pendingSnapshot} />
     </div>
   );
 }
