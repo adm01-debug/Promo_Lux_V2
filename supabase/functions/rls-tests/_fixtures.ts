@@ -1,3 +1,8 @@
+/** Helper: executa o builder do postgrest sem propagar erro (cleanup paths). */
+async function safeRun<T>(p: PromiseLike<T>): Promise<void> {
+  try { await p; } catch { /* ignore — cleanup deve ser idempotente */ }
+}
+
 /**
  * Fixtures utilitárias para os testes da função `rls-tests`.
  *
@@ -92,7 +97,7 @@ export async function createNonAdminUserFixture(
     password,
   });
   if (signErr || !signIn.session) {
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.auth.admin.deleteUser(userId));
     throw new Error(`createNonAdminUserFixture: signIn failed: ${signErr?.message}`);
   }
 
@@ -102,8 +107,8 @@ export async function createNonAdminUserFixture(
     cleaned = true;
     try { await userClient.auth.signOut(); } catch { /* ignore */ }
     // Remove qualquer membership criada após o sign-in também (paranoia).
-    await admin.from("organization_members").delete().eq("user_id", userId).catch(() => {});
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.from("organization_members").delete().eq("user_id", userId));
+    await safeRun(admin.auth.admin.deleteUser(userId));
   };
 
   return {
@@ -147,7 +152,7 @@ export async function createAdminUserFixture(
     .select("id")
     .single();
   if (orgErr || !org) {
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.auth.admin.deleteUser(userId));
     throw new Error(`createAdminUserFixture: insert org failed: ${orgErr?.message}`);
   }
   const organizationId = org.id as string;
@@ -161,8 +166,8 @@ export async function createAdminUserFixture(
       { onConflict: "organization_id,user_id" },
     );
   if (memberErr) {
-    await admin.from("organizations").delete().eq("id", organizationId).catch(() => {});
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.from("organizations").delete().eq("id", organizationId));
+    await safeRun(admin.auth.admin.deleteUser(userId));
     throw new Error(`createAdminUserFixture: upsert member failed: ${memberErr.message}`);
   }
 
@@ -176,9 +181,9 @@ export async function createAdminUserFixture(
     .eq("role", "admin")
     .maybeSingle();
   if (checkErr || !check) {
-    await admin.from("organization_members").delete().eq("organization_id", organizationId).catch(() => {});
-    await admin.from("organizations").delete().eq("id", organizationId).catch(() => {});
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.from("organization_members").delete().eq("organization_id", organizationId));
+    await safeRun(admin.from("organizations").delete().eq("id", organizationId));
+    await safeRun(admin.auth.admin.deleteUser(userId));
     throw new Error(
       `createAdminUserFixture: linha admin não persistiu (${checkErr?.message ?? "row not found"})`,
     );
@@ -190,9 +195,9 @@ export async function createAdminUserFixture(
     password,
   });
   if (signErr || !signIn.session) {
-    await admin.from("organization_members").delete().eq("organization_id", organizationId).catch(() => {});
-    await admin.from("organizations").delete().eq("id", organizationId).catch(() => {});
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.from("organization_members").delete().eq("organization_id", organizationId));
+    await safeRun(admin.from("organizations").delete().eq("id", organizationId));
+    await safeRun(admin.auth.admin.deleteUser(userId));
     throw new Error(`createAdminUserFixture: signIn failed: ${signErr?.message}`);
   }
 
@@ -204,9 +209,9 @@ export async function createAdminUserFixture(
     // Ordem importa: members → org → user (FKs com CASCADE cobrem o
     // happy-path, mas executamos manualmente para tolerar configurações
     // sem cascade).
-    await admin.from("organization_members").delete().eq("organization_id", organizationId).catch(() => {});
-    await admin.from("organizations").delete().eq("id", organizationId).catch(() => {});
-    await admin.auth.admin.deleteUser(userId).catch(() => {});
+    await safeRun(admin.from("organization_members").delete().eq("organization_id", organizationId));
+    await safeRun(admin.from("organizations").delete().eq("id", organizationId));
+    await safeRun(admin.auth.admin.deleteUser(userId));
   };
 
   return {
