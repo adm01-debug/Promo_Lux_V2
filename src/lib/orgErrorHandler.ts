@@ -13,6 +13,7 @@
 import { toast } from "sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import { OrgMismatchError, MissingOrgContextError } from "@/integrations/supabase/withOrg";
+import { supabase } from "@/integrations/supabase/client";
 
 let qcRef: QueryClient | null = null;
 
@@ -23,6 +24,55 @@ export function registerQueryClient(qc: QueryClient) {
 
 let lastToastAt = 0;
 const THROTTLE_MS = 1500;
+
+/**
+ * Registra a tentativa bloqueada na trilha de auditoria (`audit_logs`)
+ * com `table_name="__org_violation"` para separá-la das mutações reais.
+ * Fire-and-forget: erros de inserção (ex.: RLS, offline) são ignorados —
+ * auditoria nunca pode quebrar o fluxo do usuário. Throttle próprio para
+ * evitar floods quando várias queries falham simultaneamente.
+ */
+let lastAuditAt = 0;
+const AUDIT_THROTTLE_MS = 1000;
+function recordOrgViolation(err: OrgMismatchError | MissingOrgContextError) {
+  const now = Date.now();
+  if (now - lastAuditAt < AUDIT_THROTTLE_MS) return;
+  lastAuditAt = now;
+
+  const payload = {
+    kind: err.name,
+    table: (err as OrgMismatchError).table,
+    op: (err as OrgMismatchError).op,
+    expected_org: (err as OrgMismatchError).expected ?? null,
+    received_org:
+      err instanceof OrgMismatchError ? String((err as OrgMismatchError).got) : null,
+    url: typeof window !== "undefined" ? window.location.pathname : null,
+    user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
+    occurred_at: new Date().toISOString(),
+  };
+
+  void supabase.auth.getUser().then(({ data }) => {
+    const user = data.user;
+    if (!user) return;
+    const orgId = (err as OrgMismatchError).expected ?? null;
+    void supabase
+      .from("audit_logs")
+      .insert({
+        action: "update",
+        table_name: "__org_violation",
+        record_id: user.id,
+        actor_id: user.id,
+        organization_id: orgId,
+        old_data: null,
+        new_data: payload,
+      })
+      .then(({ error }) => {
+        if (error && typeof console !== "undefined") {
+          console.debug("[orgErrorHandler] audit insert skipped:", error.message);
+        }
+      });
+  });
+}
 
 /**
  * Inspeciona um erro arbitrário; se for um erro de escopo, exibe toast
@@ -36,6 +86,10 @@ export function handleOrgError(err: unknown): boolean {
   ) {
     return false;
   }
+
+  // Auditoria estruturada — antes do throttle do toast, para que bursts
+  // continuem registrados (com throttle próprio mais curto).
+  recordOrgViolation(err);
 
   // Throttle simples — várias queries falhando juntas não geram spam.
   const now = Date.now();
