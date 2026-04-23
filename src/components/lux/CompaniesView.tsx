@@ -68,10 +68,10 @@ export const CompaniesView = () => {
   const queryClient = useQueryClient();
   const itemsPerPage = 20;
 
-  const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery({
+  const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery<Company[]>({
     queryKey: ["companies-list"],
     queryFn: isDemoMode
-      ? () => DEMO_COMPANIES_FULL
+      ? () => DEMO_COMPANIES_FULL as unknown as Company[]
       : async () => {
           const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false });
           if (error) throw error;
