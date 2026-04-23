@@ -845,6 +845,12 @@ export type Database = {
           last_polled_at: string | null
           organization_id: string
           provider: string
+          reconnect_attempts: number
+          reconnect_base_delay_seconds: number
+          reconnect_last_error: string | null
+          reconnect_max_attempts: number
+          reconnect_next_at: string | null
+          reconnect_required: boolean
           refresh_token: string | null
           scope: string | null
           scope_type: string
@@ -865,6 +871,12 @@ export type Database = {
           last_polled_at?: string | null
           organization_id?: string
           provider: string
+          reconnect_attempts?: number
+          reconnect_base_delay_seconds?: number
+          reconnect_last_error?: string | null
+          reconnect_max_attempts?: number
+          reconnect_next_at?: string | null
+          reconnect_required?: boolean
           refresh_token?: string | null
           scope?: string | null
           scope_type?: string
@@ -885,6 +897,12 @@ export type Database = {
           last_polled_at?: string | null
           organization_id?: string
           provider?: string
+          reconnect_attempts?: number
+          reconnect_base_delay_seconds?: number
+          reconnect_last_error?: string | null
+          reconnect_max_attempts?: number
+          reconnect_next_at?: string | null
+          reconnect_required?: boolean
           refresh_token?: string | null
           scope?: string | null
           scope_type?: string
