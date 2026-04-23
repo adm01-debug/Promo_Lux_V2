@@ -3,6 +3,7 @@ import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History } 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -27,6 +28,8 @@ interface HistoryEntry {
   passed: number;
   failed: number;
   duration_ms: number;
+  failed_results: TestResult[];
+  passed_names: string[];
 }
 
 type RuleOp = "SELECT" | "INSERT" | "UPDATE" | "DELETE" | "COVERAGE" | "SETUP";
@@ -112,6 +115,7 @@ export const RLSVerificationPanel = () => {
   const [filter, setFilter] = useState<"failed" | "all">("failed");
   const [historyStatus, setHistoryStatus] = useState<"all" | "pass" | "fail">("all");
   const [historyPeriod, setHistoryPeriod] = useState<"24h" | "7d" | "30d">("7d");
+  const [selected, setSelected] = useState<HistoryEntry | null>(null);
 
   const loadHistory = useCallback(async () => {
     const hours = historyPeriod === "24h" ? 24 : historyPeriod === "7d" ? 24 * 7 : 24 * 30;
@@ -134,6 +138,8 @@ export const RLSVerificationPanel = () => {
           passed: Number(d.passed ?? 0),
           failed: Number(d.failed ?? 0),
           duration_ms: Number(d.duration_ms ?? 0),
+          failed_results: Array.isArray(d.failed_results) ? (d.failed_results as TestResult[]) : [],
+          passed_names: Array.isArray(d.passed_names) ? (d.passed_names as string[]) : [],
         };
       });
     const filtered = mapped.filter((h) =>
@@ -355,9 +361,12 @@ export const RLSVerificationPanel = () => {
         ) : (
           <ul className="space-y-1">
             {history.map((h) => (
-              <li
+              <li key={h.id}>
+                <button
+                  type="button"
+                  onClick={() => setSelected(h)}
                 key={h.id}
-                className="flex items-center justify-between gap-3 px-3 py-2 rounded-md bg-background/40 border border-border/30 text-xs"
+                  className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-md bg-background/40 border border-border/30 text-xs hover:bg-background/70 hover:border-primary/40 transition-colors text-left"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   {h.all_passed ? (
@@ -372,11 +381,101 @@ export const RLSVerificationPanel = () => {
                 <span className="text-muted-foreground font-mono shrink-0">
                   {h.passed}/{h.total} · {h.duration_ms}ms
                 </span>
+                </button>
               </li>
             ))}
           </ul>
         )}
       </div>
+
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {selected?.all_passed ? (
+                <CheckCircle2 className="h-4 w-4 text-success" />
+              ) : (
+                <XCircle className="h-4 w-4 text-destructive" />
+              )}
+              Execução RLS — {selected && new Date(selected.created_at).toLocaleString("pt-BR")}
+            </DialogTitle>
+            <DialogDescription className="font-mono text-xs">
+              {selected?.passed}/{selected?.total} passaram · {selected?.failed} falhas · {selected?.duration_ms}ms
+            </DialogDescription>
+          </DialogHeader>
+
+          {selected && (
+            <ScrollArea className="flex-1 -mx-2 px-2">
+              <div className="space-y-4">
+                {selected.failed_results.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-semibold text-destructive flex items-center gap-1.5">
+                      <AlertTriangle className="h-3.5 w-3.5" />
+                      Falhas ({selected.failed_results.length})
+                    </h4>
+                    <ul className="divide-y divide-border/40 rounded-md border border-destructive/30 bg-destructive/5">
+                      {selected.failed_results.map((r) => {
+                        const p = parseTest(r);
+                        return (
+                          <li key={r.name} className="px-3 py-2.5 flex items-start gap-2.5 text-xs">
+                            <XCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />
+                            <div className="flex-1 min-w-0 space-y-1">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${OP_STYLES[p.op]}`}>
+                                  {p.op}
+                                </span>
+                                {p.table && (
+                                  <span className="font-mono text-[11px] text-foreground/90">{p.table}</span>
+                                )}
+                              </div>
+                              <p className="text-foreground/90 leading-snug">{p.description}</p>
+                              <p className="text-muted-foreground text-[10px] font-mono leading-tight break-all">
+                                {r.name} · {r.detail}
+                              </p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+
+                {selected.passed_names.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-semibold text-success flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Passaram ({selected.passed_names.length})
+                    </h4>
+                    <ul className="rounded-md border border-border/40 bg-background/40 divide-y divide-border/30">
+                      {selected.passed_names.map((name) => {
+                        const p = parseTest({ name, passed: true, detail: "" });
+                        return (
+                          <li key={name} className="px-3 py-2 flex items-center gap-2 text-[11px]">
+                            <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border ${OP_STYLES[p.op]}`}>
+                              {p.op}
+                            </span>
+                            {p.table && (
+                              <span className="font-mono text-foreground/80">{p.table}</span>
+                            )}
+                            <span className="text-muted-foreground font-mono truncate">{name}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+
+                {selected.failed_results.length === 0 && selected.passed_names.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center py-6">
+                    Esta execução não armazenou detalhes de testes individuais.
+                  </p>
+                )}
+              </div>
+            </ScrollArea>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
