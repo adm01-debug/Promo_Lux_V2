@@ -1,9 +1,9 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ScrollText, UserPlus, UserMinus, UserCog, LogOut, Filter, RefreshCw, Loader2 } from "lucide-react";
+import { ScrollText, UserPlus, UserMinus, UserCog, LogOut, Filter, RefreshCw, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useMembershipAuditLog, type MembershipAuditEntry, type MembershipAuditAction, type AppRole } from "@/hooks/useMembershipAuditLog";
+import { useMembershipAuditLogPaged, type MembershipAuditEntry, type MembershipAuditAction, type AppRole } from "@/hooks/useMembershipAuditLog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -58,8 +58,16 @@ interface Props {
 }
 
 export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
-  const { data, isLoading, error, refetch, isFetching } = useMembershipAuditLog(orgId, 50);
+  const PAGE_SIZE = 50;
+  const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<"all" | MembershipAuditAction>("all");
+  const { data: pageData, isLoading, error, refetch, isFetching, isPlaceholderData } =
+    useMembershipAuditLogPaged(orgId, page, PAGE_SIZE);
+  const data = pageData?.entries;
+  const hasMore = pageData?.hasMore ?? false;
+
+  // Reset to page 0 when org changes
+  useEffect(() => { setPage(0); }, [orgId]);
 
   const filtered = useMemo(() => {
     if (!data) return [];
@@ -72,6 +80,9 @@ export const MembershipAuditLog = memo(({ orgId, currentUserId }: Props) => {
     (data ?? []).forEach(e => { (base as Record<string, number>)[e.action] += 1; });
     return base;
   }, [data]);
+
+  const rangeStart = page * PAGE_SIZE + 1;
+  const rangeEnd = page * PAGE_SIZE + (data?.length ?? 0);
 
   return (
     <div className="glass rounded-lg overflow-hidden">
