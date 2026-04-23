@@ -52,6 +52,7 @@ export function EmailAccountsPanel() {
   const [connecting, setConnecting] = useState<"gmail" | "outlook" | null>(null);
   const [scopeType, setScopeType] = useState<"user" | "organization">("user");
   const { isAdmin } = usePermissions();
+  const notifiedErrorsRef = useRef<Map<string, string>>(new Map());
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -66,6 +67,41 @@ export function EmailAccountsPanel() {
     },
     refetchInterval: 30_000,
   });
+
+  // Notifica via toast quando aparecer um novo erro em uma conta
+  useEffect(() => {
+    accounts.forEach((acc) => {
+      const prev = notifiedErrorsRef.current.get(acc.id);
+      if (acc.last_error && acc.last_error !== prev) {
+        const kind = classifyError(acc.last_error);
+        if (kind === "auth") {
+          toast({
+            title: "Reconexão necessária",
+            description: `${acc.email}: token expirado ou revogado. Reconecte para retomar a sincronização.`,
+            variant: "destructive",
+            action: (
+              <button
+                onClick={() => connectMutation.mutate(acc.provider)}
+                className="inline-flex items-center gap-1 rounded-md border border-destructive/40 px-2 py-1 text-xs font-medium text-destructive hover:bg-destructive/10"
+              >
+                <Link2 className="h-3 w-3" /> Reconectar
+              </button>
+            ),
+          });
+        } else {
+          toast({
+            title: "Falha na sincronização",
+            description: `${acc.email}: ${acc.last_error.slice(0, 120)}`,
+            variant: "destructive",
+          });
+        }
+        notifiedErrorsRef.current.set(acc.id, acc.last_error);
+      } else if (!acc.last_error && prev) {
+        notifiedErrorsRef.current.delete(acc.id);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accounts]);
 
   // Trata retorno do callback OAuth via query string
   useEffect(() => {
