@@ -348,10 +348,17 @@ export function handleOrgError(err: unknown): boolean {
     const { title, description } = copyForMismatch(err);
     toast.error(title, {
       description,
-      action: {
-        label: "Recarregar dados",
-        onClick: reload,
-      },
+      action: lastOperation
+        ? {
+            label: "Tentar novamente",
+            onClick: () => {
+              void refreshOrgAndRetry();
+            },
+          }
+        : {
+            label: "Recarregar dados",
+            onClick: reload,
+          },
     });
   }
 
