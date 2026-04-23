@@ -215,6 +215,40 @@ export const OrganizationsView = () => {
     }
   };
 
+  const handleExportInvites = () => {
+    const list = filteredInvites ?? [];
+    if (list.length === 0) {
+      toast({ title: "Nada para exportar", description: "Nenhum convite no filtro atual.", variant: "destructive" });
+      return;
+    }
+    const now = new Date();
+    const rows = list.map((inv) => {
+      const expired = new Date(inv.expires_at) < now;
+      const used = !!inv.accepted_at;
+      const status = used ? "aceito" : inv.revoked ? "revogado" : expired ? "expirado" : "pendente";
+      const resends = resendHistory[inv.token] ?? [];
+      return {
+        token: inv.token,
+        role: ROLE_LABEL[inv.role],
+        status,
+        criado_por_nome: inv.created_by_profile?.full_name?.trim() ?? "",
+        criado_por_id: inv.created_by,
+        criado_em: new Date(inv.created_at).toISOString(),
+        expira_em: new Date(inv.expires_at).toISOString(),
+        aceito_por_nome: inv.accepted_by_profile?.full_name?.trim() ?? "",
+        aceito_por_id: inv.accepted_by ?? "",
+        aceito_em: inv.accepted_at ? new Date(inv.accepted_at).toISOString() : "",
+        revogado: inv.revoked ? "sim" : "nao",
+        reenvios: resends.length,
+        ultimo_reenvio_em: resends[0] ? new Date(resends[0].at).toISOString() : "",
+      };
+    });
+    const orgSlug = activeOrg?.organizations.slug ?? "workspace";
+    const stamp = now.toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    downloadCSV(rows, `convites-${orgSlug}-${stamp}.csv`);
+    toast({ title: "CSV exportado", description: `${rows.length} convite${rows.length === 1 ? "" : "s"} no arquivo.` });
+  };
+
   const handleRoleChange = async (
     member: { id: string; role: AppRole; user_id: string; profile?: { full_name: string | null } | null },
     newRole: AppRole
