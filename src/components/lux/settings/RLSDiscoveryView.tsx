@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Database, RefreshCw, Loader2, AlertTriangle, CheckCircle2,
-  Download, ClipboardCopy, FileCode2,
+  Download, ClipboardCopy, FileCode2, Wand2, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { downloadCSV } from "@/lib/exportCSV";
@@ -18,6 +19,58 @@ interface DiscoveredTable {
   name: string;
   bucket: Bucket;
   inDb: boolean;
+}
+
+interface ColumnInfo {
+  column_name: string;
+  data_type: string;
+  udt_name: string;
+  is_nullable: boolean;
+  has_default: boolean;
+  column_default: string | null;
+}
+
+/** Colunas que o runner já injeta automaticamente — não precisam estar no payload. */
+const AUTO_COLUMNS = new Set(["id", "created_at", "updated_at", "organization_id", "user_id"]);
+
+/** Sugere um valor literal JS para uma coluna NOT NULL sem default. */
+function sampleValueFor(col: ColumnInfo): string {
+  const u = col.udt_name.toLowerCase();
+  const d = col.data_type.toLowerCase();
+  if (u === "uuid") return `ctx.${col.column_name.replace(/_id$/, "") || "ref"} /* TODO: id de tabela referenciada */`;
+  if (u.startsWith("int") || d.includes("integer") || d.includes("numeric") || d.includes("double") || d.includes("real")) return "0";
+  if (u === "bool") return "false";
+  if (u === "jsonb" || u === "json") return "{}";
+  if (d.includes("array") || u.startsWith("_")) return "[]";
+  if (u === "timestamptz" || u === "timestamp" || d.includes("timestamp")) return "new Date().toISOString()";
+  if (u === "date") return `"${new Date().toISOString().slice(0, 10)}"`;
+  // text / varchar / enum / etc.
+  return `"${col.column_name}-sample"`;
+}
+
+/** Constrói o objeto payload a partir das colunas obrigatórias da tabela. */
+function buildPayloadFromColumns(table: string, cols: ColumnInfo[]): string {
+  const required = cols.filter((c) => !c.is_nullable && !c.has_default && !AUTO_COLUMNS.has(c.column_name));
+  const lines: string[] = [];
+  // Sempre inclui organization_id + user_id (vêm do runner mesmo com default).
+  lines.push(`      organization_id: org,`);
+  lines.push(`      user_id: uid,`);
+  for (const c of required) {
+    lines.push(`      ${c.column_name}: ${sampleValueFor(c)},`);
+  }
+  const requires = required
+    .filter((c) => c.udt_name === "uuid" && c.column_name.endsWith("_id"))
+    .map((c) => c.column_name.replace(/_id$/, ""))
+    .filter(Boolean);
+  const requiresLine = requires.length
+    ? `\n    requires: ${JSON.stringify(requires)},`
+    : "";
+  return `  {
+    table: ${JSON.stringify(table)},${requiresLine}
+    payload: (org, uid${requires.length ? ", ctx" : ""}) => ({
+${lines.join("\n")}
+    }),
+  },`;
 }
 
 const BUCKET_STYLES: Record<Bucket, string> = {
