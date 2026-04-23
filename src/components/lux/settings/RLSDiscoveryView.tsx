@@ -401,6 +401,77 @@ export const RLSDiscoveryView = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={!!genTable} onOpenChange={(open) => !open && setGenTable(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Wand2 className="h-4 w-4 text-primary" />
+              Gerador de payload — <code className="font-mono text-sm">{genTable}</code>
+            </DialogTitle>
+            <DialogDescription>
+              Inspeciona as colunas <code className="font-mono">NOT NULL</code> sem default
+              e gera um objeto pronto para colar em <code className="font-mono">RLS_TABLES</code>.
+              Substitua os <code className="font-mono">TODO</code> por valores reais quando necessário.
+            </DialogDescription>
+          </DialogHeader>
+
+          {genLoading ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground py-6 justify-center">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              Inspecionando colunas…
+            </div>
+          ) : genError ? (
+            <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 border border-destructive/30 rounded-md px-3 py-2">
+              <AlertTriangle className="h-3.5 w-3.5" />
+              {genError}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div className="text-[11px] text-muted-foreground">
+                {genColumns.length} colunas detectadas ·{" "}
+                {genColumns.filter((c) => !c.is_nullable && !c.has_default && !AUTO_COLUMNS.has(c.column_name)).length} obrigatórias
+              </div>
+              <ScrollArea className="h-[140px] rounded-md border border-border/50 bg-background/40">
+                <ul className="divide-y divide-border/40">
+                  {genColumns.map((c) => {
+                    const isAuto = AUTO_COLUMNS.has(c.column_name);
+                    const required = !c.is_nullable && !c.has_default && !isAuto;
+                    return (
+                      <li key={c.column_name} className="px-3 py-1.5 flex items-center justify-between gap-3 text-[11px]">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="font-mono truncate">{c.column_name}</span>
+                          <span className="text-muted-foreground font-mono">{c.udt_name}</span>
+                        </div>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${
+                          required ? "border-destructive/40 text-destructive bg-destructive/10"
+                            : isAuto ? "border-primary/30 text-primary bg-primary/10"
+                            : "border-border text-muted-foreground"
+                        }`}>
+                          {isAuto ? "auto" : required ? "obrigatória" : c.is_nullable ? "opcional" : "default"}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </ScrollArea>
+              <pre className="text-[11px] font-mono bg-background/60 border border-border/40 rounded-md p-3 overflow-x-auto whitespace-pre max-h-[260px]">
+{generatedSnippet}
+              </pre>
+              <div className="flex items-center justify-end gap-2">
+                <Button variant="outline" size="sm" onClick={() => setGenTable(null)} className="gap-1.5">
+                  <X className="h-3.5 w-3.5" />
+                  Fechar
+                </Button>
+                <Button size="sm" onClick={copyGenerated} className="gap-1.5">
+                  <ClipboardCopy className="h-3.5 w-3.5" />
+                  Copiar payload
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
