@@ -75,11 +75,11 @@ export function EmailAccountsPanel() {
     accounts.forEach((acc) => {
       const prev = notifiedErrorsRef.current.get(acc.id);
       if (acc.last_error && acc.last_error !== prev) {
-        const kind = classifyError(acc.last_error);
-        if (kind === "auth") {
+        const info = describeEmailError(acc.last_error);
+        if (info?.kind === "auth") {
           toast({
-            title: "Reconexão necessária",
-            description: `${acc.email}: token expirado ou revogado. Reconecte para retomar a sincronização.`,
+            title: info.title,
+            description: `${acc.email} — ${info.description} ${info.actionHint}`,
             variant: "destructive",
             action: (
               <button
@@ -92,8 +92,8 @@ export function EmailAccountsPanel() {
           });
         } else {
           toast({
-            title: "Falha na sincronização",
-            description: `${acc.email}: ${acc.last_error.slice(0, 120)}`,
+            title: info?.title ?? "Falha na sincronização",
+            description: `${acc.email} — ${info?.description ?? acc.last_error.slice(0, 120)} ${info?.actionHint ?? ""}`.trim(),
             variant: "destructive",
           });
         }
