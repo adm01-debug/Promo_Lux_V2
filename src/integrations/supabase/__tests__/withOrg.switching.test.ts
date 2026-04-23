@@ -31,7 +31,7 @@ function makeBuilder() {
 }
 
 const builder = makeBuilder();
-const fromSpy = vi.fn(() => builder);
+const fromSpy = vi.fn((_table: string) => builder);
 
 vi.mock("../client", () => ({
   supabase: { from: (t: string) => fromSpy(t) },
