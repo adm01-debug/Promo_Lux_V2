@@ -29,6 +29,39 @@ export interface MembershipAuditPage {
 }
 
 /**
+ * Classify a raw audit row into a domain action.
+ *
+ * `left` (voluntary leave) is intentionally strict to avoid false positives:
+ *   - SQL action must be `delete`
+ *   - `old_data` must exist with an explicit `user_id` (cascades that null
+ *     out old_data are excluded)
+ *   - `actor_id` must be present and equal to `old_data.user_id` (not merely
+ *     to a fallback inferred from `new_data`, which is null on delete)
+ *
+ * Anything else that's a delete falls back to `removed`. This keeps service
+ * role / cascade / cross-admin removals from being mislabelled as "saída
+ * voluntária".
+ */
+function classify(
+  rawAction: "create" | "update" | "delete",
+  actorId: string | null,
+  oldData: Record<string, unknown> | null,
+  oldRole: AppRole | null,
+  newRole: AppRole | null,
+): MembershipAuditAction {
+  if (rawAction === "create") return "added";
+  if (rawAction === "update") return oldRole !== newRole ? "role_changed" : "other";
+  // delete
+  const oldUserId = (oldData?.user_id ?? null) as string | null;
+  const isVoluntary =
+    !!actorId &&
+    !!oldData &&
+    !!oldUserId &&
+    actorId === oldUserId;
+  return isVoluntary ? "left" : "removed";
+}
+
+/**
  * Backward-compatible single-page fetch (used by callers that pass a flat limit).
  */
 export function useMembershipAuditLog(orgId: string | null, limit = 25) {
@@ -53,11 +86,10 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
         const oldRole = (oldData?.role ?? null) as AppRole | null;
         const newRole = (newData?.role ?? null) as AppRole | null;
 
-        let action: MembershipAuditAction = "other";
-        if (r.action === "create") action = "added";
-        else if (r.action === "delete") {
-          action = r.actor_id && targetUserId && r.actor_id === targetUserId ? "left" : "removed";
-        } else if (r.action === "update" && oldRole !== newRole) action = "role_changed";
+        const rawAction = r.action as "create" | "update" | "delete";
+        const action = classify(rawAction, r.actor_id, oldData, oldRole, newRole);
+        const oldUserId = (oldData?.user_id ?? null) as string | null;
+        const isSelfAction = !!r.actor_id && !!oldUserId && r.actor_id === oldUserId;
 
         return {
           id: r.id,
@@ -67,10 +99,10 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
           target_user_id: targetUserId,
           old_role: oldRole,
           new_role: newRole,
-          is_self_action: !!r.actor_id && !!targetUserId && r.actor_id === targetUserId,
+          is_self_action: isSelfAction,
           old_data: oldData,
           new_data: newData,
-          raw_action: r.action as "create" | "update" | "delete",
+          raw_action: rawAction,
         };
       });
 
@@ -136,11 +168,10 @@ export function useMembershipAuditLogPaged(
         const oldRole = (oldData?.role ?? null) as AppRole | null;
         const newRole = (newData?.role ?? null) as AppRole | null;
 
-        let action: MembershipAuditAction = "other";
-        if (r.action === "create") action = "added";
-        else if (r.action === "delete") {
-          action = r.actor_id && targetUserId && r.actor_id === targetUserId ? "left" : "removed";
-        } else if (r.action === "update" && oldRole !== newRole) action = "role_changed";
+        const rawAction = r.action as "create" | "update" | "delete";
+        const action = classify(rawAction, r.actor_id, oldData, oldRole, newRole);
+        const oldUserId = (oldData?.user_id ?? null) as string | null;
+        const isSelfAction = !!r.actor_id && !!oldUserId && r.actor_id === oldUserId;
 
         return {
           id: r.id,
@@ -150,10 +181,10 @@ export function useMembershipAuditLogPaged(
           target_user_id: targetUserId,
           old_role: oldRole,
           new_role: newRole,
-          is_self_action: !!r.actor_id && !!targetUserId && r.actor_id === targetUserId,
+          is_self_action: isSelfAction,
           old_data: oldData,
           new_data: newData,
-          raw_action: r.action as "create" | "update" | "delete",
+          raw_action: rawAction,
         };
       });
 
