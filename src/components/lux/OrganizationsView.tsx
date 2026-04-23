@@ -608,6 +608,11 @@ export const OrganizationsView = () => {
                 </div>
               )}
 
+              {/* Persistent membership audit log (admins only) */}
+              {isAdmin && (
+                <MembershipAuditLog orgId={activeOrgId} currentUserId={user?.id ?? null} />
+              )}
+
               {/* Permissions matrix */}
               <div className="glass rounded-lg overflow-hidden">
                 <div className="p-4 border-b border-border/40">
