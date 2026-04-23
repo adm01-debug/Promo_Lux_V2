@@ -14,6 +14,9 @@ export interface MembershipAuditEntry {
   old_role: AppRole | null;
   new_role: AppRole | null;
   is_self_action: boolean;
+  old_data: Record<string, unknown> | null;
+  new_data: Record<string, unknown> | null;
+  raw_action: "create" | "update" | "delete";
   actor_profile?: { full_name: string | null; avatar_url: string | null } | null;
   target_profile?: { full_name: string | null; avatar_url: string | null } | null;
 }
