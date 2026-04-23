@@ -369,6 +369,21 @@ export const OrganizationsView = () => {
                         const expired = new Date(inv.expires_at) < new Date();
                         const used = !!inv.accepted_at;
                         const inactive = inv.revoked || expired || used;
+                        const fmt = (d: string | null) =>
+                          d ? new Date(d).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : null;
+                        const statusLabel = used
+                          ? "Aceito"
+                          : inv.revoked
+                          ? "Revogado"
+                          : expired
+                          ? "Expirado"
+                          : "Pendente";
+                        const acceptedName =
+                          inv.accepted_by_profile?.full_name?.trim() ||
+                          (inv.accepted_by ? `${inv.accepted_by.slice(0, 8)}…` : null);
+                        const creatorName =
+                          inv.created_by_profile?.full_name?.trim() ||
+                          `${inv.created_by.slice(0, 8)}…`;
                         return (
                           <div key={inv.id} className="p-4 flex items-center justify-between gap-3 flex-wrap">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -389,10 +404,34 @@ export const OrganizationsView = () => {
                                       <AlertCircle className="h-3 w-3" /> Expirado
                                     </Badge>
                                   )}
+                                  {!used && !inv.revoked && !expired && (
+                                    <Badge variant="outline" className="text-[10px] bg-info/15 text-info border-info/30">
+                                      Pendente
+                                    </Badge>
+                                  )}
                                 </div>
-                                <p className="text-[10px] text-muted-foreground mt-0.5 font-mono truncate">
-                                  {inv.token.slice(0, 16)}… · expira {new Date(inv.expires_at).toLocaleDateString("pt-BR")}
-                                </p>
+                                <div className="mt-1 space-y-0.5 text-[10px] text-muted-foreground">
+                                  <p className="font-mono truncate">{inv.token.slice(0, 16)}…</p>
+                                  <p>
+                                    Criado por <span className="text-foreground/80">{creatorName}</span> em{" "}
+                                    <span className="text-foreground/80">{fmt(inv.created_at)}</span>
+                                  </p>
+                                  {used ? (
+                                    <p>
+                                      Aceito por <span className="text-success">{acceptedName ?? "—"}</span> em{" "}
+                                      <span className="text-foreground/80">{fmt(inv.accepted_at)}</span>
+                                    </p>
+                                  ) : inv.revoked ? (
+                                    <p>Revogado · expiraria em {fmt(inv.expires_at)}</p>
+                                  ) : (
+                                    <p>
+                                      {expired ? "Expirou em " : "Expira em "}
+                                      <span className={expired ? "text-warning" : "text-foreground/80"}>
+                                        {fmt(inv.expires_at)}
+                                      </span>
+                                    </p>
+                                  )}
+                                </div>
                               </div>
                             </div>
                             <div className="flex items-center gap-1 flex-shrink-0">

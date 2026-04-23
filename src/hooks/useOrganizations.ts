@@ -27,6 +27,9 @@ export interface Invite {
   revoked: boolean;
   accepted_at: string | null;
   created_at: string;
+  accepted_by: string | null;
+  accepted_by_profile?: { full_name: string | null; avatar_url: string | null } | null;
+  created_by_profile?: { full_name: string | null; avatar_url: string | null } | null;
 }
 
 const STORAGE_KEY = "lux:active-org";
@@ -124,11 +127,31 @@ export function useOrgInvites(orgId: string | null) {
     queryFn: async (): Promise<Invite[]> => {
       const { data, error } = await supabase
         .from("organization_invites")
-        .select("id, token, role, created_by, expires_at, revoked, accepted_at, created_at")
+        .select("id, token, role, created_by, expires_at, revoked, accepted_at, accepted_by, created_at")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data ?? [];
+      const rows = (data ?? []) as Invite[];
+      const ids = Array.from(
+        new Set(
+          rows.flatMap(r => [r.created_by, r.accepted_by].filter((x): x is string => !!x))
+        )
+      );
+      if (ids.length === 0) return rows;
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", ids);
+      const byId = new Map((profs ?? []).map(p => [p.id, p]));
+      return rows.map(r => ({
+        ...r,
+        created_by_profile: byId.get(r.created_by)
+          ? { full_name: byId.get(r.created_by)!.full_name, avatar_url: byId.get(r.created_by)!.avatar_url }
+          : null,
+        accepted_by_profile: r.accepted_by && byId.get(r.accepted_by)
+          ? { full_name: byId.get(r.accepted_by)!.full_name, avatar_url: byId.get(r.accepted_by)!.avatar_url }
+          : null,
+      }));
     },
   });
 }
