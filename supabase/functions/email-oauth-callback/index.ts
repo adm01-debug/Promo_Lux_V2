@@ -21,9 +21,37 @@ Deno.serve(async (req) => {
     if (cErr || !claims?.claims?.sub) return json({ error: "Unauthorized" }, 401);
     const userId = claims.claims.sub as string;
 
-    const { provider, code, redirect_uri } = await req.json();
+    const { provider, code, redirect_uri, state } = await req.json();
     if (!code || !redirect_uri) return json({ error: "code and redirect_uri required" }, 400);
     if (provider !== "gmail" && provider !== "outlook") return json({ error: "Invalid provider" }, 400);
+
+    // Parse state: userId.scopeType.orgId.nonce
+    const stateParts = typeof state === "string" ? state.split(".") : [];
+    const stateUserId = stateParts[0];
+    const scopeType: "user" | "organization" =
+      stateParts[1] === "organization" ? "organization" : "user";
+    const stateOrgId = stateParts[2] && stateParts[2].length >= 32 ? stateParts[2] : null;
+    if (!stateUserId || stateUserId !== userId) {
+      return json({ error: "State mismatch" }, 400);
+    }
+
+    // Resolve org id
+    let orgId = stateOrgId;
+    if (!orgId) {
+      const { data: defaultOrg } = await userClient.rpc("default_org_for_current_user");
+      orgId = (defaultOrg as string | null) ?? null;
+    }
+    if (!orgId) return json({ error: "No organization context" }, 400);
+
+    // Re-check admin if shared
+    if (scopeType === "organization") {
+      const { data: isAdmin } = await userClient.rpc("has_org_role", {
+        _org_id: orgId,
+        _user_id: userId,
+        _min_role: "admin",
+      });
+      if (!isAdmin) return json({ error: "Apenas admins podem conectar caixas compartilhadas" }, 403);
+    }
 
     // Troca code por tokens
     let tokens: { access_token: string; refresh_token?: string; expires_in: number; scope?: string };
@@ -73,8 +101,21 @@ Deno.serve(async (req) => {
 
     // Persiste com service role para garantir gravação dos tokens
     const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const { data, error } = await admin.from("email_accounts").upsert({
+
+    // Match existing row by (organization_id, provider, email, scope_type) to avoid cross-scope collisions
+    const { data: existing } = await admin
+      .from("email_accounts")
+      .select("id")
+      .eq("organization_id", orgId)
+      .eq("provider", provider)
+      .eq("email", email)
+      .eq("scope_type", scopeType)
+      .maybeSingle();
+
+    const payload = {
       user_id: userId,
+      organization_id: orgId,
+      scope_type: scopeType,
       provider,
       email,
       display_name: displayName,
@@ -84,10 +125,14 @@ Deno.serve(async (req) => {
       scope: tokens.scope ?? null,
       active: true,
       last_error: null,
-    }, { onConflict: "user_id,provider,email" }).select().single();
+    };
+
+    const { data, error } = existing
+      ? await admin.from("email_accounts").update(payload).eq("id", existing.id).select().single()
+      : await admin.from("email_accounts").insert(payload).select().single();
 
     if (error) return json({ error: error.message }, 500);
-    return json({ account: { id: data.id, email: data.email, provider: data.provider } });
+    return json({ account: { id: data.id, email: data.email, provider: data.provider, scope_type: data.scope_type } });
   } catch (e) {
     console.error(e);
     return json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
