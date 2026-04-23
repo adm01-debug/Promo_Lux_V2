@@ -212,14 +212,22 @@ export const OrganizationsView = () => {
             <>
               {/* Members */}
               <div className="glass rounded-lg overflow-hidden">
-                <div className="p-4 border-b border-border/40 flex items-center justify-between">
+                <div className="p-4 border-b border-border/40 flex items-center justify-between flex-wrap gap-3">
                   <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
                     Membros ({members?.length ?? 0})
                   </h3>
+                  <Tabs value={memberFilter} onValueChange={(v) => setMemberFilter(v as typeof memberFilter)}>
+                    <TabsList className="h-8">
+                      <TabsTrigger value="all" className="text-xs h-6 px-2.5">Todos ({members?.length ?? 0})</TabsTrigger>
+                      <TabsTrigger value="active" className="text-xs h-6 px-2.5">Ativos ({members?.length ?? 0})</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
                 </div>
                 <div className="divide-y divide-border/20">
-                  {(members ?? []).map((m, i) => {
+                  {filteredMembers.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-muted-foreground">Nenhum membro neste filtro.</div>
+                  ) : filteredMembers.map((m, i) => {
                     const isOwner = activeOrg.organizations.owner_id === m.user_id;
                     const isMe = m.user_id === user?.id;
                     const displayName = isMe
