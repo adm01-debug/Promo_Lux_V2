@@ -722,6 +722,37 @@ export const OrganizationsView = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog
+        open={!!revokeTarget}
+        onOpenChange={(o) => !o && !revokingId && setRevokeTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Revogar este convite?</AlertDialogTitle>
+            <AlertDialogDescription>
+              O link <span className="font-mono text-foreground/80">{revokeTarget?.token.slice(0, 12)}…</span>{" "}
+              ({revokeTarget ? ROLE_LABEL[revokeTarget.role] : ""}) deixará de funcionar imediatamente.
+              Quem ainda não aceitou não conseguirá entrar pelo link. Esta ação não pode ser desfeita —
+              gere um novo convite se precisar.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={!!revokingId}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={!!revokingId}
+              onClick={(e) => {
+                e.preventDefault();
+                if (revokeTarget) handleRevokeInvite(revokeTarget);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 gap-2"
+            >
+              {revokingId ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+              Revogar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
