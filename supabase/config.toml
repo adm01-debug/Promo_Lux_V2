@@ -1,16 +1,1 @@
-project_id = "cjxkodfpohnugpionkam"
-
-[functions.public-api]
-verify_jwt = false
-
-[functions.track-open]
-verify_jwt = false
-
-[functions.track-click]
-verify_jwt = false
-
-[functions.email-poll-replies]
-verify_jwt = false
-
-[functions.org-violation-alerts]
-verify_jwt = false
+project_id = "pesfxhlbsjfmlysdkzhr"
