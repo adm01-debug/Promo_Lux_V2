@@ -69,20 +69,21 @@ export function usePonto() {
         }
       }
 
-      const { data, error } = await db
-        .from("ponto_registros")
-        .insert({
-          user_id: user.id,
-          tipo,
-          observacao,
-          latitude,
-          longitude,
-          device_info: {
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            language: navigator.language
-          }
-        })
+      const payload: any = {
+        user_id: user.id,
+        tipo,
+        observacao,
+        latitude,
+        longitude,
+        device_info: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform,
+          language: navigator.language
+        }
+      };
+
+      const { data, error } = await (db.from("ponto_registros" as any) as any)
+        .insert(payload)
         .select()
         .single();
 
