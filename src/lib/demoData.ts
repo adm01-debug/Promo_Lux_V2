@@ -62,7 +62,7 @@ export const DEMO_ACTIVITY = [
   { id: "n4", type: "success", title: "Score IPC atualizado", message: 'Fintech Capital subiu de 74 para 88 após enriquecimento de dados.', created_at: minutesAgo(45), read: true, metadata: {} },
   { id: "n5", type: "enrichment", title: "Lote enriquecido", message: '34 empresas do lote "Saúde RJ" foram enriquecidas automaticamente.', created_at: minutesAgo(90), read: true, metadata: {} },
   { id: "n6", type: "error", title: "Raspagem falhou", message: 'A raspagem "Restaurantes Zona Sul" falhou por timeout. Tente novamente.', created_at: minutesAgo(120), read: true, metadata: {} },
-  { id: "n7", type: "system", title: "Novo sinal de intenção", message: 'Grupo Saúde Mais visitou a página de preços 3x nas últimas 24h.', created_at: minutesAgo(180), read: true, metadata: {} },
+  { id: "n7", type: "signal", title: "Novo sinal de intenção", message: 'Grupo Saúde Mais visitou a página de preços 3x nas últimas 24h.', created_at: minutesAgo(180), read: true, metadata: {} },
   { id: "n8", type: "success", title: "Campanha enviada", message: 'Campanha "Outbound Tech Q1" enviou 156 e-mails com taxa de abertura de 34%.', created_at: minutesAgo(240), read: true, metadata: {} },
 ];
 
