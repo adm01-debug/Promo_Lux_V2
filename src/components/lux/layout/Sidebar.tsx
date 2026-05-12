@@ -23,7 +23,6 @@ import {
   Webhook,
   ShieldAlert,
   ShieldCheck,
-  Clock,
   X,
   PanelLeftClose,
   PanelLeft,
@@ -57,7 +56,6 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "integrations", label: "API & Webhooks", icon: Webhook },
   { id: "org-violations", label: "Violações de Org", icon: ShieldAlert },
   { id: "rls-discovery", label: "RLS Discovery", icon: ShieldCheck },
-  { id: "ponto", label: "Ponto Eletrônico", icon: Clock },
   { id: "settings", label: "Configurações", icon: Settings },
 ];
 
