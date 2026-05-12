@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck,
+  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Clock
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
