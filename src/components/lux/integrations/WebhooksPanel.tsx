@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Eye, RefreshCw, Power } from "lucide-react";
+import { Plus, Trash2, Eye, RefreshCw, Power, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useWebhooks, useWebhookDeliveries, WEBHOOK_EVENTS, type Webhook } from "@/hooks/useWebhooks";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const STATUS_COLORS: Record<string, string> = {
   success: "bg-success/20 text-success",
@@ -119,6 +120,7 @@ export function WebhooksPanel() {
 
 function DeliveriesDrawer({ webhook, onClose }: { webhook: Webhook; onClose: () => void }) {
   const { data: deliveries = [], replay } = useWebhookDeliveries(webhook.id);
+  const [showPayload, setShowPayload] = useState<string | null>(null);
 
   return (
     <Sheet open onOpenChange={(o) => !o && onClose()}>
@@ -161,7 +163,27 @@ function DeliveriesDrawer({ webhook, onClose }: { webhook: Webhook; onClose: () 
                 {format(new Date(d.created_at), "dd MMM HH:mm:ss", { locale: ptBR })} · {d.attempts} tentativa{d.attempts !== 1 ? "s" : ""}
               </p>
               {d.error_message && (
-                <p className="text-[10px] text-destructive mt-1">{d.error_message}</p>
+                <p className="text-[10px] text-destructive mt-1 font-medium">{d.error_message}</p>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 mt-2 text-[10px] gap-1 text-muted-foreground hover:text-primary"
+                onClick={() => setShowPayload(showPayload === d.id ? null : d.id)}
+              >
+                <Terminal className="h-3 w-3" />
+                {showPayload === d.id ? "Ocultar payload" : "Ver payload"}
+              </Button>
+              {showPayload === d.id && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="mt-2 p-2 rounded bg-secondary/50 border border-border/40 overflow-hidden"
+                >
+                  <pre className="text-[9px] font-mono whitespace-pre-wrap break-all leading-tight">
+                    {JSON.stringify(d.payload, null, 2)}
+                  </pre>
+                </motion.div>
               )}
             </div>
           ))}
