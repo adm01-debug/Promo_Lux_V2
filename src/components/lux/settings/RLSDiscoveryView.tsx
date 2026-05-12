@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Search, Database, RefreshCw, Loader2, AlertTriangle, CheckCircle2,
-  Download, ClipboardCopy, FileCode2, Wand2, X,
+  Download, ClipboardCopy, FileCode2, Wand2, X, Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,7 @@ function buildPayloadFromColumns(table: string, cols: ColumnInfo[]): string {
     payload: (org, uid${requires.length ? ", ctx" : ""}) => ({
 ${lines.join("\n")}
     }),
+    envExempt: [], // Opcional: ["prod", "staging"]
   },`;
 }
 
@@ -107,6 +108,13 @@ function buildRegistrySnippet(tables: string[]): string {
  * no whitelist do edge function `rls-tests`.
  */
 export const RLSDiscoveryView = () => {
+  const currentEnv = useMemo(() => {
+    const url = window.location.href;
+    if (url.includes("localhost") || url.includes("127.0.0.1")) return "dev";
+    if (url.includes("staging")) return "staging";
+    return "prod"; // No frontend, assumimos prod se não for local/staging
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dbTables, setDbTables] = useState<string[]>([]);
@@ -258,7 +266,13 @@ export const RLSDiscoveryView = () => {
               <Database className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Tabelas RLS-enabled</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-foreground">Tabelas RLS-enabled</h3>
+                <Badge variant="outline" className="text-[10px] h-4 gap-1 border-primary/20 bg-primary/5">
+                  <Globe className="h-2.5 w-2.5" />
+                  {currentEnv.toUpperCase()}
+                </Badge>
+              </div>
               <p className="text-xs text-muted-foreground mt-1 max-w-xl">
                 Lista obtida via <code className="font-mono">pg_catalog_rls_tables()</code>.
                 Tabelas <span className="text-destructive">faltando</span> ainda não
