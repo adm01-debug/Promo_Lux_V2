@@ -1,4 +1,4 @@
-import { Activity, Zap, Building2, TrendingUp, ArrowUpRight } from "lucide-react";
+import { Activity, Zap, Building2, TrendingUp, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useDashboardStats } from "@/hooks/useDashboardData";
 import { cn } from "@/lib/utils";
