@@ -35,62 +35,46 @@ export function useICPConfig() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  const query = useQuery({
-    queryKey: ["ipc-config"],
-    queryFn: async (): Promise<ICPConfig> => {
+  const queryAll = useQuery({
+    queryKey: ["ipc-configs"],
+    queryFn: async (): Promise<ICPConfig[]> => {
       const { data, error } = await supabase
         .from("ipc_config")
         .select("*")
-        .eq("is_active", true)
-        .order("updated_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .order("updated_at", { ascending: false });
 
       if (error) throw error;
-
-      if (data) {
-        return {
-          id: data.id,
-          name: data.name,
-          is_active: data.is_active ?? true,
-          criteria: (data.criteria as unknown as ICPCriterion[]) || DEFAULT_CRITERIA,
-          created_at: data.created_at,
-          updated_at: data.updated_at,
-        };
-      }
-
-      // No config exists — return defaults (will be saved on first "Salvar")
-      return {
-        id: "",
-        name: "default",
-        is_active: true,
-        criteria: DEFAULT_CRITERIA,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
+      return (data || []).map(d => ({
+        id: d.id,
+        name: d.name,
+        is_active: d.is_active ?? false,
+        criteria: (d.criteria as unknown as ICPCriterion[]) || DEFAULT_CRITERIA,
+        created_at: d.created_at,
+        updated_at: d.updated_at,
+      }));
     },
     staleTime: 30_000,
   });
 
+  const activeConfig = queryAll.data?.find(c => c.is_active) || queryAll.data?.[0];
+
   const saveMutation = useMutation({
-    mutationFn: async ({ id, name, criteria }: { id: string; name: string; criteria: ICPCriterion[] }) => {
+    mutationFn: async ({ id, name, criteria, is_active = true }: { id?: string; name: string; criteria: ICPCriterion[]; is_active?: boolean }) => {
       if (id) {
-        // Update existing
         const { error } = await supabase
           .from("ipc_config")
-          .update({ criteria: criteria as unknown as Json, name, updated_at: new Date().toISOString() })
+          .update({ criteria: criteria as unknown as Json, name, is_active, updated_at: new Date().toISOString() })
           .eq("id", id);
         if (error) throw error;
       } else {
-        // Insert new
         const { error } = await supabase
           .from("ipc_config")
-          .insert({ user_id: user?.id, name, criteria: criteria as unknown as Json, is_active: true });
+          .insert({ user_id: user?.id, name, criteria: criteria as unknown as Json, is_active });
         if (error) throw error;
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["ipc-config"] });
+      queryClient.invalidateQueries({ queryKey: ["ipc-configs"] });
       toast({ title: "IPC salvo!", description: "Critérios atualizados com sucesso." });
     },
     onError: (err) => {
@@ -98,5 +82,40 @@ export function useICPConfig() {
     },
   });
 
-  return { config: query.data, isLoading: query.isLoading, error: query.error, save: saveMutation.mutate, isSaving: saveMutation.isPending };
+  const activateMutation = useMutation({
+    mutationFn: async (id: string) => {
+      // Deactivate all first
+      await supabase.from("ipc_config").update({ is_active: false }).neq("id", id);
+      // Activate target
+      const { error } = await supabase.from("ipc_config").update({ is_active: true }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ipc-configs"] });
+      toast({ title: "Configuração ativada", description: "O novo perfil IPC está agora em uso." });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("ipc_config").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ipc-configs"] });
+      toast({ title: "Configuração removida" });
+    },
+  });
+
+  return { 
+    configs: queryAll.data || [], 
+    activeConfig,
+    isLoading: queryAll.isLoading, 
+    error: queryAll.error, 
+    save: saveMutation.mutate, 
+    isSaving: saveMutation.isPending,
+    activate: activateMutation.mutate,
+    delete: deleteMutation.mutate,
+    DEFAULT_CRITERIA
+  };
 }
