@@ -122,62 +122,63 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
       title: "Performance Semanal",
       content: (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-3 glass rounded-lg overflow-hidden">
-          <div className="p-5 border-b border-border/50 flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
-                Performance Semanal
-              </h3>
-              <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas (últimos 7 dias — dados reais)</p>
+          <div className="lg:col-span-3 glass rounded-lg overflow-hidden flex flex-col">
+            <div className="p-5 border-b border-border/50 flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-primary" />
+                  Performance Semanal
+                </h3>
+                <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas (últimos 7 dias — dados reais)</p>
+              </div>
             </div>
-          </div>
-          <div className="p-5">
-            {perfLoading ? (
-              <Skeleton className="h-[220px] w-full rounded-lg" />
-            ) : (
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={performanceData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={primaryStroke} stopOpacity={0.02} />
-                    </linearGradient>
-                    <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={successStroke} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={successStroke} stopOpacity={0.02} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
-                  <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} width={35} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="raspadas"
-                    stroke={primaryStroke}
-                    fill="url(#gradientRaspadas)"
-                    strokeWidth={2.5}
-                    dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }}
-                    activeDot={{ r: 6, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }}
-                    animationDuration={1200}
-                    animationEasing="ease-out"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="qualificadas"
-                    stroke={successStroke}
-                    fill="url(#gradientQualificadas)"
-                    strokeWidth={2.5}
-                    dot={{ r: 3, fill: successStroke, strokeWidth: 0 }}
-                    activeDot={{ r: 6, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }}
-                    animationDuration={1400}
-                    animationEasing="ease-out"
-                    animationBegin={200}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            )}
+            <div className="p-5 flex-1 min-h-[260px]">
+              {perfLoading ? (
+                <Skeleton className="h-full w-full rounded-lg" />
+              ) : (
+                <ResponsiveContainer width="100%" height={220}>
+                  <AreaChart data={performanceData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.35} />
+                        <stop offset="100%" stopColor={primaryStroke} stopOpacity={0.02} />
+                      </linearGradient>
+                      <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={successStroke} stopOpacity={0.35} />
+                        <stop offset="100%" stopColor={successStroke} stopOpacity={0.02} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
+                    <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} width={35} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Area
+                      type="monotone"
+                      dataKey="raspadas"
+                      stroke={primaryStroke}
+                      fill="url(#gradientRaspadas)"
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }}
+                      activeDot={{ r: 6, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }}
+                      animationDuration={1200}
+                      animationEasing="ease-out"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="qualificadas"
+                      stroke={successStroke}
+                      fill="url(#gradientQualificadas)"
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: successStroke, strokeWidth: 0 }}
+                      activeDot={{ r: 6, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }}
+                      animationDuration={1400}
+                      animationEasing="ease-out"
+                      animationBegin={200}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              )}
+            </div>
           </div>
           <div className="lg:col-span-1 space-y-6">
             <div className="glass rounded-lg p-5 border border-primary/20 bg-primary/5">
