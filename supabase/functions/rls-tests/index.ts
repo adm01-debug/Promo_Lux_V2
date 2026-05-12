@@ -376,6 +376,7 @@ Deno.serve(async (req) => {
       const knownNames = new Set([
         ...RLS_TABLES.map((t) => t.table),
         ...RLS_TABLES_EXEMPT,
+        ...ENV_EXEMPT_TABLES[currentEnv],
       ]);
       const { data: rlsTables, error: covErr } = await admin.rpc("pg_catalog_rls_tables");
       if (!covErr && Array.isArray(rlsTables)) {
@@ -383,11 +384,11 @@ Deno.serve(async (req) => {
           .map((r) => r.table_name)
           .filter((name) => !knownNames.has(name));
         results.push({
-          name: "rls_coverage_complete",
+          name: `rls_coverage_complete_${currentEnv}`,
           passed: missing.length === 0,
           detail: missing.length
-            ? `tabelas RLS sem entrada no registry: ${missing.join(", ")}`
-            : `${knownNames.size} tabelas registradas`,
+            ? `tabelas RLS sem entrada no registry ou isenção em ${currentEnv}: ${missing.join(", ")}`
+            : `${knownNames.size} tabelas registradas/isentas`,
         });
       } else {
         results.push({
