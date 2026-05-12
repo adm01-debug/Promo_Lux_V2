@@ -145,23 +145,23 @@ interface StatCardProps {
 
 const CARD_STYLES: Record<string, string> = {
   "Workflows Ativos": "border-violet-500/20",
-  "Empresas Encontradas": "border-primary/40 shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)]",
-  "Taxa de Enriquecimento": "border-emerald-500/20",
-  "Raspagens Hoje": "border-sky-500/20",
+  "Total de Empresas": "border-primary/40 shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)]",
+  "Empresas Qualificadas": "border-emerald-500/20",
+  "Taxa de Conversão": "border-sky-500/20",
 };
 
 const ICON_BG: Record<string, string> = {
   "Workflows Ativos": "bg-violet-500/10 text-violet-400",
-  "Empresas Encontradas": "bg-primary/10 text-primary",
-  "Taxa de Enriquecimento": "bg-emerald-500/10 text-emerald-400",
-  "Raspagens Hoje": "bg-sky-500/10 text-sky-400",
+  "Total de Empresas": "bg-primary/10 text-primary",
+  "Empresas Qualificadas": "bg-emerald-500/10 text-emerald-400",
+  "Taxa de Conversão": "bg-sky-500/10 text-sky-400",
 };
 
 const SPARK_COLORS: Record<string, string> = {
   "Workflows Ativos": "#8b5cf6",
-  "Empresas Encontradas": "hsl(45, 100%, 55%)",
-  "Taxa de Enriquecimento": "#10b981",
-  "Raspagens Hoje": "#0ea5e9",
+  "Total de Empresas": "hsl(45, 100%, 55%)",
+  "Empresas Qualificadas": "#10b981",
+  "Taxa de Conversão": "#0ea5e9",
 };
 
 const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = true, progress, onClick, featured, suffix, sparkData, sparkColor }: StatCardProps) => (
@@ -246,7 +246,7 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
         <motion.div
           className={cn(
             "h-full rounded-full",
-            title === "Taxa de Enriquecimento" ? "bg-emerald-500" : title === "Raspagens Hoje" ? "bg-sky-500" : "bg-primary"
+            title === "Empresas Qualificadas" ? "bg-emerald-500" : title === "Taxa de Conversão" ? "bg-sky-500" : "bg-primary"
           )}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
@@ -286,60 +286,59 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
 
   const s = data!;
   const matchRate = s.totalCompanies > 0 ? Math.round((s.enrichedCompanies / s.totalCompanies) * 100) : 0;
-  const scrapeProgress = s.totalScrapeJobs > 0 ? Math.round((s.completedScrapeJobs / s.totalScrapeJobs) * 100) : 0;
-
+  
   const stats: StatCardProps[] = [
+    {
+      title: "Total de Empresas",
+      value: s.totalCompanies.toLocaleString("pt-BR"),
+      rawNumber: s.totalCompanies,
+      subtitle: `${s.enrichedCompanies} enriquecidas`,
+      icon: <Building2 className="h-5 w-5" />,
+      featured: true,
+      trend: s.totalCompanies > 0 ? `${matchRate}% enr.` : undefined,
+      trendUp: true,
+      onClick: () => onNavigate?.("companies"),
+      sparkData: generateSparkData(s.totalCompanies),
+      sparkColor: SPARK_COLORS["Total de Empresas"],
+    },
+    {
+      title: "Empresas Qualificadas",
+      value: s.qualifiedCompanies.toLocaleString("pt-BR"),
+      rawNumber: s.qualifiedCompanies,
+      subtitle: `Score IPC >= 75`,
+      icon: <CheckCircle2 className="h-5 w-5" />,
+      trend: s.qualifiedCompanies > 0 ? `Score 75+` : undefined,
+      trendUp: true,
+      onClick: () => onNavigate?.("companies"),
+      sparkData: generateSparkData(s.qualifiedCompanies),
+      sparkColor: SPARK_COLORS["Empresas Qualificadas"],
+      progress: s.totalCompanies > 0 ? Math.round((s.qualifiedCompanies / s.totalCompanies) * 100) : 0,
+    },
+    {
+      title: "Taxa de Conversão",
+      value: `${s.conversionRate}%`,
+      rawNumber: s.conversionRate,
+      suffix: "%",
+      subtitle: "Qualificadas / Total",
+      icon: <TrendingUp className="h-5 w-5" />,
+      trend: s.conversionRate >= 15 ? "Excelente" : "Em crescimento",
+      trendUp: s.conversionRate >= 15,
+      progress: s.conversionRate,
+      onClick: () => onNavigate?.("analytics"),
+      sparkData: generateSparkData(s.conversionRate),
+      sparkColor: SPARK_COLORS["Taxa de Conversão"],
+    },
     {
       title: "Workflows Ativos",
       value: s.activeWorkflows,
       rawNumber: s.activeWorkflows,
-      subtitle: `${s.runningWorkflows} em execução agora`,
+      subtitle: `${s.runningWorkflows} em execução`,
       icon: <Zap className="h-5 w-5" />,
       trend: s.activeWorkflows > 0 ? `+${s.runningWorkflows}` : undefined,
       trendUp: true,
       onClick: () => onNavigate?.("workflows"),
       sparkData: generateSparkData(s.activeWorkflows),
       sparkColor: SPARK_COLORS["Workflows Ativos"],
-    },
-    {
-      title: "Empresas Encontradas",
-      value: s.totalCompanies.toLocaleString("pt-BR"),
-      rawNumber: s.totalCompanies,
-      subtitle: `${s.enrichedCompanies} enriquecidas`,
-      icon: <Building2 className="h-5 w-5" />,
-      featured: true,
-      trend: s.totalCompanies > 0 ? `${Math.round((s.enrichedCompanies / Math.max(s.totalCompanies, 1)) * 100)}% enr.` : undefined,
-      trendUp: true,
-      onClick: () => onNavigate?.("companies"),
-      sparkData: generateSparkData(s.totalCompanies),
-      sparkColor: SPARK_COLORS["Empresas Encontradas"],
-    },
-    {
-      title: "Taxa de Enriquecimento",
-      value: `${matchRate}%`,
-      rawNumber: matchRate,
-      suffix: "%",
-      subtitle: matchRate >= 50 ? "Acima da média" : "Abaixo da média",
-      icon: <TrendingUp className="h-5 w-5" />,
-      trend: matchRate >= 50 ? "Bom" : undefined,
-      trendUp: matchRate >= 50,
-      progress: matchRate,
-      onClick: () => onNavigate?.("companies"),
-      sparkData: generateSparkData(matchRate),
-      sparkColor: SPARK_COLORS["Taxa de Enriquecimento"],
-    },
-    {
-      title: "Raspagens Hoje",
-      value: `${s.todayScrapeJobs}`,
-      rawNumber: s.todayScrapeJobs,
-      subtitle: `${scrapeProgress}% concluído`,
-      icon: <Activity className="h-5 w-5" />,
-      trend: s.todayScrapeJobs > 0 ? `${s.completedScrapeJobs} ok` : undefined,
-      trendUp: true,
-      progress: scrapeProgress,
-      onClick: () => onNavigate?.("gmaps"),
-      sparkData: generateSparkData(s.todayScrapeJobs),
-      sparkColor: SPARK_COLORS["Raspagens Hoje"],
     },
   ];
 
