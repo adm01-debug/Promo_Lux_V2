@@ -24,7 +24,7 @@ const ACTIONS: QuickAction[] = [
   },
   {
     id: "gmaps",
-    label: "Raspar Google Maps",
+    label: "Novo Scrape",
     description: "Encontre empresas por localidade",
     icon: MapPin,
     gradient: "from-success/20 via-success/10 to-transparent",
@@ -33,7 +33,7 @@ const ACTIONS: QuickAction[] = [
   },
   {
     id: "workflows",
-    label: "Criar Workflow",
+    label: "Novo Workflow",
     description: "Automatize sua prospecção",
     icon: Workflow,
     gradient: "from-warning/20 via-warning/10 to-transparent",
@@ -42,7 +42,7 @@ const ACTIONS: QuickAction[] = [
   },
   {
     id: "ai-agent",
-    label: "Agente IA",
+    label: "Abrir IA",
     description: "Converse com a inteligência artificial",
     icon: Bot,
     gradient: "from-accent/20 via-accent/10 to-transparent",
