@@ -12,13 +12,13 @@ export async function exportAnalyticsPDF() {
   ] = await Promise.all([
     db.from("companies").select("sector, ipc_score, enriched, source, created_at"),
     db.from("scrape_jobs").select("status, results_count"),
-    db.from("workflows").select("leads_processed, leads_qualified, success_rate"),
+    db.from("workflows").select("status, leads_processed, leads_qualified, success_rate"),
     db.from("campaigns").select("name, prospects, sent, opened, replied, meetings"),
   ]);
 
   const doc = new jsPDF();
-  const gold = [212, 165, 32]; // #D4A520
-  const dark = [10, 13, 20]; // Background color
+  const gold: [number, number, number] = [212, 165, 32]; // #D4A520
+  const dark: [number, number, number] = [10, 13, 20]; // Background color
 
   const totalCompanies = companies?.length ?? 0;
   const enrichedCount = (companies ?? []).filter((c) => c.enriched).length;
@@ -32,10 +32,10 @@ export async function exportAnalyticsPDF() {
   const totalMeetings = allCampaigns.reduce((a, c) => a + (c.meetings || 0), 0);
 
   // Header
-  doc.setFillColor(...dark);
+  doc.setFillColor(dark[0], dark[1], dark[2]);
   doc.rect(0, 0, 210, 40, "F");
   
-  doc.setTextColor(...gold);
+  doc.setTextColor(gold[0], gold[1], gold[2]);
   doc.setFontSize(24);
   doc.text("LUX IA", 15, 20);
   
@@ -112,9 +112,9 @@ export async function exportAnalyticsPDF() {
   // Campaign Detail
   if (allCampaigns.length > 0) {
     doc.addPage();
-    doc.setFillColor(...dark);
+    doc.setFillColor(dark[0], dark[1], dark[2]);
     doc.rect(0, 0, 210, 20, "F");
-    doc.setTextColor(...gold);
+    doc.setTextColor(gold[0], gold[1], gold[2]);
     doc.setFontSize(14);
     doc.text("Detalhe por Campanha", 15, 13);
     
