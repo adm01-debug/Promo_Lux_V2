@@ -1346,6 +1346,198 @@ export type Database = {
         }
         Relationships: []
       }
+      ponto_ajustes: {
+        Row: {
+          aprovado_por: string | null
+          created_at: string
+          data_decisao: string | null
+          data_nova: string
+          data_original: string | null
+          id: string
+          motivo: string
+          observacao_admin: string | null
+          organization_id: string
+          registro_id: string | null
+          status: string
+          tipo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          aprovado_por?: string | null
+          created_at?: string
+          data_decisao?: string | null
+          data_nova: string
+          data_original?: string | null
+          id?: string
+          motivo: string
+          observacao_admin?: string | null
+          organization_id: string
+          registro_id?: string | null
+          status?: string
+          tipo: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          aprovado_por?: string | null
+          created_at?: string
+          data_decisao?: string | null
+          data_nova?: string
+          data_original?: string | null
+          id?: string
+          motivo?: string
+          observacao_admin?: string | null
+          organization_id?: string
+          registro_id?: string | null
+          status?: string
+          tipo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ponto_ajustes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ponto_ajustes_registro_id_fkey"
+            columns: ["registro_id"]
+            isOneToOne: false
+            referencedRelation: "ponto_registros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ponto_banco_horas: {
+        Row: {
+          id: string
+          organization_id: string
+          saldo: string
+          ultima_atualizacao: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          organization_id: string
+          saldo?: string
+          ultima_atualizacao?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          organization_id?: string
+          saldo?: string
+          ultima_atualizacao?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ponto_banco_horas_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ponto_configuracoes: {
+        Row: {
+          carga_horaria_diaria: string
+          created_at: string
+          exige_geolocalizacao: boolean
+          id: string
+          organization_id: string
+          permite_ajuste_manual: boolean
+          tolerancia_minutos: number
+          updated_at: string
+        }
+        Insert: {
+          carga_horaria_diaria?: string
+          created_at?: string
+          exige_geolocalizacao?: boolean
+          id?: string
+          organization_id: string
+          permite_ajuste_manual?: boolean
+          tolerancia_minutos?: number
+          updated_at?: string
+        }
+        Update: {
+          carga_horaria_diaria?: string
+          created_at?: string
+          exige_geolocalizacao?: boolean
+          id?: string
+          organization_id?: string
+          permite_ajuste_manual?: boolean
+          tolerancia_minutos?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ponto_configuracoes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ponto_registros: {
+        Row: {
+          created_at: string
+          device_info: Json | null
+          id: string
+          latitude: number | null
+          localizacao_info: string | null
+          longitude: number | null
+          observacao: string | null
+          organization_id: string
+          timestamp: string
+          tipo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          latitude?: number | null
+          localizacao_info?: string | null
+          longitude?: number | null
+          observacao?: string | null
+          organization_id: string
+          timestamp?: string
+          tipo: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          latitude?: number | null
+          localizacao_info?: string | null
+          longitude?: number | null
+          observacao?: string | null
+          organization_id?: string
+          timestamp?: string
+          tipo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ponto_registros_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
