@@ -20,6 +20,8 @@ export interface DashboardStats {
   completedScrapeJobs: number;
   totalDeals: number;
   dealsValue: number;
+  totalApiKeys: number;
+  totalWebhooks: number;
 }
 
 async function fetchDashboardStats(): Promise<DashboardStats> {
@@ -38,6 +40,8 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     { count: completedScrapeJobs },
     { count: totalDeals },
     { data: dealsValueData },
+    { count: totalApiKeys },
+    { count: totalWebhooks },
   ] = await Promise.all([
     db.from("workflows").select("*", { count: "exact", head: true }).in("status", ["active", "running"]),
     db.from("workflows").select("*", { count: "exact", head: true }).eq("status", "running"),
@@ -50,6 +54,8 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     db.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("status", "completed"),
     db.from("deals").select("*", { count: "exact", head: true }),
     db.from("deals").select("value"),
+    db.from("api_keys").select("*", { count: "exact", head: true }),
+    db.from("webhooks").select("*", { count: "exact", head: true }),
   ]);
 
   const scores = (companiesForAvg ?? []).map((c) => c.ipc_score ?? 0).filter((s) => s > 0);
@@ -73,6 +79,8 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     completedScrapeJobs: completedScrapeJobs ?? 0,
     totalDeals: totalDeals ?? 0,
     dealsValue,
+    totalApiKeys: totalApiKeys ?? 0,
+    totalWebhooks: totalWebhooks ?? 0,
   };
 }
 
