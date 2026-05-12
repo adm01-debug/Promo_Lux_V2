@@ -25,6 +25,7 @@ const VIEW_LABELS: Record<View, string> = {
   integrations: "Integrações",
   "org-violations": "Violações de Organização",
   "rls-discovery": "RLS Discovery",
+  ponto: "Ponto Eletrônico",
 };
 
 const VIEW_SECTIONS: Record<View, string> = {
@@ -46,9 +47,10 @@ const VIEW_SECTIONS: Record<View, string> = {
   integrations: "Sistema",
   "org-violations": "Sistema",
   "rls-discovery": "Sistema",
+  ponto: "Sistema",
 };
 
-const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery"];
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery", "ponto"];
 
 // Shortcut views moved to useKeyboardShortcuts
 
