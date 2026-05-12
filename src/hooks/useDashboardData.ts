@@ -106,6 +106,15 @@ export function useDashboardStats() {
         queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
         queryClient.invalidateQueries({ queryKey: ["notifications"] });
       })
+      .on("postgres_changes", { event: "*", schema: "public", table: "deals", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "api_keys", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "webhooks", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
