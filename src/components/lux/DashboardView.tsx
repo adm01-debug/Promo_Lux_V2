@@ -201,7 +201,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             <CompanyTable />
           </div>
           <div className="xl:col-span-1">
-            <ActivityFeed />
+            <ActivityFeed onNavigate={onNavigate} />
           </div>
         </div>
       ),
