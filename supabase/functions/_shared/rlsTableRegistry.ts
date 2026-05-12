@@ -12,11 +12,17 @@
  * - `excludeFromAnon`: pula o teste de "anon não pode ler/inserir" (ex.: tabelas
  *   somente service_role como webhook_deliveries).
  */
+export type AppEnv = "dev" | "staging" | "prod";
+
 export interface RlsTableSpec {
   table: string;
   payload: (orgId: string, userId: string, ctx: Record<string, string>) => Record<string, unknown>;
   requires?: string[];
   excludeFromAnon?: boolean;
+  /**
+   * Ambientes nos quais esta tabela ainda não existe ou deve ser ignorada no teste de isolamento.
+   */
+  envExempt?: AppEnv[];
 }
 
 export const RLS_TABLES: RlsTableSpec[] = [
@@ -71,3 +77,13 @@ export const RLS_TABLES_EXEMPT: string[] = [
   "email_accounts",
   "workflow_runs",
 ];
+
+/**
+ * Exceções globais por ambiente.
+ * Útil para tabelas que ainda não foram migradas para staging/prod.
+ */
+export const ENV_EXEMPT_TABLES: Record<AppEnv, string[]> = {
+  dev: [],
+  staging: [], // Exemplo: ["tabela_nova_em_dev"]
+  prod: [],
+};
