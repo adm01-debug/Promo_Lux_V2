@@ -8,11 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, MapPin, AlertCircle, CheckCircle2, History, Calculator, Send } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 export function PontoView() {
   const { registrosHoje, loadingRegistros, registrarBatida, isRegistering, config } = usePonto();
@@ -61,7 +62,7 @@ export function PontoView() {
               <Calculator className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Banco de Horas</p>
-                <p className="text-sm font-bold font-mono text-primary">{banco?.saldo || "00:00"}</p>
+                <p className="text-sm font-bold font-mono text-primary">{(banco as any)?.saldo || "00:00"}</p>
               </div>
             </CardContent>
           </Card>
@@ -258,7 +259,7 @@ export function PontoView() {
                             <div key={aj.id} className="p-3 space-y-1">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs font-bold">{format(new Date(aj.data_nova), "dd/MM HH:mm")}</span>
-                                <Badge variant={aj.status === 'aprovado' ? 'success' : aj.status === 'rejeitado' ? 'destructive' : 'outline'} className="text-[8px] h-4">
+                                <Badge variant={aj.status === 'aprovado' ? 'default' : aj.status === 'rejeitado' ? 'destructive' : 'outline'} className={cn("text-[8px] h-4", aj.status === 'aprovado' && "bg-success hover:bg-success/90")}>
                                   {aj.status.toUpperCase()}
                                 </Badge>
                               </div>
