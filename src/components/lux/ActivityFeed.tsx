@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { CheckCircle2, AlertCircle, Zap, Database, Bell, Clock } from "lucide-react";
+import { CheckCircle2, AlertCircle, Zap, Database, Bell, Clock, TrendingUp } from "lucide-react";
 import { useRecentActivity, type ActivityItem } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
@@ -14,6 +14,7 @@ const iconMap: Record<string, { icon: React.ReactNode; bg: string; ring: string 
   system: { icon: <Zap className="h-3.5 w-3.5 text-primary" />, bg: "bg-primary/10", ring: "ring-primary/30" },
   enrichment: { icon: <Database className="h-3.5 w-3.5 text-accent-foreground" />, bg: "bg-accent/10", ring: "ring-accent/30" },
   signal: { icon: <Bell className="h-3.5 w-3.5 text-amber-500" />, bg: "bg-amber-500/10", ring: "ring-amber-500/30" },
+  deal: { icon: <TrendingUp className="h-3.5 w-3.5 text-blue-500" />, bg: "bg-blue-500/10", ring: "ring-blue-500/30" },
 };
 
 export const ActivityFeed = memo(() => {
