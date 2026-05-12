@@ -278,7 +278,7 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
       </div>
     );
@@ -339,10 +339,22 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
       sparkData: generateSparkData(s.activeWorkflows),
       sparkColor: SPARK_COLORS["Workflows Ativos"],
     },
+    {
+      title: "Integrações",
+      value: s.totalApiKeys + s.totalWebhooks,
+      rawNumber: s.totalApiKeys + s.totalWebhooks,
+      subtitle: `${s.totalApiKeys} chaves · ${s.totalWebhooks} hooks`,
+      icon: <Activity className="h-5 w-5" />,
+      trend: "API Ativa",
+      trendUp: true,
+      onClick: () => onNavigate?.("integrations"),
+      sparkData: generateSparkData(s.totalApiKeys + s.totalWebhooks),
+      sparkColor: "#94a3b8", // slate
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       {stats.map((stat, i) => (
         <motion.div key={stat.title} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1, ease: "easeOut" }}>
           <StatCard {...stat} />
