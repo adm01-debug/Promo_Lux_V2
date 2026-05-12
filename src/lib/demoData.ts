@@ -4,9 +4,11 @@ import type { DashboardStats, RecentCompany } from "@/hooks/useDashboardData";
 export const DEMO_STATS: DashboardStats = {
   activeWorkflows: 7,
   runningWorkflows: 3,
-  totalCompanies: 1_284,
+  totalCompanies: 1284,
   enrichedCompanies: 847,
-  totalCompaniesCount: 1_284,
+  qualifiedCompanies: 198,
+  conversionRate: 15,
+  totalCompaniesCount: 1284,
   avgIpcScore: 72,
   todayScrapeJobs: 12,
   totalScrapeJobs: 48,
