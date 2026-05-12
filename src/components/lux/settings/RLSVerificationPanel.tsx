@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History, Download, FileText } from "lucide-react";
+import { Shield, Play, CheckCircle2, XCircle, Loader2, AlertTriangle, History, Download, FileText, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -57,10 +57,11 @@ function parseTest(t: TestResult): ParsedTest {
   const make = (op: RuleOp, table: string | null, description: string): ParsedTest =>
     ({ ...t, op, table, description });
 
-  if (n === "rls_coverage_complete") {
+  if (n.startsWith("rls_coverage_complete")) {
+    const env = n.split("_").pop()?.toUpperCase() || "";
     return make("COVERAGE", null, t.passed
-      ? "Todas as tabelas RLS estão cobertas pelo registry."
-      : "Há tabelas RLS sem cobertura no registry compartilhado.");
+      ? `Todas as tabelas RLS estão cobertas (${env}).`
+      : `Há tabelas RLS sem cobertura no ambiente ${env}.`);
   }
   if (n === "SETUP_ERROR") return make("SETUP", null, "Falha ao preparar ambiente de teste.");
 
@@ -110,6 +111,13 @@ function parseTest(t: TestResult): ParsedTest {
  * Resultado é exibido em tempo real e gravado em `audit_logs` para histórico.
  */
 export const RLSVerificationPanel = () => {
+  const currentEnv = useMemo(() => {
+    const url = window.location.href;
+    if (url.includes("localhost") || url.includes("127.0.0.1")) return "dev";
+    if (url.includes("staging")) return "staging";
+    return "prod";
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<ApiResponse | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -213,7 +221,13 @@ export const RLSVerificationPanel = () => {
             <Shield className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground">Verificação de Isolamento (RLS)</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-foreground">Verificação de Isolamento (RLS)</h3>
+              <Badge variant="outline" className="text-[10px] h-4 gap-1 border-primary/20 bg-primary/5">
+                <Globe className="h-2.5 w-2.5" />
+                {currentEnv.toUpperCase()}
+              </Badge>
+            </div>
             <p className="text-xs text-muted-foreground mt-1 max-w-md">
               Provisiona usuários e organizações temporárias no backend e confirma que membros de uma
               workspace não conseguem ler nem modificar dados de outra.
