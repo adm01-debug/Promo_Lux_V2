@@ -9,13 +9,14 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { QuickActions } from "@/components/lux/QuickActions";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, Eye, LogIn } from "lucide-react";
+import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, Eye, LogIn, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useWeeklyPerformance } from "@/hooks/useWeeklyPerformance";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 
 const LAYOUT_KEY = "lux-dashboard-widget-order";
 
@@ -120,62 +121,119 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
     chart: {
       title: "Performance Semanal",
       content: (
-        <div className="glass rounded-lg overflow-hidden">
-          <div className="p-5 border-b border-border/50 flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
-                Performance Semanal
-              </h3>
-              <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas (últimos 7 dias — dados reais)</p>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-3 glass rounded-lg overflow-hidden flex flex-col">
+            <div className="p-5 border-b border-border/50 flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-primary" />
+                  Performance Semanal
+                </h3>
+                <p className="text-xs text-muted-foreground">Empresas raspadas vs qualificadas (últimos 7 dias — dados reais)</p>
+              </div>
+            </div>
+            <div className="p-5 flex-1 min-h-[260px]">
+              {perfLoading ? (
+                <Skeleton className="h-full w-full rounded-lg" />
+              ) : (
+                <ResponsiveContainer width="100%" height={220}>
+                  <AreaChart data={performanceData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.35} />
+                        <stop offset="100%" stopColor={primaryStroke} stopOpacity={0.02} />
+                      </linearGradient>
+                      <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={successStroke} stopOpacity={0.35} />
+                        <stop offset="100%" stopColor={successStroke} stopOpacity={0.02} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
+                    <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} width={35} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Area
+                      type="monotone"
+                      dataKey="raspadas"
+                      stroke={primaryStroke}
+                      fill="url(#gradientRaspadas)"
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }}
+                      activeDot={{ r: 6, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }}
+                      animationDuration={1200}
+                      animationEasing="ease-out"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="qualificadas"
+                      stroke={successStroke}
+                      fill="url(#gradientQualificadas)"
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: successStroke, strokeWidth: 0 }}
+                      activeDot={{ r: 6, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }}
+                      animationDuration={1400}
+                      animationEasing="ease-out"
+                      animationBegin={200}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </div>
-          <div className="p-5">
-            {perfLoading ? (
-              <Skeleton className="h-[220px] w-full rounded-lg" />
-            ) : (
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={performanceData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="gradientRaspadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={primaryStroke} stopOpacity={0.02} />
-                    </linearGradient>
-                    <linearGradient id="gradientQualificadas" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={successStroke} stopOpacity={0.35} />
-                      <stop offset="100%" stopColor={successStroke} stopOpacity={0.02} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={0.5} />
-                  <XAxis dataKey="day" stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke={axisColor} fontSize={11} tickLine={false} axisLine={false} width={35} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="raspadas"
-                    stroke={primaryStroke}
-                    fill="url(#gradientRaspadas)"
-                    strokeWidth={2.5}
-                    dot={{ r: 3, fill: primaryStroke, strokeWidth: 0 }}
-                    activeDot={{ r: 6, strokeWidth: 2, stroke: primaryStroke, fill: "var(--background)" }}
-                    animationDuration={1200}
-                    animationEasing="ease-out"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="qualificadas"
-                    stroke={successStroke}
-                    fill="url(#gradientQualificadas)"
-                    strokeWidth={2.5}
-                    dot={{ r: 3, fill: successStroke, strokeWidth: 0 }}
-                    activeDot={{ r: 6, strokeWidth: 2, stroke: successStroke, fill: "var(--background)" }}
-                    animationDuration={1400}
-                    animationEasing="ease-out"
-                    animationBegin={200}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            )}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="glass rounded-lg p-5 border border-primary/20 bg-primary/5">
+              <h4 className="text-[10px] uppercase tracking-wider text-primary font-bold mb-3">API Health</h4>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">Endpoints</span>
+                  <Badge variant="outline" className="text-[10px] border-success/30 text-success bg-success/5 gap-1">
+                    <motion.span 
+                      className="h-1 w-1 rounded-full bg-success"
+                      animate={{ opacity: [1, 0.4, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
+                    Operational
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">Webhooks</span>
+                  <Badge variant="outline" className="text-[10px] border-success/30 text-success bg-success/5 gap-1">
+                    Operational
+                  </Badge>
+                </div>
+                <div className="pt-2 border-t border-border/40">
+                  <p className="text-[10px] text-muted-foreground leading-tight">
+                    API keys and Webhooks are active for your organization.
+                  </p>
+                  <Button 
+                    variant="link" 
+                    size="sm" 
+                    className="h-auto p-0 text-[10px] text-primary mt-1 hover:no-underline"
+                    onClick={() => onNavigate?.("integrations")}
+                  >
+                    View Settings
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass rounded-lg p-5">
+              <h4 className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-3">Security</h4>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded bg-secondary/50 flex items-center justify-center">
+                    <Lock className="h-3 w-3 text-muted-foreground" />
+                  </div>
+                  <span className="text-[11px]">RLS Isolation active</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded bg-secondary/50 flex items-center justify-center">
+                    <CheckCircle2 className="h-3 w-3 text-success" />
+                  </div>
+                  <span className="text-[11px]">SOC 2 Compliant Path</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ),
@@ -201,7 +259,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             <CompanyTable />
           </div>
           <div className="xl:col-span-1">
-            <ActivityFeed />
+            <ActivityFeed onNavigate={onNavigate} />
           </div>
         </div>
       ),

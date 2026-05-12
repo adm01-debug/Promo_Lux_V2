@@ -13,6 +13,10 @@ export const DEMO_STATS: DashboardStats = {
   todayScrapeJobs: 12,
   totalScrapeJobs: 48,
   completedScrapeJobs: 41,
+  totalDeals: 12,
+  dealsValue: 145000,
+  totalApiKeys: 3,
+  totalWebhooks: 2,
 };
 
 /* ── Weekly Performance Chart ── */

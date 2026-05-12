@@ -18,6 +18,10 @@ export interface DashboardStats {
   todayScrapeJobs: number;
   totalScrapeJobs: number;
   completedScrapeJobs: number;
+  totalDeals: number;
+  dealsValue: number;
+  totalApiKeys: number;
+  totalWebhooks: number;
 }
 
 async function fetchDashboardStats(): Promise<DashboardStats> {
@@ -34,6 +38,10 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     { count: todayScrapeJobs },
     { count: totalScrapeJobs },
     { count: completedScrapeJobs },
+    { count: totalDeals },
+    { data: dealsValueData },
+    { count: totalApiKeys },
+    { count: totalWebhooks },
   ] = await Promise.all([
     db.from("workflows").select("*", { count: "exact", head: true }).in("status", ["active", "running"]),
     db.from("workflows").select("*", { count: "exact", head: true }).eq("status", "running"),
@@ -44,6 +52,10 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     db.from("scrape_jobs").select("*", { count: "exact", head: true }).gte("created_at", today.toISOString()),
     db.from("scrape_jobs").select("*", { count: "exact", head: true }),
     db.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("status", "completed"),
+    db.from("deals").select("*", { count: "exact", head: true }),
+    db.from("deals").select("value"),
+    db.from("api_keys").select("*", { count: "exact", head: true }),
+    db.from("webhooks").select("*", { count: "exact", head: true }),
   ]);
 
   const scores = (companiesForAvg ?? []).map((c) => c.ipc_score ?? 0).filter((s) => s > 0);
@@ -51,6 +63,7 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
   const total = totalCompanies ?? 0;
   const qualified = qualifiedCompanies ?? 0;
   const conversionRate = total > 0 ? Math.round((qualified / total) * 100) : 0;
+  const dealsValue = (dealsValueData ?? []).reduce((acc, d) => acc + (Number(d.value) || 0), 0);
 
   return {
     activeWorkflows: activeWorkflows ?? 0,
@@ -64,6 +77,10 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     todayScrapeJobs: todayScrapeJobs ?? 0,
     totalScrapeJobs: totalScrapeJobs ?? 0,
     completedScrapeJobs: completedScrapeJobs ?? 0,
+    totalDeals: totalDeals ?? 0,
+    dealsValue,
+    totalApiKeys: totalApiKeys ?? 0,
+    totalWebhooks: totalWebhooks ?? 0,
   };
 }
 
@@ -88,6 +105,15 @@ export function useDashboardStats() {
       .on("postgres_changes", { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, () => {
         queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
         queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "deals", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "api_keys", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "webhooks", filter: `user_id=eq.${user.id}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       })
       .subscribe();
 

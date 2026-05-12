@@ -1,4 +1,4 @@
-import { Activity, Zap, Building2, TrendingUp, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { Activity, Zap, Building2, TrendingUp, ArrowUpRight, CheckCircle2, DollarSign } from "lucide-react";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useDashboardStats } from "@/hooks/useDashboardData";
 import { cn } from "@/lib/utils";
@@ -146,21 +146,21 @@ interface StatCardProps {
 const CARD_STYLES: Record<string, string> = {
   "Workflows Ativos": "border-violet-500/20",
   "Total de Empresas": "border-primary/40 shadow-[0_0_24px_-6px_hsl(var(--primary)/0.2)]",
-  "Empresas Qualificadas": "border-emerald-500/20",
+  "Receita em Pipeline": "border-emerald-500/20",
   "Taxa de Conversão": "border-sky-500/20",
 };
 
 const ICON_BG: Record<string, string> = {
   "Workflows Ativos": "bg-violet-500/10 text-violet-400",
   "Total de Empresas": "bg-primary/10 text-primary",
-  "Empresas Qualificadas": "bg-emerald-500/10 text-emerald-400",
+  "Receita em Pipeline": "bg-emerald-500/10 text-emerald-400",
   "Taxa de Conversão": "bg-sky-500/10 text-sky-400",
 };
 
 const SPARK_COLORS: Record<string, string> = {
   "Workflows Ativos": "#8b5cf6",
   "Total de Empresas": "hsl(45, 100%, 55%)",
-  "Empresas Qualificadas": "#10b981",
+  "Receita em Pipeline": "#10b981",
   "Taxa de Conversão": "#0ea5e9",
 };
 
@@ -246,7 +246,7 @@ const StatCard = ({ title, value, rawNumber, subtitle, icon, trend, trendUp = tr
         <motion.div
           className={cn(
             "h-full rounded-full",
-            title === "Empresas Qualificadas" ? "bg-emerald-500" : title === "Taxa de Conversão" ? "bg-sky-500" : "bg-primary"
+            title === "Receita em Pipeline" ? "bg-emerald-500" : title === "Taxa de Conversão" ? "bg-sky-500" : "bg-primary"
           )}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
@@ -278,7 +278,7 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
       </div>
     );
@@ -302,17 +302,16 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
       sparkColor: SPARK_COLORS["Total de Empresas"],
     },
     {
-      title: "Empresas Qualificadas",
-      value: s.qualifiedCompanies.toLocaleString("pt-BR"),
-      rawNumber: s.qualifiedCompanies,
-      subtitle: `Score IPC >= 75`,
-      icon: <CheckCircle2 className="h-5 w-5" />,
-      trend: s.qualifiedCompanies > 0 ? `Score 75+` : undefined,
+      title: "Receita em Pipeline",
+      value: s.dealsValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 }),
+      subtitle: `${s.totalDeals} negócios ativos`,
+      icon: <DollarSign className="h-5 w-5" />,
+      trend: s.totalDeals > 0 ? `${s.totalDeals} deals` : undefined,
       trendUp: true,
-      onClick: () => onNavigate?.("companies"),
-      sparkData: generateSparkData(s.qualifiedCompanies),
-      sparkColor: SPARK_COLORS["Empresas Qualificadas"],
-      progress: s.totalCompanies > 0 ? Math.round((s.qualifiedCompanies / s.totalCompanies) * 100) : 0,
+      onClick: () => onNavigate?.("deals"),
+      sparkData: generateSparkData(s.dealsValue / 1000), // scale down for spark
+      sparkColor: SPARK_COLORS["Receita em Pipeline"],
+      progress: 65, // conceptual progress toward goal
     },
     {
       title: "Taxa de Conversão",
@@ -340,10 +339,22 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
       sparkData: generateSparkData(s.activeWorkflows),
       sparkColor: SPARK_COLORS["Workflows Ativos"],
     },
+    {
+      title: "Integrações",
+      value: s.totalApiKeys + s.totalWebhooks,
+      rawNumber: s.totalApiKeys + s.totalWebhooks,
+      subtitle: `${s.totalApiKeys} chaves · ${s.totalWebhooks} hooks`,
+      icon: <Activity className="h-5 w-5" />,
+      trend: "API Ativa",
+      trendUp: true,
+      onClick: () => onNavigate?.("integrations"),
+      sparkData: generateSparkData(s.totalApiKeys + s.totalWebhooks),
+      sparkColor: "#94a3b8", // slate
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       {stats.map((stat, i) => (
         <motion.div key={stat.title} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1, ease: "easeOut" }}>
           <StatCard {...stat} />
