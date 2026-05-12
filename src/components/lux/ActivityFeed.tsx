@@ -93,10 +93,13 @@ export const ActivityFeed = memo(({ onNavigate }: { onNavigate?: (view: string) 
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ delay: i * 0.07, duration: 0.35 }}
                   whileHover={{ x: 4 }}
-                  onClick={() => a.type === "deal" && onNavigate?.("deals")}
+                  onClick={() => {
+                    if (a.type === "deal") onNavigate?.("deals");
+                    if (a.type === "enrichment") onNavigate?.("companies");
+                  }}
                   className={cn(
                     "relative flex items-start gap-3 px-4 py-3 transition-colors group cursor-default",
-                    a.type === "deal" ? "hover:bg-blue-500/10 cursor-pointer" : "hover:bg-secondary/15"
+                    (a.type === "deal" || a.type === "enrichment") ? "hover:bg-primary/10 cursor-pointer" : "hover:bg-secondary/15"
                   )}
                 >
                   {/* Timeline dot */}
