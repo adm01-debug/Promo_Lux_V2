@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { cn } from "@/lib/utils";
 import { CheckCircle2, AlertCircle, Zap, Database, Bell, Clock, TrendingUp } from "lucide-react";
 import { useRecentActivity, type ActivityItem } from "@/hooks/useDashboardData";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,7 +18,7 @@ const iconMap: Record<string, { icon: React.ReactNode; bg: string; ring: string 
   deal: { icon: <TrendingUp className="h-3.5 w-3.5 text-blue-500" />, bg: "bg-blue-500/10", ring: "ring-blue-500/30" },
 };
 
-export const ActivityFeed = memo(() => {
+export const ActivityFeed = memo(({ onNavigate }: { onNavigate?: (view: string) => void }) => {
   const { data: activities, isLoading } = useRecentActivity();
 
   return (
@@ -92,7 +93,11 @@ export const ActivityFeed = memo(() => {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ delay: i * 0.07, duration: 0.35 }}
                   whileHover={{ x: 4 }}
-                  className="relative flex items-start gap-3 px-4 py-3 hover:bg-secondary/15 transition-colors group cursor-default"
+                  onClick={() => a.type === "deal" && onNavigate?.("deals")}
+                  className={cn(
+                    "relative flex items-start gap-3 px-4 py-3 transition-colors group cursor-default",
+                    a.type === "deal" ? "hover:bg-blue-500/10 cursor-pointer" : "hover:bg-secondary/15"
+                  )}
                 >
                   {/* Timeline dot */}
                   <div className="relative z-10 flex flex-col items-center">
