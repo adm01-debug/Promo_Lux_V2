@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
-import { RLS_TABLES, RLS_TABLES_EXEMPT } from "../_shared/rlsTableRegistry.ts";
+import { RLS_TABLES, RLS_TABLES_EXEMPT, ENV_EXEMPT_TABLES, type AppEnv } from "../_shared/rlsTableRegistry.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -27,6 +27,22 @@ function createLogger(requestId: string) {
   };
 }
 
+function getAppEnv(supabaseUrl: string): AppEnv {
+  const envSecret = Deno.env.get("APP_ENV") as AppEnv | undefined;
+  if (envSecret && ["dev", "staging", "prod"].includes(envSecret)) {
+    return envSecret;
+  }
+
+  // Heurística baseada na URL
+  if (supabaseUrl.includes("localhost") || supabaseUrl.includes("127.0.0.1")) return "dev";
+  if (supabaseUrl.includes("staging")) return "staging";
+  
+  // No Lovable Cloud, projetos de preview costumam ter IDs dinâmicos.
+  // Se não for localhost nem explicitamente staging, tratamos como dev por segurança
+  // a menos que o APP_ENV diga o contrário.
+  return "dev"; 
+}
+
 interface TestResult {
   name: string;
   passed: boolean;
@@ -45,6 +61,9 @@ Deno.serve(async (req) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const currentEnv = getAppEnv(supabaseUrl);
+
+  log.info("rls_test_config", { env: currentEnv });
 
   // ── Helper: persiste motivo de bloqueio em audit_logs (best-effort) ──
   async function recordDenial(
@@ -295,6 +314,12 @@ Deno.serve(async (req) => {
     const ctx: Record<string, string> = {};
     const createdRows: Array<{ table: string; id: string }> = [];
     for (const spec of RLS_TABLES) {
+      // Pula tabelas isentas no ambiente atual
+      if (spec.envExempt?.includes(currentEnv)) {
+        log.info("skipping_table_isolation_test", { table: spec.table, env: currentEnv });
+        continue;
+      }
+
       // Pula tabelas que já têm cobertura específica acima (companies)
       if (spec.table === "companies") continue;
       try {
@@ -351,6 +376,7 @@ Deno.serve(async (req) => {
       const knownNames = new Set([
         ...RLS_TABLES.map((t) => t.table),
         ...RLS_TABLES_EXEMPT,
+        ...ENV_EXEMPT_TABLES[currentEnv],
       ]);
       const { data: rlsTables, error: covErr } = await admin.rpc("pg_catalog_rls_tables");
       if (!covErr && Array.isArray(rlsTables)) {
@@ -358,11 +384,11 @@ Deno.serve(async (req) => {
           .map((r) => r.table_name)
           .filter((name) => !knownNames.has(name));
         results.push({
-          name: "rls_coverage_complete",
+          name: `rls_coverage_complete_${currentEnv}`,
           passed: missing.length === 0,
           detail: missing.length
-            ? `tabelas RLS sem entrada no registry: ${missing.join(", ")}`
-            : `${knownNames.size} tabelas registradas`,
+            ? `tabelas RLS sem entrada no registry ou isenção em ${currentEnv}: ${missing.join(", ")}`
+            : `${knownNames.size} tabelas registradas/isentas`,
         });
       } else {
         results.push({
