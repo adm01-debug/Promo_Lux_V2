@@ -13,6 +13,7 @@ const iconMap: Record<string, { icon: React.ReactNode; bg: string; ring: string 
   error: { icon: <AlertCircle className="h-3.5 w-3.5 text-destructive" />, bg: "bg-destructive/10", ring: "ring-destructive/30" },
   system: { icon: <Zap className="h-3.5 w-3.5 text-primary" />, bg: "bg-primary/10", ring: "ring-primary/30" },
   enrichment: { icon: <Database className="h-3.5 w-3.5 text-accent-foreground" />, bg: "bg-accent/10", ring: "ring-accent/30" },
+  signal: { icon: <Bell className="h-3.5 w-3.5 text-amber-500" />, bg: "bg-amber-500/10", ring: "ring-amber-500/30" },
 };
 
 export const ActivityFeed = memo(() => {

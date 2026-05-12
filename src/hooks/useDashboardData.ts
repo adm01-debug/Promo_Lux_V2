@@ -11,6 +11,8 @@ export interface DashboardStats {
   runningWorkflows: number;
   totalCompanies: number;
   enrichedCompanies: number;
+  qualifiedCompanies: number;
+  conversionRate: number;
   totalCompaniesCount: number;
   avgIpcScore: number;
   todayScrapeJobs: number;
@@ -28,6 +30,7 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     { count: totalCompanies },
     { count: enrichedCompanies },
     { data: companiesForAvg },
+    { count: qualifiedCompanies },
     { count: todayScrapeJobs },
     { count: totalScrapeJobs },
     { count: completedScrapeJobs },
@@ -37,6 +40,7 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     db.from("companies").select("*", { count: "exact", head: true }),
     db.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
     db.from("companies").select("ipc_score"),
+    db.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 75),
     db.from("scrape_jobs").select("*", { count: "exact", head: true }).gte("created_at", today.toISOString()),
     db.from("scrape_jobs").select("*", { count: "exact", head: true }),
     db.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("status", "completed"),
@@ -44,13 +48,18 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
 
   const scores = (companiesForAvg ?? []).map((c) => c.ipc_score ?? 0).filter((s) => s > 0);
   const avgIpcScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const total = totalCompanies ?? 0;
+  const qualified = qualifiedCompanies ?? 0;
+  const conversionRate = total > 0 ? Math.round((qualified / total) * 100) : 0;
 
   return {
     activeWorkflows: activeWorkflows ?? 0,
     runningWorkflows: runningWorkflows ?? 0,
-    totalCompanies: totalCompanies ?? 0,
+    totalCompanies: total,
     enrichedCompanies: enrichedCompanies ?? 0,
-    totalCompaniesCount: totalCompanies ?? 0,
+    qualifiedCompanies: qualified,
+    conversionRate,
+    totalCompaniesCount: total,
     avgIpcScore,
     todayScrapeJobs: todayScrapeJobs ?? 0,
     totalScrapeJobs: totalScrapeJobs ?? 0,
