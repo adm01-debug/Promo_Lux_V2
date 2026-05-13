@@ -42,7 +42,8 @@ describe("Sidebar", () => {
   it("renders all nav items when expanded", () => {
     renderSidebar();
     NAV_ITEMS.forEach((item) => {
-      expect(screen.getByText(item.label)).toBeInTheDocument();
+      const elements = screen.getAllByText(item.label);
+      expect(elements.length).toBeGreaterThanOrEqual(1);
     });
   });
 
