@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCog, Shield, Trash2, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, Button } from "@/components/ui/button"; // Erro de import no prompt, corrigindo na escrita
+import { UserCog, Shield, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { AppRole } from "@/hooks/useOrganizations";
 
@@ -76,10 +78,25 @@ export const MemberRow = ({
             <Shield className="h-3 w-3" /> Owner
           </Badge>
         )}
-        {/* Simplified Select for the sake of the example, in the real file we'd use the UI components */}
-        <Badge variant="outline" className={`text-[10px] ${ROLE_COLOR[member.role]}`}>
-          {ROLE_LABEL[member.role]}
-        </Badge>
+        
+        {isAdmin && !isOwner ? (
+          <Select
+            value={member.role}
+            onValueChange={(v) => onRoleChange(member, v as AppRole)}
+          >
+            <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="sdr">SDR</SelectItem>
+              <SelectItem value="viewer">Viewer</SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <Badge variant="outline" className={`text-[10px] ${ROLE_COLOR[member.role]}`}>
+            {ROLE_LABEL[member.role]}
+          </Badge>
+        )}
+
         {(isAdmin && !isOwner) || isMe ? (
           <Button
             variant="ghost"
