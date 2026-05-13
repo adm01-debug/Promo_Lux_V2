@@ -8,6 +8,7 @@ export const scrapeJobSchema = z.object({
   depth: z.number().min(1, "Mínimo 1").max(5, "Máximo 5"),
   email: z.boolean(),
   fast_mode: z.boolean(),
+  auto_sync: z.boolean().default(false),
 });
 
 export type ScrapeJobFormData = z.infer<typeof scrapeJobSchema>;

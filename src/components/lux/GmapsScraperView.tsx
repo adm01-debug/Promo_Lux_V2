@@ -21,8 +21,10 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
   completed: { label: "Concluído", color: "bg-success/20 text-success border-success/30", icon: <CheckCircle2 className="h-3 w-3" /> },
   ok: { label: "Concluído", color: "bg-success/20 text-success border-success/30", icon: <CheckCircle2 className="h-3 w-3" /> },
   running: { label: "Executando", color: "bg-primary/20 text-primary border-primary/30", icon: <Loader2 className="h-3 w-3 animate-spin" /> },
+  working: { label: "Trabalhando", color: "bg-blue-500/20 text-blue-500 border-blue-500/30", icon: <Loader2 className="h-3 w-3 animate-spin" /> },
   pending: { label: "Pendente", color: "bg-warning/20 text-warning border-warning/30", icon: <Clock className="h-3 w-3" /> },
   error: { label: "Erro", color: "bg-destructive/20 text-destructive border-destructive/30", icon: <AlertCircle className="h-3 w-3" /> },
+  failed: { label: "Falha", color: "bg-destructive/20 text-destructive border-destructive/30", icon: <AlertCircle className="h-3 w-3" /> },
 };
 
 const getStatus = (status: string) => statusConfig[status] || statusConfig["pending"];
@@ -38,6 +40,7 @@ export const GmapsScraperView = () => {
   const [depth, setDepth] = useState(1);
   const [extractEmail, setExtractEmail] = useState(true);
   const [fastMode, setFastMode] = useState(false);
+  const [autoSync, setAutoSync] = useState(true);
   const [expandedJob, setExpandedJob] = useState<string | null>(null);
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -112,6 +115,7 @@ export const GmapsScraperView = () => {
       depth,
       email: extractEmail,
       fast_mode: fastMode,
+      auto_sync: autoSync,
     });
     if (!result.success) {
       const firstError = Object.values(result.errors)[0];
@@ -126,6 +130,7 @@ export const GmapsScraperView = () => {
       depth,
       email: extractEmail,
       fast_mode: fastMode,
+      auto_sync: autoSync,
     });
   };
 
@@ -206,10 +211,10 @@ export const GmapsScraperView = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-foreground">Modo rápido</p>
-                    <p className="text-[10px] text-muted-foreground">Menos detalhes, mais velocidade</p>
+                    <p className="text-sm text-foreground">Sincronização automática</p>
+                    <p className="text-[10px] text-muted-foreground">Importa para o CRM assim que concluir</p>
                   </div>
-                  <Switch checked={fastMode} onCheckedChange={setFastMode} />
+                  <Switch checked={autoSync} onCheckedChange={setAutoSync} />
                 </div>
                 <Button onClick={handleCreate} disabled={createMutation.isPending || !jobName.trim() || !keywords.trim()} className="w-full gap-2">
                   {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
@@ -352,14 +357,25 @@ export const GmapsScraperView = () => {
                                   Importar & Qualificar IPC
                                 </Button>
                               )}
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="gap-1.5 text-xs text-destructive hover:text-destructive"
-                                onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(job.id); }}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" /> Deletar
-                              </Button>
+                              {job.status === "running" || job.status === "working" || job.status === "pending" ? (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="gap-1.5 text-xs text-warning hover:text-warning"
+                                  onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(job.id); }}
+                                >
+                                  <AlertCircle className="h-3.5 w-3.5" /> Cancelar
+                                </Button>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="gap-1.5 text-xs text-destructive hover:text-destructive"
+                                  onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(job.id); }}
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" /> Deletar
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </motion.div>

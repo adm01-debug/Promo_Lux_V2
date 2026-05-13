@@ -16,6 +16,7 @@ export const ScrapeJobConfigSchema = z.object({
 
 export const CreateScrapeJobSchema = z.object({
   name: z.string().min(1).max(255),
+  auto_sync: z.boolean().default(false),
   config: ScrapeJobConfigSchema,
 });
 

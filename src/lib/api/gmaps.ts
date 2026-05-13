@@ -21,6 +21,7 @@ export interface ScrapeJob {
     max_time?: number;
     proxies?: string[];
   };
+  auto_sync: boolean;
   results_count: number;
   error_message: string | null;
   started_at: string | null;
@@ -32,6 +33,7 @@ export interface ScrapeJob {
 export interface CreateJobRequest {
   name: string;
   keywords: string[];
+  auto_sync?: boolean;
   lang?: string;
   zoom?: number;
   lat?: string;
@@ -72,10 +74,10 @@ export const gmapsApi = {
 
   async createJob(data: CreateJobRequest): Promise<{ id: string; external_id: string | null; status: string }> {
     // Transform flat request to structured schema
-    const { name, ...config } = data;
+    const { name, auto_sync, ...config } = data;
     return callProxy("create", {
       method: "POST",
-      body: JSON.stringify({ name, config }),
+      body: JSON.stringify({ name, auto_sync, config }),
       headers: {
         "idempotency-key": crypto.randomUUID(),
       }
