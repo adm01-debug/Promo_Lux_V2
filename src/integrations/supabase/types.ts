@@ -985,6 +985,63 @@ export type Database = {
           },
         ]
       }
+      feature_flags: {
+        Row: {
+          created_at: string
+          description: string | null
+          enabled: boolean | null
+          id: string
+          name: string
+          rules: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean | null
+          id?: string
+          name: string
+          rules?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean | null
+          id?: string
+          name?: string
+          rules?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      health_checks: {
+        Row: {
+          id: string
+          last_check: string
+          latency_ms: number | null
+          metadata: Json | null
+          service_name: string
+          status: string
+        }
+        Insert: {
+          id?: string
+          last_check?: string
+          latency_ms?: number | null
+          metadata?: Json | null
+          service_name: string
+          status: string
+        }
+        Update: {
+          id?: string
+          last_check?: string
+          latency_ms?: number | null
+          metadata?: Json | null
+          service_name?: string
+          status?: string
+        }
+        Relationships: []
+      }
       idempotency_keys: {
         Row: {
           created_at: string
@@ -1414,6 +1471,7 @@ export type Database = {
       }
       scrape_jobs: {
         Row: {
+          auto_sync: boolean | null
           completed_at: string | null
           config: Json
           created_at: string
@@ -1430,6 +1488,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          auto_sync?: boolean | null
           completed_at?: string | null
           config?: Json
           created_at?: string
@@ -1446,6 +1505,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          auto_sync?: boolean | null
           completed_at?: string | null
           config?: Json
           created_at?: string
