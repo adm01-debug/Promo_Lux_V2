@@ -258,6 +258,9 @@ serve(async (req) => {
       let responseBody: any = { id: dbJob.id, status: "pending" };
       
       try {
+        const isHealthy = await checkCircuitBreaker(supabase, "gmaps-api");
+        if (!isHealthy) throw new Error("Circuit breaker is open");
+
         const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
