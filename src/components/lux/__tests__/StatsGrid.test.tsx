@@ -64,7 +64,7 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
     
     // Each card should have unique border styling
     const classNames = Array.from(cards).map(c => c.className);
-    // Workflows = violet, Empresas = primary, Enriquecimento = emerald, Raspagens = sky
+    // Workflows = violet, Empresas = primary, Pipeline = emerald, Conversão = sky
     expect(classNames.some(c => c.includes("border-violet"))).toBe(true);
     expect(classNames.some(c => c.includes("border-primary"))).toBe(true);
     expect(classNames.some(c => c.includes("border-emerald"))).toBe(true);
