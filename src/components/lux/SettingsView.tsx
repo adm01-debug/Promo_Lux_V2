@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
+import { MFASetup } from "@/components/lux/settings/MFASetup";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";
 
@@ -209,6 +210,15 @@ export const SettingsView = () => {
                   {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
                   {saving ? "Salvando..." : saved ? "Salvo!" : "Salvar Alterações"}
                 </Button>
+              </div>
+
+              <Separator className="bg-border/30" />
+
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-primary" /> Autenticação de Dois Fatores
+                </h4>
+                <MFASetup />
               </div>
 
               <Separator className="bg-border/30" />
