@@ -558,6 +558,7 @@ export type Database = {
           starred: boolean | null
           updated_at: string
           user_id: string
+          version: number
           website: string | null
         }
         Insert: {
@@ -580,6 +581,7 @@ export type Database = {
           starred?: boolean | null
           updated_at?: string
           user_id?: string
+          version?: number
           website?: string | null
         }
         Update: {
@@ -602,6 +604,7 @@ export type Database = {
           starred?: boolean | null
           updated_at?: string
           user_id?: string
+          version?: number
           website?: string | null
         }
         Relationships: []
@@ -767,6 +770,7 @@ export type Database = {
           updated_at: string
           user_id: string
           value: number | null
+          version: number
         }
         Insert: {
           closed_at?: string | null
@@ -786,6 +790,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number | null
+          version?: number
         }
         Update: {
           closed_at?: string | null
@@ -805,6 +810,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number | null
+          version?: number
         }
         Relationships: [
           {
