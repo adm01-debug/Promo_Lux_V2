@@ -40,13 +40,16 @@ describe("Sidebar — P1 Dynamic Footer", () => {
   it("renders all nav items when expanded", () => {
     render(<Sidebar {...defaultProps} />, { wrapper });
     NAV_ITEMS.forEach((item) => {
-      expect(screen.getByText(item.label)).toBeInTheDocument();
+      // Use getAllByText for items that might appear multiple times (nav item + footer title)
+      const elements = screen.getAllByText(item.label);
+      expect(elements.length).toBeGreaterThanOrEqual(1);
     });
   });
 
   it("renders system status section when expanded", () => {
     render(<Sidebar {...defaultProps} />, { wrapper });
-    expect(screen.getByText("Status do Sistema")).toBeInTheDocument();
+    const statusLabels = screen.getAllByText("Status do Sistema");
+    expect(statusLabels.length).toBeGreaterThanOrEqual(1);
   });
 
   it("hides system status when collapsed", () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
@@ -45,6 +46,11 @@ vi.mock("@/lib/api/workflows", () => ({
   },
 }));
 
+vi.mock("@/hooks/usePermissions", () => ({
+  useCan: () => true,
+  usePermissions: () => ({ role: "admin", isAdmin: true, can: () => true }),
+}));
+
 vi.mock("@/hooks/use-toast", () => ({
   toast: vi.fn(),
 }));
@@ -58,7 +64,11 @@ import { WorkflowsView } from "../WorkflowsView";
 
 function renderWithProviders(ui: React.ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return render(<QueryClientProvider client={qc}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={qc}>
+      <TooltipProvider>{ui}</TooltipProvider>
+    </QueryClientProvider>
+  );
 }
 
 describe("WorkflowsView", () => {

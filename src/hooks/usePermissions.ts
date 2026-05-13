@@ -22,7 +22,7 @@ export function usePermissions() {
     return (m?.role as AppRole | undefined) ?? null;
   }, [user?.id, activeOrgId, members]);
 
-  const isOwner = !!(activeOrg && user?.id && activeOrg.organizations.owner_id === user.id);
+  const isOwner = !!(activeOrg && user?.id && (activeOrg as any).organizations?.owner_id === user.id);
 
   return {
     role,
