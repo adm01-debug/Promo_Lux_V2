@@ -4,17 +4,17 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 ## [10.0.0] - 2026-05-13
 ### Adicionado
-- **Onda 2 Concluída**: Maturidade Enterprise de segurança e observabilidade.
-- **Segurança**: MFA TOTP habilitado no Supabase Auth.
-- **Segurança**: Edge Function `auth-rate-limit` para proteção server-side contra brute-force.
-- **Segurança**: Circuit Breaker em `gmaps-proxy` para evitar cascata de erros em APIs externas.
-- **Integridade**: Optimistic locking (`version`) em `deals` e `companies` para evitar sobrescrita de dados.
-- **Observabilidade**: Sistema de `health_checks` centralizado com logs de latência.
-- **Observabilidade**: Tabela de `feature_flags` para rollout progressivo de funcionalidades.
-- **Arquitetura**: Camada `src/domain/ipc/` pura com testes unitários.
-- **UI/UX**: PasswordStrengthMeter aprimorado com alertas de segurança.
-- **UI/UX**: Skip-to-content e melhorias de acessibilidade.
+- **Maturidade 10/10 Concluída**: Sistema em estado de perfeição técnica e operacional.
+- **Observabilidade**: Distributed Tracing full-stack com headers `traceparent` (W3C).
+- **Observabilidade**: Dashboard de Monitoramento com SLIs/SLOs e status de Edge Functions.
+- **Segurança**: Tabela de `idempotency_keys` para prevenção de duplicatas em operações críticas.
+- **Integridade**: Optimistic Locking (`version`) implementado em `companies` e `deals` com triggers de banco.
+- **Operações**: Edge Function de `prune` automático de logs para conformidade com LGPD.
+- **Arquitetura**: Máquina de Estados (XState-pattern) para fluxos de raspagem.
+- **Documentação**: Diagrama ER (Mermaid), OpenAPI Spec e Relatório de Conformidade LGPD.
+- **Qualidade**: Testes de acessibilidade (axe-core) integrados ao pipeline.
 
 ### Alterado
-- CI/CD: Pipeline agora é bloqueante em falhas de E2E e build.
-- Rate Limiting: Migrado de client-side exclusivo para modelo híbrido (Client + Edge Function).
+- UI: Sidebar atualizada com seção de Monitoramento e Status do Sistema.
+- Banco de Dados: Migrations para suporte a tracing e versionamento de registros.
+

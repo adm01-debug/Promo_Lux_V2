@@ -40,6 +40,7 @@ import { z } from "https://esm.sh/zod@3.23.8";
 import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
 import { calculateIPCScore } from "../_shared/domain/ipc/scoring.ts";
+import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -60,8 +61,8 @@ function getCorsHeaders(req: Request) {
 }
 
 // ── Structured Logger ──
-function createLogger(requestId: string) {
-  const base = { function: "gmaps-proxy", request_id: requestId };
+function createLogger(requestId: string, traceId?: string) {
+  const base = { function: "gmaps-proxy", request_id: requestId, trace_id: traceId };
   return {
     info: (msg: string, data?: Record<string, unknown>) =>
       console.log(JSON.stringify({ ...base, level: "info", msg, ...data, ts: new Date().toISOString() })),
@@ -104,7 +105,9 @@ const ActionSchema = z.enum(["list", "create", "delete", "sync-results"]);
 
 serve(async (req) => {
   const requestId = crypto.randomUUID();
-  const log = createLogger(requestId);
+  const traceparent = getTraceparent(req.headers);
+  const traceId = traceparent ? parseTraceparent(traceparent)?.traceId : crypto.randomUUID().replace(/-/g, '');
+  const log = createLogger(requestId, traceId);
   const corsHeaders = getCorsHeaders(req);
 
   if (req.method === "OPTIONS") {

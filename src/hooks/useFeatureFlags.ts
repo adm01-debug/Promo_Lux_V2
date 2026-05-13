@@ -21,7 +21,9 @@ export const useFeatureFlags = () => {
       
       const flags: Record<string, boolean> = {};
       data?.forEach(flag => {
-        flags[flag.name] = !!flag.enabled;
+        if (flag.flag_key) {
+          flags[flag.flag_key] = !!flag.is_enabled;
+        }
       });
       return flags;
     },
