@@ -170,6 +170,36 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_rate_limits: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          id: string
+          identifier: string
+          last_attempt: string | null
+          locked_until: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          id?: string
+          identifier: string
+          last_attempt?: string | null
+          locked_until?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          id?: string
+          identifier?: string
+          last_attempt?: string | null
+          locked_until?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       campaign_events: {
         Row: {
           campaign_id: string
@@ -1975,6 +2005,7 @@ export type Database = {
           udt_name: string
         }[]
       }
+      prune_auth_rate_limits: { Args: never; Returns: undefined }
       record_campaign_event: {
         Args: {
           _event_type: string
