@@ -97,6 +97,7 @@ export type Database = {
           path: string
           resource: string | null
           status_code: number
+          trace_id: string | null
           user_agent: string | null
           user_id: string | null
         }
@@ -113,6 +114,7 @@ export type Database = {
           path: string
           resource?: string | null
           status_code: number
+          trace_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
@@ -129,6 +131,7 @@ export type Database = {
           path?: string
           resource?: string | null
           status_code?: number
+          trace_id?: string | null
           user_agent?: string | null
           user_id?: string | null
         }
@@ -146,6 +149,7 @@ export type Database = {
           organization_id: string | null
           record_id: string
           table_name: string
+          trace_id: string | null
         }
         Insert: {
           action: Database["public"]["Enums"]["audit_action"]
@@ -158,6 +162,7 @@ export type Database = {
           organization_id?: string | null
           record_id: string
           table_name: string
+          trace_id?: string | null
         }
         Update: {
           action?: Database["public"]["Enums"]["audit_action"]
@@ -170,6 +175,7 @@ export type Database = {
           organization_id?: string | null
           record_id?: string
           table_name?: string
+          trace_id?: string | null
         }
         Relationships: []
       }
