@@ -404,25 +404,7 @@ serve(async (req) => {
       let companiesCreated = 0;
 
       for (const result of results) {
-        // Usar lógica centralizada de scoring (importação manual simulada aqui no Deno para este contexto)
-        let ipcScore = 0;
-        const criteria = ipcConfig?.criteria as any;
-        
-        const sector = result.category || result.type;
-        const location = result.address || result.city || "";
-        
-        if (criteria) {
-          if (sector && criteria.sectors?.includes(sector)) ipcScore += 30;
-          if (location && criteria.locations?.some((loc: string) => location.includes(loc))) ipcScore += 20;
-        } else {
-          ipcScore = 50;
-        }
-
-        if (result.email) ipcScore += 15;
-        if (result.phone) ipcScore += 10;
-        if (result.website) ipcScore += 10;
-        const rating = result.rating ? parseFloat(result.rating) : 0;
-        if (rating >= 4) ipcScore += 15;
+        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as any);
 
         const { data: company } = await supabase
           .from("companies")
@@ -435,7 +417,7 @@ serve(async (req) => {
             phone: result.phone || "",
             email: result.email || "",
             source: "gmaps",
-            ipc_score: Math.min(ipcScore, 100),
+            ipc_score: ipcScore,
             enriched: !!(result.email || result.phone),
             raw_data: result,
           }, { onConflict: "name,source" })
