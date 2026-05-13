@@ -30,6 +30,7 @@ export interface Deal {
   position: number;
   created_at: string;
   updated_at: string;
+  version: number;
 }
 
 export function useDealStages() {
