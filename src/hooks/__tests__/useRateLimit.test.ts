@@ -1,83 +1,46 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useRateLimit } from "../useRateLimit";
 
 describe("useRateLimit", () => {
   beforeEach(() => {
+    localStorage.clear();
     vi.useFakeTimers();
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
+  it("should not be locked initially", () => {
+    const { result } = renderHook(() => useRateLimit("test", { maxAttempts: 2, windowMs: 1000 }));
+    expect(result.current.locked).toBe(false);
   });
 
-  it("starts unlocked", () => {
-    const { result } = renderHook(() => useRateLimit());
-    expect(result.current.isLocked().locked).toBe(false);
+  it("should lock after exceeding max attempts", () => {
+    const { result } = renderHook(() => useRateLimit("test", { maxAttempts: 2, windowMs: 1000 }));
+
+    act(() => {
+      result.current.recordAttempt();
+    });
+    expect(result.current.locked).toBe(false);
+
+    act(() => {
+      result.current.recordAttempt();
+    });
+    expect(result.current.locked).toBe(true);
+    expect(result.current.remainingSec).toBe(1);
   });
 
-  it("stays unlocked under max attempts", () => {
-    const { result } = renderHook(() =>
-      useRateLimit({ maxAttempts: 3, windowMs: 60000, lockoutMs: 5000 })
-    );
+  it("should unlock after window windowMs", () => {
+    const { result } = renderHook(() => useRateLimit("test", { maxAttempts: 1, windowMs: 1000 }));
 
-    act(() => { result.current.recordAttempt(); });
-    act(() => { result.current.recordAttempt(); });
-    expect(result.current.isLocked().locked).toBe(false);
-  });
+    act(() => {
+      result.current.recordAttempt();
+    });
+    expect(result.current.locked).toBe(true);
 
-  it("locks after reaching max attempts", () => {
-    const { result } = renderHook(() =>
-      useRateLimit({ maxAttempts: 3, windowMs: 60000, lockoutMs: 5000 })
-    );
-
-    act(() => { result.current.recordAttempt(); });
-    act(() => { result.current.recordAttempt(); });
-    const lockResult = act(() => result.current.recordAttempt());
-    expect(result.current.isLocked().locked).toBe(true);
-  });
-
-  it("unlocks after lockout period", () => {
-    const { result } = renderHook(() =>
-      useRateLimit({ maxAttempts: 2, windowMs: 60000, lockoutMs: 5000 })
-    );
-
-    act(() => { result.current.recordAttempt(); });
-    act(() => { result.current.recordAttempt(); });
-    expect(result.current.isLocked().locked).toBe(true);
-
-    act(() => { vi.advanceTimersByTime(5001); });
-    expect(result.current.isLocked().locked).toBe(false);
-  });
-
-  it("checkAndRecord returns lock status when already locked", () => {
-    const { result } = renderHook(() =>
-      useRateLimit({ maxAttempts: 2, windowMs: 60000, lockoutMs: 5000 })
-    );
-
-    act(() => { result.current.recordAttempt(); });
-    act(() => { result.current.recordAttempt(); });
-
-    let status: { locked: boolean; remainingSec: number } = { locked: false, remainingSec: 0 };
-    act(() => { status = result.current.checkAndRecord(); });
-    expect(status.locked).toBe(true);
-    expect(status.remainingSec).toBeGreaterThan(0);
-  });
-
-  it("clears old attempts outside the window", () => {
-    const { result } = renderHook(() =>
-      useRateLimit({ maxAttempts: 3, windowMs: 1000, lockoutMs: 5000 })
-    );
-
-    act(() => { result.current.recordAttempt(); });
-    act(() => { result.current.recordAttempt(); });
-
-    // Advance past the window
-    act(() => { vi.advanceTimersByTime(1500); });
-
-    // These should not trigger lockout because old attempts expired
-    act(() => { result.current.recordAttempt(); });
-    act(() => { result.current.recordAttempt(); });
+    act(() => {
+      vi.advanceTimersByTime(1100);
+    });
+    
+    // Manual check because interval runs every 1s
     expect(result.current.isLocked().locked).toBe(false);
   });
 });
