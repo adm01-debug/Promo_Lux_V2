@@ -21,6 +21,7 @@ export interface ScrapeJob {
     max_time?: number;
     proxies?: string[];
   };
+  auto_sync: boolean;
   results_count: number;
   error_message: string | null;
   started_at: string | null;
@@ -32,6 +33,7 @@ export interface ScrapeJob {
 export interface CreateJobRequest {
   name: string;
   keywords: string[];
+  auto_sync?: boolean;
   lang?: string;
   zoom?: number;
   lat?: string;
