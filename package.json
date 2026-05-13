@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -79,6 +80,7 @@
     "zod": "3"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^21.0.1",
     "@eslint/js": "^9.32.0",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/typography": "^0.5.19",
@@ -88,18 +90,24 @@
     "@types/react": "19",
     "@types/react-dom": "19",
     "@vitejs/plugin-react-swc": "3",
+    "@vitest/coverage-v8": "^4.1.6",
     "autoprefixer": "^10.4.27",
+    "commitlint": "^21.0.1",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "0.4",
     "globals": "^15.15.0",
+    "husky": "^9.1.7",
     "jsdom": "20",
+    "lint-staged": "^17.0.4",
     "lovable-tagger": "^1.1.13",
     "postcss": "^8.5.8",
+    "prettier": "^3.8.3",
     "tailwindcss": "^3.4.17",
     "typescript": "5",
     "typescript-eslint": "8",
     "vite": "5",
+    "vite-bundle-visualizer": "^1.2.1",
     "vitest": "3"
   }
 }
