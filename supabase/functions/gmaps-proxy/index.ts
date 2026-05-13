@@ -285,14 +285,18 @@ serve(async (req) => {
           const result = await res.json();
           externalId = result.id || result.ID;
           responseBody = { id: dbJob.id, external_id: externalId, status: "running" };
+          await reportSuccess(supabase, "gmaps-api");
 
           await supabase
             .from("scrape_jobs")
             .update({ external_id: externalId, status: "running" })
             .eq("id", dbJob.id);
+        } else {
+          await reportFailure(supabase, "gmaps-api");
         }
       } catch (err) {
         log.error("gmaps_api_create_error", { error: (err as Error).message });
+        await reportFailure(supabase, "gmaps-api");
       }
 
       if (idempotencyKey) {
