@@ -152,7 +152,7 @@ export function useDeals() {
   });
 
   const updateDeal = useMutation({
-    mutationFn: async ({ id, ...patch }: Partial<Deal> & { id: string }) => {
+    mutationFn: async ({ id, ...patch }: Partial<Deal> & { id: string; version?: number }) => {
       const { error } = await db.from("deals").update(patch).eq("id", id);
       if (error) throw error;
     },
