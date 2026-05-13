@@ -34,11 +34,16 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Unit tests
-        run: bun run test -- --run
+      - name: Unit tests with Coverage
+        run: bun run test:coverage
 
       - name: Security audit
         run: bunx npm-audit-ci --moderate
+
+      - name: Gitleaks Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Playwright browsers
         run: bunx playwright install --with-deps chromium
