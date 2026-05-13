@@ -24,7 +24,8 @@ export const signupSchema = z.object({
     .min(8, "A senha deve ter pelo menos 8 caracteres.")
     .max(72, "A senha deve ter no máximo 72 caracteres.")
     .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
-    .regex(/[0-9]/, "A senha deve conter ao menos um número."),
+    .regex(/[0-9]/, "A senha deve conter ao menos um número.")
+    .regex(/[^A-Za-z0-9]/, "A senha deve conter ao menos um caractere especial."),
 });
 
 export const resetEmailSchema = z.object({
@@ -41,7 +42,8 @@ export const newPasswordSchema = z.object({
     .min(8, "A senha deve ter pelo menos 8 caracteres.")
     .max(72, "A senha deve ter no máximo 72 caracteres.")
     .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
-    .regex(/[0-9]/, "A senha deve conter ao menos um número."),
+    .regex(/[0-9]/, "A senha deve conter ao menos um número.")
+    .regex(/[^A-Za-z0-9]/, "A senha deve conter ao menos um caractere especial."),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não coincidem.",
