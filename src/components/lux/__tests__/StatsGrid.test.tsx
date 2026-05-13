@@ -101,7 +101,7 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
     expect(skyBars.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("marks 'Empresas Encontradas' as featured (larger text)", () => {
+  it("marks 'Total de Empresas' as featured (larger text)", () => {
     const { container } = render(<StatsGrid />, { wrapper });
     const featured = container.querySelector(".text-4xl");
     expect(featured).toBeInTheDocument();
