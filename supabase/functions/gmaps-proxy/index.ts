@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
-import { ScrapeJobConfigSchema } from "../_shared/schemas.ts";
+import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -197,11 +197,11 @@ serve(async (req) => {
         }
       }
 
-      const parsed = CreateJobSchema.safeParse(await req.json());
+      const parsed = CreateScrapeJobSchema.safeParse(await req.json());
       if (!parsed.success) {
         return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
-      const body = parsed.data;
+      const body = { name: parsed.data.name, ...parsed.data.config };
 
       const { data: dbJob, error: dbError } = await supabase
         .from("scrape_jobs")
