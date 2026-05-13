@@ -21,8 +21,10 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
   completed: { label: "Concluído", color: "bg-success/20 text-success border-success/30", icon: <CheckCircle2 className="h-3 w-3" /> },
   ok: { label: "Concluído", color: "bg-success/20 text-success border-success/30", icon: <CheckCircle2 className="h-3 w-3" /> },
   running: { label: "Executando", color: "bg-primary/20 text-primary border-primary/30", icon: <Loader2 className="h-3 w-3 animate-spin" /> },
+  working: { label: "Trabalhando", color: "bg-blue-500/20 text-blue-500 border-blue-500/30", icon: <Loader2 className="h-3 w-3 animate-spin" /> },
   pending: { label: "Pendente", color: "bg-warning/20 text-warning border-warning/30", icon: <Clock className="h-3 w-3" /> },
   error: { label: "Erro", color: "bg-destructive/20 text-destructive border-destructive/30", icon: <AlertCircle className="h-3 w-3" /> },
+  failed: { label: "Falha", color: "bg-destructive/20 text-destructive border-destructive/30", icon: <AlertCircle className="h-3 w-3" /> },
 };
 
 const getStatus = (status: string) => statusConfig[status] || statusConfig["pending"];
