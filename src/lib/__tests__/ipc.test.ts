@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateIpcScore } from "../lib/ipc";
+import { calculateIpcScore } from "@/lib/ipc";
 
 describe("calculateIpcScore", () => {
   const criteria = {

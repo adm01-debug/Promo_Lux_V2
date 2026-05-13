@@ -1,4 +1,4 @@
-import { IPC_WEIGHTS, IPC_THRESHOLDS } from "./constants";
+import { IPC_THRESHOLDS } from "./constants";
 
 export interface ScoringCriteria {
   sectors?: string[];
@@ -28,21 +28,21 @@ export function calculateIpcScore(result: ScrapedResult, criteria?: ScoringCrite
     const location = result.city || result.address;
 
     if (sector && criteria.sectors?.includes(sector)) {
-      score += IPC_WEIGHTS.SECTOR_MATCH;
+      score += 30;
     }
     
     if (location && criteria.locations?.some(loc => location.includes(loc))) {
-      score += IPC_WEIGHTS.LOCATION_MATCH;
+      score += 20;
     }
   }
 
-  if (result.email) score += IPC_WEIGHTS.HAS_EMAIL;
-  if (result.phone) score += IPC_WEIGHTS.HAS_PHONE;
-  if (result.website) score += IPC_WEIGHTS.HAS_WEBSITE;
+  if (result.email) score += 15;
+  if (result.phone) score += 10;
+  if (result.website) score += 10;
   
   const rating = typeof result.rating === "string" ? parseFloat(result.rating) : result.rating;
   if (rating && rating >= 4) {
-    score += IPC_WEIGHTS.HIGH_RATING;
+    score += 15;
   }
 
   return Math.min(score, IPC_THRESHOLDS.MAX_SCORE);
