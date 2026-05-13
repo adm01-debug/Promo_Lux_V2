@@ -1,52 +1,65 @@
-import { useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "./use-toast";
 
 interface RateLimitConfig {
   maxAttempts: number;
   windowMs: number;
-  lockoutMs: number;
 }
 
-const DEFAULT_CONFIG: RateLimitConfig = {
-  maxAttempts: 5,
-  windowMs: 60_000,      // 1 minute window
-  lockoutMs: 300_000,    // 5 minute lockout
-};
+/**
+ * Hook para rate limiting client-side básico (UX).
+ * Complementa o rate limiting server-side.
+ */
+export function useRateLimit(key: string, config: RateLimitConfig = { maxAttempts: 5, windowMs: 60000 }) {
+  const [locked, setLocked] = useState(false);
+  const [remainingSec, setRemainingSec] = useState(0);
 
-export function useRateLimit(config: Partial<RateLimitConfig> = {}) {
-  const { maxAttempts, windowMs, lockoutMs } = { ...DEFAULT_CONFIG, ...config };
+  useEffect(() => {
+    const checkLock = () => {
+      const lockUntil = localStorage.getItem(`lux:lock:${key}`);
+      if (lockUntil) {
+        const remaining = Math.ceil((parseInt(lockUntil) - Date.now()) / 1000);
+        if (remaining > 0) {
+          setLocked(true);
+          setRemainingSec(remaining);
+        } else {
+          setLocked(false);
+          setRemainingSec(0);
+          localStorage.removeItem(`lux:lock:${key}`);
+        }
+      }
+    };
 
-  const attemptsRef = useRef<number[]>([]);
-  const lockedUntilRef = useRef<number>(0);
+    checkLock();
+    const interval = setInterval(checkLock, 1000);
+    return () => clearInterval(interval);
+  }, [key]);
 
-  const isLocked = useCallback(() => {
-    if (Date.now() < lockedUntilRef.current) {
-      const remainingSec = Math.ceil((lockedUntilRef.current - Date.now()) / 1000);
-      return { locked: true, remainingSec };
-    }
-    return { locked: false, remainingSec: 0 };
-  }, []);
-
-  const recordAttempt = useCallback(() => {
+  const recordAttempt = () => {
+    const attemptsKey = `lux:attempts:${key}`;
     const now = Date.now();
+    const attemptsRaw = localStorage.getItem(attemptsKey);
+    let attempts: number[] = attemptsRaw ? JSON.parse(attemptsRaw) : [];
+    
+    // Filter attempts within window
+    attempts = attempts.filter(t => now - t < config.windowMs);
+    attempts.push(now);
+    localStorage.setItem(attemptsKey, JSON.stringify(attempts));
 
-    // Clear old attempts outside window
-    attemptsRef.current = attemptsRef.current.filter((t) => now - t < windowMs);
-    attemptsRef.current.push(now);
-
-    if (attemptsRef.current.length >= maxAttempts) {
-      lockedUntilRef.current = now + lockoutMs;
-      attemptsRef.current = [];
-      return { locked: true, remainingSec: Math.ceil(lockoutMs / 1000) };
+    if (attempts.length >= config.maxAttempts) {
+      const lockTime = now + config.windowMs;
+      localStorage.setItem(`lux:lock:${key}`, lockTime.toString());
+      setLocked(true);
+      setRemainingSec(Math.ceil(config.windowMs / 1000));
+      toast({
+        title: "Muitas tentativas",
+        description: `Por favor, aguarde ${Math.ceil(config.windowMs / 1000)} segundos.`,
+        variant: "destructive",
+      });
+      return true;
     }
+    return false;
+  };
 
-    return { locked: false, remainingSec: 0 };
-  }, [maxAttempts, windowMs, lockoutMs]);
-
-  const checkAndRecord = useCallback(() => {
-    const lockStatus = isLocked();
-    if (lockStatus.locked) return lockStatus;
-    return recordAttempt();
-  }, [isLocked, recordAttempt]);
-
-  return { isLocked, recordAttempt, checkAndRecord };
+  return { locked, remainingSec, recordAttempt };
 }
