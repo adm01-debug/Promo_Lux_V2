@@ -4,7 +4,7 @@ import { validateCampaign } from "@/lib/schemas/campaign";
 import { validateCompany } from "@/lib/schemas/company";
 
 describe("validateScrapeJob", () => {
-  const valid = { name: "Job1", keywords: "restaurantes", lang: "pt" as const, radius: 10000, depth: 1, email: true, fast_mode: false };
+  const valid = { name: "Job1", keywords: "restaurantes", lang: "pt" as const, radius: 10000, depth: 1, email: true, fast_mode: false, auto_sync: false };
 
   it("accepts valid input", () => {
     expect(validateScrapeJob(valid).success).toBe(true);
