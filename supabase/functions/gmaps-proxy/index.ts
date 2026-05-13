@@ -1,5 +1,41 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+/**
+ * Circuit Breaker State
+ */
+const CB_THRESHOLD = 5; // 5 falhas em 1 min
+const CB_RESET_TIMEOUT = 60000; // 1 minuto
+let failureCount = 0;
+let lastFailureTime = 0;
+let cbOpen = false;
+
+function isCircuitOpen(): boolean {
+  if (cbOpen) {
+    if (Date.now() - lastFailureTime > CB_RESET_TIMEOUT) {
+      cbOpen = false;
+      failureCount = 0;
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+function recordFailure() {
+  const now = Date.now();
+  if (now - lastFailureTime > CB_RESET_TIMEOUT) {
+    failureCount = 1;
+  } else {
+    failureCount++;
+  }
+  lastFailureTime = now;
+  if (failureCount >= CB_THRESHOLD) {
+    cbOpen = true;
+  }
+}
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
 import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
