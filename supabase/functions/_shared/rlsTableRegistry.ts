@@ -76,6 +76,7 @@ export const RLS_TABLES_EXEMPT: string[] = [
   "scrape_results",
   "email_accounts",
   "workflow_runs",
+  "idempotency_keys",
 ];
 
 /**

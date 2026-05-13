@@ -40,6 +40,7 @@ interface Company {
   phone?: string;
   enriched: boolean;
   starred: boolean;
+  version: number;
   organization_id?: string | null;
 }
 
@@ -78,9 +79,9 @@ export const CompaniesView = () => {
           return (data ?? []).map((c) => ({
             id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
             ipcScore: c.ipc_score ?? 0, source: c.source, website: c.website ?? undefined,
-            employees: c.employees ?? "—", revenue: c.revenue ?? "—", email: c.email ?? undefined,
+            employees: c.employees ?? "—", revenue: c.revenue?.toString() ?? "—", email: c.email ?? undefined,
             phone: c.phone ?? undefined, enriched: c.enriched ?? false, starred: c.starred ?? false,
-            organization_id: c.organization_id ?? null,
+            version: c.version, organization_id: c.organization_id ?? null,
           })) as Company[];
         },
     staleTime: 15_000,
@@ -222,10 +223,18 @@ export const CompaniesView = () => {
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
     const company = companies.find((c) => c.id === id);
+    if (!company) return;
     queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) => old?.map((c) => (c.id === id ? { ...c, starred } : c)));
-    toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: company ? `"${company.name}"` : undefined });
-    const { error } = await db.from("companies").update({ starred }).eq("id", id);
-    if (error) { queryClient.invalidateQueries({ queryKey: ["companies-list"] }); toast({ title: "Erro ao favoritar", variant: "destructive" }); }
+    toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: `"${company.name}"` });
+    const { error } = await db.from("companies").update({ starred, version: company.version }).eq("id", id);
+    if (error) {
+      if (error.code === "PGRST116" || error.message?.includes("0 rows")) {
+        toast({ title: "Conflito detectado", description: "O registro foi alterado por outro usuário. Recarregando...", variant: "destructive" });
+      } else {
+        toast({ title: "Erro ao favoritar", variant: "destructive" });
+      }
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+    }
   }, [companies, queryClient, toast]);
 
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];

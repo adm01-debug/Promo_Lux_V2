@@ -19,6 +19,7 @@ interface Company {
   phone?: string;
   enriched: boolean;
   starred: boolean;
+  version: number;
 }
 
 const getScoreColor = (score: number) => {

@@ -558,6 +558,7 @@ export type Database = {
           starred: boolean | null
           updated_at: string
           user_id: string
+          version: number
           website: string | null
         }
         Insert: {
@@ -580,6 +581,7 @@ export type Database = {
           starred?: boolean | null
           updated_at?: string
           user_id?: string
+          version?: number
           website?: string | null
         }
         Update: {
@@ -602,6 +604,7 @@ export type Database = {
           starred?: boolean | null
           updated_at?: string
           user_id?: string
+          version?: number
           website?: string | null
         }
         Relationships: []
@@ -767,6 +770,7 @@ export type Database = {
           updated_at: string
           user_id: string
           value: number | null
+          version: number
         }
         Insert: {
           closed_at?: string | null
@@ -786,6 +790,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number | null
+          version?: number
         }
         Update: {
           closed_at?: string | null
@@ -805,6 +810,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           value?: number | null
+          version?: number
         }
         Relationships: [
           {
@@ -978,6 +984,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      idempotency_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          response_body: Json
+          status_code: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          response_body: Json
+          status_code: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          response_body?: Json
+          status_code?: number
+          user_id?: string
+        }
+        Relationships: []
       }
       intent_signals: {
         Row: {

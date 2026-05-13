@@ -216,6 +216,15 @@ export function fromOrg<T extends TableName>(table: T) {
             ? (target as any).update(sanitized)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             : (target as any).update(sanitized, options);
+            
+          // Suporte a optimistic locking via .match() se 'version' estiver presente
+          if (values && typeof values === "object" && "version" in (values as any)) {
+            const version = (values as any).version;
+            if (typeof version === "number") {
+              return q.eq("organization_id", orgId).eq("version", version);
+            }
+          }
+          
           return q.eq("organization_id", orgId);
         };
       }
