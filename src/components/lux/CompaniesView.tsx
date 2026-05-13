@@ -223,8 +223,9 @@ export const CompaniesView = () => {
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
     const company = companies.find((c) => c.id === id);
+    if (!company) return;
     queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) => old?.map((c) => (c.id === id ? { ...c, starred } : c)));
-    toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: company ? `"${company.name}"` : undefined });
+    toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: `"${company.name}"` });
     const { error } = await db.from("companies").update({ starred, version: company.version }).eq("id", id);
     if (error) {
       if (error.code === "PGRST116" || error.message?.includes("0 rows")) {
