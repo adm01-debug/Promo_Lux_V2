@@ -6,7 +6,7 @@ const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
-  "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+  "https://id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
 ];
 
 function getCorsHeaders(req: Request) {
@@ -14,7 +14,7 @@ function getCorsHeaders(req: Request) {
   const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, idempotency-key",
     "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
     "Vary": "Origin",
   };
@@ -177,6 +177,25 @@ serve(async (req) => {
 
     // CREATE JOB
     if (action === "create" && req.method === "POST") {
+      const idempotencyKey = req.headers.get("idempotency-key");
+      
+      if (idempotencyKey) {
+        const { data: existingKey } = await supabase
+          .from("idempotency_keys")
+          .select("response_body, status_code")
+          .eq("key", idempotencyKey)
+          .eq("user_id", userId)
+          .maybeSingle();
+          
+        if (existingKey) {
+          log.info("idempotency_hit", { key: idempotencyKey });
+          return new Response(JSON.stringify(existingKey.response_body), {
+            status: existingKey.status_code,
+            headers: { ...corsHeaders, "Content-Type": "application/json", "x-idempotency-hit": "true" },
+          });
+        }
+      }
+
       const parsed = CreateJobSchema.safeParse(await req.json());
       if (!parsed.success) {
         return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
@@ -210,6 +229,8 @@ serve(async (req) => {
       if (dbError) throw dbError;
 
       let externalId: string | null = null;
+      let responseBody: any = { id: dbJob.id, status: "pending" };
+      
       try {
         const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
           method: "POST",
@@ -234,6 +255,7 @@ serve(async (req) => {
         if (res.ok) {
           const result = await res.json();
           externalId = result.id || result.ID;
+          responseBody = { id: dbJob.id, external_id: externalId, status: "running" };
 
           await supabase
             .from("scrape_jobs")
@@ -244,13 +266,21 @@ serve(async (req) => {
         log.error("gmaps_api_create_error", { error: (err as Error).message });
       }
 
+      if (idempotencyKey) {
+        await supabase.from("idempotency_keys").insert({
+          user_id: userId,
+          key: idempotencyKey,
+          response_body: responseBody,
+          status_code: 200,
+        });
+      }
+
       const duration = Math.round(performance.now() - start);
       log.info("request_complete", { action, duration_ms: duration, job_id: dbJob.id, external_id: externalId });
 
-      return new Response(
-        JSON.stringify({ id: dbJob.id, external_id: externalId, status: externalId ? "running" : "pending" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify(responseBody), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
     }
 
     // DELETE JOB

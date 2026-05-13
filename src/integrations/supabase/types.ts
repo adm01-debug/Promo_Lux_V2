@@ -979,6 +979,33 @@ export type Database = {
           },
         ]
       }
+      idempotency_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          response_body: Json
+          status_code: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          response_body: Json
+          status_code: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          response_body?: Json
+          status_code?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       intent_signals: {
         Row: {
           company_id: string | null
