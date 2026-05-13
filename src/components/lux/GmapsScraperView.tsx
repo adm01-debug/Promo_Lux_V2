@@ -357,14 +357,25 @@ export const GmapsScraperView = () => {
                                   Importar & Qualificar IPC
                                 </Button>
                               )}
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="gap-1.5 text-xs text-destructive hover:text-destructive"
-                                onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(job.id); }}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" /> Deletar
-                              </Button>
+                              {job.status === "running" || job.status === "working" || job.status === "pending" ? (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="gap-1.5 text-xs text-warning hover:text-warning"
+                                  onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(job.id); }}
+                                >
+                                  <AlertCircle className="h-3.5 w-3.5" /> Cancelar
+                                </Button>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="gap-1.5 text-xs text-destructive hover:text-destructive"
+                                  onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(job.id); }}
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" /> Deletar
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </motion.div>
