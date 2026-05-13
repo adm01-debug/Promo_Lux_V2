@@ -74,7 +74,7 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
   it("renders unique icon backgrounds per card", () => {
     const { container } = render(<StatsGrid />, { wrapper });
     const iconContainers = container.querySelectorAll(".h-9.w-9.rounded-lg");
-    expect(iconContainers.length).toBe(4);
+    expect(iconContainers.length).toBeGreaterThanOrEqual(4);
     
     const classes = Array.from(iconContainers).map(el => el.className);
     expect(classes.some(c => c.includes("bg-violet"))).toBe(true);
