@@ -40,12 +40,13 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
     } as any);
   });
 
-  it("renders all 4 KPI cards", () => {
+  it("renders all 5 KPI cards", () => {
     render(<StatsGrid />, { wrapper });
     expect(screen.getByText("Workflows Ativos")).toBeInTheDocument();
-    expect(screen.getByText("Empresas Encontradas")).toBeInTheDocument();
-    expect(screen.getByText("Taxa de Enriquecimento")).toBeInTheDocument();
-    expect(screen.getByText("Raspagens Hoje")).toBeInTheDocument();
+    expect(screen.getByText("Total de Empresas")).toBeInTheDocument();
+    expect(screen.getByText("Receita em Pipeline")).toBeInTheDocument();
+    expect(screen.getByText("Taxa de Conversão")).toBeInTheDocument();
+    expect(screen.getByText("Integrações")).toBeInTheDocument();
   });
 
   it("shows loading skeletons when data is loading", () => {
