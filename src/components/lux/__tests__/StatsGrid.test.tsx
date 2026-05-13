@@ -119,9 +119,9 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
     (screen.getByText("Workflows Ativos").closest("[class*=glass]") as HTMLElement)?.click();
   });
 
-  it("renders in 4-column grid on large screens", () => {
+  it("renders in 5-column grid on large screens", () => {
     const { container } = render(<StatsGrid />, { wrapper });
     const grid = container.querySelector(".grid");
-    expect(grid?.className).toContain("lg:grid-cols-4");
+    expect(grid?.className).toContain("lg:grid-cols-5");
   });
 });
