@@ -122,6 +122,14 @@ serve(async (req) => {
       let externalJobs: Record<string, unknown>[] = [];
       let apiOnline = false;
       try {
+        const isHealthy = await checkCircuitBreaker(supabase, "gmaps-api");
+        if (!isHealthy) {
+          log.warn("circuit_breaker_open", { service: "gmaps-api" });
+          return new Response(JSON.stringify({ jobs: [], api_online: false, circuit_breaker: "open" }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
         const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
           signal: AbortSignal.timeout(8000),
         });
