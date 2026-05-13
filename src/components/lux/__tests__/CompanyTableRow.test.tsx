@@ -39,6 +39,7 @@ describe("CompanyTableRow", () => {
     enriched: true,
     starred: false,
     website: "https://finedge.com",
+    version: 1,
   };
 
   const defaultProps = {
