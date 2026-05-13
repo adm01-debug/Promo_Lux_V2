@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
 import { useCan } from "@/hooks/usePermissions";
+import { createTraceparent } from "@/lib/utils";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
