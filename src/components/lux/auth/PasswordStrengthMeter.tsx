@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, ShieldCheck, ShieldAlert, Check, X } from "lucide-react";
+import { Shield, ShieldCheck, ShieldAlert, Check, X, AlertTriangle } from "lucide-react";
 
 interface PasswordStrengthMeterProps {
   password: string;
@@ -101,6 +101,20 @@ export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) 
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {score < 3 && (
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }}
+          className="flex items-center gap-1.5 p-2 rounded bg-destructive/10 border border-destructive/20"
+        >
+          <AlertTriangle className="h-3 w-3 text-destructive" />
+          <p className="text-[10px] text-destructive leading-tight">
+            Senha muito simples. Use caracteres variados para proteger sua conta multi-tenant.
+          </p>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
+
