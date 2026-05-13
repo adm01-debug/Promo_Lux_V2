@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
+import { MFASetup } from "@/components/lux/settings/MFASetup";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";
 
