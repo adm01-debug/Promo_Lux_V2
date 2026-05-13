@@ -136,6 +136,7 @@ serve(async (req) => {
         if (res.ok) {
           externalJobs = await res.json();
           apiOnline = true;
+          await reportSuccess(supabase, "gmaps-api");
 
           for (const job of externalJobs) {
             const status = (job.Status as string) === "ok" ? "completed" : job.Status as string;
