@@ -110,7 +110,7 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
   it("computes match rate correctly", () => {
     render(<StatsGrid />, { wrapper });
     // 75/150 = 50%
-    expect(screen.getByText("Acima da média")).toBeInTheDocument();
+    expect(screen.getByText("50% enr.")).toBeInTheDocument();
   });
 
   it("navigates to workflows on Workflows card click", () => {
