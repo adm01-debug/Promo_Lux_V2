@@ -26,6 +26,7 @@ import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
 import { PermissionsMatrix } from "@/components/lux/permissions/PermissionsMatrix";
 import { MembershipAuditLog } from "@/components/lux/organizations/MembershipAuditLog";
+import { MemberRow } from "@/components/lux/organizations/MemberRow";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { downloadCSV } from "@/lib/exportCSV";
 
@@ -417,82 +418,19 @@ export const OrganizationsView = () => {
                 <div className="divide-y divide-border/20">
                   {filteredMembers.length === 0 ? (
                     <div className="p-8 text-center text-sm text-muted-foreground">Nenhum membro neste filtro.</div>
-                  ) : filteredMembers.map((m, i) => {
-                    const isOwner = activeOrg.organizations.owner_id === m.user_id;
-                    const isMe = m.user_id === user?.id;
-                    const displayName = isMe
-                      ? "Você"
-                      : m.profile?.full_name?.trim() || `${m.user_id.slice(0, 8)}…`;
-                    const initials = (m.profile?.full_name || m.user_id).slice(0, 2).toUpperCase();
-                    return (
-                      <motion.div
+                    ) : filteredMembers.map((m, i) => (
+                      <MemberRow
                         key={m.id}
-                        id={`org-member-${m.id}`}
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.03 }}
-                        className={`p-4 flex items-center justify-between gap-3 hover:bg-secondary/20 transition-colors ${
-                          highlightedMemberId === m.id
-                            ? "bg-primary/10 ring-1 ring-primary/40"
-                            : ""
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <Avatar className="h-9 w-9 flex-shrink-0 border border-border/40">
-                            {m.profile?.avatar_url && <AvatarImage src={m.profile.avatar_url} alt={displayName} />}
-                            <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
-                              {m.profile?.full_name ? initials : <UserCog className="h-4 w-4" />}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-foreground truncate">
-                              {displayName}
-                              {isMe && <span className="ml-1.5 text-[10px] text-muted-foreground">(você)</span>}
-                            </p>
-                            <p className="text-[10px] text-muted-foreground">
-                              Entrou em {new Date(m.created_at).toLocaleDateString("pt-BR")}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          {isOwner && (
-                            <Badge variant="outline" className="text-[10px] gap-1 bg-primary/15 border-primary/30 text-primary">
-                              <Shield className="h-3 w-3" /> Owner
-                            </Badge>
-                          )}
-                          {isAdmin && !isOwner ? (
-                            <Select
-                              value={m.role}
-                              onValueChange={(v) => handleRoleChange(m, v as AppRole)}
-                            >
-                              <SelectTrigger className="h-8 w-[110px] text-xs"><SelectValue /></SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                <SelectItem value="sdr">SDR</SelectItem>
-                                <SelectItem value="viewer">Viewer</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          ) : (
-                            <Badge variant="outline" className={`text-[10px] ${ROLE_COLOR[m.role]}`}>
-                              {ROLE_LABEL[m.role]}
-                            </Badge>
-                          )}
-                          {(isAdmin && !isOwner) || isMe ? (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-                              disabled={isOwner}
-                              onClick={() => setRemoveTarget({ id: m.id, label: displayName, isMe })}
-                              title={isMe ? "Sair do workspace" : "Remover membro"}
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
-                          ) : null}
-                        </div>
-                      </motion.div>
-                    );
-                  })}
+                        member={m}
+                        isOwner={activeOrg.organizations.owner_id === m.user_id}
+                        isMe={m.user_id === user?.id}
+                        isAdmin={isAdmin}
+                        highlightedMemberId={highlightedMemberId}
+                        index={i}
+                        onRoleChange={handleRoleChange}
+                        onRemove={(member) => setRemoveTarget({ id: member.id, label: member.user_id === user?.id ? "Você" : member.profile?.full_name?.trim() || `${member.user_id.slice(0, 8)}…`, isMe: member.user_id === user?.id })}
+                      />
+                    ))}
                 </div>
               </div>
 
