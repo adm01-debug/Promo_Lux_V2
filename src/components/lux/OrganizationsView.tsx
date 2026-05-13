@@ -29,6 +29,8 @@ import { MembershipAuditLog } from "@/components/lux/organizations/MembershipAud
 import { MemberRow } from "@/components/lux/organizations/MemberRow";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { downloadCSV } from "@/lib/exportCSV";
+import { WorkspaceSelector } from "./organizations/WorkspaceSelector";
+import { InviteSection } from "./organizations/InviteSection";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
