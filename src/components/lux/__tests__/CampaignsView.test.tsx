@@ -42,6 +42,15 @@ vi.mock("@/contexts/AuthContext", () => ({
   useAuth: vi.fn(() => ({ user: { id: "u1" } })),
 }));
 
+vi.mock("@/hooks/usePermissions", () => ({
+  useCan: () => true,
+  usePermissions: () => ({ role: "admin", isAdmin: true, can: () => true }),
+}));
+
+vi.mock("@/contexts/DemoContext", () => ({
+  useDemo: () => ({ isDemoMode: false }),
+}));
+
 vi.mock("@/hooks/use-toast", () => ({
   toast: vi.fn(),
 }));
