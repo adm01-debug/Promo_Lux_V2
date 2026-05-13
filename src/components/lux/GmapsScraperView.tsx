@@ -209,10 +209,10 @@ export const GmapsScraperView = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-foreground">Modo rápido</p>
-                    <p className="text-[10px] text-muted-foreground">Menos detalhes, mais velocidade</p>
+                    <p className="text-sm text-foreground">Sincronização automática</p>
+                    <p className="text-[10px] text-muted-foreground">Importa para o CRM assim que concluir</p>
                   </div>
-                  <Switch checked={fastMode} onCheckedChange={setFastMode} />
+                  <Switch checked={autoSync} onCheckedChange={setAutoSync} />
                 </div>
                 <Button onClick={handleCreate} disabled={createMutation.isPending || !jobName.trim() || !keywords.trim()} className="w-full gap-2">
                   {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
