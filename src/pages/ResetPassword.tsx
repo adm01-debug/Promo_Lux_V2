@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <PasswordInput
             id="new-password"
-            label="Nova senha (mín. 8 caracteres)"
+            label="Nova senha (mín. 8 caracteres e esp.)"
             value={password}
             onChange={setPassword}
             autoComplete="new-password"
