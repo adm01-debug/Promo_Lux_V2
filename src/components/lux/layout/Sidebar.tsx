@@ -23,6 +23,7 @@ import {
   Webhook,
   ShieldAlert,
   ShieldCheck,
+  Activity,
   X,
   PanelLeftClose,
   PanelLeft,
