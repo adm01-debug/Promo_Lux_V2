@@ -135,7 +135,7 @@ export function LoginCard(props: LoginCardProps) {
                     <EmailInput id="signup-email" value={email} onChange={setEmail} />
                     <PasswordInput
                       id="signup-password"
-                      label="Senha (mín. 8 caracteres)"
+                      label="Senha (mín. 8 caracteres e esp.)"
                       value={password}
                       onChange={setPassword}
                       autoComplete="new-password"
