@@ -45,6 +45,11 @@ vi.mock("@/lib/api/workflows", () => ({
   },
 }));
 
+vi.mock("@/hooks/usePermissions", () => ({
+  useCan: () => true,
+  usePermissions: () => ({ role: "admin", isAdmin: true, can: () => true }),
+}));
+
 vi.mock("@/hooks/use-toast", () => ({
   toast: vi.fn(),
 }));
