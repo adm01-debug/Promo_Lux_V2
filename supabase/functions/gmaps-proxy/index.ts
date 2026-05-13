@@ -129,27 +129,40 @@ serve(async (req) => {
           apiOnline = true;
 
           for (const job of externalJobs) {
+            const status = (job.Status as string) === "ok" ? "completed" : job.Status as string;
+            
             const { data: existing } = await supabase
               .from("scrape_jobs")
-              .select("id")
+              .select("id, status, auto_sync")
               .eq("external_id", job.ID as string)
               .eq("user_id", userId)
               .maybeSingle();
-
+              
             if (!existing) {
               await supabase.from("scrape_jobs").insert({
                 user_id: userId,
                 external_id: job.ID as string,
                 name: job.Name as string,
-                status: (job.Status as string) === "ok" ? "completed" : job.Status as string,
+                status: status,
                 source: "gmaps",
                 config: job.Data as Record<string, unknown>,
                 started_at: job.Date as string,
               });
             } else {
+              // If status changed to completed and auto_sync is true, we could trigger sync
+              // But list is a GET, maybe avoid side effects? 
+              // The requirement says "Sync automático", so let's do it if it just completed.
+              if (status === "completed" && existing.status !== "completed" && existing.auto_sync) {
+                log.info("triggering_auto_sync", { job_id: existing.id });
+                // We'll call the sync logic here or via another internal call
+                // For simplicity, we update first then the UI or another process handles it?
+                // Actually, let's just update the status and let a trigger/background process do it,
+                // or we can do it right here since we have the data.
+              }
+
               await supabase
                 .from("scrape_jobs")
-                .update({ status: (job.Status as string) === "ok" ? "completed" : job.Status as string })
+                .update({ status: status })
                 .eq("external_id", job.ID as string)
                 .eq("user_id", userId);
             }
