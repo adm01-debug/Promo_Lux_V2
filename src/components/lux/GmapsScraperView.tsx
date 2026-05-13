@@ -113,6 +113,7 @@ export const GmapsScraperView = () => {
       depth,
       email: extractEmail,
       fast_mode: fastMode,
+      auto_sync: autoSync,
     });
     if (!result.success) {
       const firstError = Object.values(result.errors)[0];
@@ -127,6 +128,7 @@ export const GmapsScraperView = () => {
       depth,
       email: extractEmail,
       fast_mode: fastMode,
+      auto_sync: autoSync,
     });
   };
 
