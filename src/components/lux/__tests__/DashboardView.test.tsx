@@ -132,7 +132,7 @@ describe("DashboardView — P1 Chart Legibility", () => {
   it("renders StatsGrid section", () => {
     render(<DashboardView />, { wrapper });
     expect(screen.getByText("Workflows Ativos")).toBeInTheDocument();
-    expect(screen.getByText("Empresas Encontradas")).toBeInTheDocument();
+    expect(screen.getByText("Total de Empresas")).toBeInTheDocument();
   });
 
   it("renders greeting message", () => {
