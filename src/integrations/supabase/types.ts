@@ -140,6 +140,7 @@ export type Database = {
           actor_id: string | null
           created_at: string
           id: string
+          metadata: Json | null
           new_data: Json | null
           old_data: Json | null
           organization_id: string | null
@@ -151,6 +152,7 @@ export type Database = {
           actor_id?: string | null
           created_at?: string
           id?: string
+          metadata?: Json | null
           new_data?: Json | null
           old_data?: Json | null
           organization_id?: string | null
@@ -162,6 +164,7 @@ export type Database = {
           actor_id?: string | null
           created_at?: string
           id?: string
+          metadata?: Json | null
           new_data?: Json | null
           old_data?: Json | null
           organization_id?: string | null
@@ -1047,30 +1050,30 @@ export type Database = {
       }
       feature_flags: {
         Row: {
+          config: Json | null
           created_at: string
-          description: string | null
-          enabled: boolean | null
+          flag_key: string | null
           id: string
-          name: string
-          rules: Json | null
+          is_enabled: boolean | null
+          organization_id: string | null
           updated_at: string
         }
         Insert: {
+          config?: Json | null
           created_at?: string
-          description?: string | null
-          enabled?: boolean | null
+          flag_key?: string | null
           id?: string
-          name: string
-          rules?: Json | null
+          is_enabled?: boolean | null
+          organization_id?: string | null
           updated_at?: string
         }
         Update: {
+          config?: Json | null
           created_at?: string
-          description?: string | null
-          enabled?: boolean | null
+          flag_key?: string | null
           id?: string
-          name?: string
-          rules?: Json | null
+          is_enabled?: boolean | null
+          organization_id?: string | null
           updated_at?: string
         }
         Relationships: []
