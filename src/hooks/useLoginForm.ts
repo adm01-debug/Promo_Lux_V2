@@ -6,7 +6,7 @@ import { toast } from "@/hooks/use-toast";
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
 
 export function useLoginForm() {
-  const { checkAndRecord, isLocked } = useRateLimit("login", { maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
+  const { checkAndRecord, isLocked, checkServerRateLimit } = useRateLimit("login", { maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
   const [lockMsg, setLockMsg] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
