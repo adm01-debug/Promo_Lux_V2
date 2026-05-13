@@ -42,6 +42,17 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
+// Mock withOrg and db to prevent MissingOrgContextError in tests
+vi.mock("@/integrations/supabase/withOrg", () => ({
+  db: {
+    from: (table: string) => ({
+      insert: mockInsert,
+      select: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ data: [], error: null }) }),
+    }),
+  },
+  getActiveOrgId: () => "test-org-id",
+}));
+
 import { renderHook } from "@testing-library/react";
 import { useRealtimeCompanies } from "../useRealtimeCompanies";
 
