@@ -71,9 +71,14 @@ export const gmapsApi = {
   },
 
   async createJob(data: CreateJobRequest): Promise<{ id: string; external_id: string | null; status: string }> {
+    // Transform flat request to structured schema
+    const { name, ...config } = data;
     return callProxy("create", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({ name, config }),
+      headers: {
+        "idempotency-key": crypto.randomUUID(),
+      }
     });
   },
 

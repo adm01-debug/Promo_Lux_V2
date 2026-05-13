@@ -1,52 +1,76 @@
-import { useRef, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { toast } from "./use-toast";
 
 interface RateLimitConfig {
   maxAttempts: number;
   windowMs: number;
-  lockoutMs: number;
+  lockoutMs?: number;
 }
 
-const DEFAULT_CONFIG: RateLimitConfig = {
-  maxAttempts: 5,
-  windowMs: 60_000,      // 1 minute window
-  lockoutMs: 300_000,    // 5 minute lockout
-};
+export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?: RateLimitConfig) {
+  // Overload support for both (key, config) and (config)
+  const key = typeof configOrKey === "string" ? configOrKey : "global";
+  const config = typeof configOrKey === "object" ? configOrKey : (maybeConfig || { maxAttempts: 5, windowMs: 60000 });
+  const lockoutMs = config.lockoutMs || config.windowMs;
 
-export function useRateLimit(config: Partial<RateLimitConfig> = {}) {
-  const { maxAttempts, windowMs, lockoutMs } = { ...DEFAULT_CONFIG, ...config };
-
-  const attemptsRef = useRef<number[]>([]);
-  const lockedUntilRef = useRef<number>(0);
-
-  const isLocked = useCallback(() => {
-    if (Date.now() < lockedUntilRef.current) {
-      const remainingSec = Math.ceil((lockedUntilRef.current - Date.now()) / 1000);
-      return { locked: true, remainingSec };
-    }
-    return { locked: false, remainingSec: 0 };
-  }, []);
-
-  const recordAttempt = useCallback(() => {
-    const now = Date.now();
-
-    // Clear old attempts outside window
-    attemptsRef.current = attemptsRef.current.filter((t) => now - t < windowMs);
-    attemptsRef.current.push(now);
-
-    if (attemptsRef.current.length >= maxAttempts) {
-      lockedUntilRef.current = now + lockoutMs;
-      attemptsRef.current = [];
-      return { locked: true, remainingSec: Math.ceil(lockoutMs / 1000) };
-    }
-
-    return { locked: false, remainingSec: 0 };
-  }, [maxAttempts, windowMs, lockoutMs]);
+  const [locked, setLocked] = useState(false);
+  const [remainingSec, setRemainingSec] = useState(0);
 
   const checkAndRecord = useCallback(() => {
-    const lockStatus = isLocked();
-    if (lockStatus.locked) return lockStatus;
-    return recordAttempt();
-  }, [isLocked, recordAttempt]);
+    const attemptsKey = `lux:attempts:${key}`;
+    const lockKey = `lux:lock:${key}`;
+    const now = Date.now();
 
-  return { isLocked, recordAttempt, checkAndRecord };
+    // Check existing lock
+    const lockUntil = localStorage.getItem(lockKey);
+    if (lockUntil) {
+      const remaining = Math.ceil((parseInt(lockUntil) - now) / 1000);
+      if (remaining > 0) {
+        return { locked: true, remainingSec: remaining };
+      }
+      localStorage.removeItem(lockKey);
+    }
+
+    const attemptsRaw = localStorage.getItem(attemptsKey);
+    let attempts: number[] = attemptsRaw ? JSON.parse(attemptsRaw) : [];
+    
+    attempts = attempts.filter(t => now - t < config.windowMs);
+    attempts.push(now);
+    localStorage.setItem(attemptsKey, JSON.stringify(attempts));
+
+    if (attempts.length >= config.maxAttempts) {
+      const lockTime = now + lockoutMs;
+      localStorage.setItem(lockKey, lockTime.toString());
+      const rem = Math.ceil(lockoutMs / 1000);
+      setLocked(true);
+      setRemainingSec(rem);
+      return { locked: true, remainingSec: rem };
+    }
+
+    return { locked: false, remainingSec: 0 };
+  }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
+
+  const isLocked = useCallback(() => {
+    const lockUntil = localStorage.getItem(`lux:lock:${key}`);
+    if (!lockUntil) return { locked: false, remainingSec: 0 };
+    const remaining = Math.ceil((parseInt(lockUntil) - Date.now()) / 1000);
+    return remaining > 0 ? { locked: true, remainingSec: remaining } : { locked: false, remainingSec: 0 };
+  }, [key]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const status = isLocked();
+      setLocked(status.locked);
+      setRemainingSec(status.remainingSec);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isLocked]);
+
+  return { 
+    locked: isLocked().locked, 
+    remainingSec: isLocked().remainingSec, 
+    recordAttempt: () => checkAndRecord().locked,
+    checkAndRecord,
+    isLocked
+  };
 }

@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
+import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -45,16 +46,16 @@ function badRequest(corsHeaders: Record<string, string>, details: unknown) {
 const CreateJobSchema = z.object({
   name: z.string().min(1).max(255),
   keywords: z.array(z.string().min(1).max(200)).min(1).max(20),
-  lang: z.string().min(2).max(5).default("pt"),
-  zoom: z.number().int().min(1).max(21).default(15),
-  lat: z.string().max(30).default("0"),
-  lon: z.string().max(30).default("0"),
-  fast_mode: z.boolean().default(false),
-  radius: z.number().int().min(100).max(100000).default(10000),
-  depth: z.number().int().min(1).max(10).default(1),
-  email: z.boolean().default(true),
-  max_time: z.number().int().positive().default(480000000000),
-  proxies: z.array(z.string().max(500)).max(10).default([]),
+  lang: z.string().min(2).max(5).optional(),
+  zoom: z.number().optional(),
+  lat: z.string().optional(),
+  lon: z.string().optional(),
+  fast_mode: z.boolean().optional(),
+  radius: z.number().optional(),
+  depth: z.number().optional(),
+  email: z.boolean().optional(),
+  max_time: z.number().optional(),
+  proxies: z.array(z.string()).optional(),
 });
 
 const SyncResultsSchema = z.object({
@@ -196,11 +197,11 @@ serve(async (req) => {
         }
       }
 
-      const parsed = CreateJobSchema.safeParse(await req.json());
+      const parsed = CreateScrapeJobSchema.safeParse(await req.json());
       if (!parsed.success) {
         return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
-      const body = parsed.data;
+      const body = { name: parsed.data.name, ...parsed.data.config };
 
       const { data: dbJob, error: dbError } = await supabase
         .from("scrape_jobs")
