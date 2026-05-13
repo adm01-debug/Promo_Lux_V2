@@ -180,6 +180,7 @@ serve(async (req) => {
         }
       } catch (err) {
         log.error("gmaps_api_list_error", { error: (err as Error).message });
+        await reportFailure(supabase, "gmaps-api");
       }
 
       const { data: dbJobs, error } = await supabase
