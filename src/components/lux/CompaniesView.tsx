@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
 import { useCan } from "@/hooks/usePermissions";
+import { getTraceparent, createTraceparent } from "@/lib/tracing";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -74,7 +75,8 @@ export const CompaniesView = () => {
     queryFn: isDemoMode
       ? () => DEMO_COMPANIES_FULL as unknown as Company[]
       : async () => {
-          const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false });
+          const traceId = createTraceparent();
+          const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false }).headers({ "x-trace-id": traceId });
           if (error) throw error;
           return (data ?? []).map((c) => ({
             id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
