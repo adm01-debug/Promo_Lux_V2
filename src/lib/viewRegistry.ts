@@ -25,6 +25,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   integrations: () => import("@/components/lux/IntegrationsView"),
   "org-violations": () => import("@/components/lux/OrgViolationsView"),
   "rls-discovery": () => import("@/components/lux/settings/RLSDiscoveryView"),
+  monitoring: () => import("@/components/lux/monitoring/MonitoringView"),
 };
 
 // Cache to avoid double-prefetch
@@ -57,4 +58,5 @@ export const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentTyp
   integrations: lazy(() => import("@/components/lux/IntegrationsView").then(m => ({ default: m.IntegrationsView }))),
   "org-violations": lazy(() => import("@/components/lux/OrgViolationsView").then(m => ({ default: m.OrgViolationsView }))),
   "rls-discovery": lazy(() => import("@/components/lux/settings/RLSDiscoveryView").then(m => ({ default: m.RLSDiscoveryView }))),
+  monitoring: lazy(() => import("@/components/lux/monitoring/MonitoringView").then(m => ({ default: m.MonitoringView }))),
 };
