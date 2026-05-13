@@ -6,7 +6,20 @@ import { MemoryRouter } from "react-router-dom";
 
 vi.mock("@/hooks/useDashboardData", () => ({
   useDashboardStats: () => ({
-    data: { activeWorkflows: 2, runningWorkflows: 1, totalCompanies: 100, enrichedCompanies: 50, todayScrapeJobs: 3, totalScrapeJobs: 5, completedScrapeJobs: 3 },
+    data: { 
+      activeWorkflows: 2, 
+      runningWorkflows: 1, 
+      totalCompanies: 100, 
+      enrichedCompanies: 50, 
+      todayScrapeJobs: 3, 
+      totalScrapeJobs: 5, 
+      completedScrapeJobs: 3, 
+      dealsValue: 50000, 
+      totalDeals: 5, 
+      conversionRate: 15,
+      totalApiKeys: 2,
+      totalWebhooks: 1
+    },
     isLoading: false,
   }),
   useRecentCompanies: () => ({ data: [], isLoading: false }),
