@@ -31,6 +31,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { downloadCSV } from "@/lib/exportCSV";
 import { WorkspaceSelector } from "./organizations/WorkspaceSelector";
 import { InviteSection } from "./organizations/InviteSection";
+import { ActivityHistory } from "./organizations/ActivityHistory";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
