@@ -6,7 +6,7 @@ import { toast } from "@/hooks/use-toast";
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
 
 export function useLoginForm() {
-  const { checkAndRecord, isLocked } = useRateLimit("login", { maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
+  const { checkAndRecord, isLocked, checkServerRateLimit } = useRateLimit("login", { maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
   const [lockMsg, setLockMsg] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +25,8 @@ export function useLoginForm() {
 
   const locked = isLocked();
 
-  const guardRate = () => {
+  const guardRate = async () => {
+    // 1. Check local storage first (instant)
     const status = checkAndRecord();
     if (status.locked) {
       const msg = `Muitas tentativas. Tente novamente em ${status.remainingSec}s.`;
@@ -33,12 +34,24 @@ export function useLoginForm() {
       toast({ title: "Acesso bloqueado", description: msg, variant: "destructive" });
       return true;
     }
+
+    // 2. Check server-side for stronger enforcement
+    if (email) {
+      const isServerLocked = await checkServerRateLimit(email);
+      if (isServerLocked) {
+        const msg = "Acesso temporariamente bloqueado por segurança (servidor).";
+        setLockMsg(msg);
+        toast({ title: "Segurança: Bloqueio Ativo", description: msg, variant: "destructive" });
+        return true;
+      }
+    }
+
     setLockMsg(null);
     return false;
   };
 
   const handleGoogleLogin = async () => {
-    if (guardRate()) return;
+    if (await guardRate()) return;
     setGoogleLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
@@ -51,7 +64,7 @@ export function useLoginForm() {
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (guardRate()) return;
+    if (await guardRate()) return;
 
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
@@ -77,7 +90,7 @@ export function useLoginForm() {
 
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (guardRate()) return;
+    if (await guardRate()) return;
 
     const result = signupSchema.safeParse({ email, password });
     if (!result.success) {
@@ -111,7 +124,7 @@ export function useLoginForm() {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (guardRate()) return;
+    if (await guardRate()) return;
     const trimmed = resetEmail.trim();
     if (!trimmed) return;
 

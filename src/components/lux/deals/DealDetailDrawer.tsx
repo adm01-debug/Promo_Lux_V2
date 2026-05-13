@@ -37,7 +37,7 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
           <SheetTitle className="flex items-start justify-between gap-3">
             <Input
               defaultValue={deal.title}
-              onBlur={(e) => e.target.value !== deal.title && updateDeal.mutate({ id: deal.id, title: e.target.value })}
+              onBlur={(e) => e.target.value !== deal.title && updateDeal.mutate({ id: deal.id, title: e.target.value, version: deal.version })}
               className="text-lg font-semibold border-0 px-0 bg-transparent focus-visible:ring-0"
             />
             <Button
@@ -54,12 +54,12 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Valor</label>
             <Input
               type="number" defaultValue={deal.value ?? 0}
-              onBlur={(e) => updateDeal.mutate({ id: deal.id, value: Number(e.target.value) })}
+              onBlur={(e) => updateDeal.mutate({ id: deal.id, value: Number(e.target.value), version: deal.version })}
             />
           </div>
           <div>
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Estágio</label>
-            <Select value={deal.stage_id} onValueChange={(v) => updateDeal.mutate({ id: deal.id, stage_id: v })}>
+            <Select value={deal.stage_id} onValueChange={(v) => updateDeal.mutate({ id: deal.id, stage_id: v, version: deal.version })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 {stages.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
@@ -68,7 +68,7 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
           </div>
           <div>
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Prioridade</label>
-            <Select value={deal.priority} onValueChange={(v) => updateDeal.mutate({ id: deal.id, priority: v as Deal["priority"] })}>
+            <Select value={deal.priority} onValueChange={(v) => updateDeal.mutate({ id: deal.id, priority: v as Deal["priority"], version: deal.version })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="low">Baixa</SelectItem>
@@ -81,7 +81,7 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Fech. esperado</label>
             <Input
               type="date" defaultValue={deal.expected_close_date ?? ""}
-              onBlur={(e) => updateDeal.mutate({ id: deal.id, expected_close_date: e.target.value || null })}
+              onBlur={(e) => updateDeal.mutate({ id: deal.id, expected_close_date: e.target.value || null, version: deal.version })}
             />
           </div>
         </div>
@@ -90,7 +90,7 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
           <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Descrição</label>
           <Textarea
             defaultValue={deal.description ?? ""} rows={3}
-            onBlur={(e) => updateDeal.mutate({ id: deal.id, description: e.target.value || null })}
+            onBlur={(e) => updateDeal.mutate({ id: deal.id, description: e.target.value || null, version: deal.version })}
           />
         </div>
 

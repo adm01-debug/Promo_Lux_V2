@@ -30,6 +30,7 @@ export interface Deal {
   position: number;
   created_at: string;
   updated_at: string;
+  version: number;
 }
 
 export function useDealStages() {
@@ -152,7 +153,7 @@ export function useDeals() {
   });
 
   const updateDeal = useMutation({
-    mutationFn: async ({ id, ...patch }: Partial<Deal> & { id: string }) => {
+    mutationFn: async ({ id, ...patch }: Partial<Deal> & { id: string; version?: number }) => {
       const { error } = await db.from("deals").update(patch).eq("id", id);
       if (error) throw error;
     },

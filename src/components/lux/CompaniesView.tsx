@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
 import { useCan } from "@/hooks/usePermissions";
+import { createTraceparent } from "@/lib/utils";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -76,7 +77,7 @@ export const CompaniesView = () => {
       : async () => {
           const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false });
           if (error) throw error;
-          return (data ?? []).map((c) => ({
+          return (data ?? []).map((c: any) => ({
             id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
             ipcScore: c.ipc_score ?? 0, source: c.source, website: c.website ?? undefined,
             employees: c.employees ?? "—", revenue: c.revenue?.toString() ?? "—", email: c.email ?? undefined,

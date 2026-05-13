@@ -240,7 +240,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         updateData.lng = geoCoords.lng;
       }
 
-      const { error } = await db.from("companies").update(updateData).eq("id", company.id);
+      const { error } = await db.from("companies").update({ ...updateData, version: (company as any).version }).eq("id", company.id);
       if (error) throw error;
 
       toast({ title: "Empresa atualizada!", description: `"${name}" foi atualizada com sucesso.` });
