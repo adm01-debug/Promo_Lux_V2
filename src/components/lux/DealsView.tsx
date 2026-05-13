@@ -63,7 +63,7 @@ export function DealsView() {
     }
     if (!targetStageId || targetStageId === dragged.stage_id) return;
 
-    updateDeal.mutate({ id: dragged.id, stage_id: targetStageId });
+    updateDeal.mutate({ id: dragged.id, stage_id: targetStageId, version: dragged.version });
   };
 
   return (
