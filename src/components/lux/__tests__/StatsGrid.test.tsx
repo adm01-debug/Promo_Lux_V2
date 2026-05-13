@@ -23,6 +23,11 @@ const mockStats = {
   todayScrapeJobs: 5,
   totalScrapeJobs: 10,
   completedScrapeJobs: 7,
+  dealsValue: 250000,
+  totalDeals: 12,
+  conversionRate: 18,
+  totalApiKeys: 3,
+  totalWebhooks: 2
 };
 
 const wrapper = ({ children }: any) => <TooltipProvider>{children}</TooltipProvider>;
