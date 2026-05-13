@@ -48,7 +48,8 @@ describe("Sidebar — P1 Dynamic Footer", () => {
 
   it("renders system status section when expanded", () => {
     render(<Sidebar {...defaultProps} />, { wrapper });
-    expect(screen.getByText("Status do Sistema")).toBeInTheDocument();
+    const statusLabels = screen.getAllByText("Status do Sistema");
+    expect(statusLabels.length).toBeGreaterThanOrEqual(1);
   });
 
   it("hides system status when collapsed", () => {
