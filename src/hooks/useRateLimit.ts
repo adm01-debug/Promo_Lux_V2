@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { toast } from "./use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RateLimitConfig {
   maxAttempts: number;
@@ -7,8 +7,12 @@ interface RateLimitConfig {
   lockoutMs?: number;
 }
 
+/**
+ * Hook de Rate Limit Híbrido:
+ * - LocalStorage para resposta instantânea na UI.
+ * - Edge Function para segurança server-side real (anti-burlagem).
+ */
 export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?: RateLimitConfig) {
-  // Overload support for both (key, config) and (config)
   const key = typeof configOrKey === "string" ? configOrKey : "global";
   const config = typeof configOrKey === "object" ? configOrKey : (maybeConfig || { maxAttempts: 5, windowMs: 60000 });
   const lockoutMs = config.lockoutMs || config.windowMs;
@@ -16,12 +20,35 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   const [locked, setLocked] = useState(false);
   const [remainingSec, setRemainingSec] = useState(0);
 
+  /**
+   * Verifica o rate limit no servidor via Edge Function.
+   * Chamada em momentos críticos (login, signup, password reset).
+   */
+  const checkServerRateLimit = useCallback(async (identifier: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("auth-rate-limit", {
+        body: { identifier },
+      });
+
+      if (error) throw error;
+
+      if (data.locked) {
+        setLocked(true);
+        setRemainingSec(data.remainingSec || 900); // Default 15 min
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error("[useRateLimit] Server check failed:", err);
+      return false; // Fail open no client para não bloquear legítimos se a function cair
+    }
+  }, []);
+
   const checkAndRecord = useCallback(() => {
     const attemptsKey = `lux:attempts:${key}`;
     const lockKey = `lux:lock:${key}`;
     const now = Date.now();
 
-    // Check existing lock
     const lockUntil = localStorage.getItem(lockKey);
     if (lockUntil) {
       const remaining = Math.ceil((parseInt(lockUntil) - now) / 1000);
@@ -60,17 +87,24 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   useEffect(() => {
     const interval = setInterval(() => {
       const status = isLocked();
-      setLocked(status.locked);
-      setRemainingSec(status.remainingSec);
+      if (status.locked) {
+        setLocked(true);
+        setRemainingSec(status.remainingSec);
+      } else if (!locked) {
+        setLocked(false);
+        setRemainingSec(0);
+      }
     }, 1000);
     return () => clearInterval(interval);
-  }, [isLocked]);
+  }, [isLocked, locked]);
 
   return { 
-    locked: isLocked().locked, 
-    remainingSec: isLocked().remainingSec, 
+    locked, 
+    remainingSec, 
     recordAttempt: () => checkAndRecord().locked,
     checkAndRecord,
+    checkServerRateLimit,
     isLocked
   };
 }
+
