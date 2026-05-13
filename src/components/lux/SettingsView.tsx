@@ -214,6 +214,15 @@ export const SettingsView = () => {
 
               <Separator className="bg-border/30" />
 
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-primary" /> Autenticação de Dois Fatores
+                </h4>
+                <MFASetup />
+              </div>
+
+              <Separator className="bg-border/30" />
+
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
                   <RotateCcw className="h-4 w-4 text-primary" /> Tour de Onboarding
