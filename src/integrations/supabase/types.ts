@@ -537,6 +537,36 @@ export type Database = {
         }
         Relationships: []
       }
+      circuit_breakers: {
+        Row: {
+          failure_count: number | null
+          last_failure_at: string | null
+          opened_at: string | null
+          reset_timeout_ms: number | null
+          service_name: string
+          state: string
+          threshold: number | null
+        }
+        Insert: {
+          failure_count?: number | null
+          last_failure_at?: string | null
+          opened_at?: string | null
+          reset_timeout_ms?: number | null
+          service_name: string
+          state?: string
+          threshold?: number | null
+        }
+        Update: {
+          failure_count?: number | null
+          last_failure_at?: string | null
+          opened_at?: string | null
+          reset_timeout_ms?: number | null
+          service_name?: string
+          state?: string
+          threshold?: number | null
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           created_at: string
