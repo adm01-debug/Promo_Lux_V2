@@ -22,21 +22,26 @@ export const AddCompanyDialog = () => {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [name, setName] = useState("");
+  const [cnpj, setCnpj] = useState("");
   const [sector, setSector] = useState("");
   const [location, setLocation] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
+  const [description, setDescription] = useState("");
 
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reset = () => {
-    setName(""); setSector(""); setLocation(""); setEmail("");
-    setPhone(""); setWebsite(""); setEmployees(""); setRevenue("");
+    setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
+    setPhone(""); setWebsite(""); setLinkedinUrl(""); setInstagramUrl("");
+    setEmployees(""); setRevenue(""); setDescription("");
     setGeoStatus("idle"); setGeoCoords(null); setFieldErrors({});
   };
 
