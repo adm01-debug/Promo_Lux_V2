@@ -16,15 +16,19 @@ import { toast } from "@/hooks/use-toast";
 interface Company {
   id: string;
   name: string;
+  cnpj?: string;
   sector: string;
   location: string;
   ipcScore: number;
   source: string;
   website?: string;
+  linkedin_url?: string;
+  instagram_url?: string;
   employees: string;
   revenue: string;
   email?: string;
   phone?: string;
+  description?: string;
   enriched: boolean;
   starred: boolean;
 }
@@ -124,7 +128,15 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
         <div className="p-6 pb-4 flex-shrink-0">
           <DialogHeader>
             <div className="flex items-start gap-4">
-              <div className="h-14 w-14 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+              <div className="h-14 w-14 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
+                {company.linkedin_url && (
+                  <img 
+                    src={`https://logo.clearbit.com/${new URL(company.website || "").hostname}`} 
+                    onError={(e) => { (e.target as HTMLImageElement).src = ""; }}
+                    className="h-full w-full object-cover"
+                    alt=""
+                  />
+                )}
                 <Building2 className="h-7 w-7 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
@@ -136,7 +148,10 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <MapPin className="h-3 w-3" />{company.location}
                   </span>
-                  <Badge variant="outline" className="text-[10px] bg-secondary/50">{company.source}</Badge>
+                  <Badge variant="outline" className="text-[10px] bg-secondary/50 uppercase">{company.source}</Badge>
+                  {company.cnpj && (
+                    <Badge variant="outline" className="text-[10px] bg-secondary/50 font-mono">CNPJ: {company.cnpj}</Badge>
+                  )}
                   {company.enriched ? (
                     <Badge variant="outline" className="text-[10px] bg-success/10 text-success border-success/30">Enriquecido</Badge>
                   ) : (
@@ -187,6 +202,11 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
               </div>
             )}
           </div>
+          {company.description && (
+            <p className="mt-4 text-sm text-muted-foreground line-clamp-2 italic">
+              "{company.description}"
+            </p>
+          )}
         </div>
 
         <Separator className="bg-border/30 flex-shrink-0" />
