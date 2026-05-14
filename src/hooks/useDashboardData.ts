@@ -142,6 +142,7 @@ export interface RecentCompany {
   source: string;
   website: string | null;
   enriched: boolean | null;
+  cnpj: string | null;
 }
 
 export function useRecentCompanies(limit = 6) {
@@ -154,7 +155,7 @@ export function useRecentCompanies(limit = 6) {
       : async () => {
           const { data, error } = await db
             .from("companies")
-            .select("id, name, sector, location, ipc_score, source, website, enriched")
+            .select("id, name, sector, location, ipc_score, source, website, enriched, cnpj")
             .order("created_at", { ascending: false })
             .limit(limit);
           if (error) throw error;
