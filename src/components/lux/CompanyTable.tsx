@@ -108,7 +108,7 @@ export const CompanyTable = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/30">
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa</th>
+                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa / CNPJ</th>
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Setor</th>
                 <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Localização</th>
                 <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
@@ -153,14 +153,28 @@ export const CompanyTable = () => {
                         <Building2 className="h-4 w-4 text-primary" />
                       </motion.div>
                       <div>
-                        <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-200">
-                          {company.name}
-                        </span>
-                        {company.website && (
-                          <ExternalLink className="inline h-3 w-3 ml-1.5 text-muted-foreground group-hover:text-primary/60 transition-colors" />
-                        )}
-                        {company.enriched && (
-                          <Sparkles className="inline h-3 w-3 ml-1 text-primary/50" />
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-200">
+                            {company.name}
+                          </span>
+                          {company.website && (
+                            <a href={company.website} target="_blank" rel="noopener noreferrer" className="inline-block" onClick={(e) => e.stopPropagation()}>
+                              <ExternalLink className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors" />
+                            </a>
+                          )}
+                          {company.enriched && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Sparkles className="h-3 w-3 text-primary/70 animate-pulse" />
+                              </TooltipTrigger>
+                              <TooltipContent>Dados enriquecidos com IA</TooltipContent>
+                            </Tooltip>
+                          )}
+                        </div>
+                        {(company as any).cnpj && (
+                          <span className="text-[10px] text-muted-foreground/60 font-mono block mt-0.5">
+                            {(company as any).cnpj}
+                          </span>
                         )}
                       </div>
                     </div>
