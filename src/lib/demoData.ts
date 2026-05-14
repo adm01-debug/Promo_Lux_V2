@@ -46,12 +46,12 @@ export const DEMO_PERFORMANCE = (() => {
 
 /* ── Recent Companies ── */
 export const DEMO_COMPANIES: RecentCompany[] = [
-  { id: "d1", name: "TechNova Solutions", sector: "Tecnologia", location: "São Paulo, SP", ipc_score: 92, source: "gmaps", website: "https://technova.com.br", enriched: true },
-  { id: "d2", name: "Construtora Horizonte", sector: "Construção", location: "Curitiba, PR", ipc_score: 85, source: "gmaps", website: "https://horizonte.eng.br", enriched: true },
-  { id: "d3", name: "Grupo Saúde Mais", sector: "Saúde", location: "Rio de Janeiro, RJ", ipc_score: 78, source: "linkedin", website: null, enriched: true },
-  { id: "d4", name: "AgroTech Brasil", sector: "Agronegócio", location: "Ribeirão Preto, SP", ipc_score: 71, source: "gmaps", website: "https://agrotech.agr.br", enriched: false },
-  { id: "d5", name: "Fintech Capital", sector: "Financeiro", location: "Belo Horizonte, MG", ipc_score: 88, source: "manual", website: "https://fintechcapital.com.br", enriched: true },
-  { id: "d6", name: "EduStart Learning", sector: "Educação", location: "Florianópolis, SC", ipc_score: 65, source: "gmaps", website: null, enriched: false },
+  { id: "d1", name: "TechNova Solutions", sector: "Tecnologia", location: "São Paulo, SP", ipc_score: 92, source: "gmaps", website: "https://technova.com.br", enriched: true, cnpj: "12.345.678/0001-90" },
+  { id: "d2", name: "Construtora Horizonte", sector: "Construção", location: "Curitiba, PR", ipc_score: 85, source: "gmaps", website: "https://horizonte.eng.br", enriched: true, cnpj: "98.765.432/0001-10" },
+  { id: "d3", name: "Grupo Saúde Mais", sector: "Saúde", location: "Rio de Janeiro, RJ", ipc_score: 78, source: "linkedin", website: null, enriched: true, cnpj: "45.678.901/0001-55" },
+  { id: "d4", name: "AgroTech Brasil", sector: "Agronegócio", location: "Ribeirão Preto, SP", ipc_score: 71, source: "gmaps", website: "https://agrotech.agr.br", enriched: false, cnpj: null },
+  { id: "d5", name: "Fintech Capital", sector: "Financeiro", location: "Belo Horizonte, MG", ipc_score: 88, source: "manual", website: "https://fintechcapital.com.br", enriched: true, cnpj: "33.222.111/0001-00" },
+  { id: "d6", name: "EduStart Learning", sector: "Educação", location: "Florianópolis, SC", ipc_score: 65, source: "gmaps", website: null, enriched: false, cnpj: null },
 ];
 
 /* ── Activity Feed (notifications) ── */
