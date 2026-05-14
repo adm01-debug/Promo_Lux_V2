@@ -4,7 +4,7 @@ import { z } from "https://esm.sh/zod@3.23.8";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
-  "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+  "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
 ];
 
 function getCorsHeaders(req: Request) {
