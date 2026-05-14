@@ -227,7 +227,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
       return;
     }
 
-    const result = validateCompany({ name, sector, location, email, phone, website, employees, revenue });
+    const result = validateCompany({ name, cnpj, sector, location, email, phone, website, linkedin_url: linkedinUrl, instagram_url: instagramUrl, employees, revenue, description });
     if (!result.success) {
       setFieldErrors(result.errors);
       toast({ title: "Corrija os campos inválidos", variant: "destructive" });
@@ -238,13 +238,17 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     try {
       const updateData: Record<string, string | number | null> = {
         name: name.trim(),
+        cnpj: cnpj.trim() || null,
         sector: sector || null,
         location: location || null,
         email: email || null,
         phone: phone || null,
         website: website || null,
+        linkedin_url: linkedinUrl || null,
+        instagram_url: instagramUrl || null,
         employees: employees || null,
         revenue: revenue || null,
+        description: description || null,
       };
 
       if (geoCoords) {
@@ -300,17 +304,22 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
           </div>
         )}
         <div className="grid grid-cols-2 gap-4 mt-2">
-          <div className="col-span-2">
+          <div className="col-span-2 sm:col-span-1">
             <Label>Nome *</Label>
             <Input disabled={locked} value={name} onChange={(e) => { setName(e.target.value); markDirty(); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
             <FieldError field="name" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
+            <Label>CNPJ</Label>
+            <Input disabled={locked} value={cnpj} onChange={(e) => { setCnpj(e.target.value); markDirty(); clearError("cnpj"); }} className={`mt-1 ${fieldErrors.cnpj ? "border-destructive" : ""}`} />
+            <FieldError field="cnpj" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Setor</Label>
             <Input disabled={locked} value={sector} onChange={(e) => { setSector(e.target.value); markDirty(); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
             <FieldError field="sector" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <Label className="flex items-center gap-1.5">
               Localização
               {geoStatus === "checking" && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
@@ -324,35 +333,47 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
                 {geoCoords.lat.toFixed(4)}, {geoCoords.lng.toFixed(4)}
               </p>
             )}
-            {geoStatus === "not_found" && (
-              <p className="text-[10px] text-destructive mt-1">Localização não encontrada no mapa</p>
-            )}
             <FieldError field="location" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Email</Label>
             <Input disabled={locked} type="email" value={email} onChange={(e) => { setEmail(e.target.value); markDirty(); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
             <FieldError field="email" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Telefone</Label>
             <Input disabled={locked} value={phone} onChange={(e) => { setPhone(e.target.value); markDirty(); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
             <FieldError field="phone" />
           </div>
-          <div>
+          <div className="col-span-2">
             <Label>Website</Label>
             <Input disabled={locked} value={website} onChange={(e) => { setWebsite(e.target.value); markDirty(); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
             <FieldError field="website" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
+            <Label>LinkedIn</Label>
+            <Input disabled={locked} value={linkedinUrl} onChange={(e) => { setLinkedinUrl(e.target.value); markDirty(); clearError("linkedin_url"); }} className={`mt-1 ${fieldErrors.linkedin_url ? "border-destructive" : ""}`} />
+            <FieldError field="linkedin_url" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <Label>Instagram</Label>
+            <Input disabled={locked} value={instagramUrl} onChange={(e) => { setInstagramUrl(e.target.value); markDirty(); clearError("instagram_url"); }} className={`mt-1 ${fieldErrors.instagram_url ? "border-destructive" : ""}`} />
+            <FieldError field="instagram_url" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Funcionários</Label>
             <Input disabled={locked} value={employees} onChange={(e) => { setEmployees(e.target.value); markDirty(); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
             <FieldError field="employees" />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-2 sm:col-span-1">
             <Label>Faturamento</Label>
             <Input disabled={locked} value={revenue} onChange={(e) => { setRevenue(e.target.value); markDirty(); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
             <FieldError field="revenue" />
+          </div>
+          <div className="col-span-2">
+            <Label>Descrição</Label>
+            <Input disabled={locked} value={description} onChange={(e) => { setDescription(e.target.value); markDirty(); clearError("description"); }} className={`mt-1 ${fieldErrors.description ? "border-destructive" : ""}`} />
+            <FieldError field="description" />
           </div>
         </div>
         <Button className="w-full mt-4 gap-2" onClick={handleSave} disabled={saving || locked}>
