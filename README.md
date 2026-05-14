@@ -9,6 +9,7 @@
 ## Índice
 
 - [Visão Geral](#visão-geral)
+- [Auditoria Enterprise](#auditoria-enterprise)
 - [Arquitetura](#arquitetura)
 - [Stack Tecnológico](#stack-tecnológico)
 - [Setup Local](#setup-local)
@@ -34,6 +35,15 @@ LUX IA é um sistema de prospecção B2B que automatiza:
 6. **Campanhas** — Gestão de outreach com métricas de conversão
 7. **Sinais de Intenção** — Monitoramento de atividades de prospects
 8. **Stakeholders** — Mapeamento de decisores por empresa
+
+---
+
+## Auditoria Enterprise
+
+O sistema passa por auditorias regulares de conformidade, segurança e qualidade.
+
+- **Relatório Completo (Markdown)**: [docs/AUDITORIA_FINAL_LUX_IA.md](docs/AUDITORIA_FINAL_LUX_IA.md)
+- **Relatório para Impressão (PDF)**: [docs/AUDITORIA_FINAL_LUX_IA.pdf](docs/AUDITORIA_FINAL_LUX_IA.pdf)
 
 ---
 
