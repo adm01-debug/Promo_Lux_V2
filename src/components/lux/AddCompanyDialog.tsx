@@ -22,21 +22,26 @@ export const AddCompanyDialog = () => {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [name, setName] = useState("");
+  const [cnpj, setCnpj] = useState("");
   const [sector, setSector] = useState("");
   const [location, setLocation] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
+  const [description, setDescription] = useState("");
 
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reset = () => {
-    setName(""); setSector(""); setLocation(""); setEmail("");
-    setPhone(""); setWebsite(""); setEmployees(""); setRevenue("");
+    setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
+    setPhone(""); setWebsite(""); setLinkedinUrl(""); setInstagramUrl("");
+    setEmployees(""); setRevenue(""); setDescription("");
     setGeoStatus("idle"); setGeoCoords(null); setFieldErrors({});
   };
 
@@ -71,7 +76,7 @@ export const AddCompanyDialog = () => {
   }, []);
 
   const handleSave = async () => {
-    const result = validateCompany({ name, sector, location, email, phone, website, employees, revenue });
+    const result = validateCompany({ name, cnpj, sector, location, email, phone, website, linkedin_url: linkedinUrl, instagram_url: instagramUrl, employees, revenue, description });
     if (!result.success) {
       setFieldErrors(result.errors);
       toast({ title: "Corrija os campos inválidos", variant: "destructive" });
@@ -82,13 +87,17 @@ export const AddCompanyDialog = () => {
     try {
       const { error } = await db.from("companies").insert([{
         name: name.trim(),
+        cnpj: cnpj.trim() || null,
         sector: sector || null,
         location: location || null,
         email: email || null,
         phone: phone || null,
         website: website || null,
+        linkedin_url: linkedinUrl || null,
+        instagram_url: instagramUrl || null,
         employees: employees || null,
         revenue: revenue ? parseFloat(revenue.replace(/[^\d.,]/g, '').replace(',', '.')) : null,
+        description: description || null,
         source: "manual",
         lat: geoCoords?.lat ?? null,
         lng: geoCoords?.lng ?? null,
@@ -130,17 +139,22 @@ export const AddCompanyDialog = () => {
           </DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 mt-2">
-          <div className="col-span-2">
+          <div className="col-span-2 sm:col-span-1">
             <Label>Nome *</Label>
             <Input placeholder="Nome da empresa" value={name} onChange={(e) => { setName(e.target.value); clearError("name"); }} className={`mt-1 ${fieldErrors.name ? "border-destructive" : ""}`} />
             <FieldError field="name" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
+            <Label>CNPJ</Label>
+            <Input placeholder="00.000.000/0000-00" value={cnpj} onChange={(e) => { setCnpj(e.target.value); clearError("cnpj"); }} className={`mt-1 ${fieldErrors.cnpj ? "border-destructive" : ""}`} />
+            <FieldError field="cnpj" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Setor</Label>
             <Input placeholder="Ex: SaaS B2B" value={sector} onChange={(e) => { setSector(e.target.value); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
             <FieldError field="sector" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <Label className="flex items-center gap-1.5">
               Localização
               {geoStatus === "checking" && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
@@ -154,35 +168,47 @@ export const AddCompanyDialog = () => {
                 {geoCoords.lat.toFixed(4)}, {geoCoords.lng.toFixed(4)}
               </p>
             )}
-            {geoStatus === "not_found" && (
-              <p className="text-[10px] text-destructive mt-1">Localização não encontrada no mapa</p>
-            )}
             <FieldError field="location" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Email</Label>
             <Input type="email" placeholder="contato@empresa.com" value={email} onChange={(e) => { setEmail(e.target.value); clearError("email"); }} className={`mt-1 ${fieldErrors.email ? "border-destructive" : ""}`} />
             <FieldError field="email" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Telefone</Label>
             <Input placeholder="(11) 99999-9999" value={phone} onChange={(e) => { setPhone(e.target.value); clearError("phone"); }} className={`mt-1 ${fieldErrors.phone ? "border-destructive" : ""}`} />
             <FieldError field="phone" />
           </div>
-          <div>
+          <div className="col-span-2">
             <Label>Website</Label>
             <Input placeholder="https://empresa.com" value={website} onChange={(e) => { setWebsite(e.target.value); clearError("website"); }} className={`mt-1 ${fieldErrors.website ? "border-destructive" : ""}`} />
             <FieldError field="website" />
           </div>
-          <div>
+          <div className="col-span-2 sm:col-span-1">
+            <Label>LinkedIn</Label>
+            <Input placeholder="https://linkedin.com/company/..." value={linkedinUrl} onChange={(e) => { setLinkedinUrl(e.target.value); clearError("linkedin_url"); }} className={`mt-1 ${fieldErrors.linkedin_url ? "border-destructive" : ""}`} />
+            <FieldError field="linkedin_url" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <Label>Instagram</Label>
+            <Input placeholder="https://instagram.com/..." value={instagramUrl} onChange={(e) => { setInstagramUrl(e.target.value); clearError("instagram_url"); }} className={`mt-1 ${fieldErrors.instagram_url ? "border-destructive" : ""}`} />
+            <FieldError field="instagram_url" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
             <Label>Funcionários</Label>
             <Input placeholder="Ex: 50-200" value={employees} onChange={(e) => { setEmployees(e.target.value); clearError("employees"); }} className={`mt-1 ${fieldErrors.employees ? "border-destructive" : ""}`} />
             <FieldError field="employees" />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-2 sm:col-span-1">
             <Label>Faturamento</Label>
             <Input placeholder="Ex: R$ 1M - 5M" value={revenue} onChange={(e) => { setRevenue(e.target.value); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
             <FieldError field="revenue" />
+          </div>
+          <div className="col-span-2">
+            <Label>Descrição</Label>
+            <Input placeholder="Breve resumo sobre a empresa..." value={description} onChange={(e) => { setDescription(e.target.value); clearError("description"); }} className={`mt-1 ${fieldErrors.description ? "border-destructive" : ""}`} />
+            <FieldError field="description" />
           </div>
         </div>
         <Button className="w-full mt-4 gap-2" onClick={handleSave} disabled={saving}>

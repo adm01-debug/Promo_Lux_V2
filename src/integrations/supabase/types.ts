@@ -608,15 +608,20 @@ export type Database = {
       }
       companies: {
         Row: {
+          cnpj: string | null
           created_at: string
+          description: string | null
           email: string | null
           employees: string | null
           enriched: boolean | null
           id: string
+          instagram_url: string | null
           ipc_score: number | null
           lat: number | null
+          linkedin_url: string | null
           lng: number | null
           location: string | null
+          logo_url: string | null
           name: string
           organization_id: string
           phone: string | null
@@ -631,15 +636,20 @@ export type Database = {
           website: string | null
         }
         Insert: {
+          cnpj?: string | null
           created_at?: string
+          description?: string | null
           email?: string | null
           employees?: string | null
           enriched?: boolean | null
           id?: string
+          instagram_url?: string | null
           ipc_score?: number | null
           lat?: number | null
+          linkedin_url?: string | null
           lng?: number | null
           location?: string | null
+          logo_url?: string | null
           name: string
           organization_id?: string
           phone?: string | null
@@ -654,15 +664,20 @@ export type Database = {
           website?: string | null
         }
         Update: {
+          cnpj?: string | null
           created_at?: string
+          description?: string | null
           email?: string | null
           employees?: string | null
           enriched?: boolean | null
           id?: string
+          instagram_url?: string | null
           ipc_score?: number | null
           lat?: number | null
+          linkedin_url?: string | null
           lng?: number | null
           location?: string | null
+          logo_url?: string | null
           name?: string
           organization_id?: string
           phone?: string | null

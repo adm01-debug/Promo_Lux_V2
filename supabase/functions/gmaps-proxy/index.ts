@@ -46,7 +46,7 @@ const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
-  "https://id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+  "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
 ];
 
 function getCorsHeaders(req: Request) {
