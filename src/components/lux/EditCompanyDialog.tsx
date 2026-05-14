@@ -19,13 +19,17 @@ interface EditCompanyDialogProps {
   company: {
     id: string;
     name: string;
+    cnpj?: string;
     sector: string;
     location: string;
     email?: string;
     phone?: string;
     website?: string;
+    linkedin_url?: string;
+    instagram_url?: string;
     employees: string;
     revenue: string;
+    description?: string;
     organization_id?: string | null;
   } | null;
   open: boolean;
@@ -40,13 +44,17 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [name, setName] = useState("");
+  const [cnpj, setCnpj] = useState("");
   const [sector, setSector] = useState("");
   const [location, setLocation] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
+  const [description, setDescription] = useState("");
 
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -131,13 +139,17 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
   useEffect(() => {
     if (company && open) {
       setName(company.name);
+      setCnpj(company.cnpj ?? "");
       setSector(company.sector === "—" ? "" : company.sector);
       setLocation(company.location === "—" ? "" : company.location);
       setEmail(company.email ?? "");
       setPhone(company.phone ?? "");
       setWebsite(company.website ?? "");
+      setLinkedinUrl(company.linkedin_url ?? "");
+      setInstagramUrl(company.instagram_url ?? "");
       setEmployees(company.employees === "—" ? "" : company.employees);
       setRevenue(company.revenue === "—" ? "" : company.revenue);
+      setDescription(company.description ?? "");
       setGeoStatus("idle");
       setGeoCoords(null);
       setFieldErrors({});
