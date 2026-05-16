@@ -31,11 +31,20 @@ export function LuxImage({ src, alt, className, fallbackIcon, ...props }: LuxIma
     );
   }
 
+  // Remove motion-conflicting props from img attributes
+  const { 
+    onAnimationStart, onDrag, onDragEnd, onDragStart,
+    // @ts-ignore
+    style: motionStyle, 
+    ...imgProps 
+  } = props as any;
+
   return (
     <div className={cn("relative overflow-hidden bg-secondary/20", className)}>
       <AnimatePresence>
         {!loaded && (
           <motion.div
+            key="placeholder"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 bg-muted/40 animate-pulse"
@@ -52,7 +61,7 @@ export function LuxImage({ src, alt, className, fallbackIcon, ...props }: LuxIma
           "w-full h-full object-cover",
           !loaded && "invisible"
         )}
-        {...props}
+        {...imgProps}
       />
     </div>
   );
