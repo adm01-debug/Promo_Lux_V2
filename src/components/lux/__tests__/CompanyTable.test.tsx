@@ -86,7 +86,7 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
     vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
     
-    expect(screen.getByText(/Empresa/i)).toBeInTheDocument();
+    expect(screen.getByText("Empresa / CNPJ")).toBeInTheDocument();
     expect(screen.getByText("Setor")).toBeInTheDocument();
     expect(screen.getByText("Localização")).toBeInTheDocument();
     expect(screen.getByText("Fonte")).toBeInTheDocument();
