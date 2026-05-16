@@ -77,8 +77,11 @@ export function useActiveOrganization() {
     setActiveOrgId(id);
     // Invalidate all workspace-scoped data so it refetches under the new org
     qc.invalidateQueries();
-    // Notify other tabs / listeners
-    window.dispatchEvent(new CustomEvent("lux:active-org-changed", { detail: { id } }));
+    // Notify other tabs / listeners via storage event
+    window.dispatchEvent(new StorageEvent("storage", {
+      key: STORAGE_KEY,
+      newValue: id,
+    }));
   }, [activeId, qc]);
 
   const active = useMemo(
