@@ -9,11 +9,13 @@ const SHORTCUT_VIEWS: View[] = [
 interface UseKeyboardShortcutsOptions {
   onNavigate: (view: View) => void;
   onToggleSidebar: () => void;
+  onBack?: () => void;
 }
 
 export function useKeyboardShortcuts({
   onNavigate,
   onToggleSidebar,
+  onBack,
 }: UseKeyboardShortcutsOptions) {
   const handler = useCallback(
     (e: KeyboardEvent) => {
@@ -22,6 +24,20 @@ export function useKeyboardShortcuts({
         e.preventDefault();
         onToggleSidebar();
         return;
+      }
+
+      // Escape → go back
+      if (e.key === "Escape" && onBack) {
+        // Only if not in a modal or input
+        const target = e.target as HTMLElement;
+        const isInput = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
+        const hasOverlay = document.querySelector('[role="dialog"], [role="menu"]');
+        
+        if (!isInput && !hasOverlay) {
+          e.preventDefault();
+          onBack();
+          return;
+        }
       }
 
       // Alt + 1-9 → navigate to view
