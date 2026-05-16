@@ -3,7 +3,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useMyOrganizations, useActiveOrganization, useOrganizations } from "@/hooks/useOrganizations";
+import { useMyOrganizations, useActiveOrganization } from "@/hooks/useOrganizations";
 import { Badge } from "@/components/ui/badge";
 import { useEffect } from "react";
 
