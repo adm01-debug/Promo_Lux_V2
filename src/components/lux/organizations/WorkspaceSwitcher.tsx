@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useMyOrganizations, useActiveOrganization } from "@/hooks/useOrganizations";
 import { Badge } from "@/components/ui/badge";
+import { useEffect } from "react";
 
 interface WorkspaceSwitcherProps {
   onManage: () => void;
@@ -13,6 +14,17 @@ interface WorkspaceSwitcherProps {
 export const WorkspaceSwitcher = ({ onManage }: WorkspaceSwitcherProps) => {
   const { data: orgs } = useMyOrganizations();
   const { activeOrgId, activeOrg, setActive } = useActiveOrganization();
+
+  // Sincronização de Workspace entre abas
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "lux:active-org" && e.newValue && e.newValue !== activeOrgId) {
+        setActive(e.newValue);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [activeOrgId, setActive]);
 
   if (!orgs || orgs.length === 0) {
     return (

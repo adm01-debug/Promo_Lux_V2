@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { motion } from "framer-motion";
+import { SafeHTML } from "@/components/lux/SafeHTML";
 
 interface Company {
   id: string;
@@ -83,16 +84,44 @@ export const CompanyTableRow = ({ company, index, isSelected, searchQuery, onSel
           <Building2 className="h-4 w-4 text-primary" />
         </div>
         <div>
-          <span className="font-medium text-foreground"><HighlightText text={company.name} query={searchQuery} /></span>
-          {company.email && <p className="text-[10px] text-muted-foreground"><HighlightText text={company.email} query={searchQuery} /></p>}
+          <span className="font-medium text-foreground">
+            {searchQuery.length >= 2 ? (
+              <HighlightText text={company.name} query={searchQuery} />
+            ) : (
+              <SafeHTML as="span" content={company.name} />
+            )}
+          </span>
+          {company.email && (
+            <p className="text-[10px] text-muted-foreground">
+              {searchQuery.length >= 2 ? (
+                <HighlightText text={company.email} query={searchQuery} />
+              ) : (
+                <SafeHTML as="span" content={company.email} />
+              )}
+            </p>
+          )}
         </div>
       </div>
     </td>
     <td className="p-3 hidden md:table-cell">
-      <Badge variant="outline" className="text-xs gap-1 bg-secondary/50"><Tag className="h-3 w-3" /><HighlightText text={company.sector} query={searchQuery} /></Badge>
+      <Badge variant="outline" className="text-xs gap-1 bg-secondary/50">
+        <Tag className="h-3 w-3" />
+        {searchQuery.length >= 2 ? (
+          <HighlightText text={company.sector} query={searchQuery} />
+        ) : (
+          <SafeHTML as="span" content={company.sector} />
+        )}
+      </Badge>
     </td>
     <td className="p-3 text-muted-foreground text-xs hidden lg:table-cell">
-      <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /><HighlightText text={company.location} query={searchQuery} /></span>
+      <span className="flex items-center gap-1">
+        <MapPin className="h-3 w-3" />
+        {searchQuery.length >= 2 ? (
+          <HighlightText text={company.location} query={searchQuery} />
+        ) : (
+          <SafeHTML as="span" content={company.location} />
+        )}
+      </span>
     </td>
     <td className="p-3 text-xs text-muted-foreground hidden xl:table-cell">{company.source}</td>
     <td className="p-3 text-center">

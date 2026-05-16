@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const PREFIX = "lux-filters-";
 
@@ -22,6 +22,23 @@ export function usePersistedFilters<T extends object>(
       return defaultState;
     }
   });
+
+  // Sincronização entre abas
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === storageKey && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          const next = deserialize(parsed, defaultState as Record<string, unknown>) as T;
+          setStateRaw(next);
+        } catch {}
+      } else if (e.key === storageKey && !e.newValue) {
+        setStateRaw(defaultState);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [storageKey, defaultState]);
 
   const setState = useCallback(
     (updater: T | ((prev: T) => T)) => {
