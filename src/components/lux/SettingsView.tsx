@@ -301,9 +301,9 @@ export const SettingsView = () => {
                   </div>
                 ))}
               </div>
-              <Button onClick={handleSaveNotifs} disabled={savingNotifs} className="gap-2">
-                {savingNotifs ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                {savingNotifs ? "Salvando..." : "Salvar Preferências"}
+              <Button onClick={handleSaveAll} disabled={saving} className="gap-2 sm:flex hidden">
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                {saving ? "Salvando..." : "Salvar Preferências"}
               </Button>
             </div>
           )}
@@ -353,6 +353,13 @@ export const SettingsView = () => {
           )}
         </motion.div>
       </div>
+
+      <StickySaveBar
+        isVisible={isDirty}
+        isSaving={saving}
+        onSave={handleSaveAll}
+        onCancel={handleDiscard}
+      />
     </div>
   );
 };
