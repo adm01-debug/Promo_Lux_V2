@@ -3,9 +3,8 @@ import { db } from "@/integrations/supabase/withOrg";
 import { useMemo } from "react";
 
 /**
- * useVirtualList
- * Helper hook para lógica de virtualização básica ou integração com bibliotecas.
- * Por enquanto, foca em fornecer dados paginados de forma performática.
+ * useVirtualCompanies
+ * Fornece uma lista de empresas preparada para virtualização.
  */
 export function useVirtualCompanies(limit = 100) {
   return useQuery({
