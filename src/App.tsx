@@ -38,12 +38,14 @@ const queryClient = new QueryClient({
           const status = (error as { status: number }).status;
           if (status === 401 || status === 403) return false;
         }
-        return failureCount < 2;
+        return failureCount < 3;
       },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
       refetchOnWindowFocus: false,
     },
     mutations: {
-      retry: false,
+      retry: 1,
+      retryDelay: 2000,
     },
   },
 });
