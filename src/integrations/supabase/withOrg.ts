@@ -74,6 +74,14 @@ const ORG_SCOPED_TABLES = new Set<string>([
   "workflows",
 ]);
 
+/** Tabelas globais ou que gerenciam o próprio escopo via RLS específica. */
+const EXEMPT_TABLES = new Set<string>([
+  "profiles",
+  "organizations",
+  "organization_members",
+  "organization_invites",
+]);
+
 export class OrgMismatchError extends Error {
   constructor(
     public table: string,
@@ -183,6 +191,12 @@ export function fromOrg<T extends TableName>(table: T) {
   const builder = supabase.from(table);
   const tableName = String(table);
   const isScoped = ORG_SCOPED_TABLES.has(tableName);
+  const isExempt = EXEMPT_TABLES.has(tableName);
+
+  // Deny-by-Default: Se a tabela não for escopada nem isenta, bloqueia o acesso.
+  if (!isScoped && !isExempt) {
+    throw new Error(`[withOrg] Acesso bloqueado: tabela "${tableName}" não possui classificação de escopo definida.`);
+  }
 
   return new Proxy(builder, {
     get(target, prop, receiver) {
