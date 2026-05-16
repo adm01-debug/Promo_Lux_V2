@@ -91,6 +91,7 @@ const Index = () => {
   useKeyboardShortcuts({
     onNavigate: handleNav,
     onToggleSidebar: toggleCollapse,
+    onBack: goBack,
   });
 
   // Track view transitions for progress bar + scroll to top + dynamic title
