@@ -223,9 +223,9 @@ export const SettingsView = () => {
                 </div>
               </div>
               <div className="flex items-center gap-3 flex-wrap">
-                <Button onClick={handleSaveAccount} disabled={saving} className="gap-2">
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <Check className="h-4 w-4" /> : <Save className="h-4 w-4" />}
-                  {saving ? "Salvando..." : saved ? "Salvo!" : "Salvar Alterações"}
+                <Button onClick={handleSaveAll} disabled={saving} className="gap-2 sm:flex hidden">
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                  {saving ? "Salvando..." : "Salvar Alterações"}
                 </Button>
               </div>
 
