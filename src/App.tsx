@@ -12,6 +12,8 @@ import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
 import { ErrorBoundary } from "@/components/lux/ErrorBoundary";
 import { PageTransition } from "@/components/lux/PageTransition";
 import { OrgErrorBanner } from "@/components/lux/OrgErrorBanner";
+import { AutoTopProgressBar } from "@/components/lux/AutoTopProgressBar";
+import { UnsavedChangesDialog } from "@/components/lux/UnsavedChangesDialog";
 import { useEffect } from "react";
 import {
   registerQueryClient,
@@ -113,6 +115,8 @@ const App = () => (
           <AuthProvider>
             <DemoProvider>
               <GlobalOrgErrorListener />
+              <AutoTopProgressBar />
+              <UnsavedChangesDialog />
               <OrgErrorBanner />
               <Toaster />
               <Sonner />

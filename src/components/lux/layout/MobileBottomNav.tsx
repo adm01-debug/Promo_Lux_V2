@@ -20,6 +20,14 @@ export const BOTTOM_NAV_TABS: { id: View; label: string; icon: React.ElementType
 
 const tapSpring = { type: "spring" as const, stiffness: 500, damping: 28 };
 
+/** triggerHaptic - Vibração leve para dispositivos suportados */
+const triggerHaptic = (style: "light" | "medium" | "heavy" = "light") => {
+  if (typeof navigator !== "undefined" && navigator.vibrate) {
+    const pattern = style === "light" ? 10 : style === "medium" ? 20 : 40;
+    navigator.vibrate(pattern);
+  }
+};
+
 export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBottomNavProps) {
   const { data: unreadCount } = useQuery({
     queryKey: ["unread-notifications-count"],
@@ -32,6 +40,18 @@ export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBo
     },
     staleTime: 30_000,
   });
+
+  const handleNavigate = (id: View) => {
+    if (activeView !== id) {
+      triggerHaptic("light");
+      onNavigate(id);
+    }
+  };
+
+  const handleOpenMenu = () => {
+    triggerHaptic("medium");
+    onOpenMenu();
+  };
 
   return (
     <nav
@@ -60,12 +80,12 @@ export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBo
           return (
             <motion.button
               key={id}
-              onClick={() => onNavigate(id)}
+              onClick={() => handleNavigate(id)}
               whileTap={{ scale: 0.82 }}
               whileHover={{ scale: 1.05 }}
               transition={tapSpring}
               className={cn(
-                "relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors duration-200",
+                "relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors duration-200 outline-none",
                 active ? "text-primary" : "text-muted-foreground"
               )}
               aria-current={active ? "page" : undefined}
@@ -94,7 +114,7 @@ export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBo
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                    className="absolute -top-1.5 -right-1.5 h-4 min-w-[16px] rounded-full bg-destructive flex items-center justify-center"
+                    className="absolute -top-1.5 -right-1.5 h-4 min-w-[16px] rounded-full bg-destructive flex items-center justify-center border-2 border-background"
                   >
                     <span className="text-[9px] font-bold text-destructive-foreground px-1">
                       {(unreadCount ?? 0) > 9 ? "9+" : unreadCount}
@@ -131,11 +151,11 @@ export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBo
         })}
 
         <motion.button
-          onClick={onOpenMenu}
+          onClick={handleOpenMenu}
           whileTap={{ scale: 0.82 }}
           whileHover={{ scale: 1.05 }}
           transition={tapSpring}
-          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full text-muted-foreground transition-colors duration-200"
+          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full text-muted-foreground transition-colors duration-200 outline-none"
           aria-label="Mais opções"
         >
           <Menu className="h-5 w-5" />

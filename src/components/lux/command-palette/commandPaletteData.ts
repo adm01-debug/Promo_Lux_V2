@@ -1,6 +1,7 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
   Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Activity,
+  HelpCircle, Keyboard, LifeBuoy, FileText,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
@@ -47,6 +48,13 @@ export const VIEW_LABELS: Record<View, string> = {
   "rls-discovery": "RLS Discovery",
   monitoring: "Status do Sistema",
 };
+
+export const helpItems = [
+  { id: "help-center", label: "Central de Ajuda", icon: HelpCircle, action: () => window.open("https://docs.lux-ai.com.br") },
+  { id: "shortcuts", label: "Ver Atalhos de Teclado", icon: Keyboard, action: () => document.dispatchEvent(new KeyboardEvent("keydown", { key: "?" })) },
+  { id: "support", label: "Falar com Suporte", icon: LifeBuoy, action: () => window.open("mailto:suporte@lux-ai.com.br") },
+  { id: "api-docs", label: "Documentação da API", icon: FileText, action: () => window.open("https://api-docs.lux-ai.com.br") },
+];
 
 export const sections = [
   {

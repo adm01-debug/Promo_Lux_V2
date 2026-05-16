@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
-import { VIEW_LABELS, sections } from "./command-palette/commandPaletteData";
+import { VIEW_LABELS, sections, helpItems } from "./command-palette/commandPaletteData";
 
 interface CommandPaletteProps {
   onNavigate: (view: View) => void;
@@ -188,6 +188,15 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
             </CommandGroup>
           </div>
         ))}
+        
+        <CommandSeparator />
+        <CommandGroup heading="Ajuda e Suporte">
+          {helpItems.map((item) => (
+            <CommandItem key={item.id} value={`ajuda ${item.label}`} onSelect={() => handleAction(item.action)} className="cursor-pointer">
+              <item.icon className="mr-2 h-4 w-4 text-muted-foreground" /><span>{item.label}</span>
+            </CommandItem>
+          ))}
+        </CommandGroup>
       </CommandList>
       <div className="border-t border-border/50 px-3 py-2 flex items-center justify-between text-[10px] text-muted-foreground/60">
         <div className="flex items-center gap-3">

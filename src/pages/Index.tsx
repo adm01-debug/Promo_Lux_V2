@@ -122,26 +122,13 @@ const Index = () => {
       {/* Skip nav is in index.html — no duplicate needed here */}
 
       <ConnectionStatus />
+      {/* AutoTopProgressBar está no App.tsx para escopo global, o local trata apenas navegação suave */}
       <TopProgressBar isAnimating={isTransitioning} />
       <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
       <KeyboardShortcutsDialog />
       <OnboardingTour />
 
-      {/* Unsaved changes dialog */}
-      <AlertDialog open={showConfirmDialog} onOpenChange={(open) => !open && handleCancel()}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Alterações não salvas</AlertDialogTitle>
-            <AlertDialogDescription>
-              Você tem alterações que não foram salvas. Deseja sair sem salvar?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm}>Sair sem salvar</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Unsaved changes dialog é gerenciado globalmente no App.tsx */}
 
       {/* Mobile overlay with backdrop blur */}
       <AnimatePresence>
