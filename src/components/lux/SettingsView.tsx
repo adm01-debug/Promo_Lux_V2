@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,8 @@ import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { StickySaveBar } from "./StickySaveBar";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";
 
@@ -42,9 +44,13 @@ const DEFAULT_PREFS: NotifPrefs = { email_notifs: true, signal_notifs: true, scr
 export const SettingsView = () => {
   const { user } = useAuth();
   const isAdmin = useCan("audit_logs", "view");
+  const { setHasUnsavedChanges } = useUnsavedChanges();
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
+
+  // Initial values for dirty check
+  const [initialFullName, setInitialFullName] = useState("");
+  const [initialNotifPrefs, setInitialNotifPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
 
   // Account fields
   const [fullName, setFullName] = useState("");
@@ -55,7 +61,6 @@ export const SettingsView = () => {
 
   // Notification prefs
   const [notifPrefs, setNotifPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
-  const [savingNotifs, setSavingNotifs] = useState(false);
 
   // Load profile data
   useEffect(() => {
@@ -66,72 +71,84 @@ export const SettingsView = () => {
       .eq("id", user.id)
       .single()
       .then(({ data }) => {
-        if (data?.full_name) setFullName(data.full_name);
+        if (data?.full_name) {
+          setFullName(data.full_name);
+          setInitialFullName(data.full_name);
+        }
         if (data?.notification_prefs) {
-          setNotifPrefs({ ...DEFAULT_PREFS, ...(data.notification_prefs as unknown as NotifPrefs) });
+          const prefs = { ...DEFAULT_PREFS, ...(data.notification_prefs as unknown as NotifPrefs) };
+          setNotifPrefs(prefs);
+          setInitialNotifPrefs(prefs);
         }
       });
   }, [user]);
 
-  const handleSaveAccount = async () => {
+  const isDirty = useMemo(() => {
+    if (activeTab === "account") {
+      return fullName !== initialFullName || !!newPassword;
+    }
+    if (activeTab === "notifications") {
+      return JSON.stringify(notifPrefs) !== JSON.stringify(initialNotifPrefs);
+    }
+    return false;
+  }, [fullName, initialFullName, newPassword, notifPrefs, initialNotifPrefs, activeTab]);
+
+  useEffect(() => {
+    setHasUnsavedChanges(isDirty);
+    return () => setHasUnsavedChanges(false);
+  }, [isDirty, setHasUnsavedChanges]);
+
+  const handleSaveAll = async () => {
     if (!user) return;
     setSaving(true);
-    setSaved(false);
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ full_name: fullName })
-        .eq("id", user.id);
-      if (error) throw error;
+      if (activeTab === "account") {
+        const { error } = await supabase
+          .from("profiles")
+          .update({ full_name: fullName })
+          .eq("id", user.id);
+        if (error) throw error;
+        setInitialFullName(fullName);
 
-      // Password change
-      if (newPassword) {
-        if (newPassword !== confirmPassword) {
-          toast({ title: "Erro", description: "As senhas não coincidem.", variant: "destructive" });
-          setSaving(false);
-          return;
+        if (newPassword) {
+          if (newPassword !== confirmPassword) throw new Error("As senhas não coincidem.");
+          if (newPassword.length < 8) throw new Error("A senha deve ter pelo menos 8 caracteres.");
+          const { error: pwError } = await supabase.auth.updateUser({ password: newPassword });
+          if (pwError) throw pwError;
+          setNewPassword("");
+          setConfirmPassword("");
         }
-        if (newPassword.length < 8) {
-          toast({ title: "Erro", description: "A senha deve ter pelo menos 8 caracteres.", variant: "destructive" });
-          setSaving(false);
-          return;
-        }
-        const { error: pwError } = await supabase.auth.updateUser({ password: newPassword });
-        if (pwError) throw pwError;
-        setNewPassword("");
-        setConfirmPassword("");
+      } else if (activeTab === "notifications") {
+        const { error } = await supabase
+          .from("profiles")
+          .update({ notification_prefs: notifPrefs as unknown as Record<string, boolean> })
+          .eq("id", user.id);
+        if (error) throw error;
+        setInitialNotifPrefs(notifPrefs);
       }
-
-      setSaved(true);
+      
       toast({ title: "Salvo!", description: "Informações atualizadas com sucesso." });
-      setTimeout(() => setSaved(false), 2000);
-    } catch (err: unknown) {
-      toast({ title: "Erro ao salvar", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
+    } catch (err: any) {
+      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
     } finally {
       setSaving(false);
     }
   };
 
-  const handleSaveNotifs = async () => {
-    if (!user) return;
-    setSavingNotifs(true);
-    try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ notification_prefs: notifPrefs as unknown as Record<string, boolean> })
-        .eq("id", user.id);
-      if (error) throw error;
-      toast({ title: "Preferências salvas!", description: "Notificações atualizadas." });
-    } catch (err: unknown) {
-      toast({ title: "Erro", description: err instanceof Error ? err.message : "Erro desconhecido", variant: "destructive" });
-    } finally {
-      setSavingNotifs(false);
+  const handleDiscard = () => {
+    if (activeTab === "account") {
+      setFullName(initialFullName);
+      setNewPassword("");
+      setConfirmPassword("");
+    } else if (activeTab === "notifications") {
+      setNotifPrefs(initialNotifPrefs);
     }
   };
 
   const updateNotifPref = (key: keyof NotifPrefs, value: boolean) => {
     setNotifPrefs((prev) => ({ ...prev, [key]: value }));
   };
+
 
   return (
     <div className="space-y-6">
