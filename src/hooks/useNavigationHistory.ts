@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { prefetchView } from "@/lib/viewRegistry";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations" | "rls-discovery" | "monitoring";
 
@@ -52,8 +53,6 @@ const VIEW_SECTIONS: Record<View, string> = {
 
 const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery", "monitoring"];
 
-// Shortcut views moved to useKeyboardShortcuts
-
 function isValidView(v: string | null): v is View {
   return !!v && ALL_VIEWS.includes(v as View);
 }
@@ -68,6 +67,7 @@ export function useNavigationHistory() {
   const [historyIndex, setHistoryIndex] = useState(0);
   const [direction, setDirection] = useState<NavigationDirection>("forward");
   const isPopState = useRef(false);
+  const prevViewRef = useRef<View>(initialView);
 
   // Sync URL → state on popstate (browser back/forward)
   useEffect(() => {
@@ -102,7 +102,19 @@ export function useNavigationHistory() {
     }
   }, [activeView]);
 
-  const navigate = useCallback((view: View) => {
+  const goBack = useCallback(() => {
+    if (historyIndex > 0) {
+      setDirection("back");
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      setActiveView(history[newIndex]);
+    }
+  }, [history, historyIndex]);
+
+  const navigate = useCallback((view: View, showUndo = false) => {
+    if (view === activeView) return;
+
+    const oldView = activeView;
     setDirection("forward");
     setHistory((prev) => {
       const newHistory = prev.slice(0, historyIndex + 1);
@@ -113,22 +125,21 @@ export function useNavigationHistory() {
     setActiveView(view);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
+    if (showUndo) {
+      toast.success(`Navegando para ${VIEW_LABELS[view]}`, {
+        description: `De ${VIEW_LABELS[oldView]}`,
+        action: {
+          label: "Desfazer",
+          onClick: () => goBack(),
+        },
+      });
+    }
+
     // Prefetch adjacent views for instant navigation
     const idx = ALL_VIEWS.indexOf(view);
     if (idx > 0) prefetchView(ALL_VIEWS[idx - 1]);
     if (idx < ALL_VIEWS.length - 1) prefetchView(ALL_VIEWS[idx + 1]);
-  }, [historyIndex]);
-
-  // Alt+N shortcuts moved to useKeyboardShortcuts hook
-
-  const goBack = useCallback(() => {
-    if (historyIndex > 0) {
-      setDirection("back");
-      const newIndex = historyIndex - 1;
-      setHistoryIndex(newIndex);
-      setActiveView(history[newIndex]);
-    }
-  }, [history, historyIndex]);
+  }, [activeView, historyIndex, goBack]);
 
   const canGoBack = historyIndex > 0;
 
