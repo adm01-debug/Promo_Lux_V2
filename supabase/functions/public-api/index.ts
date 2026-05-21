@@ -157,10 +157,18 @@ Deno.serve(async (req) => {
     if (req.method === "GET" && !id) {
       const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 200);
       const offset = Math.max(Number(url.searchParams.get("offset") ?? 0), 0);
-      const { data, error, count } = await supabase
+      const nameFilter = url.searchParams.get("name");
+      const sectorFilter = url.searchParams.get("sector");
+
+      let query = supabase
         .from(table)
         .select("*", { count: "exact" })
-        .eq("user_id", user_id)
+        .eq("user_id", user_id);
+
+      if (nameFilter) query = query.ilike("name", `%${nameFilter}%`);
+      if (sectorFilter) query = query.ilike("sector", `%${sectorFilter}%`);
+
+      const { data, error, count } = await query
         .range(offset, offset + limit - 1)
         .order("created_at", { ascending: false });
       if (error) return await respond({ error: error.message }, 500);
