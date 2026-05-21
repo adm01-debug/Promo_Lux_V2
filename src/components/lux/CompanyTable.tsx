@@ -2,6 +2,8 @@ import { Building2, ExternalLink, MapPin, Tag, HelpCircle, Sparkles } from "luci
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { useRecentCompanies } from "@/hooks/useDashboardData";
+import { useVirtualCompanies } from "@/hooks/useVirtualCompanies";
+import { useVirtualization } from "@/hooks/useVirtualization";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { motion, useMotionValue, animate, useInView } from "framer-motion";
@@ -63,7 +65,19 @@ const rowVariants = {
 };
 
 export const CompanyTable = () => {
-  const { data: companies, isLoading } = useRecentCompanies(6);
+  const { data: companies, isLoading } = useVirtualCompanies(200);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerHeight, setContainerHeight] = useEffect(() => {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.clientHeight);
+    }
+  }, []);
+
+  const { virtualItems, totalHeight, onScroll } = useVirtualization(companies || [], {
+    itemHeight: 64, // Altura estimada da linha
+    overscan: 10,
+    containerHeight: 400
+  });
 
   return (
     <div className="glass rounded-lg overflow-hidden">
@@ -104,38 +118,51 @@ export const CompanyTable = () => {
           description="Empresas aparecerão aqui conforme forem raspadas e identificadas pelo IPC."
         />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border/30">
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa / CNPJ</th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Setor</th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Localização</th>
-                <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="inline-flex items-center gap-1 cursor-help">
-                        Score IPC
-                        <HelpCircle className="h-3 w-3 text-muted-foreground/50" />
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-[220px] text-xs">
-                      <p className="font-semibold mb-1">Score do Perfil de Cliente Ideal</p>
-                      <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </th>
-                <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Fonte</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/20">
-              {companies.map((company, i) => (
-                <motion.tr
-                  key={company.id}
-                  custom={i}
-                  variants={rowVariants}
-                  initial="hidden"
-                  animate="visible"
+        <div 
+          ref={containerRef}
+          className="overflow-y-auto h-[400px] relative scrollbar-thin scrollbar-thumb-primary/10"
+          onScroll={onScroll}
+        >
+          <div style={{ height: totalHeight, position: 'relative' }}>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/30 bg-background/80 backdrop-blur sticky top-0 z-10">
+                  <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Empresa / CNPJ</th>
+                  <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Setor</th>
+                  <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Localização</th>
+                  <th className="text-center p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="inline-flex items-center gap-1 cursor-help">
+                          Score IPC
+                          <HelpCircle className="h-3 w-3 text-muted-foreground/50" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-[220px] text-xs">
+                        <p className="font-semibold mb-1">Score do Perfil de Cliente Ideal</p>
+                        <p className="text-muted-foreground">90+ Excelente · 75-89 Bom · 60-74 Médio · &lt;60 Baixo.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </th>
+                  <th className="text-left p-3 text-xs text-muted-foreground uppercase tracking-wider font-medium">Fonte</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/20">
+                {virtualItems.map(({ item: company, top }, i) => (
+                  <motion.tr
+                    key={company.id}
+                    custom={i}
+                    variants={rowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    style={{ 
+                      position: 'absolute', 
+                      top, 
+                      left: 0, 
+                      right: 0, 
+                      height: 64,
+                      display: 'table-row'
+                    }}
                   whileHover={{
                     backgroundColor: "hsl(var(--primary) / 0.04)",
                     x: 2,

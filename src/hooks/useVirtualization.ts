@@ -1,19 +1,42 @@
-import { useQuery } from "@tanstack/react-query";
-import { db } from "@/integrations/supabase/withOrg";
-import { useMemo } from "react";
+import { useState, useMemo, useEffect } from 'react';
 
-/**
- * useVirtualCompanies
- * Fornece uma lista de empresas preparada para virtualização.
- */
-export function useVirtualCompanies(limit = 100) {
-  return useQuery({
-    queryKey: ["companies-virtual", limit],
-    queryFn: async () => {
-      const { data, error } = await db.from("companies").select("*").limit(limit);
-      if (error) throw error;
-      return data;
-    },
-    staleTime: 30000,
-  });
+interface UseVirtualizationOptions {
+  itemHeight: number;
+  overscan?: number;
+  containerHeight?: number;
+}
+
+export function useVirtualization<T>(
+  items: T[],
+  { itemHeight, overscan = 5, containerHeight = 400 }: UseVirtualizationOptions
+) {
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const totalHeight = items.length * itemHeight;
+  
+  const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
+  const endIndex = Math.min(
+    items.length - 1,
+    Math.floor((scrollTop + containerHeight) / itemHeight) + overscan
+  );
+
+  const virtualItems = useMemo(() => {
+    return items.slice(startIndex, endIndex + 1).map((item, index) => ({
+      item,
+      index: startIndex + index,
+      top: (startIndex + index) * itemHeight,
+    }));
+  }, [items, startIndex, endIndex, itemHeight]);
+
+  const onScroll = (e: React.UIEvent<HTMLElement>) => {
+    setScrollTop(e.currentTarget.scrollTop);
+  };
+
+  return {
+    virtualItems,
+    totalHeight,
+    startIndex,
+    endIndex,
+    onScroll,
+  };
 }
