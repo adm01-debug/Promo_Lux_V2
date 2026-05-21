@@ -21,12 +21,13 @@ describe("withOrg Multi-tenant Isolation", () => {
     );
   });
 
-  it("should inject organization_id on select for scoped tables", () => {
+  it("should inject organization_id on select for scoped tables", async () => {
     setActiveOrgId("org-123");
     // @ts-ignore
     db.from("companies").select("*");
     
-    const { supabase } = require("../client");
+    // @ts-ignore
+    const { supabase } = await import("../client");
     expect(supabase.from).toHaveBeenCalledWith("companies");
     // Verifica se eq foi chamado com organization_id
     // Note: Em ambiente de teste real validaríamos a cadeia de chamadas do proxy
