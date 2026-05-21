@@ -40,12 +40,21 @@ serve(async (req) => {
       .lt('created_at', cutoffStr);
 
     if (apiError) throw apiError;
+    
+    // Prune health_checks
+    const { count: healthCount, error: healthError } = await supabase
+      .from('health_checks')
+      .delete({ count: 'exact' })
+      .lt('created_at', cutoffStr);
+
+    if (healthError) throw healthError;
 
     return new Response(JSON.stringify({
       success: true,
       pruned: {
         audit_logs: auditCount,
-        api_request_logs: apiCount
+        api_request_logs: apiCount,
+        health_checks: healthCount
       }
     }), { headers: { 'Content-Type': 'application/json' } });
 

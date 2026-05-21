@@ -9,7 +9,9 @@ const ALLOWED_ORIGINS = [
 
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get("Origin") ?? "";
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const isAllowed = ALLOWED_ORIGINS.includes(origin) || origin.includes("localhost") || origin.includes("127.0.0.1");
+  const allowedOrigin = isAllowed ? origin : ALLOWED_ORIGINS[0];
+  
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -106,19 +108,15 @@ serve(async (req) => {
       supabase.from("workflows").select("*", { count: "exact", head: true }).eq("user_id", userId),
       supabase.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("user_id", userId),
       supabase.from("ipc_config").select("criteria").eq("is_active", true).eq("user_id", userId).limit(1).maybeSingle(),
-      supabase.from("companies").select("sector").eq("user_id", userId),
+      supabase.from("companies").select("criteria:sector").eq("user_id", userId), // This was inefficient
     ]);
 
-    // Build sector distribution
-    const sectorMap = new Map<string, number>();
-    (sectorStats ?? []).forEach((c: { sector: string | null }) => {
-      const s = c.sector ?? "Outros";
-      sectorMap.set(s, (sectorMap.get(s) || 0) + 1);
-    });
-    const sectorSummary = Array.from(sectorMap.entries())
-      .sort((a, b) => b[1] - a[1])
+    // Better way: Get sector counts directly via RPC or separate query
+    const { data: sectorCounts } = await supabase.rpc("get_sector_summary", { p_user_id: userId });
+    
+    const sectorSummary = (sectorCounts ?? [])
       .slice(0, 8)
-      .map(([s, n]) => `${s}: ${n}`)
+      .map((s: { sector: string; count: number }) => `${s.sector || "Outros"}: ${s.count}`)
       .join(", ");
 
     const systemPrompt = `Você é o Agente IA do LUX IA, um sistema de automação de prospecção B2B.

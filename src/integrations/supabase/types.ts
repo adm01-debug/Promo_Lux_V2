@@ -1993,6 +1993,13 @@ export type Database = {
           window_minutes: number
         }[]
       }
+      get_sector_summary: {
+        Args: { p_user_id: string }
+        Returns: {
+          count: number
+          sector: string
+        }[]
+      }
       has_org_role: {
         Args: {
           _min_role: Database["public"]["Enums"]["app_role"]

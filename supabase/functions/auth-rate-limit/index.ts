@@ -53,12 +53,16 @@ serve(async (req) => {
     }
 
     // Incrementar tentativas
-    let attempts = (record?.attempts ?? 0) + 1;
+    // Se a última tentativa foi há mais de WINDOW_MINUTES, resetar contador
+    const lastAttempt = record?.last_attempt ? new Date(record.last_attempt) : null;
+    const isOld = lastAttempt && (now.getTime() - lastAttempt.getTime() > WINDOW_MINUTES * 60 * 1000);
+    
+    let attempts = isOld ? 1 : (record?.attempts ?? 0) + 1;
     let locked_until = null;
 
     if (attempts >= MAX_ATTEMPTS) {
       locked_until = new Date(now.getTime() + WINDOW_MINUTES * 60 * 1000).toISOString();
-      attempts = 0; // Reset após o bloqueio para a próxima rodada
+      // Não resetamos as attempts aqui para que o bloqueio seja mantido se ele tentar novamente durante o locked_until
     }
 
     if (record) {
