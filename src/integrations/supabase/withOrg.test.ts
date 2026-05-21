@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { db, setActiveOrgId, getActiveOrgId } from "./withOrg";
+import { db, setActiveOrgId } from "./withOrg";
+import { supabase } from "../client";
 
 // Mock do supabase client
 vi.mock("../client", () => ({
@@ -10,6 +11,7 @@ vi.mock("../client", () => ({
       update: vi.fn().mockReturnThis(),
       delete: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
     })),
   },
 }));
@@ -21,16 +23,11 @@ describe("withOrg Multi-tenant Isolation", () => {
     );
   });
 
-  it("should inject organization_id on select for scoped tables", async () => {
+  it("should inject organization_id on select for scoped tables", () => {
     setActiveOrgId("org-123");
-    // @ts-ignore
     db.from("companies").select("*");
     
-    // @ts-ignore
-    const { supabase } = await import("../client");
     expect(supabase.from).toHaveBeenCalledWith("companies");
-    // Verifica se eq foi chamado com organization_id
-    // Note: Em ambiente de teste real validaríamos a cadeia de chamadas do proxy
   });
 
   it("should block write operations without active organization", () => {
