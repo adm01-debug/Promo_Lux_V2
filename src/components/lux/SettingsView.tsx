@@ -128,8 +128,8 @@ export const SettingsView = () => {
       }
       
       toast({ title: "Salvo!", description: "Informações atualizadas com sucesso." });
-    } catch (err: any) {
-      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } catch (err) {
+      toast({ title: "Erro ao salvar", description: (err as Error).message, variant: "destructive" });
     } finally {
       setSaving(false);
     }

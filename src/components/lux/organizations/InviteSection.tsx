@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { type AppRole } from "@/hooks/useOrganizations";
+import { type AppRole, type Invite } from "@/hooks/useOrganizations";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
@@ -16,22 +16,28 @@ const ROLE_COLOR: Record<AppRole, string> = {
   viewer: "bg-muted/30 text-muted-foreground border-border/40",
 };
 
+export type InviteFilter = "all" | "pending" | "accepted" | "revoked" | "expired";
+export interface ResendEntry {
+  at: number;
+  newToken: string;
+}
+
 interface InviteSectionProps {
-  invites: any[];
+  invites: Invite[];
   inviteRole: AppRole;
   setInviteRole: (role: AppRole) => void;
   inviteFilter: string;
-  setInviteFilter: (filter: any) => void;
+  setInviteFilter: (filter: InviteFilter) => void;
   handleCreateInvite: () => void;
   handleExportInvites: () => void;
   createInvitePending: boolean;
-  filteredInvites: any[];
+  filteredInvites: Invite[];
   inviteCounts: { pending: number; accepted: number; revoked: number; expired: number };
-  resendHistory: Record<string, any[]>;
+  resendHistory: Record<string, ResendEntry[]>;
   focusMemberByUserId: (userId: string | null) => void;
   copyInviteLink: (token: string) => void;
-  handleResendInvite: (inv: any) => void;
-  setRevokeTarget: (inv: any) => void;
+  handleResendInvite: (inv: Invite) => void;
+  setRevokeTarget: (inv: Invite) => void;
   revokingId: string | null;
 }
 
@@ -102,7 +108,7 @@ export const InviteSection = ({
       </div>
       <div className="px-4 py-2.5 border-b border-border/40 bg-secondary/10 flex items-center gap-2 flex-wrap">
         <Filter className="h-3.5 w-3.5 text-muted-foreground" />
-        <Tabs value={inviteFilter} onValueChange={(v) => setInviteFilter(v)}>
+        <Tabs value={inviteFilter} onValueChange={(v) => setInviteFilter(v as InviteFilter)}>
           <TabsList className="h-8">
             <TabsTrigger value="all" className="text-xs h-6 px-2.5">Todos ({invites?.length ?? 0})</TabsTrigger>
             <TabsTrigger value="pending" className="text-xs h-6 px-2.5">Pendentes ({inviteCounts.pending})</TabsTrigger>
@@ -180,7 +186,7 @@ export const InviteSection = ({
                               <TooltipContent side="top" align="start" className="max-w-[260px]">
                                 <p className="text-[11px] font-semibold mb-1">Histórico de reenvios</p>
                                 <ul className="space-y-0.5 text-[10px]">
-                                  {resends.slice(0, 5).map((r: any, i: number) => (
+                                  {resends.slice(0, 5).map((r, i: number) => (
                                     <li key={`${r.at}-${i}`} className="flex justify-between gap-3">
                                       <span className="text-muted-foreground">
                                         {new Date(r.at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}

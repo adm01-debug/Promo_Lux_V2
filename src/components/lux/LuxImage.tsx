@@ -32,12 +32,14 @@ export function LuxImage({ src, alt, className, fallbackIcon, ...props }: LuxIma
   }
 
   // Remove motion-conflicting props from img attributes
-  const { 
-    onAnimationStart, onDrag, onDragEnd, onDragStart,
-    // @ts-ignore
-    style: motionStyle, 
-    ...imgProps 
-  } = props as any;
+  const {
+    onAnimationStart: _onAnimationStart,
+    onDrag: _onDrag,
+    onDragEnd: _onDragEnd,
+    onDragStart: _onDragStart,
+    style: _style,
+    ...imgProps
+  } = props;
 
   return (
     <div className={cn("relative overflow-hidden bg-secondary/20", className)}>

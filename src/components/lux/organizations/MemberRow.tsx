@@ -4,7 +4,7 @@ import { UserCog, Shield, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { AppRole } from "@/hooks/useOrganizations";
+import { AppRole, type Member } from "@/hooks/useOrganizations";
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
@@ -14,20 +14,14 @@ const ROLE_COLOR: Record<AppRole, string> = {
 };
 
 interface MemberRowProps {
-  member: {
-    id: string;
-    role: AppRole;
-    user_id: string;
-    created_at: string;
-    profile?: { full_name: string | null; avatar_url: string | null } | null;
-  };
+  member: Member;
   isOwner: boolean;
   isMe: boolean;
   isAdmin: boolean;
   highlightedMemberId: string | null;
   index: number;
-  onRoleChange: (member: any, role: AppRole) => void;
-  onRemove: (member: any) => void;
+  onRoleChange: (member: Member, role: AppRole) => void;
+  onRemove: (member: Member) => void;
 }
 
 export const MemberRow = ({

@@ -1,4 +1,5 @@
 import { db } from "@/integrations/supabase/withOrg";
+import type { Json, Database as DB } from "@/integrations/supabase/types";
 import { useState } from "react";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { DataError } from "@/components/lux/DataError";
@@ -76,7 +77,7 @@ export const WorkflowsView = () => {
     mutationFn: async (data: Parameters<typeof workflowApi.create>[0]) => {
       try { return await workflowApi.create(data); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as any, config: data.config as any }).select().single();
+        const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as unknown as Json, config: data.config as unknown as Json }).select().single();
         if (error) throw error;
         return row as unknown as Workflow;
       }
@@ -95,7 +96,7 @@ export const WorkflowsView = () => {
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       try { await workflowApi.toggleStatus(id, status); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { error } = await db.from("workflows").update({ status: status as any }).eq("id", id);
+        const { error } = await db.from("workflows").update({ status: status as DB["public"]["Enums"]["workflow_status"] }).eq("id", id);
         if (error) throw error;
       }
     },

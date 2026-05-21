@@ -6,9 +6,15 @@ const { mockInvalidateQueries, mockToast, mockInsert, mockRemoveChannel } = vi.h
   mockInsert: vi.fn().mockResolvedValue({ error: null }),
   mockRemoveChannel: vi.fn(),
 }));
-let subscribeCb: any = null;
+type RealtimePayload = {
+  eventType?: string;
+  new?: Record<string, unknown>;
+  old?: Record<string, unknown>;
+};
+type SubscribeCb = (payload: RealtimePayload) => void | Promise<void>;
+let subscribeCb: SubscribeCb | null = null;
 let capturedChannelName: string | null = null;
-let capturedOnConfig: any = null;
+let capturedOnConfig: Record<string, unknown> | null = null;
 
 vi.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({ invalidateQueries: mockInvalidateQueries }),
@@ -30,7 +36,7 @@ vi.mock("@/integrations/supabase/client", () => ({
     channel: (name: string) => {
       capturedChannelName = name;
       return {
-        on: (_event: string, config: any, cb: any) => {
+        on: (_event: string, config: Record<string, unknown>, cb: SubscribeCb) => {
           capturedOnConfig = config;
           subscribeCb = cb;
           return { subscribe: () => ({}) };
@@ -104,13 +110,13 @@ describe("useRealtimeScrapeJobs", () => {
 
   it("ignores same-status transitions", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({ new: { status: "running" }, old: { status: "running" } });
+    await subscribeCb!({ new: { status: "running" }, old: { status: "running" } });
     expect(mockToast).not.toHaveBeenCalled();
   });
 
   it("toasts on completed job", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({
+    await subscribeCb!({
       new: { status: "completed", name: "Job1", results_count: 42, id: "j1", source: "gmaps" },
       old: { status: "running" },
     });
@@ -121,7 +127,7 @@ describe("useRealtimeScrapeJobs", () => {
 
   it("persists completed notification", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({
+    await subscribeCb!({
       new: { status: "completed", name: "Job2", results_count: 10, id: "j2", source: "gmaps" },
       old: { status: "running" },
     });
@@ -132,7 +138,7 @@ describe("useRealtimeScrapeJobs", () => {
 
   it("toasts on failed job with destructive variant", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({
+    await subscribeCb!({
       new: { status: "failed", name: "Job3", error_message: "timeout", id: "j3" },
       old: { status: "running" },
     });
@@ -143,7 +149,7 @@ describe("useRealtimeScrapeJobs", () => {
 
   it("persists failed notification", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({
+    await subscribeCb!({
       new: { status: "failed", name: "Job4", error_message: "err", id: "j4" },
       old: { status: "running" },
     });
@@ -154,7 +160,7 @@ describe("useRealtimeScrapeJobs", () => {
 
   it("invalidates scrape-jobs and dashboard queries", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({
+    await subscribeCb!({
       new: { status: "completed", name: "J", results_count: 1, id: "x", source: "gmaps" },
       old: { status: "pending" },
     });
@@ -164,7 +170,7 @@ describe("useRealtimeScrapeJobs", () => {
 
   it("handles missing error_message gracefully", async () => {
     renderHook(() => useRealtimeScrapeJobs());
-    await subscribeCb({
+    await subscribeCb!({
       new: { status: "failed", name: "Job5", error_message: null, id: "j5" },
       old: { status: "running" },
     });

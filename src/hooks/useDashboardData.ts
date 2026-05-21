@@ -93,32 +93,26 @@ export function useDashboardStats() {
 
   useEffect(() => {
     if (!user?.id || isDemoMode) return;
+    // Os dados do dashboard são escopados por organização e a RLS já restringe
+    // os eventos que este canal recebe. Invalidamos em qualquer mudança relevante
+    // (incluindo DELETE, cujo payload vem em `old`, não em `new`).
     const channel = supabase
       .channel(`private:${user.id}:dashboard`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, (payload) => {
-        // Only invalidate if the change belongs to the user (RLS will filter, but frontend should be smart)
-        if (payload.new && (payload.new as any).user_id === user.id) {
-          queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-          queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
-          queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
-        }
+      .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
+        queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, (payload) => {
-        if (payload.new && (payload.new as any).user_id === user.id) {
-          queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-          queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
-        }
+      .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload) => {
-        if (payload.new && (payload.new as any).user_id === user.id) {
-          queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
-          queryClient.invalidateQueries({ queryKey: ["notifications"] });
-        }
+      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, (payload) => {
-        if (payload.new && (payload.new as any).user_id === user.id) {
-          queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-        }
+      .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       })
       .subscribe();
 

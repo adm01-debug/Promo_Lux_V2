@@ -7,6 +7,7 @@ import { Filter, DollarSign, TrendingUp } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { MiniDonut } from "./AnimatedDonut";
 import { CustomTooltip } from "./AnalyticsChartTooltip";
+import type { AnalyticsCampaign } from "./useAnalyticsData";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -16,7 +17,7 @@ const cardVariants = {
 interface ConversionTabProps {
   funnelData: { name: string; value: number; fill: string }[];
   roiData: { name: string; abertura: number; resposta: number; reunioes: number; roi: number }[];
-  allCampaigns: any[];
+  allCampaigns: AnalyticsCampaign[];
   totalProspects: number;
   totalMeetings: number;
   conversionRate: string;
@@ -126,9 +127,11 @@ export const ConversionTab = ({ funnelData, roiData, allCampaigns, totalProspect
             </thead>
             <tbody>
               {allCampaigns.map((c) => {
-                const openRate = c.sent > 0 ? Math.round((c.opened / c.sent) * 100) : 0;
-                const replyRate = c.sent > 0 ? Math.round((c.replied / c.sent) * 100) : 0;
-                const convRate = c.prospects > 0 ? ((c.meetings / c.prospects) * 100).toFixed(1) : "0";
+                const sent = c.sent ?? 0;
+                const prospects = c.prospects ?? 0;
+                const openRate = sent > 0 ? Math.round(((c.opened ?? 0) / sent) * 100) : 0;
+                const replyRate = sent > 0 ? Math.round(((c.replied ?? 0) / sent) * 100) : 0;
+                const convRate = prospects > 0 ? (((c.meetings ?? 0) / prospects) * 100).toFixed(1) : "0";
                 return (
                   <tr key={c.id} className="border-b border-border/30 hover:bg-secondary/20 transition-colors">
                     <td className="p-3 font-medium text-foreground">{c.name}</td>

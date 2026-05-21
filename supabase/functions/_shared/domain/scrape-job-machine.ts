@@ -29,14 +29,16 @@ export const ScrapeJobStateMachine = {
   }
 };
 
+type TransitionMap = Record<string, ScrapeJobStatus | undefined>;
+
 export function canTransitionScrapeJob(current: ScrapeJobStatus, event: string): boolean {
   const state = ScrapeJobStateMachine.states[current];
   if (!state) return false;
-  return !!(state as any).on[event];
+  return !!(state.on as TransitionMap)[event];
 }
 
 export function getNextScrapeJobStatus(current: ScrapeJobStatus, event: string): ScrapeJobStatus | null {
   const state = ScrapeJobStateMachine.states[current];
   if (!state) return null;
-  return (state as any).on[event] || null;
+  return (state.on as TransitionMap)[event] || null;
 }

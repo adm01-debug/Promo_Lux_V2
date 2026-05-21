@@ -31,7 +31,9 @@ export function usePersistedFilters<T extends object>(
           const parsed = JSON.parse(e.newValue);
           const next = deserialize(parsed, defaultState as Record<string, unknown>) as T;
           setStateRaw(next);
-        } catch {}
+        } catch {
+          /* JSON inválido em outra aba: ignora e mantém o estado atual */
+        }
       } else if (e.key === storageKey && !e.newValue) {
         setStateRaw(defaultState);
       }
@@ -46,7 +48,9 @@ export function usePersistedFilters<T extends object>(
         const next = typeof updater === "function" ? (updater as (p: T) => T)(prev) : updater;
         try {
           localStorage.setItem(storageKey, JSON.stringify(serialize(next as Record<string, unknown>)));
-        } catch {}
+        } catch {
+          /* localStorage indisponível (modo privado/cota): persiste só em memória */
+        }
         return next;
       });
     },

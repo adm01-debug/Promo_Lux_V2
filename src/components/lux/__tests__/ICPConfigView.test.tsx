@@ -15,20 +15,26 @@ vi.mock("@/hooks/useICPConfig", () => ({
 
 import { useICPConfig } from "@/hooks/useICPConfig";
 
+type MockedICP = {
+  config: { criteria: { type: string }[] };
+  isLoading: boolean;
+  save: () => void;
+};
+
 describe("useICPConfig (mocked)", () => {
   it("returns config with criteria", () => {
-    const result = (useICPConfig as any)();
+    const result = vi.mocked(useICPConfig)() as unknown as MockedICP;
     expect(result.config.criteria).toHaveLength(1);
     expect(result.config.criteria[0].type).toBe("sector");
   });
 
   it("returns isLoading false", () => {
-    const result = (useICPConfig as any)();
+    const result = vi.mocked(useICPConfig)() as unknown as MockedICP;
     expect(result.isLoading).toBe(false);
   });
 
   it("returns save function", () => {
-    const result = (useICPConfig as any)();
+    const result = vi.mocked(useICPConfig)() as unknown as MockedICP;
     expect(typeof result.save).toBe("function");
   });
 });

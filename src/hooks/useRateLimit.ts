@@ -90,7 +90,8 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
       if (status.locked) {
         setLocked(true);
         setRemainingSec(status.remainingSec);
-      } else if (!locked) {
+      } else if (locked) {
+        // Lock expirou: limpa o estado travado (antes ficava preso para sempre)
         setLocked(false);
         setRemainingSec(0);
       }

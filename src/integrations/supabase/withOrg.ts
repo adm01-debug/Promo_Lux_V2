@@ -209,7 +209,6 @@ export function fromOrg<T extends TableName>(table: T) {
             assertOrgMatch(values, orgId, tableName, String(prop));
           }
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ? (target as any)[prop](next)
@@ -224,7 +223,6 @@ export function fromOrg<T extends TableName>(table: T) {
           assertOrgMatch(values, orgId, tableName, "update");
           // Remove organization_id do payload — UPDATE não deve "mover" registros entre orgs
           const sanitized = stripOrgFromUpdate(values);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const q = options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ? (target as any).update(sanitized)
@@ -232,8 +230,8 @@ export function fromOrg<T extends TableName>(table: T) {
             : (target as any).update(sanitized, options);
             
           // Suporte a optimistic locking via .match() se 'version' estiver presente
-          if (values && typeof values === "object" && "version" in (values as any)) {
-            const version = (values as any).version;
+          if (values && typeof values === "object" && "version" in values) {
+            const version = (values as Record<string, unknown>).version;
             if (typeof version === "number") {
               return q.eq("organization_id", orgId).eq("version", version);
             }
@@ -246,7 +244,6 @@ export function fromOrg<T extends TableName>(table: T) {
       if (prop === "delete" && isScoped) {
         return (options?: unknown) => {
           if (!orgId) raise(new MissingOrgContextError(tableName, "delete"));
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const q = options === undefined
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ? (target as any).delete()

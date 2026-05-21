@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import type { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -41,7 +42,7 @@ vi.mock("@/hooks/usePersistedFilters", () => ({
 const { CompaniesView } = await import("../CompaniesView");
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-const wrapper = ({ children }: any) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={qc}>
     <TooltipProvider>{children}</TooltipProvider>
   </QueryClientProvider>

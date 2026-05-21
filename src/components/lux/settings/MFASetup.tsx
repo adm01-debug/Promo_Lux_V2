@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import type { Factor } from "@supabase/supabase-js";
 import { toast } from "@/hooks/use-toast";
 
 export const MFASetup = () => {
@@ -13,7 +14,7 @@ export const MFASetup = () => {
   const [secret, setSecret] = useState<string | null>(null);
   const [verifyCode, setVerifyCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [factors, setFactors] = useState<any[]>([]);
+  const [factors, setFactors] = useState<Factor[]>([]);
   const [copied, setCopied] = useState(false);
 
   const fetchFactors = async () => {
@@ -39,8 +40,8 @@ export const MFASetup = () => {
       setFactorId(data.id);
       setQrCode(data.totp.qr_code);
       setSecret(data.totp.secret);
-    } catch (err: any) {
-      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    } catch (err) {
+      toast({ title: "Erro", description: (err as Error).message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -65,8 +66,8 @@ export const MFASetup = () => {
       setFactorId(null);
       setVerifyCode("");
       fetchFactors();
-    } catch (err: any) {
-      toast({ title: "Erro na verificação", description: err.message, variant: "destructive" });
+    } catch (err) {
+      toast({ title: "Erro na verificação", description: (err as Error).message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -79,8 +80,8 @@ export const MFASetup = () => {
       if (error) throw error;
       toast({ title: "MFA Desativado", description: "O fator de autenticação foi removido." });
       fetchFactors();
-    } catch (err: any) {
-      toast({ title: "Erro ao desativar", description: err.message, variant: "destructive" });
+    } catch (err) {
+      toast({ title: "Erro ao desativar", description: (err as Error).message, variant: "destructive" });
     } finally {
       setLoading(false);
     }

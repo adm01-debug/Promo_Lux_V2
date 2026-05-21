@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import type { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import { CompanyTable } from "../CompanyTable";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,7 +17,7 @@ vi.mock("@/hooks/useDashboardData", () => ({
 import { useRecentCompanies } from "@/hooks/useDashboardData";
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-const wrapper = ({ children }: any) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={qc}>
     <TooltipProvider>{children}</TooltipProvider>
   </QueryClientProvider>
@@ -30,7 +31,7 @@ const mockCompanies = [
 
 describe("CompanyTable — P1 Score IPC Tooltip", () => {
   it("renders Score IPC header with HelpCircle tooltip trigger", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as unknown as ReturnType<typeof useRecentCompanies>);
     render(<CompanyTable />, { wrapper });
     
     expect(screen.getByText("Score IPC")).toBeInTheDocument();
@@ -40,7 +41,7 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
   });
 
   it("renders company names", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as unknown as ReturnType<typeof useRecentCompanies>);
     render(<CompanyTable />, { wrapper });
     
     expect(screen.getByText("Acme Corp")).toBeInTheDocument();
@@ -49,7 +50,7 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
   });
 
   it("applies correct score color classes", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as unknown as ReturnType<typeof useRecentCompanies>);
     render(<CompanyTable />, { wrapper });
     
     // Score 92 = text-success — class is on ancestor span
@@ -69,7 +70,7 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
   });
 
   it("shows loading state when loading", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: undefined, isLoading: true } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: undefined, isLoading: true } as unknown as ReturnType<typeof useRecentCompanies>);
     const { container } = render(<CompanyTable />, { wrapper });
     // Loading renders skeleton placeholders (divs with specific spacing)
     const loadingArea = container.querySelector(".space-y-3");
@@ -77,13 +78,13 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
   });
 
   it("shows empty state when no companies", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: [], isLoading: false } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: [], isLoading: false } as unknown as ReturnType<typeof useRecentCompanies>);
     render(<CompanyTable />, { wrapper });
     expect(screen.getByText("Nenhuma empresa ainda")).toBeInTheDocument();
   });
 
   it("renders table headers correctly", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as unknown as ReturnType<typeof useRecentCompanies>);
     render(<CompanyTable />, { wrapper });
     
     expect(screen.getByText("Empresa / CNPJ")).toBeInTheDocument();
@@ -93,7 +94,7 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
   });
 
   it("renders sector badges for each company", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as unknown as ReturnType<typeof useRecentCompanies>);
     render(<CompanyTable />, { wrapper });
     
     expect(screen.getByText("Tech")).toBeInTheDocument();

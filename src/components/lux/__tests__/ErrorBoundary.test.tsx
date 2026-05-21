@@ -29,7 +29,7 @@ describe("ErrorBoundary", () => {
         <BrokenComponent shouldThrow />
       </ErrorBoundary>
     );
-    expect(screen.getByText("Algo deu errado")).toBeInTheDocument();
+    expect(screen.getByText(/Algo deu errado/)).toBeInTheDocument();
     expect(screen.getByText("Tentar novamente")).toBeInTheDocument();
     expect(screen.getByText("Ir ao início")).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe("ErrorBoundary", () => {
         <BrokenComponent shouldThrow />
       </ErrorBoundary>
     );
-    expect(screen.getByText("Test crash")).toBeInTheDocument();
+    expect(screen.getByText(/Test crash/)).toBeInTheDocument();
   });
 
   it("renders custom fallback when provided", () => {

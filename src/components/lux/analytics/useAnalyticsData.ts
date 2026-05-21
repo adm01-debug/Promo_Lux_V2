@@ -5,15 +5,44 @@ import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_COMPANIES_FULL, DEMO_CAMPAIGNS, DEMO_WORKFLOWS } from "@/lib/demoData";
 import { COLORS } from "./AnalyticsChartTooltip";
 
+interface AnalyticsCompany {
+  sector?: string | null;
+  ipc_score?: number | null;
+  enriched?: boolean | null;
+  source?: string | null;
+  created_at?: string | null;
+}
+interface AnalyticsScrapeJob {
+  status?: string | null;
+  results_count?: number | null;
+  source?: string | null;
+  created_at?: string | null;
+}
+interface AnalyticsWorkflow {
+  status?: string | null;
+  leads_processed?: number | null;
+  leads_qualified?: number | null;
+  success_rate?: number | null;
+}
+export interface AnalyticsCampaign {
+  id?: string;
+  name: string;
+  prospects?: number | null;
+  sent?: number | null;
+  opened?: number | null;
+  replied?: number | null;
+  meetings?: number | null;
+}
+
 export function useAnalyticsData() {
   const { isDemoMode } = useDemo();
   return useQuery({
     queryKey: ["analytics-data", isDemoMode],
     queryFn: async () => {
-      let companies: any[] | null;
-      let scrapeJobs: any[] | null;
-      let workflows: any[] | null;
-      let campaigns: any[] | null;
+      let companies: AnalyticsCompany[] | null;
+      let scrapeJobs: AnalyticsScrapeJob[] | null;
+      let workflows: AnalyticsWorkflow[] | null;
+      let campaigns: AnalyticsCampaign[] | null;
 
       if (isDemoMode) {
         companies = DEMO_COMPANIES_FULL.map(c => ({ sector: c.sector, ipc_score: c.ipcScore, enriched: c.enriched, source: c.source, created_at: new Date().toISOString() }));
@@ -25,7 +54,7 @@ export function useAnalyticsData() {
           { status: "pending", results_count: 0, source: "gmaps", created_at: new Date().toISOString() },
         ];
         workflows = DEMO_WORKFLOWS.map(w => ({ status: w.status, leads_processed: w.leads_processed, leads_qualified: w.leads_qualified, success_rate: w.success_rate }));
-        campaigns = DEMO_CAMPAIGNS as any[];
+        campaigns = DEMO_CAMPAIGNS as unknown as AnalyticsCampaign[];
       } else {
         const [r1, r2, r3, r4] = await Promise.all([
           db.from("companies").select("sector, ipc_score, enriched, source, created_at"),
@@ -112,15 +141,19 @@ export function useAnalyticsData() {
 
       // ROI per campaign
       const roiData = allCampaigns
-        .filter((c) => c.sent > 0)
+        .filter((c) => (c.sent ?? 0) > 0)
         .slice(0, 8)
-        .map((c) => ({
-          name: c.name.length > 18 ? c.name.slice(0, 18) + "…" : c.name,
-          abertura: c.sent > 0 ? Math.round((c.opened / c.sent) * 100) : 0,
-          resposta: c.sent > 0 ? Math.round((c.replied / c.sent) * 100) : 0,
-          reunioes: c.meetings || 0,
-          roi: c.prospects > 0 ? Math.round((c.meetings / c.prospects) * 100) : 0,
-        }));
+        .map((c) => {
+          const sent = c.sent ?? 0;
+          const prospects = c.prospects ?? 0;
+          return {
+            name: c.name.length > 18 ? c.name.slice(0, 18) + "…" : c.name,
+            abertura: sent > 0 ? Math.round(((c.opened ?? 0) / sent) * 100) : 0,
+            resposta: sent > 0 ? Math.round(((c.replied ?? 0) / sent) * 100) : 0,
+            reunioes: c.meetings ?? 0,
+            roi: prospects > 0 ? Math.round(((c.meetings ?? 0) / prospects) * 100) : 0,
+          };
+        });
 
       return {
         sectorData, sourceData, scoreData,

@@ -62,7 +62,9 @@ function loadOrder(): WidgetId[] {
   try {
     const stored = localStorage.getItem(LAYOUT_KEY);
     if (stored) return JSON.parse(stored);
-  } catch {}
+  } catch {
+    /* layout salvo corrompido ou storage indisponível: usa a ordem padrão */
+  }
   return DEFAULT_ORDER;
 }
 

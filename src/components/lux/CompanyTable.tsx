@@ -171,9 +171,9 @@ export const CompanyTable = () => {
                             </Tooltip>
                           )}
                         </div>
-                        {(company as any).cnpj && (
+                        {company.cnpj && (
                           <span className="text-[10px] text-muted-foreground/60 font-mono block mt-0.5">
-                            {(company as any).cnpj}
+                            {company.cnpj}
                           </span>
                         )}
                       </div>

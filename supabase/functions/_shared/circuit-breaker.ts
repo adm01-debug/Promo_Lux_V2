@@ -41,7 +41,7 @@ export async function reportFailure(supabase: SupabaseClient, serviceName: strin
     .single();
 
   const newCount = cb.failure_count + 1;
-  const updates: any = { failure_count: newCount, last_failure_at: new Date().toISOString() };
+  const updates: Record<string, unknown> = { failure_count: newCount, last_failure_at: new Date().toISOString() };
 
   if (newCount >= cb.threshold) {
     updates.state = "open";

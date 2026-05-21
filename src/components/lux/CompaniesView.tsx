@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
-import { CompanyFilters, CompanyFiltersState, getScoreRange, getCity } from "@/components/lux/CompanyFilters";
+import { CompanyFilters, CompanyFiltersState, getScoreRange, getCity, type ScoreRange } from "@/components/lux/CompanyFilters";
 import { CompanyPagination } from "@/components/lux/CompanyPagination";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
@@ -17,6 +17,7 @@ import { DataError } from "@/components/lux/DataError";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db, ensureSameOrg, getActiveOrgId } from "@/integrations/supabase/withOrg";
+import type { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CompanyTableRow } from "./companies/CompanyTableRow";
@@ -77,7 +78,7 @@ export const CompaniesView = () => {
       : async () => {
           const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false });
           if (error) throw error;
-          return (data ?? []).map((c: any) => ({
+          return (data ?? []).map((c: Database["public"]["Tables"]["companies"]["Row"]) => ({
             id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
             ipcScore: c.ipc_score ?? 0, source: c.source, website: c.website ?? undefined,
             employees: c.employees ?? "—", revenue: c.revenue?.toString() ?? "—", email: c.email ?? undefined,
@@ -97,7 +98,7 @@ export const CompaniesView = () => {
   };
 
   const filtered = useMemo(() => {
-    let result = companies.filter((c) => {
+    const result = companies.filter((c) => {
       const s = filters.search.toLowerCase();
       const matchSearch = !s || c.name.toLowerCase().includes(s) || c.sector.toLowerCase().includes(s) || c.location.toLowerCase().includes(s) || (c.email && c.email.toLowerCase().includes(s));
       const matchSector = filters.selectedSectors.size === 0 || filters.selectedSectors.has(c.sector);
@@ -289,7 +290,7 @@ export const CompaniesView = () => {
           onToggleLocation={(v) => setFilters((f) => ({ ...f, selectedLocations: toggleSet(f.selectedLocations, v) }))}
           onToggleSource={(v) => setFilters((f) => ({ ...f, selectedSources: toggleSet(f.selectedSources, v) }))}
           onToggleStatus={(v) => setFilters((f) => ({ ...f, selectedStatus: toggleSet(f.selectedStatus, v) }))}
-          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as any) }))}
+          onToggleScore={(v) => setFilters((f) => ({ ...f, selectedScores: toggleSet(f.selectedScores, v as ScoreRange) }))}
           onClearAll={resetFilters}
           companies={companies}
         />

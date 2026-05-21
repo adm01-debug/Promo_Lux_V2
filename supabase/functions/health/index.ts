@@ -22,7 +22,11 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const start = performance.now();
-  const results: Record<string, any> = {
+  const results: {
+    status: string;
+    timestamp: string;
+    checks: Record<string, unknown>;
+  } = {
     status: "healthy",
     timestamp: new Date().toISOString(),
     checks: {}

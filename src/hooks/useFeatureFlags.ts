@@ -6,7 +6,7 @@ export interface FeatureFlag {
   name: string;
   description: string | null;
   enabled: boolean;
-  rules: any;
+  rules: unknown;
 }
 
 export const useFeatureFlags = () => {
