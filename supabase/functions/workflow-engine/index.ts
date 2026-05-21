@@ -301,39 +301,45 @@ serve(async (req) => {
 
               const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
 
-              for (let li = 1; li < lines.length; li++) {
-                const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
-                const obj: Record<string, string> = {};
-                headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
+        const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
+        const obj: Record<string, string> = {};
+        headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
 
-                const { data: company } = await supabase
-                  .from("companies")
-                  .insert({
-                    user_id: userId,
-                    name: obj.name || obj.title || "Unknown",
-                    sector: obj.category || obj.type || "Não classificado",
-                    location: obj.address || obj.city || "",
-                    website: obj.website || obj.web_site || "",
-                    phone: obj.phone || "",
-                    email: obj.email || "",
-                    source: "gmaps",
-                    enriched: !!(obj.email || obj.phone),
-                    raw_data: obj,
-                  })
-                  .select()
-                  .single();
+        const companyToInsert = {
+          user_id: userId,
+          name: obj.name || obj.title || "Unknown",
+          sector: obj.category || obj.type || "Não classificado",
+          location: obj.address || obj.city || "",
+          website: obj.website || obj.web_site || "",
+          phone: obj.phone || "",
+          email: obj.email || "",
+          source: "gmaps",
+          enriched: !!(obj.email || obj.phone),
+          raw_data: obj,
+        };
 
-                if (company) {
-                  await supabase.from("scrape_results").insert({
-                    user_id: userId,
-                    job_id: job.id,
-                    company_id: company.id,
-                    raw_data: obj,
-                    processed: false,
-                  });
-                  enrichedCount++;
-                }
-              }
+        const { data: company, error: insError } = await supabase
+          .from("companies")
+          .insert(companyToInsert)
+          .select()
+          .single();
+
+        if (insError) {
+          log.warn("company_insert_skip", { error: insError.message, name: companyToInsert.name });
+          continue;
+        }
+
+        if (company) {
+          await supabase.from("scrape_results").insert({
+            user_id: userId,
+            job_id: job.id,
+            company_id: company.id,
+            raw_data: obj,
+            processed: false,
+          });
+          enrichedCount++;
+        }
+      }
 
               await supabase
                 .from("scrape_jobs")
