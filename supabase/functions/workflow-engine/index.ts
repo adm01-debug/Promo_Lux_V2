@@ -301,43 +301,53 @@ serve(async (req) => {
 
               const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
 
-        const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
-        const obj: Record<string, string> = {};
-        headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
+        const batchCompanies = [];
+        const batchRawData = [];
 
-        const companyToInsert = {
-          user_id: userId,
-          name: obj.name || obj.title || "Unknown",
-          sector: obj.category || obj.type || "Não classificado",
-          location: obj.address || obj.city || "",
-          website: obj.website || obj.web_site || "",
-          phone: obj.phone || "",
-          email: obj.email || "",
-          source: "gmaps",
-          enriched: !!(obj.email || obj.phone),
-          raw_data: obj,
-        };
+        for (let li = 1; li < lines.length; li++) {
+          const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
+          const obj: Record<string, string> = {};
+          headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
 
-        const { data: company, error: insError } = await supabase
-          .from("companies")
-          .insert(companyToInsert)
-          .select()
-          .single();
-
-        if (insError) {
-          log.warn("company_insert_skip", { error: insError.message, name: companyToInsert.name });
-          continue;
+          batchCompanies.push({
+            user_id: userId,
+            name: obj.name || obj.title || "Unknown",
+            sector: obj.category || obj.type || "Não classificado",
+            location: obj.address || obj.city || "",
+            website: obj.website || obj.web_site || "",
+            phone: obj.phone || "",
+            email: obj.email || "",
+            source: "gmaps",
+            enriched: !!(obj.email || obj.phone),
+            raw_data: obj,
+          });
+          batchRawData.push(obj);
         }
 
-        if (company) {
-          await supabase.from("scrape_results").insert({
-            user_id: userId,
-            job_id: job.id,
-            company_id: company.id,
-            raw_data: obj,
-            processed: false,
-          });
-          enrichedCount++;
+        if (batchCompanies.length > 0) {
+          const { data: insertedCompanies, error: insError } = await supabase
+            .from("companies")
+            .insert(batchCompanies)
+            .select();
+
+          if (insError) {
+            log.error("bulk_company_insert_failed", { error: insError.message });
+            continue;
+          }
+
+          if (insertedCompanies) {
+            const resultsToInsert = insertedCompanies.map((c, idx) => ({
+              user_id: userId,
+              job_id: job.id,
+              company_id: c.id,
+              raw_data: batchRawData[idx],
+              processed: false,
+            }));
+
+            const { error: resError } = await supabase.from("scrape_results").insert(resultsToInsert);
+            if (resError) log.error("bulk_results_insert_failed", { error: resError.message });
+            enrichedCount += insertedCompanies.length;
+          }
         }
       }
 
