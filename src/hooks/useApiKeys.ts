@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -36,7 +35,7 @@ export function useApiKeys() {
     queryKey: ["api_keys", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("api_keys")
         .select("id,name,prefix,scopes,last_used_at,expires_at,active,created_at")
         .order("created_at", { ascending: false });

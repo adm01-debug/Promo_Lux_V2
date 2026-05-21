@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -71,7 +71,7 @@ export const CampaignTrackingDrawer = ({
     queryKey: ["campaign-recipients", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("campaign_recipients")
         .select("*")
         .eq("campaign_id", campaignId!)
@@ -85,7 +85,7 @@ export const CampaignTrackingDrawer = ({
     queryKey: ["campaign-events", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("campaign_events")
         .select("id,event_type,url,occurred_at,recipient_id")
         .eq("campaign_id", campaignId!)
@@ -100,7 +100,7 @@ export const CampaignTrackingDrawer = ({
     queryKey: ["campaign-replies", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("campaign_replies")
         .select("id,recipient_id,from_email,from_name,subject,snippet,received_at")
         .eq("campaign_id", campaignId!)

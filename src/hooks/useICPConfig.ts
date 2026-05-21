@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
@@ -38,7 +38,7 @@ export function useICPConfig() {
   const queryAll = useQuery({
     queryKey: ["ipc-configs"],
     queryFn: async (): Promise<ICPConfig[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("ipc_config")
         .select("*")
         .order("updated_at", { ascending: false });
@@ -61,13 +61,13 @@ export function useICPConfig() {
   const saveMutation = useMutation({
     mutationFn: async ({ id, name, criteria, is_active = true }: { id?: string; name: string; criteria: ICPCriterion[]; is_active?: boolean }) => {
       if (id) {
-        const { error } = await supabase
+        const { error } = await db
           .from("ipc_config")
           .update({ criteria: criteria as unknown as Json, name, is_active, updated_at: new Date().toISOString() })
           .eq("id", id);
         if (error) throw error;
       } else {
-        const { error } = await supabase
+        const { error } = await db
           .from("ipc_config")
           .insert({ user_id: user?.id, name, criteria: criteria as unknown as Json, is_active });
         if (error) throw error;
@@ -85,9 +85,9 @@ export function useICPConfig() {
   const activateMutation = useMutation({
     mutationFn: async (id: string) => {
       // Deactivate all first
-      await supabase.from("ipc_config").update({ is_active: false }).neq("id", id);
+      await db.from("ipc_config").update({ is_active: false }).neq("id", id);
       // Activate target
-      const { error } = await supabase.from("ipc_config").update({ is_active: true }).eq("id", id);
+      const { error } = await db.from("ipc_config").update({ is_active: true }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -98,7 +98,7 @@ export function useICPConfig() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("ipc_config").delete().eq("id", id);
+      const { error } = await db.from("ipc_config").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

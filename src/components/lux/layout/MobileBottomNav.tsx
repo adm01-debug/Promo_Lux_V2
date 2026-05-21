@@ -3,7 +3,7 @@ import { LayoutDashboard, Building2, Bot, BarChart3, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 
 interface MobileBottomNavProps {
   activeView: View;
@@ -32,7 +32,7 @@ export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBo
   const { data: unreadCount } = useQuery({
     queryKey: ["unread-notifications-count"],
     queryFn: async () => {
-      const { count } = await supabase
+      const { count } = await db
         .from("notifications")
         .select("*", { count: "exact", head: true })
         .eq("read", false);

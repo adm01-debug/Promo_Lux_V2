@@ -67,7 +67,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
     queryFn: isDemoMode
       ? () => DEMO_NOTIFICATIONS as unknown as Notification[]
       : async () => {
-          const { data, error } = await supabase
+          const { data, error } = await db
             .from("notifications")
             .select("*")
             .order("created_at", { ascending: false })
@@ -307,7 +307,7 @@ export const useNotificationCount = () => {
     queryFn: isDemoMode
       ? () => DEMO_NOTIFICATIONS.filter(n => !n.read).length
       : async () => {
-          const { count, error } = await supabase
+          const { count, error } = await db
             .from("notifications")
             .select("*", { count: "exact", head: true })
             .eq("read", false);

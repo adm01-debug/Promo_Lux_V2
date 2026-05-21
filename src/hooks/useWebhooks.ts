@@ -93,7 +93,7 @@ export function useWebhookDeliveries(webhookId: string | null) {
     enabled: !!webhookId && !!user,
     refetchInterval: 10_000,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("webhook_deliveries")
         .select("*")
         .eq("webhook_id", webhookId!)
@@ -108,7 +108,7 @@ export function useWebhookDeliveries(webhookId: string | null) {
     mutationFn: async (deliveryId: string) => {
       // Reset delivery state so the dispatcher will pick it up even if it
       // previously hit MAX_ATTEMPTS or was marked as failed.
-      const { error: resetErr } = await supabase
+      const { error: resetErr } = await db
         .from("webhook_deliveries")
         .update({
           status: "pending",

@@ -41,7 +41,7 @@ export function useDealStages() {
     queryKey: ["deal_stages", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("deal_stages")
         .select("*")
         .order("position", { ascending: true });
@@ -63,7 +63,7 @@ export function useDealStages() {
 
   const createStage = useMutation({
     mutationFn: async (input: Partial<DealStage> & { name: string }) => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("deal_stages")
         .insert({
           name: input.name,
@@ -115,7 +115,7 @@ export function useDeals() {
     queryKey: ["deals", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("deals")
         .select("*")
         .order("position", { ascending: true });
@@ -126,7 +126,7 @@ export function useDeals() {
 
   const createDeal = useMutation({
     mutationFn: async (input: Partial<Deal> & { title: string; stage_id: string }) => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("deals")
         .insert({
           title: input.title,
@@ -204,7 +204,7 @@ export function useDealActivities(dealId: string | null) {
     queryKey: ["deal_activities", dealId],
     enabled: !!dealId && !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("deal_activities")
         .select("*")
         .eq("deal_id", dealId!)
@@ -283,7 +283,7 @@ export function useDealTasks(dealId?: string | null) {
 
   const toggleTask = useMutation({
     mutationFn: async ({ id, completed }: { id: string; completed: boolean }) => {
-      const { error } = await supabase
+      const { error } = await db
         .from("deal_tasks")
         .update({ completed, completed_at: completed ? new Date().toISOString() : null })
         .eq("id", id);

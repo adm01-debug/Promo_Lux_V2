@@ -12,7 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -59,7 +58,7 @@ export const IntentSignalsView = () => {
     queryFn: isDemoMode
       ? () => DEMO_INTENT_SIGNALS as unknown as Tables<"intent_signals">[]
       : async () => {
-          const { data, error } = await supabase
+          const { data, error } = await db
             .from("intent_signals")
             .select("*")
             .order("created_at", { ascending: false })

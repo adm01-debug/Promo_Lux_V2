@@ -80,7 +80,7 @@ export const AIAgentView = () => {
   const { data: persistedMessages } = useQuery({
     queryKey: ["agent-chat-messages"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("agent_chat_messages")
         .select("id, role, content, created_at")
         .order("created_at", { ascending: true });

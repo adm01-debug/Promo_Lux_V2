@@ -55,7 +55,7 @@ export const ScrapeResultsView = () => {
   const { data: jobs } = useQuery({
     queryKey: ["scrape-jobs-lite"],
     queryFn: async (): Promise<JobLite[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("scrape_jobs")
         .select("id, name")
         .order("created_at", { ascending: false });
@@ -67,7 +67,7 @@ export const ScrapeResultsView = () => {
   const { data: results, isLoading, error, refetch } = useQuery({
     queryKey: ["scrape-results", jobFilter, statusFilter],
     queryFn: async (): Promise<ScrapeResultRow[]> => {
-      let q = supabase
+      let q = db
         .from("scrape_results")
         .select("id, job_id, company_id, processed, raw_data, created_at")
         .order("created_at", { ascending: false })
@@ -120,7 +120,7 @@ export const ScrapeResultsView = () => {
 
   const reprocessMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      const { error } = await db
         .from("scrape_results")
         .update({ processed: false, company_id: null })
         .eq("id", id);
@@ -163,14 +163,14 @@ export const ScrapeResultsView = () => {
         enriched: !!(email || phone),
         raw_data: raw as TablesInsert<"companies">["raw_data"],
       };
-      const { data: company, error: cErr } = await supabase
+      const { data: company, error: cErr } = await db
         .from("companies")
         .insert(insertPayload)
         .select("id")
         .single();
       if (cErr) throw cErr;
 
-      const { error: uErr } = await supabase
+      const { error: uErr } = await db
         .from("scrape_results")
         .update({ processed: true, company_id: company.id })
         .eq("id", row.id);

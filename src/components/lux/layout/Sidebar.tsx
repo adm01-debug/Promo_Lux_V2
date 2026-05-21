@@ -1,7 +1,7 @@
 import { useMemo, memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { prefetchView } from "@/lib/viewRegistry";
 import {
   Sparkles,
@@ -92,7 +92,7 @@ export const Sidebar = memo(({
   const { data: intentCount = 0 } = useQuery({
     queryKey: ["intent-signals-unread-count"],
     queryFn: async () => {
-      const { count, error } = await supabase
+      const { count, error } = await db
         .from("intent_signals")
         .select("*", { count: "exact", head: true })
         .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
@@ -201,7 +201,7 @@ function SidebarFooter({ collapsed, onToggleCollapse, ref }: { collapsed: boolea
   const { data: activeCount = 0 } = useQuery({
     queryKey: ["active-workflows-count"],
     queryFn: async () => {
-      const { count, error } = await supabase
+      const { count, error } = await db
         .from("workflows")
         .select("*", { count: "exact", head: true })
         .eq("status", "active");
