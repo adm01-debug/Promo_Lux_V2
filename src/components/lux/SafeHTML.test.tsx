@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import { SafeHTML } from "../SafeHTML";
+import { SafeHTML } from "./SafeHTML";
 import React from 'react';
 
 describe("SafeHTML XSS Protection", () => {

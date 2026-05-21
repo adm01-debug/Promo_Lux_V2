@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { db, setActiveOrgId, getActiveOrgId } from "../withOrg";
+import { db, setActiveOrgId, getActiveOrgId } from "./withOrg";
 
 // Mock do supabase client
 vi.mock("../client", () => ({
