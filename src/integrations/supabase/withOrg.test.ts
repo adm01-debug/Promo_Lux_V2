@@ -22,9 +22,8 @@ describe("withOrg Multi-tenant Isolation", () => {
     );
   });
 
-  it("should inject organization_id on select for scoped tables", () => {
+  it("should allow access to scoped tables when org is active", () => {
     setActiveOrgId("org-123");
-    // Tabela permitida não deve lançar erro ao acessar
     expect(() => db.from("companies").select("*")).not.toThrow();
   });
 
