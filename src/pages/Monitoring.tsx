@@ -22,15 +22,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const AutomationMonitoring = () => {
   const [activeTab, setActiveTab] = useState("runs");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Query para buscar jobs de raspagem
   const { data: jobs, isLoading: jobsLoading } = useQuery({
     queryKey: ["automation-jobs"],
     queryFn: async () => {
@@ -40,7 +38,6 @@ const AutomationMonitoring = () => {
     }
   });
 
-  // Query para auditoria
   const { data: auditLogs, isLoading: auditLoading } = useQuery({
     queryKey: ["audit-logs"],
     queryFn: async () => {
@@ -54,6 +51,16 @@ const AutomationMonitoring = () => {
     j.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
     j.status?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const getStatusBadgeVariant = (status: string): "default" | "destructive" | "outline" | "secondary" => {
+    switch (status) {
+      case 'completed': return 'default';
+      case 'failed': return 'destructive';
+      case 'running':
+      case 'working': return 'secondary';
+      default: return 'outline';
+    }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -113,15 +120,15 @@ const AutomationMonitoring = () => {
                         <div className="space-y-1">
                           <CardTitle className="text-base flex items-center gap-2">
                             {job.name || "Tarefa Sem Nome"}
-                            {job.status === 'completed' && <CheckCircle2 className="h-4 w-4 text-success" />}
+                            {job.status === 'completed' && <CheckCircle2 className="h-4 w-4 text-primary" />}
                             {job.status === 'failed' && <XCircle className="h-4 w-4 text-destructive" />}
-                            {job.status === 'processing' && <Clock className="h-4 w-4 text-primary animate-spin" />}
+                            {(job.status === 'running' || job.status === 'working') && <Clock className="h-4 w-4 text-primary animate-spin" />}
                           </CardTitle>
                           <CardDescription className="text-xs font-mono">
                             ID: {job.external_id || job.id.slice(0,8)}
                           </CardDescription>
                         </div>
-                        <Badge variant={job.status === 'completed' ? 'success' : job.status === 'failed' ? 'destructive' : 'secondary'}>
+                        <Badge variant={getStatusBadgeVariant(job.status)}>
                           {job.status}
                         </Badge>
                       </div>
