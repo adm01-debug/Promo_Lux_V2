@@ -2,19 +2,17 @@ import { describe, it, expect, vi } from "vitest";
 import { db, setActiveOrgId } from "./withOrg";
 
 // Mock do supabase client
-const mockSupabase = {
-  from: vi.fn(() => ({
-    select: vi.fn().mockReturnThis(),
-    insert: vi.fn().mockReturnThis(),
-    update: vi.fn().mockReturnThis(),
-    delete: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    limit: vi.fn().mockReturnThis(),
-  })),
-};
-
 vi.mock("./client", () => ({
-  supabase: mockSupabase
+  supabase: {
+    from: vi.fn(() => ({
+      select: vi.fn().mockReturnThis(),
+      insert: vi.fn().mockReturnThis(),
+      update: vi.fn().mockReturnThis(),
+      delete: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
+    })),
+  }
 }));
 
 describe("withOrg Multi-tenant Isolation", () => {
@@ -26,9 +24,7 @@ describe("withOrg Multi-tenant Isolation", () => {
 
   it("should inject organization_id on select for scoped tables", () => {
     setActiveOrgId("org-123");
-    db.from("companies").select("*");
-    
-    // Verificamos o mock local se possível, ou apenas garantimos que não houve erro na tabela escopada
+    // Tabela permitida não deve lançar erro ao acessar
     expect(() => db.from("companies").select("*")).not.toThrow();
   });
 
