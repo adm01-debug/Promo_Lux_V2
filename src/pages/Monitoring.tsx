@@ -61,7 +61,6 @@ const AutomationMonitoring = () => {
   const { data: auditLogs, isLoading: auditLoading } = useQuery({
     queryKey: ["audit-logs"],
     queryFn: async () => {
-      // Manual join since foreign keys might not be present or valid for all records
       const { data: logs, error: logsError } = await db
         .from("audit_logs")
         .select("*")
@@ -87,6 +86,19 @@ const AutomationMonitoring = () => {
       return logs.map(log => ({ ...log, actor: null }));
     }
   });
+
+  const handleOpenDetails = (jobId: string) => {
+    setSelectedJobId(jobId);
+    setIsDetailsOpen(true);
+  };
+
+  const handleManualSync = () => {
+    refetchJobs();
+    toast({
+      title: "Sincronizando",
+      description: "Buscando atualizações de status...",
+    });
+  };
 
   const filteredJobs = jobs?.filter(j => 
     j.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -158,7 +170,7 @@ const AutomationMonitoring = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  <Card className="glass group hover:border-primary/30 transition-all">
+                  <Card className="glass group hover:border-primary/30 transition-all cursor-pointer" onClick={() => handleOpenDetails(job.id)}>
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
@@ -200,14 +212,17 @@ const AutomationMonitoring = () => {
                           variant="ghost" 
                           size="sm" 
                           className="w-full text-xs gap-1.5 h-8 hover:bg-primary/10 hover:text-primary transition-colors"
-                          onClick={() => handleOpenDetails(job.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenDetails(job.id);
+                          }}
                         >
                           <Terminal className="h-3 w-3" />
                           Logs & Detalhes
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
+                            <Button variant="ghost" size="sm" className="w-8 h-8 p-0" onClick={(e) => e.stopPropagation()}>
                               <MoreVertical className="h-3 w-3" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -246,7 +261,7 @@ const AutomationMonitoring = () => {
                     <div className="p-10 text-center text-muted-foreground">
                       Nenhum registro de auditoria encontrado.
                     </div>
-                  ) : auditLogs?.map((log) => (
+                  ) : auditLogs?.map((log: any) => (
                     <div key={log.id} className="flex items-start gap-4 p-4 hover:bg-secondary/10 transition-colors">
                       <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0 border border-border/30 overflow-hidden">
                         {log.actor?.avatar_url ? (
