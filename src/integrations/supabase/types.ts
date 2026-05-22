@@ -1993,6 +1993,7 @@ export type Database = {
           window_minutes: number
         }[]
       }
+      get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
         Args: { p_user_id: string }
         Returns: {
