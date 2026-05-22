@@ -159,8 +159,8 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
         description: 'Preparando ambiente e parâmetros de busca.',
         icon: Play,
         status: job?.started_at ? 'completed' : isFailed ? 'failed' : 'running',
-        startTime: job?.created_at,
-        endTime: job?.started_at
+        startTime: job?.created_at ?? undefined,
+        endTime: job?.started_at ?? undefined
       },
       {
         id: 'search',
