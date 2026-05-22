@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemo } from "@/contexts/DemoContext";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { DEMO_STATS, DEMO_COMPANIES, DEMO_ACTIVITY } from "@/lib/demoData";
 
 export interface DashboardStats {
@@ -52,7 +53,7 @@ export function useDashboardStats() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const { isDemoMode } = useDemo();
-  const activeOrgId = localStorage.getItem("lux:active-org");
+  const { activeOrgId } = useActiveOrganization();
 
   useEffect(() => {
     if (!user?.id || isDemoMode) return;
