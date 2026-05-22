@@ -504,6 +504,16 @@ serve(async (req) => {
         enriched: enrichedCount, scored: scoredCount, qualified: totalQualified,
       });
 
+      // Audit Log: Execution completed
+      await supabase.from("audit_logs").insert({
+        action: "workflow_execution_completed",
+        table_name: "workflows",
+        record_id: workflow_id,
+        actor_id: userId,
+        organization_id: workflow.organization_id,
+        metadata: { ...results.summary, enriched: enrichedCount }
+      });
+
       return new Response(JSON.stringify({ run_id: run.id, results }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
