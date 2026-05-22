@@ -241,8 +241,8 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "select" && isScoped) {
         return (...args: any[]) => {
-          const q = (target as any).select(...args);
-          return orgId ? q.eq("organization_id", orgId) : q;
+          if (!orgId) raise(new MissingOrgContextError(tableName, "select"));
+          return (target as any).select(...args).eq("organization_id", orgId);
         };
       }
 
