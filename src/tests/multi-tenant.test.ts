@@ -1,44 +1,33 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
-
-// Mock implementation
-vi.mock("@/integrations/supabase/withOrg", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/integrations/supabase/withOrg")>();
-  return {
-    ...actual,
-    getActiveOrgId: vi.fn(),
-  };
-});
+import { describe, it, expect, beforeEach } from "vitest";
+import { db, setActiveOrgId, getActiveOrgId } from "@/integrations/supabase/withOrg";
 
 describe("Multi-Tenant Isolation (SafeOrg)", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    setActiveOrgId(null);
   });
 
-  it("should automatically inject organization_id into SELECT queries", async () => {
+  it("should automatically inject organization_id into SELECT queries", () => {
     const mockOrgId = "123e4567-e89b-12d3-a456-426614174000";
-    // Setup the mock to return a value
-    (getActiveOrgId as any).mockReturnValue(mockOrgId);
+    setActiveOrgId(mockOrgId);
 
-    // This should NOT throw now
+    expect(getActiveOrgId()).toBe(mockOrgId);
+
+    // This should NOT throw
     const query = db.from("companies").select("*");
-    
     expect(query).toBeDefined();
-    // The test failing earlier with MissingOrgContextError 
-    // proved that the proxy is intercepting the call.
   });
 
-  it("should reject queries when no organization is active (Deny-by-default)", async () => {
-    (getActiveOrgId as any).mockReturnValue(null);
+  it("should reject queries when no organization is active (Deny-by-default)", () => {
+    setActiveOrgId(null);
 
     expect(() => {
       db.from("companies").select("*");
     }).toThrow(/bloqueada: nenhuma organização ativa/);
   });
 
-  it("should block cross-tenant injection attempts in values", async () => {
+  it("should block cross-tenant injection attempts in values", () => {
     const mockOrgId = "org-a";
-    (getActiveOrgId as any).mockReturnValue(mockOrgId);
+    setActiveOrgId(mockOrgId);
 
     const payload = { name: "Test", organization_id: "org-b" };
     
