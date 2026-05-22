@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
+import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -14,14 +14,21 @@ export function useRealtimeCompanies() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
+  const activeOrgId = getActiveOrgId();
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !activeOrgId) return;
+
     const channel = supabase
-      .channel(`private:${user.id}:companies`)
+      .channel(`org:${activeOrgId}:companies`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "companies", filter: `user_id=eq.${user.id}` },
+        { 
+          event: "*", 
+          schema: "public", 
+          table: "companies", 
+          filter: `organization_id=eq.${activeOrgId}` 
+        },
         async (payload) => {
           queryClient.invalidateQueries({ queryKey: ["companies-list"] });
           queryClient.invalidateQueries({ queryKey: ["companies-map"] });
@@ -47,9 +54,9 @@ export function useRealtimeCompanies() {
             toast({ title, description });
 
             // Persist notification in DB for the notifications panel
-            if (!user?.id) return;
             await db.from("notifications").insert([{
               user_id: user.id,
+              organization_id: activeOrgId,
               title,
               message: description,
               type: isScraped ? "scrape" : "system",
@@ -69,5 +76,5 @@ export function useRealtimeCompanies() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, toast, user?.id]);
+  }, [queryClient, toast, user?.id, activeOrgId]);
 }

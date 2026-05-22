@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
+import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -13,14 +13,21 @@ export function useRealtimeScrapeJobs() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
+  const activeOrgId = getActiveOrgId();
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !activeOrgId) return;
+
     const channel = supabase
-      .channel(`private:${user.id}:scrape-jobs`)
+      .channel(`org:${activeOrgId}:scrape-jobs`)
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "scrape_jobs", filter: `user_id=eq.${user.id}` },
+        { 
+          event: "UPDATE", 
+          schema: "public", 
+          table: "scrape_jobs", 
+          filter: `organization_id=eq.${activeOrgId}` 
+        },
         async (payload) => {
           const job = payload.new as Record<string, unknown>;
           const oldJob = payload.old as Record<string, unknown>;
@@ -38,39 +45,37 @@ export function useRealtimeScrapeJobs() {
 
             toast({ title, description: message });
 
-            if (user?.id) {
-              await db.from("notifications").insert([{
-                user_id: user.id,
-                title,
-                message,
-                type: "scrape",
-                metadata: {
-                  job_id: String(job.id ?? ""),
-                  job_name: String(job.name ?? ""),
-                  results_count: Number(count),
-                  source: String(job.source ?? ""),
-                },
-              }]);
-            }
+            await db.from("notifications").insert([{
+              user_id: user.id,
+              organization_id: activeOrgId,
+              title,
+              message,
+              type: "scrape",
+              metadata: {
+                job_id: String(job.id ?? ""),
+                job_name: String(job.name ?? ""),
+                results_count: Number(count),
+                source: String(job.source ?? ""),
+              },
+            }]);
           } else if (job.status === "failed") {
             const title = "❌ Raspagem falhou";
             const message = `"${String(job.name ?? "")}" falhou: ${String(job.error_message ?? "erro desconhecido")}.`;
 
             toast({ title, description: message, variant: "destructive" });
 
-            if (user?.id) {
-              await db.from("notifications").insert([{
-                user_id: user.id,
-                title,
-                message,
-                type: "scrape",
-                metadata: {
-                  job_id: String(job.id ?? ""),
-                  job_name: String(job.name ?? ""),
-                  error: String(job.error_message ?? ""),
-                },
-              }]);
-            }
+            await db.from("notifications").insert([{
+              user_id: user.id,
+              organization_id: activeOrgId,
+              title,
+              message,
+              type: "scrape",
+              metadata: {
+                job_id: String(job.id ?? ""),
+                job_name: String(job.name ?? ""),
+                error: String(job.error_message ?? ""),
+              },
+            }]);
           }
         }
       )
@@ -79,5 +84,5 @@ export function useRealtimeScrapeJobs() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, toast, user?.id]);
+  }, [queryClient, toast, user?.id, activeOrgId]);
 }

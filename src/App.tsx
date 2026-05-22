@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -58,14 +58,28 @@ setOrgErrorListener((err) => { handleOrgError(err); });
 
 function PageLoader() {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4" role="status" aria-label="Carregando">
-      <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center animate-pulse">
-        <svg className="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-          <path d="M12 3l1.912 5.813L20 10.125l-4.587 3.89L16.824 20 12 16.5 7.176 20l1.411-6.172L4 10.125l6.088-1.312z" />
-        </svg>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6" role="status" aria-label="Carregando LUX IA">
+      <div className="relative">
+        <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse" />
+        <div className="relative h-16 w-16 rounded-2xl bg-card border border-border/50 flex items-center justify-center shadow-2xl">
+          <svg className="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 3l1.912 5.813L20 10.125l-4.587 3.89L16.824 20 12 16.5 7.176 20l1.411-6.172L4 10.125l6.088-1.312z" />
+          </svg>
+        </div>
       </div>
-      <div className="h-1 w-32 rounded-full bg-muted overflow-hidden">
-        <div className="h-full bg-primary rounded-full animate-[loading_1.5s_ease-in-out_infinite]" style={{ width: "40%" }} />
+      <div className="flex flex-col items-center gap-2">
+        <div className="h-1 w-32 rounded-full bg-muted overflow-hidden relative">
+          <div className="absolute inset-0 bg-primary/10" />
+          <motion.div 
+            className="h-full bg-primary rounded-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+          Iniciando Inteligência
+        </span>
       </div>
     </div>
   );

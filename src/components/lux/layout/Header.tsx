@@ -120,7 +120,8 @@ export const Header = memo(({
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Buscar empresas, workflows, campanhas..."
+                  placeholder="Buscar empresas, pipelines, workflows..."
+                  autoComplete="off"
                   className="w-full h-9 pl-9 pr-20 rounded-xl bg-secondary/40 border border-border/40 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") openCommandPalette();

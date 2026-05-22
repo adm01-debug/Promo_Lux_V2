@@ -204,37 +204,25 @@ export function fromOrg<T extends TableName>(table: T) {
       const orgId = getActiveOrgId();
 
       if (prop === "insert" || prop === "upsert") {
-        return (values: unknown, options?: unknown) => {
+        return (values: any, options?: any) => {
           if (isScoped) {
             if (!orgId) raise(new MissingOrgContextError(tableName, String(prop)));
             assertOrgMatch(values, orgId, tableName, String(prop));
           }
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return options === undefined
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? (target as any)[prop](next)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            : (target as any)[prop](next, options);
+          return (target as any)[prop](next, options);
         };
       }
 
       if (prop === "update" && isScoped) {
-        return (values: unknown, options?: unknown) => {
+        return (values: any, options?: any) => {
           if (!orgId) raise(new MissingOrgContextError(tableName, "update"));
           assertOrgMatch(values, orgId, tableName, "update");
-          // Remove organization_id do payload — UPDATE não deve "mover" registros entre orgs
           const sanitized = stripOrgFromUpdate(values);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const q = options === undefined
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? (target as any).update(sanitized)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            : (target as any).update(sanitized, options);
-            
-          // Suporte a optimistic locking via .match() se 'version' estiver presente
-          if (values && typeof values === "object" && "version" in (values as any)) {
-            const version = (values as any).version;
+          const q = (target as any).update(sanitized, options);
+          
+          if (values && typeof values === "object" && "version" in values) {
+            const version = values.version;
             if (typeof version === "number") {
               return q.eq("organization_id", orgId).eq("version", version);
             }
@@ -245,22 +233,14 @@ export function fromOrg<T extends TableName>(table: T) {
       }
 
       if (prop === "delete" && isScoped) {
-        return (options?: unknown) => {
+        return (options?: any) => {
           if (!orgId) raise(new MissingOrgContextError(tableName, "delete"));
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const q = options === undefined
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ? (target as any).delete()
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            : (target as any).delete(options);
-          return q.eq("organization_id", orgId);
+          return (target as any).delete(options).eq("organization_id", orgId);
         };
       }
 
       if (prop === "select" && isScoped) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (...args: any[]) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const q = (target as any).select(...args);
           return orgId ? q.eq("organization_id", orgId) : q;
         };
@@ -268,7 +248,7 @@ export function fromOrg<T extends TableName>(table: T) {
 
       return Reflect.get(target, prop, receiver);
     },
-  });
+  }) as typeof builder;
 }
 
 /** API conveniente: `db.from("companies").select("*")`. */
