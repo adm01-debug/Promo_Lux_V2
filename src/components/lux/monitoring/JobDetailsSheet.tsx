@@ -27,7 +27,10 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
       return data;
     },
     enabled: !!jobId && open,
-    refetchInterval: (data) => (data?.status === 'running' || data?.status === 'working' ? 3000 : false),
+    refetchInterval: (query: any) => {
+      const data = query.state.data;
+      return (data?.status === 'running' || data?.status === 'working' ? 3000 : false);
+    },
   });
 
   const { data: results, isLoading: resultsLoading } = useQuery({
@@ -47,7 +50,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
   });
 
   const exportCSV = () => {
-    if (!results || results.length === 0) return;
+    if (!results || results.length === 0 || !jobId) return;
     
     const headers = ["ID", "Nome", "Setor", "Localização", "Website", "Email", "Telefone", "IPC Score"];
     const rows = results.map((res: any) => [
@@ -79,6 +82,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
   };
 
   const handleAction = async (action: 'cancel' | 'retry' | 'delete') => {
+    if (!jobId) return;
     try {
       if (action === 'cancel') {
         await db.from("scrape_jobs").update({ status: 'failed', error_message: 'Cancelado pelo usuário' }).eq("id", jobId);
@@ -95,8 +99,9 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     }
   };
 
-  const progress = job?.results_count && job?.config?.depth 
-    ? Math.min(Math.round((job.results_count / (job.config.depth * 20)) * 100), 100) 
+  const config = job?.config as any;
+  const progress = job?.results_count && config?.depth 
+    ? Math.min(Math.round((job.results_count / (config.depth * 20)) * 100), 100) 
     : 0;
 
   return (
