@@ -61,32 +61,46 @@ const AutomationMonitoring = () => {
   const { data: auditLogs, isLoading: auditLoading } = useQuery({
     queryKey: ["audit-logs"],
     queryFn: async () => {
-      // Joining with profiles to show user names
-      const { data, error } = await db
+      // Manual join since foreign keys might not be present or valid for all records
+      const { data: logs, error: logsError } = await db
         .from("audit_logs")
-        .select(`
-          *,
-          actor:profiles!actor_id(full_name, avatar_url)
-        `)
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(50);
       
-      if (error) throw error;
-      return data;
+      if (logsError) throw logsError;
+
+      const actorIds = [...new Set(logs.map(l => l.actor_id).filter(Boolean))];
+      
+      if (actorIds.length > 0) {
+        const { data: profiles } = await db
+          .from("profiles")
+          .select("id, full_name, avatar_url")
+          .in("id", actorIds as string[]);
+        
+        return logs.map(log => ({
+          ...log,
+          actor: profiles?.find(p => p.id === log.actor_id)
+        }));
+      }
+
+      return logs.map(log => ({ ...log, actor: null }));
     }
   });
 
-  const handleOpenDetails = (jobId: string) => {
-    setSelectedJobId(jobId);
-    setIsDetailsOpen(true);
-  };
+  const filteredJobs = jobs?.filter(j => 
+    j.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    j.status?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const handleManualSync = () => {
-    refetchJobs();
-    toast({
-      title: "Sincronizando",
-      description: "Buscando atualizações de status...",
-    });
+  const getStatusBadgeVariant = (status: string): "default" | "destructive" | "outline" | "secondary" => {
+    switch (status) {
+      case 'completed': return 'default';
+      case 'failed': return 'destructive';
+      case 'running':
+      case 'working': return 'secondary';
+      default: return 'outline';
+    }
   };
 
   return (
