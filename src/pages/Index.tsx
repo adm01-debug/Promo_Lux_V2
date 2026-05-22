@@ -38,10 +38,11 @@ import {
 const slideVariants = {
   initial: (dir: string) => ({
     opacity: 0,
-    x: dir === "forward" ? 40 : -40,
-    y: 6,
-    scale: 0.97,
-    filter: "blur(6px)",
+    x: dir === "forward" ? 30 : -30,
+    y: 0,
+    scale: 0.985,
+    filter: "blur(4px)",
+    willChange: "transform, opacity, filter",
   }),
   animate: {
     opacity: 1,
@@ -52,10 +53,10 @@ const slideVariants = {
   },
   exit: (dir: string) => ({
     opacity: 0,
-    x: dir === "forward" ? -20 : 20,
-    y: -4,
-    scale: 0.98,
-    filter: "blur(4px)",
+    x: dir === "forward" ? -15 : 15,
+    y: 0,
+    scale: 0.99,
+    filter: "blur(2px)",
   }),
 };
 
