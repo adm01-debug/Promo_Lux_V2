@@ -63,7 +63,7 @@ const AutomationMonitoring = () => {
       }
 
       if (statusFilter !== "all") {
-        query = query.eq("status", statusFilter);
+        query = query.eq("status", statusFilter as any);
       }
 
       const { data, error, count } = await query.range((page - 1) * pageSize, page * pageSize - 1);
