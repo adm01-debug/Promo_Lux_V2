@@ -39,6 +39,7 @@ import { useToast } from "@/hooks/use-toast";
 const AutomationMonitoring = () => {
   const [activeTab, setActiveTab] = useState("runs");
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { toast } = useToast();
@@ -50,19 +51,22 @@ const AutomationMonitoring = () => {
   const pageSize = 12;
 
   const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
-    queryKey: ["automation-jobs", page, searchTerm],
+    queryKey: ["automation-jobs", page, searchTerm, statusFilter],
     queryFn: async () => {
       let query = db
         .from("scrape_jobs")
         .select("*", { count: "exact" })
-        .order("created_at", { ascending: false })
-        .range((page - 1) * pageSize, page * pageSize - 1);
+        .order("created_at", { ascending: false });
       
       if (searchTerm) {
         query = query.ilike("name", `%${searchTerm}%`);
       }
-      
-      const { data, error, count } = await query;
+
+      if (statusFilter !== "all") {
+        query = query.eq("status", statusFilter as any);
+      }
+
+      const { data, error, count } = await query.range((page - 1) * pageSize, page * pageSize - 1);
       if (error) throw error;
       return { data, count };
     }
@@ -135,7 +139,7 @@ const AutomationMonitoring = () => {
         </p>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
@@ -145,12 +149,30 @@ const AutomationMonitoring = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button variant="outline" size="icon" onClick={handleManualSync} className="shrink-0 border-border/40">
-          <RefreshCw className="h-4 w-4" />
-        </Button>
-        <Button variant="outline" size="icon" className="shrink-0 border-border/40">
-          <Filter className="h-4 w-4" />
-        </Button>
+        
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="h-9 px-3 border-border/40 bg-secondary/10 flex items-center gap-2 font-normal">
+            <Filter className="h-3.5 w-3.5" />
+            <select 
+              className="bg-transparent border-none outline-none text-xs cursor-pointer"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="all">Todos os Status</option>
+              <option value="completed">Concluídos</option>
+              <option value="failed">Falhas</option>
+              <option value="running">Executando</option>
+              <option value="pending">Pendentes</option>
+            </select>
+          </Badge>
+        </div>
+
+        <div className="flex gap-2 ml-auto">
+          <Button variant="outline" size="sm" onClick={handleManualSync} className="h-9 gap-2 border-border/40">
+            <RefreshCw className="h-4 w-4" />
+            Sincronizar
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
