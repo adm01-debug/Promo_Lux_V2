@@ -3,9 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Calendar, FileText, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Building2, Calendar, FileText, CheckCircle2, XCircle, Clock, Download, AlertTriangle, Play, Pause, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Progress } from "@/components/ui/progress";
 
 interface JobDetailsSheetProps {
   jobId: string | null;
@@ -14,7 +17,8 @@ interface JobDetailsSheetProps {
 }
 
 export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetProps) => {
-  const { data: job } = useQuery({
+  const { toast } = useToast();
+  const { data: job, refetch: refetchJob } = useQuery({
     queryKey: ["scrape-job", jobId],
     queryFn: async () => {
       if (!jobId) return null;
@@ -23,6 +27,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
       return data;
     },
     enabled: !!jobId && open,
+    refetchInterval: (data) => (data?.status === 'running' || data?.status === 'working' ? 3000 : false),
   });
 
   const { data: results, isLoading: resultsLoading } = useQuery({
@@ -33,12 +38,66 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
         .from("scrape_results")
         .select("*, companies(*)")
         .eq("job_id", jobId)
+        .order('created_at', { ascending: false })
         .limit(100);
       if (error) throw error;
       return data || [];
     },
     enabled: !!jobId && open,
   });
+
+  const exportCSV = () => {
+    if (!results || results.length === 0) return;
+    
+    const headers = ["ID", "Nome", "Setor", "Localização", "Website", "Email", "Telefone", "IPC Score"];
+    const rows = results.map((res: any) => [
+      res.companies?.id,
+      res.companies?.name,
+      res.companies?.sector,
+      res.companies?.location,
+      res.companies?.website,
+      res.companies?.email,
+      res.companies?.phone,
+      res.companies?.ipc_score
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `lux_export_${jobId}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "Exportação Concluída",
+      description: "O arquivo CSV foi gerado com sucesso.",
+    });
+  };
+
+  const handleAction = async (action: 'cancel' | 'retry' | 'delete') => {
+    try {
+      if (action === 'cancel') {
+        await db.from("scrape_jobs").update({ status: 'failed', error_message: 'Cancelado pelo usuário' }).eq("id", jobId);
+      } else if (action === 'retry') {
+        await db.from("scrape_jobs").update({ status: 'pending', error_message: null }).eq("id", jobId);
+      } else if (action === 'delete') {
+        await db.from("scrape_jobs").delete().eq("id", jobId);
+        onOpenChange(false);
+      }
+      refetchJob();
+      toast({ title: "Sucesso", description: `Ação ${action} executada.` });
+    } catch (error) {
+      toast({ title: "Erro", description: "Falha ao executar ação.", variant: "destructive" });
+    }
+  };
+
+  const progress = job?.results_count && job?.config?.depth 
+    ? Math.min(Math.round((job.results_count / (job.config.depth * 20)) * 100), 100) 
+    : 0;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -49,13 +108,27 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
             {job?.status === 'failed' && <XCircle className="h-5 w-5 text-destructive" />}
             {(job?.status === 'running' || job?.status === 'working') && <Clock className="h-5 w-5 text-primary animate-spin" />}
             <SheetTitle>{job?.name || "Detalhes da Execução"}</SheetTitle>
+            <div className="flex gap-2 ml-auto">
+              <Button variant="outline" size="icon" className="h-8 w-8" onClick={exportCSV} disabled={!results?.length}>
+                <Download className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-          <SheetDescription>
-            Logs e resultados detalhados da automação.
+          <SheetDescription className="flex items-center gap-2">
+            ID: <span className="font-mono text-[10px]">{job?.id}</span>
           </SheetDescription>
         </SheetHeader>
 
         <div className="mt-6 space-y-6 flex-1 overflow-hidden flex flex-col">
+          {(job?.status === 'running' || job?.status === 'working') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span>Progresso Estimado</span>
+                <span>{progress}%</span>
+              </div>
+              <Progress value={progress} className="h-1" />
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div className="p-3 rounded-lg bg-secondary/30 border border-border/50">
               <p className="text-[10px] text-muted-foreground uppercase font-semibold mb-1">Status</p>
@@ -112,9 +185,9 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
           </div>
 
           {job?.error_message && (
-            <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 mt-auto">
+            <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
               <h4 className="text-xs font-bold text-destructive flex items-center gap-2 mb-2">
-                <XCircle className="h-3 w-3" />
+                <AlertTriangle className="h-3 w-3" />
                 RELATÓRIO DE ERRO
               </h4>
               <p className="text-[11px] font-mono text-destructive/90 whitespace-pre-wrap">
@@ -122,6 +195,22 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
               </p>
             </div>
           )}
+
+          <div className="grid grid-cols-2 gap-2 mt-auto">
+            {job?.status === 'failed' && (
+              <Button variant="outline" className="gap-2" onClick={() => handleAction('retry')}>
+                <Play className="h-4 w-4" /> Tentar Novamente
+              </Button>
+            )}
+            {(job?.status === 'running' || job?.status === 'working' || job?.status === 'pending') && (
+              <Button variant="outline" className="gap-2 text-destructive hover:bg-destructive/10" onClick={() => handleAction('cancel')}>
+                <Pause className="h-4 w-4" /> Cancelar
+              </Button>
+            )}
+            <Button variant="ghost" className="gap-2 text-muted-foreground" onClick={() => handleAction('delete')}>
+              <Trash2 className="h-4 w-4" /> Excluir Registro
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
