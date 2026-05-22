@@ -514,6 +514,20 @@ serve(async (req) => {
         metadata: { ...summary, enriched: enrichedCount }
       });
 
+      // Notification/Alert check
+      const { data: alertConfig } = await supabase
+        .from("automation_alerts")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("event_type", "job_completed")
+        .eq("is_active", true)
+        .maybeSingle();
+
+      if (alertConfig) {
+        log.info("trigger_alert", { type: "job_completed", user_id: userId });
+        // In a real scenario, we'd trigger an email function or push notification here
+      }
+
       return new Response(JSON.stringify({ run_id: run.id, results }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -566,6 +580,22 @@ serve(async (req) => {
   } catch (err) {
     const duration = Math.round(performance.now() - start);
     log.error("request_failed", { error: (err as Error).message, action, duration_ms: duration });
+
+    // Try to notify failure
+    try {
+      const { data: alertConfig } = await supabase
+        .from("automation_alerts")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("event_type", "job_failed")
+        .eq("is_active", true)
+        .maybeSingle();
+      
+      if (alertConfig) {
+        log.info("trigger_failure_alert", { user_id: userId });
+      }
+    } catch (_) {}
+
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
