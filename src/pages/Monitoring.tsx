@@ -110,10 +110,9 @@ const AutomationMonitoring = () => {
     });
   };
 
-  const filteredJobs = jobs?.filter(j => 
-    j.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    j.status?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const jobsData = jobs?.data || [];
+  const totalCount = jobs?.count || 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const getStatusBadgeVariant = (status: string): "default" | "destructive" | "outline" | "secondary" => {
     switch (status) {
@@ -173,7 +172,7 @@ const AutomationMonitoring = () => {
              </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredJobs?.map((job) => (
+              {jobsData.map((job: any) => (
                 <motion.div
                   key={job.id}
                   layout
@@ -251,7 +250,29 @@ const AutomationMonitoring = () => {
                     </CardContent>
                   </Card>
                 </motion.div>
-              ))}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
+                    Anterior
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Página {page} de {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                  >
+                    Próxima
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </TabsContent>
