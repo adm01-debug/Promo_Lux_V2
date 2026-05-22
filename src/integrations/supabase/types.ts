@@ -209,6 +209,47 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_alerts: {
+        Row: {
+          created_at: string | null
+          delivery_method: string
+          event_type: string
+          id: string
+          is_active: boolean | null
+          organization_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          delivery_method: string
+          event_type: string
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          delivery_method?: string
+          event_type?: string
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_events: {
         Row: {
           campaign_id: string
@@ -1235,6 +1276,54 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      job_exports: {
+        Row: {
+          created_at: string | null
+          file_url: string | null
+          format: string
+          id: string
+          job_id: string
+          organization_id: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_url?: string | null
+          format: string
+          id?: string
+          job_id: string
+          organization_id?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          file_url?: string | null
+          format?: string
+          id?: string
+          job_id?: string
+          organization_id?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_exports_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "scrape_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_exports_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
