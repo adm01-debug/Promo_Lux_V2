@@ -64,9 +64,9 @@ const rowVariants = {
 };
 
 export const CompanyTable = () => {
-  const { data: companies, isLoading } = useVirtualCompanies(200);
+  const { data: companies, isLoading } = useVirtualCompanies(500); // Increased from 200 to 500 for better demo
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerHeight, setContainerHeight] = useState(400);
+  const [containerHeight, setContainerHeight] = useState(480);
 
   useEffect(() => {
     if (containerRef.current) {

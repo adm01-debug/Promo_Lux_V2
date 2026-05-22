@@ -13,7 +13,9 @@ import {
   ShieldCheck,
   User,
   Calendar,
-  Building2
+  Building2,
+  RefreshCw,
+  MoreVertical
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,17 +24,35 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
+import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 const AutomationMonitoring = () => {
   const [activeTab, setActiveTab] = useState("runs");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const { toast } = useToast();
 
-  const { data: jobs, isLoading: jobsLoading } = useQuery({
+  // Enable realtime updates for scrape jobs
+  useRealtimeScrapeJobs();
+
+  const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
     queryKey: ["automation-jobs"],
     queryFn: async () => {
-      const { data, error } = await db.from("scrape_jobs").select("*").order("created_at", { ascending: false });
+      const { data, error } = await db
+        .from("scrape_jobs")
+        .select("*")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     }
@@ -41,11 +61,44 @@ const AutomationMonitoring = () => {
   const { data: auditLogs, isLoading: auditLoading } = useQuery({
     queryKey: ["audit-logs"],
     queryFn: async () => {
-      const { data, error } = await db.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(50);
-      if (error) throw error;
-      return data;
+      const { data: logs, error: logsError } = await db
+        .from("audit_logs")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      
+      if (logsError) throw logsError;
+
+      const actorIds = [...new Set(logs.map(l => l.actor_id).filter(Boolean))];
+      
+      if (actorIds.length > 0) {
+        const { data: profiles } = await db
+          .from("profiles")
+          .select("id, full_name, avatar_url")
+          .in("id", actorIds as string[]);
+        
+        return logs.map(log => ({
+          ...log,
+          actor: profiles?.find(p => p.id === log.actor_id)
+        }));
+      }
+
+      return logs.map(log => ({ ...log, actor: null }));
     }
   });
+
+  const handleOpenDetails = (jobId: string) => {
+    setSelectedJobId(jobId);
+    setIsDetailsOpen(true);
+  };
+
+  const handleManualSync = () => {
+    refetchJobs();
+    toast({
+      title: "Sincronizando",
+      description: "Buscando atualizações de status...",
+    });
+  };
 
   const filteredJobs = jobs?.filter(j => 
     j.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -78,12 +131,15 @@ const AutomationMonitoring = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
             placeholder="Buscar execuções..." 
-            className="pl-9"
+            className="pl-9 bg-secondary/20 border-border/40 focus:bg-background transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" onClick={handleManualSync} className="shrink-0 border-border/40">
+          <RefreshCw className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" size="icon" className="shrink-0 border-border/40">
           <Filter className="h-4 w-4" />
         </Button>
       </div>
@@ -114,7 +170,7 @@ const AutomationMonitoring = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                 >
-                  <Card className="glass group hover:border-primary/30 transition-all">
+                  <Card className="glass group hover:border-primary/30 transition-all cursor-pointer" onClick={() => handleOpenDetails(job.id)}>
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
@@ -152,14 +208,35 @@ const AutomationMonitoring = () => {
                       )}
 
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm" className="w-full text-xs gap-1.5 h-8">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full text-xs gap-1.5 h-8 hover:bg-primary/10 hover:text-primary transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenDetails(job.id);
+                          }}
+                        >
                           <Terminal className="h-3 w-3" />
-                          Ver Logs
+                          Logs & Detalhes
                         </Button>
-                        <Button variant="secondary" size="sm" className="w-full text-xs gap-1.5 h-8">
-                          <ExternalLink className="h-3 w-3" />
-                          Resultados
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="w-8 h-8 p-0" onClick={(e) => e.stopPropagation()}>
+                              <MoreVertical className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-lg">
+                            <DropdownMenuItem className="gap-2 text-xs">
+                              <ExternalLink className="h-3 w-3" />
+                              Exportar CSV
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="gap-2 text-xs text-destructive">
+                              <XCircle className="h-3 w-3" />
+                              Cancelar Execução
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </CardContent>
                   </Card>
@@ -170,36 +247,45 @@ const AutomationMonitoring = () => {
         </TabsContent>
 
         <TabsContent value="audit">
-          <Card className="glass">
-            <CardHeader>
+          <Card className="glass border-border/40 overflow-hidden">
+            <CardHeader className="bg-secondary/20">
               <CardTitle className="text-lg">Registro de Auditoria</CardTitle>
               <CardDescription>Eventos de sistema e ações administrativas por workspace.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[500px] pr-4">
-                <div className="space-y-4">
+            <CardContent className="p-0">
+              <ScrollArea className="h-[600px]">
+                <div className="divide-y divide-border/20">
                   {auditLoading ? (
-                    [1,2,3].map(i => <div key={i} className="h-12 w-full bg-muted/50 rounded animate-pulse" />)
-                  ) : auditLogs?.map((log) => (
-                    <div key={log.id} className="flex items-start gap-4 p-3 rounded-lg border border-border/30 hover:bg-secondary/20 transition-colors">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <User className="h-4 w-4 text-primary" />
+                    [1,2,3,4,5].map(i => <div key={i} className="h-20 w-full bg-muted/50 animate-pulse" />)
+                  ) : auditLogs?.length === 0 ? (
+                    <div className="p-10 text-center text-muted-foreground">
+                      Nenhum registro de auditoria encontrado.
+                    </div>
+                  ) : auditLogs?.map((log: any) => (
+                    <div key={log.id} className="flex items-start gap-4 p-4 hover:bg-secondary/10 transition-colors">
+                      <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0 border border-border/30 overflow-hidden">
+                        {log.actor?.avatar_url ? (
+                          <img src={log.actor.avatar_url} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <User className="h-5 w-5 text-muted-foreground" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0 space-y-1">
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-sm font-medium">
-                            <span className="text-primary">{log.action}</span> em <span className="font-mono">{log.table_name}</span>
+                            <span className="text-primary font-semibold">{log.action}</span> em <span className="font-mono bg-secondary/50 px-1 rounded text-xs">{log.table_name}</span>
                           </p>
-                          <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                            {format(new Date(log.created_at), "HH:mm:ss · dd/MM/yy", { locale: ptBR })}
+                          <span className="text-[10px] text-muted-foreground whitespace-nowrap bg-secondary/30 px-2 py-0.5 rounded-full border border-border/20">
+                            {format(new Date(log.created_at), "HH:mm:ss · dd MMM", { locale: ptBR })}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                          Ator: {log.actor_id?.slice(0,8) || 'Sistema'}
+                          Ator: <span className="text-foreground/80 font-medium">{log.actor?.full_name || 'Sistema'}</span>
+                          <span className="text-[10px] opacity-40">({log.actor_id?.slice(0,8)})</span>
                         </p>
-                        {log.metadata && (
-                          <div className="mt-2 text-[10px] font-mono p-2 bg-black/20 rounded border border-white/5 overflow-x-auto">
-                            {JSON.stringify(log.metadata, null, 2)}
+                        {log.metadata && Object.keys(log.metadata).length > 0 && (
+                          <div className="mt-2 text-[10px] font-mono p-3 bg-black/40 rounded-lg border border-white/5 overflow-x-auto text-primary/80">
+                            <pre>{JSON.stringify(log.metadata, null, 2)}</pre>
                           </div>
                         )}
                       </div>
@@ -211,6 +297,12 @@ const AutomationMonitoring = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <JobDetailsSheet 
+        jobId={selectedJobId} 
+        open={isDetailsOpen} 
+        onOpenChange={setIsDetailsOpen} 
+      />
     </div>
   );
 };

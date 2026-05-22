@@ -176,10 +176,26 @@ serve(async (req) => {
 
       log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name });
 
+      // Audit Log: Execution started
+      await supabase.from("audit_logs").insert({
+        action: "workflow_execution_started",
+        table_name: "workflows",
+        record_id: workflow_id,
+        actor_id: userId,
+        organization_id: workflow.organization_id,
+        metadata: { workflow_name: workflow.name }
+      });
+
       // Create run record
       const { data: run, error: runError } = await supabase
         .from("workflow_runs")
-        .insert({ workflow_id, user_id: userId, status: "running", current_step: "scrape" })
+        .insert({ 
+          workflow_id, 
+          user_id: userId, 
+          organization_id: workflow.organization_id,
+          status: "running", 
+          current_step: "scrape" 
+        })
         .select()
         .single();
       if (runError) throw runError;
@@ -191,7 +207,7 @@ serve(async (req) => {
         .eq("user_id", userId);
 
       const config = workflow.config as Record<string, unknown>;
-      const results: Record<string, unknown> = {};
+      const results: Record<string, unknown> = { summary: {} };
 
       // ===== STEP 1: SCRAPE =====
       await supabase.from("workflow_runs").update({ current_step: "scrape" }).eq("id", run.id);
@@ -209,6 +225,7 @@ serve(async (req) => {
           .from("scrape_jobs")
           .insert({
             user_id: userId,
+            organization_id: workflow.organization_id,
             name: `WF: ${workflow.name}`,
             status: "pending",
             source: "gmaps",
@@ -301,55 +318,56 @@ serve(async (req) => {
 
               const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
 
-        const batchCompanies = [];
-        const batchRawData = [];
+              const batchCompanies = [];
+              const batchRawData = [];
 
-        for (let li = 1; li < lines.length; li++) {
-          const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
-          const obj: Record<string, string> = {};
-          headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
+              for (let li = 1; li < lines.length; li++) {
+                const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
+                const obj: Record<string, string> = {};
+                headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
 
-          batchCompanies.push({
-            user_id: userId,
-            name: obj.name || obj.title || "Unknown",
-            sector: obj.category || obj.type || "Não classificado",
-            location: obj.address || obj.city || "",
-            website: obj.website || obj.web_site || "",
-            phone: obj.phone || "",
-            email: obj.email || "",
-            source: "gmaps",
-            enriched: !!(obj.email || obj.phone),
-            raw_data: obj,
-          });
-          batchRawData.push(obj);
-        }
+                batchCompanies.push({
+                  user_id: userId,
+                  organization_id: workflow.organization_id,
+                  name: obj.name || obj.title || "Unknown",
+                  sector: obj.category || obj.type || "Não classificado",
+                  location: obj.address || obj.city || "",
+                  website: obj.website || obj.web_site || "",
+                  phone: obj.phone || "",
+                  email: obj.email || "",
+                  source: "gmaps",
+                  enriched: !!(obj.email || obj.phone),
+                  raw_data: obj,
+                });
+                batchRawData.push(obj);
+              }
 
-        if (batchCompanies.length > 0) {
-          const { data: insertedCompanies, error: insError } = await supabase
-            .from("companies")
-            .insert(batchCompanies)
-            .select();
+              if (batchCompanies.length > 0) {
+                const { data: insertedCompanies, error: insError } = await supabase
+                  .from("companies")
+                  .insert(batchCompanies)
+                  .select();
 
-          if (insError) {
-            log.error("bulk_company_insert_failed", { error: insError.message });
-            continue;
-          }
+                if (insError) {
+                  log.error("bulk_company_insert_failed", { error: insError.message });
+                  continue;
+                }
 
-          if (insertedCompanies) {
-            const resultsToInsert = insertedCompanies.map((c, idx) => ({
-              user_id: userId,
-              job_id: job.id,
-              company_id: c.id,
-              raw_data: batchRawData[idx],
-              processed: false,
-            }));
+                if (insertedCompanies) {
+                  const resultsToInsert = insertedCompanies.map((c, idx) => ({
+                    user_id: userId,
+                    organization_id: workflow.organization_id,
+                    job_id: job.id,
+                    company_id: c.id,
+                    raw_data: batchRawData[idx],
+                    processed: false,
+                  }));
 
-            const { error: resError } = await supabase.from("scrape_results").insert(resultsToInsert);
-            if (resError) log.error("bulk_results_insert_failed", { error: resError.message });
-            enrichedCount += insertedCompanies.length;
-          }
-        }
-      }
+                  const { error: resError } = await supabase.from("scrape_results").insert(resultsToInsert);
+                  if (resError) log.error("bulk_results_insert_failed", { error: resError.message });
+                  enrichedCount += insertedCompanies.length;
+                }
+              }
 
               await supabase
                 .from("scrape_jobs")
@@ -472,7 +490,8 @@ serve(async (req) => {
         .eq("id", workflow_id)
         .eq("user_id", userId);
 
-      results.summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
+      const summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
+      results.summary = summary;
 
       await supabase
         .from("workflow_runs")
@@ -483,6 +502,16 @@ serve(async (req) => {
       log.info("workflow_run_complete", {
         workflow_id, run_id: run.id, duration_ms: duration,
         enriched: enrichedCount, scored: scoredCount, qualified: totalQualified,
+      });
+
+      // Audit Log: Execution completed
+      await supabase.from("audit_logs").insert({
+        action: "workflow_execution_completed",
+        table_name: "workflows",
+        record_id: workflow_id,
+        actor_id: userId,
+        organization_id: workflow.organization_id,
+        metadata: { ...summary, enriched: enrichedCount }
       });
 
       return new Response(JSON.stringify({ run_id: run.id, results }), {
