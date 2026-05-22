@@ -190,8 +190,8 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
         description: 'Sincronizando resultados com o workspace.',
         icon: CheckCircle2,
         status: isCompleted ? 'completed' : isFailed ? 'failed' : 'pending',
-        startTime: job?.completed_at,
-        error: isFailed ? job?.error_message : undefined
+        startTime: job?.completed_at ?? undefined,
+        error: isFailed ? (job?.error_message ?? undefined) : undefined
       }
     ];
 
