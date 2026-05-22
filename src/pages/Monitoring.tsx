@@ -46,15 +46,25 @@ const AutomationMonitoring = () => {
   // Enable realtime updates for scrape jobs
   useRealtimeScrapeJobs();
 
+  const [page, setPage] = useState(1);
+  const pageSize = 12;
+
   const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
-    queryKey: ["automation-jobs"],
+    queryKey: ["automation-jobs", page, searchTerm],
     queryFn: async () => {
-      const { data, error } = await db
+      let query = db
         .from("scrape_jobs")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range((page - 1) * pageSize, page * pageSize - 1);
+      
+      if (searchTerm) {
+        query = query.ilike("name", `%${searchTerm}%`);
+      }
+      
+      const { data, error, count } = await query;
       if (error) throw error;
-      return data;
+      return { data, count };
     }
   });
 
