@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { db } from "@/integrations/supabase/withOrg";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface OAuthSnapshot {
@@ -44,7 +45,7 @@ export function useOAuthSandboxSnapshots() {
   return useQuery({
     queryKey: KEY,
     queryFn: async (): Promise<OAuthSnapshot[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("oauth_sandbox_snapshots")
         .select("*")
         .order("created_at", { ascending: false })
@@ -59,7 +60,7 @@ export function useSaveOAuthSnapshot() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: SaveSnapshotInput): Promise<OAuthSnapshot> => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("oauth_sandbox_snapshots")
         .insert(input)
         .select("*")
@@ -75,7 +76,7 @@ export function useDeleteOAuthSnapshot() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("oauth_sandbox_snapshots").delete().eq("id", id);
+      const { error } = await db.from("oauth_sandbox_snapshots").delete().eq("id", id);
       if (error) throw error;
       return id;
     },

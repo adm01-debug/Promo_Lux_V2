@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +61,7 @@ export function EmailAccountsPanel() {
     queryKey: ["email-accounts", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("email_accounts")
         .select("id,provider,email,display_name,active,last_polled_at,last_error,created_at,scope_type,user_id,reconnect_attempts,reconnect_next_at,reconnect_max_attempts,reconnect_required,reconnect_last_error")
         .order("created_at", { ascending: false });
@@ -199,7 +200,7 @@ export function EmailAccountsPanel() {
       // Quando vira pessoal, o owner passa a ser o admin que está fazendo a conversão.
       const patch: { scope_type: "user" | "organization"; user_id?: string } =
         target === "user" ? { scope_type: "user", user_id: user.id } : { scope_type: "organization" };
-      const { error } = await supabase.from("email_accounts").update(patch).eq("id", acc.id);
+      const { error } = await db.from("email_accounts").update(patch).eq("id", acc.id);
       if (error) throw error;
       return target;
     },

@@ -65,6 +65,7 @@ const ORG_SCOPED_TABLES = new Set<string>([
   "intent_signals",
   "ipc_config",
   "notifications",
+  "oauth_sandbox_snapshots",
   "scrape_jobs",
   "scrape_results",
   "stakeholders",

@@ -24,65 +24,27 @@ export interface DashboardStats {
   totalWebhooks: number;
 }
 
-async function fetchDashboardStats(): Promise<DashboardStats> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // Optimized query using RPC or grouping if possible, but keeping db wrapper for now.
-  // We reduce payload by only selecting necessary columns.
-  const [
-    { count: activeWorkflows },
-    { count: runningWorkflows },
-    { count: totalCompanies },
-    { count: enrichedCompanies },
-    { data: companiesForAvg },
-    { count: qualifiedCompanies },
-    { count: todayScrapeJobs },
-    { count: totalScrapeJobs },
-    { count: completedScrapeJobs },
-    { count: totalDeals },
-    { data: dealsValueData },
-    { count: totalApiKeys },
-    { count: totalWebhooks },
-  ] = await Promise.all([
-    db.from("workflows").select("id", { count: "exact", head: true }).in("status", ["active", "running"]),
-    db.from("workflows").select("id", { count: "exact", head: true }).eq("status", "running"),
-    db.from("companies").select("id", { count: "exact", head: true }),
-    db.from("companies").select("id", { count: "exact", head: true }).eq("enriched", true),
-    db.from("companies").select("ipc_score").not("ipc_score", "is", null),
-    db.from("companies").select("id", { count: "exact", head: true }).gte("ipc_score", 75),
-    db.from("scrape_jobs").select("id", { count: "exact", head: true }).gte("created_at", today.toISOString()),
-    db.from("scrape_jobs").select("id", { count: "exact", head: true }),
-    db.from("scrape_jobs").select("id", { count: "exact", head: true }).eq("status", "completed"),
-    db.from("deals").select("id", { count: "exact", head: true }),
-    db.from("deals").select("value"),
-    db.from("api_keys").select("id", { count: "exact", head: true }),
-    db.from("webhooks").select("id", { count: "exact", head: true }),
-  ]);
-
-  const scores = (companiesForAvg ?? []).map((c) => c.ipc_score ?? 0);
-  const avgIpcScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-  const total = totalCompanies ?? 0;
-  const qualified = qualifiedCompanies ?? 0;
-  const conversionRate = total > 0 ? Math.round((qualified / total) * 100) : 0;
-  const dealsValue = (dealsValueData ?? []).reduce((acc, d) => acc + (Number(d.value) || 0), 0);
-
+async function fetchDashboardStats(orgId: string): Promise<DashboardStats> {
+  const { data, error } = await supabase.rpc("get_dashboard_stats", { p_org_id: orgId });
+  if (error) throw error;
+  
+  const stats = data as Record<string, number>;
   return {
-    activeWorkflows: activeWorkflows ?? 0,
-    runningWorkflows: runningWorkflows ?? 0,
-    totalCompanies: total,
-    enrichedCompanies: enrichedCompanies ?? 0,
-    qualifiedCompanies: qualified,
-    conversionRate,
-    totalCompaniesCount: total,
-    avgIpcScore,
-    todayScrapeJobs: todayScrapeJobs ?? 0,
-    totalScrapeJobs: totalScrapeJobs ?? 0,
-    completedScrapeJobs: completedScrapeJobs ?? 0,
-    totalDeals: totalDeals ?? 0,
-    dealsValue,
-    totalApiKeys: totalApiKeys ?? 0,
-    totalWebhooks: totalWebhooks ?? 0,
+    activeWorkflows: stats.activeWorkflows ?? 0,
+    runningWorkflows: stats.runningWorkflows ?? 0,
+    totalCompanies: stats.totalCompanies ?? 0,
+    enrichedCompanies: stats.enrichedCompanies ?? 0,
+    qualifiedCompanies: stats.qualifiedCompanies ?? 0,
+    conversionRate: stats.totalCompanies > 0 ? Math.round((stats.qualifiedCompanies / stats.totalCompanies) * 100) : 0,
+    totalCompaniesCount: stats.totalCompanies ?? 0,
+    avgIpcScore: stats.avgIpcScore ?? 0,
+    todayScrapeJobs: stats.todayScrapeJobs ?? 0,
+    totalScrapeJobs: stats.totalScrapeJobs ?? 0,
+    completedScrapeJobs: stats.completedScrapeJobs ?? 0,
+    totalDeals: stats.totalDeals ?? 0,
+    dealsValue: stats.dealsValue ?? 0,
+    totalApiKeys: stats.totalApiKeys ?? 0,
+    totalWebhooks: stats.totalWebhooks ?? 0,
   };
 }
 
@@ -90,45 +52,49 @@ export function useDashboardStats() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const { isDemoMode } = useDemo();
+  const activeOrgId = localStorage.getItem("lux:active-org");
 
   useEffect(() => {
     if (!user?.id || isDemoMode) return;
     const channel = supabase
       .channel(`private:${user.id}:dashboard`)
       .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, (payload) => {
-        // Only invalidate if the change belongs to the user (RLS will filter, but frontend should be smart)
-        if (payload.new && (payload.new as any).user_id === user.id) {
+        // Only invalidate if the change belongs to the active org (real-time filtering)
+        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
           queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
           queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, (payload) => {
-        if (payload.new && (payload.new as any).user_id === user.id) {
+        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
           queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload) => {
-        if (payload.new && (payload.new as any).user_id === user.id) {
+        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
           queryClient.invalidateQueries({ queryKey: ["notifications"] });
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, (payload) => {
-        if (payload.new && (payload.new as any).user_id === user.id) {
+        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
         }
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [queryClient, user?.id, isDemoMode]);
+  }, [queryClient, user?.id, isDemoMode, activeOrgId]);
 
   return useQuery({
-    queryKey: ["dashboard-stats", isDemoMode],
-    queryFn: isDemoMode ? () => DEMO_STATS : fetchDashboardStats,
-    refetchInterval: isDemoMode ? false : 60_000, // Reduced refresh frequency
+    queryKey: ["dashboard-stats", isDemoMode, activeOrgId],
+    queryFn: isDemoMode 
+      ? () => DEMO_STATS 
+      : () => fetchDashboardStats(activeOrgId || ""),
+    enabled: isDemoMode || !!activeOrgId,
+    refetchInterval: isDemoMode ? false : 60_000,
     staleTime: isDemoMode ? Infinity : 30_000,
   });
 }
