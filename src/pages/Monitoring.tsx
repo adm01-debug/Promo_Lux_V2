@@ -39,6 +39,7 @@ import { useToast } from "@/hooks/use-toast";
 const AutomationMonitoring = () => {
   const [activeTab, setActiveTab] = useState("runs");
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { toast } = useToast();
@@ -50,19 +51,22 @@ const AutomationMonitoring = () => {
   const pageSize = 12;
 
   const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
-    queryKey: ["automation-jobs", page, searchTerm],
+    queryKey: ["automation-jobs", page, searchTerm, statusFilter],
     queryFn: async () => {
       let query = db
         .from("scrape_jobs")
         .select("*", { count: "exact" })
-        .order("created_at", { ascending: false })
-        .range((page - 1) * pageSize, page * pageSize - 1);
+        .order("created_at", { ascending: false });
       
       if (searchTerm) {
         query = query.ilike("name", `%${searchTerm}%`);
       }
-      
-      const { data, error, count } = await query;
+
+      if (statusFilter !== "all") {
+        query = query.eq("status", statusFilter);
+      }
+
+      const { data, error, count } = await query.range((page - 1) * pageSize, page * pageSize - 1);
       if (error) throw error;
       return { data, count };
     }
