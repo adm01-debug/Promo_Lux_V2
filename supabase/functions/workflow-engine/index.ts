@@ -176,10 +176,26 @@ serve(async (req) => {
 
       log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name });
 
+      // Audit Log: Execution started
+      await supabase.from("audit_logs").insert({
+        action: "workflow_execution_started",
+        table_name: "workflows",
+        record_id: workflow_id,
+        actor_id: userId,
+        organization_id: workflow.organization_id,
+        metadata: { workflow_name: workflow.name }
+      });
+
       // Create run record
       const { data: run, error: runError } = await supabase
         .from("workflow_runs")
-        .insert({ workflow_id, user_id: userId, status: "running", current_step: "scrape" })
+        .insert({ 
+          workflow_id, 
+          user_id: userId, 
+          organization_id: workflow.organization_id, // Added for perfection
+          status: "running", 
+          current_step: "scrape" 
+        })
         .select()
         .single();
       if (runError) throw runError;
@@ -209,6 +225,7 @@ serve(async (req) => {
           .from("scrape_jobs")
           .insert({
             user_id: userId,
+            organization_id: workflow.organization_id, // Added for perfection
             name: `WF: ${workflow.name}`,
             status: "pending",
             source: "gmaps",
@@ -311,6 +328,7 @@ serve(async (req) => {
 
           batchCompanies.push({
             user_id: userId,
+            organization_id: workflow.organization_id, // Added for perfection
             name: obj.name || obj.title || "Unknown",
             sector: obj.category || obj.type || "Não classificado",
             location: obj.address || obj.city || "",
@@ -338,6 +356,7 @@ serve(async (req) => {
           if (insertedCompanies) {
             const resultsToInsert = insertedCompanies.map((c, idx) => ({
               user_id: userId,
+              organization_id: workflow.organization_id, // Added for perfection
               job_id: job.id,
               company_id: c.id,
               raw_data: batchRawData[idx],
