@@ -25,7 +25,6 @@ import {
   Info,
   Search,
   RotateCcw,
-  Eye,
   Terminal,
   Filter
 } from "lucide-react";
@@ -57,7 +56,7 @@ type JobStage = {
   id: string;
   name: string;
   message?: string | null;
-  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' | null;
   started_at?: string | null;
   completed_at?: string | null;
   payload?: any;
@@ -168,9 +167,8 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
 
   const handleRetryStep = async (stepId: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('workflow-engine', {
-        body: { step_id: stepId },
-        query: { action: 'retry-step' }
+      const { data, error } = await supabase.functions.invoke('workflow-engine?action=retry-step', {
+        body: { step_id: stepId }
       });
       if (error) throw error;
       toast({ title: "Sucesso", description: "Etapa reiniciada com sucesso." });
@@ -336,7 +334,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
 
                   <div className="relative space-y-6 before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary/50 before:via-border before:to-transparent">
                     <AnimatePresence mode="popLayout">
-                      {filteredSteps.map((step, i) => {
+                      {filteredSteps.map((step) => {
                         const Icon = getStepIcon(step.name);
                         return (
                           <motion.div 
