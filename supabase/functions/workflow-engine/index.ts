@@ -58,7 +58,7 @@ const ToggleStatusSchema = z.object({
   new_status: z.enum(["active", "paused", "draft"]),
 });
 
-const ActionSchema = z.enum(["list", "create", "run", "toggle-status", "delete"]);
+const ActionSchema = z.enum(["list", "create", "run", "retry-step", "toggle-status", "delete"]);
 
 serve(async (req) => {
   const requestId = crypto.randomUUID();
@@ -158,6 +158,47 @@ serve(async (req) => {
       });
     }
 
+    // RETRY step
+    if (action === "retry-step" && req.method === "POST") {
+      const { step_id } = await req.json();
+      if (!step_id) return badRequest(corsHeaders, { step_id: "Required" });
+
+      const { data: step, error: stepError } = await supabase
+        .from("automation_steps")
+        .select("*, scrape_jobs(organization_id)")
+        .eq("id", step_id)
+        .single();
+      
+      if (stepError || !step) throw new Error("Step not found");
+
+      // Verify organization access
+      const { data: membership } = await supabase
+        .from("organization_members")
+        .select("id")
+        .eq("organization_id", step.scrape_jobs.organization_id)
+        .eq("user_id", userId)
+        .single();
+      
+      if (!membership) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 403, headers: corsHeaders });
+
+      // Update step to pending
+      await supabase.from("automation_steps").update({ 
+        status: "pending", 
+        error_stack: null,
+        message: "Reiniciado pelo usuário",
+        started_at: new Date().toISOString(),
+        completed_at: null 
+      }).eq("id", step_id);
+
+      // In a real scenario, we would trigger the specific step logic here.
+      // For now, we'll simulate the restart of the job or the specific phase.
+      log.info("step_retry_triggered", { step_id, step_name: step.name, job_id: step.job_id });
+
+      return new Response(JSON.stringify({ success: true, message: "Etapa reiniciada" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // RUN workflow
     if (action === "run" && req.method === "POST") {
       const parsed = RunWorkflowSchema.safeParse(await req.json());
@@ -213,6 +254,29 @@ serve(async (req) => {
       await supabase.from("workflow_runs").update({ current_step: "scrape" }).eq("id", run.id);
 
       let scrapeJobId: string | null = null;
+      
+      const insertStep = async (name: string, message: string, payload?: any) => {
+        return await supabase.from("automation_steps").insert({
+          job_id: scrapeJobId,
+          run_id: run.id,
+          organization_id: workflow.organization_id,
+          name,
+          message,
+          payload,
+          status: "running"
+        }).select().single();
+      };
+
+      const updateStep = async (stepId: string, status: string, message?: string, payload?: any, errorStack?: string) => {
+        return await supabase.from("automation_steps").update({
+          status,
+          message,
+          payload,
+          error_stack: errorStack,
+          completed_at: status === 'completed' || status === 'failed' ? new Date().toISOString() : null
+        }).eq("id", stepId);
+      };
+
       try {
         const keywords = (config.keywords as string[]) || ["empresas"];
         const lang = (config.lang as string) || "pt";
@@ -241,6 +305,8 @@ serve(async (req) => {
 
         scrapeJobId = scrapeJob?.id ?? null;
 
+        const stepInit = await insertStep("Inicialização", "Preparando ambiente e parâmetros de busca", { keywords, radius, depth });
+        
         let externalId: string | null = null;
         try {
           const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
@@ -258,22 +324,35 @@ serve(async (req) => {
           if (res.ok) {
             const result = await res.json();
             externalId = result.id || result.ID;
+            if (stepInit.data) await updateStep(stepInit.data.id, "completed", "Ambiente preparado com sucesso", { external_id: externalId });
+          } else {
+            const errText = await res.text();
+            if (stepInit.data) await updateStep(stepInit.data.id, "failed", "Falha ao iniciar job externo", { status: res.status, error: errText });
           }
         } catch (err) {
           log.error("step_scrape_api_error", { error: (err as Error).message, workflow_id });
+          if (stepInit.data) await updateStep(stepInit.data.id, "failed", "Erro de conexão com API externa", null, (err as Error).stack);
         }
+
+        const stepSearch = await insertStep("Busca de Leads", "Iniciando busca no Google Maps", { external_id: externalId });
 
         if (scrapeJobId) {
           await supabase
             .from("scrape_jobs")
-            .update({ external_id: externalId, status: externalId ? "running" : "pending" })
+            .update({ external_id: externalId, status: externalId ? "running" : "failed" })
             .eq("id", scrapeJobId);
+        }
+
+        if (externalId && stepSearch.data) {
+          await updateStep(stepSearch.data.id, "completed", "Busca iniciada remotamente", { external_id: externalId });
+        } else if (stepSearch.data) {
+          await updateStep(stepSearch.data.id, "failed", "Não foi possível obter ID externo para busca");
         }
 
         results.scrape = {
           job_id: scrapeJobId,
           external_id: externalId,
-          status: externalId ? "submitted" : "queued_locally",
+          status: externalId ? "submitted" : "failed",
           keywords,
         };
       } catch (err) {
@@ -284,6 +363,7 @@ serve(async (req) => {
       // ===== STEP 2: ENRICH =====
       await supabase.from("workflow_runs").update({ current_step: "enrich" }).eq("id", run.id);
 
+      const stepEnrich = await insertStep("Enriquecimento", "Iniciando processamento e extração de dados");
       let enrichedCount = 0;
       try {
         const { data: completedJobs } = await supabase
@@ -379,15 +459,18 @@ serve(async (req) => {
           }
         }
 
+        if (stepEnrich.data) await updateStep(stepEnrich.data.id, "completed", `Enriquecimento concluído: ${enrichedCount} empresas processadas`, { count: enrichedCount });
         results.enrich = { companies_imported: enrichedCount, status: "completed" };
       } catch (err) {
         log.error("step_enrich_error", { error: (err as Error).message, workflow_id });
+        if (stepEnrich.data) await updateStep(stepEnrich.data.id, "failed", "Falha durante enriquecimento", null, (err as Error).stack);
         results.enrich = { error: (err as Error).message };
       }
 
       // ===== STEP 3: IPC SCORING =====
       await supabase.from("workflow_runs").update({ current_step: "ipc_score" }).eq("id", run.id);
 
+      const stepIPC = await insertStep("Qualificação IPC", "Calculando pontuação de leads qualificados");
       let scoredCount = 0;
       try {
         const { data: ipcConfig } = await supabase
@@ -458,13 +541,16 @@ serve(async (req) => {
           await supabase.from("scrape_results").update({ processed: true }).in("id", ids);
         }
 
+        if (stepIPC.data) await updateStep(stepIPC.data.id, "completed", `Qualificação concluída: ${scoredCount} empresas pontuadas`, { count: scoredCount });
         results.ipc_score = { companies_scored: scoredCount, status: "completed" };
       } catch (err) {
         log.error("step_ipc_score_error", { error: (err as Error).message, workflow_id });
+        if (stepIPC.data) await updateStep(stepIPC.data.id, "failed", "Falha durante pontuação IPC", null, (err as Error).stack);
         results.ipc_score = { error: (err as Error).message };
       }
 
       // ===== STEP 4: FINALIZE =====
+      const stepFinal = await insertStep("Finalização", "Sincronizando resultados finais");
       await supabase.from("workflow_runs").update({ current_step: "save" }).eq("id", run.id);
 
       const { count: qualifiedCount } = await supabase
@@ -492,6 +578,8 @@ serve(async (req) => {
 
       const summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
       results.summary = summary;
+
+      if (stepFinal.data) await updateStep(stepFinal.data.id, "completed", "Execução finalizada com sucesso", { total: totalProcessed, qualified: totalQualified });
 
       await supabase
         .from("workflow_runs")

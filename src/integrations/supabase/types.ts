@@ -250,6 +250,76 @@ export type Database = {
           },
         ]
       }
+      automation_steps: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          error_stack: string | null
+          id: string
+          job_id: string | null
+          message: string | null
+          name: string
+          organization_id: string
+          payload: Json | null
+          run_id: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["automation_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_stack?: string | null
+          id?: string
+          job_id?: string | null
+          message?: string | null
+          name: string
+          organization_id: string
+          payload?: Json | null
+          run_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["automation_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_stack?: string | null
+          id?: string
+          job_id?: string | null
+          message?: string | null
+          name?: string
+          organization_id?: string
+          payload?: Json | null
+          run_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["automation_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_steps_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "scrape_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_steps_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_steps_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_events: {
         Row: {
           campaign_id: string
@@ -2166,6 +2236,12 @@ export type Database = {
     Enums: {
       app_role: "admin" | "sdr" | "viewer"
       audit_action: "create" | "update" | "delete"
+      automation_status:
+        | "pending"
+        | "running"
+        | "completed"
+        | "failed"
+        | "cancelled"
       campaign_status: "draft" | "active" | "paused" | "completed" | "archived"
       scrape_job_status:
         | "pending"
@@ -2311,6 +2387,13 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "sdr", "viewer"],
       audit_action: ["create", "update", "delete"],
+      automation_status: [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
       campaign_status: ["draft", "active", "paused", "completed", "archived"],
       scrape_job_status: [
         "pending",

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
 import { 
   History, 
@@ -15,19 +15,24 @@ import {
   Calendar,
   Building2,
   RefreshCw,
-  MoreVertical
+  MoreVertical,
+  Download,
+  Bell,
+  Mail,
+  Settings2
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { format } from "date-fns";
+import { format, subDays, startOfDay, endOfDay, differenceInSeconds } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -35,14 +40,27 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const AutomationMonitoring = () => {
   const [activeTab, setActiveTab] = useState("runs");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [periodFilter, setPeriodFilter] = useState<string>("7"); // days
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   // Enable realtime updates for scrape jobs
   useRealtimeScrapeJobs();
@@ -51,7 +69,7 @@ const AutomationMonitoring = () => {
   const pageSize = 12;
 
   const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
-    queryKey: ["automation-jobs", page, searchTerm, statusFilter],
+    queryKey: ["automation-jobs", page, searchTerm, statusFilter, periodFilter],
     queryFn: async () => {
       let query = db
         .from("scrape_jobs")
@@ -66,9 +84,44 @@ const AutomationMonitoring = () => {
         query = query.eq("status", statusFilter as any);
       }
 
+      if (periodFilter !== "all") {
+        const days = parseInt(periodFilter);
+        const dateLimit = subDays(new Date(), days).toISOString();
+        query = query.gte("created_at", dateLimit);
+      }
+
       const { data, error, count } = await query.range((page - 1) * pageSize, page * pageSize - 1);
       if (error) throw error;
       return { data, count };
+    }
+  });
+
+  const { data: alertSettings, refetch: refetchAlerts } = useQuery({
+    queryKey: ["automation-alerts"],
+    queryFn: async () => {
+      const { data, error } = await db.from("automation_alerts").select("*");
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const updateAlertMutation = useMutation({
+    mutationFn: async ({ type, method, active }: { type: string, method: string, active: boolean }) => {
+      const existing = alertSettings?.find(a => a.event_type === type && a.delivery_method === method);
+      if (existing) {
+        return await db.from("automation_alerts").update({ is_active: active }).eq("id", existing.id);
+      } else if (user?.id) {
+        return await db.from("automation_alerts").insert([{
+          event_type: type,
+          delivery_method: method,
+          is_active: active,
+          user_id: user.id
+        }]);
+      }
+    },
+    onSuccess: () => {
+      refetchAlerts();
+      toast({ title: "Configurações Salvas", description: "Suas preferências de alerta foram atualizadas." });
     }
   });
 
@@ -114,6 +167,31 @@ const AutomationMonitoring = () => {
     });
   };
 
+  const handleExportAll = () => {
+    if (!jobs?.data) return;
+    
+    const headers = ["ID", "Nome", "Status", "Empresas", "Criado em", "Duração"];
+    const rows = jobs.data.map((job: any) => [
+      job.id,
+      job.name,
+      job.status,
+      job.results_count || 0,
+      format(new Date(job.created_at), "dd/MM/yyyy HH:mm"),
+      job.started_at && job.completed_at ? 
+        `${differenceInSeconds(new Date(job.completed_at), new Date(job.started_at))}s` : '-'
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `lux_monitoring_report_${format(new Date(), "yyyy-MM-dd")}.csv`);
+    link.click();
+    
+    toast({ title: "Exportação Iniciada", description: "O relatório CSV está sendo baixado." });
+  };
+
   const jobsData = jobs?.data || [];
   const totalCount = jobs?.count || 0;
   const totalPages = Math.ceil(totalCount / pageSize);
@@ -126,6 +204,10 @@ const AutomationMonitoring = () => {
       case 'working': return 'secondary';
       default: return 'outline';
     }
+  };
+
+  const isAlertActive = (type: string, method: string) => {
+    return alertSettings?.find(a => a.event_type === type && a.delivery_method === method)?.is_active ?? false;
   };
 
   return (
@@ -152,9 +234,9 @@ const AutomationMonitoring = () => {
         
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="h-9 px-3 border-border/40 bg-secondary/10 flex items-center gap-2 font-normal">
-            <Filter className="h-3.5 w-3.5" />
+            <Filter className="h-3.5 w-3.5 text-primary" />
             <select 
-              className="bg-transparent border-none outline-none text-xs cursor-pointer"
+              className="bg-transparent border-none outline-none text-xs cursor-pointer font-medium"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -165,9 +247,101 @@ const AutomationMonitoring = () => {
               <option value="pending">Pendentes</option>
             </select>
           </Badge>
+
+          <Badge variant="outline" className="h-9 px-3 border-border/40 bg-secondary/10 flex items-center gap-2 font-normal">
+            <Calendar className="h-3.5 w-3.5 text-primary" />
+            <select 
+              className="bg-transparent border-none outline-none text-xs cursor-pointer font-medium"
+              value={periodFilter}
+              onChange={(e) => setPeriodFilter(e.target.value)}
+            >
+              <option value="1">Últimas 24h</option>
+              <option value="7">Últimos 7 dias</option>
+              <option value="30">Últimos 30 dias</option>
+              <option value="all">Todo o Período</option>
+            </select>
+          </Badge>
         </div>
 
         <div className="flex gap-2 ml-auto">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="h-9 gap-2 border-border/40">
+                <Bell className="h-4 w-4" />
+                Alertas
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Settings2 className="h-5 w-5 text-primary" />
+                  Configurações de Alerta
+                </DialogTitle>
+                <DialogDescription>
+                  Escolha como deseja ser notificado sobre suas automações.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold border-b pb-2">Finalização com Sucesso</h4>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Bell className="h-4 w-4 opacity-70" />
+                      <Label htmlFor="succ-push">Notificação Push</Label>
+                    </div>
+                    <Switch 
+                      id="succ-push" 
+                      checked={isAlertActive('job_completed', 'push')}
+                      onCheckedChange={(v) => updateAlertMutation.mutate({ type: 'job_completed', method: 'push', active: v })}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 opacity-70" />
+                      <Label htmlFor="succ-email">E-mail</Label>
+                    </div>
+                    <Switch 
+                      id="succ-email" 
+                      checked={isAlertActive('job_completed', 'email')}
+                      onCheckedChange={(v) => updateAlertMutation.mutate({ type: 'job_completed', method: 'email', active: v })}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold border-b pb-2 text-destructive">Falhas na Execução</h4>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Bell className="h-4 w-4 opacity-70" />
+                      <Label htmlFor="fail-push">Notificação Push</Label>
+                    </div>
+                    <Switch 
+                      id="fail-push" 
+                      checked={isAlertActive('job_failed', 'push')}
+                      onCheckedChange={(v) => updateAlertMutation.mutate({ type: 'job_failed', method: 'push', active: v })}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 opacity-70" />
+                      <Label htmlFor="fail-email">E-mail</Label>
+                    </div>
+                    <Switch 
+                      id="fail-email" 
+                      checked={isAlertActive('job_failed', 'email')}
+                      onCheckedChange={(v) => updateAlertMutation.mutate({ type: 'job_failed', method: 'email', active: v })}
+                    />
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Button variant="outline" size="sm" onClick={handleExportAll} className="h-9 gap-2 border-border/40">
+            <Download className="h-4 w-4" />
+            Exportar
+          </Button>
+
           <Button variant="outline" size="sm" onClick={handleManualSync} className="h-9 gap-2 border-border/40">
             <RefreshCw className="h-4 w-4" />
             Sincronizar
@@ -258,9 +432,9 @@ const AutomationMonitoring = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-lg">
-                            <DropdownMenuItem className="gap-2 text-xs">
+                            <DropdownMenuItem className="gap-2 text-xs" onClick={(e) => { e.stopPropagation(); /* Logic in JobDetailsSheet */ }}>
                               <ExternalLink className="h-3 w-3" />
-                              Exportar CSV
+                              Exportar Resultados
                             </DropdownMenuItem>
                             <DropdownMenuItem className="gap-2 text-xs text-destructive">
                               <XCircle className="h-3 w-3" />
