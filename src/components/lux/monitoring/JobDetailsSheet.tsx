@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
+import { supabase } from "@/integrations/supabase/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -57,10 +58,10 @@ type JobStage = {
   name: string;
   message?: string;
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
-  started_at?: string;
-  completed_at?: string;
+  started_at?: string | null;
+  completed_at?: string | null;
   payload?: any;
-  error_stack?: string;
+  error_stack?: string | null;
   icon?: any;
 };
 
@@ -167,7 +168,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
 
   const handleRetryStep = async (stepId: string) => {
     try {
-      const { data, error } = await db.functions.invoke('workflow-engine', {
+      const { data, error } = await supabase.functions.invoke('workflow-engine', {
         body: { step_id: stepId },
         query: { action: 'retry-step' }
       });
