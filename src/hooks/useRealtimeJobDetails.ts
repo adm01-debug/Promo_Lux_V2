@@ -36,6 +36,19 @@ export function useRealtimeJobDetails(jobId: string | null) {
           queryClient.invalidateQueries({ queryKey: ["scrape-job", jobId] });
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "scrape_results",
+          filter: `job_id=eq.${jobId}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["scrape-results", jobId] });
+          queryClient.invalidateQueries({ queryKey: ["scrape-job", jobId] });
+        }
+      )
       .subscribe();
 
     return () => {

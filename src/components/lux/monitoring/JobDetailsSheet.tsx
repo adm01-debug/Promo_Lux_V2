@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
@@ -167,12 +167,19 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
 
   const handleRetryStep = async (stepId: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('workflow-engine?action=retry-step', {
-        body: { step_id: stepId }
+      // Garantir isolamento multi-tenant enviando o organization_id (obtido do job ou do contexto)
+      const { data, error } = await supabase.functions.invoke('workflow-engine', {
+        body: { 
+          action: 'retry-step', 
+          step_id: stepId,
+          job_id: jobId,
+          organization_id: job?.organization_id 
+        }
       });
       if (error) throw error;
       toast({ title: "Sucesso", description: "Etapa reiniciada com sucesso." });
     } catch (error) {
+      console.error("Retry step error:", error);
       toast({ title: "Erro", description: "Falha ao reiniciar etapa.", variant: "destructive" });
     }
   };
@@ -192,8 +199,13 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
 
   const filteredSteps = useMemo(() => {
     return steps.filter(step => {
-      const matchesSearch = step.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            (step.message?.toLowerCase() || "").includes(searchTerm.toLowerCase());
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = 
+        step.name.toLowerCase().includes(searchLower) || 
+        (step.message?.toLowerCase() || "").includes(searchLower) ||
+        (step.error_stack?.toLowerCase() || "").includes(searchLower) ||
+        (JSON.stringify(step.payload || {}).toLowerCase().includes(searchLower));
+        
       const matchesStatus = statusFilter === "all" || step.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -252,8 +264,8 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
         </div>
 
         <Tabs defaultValue="overview" className="flex-1 flex flex-col overflow-hidden">
-          <div className="px-6 border-b border-border/50 bg-secondary/5">
-            <TabsList className="bg-transparent h-12 w-full justify-start gap-6 p-0">
+          <div className="px-6 border-b border-border/50 bg-secondary/5 flex items-center justify-between">
+            <TabsList className="bg-transparent h-12 justify-start gap-6 p-0">
               <TabsTrigger value="overview" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none h-full px-0 text-sm gap-2">
                 <Activity className="h-4 w-4" /> Visão Geral
               </TabsTrigger>
@@ -264,6 +276,12 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                 <FileText className="h-4 w-4" /> Configuração
               </TabsTrigger>
             </TabsList>
+            {job?.status === 'running' && (
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                <span className="text-[10px] font-medium text-primary uppercase tracking-wider">Live</span>
+              </div>
+            )}
           </div>
 
           <ScrollArea className="flex-1">
