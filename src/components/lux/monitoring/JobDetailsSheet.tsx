@@ -118,32 +118,62 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
   const exportCSV = () => {
     if (!results || results.length === 0 || !jobId) return;
     
-    const headers = ["ID", "Nome", "Setor", "Localização", "Website", "Email", "Telefone", "IPC Score"];
-    const rows = results.map((res: any) => [
-      res.companies?.id,
-      res.companies?.name,
-      res.companies?.sector,
-      res.companies?.location,
-      res.companies?.website,
-      res.companies?.email,
-      res.companies?.phone,
-      res.companies?.ipc_score
-    ]);
+    // Relatório completo: Timeline + Resultados
+    const sections = [];
+    
+    // 1. Resumo da Execução
+    sections.push(["RESUMO DA EXECUÇÃO"]);
+    sections.push(["ID", jobId]);
+    sections.push(["Nome", job?.name]);
+    sections.push(["Status", job?.status]);
+    sections.push(["Duração", calculateDuration()]);
+    sections.push(["Data", format(new Date(job?.created_at || new Date()), "dd/MM/yyyy HH:mm")]);
+    sections.push([""]);
 
-    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    // 2. Timeline (Etapas)
+    sections.push(["TIMELINE DE EXECUÇÃO"]);
+    sections.push(["Etapa", "Status", "Início", "Mensagem", "Erro"]);
+    steps.forEach((s: any) => {
+      sections.push([
+        s.name,
+        s.status,
+        s.started_at ? format(new Date(s.started_at), "HH:mm:ss") : "-",
+        s.message || "",
+        s.error_stack ? "Sim (ver log)" : "Não"
+      ]);
+    });
+    sections.push([""]);
+
+    // 3. Resultados (Leads)
+    sections.push(["RESULTADOS (LEADS)"]);
+    sections.push(["ID Empresa", "Nome", "Setor", "Localização", "Website", "Email", "Telefone", "IPC Score"]);
+    results.forEach((res: any) => {
+      sections.push([
+        res.companies?.id || "-",
+        res.companies?.name || "-",
+        res.companies?.sector || "-",
+        res.companies?.location || "-",
+        res.companies?.website || "-",
+        res.companies?.email || "-",
+        res.companies?.phone || "-",
+        res.companies?.ipc_score || "0"
+      ]);
+    });
+
+    const csvContent = sections.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `lux_export_${jobId}.csv`);
+    link.setAttribute("download", `lux_report_${jobId}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     
     toast({
-      title: "Exportação Concluída",
-      description: "O arquivo CSV foi gerado com sucesso.",
+      title: "Relatório Gerado",
+      description: "O relatório completo foi exportado em CSV.",
     });
   };
 
