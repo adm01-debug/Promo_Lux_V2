@@ -56,7 +56,7 @@ interface JobDetailsSheetProps {
 type JobStage = {
   id: string;
   name: string;
-  message?: string;
+  message?: string | null;
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
   started_at?: string | null;
   completed_at?: string | null;
