@@ -237,7 +237,10 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={exportCSV} disabled={!results?.length}>
+                <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={() => window.print()} title="Imprimir / Exportar PDF">
+                  <FileText className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={exportCSV} disabled={!results?.length} title="Exportar CSV">
                   <Download className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-destructive hover:bg-destructive/10" onClick={() => handleAction('delete')}>
