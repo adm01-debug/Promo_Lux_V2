@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { format, subDays, startOfDay, endOfDay } from "date-fns";
+import { format, subDays, startOfDay, endOfDay, differenceInSeconds } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -109,11 +109,11 @@ const AutomationMonitoring = () => {
       if (existing) {
         return await db.from("automation_alerts").update({ is_active: active }).eq("id", existing.id);
       } else {
-        return await db.from("automation_alerts").insert({
+        return await db.from("automation_alerts").insert([{
           event_type: type,
           delivery_method: method,
           is_active: active
-        });
+        }]);
       }
     },
     onSuccess: () => {
