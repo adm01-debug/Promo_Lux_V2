@@ -32,6 +32,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -58,6 +59,7 @@ const AutomationMonitoring = () => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   // Enable realtime updates for scrape jobs
@@ -108,11 +110,12 @@ const AutomationMonitoring = () => {
       const existing = alertSettings?.find(a => a.event_type === type && a.delivery_method === method);
       if (existing) {
         return await db.from("automation_alerts").update({ is_active: active }).eq("id", existing.id);
-      } else {
+      } else if (user?.id) {
         return await db.from("automation_alerts").insert([{
           event_type: type,
           delivery_method: method,
-          is_active: active
+          is_active: active,
+          user_id: user.id
         }]);
       }
     },
