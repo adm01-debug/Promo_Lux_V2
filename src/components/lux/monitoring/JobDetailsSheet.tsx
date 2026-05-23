@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
@@ -19,9 +20,13 @@ import {
   Zap,
   Globe,
   Database,
-  ArrowRight,
   ChevronRight,
-  Info
+  Info,
+  Search,
+  RotateCcw,
+  Eye,
+  Terminal,
+  Filter
 } from "lucide-react";
 import { format, differenceInSeconds, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -30,7 +35,16 @@ import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { useRealtimeJobDetails } from "@/hooks/useRealtimeJobDetails";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription 
+} from "@/components/ui/dialog";
 
 interface JobDetailsSheetProps {
   jobId: string | null;
@@ -40,18 +54,24 @@ interface JobDetailsSheetProps {
 
 type JobStage = {
   id: string;
-  label: string;
-  description: string;
-  icon: any;
-  status: 'pending' | 'running' | 'completed' | 'failed';
-  startTime?: string;
-  endTime?: string;
-  metrics?: string;
-  error?: string;
+  name: string;
+  message?: string;
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  started_at?: string;
+  completed_at?: string;
+  payload?: any;
+  error_stack?: string;
+  icon?: any;
 };
 
 export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetProps) => {
   const { toast } = useToast();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [selectedStep, setSelectedStep] = useState<JobStage | null>(null);
+
+  // Enable realtime updates
+  useRealtimeJobDetails(jobId);
 
   const { data: job, refetch: refetchJob } = useQuery({
     queryKey: ["scrape-job", jobId],
@@ -62,10 +82,21 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
       return data;
     },
     enabled: !!jobId && open,
-    refetchInterval: (query: any) => {
-      const data = query.state.data;
-      return (data?.status === 'running' || data?.status === 'working' ? 3000 : false);
+  });
+
+  const { data: steps = [], isLoading: stepsLoading } = useQuery({
+    queryKey: ["automation-steps", jobId],
+    queryFn: async () => {
+      if (!jobId) return [];
+      const { data, error } = await db
+        .from("automation_steps")
+        .select("*")
+        .eq("job_id", jobId)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return data || [];
     },
+    enabled: !!jobId && open,
   });
 
   const { data: results, isLoading: resultsLoading } = useQuery({
@@ -134,6 +165,19 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     }
   };
 
+  const handleRetryStep = async (stepId: string) => {
+    try {
+      const { data, error } = await db.functions.invoke('workflow-engine', {
+        body: { step_id: stepId },
+        query: { action: 'retry-step' }
+      });
+      if (error) throw error;
+      toast({ title: "Sucesso", description: "Etapa reiniciada com sucesso." });
+    } catch (error) {
+      toast({ title: "Erro", description: "Falha ao reiniciar etapa.", variant: "destructive" });
+    }
+  };
+
   const config = job?.config as any;
   const progress = job?.results_count && config?.depth 
     ? Math.min(Math.round((job.results_count / (config.depth * 20)) * 100), 100) 
@@ -147,55 +191,23 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     return `${Math.floor(diff / 60)}m ${diff % 60}s`;
   };
 
-  const getStages = (): JobStage[] => {
-    const isCompleted = job?.status === 'completed';
-    const isFailed = job?.status === 'failed';
-    const isRunning = job?.status === 'running' || job?.status === 'working';
-    
-    const stages: JobStage[] = [
-      {
-        id: 'init',
-        label: 'Inicialização',
-        description: 'Preparando ambiente e parâmetros de busca.',
-        icon: Play,
-        status: job?.started_at ? 'completed' : isFailed ? 'failed' : 'running',
-        startTime: job?.created_at ?? undefined,
-        endTime: job?.started_at ?? undefined
-      },
-      {
-        id: 'search',
-        label: 'Busca de Leads',
-        description: 'Consultando Google Maps e fontes externas.',
-        icon: Globe,
-        status: (job?.results_count || 0) > 0 ? 'completed' : isRunning ? 'running' : isFailed ? 'failed' : 'pending',
-        metrics: job?.results_count ? `${job.results_count} encontrados` : undefined,
-      },
-      {
-        id: 'parse',
-        label: 'Processamento',
-        description: 'Extraindo detalhes, emails e telefones.',
-        icon: Database,
-        status: isCompleted ? 'completed' : isRunning && (job?.results_count || 0) > 0 ? 'running' : isFailed ? 'failed' : 'pending',
-      },
-      {
-        id: 'enrich',
-        label: 'Enriquecimento',
-        description: 'Qualificação via IPC e análise setorial.',
-        icon: Zap,
-        status: isCompleted ? 'completed' : isRunning && progress > 80 ? 'running' : isFailed ? 'failed' : 'pending',
-      },
-      {
-        id: 'finish',
-        label: 'Finalização',
-        description: 'Sincronizando resultados com o workspace.',
-        icon: CheckCircle2,
-        status: isCompleted ? 'completed' : isFailed ? 'failed' : 'pending',
-        startTime: job?.completed_at ?? undefined,
-        error: isFailed ? (job?.error_message ?? undefined) : undefined
-      }
-    ];
+  const filteredSteps = useMemo(() => {
+    return steps.filter(step => {
+      const matchesSearch = step.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            (step.message?.toLowerCase() || "").includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === "all" || step.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [steps, searchTerm, statusFilter]);
 
-    return stages;
+  const getStepIcon = (name: string) => {
+    const n = name.toLowerCase();
+    if (n.includes('inicialização')) return Play;
+    if (n.includes('busca')) return Globe;
+    if (n.includes('processamento') || n.includes('enriquecimento')) return Database;
+    if (n.includes('qualificação') || n.includes('ipc')) return Zap;
+    if (n.includes('finalização')) return CheckCircle2;
+    return Activity;
   };
 
   return (
@@ -291,52 +303,119 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                   </div>
                 )}
 
-                {/* Timeline */}
+                {/* Timeline & Filters */}
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-primary" />
-                    <h3 className="font-bold text-sm tracking-tight uppercase">Linha do Tempo</h3>
-                  </div>
-                  <div className="relative space-y-6 before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary/50 before:via-border before:to-transparent">
-                    {getStages().map((stage, i) => (
-                      <div key={stage.id} className="relative flex items-start gap-4">
-                        <div className={cn(
-                          "mt-1.5 h-[2.25rem] w-[2.25rem] rounded-full border-4 border-background flex items-center justify-center shrink-0 z-10 transition-all duration-500",
-                          stage.status === 'completed' ? "bg-success text-white scale-110 shadow-lg shadow-success/20" :
-                          stage.status === 'running' ? "bg-primary text-white animate-pulse" :
-                          stage.status === 'failed' ? "bg-destructive text-white" :
-                          "bg-secondary text-muted-foreground"
-                        )}>
-                          <stage.icon className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1 pt-1 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <h4 className={cn("text-sm font-bold", stage.status === 'pending' && "text-muted-foreground")}>
-                              {stage.label}
-                            </h4>
-                            {stage.startTime && (
-                              <span className="text-[10px] font-mono opacity-50">
-                                {format(new Date(stage.startTime), "HH:mm:ss")}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-muted-foreground leading-relaxed">
-                            {stage.description}
-                          </p>
-                          {stage.metrics && (
-                            <Badge variant="secondary" className="mt-1 text-[10px] font-mono bg-secondary/50">
-                              {stage.metrics}
-                            </Badge>
-                          )}
-                          {stage.error && (
-                            <div className="mt-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-2">
-                              <AlertTriangle className="h-3 w-3 text-destructive shrink-0 mt-0.5" />
-                              <p className="text-[10px] font-mono text-destructive leading-tight">{stage.error}</p>
-                            </div>
-                          )}
-                        </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <h3 className="font-bold text-sm tracking-tight uppercase">Etapas de Execução</h3>
+                    </div>
+                    <div className="flex items-center gap-2 max-w-[300px]">
+                      <div className="relative flex-1">
+                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+                        <Input 
+                          placeholder="Buscar etapa..." 
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="h-8 pl-7 text-xs bg-secondary/10 border-none"
+                        />
                       </div>
-                    ))}
+                      <select 
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="h-8 bg-secondary/10 border-none text-[10px] rounded-md px-2 outline-none cursor-pointer"
+                      >
+                        <option value="all">Todos</option>
+                        <option value="running">Executando</option>
+                        <option value="completed">Sucesso</option>
+                        <option value="failed">Erro</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="relative space-y-6 before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary/50 before:via-border before:to-transparent">
+                    <AnimatePresence mode="popLayout">
+                      {filteredSteps.map((step, i) => {
+                        const Icon = getStepIcon(step.name);
+                        return (
+                          <motion.div 
+                            key={step.id} 
+                            layout
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="relative flex items-start gap-4"
+                          >
+                            <div className={cn(
+                              "mt-1.5 h-[2.25rem] w-[2.25rem] rounded-full border-4 border-background flex items-center justify-center shrink-0 z-10 transition-all duration-500",
+                              step.status === 'completed' ? "bg-success text-white scale-110 shadow-lg shadow-success/20" :
+                              step.status === 'running' ? "bg-primary text-white animate-pulse" :
+                              step.status === 'failed' ? "bg-destructive text-white" :
+                              "bg-secondary text-muted-foreground"
+                            )}>
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1 pt-1 space-y-1">
+                              <div className="flex items-center justify-between">
+                                <h4 className={cn("text-sm font-bold", step.status === 'pending' && "text-muted-foreground")}>
+                                  {step.name}
+                                </h4>
+                                <div className="flex items-center gap-2">
+                                  {step.started_at && (
+                                    <span className="text-[10px] font-mono opacity-50">
+                                      {format(new Date(step.started_at), "HH:mm:ss")}
+                                    </span>
+                                  )}
+                                  <Badge variant={step.status === 'completed' ? "default" : step.status === 'failed' ? "destructive" : "outline"} className="text-[9px] py-0 px-1 capitalize">
+                                    {step.status}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <p className="text-xs text-muted-foreground leading-relaxed">
+                                {step.message}
+                              </p>
+                              
+                              <div className="flex items-center gap-2 mt-2">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  className="h-7 text-[10px] gap-1 px-2 hover:bg-primary/10 hover:text-primary"
+                                  onClick={() => setSelectedStep(step)}
+                                >
+                                  <Terminal className="h-3 w-3" /> Logs & Payload
+                                </Button>
+                                {step.status === 'failed' && (
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="h-7 text-[10px] gap-1 px-2 border-warning/30 text-warning hover:bg-warning/10"
+                                    onClick={() => handleRetryStep(step.id)}
+                                  >
+                                    <RotateCcw className="h-3 w-3" /> Tentar Novamente
+                                  </Button>
+                                )}
+                              </div>
+
+                              {step.error_stack && (
+                                <div className="mt-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-2">
+                                  <AlertTriangle className="h-3 w-3 text-destructive shrink-0 mt-0.5" />
+                                  <p className="text-[10px] font-mono text-destructive leading-tight break-all line-clamp-2">
+                                    {step.error_stack}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+
+                    {filteredSteps.length === 0 && !stepsLoading && (
+                      <div className="py-10 text-center text-muted-foreground">
+                        <Filter className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                        <p className="text-xs">Nenhuma etapa encontrada com os filtros atuais.</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -344,7 +423,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                 <div className="flex gap-3 pt-4">
                   {job?.status === 'failed' && (
                     <Button className="flex-1 h-12 rounded-2xl gap-2 shadow-lg shadow-primary/20" onClick={() => handleAction('retry')}>
-                      <Play className="h-4 w-4" /> Tentar Novamente
+                      <Play className="h-4 w-4" /> Tentar Novamente (Geral)
                     </Button>
                   )}
                   {(job?.status === 'running' || job?.status === 'working' || job?.status === 'pending') && (
@@ -464,6 +543,58 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
             </div>
           </ScrollArea>
         </Tabs>
+
+        {/* Log Viewer Dialog */}
+        <Dialog open={!!selectedStep} onOpenChange={() => setSelectedStep(null)}>
+          <DialogContent className="sm:max-w-2xl bg-background/95 backdrop-blur-xl border border-border/50 max-h-[80vh] flex flex-col">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  "h-8 w-8 rounded-lg flex items-center justify-center border",
+                  selectedStep?.status === 'completed' ? "bg-success/10 border-success/30 text-success" :
+                  selectedStep?.status === 'failed' ? "bg-destructive/10 border-destructive/30 text-destructive" :
+                  "bg-primary/10 border-primary/30 text-primary"
+                )}>
+                  <Terminal className="h-4 w-4" />
+                </div>
+                <div>
+                  <DialogTitle>Logs: {selectedStep?.name}</DialogTitle>
+                  <DialogDescription>
+                    Detalhes técnicos, payloads e erros da etapa.
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
+            <ScrollArea className="flex-1 mt-4">
+              <div className="space-y-6 p-1">
+                <div className="space-y-2">
+                  <h4 className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Mensagem</h4>
+                  <p className="text-sm bg-secondary/20 p-4 rounded-xl border border-border/50">
+                    {selectedStep?.message || "Sem mensagem detalhada."}
+                  </p>
+                </div>
+
+                {selectedStep?.payload && (
+                  <div className="space-y-2">
+                    <h4 className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Payload (JSON)</h4>
+                    <pre className="p-4 rounded-xl bg-black/40 text-[11px] font-mono text-primary/90 border border-white/5 overflow-x-auto">
+                      {JSON.stringify(selectedStep.payload, null, 2)}
+                    </pre>
+                  </div>
+                )}
+
+                {selectedStep?.error_stack && (
+                  <div className="space-y-2">
+                    <h4 className="text-[10px] text-destructive uppercase font-bold tracking-wider">Stack Trace</h4>
+                    <pre className="p-4 rounded-xl bg-destructive/5 text-[10px] font-mono text-destructive/80 border border-destructive/20 overflow-x-auto">
+                      {selectedStep.error_stack}
+                    </pre>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </SheetContent>
     </Sheet>
   );
