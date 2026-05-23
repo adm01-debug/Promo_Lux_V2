@@ -579,6 +579,8 @@ serve(async (req) => {
       const summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
       results.summary = summary;
 
+      if (stepFinal.data) await updateStep(stepFinal.data.id, "completed", "Execução finalizada com sucesso", { total: totalProcessed, qualified: totalQualified });
+
       await supabase
         .from("workflow_runs")
         .update({ status: "completed", current_step: null, results, completed_at: new Date().toISOString() })
