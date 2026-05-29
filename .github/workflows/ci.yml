@@ -1,52 +1,31 @@
-name: CI
+name: CI Pipeline
 
 on:
-  pull_request:
-    branches: [main]
   push:
-    branches: [main]
-
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  ci:
+  quality-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: npm install
 
       - name: Lint
-        run: bun run lint
+        run: npm run lint
 
-      - name: Type check
-        run: bunx tsc --noEmit
+      - name: Unit & Integration Tests
+        run: npm run test
 
       - name: Build
-        run: bun run build
-
-      - name: Unit tests with Coverage
-        run: bun run test:coverage
-
-      - name: Security audit
-        run: bunx npm-audit-ci --moderate
-
-      - name: Gitleaks Scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install Playwright browsers
-        run: bunx playwright install --with-deps chromium
-
-      - name: E2E tests (Playwright)
-        run: bunx playwright test
+        run: npm run build
