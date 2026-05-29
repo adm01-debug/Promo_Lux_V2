@@ -645,9 +645,9 @@ serve(async (req) => {
     }
 
     // DELETE workflow
-    if (action === "delete" && req.method === "DELETE") {
-      const id = url.searchParams.get("id");
-      if (!id || !z.string().uuid().safeParse(id).success) {
+    if (action === "delete" && req.method === "POST") { // Adjusted from DELETE to POST for easier action routing if needed, or keep DELETE
+      const { workflow_id } = await req.json();
+      if (!workflow_id) return badRequest(corsHeaders, { workflow_id: "Required" });
         return badRequest(corsHeaders, { id: "Valid UUID required" });
       }
       const { error } = await supabase.from("workflows").delete().eq("id", id).eq("user_id", userId);

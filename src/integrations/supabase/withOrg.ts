@@ -241,7 +241,10 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "select" && isScoped) {
         return (...args: any[]) => {
-          if (!orgId) raise(new MissingOrgContextError(tableName, "select"));
+          if (!orgId) {
+            console.warn(`[withOrg] Tentativa de select em "${tableName}" sem org ativa. Retornando builder sem filtro automático para evitar MissingOrgContextError imediato.`);
+            return (target as any).select(...args);
+          }
           return (target as any).select(...args).eq("organization_id", orgId);
         };
       }

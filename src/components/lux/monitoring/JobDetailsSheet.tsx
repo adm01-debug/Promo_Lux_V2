@@ -198,9 +198,8 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
   const handleRetryStep = async (stepId: string) => {
     try {
       // Garantir isolamento multi-tenant enviando o organization_id (obtido do job ou do contexto)
-      const { data, error } = await supabase.functions.invoke('workflow-engine', {
+      const { data, error } = await supabase.functions.invoke('workflow-engine?action=retry-step', {
         body: { 
-          action: 'retry-step', 
           step_id: stepId,
           job_id: jobId,
           organization_id: job?.organization_id 

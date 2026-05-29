@@ -59,7 +59,7 @@ const AutomationMonitoring = () => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const queryClient = useQueryClient();
 
   // Enable realtime updates for scrape jobs
@@ -69,8 +69,11 @@ const AutomationMonitoring = () => {
   const pageSize = 12;
 
   const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
-    queryKey: ["automation-jobs", page, searchTerm, statusFilter, periodFilter],
+    queryKey: ["automation-jobs", page, searchTerm, statusFilter, periodFilter, user?.id],
     queryFn: async () => {
+      const activeOrgId = getActiveOrgId();
+      if (!activeOrgId) return { data: [], count: 0 };
+      
       let query = db
         .from("scrape_jobs")
         .select("*", { count: "exact" })
