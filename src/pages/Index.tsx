@@ -123,8 +123,8 @@ const Index = () => {
       {/* Skip nav is in index.html — no duplicate needed here */}
 
       <ConnectionStatus />
-      {/* AutoTopProgressBar está no App.tsx para escopo global, o local trata apenas navegação suave */}
-      <TopProgressBar isAnimating={isTransitioning} />
+      {/* AutoTopProgressBar está no App.tsx para escopo global, o local trata apenas navegação suave se necessário */}
+      {/* <TopProgressBar isAnimating={isTransitioning} /> */}
       <CommandPalette onNavigate={handleNav} recentViews={recentViews} />
       <KeyboardShortcutsDialog />
       <OnboardingTour />

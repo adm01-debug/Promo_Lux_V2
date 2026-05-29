@@ -1,5 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import type { Database } from "@/integrations/supabase/types";
 
 export type MembershipAuditAction = "added" | "removed" | "role_changed" | "left" | "other";
@@ -69,7 +69,7 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
     queryKey: ["membership-audit", orgId, limit],
     enabled: !!orgId,
     queryFn: async (): Promise<MembershipAuditEntry[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("audit_logs")
         .select("id, created_at, action, actor_id, old_data, new_data")
         .eq("organization_id", orgId!)
@@ -111,7 +111,7 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
       ));
       if (ids.length === 0) return entries;
 
-      const { data: profs } = await supabase
+      const { data: profs } = await db
         .from("profiles")
         .select("id, full_name, avatar_url")
         .in("id", ids);
@@ -148,7 +148,7 @@ export function useMembershipAuditLogPaged(
     queryFn: async (): Promise<MembershipAuditPage> => {
       const from = page * pageSize;
       const to = from + pageSize; // inclusive — fetches pageSize+1 rows for hasMore check
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("audit_logs")
         .select("id, created_at, action, actor_id, old_data, new_data")
         .eq("organization_id", orgId!)
@@ -193,7 +193,7 @@ export function useMembershipAuditLogPaged(
       ));
       let enriched = entries;
       if (ids.length > 0) {
-        const { data: profs } = await supabase
+        const { data: profs } = await db
           .from("profiles")
           .select("id, full_name, avatar_url")
           .in("id", ids);
