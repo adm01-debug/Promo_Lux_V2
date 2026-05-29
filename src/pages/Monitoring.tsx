@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { db } from "@/integrations/supabase/withOrg";
+import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { 
   History, 
   Terminal, 
