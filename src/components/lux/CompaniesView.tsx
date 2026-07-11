@@ -3,6 +3,7 @@ import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_COMPANIES_FULL } from "@/lib/demoData";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
+import { ImportCompaniesDialog } from "@/components/lux/companies/ImportCompaniesDialog";
 import { EditCompanyDialog } from "@/components/lux/EditCompanyDialog";
 import { Building2, Download, X, Loader2, Trash2, Sparkles, HelpCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
