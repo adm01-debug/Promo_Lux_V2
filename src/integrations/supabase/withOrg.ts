@@ -233,7 +233,7 @@ export function fromOrg<T extends TableName>(table: T) {
           if (!orgId) raise(new MissingOrgContextError(tableName, "update"));
           assertOrgMatch(values, orgId, tableName, "update");
           const sanitized = stripOrgFromUpdate(values);
-          const q = (target as any).update(sanitized, options);
+          const q = options === undefined ? (target as any).update(sanitized) : (target as any).update(sanitized, options);
           
           if (values && typeof values === "object" && "version" in values) {
             const version = values.version;
