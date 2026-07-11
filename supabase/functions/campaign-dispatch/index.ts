@@ -44,6 +44,9 @@ interface Recipient {
   email: string;
   full_name: string | null;
   status: string;
+  current_step: number;
+  next_action_at: string | null;
+  sequence_completed_at: string | null;
 }
 
 interface Campaign {
