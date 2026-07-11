@@ -348,6 +348,12 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     }
   }
 
+  // Avalia seleção automática de vencedor A/B (opt-in via ab_test_enabled).
+  // A função é idempotente e barata; ignora campanhas sem teste ativo.
+  if (campaign.ab_test_enabled) {
+    await admin.rpc("decide_ab_winner", { _campaign_id: campaign.id });
+  }
+
   return { skipped: false, sent, failed, waiting, completed, account: fresh.email };
 }
 
