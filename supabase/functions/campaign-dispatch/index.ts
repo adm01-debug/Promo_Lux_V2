@@ -182,7 +182,7 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
   const nowIso = new Date().toISOString();
   const { data: recipients, error: recErr } = await admin
     .from("campaign_recipients")
-    .select("id,organization_id,campaign_id,email,full_name,status,current_step,next_action_at,sequence_completed_at")
+    .select("id,organization_id,campaign_id,email,full_name,status,current_step,next_action_at,sequence_completed_at,variant")
     .eq("campaign_id", campaign.id)
     .eq("organization_id", campaign.organization_id) // defesa extra de isolamento
     .is("sequence_completed_at", null)
