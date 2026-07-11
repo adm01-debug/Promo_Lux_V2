@@ -1,7 +1,7 @@
 # ADR-008: Política de Soft Delete e Retenção de Dados
 
 ## Status
-Aceito
+Aceito e Implementado
 
 ## Contexto
 A exclusão acidental de dados críticos (leads, deals, campanhas) por usuários pode causar prejuízos operacionais. Além disso, a manutenção de logs e históricos é necessária para auditoria e conformidade.
