@@ -27,6 +27,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   "org-violations": SettingsSkeleton,
   "rls-discovery": SettingsSkeleton,
   monitoring: DashboardSkeleton,
+  "recycle-bin": SettingsSkeleton,
 };
 
 /** Render a view-specific skeleton with accessibility. Falls back to DashboardSkeleton. */

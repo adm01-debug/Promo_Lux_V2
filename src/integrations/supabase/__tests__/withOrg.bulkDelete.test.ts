@@ -16,7 +16,7 @@ const callOrder: Call[] = [];
 
 function makeBuilder() {
   const b: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const m of ["select", "insert", "upsert", "update", "delete", "eq", "in", "neq"] as const) {
+  for (const m of ["select", "insert", "upsert", "update", "delete", "eq", "in", "neq", "is"] as const) {
     b[m] = vi.fn((...args: unknown[]) => {
       callOrder.push({ method: m, args });
       return b;
@@ -50,7 +50,8 @@ describe("db (withOrg) — bulk DELETE scope guards", () => {
   });
 
   it("injeta organization_id ANTES de filtros adicionais (.in)", () => {
-    db.from("companies").delete().in("id", ["c1", "c2", "c3"]);
+    // notifications é org-escopada mas NÃO usa soft delete → hard delete real.
+    db.from("notifications").delete().in("id", ["c1", "c2", "c3"]);
 
     const methods = callOrder.map((c) => c.method);
     // Ordem esperada: delete → eq(organization_id) → in(id, [...])
@@ -61,6 +62,20 @@ describe("db (withOrg) — bulk DELETE scope guards", () => {
 
     const inCall = callOrder.find((c) => c.method === "in");
     expect(inCall?.args).toEqual(["id", ["c1", "c2", "c3"]]);
+  });
+
+  it("soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org", () => {
+    db.from("companies").delete().in("id", ["c1", "c2"]);
+
+    const methods = callOrder.map((c) => c.method);
+    // Soft delete: update(deleted_at) → eq(organization_id) → is(deleted_at,null) → in(id)
+    expect(methods).toEqual(["update", "eq", "is", "in"]);
+
+    const updateCall = callOrder.find((c) => c.method === "update");
+    expect((updateCall?.args[0] as Record<string, unknown>)?.deleted_at).toBeDefined();
+
+    const eqCall = callOrder.find((c) => c.method === "eq");
+    expect(eqCall?.args).toEqual(["organization_id", ORG_A]);
   });
 
   it("injeta filtro de org mesmo quando chamador encadeia múltiplos .eq/.neq", () => {
@@ -122,8 +137,8 @@ describe("db (withOrg) — bulk DELETE scope guards", () => {
     }
   });
 
-  it("delete sem filtros adicionais ainda recebe o eq de org", () => {
-    db.from("companies").delete();
+  it("delete sem filtros adicionais ainda recebe o eq de org (tabela hard-delete)", () => {
+    db.from("notifications").delete();
     const methods = callOrder.map((c) => c.method);
     expect(methods).toEqual(["delete", "eq"]);
     expect(callOrder[1].args).toEqual(["organization_id", ORG_A]);

@@ -26,6 +26,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   "org-violations": () => import("@/components/lux/OrgViolationsView"),
   "rls-discovery": () => import("@/components/lux/settings/RLSDiscoveryView"),
   monitoring: () => import("@/components/lux/monitoring/MonitoringView"),
+  "recycle-bin": () => import("@/components/lux/RecycleBinView"),
 };
 
 // Cache to avoid double-prefetch
@@ -59,4 +60,5 @@ export const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentTyp
   "org-violations": lazy(() => import("@/components/lux/OrgViolationsView").then(m => ({ default: m.OrgViolationsView }))),
   "rls-discovery": lazy(() => import("@/components/lux/settings/RLSDiscoveryView").then(m => ({ default: m.RLSDiscoveryView }))),
   monitoring: lazy(() => import("@/components/lux/monitoring/MonitoringView").then(m => ({ default: m.MonitoringView }))),
+  "recycle-bin": lazy(() => import("@/components/lux/RecycleBinView").then(m => ({ default: m.RecycleBinView }))),
 };

@@ -634,6 +634,7 @@ export type Database = {
         Row: {
           bounced: number
           created_at: string
+          deleted_at: string | null
           failed: number
           id: string
           meetings: number
@@ -652,6 +653,7 @@ export type Database = {
         Insert: {
           bounced?: number
           created_at?: string
+          deleted_at?: string | null
           failed?: number
           id?: string
           meetings?: number
@@ -670,6 +672,7 @@ export type Database = {
         Update: {
           bounced?: number
           created_at?: string
+          deleted_at?: string | null
           failed?: number
           id?: string
           meetings?: number
@@ -721,6 +724,7 @@ export type Database = {
         Row: {
           cnpj: string | null
           created_at: string
+          deleted_at: string | null
           description: string | null
           email: string | null
           employees: string | null
@@ -749,6 +753,7 @@ export type Database = {
         Insert: {
           cnpj?: string | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           email?: string | null
           employees?: string | null
@@ -777,6 +782,7 @@ export type Database = {
         Update: {
           cnpj?: string | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           email?: string | null
           employees?: string | null
@@ -952,6 +958,7 @@ export type Database = {
           company_id: string | null
           created_at: string
           currency: string
+          deleted_at: string | null
           description: string | null
           expected_close_date: string | null
           id: string
@@ -972,6 +979,7 @@ export type Database = {
           company_id?: string | null
           created_at?: string
           currency?: string
+          deleted_at?: string | null
           description?: string | null
           expected_close_date?: string | null
           id?: string
@@ -992,6 +1000,7 @@ export type Database = {
           company_id?: string | null
           created_at?: string
           currency?: string
+          deleted_at?: string | null
           description?: string | null
           expected_close_date?: string | null
           id?: string
@@ -2070,6 +2079,7 @@ export type Database = {
         Row: {
           config: Json
           created_at: string
+          deleted_at: string | null
           description: string | null
           id: string
           last_run_at: string | null
@@ -2086,6 +2096,7 @@ export type Database = {
         Insert: {
           config?: Json
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: string
           last_run_at?: string | null
@@ -2102,6 +2113,7 @@ export type Database = {
         Update: {
           config?: Json
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: string
           last_run_at?: string | null
@@ -2197,6 +2209,7 @@ export type Database = {
         }[]
       }
       prune_auth_rate_limits: { Args: never; Returns: undefined }
+      purge_soft_deleted: { Args: never; Returns: undefined }
       record_campaign_event: {
         Args: {
           _event_type: string

@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Activity,
+  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Activity, Trash2,
   HelpCircle, Keyboard, LifeBuoy, FileText,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
@@ -25,6 +25,7 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   "org-violations": ShieldAlert,
   "rls-discovery": ShieldCheck,
   monitoring: Activity,
+  "recycle-bin": Trash2,
 };
 
 export const VIEW_LABELS: Record<View, string> = {
@@ -47,6 +48,7 @@ export const VIEW_LABELS: Record<View, string> = {
   "org-violations": "Violações de Organização",
   "rls-discovery": "RLS Discovery",
   monitoring: "Status do Sistema",
+  "recycle-bin": "Lixeira",
 };
 
 export const helpItems = [

@@ -1,7 +1,7 @@
 # ADR-008: Política de Soft Delete e Retenção de Dados
 
 ## Status
-Aceito
+Aceito e Implementado
 
 ## Contexto
 A exclusão acidental de dados críticos (leads, deals, campanhas) por usuários pode causar prejuízos operacionais. Além disso, a manutenção de logs e históricos é necessária para auditoria e conformidade.
@@ -12,7 +12,7 @@ Adotar uma política híbrida de deleção:
 1. **Soft Delete (Padrão para Negócio)**:
    - Tabelas como `companies`, `deals`, `campaigns` e `workflows` devem utilizar a coluna `deleted_at`.
    - Registros "deletados" permanecem no banco por 30 dias antes de expurgo permanente.
-   - Queries via `withOrg` devem filtrar registros onde `deleted_at IS NULL` por padrão (a ser implementado).
+   - Queries via `withOrg` filtram registros onde `deleted_at IS NULL` por padrão. DELETE é convertido em soft delete; a UI de Lixeira (`RecycleBinView`) permite restaurar ou excluir permanentemente. Expurgo automático (30 dias) via cron + edge function `purge-soft-deleted`.
 
 2. **Hard Delete (Técnico/Segurança)**:
    - Tabelas de configuração técnica (`api_keys`, `webhook_deliveries`) utilizam deleção física imediata.

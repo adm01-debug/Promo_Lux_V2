@@ -26,6 +26,7 @@ const METHODS = [
   "match",
   "filter",
   "not",
+  "is",
 ] as const;
 
 function makeBuilder() {
@@ -127,7 +128,7 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
 
   describe("DELETE — filtros combinados não removem o escopo", () => {
     it("delete com .or() ainda recebe .eq(organization_id) injetado primeiro", () => {
-      db.from("companies").delete().or("starred.eq.false,enriched.eq.false");
+      db.from("notifications").delete().or("starred.eq.false,enriched.eq.false");
 
       const methods = callOrder.map((c) => c.method);
       expect(methods[0]).toBe("delete");
@@ -137,7 +138,7 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
     });
 
     it("delete com .match() arbitrário não substitui filtro de org", () => {
-      db.from("companies").delete().match({ source: "manual" });
+      db.from("notifications").delete().match({ source: "manual" });
       expect(orgEqCalls()).toHaveLength(1);
       expect(callOrder.find((c) => c.method === "match")?.args).toEqual([
         { source: "manual" },
@@ -147,7 +148,7 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
     it("delete com .filter('organization_id','eq', ORG_B) coexiste com filtro forçado da org ativa", () => {
       // O atacante adiciona um filtro divergente; o wrapper já injetou o
       // filtro correto. A interseção no Postgrest é vazia → seguro.
-      db.from("companies").delete().filter("organization_id", "eq", ORG_B);
+      db.from("notifications").delete().filter("organization_id", "eq", ORG_B);
 
       expect(orgEqCalls()[0]?.args).toEqual(["organization_id", ORG_A]);
       const filterCall = callOrder.find((c) => c.method === "filter");
@@ -157,7 +158,7 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
     it("delete com .not('organization_id','eq', ORG_A) ainda recebe o eq positivo da org", () => {
       // Tentativa explícita de excluir a org ativa do escopo. O wrapper
       // garante que o .eq positivo está presente — interseção vazia.
-      db.from("companies").delete().not("organization_id", "eq", ORG_A);
+      db.from("notifications").delete().not("organization_id", "eq", ORG_A);
 
       expect(orgEqCalls()[0]?.args).toEqual(["organization_id", ORG_A]);
       const notCall = callOrder.find((c) => c.method === "not");
