@@ -10,6 +10,7 @@ vi.mock("./client", () => ({
       update: vi.fn().mockReturnThis(),
       delete: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
       limit: vi.fn().mockReturnThis(),
     })),
   }
