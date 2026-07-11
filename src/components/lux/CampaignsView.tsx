@@ -248,6 +248,26 @@ export const CampaignsView = () => {
     },
   });
 
+  const dispatchMutation = useMutation({
+    mutationFn: async (campaignId: string) => {
+      const { data, error } = await supabase.functions.invoke("campaign-dispatch", {
+        body: { campaign_id: campaignId },
+      });
+      if (error) throw error;
+      return data as { results?: Array<{ sent?: number; failed?: number; reason?: string }> };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      const r = data?.results?.[0];
+      if (r?.reason && !r.sent) {
+        toast({ title: "Nada enviado", description: r.reason === "no active email account for organization" ? "Conecte uma conta de e-mail nas Integrações." : "Sem destinatários pendentes." });
+      } else {
+        toast({ title: "Envio disparado", description: `${r?.sent ?? 0} enviados · ${r?.failed ?? 0} falhas` });
+      }
+    },
+    onError: (err: Error) => toast({ title: "Erro no envio", description: err.message, variant: "destructive" }),
+  });
+
   const openEdit = (campaign: Tables<"campaigns">) => {
     setEditingCampaign(campaign);
     setFormName(campaign.name);
