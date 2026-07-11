@@ -39,33 +39,6 @@ interface CompanyDetailModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const mockSignals = [
-  { type: "Visita ao site", detail: "Visitou página de pricing 3x", time: "2h atrás", strength: "high" as const, icon: <Eye className="h-3.5 w-3.5" /> },
-  { type: "Contratando", detail: "Vaga aberta: Head de Tecnologia", time: "1d atrás", strength: "high" as const, icon: <Briefcase className="h-3.5 w-3.5" /> },
-  { type: "Rodada de investimento", detail: "Série A — R$ 15M captados", time: "3d atrás", strength: "high" as const, icon: <TrendingUp className="h-3.5 w-3.5" /> },
-  { type: "Engajamento", detail: "Abriu email da campanha de outreach", time: "5d atrás", strength: "medium" as const, icon: <Mail className="h-3.5 w-3.5" /> },
-  { type: "Adoção de tech", detail: "Migrou infra para AWS EKS", time: "1 sem atrás", strength: "low" as const, icon: <Globe className="h-3.5 w-3.5" /> },
-];
-
-const mockContacts = [
-  { name: "Ana Silva", role: "CEO & Co-founder", email: "ana@company.com", linkedin: true, verified: true },
-  { name: "Pedro Santos", role: "CTO", email: "pedro@company.com", linkedin: true, verified: true },
-  { name: "Maria Costa", role: "VP of Sales", email: "maria@company.com", linkedin: true, verified: false },
-  { name: "Lucas Mendes", role: "Head of Growth", email: "lucas@company.com", linkedin: false, verified: true },
-];
-
-const mockTimeline = [
-  { action: "Email de follow-up enviado", type: "outreach", date: "28 Mar 2025", detail: "Campanha: SaaS Q1" },
-  { action: "Abriu email — Taxa de abertura 3/3", type: "engagement", date: "27 Mar 2025", detail: "Tempo de leitura: 45s" },
-  { action: "Email inicial enviado", type: "outreach", date: "25 Mar 2025", detail: "Assunto: Como empresas SaaS estão..." },
-  { action: "Enriquecido via waterfall (Hunter + Clearbit)", type: "enrichment", date: "20 Mar 2025", detail: "4 contatos encontrados, 3 emails verificados" },
-  { action: "Qualificado pelo IPC — Score 94", type: "qualification", date: "18 Mar 2025", detail: "Critérios: SaaS B2B, SP, 50-200 func." },
-  { action: "Adicionado ao workflow de prospecção", type: "workflow", date: "15 Mar 2025", detail: "Workflow: LinkedIn → Enriquecimento → CRM" },
-  { action: "Identificado pelo crawler de LinkedIn", type: "discovery", date: "14 Mar 2025", detail: "Fonte: LinkedIn Sales Navigator" },
-];
-
-const mockTechnologies = ["React", "Node.js", "AWS", "PostgreSQL", "Kubernetes", "Stripe", "HubSpot"];
-
 const timelineIcons: Record<string, React.ReactNode> = {
   outreach: <Send className="h-3 w-3" />,
   engagement: <Eye className="h-3 w-3" />,
@@ -73,6 +46,7 @@ const timelineIcons: Record<string, React.ReactNode> = {
   qualification: <Star className="h-3 w-3" />,
   workflow: <Zap className="h-3 w-3" />,
   discovery: <Radar className="h-3 w-3" />,
+  signal: <Radar className="h-3 w-3" />,
 };
 
 const timelineColors: Record<string, string> = {
