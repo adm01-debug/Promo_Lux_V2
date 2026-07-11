@@ -16,7 +16,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
  */
 
 const calls: Record<string, unknown[]> = {
-  select: [], insert: [], upsert: [], update: [], delete: [], eq: [],
+  select: [], insert: [], upsert: [], update: [], delete: [], eq: [], is: [],
 };
 
 function makeBuilder() {
