@@ -134,7 +134,7 @@ export const ImportCompaniesDialog = () => {
         // Insere em lotes de 500
         for (let i = 0; i < withUser.length; i += 500) {
           const batch = withUser.slice(i, i + 500);
-          const { error } = await db.from("companies").insert(batch);
+          const { error } = await db.from("companies").insert(batch as never);
           if (error) throw error;
           res.inserted += batch.length;
         }
