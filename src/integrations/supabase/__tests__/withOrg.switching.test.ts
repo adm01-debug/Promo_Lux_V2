@@ -21,7 +21,7 @@ const calls: Record<string, unknown[]> = {
 
 function makeBuilder() {
   const b: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const m of ["select", "insert", "upsert", "update", "delete", "eq"] as const) {
+  for (const m of ["select", "insert", "upsert", "update", "delete", "eq", "is"] as const) {
     b[m] = vi.fn((...args: unknown[]) => {
       calls[m].push({ method: m, args });
       return b;
