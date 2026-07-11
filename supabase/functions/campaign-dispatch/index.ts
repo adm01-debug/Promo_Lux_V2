@@ -185,10 +185,6 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
   }
 
 
-  const step = firstEmailStep(campaign.sequence);
-  const subjectBase = step?.subject?.trim() || `${campaign.name}`;
-  const bodyBase = step?.body?.trim() || defaultBody(campaign.name);
-
   let fresh: EmailAccount;
   try {
     fresh = await ensureFreshToken(admin, account);
@@ -203,62 +199,174 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
 
   let sent = 0;
   let failed = 0;
+  let waiting = 0;
+  let completed = 0;
 
   for (const r of recipients as Recipient[]) {
-    // Validação de e-mail defensiva.
+    // Determina a etapa corrente. Fora dos limites → conclui a sequência.
+    let stepIdx = clampStep(r.current_step, steps.length);
+    if (stepIdx >= steps.length) {
+      await admin.rpc("advance_recipient_step", {
+        _recipient_id: r.id, _next_step: steps.length, _next_action_at: new Date().toISOString(),
+        _completed: true, _error: null,
+      });
+      completed++;
+      continue;
+    }
+
+    // Etapas de espera (wait/delay): apenas agenda a próxima ação e avança.
+    const cur = steps[stepIdx];
+    if (isWaitStep(cur)) {
+      const nextAt = new Date(Date.now() + waitMs(cur)).toISOString();
+      const isLast = stepIdx + 1 >= steps.length;
+      await admin.rpc("advance_recipient_step", {
+        _recipient_id: r.id, _next_step: stepIdx + 1, _next_action_at: nextAt,
+        _completed: isLast, _error: null,
+      });
+      if (isLast) completed++; else waiting++;
+      continue;
+    }
+
+    // Etapa de e-mail: validação defensiva do endereço.
     if (!r.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email)) {
       await admin.rpc("record_campaign_event", {
         _recipient_id: r.id, _event_type: "failed", _url: null, _ip: null, _ua: null,
+      });
+      await admin.rpc("advance_recipient_step", {
+        _recipient_id: r.id, _next_step: steps.length, _next_action_at: new Date().toISOString(),
+        _completed: true, _error: "invalid email address",
       });
       failed++;
       continue;
     }
 
-    const subject = personalize(subjectBase, r);
-    const body = personalize(bodyBase, r);
+    const subject = personalize(cur.subject?.trim() || campaign.name, r);
+    const body = personalize(cur.body?.trim() || defaultBody(campaign.name), r);
+
+    // Reutiliza thread da primeira mensagem para manter o encadeamento (follow-ups).
+    const thread = await firstThreadFor(admin, r.id);
 
     try {
       const meta = fresh.provider === "gmail"
-        ? await sendGmail(fresh, r.email, subject, body)
+        ? await sendGmail(fresh, r.email, subject, body, thread)
         : await sendOutlook(fresh, r.email, subject, body);
 
       // Registra a mensagem enviada (threading para reply-detection).
-      await admin.from("campaign_messages").insert({
+      // Idempotência garantida pelo índice único (recipient_id, step_index).
+      const { error: msgErr } = await admin.from("campaign_messages").insert({
         organization_id: r.organization_id,
         user_id: fresh.user_id,
         campaign_id: r.campaign_id,
         recipient_id: r.id,
         email_account_id: fresh.id,
-        step_index: 0,
+        step_index: stepIdx,
         provider: fresh.provider,
         provider_message_id: meta.providerMessageId,
         rfc822_message_id: meta.rfc822MessageId,
-        thread_id: meta.threadId,
+        thread_id: meta.threadId ?? thread?.threadId ?? null,
         subject,
         sent_at: new Date().toISOString(),
       });
+      // Conflito de unicidade = etapa já enviada; segue sem duplicar evento.
+      if (msgErr && !/duplicate key|unique/i.test(msgErr.message)) {
+        throw new Error(msgErr.message);
+      }
 
-      await admin.rpc("record_campaign_event", {
-        _recipient_id: r.id, _event_type: "sent", _url: null, _ip: null, _ua: null,
+      // Evento "sent" apenas na primeira mensagem da sequência (métrica de envio).
+      if (stepIdx === 0) {
+        await admin.rpc("record_campaign_event", {
+          _recipient_id: r.id, _event_type: "sent", _url: null, _ip: null, _ua: null,
+        });
+      }
+
+      // Avança para a próxima etapa; se era a última, conclui.
+      const isLast = stepIdx + 1 >= steps.length;
+      await admin.rpc("advance_recipient_step", {
+        _recipient_id: r.id,
+        _next_step: stepIdx + 1,
+        _next_action_at: new Date().toISOString(),
+        _completed: isLast,
+        _error: null,
       });
       sent++;
+      if (isLast) completed++;
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       console.error(`send to ${r.email} failed:`, msg);
-      await admin.rpc("record_campaign_event", {
-        _recipient_id: r.id, _event_type: "failed", _url: null, _ip: null, _ua: null,
+      if (stepIdx === 0) {
+        await admin.rpc("record_campaign_event", {
+          _recipient_id: r.id, _event_type: "failed", _url: null, _ip: null, _ua: null,
+        });
+      }
+      // Reprograma nova tentativa em 1h (não avança a etapa) e registra o erro.
+      await admin.rpc("advance_recipient_step", {
+        _recipient_id: r.id,
+        _next_step: stepIdx,
+        _next_action_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+        _completed: false,
+        _error: msg.slice(0, 500),
       });
       failed++;
     }
   }
 
-  return { skipped: false, sent, failed, account: fresh.email };
+  return { skipped: false, sent, failed, waiting, completed, account: fresh.email };
 }
 
-function firstEmailStep(sequence: unknown): SequenceStep | null {
-  if (!Array.isArray(sequence)) return null;
-  return (sequence as SequenceStep[]).find((s) => s?.type === "email") ?? null;
+/** Normaliza a sequência JSONB em uma lista de etapas ordenadas (email/wait). */
+function normalizeSequence(sequence: unknown, campaignName: string): SequenceStep[] {
+  if (!Array.isArray(sequence)) return [];
+  const steps = (sequence as SequenceStep[]).filter(
+    (s) => s && typeof s === "object",
+  );
+  // Se não houver nenhuma etapa de e-mail, cria uma etapa padrão única.
+  if (!steps.some((s) => !isWaitStep(s))) {
+    return [{ type: "email", subject: campaignName, body: defaultBody(campaignName) }];
+  }
+  return steps;
 }
+
+function isWaitStep(step: SequenceStep): boolean {
+  const t = (step.type || "").toLowerCase();
+  return t === "wait" || t === "delay";
+}
+
+/** Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */
+function waitMs(step: SequenceStep): number {
+  const days = num(step.days) + num(step.waitDays) + num(step.delay);
+  const hours = num(step.hours) + num(step.waitHours);
+  const minutes = num(step.minutes);
+  const ms = ((days * 24 + hours) * 60 + minutes) * 60 * 1000;
+  return ms > 0 ? ms : 60 * 1000;
+}
+
+function num(v: unknown): number {
+  const n = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+function clampStep(step: unknown, len: number): number {
+  const n = typeof step === "number" && Number.isFinite(step) ? Math.floor(step) : 0;
+  return n < 0 ? 0 : Math.min(n, len);
+}
+
+/** Recupera thread/RFC id da primeira mensagem enviada ao destinatário (para follow-ups). */
+async function firstThreadFor(
+  admin: SupabaseClient,
+  recipientId: string,
+): Promise<{ threadId: string | null; rfc822: string | null } | null> {
+  const { data } = await admin
+    .from("campaign_messages")
+    .select("thread_id, rfc822_message_id")
+    .eq("recipient_id", recipientId)
+    .order("step_index", { ascending: true })
+    .limit(1);
+  const row = data?.[0];
+  if (!row) return null;
+  return { threadId: row.thread_id ?? null, rfc822: row.rfc822_message_id ?? null };
+}
+
+
 
 function defaultBody(campaignName: string): string {
   return `Olá {{nome}},\n\nEntramos em contato através da campanha "${campaignName}".\n\nAtenciosamente,\nEquipe LUX IA`;
