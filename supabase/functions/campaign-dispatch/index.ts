@@ -436,11 +436,17 @@ function encodeBase64Url(input: string): string {
   return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-async function sendGmail(acc: EmailAccount, to: string, subject: string, body: string): Promise<SendMeta> {
+async function sendGmail(
+  acc: EmailAccount,
+  to: string,
+  subject: string,
+  body: string,
+  thread?: { threadId: string | null; rfc822: string | null } | null,
+): Promise<SendMeta> {
   const fromDomain = acc.email.split("@")[1] || "lux.ai";
   const rfc822Id = buildRfc822Id(fromDomain);
   const fromName = acc.display_name || acc.email;
-  const mime = [
+  const headers = [
     `From: ${fromName} <${acc.email}>`,
     `To: ${to}`,
     `Subject: ${encodeMimeSubject(subject)}`,
@@ -448,9 +454,16 @@ async function sendGmail(acc: EmailAccount, to: string, subject: string, body: s
     `MIME-Version: 1.0`,
     `Content-Type: text/plain; charset="UTF-8"`,
     `Content-Transfer-Encoding: 8bit`,
-    ``,
-    body,
-  ].join("\r\n");
+  ];
+  // Encadeamento de follow-ups: referencia a mensagem original.
+  if (thread?.rfc822) {
+    headers.push(`In-Reply-To: ${thread.rfc822}`);
+    headers.push(`References: ${thread.rfc822}`);
+  }
+  const mime = [...headers, ``, body].join("\r\n");
+
+  const payload: Record<string, unknown> = { raw: encodeBase64Url(mime) };
+  if (thread?.threadId) payload.threadId = thread.threadId;
 
   const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
     method: "POST",
@@ -458,12 +471,13 @@ async function sendGmail(acc: EmailAccount, to: string, subject: string, body: s
       Authorization: `Bearer ${acc.access_token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ raw: encodeBase64Url(mime) }),
+    body: JSON.stringify(payload),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(`Gmail send [${res.status}]: ${JSON.stringify(data)}`);
   return { providerMessageId: data.id ?? null, rfc822MessageId: rfc822Id, threadId: data.threadId ?? null };
 }
+
 
 async function sendOutlook(acc: EmailAccount, to: string, subject: string, body: string): Promise<SendMeta> {
   const res = await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
