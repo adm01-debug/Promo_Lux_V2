@@ -263,7 +263,11 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     let assignedVariant = r.variant;
     let chosen: SequenceVariant = { subject: cur.subject, body: cur.body };
     if (stepIdx === 0 && variants.length > 1) {
-      const idx = pickVariantIndex(r.id, variants.length);
+      // Se já há vencedora decidida (auto-winner), todos os novos destinatários
+      // recebem a variante vencedora; caso contrário, split determinístico.
+      const winner = campaign.ab_winner_variant?.trim() || null;
+      let idx = winner ? indexOfVariant(variants, winner) : -1;
+      if (idx < 0) idx = pickVariantIndex(r.id, variants.length);
       chosen = variants[idx];
       assignedVariant = chosen.label?.trim() || variantLabel(idx);
       if (assignedVariant !== r.variant) {
@@ -272,6 +276,7 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
           .eq("id", r.id);
       }
     }
+
 
     const subject = personalize(chosen.subject?.trim() || cur.subject?.trim() || campaign.name, r);
     const body = personalize(chosen.body?.trim() || cur.body?.trim() || defaultBody(campaign.name), r);
