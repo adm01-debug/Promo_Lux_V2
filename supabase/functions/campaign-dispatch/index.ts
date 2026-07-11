@@ -131,7 +131,7 @@ Deno.serve(async (req) => {
 
   let cq = admin
     .from("campaigns")
-    .select("id, name, status, organization_id, sequence")
+    .select("id, name, status, organization_id, sequence, ab_test_enabled, ab_winner_variant")
     .eq("status", "active")
     .is("deleted_at", null);
   if (campaignFilter) cq = cq.eq("id", campaignFilter);
