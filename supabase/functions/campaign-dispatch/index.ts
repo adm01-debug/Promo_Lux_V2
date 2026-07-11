@@ -199,6 +199,30 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     return { skipped: false, reason: "no recipients ready", sent: 0, failed: 0 };
   }
 
+  // Lista de supressão (compliance/deliverability): e-mails que descadastraram,
+  // sofreram bounce ou reclamaram em QUALQUER campanha desta organização não
+  // podem mais ser contatados. Consulta apenas os e-mails do batch corrente.
+  const batchEmails = Array.from(
+    new Set(
+      (recipients as Recipient[])
+        .map((r) => (r.email ? r.email.trim().toLowerCase() : ""))
+        .filter((e) => e.length > 0),
+    ),
+  );
+  const suppressed = new Set<string>();
+  if (batchEmails.length > 0) {
+    const { data: supRows, error: supErr } = await admin
+      .from("email_suppressions")
+      .select("email")
+      .eq("organization_id", campaign.organization_id)
+      .in("email", batchEmails);
+    if (supErr) throw new Error(`load suppressions: ${supErr.message}`);
+    for (const row of supRows ?? []) {
+      if (row?.email) suppressed.add(String(row.email).toLowerCase());
+    }
+  }
+
+
 
   let fresh: EmailAccount;
   try {
