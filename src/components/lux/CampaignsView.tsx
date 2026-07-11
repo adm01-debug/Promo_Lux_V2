@@ -424,6 +424,18 @@ export const CampaignsView = () => {
                       {campaign.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
                       {campaign.status === "active" ? "Pausar" : "Ativar"}
                     </Button>}
+                    {canEdit && campaign.status === "active" && !isDemoMode && (
+                      <Button
+                        size="sm"
+                        variant="default"
+                        className="gap-1 text-xs h-8"
+                        onClick={() => dispatchMutation.mutate(campaign.id)}
+                        disabled={dispatchMutation.isPending}
+                      >
+                        {dispatchMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Mail className="h-3 w-3" />}
+                        Enviar agora
+                      </Button>
+                    )}
                     {canDelete && (
                       <Button
                         size="sm"
