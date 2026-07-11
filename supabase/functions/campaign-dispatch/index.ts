@@ -395,6 +395,9 @@ function pickVariantIndex(recipientId: string, count: number): number {
     h = Math.imul(h, 16777619);
   }
   return Math.abs(h) % count;
+}
+
+
 
 /** Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */
 function waitMs(step: SequenceStep): number {
