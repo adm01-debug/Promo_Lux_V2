@@ -16,7 +16,7 @@ const callOrder: Call[] = [];
 
 function makeBuilder() {
   const b: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const m of ["select", "insert", "upsert", "update", "delete", "eq", "in", "neq"] as const) {
+  for (const m of ["select", "insert", "upsert", "update", "delete", "eq", "in", "neq", "is"] as const) {
     b[m] = vi.fn((...args: unknown[]) => {
       callOrder.push({ method: m, args });
       return b;
