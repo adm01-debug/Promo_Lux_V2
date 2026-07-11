@@ -56,7 +56,10 @@ interface Campaign {
   status: string;
   organization_id: string;
   sequence: unknown;
+  ab_test_enabled: boolean | null;
+  ab_winner_variant: string | null;
 }
+
 
 // Uma variante A/B da etapa de e-mail (subject/body alternativos).
 interface SequenceVariant {
