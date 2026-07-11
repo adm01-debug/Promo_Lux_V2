@@ -283,7 +283,9 @@ export const CampaignsView = () => {
             name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
             prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
             sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
+            ab={formAb} setAb={(v) => { setFormAb(v); setDirty(true); }}
             isEdit
+
           />
           <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending || !formName.trim()} className="w-full gap-2">
             {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
