@@ -224,7 +224,7 @@ export function fromOrg<T extends TableName>(table: T) {
             assertOrgMatch(values, orgId, tableName, String(prop));
           }
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
-          return (target as any)[prop](next, options);
+          return options === undefined ? (target as any)[prop](next) : (target as any)[prop](next, options);
         };
       }
 
