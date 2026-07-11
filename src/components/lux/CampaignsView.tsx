@@ -61,14 +61,17 @@ export const CampaignsView = () => {
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
   const [formSequence, setFormSequence] = useState<SequenceStep[]>(defaultSequence);
+  const [formAb, setFormAb] = useState<AbConfig>(defaultAb);
   const [dirty, setDirty] = useState(false);
 
   const resetForm = () => {
     setFormName("");
     setFormProspects("50");
     setFormSequence([...defaultSequence]);
+    setFormAb({ ...defaultAb });
     setDirty(false);
   };
+
 
   // Sync dirty flag with global guard while a form dialog is open
   useEffect(() => {
