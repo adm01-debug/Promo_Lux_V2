@@ -26,6 +26,7 @@ const METHODS = [
   "match",
   "filter",
   "not",
+  "is",
 ] as const;
 
 function makeBuilder() {
