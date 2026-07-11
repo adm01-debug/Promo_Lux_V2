@@ -125,13 +125,38 @@ export const CampaignTrackingDrawer = ({
       }>;
     },
   });
+
+  // Configuração/estado oficial do teste A/B (vencedora auto-decidida).
+  const { data: abConfig } = useQuery({
+    queryKey: ["campaign-ab-config", campaignId],
+    enabled: !!campaignId && open,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("campaigns")
+        .select("ab_test_enabled,ab_winner_metric,ab_winner_variant,ab_winner_decided_at")
+        .eq("id", campaignId!)
+        .maybeSingle();
+      if (error) throw error;
+      return data as {
+        ab_test_enabled: boolean;
+        ab_winner_metric: string;
+        ab_winner_variant: string | null;
+        ab_winner_decided_at: string | null;
+      } | null;
+    },
+  });
+
   const hasAbTest = abStats.length > 1;
-  // Variante vencedora: maior reply_rate, com open_rate como desempate.
-  const winner = hasAbTest
-    ? [...abStats].sort(
-        (a, b) => (b.reply_rate ?? 0) - (a.reply_rate ?? 0) || (b.open_rate ?? 0) - (a.open_rate ?? 0),
-      )[0]?.variant
-    : null;
+  // Vencedora: prioriza a decisão automática persistida; senão calcula localmente
+  // (maior reply_rate, com open_rate como desempate).
+  const winner =
+    abConfig?.ab_winner_variant ??
+    (hasAbTest
+      ? [...abStats].sort(
+          (a, b) => (b.reply_rate ?? 0) - (a.reply_rate ?? 0) || (b.open_rate ?? 0) - (a.open_rate ?? 0),
+        )[0]?.variant
+      : null);
+
 
 
   const sent = recipients.filter((r) => r.sent_at).length;
@@ -176,6 +201,15 @@ export const CampaignTrackingDrawer = ({
         {hasAbTest && (
           <section className="mt-6">
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Teste A/B por variante</h3>
+            {abConfig?.ab_winner_variant && abConfig.ab_winner_decided_at && (
+              <p className="text-[11px] text-primary mb-2">
+                Vencedora <strong>{abConfig.ab_winner_variant}</strong> definida automaticamente em{" "}
+                {new Date(abConfig.ab_winner_decided_at).toLocaleString("pt-BR", {
+                  day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+                })}{" "}
+                (métrica: {abConfig.ab_winner_metric}).
+              </p>
+            )}
             <div className="space-y-2">
               {abStats.map((v) => (
                 <div

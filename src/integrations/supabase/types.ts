@@ -647,6 +647,11 @@ export type Database = {
       }
       campaigns: {
         Row: {
+          ab_min_sample: number
+          ab_test_enabled: boolean
+          ab_winner_decided_at: string | null
+          ab_winner_metric: string
+          ab_winner_variant: string | null
           bounced: number
           created_at: string
           deleted_at: string | null
@@ -666,6 +671,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ab_min_sample?: number
+          ab_test_enabled?: boolean
+          ab_winner_decided_at?: string | null
+          ab_winner_metric?: string
+          ab_winner_variant?: string | null
           bounced?: number
           created_at?: string
           deleted_at?: string | null
@@ -685,6 +695,11 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          ab_min_sample?: number
+          ab_test_enabled?: boolean
+          ab_winner_decided_at?: string | null
+          ab_winner_metric?: string
+          ab_winner_variant?: string | null
           bounced?: number
           created_at?: string
           deleted_at?: string | null
@@ -2189,6 +2204,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      decide_ab_winner: { Args: { _campaign_id: string }; Returns: string }
       default_org_for_current_user: { Args: never; Returns: string }
       evaluate_org_violation_alerts: {
         Args: never

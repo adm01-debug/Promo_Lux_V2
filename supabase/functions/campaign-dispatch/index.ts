@@ -56,7 +56,10 @@ interface Campaign {
   status: string;
   organization_id: string;
   sequence: unknown;
+  ab_test_enabled: boolean | null;
+  ab_winner_variant: string | null;
 }
+
 
 // Uma variante A/B da etapa de e-mail (subject/body alternativos).
 interface SequenceVariant {
@@ -128,7 +131,7 @@ Deno.serve(async (req) => {
 
   let cq = admin
     .from("campaigns")
-    .select("id, name, status, organization_id, sequence")
+    .select("id, name, status, organization_id, sequence, ab_test_enabled, ab_winner_variant")
     .eq("status", "active")
     .is("deleted_at", null);
   if (campaignFilter) cq = cq.eq("id", campaignFilter);
@@ -260,7 +263,11 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     let assignedVariant = r.variant;
     let chosen: SequenceVariant = { subject: cur.subject, body: cur.body };
     if (stepIdx === 0 && variants.length > 1) {
-      const idx = pickVariantIndex(r.id, variants.length);
+      // Se já há vencedora decidida (auto-winner), todos os novos destinatários
+      // recebem a variante vencedora; caso contrário, split determinístico.
+      const winner = campaign.ab_winner_variant?.trim() || null;
+      let idx = winner ? indexOfVariant(variants, winner) : -1;
+      if (idx < 0) idx = pickVariantIndex(r.id, variants.length);
       chosen = variants[idx];
       assignedVariant = chosen.label?.trim() || variantLabel(idx);
       if (assignedVariant !== r.variant) {
@@ -269,6 +276,7 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
           .eq("id", r.id);
       }
     }
+
 
     const subject = personalize(chosen.subject?.trim() || cur.subject?.trim() || campaign.name, r);
     const body = personalize(chosen.body?.trim() || cur.body?.trim() || defaultBody(campaign.name), r);
@@ -340,6 +348,12 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     }
   }
 
+  // Avalia seleção automática de vencedor A/B (opt-in via ab_test_enabled).
+  // A função é idempotente e barata; ignora campanhas sem teste ativo.
+  if (campaign.ab_test_enabled) {
+    await admin.rpc("decide_ab_winner", { _campaign_id: campaign.id });
+  }
+
   return { skipped: false, sent, failed, waiting, completed, account: fresh.email };
 }
 
@@ -381,6 +395,14 @@ function variantLabel(idx: number): string {
   if (idx < 26) return String.fromCharCode(65 + idx);
   return `V${idx + 1}`;
 }
+
+/** Índice da variante cujo rótulo (explícito ou derivado) casa com `label`. */
+function indexOfVariant(variants: SequenceVariant[], label: string): number {
+  return variants.findIndex(
+    (v, i) => (v.label?.trim() || variantLabel(i)) === label,
+  );
+}
+
 
 /**
  * Atribuição determinística de variante a partir do UUID do destinatário.
