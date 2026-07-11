@@ -361,6 +361,41 @@ function isWaitStep(step: SequenceStep): boolean {
   return t === "wait" || t === "delay";
 }
 
+/**
+ * Extrai as variantes A/B de uma etapa de e-mail. Se `variants` estiver
+ * ausente ou vazio, retorna uma única variante com o conteúdo direto da etapa.
+ * Variantes inválidas (sem subject e sem body) são descartadas.
+ */
+function emailVariants(step: SequenceStep): SequenceVariant[] {
+  const raw = Array.isArray(step.variants) ? step.variants : [];
+  const valid = raw.filter(
+    (v) => v && typeof v === "object" &&
+      ((v.subject && v.subject.trim()) || (v.body && v.body.trim())),
+  );
+  if (valid.length === 0) return [{ subject: step.subject, body: step.body }];
+  return valid;
+}
+
+/** Rótulo padrão de variante por índice: 0 -> "A", 1 -> "B", ... */
+function variantLabel(idx: number): string {
+  if (idx < 26) return String.fromCharCode(65 + idx);
+  return `V${idx + 1}`;
+}
+
+/**
+ * Atribuição determinística de variante a partir do UUID do destinatário.
+ * Hash simples (FNV-1a) sobre o id garante distribuição estável e reprodutível
+ * sem depender de aleatoriedade — reprocessar o mesmo destinatário mantém a
+ * mesma variante.
+ */
+function pickVariantIndex(recipientId: string, count: number): number {
+  let h = 2166136261;
+  for (let i = 0; i < recipientId.length; i++) {
+    h ^= recipientId.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h) % count;
+
 /** Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */
 function waitMs(step: SequenceStep): number {
   const days = num(step.days) + num(step.waitDays) + num(step.delay);
