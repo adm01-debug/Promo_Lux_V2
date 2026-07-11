@@ -277,6 +277,7 @@ export const CompaniesView = () => {
             {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
             {isExporting ? "Exportando..." : "Exportar CSV"}
           </Button>
+          {canCreate && <ImportCompaniesDialog />}
           {canCreate && <AddCompanyDialog />}
         </div>
       </div>
