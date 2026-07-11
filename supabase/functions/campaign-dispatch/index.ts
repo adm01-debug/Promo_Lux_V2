@@ -157,19 +157,33 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     return { skipped: true, reason: "no active email account for organization", sent: 0, failed: 0 };
   }
 
-  // Destinatários prontos para envio (idempotente por status).
+  // Normaliza a sequência: lista de etapas (email/wait). Sem etapas → nada a fazer.
+  const steps = normalizeSequence(campaign.sequence, campaign.name);
+  if (steps.length === 0) {
+    return { skipped: true, reason: "empty sequence", sent: 0, failed: 0 };
+  }
+
+  // Destinatários prontos para a PRÓXIMA etapa:
+  //  - sequência ainda não concluída
+  //  - horário de próxima ação já chegou (respeita waits/delays)
+  //  - não responderam / descadastraram / bounce (reply-detection pausa a sequência)
+  const nowIso = new Date().toISOString();
   const { data: recipients, error: recErr } = await admin
     .from("campaign_recipients")
-    .select("id,organization_id,campaign_id,email,full_name,status")
+    .select("id,organization_id,campaign_id,email,full_name,status,current_step,next_action_at,sequence_completed_at")
     .eq("campaign_id", campaign.id)
     .eq("organization_id", campaign.organization_id) // defesa extra de isolamento
-    .in("status", ["pending", "queued"])
+    .is("sequence_completed_at", null)
+    .not("status", "in", "(replied,unsubscribed,bounced)")
+    .lte("next_action_at", nowIso)
+    .order("next_action_at", { ascending: true })
     .limit(BATCH_PER_CAMPAIGN);
 
   if (recErr) throw new Error(`load recipients: ${recErr.message}`);
   if (!recipients || recipients.length === 0) {
-    return { skipped: false, reason: "no pending recipients", sent: 0, failed: 0 };
+    return { skipped: false, reason: "no recipients ready", sent: 0, failed: 0 };
   }
+
 
   const step = firstEmailStep(campaign.sequence);
   const subjectBase = step?.subject?.trim() || `${campaign.name}`;
