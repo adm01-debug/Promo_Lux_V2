@@ -252,8 +252,26 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
       continue;
     }
 
-    const subject = personalize(cur.subject?.trim() || campaign.name, r);
-    const body = personalize(cur.body?.trim() || defaultBody(campaign.name), r);
+    // Seleção de variante A/B: apenas a etapa 0 decide (etapas seguintes
+    // herdam o conteúdo padrão da etapa). Atribuição determinística por
+    // destinatário para consistência entre reprocessamentos e persistência
+    // do rótulo escolhido em campaign_recipients.variant.
+    const variants = emailVariants(cur);
+    let assignedVariant = r.variant;
+    let chosen: SequenceVariant = { subject: cur.subject, body: cur.body };
+    if (stepIdx === 0 && variants.length > 1) {
+      const idx = pickVariantIndex(r.id, variants.length);
+      chosen = variants[idx];
+      assignedVariant = chosen.label?.trim() || variantLabel(idx);
+      if (assignedVariant !== r.variant) {
+        await admin.from("campaign_recipients")
+          .update({ variant: assignedVariant })
+          .eq("id", r.id);
+      }
+    }
+
+    const subject = personalize(chosen.subject?.trim() || cur.subject?.trim() || campaign.name, r);
+    const body = personalize(chosen.body?.trim() || cur.body?.trim() || defaultBody(campaign.name), r);
 
     // Reutiliza thread da primeira mensagem para manter o encadeamento (follow-ups).
     const thread = await firstThreadFor(admin, r.id);
