@@ -396,6 +396,14 @@ function variantLabel(idx: number): string {
   return `V${idx + 1}`;
 }
 
+/** Índice da variante cujo rótulo (explícito ou derivado) casa com `label`. */
+function indexOfVariant(variants: SequenceVariant[], label: string): number {
+  return variants.findIndex(
+    (v, i) => (v.label?.trim() || variantLabel(i)) === label,
+  );
+}
+
+
 /**
  * Atribuição determinística de variante a partir do UUID do destinatário.
  * Hash simples (FNV-1a) sobre o id garante distribuição estável e reprodutível
