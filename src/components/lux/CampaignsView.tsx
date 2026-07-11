@@ -32,7 +32,7 @@ const statusConfig: Record<CampaignStatus, { label: string; color: string; icon:
   completed: { label: "Concluída", color: "bg-primary/20 text-primary border-primary/30", icon: <CheckCircle2 className="h-3 w-3" /> },
 };
 
-type SequenceStep = { id: string; type: string; label: string };
+import { CampaignFormFields, type SequenceStep, type AbConfig } from "@/components/lux/campaigns/CampaignFormFields";
 
 const defaultSequence: SequenceStep[] = [
   { id: "s1", type: "email", label: "Email inicial" },
@@ -42,74 +42,8 @@ const defaultSequence: SequenceStep[] = [
   { id: "s5", type: "email", label: "Último contato" },
 ];
 
-const CampaignFormFields = ({
-  name, setName, prospects, setProspects, sequence, setSequence,
-}: {
-  name: string; setName: (v: string) => void;
-  prospects: string; setProspects: (v: string) => void;
-  sequence: SequenceStep[]; setSequence: (v: SequenceStep[]) => void;
-  isEdit?: boolean;
-}) => (
-  <div className="space-y-4 mt-2">
-    <div className="space-y-2">
-      <Label className="text-xs text-muted-foreground">Nome da Campanha</Label>
-      <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Outreach SaaS Q2" className="h-9 text-sm" />
-    </div>
-    <div className="space-y-2">
-      <Label className="text-xs text-muted-foreground">Nº de Prospects</Label>
-      <Input value={prospects} onChange={(e) => setProspects(e.target.value)} type="number" className="h-9 text-sm" />
-    </div>
-    <div className="space-y-2">
-      <Label className="text-xs text-muted-foreground">Sequência</Label>
-      <div className="space-y-2">
-        {sequence.map((step, idx) => (
-          <div key={step.id} className="flex items-center gap-2">
-            <Badge variant="outline" className="text-[10px] shrink-0">
-              {step.type === "email" ? "📧" : "⏳"} {idx + 1}
-            </Badge>
-            <Input
-              value={step.label}
-              onChange={(e) => {
-                const updated = [...sequence];
-                updated[idx] = { ...step, label: e.target.value };
-                setSequence(updated);
-              }}
-              className="h-8 text-xs"
-            />
-            {sequence.length > 1 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 text-destructive hover:text-destructive shrink-0"
-                onClick={() => setSequence(sequence.filter((_, i) => i !== idx))}
-              >
-                <Trash2 className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs h-7 gap-1"
-          onClick={() => setSequence([...sequence, { id: `s${Date.now()}`, type: "email", label: "Novo email" }])}
-        >
-          <Plus className="h-3 w-3" /> Email
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs h-7 gap-1"
-          onClick={() => setSequence([...sequence, { id: `s${Date.now()}`, type: "wait", label: "Aguardar 3 dias" }])}
-        >
-          <Plus className="h-3 w-3" /> Espera
-        </Button>
-      </div>
-    </div>
-  </div>
-);
+const defaultAb: AbConfig = { enabled: false, minSample: 20, metric: "reply" };
+
 
 export const CampaignsView = () => {
   const { isDemoMode } = useDemo();
