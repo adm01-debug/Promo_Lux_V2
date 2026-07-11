@@ -110,7 +110,13 @@ const CopyButton = ({ text }: { text: string }) => {
 };
 
 export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetailModalProps) => {
+  const { data, isLoading } = useCompanyDetails(company?.id, open && !!company);
   if (!company) return null;
+
+  const contacts = data?.contacts ?? [];
+  const signals = data?.signals ?? [];
+  const timeline = data?.timeline ?? [];
+  const technologies = data?.technologies ?? [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
