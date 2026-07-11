@@ -25,6 +25,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   Activity,
+  Trash2,
   X,
   PanelLeftClose,
   PanelLeft,
