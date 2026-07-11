@@ -249,6 +249,13 @@ export function fromOrg<T extends TableName>(table: T) {
       if (prop === "delete" && isScoped) {
         return (options?: any) => {
           if (!orgId) raise(new MissingOrgContextError(tableName, "delete"));
+          // Soft delete: converte DELETE em UPDATE deleted_at = now().
+          if (SOFT_DELETE_TABLES.has(tableName)) {
+            return (target as any)
+              .update({ deleted_at: new Date().toISOString() })
+              .eq("organization_id", orgId)
+              .is("deleted_at", null);
+          }
           return (target as any).delete(options).eq("organization_id", orgId);
         };
       }
@@ -259,7 +266,12 @@ export function fromOrg<T extends TableName>(table: T) {
             console.warn(`[withOrg] Tentativa de select em "${tableName}" sem org ativa. Retornando builder sem filtro automático para evitar MissingOrgContextError imediato.`);
             return (target as any).select(...args);
           }
-          return (target as any).select(...args).eq("organization_id", orgId);
+          const q = (target as any).select(...args).eq("organization_id", orgId);
+          // Soft delete: por padrão, esconde registros na lixeira.
+          if (SOFT_DELETE_TABLES.has(tableName)) {
+            return q.is("deleted_at", null);
+          }
+          return q;
         };
       }
 
@@ -268,7 +280,51 @@ export function fromOrg<T extends TableName>(table: T) {
   }) as typeof builder;
 }
 
+/** Nomes de tabelas com soft delete (para a UI de lixeira). */
+export type SoftDeleteTable = "companies" | "deals" | "campaigns" | "workflows";
+
+/**
+ * Builder de SELECT para a LIXEIRA: registros com `deleted_at IS NOT NULL`,
+ * sempre escopados pela org ativa. Ex.: `db.trash("companies").select("*")`.
+ */
+function trashFrom(table: SoftDeleteTable) {
+  const orgId = getActiveOrgId();
+  const builder = supabase.from(table);
+  return {
+    select: (...args: any[]) => {
+      if (!orgId) raise(new MissingOrgContextError(table, "trash.select"));
+      return (builder as any).select(...args).eq("organization_id", orgId).not("deleted_at", "is", null);
+    },
+  };
+}
+
+/** Restaura um registro da lixeira (deleted_at = null), escopado por org. */
+async function restoreRow(table: SoftDeleteTable, id: string) {
+  const orgId = getActiveOrgId();
+  if (!orgId) raise(new MissingOrgContextError(table, "restore"));
+  return supabase
+    .from(table)
+    .update({ deleted_at: null } as any)
+    .eq("id", id)
+    .eq("organization_id", orgId);
+}
+
+/** Exclusão permanente (hard delete) de um item já na lixeira, escopado por org. */
+async function hardDeleteRow(table: SoftDeleteTable, id: string) {
+  const orgId = getActiveOrgId();
+  if (!orgId) raise(new MissingOrgContextError(table, "hardDelete"));
+  return supabase
+    .from(table)
+    .delete()
+    .eq("id", id)
+    .eq("organization_id", orgId)
+    .not("deleted_at", "is", null);
+}
+
 /** API conveniente: `db.from("companies").select("*")`. */
 export const db = {
   from: fromOrg,
+  trash: trashFrom,
+  restore: restoreRow,
+  hardDelete: hardDeleteRow,
 };
