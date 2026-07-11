@@ -213,13 +213,13 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
         <Tabs defaultValue="signals" className="flex-1 flex flex-col min-h-0">
           <TabsList className="w-full justify-start rounded-none border-b border-border/30 bg-transparent px-6 h-10 flex-shrink-0">
             <TabsTrigger value="signals" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
-              <Radar className="h-3 w-3" /> Sinais ({mockSignals.length})
+              <Radar className="h-3 w-3" /> Sinais ({signals.length})
             </TabsTrigger>
             <TabsTrigger value="contacts" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
-              <User className="h-3 w-3" /> Contatos ({mockContacts.length})
+              <User className="h-3 w-3" /> Contatos ({contacts.length})
             </TabsTrigger>
             <TabsTrigger value="timeline" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
-              <Clock className="h-3 w-3" /> Timeline ({mockTimeline.length})
+              <Clock className="h-3 w-3" /> Timeline ({timeline.length})
             </TabsTrigger>
             <TabsTrigger value="tech" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
               <Globe className="h-3 w-3" /> Tech Stack
@@ -229,120 +229,143 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
           <div className="flex-1 overflow-y-auto">
             {/* Signals Tab */}
             <TabsContent value="signals" className="p-5 space-y-2 mt-0">
-              {mockSignals.map((signal, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="glass rounded-lg p-3 flex items-center gap-3"
-                >
-                  <div className={`h-8 w-8 rounded-lg flex items-center justify-center border flex-shrink-0 ${strengthColors[signal.strength]}`}>
-                    {signal.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">{signal.detail}</p>
-                    <p className="text-[10px] text-muted-foreground">{signal.type} — {signal.time}</p>
-                  </div>
-                  <Badge variant="outline" className={`text-[10px] flex-shrink-0 ${strengthColors[signal.strength]}`}>
-                    {signal.strength === "high" ? "🔥 Alta" : signal.strength === "medium" ? "Média" : "Baixa"}
-                  </Badge>
-                </motion.div>
-              ))}
+              {isLoading ? (
+                <EmptyTab text="Carregando sinais..." />
+              ) : signals.length === 0 ? (
+                <EmptyTab text="Nenhum sinal de intenção registrado para esta empresa." />
+              ) : (
+                signals.map((signal, i) => {
+                  const strength = normalizeStrength(signal.strength);
+                  return (
+                    <motion.div
+                      key={signal.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="glass rounded-lg p-3 flex items-center gap-3"
+                    >
+                      <div className={`h-8 w-8 rounded-lg flex items-center justify-center border flex-shrink-0 ${strengthColors[strength]}`}>
+                        <Radar className="h-3.5 w-3.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground">{signal.signal}</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {signal.type}{signal.details ? ` — ${signal.details}` : ""}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className={`text-[10px] flex-shrink-0 ${strengthColors[strength]}`}>
+                        {strengthLabel(strength)}
+                      </Badge>
+                    </motion.div>
+                  );
+                })
+              )}
             </TabsContent>
 
             {/* Contacts Tab */}
             <TabsContent value="contacts" className="p-5 space-y-2 mt-0">
-              {mockContacts.map((contact, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="glass rounded-lg p-3 flex items-center gap-3"
-                >
-                  <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-xs font-bold text-primary">
-                    {contact.name.split(" ").map(n => n[0]).join("")}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-foreground">{contact.name}</p>
-                      {contact.linkedin && (
-                        <Linkedin className="h-3 w-3 text-blue-400" />
-                      )}
-                      {contact.verified && (
-                        <Shield className="h-3 w-3 text-success" />
+              {isLoading ? (
+                <EmptyTab text="Carregando contatos..." />
+              ) : contacts.length === 0 ? (
+                <EmptyTab text="Nenhum contato encontrado. Enriqueça a empresa para descobrir stakeholders." />
+              ) : (
+                contacts.map((contact, i) => (
+                  <motion.div
+                    key={contact.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="glass rounded-lg p-3 flex items-center gap-3"
+                  >
+                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-xs font-bold text-primary">
+                      {contact.full_name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-foreground">{contact.full_name}</p>
+                        {contact.linkedin_url && <Linkedin className="h-3 w-3 text-blue-400" />}
+                        {(contact.confidence_score ?? 0) >= 70 && <Shield className="h-3 w-3 text-success" />}
+                      </div>
+                      {contact.role && <p className="text-[10px] text-muted-foreground">{contact.role}</p>}
+                      {contact.email && (
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <p className="text-[11px] text-foreground/80 font-mono truncate">{contact.email}</p>
+                          <CopyButton text={contact.email} />
+                        </div>
                       )}
                     </div>
-                    <p className="text-[10px] text-muted-foreground">{contact.role}</p>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <p className="text-[11px] text-foreground/80 font-mono">{contact.email}</p>
-                      <CopyButton text={contact.email} />
+                    <div className="flex gap-1 flex-shrink-0">
+                      {contact.email && (
+                        <Button size="icon" variant="ghost" className="h-7 w-7" title="Enviar email" asChild>
+                          <a href={`mailto:${contact.email}`}><Mail className="h-3.5 w-3.5" /></a>
+                        </Button>
+                      )}
+                      {contact.linkedin_url && (
+                        <Button size="icon" variant="ghost" className="h-7 w-7" title="Ver LinkedIn" asChild>
+                          <a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer"><Linkedin className="h-3.5 w-3.5" /></a>
+                        </Button>
+                      )}
                     </div>
-                  </div>
-                  <div className="flex gap-1 flex-shrink-0">
-                    <Button size="icon" variant="ghost" className="h-7 w-7" title="Enviar email">
-                      <Mail className="h-3.5 w-3.5" />
-                    </Button>
-                    {contact.linkedin && (
-                      <Button size="icon" variant="ghost" className="h-7 w-7" title="Ver LinkedIn">
-                        <Linkedin className="h-3.5 w-3.5" />
-                      </Button>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-              <div className="pt-2">
-                <Button size="sm" variant="outline" className="gap-1.5 text-xs w-full">
-                  <Database className="h-3.5 w-3.5" /> Buscar mais contatos via waterfall
-                </Button>
-              </div>
+                  </motion.div>
+                ))
+              )}
             </TabsContent>
 
             {/* Timeline Tab */}
             <TabsContent value="timeline" className="p-5 mt-0">
-              <div className="relative">
-                <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border/30" />
-                <div className="space-y-4">
-                  {mockTimeline.map((entry, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                      className="flex gap-3 relative"
-                    >
-                      <div className={`h-[30px] w-[30px] rounded-full border flex items-center justify-center flex-shrink-0 z-10 ${timelineColors[entry.type]}`}>
-                        {timelineIcons[entry.type]}
-                      </div>
-                      <div className="flex-1 pb-1">
-                        <p className="text-sm font-medium text-foreground leading-tight">{entry.action}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{entry.detail}</p>
-                        <p className="text-[10px] text-muted-foreground/60 mt-1">{entry.date}</p>
-                      </div>
-                    </motion.div>
-                  ))}
+              {isLoading ? (
+                <EmptyTab text="Carregando histórico..." />
+              ) : timeline.length === 0 ? (
+                <EmptyTab text="Sem eventos registrados para esta empresa." />
+              ) : (
+                <div className="relative">
+                  <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border/30" />
+                  <div className="space-y-4">
+                    {timeline.map((entry, i) => (
+                      <motion.div
+                        key={entry.id}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.04 }}
+                        className="flex gap-3 relative"
+                      >
+                        <div className={`h-[30px] w-[30px] rounded-full border flex items-center justify-center flex-shrink-0 z-10 ${timelineColors[entry.type] ?? timelineColors.discovery}`}>
+                          {timelineIcons[entry.type] ?? timelineIcons.discovery}
+                        </div>
+                        <div className="flex-1 pb-1">
+                          <p className="text-sm font-medium text-foreground leading-tight">{entry.action}</p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{entry.detail}</p>
+                          <p className="text-[10px] text-muted-foreground/60 mt-1">{entry.date}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </TabsContent>
 
             {/* Tech Stack Tab */}
             <TabsContent value="tech" className="p-5 space-y-4 mt-0">
               <div>
                 <h4 className="text-xs uppercase tracking-widest text-muted-foreground mb-3">Tecnologias Detectadas</h4>
-                <div className="flex flex-wrap gap-2">
-                  {mockTechnologies.map((tech) => (
-                    <Badge key={tech} variant="outline" className="text-xs bg-secondary/50 gap-1">
-                      <Globe className="h-3 w-3 text-primary/70" />{tech}
-                    </Badge>
-                  ))}
-                </div>
+                {technologies.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Nenhuma tecnologia detectada para esta empresa.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {technologies.map((tech) => (
+                      <Badge key={tech} variant="outline" className="text-xs bg-secondary/50 gap-1">
+                        <Globe className="h-3 w-3 text-primary/70" />{tech}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
               <Separator className="bg-border/20" />
               <div className="grid grid-cols-2 gap-3">
                 <div className="glass rounded-lg p-3 space-y-1">
                   <span className="text-[9px] uppercase tracking-widest text-muted-foreground">Website</span>
                   <p className="text-xs text-primary">{company.website || "N/A"}</p>
+
                 </div>
                 <div className="glass rounded-lg p-3 space-y-1">
                   <span className="text-[9px] uppercase tracking-widest text-muted-foreground">Fonte dos dados</span>
