@@ -126,8 +126,12 @@ export const CampaignsView = () => {
         prospects: parseInt(formProspects) || 50,
         status: "draft",
         sequence: formSequence,
+        ab_test_enabled: formAb.enabled,
+        ab_min_sample: formAb.minSample,
+        ab_winner_metric: formAb.metric,
       });
       if (error) throw error;
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
