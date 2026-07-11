@@ -61,6 +61,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "rls-discovery", label: "RLS Discovery", icon: ShieldCheck },
   { id: "monitoring", label: "Status do Sistema", icon: Activity },
   { id: "settings", label: "Configurações", icon: Settings },
+  { id: "recycle-bin", label: "Lixeira", icon: Trash2 },
 ];
 
 const SHORTCUT_VIEWS: View[] = [
