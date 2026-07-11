@@ -75,6 +75,20 @@ const ORG_SCOPED_TABLES = new Set<string>([
   "workflows",
 ]);
 
+/**
+ * Tabelas com política de soft delete (ADR-008). Nelas:
+ *   - DELETE vira UPDATE `deleted_at = now()`.
+ *   - SELECT filtra automaticamente `deleted_at IS NULL`.
+ * A lixeira e restauração usam helpers dedicados (`db.trash`, `db.restore`,
+ * `db.hardDelete`).
+ */
+const SOFT_DELETE_TABLES = new Set<string>([
+  "companies",
+  "deals",
+  "campaigns",
+  "workflows",
+]);
+
 /** Tabelas globais ou que gerenciam o próprio escopo via RLS específica. */
 const EXEMPT_TABLES = new Set<string>([
   "profiles",
