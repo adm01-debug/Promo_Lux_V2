@@ -8,8 +8,6 @@ import { CampaignTrackingDrawer } from "@/components/lux/campaigns/CampaignTrack
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
@@ -32,7 +30,7 @@ const statusConfig: Record<CampaignStatus, { label: string; color: string; icon:
   completed: { label: "Concluída", color: "bg-primary/20 text-primary border-primary/30", icon: <CheckCircle2 className="h-3 w-3" /> },
 };
 
-type SequenceStep = { id: string; type: string; label: string };
+import { CampaignFormFields, type SequenceStep, type AbConfig } from "@/components/lux/campaigns/CampaignFormFields";
 
 const defaultSequence: SequenceStep[] = [
   { id: "s1", type: "email", label: "Email inicial" },
@@ -42,74 +40,8 @@ const defaultSequence: SequenceStep[] = [
   { id: "s5", type: "email", label: "Último contato" },
 ];
 
-const CampaignFormFields = ({
-  name, setName, prospects, setProspects, sequence, setSequence,
-}: {
-  name: string; setName: (v: string) => void;
-  prospects: string; setProspects: (v: string) => void;
-  sequence: SequenceStep[]; setSequence: (v: SequenceStep[]) => void;
-  isEdit?: boolean;
-}) => (
-  <div className="space-y-4 mt-2">
-    <div className="space-y-2">
-      <Label className="text-xs text-muted-foreground">Nome da Campanha</Label>
-      <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Outreach SaaS Q2" className="h-9 text-sm" />
-    </div>
-    <div className="space-y-2">
-      <Label className="text-xs text-muted-foreground">Nº de Prospects</Label>
-      <Input value={prospects} onChange={(e) => setProspects(e.target.value)} type="number" className="h-9 text-sm" />
-    </div>
-    <div className="space-y-2">
-      <Label className="text-xs text-muted-foreground">Sequência</Label>
-      <div className="space-y-2">
-        {sequence.map((step, idx) => (
-          <div key={step.id} className="flex items-center gap-2">
-            <Badge variant="outline" className="text-[10px] shrink-0">
-              {step.type === "email" ? "📧" : "⏳"} {idx + 1}
-            </Badge>
-            <Input
-              value={step.label}
-              onChange={(e) => {
-                const updated = [...sequence];
-                updated[idx] = { ...step, label: e.target.value };
-                setSequence(updated);
-              }}
-              className="h-8 text-xs"
-            />
-            {sequence.length > 1 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 text-destructive hover:text-destructive shrink-0"
-                onClick={() => setSequence(sequence.filter((_, i) => i !== idx))}
-              >
-                <Trash2 className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs h-7 gap-1"
-          onClick={() => setSequence([...sequence, { id: `s${Date.now()}`, type: "email", label: "Novo email" }])}
-        >
-          <Plus className="h-3 w-3" /> Email
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs h-7 gap-1"
-          onClick={() => setSequence([...sequence, { id: `s${Date.now()}`, type: "wait", label: "Aguardar 3 dias" }])}
-        >
-          <Plus className="h-3 w-3" /> Espera
-        </Button>
-      </div>
-    </div>
-  </div>
-);
+const defaultAb: AbConfig = { enabled: false, minSample: 20, metric: "reply" };
+
 
 export const CampaignsView = () => {
   const { isDemoMode } = useDemo();
@@ -127,14 +59,17 @@ export const CampaignsView = () => {
   const [formName, setFormName] = useState("");
   const [formProspects, setFormProspects] = useState("50");
   const [formSequence, setFormSequence] = useState<SequenceStep[]>(defaultSequence);
+  const [formAb, setFormAb] = useState<AbConfig>(defaultAb);
   const [dirty, setDirty] = useState(false);
 
   const resetForm = () => {
     setFormName("");
     setFormProspects("50");
     setFormSequence([...defaultSequence]);
+    setFormAb({ ...defaultAb });
     setDirty(false);
   };
+
 
   // Sync dirty flag with global guard while a form dialog is open
   useEffect(() => {
@@ -189,8 +124,12 @@ export const CampaignsView = () => {
         prospects: parseInt(formProspects) || 50,
         status: "draft",
         sequence: formSequence,
+        ab_test_enabled: formAb.enabled,
+        ab_min_sample: formAb.minSample,
+        ab_winner_metric: formAb.metric,
       });
       if (error) throw error;
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
@@ -209,8 +148,12 @@ export const CampaignsView = () => {
         name: formName.trim(),
         prospects: parseInt(formProspects) || 50,
         sequence: formSequence,
+        ab_test_enabled: formAb.enabled,
+        ab_min_sample: formAb.minSample,
+        ab_winner_metric: formAb.metric,
       }).eq("id", editingCampaign.id);
       if (error) throw error;
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
@@ -274,9 +217,15 @@ export const CampaignsView = () => {
     setFormProspects(String(campaign.prospects));
     const seq = Array.isArray(campaign.sequence) ? campaign.sequence as SequenceStep[] : defaultSequence;
     setFormSequence(seq);
+    setFormAb({
+      enabled: campaign.ab_test_enabled ?? false,
+      minSample: campaign.ab_min_sample ?? 20,
+      metric: (campaign.ab_winner_metric as AbConfig["metric"]) ?? "reply",
+    });
     setDirty(false);
     setEditOpen(true);
   };
+
 
   const activeCount = campaigns.filter((c) => c.status === "active").length;
   const totalSent = campaigns.reduce((a, c) => a + (c.sent || 0), 0);
@@ -309,7 +258,9 @@ export const CampaignsView = () => {
               name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
               prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
               sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
+              ab={formAb} setAb={(v) => { setFormAb(v); setDirty(true); }}
             />
+
             <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !formName.trim()} className="w-full gap-2">
               {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
               Criar Campanha
@@ -330,7 +281,9 @@ export const CampaignsView = () => {
             name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
             prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
             sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
+            ab={formAb} setAb={(v) => { setFormAb(v); setDirty(true); }}
             isEdit
+
           />
           <Button onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending || !formName.trim()} className="w-full gap-2">
             {updateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
