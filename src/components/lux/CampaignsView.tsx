@@ -260,7 +260,9 @@ export const CampaignsView = () => {
               name={formName} setName={(v) => { setFormName(v); setDirty(true); }}
               prospects={formProspects} setProspects={(v) => { setFormProspects(v); setDirty(true); }}
               sequence={formSequence} setSequence={(v) => { setFormSequence(v); setDirty(true); }}
+              ab={formAb} setAb={(v) => { setFormAb(v); setDirty(true); }}
             />
+
             <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !formName.trim()} className="w-full gap-2">
               {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
               Criar Campanha
