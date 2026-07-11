@@ -72,11 +72,28 @@ const getScoreBg = (score: number) => {
   return "bg-destructive/10 border-destructive/30";
 };
 
-const strengthColors = {
+const strengthColors: Record<string, string> = {
   high: "bg-success/20 text-success border-success/30",
   medium: "bg-primary/20 text-primary border-primary/30",
   low: "bg-muted text-muted-foreground",
 };
+
+const normalizeStrength = (s: string | null | undefined): "high" | "medium" | "low" => {
+  const v = (s ?? "").toLowerCase();
+  if (["high", "alta", "forte", "hot"].includes(v)) return "high";
+  if (["low", "baixa", "fraca", "cold"].includes(v)) return "low";
+  return "medium";
+};
+
+const strengthLabel = (s: "high" | "medium" | "low") =>
+  s === "high" ? "🔥 Alta" : s === "medium" ? "Média" : "Baixa";
+
+const EmptyTab = ({ text }: { text: string }) => (
+  <div className="flex items-center justify-center py-12 text-center">
+    <p className="text-xs text-muted-foreground">{text}</p>
+  </div>
+);
+
 
 const CopyButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
