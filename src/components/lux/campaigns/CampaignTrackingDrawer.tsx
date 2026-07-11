@@ -111,6 +111,29 @@ export const CampaignTrackingDrawer = ({
     },
   });
 
+  // Estatísticas de teste A/B por variante (via RPC segura campaign_ab_stats).
+  const { data: abStats = [] } = useQuery({
+    queryKey: ["campaign-ab-stats", campaignId],
+    enabled: !!campaignId && open,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("campaign_ab_stats", { _campaign_id: campaignId! });
+      if (error) throw error;
+      return data as Array<{
+        variant: string; recipients: number; sent: number; opened: number;
+        clicked: number; replied: number; bounced: number;
+        open_rate: number | null; click_rate: number | null; reply_rate: number | null;
+      }>;
+    },
+  });
+  const hasAbTest = abStats.length > 1;
+  // Variante vencedora: maior reply_rate, com open_rate como desempate.
+  const winner = hasAbTest
+    ? [...abStats].sort(
+        (a, b) => (b.reply_rate ?? 0) - (a.reply_rate ?? 0) || (b.open_rate ?? 0) - (a.open_rate ?? 0),
+      )[0]?.variant
+    : null;
+
+
   const sent = recipients.filter((r) => r.sent_at).length;
   const opened = recipients.filter((r) => r.open_count > 0).length;
   const clicked = recipients.filter((r) => r.click_count > 0).length;
