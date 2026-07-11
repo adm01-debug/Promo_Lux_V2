@@ -150,8 +150,12 @@ export const CampaignsView = () => {
         name: formName.trim(),
         prospects: parseInt(formProspects) || 50,
         sequence: formSequence,
+        ab_test_enabled: formAb.enabled,
+        ab_min_sample: formAb.minSample,
+        ab_winner_metric: formAb.metric,
       }).eq("id", editingCampaign.id);
       if (error) throw error;
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
