@@ -47,6 +47,7 @@ interface Recipient {
   current_step: number;
   next_action_at: string | null;
   sequence_completed_at: string | null;
+  variant: string | null;
 }
 
 interface Campaign {
@@ -57,17 +58,28 @@ interface Campaign {
   sequence: unknown;
 }
 
+// Uma variante A/B da etapa de e-mail (subject/body alternativos).
+interface SequenceVariant {
+  label?: string;
+  subject?: string;
+  body?: string;
+}
+
 interface SequenceStep {
   id?: string;
   type?: string;
   label?: string;
   subject?: string;
   body?: string;
+  // Variantes A/B para a etapa de e-mail. Quando presentes (>1), cada
+  // destinatário é atribuído deterministicamente a uma variante na etapa 0.
+  variants?: SequenceVariant[];
   // Campos de espera (step do tipo "wait"/"delay"): duração até a próxima etapa.
   days?: number;
   hours?: number;
   minutes?: number;
   waitDays?: number;
+
   waitHours?: number;
   delay?: number; // dias (compat legado)
 }
