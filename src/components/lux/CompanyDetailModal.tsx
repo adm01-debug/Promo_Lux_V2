@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
+import { useCompanyDetails } from "@/hooks/useCompanyDetails";
 
 interface Company {
   id: string;
