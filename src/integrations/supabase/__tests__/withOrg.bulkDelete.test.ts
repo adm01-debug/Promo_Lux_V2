@@ -137,8 +137,8 @@ describe("db (withOrg) — bulk DELETE scope guards", () => {
     }
   });
 
-  it("delete sem filtros adicionais ainda recebe o eq de org", () => {
-    db.from("companies").delete();
+  it("delete sem filtros adicionais ainda recebe o eq de org (tabela hard-delete)", () => {
+    db.from("notifications").delete();
     const methods = callOrder.map((c) => c.method);
     expect(methods).toEqual(["delete", "eq"]);
     expect(callOrder[1].args).toEqual(["organization_id", ORG_A]);
