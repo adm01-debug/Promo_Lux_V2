@@ -474,6 +474,7 @@ export type Database = {
           unsubscribed_at: string | null
           updated_at: string
           user_id: string
+          variant: string | null
         }
         Insert: {
           bounced_at?: string | null
@@ -501,6 +502,7 @@ export type Database = {
           unsubscribed_at?: string | null
           updated_at?: string
           user_id?: string
+          variant?: string | null
         }
         Update: {
           bounced_at?: string | null
@@ -528,6 +530,7 @@ export type Database = {
           unsubscribed_at?: string | null
           updated_at?: string
           user_id?: string
+          variant?: string | null
         }
         Relationships: [
           {
@@ -2156,6 +2159,21 @@ export type Database = {
           _recipient_id: string
         }
         Returns: undefined
+      }
+      campaign_ab_stats: {
+        Args: { _campaign_id: string }
+        Returns: {
+          bounced: number
+          click_rate: number
+          clicked: number
+          open_rate: number
+          opened: number
+          recipients: number
+          replied: number
+          reply_rate: number
+          sent: number
+          variant: string
+        }[]
       }
       count_recent_org_violations: {
         Args: { _window_minutes?: number }

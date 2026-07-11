@@ -47,6 +47,7 @@ interface Recipient {
   current_step: number;
   next_action_at: string | null;
   sequence_completed_at: string | null;
+  variant: string | null;
 }
 
 interface Campaign {
@@ -57,17 +58,28 @@ interface Campaign {
   sequence: unknown;
 }
 
+// Uma variante A/B da etapa de e-mail (subject/body alternativos).
+interface SequenceVariant {
+  label?: string;
+  subject?: string;
+  body?: string;
+}
+
 interface SequenceStep {
   id?: string;
   type?: string;
   label?: string;
   subject?: string;
   body?: string;
+  // Variantes A/B para a etapa de e-mail. Quando presentes (>1), cada
+  // destinatário é atribuído deterministicamente a uma variante na etapa 0.
+  variants?: SequenceVariant[];
   // Campos de espera (step do tipo "wait"/"delay"): duração até a próxima etapa.
   days?: number;
   hours?: number;
   minutes?: number;
   waitDays?: number;
+
   waitHours?: number;
   delay?: number; // dias (compat legado)
 }
@@ -170,7 +182,7 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
   const nowIso = new Date().toISOString();
   const { data: recipients, error: recErr } = await admin
     .from("campaign_recipients")
-    .select("id,organization_id,campaign_id,email,full_name,status,current_step,next_action_at,sequence_completed_at")
+    .select("id,organization_id,campaign_id,email,full_name,status,current_step,next_action_at,sequence_completed_at,variant")
     .eq("campaign_id", campaign.id)
     .eq("organization_id", campaign.organization_id) // defesa extra de isolamento
     .is("sequence_completed_at", null)
@@ -240,8 +252,26 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
       continue;
     }
 
-    const subject = personalize(cur.subject?.trim() || campaign.name, r);
-    const body = personalize(cur.body?.trim() || defaultBody(campaign.name), r);
+    // Seleção de variante A/B: apenas a etapa 0 decide (etapas seguintes
+    // herdam o conteúdo padrão da etapa). Atribuição determinística por
+    // destinatário para consistência entre reprocessamentos e persistência
+    // do rótulo escolhido em campaign_recipients.variant.
+    const variants = emailVariants(cur);
+    let assignedVariant = r.variant;
+    let chosen: SequenceVariant = { subject: cur.subject, body: cur.body };
+    if (stepIdx === 0 && variants.length > 1) {
+      const idx = pickVariantIndex(r.id, variants.length);
+      chosen = variants[idx];
+      assignedVariant = chosen.label?.trim() || variantLabel(idx);
+      if (assignedVariant !== r.variant) {
+        await admin.from("campaign_recipients")
+          .update({ variant: assignedVariant })
+          .eq("id", r.id);
+      }
+    }
+
+    const subject = personalize(chosen.subject?.trim() || cur.subject?.trim() || campaign.name, r);
+    const body = personalize(chosen.body?.trim() || cur.body?.trim() || defaultBody(campaign.name), r);
 
     // Reutiliza thread da primeira mensagem para manter o encadeamento (follow-ups).
     const thread = await firstThreadFor(admin, r.id);
@@ -330,6 +360,44 @@ function isWaitStep(step: SequenceStep): boolean {
   const t = (step.type || "").toLowerCase();
   return t === "wait" || t === "delay";
 }
+
+/**
+ * Extrai as variantes A/B de uma etapa de e-mail. Se `variants` estiver
+ * ausente ou vazio, retorna uma única variante com o conteúdo direto da etapa.
+ * Variantes inválidas (sem subject e sem body) são descartadas.
+ */
+function emailVariants(step: SequenceStep): SequenceVariant[] {
+  const raw = Array.isArray(step.variants) ? step.variants : [];
+  const valid = raw.filter(
+    (v) => v && typeof v === "object" &&
+      ((v.subject && v.subject.trim()) || (v.body && v.body.trim())),
+  );
+  if (valid.length === 0) return [{ subject: step.subject, body: step.body }];
+  return valid;
+}
+
+/** Rótulo padrão de variante por índice: 0 -> "A", 1 -> "B", ... */
+function variantLabel(idx: number): string {
+  if (idx < 26) return String.fromCharCode(65 + idx);
+  return `V${idx + 1}`;
+}
+
+/**
+ * Atribuição determinística de variante a partir do UUID do destinatário.
+ * Hash simples (FNV-1a) sobre o id garante distribuição estável e reprodutível
+ * sem depender de aleatoriedade — reprocessar o mesmo destinatário mantém a
+ * mesma variante.
+ */
+function pickVariantIndex(recipientId: string, count: number): number {
+  let h = 2166136261;
+  for (let i = 0; i < recipientId.length; i++) {
+    h ^= recipientId.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h) % count;
+}
+
+
 
 /** Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */
 function waitMs(step: SequenceStep): number {
