@@ -219,9 +219,15 @@ export const CampaignsView = () => {
     setFormProspects(String(campaign.prospects));
     const seq = Array.isArray(campaign.sequence) ? campaign.sequence as SequenceStep[] : defaultSequence;
     setFormSequence(seq);
+    setFormAb({
+      enabled: campaign.ab_test_enabled ?? false,
+      minSample: campaign.ab_min_sample ?? 20,
+      metric: (campaign.ab_winner_metric as AbConfig["metric"]) ?? "reply",
+    });
     setDirty(false);
     setEditOpen(true);
   };
+
 
   const activeCount = campaigns.filter((c) => c.status === "active").length;
   const totalSent = campaigns.reduce((a, c) => a + (c.sent || 0), 0);
