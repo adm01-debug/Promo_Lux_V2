@@ -201,6 +201,15 @@ export const CampaignTrackingDrawer = ({
         {hasAbTest && (
           <section className="mt-6">
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Teste A/B por variante</h3>
+            {abConfig?.ab_winner_variant && abConfig.ab_winner_decided_at && (
+              <p className="text-[11px] text-primary mb-2">
+                Vencedora <strong>{abConfig.ab_winner_variant}</strong> definida automaticamente em{" "}
+                {new Date(abConfig.ab_winner_decided_at).toLocaleString("pt-BR", {
+                  day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+                })}{" "}
+                (métrica: {abConfig.ab_winner_metric}).
+              </p>
+            )}
             <div className="space-y-2">
               {abStats.map((v) => (
                 <div
