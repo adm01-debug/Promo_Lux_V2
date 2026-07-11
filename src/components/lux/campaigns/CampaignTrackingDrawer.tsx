@@ -173,6 +173,50 @@ export const CampaignTrackingDrawer = ({
           ))}
         </div>
 
+        {hasAbTest && (
+          <section className="mt-6">
+            <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Teste A/B por variante</h3>
+            <div className="space-y-2">
+              {abStats.map((v) => (
+                <div
+                  key={v.variant}
+                  className={`glass rounded-lg p-3 ${v.variant === winner ? "ring-1 ring-primary/60" : ""}`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Badge variant={v.variant === winner ? "default" : "outline"} className="h-5">
+                        Variante {v.variant}
+                      </Badge>
+                      {v.variant === winner && (
+                        <span className="text-[10px] uppercase tracking-widest text-primary">Vencedora</span>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground font-mono">
+                      {v.sent}/{v.recipients} enviados
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div>
+                      <p className="text-sm font-bold font-mono text-foreground">{v.open_rate ?? 0}%</p>
+                      <span className="text-[10px] text-muted-foreground">Open</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold font-mono text-foreground">{v.click_rate ?? 0}%</p>
+                      <span className="text-[10px] text-muted-foreground">Click</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold font-mono text-foreground">{v.reply_rate ?? 0}%</p>
+                      <span className="text-[10px] text-muted-foreground">Reply</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+
+
         <section className="mt-6">
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Destinatários ({recipients.length})</h3>
           {loadingR ? (
