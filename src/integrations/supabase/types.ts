@@ -454,6 +454,7 @@ export type Database = {
           click_count: number
           company_id: string | null
           created_at: string
+          current_step: number
           email: string
           first_clicked_at: string | null
           first_opened_at: string | null
@@ -461,10 +462,13 @@ export type Database = {
           id: string
           last_clicked_at: string | null
           last_opened_at: string | null
+          last_step_error: string | null
+          next_action_at: string
           open_count: number
           organization_id: string
           replied_at: string | null
           sent_at: string | null
+          sequence_completed_at: string | null
           stakeholder_id: string | null
           status: string
           unsubscribed_at: string | null
@@ -477,6 +481,7 @@ export type Database = {
           click_count?: number
           company_id?: string | null
           created_at?: string
+          current_step?: number
           email: string
           first_clicked_at?: string | null
           first_opened_at?: string | null
@@ -484,10 +489,13 @@ export type Database = {
           id?: string
           last_clicked_at?: string | null
           last_opened_at?: string | null
+          last_step_error?: string | null
+          next_action_at?: string
           open_count?: number
           organization_id?: string
           replied_at?: string | null
           sent_at?: string | null
+          sequence_completed_at?: string | null
           stakeholder_id?: string | null
           status?: string
           unsubscribed_at?: string | null
@@ -500,6 +508,7 @@ export type Database = {
           click_count?: number
           company_id?: string | null
           created_at?: string
+          current_step?: number
           email?: string
           first_clicked_at?: string | null
           first_opened_at?: string | null
@@ -507,10 +516,13 @@ export type Database = {
           id?: string
           last_clicked_at?: string | null
           last_opened_at?: string | null
+          last_step_error?: string | null
+          next_action_at?: string
           open_count?: number
           organization_id?: string
           replied_at?: string | null
           sent_at?: string | null
+          sequence_completed_at?: string | null
           stakeholder_id?: string | null
           status?: string
           unsubscribed_at?: string | null
@@ -2135,6 +2147,16 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      advance_recipient_step: {
+        Args: {
+          _completed: boolean
+          _error?: string
+          _next_action_at: string
+          _next_step: number
+          _recipient_id: string
+        }
+        Returns: undefined
+      }
       count_recent_org_violations: {
         Args: { _window_minutes?: number }
         Returns: {

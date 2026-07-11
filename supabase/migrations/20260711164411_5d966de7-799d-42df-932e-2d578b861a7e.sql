@@ -1,0 +1,2 @@
+REVOKE EXECUTE ON FUNCTION public.advance_recipient_step(uuid, integer, timestamp with time zone, boolean, text) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.advance_recipient_step(uuid, integer, timestamp with time zone, boolean, text) TO service_role;
