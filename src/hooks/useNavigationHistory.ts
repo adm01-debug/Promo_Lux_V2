@@ -27,6 +27,7 @@ const VIEW_LABELS: Record<View, string> = {
   "org-violations": "Violações de Organização",
   "rls-discovery": "RLS Discovery",
   monitoring: "Status do Sistema",
+  "recycle-bin": "Lixeira",
 };
 
 const VIEW_SECTIONS: Record<View, string> = {
