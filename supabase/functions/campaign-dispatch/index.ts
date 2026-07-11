@@ -63,6 +63,13 @@ interface SequenceStep {
   label?: string;
   subject?: string;
   body?: string;
+  // Campos de espera (step do tipo "wait"/"delay"): duração até a próxima etapa.
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  waitDays?: number;
+  waitHours?: number;
+  delay?: number; // dias (compat legado)
 }
 
 function isFatalRefreshError(payload: unknown): boolean {
