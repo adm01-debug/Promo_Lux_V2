@@ -279,6 +279,20 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
       continue;
     }
 
+    // Supressão: e-mail na lista de bloqueio da org → descadastra o
+    // destinatário (encerra a sequência) e nunca envia. Idempotente.
+    if (suppressed.has(r.email.trim().toLowerCase())) {
+      await admin.rpc("record_campaign_event", {
+        _recipient_id: r.id, _event_type: "unsubscribe", _url: null, _ip: null, _ua: null,
+      });
+      await admin.rpc("advance_recipient_step", {
+        _recipient_id: r.id, _next_step: steps.length, _next_action_at: new Date().toISOString(),
+        _completed: true, _error: "suppressed",
+      });
+      continue;
+    }
+
+
     // Seleção de variante A/B: apenas a etapa 0 decide (etapas seguintes
     // herdam o conteúdo padrão da etapa). Atribuição determinística por
     // destinatário para consistência entre reprocessamentos e persistência
