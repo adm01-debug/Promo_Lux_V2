@@ -19,7 +19,8 @@ import {
   Download,
   Bell,
   Mail,
-  Settings2
+  Settings2,
+  Database
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
