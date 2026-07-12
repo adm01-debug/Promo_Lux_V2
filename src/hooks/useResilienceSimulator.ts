@@ -20,6 +20,8 @@ interface RunOptions {
   policy?: RetryPolicy;
   grid?: ScenarioGridConfig;
   thresholds?: GapThresholds;
+  /** Circuit breaker de provedor. `null` desliga (baseline). Default: ativo. */
+  breaker?: BreakerSimConfig | null;
 }
 
 interface SimulationState {
