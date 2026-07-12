@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PlayCircle, Download, ShieldAlert, ShieldCheck, AlertTriangle, Info } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { PlayCircle, Download, ShieldAlert, ShieldCheck, AlertTriangle, Info, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useResilienceSimulator } from "@/hooks/useResilienceSimulator";
 import type { GapSeverity } from "@/lib/resilience/report";
