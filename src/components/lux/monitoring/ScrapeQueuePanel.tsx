@@ -14,6 +14,7 @@ import {
   Skull,
   RotateCcw,
   AlertTriangle,
+  Trash2,
 } from "lucide-react";
 import type { ScrapeQueueItem } from "@/hooks/useScrapeQueue";
 
