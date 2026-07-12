@@ -67,18 +67,18 @@ describe("useRealtimeScrapeJobs", () => {
 
   // --- Private channel tests ---
 
-  it("uses private channel name scoped to user id", () => {
+  it("uses private channel name scoped to org id", () => {
     renderHook(() => useRealtimeScrapeJobs());
-    expect(capturedChannelName).toBe("private:test-user-id:scrape-jobs");
+    expect(capturedChannelName).toBe("org:test-org-id:scrape-jobs");
   });
 
-  it("applies user_id filter for UPDATE events only", () => {
+  it("applies organization_id filter for UPDATE events only", () => {
     renderHook(() => useRealtimeScrapeJobs());
     expect(capturedOnConfig).toMatchObject({
       event: "UPDATE",
       schema: "public",
       table: "scrape_jobs",
-      filter: "user_id=eq.test-user-id",
+      filter: "organization_id=eq.test-org-id",
     });
   });
 

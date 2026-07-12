@@ -57,7 +57,7 @@ serve(async (req) => {
     const lastAttempt = record?.last_attempt ? new Date(record.last_attempt) : null;
     const isOld = lastAttempt && (now.getTime() - lastAttempt.getTime() > WINDOW_MINUTES * 60 * 1000);
     
-    let attempts = isOld ? 1 : (record?.attempts ?? 0) + 1;
+    const attempts = isOld ? 1 : (record?.attempts ?? 0) + 1;
     let locked_until = null;
 
     if (attempts >= MAX_ATTEMPTS) {
