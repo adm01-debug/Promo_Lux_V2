@@ -2,6 +2,14 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { db } from "@/integrations/supabase/withOrg";
 
+/** jsPDF instance augmented by jspdf-autotable with the last table's geometry. */
+type JsPDFWithAutoTable = jsPDF & {
+  lastAutoTable: { finalY: number };
+  internal: jsPDF["internal"] & { getNumberOfPages: () => number };
+};
+
+
+
 export async function exportAnalyticsPDF() {
   // Gather data
   const [
@@ -66,7 +74,7 @@ export async function exportAnalyticsPDF() {
   });
 
   // Funnel Data
-  const funnelY = (doc as any).lastAutoTable.finalY + 15;
+  const funnelY = (doc as JsPDFWithAutoTable).lastAutoTable.finalY + 15;
   doc.text("Funil de Conversão", 15, funnelY);
   
   const totalSent = allCampaigns.reduce((a, c) => a + (c.sent || 0), 0);
@@ -93,7 +101,7 @@ export async function exportAnalyticsPDF() {
     sectorMap.set(s, (sectorMap.get(s) || 0) + 1);
   });
   
-  const sectorY = (doc as any).lastAutoTable.finalY + 15;
+  const sectorY = (doc as JsPDFWithAutoTable).lastAutoTable.finalY + 15;
   doc.text("Distribuição por Setor", 15, sectorY);
   
   autoTable(doc, {
@@ -133,7 +141,7 @@ export async function exportAnalyticsPDF() {
   }
 
   // Footer on last page
-  const pageCount = (doc as any).internal.getNumberOfPages();
+  const pageCount = (doc as JsPDFWithAutoTable).internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);

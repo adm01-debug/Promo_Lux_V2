@@ -60,6 +60,13 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import type { Tables } from "@/integrations/supabase/types";
+
+type ScrapeJobRow = Tables<"scrape_jobs">;
+type AuditLogRow = Tables<"audit_logs"> & {
+  actor?: { full_name?: string | null; avatar_url?: string | null } | null;
+};
+
 
 const AutomationMonitoring = () => {
   const [activeTab, setActiveTab] = useState("runs");
@@ -94,7 +101,7 @@ const AutomationMonitoring = () => {
       }
 
       if (statusFilter !== "all") {
-        query = query.eq("status", statusFilter as any);
+        query = query.eq("status", statusFilter as ScrapeJobRow["status"]);
       }
 
       if (periodFilter !== "all") {
@@ -184,7 +191,7 @@ const AutomationMonitoring = () => {
     if (!jobs?.data) return;
     
     const headers = ["ID", "Nome", "Status", "Empresas", "Criado em", "Duração"];
-    const rows = jobs.data.map((job: any) => [
+    const rows = jobs.data.map((job: ScrapeJobRow) => [
       job.id,
       job.name,
       job.status,
@@ -410,7 +417,7 @@ const AutomationMonitoring = () => {
              </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {jobsData.map((job: any) => (
+              {jobsData.map((job: ScrapeJobRow) => (
                 <motion.div
                   key={job.id}
                   layout
@@ -531,7 +538,7 @@ const AutomationMonitoring = () => {
                     <div className="p-10 text-center text-muted-foreground">
                       Nenhum registro de auditoria encontrado.
                     </div>
-                  ) : auditLogs?.map((log: any) => (
+                  ) : auditLogs?.map((log: AuditLogRow) => (
                     <div key={log.id} className="flex items-start gap-4 p-4 hover:bg-secondary/10 transition-colors">
                       <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0 border border-border/30 overflow-hidden">
                         {log.actor?.avatar_url ? (

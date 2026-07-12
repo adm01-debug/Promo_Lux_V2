@@ -7,7 +7,8 @@ describe("cn (class merge utility)", () => {
   });
 
   it("handles conditional classes", () => {
-    expect(cn("base", false && "hidden", "visible")).toBe("base visible");
+    const isHidden = false as boolean;
+    expect(cn("base", isHidden && "hidden", "visible")).toBe("base visible");
   });
 
   it("deduplicates conflicting tailwind classes", () => {
