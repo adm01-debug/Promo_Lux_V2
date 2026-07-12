@@ -294,7 +294,7 @@ serve(async (req) => {
       if (dbError) throw dbError;
 
       let externalId: string | null = null;
-      let responseBody: any = { id: dbJob.id, status: "pending" };
+      let responseBody: Record<string, unknown> = { id: dbJob.id, status: "pending" };
       
       try {
         const isHealthy = await checkCircuitBreaker(supabase, "gmaps-api");
