@@ -360,11 +360,11 @@ function trashFrom(table: SoftDeleteTable) {
 async function restoreRow(table: SoftDeleteTable, id: string) {
   const orgId = getActiveOrgId();
   if (!orgId) raise(new MissingOrgContextError(table, "restore"));
-  return supabase
-    .from(table)
-    .update({ deleted_at: null } as any)
+  const dispatch = supabase.from(table) as unknown as OrgDispatchBuilder;
+  return dispatch
+    .update({ deleted_at: null })
     .eq("id", id)
-    .eq("organization_id", orgId);
+    .eq("organization_id", orgId) as unknown as Promise<{ error: unknown }>;
 }
 
 /** Exclusão permanente (hard delete) de um item já na lixeira, escopado por org. */
