@@ -157,6 +157,19 @@ export function DlqHealthCard() {
   // Índice rótulo-do-eixo → alerta, para enriquecer o tooltip do gráfico.
   const alertByLabel = new Map(alertDots.map((d) => [d.x, d]));
 
+  // Correlação de picos de pendências com logs de automação próximos no tempo.
+  // Logs de erro/aviso são os mais informativos para diagnosticar a causa raiz.
+  const { data: automationLogs } = useAutomationLogs({ level: "all" });
+  const spikeCorrelations = useMemo(
+    () =>
+      correlateSpikesWithLogs(trendData, automationLogs ?? [], {
+        windowMs: 30 * 60_000,
+      }).slice(0, 3),
+    [trendData, automationLogs],
+  );
+
+
+
 
   const handleExportCsv = () => {
     const rows = trend ?? [];
