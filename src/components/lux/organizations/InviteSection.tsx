@@ -7,7 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { type AppRole } from "@/hooks/useOrganizations";
+import { type AppRole, type Invite } from "@/hooks/useOrganizations";
+
+export type InviteFilter = "all" | "pending" | "accepted" | "revoked" | "expired";
+export interface ResendEntry {
+  at: string;
+  newToken: string;
+}
 
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 const ROLE_COLOR: Record<AppRole, string> = {
