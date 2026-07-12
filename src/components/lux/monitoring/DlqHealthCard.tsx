@@ -60,6 +60,51 @@ export function DlqHealthCard() {
     pending: Number(p.pending_items),
   }));
 
+  const handleExportCsv = () => {
+    const rows = trend ?? [];
+    if (rows.length === 0) {
+      toast.info("Sem histórico de tendência para exportar ainda.");
+      return;
+    }
+    const header = [
+      "captured_at",
+      "pending_items",
+      "total_items",
+      "replayed_items",
+      "oldest_pending_age_secs",
+    ];
+    const escape = (v: string | number) => {
+      const s = String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [
+      header.join(","),
+      ...rows.map((p) =>
+        [
+          new Date(p.captured_at).toISOString(),
+          p.pending_items,
+          p.total_items,
+          p.replayed_items,
+          Math.round(Number(p.oldest_pending_age_secs)),
+        ]
+          .map(escape)
+          .join(",")
+      ),
+    ];
+    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `dlq-tendencia-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast.success(`${rows.length} registros exportados.`);
+  };
+
+
+
 
   return (
     <Card className="glass shadow-sm">
