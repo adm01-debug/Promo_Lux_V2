@@ -60,3 +60,33 @@ export function useApiLatency(hours = 24, limit = 20) {
     refetchInterval: 60_000,
   });
 }
+
+/** Ponto de série temporal da latência agregada por bucket de tempo. */
+export interface ApiLatencyTrendPoint {
+  bucket: string;
+  requests: number;
+  errors: number;
+  error_rate: number;
+  p50_ms: number;
+  p95_ms: number;
+}
+
+/**
+ * Tendência de latência p95 ao longo do tempo (buckets horários por padrão),
+ * agregada por toda a organização. Backed pela RPC `api_latency_trend`
+ * (SECURITY DEFINER, isolada por organização).
+ */
+export function useApiLatencyTrend(hours = 24, bucketMinutes = 60) {
+  return useQuery({
+    queryKey: ["api-latency-trend", hours, bucketMinutes],
+    queryFn: async (): Promise<ApiLatencyTrendPoint[]> => {
+      const { data, error } = await supabase.rpc("api_latency_trend", {
+        _hours: hours,
+        _bucket_minutes: bucketMinutes,
+      });
+      if (error) throw error;
+      return (data ?? []) as ApiLatencyTrendPoint[];
+    },
+    refetchInterval: 60_000,
+  });
+}

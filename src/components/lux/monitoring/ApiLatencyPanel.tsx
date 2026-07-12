@@ -6,11 +6,13 @@ import { Gauge, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   useApiLatency,
+  useApiLatencyTrend,
   latencySeverity,
   LATENCY_THRESHOLDS,
   type ApiLatencyStat,
   type LatencySeverity,
 } from "@/hooks/useApiLatency";
+import { LatencySparkline } from "./LatencySparkline";
 
 const WINDOWS: { label: string; hours: number }[] = [
   { label: "1h", hours: 1 },
@@ -86,6 +88,8 @@ function LatencyRow({ stat }: LatencyRowProps) {
 export function ApiLatencyPanel() {
   const [hours, setHours] = useState(24);
   const { data, isLoading, isError, refetch, isFetching } = useApiLatency(hours);
+  const { data: trend } = useApiLatencyTrend(hours);
+  const trendPoints = trend ?? [];
 
   const stats = data ?? [];
   const worst = stats[0];
@@ -160,6 +164,20 @@ export function ApiLatencyPanel() {
                 {overallErrRate}%
               </p>
             </div>
+          </div>
+        )}
+
+        {!isLoading && !isError && trendPoints.length > 1 && (
+          <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Tendência p95
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                {fmtMs(Number(trendPoints[trendPoints.length - 1].p95_ms))} atual
+              </p>
+            </div>
+            <LatencySparkline points={trendPoints} />
           </div>
         )}
 
