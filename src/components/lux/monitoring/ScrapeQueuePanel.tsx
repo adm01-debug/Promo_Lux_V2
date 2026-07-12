@@ -28,6 +28,7 @@ export function ScrapeQueuePanel() {
   const { data: queue, isLoading } = useScrapeQueue();
   const { data: dlq } = useDeadLetterQueue();
   const replay = useReplayDeadLetter();
+  const replayBatch = useReplayDeadLetterBatch();
 
   const counts = useMemo(() => {
     const c = { queued: 0, processing: 0, succeeded: 0, dead: 0 };
