@@ -570,6 +570,10 @@ const AutomationMonitoring = () => {
         <TabsContent value="resilience" className="space-y-4">
           <ResilienceSimulatorPanel />
         </TabsContent>
+
+        <TabsContent value="automation-logs" className="space-y-4">
+          <AutomationLogsPanel />
+        </TabsContent>
       </Tabs>
 
       <JobDetailsSheet 
