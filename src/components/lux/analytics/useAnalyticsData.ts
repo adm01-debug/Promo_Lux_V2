@@ -5,15 +5,44 @@ import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_COMPANIES_FULL, DEMO_CAMPAIGNS, DEMO_WORKFLOWS } from "@/lib/demoData";
 import { COLORS } from "./AnalyticsChartTooltip";
 
+/** Campos de campanha consumidos pelos gráficos de conversão/ROI. */
+export interface AnalyticsCampaign {
+  name: string;
+  prospects: number;
+  sent: number;
+  opened: number;
+  replied: number;
+  meetings: number;
+}
+interface AnalyticsCompany {
+  sector: string | null;
+  ipc_score: number | null;
+  enriched: boolean | null;
+  source: string | null;
+  created_at: string;
+}
+interface AnalyticsScrapeJob {
+  status: string;
+  results_count: number | null;
+  source: string | null;
+  created_at: string;
+}
+interface AnalyticsWorkflow {
+  status: string;
+  leads_processed: number | null;
+  leads_qualified: number | null;
+  success_rate: number | null;
+}
+
 export function useAnalyticsData() {
   const { isDemoMode } = useDemo();
   return useQuery({
     queryKey: ["analytics-data", isDemoMode],
     queryFn: async () => {
-      let companies: any[] | null;
-      let scrapeJobs: any[] | null;
-      let workflows: any[] | null;
-      let campaigns: any[] | null;
+      let companies: AnalyticsCompany[] | null;
+      let scrapeJobs: AnalyticsScrapeJob[] | null;
+      let workflows: AnalyticsWorkflow[] | null;
+      let campaigns: AnalyticsCampaign[] | null;
 
       if (isDemoMode) {
         companies = DEMO_COMPANIES_FULL.map(c => ({ sector: c.sector, ipc_score: c.ipcScore, enriched: c.enriched, source: c.source, created_at: new Date().toISOString() }));
