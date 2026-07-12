@@ -375,6 +375,10 @@ const AutomationMonitoring = () => {
             <ListChecks className="h-4 w-4" />
             Fila de Scraping
           </TabsTrigger>
+          <TabsTrigger value="partitions" className="gap-2">
+            <Layers className="h-4 w-4" />
+            Particionamento
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
