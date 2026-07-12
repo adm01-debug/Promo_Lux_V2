@@ -11,7 +11,7 @@ import { type AppRole, type Invite } from "@/hooks/useOrganizations";
 
 export type InviteFilter = "all" | "pending" | "accepted" | "revoked" | "expired";
 export interface ResendEntry {
-  at: string;
+  at: number;
   newToken: string;
 }
 
