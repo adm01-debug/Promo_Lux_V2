@@ -1,8 +1,9 @@
-import { useDlqHealth, dlqSeverity, DLQ_THRESHOLDS, type DlqHealthSeverity } from "@/hooks/useDlqHealth";
+import { useDlqHealth, useDlqTrend, dlqSeverity, DLQ_THRESHOLDS, type DlqHealthSeverity } from "@/hooks/useDlqHealth";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Skull, Clock, TrendingUp, RotateCcw, Inbox } from "lucide-react";
+import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity } from "lucide-react";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
