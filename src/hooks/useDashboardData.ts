@@ -61,26 +61,26 @@ export function useDashboardStats() {
       .channel(`private:${user.id}:dashboard`)
       .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, (payload) => {
         // Only invalidate if the change belongs to the active org (real-time filtering)
-        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
+        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
           queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
           queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, (payload) => {
-        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
+        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
           queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload) => {
-        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
+        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
           queryClient.invalidateQueries({ queryKey: ["notifications"] });
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, (payload) => {
-        if (payload.new && (payload.new as any).organization_id === activeOrgId) {
+        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
         }
       })
