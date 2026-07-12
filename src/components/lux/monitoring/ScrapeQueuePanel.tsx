@@ -30,6 +30,7 @@ export function ScrapeQueuePanel() {
   const { data: dlq } = useDeadLetterQueue();
   const replay = useReplayDeadLetter();
   const replayBatch = useReplayDeadLetterBatch();
+  const purge = usePurgeDeadLetter();
 
   const counts = useMemo(() => {
     const c = { queued: 0, processing: 0, succeeded: 0, dead: 0 };
