@@ -2776,6 +2776,13 @@ export type Database = {
         }[]
       }
       prune_auth_rate_limits: { Args: never; Returns: undefined }
+      purge_dead_letter: {
+        Args: {
+          _replayed_retention_days?: number
+          _stale_retention_days?: number
+        }
+        Returns: number
+      }
       purge_soft_deleted: { Args: never; Returns: undefined }
       record_campaign_event: {
         Args: {
