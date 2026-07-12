@@ -15,6 +15,7 @@ import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { workflowApi, type Workflow } from "@/lib/api/workflows";
+import type { Json, Tables } from "@/integrations/supabase/types";
 import { useDemo } from "@/contexts/DemoContext";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
@@ -76,7 +77,7 @@ export const WorkflowsView = () => {
     mutationFn: async (data: Parameters<typeof workflowApi.create>[0]) => {
       try { return await workflowApi.create(data); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as any, config: data.config as any }).select().single();
+        const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as unknown as Json, config: data.config as unknown as Json }).select().single();
         if (error) throw error;
         return row as unknown as Workflow;
       }
@@ -95,7 +96,7 @@ export const WorkflowsView = () => {
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       try { await workflowApi.toggleStatus(id, status); } catch {
         const { supabase } = await import("@/integrations/supabase/client");
-        const { error } = await db.from("workflows").update({ status: status as any }).eq("id", id);
+        const { error } = await db.from("workflows").update({ status: status as Tables<"workflows">["status"] }).eq("id", id);
         if (error) throw error;
       }
     },
