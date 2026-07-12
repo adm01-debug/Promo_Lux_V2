@@ -4,7 +4,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save, History } from "lucide-react";
+import { BellRing, Save, History, Download } from "lucide-react";
+import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import {
   useDlqAlertSettings,
