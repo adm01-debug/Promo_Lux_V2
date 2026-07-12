@@ -152,7 +152,13 @@ export function DlqHealthCard() {
     t: fmt(p.captured_at),
     ts: new Date(p.captured_at).getTime(),
     pending: Number(p.pending_items),
+    // Idade do item mais antigo convertida para horas (envelhecimento).
+    ageHours: Math.max(0, Number(p.oldest_pending_age_secs) / 3600),
   }));
+
+  // Só mostra o sparkline de envelhecimento se houver algum item com idade > 0.
+  const hasAging = trendData.some((p) => p.ageHours > 0);
+  const peakAgeHours = trendData.reduce((max, p) => Math.max(max, p.ageHours), 0);
 
   // Marca cada alerta no ponto de tendência mais próximo dentro do intervalo.
   const rangeStart = Date.now() - rangeHours * 3600_000;
