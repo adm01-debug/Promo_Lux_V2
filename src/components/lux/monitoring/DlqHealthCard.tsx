@@ -92,8 +92,20 @@ export function DlqHealthCard() {
       const nearest = trendData.reduce((best, cur) =>
         Math.abs(cur.ts - at) < Math.abs(best.ts - at) ? cur : best
       );
-      return { x: nearest.t, y: nearest.pending, id: a.id };
+      return {
+        x: nearest.t,
+        y: nearest.pending,
+        id: a.id,
+        triggered_at: a.triggered_at,
+        pending_items: a.pending_items,
+        pending_critical: a.pending_critical,
+        consecutive: a.consecutive,
+        admins_notified: a.admins_notified,
+      };
     });
+
+  // Índice rótulo-do-eixo → alerta, para enriquecer o tooltip do gráfico.
+  const alertByLabel = new Map(alertDots.map((d) => [d.x, d]));
 
 
   const handleExportCsv = () => {
