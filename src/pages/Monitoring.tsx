@@ -586,7 +586,12 @@ const AutomationMonitoring = () => {
           <CircuitBreakerPanel />
         </TabsContent>
 
+        <TabsContent value="latency" className="space-y-4">
+          <ApiLatencyPanel />
+        </TabsContent>
+
         <TabsContent value="automation-logs" className="space-y-4">
+
           <AutomationLogsPanel />
         </TabsContent>
       </Tabs>
