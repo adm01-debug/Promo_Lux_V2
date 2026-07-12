@@ -2736,6 +2736,14 @@ export type Database = {
         }
         Returns: string
       }
+      evaluate_dlq_alerts: {
+        Args: {
+          _consecutive?: number
+          _cooldown_hours?: number
+          _pending_critical?: number
+        }
+        Returns: number
+      }
       evaluate_org_violation_alerts: {
         Args: never
         Returns: {
