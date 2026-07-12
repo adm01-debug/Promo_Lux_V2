@@ -84,6 +84,25 @@ export function DlqAlertSettingsCard() {
     };
   }, [filteredHistory]);
 
+  // Frequência de disparos agrupada por dia (ordem cronológica crescente).
+  const dailyFrequency = useMemo(() => {
+    if (filteredHistory.length === 0) return [];
+    const byDay = new Map<string, number>();
+    for (const h of filteredHistory) {
+      const d = new Date(h.triggered_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      byDay.set(key, (byDay.get(key) ?? 0) + 1);
+    }
+    return Array.from(byDay.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, count]) => {
+        const [, mm, dd] = key.split("-");
+        return { day: `${dd}/${mm}`, count };
+      });
+  }, [filteredHistory]);
+
+
+
 
 
   const state = form ?? (activeOrgId ? { organization_id: activeOrgId, ...DLQ_ALERT_DEFAULTS } : null);
