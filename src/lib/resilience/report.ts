@@ -87,38 +87,38 @@ export function buildGapReport(
       },
     };
 
-    // Contexto do cenário: outage total do provedor vs SLA impossível por config.
+    // Contexto do cenário.
     const isOutage = r.spec.failureRate >= thresholds.outageFailureRate;
     const slaImpossible = r.spec.slaSecs < thresholds.minBackoffSecs;
+    const isPermanent = !FAULT_TRANSIENT[r.spec.fault];
 
     if (r.dlqRate > thresholds.maxDlqRate) {
-      // Em outage, DLQ controlada (breaker segurou) é degradação esperada.
-      const severity: GapSeverity = isOutage
-        ? r.dlqRate > 0.5
-          ? "warning"
-          : "info"
-        : r.dlqRate > 0.5
-          ? "critical"
-          : "warning";
-      gaps.push({
-        ...base,
-        severity,
-        category: isOutage ? "DLQ em outage (esperado)" : "DLQ excessiva",
-        detail: isOutage
-          ? `${label}: provedor em outage (falha ${(r.spec.failureRate * 100).toFixed(0)}%); ${(r.dlqRate * 100).toFixed(0)}% em dead-letter após o breaker pausar — resposta esperada é alerta/replay.`
-          : `${label}: ${(r.dlqRate * 100).toFixed(0)}% das tarefas caem em dead-letter (limite ${(thresholds.maxDlqRate * 100).toFixed(0)}%).`,
-      });
+      // DLQ de erro permanente (4xx) é o comportamento CORRETO — não retentar.
+      // DLQ em outage controlada pelo breaker é degradação esperada.
+      // Só é crítico quando trabalho RECUPERÁVEL é perdido em massa.
+      let severity: GapSeverity;
+      let category: string;
+      let detail: string;
+      if (isPermanent) {
+        severity = "info";
+        category = "DLQ por erro permanente (esperado)";
+        detail = `${label}: erro não-retentável vai direto para dead-letter (${(r.dlqRate * 100).toFixed(0)}%) — comportamento correto; foco em corrigir a origem do 4xx.`;
+      } else if (isOutage) {
+        severity = r.dlqRate > 0.5 ? "warning" : "info";
+        category = "DLQ em outage (esperado)";
+        detail = `${label}: provedor em outage (falha ${(r.spec.failureRate * 100).toFixed(0)}%); ${(r.dlqRate * 100).toFixed(0)}% em dead-letter após o breaker pausar — resposta esperada é alerta/replay.`;
+      } else {
+        severity = r.dlqRate > 0.5 ? "critical" : "warning";
+        category = "DLQ excessiva";
+        detail = `${label}: ${(r.dlqRate * 100).toFixed(0)}% de trabalho recuperável perdido em dead-letter (limite ${(thresholds.maxDlqRate * 100).toFixed(0)}%).`;
+      }
+      gaps.push({ ...base, severity, category, detail });
     }
 
     if (r.slaBreachRate > thresholds.maxSlaBreachRate) {
-      // SLA menor que o backoff mínimo é inatingível por design, não defeito.
-      const severity: GapSeverity = slaImpossible
-        ? "info"
-        : isOutage
-          ? "warning"
-          : r.slaBreachRate > 0.5
-            ? "critical"
-            : "warning";
+      // SLA breach NÃO é perda de dado — a tarefa completa, só demora.
+      // Nunca é crítico; no máximo warning. SLA < backoff mínimo é config.
+      const severity: GapSeverity = slaImpossible ? "info" : "warning";
       gaps.push({
         ...base,
         severity,
@@ -126,14 +126,14 @@ export function buildGapReport(
           ? "SLA inatingível por config"
           : isOutage
             ? "SLA em outage (esperado)"
-            : "Violação de SLA",
+            : "Latência acima do SLA",
         detail: slaImpossible
           ? `${label}: SLA de ${r.spec.slaSecs}s < backoff mínimo de ${thresholds.minBackoffSecs}s — inatingível por design; ajustar SLA ou base_delay.`
-          : `${label}: ${(r.slaBreachRate * 100).toFixed(0)}% resolvem acima do SLA de ${r.spec.slaSecs}s (p95 ${r.p95ResolutionSecs.toFixed(0)}s).`,
+          : `${label}: ${(r.slaBreachRate * 100).toFixed(0)}% resolvem acima do SLA de ${r.spec.slaSecs}s (p95 ${r.p95ResolutionSecs.toFixed(0)}s) — tarefa completa, porém lenta.`,
       });
     }
 
-    if (r.successRate < thresholds.minSuccessRate && r.dlqRate <= thresholds.maxDlqRate) {
+    if (r.successRate < thresholds.minSuccessRate && r.dlqRate <= thresholds.maxDlqRate && !isPermanent) {
       gaps.push({
         ...base,
         severity: "info",
