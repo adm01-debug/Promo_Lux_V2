@@ -118,12 +118,18 @@ export function DlqAlertSettingsCard() {
 
         {history && history.length > 0 && (
           <div className="space-y-2 border-t border-border/50 pt-3">
-            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <History className="h-3.5 w-3.5" />
-              Últimos alertas disparados
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <History className="h-3.5 w-3.5" />
+                Últimos alertas disparados
+              </div>
+              <Button variant="ghost" size="sm" className="h-7 gap-1.5 text-xs" onClick={handleExportHistory}>
+                <Download className="h-3.5 w-3.5" />
+                CSV
+              </Button>
             </div>
             <ul className="space-y-1.5">
-              {history.map((h) => (
+              {history.slice(0, 5).map((h) => (
                 <li
                   key={h.id}
                   className="flex items-center justify-between rounded-md border border-border/40 bg-secondary/20 px-3 py-1.5 text-xs"
