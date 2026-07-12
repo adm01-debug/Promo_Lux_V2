@@ -262,7 +262,7 @@ export function DlqAlertSettingsCard() {
                         <ArrowUpDown className="h-3 w-3 opacity-50" />
                       )}
                     </button>
-                  ))}
+                </div>
                 <Button
                   variant="ghost"
                   size="sm"
