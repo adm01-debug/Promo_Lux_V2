@@ -90,7 +90,9 @@ serve(async (req) => {
     }
     const { message } = parsed.data;
 
-    // Gather context from database
+    // Gather context from database.
+    // NOTA: a distribuição por setor é obtida via RPC agregada (get_sector_summary),
+    // evitando um full-scan de todas as empresas a cada requisição de chat.
     const [
       { count: totalCompanies },
       { count: enrichedCompanies },
@@ -99,7 +101,7 @@ serve(async (req) => {
       { count: totalWorkflows },
       { count: totalJobs },
       { data: ipcConfig },
-      { data: sectorStats },
+      { data: sectorCounts },
     ] = await Promise.all([
       supabase.from("companies").select("*", { count: "exact", head: true }).eq("user_id", userId),
       supabase.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true).eq("user_id", userId),
@@ -108,11 +110,10 @@ serve(async (req) => {
       supabase.from("workflows").select("*", { count: "exact", head: true }).eq("user_id", userId),
       supabase.from("scrape_jobs").select("*", { count: "exact", head: true }).eq("user_id", userId),
       supabase.from("ipc_config").select("criteria").eq("is_active", true).eq("user_id", userId).limit(1).maybeSingle(),
-      supabase.from("companies").select("criteria:sector").eq("user_id", userId), // This was inefficient
+      supabase.rpc("get_sector_summary", { p_user_id: userId }),
     ]);
 
-    // Better way: Get sector counts directly via RPC or separate query
-    const { data: sectorCounts } = await supabase.rpc("get_sector_summary", { p_user_id: userId });
+
     
     const sectorSummary = (sectorCounts ?? [])
       .slice(0, 8)
