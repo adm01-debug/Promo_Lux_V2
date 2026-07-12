@@ -4,7 +4,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save, History } from "lucide-react";
+import { BellRing, Save, History, Download } from "lucide-react";
+import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import {
   useDlqAlertSettings,
@@ -21,7 +22,7 @@ export function DlqAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
   const isAdmin = activeOrg?.role === "admin";
   const { data, isLoading } = useDlqAlertSettings(activeOrgId);
-  const { data: history } = useDlqAlertHistory(activeOrgId, 5);
+  const { data: history } = useDlqAlertHistory(activeOrgId, 50);
   const save = useSaveDlqAlertSettings();
 
   const [form, setForm] = useState<DlqAlertSettings | null>(null);
@@ -41,6 +42,22 @@ export function DlqAlertSettingsCard() {
       cooldown_hours: clamp(state.cooldown_hours, 1, 168),
     });
   };
+
+  const handleExportHistory = () => {
+    const rows = history ?? [];
+    downloadCsv(
+      `dlq-alertas-${new Date().toISOString().slice(0, 10)}.csv`,
+      ["triggered_at", "pending_items", "pending_critical", "consecutive", "admins_notified"],
+      rows.map((h) => [
+        new Date(h.triggered_at).toISOString(),
+        h.pending_items,
+        h.pending_critical,
+        h.consecutive,
+        h.admins_notified,
+      ])
+    );
+  };
+
 
   return (
     <Card className="glass shadow-sm">
@@ -118,12 +135,18 @@ export function DlqAlertSettingsCard() {
 
         {history && history.length > 0 && (
           <div className="space-y-2 border-t border-border/50 pt-3">
-            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <History className="h-3.5 w-3.5" />
-              Últimos alertas disparados
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <History className="h-3.5 w-3.5" />
+                Últimos alertas disparados
+              </div>
+              <Button variant="ghost" size="sm" className="h-7 gap-1.5 text-xs" onClick={handleExportHistory}>
+                <Download className="h-3.5 w-3.5" />
+                CSV
+              </Button>
             </div>
             <ul className="space-y-1.5">
-              {history.map((h) => (
+              {history.slice(0, 5).map((h) => (
                 <li
                   key={h.id}
                   className="flex items-center justify-between rounded-md border border-border/40 bg-secondary/20 px-3 py-1.5 text-xs"

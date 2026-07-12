@@ -9,6 +9,7 @@ import { Area, AreaChart, ReferenceLine, ReferenceDot, ResponsiveContainer, Tool
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
+import { downloadCsv } from "@/lib/csv";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
@@ -101,42 +102,21 @@ export function DlqHealthCard() {
       toast.info("Sem histórico de tendência para exportar ainda.");
       return;
     }
-    const header = [
-      "captured_at",
-      "pending_items",
-      "total_items",
-      "replayed_items",
-      "oldest_pending_age_secs",
-    ];
-    const escape = (v: string | number) => {
-      const s = String(v);
-      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-    };
-    const lines = [
-      header.join(","),
-      ...rows.map((p) =>
-        [
-          new Date(p.captured_at).toISOString(),
-          p.pending_items,
-          p.total_items,
-          p.replayed_items,
-          Math.round(Number(p.oldest_pending_age_secs)),
-        ]
-          .map(escape)
-          .join(",")
-      ),
-    ];
-    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `dlq-tendencia-${RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label}-${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    const label = RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label;
+    downloadCsv(
+      `dlq-tendencia-${label}-${new Date().toISOString().slice(0, 10)}.csv`,
+      ["captured_at", "pending_items", "total_items", "replayed_items", "oldest_pending_age_secs"],
+      rows.map((p) => [
+        new Date(p.captured_at).toISOString(),
+        p.pending_items,
+        p.total_items,
+        p.replayed_items,
+        Math.round(Number(p.oldest_pending_age_secs)),
+      ])
+    );
     toast.success(`${rows.length} registros exportados.`);
   };
+
 
 
 
