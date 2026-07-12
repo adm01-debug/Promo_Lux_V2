@@ -2691,6 +2691,20 @@ export type Database = {
         }
         Returns: undefined
       }
+      api_latency_stats: {
+        Args: { _hours?: number; _limit?: number }
+        Returns: {
+          avg_ms: number
+          error_rate: number
+          errors: number
+          max_ms: number
+          p50_ms: number
+          p95_ms: number
+          p99_ms: number
+          path: string
+          requests: number
+        }[]
+      }
       campaign_ab_stats: {
         Args: { _campaign_id: string }
         Returns: {
