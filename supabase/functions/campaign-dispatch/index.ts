@@ -633,6 +633,7 @@ async function sendOutlook(acc: EmailAccount, to: string, subject: string, body:
 
 function encodeMimeSubject(subject: string): string {
   // Codifica assunto se contiver caracteres não-ASCII (RFC 2047).
+  // eslint-disable-next-line no-control-regex -- intencional: detecta se o assunto é 100% ASCII (0-127)
   if (/^[\x00-\x7F]*$/.test(subject)) return subject;
   return `=?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`;
 }

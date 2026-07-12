@@ -31,7 +31,7 @@ export function usePersistedFilters<T extends object>(
           const parsed = JSON.parse(e.newValue);
           const next = deserialize(parsed, defaultState as Record<string, unknown>) as T;
           setStateRaw(next);
-        } catch {}
+        } catch { /* valor persistido inválido: mantém estado atual */ }
       } else if (e.key === storageKey && !e.newValue) {
         setStateRaw(defaultState);
       }
@@ -46,7 +46,7 @@ export function usePersistedFilters<T extends object>(
         const next = typeof updater === "function" ? (updater as (p: T) => T)(prev) : updater;
         try {
           localStorage.setItem(storageKey, JSON.stringify(serialize(next as Record<string, unknown>)));
-        } catch {}
+        } catch { /* storage indisponível (quota/privado): ignora persistência */ }
         return next;
       });
     },

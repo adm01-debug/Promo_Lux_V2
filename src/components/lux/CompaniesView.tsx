@@ -98,7 +98,7 @@ export const CompaniesView = () => {
   };
 
   const filtered = useMemo(() => {
-    let result = companies.filter((c) => {
+    const result = companies.filter((c) => {
       const s = filters.search.toLowerCase();
       const matchSearch = !s || c.name.toLowerCase().includes(s) || c.sector.toLowerCase().includes(s) || c.location.toLowerCase().includes(s) || (c.email && c.email.toLowerCase().includes(s));
       const matchSector = filters.selectedSectors.size === 0 || filters.selectedSectors.has(c.sector);

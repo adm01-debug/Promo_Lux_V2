@@ -683,7 +683,7 @@ serve(async (req) => {
       if (alertConfig) {
         log.info("trigger_failure_alert", { user_id: userId });
       }
-    } catch (_) {}
+    } catch (_) { /* best-effort: falha ao disparar alerta não deve mascarar o erro original */ }
 
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500,
