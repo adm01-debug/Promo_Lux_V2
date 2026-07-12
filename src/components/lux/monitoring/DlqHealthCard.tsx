@@ -50,13 +50,23 @@ function Metric({
   );
 }
 
+const RANGE_OPTIONS: { label: string; hours: number }[] = [
+  { label: "24h", hours: 24 },
+  { label: "48h", hours: 48 },
+  { label: "7d", hours: 168 },
+];
+
 export function DlqHealthCard() {
+  const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
-  const { data: trend } = useDlqTrend(48);
+  const { data: trend } = useDlqTrend(rangeHours);
   const severity = dlqSeverity(data);
 
+  const isWeek = rangeHours > 48;
   const trendData = (trend ?? []).map((p) => ({
-    t: new Date(p.captured_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+    t: new Date(p.captured_at).toLocaleString("pt-BR", isWeek
+      ? { day: "2-digit", month: "2-digit", hour: "2-digit" }
+      : { hour: "2-digit", minute: "2-digit" }),
     pending: Number(p.pending_items),
   }));
 
