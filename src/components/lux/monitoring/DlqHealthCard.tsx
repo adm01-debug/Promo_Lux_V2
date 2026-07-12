@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
+import { useDlqAlertSettings } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
@@ -61,7 +63,12 @@ export function DlqHealthCard() {
   const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
   const { data: trend } = useDlqTrend(rangeHours);
+  const { activeOrgId } = useActiveOrganization();
+  const { data: alertSettings } = useDlqAlertSettings(activeOrgId);
   const severity = dlqSeverity(data);
+
+  const criticalLimit = alertSettings?.enabled ? alertSettings.pending_critical : undefined;
+
 
   const isWeek = rangeHours > 48;
   const trendData = (trend ?? []).map((p) => ({
@@ -237,6 +244,20 @@ export function DlqHealthCard() {
                     strokeWidth={2}
                     fill="url(#dlqTrendFill)"
                   />
+                  {criticalLimit !== undefined && (
+                    <ReferenceLine
+                      y={criticalLimit}
+                      stroke="hsl(var(--destructive))"
+                      strokeDasharray="4 4"
+                      strokeOpacity={0.7}
+                      label={{
+                        value: `Crítico: ${criticalLimit}`,
+                        position: "insideTopRight",
+                        fill: "hsl(var(--destructive))",
+                        fontSize: 10,
+                      }}
+                    />
+                  )}
                 </AreaChart>
               </ResponsiveContainer>
             </div>
