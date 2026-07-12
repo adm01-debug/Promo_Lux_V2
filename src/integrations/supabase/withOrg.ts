@@ -348,9 +348,10 @@ function trashFrom(table: SoftDeleteTable) {
   const orgId = getActiveOrgId();
   const builder = supabase.from(table);
   return {
-    select: (...args: any[]) => {
+    select: (...args: unknown[]) => {
       if (!orgId) raise(new MissingOrgContextError(table, "trash.select"));
-      return (builder as any).select(...args).eq("organization_id", orgId).not("deleted_at", "is", null);
+      const dispatch = builder as unknown as OrgDispatchBuilder;
+      return dispatch.select(...args).eq("organization_id", orgId).not("deleted_at", "is", null);
     },
   };
 }
