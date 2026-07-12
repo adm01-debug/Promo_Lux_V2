@@ -75,6 +75,17 @@ interface QueueTask {
 
 async function processTask(supabase: ReturnType<typeof createClient>, task: QueueTask): Promise<void> {
   const cfg = (task.payload ?? {}) as Record<string, unknown>;
+  const startedAt = performance.now();
+  const attempt = task.attempts + 1;
+
+  await audit(supabase, task, {
+    _phase: "execute",
+    _status: "started",
+    _level: "info",
+    _message: "Tarefa de scraping iniciada",
+    _attempt: attempt,
+    _metadata: { keywords: cfg.keywords ?? null, name: cfg.name ?? null },
+  });
 
   if (task.scrape_job_id) {
     await supabase.from("scrape_jobs")
@@ -107,7 +118,19 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
     // Rede/timeout => transitório
     const message = `network_error: ${(err as Error).message}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: true });
-    log("warn", "task_transient_network_fail", { task_id: task.id, attempts: task.attempts + 1, next: result.data });
+    const dead = result.data === "dead";
+    await audit(supabase, task, {
+      _phase: dead ? "dead_letter" : "retry",
+      _status: dead ? "dead" : "retrying",
+      _level: "error",
+      _message: "Falha de rede ao criar job no provedor externo",
+      _failure_reason: "network_error",
+      _error_detail: (err as Error).message,
+      _transient: true,
+      _attempt: attempt,
+      _duration_ms: Math.round(performance.now() - startedAt),
+    });
+    log("warn", "task_transient_network_fail", { task_id: task.id, attempts: attempt, next: result.data });
     return;
   }
 
@@ -116,6 +139,19 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
     const transient = isTransient(res.status);
     const message = `http_${res.status}: ${bodyText.slice(0, 500)}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: transient });
+    const dead = result.data === "dead";
+    await audit(supabase, task, {
+      _phase: dead ? "dead_letter" : "retry",
+      _status: dead ? "dead" : "retrying",
+      _level: "error",
+      _message: `Provedor externo respondeu HTTP ${res.status}`,
+      _failure_reason: `http_${res.status}`,
+      _error_detail: bodyText.slice(0, 1000),
+      _http_status: res.status,
+      _transient: transient,
+      _attempt: attempt,
+      _duration_ms: Math.round(performance.now() - startedAt),
+    });
     log("warn", "task_http_fail", { task_id: task.id, status: res.status, transient, outcome: result.data });
     return;
   }
@@ -129,6 +165,15 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
       .eq("id", task.scrape_job_id);
   }
   await supabase.rpc("complete_scrape_task", { _id: task.id });
+  await audit(supabase, task, {
+    _phase: "complete",
+    _status: "succeeded",
+    _level: "info",
+    _message: "Job de scraping criado com sucesso no provedor externo",
+    _attempt: attempt,
+    _duration_ms: Math.round(performance.now() - startedAt),
+    _metadata: { external_id: externalId },
+  });
   log("info", "task_succeeded", { task_id: task.id, external_id: externalId });
 }
 
