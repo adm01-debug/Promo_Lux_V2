@@ -62,3 +62,30 @@ export function useSaveDlqAlertSettings() {
     },
   });
 }
+
+export interface DlqAlertHistoryItem {
+  id: string;
+  triggered_at: string;
+  pending_items: number;
+  pending_critical: number;
+  consecutive: number;
+  admins_notified: number;
+}
+
+export function useDlqAlertHistory(orgId: string | null, limit = 10) {
+  return useQuery({
+    queryKey: ["dlq-alert-history", orgId, limit],
+    enabled: !!orgId,
+    queryFn: async (): Promise<DlqAlertHistoryItem[]> => {
+      const { data, error } = await supabase
+        .from("dlq_alert_history")
+        .select("id, triggered_at, pending_items, pending_critical, consecutive, admins_notified")
+        .eq("organization_id", orgId!)
+        .order("triggered_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data ?? []) as DlqAlertHistoryItem[];
+    },
+    refetchInterval: 60_000,
+  });
+}
