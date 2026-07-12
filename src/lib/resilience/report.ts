@@ -11,12 +11,26 @@ export interface GapThresholds {
   maxDlqRate: number;
   maxSlaBreachRate: number;
   minSuccessRate: number;
+  /**
+   * Acima desta taxa de falha o provedor é considerado em OUTAGE total.
+   * Nesses cenários a resposta correta é o circuit breaker pausar o
+   * despacho e alertar — não é um defeito da fila, então classificamos
+   * como degradação esperada (info), desde que a DLQ não exploda.
+   */
+  outageFailureRate: number;
+  /**
+   * Menor backoff da política (s). Se o SLA for menor que isto, uma única
+   * retentativa já o estoura — é limitação de configuração, não defeito.
+   */
+  minBackoffSecs: number;
 }
 
 export const DEFAULT_THRESHOLDS: GapThresholds = {
   maxDlqRate: 0.1,
   maxSlaBreachRate: 0.2,
   minSuccessRate: 0.9,
+  outageFailureRate: 0.95,
+  minBackoffSecs: 30,
 };
 
 export interface Gap {
