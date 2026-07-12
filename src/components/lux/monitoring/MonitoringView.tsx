@@ -164,7 +164,7 @@ export const MonitoringView = memo(() => {
                     <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                       <span>{new Date(log.created_at).toLocaleString()}</span>
                       <span>•</span>
-                      <span className="font-mono">{(log as any).trace_id?.substring(0, 8) || 'no-trace'}</span>
+                      <span className="font-mono">{(log as { trace_id?: string | null }).trace_id?.substring(0, 8) || 'no-trace'}</span>
                     </div>
                   </div>
                   <Badge variant="outline" className="text-[10px]">{log.table_name}</Badge>
