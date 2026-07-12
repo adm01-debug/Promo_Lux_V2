@@ -60,3 +60,24 @@ export function useDlqHealth() {
     refetchInterval: 30_000,
   });
 }
+
+export interface DlqTrendPoint {
+  captured_at: string;
+  pending_items: number;
+  total_items: number;
+  replayed_items: number;
+  oldest_pending_age_secs: number;
+}
+
+/** Série temporal de pendências da DLQ (para mini-gráfico de tendência). */
+export function useDlqTrend(hours = 48) {
+  return useQuery({
+    queryKey: ["dlq-health-trend", hours],
+    queryFn: async (): Promise<DlqTrendPoint[]> => {
+      const { data, error } = await supabase.rpc("dlq_health_trend", { _hours: hours });
+      if (error) throw error;
+      return (data ?? []) as DlqTrendPoint[];
+    },
+    refetchInterval: 60_000,
+  });
+}
