@@ -21,6 +21,28 @@ import type { Database } from "./types";
 type SchemaTables = Database["public"]["Tables"];
 type TableName = keyof SchemaTables;
 
+/**
+ * Superfície mínima de dispatch dinâmico do query builder do Supabase.
+ *
+ * O Proxy precisa invocar métodos sobrecarregados (`insert`/`upsert`/`update`/
+ * `delete`/`select`) cujas assinaturas variam por tabela e não podem ser
+ * reproduzidas através de um Proxy sem perder a inferência. Em vez de espalhar
+ * `any`, modelamos apenas o contrato realmente usado pelo wrapper e a cadeia de
+ * filtros encadeáveis retornada.
+ */
+interface OrgChain {
+  eq: (column: string, value: unknown) => OrgChain;
+  is: (column: string, value: unknown) => OrgChain;
+  not: (column: string, operator: string, value: unknown) => OrgChain;
+}
+interface OrgDispatchBuilder {
+  insert: (values: unknown, options?: unknown) => OrgChain;
+  upsert: (values: unknown, options?: unknown) => OrgChain;
+  update: (values: unknown, options?: unknown) => OrgChain;
+  delete: (options?: unknown) => OrgChain;
+  select: (...args: unknown[]) => OrgChain;
+}
+
 const STORAGE_KEY = "lux:active-org";
 let activeOrgIdMem: string | null = null;
 
