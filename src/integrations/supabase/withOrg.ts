@@ -92,12 +92,39 @@ const SOFT_DELETE_TABLES = new Set<string>([
 ]);
 
 /** Tabelas globais ou que gerenciam o próprio escopo via RLS específica. */
-const EXEMPT_TABLES = new Set<string>([
+export const EXEMPT_TABLES = new Set<string>([
   "profiles",
   "organizations",
   "organization_members",
   "organization_invites",
 ]);
+
+/**
+ * Tabelas que POSSUEM `organization_id` mas são acessadas intencionalmente
+ * fora do wrapper `db` (via `supabase.from()` cru, RPC `SECURITY DEFINER`
+ * ou apenas por edge functions / admin). Ficam sob RLS específica e NÃO
+ * passam pela injeção automática de org.
+ *
+ * Cada entrada aqui é uma decisão consciente. O teste de sincronia
+ * (`withOrg.registry.test.ts`) garante que TODA tabela com `organization_id`
+ * esteja classificada em exatamente um destes conjuntos — impedindo gaps
+ * silenciosos quando novas tabelas multi-tenant são criadas.
+ */
+export const ORG_UNSCOPED_TABLES = new Set<string>([
+  "automation_execution_logs", // leitura via supabase.from + RLS (useAutomationLogs)
+  "automation_steps",          // leitura via supabase.from + RLS (JobDetailsSheet)
+  "dlq_alert_history",         // leitura via supabase.from + RLS (useDlqAlertSettings)
+  "dlq_alert_settings",        // leitura via supabase.from + RLS (useDlqAlertSettings)
+  "dlq_health_snapshots",      // acesso via RPC dlq_health_trend (SECURITY DEFINER)
+  "email_sync_log",            // leitura via supabase.from + RLS (useEmailSyncLog)
+  "feature_flags",             // leitura via supabase.from + RLS (useFeatureFlags)
+  "job_exports",               // gerado/consumido por edge functions
+  "org_violation_alert_settings", // painel de segurança via supabase.from + RLS
+  "org_violation_alerts",      // painel de segurança via supabase.from + RLS
+  "scrape_dead_letter",        // DLQ: leitura via supabase.from + RPC de replay
+  "scrape_queue",              // fila: escrita via RPC, leitura via supabase.from + RLS
+]);
+
 
 export class OrgMismatchError extends Error {
   constructor(
