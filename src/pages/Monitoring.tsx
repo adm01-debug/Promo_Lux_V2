@@ -40,6 +40,7 @@ import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/Resilience
 import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
 import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
+import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -588,6 +589,7 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="latency" className="space-y-4">
           <ApiLatencyPanel />
+          <ApiLatencyAlertSettingsCard />
         </TabsContent>
 
         <TabsContent value="automation-logs" className="space-y-4">

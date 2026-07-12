@@ -111,6 +111,9 @@ export const EXEMPT_TABLES = new Set<string>([
  * silenciosos quando novas tabelas multi-tenant são criadas.
  */
 export const ORG_UNSCOPED_TABLES = new Set<string>([
+  "api_latency_alert_history",  // leitura via supabase.from + RLS (useApiLatencyAlertSettings)
+  "api_latency_alert_settings", // leitura/escrita via supabase.from + RLS (useApiLatencyAlertSettings)
+  "api_latency_snapshots",      // acesso via RPC api_latency_trend/stats (SECURITY DEFINER)
   "automation_execution_logs", // leitura via supabase.from + RLS (useAutomationLogs)
   "automation_steps",          // leitura via supabase.from + RLS (JobDetailsSheet)
   "dlq_alert_history",         // leitura via supabase.from + RLS (useDlqAlertSettings)
