@@ -629,7 +629,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                   </p>
                 </div>
 
-                {selectedStep?.payload && (
+                {selectedStep?.payload != null && (
                   <div className="space-y-2">
                     <h4 className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Payload (JSON)</h4>
                     <pre className="p-4 rounded-xl bg-black/40 text-[11px] font-mono text-primary/90 border border-white/5 overflow-x-auto">
