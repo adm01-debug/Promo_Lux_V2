@@ -62,6 +62,7 @@ const ORG_SCOPED_TABLES = new Set<string>([
   "deal_tasks",
   "deals",
   "email_accounts",
+  "email_suppressions",
   "intent_signals",
   "ipc_config",
   "notifications",
