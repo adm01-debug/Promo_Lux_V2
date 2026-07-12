@@ -131,6 +131,23 @@ export function DlqHealthCard() {
             </CardDescription>
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+              {RANGE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.hours}
+                  type="button"
+                  onClick={() => setRangeHours(opt.hours)}
+                  className={cn(
+                    "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                    rangeHours === opt.hours
+                      ? "bg-primary/20 text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
             <Button
               variant="ghost"
               size="sm"
