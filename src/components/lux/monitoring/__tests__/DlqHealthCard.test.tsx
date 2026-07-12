@@ -89,6 +89,7 @@ describe("DlqHealthCard", () => {
     infoToast.mockClear();
     successToast.mockClear();
     rangeCalls = [];
+    automationLogRows = [];
     trendRows = [
       { captured_at: "2026-07-12T10:00:00Z", pending_items: 40, total_items: 100, replayed_items: 60, oldest_pending_age_secs: 7200 },
       { captured_at: "2026-07-12T11:00:00Z", pending_items: 50, total_items: 110, replayed_items: 60, oldest_pending_age_secs: 9000 },
