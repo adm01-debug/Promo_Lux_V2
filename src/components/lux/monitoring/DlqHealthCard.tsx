@@ -9,6 +9,7 @@ import { Area, AreaChart, ReferenceLine, ReferenceDot, ResponsiveContainer, Tool
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
+import { downloadCsv } from "@/lib/csv";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
