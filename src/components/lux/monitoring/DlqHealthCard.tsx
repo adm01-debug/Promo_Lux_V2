@@ -292,15 +292,10 @@ export function DlqHealthCard() {
                   <XAxis dataKey="t" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={24} />
                   <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} allowDecimals={false} width={28} />
                   <Tooltip
-                    contentStyle={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                    labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-                    formatter={(v: number) => [String(v), "Pendentes"]}
+                    cursor={{ stroke: "hsl(var(--border))" }}
+                    content={<TrendTooltip alertByLabel={alertByLabel} />}
                   />
+
                   <Area
                     type="monotone"
                     dataKey="pending"
