@@ -41,6 +41,12 @@ vi.mock("@/hooks/useDlqAlertSettings", () => ({
   useDlqAlertHistory: () => ({ data: [] }),
 }));
 
+vi.mock("@/hooks/useAutomationLogs", () => ({
+  useAutomationLogs: () => ({ data: [] }),
+}));
+
+
+
 vi.mock("@/hooks/useDlqHealth", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/hooks/useDlqHealth")>();
   return {
