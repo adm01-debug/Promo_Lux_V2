@@ -69,6 +69,23 @@ export function DlqAlertSettingsCard() {
       return { ...h, delta };
     });
 
+  // Resumo estatístico do período filtrado: nº de disparos, média e pico de
+  // pendentes, além do total de admins notificados.
+  const periodStats = useMemo(() => {
+    if (filteredHistory.length === 0) return null;
+    const pendings = filteredHistory.map((h) => h.pending_items);
+    const total = pendings.reduce((a, b) => a + b, 0);
+    const notified = filteredHistory.reduce((a, h) => a + h.admins_notified, 0);
+    return {
+      count: filteredHistory.length,
+      avg: Math.round(total / filteredHistory.length),
+      peak: Math.max(...pendings),
+      notified,
+    };
+  }, [filteredHistory]);
+
+
+
   const state = form ?? (activeOrgId ? { organization_id: activeOrgId, ...DLQ_ALERT_DEFAULTS } : null);
 
   const handleSave = () => {
