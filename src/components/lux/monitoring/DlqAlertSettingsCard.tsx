@@ -37,8 +37,15 @@ export function DlqAlertSettingsCard() {
   const save = useSaveDlqAlertSettings();
 
   const [form, setForm] = useState<DlqAlertSettings | null>(null);
-  const [periodHours, setPeriodHours] = useState<number | null>(168);
   const [page, setPage] = useState(0);
+
+  // Preferência de período persistida entre sessões (e sincronizada entre abas).
+  const [historyPrefs, setHistoryPrefs] = usePersistedFilters<{ periodHours: number | null }>(
+    "dlq-alert-history",
+    { periodHours: 168 }
+  );
+  const periodHours = historyPrefs.periodHours;
+  const setPeriodHours = (hours: number | null) => setHistoryPrefs({ periodHours: hours });
 
   useEffect(() => {
     if (data) setForm(data);
