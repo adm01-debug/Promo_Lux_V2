@@ -36,10 +36,29 @@ export function DlqAlertSettingsCard() {
   const save = useSaveDlqAlertSettings();
 
   const [form, setForm] = useState<DlqAlertSettings | null>(null);
+  const [periodHours, setPeriodHours] = useState<number | null>(168);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     if (data) setForm(data);
   }, [data]);
+
+  // Reinicia a paginação sempre que o filtro de período muda.
+  useEffect(() => {
+    setPage(0);
+  }, [periodHours]);
+
+  // Aplica o filtro de período sobre o histórico carregado.
+  const filteredHistory = useMemo(() => {
+    const rows = history ?? [];
+    if (periodHours === null) return rows;
+    const cutoff = Date.now() - periodHours * 3600_000;
+    return rows.filter((h) => new Date(h.triggered_at).getTime() >= cutoff);
+  }, [history, periodHours]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredHistory.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pagedHistory = filteredHistory.slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE);
 
   const state = form ?? (activeOrgId ? { organization_id: activeOrgId, ...DLQ_ALERT_DEFAULTS } : null);
 
