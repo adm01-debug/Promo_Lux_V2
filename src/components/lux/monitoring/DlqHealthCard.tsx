@@ -50,7 +50,14 @@ function Metric({
 
 export function DlqHealthCard() {
   const { data, isLoading } = useDlqHealth();
+  const { data: trend } = useDlqTrend(48);
   const severity = dlqSeverity(data);
+
+  const trendData = (trend ?? []).map((p) => ({
+    t: new Date(p.captured_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+    pending: Number(p.pending_items),
+  }));
+
 
   return (
     <Card className="glass shadow-sm">
