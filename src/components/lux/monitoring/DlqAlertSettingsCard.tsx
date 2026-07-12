@@ -52,11 +52,14 @@ export function DlqAlertSettingsCard() {
     periodHours: number | null;
     sortKey: SortKey;
     sortDir: SortDir;
-  }>("dlq-alert-history", { periodHours: 168, sortKey: "date", sortDir: "desc" });
+    pageSize: number;
+  }>("dlq-alert-history", { periodHours: 168, sortKey: "date", sortDir: "desc", pageSize: DEFAULT_PAGE_SIZE });
   const periodHours = historyPrefs.periodHours;
   const setPeriodHours = (hours: number | null) => setHistoryPrefs({ ...historyPrefs, periodHours: hours });
   const sortKey = historyPrefs.sortKey ?? "date";
   const sortDir = historyPrefs.sortDir ?? "desc";
+  const pageSize = normalizePageSize(historyPrefs.pageSize);
+  const setPageSize = (size: number) => setHistoryPrefs({ ...historyPrefs, pageSize: size });
   const toggleSort = (key: SortKey) =>
     setHistoryPrefs({
       ...historyPrefs,
