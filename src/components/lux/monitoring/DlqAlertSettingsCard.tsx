@@ -115,6 +115,38 @@ export function DlqAlertSettingsCard() {
             {save.isPending ? "Salvando…" : "Salvar"}
           </Button>
         </div>
+
+        {history && history.length > 0 && (
+          <div className="space-y-2 border-t border-border/50 pt-3">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <History className="h-3.5 w-3.5" />
+              Últimos alertas disparados
+            </div>
+            <ul className="space-y-1.5">
+              {history.map((h) => (
+                <li
+                  key={h.id}
+                  className="flex items-center justify-between rounded-md border border-border/40 bg-secondary/20 px-3 py-1.5 text-xs"
+                >
+                  <span className="text-muted-foreground">
+                    {new Date(h.triggered_at).toLocaleString("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  <span className="font-mono">
+                    <span className="text-destructive">{h.pending_items}</span>
+                    <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
+                    <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
       </CardContent>
     </Card>
   );
