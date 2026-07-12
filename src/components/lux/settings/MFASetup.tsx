@@ -7,13 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
+interface MFAFactor {
+  id: string;
+  status: string;
+  factor_type?: string;
+  friendly_name?: string | null;
+}
+
+const getErrorMessage = (err: unknown): string =>
+  err instanceof Error ? err.message : String(err);
+
 export const MFASetup = () => {
   const [factorId, setFactorId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [secret, setSecret] = useState<string | null>(null);
   const [verifyCode, setVerifyCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [factors, setFactors] = useState<any[]>([]);
+  const [factors, setFactors] = useState<MFAFactor[]>([]);
   const [copied, setCopied] = useState(false);
 
   const fetchFactors = async () => {
