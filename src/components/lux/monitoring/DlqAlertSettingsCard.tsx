@@ -387,37 +387,59 @@ export function DlqAlertSettingsCard() {
                   ))}
                 </ul>
 
-                {pageCount > 1 && (
-                  <div className="flex items-center justify-between pt-1 text-xs text-muted-foreground">
-                    <span>
-                      {safePage * PAGE_SIZE + 1}–{Math.min((safePage + 1) * PAGE_SIZE, filteredHistory.length)} de{" "}
-                      {filteredHistory.length}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => setPage((p) => Math.max(0, p - 1))}
-                        disabled={safePage === 0}
-                        aria-label="Página anterior"
-                      >
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                      </Button>
-                      <span className="font-mono">
-                        {safePage + 1}/{pageCount}
+                {sortedHistory.length > 0 && (
+                  <div className="flex items-center justify-between gap-2 pt-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <span>
+                        {safePage * pageSize + 1}–{Math.min((safePage + 1) * pageSize, filteredHistory.length)} de{" "}
+                        {filteredHistory.length}
                       </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-                        disabled={safePage >= pageCount - 1}
-                        aria-label="Próxima página"
-                      >
-                        <ChevronRight className="h-3.5 w-3.5" />
-                      </Button>
+                      <div className="flex items-center gap-1" role="group" aria-label="Itens por página">
+                        {PAGE_SIZE_OPTIONS.map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => setPageSize(size)}
+                            aria-pressed={pageSize === size}
+                            className={cn(
+                              "rounded px-1.5 py-0.5 font-mono transition-colors",
+                              pageSize === size
+                                ? "bg-primary/15 text-primary"
+                                : "hover:bg-muted"
+                            )}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+                    {pageCount > 1 && (
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => setPage((p) => Math.max(0, p - 1))}
+                          disabled={safePage === 0}
+                          aria-label="Página anterior"
+                        >
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                        </Button>
+                        <span className="font-mono">
+                          {safePage + 1}/{pageCount}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                          disabled={safePage >= pageCount - 1}
+                          aria-label="Próxima página"
+                        >
+                          <ChevronRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
               </>
