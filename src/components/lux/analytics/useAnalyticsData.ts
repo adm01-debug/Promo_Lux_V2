@@ -7,6 +7,7 @@ import { COLORS } from "./AnalyticsChartTooltip";
 
 /** Campos de campanha consumidos pelos gráficos de conversão/ROI. */
 export interface AnalyticsCampaign {
+  id: string;
   name: string;
   prospects: number;
   sent: number;
