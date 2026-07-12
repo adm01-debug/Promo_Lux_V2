@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import {
@@ -83,6 +84,25 @@ export function DlqAlertSettingsCard() {
       notified,
     };
   }, [filteredHistory]);
+
+  // Frequência de disparos agrupada por dia (ordem cronológica crescente).
+  const dailyFrequency = useMemo(() => {
+    if (filteredHistory.length === 0) return [];
+    const byDay = new Map<string, number>();
+    for (const h of filteredHistory) {
+      const d = new Date(h.triggered_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      byDay.set(key, (byDay.get(key) ?? 0) + 1);
+    }
+    return Array.from(byDay.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, count]) => {
+        const [, mm, dd] = key.split("-");
+        return { day: `${dd}/${mm}`, count };
+      });
+  }, [filteredHistory]);
+
+
 
 
 
@@ -253,6 +273,30 @@ export function DlqAlertSettingsCard() {
                     </div>
                   </div>
                 )}
+                {dailyFrequency.length >= 2 && (
+                  <div>
+                    <p className="mb-1 text-[10px] text-muted-foreground">Frequência de disparos por dia</p>
+                    <div className="h-16 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={dailyFrequency} margin={{ top: 2, right: 4, bottom: 0, left: 4 }}>
+                          <XAxis dataKey="day" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={12} />
+                          <Tooltip
+                            cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
+                            formatter={(value: number) => [`${value} disparo(s)`, "Frequência"]}
+                            contentStyle={{
+                              background: "hsl(var(--card))",
+                              border: "1px solid hsl(var(--border))",
+                              borderRadius: 8,
+                              fontSize: 12,
+                            }}
+                          />
+                          <Bar dataKey="count" fill="hsl(var(--destructive))" radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
                 <ul className="space-y-1.5">
                   {pagedHistory.map((h) => (
                     <li
