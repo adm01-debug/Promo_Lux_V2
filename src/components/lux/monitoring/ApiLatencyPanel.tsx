@@ -167,6 +167,20 @@ export function ApiLatencyPanel() {
           </div>
         )}
 
+        {!isLoading && !isError && trendPoints.length > 1 && (
+          <div className="rounded-lg border border-border/50 bg-card/40 p-3">
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Tendência p95
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                {fmtMs(Number(trendPoints[trendPoints.length - 1].p95_ms))} atual
+              </p>
+            </div>
+            <LatencySparkline points={trendPoints} />
+          </div>
+        )}
+
         {isLoading && (
           <div className="space-y-2">
             {[1, 2, 3].map((i) => (
