@@ -50,9 +50,9 @@ vi.mock("framer-motion", async () => {
 });
 
 vi.mock("recharts", () => ({
-  ResponsiveContainer: ({ children }: any) => <div data-testid="chart-container">{children}</div>,
-  AreaChart: ({ children }: any) => <div data-testid="area-chart">{children}</div>,
-  Area: (props: any) => <div data-testid={`area-${props.dataKey}`} data-strokewidth={props.strokeWidth} data-dot={JSON.stringify(props.dot)} />,
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="chart-container">{children}</div>,
+  AreaChart: ({ children }: { children: React.ReactNode }) => <div data-testid="area-chart">{children}</div>,
+  Area: (props: { dataKey?: string; strokeWidth?: number; dot?: unknown }) => <div data-testid={`area-${props.dataKey}`} data-strokewidth={props.strokeWidth} data-dot={JSON.stringify(props.dot)} />,
   XAxis: () => null,
   YAxis: () => null,
   CartesianGrid: () => null,
@@ -96,7 +96,7 @@ vi.mock("@/contexts/DemoContext", () => ({
 const { DashboardView } = await import("../DashboardView");
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-const wrapper = ({ children }: any) => (
+const wrapper = ({ children }: { children: React.ReactNode }) => (
   <MemoryRouter>
     <QueryClientProvider client={qc}>
       <TooltipProvider>{children}</TooltipProvider>
