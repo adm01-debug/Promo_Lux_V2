@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import {
   useDlqAlertSettings,
   useSaveDlqAlertSettings,
