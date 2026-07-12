@@ -250,6 +250,98 @@ export type Database = {
           },
         ]
       }
+      automation_execution_logs: {
+        Row: {
+          attempt: number | null
+          correlation_id: string | null
+          created_at: string
+          duration_ms: number | null
+          error_detail: string | null
+          failure_reason: string | null
+          http_status: number | null
+          id: string
+          level: string
+          max_attempts: number | null
+          message: string | null
+          metadata: Json
+          organization_id: string
+          phase: string
+          queue_task_id: string | null
+          run_id: string | null
+          scrape_job_id: string | null
+          source: string
+          status: string
+          step_index: number | null
+          step_name: string | null
+          transient: boolean | null
+          user_id: string | null
+          worker_id: string | null
+          workflow_id: string | null
+        }
+        Insert: {
+          attempt?: number | null
+          correlation_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_detail?: string | null
+          failure_reason?: string | null
+          http_status?: number | null
+          id?: string
+          level?: string
+          max_attempts?: number | null
+          message?: string | null
+          metadata?: Json
+          organization_id: string
+          phase?: string
+          queue_task_id?: string | null
+          run_id?: string | null
+          scrape_job_id?: string | null
+          source?: string
+          status?: string
+          step_index?: number | null
+          step_name?: string | null
+          transient?: boolean | null
+          user_id?: string | null
+          worker_id?: string | null
+          workflow_id?: string | null
+        }
+        Update: {
+          attempt?: number | null
+          correlation_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_detail?: string | null
+          failure_reason?: string | null
+          http_status?: number | null
+          id?: string
+          level?: string
+          max_attempts?: number | null
+          message?: string | null
+          metadata?: Json
+          organization_id?: string
+          phase?: string
+          queue_task_id?: string | null
+          run_id?: string | null
+          scrape_job_id?: string | null
+          source?: string
+          status?: string
+          step_index?: number | null
+          step_name?: string | null
+          transient?: boolean | null
+          user_id?: string | null
+          worker_id?: string | null
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_execution_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_steps: {
         Row: {
           completed_at: string | null
@@ -2634,6 +2726,33 @@ export type Database = {
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
+      }
+      log_automation_event: {
+        Args: {
+          _attempt?: number
+          _correlation_id?: string
+          _duration_ms?: number
+          _error_detail?: string
+          _failure_reason?: string
+          _http_status?: number
+          _level?: string
+          _max_attempts?: number
+          _message?: string
+          _metadata?: Json
+          _organization_id: string
+          _phase: string
+          _queue_task_id?: string
+          _run_id?: string
+          _scrape_job_id?: string
+          _source?: string
+          _status: string
+          _step_index?: number
+          _step_name?: string
+          _transient?: boolean
+          _worker_id?: string
+          _workflow_id?: string
+        }
+        Returns: string
       }
       pg_catalog_rls_tables: {
         Args: never
