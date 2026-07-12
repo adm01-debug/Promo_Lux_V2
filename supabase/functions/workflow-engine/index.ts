@@ -255,7 +255,7 @@ serve(async (req) => {
 
       let scrapeJobId: string | null = null;
       
-      const insertStep = async (name: string, message: string, payload?: any) => {
+      const insertStep = async (name: string, message: string, payload?: unknown) => {
         return await supabase.from("automation_steps").insert({
           job_id: scrapeJobId,
           run_id: run.id,
@@ -267,7 +267,7 @@ serve(async (req) => {
         }).select().single();
       };
 
-      const updateStep = async (stepId: string, status: string, message?: string, payload?: any, errorStack?: string) => {
+      const updateStep = async (stepId: string, status: string, message?: string, payload?: unknown, errorStack?: string) => {
         return await supabase.from("automation_steps").update({
           status,
           message,
