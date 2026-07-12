@@ -34,7 +34,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
-import { ListChecks } from "lucide-react";
+import { ListChecks, Layers } from "lucide-react";
+import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -374,6 +375,10 @@ const AutomationMonitoring = () => {
             <ListChecks className="h-4 w-4" />
             Fila de Scraping
           </TabsTrigger>
+          <TabsTrigger value="partitions" className="gap-2">
+            <Layers className="h-4 w-4" />
+            Particionamento
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
@@ -546,6 +551,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="queue" className="space-y-4">
           <ScrapeQueuePanel />
+        </TabsContent>
+
+        <TabsContent value="partitions" className="space-y-4">
+          <PartitionAdvisoryPanel />
         </TabsContent>
       </Tabs>
 

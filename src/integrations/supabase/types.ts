@@ -1817,6 +1817,101 @@ export type Database = {
         }
         Relationships: []
       }
+      partition_advisories: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          breached_bytes: boolean
+          breached_rows: boolean
+          created_at: string
+          id: string
+          live_rows: number
+          policy_id: string | null
+          recommendation: string
+          table_name: string
+          threshold_bytes: number
+          threshold_rows: number
+          total_bytes: number
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          breached_bytes?: boolean
+          breached_rows?: boolean
+          created_at?: string
+          id?: string
+          live_rows: number
+          policy_id?: string | null
+          recommendation: string
+          table_name: string
+          threshold_bytes: number
+          threshold_rows: number
+          total_bytes: number
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          breached_bytes?: boolean
+          breached_rows?: boolean
+          created_at?: string
+          id?: string
+          live_rows?: number
+          policy_id?: string | null
+          recommendation?: string
+          table_name?: string
+          threshold_bytes?: number
+          threshold_rows?: number
+          total_bytes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partition_advisories_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "partition_policies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partition_policies: {
+        Row: {
+          cooldown_hours: number
+          created_at: string
+          enabled: boolean
+          id: string
+          notes: string | null
+          partition_by: string
+          table_name: string
+          threshold_bytes: number
+          threshold_rows: number
+          updated_at: string
+        }
+        Insert: {
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          notes?: string | null
+          partition_by?: string
+          table_name: string
+          threshold_bytes?: number
+          threshold_rows?: number
+          updated_at?: string
+        }
+        Update: {
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          notes?: string | null
+          partition_by?: string
+          table_name?: string
+          threshold_bytes?: number
+          threshold_rows?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -2497,6 +2592,16 @@ export type Database = {
           top_tables: Json
           violation_count: number
           window_minutes: number
+        }[]
+      }
+      evaluate_partition_policies: {
+        Args: never
+        Returns: {
+          advisory_created: boolean
+          breached: boolean
+          live_rows: number
+          table_name: string
+          total_bytes: number
         }[]
       }
       fail_scrape_task: {
