@@ -37,6 +37,7 @@ import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
 import { ListChecks, Layers, ShieldAlert, FileText } from "lucide-react";
 import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
+import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
 import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
