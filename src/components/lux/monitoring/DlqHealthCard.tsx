@@ -63,7 +63,12 @@ export function DlqHealthCard() {
   const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
   const { data: trend } = useDlqTrend(rangeHours);
+  const { activeOrgId } = useActiveOrganization();
+  const { data: alertSettings } = useDlqAlertSettings(activeOrgId);
   const severity = dlqSeverity(data);
+
+  const criticalLimit = alertSettings?.enabled ? alertSettings.pending_critical : undefined;
+
 
   const isWeek = rangeHours > 48;
   const trendData = (trend ?? []).map((p) => ({
