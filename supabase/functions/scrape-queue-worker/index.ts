@@ -28,6 +28,32 @@ function log(level: "info" | "warn" | "error", msg: string, data?: Record<string
   );
 }
 
+/**
+ * Grava um log de auditoria detalhado da execução (job, tenant, etapa, causa).
+ * Nunca deixa uma falha de auditoria derrubar o processamento da tarefa.
+ */
+async function audit(
+  supabase: ReturnType<typeof createClient>,
+  task: QueueTask,
+  fields: Record<string, unknown>,
+): Promise<void> {
+  try {
+    await supabase.rpc("log_automation_event", {
+      _organization_id: task.organization_id,
+      _source: task.source ?? "gmaps",
+      _scrape_job_id: task.scrape_job_id,
+      _queue_task_id: task.id,
+      _worker_id: WORKER_ID,
+      _correlation_id: task.id,
+      _max_attempts: task.max_attempts,
+      _step_name: "scrape.create_job",
+      ...fields,
+    });
+  } catch (e) {
+    log("warn", "audit_log_failed", { task_id: task.id, error: (e as Error).message });
+  }
+}
+
 /** Classifica se um erro deve ser retentado (transitório) ou não (permanente). */
 function isTransient(status: number | null, err?: unknown): boolean {
   if (status === null) return true; // rede/timeout/abort => transitório
