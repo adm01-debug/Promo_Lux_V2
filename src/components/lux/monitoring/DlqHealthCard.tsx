@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
+import { useDlqAlertSettings } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
