@@ -561,6 +561,10 @@ const AutomationMonitoring = () => {
         <TabsContent value="partitions" className="space-y-4">
           <PartitionAdvisoryPanel />
         </TabsContent>
+
+        <TabsContent value="resilience" className="space-y-4">
+          <ResilienceSimulatorPanel />
+        </TabsContent>
       </Tabs>
 
       <JobDetailsSheet 
