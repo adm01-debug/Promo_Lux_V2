@@ -3,6 +3,9 @@
   "tablesWithOrganizationId": [
     "agent_chat_messages",
     "api_keys",
+    "api_latency_alert_history",
+    "api_latency_alert_settings",
+    "api_latency_snapshots",
     "api_request_logs",
     "audit_logs",
     "automation_alerts",
