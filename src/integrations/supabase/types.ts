@@ -2662,6 +2662,10 @@ export type Database = {
       }
       decide_ab_winner: { Args: { _campaign_id: string }; Returns: string }
       default_org_for_current_user: { Args: never; Returns: string }
+      defer_scrape_task: {
+        Args: { _delay_secs?: number; _id: string; _reason?: string }
+        Returns: Database["public"]["Enums"]["scrape_queue_status"]
+      }
       enqueue_scrape_task: {
         Args: {
           _max_attempts?: number
