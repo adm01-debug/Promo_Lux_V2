@@ -3,7 +3,11 @@ import autoTable from "jspdf-autotable";
 import { db } from "@/integrations/supabase/withOrg";
 
 /** jsPDF instance augmented by jspdf-autotable with the last table's geometry. */
-type JsPDFWithAutoTable = jsPDF & { lastAutoTable: { finalY: number } };
+type JsPDFWithAutoTable = jsPDF & {
+  lastAutoTable: { finalY: number };
+  internal: jsPDF["internal"] & { getNumberOfPages: () => number };
+};
+
 
 
 export async function exportAnalyticsPDF() {
@@ -137,7 +141,7 @@ export async function exportAnalyticsPDF() {
   }
 
   // Footer on last page
-  const pageCount = doc.internal.getNumberOfPages();
+  const pageCount = (doc as JsPDFWithAutoTable).internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);
