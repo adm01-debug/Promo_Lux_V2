@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import {
