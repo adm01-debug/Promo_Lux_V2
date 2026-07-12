@@ -442,7 +442,7 @@ serve(async (req) => {
       let companiesCreated = 0;
 
       for (const result of results) {
-        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as any);
+        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as IPCHittingCriteria | undefined);
 
         const { data: company } = await supabase
           .from("companies")
