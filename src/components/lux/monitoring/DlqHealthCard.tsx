@@ -13,6 +13,7 @@ import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import { computePeriodDelta, computeAlertDots, correlateSpikesWithLogs } from "@/lib/dlq/aggregations";
 import { useAutomationLogs } from "@/hooks/useAutomationLogs";
 import { AlertTriangle } from "lucide-react";
+import { useMemo } from "react";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
