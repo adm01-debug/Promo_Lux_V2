@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save, History, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
@@ -58,7 +58,16 @@ export function DlqAlertSettingsCard() {
 
   const pageCount = Math.max(1, Math.ceil(filteredHistory.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
-  const pagedHistory = filteredHistory.slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE);
+  const pagedHistory = filteredHistory
+    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
+    .map((h, i) => {
+      // Compara com o disparo imediatamente anterior (mais antigo). Como a
+      // lista está em ordem decrescente, o anterior é o próximo índice global.
+      const globalIdx = safePage * PAGE_SIZE + i;
+      const prev = filteredHistory[globalIdx + 1];
+      const delta = prev ? h.pending_items - prev.pending_items : null;
+      return { ...h, delta };
+    });
 
   const state = form ?? (activeOrgId ? { organization_id: activeOrgId, ...DLQ_ALERT_DEFAULTS } : null);
 
@@ -221,10 +230,38 @@ export function DlqAlertSettingsCard() {
                           minute: "2-digit",
                         })}
                       </span>
-                      <span className="font-mono">
-                        <span className="text-destructive">{h.pending_items}</span>
-                        <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
-                        <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
+                      <span className="flex items-center gap-2 font-mono">
+                        {h.delta !== null && (
+                          <span
+                            className={cn(
+                              "flex items-center gap-0.5",
+                              h.delta > 0
+                                ? "text-destructive"
+                                : h.delta < 0
+                                ? "text-emerald-500"
+                                : "text-muted-foreground"
+                            )}
+                            title={
+                              h.delta === 0
+                                ? "Sem variação vs. alerta anterior"
+                                : `${h.delta > 0 ? "+" : ""}${h.delta} vs. alerta anterior`
+                            }
+                          >
+                            {h.delta > 0 ? (
+                              <ArrowUp className="h-3 w-3" />
+                            ) : h.delta < 0 ? (
+                              <ArrowDown className="h-3 w-3" />
+                            ) : (
+                              <Minus className="h-3 w-3" />
+                            )}
+                            {h.delta !== 0 && `${h.delta > 0 ? "+" : ""}${h.delta}`}
+                          </span>
+                        )}
+                        <span>
+                          <span className="text-destructive">{h.pending_items}</span>
+                          <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
+                          <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
+                        </span>
                       </span>
                     </li>
                   ))}
