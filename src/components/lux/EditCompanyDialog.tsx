@@ -30,6 +30,7 @@ interface EditCompanyDialogProps {
     employees: string;
     revenue: string;
     description?: string;
+    version?: number;
     organization_id?: string | null;
   } | null;
   open: boolean;
@@ -256,7 +257,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         updateData.lng = geoCoords.lng;
       }
 
-      const { error } = await db.from("companies").update({ ...updateData, version: (company as any).version }).eq("id", company.id);
+      const { error } = await db.from("companies").update({ ...updateData, version: company.version }).eq("id", company.id);
       if (error) throw error;
 
       toast({ title: "Empresa atualizada!", description: `"${name}" foi atualizada com sucesso.` });
