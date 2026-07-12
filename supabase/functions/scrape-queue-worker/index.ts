@@ -213,6 +213,32 @@ Deno.serve(async (req) => {
     const claimed = (tasks ?? []) as QueueTask[];
     log("info", "batch_claimed", { count: claimed.length });
 
+    // Circuit breaker: se o provedor está em outage (circuito aberto), NÃO
+    // despacha — adia as tarefas sem gastar tentativa, evitando inundar a DLQ.
+    const circuitClosed = await checkCircuitBreaker(supabase, CIRCUIT_SERVICE).catch(() => true);
+    if (!circuitClosed && claimed.length > 0) {
+      for (const t of claimed) {
+        await supabase.rpc("defer_scrape_task", {
+          _id: t.id,
+          _delay_secs: DEFER_DELAY_SECS,
+          _reason: "circuit_open",
+        }).catch(() => {});
+        await audit(supabase, t, {
+          _phase: "deferred",
+          _status: "deferred",
+          _level: "warn",
+          _message: "Circuito aberto (provedor em outage) — tarefa adiada sem consumir tentativa",
+          _failure_reason: "circuit_open",
+          _attempt: t.attempts,
+        }).catch(() => {});
+      }
+      log("warn", "circuit_open_deferred", { count: claimed.length, delay_secs: DEFER_DELAY_SECS });
+      return new Response(
+        JSON.stringify({ deferred: claimed.length, reason: "circuit_open", duration_ms: Math.round(performance.now() - start) }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     // Processa em paralelo — cada tarefa isola seu próprio erro.
     const results = await Promise.allSettled(claimed.map((t) => processTask(supabase, t)));
     const failed = results.filter((r) => r.status === "rejected").length;
