@@ -73,7 +73,7 @@ describe("DlqAlertSettingsCard", () => {
     saveMutate.mockClear();
     role = "admin";
     historyRows = makeHistory();
-    (globalThis as Record<string, unknown>).__pf = { v: { periodHours: null, sortKey: "date", sortDir: "desc" } };
+    (globalThis as Record<string, unknown>).__pfSeed = { periodHours: null, sortKey: "date", sortDir: "desc" };
   });
 
   it("renderiza título e campos de configuração", () => {
