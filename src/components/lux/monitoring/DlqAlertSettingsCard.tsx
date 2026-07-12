@@ -41,13 +41,23 @@ export function DlqAlertSettingsCard() {
   const [form, setForm] = useState<DlqAlertSettings | null>(null);
   const [page, setPage] = useState(0);
 
-  // Preferência de período persistida entre sessões (e sincronizada entre abas).
-  const [historyPrefs, setHistoryPrefs] = usePersistedFilters<{ periodHours: number | null }>(
-    "dlq-alert-history",
-    { periodHours: 168 }
-  );
+  // Preferências persistidas entre sessões (e sincronizadas entre abas).
+  const [historyPrefs, setHistoryPrefs] = usePersistedFilters<{
+    periodHours: number | null;
+    sortKey: SortKey;
+    sortDir: SortDir;
+  }>("dlq-alert-history", { periodHours: 168, sortKey: "date", sortDir: "desc" });
   const periodHours = historyPrefs.periodHours;
-  const setPeriodHours = (hours: number | null) => setHistoryPrefs({ periodHours: hours });
+  const setPeriodHours = (hours: number | null) => setHistoryPrefs({ ...historyPrefs, periodHours: hours });
+  const sortKey = historyPrefs.sortKey ?? "date";
+  const sortDir = historyPrefs.sortDir ?? "desc";
+  const toggleSort = (key: SortKey) =>
+    setHistoryPrefs({
+      ...historyPrefs,
+      sortKey: key,
+      // Alterna direção ao reclicar a mesma chave; nova chave começa decrescente.
+      sortDir: sortKey === key ? (sortDir === "desc" ? "asc" : "desc") : "desc",
+    });
 
   useEffect(() => {
     if (data) setForm(data);
