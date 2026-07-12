@@ -393,6 +393,69 @@ export function DlqHealthCard() {
           </div>
         )}
 
+        {trendData.length >= 2 && hasAging && (
+          <div>
+            <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                Envelhecimento do item mais antigo ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
+              </span>
+              <span
+                className={cn(
+                  "font-mono font-medium",
+                  peakAgeHours * 3600 >= DLQ_THRESHOLDS.ageCriticalSecs
+                    ? "text-destructive"
+                    : peakAgeHours * 3600 >= DLQ_THRESHOLDS.ageWarnSecs
+                    ? "text-warning"
+                    : "text-muted-foreground"
+                )}
+                title="Pico de idade no período"
+              >
+                pico {formatAge(peakAgeHours * 3600)}
+              </span>
+            </div>
+            <div className="h-16 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={trendData} margin={{ top: 4, right: 4, bottom: 0, left: -24 }}>
+                  <defs>
+                    <linearGradient id="dlqAgeFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--warning))" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="hsl(var(--warning))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="t" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={24} />
+                  <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} allowDecimals={false} width={28} unit="h" />
+                  <Tooltip
+                    cursor={{ stroke: "hsl(var(--border))" }}
+                    formatter={(value: number) => [formatAge(value * 3600), "Idade"]}
+                    contentStyle={{
+                      background: "hsl(var(--card))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="ageHours"
+                    stroke="hsl(var(--warning))"
+                    strokeWidth={2}
+                    fill="url(#dlqAgeFill)"
+                  />
+                  {DLQ_THRESHOLDS.ageCriticalSecs > 0 && (
+                    <ReferenceLine
+                      y={DLQ_THRESHOLDS.ageCriticalSecs / 3600}
+                      stroke="hsl(var(--destructive))"
+                      strokeDasharray="4 4"
+                      strokeOpacity={0.6}
+                    />
+                  )}
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
         <p className="text-xs text-muted-foreground">
           Total histórico: {data?.total_items ?? 0} · já reprocessados: {data?.replayed_items ?? 0}.
           Itens reprocessados são expurgados automaticamente após 30 dias.
