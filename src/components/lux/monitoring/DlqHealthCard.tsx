@@ -229,9 +229,17 @@ export function DlqHealthCard() {
 
         {trendData.length >= 2 && (
           <div>
-            <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Activity className="h-3.5 w-3.5" />
-              Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
+            <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Activity className="h-3.5 w-3.5" />
+                Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
+              </span>
+              {alertDots.length > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+                  Alerta disparado
+                </span>
+              )}
             </div>
             <div className="h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
