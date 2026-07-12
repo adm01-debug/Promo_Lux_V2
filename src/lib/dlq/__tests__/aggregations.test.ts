@@ -159,3 +159,55 @@ describe("sortHistory", () => {
     expect(rows).toEqual(copy);
   });
 });
+
+describe("computeAlertDots", () => {
+  const trend: TrendChartPoint[] = [
+    { t: "10:00", ts: new Date("2026-07-12T10:00:00Z").getTime(), pending: 5 },
+    { t: "11:00", ts: new Date("2026-07-12T11:00:00Z").getTime(), pending: 20 },
+    { t: "12:00", ts: new Date("2026-07-12T12:00:00Z").getTime(), pending: 8 },
+  ];
+
+  function dotSrc(id: string, triggered_at: string, pending_items: number): AlertDotSource {
+    return {
+      id,
+      triggered_at,
+      pending_items,
+      pending_critical: 100,
+      consecutive: 1,
+      admins_notified: 1,
+    };
+  }
+
+  it("retorna vazio sem pontos de tendência", () => {
+    expect(computeAlertDots([dotSrc("a", "2026-07-12T11:05:00Z", 20)], [], 24, NOW)).toEqual([]);
+  });
+
+  it("ancora o alerta no ponto de tendência mais próximo", () => {
+    const dots = computeAlertDots([dotSrc("a", "2026-07-12T11:10:00Z", 22)], trend, 24, NOW);
+    expect(dots).toHaveLength(1);
+    expect(dots[0].x).toBe("11:00");
+    expect(dots[0].y).toBe(20);
+    expect(dots[0].id).toBe("a");
+    expect(dots[0].pending_items).toBe(22);
+  });
+
+  it("filtra alertas fora da janela de rangeHours", () => {
+    const dots = computeAlertDots(
+      [
+        dotSrc("old", "2026-07-11T00:00:00Z", 10), // >24h atrás
+        dotSrc("new", "2026-07-12T11:30:00Z", 15),
+      ],
+      trend,
+      6,
+      NOW,
+    );
+    expect(dots.map((d) => d.id)).toEqual(["new"]);
+  });
+
+  it("preserva todos os campos da fonte", () => {
+    const [dot] = computeAlertDots([dotSrc("z", "2026-07-12T12:00:00Z", 8)], trend, 24, NOW);
+    expect(dot.pending_critical).toBe(100);
+    expect(dot.consecutive).toBe(1);
+    expect(dot.admins_notified).toBe(1);
+  });
+});
