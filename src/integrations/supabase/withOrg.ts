@@ -46,11 +46,12 @@ export function getActiveOrgId(): string | null {
  * Tabelas que possuem coluna `organization_id` e devem ser sempre
  * escopadas pela org ativa.
  */
-const ORG_SCOPED_TABLES = new Set<string>([
+export const ORG_SCOPED_TABLES = new Set<string>([
   "agent_chat_messages",
   "api_keys",
   "api_request_logs",
   "audit_logs",
+  "automation_alerts",
   "campaign_events",
   "campaign_messages",
   "campaign_recipients",
