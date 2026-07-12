@@ -41,8 +41,16 @@ vi.mock("@/hooks/useDlqAlertSettings", () => ({
   useDlqAlertHistory: () => ({ data: [] }),
 }));
 
+let automationLogRows: Array<{
+  id: string;
+  created_at: string;
+  level: "info" | "warn" | "error";
+  message: string | null;
+  failure_reason: string | null;
+}> = [];
+
 vi.mock("@/hooks/useAutomationLogs", () => ({
-  useAutomationLogs: () => ({ data: [] }),
+  useAutomationLogs: () => ({ data: automationLogRows }),
 }));
 
 
@@ -81,6 +89,7 @@ describe("DlqHealthCard", () => {
     infoToast.mockClear();
     successToast.mockClear();
     rangeCalls = [];
+    automationLogRows = [];
     trendRows = [
       { captured_at: "2026-07-12T10:00:00Z", pending_items: 40, total_items: 100, replayed_items: 60, oldest_pending_age_secs: 7200 },
       { captured_at: "2026-07-12T11:00:00Z", pending_items: 50, total_items: 110, replayed_items: 60, oldest_pending_age_secs: 9000 },
@@ -126,5 +135,40 @@ describe("DlqHealthCard", () => {
     // Botão fica desabilitado quando não há dados de tendência.
     expect(screen.getByRole("button", { name: /csv/i })).toBeDisabled();
     unmount();
+  });
+
+  it("exibe o painel de correlação de picos com logs de automação", () => {
+    // Série com um pico claro (200) e logs de erro/aviso na janela do pico.
+    trendRows = [
+      { captured_at: "2026-07-12T10:00:00Z", pending_items: 10, total_items: 100, replayed_items: 90, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T10:30:00Z", pending_items: 12, total_items: 100, replayed_items: 88, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T11:00:00Z", pending_items: 11, total_items: 100, replayed_items: 89, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T11:30:00Z", pending_items: 200, total_items: 300, replayed_items: 100, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T12:00:00Z", pending_items: 9, total_items: 100, replayed_items: 91, oldest_pending_age_secs: 0 },
+    ];
+    automationLogRows = [
+      { id: "log-1", created_at: "2026-07-12T11:35:00Z", level: "error", message: "Timeout ao despachar tarefa", failure_reason: "provider_timeout" },
+      { id: "log-2", created_at: "2026-07-12T11:20:00Z", level: "warn", message: "Latência elevada", failure_reason: null },
+    ];
+    render(<DlqHealthCard />);
+    expect(screen.getByText("Picos correlacionados a logs de automação")).toBeInTheDocument();
+    expect(screen.getByText(/1 erro/)).toBeInTheDocument();
+    expect(screen.getByText(/1 aviso/)).toBeInTheDocument();
+    expect(screen.getByText("provider_timeout")).toBeInTheDocument();
+  });
+
+  it("não exibe o painel de correlação quando não há logs relacionados", () => {
+    trendRows = [
+      { captured_at: "2026-07-12T10:00:00Z", pending_items: 10, total_items: 100, replayed_items: 90, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T10:30:00Z", pending_items: 12, total_items: 100, replayed_items: 88, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T11:00:00Z", pending_items: 11, total_items: 100, replayed_items: 89, oldest_pending_age_secs: 0 },
+      { captured_at: "2026-07-12T11:30:00Z", pending_items: 200, total_items: 300, replayed_items: 100, oldest_pending_age_secs: 0 },
+    ];
+    automationLogRows = [
+      // Log muito distante do pico (fora da janela de 30 min).
+      { id: "log-far", created_at: "2026-07-12T20:00:00Z", level: "error", message: "irrelevante", failure_reason: null },
+    ];
+    render(<DlqHealthCard />);
+    expect(screen.queryByText("Picos correlacionados a logs de automação")).not.toBeInTheDocument();
   });
 });
