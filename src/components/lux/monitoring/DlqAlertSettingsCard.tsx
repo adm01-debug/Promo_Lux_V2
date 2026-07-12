@@ -273,6 +273,30 @@ export function DlqAlertSettingsCard() {
                     </div>
                   </div>
                 )}
+                {dailyFrequency.length >= 2 && (
+                  <div>
+                    <p className="mb-1 text-[10px] text-muted-foreground">Frequência de disparos por dia</p>
+                    <div className="h-16 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={dailyFrequency} margin={{ top: 2, right: 4, bottom: 0, left: 4 }}>
+                          <XAxis dataKey="day" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={12} />
+                          <Tooltip
+                            cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
+                            formatter={(value: number) => [`${value} disparo(s)`, "Frequência"]}
+                            contentStyle={{
+                              background: "hsl(var(--card))",
+                              border: "1px solid hsl(var(--border))",
+                              borderRadius: 8,
+                              fontSize: 12,
+                            }}
+                          />
+                          <Bar dataKey="count" fill="hsl(var(--destructive))" radius={[3, 3, 0, 0]} maxBarSize={28} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
                 <ul className="space-y-1.5">
                   {pagedHistory.map((h) => (
                     <li
