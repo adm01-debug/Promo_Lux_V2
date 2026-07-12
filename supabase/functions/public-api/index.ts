@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
   const userAgent = req.headers.get("user-agent") ?? null;
-  let logCtx: {
+  const logCtx: {
     api_key_id: string | null;
     api_key_prefix: string | null;
     organization_id: string | null;

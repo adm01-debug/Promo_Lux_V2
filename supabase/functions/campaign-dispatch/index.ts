@@ -243,7 +243,7 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
 
   for (const r of recipients as Recipient[]) {
     // Determina a etapa corrente. Fora dos limites → conclui a sequência.
-    let stepIdx = clampStep(r.current_step, steps.length);
+    const stepIdx = clampStep(r.current_step, steps.length);
     if (stepIdx >= steps.length) {
       await admin.rpc("advance_recipient_step", {
         _recipient_id: r.id, _next_step: steps.length, _next_action_at: new Date().toISOString(),
