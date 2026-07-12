@@ -2666,6 +2666,17 @@ export type Database = {
         Args: { _delay_secs?: number; _id: string; _reason?: string }
         Returns: Database["public"]["Enums"]["scrape_queue_status"]
       }
+      dlq_health_metrics: {
+        Args: never
+        Returns: {
+          added_last_24h: number
+          oldest_pending_age_secs: number
+          pending_items: number
+          replayed_items: number
+          replayed_last_24h: number
+          total_items: number
+        }[]
+      }
       enqueue_scrape_task: {
         Args: {
           _max_attempts?: number
