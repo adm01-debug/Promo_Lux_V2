@@ -58,7 +58,16 @@ export function DlqAlertSettingsCard() {
 
   const pageCount = Math.max(1, Math.ceil(filteredHistory.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
-  const pagedHistory = filteredHistory.slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE);
+  const pagedHistory = filteredHistory
+    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
+    .map((h, i) => {
+      // Compara com o disparo imediatamente anterior (mais antigo). Como a
+      // lista está em ordem decrescente, o anterior é o próximo índice global.
+      const globalIdx = safePage * PAGE_SIZE + i;
+      const prev = filteredHistory[globalIdx + 1];
+      const delta = prev ? h.pending_items - prev.pending_items : null;
+      return { ...h, delta };
+    });
 
   const state = form ?? (activeOrgId ? { organization_id: activeOrgId, ...DLQ_ALERT_DEFAULTS } : null);
 
