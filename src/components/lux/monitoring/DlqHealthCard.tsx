@@ -297,12 +297,40 @@ export function DlqHealthCard() {
                 <Activity className="h-3.5 w-3.5" />
                 Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
               </span>
-              {alertDots.length > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
-                  Alerta disparado
-                </span>
-              )}
+              <div className="flex items-center gap-3">
+                {periodDelta && (
+                  <span
+                    className={cn(
+                      "flex items-center gap-1 font-medium",
+                      periodDelta.diff > 0
+                        ? "text-destructive"
+                        : periodDelta.diff < 0
+                        ? "text-emerald-500"
+                        : "text-muted-foreground"
+                    )}
+                    title={`Média atual ${periodDelta.curAvg.toFixed(1)} vs. período anterior ${periodDelta.prevAvg.toFixed(1)}`}
+                  >
+                    {periodDelta.diff > 0 ? (
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    ) : periodDelta.diff < 0 ? (
+                      <ArrowDownRight className="h-3.5 w-3.5" />
+                    ) : (
+                      <Minus className="h-3.5 w-3.5" />
+                    )}
+                    {periodDelta.pct !== null
+                      ? `${periodDelta.diff > 0 ? "+" : ""}${periodDelta.pct.toFixed(0)}%`
+                      : `${periodDelta.diff > 0 ? "+" : ""}${periodDelta.diff.toFixed(1)}`}
+                    <span className="text-muted-foreground">vs. período anterior</span>
+                  </span>
+                )}
+                {alertDots.length > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+                    Alerta disparado
+                  </span>
+                )}
+              </div>
+
             </div>
             <div className="h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
