@@ -125,7 +125,8 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
       signal: AbortSignal.timeout(15000),
     });
   } catch (err) {
-    // Rede/timeout => transitório
+    // Rede/timeout => transitório. Sinaliza o circuit breaker (saúde do provedor).
+    await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});
     const message = `network_error: ${(err as Error).message}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: true });
     const dead = result.data === "dead";
