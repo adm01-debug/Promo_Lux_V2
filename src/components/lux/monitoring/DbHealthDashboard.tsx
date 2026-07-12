@@ -198,6 +198,10 @@ export function DbHealthDashboard() {
         </Card>
       </div>
 
+      <DlqHealthCard />
+
+
+
       {latest && (
         <p className="text-xs text-muted-foreground text-right">
           Última coleta: {format(new Date(latest.captured_at), "dd MMM yyyy, HH:mm:ss", { locale: ptBR })}
