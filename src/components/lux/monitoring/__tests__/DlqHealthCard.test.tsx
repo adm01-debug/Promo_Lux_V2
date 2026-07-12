@@ -41,8 +41,16 @@ vi.mock("@/hooks/useDlqAlertSettings", () => ({
   useDlqAlertHistory: () => ({ data: [] }),
 }));
 
+let automationLogRows: Array<{
+  id: string;
+  created_at: string;
+  level: "info" | "warn" | "error";
+  message: string | null;
+  failure_reason: string | null;
+}> = [];
+
 vi.mock("@/hooks/useAutomationLogs", () => ({
-  useAutomationLogs: () => ({ data: [] }),
+  useAutomationLogs: () => ({ data: automationLogRows }),
 }));
 
 
