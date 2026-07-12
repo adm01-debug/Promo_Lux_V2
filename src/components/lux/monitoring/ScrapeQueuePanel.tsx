@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useScrapeQueue, useDeadLetterQueue, useReplayDeadLetter, useReplayDeadLetterBatch } from "@/hooks/useScrapeQueue";
+import { useScrapeQueue, useDeadLetterQueue, useReplayDeadLetter, useReplayDeadLetterBatch, usePurgeDeadLetter } from "@/hooks/useScrapeQueue";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
