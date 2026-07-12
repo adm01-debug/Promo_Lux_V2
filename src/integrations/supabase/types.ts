@@ -1210,6 +1210,44 @@ export type Database = {
           },
         ]
       }
+      dlq_health_snapshots: {
+        Row: {
+          captured_at: string
+          id: string
+          oldest_pending_age_secs: number
+          organization_id: string
+          pending_items: number
+          replayed_items: number
+          total_items: number
+        }
+        Insert: {
+          captured_at?: string
+          id?: string
+          oldest_pending_age_secs?: number
+          organization_id: string
+          pending_items?: number
+          replayed_items?: number
+          total_items?: number
+        }
+        Update: {
+          captured_at?: string
+          id?: string
+          oldest_pending_age_secs?: number
+          organization_id?: string
+          pending_items?: number
+          replayed_items?: number
+          total_items?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dlq_health_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_accounts: {
         Row: {
           access_token: string | null
@@ -2616,6 +2654,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      capture_dlq_health_snapshots: { Args: never; Returns: number }
       claim_scrape_tasks: {
         Args: { _limit?: number; _worker?: string }
         Returns: {
@@ -2674,6 +2713,16 @@ export type Database = {
           pending_items: number
           replayed_items: number
           replayed_last_24h: number
+          total_items: number
+        }[]
+      }
+      dlq_health_trend: {
+        Args: { _hours?: number }
+        Returns: {
+          captured_at: string
+          oldest_pending_age_secs: number
+          pending_items: number
+          replayed_items: number
           total_items: number
         }[]
       }
@@ -2787,6 +2836,7 @@ export type Database = {
         }[]
       }
       prune_auth_rate_limits: { Args: never; Returns: undefined }
+      prune_dlq_health_snapshots: { Args: never; Returns: number }
       purge_dead_letter: {
         Args: {
           _replayed_retention_days?: number
