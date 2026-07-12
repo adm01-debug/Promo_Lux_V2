@@ -108,7 +108,7 @@ export const InviteSection = ({
       </div>
       <div className="px-4 py-2.5 border-b border-border/40 bg-secondary/10 flex items-center gap-2 flex-wrap">
         <Filter className="h-3.5 w-3.5 text-muted-foreground" />
-        <Tabs value={inviteFilter} onValueChange={(v) => setInviteFilter(v)}>
+        <Tabs value={inviteFilter} onValueChange={(v) => setInviteFilter(v as InviteFilter)}>
           <TabsList className="h-8">
             <TabsTrigger value="all" className="text-xs h-6 px-2.5">Todos ({invites?.length ?? 0})</TabsTrigger>
             <TabsTrigger value="pending" className="text-xs h-6 px-2.5">Pendentes ({inviteCounts.pending})</TabsTrigger>
