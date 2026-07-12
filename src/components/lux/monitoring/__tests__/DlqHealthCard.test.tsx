@@ -20,7 +20,7 @@ let trendRows: Array<{
   oldest_pending_age_secs: number;
 }> = [];
 
-let lastRangeHours = 0;
+let rangeCalls: number[] = [];
 
 const infoToast = vi.fn();
 const successToast = vi.fn();
