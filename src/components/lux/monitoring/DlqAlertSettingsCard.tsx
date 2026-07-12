@@ -43,6 +43,22 @@ export function DlqAlertSettingsCard() {
     });
   };
 
+  const handleExportHistory = () => {
+    const rows = history ?? [];
+    downloadCsv(
+      `dlq-alertas-${new Date().toISOString().slice(0, 10)}.csv`,
+      ["triggered_at", "pending_items", "pending_critical", "consecutive", "admins_notified"],
+      rows.map((h) => [
+        new Date(h.triggered_at).toISOString(),
+        h.pending_items,
+        h.pending_critical,
+        h.consecutive,
+        h.admins_notified,
+      ])
+    );
+  };
+
+
   return (
     <Card className="glass shadow-sm">
       <CardHeader className="pb-3">
