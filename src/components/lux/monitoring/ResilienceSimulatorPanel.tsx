@@ -84,8 +84,11 @@ export function ResilienceSimulatorPanel() {
             <PlayCircle className={cn("h-4 w-4", running && "animate-pulse")} />
             {running ? "Simulando…" : "Executar simulação"}
           </Button>
-        </div>
       </div>
+
+      <RetryAutoTunerCard />
+
+
 
 
       {running && (
