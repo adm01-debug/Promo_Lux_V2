@@ -49,8 +49,8 @@ export const MFASetup = () => {
       setFactorId(data.id);
       setQrCode(data.totp.qr_code);
       setSecret(data.totp.secret);
-    } catch (err: any) {
-      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro", description: getErrorMessage(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -75,8 +75,8 @@ export const MFASetup = () => {
       setFactorId(null);
       setVerifyCode("");
       fetchFactors();
-    } catch (err: any) {
-      toast({ title: "Erro na verificação", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro na verificação", description: getErrorMessage(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -89,8 +89,8 @@ export const MFASetup = () => {
       if (error) throw error;
       toast({ title: "MFA Desativado", description: "O fator de autenticação foi removido." });
       fetchFactors();
-    } catch (err: any) {
-      toast({ title: "Erro ao desativar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro ao desativar", description: getErrorMessage(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }
