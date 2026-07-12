@@ -67,18 +67,18 @@ describe("useRealtimeCompanies", () => {
 
   // --- Private channel tests ---
 
-  it("uses private channel name scoped to user id", () => {
+  it("uses private channel name scoped to org id", () => {
     renderHook(() => useRealtimeCompanies());
-    expect(capturedChannelName).toBe("private:test-user-id:companies");
+    expect(capturedChannelName).toBe("org:test-org-id:companies");
   });
 
-  it("applies user_id filter in subscription config", () => {
+  it("applies organization_id filter in subscription config", () => {
     renderHook(() => useRealtimeCompanies());
     expect(capturedOnConfig).toMatchObject({
       event: "*",
       schema: "public",
       table: "companies",
-      filter: "user_id=eq.test-user-id",
+      filter: "organization_id=eq.test-org-id",
     });
   });
 
