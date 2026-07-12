@@ -5,9 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download } from "lucide-react";
-import { Area, AreaChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, ReferenceLine, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
-import { useDlqAlertSettings } from "@/hooks/useDlqAlertSettings";
+import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
@@ -65,18 +65,35 @@ export function DlqHealthCard() {
   const { data: trend } = useDlqTrend(rangeHours);
   const { activeOrgId } = useActiveOrganization();
   const { data: alertSettings } = useDlqAlertSettings(activeOrgId);
+  const { data: alertHistory } = useDlqAlertHistory(activeOrgId, 50);
   const severity = dlqSeverity(data);
 
   const criticalLimit = alertSettings?.enabled ? alertSettings.pending_critical : undefined;
 
-
   const isWeek = rangeHours > 48;
-  const trendData = (trend ?? []).map((p) => ({
-    t: new Date(p.captured_at).toLocaleString("pt-BR", isWeek
+  const fmt = (iso: string) =>
+    new Date(iso).toLocaleString("pt-BR", isWeek
       ? { day: "2-digit", month: "2-digit", hour: "2-digit" }
-      : { hour: "2-digit", minute: "2-digit" }),
+      : { hour: "2-digit", minute: "2-digit" });
+
+  const trendData = (trend ?? []).map((p) => ({
+    t: fmt(p.captured_at),
+    ts: new Date(p.captured_at).getTime(),
     pending: Number(p.pending_items),
   }));
+
+  // Marca cada alerta no ponto de tendência mais próximo dentro do intervalo.
+  const rangeStart = Date.now() - rangeHours * 3600_000;
+  const alertDots = (alertHistory ?? [])
+    .filter((a) => new Date(a.triggered_at).getTime() >= rangeStart && trendData.length > 0)
+    .map((a) => {
+      const at = new Date(a.triggered_at).getTime();
+      const nearest = trendData.reduce((best, cur) =>
+        Math.abs(cur.ts - at) < Math.abs(best.ts - at) ? cur : best
+      );
+      return { x: nearest.t, y: nearest.pending, id: a.id };
+    });
+
 
   const handleExportCsv = () => {
     const rows = trend ?? [];
@@ -212,9 +229,17 @@ export function DlqHealthCard() {
 
         {trendData.length >= 2 && (
           <div>
-            <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Activity className="h-3.5 w-3.5" />
-              Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
+            <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <Activity className="h-3.5 w-3.5" />
+                Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
+              </span>
+              {alertDots.length > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+                  Alerta disparado
+                </span>
+              )}
             </div>
             <div className="h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -258,6 +283,18 @@ export function DlqHealthCard() {
                       }}
                     />
                   )}
+                  {alertDots.map((d) => (
+                    <ReferenceDot
+                      key={d.id}
+                      x={d.x}
+                      y={d.y}
+                      r={4}
+                      fill="hsl(var(--destructive))"
+                      stroke="hsl(var(--background))"
+                      strokeWidth={1.5}
+                      isFront
+                    />
+                  ))}
                 </AreaChart>
               </ResponsiveContainer>
             </div>
