@@ -34,7 +34,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
-import { ListChecks } from "lucide-react";
+import { ListChecks, Layers } from "lucide-react";
+import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
