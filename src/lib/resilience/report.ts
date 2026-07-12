@@ -87,21 +87,49 @@ export function buildGapReport(
       },
     };
 
+    // Contexto do cenário: outage total do provedor vs SLA impossível por config.
+    const isOutage = r.spec.failureRate >= thresholds.outageFailureRate;
+    const slaImpossible = r.spec.slaSecs < thresholds.minBackoffSecs;
+
     if (r.dlqRate > thresholds.maxDlqRate) {
+      // Em outage, DLQ controlada (breaker segurou) é degradação esperada.
+      const severity: GapSeverity = isOutage
+        ? r.dlqRate > 0.5
+          ? "warning"
+          : "info"
+        : r.dlqRate > 0.5
+          ? "critical"
+          : "warning";
       gaps.push({
         ...base,
-        severity: r.dlqRate > 0.5 ? "critical" : "warning",
-        category: "DLQ excessiva",
-        detail: `${label}: ${(r.dlqRate * 100).toFixed(0)}% das tarefas caem em dead-letter (limite ${(thresholds.maxDlqRate * 100).toFixed(0)}%).`,
+        severity,
+        category: isOutage ? "DLQ em outage (esperado)" : "DLQ excessiva",
+        detail: isOutage
+          ? `${label}: provedor em outage (falha ${(r.spec.failureRate * 100).toFixed(0)}%); ${(r.dlqRate * 100).toFixed(0)}% em dead-letter após o breaker pausar — resposta esperada é alerta/replay.`
+          : `${label}: ${(r.dlqRate * 100).toFixed(0)}% das tarefas caem em dead-letter (limite ${(thresholds.maxDlqRate * 100).toFixed(0)}%).`,
       });
     }
 
     if (r.slaBreachRate > thresholds.maxSlaBreachRate) {
+      // SLA menor que o backoff mínimo é inatingível por design, não defeito.
+      const severity: GapSeverity = slaImpossible
+        ? "info"
+        : isOutage
+          ? "warning"
+          : r.slaBreachRate > 0.5
+            ? "critical"
+            : "warning";
       gaps.push({
         ...base,
-        severity: r.slaBreachRate > 0.5 ? "critical" : "warning",
-        category: "Violação de SLA",
-        detail: `${label}: ${(r.slaBreachRate * 100).toFixed(0)}% resolvem acima do SLA de ${r.spec.slaSecs}s (p95 ${r.p95ResolutionSecs.toFixed(0)}s).`,
+        severity,
+        category: slaImpossible
+          ? "SLA inatingível por config"
+          : isOutage
+            ? "SLA em outage (esperado)"
+            : "Violação de SLA",
+        detail: slaImpossible
+          ? `${label}: SLA de ${r.spec.slaSecs}s < backoff mínimo de ${thresholds.minBackoffSecs}s — inatingível por design; ajustar SLA ou base_delay.`
+          : `${label}: ${(r.slaBreachRate * 100).toFixed(0)}% resolvem acima do SLA de ${r.spec.slaSecs}s (p95 ${r.p95ResolutionSecs.toFixed(0)}s).`,
       });
     }
 
