@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDlqHealth, useDlqTrend, dlqSeverity, DLQ_THRESHOLDS, type DlqHealthSeverity } from "@/hooks/useDlqHealth";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -50,13 +51,23 @@ function Metric({
   );
 }
 
+const RANGE_OPTIONS: { label: string; hours: number }[] = [
+  { label: "24h", hours: 24 },
+  { label: "48h", hours: 48 },
+  { label: "7d", hours: 168 },
+];
+
 export function DlqHealthCard() {
+  const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
-  const { data: trend } = useDlqTrend(48);
+  const { data: trend } = useDlqTrend(rangeHours);
   const severity = dlqSeverity(data);
 
+  const isWeek = rangeHours > 48;
   const trendData = (trend ?? []).map((p) => ({
-    t: new Date(p.captured_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+    t: new Date(p.captured_at).toLocaleString("pt-BR", isWeek
+      ? { day: "2-digit", month: "2-digit", hour: "2-digit" }
+      : { hour: "2-digit", minute: "2-digit" }),
     pending: Number(p.pending_items),
   }));
 
@@ -95,7 +106,7 @@ export function DlqHealthCard() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `dlq-tendencia-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `dlq-tendencia-${RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label}-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -120,6 +131,23 @@ export function DlqHealthCard() {
             </CardDescription>
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+              {RANGE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.hours}
+                  type="button"
+                  onClick={() => setRangeHours(opt.hours)}
+                  className={cn(
+                    "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                    rangeHours === opt.hours
+                      ? "bg-primary/20 text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
             <Button
               variant="ghost"
               size="sm"
@@ -179,7 +207,7 @@ export function DlqHealthCard() {
           <div>
             <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Activity className="h-3.5 w-3.5" />
-              Tendência de pendências (48h)
+              Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
             </div>
             <div className="h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
