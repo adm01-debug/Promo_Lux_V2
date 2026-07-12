@@ -60,6 +60,53 @@ const RANGE_OPTIONS: { label: string; hours: number }[] = [
   { label: "7d", hours: 168 },
 ];
 
+interface AlertMarker {
+  triggered_at: string;
+  pending_items: number;
+  pending_critical: number;
+  consecutive: number;
+  admins_notified: number;
+}
+
+function TrendTooltip({
+  active,
+  payload,
+  label,
+  alertByLabel,
+}: {
+  active?: boolean;
+  payload?: { value: number }[];
+  label?: string;
+  alertByLabel: Map<string, AlertMarker>;
+}) {
+  if (!active || !payload?.length) return null;
+  const alert = label ? alertByLabel.get(label) : undefined;
+  return (
+    <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-md">
+      <p className="text-muted-foreground">{label}</p>
+      <p className="font-mono font-semibold">{payload[0].value} pendentes</p>
+      {alert && (
+        <div className="mt-1.5 border-t border-border/60 pt-1.5 space-y-0.5">
+          <p className="flex items-center gap-1.5 font-medium text-destructive">
+            <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+            Alerta disparado
+          </p>
+          <p className="text-muted-foreground">
+            {new Date(alert.triggered_at).toLocaleString("pt-BR")}
+          </p>
+          <p className="text-muted-foreground">
+            {alert.pending_items} itens · limite {alert.pending_critical} · {alert.consecutive} ciclos
+          </p>
+          <p className="text-muted-foreground">
+            {alert.admins_notified} admin(s) notificado(s)
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 export function DlqHealthCard() {
   const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
@@ -92,8 +139,20 @@ export function DlqHealthCard() {
       const nearest = trendData.reduce((best, cur) =>
         Math.abs(cur.ts - at) < Math.abs(best.ts - at) ? cur : best
       );
-      return { x: nearest.t, y: nearest.pending, id: a.id };
+      return {
+        x: nearest.t,
+        y: nearest.pending,
+        id: a.id,
+        triggered_at: a.triggered_at,
+        pending_items: a.pending_items,
+        pending_critical: a.pending_critical,
+        consecutive: a.consecutive,
+        admins_notified: a.admins_notified,
+      };
     });
+
+  // Índice rótulo-do-eixo → alerta, para enriquecer o tooltip do gráfico.
+  const alertByLabel = new Map(alertDots.map((d) => [d.x, d]));
 
 
   const handleExportCsv = () => {
@@ -233,15 +292,10 @@ export function DlqHealthCard() {
                   <XAxis dataKey="t" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={24} />
                   <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} allowDecimals={false} width={28} />
                   <Tooltip
-                    contentStyle={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: 8,
-                      fontSize: 12,
-                    }}
-                    labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-                    formatter={(v: number) => [String(v), "Pendentes"]}
+                    cursor={{ stroke: "hsl(var(--border))" }}
+                    content={<TrendTooltip alertByLabel={alertByLabel} />}
                   />
+
                   <Area
                     type="monotone"
                     dataKey="pending"
