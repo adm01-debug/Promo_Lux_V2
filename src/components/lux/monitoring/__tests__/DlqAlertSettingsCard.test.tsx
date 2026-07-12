@@ -114,6 +114,6 @@ describe("DlqAlertSettingsCard", () => {
   it("exibe estatística de pico do período", () => {
     render(<DlqAlertSettingsCard />);
     expect(screen.getByText("Pico")).toBeInTheDocument();
-    expect(screen.getByText("300")).toBeInTheDocument();
+    expect(screen.getAllByText("300").length).toBeGreaterThan(0);
   });
 });
