@@ -101,10 +101,10 @@ export function DlqAlertSettingsCard() {
     [filteredHistory, sortKey, sortDir]
   );
 
-  const pageCount = Math.max(1, Math.ceil(sortedHistory.length / PAGE_SIZE));
+  const pageCount = Math.max(1, Math.ceil(sortedHistory.length / pageSize));
   const safePage = Math.min(page, pageCount - 1);
   const pagedHistory = sortedHistory
-    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
+    .slice(safePage * pageSize, safePage * pageSize + pageSize)
     .map((h) => ({ ...h, delta: deltaById.get(h.id) ?? null }));
 
   // Resumo estatístico e frequência diária (funções puras testadas).
