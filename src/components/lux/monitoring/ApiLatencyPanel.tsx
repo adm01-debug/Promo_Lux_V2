@@ -88,6 +88,8 @@ function LatencyRow({ stat }: LatencyRowProps) {
 export function ApiLatencyPanel() {
   const [hours, setHours] = useState(24);
   const { data, isLoading, isError, refetch, isFetching } = useApiLatency(hours);
+  const { data: trend } = useApiLatencyTrend(hours);
+  const trendPoints = trend ?? [];
 
   const stats = data ?? [];
   const worst = stats[0];
