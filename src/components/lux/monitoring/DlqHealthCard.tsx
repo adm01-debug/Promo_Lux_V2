@@ -10,7 +10,7 @@ import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSett
 import { toast } from "sonner";
 import { downloadCsv } from "@/lib/csv";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
-import { computePeriodDelta } from "@/lib/dlq/aggregations";
+import { computePeriodDelta, computeAlertDots } from "@/lib/dlq/aggregations";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
@@ -148,26 +148,9 @@ export function DlqHealthCard() {
   const hasAging = trendData.some((p) => p.ageHours > 0);
   const peakAgeHours = trendData.reduce((max, p) => Math.max(max, p.ageHours), 0);
 
-  // Marca cada alerta no ponto de tendência mais próximo dentro do intervalo.
-  const rangeStart = Date.now() - rangeHours * 3600_000;
-  const alertDots = (alertHistory ?? [])
-    .filter((a) => new Date(a.triggered_at).getTime() >= rangeStart && trendData.length > 0)
-    .map((a) => {
-      const at = new Date(a.triggered_at).getTime();
-      const nearest = trendData.reduce((best, cur) =>
-        Math.abs(cur.ts - at) < Math.abs(best.ts - at) ? cur : best
-      );
-      return {
-        x: nearest.t,
-        y: nearest.pending,
-        id: a.id,
-        triggered_at: a.triggered_at,
-        pending_items: a.pending_items,
-        pending_critical: a.pending_critical,
-        consecutive: a.consecutive,
-        admins_notified: a.admins_notified,
-      };
-    });
+  // Marca cada alerta no ponto de tendência mais próximo dentro do intervalo
+  // (função pura testada em aggregations).
+  const alertDots = computeAlertDots(alertHistory ?? [], trendData, rangeHours, Date.now());
 
   // Índice rótulo-do-eixo → alerta, para enriquecer o tooltip do gráfico.
   const alertByLabel = new Map(alertDots.map((d) => [d.x, d]));
