@@ -543,6 +543,10 @@ const AutomationMonitoring = () => {
         <TabsContent value="database" className="space-y-4">
           <DbHealthDashboard />
         </TabsContent>
+
+        <TabsContent value="queue" className="space-y-4">
+          <ScrapeQueuePanel />
+        </TabsContent>
       </Tabs>
 
       <JobDetailsSheet 
