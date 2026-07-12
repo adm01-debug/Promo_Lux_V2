@@ -2,8 +2,10 @@ import { useCallback, useState } from "react";
 import {
   simulateScenario,
   DEFAULT_POLICY,
+  DEFAULT_BREAKER_SIM,
   type ScenarioResult,
   type RetryPolicy,
+  type BreakerSimConfig,
 } from "@/lib/resilience/simulator";
 import { generateScenarios, type ScenarioGridConfig } from "@/lib/resilience/scenarios";
 import {
