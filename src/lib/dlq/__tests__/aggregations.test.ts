@@ -4,6 +4,7 @@ import {
   computePeriodStats,
   computeDailyFrequency,
   computePeriodDelta,
+  sortHistory,
   type AlertHistoryPoint,
   type TrendPoint,
 } from "../aggregations";
@@ -123,5 +124,35 @@ describe("computePeriodDelta", () => {
     const delta = computePeriodDelta(rows, 24, NOW);
     expect(delta!.curAvg).toBe(30);
     expect(delta!.prevAvg).toBe(10);
+  });
+});
+
+describe("sortHistory", () => {
+  const rows = [
+    { id: "a", triggered_at: "2026-07-10T00:00:00Z", pending_items: 50 },
+    { id: "b", triggered_at: "2026-07-12T00:00:00Z", pending_items: 10 },
+    { id: "c", triggered_at: "2026-07-11T00:00:00Z", pending_items: 50 },
+  ];
+
+  it("ordena por data decrescente (mais recente primeiro)", () => {
+    expect(sortHistory(rows, "date", "desc").map((r) => r.id)).toEqual(["b", "c", "a"]);
+  });
+
+  it("ordena por data crescente", () => {
+    expect(sortHistory(rows, "date", "asc").map((r) => r.id)).toEqual(["a", "c", "b"]);
+  });
+
+  it("ordena por volume decrescente, desempatando pela data mais recente", () => {
+    expect(sortHistory(rows, "volume", "desc").map((r) => r.id)).toEqual(["c", "a", "b"]);
+  });
+
+  it("ordena por volume crescente", () => {
+    expect(sortHistory(rows, "volume", "asc").map((r) => r.id)).toEqual(["b", "a", "c"]);
+  });
+
+  it("não muta o array de entrada", () => {
+    const copy = [...rows];
+    sortHistory(rows, "volume", "asc");
+    expect(rows).toEqual(copy);
   });
 });

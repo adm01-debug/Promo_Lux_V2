@@ -81,6 +81,32 @@ export function computeDailyFrequency(rows: AlertHistoryPoint[]): DailyFrequency
     });
 }
 
+/** Chave de ordenação disponível para o histórico de alertas. */
+export type SortKey = "date" | "volume";
+/** Direção de ordenação. */
+export type SortDir = "asc" | "desc";
+
+/**
+ * Ordena o histórico de alertas por data de disparo ou por volume de itens
+ * pendentes. Retorna uma nova lista (não muta a entrada). Empates em `volume`
+ * são desempatados pela data mais recente para manter estabilidade previsível.
+ */
+export function sortHistory<T extends { triggered_at: string; pending_items: number }>(
+  rows: T[],
+  key: SortKey,
+  dir: SortDir,
+): T[] {
+  const factor = dir === "asc" ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    if (key === "volume" && a.pending_items !== b.pending_items) {
+      return (a.pending_items - b.pending_items) * factor;
+    }
+    const ta = new Date(a.triggered_at).getTime();
+    const tb = new Date(b.triggered_at).getTime();
+    return (ta - tb) * factor;
+  });
+}
+
 export interface PeriodDelta {
   curAvg: number;
   prevAvg: number;

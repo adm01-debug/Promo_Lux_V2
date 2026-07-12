@@ -4,12 +4,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus } from "lucide-react";
+import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
-import { filterByPeriod, computePeriodStats, computeDailyFrequency } from "@/lib/dlq/aggregations";
+import { filterByPeriod, computePeriodStats, computeDailyFrequency, sortHistory, type SortKey, type SortDir } from "@/lib/dlq/aggregations";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import {
   useDlqAlertSettings,
@@ -41,22 +41,32 @@ export function DlqAlertSettingsCard() {
   const [form, setForm] = useState<DlqAlertSettings | null>(null);
   const [page, setPage] = useState(0);
 
-  // Preferência de período persistida entre sessões (e sincronizada entre abas).
-  const [historyPrefs, setHistoryPrefs] = usePersistedFilters<{ periodHours: number | null }>(
-    "dlq-alert-history",
-    { periodHours: 168 }
-  );
+  // Preferências persistidas entre sessões (e sincronizadas entre abas).
+  const [historyPrefs, setHistoryPrefs] = usePersistedFilters<{
+    periodHours: number | null;
+    sortKey: SortKey;
+    sortDir: SortDir;
+  }>("dlq-alert-history", { periodHours: 168, sortKey: "date", sortDir: "desc" });
   const periodHours = historyPrefs.periodHours;
-  const setPeriodHours = (hours: number | null) => setHistoryPrefs({ periodHours: hours });
+  const setPeriodHours = (hours: number | null) => setHistoryPrefs({ ...historyPrefs, periodHours: hours });
+  const sortKey = historyPrefs.sortKey ?? "date";
+  const sortDir = historyPrefs.sortDir ?? "desc";
+  const toggleSort = (key: SortKey) =>
+    setHistoryPrefs({
+      ...historyPrefs,
+      sortKey: key,
+      // Alterna direção ao reclicar a mesma chave; nova chave começa decrescente.
+      sortDir: sortKey === key ? (sortDir === "desc" ? "asc" : "desc") : "desc",
+    });
 
   useEffect(() => {
     if (data) setForm(data);
   }, [data]);
 
-  // Reinicia a paginação sempre que o filtro de período muda.
+  // Reinicia a paginação quando o filtro de período ou a ordenação mudam.
   useEffect(() => {
     setPage(0);
-  }, [periodHours]);
+  }, [periodHours, sortKey, sortDir]);
 
   // Aplica o filtro de período sobre o histórico carregado.
   const filteredHistory = useMemo(
@@ -64,18 +74,29 @@ export function DlqAlertSettingsCard() {
     [history, periodHours]
   );
 
-  const pageCount = Math.max(1, Math.ceil(filteredHistory.length / PAGE_SIZE));
-  const safePage = Math.min(page, pageCount - 1);
-  const pagedHistory = filteredHistory
-    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
-    .map((h, i) => {
-      // Compara com o disparo imediatamente anterior (mais antigo). Como a
-      // lista está em ordem decrescente, o anterior é o próximo índice global.
-      const globalIdx = safePage * PAGE_SIZE + i;
-      const prev = filteredHistory[globalIdx + 1];
-      const delta = prev ? h.pending_items - prev.pending_items : null;
-      return { ...h, delta };
+  // Delta (variação vs. disparo anterior no tempo) é sempre calculado sobre a
+  // ordem cronológica decrescente, independentemente da ordenação de exibição.
+  const deltaById = useMemo(() => {
+    const byDateDesc = sortHistory(filteredHistory, "date", "desc");
+    const map = new Map<string, number | null>();
+    byDateDesc.forEach((h, i) => {
+      const prev = byDateDesc[i + 1];
+      map.set(h.id, prev ? h.pending_items - prev.pending_items : null);
     });
+    return map;
+  }, [filteredHistory]);
+
+  // Ordenação configurável de exibição (persistida entre sessões).
+  const sortedHistory = useMemo(
+    () => sortHistory(filteredHistory, sortKey, sortDir),
+    [filteredHistory, sortKey, sortDir]
+  );
+
+  const pageCount = Math.max(1, Math.ceil(sortedHistory.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pagedHistory = sortedHistory
+    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
+    .map((h) => ({ ...h, delta: deltaById.get(h.id) ?? null }));
 
   // Resumo estatístico e frequência diária (funções puras testadas).
   const periodStats = useMemo(() => computePeriodStats(filteredHistory), [filteredHistory]);
@@ -210,6 +231,36 @@ export function DlqAlertSettingsCard() {
                       )}
                     >
                       {opt.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+                  {([
+                    { key: "date" as SortKey, label: "Data" },
+                    { key: "volume" as SortKey, label: "Volume" },
+                  ]).map((opt) => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => toggleSort(opt.key)}
+                      className={cn(
+                        "flex items-center gap-0.5 rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                        sortKey === opt.key
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                      title={`Ordenar por ${opt.label.toLowerCase()}`}
+                    >
+                      {opt.label}
+                      {sortKey === opt.key ? (
+                        sortDir === "desc" ? (
+                          <ArrowDown className="h-3 w-3" />
+                        ) : (
+                          <ArrowUp className="h-3 w-3" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 opacity-50" />
+                      )}
                     </button>
                   ))}
                 </div>
