@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { useState } from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 
 // --- Mocks de hooks (isolam o componente da rede/estado global) -------------
