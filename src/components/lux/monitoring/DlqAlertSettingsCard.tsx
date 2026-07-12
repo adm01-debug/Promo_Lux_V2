@@ -29,7 +29,13 @@ const PERIOD_OPTIONS: { label: string; hours: number | null }[] = [
   { label: "Tudo", hours: null },
 ];
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE_OPTIONS = [5, 10, 20] as const;
+const DEFAULT_PAGE_SIZE = 5;
+/** Garante que o tamanho de página persistido seja um valor válido/suportado. */
+const normalizePageSize = (v: unknown): number =>
+  PAGE_SIZE_OPTIONS.includes(v as (typeof PAGE_SIZE_OPTIONS)[number])
+    ? (v as number)
+    : DEFAULT_PAGE_SIZE;
 
 export function DlqAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
@@ -46,11 +52,14 @@ export function DlqAlertSettingsCard() {
     periodHours: number | null;
     sortKey: SortKey;
     sortDir: SortDir;
-  }>("dlq-alert-history", { periodHours: 168, sortKey: "date", sortDir: "desc" });
+    pageSize: number;
+  }>("dlq-alert-history", { periodHours: 168, sortKey: "date", sortDir: "desc", pageSize: DEFAULT_PAGE_SIZE });
   const periodHours = historyPrefs.periodHours;
   const setPeriodHours = (hours: number | null) => setHistoryPrefs({ ...historyPrefs, periodHours: hours });
   const sortKey = historyPrefs.sortKey ?? "date";
   const sortDir = historyPrefs.sortDir ?? "desc";
+  const pageSize = normalizePageSize(historyPrefs.pageSize);
+  const setPageSize = (size: number) => setHistoryPrefs({ ...historyPrefs, pageSize: size });
   const toggleSort = (key: SortKey) =>
     setHistoryPrefs({
       ...historyPrefs,
@@ -63,10 +72,10 @@ export function DlqAlertSettingsCard() {
     if (data) setForm(data);
   }, [data]);
 
-  // Reinicia a paginação quando o filtro de período ou a ordenação mudam.
+  // Reinicia a paginação quando o filtro, a ordenação ou o tamanho mudam.
   useEffect(() => {
     setPage(0);
-  }, [periodHours, sortKey, sortDir]);
+  }, [periodHours, sortKey, sortDir, pageSize]);
 
   // Aplica o filtro de período sobre o histórico carregado.
   const filteredHistory = useMemo(
@@ -92,10 +101,10 @@ export function DlqAlertSettingsCard() {
     [filteredHistory, sortKey, sortDir]
   );
 
-  const pageCount = Math.max(1, Math.ceil(sortedHistory.length / PAGE_SIZE));
+  const pageCount = Math.max(1, Math.ceil(sortedHistory.length / pageSize));
   const safePage = Math.min(page, pageCount - 1);
   const pagedHistory = sortedHistory
-    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
+    .slice(safePage * pageSize, safePage * pageSize + pageSize)
     .map((h) => ({ ...h, delta: deltaById.get(h.id) ?? null }));
 
   // Resumo estatístico e frequência diária (funções puras testadas).
@@ -378,37 +387,59 @@ export function DlqAlertSettingsCard() {
                   ))}
                 </ul>
 
-                {pageCount > 1 && (
-                  <div className="flex items-center justify-between pt-1 text-xs text-muted-foreground">
-                    <span>
-                      {safePage * PAGE_SIZE + 1}–{Math.min((safePage + 1) * PAGE_SIZE, filteredHistory.length)} de{" "}
-                      {filteredHistory.length}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => setPage((p) => Math.max(0, p - 1))}
-                        disabled={safePage === 0}
-                        aria-label="Página anterior"
-                      >
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                      </Button>
-                      <span className="font-mono">
-                        {safePage + 1}/{pageCount}
+                {sortedHistory.length > 0 && (
+                  <div className="flex items-center justify-between gap-2 pt-1 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <span>
+                        {safePage * pageSize + 1}–{Math.min((safePage + 1) * pageSize, filteredHistory.length)} de{" "}
+                        {filteredHistory.length}
                       </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-                        disabled={safePage >= pageCount - 1}
-                        aria-label="Próxima página"
-                      >
-                        <ChevronRight className="h-3.5 w-3.5" />
-                      </Button>
+                      <div className="flex items-center gap-1" role="group" aria-label="Itens por página">
+                        {PAGE_SIZE_OPTIONS.map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => setPageSize(size)}
+                            aria-pressed={pageSize === size}
+                            className={cn(
+                              "rounded px-1.5 py-0.5 font-mono transition-colors",
+                              pageSize === size
+                                ? "bg-primary/15 text-primary"
+                                : "hover:bg-muted"
+                            )}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+                    {pageCount > 1 && (
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => setPage((p) => Math.max(0, p - 1))}
+                          disabled={safePage === 0}
+                          aria-label="Página anterior"
+                        >
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                        </Button>
+                        <span className="font-mono">
+                          {safePage + 1}/{pageCount}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                          disabled={safePage >= pageCount - 1}
+                          aria-label="Próxima página"
+                        >
+                          <ChevronRight className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
               </>
