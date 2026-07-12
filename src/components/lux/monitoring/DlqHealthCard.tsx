@@ -10,7 +10,9 @@ import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSett
 import { toast } from "sonner";
 import { downloadCsv } from "@/lib/csv";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
-import { computePeriodDelta, computeAlertDots } from "@/lib/dlq/aggregations";
+import { computePeriodDelta, computeAlertDots, correlateSpikesWithLogs } from "@/lib/dlq/aggregations";
+import { useAutomationLogs } from "@/hooks/useAutomationLogs";
+import { AlertTriangle } from "lucide-react";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
