@@ -380,6 +380,49 @@ export function DlqHealthCard() {
           </div>
         )}
 
+        {spikeCorrelations.length > 0 && (
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+            <div className="mb-2 flex items-center gap-1.5 text-xs font-medium text-foreground">
+              <AlertTriangle className="h-3.5 w-3.5 text-warning" />
+              Picos correlacionados a logs de automação
+            </div>
+            <ul className="space-y-2">
+              {spikeCorrelations.map((c) => {
+                const top = c.logs[0];
+                return (
+                  <li key={c.spike.ts} className="text-xs">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-1.5 font-mono text-foreground">
+                        <TrendingUp className="h-3 w-3 text-destructive" />
+                        {c.spike.t} · {c.spike.pending} pendentes
+                      </span>
+                      <span className="flex items-center gap-1.5 text-muted-foreground">
+                        {c.errorCount > 0 && (
+                          <Badge variant="outline" className="border-destructive/30 bg-destructive/10 text-destructive">
+                            {c.errorCount} erro{c.errorCount > 1 ? "s" : ""}
+                          </Badge>
+                        )}
+                        {c.warnCount > 0 && (
+                          <Badge variant="outline" className="border-warning/30 bg-warning/10 text-warning">
+                            {c.warnCount} aviso{c.warnCount > 1 ? "s" : ""}
+                          </Badge>
+                        )}
+                      </span>
+                    </div>
+                    {top && (top.failure_reason || top.message) && (
+                      <p className="mt-0.5 truncate text-muted-foreground" title={top.failure_reason || top.message || ""}>
+                        {top.failure_reason || top.message}
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+
+
         {trendData.length >= 2 && hasAging && (
           <div>
             <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
