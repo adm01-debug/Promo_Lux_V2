@@ -42,15 +42,11 @@ vi.mock("@/hooks/useDlqAlertSettings", () => ({
   useDlqAlertHistory: () => ({ data: historyRows }),
 }));
 
-// Estado local em memória para simular persistência entre renders.
+// Usa useState real para que setPrefs dispare re-render (comportamento fiel).
 vi.mock("@/hooks/usePersistedFilters", () => ({
   usePersistedFilters: (_key: string, initial: unknown) => {
-    const holder = (globalThis as Record<string, unknown>).__pf ?? { v: initial };
-    (globalThis as Record<string, unknown>).__pf = holder;
-    const set = (next: unknown) => {
-      (holder as { v: unknown }).v = next;
-    };
-    return [(holder as { v: unknown }).v, set];
+    const seed = (globalThis as Record<string, unknown>).__pfSeed ?? initial;
+    return useState(seed);
   },
 }));
 
