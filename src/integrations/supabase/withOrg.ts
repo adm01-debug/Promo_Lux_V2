@@ -270,57 +270,60 @@ export function fromOrg<T extends TableName>(table: T) {
   return new Proxy(builder, {
     get(target, prop, receiver) {
       const orgId = getActiveOrgId();
+      // Dispatch dinâmico tipado: evita `any` sem reproduzir as sobrecargas.
+      const dispatch = target as unknown as OrgDispatchBuilder;
 
       if (prop === "insert" || prop === "upsert") {
-        return (values: any, options?: any) => {
+        return (values: unknown, options?: unknown) => {
           if (isScoped) {
             if (!orgId) raise(new MissingOrgContextError(tableName, String(prop)));
             assertOrgMatch(values, orgId, tableName, String(prop));
           }
           const next = orgId && isScoped ? injectOrg(values, orgId) : values;
-          return options === undefined ? (target as any)[prop](next) : (target as any)[prop](next, options);
+          const method = dispatch[prop];
+          return options === undefined ? method(next) : method(next, options);
         };
       }
 
       if (prop === "update" && isScoped) {
-        return (values: any, options?: any) => {
+        return (values: unknown, options?: unknown) => {
           if (!orgId) raise(new MissingOrgContextError(tableName, "update"));
           assertOrgMatch(values, orgId, tableName, "update");
           const sanitized = stripOrgFromUpdate(values);
-          const q = options === undefined ? (target as any).update(sanitized) : (target as any).update(sanitized, options);
-          
+          const q = options === undefined ? dispatch.update(sanitized) : dispatch.update(sanitized, options);
+
           if (values && typeof values === "object" && "version" in values) {
-            const version = values.version;
+            const version = (values as { version?: unknown }).version;
             if (typeof version === "number") {
               return q.eq("organization_id", orgId).eq("version", version);
             }
           }
-          
+
           return q.eq("organization_id", orgId);
         };
       }
 
       if (prop === "delete" && isScoped) {
-        return (options?: any) => {
+        return (options?: unknown) => {
           if (!orgId) raise(new MissingOrgContextError(tableName, "delete"));
           // Soft delete: converte DELETE em UPDATE deleted_at = now().
           if (SOFT_DELETE_TABLES.has(tableName)) {
-            return (target as any)
+            return dispatch
               .update({ deleted_at: new Date().toISOString() })
               .eq("organization_id", orgId)
               .is("deleted_at", null);
           }
-          return (target as any).delete(options).eq("organization_id", orgId);
+          return dispatch.delete(options).eq("organization_id", orgId);
         };
       }
 
       if (prop === "select" && isScoped) {
-        return (...args: any[]) => {
+        return (...args: unknown[]) => {
           if (!orgId) {
             console.warn(`[withOrg] Tentativa de select em "${tableName}" sem org ativa. Retornando builder sem filtro automático para evitar MissingOrgContextError imediato.`);
-            return (target as any).select(...args);
+            return dispatch.select(...args);
           }
-          const q = (target as any).select(...args).eq("organization_id", orgId);
+          const q = dispatch.select(...args).eq("organization_id", orgId);
           // Soft delete: por padrão, esconde registros na lixeira.
           if (SOFT_DELETE_TABLES.has(tableName)) {
             return q.is("deleted_at", null);
