@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 
-export type ScoreRange = "all" | "90+" | "75-89" | "60-74" | "<60";
+type ScoreRange = "all" | "90+" | "75-89" | "60-74" | "<60";
 
 interface FacetItem {
   value: string;
