@@ -34,7 +34,6 @@ export function LuxImage({ src, alt, className, fallbackIcon, ...props }: LuxIma
   // Remove motion-conflicting props from img attributes
   const { 
     onAnimationStart, onDrag, onDragEnd, onDragStart,
-    // @ts-expect-error style pode conflitar entre motion e img
     style: motionStyle, 
     ...imgProps 
   } = props as any;
