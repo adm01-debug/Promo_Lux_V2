@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDlqHealth, useDlqTrend, dlqSeverity, DLQ_THRESHOLDS, type DlqHealthSeverity } from "@/hooks/useDlqHealth";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +9,7 @@ import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
 import { downloadCsv } from "@/lib/csv";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
@@ -108,7 +108,12 @@ function TrendTooltip({
 
 
 export function DlqHealthCard() {
-  const [rangeHours, setRangeHours] = useState(48);
+  const [prefs, setPrefs] = usePersistedFilters<{ rangeHours: number }>(
+    "dlq-health-trend",
+    { rangeHours: 48 }
+  );
+  const rangeHours = prefs.rangeHours;
+  const setRangeHours = (hours: number) => setPrefs({ rangeHours: hours });
   const { data, isLoading } = useDlqHealth();
   const { data: trend } = useDlqTrend(rangeHours);
   const { data: trendPrev } = useDlqTrend(rangeHours * 2);
