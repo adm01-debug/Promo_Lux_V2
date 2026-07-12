@@ -1210,6 +1210,44 @@ export type Database = {
           },
         ]
       }
+      dlq_alert_history: {
+        Row: {
+          admins_notified: number
+          consecutive: number
+          id: string
+          organization_id: string
+          pending_critical: number
+          pending_items: number
+          triggered_at: string
+        }
+        Insert: {
+          admins_notified?: number
+          consecutive: number
+          id?: string
+          organization_id: string
+          pending_critical: number
+          pending_items: number
+          triggered_at?: string
+        }
+        Update: {
+          admins_notified?: number
+          consecutive?: number
+          id?: string
+          organization_id?: string
+          pending_critical?: number
+          pending_items?: number
+          triggered_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dlq_alert_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dlq_alert_settings: {
         Row: {
           consecutive: number
