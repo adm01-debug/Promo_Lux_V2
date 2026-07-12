@@ -380,6 +380,10 @@ const AutomationMonitoring = () => {
             <Layers className="h-4 w-4" />
             Particionamento
           </TabsTrigger>
+          <TabsTrigger value="resilience" className="gap-2">
+            <ShieldAlert className="h-4 w-4" />
+            Simulador de Falhas
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
