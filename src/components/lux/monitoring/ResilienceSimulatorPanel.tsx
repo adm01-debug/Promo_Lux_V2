@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { PlayCircle, Download, ShieldAlert, ShieldCheck, AlertTriangle, Info, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useResilienceSimulator } from "@/hooks/useResilienceSimulator";
+import { RetryAutoTunerCard } from "./RetryAutoTunerCard";
 import type { GapSeverity } from "@/lib/resilience/report";
 
 const severityStyle: Record<GapSeverity, string> = {
@@ -85,6 +86,11 @@ export function ResilienceSimulatorPanel() {
           </Button>
         </div>
       </div>
+
+
+      <RetryAutoTunerCard />
+
+
 
 
       {running && (
