@@ -111,10 +111,34 @@ export function DlqHealthCard() {
   const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
   const { data: trend } = useDlqTrend(rangeHours);
+  const { data: trendPrev } = useDlqTrend(rangeHours * 2);
   const { activeOrgId } = useActiveOrganization();
   const { data: alertSettings } = useDlqAlertSettings(activeOrgId);
   const { data: alertHistory } = useDlqAlertHistory(activeOrgId, 50);
   const severity = dlqSeverity(data);
+
+  // Comparativo período-a-período: média de pendências na janela atual
+  // versus a janela imediatamente anterior de mesma duração.
+  const periodDelta = (() => {
+    const rows = trendPrev ?? [];
+    if (rows.length < 2) return null;
+    const cutoff = Date.now() - rangeHours * 3600_000;
+    const cur: number[] = [];
+    const prev: number[] = [];
+    for (const p of rows) {
+      const val = Number(p.pending_items);
+      if (new Date(p.captured_at).getTime() >= cutoff) cur.push(val);
+      else prev.push(val);
+    }
+    if (cur.length === 0 || prev.length === 0) return null;
+    const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    const curAvg = avg(cur);
+    const prevAvg = avg(prev);
+    const diff = curAvg - prevAvg;
+    const pct = prevAvg > 0 ? (diff / prevAvg) * 100 : null;
+    return { curAvg, prevAvg, diff, pct };
+  })();
+
 
   const criticalLimit = alertSettings?.enabled ? alertSettings.pending_critical : undefined;
 
