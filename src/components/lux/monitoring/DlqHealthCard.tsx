@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download } from "lucide-react";
 import { Area, AreaChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
-import { useDlqAlertSettings } from "@/hooks/useDlqAlertSettings";
+import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
