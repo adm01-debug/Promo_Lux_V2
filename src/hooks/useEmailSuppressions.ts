@@ -55,11 +55,12 @@ export function useEmailSuppressions() {
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         throw new Error("Informe um e-mail válido.");
       }
+      // `organization_id` é injetado automaticamente pelo wrapper `db` (withOrg).
       const { error } = await db.from("email_suppressions").insert([{
         email,
         reason: "manual",
         notes: input.notes?.trim() || null,
-      }]);
+      }] as never);
       // Conflito de único (org + email) = já suprimido; tratamos como sucesso idempotente.
       if (error && !String(error.message).includes("duplicate")) throw error;
     },
