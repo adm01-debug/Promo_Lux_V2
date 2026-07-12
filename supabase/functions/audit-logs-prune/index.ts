@@ -49,12 +49,21 @@ serve(async (req) => {
 
     if (healthError) throw healthError;
 
+    // Prune email_sync_log (fecha gap de retenção — crescia sem limite)
+    const { count: emailSyncCount, error: emailSyncError } = await supabase
+      .from('email_sync_log')
+      .delete({ count: 'exact' })
+      .lt('created_at', cutoffStr);
+
+    if (emailSyncError) throw emailSyncError;
+
     return new Response(JSON.stringify({
       success: true,
       pruned: {
         audit_logs: auditCount,
         api_request_logs: apiCount,
-        health_checks: healthCount
+        health_checks: healthCount,
+        email_sync_log: emailSyncCount
       }
     }), { headers: { 'Content-Type': 'application/json' } });
 
