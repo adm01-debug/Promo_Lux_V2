@@ -1,9 +1,11 @@
 import { useDlqHealth, useDlqTrend, dlqSeverity, DLQ_THRESHOLDS, type DlqHealthSeverity } from "@/hooks/useDlqHealth";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity } from "lucide-react";
+import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { toast } from "sonner";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
@@ -58,6 +60,51 @@ export function DlqHealthCard() {
     pending: Number(p.pending_items),
   }));
 
+  const handleExportCsv = () => {
+    const rows = trend ?? [];
+    if (rows.length === 0) {
+      toast.info("Sem histórico de tendência para exportar ainda.");
+      return;
+    }
+    const header = [
+      "captured_at",
+      "pending_items",
+      "total_items",
+      "replayed_items",
+      "oldest_pending_age_secs",
+    ];
+    const escape = (v: string | number) => {
+      const s = String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [
+      header.join(","),
+      ...rows.map((p) =>
+        [
+          new Date(p.captured_at).toISOString(),
+          p.pending_items,
+          p.total_items,
+          p.replayed_items,
+          Math.round(Number(p.oldest_pending_age_secs)),
+        ]
+          .map(escape)
+          .join(",")
+      ),
+    ];
+    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `dlq-tendencia-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast.success(`${rows.length} registros exportados.`);
+  };
+
+
+
 
   return (
     <Card className="glass shadow-sm">
@@ -72,9 +119,21 @@ export function DlqHealthCard() {
               Crescimento e envelhecimento das falhas definitivas ainda não reprocessadas.
             </CardDescription>
           </div>
-          <Badge variant="outline" className={cn("shrink-0", sevStyles[severity])}>
-            {sevLabel[severity]}
-          </Badge>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1.5 text-xs"
+              onClick={handleExportCsv}
+              disabled={(trend ?? []).length === 0}
+            >
+              <Download className="h-3.5 w-3.5" />
+              CSV
+            </Button>
+            <Badge variant="outline" className={cn(sevStyles[severity])}>
+              {sevLabel[severity]}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
