@@ -6,11 +6,13 @@ import { Gauge, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   useApiLatency,
+  useApiLatencyTrend,
   latencySeverity,
   LATENCY_THRESHOLDS,
   type ApiLatencyStat,
   type LatencySeverity,
 } from "@/hooks/useApiLatency";
+import { LatencySparkline } from "./LatencySparkline";
 
 const WINDOWS: { label: string; hours: number }[] = [
   { label: "1h", hours: 1 },
