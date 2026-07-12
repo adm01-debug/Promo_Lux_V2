@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useScrapeQueue, useDeadLetterQueue, useReplayDeadLetter, useReplayDeadLetterBatch } from "@/hooks/useScrapeQueue";
+import { useScrapeQueue, useDeadLetterQueue, useReplayDeadLetter, useReplayDeadLetterBatch, usePurgeDeadLetter } from "@/hooks/useScrapeQueue";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   Skull,
   RotateCcw,
   AlertTriangle,
+  Trash2,
 } from "lucide-react";
 import type { ScrapeQueueItem } from "@/hooks/useScrapeQueue";
 
@@ -29,6 +30,7 @@ export function ScrapeQueuePanel() {
   const { data: dlq } = useDeadLetterQueue();
   const replay = useReplayDeadLetter();
   const replayBatch = useReplayDeadLetterBatch();
+  const purge = usePurgeDeadLetter();
 
   const counts = useMemo(() => {
     const c = { queued: 0, processing: 0, succeeded: 0, dead: 0 };
@@ -109,18 +111,30 @@ export function ScrapeQueuePanel() {
                 <Skull className="h-4 w-4 text-destructive" />
                 Dead-Letter Queue
               </CardTitle>
-              <CardDescription>Falhas definitivas após esgotar as tentativas. Reprocesse quando resolver a causa.</CardDescription>
+              <CardDescription>Falhas definitivas após esgotar as tentativas. Reprocesse quando resolver a causa. Itens reprocessados são expurgados automaticamente após 30 dias (90 dias para os nunca reprocessados).</CardDescription>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              className="gap-1.5 h-8 shrink-0"
-              disabled={pendingDlq.length === 0 || replayBatch.isPending}
-              onClick={() => replayBatch.mutate(undefined)}
-            >
-              <RotateCcw className={cn("h-3.5 w-3.5", replayBatch.isPending && "animate-spin")} />
-              Reprocessar todas ({pendingDlq.length})
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 h-8"
+                disabled={pendingDlq.length === 0 || replayBatch.isPending}
+                onClick={() => replayBatch.mutate(undefined)}
+              >
+                <RotateCcw className={cn("h-3.5 w-3.5", replayBatch.isPending && "animate-spin")} />
+                Reprocessar todas ({pendingDlq.length})
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="gap-1.5 h-8 text-muted-foreground hover:text-destructive"
+                disabled={purge.isPending}
+                onClick={() => purge.mutate()}
+              >
+                <Trash2 className={cn("h-3.5 w-3.5", purge.isPending && "animate-pulse")} />
+                Expurgar agora
+              </Button>
+            </div>
           </div>
         </CardHeader>
 
