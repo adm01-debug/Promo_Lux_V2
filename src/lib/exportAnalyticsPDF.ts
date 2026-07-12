@@ -70,7 +70,7 @@ export async function exportAnalyticsPDF() {
   });
 
   // Funnel Data
-  const funnelY = (doc as any).lastAutoTable.finalY + 15;
+  const funnelY = (doc as JsPDFWithAutoTable).lastAutoTable.finalY + 15;
   doc.text("Funil de Conversão", 15, funnelY);
   
   const totalSent = allCampaigns.reduce((a, c) => a + (c.sent || 0), 0);
@@ -97,7 +97,7 @@ export async function exportAnalyticsPDF() {
     sectorMap.set(s, (sectorMap.get(s) || 0) + 1);
   });
   
-  const sectorY = (doc as any).lastAutoTable.finalY + 15;
+  const sectorY = (doc as JsPDFWithAutoTable).lastAutoTable.finalY + 15;
   doc.text("Distribuição por Setor", 15, sectorY);
   
   autoTable(doc, {
@@ -137,7 +137,7 @@ export async function exportAnalyticsPDF() {
   }
 
   // Footer on last page
-  const pageCount = (doc as any).internal.getNumberOfPages();
+  const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);
