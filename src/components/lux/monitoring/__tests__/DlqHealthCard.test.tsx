@@ -47,7 +47,7 @@ vi.mock("@/hooks/useDlqHealth", async (importOriginal) => {
     ...actual, // mantém dlqSeverity, DLQ_THRESHOLDS puros
     useDlqHealth: () => ({ data: healthData, isLoading: false }),
     useDlqTrend: (hours = 48) => {
-      lastRangeHours = hours;
+      rangeCalls.push(hours);
       return { data: trendRows };
     },
   };
@@ -74,7 +74,7 @@ describe("DlqHealthCard", () => {
   beforeEach(() => {
     infoToast.mockClear();
     successToast.mockClear();
-    lastRangeHours = 0;
+    rangeCalls = [];
     trendRows = [
       { captured_at: "2026-07-12T10:00:00Z", pending_items: 40, total_items: 100, replayed_items: 60, oldest_pending_age_secs: 7200 },
       { captured_at: "2026-07-12T11:00:00Z", pending_items: 50, total_items: 110, replayed_items: 60, oldest_pending_age_secs: 9000 },
@@ -110,7 +110,7 @@ describe("DlqHealthCard", () => {
   it("altera a janela de tendência ao clicar em 7d", () => {
     render(<DlqHealthCard />);
     fireEvent.click(screen.getByRole("button", { name: "7d" }));
-    expect(lastRangeHours).toBe(168);
+    expect(rangeCalls).toContain(168);
   });
 
   it("exporta CSV quando há dados e informa quando não há", () => {
