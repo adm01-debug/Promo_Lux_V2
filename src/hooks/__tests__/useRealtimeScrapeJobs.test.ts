@@ -6,9 +6,10 @@ const { mockInvalidateQueries, mockToast, mockInsert, mockRemoveChannel } = vi.h
   mockInsert: vi.fn().mockResolvedValue({ error: null }),
   mockRemoveChannel: vi.fn(),
 }));
-let subscribeCb: any = null;
+type RealtimePayload = { eventType: string; new: Record<string, unknown>; old?: Record<string, unknown> };
+let subscribeCb: ((payload: RealtimePayload) => void | Promise<void>) | null = null;
 let capturedChannelName: string | null = null;
-let capturedOnConfig: any = null;
+let capturedOnConfig: Record<string, unknown> | null = null;
 
 vi.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({ invalidateQueries: mockInvalidateQueries }),
@@ -30,7 +31,7 @@ vi.mock("@/integrations/supabase/client", () => ({
     channel: (name: string) => {
       capturedChannelName = name;
       return {
-        on: (_event: string, config: any, cb: any) => {
+        on: (_event: string, config: Record<string, unknown>, cb: (payload: RealtimePayload) => void | Promise<void>) => {
           capturedOnConfig = config;
           subscribeCb = cb;
           return { subscribe: () => ({}) };

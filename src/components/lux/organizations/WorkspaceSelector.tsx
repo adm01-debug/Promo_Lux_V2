@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { type AppRole } from "@/hooks/useOrganizations";
+import { type AppRole, type OrgMembership } from "@/hooks/useOrganizations";
 
 const ROLE_COLOR: Record<AppRole, string> = {
   admin: "bg-primary/15 text-primary border-primary/30",
@@ -11,7 +11,7 @@ const ROLE_COLOR: Record<AppRole, string> = {
 const ROLE_LABEL: Record<AppRole, string> = { admin: "Admin", sdr: "SDR", viewer: "Viewer" };
 
 interface WorkspaceSelectorProps {
-  orgs: any[];
+  orgs: OrgMembership[];
   activeOrgId: string | null;
   setActive: (id: string) => void;
 }

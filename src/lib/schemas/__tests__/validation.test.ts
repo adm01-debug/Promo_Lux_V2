@@ -23,7 +23,7 @@ describe("validateScrapeJob", () => {
   });
 
   it("rejects invalid lang", () => {
-    const r = validateScrapeJob({ ...valid, lang: "fr" as any });
+    const r = validateScrapeJob({ ...valid, lang: "fr" as never });
     expect(r.success).toBe(false);
   });
 

@@ -7,13 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
+interface MFAFactor {
+  id: string;
+  status: string;
+  factor_type?: string;
+  friendly_name?: string | null;
+}
+
+const getErrorMessage = (err: unknown): string =>
+  err instanceof Error ? err.message : String(err);
+
 export const MFASetup = () => {
   const [factorId, setFactorId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [secret, setSecret] = useState<string | null>(null);
   const [verifyCode, setVerifyCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [factors, setFactors] = useState<any[]>([]);
+  const [factors, setFactors] = useState<MFAFactor[]>([]);
   const [copied, setCopied] = useState(false);
 
   const fetchFactors = async () => {
@@ -39,8 +49,8 @@ export const MFASetup = () => {
       setFactorId(data.id);
       setQrCode(data.totp.qr_code);
       setSecret(data.totp.secret);
-    } catch (err: any) {
-      toast({ title: "Erro", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro", description: getErrorMessage(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -65,8 +75,8 @@ export const MFASetup = () => {
       setFactorId(null);
       setVerifyCode("");
       fetchFactors();
-    } catch (err: any) {
-      toast({ title: "Erro na verificação", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro na verificação", description: getErrorMessage(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -79,8 +89,8 @@ export const MFASetup = () => {
       if (error) throw error;
       toast({ title: "MFA Desativado", description: "O fator de autenticação foi removido." });
       fetchFactors();
-    } catch (err: any) {
-      toast({ title: "Erro ao desativar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Erro ao desativar", description: getErrorMessage(err), variant: "destructive" });
     } finally {
       setLoading(false);
     }

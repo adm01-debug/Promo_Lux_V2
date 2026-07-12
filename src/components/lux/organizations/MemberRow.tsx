@@ -13,21 +13,23 @@ const ROLE_COLOR: Record<AppRole, string> = {
   viewer: "bg-muted/30 text-muted-foreground border-border/40",
 };
 
+export interface OrgMember {
+  id: string;
+  role: AppRole;
+  user_id: string;
+  created_at: string;
+  profile?: { full_name: string | null; avatar_url: string | null } | null;
+}
+
 interface MemberRowProps {
-  member: {
-    id: string;
-    role: AppRole;
-    user_id: string;
-    created_at: string;
-    profile?: { full_name: string | null; avatar_url: string | null } | null;
-  };
+  member: OrgMember;
   isOwner: boolean;
   isMe: boolean;
   isAdmin: boolean;
   highlightedMemberId: string | null;
   index: number;
-  onRoleChange: (member: any, role: AppRole) => void;
-  onRemove: (member: any) => void;
+  onRoleChange: (member: OrgMember, role: AppRole) => void;
+  onRemove: (member: OrgMember) => void;
 }
 
 export const MemberRow = ({

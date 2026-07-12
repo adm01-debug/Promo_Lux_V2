@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
@@ -30,14 +31,14 @@ const mockStats = {
   totalWebhooks: 2
 };
 
-const wrapper = ({ children }: any) => <TooltipProvider>{children}</TooltipProvider>;
+const wrapper = ({ children }: { children: ReactNode }) => <TooltipProvider>{children}</TooltipProvider>;
 
 describe("StatsGrid — P1 Visual Differentiation", () => {
   beforeEach(() => {
     vi.mocked(useDashboardStats).mockReturnValue({
       data: mockStats,
       isLoading: false,
-    } as any);
+    } as ReturnType<typeof useDashboardStats>);
   });
 
   it("renders all 5 KPI cards", () => {
@@ -50,7 +51,7 @@ describe("StatsGrid — P1 Visual Differentiation", () => {
   });
 
   it("shows loading skeletons when data is loading", () => {
-    vi.mocked(useDashboardStats).mockReturnValue({ data: undefined, isLoading: true } as any);
+    vi.mocked(useDashboardStats).mockReturnValue({ data: undefined, isLoading: true } as ReturnType<typeof useDashboardStats>);
     const { container } = render(<StatsGrid />, { wrapper });
     // Should render 5 skeleton cards (based on current implementation)
     const skeletons = container.querySelectorAll(".glass");

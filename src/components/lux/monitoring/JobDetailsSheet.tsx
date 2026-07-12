@@ -45,12 +45,18 @@ import {
   DialogTitle, 
   DialogDescription 
 } from "@/components/ui/dialog";
+import type { Tables } from "@/integrations/supabase/types";
+import type { LucideIcon } from "lucide-react";
 
 interface JobDetailsSheetProps {
   jobId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+type ScrapeResultWithCompany = Tables<"scrape_results"> & {
+  companies: Tables<"companies"> | null;
+};
 
 type JobStage = {
   id: string;
@@ -59,9 +65,9 @@ type JobStage = {
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' | null;
   started_at?: string | null;
   completed_at?: string | null;
-  payload?: any;
+  payload?: unknown;
   error_stack?: string | null;
-  icon?: any;
+  icon?: LucideIcon;
 };
 
 export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetProps) => {
@@ -133,7 +139,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     // 2. Timeline (Etapas)
     sections.push(["TIMELINE DE EXECUÇÃO"]);
     sections.push(["Etapa", "Status", "Início", "Mensagem", "Erro"]);
-    steps.forEach((s: any) => {
+    steps.forEach((s) => {
       sections.push([
         s.name,
         s.status,
@@ -147,7 +153,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     // 3. Resultados (Leads)
     sections.push(["RESULTADOS (LEADS)"]);
     sections.push(["ID Empresa", "Nome", "Setor", "Localização", "Website", "Email", "Telefone", "IPC Score"]);
-    results.forEach((res: any) => {
+    (results as ScrapeResultWithCompany[]).forEach((res) => {
       sections.push([
         res.companies?.id || "-",
         res.companies?.name || "-",
@@ -213,7 +219,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     }
   };
 
-  const config = job?.config as any;
+  const config = (job?.config ?? {}) as { depth?: number; keywords?: string[]; radius?: number };
   const progress = job?.results_count && config?.depth 
     ? Math.min(Math.round((job.results_count / (config.depth * 20)) * 100), 100) 
     : 0;
@@ -334,7 +340,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                   </div>
                   <div className="p-4 rounded-2xl bg-secondary/20 border border-border/50 flex flex-col gap-1">
                     <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Métrica IPC</span>
-                    <span className="font-semibold">{Math.round((results?.filter((r: any) => (r.companies?.ipc_score || 0) > 70).length || 0) / (results?.length || 1) * 100)}% qualificados</span>
+                    <span className="font-semibold">{Math.round((results?.filter((r) => ((r as ScrapeResultWithCompany).companies?.ipc_score || 0) > 70).length || 0) / (results?.length || 1) * 100)}% qualificados</span>
                   </div>
                 </div>
 
@@ -498,7 +504,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                       <div key={i} className="h-20 w-full bg-secondary/10 rounded-2xl animate-pulse" />
                     ))
                   ) : results && results.length > 0 ? (
-                    results.map((res: any) => (
+                    (results as ScrapeResultWithCompany[]).map((res) => (
                       <motion.div 
                         key={res.id} 
                         initial={{ opacity: 0, y: 10 }}
@@ -623,7 +629,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                   </p>
                 </div>
 
-                {selectedStep?.payload && (
+                {selectedStep?.payload != null && (
                   <div className="space-y-2">
                     <h4 className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Payload (JSON)</h4>
                     <pre className="p-4 rounded-xl bg-black/40 text-[11px] font-mono text-primary/90 border border-white/5 overflow-x-auto">
