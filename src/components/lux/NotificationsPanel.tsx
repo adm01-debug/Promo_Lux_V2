@@ -108,7 +108,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
               gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
               osc.start(audioCtx.currentTime);
               osc.stop(audioCtx.currentTime + 0.3);
-            } catch {}
+            } catch { /* WebAudio indisponível/bloqueado: som é opcional */ }
 
             toast({
               title: `${typeLabels[n.type] ?? "Notificação"}: ${n.title}`,

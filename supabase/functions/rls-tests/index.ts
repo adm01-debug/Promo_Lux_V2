@@ -205,7 +205,7 @@ Deno.serve(async (req) => {
 
     // 8. Cross-table isolation for workflows
     const { data: wfA } = await clientA.from("workflows").insert({ name: "RLS-WF-A", steps: [] }).select("id").single();
-    const { data: bSeesWf } = await clientB.from("workflows").select("id").eq("id", wfA?.id!);
+    const { data: bSeesWf } = await clientB.from("workflows").select("id").eq("id", wfA?.id ?? "");
     results.push({ name: "userB_cannot_see_userA_workflow", passed: (bSeesWf?.length === 0), detail: `rows: ${bSeesWf?.length}` });
 
     // 9. Profile isolation
