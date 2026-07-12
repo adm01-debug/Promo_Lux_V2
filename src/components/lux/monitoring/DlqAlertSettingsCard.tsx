@@ -165,38 +165,106 @@ export function DlqAlertSettingsCard() {
 
         {history && history.length > 0 && (
           <div className="space-y-2 border-t border-border/50 pt-3">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <History className="h-3.5 w-3.5" />
-                Últimos alertas disparados
+                Alertas disparados
               </div>
-              <Button variant="ghost" size="sm" className="h-7 gap-1.5 text-xs" onClick={handleExportHistory}>
-                <Download className="h-3.5 w-3.5" />
-                CSV
-              </Button>
-            </div>
-            <ul className="space-y-1.5">
-              {history.slice(0, 5).map((h) => (
-                <li
-                  key={h.id}
-                  className="flex items-center justify-between rounded-md border border-border/40 bg-secondary/20 px-3 py-1.5 text-xs"
+              <div className="flex items-center gap-2">
+                <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+                  {PERIOD_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.label}
+                      type="button"
+                      onClick={() => setPeriodHours(opt.hours)}
+                      className={cn(
+                        "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                        periodHours === opt.hours
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 gap-1.5 text-xs"
+                  onClick={handleExportHistory}
+                  disabled={filteredHistory.length === 0}
                 >
-                  <span className="text-muted-foreground">
-                    {new Date(h.triggered_at).toLocaleString("pt-BR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                  <span className="font-mono">
-                    <span className="text-destructive">{h.pending_items}</span>
-                    <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
-                    <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+                  <Download className="h-3.5 w-3.5" />
+                  CSV
+                </Button>
+              </div>
+            </div>
+
+            {filteredHistory.length === 0 ? (
+              <p className="rounded-md border border-border/40 bg-secondary/20 px-3 py-3 text-center text-xs text-muted-foreground">
+                Nenhum alerta disparado neste período.
+              </p>
+            ) : (
+              <>
+                <ul className="space-y-1.5">
+                  {pagedHistory.map((h) => (
+                    <li
+                      key={h.id}
+                      className="flex items-center justify-between rounded-md border border-border/40 bg-secondary/20 px-3 py-1.5 text-xs"
+                    >
+                      <span className="text-muted-foreground">
+                        {new Date(h.triggered_at).toLocaleString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <span className="font-mono">
+                        <span className="text-destructive">{h.pending_items}</span>
+                        <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
+                        <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                {pageCount > 1 && (
+                  <div className="flex items-center justify-between pt-1 text-xs text-muted-foreground">
+                    <span>
+                      {safePage * PAGE_SIZE + 1}–{Math.min((safePage + 1) * PAGE_SIZE, filteredHistory.length)} de{" "}
+                      {filteredHistory.length}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => setPage((p) => Math.max(0, p - 1))}
+                        disabled={safePage === 0}
+                        aria-label="Página anterior"
+                      >
+                        <ChevronLeft className="h-3.5 w-3.5" />
+                      </Button>
+                      <span className="font-mono">
+                        {safePage + 1}/{pageCount}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                        disabled={safePage >= pageCount - 1}
+                        aria-label="Próxima página"
+                      >
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
 
