@@ -219,7 +219,7 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     }
   };
 
-  const config = (job?.config ?? {}) as { depth?: number };
+  const config = (job?.config ?? {}) as { depth?: number; keywords?: string[]; radius?: number };
   const progress = job?.results_count && config?.depth 
     ? Math.min(Math.round((job.results_count / (config.depth * 20)) * 100), 100) 
     : 0;
