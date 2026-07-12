@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
@@ -30,7 +31,7 @@ const mockStats = {
   totalWebhooks: 2
 };
 
-const wrapper = ({ children }: any) => <TooltipProvider>{children}</TooltipProvider>;
+const wrapper = ({ children }: { children: ReactNode }) => <TooltipProvider>{children}</TooltipProvider>;
 
 describe("StatsGrid — P1 Visual Differentiation", () => {
   beforeEach(() => {
