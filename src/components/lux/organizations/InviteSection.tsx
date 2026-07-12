@@ -23,21 +23,21 @@ const ROLE_COLOR: Record<AppRole, string> = {
 };
 
 interface InviteSectionProps {
-  invites: any[];
+  invites: Invite[];
   inviteRole: AppRole;
   setInviteRole: (role: AppRole) => void;
-  inviteFilter: string;
-  setInviteFilter: (filter: any) => void;
+  inviteFilter: InviteFilter;
+  setInviteFilter: (filter: InviteFilter) => void;
   handleCreateInvite: () => void;
   handleExportInvites: () => void;
   createInvitePending: boolean;
-  filteredInvites: any[];
+  filteredInvites: Invite[];
   inviteCounts: { pending: number; accepted: number; revoked: number; expired: number };
-  resendHistory: Record<string, any[]>;
+  resendHistory: Record<string, ResendEntry[]>;
   focusMemberByUserId: (userId: string | null) => void;
   copyInviteLink: (token: string) => void;
-  handleResendInvite: (inv: any) => void;
-  setRevokeTarget: (inv: any) => void;
+  handleResendInvite: (inv: Invite) => void;
+  setRevokeTarget: (inv: Invite) => void;
   revokingId: string | null;
 }
 
