@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download } from "lucide-react";
+import { Skull, Clock, TrendingUp, RotateCcw, Inbox, Activity, Download, ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import { Area, AreaChart, ReferenceLine, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
@@ -111,10 +111,34 @@ export function DlqHealthCard() {
   const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
   const { data: trend } = useDlqTrend(rangeHours);
+  const { data: trendPrev } = useDlqTrend(rangeHours * 2);
   const { activeOrgId } = useActiveOrganization();
   const { data: alertSettings } = useDlqAlertSettings(activeOrgId);
   const { data: alertHistory } = useDlqAlertHistory(activeOrgId, 50);
   const severity = dlqSeverity(data);
+
+  // Comparativo período-a-período: média de pendências na janela atual
+  // versus a janela imediatamente anterior de mesma duração.
+  const periodDelta = (() => {
+    const rows = trendPrev ?? [];
+    if (rows.length < 2) return null;
+    const cutoff = Date.now() - rangeHours * 3600_000;
+    const cur: number[] = [];
+    const prev: number[] = [];
+    for (const p of rows) {
+      const val = Number(p.pending_items);
+      if (new Date(p.captured_at).getTime() >= cutoff) cur.push(val);
+      else prev.push(val);
+    }
+    if (cur.length === 0 || prev.length === 0) return null;
+    const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    const curAvg = avg(cur);
+    const prevAvg = avg(prev);
+    const diff = curAvg - prevAvg;
+    const pct = prevAvg > 0 ? (diff / prevAvg) * 100 : null;
+    return { curAvg, prevAvg, diff, pct };
+  })();
+
 
   const criticalLimit = alertSettings?.enabled ? alertSettings.pending_critical : undefined;
 
@@ -273,12 +297,40 @@ export function DlqHealthCard() {
                 <Activity className="h-3.5 w-3.5" />
                 Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
               </span>
-              {alertDots.length > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
-                  Alerta disparado
-                </span>
-              )}
+              <div className="flex items-center gap-3">
+                {periodDelta && (
+                  <span
+                    className={cn(
+                      "flex items-center gap-1 font-medium",
+                      periodDelta.diff > 0
+                        ? "text-destructive"
+                        : periodDelta.diff < 0
+                        ? "text-emerald-500"
+                        : "text-muted-foreground"
+                    )}
+                    title={`Média atual ${periodDelta.curAvg.toFixed(1)} vs. período anterior ${periodDelta.prevAvg.toFixed(1)}`}
+                  >
+                    {periodDelta.diff > 0 ? (
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    ) : periodDelta.diff < 0 ? (
+                      <ArrowDownRight className="h-3.5 w-3.5" />
+                    ) : (
+                      <Minus className="h-3.5 w-3.5" />
+                    )}
+                    {periodDelta.pct !== null
+                      ? `${periodDelta.diff > 0 ? "+" : ""}${periodDelta.pct.toFixed(0)}%`
+                      : `${periodDelta.diff > 0 ? "+" : ""}${periodDelta.diff.toFixed(1)}`}
+                    <span className="text-muted-foreground">vs. período anterior</span>
+                  </span>
+                )}
+                {alertDots.length > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+                    Alerta disparado
+                  </span>
+                )}
+              </div>
+
             </div>
             <div className="h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
