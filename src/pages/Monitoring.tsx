@@ -368,6 +368,10 @@ const AutomationMonitoring = () => {
             <Database className="h-4 w-4" />
             Saúde do Banco
           </TabsTrigger>
+          <TabsTrigger value="queue" className="gap-2">
+            <ListChecks className="h-4 w-4" />
+            Fila de Scraping
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
