@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -50,8 +51,8 @@ vi.mock("framer-motion", async () => {
 });
 
 vi.mock("recharts", () => ({
-  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="chart-container">{children}</div>,
-  AreaChart: ({ children }: { children: React.ReactNode }) => <div data-testid="area-chart">{children}</div>,
+  ResponsiveContainer: ({ children }: { children: ReactNode }) => <div data-testid="chart-container">{children}</div>,
+  AreaChart: ({ children }: { children: ReactNode }) => <div data-testid="area-chart">{children}</div>,
   Area: (props: { dataKey?: string; strokeWidth?: number; dot?: unknown }) => <div data-testid={`area-${props.dataKey}`} data-strokewidth={props.strokeWidth} data-dot={JSON.stringify(props.dot)} />,
   XAxis: () => null,
   YAxis: () => null,
@@ -96,7 +97,7 @@ vi.mock("@/contexts/DemoContext", () => ({
 const { DashboardView } = await import("../DashboardView");
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-const wrapper = ({ children }: { children: React.ReactNode }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <MemoryRouter>
     <QueryClientProvider client={qc}>
       <TooltipProvider>{children}</TooltipProvider>
