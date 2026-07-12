@@ -33,6 +33,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
+import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
+import { ListChecks } from "lucide-react";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -368,6 +370,10 @@ const AutomationMonitoring = () => {
             <Database className="h-4 w-4" />
             Saúde do Banco
           </TabsTrigger>
+          <TabsTrigger value="queue" className="gap-2">
+            <ListChecks className="h-4 w-4" />
+            Fila de Scraping
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
@@ -536,6 +542,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="database" className="space-y-4">
           <DbHealthDashboard />
+        </TabsContent>
+
+        <TabsContent value="queue" className="space-y-4">
+          <ScrapeQueuePanel />
         </TabsContent>
       </Tabs>
 

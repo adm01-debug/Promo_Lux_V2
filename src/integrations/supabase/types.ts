@@ -1850,6 +1850,51 @@ export type Database = {
         }
         Relationships: []
       }
+      scrape_dead_letter: {
+        Row: {
+          attempts: number
+          created_at: string
+          failed_at: string
+          id: string
+          last_error: string | null
+          organization_id: string
+          payload: Json
+          queue_id: string | null
+          replayed_at: string | null
+          scrape_job_id: string | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          failed_at?: string
+          id?: string
+          last_error?: string | null
+          organization_id: string
+          payload?: Json
+          queue_id?: string | null
+          replayed_at?: string | null
+          scrape_job_id?: string | null
+          source?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          failed_at?: string
+          id?: string
+          last_error?: string | null
+          organization_id?: string
+          payload?: Json
+          queue_id?: string | null
+          replayed_at?: string | null
+          scrape_job_id?: string | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       scrape_jobs: {
         Row: {
           auto_sync: boolean | null
@@ -1903,6 +1948,77 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      scrape_queue: {
+        Row: {
+          attempts: number
+          base_delay_secs: number
+          created_at: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          max_delay_secs: number
+          next_run_at: string
+          organization_id: string
+          payload: Json
+          priority: number
+          scrape_job_id: string | null
+          source: string
+          status: Database["public"]["Enums"]["scrape_queue_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          base_delay_secs?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          max_delay_secs?: number
+          next_run_at?: string
+          organization_id: string
+          payload?: Json
+          priority?: number
+          scrape_job_id?: string | null
+          source?: string
+          status?: Database["public"]["Enums"]["scrape_queue_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          base_delay_secs?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          max_delay_secs?: number
+          next_run_at?: string
+          organization_id?: string
+          payload?: Json
+          priority?: number
+          scrape_job_id?: string | null
+          source?: string
+          status?: Database["public"]["Enums"]["scrape_queue_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scrape_queue_scrape_job_id_fkey"
+            columns: ["scrape_job_id"]
+            isOneToOne: false
+            referencedRelation: "scrape_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scrape_results: {
         Row: {
@@ -2313,6 +2429,36 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      claim_scrape_tasks: {
+        Args: { _limit?: number; _worker?: string }
+        Returns: {
+          attempts: number
+          base_delay_secs: number
+          created_at: string
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          max_delay_secs: number
+          next_run_at: string
+          organization_id: string
+          payload: Json
+          priority: number
+          scrape_job_id: string | null
+          source: string
+          status: Database["public"]["Enums"]["scrape_queue_status"]
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "scrape_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      complete_scrape_task: { Args: { _id: string }; Returns: undefined }
       count_recent_org_violations: {
         Args: { _window_minutes?: number }
         Returns: {
@@ -2329,6 +2475,16 @@ export type Database = {
       }
       decide_ab_winner: { Args: { _campaign_id: string }; Returns: string }
       default_org_for_current_user: { Args: never; Returns: string }
+      enqueue_scrape_task: {
+        Args: {
+          _max_attempts?: number
+          _payload?: Json
+          _priority?: number
+          _scrape_job_id: string
+          _source?: string
+        }
+        Returns: string
+      }
       evaluate_org_violation_alerts: {
         Args: never
         Returns: {
@@ -2342,6 +2498,10 @@ export type Database = {
           violation_count: number
           window_minutes: number
         }[]
+      }
+      fail_scrape_task: {
+        Args: { _error: string; _id: string; _transient?: boolean }
+        Returns: Database["public"]["Enums"]["scrape_queue_status"]
       }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
@@ -2415,6 +2575,7 @@ export type Database = {
         }
         Returns: string
       }
+      replay_dead_letter: { Args: { _dlq_id: string }; Returns: string }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
         Args: { _key_hash: string }
@@ -2442,6 +2603,7 @@ export type Database = {
         | "completed"
         | "failed"
         | "cancelled"
+      scrape_queue_status: "queued" | "processing" | "succeeded" | "dead"
       workflow_status:
         | "draft"
         | "active"
@@ -2595,6 +2757,7 @@ export const Constants = {
         "failed",
         "cancelled",
       ],
+      scrape_queue_status: ["queued", "processing", "succeeded", "dead"],
       workflow_status: [
         "draft",
         "active",
