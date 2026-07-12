@@ -1,4 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  checkCircuitBreaker,
+  reportFailure,
+  reportSuccess,
+} from "../_shared/circuit-breaker.ts";
+
+/** Serviço externo protegido pelo circuit breaker. */
+const CIRCUIT_SERVICE = "gmaps";
+/** Espera (s) ao adiar uma tarefa com o circuito aberto. */
+const DEFER_DELAY_SECS = 60;
 
 /**
  * scrape-queue-worker
