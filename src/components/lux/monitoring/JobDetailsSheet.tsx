@@ -45,12 +45,18 @@ import {
   DialogTitle, 
   DialogDescription 
 } from "@/components/ui/dialog";
+import type { Tables } from "@/integrations/supabase/types";
+import type { LucideIcon } from "lucide-react";
 
 interface JobDetailsSheetProps {
   jobId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+type ScrapeResultWithCompany = Tables<"scrape_results"> & {
+  companies: Tables<"companies"> | null;
+};
 
 type JobStage = {
   id: string;
@@ -59,9 +65,9 @@ type JobStage = {
   status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' | null;
   started_at?: string | null;
   completed_at?: string | null;
-  payload?: any;
+  payload?: unknown;
   error_stack?: string | null;
-  icon?: any;
+  icon?: LucideIcon;
 };
 
 export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetProps) => {
