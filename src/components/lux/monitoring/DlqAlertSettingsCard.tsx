@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save, History, Download } from "lucide-react";
+import { BellRing, Save, History, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import {
@@ -17,6 +18,15 @@ import {
 
 const clamp = (v: number, min: number, max: number) =>
   Number.isNaN(v) ? min : Math.min(Math.max(Math.trunc(v), min), max);
+
+const PERIOD_OPTIONS: { label: string; hours: number | null }[] = [
+  { label: "24h", hours: 24 },
+  { label: "7d", hours: 168 },
+  { label: "30d", hours: 720 },
+  { label: "Tudo", hours: null },
+];
+
+const PAGE_SIZE = 5;
 
 export function DlqAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
