@@ -42,13 +42,13 @@ const mockCompanies = [
 
 describe("CompanyTable — Virtualized list", () => {
   it("renders Score IPC header", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
     expect(screen.getByText("Score IPC")).toBeInTheDocument();
   });
 
   it("renders company names", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
 
     expect(screen.getByText("Acme Corp")).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe("CompanyTable — Virtualized list", () => {
   });
 
   it("applies correct score color classes", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
 
     // Score 92 = text-success — class is on the font-mono span
@@ -74,20 +74,20 @@ describe("CompanyTable — Virtualized list", () => {
   });
 
   it("shows loading state when loading", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: undefined, isLoading: true } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: undefined, isLoading: true } as ReturnType<typeof useVirtualCompanies>);
     const { container } = render(<CompanyTable />, { wrapper });
     const loadingArea = container.querySelector(".space-y-3");
     expect(loadingArea).toBeInTheDocument();
   });
 
   it("shows empty state when no companies", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: [], isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: [], isLoading: false } as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
     expect(screen.getByText("Nenhuma empresa ainda")).toBeInTheDocument();
   });
 
   it("renders table headers correctly", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
 
     expect(screen.getByText("Empresa / CNPJ")).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe("CompanyTable — Virtualized list", () => {
   });
 
   it("renders sector badges for each company", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
 
     expect(screen.getByText("Tech")).toBeInTheDocument();
