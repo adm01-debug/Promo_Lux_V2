@@ -398,8 +398,8 @@ serve(async (req) => {
 
               const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
 
-              const batchCompanies = [];
-              const batchRawData = [];
+              const batchCompanies: Record<string, unknown>[] = [];
+              const batchRawData: Record<string, string>[] = [];
 
               for (let li = 1; li < lines.length; li++) {
                 const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
