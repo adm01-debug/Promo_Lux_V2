@@ -362,6 +362,10 @@ const AutomationMonitoring = () => {
             <ShieldCheck className="h-4 w-4" />
             Trilha de Auditoria
           </TabsTrigger>
+          <TabsTrigger value="database" className="gap-2">
+            <Database className="h-4 w-4" />
+            Saúde do Banco
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
