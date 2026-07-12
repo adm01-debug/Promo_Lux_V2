@@ -275,6 +275,18 @@ export function DlqHealthCard() {
                       }}
                     />
                   )}
+                  {alertDots.map((d) => (
+                    <ReferenceDot
+                      key={d.id}
+                      x={d.x}
+                      y={d.y}
+                      r={4}
+                      fill="hsl(var(--destructive))"
+                      stroke="hsl(var(--background))"
+                      strokeWidth={1.5}
+                      isFront
+                    />
+                  ))}
                 </AreaChart>
               </ResponsiveContainer>
             </div>
