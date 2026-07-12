@@ -63,10 +63,10 @@ export function DlqAlertSettingsCard() {
     if (data) setForm(data);
   }, [data]);
 
-  // Reinicia a paginação sempre que o filtro de período muda.
+  // Reinicia a paginação quando o filtro de período ou a ordenação mudam.
   useEffect(() => {
     setPage(0);
-  }, [periodHours]);
+  }, [periodHours, sortKey, sortDir]);
 
   // Aplica o filtro de período sobre o histórico carregado.
   const filteredHistory = useMemo(
