@@ -6,10 +6,13 @@ import {
   computePeriodDelta,
   sortHistory,
   computeAlertDots,
+  detectSpikes,
+  correlateSpikesWithLogs,
   type AlertHistoryPoint,
   type TrendPoint,
   type TrendChartPoint,
   type AlertDotSource,
+  type CorrelatableLog,
 } from "../aggregations";
 
 const NOW = new Date("2026-07-12T12:00:00Z").getTime();
