@@ -106,7 +106,7 @@ export function DlqHealthCard() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `dlq-tendencia-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `dlq-tendencia-${RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label}-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -207,7 +207,7 @@ export function DlqHealthCard() {
           <div>
             <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Activity className="h-3.5 w-3.5" />
-              Tendência de pendências (48h)
+              Tendência de pendências ({RANGE_OPTIONS.find((o) => o.hours === rangeHours)?.label})
             </div>
             <div className="h-24 w-full">
               <ResponsiveContainer width="100%" height="100%">
