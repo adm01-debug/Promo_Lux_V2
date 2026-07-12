@@ -74,18 +74,29 @@ export function DlqAlertSettingsCard() {
     [history, periodHours]
   );
 
-  const pageCount = Math.max(1, Math.ceil(filteredHistory.length / PAGE_SIZE));
-  const safePage = Math.min(page, pageCount - 1);
-  const pagedHistory = filteredHistory
-    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
-    .map((h, i) => {
-      // Compara com o disparo imediatamente anterior (mais antigo). Como a
-      // lista está em ordem decrescente, o anterior é o próximo índice global.
-      const globalIdx = safePage * PAGE_SIZE + i;
-      const prev = filteredHistory[globalIdx + 1];
-      const delta = prev ? h.pending_items - prev.pending_items : null;
-      return { ...h, delta };
+  // Delta (variação vs. disparo anterior no tempo) é sempre calculado sobre a
+  // ordem cronológica decrescente, independentemente da ordenação de exibição.
+  const deltaById = useMemo(() => {
+    const byDateDesc = sortHistory(filteredHistory, "date", "desc");
+    const map = new Map<string, number | null>();
+    byDateDesc.forEach((h, i) => {
+      const prev = byDateDesc[i + 1];
+      map.set(h.id, prev ? h.pending_items - prev.pending_items : null);
     });
+    return map;
+  }, [filteredHistory]);
+
+  // Ordenação configurável de exibição (persistida entre sessões).
+  const sortedHistory = useMemo(
+    () => sortHistory(filteredHistory, sortKey, sortDir),
+    [filteredHistory, sortKey, sortDir]
+  );
+
+  const pageCount = Math.max(1, Math.ceil(sortedHistory.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pagedHistory = sortedHistory
+    .slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE)
+    .map((h) => ({ ...h, delta: deltaById.get(h.id) ?? null }));
 
   // Resumo estatístico e frequência diária (funções puras testadas).
   const periodStats = useMemo(() => computePeriodStats(filteredHistory), [filteredHistory]);
