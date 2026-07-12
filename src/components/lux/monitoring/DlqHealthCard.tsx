@@ -115,6 +115,47 @@ export function DlqHealthCard() {
             tone="text-emerald-500"
           />
         </div>
+
+        {trendData.length >= 2 && (
+          <div>
+            <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Activity className="h-3.5 w-3.5" />
+              Tendência de pendências (48h)
+            </div>
+            <div className="h-24 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={trendData} margin={{ top: 4, right: 4, bottom: 0, left: -24 }}>
+                  <defs>
+                    <linearGradient id="dlqTrendFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--destructive))" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="hsl(var(--destructive))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="t" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={24} />
+                  <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} allowDecimals={false} width={28} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "hsl(var(--card))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                    labelStyle={{ color: "hsl(var(--muted-foreground))" }}
+                    formatter={(v: number) => [String(v), "Pendentes"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="pending"
+                    stroke="hsl(var(--destructive))"
+                    strokeWidth={2}
+                    fill="url(#dlqTrendFill)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
         <p className="text-xs text-muted-foreground">
           Total histórico: {data?.total_items ?? 0} · já reprocessados: {data?.replayed_items ?? 0}.
           Itens reprocessados são expurgados automaticamente após 30 dias.
