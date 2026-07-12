@@ -186,7 +186,7 @@ export const InviteSection = ({
                               <TooltipContent side="top" align="start" className="max-w-[260px]">
                                 <p className="text-[11px] font-semibold mb-1">Histórico de reenvios</p>
                                 <ul className="space-y-0.5 text-[10px]">
-                                  {resends.slice(0, 5).map((r: any, i: number) => (
+                                  {resends.slice(0, 5).map((r: ResendEntry, i: number) => (
                                     <li key={`${r.at}-${i}`} className="flex justify-between gap-3">
                                       <span className="text-muted-foreground">
                                         {new Date(r.at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
