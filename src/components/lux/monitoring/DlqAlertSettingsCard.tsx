@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus } from "lucide-react";
+import { BellRing, Save, History, Download, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, Minus, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { downloadCsv } from "@/lib/csv";
