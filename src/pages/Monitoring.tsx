@@ -37,6 +37,7 @@ import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
 import { ListChecks, Layers, ShieldAlert, FileText } from "lucide-react";
 import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
+import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
 import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -385,6 +386,10 @@ const AutomationMonitoring = () => {
             <ShieldAlert className="h-4 w-4" />
             Simulador de Falhas
           </TabsTrigger>
+          <TabsTrigger value="circuit-breakers" className="gap-2">
+            <ShieldCheck className="h-4 w-4" />
+            Disjuntores
+          </TabsTrigger>
           <TabsTrigger value="automation-logs" className="gap-2">
             <FileText className="h-4 w-4" />
             Auditoria de Execução
@@ -569,6 +574,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="resilience" className="space-y-4">
           <ResilienceSimulatorPanel />
+        </TabsContent>
+
+        <TabsContent value="circuit-breakers" className="space-y-4">
+          <CircuitBreakerPanel />
         </TabsContent>
 
         <TabsContent value="automation-logs" className="space-y-4">

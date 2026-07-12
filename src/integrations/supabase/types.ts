@@ -2808,6 +2808,24 @@ export type Database = {
         Args: { _limit?: number; _organization_id?: string }
         Returns: number
       }
+      reset_circuit_breaker: {
+        Args: { _service_name: string }
+        Returns: {
+          failure_count: number | null
+          last_failure_at: string | null
+          opened_at: string | null
+          reset_timeout_ms: number | null
+          service_name: string
+          state: string
+          threshold: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "circuit_breakers"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
         Args: { _key_hash: string }
