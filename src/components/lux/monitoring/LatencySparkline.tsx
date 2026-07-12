@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { LATENCY_THRESHOLDS, type ApiLatencyTrendPoint } from "@/hooks/useApiLatency";
 
-interface LatencySparklineProps extends React.SVGProps<SVGSVGElement> {
+interface LatencySparklineProps extends Omit<React.SVGProps<SVGSVGElement>, "points"> {
   /** Série temporal de latência (ordenada por bucket ascendente). */
   points: ApiLatencyTrendPoint[];
   /** Largura do desenho em unidades de viewBox. */
