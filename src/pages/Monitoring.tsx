@@ -34,11 +34,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
-import { ListChecks, Layers, ShieldAlert, FileText } from "lucide-react";
+import { ListChecks, Layers, ShieldAlert, FileText, Gauge } from "lucide-react";
 import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
 import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
 import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
+import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -390,10 +391,15 @@ const AutomationMonitoring = () => {
             <ShieldCheck className="h-4 w-4" />
             Disjuntores
           </TabsTrigger>
+          <TabsTrigger value="latency" className="gap-2">
+            <Gauge className="h-4 w-4" />
+            Latência
+          </TabsTrigger>
           <TabsTrigger value="automation-logs" className="gap-2">
             <FileText className="h-4 w-4" />
             Auditoria de Execução
           </TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
@@ -580,7 +586,12 @@ const AutomationMonitoring = () => {
           <CircuitBreakerPanel />
         </TabsContent>
 
+        <TabsContent value="latency" className="space-y-4">
+          <ApiLatencyPanel />
+        </TabsContent>
+
         <TabsContent value="automation-logs" className="space-y-4">
+
           <AutomationLogsPanel />
         </TabsContent>
       </Tabs>
