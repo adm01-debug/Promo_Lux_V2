@@ -19,7 +19,8 @@ import {
   Download,
   Bell,
   Mail,
-  Settings2
+  Settings2,
+  Database
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +32,7 @@ import { ptBR } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
+import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -362,6 +364,10 @@ const AutomationMonitoring = () => {
             <ShieldCheck className="h-4 w-4" />
             Trilha de Auditoria
           </TabsTrigger>
+          <TabsTrigger value="database" className="gap-2">
+            <Database className="h-4 w-4" />
+            Saúde do Banco
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
@@ -526,6 +532,10 @@ const AutomationMonitoring = () => {
               </ScrollArea>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="database" className="space-y-4">
+          <DbHealthDashboard />
         </TabsContent>
       </Tabs>
 

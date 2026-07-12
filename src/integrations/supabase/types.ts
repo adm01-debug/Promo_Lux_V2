@@ -840,6 +840,54 @@ export type Database = {
         }
         Relationships: []
       }
+      db_health_snapshots: {
+        Row: {
+          active_connections: number
+          cache_hit_ratio: number
+          captured_at: string
+          commits: number
+          connection_pct: number
+          db_size_bytes: number
+          deadlocks: number
+          id: string
+          longest_query_secs: number
+          max_connections: number
+          postmaster_start: string
+          restart_detected: boolean
+          rollbacks: number
+        }
+        Insert: {
+          active_connections: number
+          cache_hit_ratio?: number
+          captured_at?: string
+          commits?: number
+          connection_pct: number
+          db_size_bytes: number
+          deadlocks?: number
+          id?: string
+          longest_query_secs?: number
+          max_connections: number
+          postmaster_start: string
+          restart_detected?: boolean
+          rollbacks?: number
+        }
+        Update: {
+          active_connections?: number
+          cache_hit_ratio?: number
+          captured_at?: string
+          commits?: number
+          connection_pct?: number
+          db_size_bytes?: number
+          deadlocks?: number
+          id?: string
+          longest_query_secs?: number
+          max_connections?: number
+          postmaster_start?: string
+          restart_detected?: boolean
+          rollbacks?: number
+        }
+        Relationships: []
+      }
       deal_activities: {
         Row: {
           content: string | null
@@ -2240,6 +2288,30 @@ export type Database = {
           sent: number
           variant: string
         }[]
+      }
+      capture_db_health_snapshot: {
+        Args: never
+        Returns: {
+          active_connections: number
+          cache_hit_ratio: number
+          captured_at: string
+          commits: number
+          connection_pct: number
+          db_size_bytes: number
+          deadlocks: number
+          id: string
+          longest_query_secs: number
+          max_connections: number
+          postmaster_start: string
+          restart_detected: boolean
+          rollbacks: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "db_health_snapshots"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       count_recent_org_violations: {
         Args: { _window_minutes?: number }
