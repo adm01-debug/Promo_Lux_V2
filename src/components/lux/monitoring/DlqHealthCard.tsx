@@ -10,6 +10,7 @@ import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSettings";
 import { toast } from "sonner";
 import { downloadCsv } from "@/lib/csv";
+import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
