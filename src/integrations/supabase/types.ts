@@ -2705,6 +2705,17 @@ export type Database = {
           requests: number
         }[]
       }
+      api_latency_trend: {
+        Args: { _bucket_minutes?: number; _hours?: number }
+        Returns: {
+          bucket: string
+          error_rate: number
+          errors: number
+          p50_ms: number
+          p95_ms: number
+          requests: number
+        }[]
+      }
       campaign_ab_stats: {
         Args: { _campaign_id: string }
         Returns: {
