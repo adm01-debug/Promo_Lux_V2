@@ -1210,6 +1210,44 @@ export type Database = {
           },
         ]
       }
+      dlq_alert_settings: {
+        Row: {
+          consecutive: number
+          cooldown_hours: number
+          created_at: string
+          enabled: boolean
+          organization_id: string
+          pending_critical: number
+          updated_at: string
+        }
+        Insert: {
+          consecutive?: number
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          organization_id: string
+          pending_critical?: number
+          updated_at?: string
+        }
+        Update: {
+          consecutive?: number
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          organization_id?: string
+          pending_critical?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dlq_alert_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dlq_health_snapshots: {
         Row: {
           captured_at: string
