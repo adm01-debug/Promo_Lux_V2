@@ -39,6 +39,7 @@ import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdv
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
 import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
 import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
+import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
