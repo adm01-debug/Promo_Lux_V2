@@ -54,7 +54,7 @@ export function useAnalyticsData() {
           { status: "pending", results_count: 0, source: "gmaps", created_at: new Date().toISOString() },
         ];
         workflows = DEMO_WORKFLOWS.map(w => ({ status: w.status, leads_processed: w.leads_processed, leads_qualified: w.leads_qualified, success_rate: w.success_rate }));
-        campaigns = DEMO_CAMPAIGNS as any[];
+        campaigns = DEMO_CAMPAIGNS as unknown as AnalyticsCampaign[];
       } else {
         const [r1, r2, r3, r4] = await Promise.all([
           db.from("companies").select("sector, ipc_score, enriched, source, created_at"),
@@ -62,10 +62,10 @@ export function useAnalyticsData() {
           db.from("workflows").select("status, leads_processed, leads_qualified, success_rate"),
           db.from("campaigns").select("*").order("created_at", { ascending: false }),
         ]);
-        companies = r1.data;
-        scrapeJobs = r2.data;
-        workflows = r3.data;
-        campaigns = r4.data;
+        companies = r1.data as AnalyticsCompany[] | null;
+        scrapeJobs = r2.data as AnalyticsScrapeJob[] | null;
+        workflows = r3.data as AnalyticsWorkflow[] | null;
+        campaigns = r4.data as unknown as AnalyticsCampaign[] | null;
       }
 
       // Sector distribution
