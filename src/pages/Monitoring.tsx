@@ -385,6 +385,10 @@ const AutomationMonitoring = () => {
             <ShieldAlert className="h-4 w-4" />
             Simulador de Falhas
           </TabsTrigger>
+          <TabsTrigger value="automation-logs" className="gap-2">
+            <FileText className="h-4 w-4" />
+            Auditoria de Execução
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
