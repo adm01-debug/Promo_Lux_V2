@@ -18,7 +18,7 @@ vi.mock("./client", () => ({
 
 describe("withOrg Multi-tenant Isolation", () => {
   it("should block access to unclassified tables (Deny-by-Default)", () => {
-    expect(() => db.from("random_unlisted_table" as any)).toThrow(
+    expect(() => db.from("random_unlisted_table" as never)).toThrow(
       /não possui classificação de escopo definida/
     );
   });

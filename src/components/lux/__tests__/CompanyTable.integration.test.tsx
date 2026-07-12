@@ -61,7 +61,7 @@ afterAll(() => {
 });
 
 function renderTable() {
-  vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+  vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as ReturnType<typeof useVirtualCompanies>);
   const utils = render(<CompanyTable />, { wrapper });
   const scrollContainer = utils.container.querySelector(".overflow-y-auto") as HTMLElement;
   return { ...utils, scrollContainer };
