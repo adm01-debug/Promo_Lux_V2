@@ -1,4 +1,4 @@
-import { FAULT_LABEL, type ScenarioResult } from "./simulator";
+import { FAULT_LABEL, FAULT_TRANSIENT, type ScenarioResult } from "./simulator";
 
 /**
  * Analisa os resultados da simulação e produz um relatório de gaps —
@@ -11,12 +11,26 @@ export interface GapThresholds {
   maxDlqRate: number;
   maxSlaBreachRate: number;
   minSuccessRate: number;
+  /**
+   * Acima desta taxa de falha o provedor é considerado em OUTAGE total.
+   * Nesses cenários a resposta correta é o circuit breaker pausar o
+   * despacho e alertar — não é um defeito da fila, então classificamos
+   * como degradação esperada (info), desde que a DLQ não exploda.
+   */
+  outageFailureRate: number;
+  /**
+   * Menor backoff da política (s). Se o SLA for menor que isto, uma única
+   * retentativa já o estoura — é limitação de configuração, não defeito.
+   */
+  minBackoffSecs: number;
 }
 
 export const DEFAULT_THRESHOLDS: GapThresholds = {
   maxDlqRate: 0.1,
   maxSlaBreachRate: 0.2,
   minSuccessRate: 0.9,
+  outageFailureRate: 0.95,
+  minBackoffSecs: 30,
 };
 
 export interface Gap {
@@ -73,25 +87,53 @@ export function buildGapReport(
       },
     };
 
+    // Contexto do cenário.
+    const isOutage = r.spec.failureRate >= thresholds.outageFailureRate;
+    const slaImpossible = r.spec.slaSecs < thresholds.minBackoffSecs;
+    const isPermanent = !FAULT_TRANSIENT[r.spec.fault];
+
     if (r.dlqRate > thresholds.maxDlqRate) {
-      gaps.push({
-        ...base,
-        severity: r.dlqRate > 0.5 ? "critical" : "warning",
-        category: "DLQ excessiva",
-        detail: `${label}: ${(r.dlqRate * 100).toFixed(0)}% das tarefas caem em dead-letter (limite ${(thresholds.maxDlqRate * 100).toFixed(0)}%).`,
-      });
+      // DLQ de erro permanente (4xx) é o comportamento CORRETO — não retentar.
+      // DLQ em outage controlada pelo breaker é degradação esperada.
+      // Só é crítico quando trabalho RECUPERÁVEL é perdido em massa.
+      let severity: GapSeverity;
+      let category: string;
+      let detail: string;
+      if (isPermanent) {
+        severity = "info";
+        category = "DLQ por erro permanente (esperado)";
+        detail = `${label}: erro não-retentável vai direto para dead-letter (${(r.dlqRate * 100).toFixed(0)}%) — comportamento correto; foco em corrigir a origem do 4xx.`;
+      } else if (isOutage) {
+        severity = r.dlqRate > 0.5 ? "warning" : "info";
+        category = "DLQ em outage (esperado)";
+        detail = `${label}: provedor em outage (falha ${(r.spec.failureRate * 100).toFixed(0)}%); ${(r.dlqRate * 100).toFixed(0)}% em dead-letter após o breaker pausar — resposta esperada é alerta/replay.`;
+      } else {
+        severity = r.dlqRate > 0.5 ? "critical" : "warning";
+        category = "DLQ excessiva";
+        detail = `${label}: ${(r.dlqRate * 100).toFixed(0)}% de trabalho recuperável perdido em dead-letter (limite ${(thresholds.maxDlqRate * 100).toFixed(0)}%).`;
+      }
+      gaps.push({ ...base, severity, category, detail });
     }
 
     if (r.slaBreachRate > thresholds.maxSlaBreachRate) {
+      // SLA breach NÃO é perda de dado — a tarefa completa, só demora.
+      // Nunca é crítico; no máximo warning. SLA < backoff mínimo é config.
+      const severity: GapSeverity = slaImpossible ? "info" : "warning";
       gaps.push({
         ...base,
-        severity: r.slaBreachRate > 0.5 ? "critical" : "warning",
-        category: "Violação de SLA",
-        detail: `${label}: ${(r.slaBreachRate * 100).toFixed(0)}% resolvem acima do SLA de ${r.spec.slaSecs}s (p95 ${r.p95ResolutionSecs.toFixed(0)}s).`,
+        severity,
+        category: slaImpossible
+          ? "SLA inatingível por config"
+          : isOutage
+            ? "SLA em outage (esperado)"
+            : "Latência acima do SLA",
+        detail: slaImpossible
+          ? `${label}: SLA de ${r.spec.slaSecs}s < backoff mínimo de ${thresholds.minBackoffSecs}s — inatingível por design; ajustar SLA ou base_delay.`
+          : `${label}: ${(r.slaBreachRate * 100).toFixed(0)}% resolvem acima do SLA de ${r.spec.slaSecs}s (p95 ${r.p95ResolutionSecs.toFixed(0)}s) — tarefa completa, porém lenta.`,
       });
     }
 
-    if (r.successRate < thresholds.minSuccessRate && r.dlqRate <= thresholds.maxDlqRate) {
+    if (r.successRate < thresholds.minSuccessRate && r.dlqRate <= thresholds.maxDlqRate && !isPermanent) {
       gaps.push({
         ...base,
         severity: "info",

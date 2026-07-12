@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PlayCircle, Download, ShieldAlert, ShieldCheck, AlertTriangle, Info } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { PlayCircle, Download, ShieldAlert, ShieldCheck, AlertTriangle, Info, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useResilienceSimulator } from "@/hooks/useResilienceSimulator";
 import type { GapSeverity } from "@/lib/resilience/report";
@@ -32,6 +35,7 @@ function Kpi({ label, value, tone }: { label: string; value: string; tone?: stri
 
 export function ResilienceSimulatorPanel() {
   const { running, progress, report, run } = useResilienceSimulator();
+  const [breakerOn, setBreakerOn] = useState(true);
 
   function downloadReport() {
     if (!report) return;
@@ -57,18 +61,31 @@ export function ResilienceSimulatorPanel() {
             contra a política de retry/DLQ e gera relatório de gaps antes da produção.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-secondary/30 px-3 py-1.5">
+            <Zap className={cn("h-4 w-4", breakerOn ? "text-primary" : "text-muted-foreground")} />
+            <Label htmlFor="breaker-switch" className="text-xs cursor-pointer whitespace-nowrap">
+              Circuit breaker
+            </Label>
+            <Switch
+              id="breaker-switch"
+              checked={breakerOn}
+              onCheckedChange={setBreakerOn}
+              disabled={running}
+            />
+          </div>
           {report && (
             <Button variant="outline" size="sm" className="gap-2" onClick={downloadReport}>
               <Download className="h-4 w-4" /> Exportar JSON
             </Button>
           )}
-          <Button size="sm" className="gap-2" onClick={() => run()} disabled={running}>
+          <Button size="sm" className="gap-2" onClick={() => run({ breaker: breakerOn ? undefined : null })} disabled={running}>
             <PlayCircle className={cn("h-4 w-4", running && "animate-pulse")} />
             {running ? "Simulando…" : "Executar simulação"}
           </Button>
         </div>
       </div>
+
 
       {running && (
         <Card className="glass-card">

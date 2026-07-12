@@ -120,11 +120,32 @@ function percentile(sorted: number[], p: number): number {
  * Executa uma simulação Monte Carlo de um cenário.
  * Retorna métricas agregadas sobre `trials` execuções independentes.
  */
+export interface BreakerSimConfig {
+  /** Falhas consecutivas que abrem o circuito (equivale a threshold no banco). */
+  threshold: number;
+  /** Tempo de espera enquanto o circuito está aberto, em segundos. */
+  resetTimeoutSecs: number;
+  /**
+   * Máximo de deferrals (esperas por recuperação do provedor) antes de
+   * finalmente mandar a tarefa para a DLQ. Um deferral NÃO consome tentativa —
+   * espelha `defer_scrape_task` no banco: a tarefa apenas aguarda o provedor.
+   */
+  maxDeferrals: number;
+}
+
+/** Breaker padrão — espelha a linha `gmaps` em public.circuit_breakers. */
+export const DEFAULT_BREAKER_SIM: BreakerSimConfig = {
+  threshold: 3,
+  resetTimeoutSecs: 60,
+  maxDeferrals: 6,
+};
+
 export function simulateScenario(
   spec: ScenarioSpec,
   policy: RetryPolicy = DEFAULT_POLICY,
   trials = 200,
   seed = 1,
+  breaker: BreakerSimConfig | null = null,
 ): ScenarioResult {
   const rand = mulberry32(seed + hashId(spec.id));
   const transient = FAULT_TRANSIENT[spec.fault];
@@ -139,8 +160,25 @@ export function simulateScenario(
     let attempts = 0;
     let elapsedSecs = 0;
     let outcome: "success" | "dlq" = "dlq";
+    let consecutiveFails = 0;
+    let deferrals = 0;
 
     while (attempts < policy.maxAttempts) {
+      // Circuit breaker: provedor degradado → adia sem gastar tentativa.
+      if (
+        breaker &&
+        transient &&
+        consecutiveFails >= breaker.threshold
+      ) {
+        if (deferrals >= breaker.maxDeferrals) {
+          outcome = "dlq";
+          break;
+        }
+        deferrals++;
+        elapsedSecs += breaker.resetTimeoutSecs;
+        consecutiveFails = 0; // half-open: uma sonda de recuperação
+      }
+
       attempts++;
       elapsedSecs += spec.latencyMs / 1000;
 
@@ -150,14 +188,24 @@ export function simulateScenario(
         break;
       }
 
+      consecutiveFails++;
+
       // Erro permanente → DLQ imediato, sem retry.
       if (!transient) {
         outcome = "dlq";
         break;
       }
 
-      // Última tentativa esgotada → DLQ.
+      // Última tentativa esgotada → DLQ (a menos que o breaker ainda possa adiar).
       if (attempts >= policy.maxAttempts) {
+        if (breaker && deferrals < breaker.maxDeferrals) {
+          // Provedor ainda em outage: adia em vez de matar a tarefa.
+          deferrals++;
+          elapsedSecs += breaker.resetTimeoutSecs;
+          attempts--; // deferral não consome a tentativa final
+          consecutiveFails = 0;
+          continue;
+        }
         outcome = "dlq";
         break;
       }

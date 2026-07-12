@@ -2,8 +2,10 @@ import { useCallback, useState } from "react";
 import {
   simulateScenario,
   DEFAULT_POLICY,
+  DEFAULT_BREAKER_SIM,
   type ScenarioResult,
   type RetryPolicy,
+  type BreakerSimConfig,
 } from "@/lib/resilience/simulator";
 import { generateScenarios, type ScenarioGridConfig } from "@/lib/resilience/scenarios";
 import {
@@ -18,6 +20,8 @@ interface RunOptions {
   policy?: RetryPolicy;
   grid?: ScenarioGridConfig;
   thresholds?: GapThresholds;
+  /** Circuit breaker de provedor. `null` desliga (baseline). Default: ativo. */
+  breaker?: BreakerSimConfig | null;
 }
 
 interface SimulationState {
@@ -45,6 +49,7 @@ export function useResilienceSimulator() {
     const trials = opts.trials ?? 200;
     const policy = opts.policy ?? DEFAULT_POLICY;
     const thresholds = opts.thresholds ?? DEFAULT_THRESHOLDS;
+    const breaker = opts.breaker === undefined ? DEFAULT_BREAKER_SIM : opts.breaker;
     const scenarios = generateScenarios(opts.grid);
 
     setState({ running: true, progress: 0, results: [], report: null });
@@ -55,7 +60,7 @@ export function useResilienceSimulator() {
     for (let i = 0; i < scenarios.length; i += batchSize) {
       const batch = scenarios.slice(i, i + batchSize);
       for (const spec of batch) {
-        results.push(simulateScenario(spec, policy, trials));
+        results.push(simulateScenario(spec, policy, trials, 1, breaker));
       }
       const progress = Math.round((results.length / scenarios.length) * 100);
       setState((s) => ({ ...s, progress, results: [...results] }));

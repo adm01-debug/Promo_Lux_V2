@@ -1,4 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  checkCircuitBreaker,
+  reportFailure,
+  reportSuccess,
+} from "../_shared/circuit-breaker.ts";
+
+/** Serviço externo protegido pelo circuit breaker. */
+const CIRCUIT_SERVICE = "gmaps";
+/** Espera (s) ao adiar uma tarefa com o circuito aberto. */
+const DEFER_DELAY_SECS = 60;
 
 /**
  * scrape-queue-worker
@@ -115,7 +125,8 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
       signal: AbortSignal.timeout(15000),
     });
   } catch (err) {
-    // Rede/timeout => transitório
+    // Rede/timeout => transitório. Sinaliza o circuit breaker (saúde do provedor).
+    await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});
     const message = `network_error: ${(err as Error).message}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: true });
     const dead = result.data === "dead";
@@ -137,6 +148,9 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
   if (!res.ok) {
     const bodyText = await res.text().catch(() => "");
     const transient = isTransient(res.status);
+    // Só falhas transitórias (5xx/429/timeout) indicam degradação do provedor.
+    // 4xx é erro do payload do cliente — não deve abrir o circuito.
+    if (transient) await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});
     const message = `http_${res.status}: ${bodyText.slice(0, 500)}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: transient });
     const dead = result.data === "dead";
@@ -155,6 +169,10 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
     log("warn", "task_http_fail", { task_id: task.id, status: res.status, transient, outcome: result.data });
     return;
   }
+
+  // Provedor respondeu com sucesso → fecha o circuito.
+  await reportSuccess(supabase, CIRCUIT_SERVICE).catch(() => {});
+
 
   // Sucesso: registra external_id no job vinculado.
   const data = await res.json().catch(() => ({}));
@@ -194,6 +212,32 @@ Deno.serve(async (req) => {
 
     const claimed = (tasks ?? []) as QueueTask[];
     log("info", "batch_claimed", { count: claimed.length });
+
+    // Circuit breaker: se o provedor está em outage (circuito aberto), NÃO
+    // despacha — adia as tarefas sem gastar tentativa, evitando inundar a DLQ.
+    const circuitClosed = await checkCircuitBreaker(supabase, CIRCUIT_SERVICE).catch(() => true);
+    if (!circuitClosed && claimed.length > 0) {
+      for (const t of claimed) {
+        await supabase.rpc("defer_scrape_task", {
+          _id: t.id,
+          _delay_secs: DEFER_DELAY_SECS,
+          _reason: "circuit_open",
+        }).catch(() => {});
+        await audit(supabase, t, {
+          _phase: "deferred",
+          _status: "deferred",
+          _level: "warn",
+          _message: "Circuito aberto (provedor em outage) — tarefa adiada sem consumir tentativa",
+          _failure_reason: "circuit_open",
+          _attempt: t.attempts,
+        }).catch(() => {});
+      }
+      log("warn", "circuit_open_deferred", { count: claimed.length, delay_secs: DEFER_DELAY_SECS });
+      return new Response(
+        JSON.stringify({ deferred: claimed.length, reason: "circuit_open", duration_ms: Math.round(performance.now() - start) }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
 
     // Processa em paralelo — cada tarefa isola seu próprio erro.
     const results = await Promise.allSettled(claimed.map((t) => processTask(supabase, t)));
