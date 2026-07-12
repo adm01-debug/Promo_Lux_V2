@@ -148,6 +148,9 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
   if (!res.ok) {
     const bodyText = await res.text().catch(() => "");
     const transient = isTransient(res.status);
+    // Só falhas transitórias (5xx/429/timeout) indicam degradação do provedor.
+    // 4xx é erro do payload do cliente — não deve abrir o circuito.
+    if (transient) await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});
     const message = `http_${res.status}: ${bodyText.slice(0, 500)}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: transient });
     const dead = result.data === "dead";
@@ -166,6 +169,10 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
     log("warn", "task_http_fail", { task_id: task.id, status: res.status, transient, outcome: result.data });
     return;
   }
+
+  // Provedor respondeu com sucesso → fecha o circuito.
+  await reportSuccess(supabase, CIRCUIT_SERVICE).catch(() => {});
+
 
   // Sucesso: registra external_id no job vinculado.
   const data = await res.json().catch(() => ({}));
