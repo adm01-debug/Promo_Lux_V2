@@ -83,6 +83,129 @@ export type Database = {
         }
         Relationships: []
       }
+      api_latency_alert_history: {
+        Row: {
+          admins_notified: number
+          consecutive: number
+          created_at: string
+          id: string
+          organization_id: string
+          p95_critical_ms: number
+          p95_ms: number
+          path: string
+        }
+        Insert: {
+          admins_notified?: number
+          consecutive: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          p95_critical_ms: number
+          p95_ms: number
+          path: string
+        }
+        Update: {
+          admins_notified?: number
+          consecutive?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          p95_critical_ms?: number
+          p95_ms?: number
+          path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_latency_alert_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_latency_alert_settings: {
+        Row: {
+          consecutive: number
+          cooldown_hours: number
+          enabled: boolean
+          organization_id: string
+          p95_critical_ms: number
+          updated_at: string
+        }
+        Insert: {
+          consecutive?: number
+          cooldown_hours?: number
+          enabled?: boolean
+          organization_id: string
+          p95_critical_ms?: number
+          updated_at?: string
+        }
+        Update: {
+          consecutive?: number
+          cooldown_hours?: number
+          enabled?: boolean
+          organization_id?: string
+          p95_critical_ms?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_latency_alert_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_latency_snapshots: {
+        Row: {
+          captured_at: string
+          error_rate: number
+          errors: number
+          id: string
+          organization_id: string
+          p50_ms: number
+          p95_ms: number
+          p99_ms: number
+          path: string
+          requests: number
+        }
+        Insert: {
+          captured_at?: string
+          error_rate?: number
+          errors?: number
+          id?: string
+          organization_id: string
+          p50_ms?: number
+          p95_ms?: number
+          p99_ms?: number
+          path: string
+          requests?: number
+        }
+        Update: {
+          captured_at?: string
+          error_rate?: number
+          errors?: number
+          id?: string
+          organization_id?: string
+          p50_ms?: number
+          p95_ms?: number
+          p99_ms?: number
+          path?: string
+          requests?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_latency_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_request_logs: {
         Row: {
           api_key_id: string | null
@@ -2731,6 +2854,10 @@ export type Database = {
           variant: string
         }[]
       }
+      capture_api_latency_snapshots: {
+        Args: { _hours?: number }
+        Returns: number
+      }
       capture_db_health_snapshot: {
         Args: never
         Returns: {
@@ -2836,6 +2963,14 @@ export type Database = {
           _source?: string
         }
         Returns: string
+      }
+      evaluate_api_latency_alerts: {
+        Args: {
+          _consecutive?: number
+          _cooldown_hours?: number
+          _p95_critical_ms?: number
+        }
+        Returns: number
       }
       evaluate_dlq_alerts: {
         Args: {
@@ -2944,6 +3079,7 @@ export type Database = {
           udt_name: string
         }[]
       }
+      prune_api_latency_snapshots: { Args: never; Returns: number }
       prune_auth_rate_limits: { Args: never; Returns: undefined }
       prune_dlq_health_snapshots: { Args: never; Returns: number }
       purge_dead_letter: {
