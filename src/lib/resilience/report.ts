@@ -1,4 +1,4 @@
-import { FAULT_LABEL, type ScenarioResult } from "./simulator";
+import { FAULT_LABEL, FAULT_TRANSIENT, type ScenarioResult } from "./simulator";
 
 /**
  * Analisa os resultados da simulação e produz um relatório de gaps —
