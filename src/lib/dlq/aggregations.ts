@@ -141,3 +141,61 @@ export function computePeriodDelta(
   const pct = prevAvg > 0 ? (diff / prevAvg) * 100 : null;
   return { curAvg, prevAvg, diff, pct };
 }
+
+/** Ponto de tendência já normalizado usado pelo gráfico (label + timestamp). */
+export interface TrendChartPoint {
+  /** Rótulo do eixo X (ex.: "14:30"). */
+  t: string;
+  /** Timestamp (ms) usado para achar o ponto mais próximo. */
+  ts: number;
+  pending: number;
+}
+
+/** Registro de alerta com os campos necessários para marcar o gráfico. */
+export interface AlertDotSource {
+  id: string;
+  triggered_at: string;
+  pending_items: number;
+  pending_critical: number;
+  consecutive: number;
+  admins_notified: number;
+}
+
+/** Marcador de alerta posicionado sobre o ponto de tendência mais próximo. */
+export interface AlertDot extends AlertDotSource {
+  /** Rótulo do eixo X do ponto de tendência mais próximo. */
+  x: string;
+  /** Valor de pendências do ponto mais próximo (posição vertical do dot). */
+  y: number;
+}
+
+/**
+ * Para cada alerta dentro da janela `[nowMs - rangeHours, nowMs]`, encontra o
+ * ponto de tendência temporalmente mais próximo e o converte em um marcador
+ * (`AlertDot`) posicionável no gráfico. Função pura: `nowMs` é injetado.
+ *
+ * Retorna lista vazia se não houver pontos de tendência (nada onde ancorar).
+ */
+export function computeAlertDots(
+  alerts: AlertDotSource[],
+  trendData: TrendChartPoint[],
+  rangeHours: number,
+  nowMs: number,
+): AlertDot[] {
+  if (trendData.length === 0) return [];
+  const rangeStart = nowMs - rangeHours * 3600_000;
+  return alerts
+    .filter((a) => new Date(a.triggered_at).getTime() >= rangeStart)
+    .map((a) => {
+      const at = new Date(a.triggered_at).getTime();
+      const nearest = trendData.reduce((best, cur) =>
+        Math.abs(cur.ts - at) < Math.abs(best.ts - at) ? cur : best,
+      );
+      return {
+        ...a,
+        x: nearest.t,
+        y: nearest.pending,
+      };
+    });
+}
+
