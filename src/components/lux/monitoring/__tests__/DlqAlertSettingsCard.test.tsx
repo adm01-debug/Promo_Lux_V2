@@ -116,4 +116,16 @@ describe("DlqAlertSettingsCard", () => {
     expect(screen.getByText("Pico")).toBeInTheDocument();
     expect(screen.getAllByText("300").length).toBeGreaterThan(0);
   });
+
+  it("persiste o tamanho de página selecionado", () => {
+    render(<DlqAlertSettingsCard />);
+    const group = screen.getByRole("group", { name: /itens por página/i });
+    const btn5 = within(group).getByRole("button", { name: "5" });
+    const btn10 = within(group).getByRole("button", { name: "10" });
+    expect(btn5).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(btn10);
+    expect(btn10).toHaveAttribute("aria-pressed", "true");
+    expect(btn5).toHaveAttribute("aria-pressed", "false");
+  });
 });
