@@ -29,7 +29,13 @@ const PERIOD_OPTIONS: { label: string; hours: number | null }[] = [
   { label: "Tudo", hours: null },
 ];
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE_OPTIONS = [5, 10, 20] as const;
+const DEFAULT_PAGE_SIZE = 5;
+/** Garante que o tamanho de página persistido seja um valor válido/suportado. */
+const normalizePageSize = (v: unknown): number =>
+  PAGE_SIZE_OPTIONS.includes(v as (typeof PAGE_SIZE_OPTIONS)[number])
+    ? (v as number)
+    : DEFAULT_PAGE_SIZE;
 
 export function DlqAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
