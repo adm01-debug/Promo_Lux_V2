@@ -532,6 +532,10 @@ const AutomationMonitoring = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="database" className="space-y-4">
+          <DbHealthDashboard />
+        </TabsContent>
       </Tabs>
 
       <JobDetailsSheet 
