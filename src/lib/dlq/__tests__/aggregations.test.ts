@@ -4,6 +4,7 @@ import {
   computePeriodStats,
   computeDailyFrequency,
   computePeriodDelta,
+  sortHistory,
   type AlertHistoryPoint,
   type TrendPoint,
 } from "../aggregations";
