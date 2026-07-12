@@ -199,3 +199,115 @@ export function computeAlertDots(
     });
 }
 
+
+/**
+ * Pico estatisticamente relevante identificado na série de tendência.
+ *
+ * `zScore` é o afastamento (em desvios-padrão) do valor em relação à média da
+ * janela; usamos isso — em vez de um limite absoluto — para que a detecção se
+ * adapte à magnitude natural de cada organização.
+ */
+export interface SpikePoint {
+  t: string;
+  ts: number;
+  pending: number;
+  /** Afastamento da média em desvios-padrão (>= 0). */
+  zScore: number;
+}
+
+export interface SpikeDetectionOptions {
+  /** zScore mínimo para um ponto ser considerado pico. Default 1.5. */
+  minZ?: number;
+  /** Pendências mínimas absolutas para evitar ruído em séries baixas. Default 1. */
+  minPending?: number;
+}
+
+/**
+ * Detecta picos numa série de tendência via z-score sobre média/desvio da
+ * própria janela. Função pura e determinística. Retorna picos em ordem
+ * cronológica crescente. Séries com menos de 3 pontos ou desvio-padrão nulo
+ * (valores constantes) não produzem picos.
+ */
+export function detectSpikes(
+  trendData: TrendChartPoint[],
+  opts: SpikeDetectionOptions = {},
+): SpikePoint[] {
+  const minZ = opts.minZ ?? 1.5;
+  const minPending = opts.minPending ?? 1;
+  if (trendData.length < 3) return [];
+
+  const values = trendData.map((p) => p.pending);
+  const mean = values.reduce((a, b) => a + b, 0) / values.length;
+  const variance =
+    values.reduce((a, v) => a + (v - mean) ** 2, 0) / values.length;
+  const std = Math.sqrt(variance);
+  if (std === 0) return [];
+
+  return trendData
+    .map((p) => ({ ...p, zScore: (p.pending - mean) / std }))
+    .filter((p) => p.zScore >= minZ && p.pending >= minPending)
+    .map((p) => ({ t: p.t, ts: p.ts, pending: p.pending, zScore: p.zScore }));
+}
+
+/** Registro de log mínimo necessário para correlação temporal. */
+export interface CorrelatableLog {
+  id: string;
+  created_at: string;
+  level: "info" | "warn" | "error";
+  message: string | null;
+  failure_reason: string | null;
+}
+
+/** Um pico com os logs de automação temporalmente próximos a ele. */
+export interface SpikeCorrelation<L extends CorrelatableLog = CorrelatableLog> {
+  spike: SpikePoint;
+  logs: L[];
+  errorCount: number;
+  warnCount: number;
+}
+
+export interface CorrelationOptions {
+  /**
+   * Janela (ms) em torno do timestamp do pico onde os logs são considerados
+   * relacionados. Default: 30 min. A janela é simétrica (antes e depois),
+   * pois um pico pode ser tanto causa (erro anterior) quanto efeito.
+   */
+  windowMs?: number;
+  minZ?: number;
+  minPending?: number;
+}
+
+/**
+ * Correlaciona picos da tendência com logs de automação que ocorreram dentro
+ * de uma janela temporal ao redor de cada pico. Função pura: não lê relógio
+ * nem estado global. Logs são ordenados por proximidade ao pico e apenas picos
+ * com ao menos um log associado são retornados (ordem cronológica do pico).
+ */
+export function correlateSpikesWithLogs<L extends CorrelatableLog>(
+  trendData: TrendChartPoint[],
+  logs: L[],
+  opts: CorrelationOptions = {},
+): SpikeCorrelation<L>[] {
+  const windowMs = opts.windowMs ?? 30 * 60_000;
+  const spikes = detectSpikes(trendData, { minZ: opts.minZ, minPending: opts.minPending });
+  if (spikes.length === 0) return [];
+
+  // Pré-computa timestamps dos logs uma única vez (evita reparse por pico).
+  const stamped = logs.map((l) => ({ log: l, ts: new Date(l.created_at).getTime() }));
+
+  const out: SpikeCorrelation<L>[] = [];
+  for (const spike of spikes) {
+    const related = stamped
+      .filter(({ ts }) => Math.abs(ts - spike.ts) <= windowMs)
+      .sort((a, b) => Math.abs(a.ts - spike.ts) - Math.abs(b.ts - spike.ts))
+      .map(({ log }) => log);
+    if (related.length === 0) continue;
+    out.push({
+      spike,
+      logs: related,
+      errorCount: related.filter((l) => l.level === "error").length,
+      warnCount: related.filter((l) => l.level === "warn").length,
+    });
+  }
+  return out;
+}
