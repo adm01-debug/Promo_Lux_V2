@@ -588,6 +588,7 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="latency" className="space-y-4">
           <ApiLatencyPanel />
+          <ApiLatencyAlertSettingsCard />
         </TabsContent>
 
         <TabsContent value="automation-logs" className="space-y-4">
