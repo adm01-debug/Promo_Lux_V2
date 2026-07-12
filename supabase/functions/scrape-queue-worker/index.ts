@@ -203,10 +203,21 @@ Deno.serve(async (req) => {
     for (let i = 0; i < results.length; i++) {
       if (results[i].status === "rejected") {
         const reason = (results[i] as PromiseRejectedResult).reason;
-        await supabase.rpc("fail_scrape_task", {
+        const outcome = await supabase.rpc("fail_scrape_task", {
           _id: claimed[i].id,
           _error: `worker_exception: ${String(reason).slice(0, 500)}`,
           _transient: true,
+        });
+        const dead = outcome.data === "dead";
+        await audit(supabase, claimed[i], {
+          _phase: dead ? "dead_letter" : "retry",
+          _status: dead ? "dead" : "retrying",
+          _level: "error",
+          _message: "Exceção inesperada no worker durante o processamento",
+          _failure_reason: "worker_exception",
+          _error_detail: String(reason).slice(0, 1000),
+          _transient: true,
+          _attempt: claimed[i].attempts + 1,
         });
       }
     }
