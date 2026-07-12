@@ -201,6 +201,8 @@ export function DbHealthDashboard() {
 
       <DlqHealthCard />
 
+      <DlqAlertSettingsCard />
+
 
 
       {latest && (
