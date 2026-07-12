@@ -233,6 +233,26 @@ export function DlqAlertSettingsCard() {
               </p>
             ) : (
               <>
+                {periodStats && (
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="rounded-md border border-border/40 bg-secondary/20 px-2 py-1.5 text-center">
+                      <p className="text-[10px] text-muted-foreground">Disparos</p>
+                      <p className="font-mono text-sm font-semibold">{periodStats.count}</p>
+                    </div>
+                    <div className="rounded-md border border-border/40 bg-secondary/20 px-2 py-1.5 text-center">
+                      <p className="text-[10px] text-muted-foreground">Média</p>
+                      <p className="font-mono text-sm font-semibold">{periodStats.avg}</p>
+                    </div>
+                    <div className="rounded-md border border-border/40 bg-secondary/20 px-2 py-1.5 text-center">
+                      <p className="text-[10px] text-muted-foreground">Pico</p>
+                      <p className="font-mono text-sm font-semibold text-destructive">{periodStats.peak}</p>
+                    </div>
+                    <div className="rounded-md border border-border/40 bg-secondary/20 px-2 py-1.5 text-center">
+                      <p className="text-[10px] text-muted-foreground">Notificações</p>
+                      <p className="font-mono text-sm font-semibold">{periodStats.notified}</p>
+                    </div>
+                  </div>
+                )}
                 <ul className="space-y-1.5">
                   {pagedHistory.map((h) => (
                     <li
