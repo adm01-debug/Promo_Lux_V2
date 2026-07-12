@@ -7,6 +7,7 @@ import { Filter, DollarSign, TrendingUp } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { MiniDonut } from "./AnimatedDonut";
 import { CustomTooltip } from "./AnalyticsChartTooltip";
+import type { AnalyticsCampaign } from "./useAnalyticsData";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -16,7 +17,7 @@ const cardVariants = {
 interface ConversionTabProps {
   funnelData: { name: string; value: number; fill: string }[];
   roiData: { name: string; abertura: number; resposta: number; reunioes: number; roi: number }[];
-  allCampaigns: any[];
+  allCampaigns: AnalyticsCampaign[];
   totalProspects: number;
   totalMeetings: number;
   conversionRate: string;

@@ -78,7 +78,7 @@ export const CompaniesView = () => {
       : async () => {
           const { data, error } = await db.from("companies").select("*").order("created_at", { ascending: false });
           if (error) throw error;
-          return (data ?? []).map((c: any) => ({
+          return (data ?? []).map((c) => ({
             id: c.id, name: c.name, sector: c.sector ?? "—", location: c.location ?? "—",
             ipcScore: c.ipc_score ?? 0, source: c.source, website: c.website ?? undefined,
             employees: c.employees ?? "—", revenue: c.revenue?.toString() ?? "—", email: c.email ?? undefined,
