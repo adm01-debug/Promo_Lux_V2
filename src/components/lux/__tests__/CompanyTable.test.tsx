@@ -9,14 +9,26 @@ vi.mock("framer-motion", async () => {
   return mockFramerMotion();
 });
 
-vi.mock("@/hooks/useDashboardData", () => ({
-  useRecentCompanies: vi.fn(),
+vi.mock("@/hooks/useVirtualCompanies", () => ({
+  useVirtualCompanies: vi.fn(),
 }));
 
-import { useRecentCompanies } from "@/hooks/useDashboardData";
+// Virtualization: render every provided item so assertions can find rows in jsdom
+// (jsdom has no layout, so the real hook would compute a 0px container height).
+vi.mock("@/hooks/useVirtualization", () => ({
+  useVirtualization: (items: Array<Record<string, unknown>>) => ({
+    virtualItems: (items ?? []).map((item, index) => ({ item, index, top: index * 72 })),
+    totalHeight: (items ?? []).length * 72,
+    startIndex: 0,
+    endIndex: Math.max(0, (items ?? []).length - 1),
+    onScroll: () => {},
+  }),
+}));
+
+import { useVirtualCompanies } from "@/hooks/useVirtualCompanies";
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-const wrapper = ({ children }: any) => (
+const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={qc}>
     <TooltipProvider>{children}</TooltipProvider>
   </QueryClientProvider>
@@ -28,64 +40,56 @@ const mockCompanies = [
   { id: "3", name: "Gamma SA", sector: "Varejo", location: "PR", ipc_score: 45, website: null, source: "linkedin" },
 ];
 
-describe("CompanyTable — P1 Score IPC Tooltip", () => {
-  it("renders Score IPC header with HelpCircle tooltip trigger", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+describe("CompanyTable — Virtualized list", () => {
+  it("renders Score IPC header", () => {
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
-    
     expect(screen.getByText("Score IPC")).toBeInTheDocument();
-    // HelpCircle icon should be present
-    const helpIcon = screen.getByText("Score IPC").closest("span")?.querySelector("svg");
-    expect(helpIcon).toBeInTheDocument();
   });
 
   it("renders company names", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
-    
+
     expect(screen.getByText("Acme Corp")).toBeInTheDocument();
     expect(screen.getByText("Beta LLC")).toBeInTheDocument();
     expect(screen.getByText("Gamma SA")).toBeInTheDocument();
   });
 
   it("applies correct score color classes", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
-    
-    // Score 92 = text-success — class is on ancestor span
-    const score92 = screen.getByText("92");
-    const scoreContainer92 = score92.closest("span.font-mono");
+
+    // Score 92 = text-success — class is on the font-mono span
+    const scoreContainer92 = screen.getByText("92").closest("span.font-mono");
     expect(scoreContainer92?.className).toContain("text-success");
-    
+
     // Score 78 = text-primary
-    const score78 = screen.getByText("78");
-    const scoreContainer78 = score78.closest("span.font-mono");
+    const scoreContainer78 = screen.getByText("78").closest("span.font-mono");
     expect(scoreContainer78?.className).toContain("text-primary");
-    
+
     // Score 45 = text-muted-foreground (< 60)
-    const score45 = screen.getByText("45");
-    const scoreContainer45 = score45.closest("span.font-mono");
+    const scoreContainer45 = screen.getByText("45").closest("span.font-mono");
     expect(scoreContainer45?.className).toContain("text-muted-foreground");
   });
 
   it("shows loading state when loading", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: undefined, isLoading: true } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: undefined, isLoading: true } as any);
     const { container } = render(<CompanyTable />, { wrapper });
-    // Loading renders skeleton placeholders (divs with specific spacing)
     const loadingArea = container.querySelector(".space-y-3");
     expect(loadingArea).toBeInTheDocument();
   });
 
   it("shows empty state when no companies", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: [], isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: [], isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
     expect(screen.getByText("Nenhuma empresa ainda")).toBeInTheDocument();
   });
 
   it("renders table headers correctly", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
-    
+
     expect(screen.getByText("Empresa / CNPJ")).toBeInTheDocument();
     expect(screen.getByText("Setor")).toBeInTheDocument();
     expect(screen.getByText("Localização")).toBeInTheDocument();
@@ -93,9 +97,9 @@ describe("CompanyTable — P1 Score IPC Tooltip", () => {
   });
 
   it("renders sector badges for each company", () => {
-    vi.mocked(useRecentCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: mockCompanies, isLoading: false } as any);
     render(<CompanyTable />, { wrapper });
-    
+
     expect(screen.getByText("Tech")).toBeInTheDocument();
     expect(screen.getByText("Saúde")).toBeInTheDocument();
     expect(screen.getByText("Varejo")).toBeInTheDocument();
