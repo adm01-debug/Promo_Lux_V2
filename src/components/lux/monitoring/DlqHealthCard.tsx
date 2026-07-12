@@ -244,6 +244,20 @@ export function DlqHealthCard() {
                     strokeWidth={2}
                     fill="url(#dlqTrendFill)"
                   />
+                  {criticalLimit !== undefined && (
+                    <ReferenceLine
+                      y={criticalLimit}
+                      stroke="hsl(var(--destructive))"
+                      strokeDasharray="4 4"
+                      strokeOpacity={0.7}
+                      label={{
+                        value: `Crítico: ${criticalLimit}`,
+                        position: "insideTopRight",
+                        fill: "hsl(var(--destructive))",
+                        fontSize: 10,
+                      }}
+                    />
+                  )}
                 </AreaChart>
               </ResponsiveContainer>
             </div>
