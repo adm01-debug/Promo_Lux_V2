@@ -2804,6 +2804,10 @@ export type Database = {
         Returns: string
       }
       replay_dead_letter: { Args: { _dlq_id: string }; Returns: string }
+      replay_dead_letter_batch: {
+        Args: { _limit?: number; _organization_id?: string }
+        Returns: number
+      }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
         Args: { _key_hash: string }
