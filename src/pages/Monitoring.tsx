@@ -34,9 +34,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
-import { ListChecks, Layers, ShieldAlert } from "lucide-react";
+import { ListChecks, Layers, ShieldAlert, FileText } from "lucide-react";
 import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
+import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
@@ -384,6 +385,10 @@ const AutomationMonitoring = () => {
             <ShieldAlert className="h-4 w-4" />
             Simulador de Falhas
           </TabsTrigger>
+          <TabsTrigger value="automation-logs" className="gap-2">
+            <FileText className="h-4 w-4" />
+            Auditoria de Execução
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="runs" className="space-y-4">
@@ -564,6 +569,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="resilience" className="space-y-4">
           <ResilienceSimulatorPanel />
+        </TabsContent>
+
+        <TabsContent value="automation-logs" className="space-y-4">
+          <AutomationLogsPanel />
         </TabsContent>
       </Tabs>
 
