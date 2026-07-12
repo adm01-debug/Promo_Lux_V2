@@ -60,6 +60,53 @@ const RANGE_OPTIONS: { label: string; hours: number }[] = [
   { label: "7d", hours: 168 },
 ];
 
+interface AlertMarker {
+  triggered_at: string;
+  pending_items: number;
+  pending_critical: number;
+  consecutive: number;
+  admins_notified: number;
+}
+
+function TrendTooltip({
+  active,
+  payload,
+  label,
+  alertByLabel,
+}: {
+  active?: boolean;
+  payload?: { value: number }[];
+  label?: string;
+  alertByLabel: Map<string, AlertMarker>;
+}) {
+  if (!active || !payload?.length) return null;
+  const alert = label ? alertByLabel.get(label) : undefined;
+  return (
+    <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-md">
+      <p className="text-muted-foreground">{label}</p>
+      <p className="font-mono font-semibold">{payload[0].value} pendentes</p>
+      {alert && (
+        <div className="mt-1.5 border-t border-border/60 pt-1.5 space-y-0.5">
+          <p className="flex items-center gap-1.5 font-medium text-destructive">
+            <span className="inline-block h-2 w-2 rounded-full bg-destructive" />
+            Alerta disparado
+          </p>
+          <p className="text-muted-foreground">
+            {new Date(alert.triggered_at).toLocaleString("pt-BR")}
+          </p>
+          <p className="text-muted-foreground">
+            {alert.pending_items} itens · limite {alert.pending_critical} · {alert.consecutive} ciclos
+          </p>
+          <p className="text-muted-foreground">
+            {alert.admins_notified} admin(s) notificado(s)
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 export function DlqHealthCard() {
   const [rangeHours, setRangeHours] = useState(48);
   const { data, isLoading } = useDlqHealth();
