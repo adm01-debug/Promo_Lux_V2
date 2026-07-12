@@ -234,6 +234,35 @@ export function DlqAlertSettingsCard() {
                     </button>
                   ))}
                 </div>
+                <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+                  {([
+                    { key: "date" as SortKey, label: "Data" },
+                    { key: "volume" as SortKey, label: "Volume" },
+                  ]).map((opt) => (
+                    <button
+                      key={opt.key}
+                      type="button"
+                      onClick={() => toggleSort(opt.key)}
+                      className={cn(
+                        "flex items-center gap-0.5 rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                        sortKey === opt.key
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                      title={`Ordenar por ${opt.label.toLowerCase()}`}
+                    >
+                      {opt.label}
+                      {sortKey === opt.key ? (
+                        sortDir === "desc" ? (
+                          <ArrowDown className="h-3 w-3" />
+                        ) : (
+                          <ArrowUp className="h-3 w-3" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 opacity-50" />
+                      )}
+                    </button>
+                  ))}
                 <Button
                   variant="ghost"
                   size="sm"
