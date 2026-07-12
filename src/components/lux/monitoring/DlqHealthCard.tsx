@@ -119,9 +119,21 @@ export function DlqHealthCard() {
               Crescimento e envelhecimento das falhas definitivas ainda não reprocessadas.
             </CardDescription>
           </div>
-          <Badge variant="outline" className={cn("shrink-0", sevStyles[severity])}>
-            {sevLabel[severity]}
-          </Badge>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1.5 text-xs"
+              onClick={handleExportCsv}
+              disabled={(trend ?? []).length === 0}
+            >
+              <Download className="h-3.5 w-3.5" />
+              CSV
+            </Button>
+            <Badge variant="outline" className={cn(sevStyles[severity])}>
+              {sevLabel[severity]}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
