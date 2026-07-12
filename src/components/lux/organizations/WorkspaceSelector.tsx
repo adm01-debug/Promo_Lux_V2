@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { type AppRole } from "@/hooks/useOrganizations";
+import { type AppRole, type OrgMembership } from "@/hooks/useOrganizations";
 
 const ROLE_COLOR: Record<AppRole, string> = {
   admin: "bg-primary/15 text-primary border-primary/30",
