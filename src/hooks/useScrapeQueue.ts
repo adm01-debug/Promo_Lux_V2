@@ -109,3 +109,28 @@ export function useReplayDeadLetterBatch() {
     },
   });
 }
+
+export function usePurgeDeadLetter() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.rpc("purge_dead_letter", {
+        _replayed_retention_days: 30,
+        _stale_retention_days: 90,
+      });
+      if (error) throw error;
+      return (data ?? 0) as number;
+    },
+    onSuccess: (count) => {
+      qc.invalidateQueries({ queryKey: ["scrape-dead-letter"] });
+      if (count > 0) {
+        toast.success(`${count} item(ns) expurgado(s) da dead-letter.`);
+      } else {
+        toast.info("Nenhum item elegível para expurgo no momento.");
+      }
+    },
+    onError: (err: Error) => {
+      toast.error(`Falha ao expurgar: ${err.message}`);
+    },
+  });
+}
