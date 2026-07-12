@@ -10,6 +10,7 @@ import { useDlqAlertSettings, useDlqAlertHistory } from "@/hooks/useDlqAlertSett
 import { toast } from "sonner";
 import { downloadCsv } from "@/lib/csv";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
+import { computePeriodDelta } from "@/lib/dlq/aggregations";
 
 const sevStyles: Record<DlqHealthSeverity, string> = {
   critical: "bg-destructive/15 text-destructive border-destructive/30",
@@ -123,26 +124,8 @@ export function DlqHealthCard() {
   const severity = dlqSeverity(data);
 
   // Comparativo período-a-período: média de pendências na janela atual
-  // versus a janela imediatamente anterior de mesma duração.
-  const periodDelta = (() => {
-    const rows = trendPrev ?? [];
-    if (rows.length < 2) return null;
-    const cutoff = Date.now() - rangeHours * 3600_000;
-    const cur: number[] = [];
-    const prev: number[] = [];
-    for (const p of rows) {
-      const val = Number(p.pending_items);
-      if (new Date(p.captured_at).getTime() >= cutoff) cur.push(val);
-      else prev.push(val);
-    }
-    if (cur.length === 0 || prev.length === 0) return null;
-    const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
-    const curAvg = avg(cur);
-    const prevAvg = avg(prev);
-    const diff = curAvg - prevAvg;
-    const pct = prevAvg > 0 ? (diff / prevAvg) * 100 : null;
-    return { curAvg, prevAvg, diff, pct };
-  })();
+  // versus a janela imediatamente anterior de mesma duração (função pura testada).
+  const periodDelta = computePeriodDelta(trendPrev ?? [], rangeHours, Date.now());
 
 
   const criticalLimit = alertSettings?.enabled ? alertSettings.pending_critical : undefined;

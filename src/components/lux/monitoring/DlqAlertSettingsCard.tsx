@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { downloadCsv } from "@/lib/csv";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
+import { filterByPeriod, computePeriodStats, computeDailyFrequency } from "@/lib/dlq/aggregations";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import {
   useDlqAlertSettings,
@@ -58,12 +59,10 @@ export function DlqAlertSettingsCard() {
   }, [periodHours]);
 
   // Aplica o filtro de período sobre o histórico carregado.
-  const filteredHistory = useMemo(() => {
-    const rows = history ?? [];
-    if (periodHours === null) return rows;
-    const cutoff = Date.now() - periodHours * 3600_000;
-    return rows.filter((h) => new Date(h.triggered_at).getTime() >= cutoff);
-  }, [history, periodHours]);
+  const filteredHistory = useMemo(
+    () => filterByPeriod(history ?? [], periodHours, Date.now()),
+    [history, periodHours]
+  );
 
   const pageCount = Math.max(1, Math.ceil(filteredHistory.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
@@ -78,37 +77,9 @@ export function DlqAlertSettingsCard() {
       return { ...h, delta };
     });
 
-  // Resumo estatístico do período filtrado: nº de disparos, média e pico de
-  // pendentes, além do total de admins notificados.
-  const periodStats = useMemo(() => {
-    if (filteredHistory.length === 0) return null;
-    const pendings = filteredHistory.map((h) => h.pending_items);
-    const total = pendings.reduce((a, b) => a + b, 0);
-    const notified = filteredHistory.reduce((a, h) => a + h.admins_notified, 0);
-    return {
-      count: filteredHistory.length,
-      avg: Math.round(total / filteredHistory.length),
-      peak: Math.max(...pendings),
-      notified,
-    };
-  }, [filteredHistory]);
-
-  // Frequência de disparos agrupada por dia (ordem cronológica crescente).
-  const dailyFrequency = useMemo(() => {
-    if (filteredHistory.length === 0) return [];
-    const byDay = new Map<string, number>();
-    for (const h of filteredHistory) {
-      const d = new Date(h.triggered_at);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-      byDay.set(key, (byDay.get(key) ?? 0) + 1);
-    }
-    return Array.from(byDay.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, count]) => {
-        const [, mm, dd] = key.split("-");
-        return { day: `${dd}/${mm}`, count };
-      });
-  }, [filteredHistory]);
+  // Resumo estatístico e frequência diária (funções puras testadas).
+  const periodStats = useMemo(() => computePeriodStats(filteredHistory), [filteredHistory]);
+  const dailyFrequency = useMemo(() => computeDailyFrequency(filteredHistory), [filteredHistory]);
 
 
 
