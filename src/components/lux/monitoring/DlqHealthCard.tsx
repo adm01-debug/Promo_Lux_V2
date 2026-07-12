@@ -109,7 +109,12 @@ function TrendTooltip({
 
 
 export function DlqHealthCard() {
-  const [rangeHours, setRangeHours] = useState(48);
+  const [prefs, setPrefs] = usePersistedFilters<{ rangeHours: number }>(
+    "dlq-health-trend",
+    { rangeHours: 48 }
+  );
+  const rangeHours = prefs.rangeHours;
+  const setRangeHours = (hours: number) => setPrefs({ rangeHours: hours });
   const { data, isLoading } = useDlqHealth();
   const { data: trend } = useDlqTrend(rangeHours);
   const { data: trendPrev } = useDlqTrend(rangeHours * 2);
