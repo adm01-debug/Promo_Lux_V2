@@ -4,11 +4,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { BellRing, Save } from "lucide-react";
+import { BellRing, Save, History } from "lucide-react";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import {
   useDlqAlertSettings,
   useSaveDlqAlertSettings,
+  useDlqAlertHistory,
   DLQ_ALERT_DEFAULTS,
   type DlqAlertSettings,
 } from "@/hooks/useDlqAlertSettings";
