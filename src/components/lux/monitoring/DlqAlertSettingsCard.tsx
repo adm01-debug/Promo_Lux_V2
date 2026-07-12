@@ -22,7 +22,7 @@ export function DlqAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
   const isAdmin = activeOrg?.role === "admin";
   const { data, isLoading } = useDlqAlertSettings(activeOrgId);
-  const { data: history } = useDlqAlertHistory(activeOrgId, 5);
+  const { data: history } = useDlqAlertHistory(activeOrgId, 50);
   const save = useSaveDlqAlertSettings();
 
   const [form, setForm] = useState<DlqAlertSettings | null>(null);
