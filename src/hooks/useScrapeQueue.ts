@@ -89,7 +89,7 @@ export function useReplayDeadLetterBatch() {
   return useMutation({
     mutationFn: async (organizationId?: string) => {
       const { data, error } = await supabase.rpc("replay_dead_letter_batch", {
-        _organization_id: organizationId ?? null,
+        ...(organizationId ? { _organization_id: organizationId } : {}),
         _limit: 500,
       });
       if (error) throw error;
