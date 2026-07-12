@@ -552,6 +552,10 @@ const AutomationMonitoring = () => {
         <TabsContent value="queue" className="space-y-4">
           <ScrapeQueuePanel />
         </TabsContent>
+
+        <TabsContent value="partitions" className="space-y-4">
+          <PartitionAdvisoryPanel />
+        </TabsContent>
       </Tabs>
 
       <JobDetailsSheet 
