@@ -214,3 +214,83 @@ describe("computeAlertDots", () => {
     expect(dot.admins_notified).toBe(1);
   });
 });
+
+const trend = (pts: Array<[string, number, number]>): TrendChartPoint[] =>
+  pts.map(([t, ts, pending]) => ({ t, ts, pending }));
+
+describe("detectSpikes", () => {
+  it("retorna vazio com menos de 3 pontos", () => {
+    expect(detectSpikes(trend([["a", 1, 10], ["b", 2, 500]]))).toEqual([]);
+  });
+
+  it("retorna vazio quando a série é constante (std=0)", () => {
+    expect(detectSpikes(trend([["a", 1, 10], ["b", 2, 10], ["c", 3, 10]]))).toEqual([]);
+  });
+
+  it("identifica o ponto muito acima da média como pico", () => {
+    const data = trend([
+      ["a", 1, 10], ["b", 2, 12], ["c", 3, 11], ["d", 4, 200], ["e", 5, 9],
+    ]);
+    const spikes = detectSpikes(data, { minZ: 1.5 });
+    expect(spikes).toHaveLength(1);
+    expect(spikes[0].ts).toBe(4);
+    expect(spikes[0].pending).toBe(200);
+    expect(spikes[0].zScore).toBeGreaterThan(1.5);
+  });
+
+  it("respeita minPending para evitar ruído em séries baixas", () => {
+    const data = trend([["a", 1, 0], ["b", 2, 0], ["c", 3, 2]]);
+    expect(detectSpikes(data, { minZ: 1, minPending: 5 })).toEqual([]);
+  });
+});
+
+const log = (
+  id: string,
+  created_at: string,
+  level: CorrelatableLog["level"],
+): CorrelatableLog => ({ id, created_at, level, message: null, failure_reason: null });
+
+describe("correlateSpikesWithLogs", () => {
+  const base = new Date("2026-07-12T12:00:00Z").getTime();
+  const data = trend([
+    ["a", base - 3 * 60_000, 10],
+    ["b", base - 2 * 60_000, 12],
+    ["c", base - 60_000, 11],
+    ["d", base, 300],
+    ["e", base + 60_000, 9],
+  ]);
+
+  it("retorna vazio quando não há picos", () => {
+    const flat = trend([["a", 1, 10], ["b", 2, 10], ["c", 3, 10]]);
+    expect(correlateSpikesWithLogs(flat, [log("l1", "2026-07-12T12:00:00Z", "error")])).toEqual([]);
+  });
+
+  it("associa logs dentro da janela e conta níveis", () => {
+    const logs = [
+      log("l1", new Date(base + 5 * 60_000).toISOString(), "error"),
+      log("l2", new Date(base - 10 * 60_000).toISOString(), "warn"),
+      log("l3", new Date(base + 2 * 3600_000).toISOString(), "error"), // fora da janela
+    ];
+    const res = correlateSpikesWithLogs(data, logs, { windowMs: 30 * 60_000 });
+    expect(res).toHaveLength(1);
+    expect(res[0].logs.map((l) => l.id)).toEqual(["l1", "l2"]);
+    expect(res[0].errorCount).toBe(1);
+    expect(res[0].warnCount).toBe(1);
+  });
+
+  it("ordena logs por proximidade ao pico", () => {
+    const logs = [
+      log("far", new Date(base + 20 * 60_000).toISOString(), "info"),
+      log("near", new Date(base + 60_000).toISOString(), "info"),
+    ];
+    const res = correlateSpikesWithLogs(data, logs, { windowMs: 30 * 60_000 });
+    expect(res[0].logs[0].id).toBe("near");
+  });
+
+  it("omite picos sem nenhum log associado", () => {
+    const res = correlateSpikesWithLogs(data, [
+      log("l1", new Date(base + 5 * 3600_000).toISOString(), "error"),
+    ]);
+    expect(res).toEqual([]);
+  });
+});
