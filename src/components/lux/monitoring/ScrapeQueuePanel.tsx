@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useScrapeQueue, useDeadLetterQueue, useReplayDeadLetter } from "@/hooks/useScrapeQueue";
+import { useScrapeQueue, useDeadLetterQueue, useReplayDeadLetter, useReplayDeadLetterBatch } from "@/hooks/useScrapeQueue";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ export function ScrapeQueuePanel() {
   const { data: queue, isLoading } = useScrapeQueue();
   const { data: dlq } = useDeadLetterQueue();
   const replay = useReplayDeadLetter();
+  const replayBatch = useReplayDeadLetterBatch();
 
   const counts = useMemo(() => {
     const c = { queued: 0, processing: 0, succeeded: 0, dead: 0 };
@@ -102,12 +103,27 @@ export function ScrapeQueuePanel() {
       {/* Dead-letter queue */}
       <Card className="glass border-destructive/20">
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Skull className="h-4 w-4 text-destructive" />
-            Dead-Letter Queue
-          </CardTitle>
-          <CardDescription>Falhas definitivas após esgotar as tentativas. Reprocesse quando resolver a causa.</CardDescription>
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Skull className="h-4 w-4 text-destructive" />
+                Dead-Letter Queue
+              </CardTitle>
+              <CardDescription>Falhas definitivas após esgotar as tentativas. Reprocesse quando resolver a causa.</CardDescription>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 h-8 shrink-0"
+              disabled={pendingDlq.length === 0 || replayBatch.isPending}
+              onClick={() => replayBatch.mutate(undefined)}
+            >
+              <RotateCcw className={cn("h-3.5 w-3.5", replayBatch.isPending && "animate-spin")} />
+              Reprocessar todas ({pendingDlq.length})
+            </Button>
+          </div>
         </CardHeader>
+
         <CardContent className="space-y-2">
           {(dlq ?? []).length === 0 && (
             <p className="text-sm text-muted-foreground py-6 text-center">Nenhuma falha definitiva. 🎉</p>

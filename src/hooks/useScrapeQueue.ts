@@ -83,3 +83,29 @@ export function useReplayDeadLetter() {
     },
   });
 }
+
+export function useReplayDeadLetterBatch() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (organizationId?: string) => {
+      const { data, error } = await supabase.rpc("replay_dead_letter_batch", {
+        ...(organizationId ? { _organization_id: organizationId } : {}),
+        _limit: 500,
+      });
+      if (error) throw error;
+      return (data ?? 0) as number;
+    },
+    onSuccess: (count) => {
+      qc.invalidateQueries({ queryKey: ["scrape-queue"] });
+      qc.invalidateQueries({ queryKey: ["scrape-dead-letter"] });
+      if (count > 0) {
+        toast.success(`${count} tarefa(s) reenviada(s) para a fila.`);
+      } else {
+        toast.info("Nenhuma tarefa pendente na dead-letter para reprocessar.");
+      }
+    },
+    onError: (err: Error) => {
+      toast.error(`Falha ao reprocessar em lote: ${err.message}`);
+    },
+  });
+}
