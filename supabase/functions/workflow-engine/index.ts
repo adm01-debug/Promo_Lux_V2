@@ -255,7 +255,7 @@ serve(async (req) => {
 
       let scrapeJobId: string | null = null;
       
-      const insertStep = async (name: string, message: string, payload?: any) => {
+      const insertStep = async (name: string, message: string, payload?: unknown) => {
         return await supabase.from("automation_steps").insert({
           job_id: scrapeJobId,
           run_id: run.id,
@@ -267,7 +267,7 @@ serve(async (req) => {
         }).select().single();
       };
 
-      const updateStep = async (stepId: string, status: string, message?: string, payload?: any, errorStack?: string) => {
+      const updateStep = async (stepId: string, status: string, message?: string, payload?: unknown, errorStack?: string) => {
         return await supabase.from("automation_steps").update({
           status,
           message,
@@ -398,8 +398,8 @@ serve(async (req) => {
 
               const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
 
-              const batchCompanies = [];
-              const batchRawData = [];
+              const batchCompanies: Record<string, unknown>[] = [];
+              const batchRawData: Record<string, string>[] = [];
 
               for (let li = 1; li < lines.length; li++) {
                 const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));

@@ -4,7 +4,13 @@
 
 export type ScrapeJobStatus = 'pending' | 'running' | 'completed' | 'failed' | 'paused';
 
-export const ScrapeJobStateMachine = {
+type ScrapeJobTransitions = Partial<Record<string, ScrapeJobStatus>>;
+type ScrapeJobStateConfig = { on: ScrapeJobTransitions };
+
+export const ScrapeJobStateMachine: {
+  initial: ScrapeJobStatus;
+  states: Record<ScrapeJobStatus, ScrapeJobStateConfig>;
+} = {
   initial: 'pending',
   states: {
     pending: {
@@ -32,11 +38,11 @@ export const ScrapeJobStateMachine = {
 export function canTransitionScrapeJob(current: ScrapeJobStatus, event: string): boolean {
   const state = ScrapeJobStateMachine.states[current];
   if (!state) return false;
-  return !!(state as any).on[event];
+  return !!state.on[event];
 }
 
 export function getNextScrapeJobStatus(current: ScrapeJobStatus, event: string): ScrapeJobStatus | null {
   const state = ScrapeJobStateMachine.states[current];
   if (!state) return null;
-  return (state as any).on[event] || null;
+  return state.on[event] || null;
 }

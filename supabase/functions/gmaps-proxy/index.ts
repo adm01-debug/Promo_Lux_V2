@@ -38,7 +38,7 @@ function recordFailure() {
 import { z } from "https://esm.sh/zod@3.23.8";
 import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
-import { calculateIPCScore } from "../_shared/domain/ipc/scoring.ts";
+import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ipc/scoring.ts";
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
@@ -294,7 +294,7 @@ serve(async (req) => {
       if (dbError) throw dbError;
 
       let externalId: string | null = null;
-      let responseBody: any = { id: dbJob.id, status: "pending" };
+      let responseBody: Record<string, unknown> = { id: dbJob.id, status: "pending" };
       
       try {
         const isHealthy = await checkCircuitBreaker(supabase, "gmaps-api");
@@ -442,7 +442,7 @@ serve(async (req) => {
       let companiesCreated = 0;
 
       for (const result of results) {
-        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as any);
+        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as IPCHittingCriteria | undefined);
 
         const { data: company } = await supabase
           .from("companies")
