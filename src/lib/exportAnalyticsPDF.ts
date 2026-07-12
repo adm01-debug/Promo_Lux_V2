@@ -2,6 +2,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { db } from "@/integrations/supabase/withOrg";
 
+/** jsPDF instance augmented by jspdf-autotable with the last table's geometry. */
+type JsPDFWithAutoTable = jsPDF & { lastAutoTable: { finalY: number } };
+
+
 export async function exportAnalyticsPDF() {
   // Gather data
   const [
