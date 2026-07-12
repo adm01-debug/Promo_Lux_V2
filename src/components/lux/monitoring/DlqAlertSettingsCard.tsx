@@ -230,10 +230,38 @@ export function DlqAlertSettingsCard() {
                           minute: "2-digit",
                         })}
                       </span>
-                      <span className="font-mono">
-                        <span className="text-destructive">{h.pending_items}</span>
-                        <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
-                        <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
+                      <span className="flex items-center gap-2 font-mono">
+                        {h.delta !== null && (
+                          <span
+                            className={cn(
+                              "flex items-center gap-0.5",
+                              h.delta > 0
+                                ? "text-destructive"
+                                : h.delta < 0
+                                ? "text-emerald-500"
+                                : "text-muted-foreground"
+                            )}
+                            title={
+                              h.delta === 0
+                                ? "Sem variação vs. alerta anterior"
+                                : `${h.delta > 0 ? "+" : ""}${h.delta} vs. alerta anterior`
+                            }
+                          >
+                            {h.delta > 0 ? (
+                              <ArrowUp className="h-3 w-3" />
+                            ) : h.delta < 0 ? (
+                              <ArrowDown className="h-3 w-3" />
+                            ) : (
+                              <Minus className="h-3 w-3" />
+                            )}
+                            {h.delta !== 0 && `${h.delta > 0 ? "+" : ""}${h.delta}`}
+                          </span>
+                        )}
+                        <span>
+                          <span className="text-destructive">{h.pending_items}</span>
+                          <span className="text-muted-foreground"> / limite {h.pending_critical}</span>
+                          <span className="text-muted-foreground"> · {h.admins_notified} admin(s)</span>
+                        </span>
                       </span>
                     </li>
                   ))}
