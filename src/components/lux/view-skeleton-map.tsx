@@ -27,6 +27,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   "org-violations": SettingsSkeleton,
   "rls-discovery": SettingsSkeleton,
   monitoring: DashboardSkeleton,
+  automations: DashboardSkeleton,
   "recycle-bin": SettingsSkeleton,
   suppressions: SettingsSkeleton,
 };

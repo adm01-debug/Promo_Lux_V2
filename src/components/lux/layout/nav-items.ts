@@ -45,6 +45,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "campaigns", label: "Campanhas", icon: Mail },
   { id: "suppressions", label: "Lista de Supressão", icon: ShieldOff },
   { id: "ai-agent", label: "Agente IA", icon: Bot },
+  { id: "automations", label: "Automações (Tempo Real)", icon: Activity },
   { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
   { id: "integrations", label: "API & Webhooks", icon: Webhook },
   { id: "org-violations", label: "Violações de Org", icon: ShieldAlert },

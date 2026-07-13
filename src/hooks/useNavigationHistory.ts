@@ -3,7 +3,7 @@ import { prefetchView } from "@/lib/viewRegistry";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
-export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations" | "rls-discovery" | "monitoring" | "recycle-bin" | "suppressions";
+export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations" | "rls-discovery" | "monitoring" | "automations" | "recycle-bin" | "suppressions";
 
 export type NavigationDirection = "forward" | "back";
 
@@ -27,6 +27,7 @@ const VIEW_LABELS: Record<View, string> = {
   "org-violations": "Violações de Organização",
   "rls-discovery": "RLS Discovery",
   monitoring: "Status do Sistema",
+  automations: "Automações (Tempo Real)",
   "recycle-bin": "Lixeira",
   suppressions: "Lista de Supressão",
 };
@@ -51,11 +52,12 @@ const VIEW_SECTIONS: Record<View, string> = {
   "org-violations": "Sistema",
   "rls-discovery": "Sistema",
   monitoring: "Sistema",
+  automations: "Automação",
   "recycle-bin": "Sistema",
   suppressions: "Automação",
 };
 
-const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery", "monitoring", "recycle-bin", "suppressions"];
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery", "monitoring", "automations", "recycle-bin", "suppressions"];
 
 function isValidView(v: string | null): v is View {
   return !!v && ALL_VIEWS.includes(v as View);

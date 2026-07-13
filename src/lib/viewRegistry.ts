@@ -26,6 +26,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   "org-violations": () => import("@/components/lux/OrgViolationsView"),
   "rls-discovery": () => import("@/components/lux/settings/RLSDiscoveryView"),
   monitoring: () => import("@/components/lux/monitoring/MonitoringView"),
+  automations: () => import("@/components/lux/automations/AutomationsRealtimeView"),
   "recycle-bin": () => import("@/components/lux/RecycleBinView"),
   suppressions: () => import("@/components/lux/EmailSuppressionsView"),
 };
@@ -61,6 +62,7 @@ export const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentTyp
   "org-violations": lazy(() => import("@/components/lux/OrgViolationsView").then(m => ({ default: m.OrgViolationsView }))),
   "rls-discovery": lazy(() => import("@/components/lux/settings/RLSDiscoveryView").then(m => ({ default: m.RLSDiscoveryView }))),
   monitoring: lazy(() => import("@/components/lux/monitoring/MonitoringView").then(m => ({ default: m.MonitoringView }))),
+  automations: lazy(() => import("@/components/lux/automations/AutomationsRealtimeView").then(m => ({ default: m.AutomationsRealtimeView }))),
   "recycle-bin": lazy(() => import("@/components/lux/RecycleBinView").then(m => ({ default: m.RecycleBinView }))),
   suppressions: lazy(() => import("@/components/lux/EmailSuppressionsView").then(m => ({ default: m.EmailSuppressionsView }))),
 };
