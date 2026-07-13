@@ -144,34 +144,6 @@ const AutomationMonitoring = () => {
     }
   });
 
-  const { data: auditLogs, isLoading: auditLoading } = useQuery({
-    queryKey: ["audit-logs"],
-    queryFn: async () => {
-      const { data: logs, error: logsError } = await db
-        .from("audit_logs")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(50);
-      
-      if (logsError) throw logsError;
-
-      const actorIds = [...new Set(logs.map(l => l.actor_id).filter(Boolean))];
-      
-      if (actorIds.length > 0) {
-        const { data: profiles } = await db
-          .from("profiles")
-          .select("id, full_name, avatar_url")
-          .in("id", actorIds as string[]);
-        
-        return logs.map(log => ({
-          ...log,
-          actor: profiles?.find(p => p.id === log.actor_id)
-        }));
-      }
-
-      return logs.map(log => ({ ...log, actor: null }));
-    }
-  });
 
   const handleOpenDetails = (jobId: string) => {
     setSelectedJobId(jobId);
