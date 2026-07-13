@@ -3,12 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, ChevronLeft, Sparkles, Rocket, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { TourStep } from "./TourSteps";
+import type { TooltipPosition } from "./tour-position";
 
-interface TooltipPosition {
-  top: number;
-  left: number;
-  arrowSide: "top" | "bottom" | "left" | "right";
-}
 
 interface TourTooltipProps {
   step: number;
