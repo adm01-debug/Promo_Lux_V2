@@ -57,7 +57,7 @@ const VIEW_SECTIONS: Record<View, string> = {
   suppressions: "Automação",
 };
 
-const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery", "monitoring", "recycle-bin", "suppressions"];
+const ALL_VIEWS: View[] = ["dashboard", "icp", "workflows", "companies", "intent", "campaigns", "ai-agent", "analytics", "settings", "gmaps", "map", "stakeholders", "scrape-results", "organizations", "deals", "integrations", "org-violations", "rls-discovery", "monitoring", "automations", "recycle-bin", "suppressions"];
 
 function isValidView(v: string | null): v is View {
   return !!v && ALL_VIEWS.includes(v as View);
