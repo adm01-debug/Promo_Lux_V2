@@ -10,7 +10,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
-import { CompanyFilters, CompanyFiltersState, getScoreRange, getCity, type ScoreRange } from "@/components/lux/CompanyFilters";
+import { CompanyFilters, CompanyFiltersState } from "@/components/lux/CompanyFilters";
+import { getScoreRange, getCity, type ScoreRange } from "@/components/lux/company-filters-utils";
 import { CompanyPagination } from "@/components/lux/CompanyPagination";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
