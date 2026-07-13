@@ -52,6 +52,7 @@ const VIEW_SECTIONS: Record<View, string> = {
   "org-violations": "Sistema",
   "rls-discovery": "Sistema",
   monitoring: "Sistema",
+  automations: "Automação",
   "recycle-bin": "Sistema",
   suppressions: "Automação",
 };
