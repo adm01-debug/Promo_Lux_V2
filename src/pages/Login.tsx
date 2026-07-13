@@ -4,7 +4,7 @@ import { GoogleLoadingOverlay } from "@/components/lux/auth/GoogleLoadingOverlay
 import { LoginCard } from "@/components/lux/auth/LoginCard";
 import { GoldConfetti } from "@/components/lux/auth/GoldConfetti";
 import { AnimatePresence, motion } from "framer-motion";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { useNavigate } from "react-router-dom";
 import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";

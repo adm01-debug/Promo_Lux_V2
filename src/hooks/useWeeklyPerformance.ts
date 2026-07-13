@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { DEMO_PERFORMANCE } from "@/lib/demoData";
 
 interface DayPerformance {

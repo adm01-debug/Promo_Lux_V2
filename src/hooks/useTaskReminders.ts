@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import { toast } from "sonner";
 
 /** Polls deal_tasks every 60s and fires a toast when remind_at passes. */

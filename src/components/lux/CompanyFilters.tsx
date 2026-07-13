@@ -4,14 +4,8 @@ import { Tag, Search, MapPin, Filter, X, ChevronDown, ChevronUp } from "lucide-r
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { getScoreRange, getCity, type ScoreRange, type FacetItem } from "./company-filters-utils";
 
-type ScoreRange = "all" | "90+" | "75-89" | "60-74" | "<60";
-
-interface FacetItem {
-  value: string;
-  label: string;
-  count: number;
-}
 
 const FacetGroup = forwardRef<HTMLDivElement, {
   title: string;
@@ -113,14 +107,7 @@ interface CompanyFiltersProps {
   companies: { sector: string; location: string; source: string; enriched: boolean; ipcScore: number }[];
 }
 
-const getScoreRange = (score: number): ScoreRange => {
-  if (score >= 90) return "90+";
-  if (score >= 75) return "75-89";
-  if (score >= 60) return "60-74";
-  return "<60";
-};
 
-const getCity = (location: string) => location.split(",")[0].trim();
 
 export const CompanyFilters = ({
   filters,
@@ -256,6 +243,3 @@ export const CompanyFilters = ({
     </div>
   );
 };
-
-export { getScoreRange, getCity };
-export type { ScoreRange, FacetItem };

@@ -2,7 +2,7 @@ import { Mail, Check } from "lucide-react";
 import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { getSeniority, getScoreGradient, getInitials } from "./StakeholderCard";
+import { getSeniority, getScoreGradient, getInitials } from "./stakeholder-utils";
 
 interface Stakeholder {
   id: string;

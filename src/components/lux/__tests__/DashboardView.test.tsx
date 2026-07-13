@@ -86,11 +86,11 @@ vi.mock("../ActivityFeed", () => ({
   ActivityFeed: () => <div data-testid="activity-feed" />,
 }));
 
-vi.mock("@/contexts/AuthContext", () => ({
+vi.mock("@/contexts/auth-context", () => ({
   useAuth: () => ({ user: { email: "test@test.com" }, loading: false, signOut: vi.fn() }),
 }));
 
-vi.mock("@/contexts/DemoContext", () => ({
+vi.mock("@/contexts/demo-context", () => ({
   useDemo: () => ({ isDemoMode: false, exitDemo: vi.fn() }),
 }));
 

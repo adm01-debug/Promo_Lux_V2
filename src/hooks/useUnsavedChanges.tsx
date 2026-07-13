@@ -1,26 +1,5 @@
-import { useState, useCallback, useEffect, createContext, useContext, ReactNode } from "react";
-
-type UnsavedChangesContextType = {
-  hasUnsavedChanges: boolean;
-  setHasUnsavedChanges: (v: boolean) => void;
-  showConfirmDialog: boolean;
-  pendingAction: (() => void) | null;
-  confirmNavigation: (action: () => void) => boolean;
-  handleConfirm: () => void;
-  handleCancel: () => void;
-};
-
-const UnsavedChangesContext = createContext<UnsavedChangesContextType>({
-  hasUnsavedChanges: false,
-  setHasUnsavedChanges: () => {},
-  showConfirmDialog: false,
-  pendingAction: null,
-  confirmNavigation: () => true,
-  handleConfirm: () => {},
-  handleCancel: () => {},
-});
-
-export const useUnsavedChanges = () => useContext(UnsavedChangesContext);
+import { useState, useCallback, useEffect, ReactNode } from "react";
+import { UnsavedChangesContext } from "./unsaved-changes-context";
 
 export function UnsavedChangesProvider({ children }: { children: ReactNode }) {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);

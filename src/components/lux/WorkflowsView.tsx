@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { cn } from "@/lib/utils";
 import { workflowApi, type Workflow } from "@/lib/api/workflows";
 import type { Json, Tables } from "@/integrations/supabase/types";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
 import { WorkflowCard } from "./workflows/WorkflowCard";

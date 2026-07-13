@@ -1,5 +1,6 @@
 import { motion, Variants } from "framer-motion";
 import type { ReactNode } from "react";
+import { itemVariants } from "./motion-variants";
 
 const pageVariants: Variants = {
   initial: { opacity: 0, y: 16, scale: 0.97, filter: "blur(6px)" },
@@ -27,10 +28,7 @@ const pageVariants: Variants = {
   },
 };
 
-export const itemVariants: Variants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-};
+
 
 interface PageTransitionProps {
   children: ReactNode;

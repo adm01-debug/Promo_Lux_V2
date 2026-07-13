@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { tourSteps } from "./onboarding/TourSteps";
 import { TourSpotlight } from "./onboarding/TourSpotlight";
-import { TourTooltip, getTooltipPosition } from "./onboarding/TourTooltip";
+import { TourTooltip } from "./onboarding/TourTooltip";
+import { getTooltipPosition } from "./onboarding/tour-position";
 import { ConfettiEffect } from "./onboarding/ConfettiEffect";
 
 interface TooltipPosition {

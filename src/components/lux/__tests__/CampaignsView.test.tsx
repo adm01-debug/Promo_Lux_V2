@@ -39,7 +39,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-vi.mock("@/contexts/AuthContext", () => ({
+vi.mock("@/contexts/auth-context", () => ({
   useAuth: vi.fn(() => ({ user: { id: "u1" } })),
 }));
 
@@ -48,7 +48,7 @@ vi.mock("@/hooks/usePermissions", () => ({
   usePermissions: () => ({ role: "admin", isAdmin: true, can: () => true }),
 }));
 
-vi.mock("@/contexts/DemoContext", () => ({
+vi.mock("@/contexts/demo-context", () => ({
   useDemo: () => ({ isDemoMode: false }),
 }));
 

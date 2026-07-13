@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { DEMO_COMPANIES_FULL, DEMO_CAMPAIGNS, DEMO_WORKFLOWS } from "@/lib/demoData";
-import { COLORS } from "./AnalyticsChartTooltip";
+import { COLORS } from "./analytics-constants";
 
 /** Campos de campanha consumidos pelos gráficos de conversão/ROI. */
 export interface AnalyticsCampaign {

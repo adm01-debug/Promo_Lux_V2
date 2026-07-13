@@ -12,7 +12,7 @@ interface MobileBottomNavProps {
   onOpenMenu: () => void;
 }
 
-export const BOTTOM_NAV_TABS: { id: View; label: string; icon: React.ElementType }[] = [
+const BOTTOM_NAV_TABS: { id: View; label: string; icon: React.ElementType }[] = [
   { id: "dashboard", label: "Home", icon: LayoutDashboard },
   { id: "companies", label: "Empresas", icon: Building2 },
   { id: "analytics", label: "Analytics", icon: BarChart3 },

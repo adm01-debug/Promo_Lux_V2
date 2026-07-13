@@ -9,7 +9,7 @@ import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { validateCompany } from "@/lib/schemas/company";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { OrgMismatchError } from "@/integrations/supabase/withOrg";
 import { handleOrgError } from "@/lib/orgErrorHandler";
 

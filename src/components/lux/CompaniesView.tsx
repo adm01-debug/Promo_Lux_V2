@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { DEMO_COMPANIES_FULL } from "@/lib/demoData";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
 import { ImportCompaniesDialog } from "@/components/lux/companies/ImportCompaniesDialog";
@@ -10,7 +10,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CompanyDetailModal } from "@/components/lux/CompanyDetailModal";
-import { CompanyFilters, CompanyFiltersState, getScoreRange, getCity, type ScoreRange } from "@/components/lux/CompanyFilters";
+import { CompanyFilters, CompanyFiltersState } from "@/components/lux/CompanyFilters";
+import { getScoreRange, getCity, type ScoreRange } from "@/components/lux/company-filters-utils";
 import { CompanyPagination } from "@/components/lux/CompanyPagination";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";

@@ -9,7 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode; glow: string }> = {

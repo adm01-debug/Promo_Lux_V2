@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { validateCampaign } from "@/lib/schemas/campaign";
-import { useDemo } from "@/contexts/DemoContext";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { useDemo } from "@/contexts/demo-context";
+import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { DEMO_CAMPAIGNS } from "@/lib/demoData";
 import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil, Activity } from "lucide-react";
 import { CampaignTrackingDrawer } from "@/components/lux/campaigns/CampaignTrackingDrawer";
@@ -16,7 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import { useCan } from "@/hooks/usePermissions";
 import type { Tables } from "@/integrations/supabase/types";
 import { motion } from "framer-motion";

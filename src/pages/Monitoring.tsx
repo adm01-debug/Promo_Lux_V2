@@ -42,7 +42,7 @@ import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsP
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 

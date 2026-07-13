@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { AlertCircle } from "lucide-react";
 
 export function UnsavedChangesDialog() {

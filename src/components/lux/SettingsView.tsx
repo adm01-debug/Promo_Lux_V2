@@ -8,13 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
-import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { StickySaveBar } from "./StickySaveBar";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "api";

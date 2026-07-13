@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
-import { useDemo } from "@/contexts/DemoContext";
+import { useDemo } from "@/contexts/demo-context";
 import { DEMO_STAKEHOLDERS } from "@/lib/demoData";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery } from "@tanstack/react-query";

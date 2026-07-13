@@ -4,7 +4,8 @@ import { mockFramerMotion } from "@/test/mockFramerMotion";
 
 vi.mock("framer-motion", () => mockFramerMotion());
 
-import { StakeholderCard, getInitials, getSeniority, getScoreGradient } from "../stakeholders/StakeholderCard";
+import { StakeholderCard } from "../stakeholders/StakeholderCard";
+import { getInitials, getSeniority, getScoreGradient } from "../stakeholders/stakeholder-utils";
 
 describe("StakeholderCard utilities", () => {
   it("getInitials returns first+last initials", () => {

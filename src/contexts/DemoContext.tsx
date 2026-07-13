@@ -1,20 +1,5 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-
-interface DemoContextType {
-  isDemoMode: boolean;
-  enterDemo: () => void;
-  exitDemo: () => void;
-}
-
-const DemoContext = createContext<DemoContextType>({
-  isDemoMode: false,
-  enterDemo: () => {},
-  exitDemo: () => {},
-});
-
-export const useDemo = () => useContext(DemoContext);
-
-const DEMO_KEY = "lux-demo-mode";
+import { useState, useCallback, ReactNode } from "react";
+import { DemoContext, DEMO_KEY } from "./demo-context";
 
 export function DemoProvider({ children }: { children: ReactNode }) {
   const [isDemoMode, setIsDemoMode] = useState(() => {
