@@ -50,6 +50,7 @@ export const VIEW_LABELS: Record<View, string> = {
   "org-violations": "Violações de Organização",
   "rls-discovery": "RLS Discovery",
   monitoring: "Status do Sistema",
+  automations: "Automações (Tempo Real)",
   "recycle-bin": "Lixeira",
   suppressions: "Lista de Supressão",
 };
