@@ -25,6 +25,7 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   "org-violations": ShieldAlert,
   "rls-discovery": ShieldCheck,
   monitoring: Activity,
+  automations: Radio,
   "recycle-bin": Trash2,
   suppressions: ShieldOff,
 };
