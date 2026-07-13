@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "prepare": "husky",
-    "analyze": "vite-bundle-visualizer"
+    "analyze": "vite-bundle-visualizer",
+    "test:grants": "bash scripts/check-function-grants.sh"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
