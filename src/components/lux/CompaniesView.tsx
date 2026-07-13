@@ -89,7 +89,7 @@ export const CompaniesView = () => {
     staleTime: 15_000,
   });
 
-  const companies = rawCompanies ?? [];
+  const companies = useMemo(() => rawCompanies ?? [], [rawCompanies]);
 
   const toggleSet = <T extends string>(set: Set<T>, value: T): Set<T> => {
     const next = new Set(set);
