@@ -65,9 +65,6 @@ import { Label } from "@/components/ui/label";
 import type { Tables } from "@/integrations/supabase/types";
 
 type ScrapeJobRow = Tables<"scrape_jobs">;
-type AuditLogRow = Tables<"audit_logs"> & {
-  actor?: { full_name?: string | null; avatar_url?: string | null } | null;
-};
 
 
 const AutomationMonitoring = () => {
