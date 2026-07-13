@@ -4,14 +4,8 @@ import { Tag, Search, MapPin, Filter, X, ChevronDown, ChevronUp } from "lucide-r
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { getScoreRange, getCity, type ScoreRange, type FacetItem } from "./company-filters-utils";
 
-type ScoreRange = "all" | "90+" | "75-89" | "60-74" | "<60";
-
-interface FacetItem {
-  value: string;
-  label: string;
-  count: number;
-}
 
 const FacetGroup = forwardRef<HTMLDivElement, {
   title: string;
