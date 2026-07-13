@@ -415,6 +415,10 @@ const AutomationMonitoring = () => {
 
         </TabsList>
 
+        <TabsContent value="realtime" className="space-y-4">
+          <AutomationsRealtimeView />
+        </TabsContent>
+
         <TabsContent value="runs" className="space-y-4">
           {jobsLoading ? (
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
