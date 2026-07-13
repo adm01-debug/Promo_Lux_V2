@@ -533,6 +533,9 @@ const AutomationMonitoring = () => {
         </TabsContent>
 
         <TabsContent value="audit">
+          <AuditTrailPanel />
+        </TabsContent>
+
           <Card className="glass border-border/40 overflow-hidden">
             <CardHeader className="bg-secondary/20">
               <CardTitle className="text-lg">Registro de Auditoria</CardTitle>
