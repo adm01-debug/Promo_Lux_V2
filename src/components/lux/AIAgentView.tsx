@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Bot, Send, Sparkles, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,10 +95,13 @@ export const AIAgentView = () => {
     staleTime: 60_000,
   });
 
-  const messages: AgentMessage[] =
-    persistedMessages && persistedMessages.length > 0
-      ? persistedMessages
-      : [WELCOME_MSG];
+  const messages: AgentMessage[] = useMemo(
+    () =>
+      persistedMessages && persistedMessages.length > 0
+        ? persistedMessages
+        : [WELCOME_MSG],
+    [persistedMessages]
+  );
 
   useEffect(() => {
     if (scrollRef.current) {
