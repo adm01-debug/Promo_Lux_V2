@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
   Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Activity, Trash2, ShieldOff,
-  HelpCircle, Keyboard, LifeBuoy, FileText,
+  HelpCircle, Keyboard, LifeBuoy, FileText, Radio,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
 
