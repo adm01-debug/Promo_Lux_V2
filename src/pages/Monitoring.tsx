@@ -371,6 +371,10 @@ const AutomationMonitoring = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="bg-secondary/50 border border-border/50">
+          <TabsTrigger value="realtime" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Tempo Real
+          </TabsTrigger>
           <TabsTrigger value="runs" className="gap-2">
             <History className="h-4 w-4" />
             Execuções
