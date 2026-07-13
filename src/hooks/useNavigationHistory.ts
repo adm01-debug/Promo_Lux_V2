@@ -104,7 +104,7 @@ export function useNavigationHistory() {
       const params: Record<string, string> = target ? { view: target } : {};
       setSearchParams(params, { replace: false });
     }
-  }, [activeView]);
+  }, [activeView, searchParams, setSearchParams]);
 
   const goBack = useCallback(() => {
     if (historyIndex > 0) {

@@ -71,7 +71,7 @@ export const CompaniesMapView = () => {
       );
       if (needsGeo.length > 0) geocodeCompanies();
     }
-  }, [companies]);
+  }, [companies, isGeocoding, geocodeCompanies]);
 
   const allMappable = useMemo(() => {
     if (!companies) return [];
