@@ -18,12 +18,3 @@ export const CustomTooltip = ({ active, payload, label }: { active?: boolean; pa
     </div>
   );
 };
-
-export const COLORS = [
-  "hsl(45, 100%, 58%)",
-  "hsl(142, 71%, 45%)",
-  "hsl(210, 80%, 60%)",
-  "hsl(280, 70%, 55%)",
-  "hsl(340, 70%, 55%)",
-  "hsl(215, 12%, 50%)",
-];
