@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "analyze": "vite-bundle-visualizer",
-    "test:grants": "bash scripts/check-function-grants.sh"
+    "test:grants": "bash scripts/check-function-grants.sh",
+    "test:audit-triggers": "bash scripts/check-audit-triggers.sh"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
