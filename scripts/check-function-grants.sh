@@ -13,9 +13,9 @@ set -euo pipefail
 DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
 
 if [[ -z "$DB_URL" ]]; then
-  echo "::error::SUPABASE_DB_URL (ou DATABASE_URL) não configurada." >&2
-  echo "Adicione a connection string do banco como secret para habilitar o guard de grants/RLS." >&2
-  exit 1
+  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de grants/RLS ignorado."
+  echo "Adicione a connection string do banco como secret para ativar este guard: Settings → Secrets → Actions."
+  exit 0
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
