@@ -57,7 +57,7 @@ export interface AuditTrailResult {
   totalPages: number;
 }
 
-async function fetchAuditTrail(filters: AuditTrailFilters): Promise<AuditTrailResult> {
+export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<AuditTrailResult> {
   const { table, action, search, page, pageSize } = filters;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
