@@ -1,5 +1,6 @@
 import { motion, Variants } from "framer-motion";
 import type { ReactNode } from "react";
+import { itemVariants } from "./motion-variants";
 
 const pageVariants: Variants = {
   initial: { opacity: 0, y: 16, scale: 0.97, filter: "blur(6px)" },
