@@ -93,8 +93,8 @@ BEGIN
   END LOOP;
 
   IF violations <> '' OR missing_authenticated <> '' THEN
-    RAISE EXCEPTION E'Verificação de grants de função FALHOU:%s%s',
-      violations, missing_authenticated;
+    RAISE EXCEPTION E'Verificação de grants de função FALHOU:%',
+      violations || missing_authenticated;
   END IF;
 
   RAISE NOTICE 'OK: postura de EXECUTE das funções public está conforme o esperado (anon=0, authenticated=% funções, service_role=todas).',
