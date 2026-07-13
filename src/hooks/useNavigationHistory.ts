@@ -3,7 +3,7 @@ import { prefetchView } from "@/lib/viewRegistry";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
-export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations" | "rls-discovery" | "monitoring" | "recycle-bin" | "suppressions";
+export type View = "dashboard" | "icp" | "workflows" | "companies" | "intent" | "campaigns" | "ai-agent" | "analytics" | "settings" | "gmaps" | "map" | "stakeholders" | "scrape-results" | "organizations" | "deals" | "integrations" | "org-violations" | "rls-discovery" | "monitoring" | "automations" | "recycle-bin" | "suppressions";
 
 export type NavigationDirection = "forward" | "back";
 
