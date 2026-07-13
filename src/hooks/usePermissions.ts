@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import { useOrgMembers, useActiveOrganization } from "@/hooks/useOrganizations";
 import { can, type Action, type Entity, type AppRole } from "@/lib/permissions";
 

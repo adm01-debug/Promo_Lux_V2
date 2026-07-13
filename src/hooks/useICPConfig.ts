@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 
 export type ICPValue = string | string[] | number[];
 

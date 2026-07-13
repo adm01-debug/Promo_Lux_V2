@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import {
   useMyOrganizations, useActiveOrganization, useOrgMembers, useOrgInvites,
   useCreateOrganization, useCreateInvite, useRevokeInvite,

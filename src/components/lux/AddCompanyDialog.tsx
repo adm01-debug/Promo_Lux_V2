@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 import { validateCompany } from "@/lib/schemas/company";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";

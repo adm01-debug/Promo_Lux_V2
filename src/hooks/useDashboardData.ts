@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
-import { useAuth } from "@/contexts/AuthContext";
-import { useDemo } from "@/contexts/DemoContext";
+import { useAuth } from "@/contexts/auth-context";
+import { useDemo } from "@/contexts/demo-context";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { DEMO_STATS, DEMO_COMPANIES, DEMO_ACTIVITY } from "@/lib/demoData";
 

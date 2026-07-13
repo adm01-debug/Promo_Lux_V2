@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useDemo } from "@/contexts/DemoContext";
+import { useAuth } from "@/contexts/auth-context";
+import { useDemo } from "@/contexts/demo-context";
 import { StatsGrid } from "@/components/lux/StatsGrid";
 import { AutomationsList } from "@/components/lux/AutomationsList";
 import { CompanyTable } from "@/components/lux/CompanyTable";
