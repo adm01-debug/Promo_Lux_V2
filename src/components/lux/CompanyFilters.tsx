@@ -243,6 +243,3 @@ export const CompanyFilters = ({
     </div>
   );
 };
-
-export { getScoreRange, getCity };
-export type { ScoreRange, FacetItem };
