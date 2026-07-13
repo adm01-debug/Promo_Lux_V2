@@ -18,7 +18,8 @@ vi.mock("@/lib/viewRegistry", () => ({
   prefetchView: vi.fn(),
 }));
 
-import { Sidebar, NAV_ITEMS } from "../layout/nav-items";
+import { Sidebar } from "../layout/Sidebar";
+import { NAV_ITEMS } from "../layout/nav-items";
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
