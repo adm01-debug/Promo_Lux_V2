@@ -107,14 +107,7 @@ interface CompanyFiltersProps {
   companies: { sector: string; location: string; source: string; enriched: boolean; ipcScore: number }[];
 }
 
-const getScoreRange = (score: number): ScoreRange => {
-  if (score >= 90) return "90+";
-  if (score >= 75) return "75-89";
-  if (score >= 60) return "60-74";
-  return "<60";
-};
 
-const getCity = (location: string) => location.split(",")[0].trim();
 
 export const CompanyFilters = ({
   filters,
