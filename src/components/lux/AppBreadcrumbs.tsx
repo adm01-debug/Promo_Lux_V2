@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { View } from "@/hooks/useNavigationHistory";
-import { NAV_ITEMS } from "@/components/lux/layout/Sidebar";
+import { NAV_ITEMS } from "@/components/lux/layout/nav-items";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
