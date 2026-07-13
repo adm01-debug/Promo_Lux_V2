@@ -29,3 +29,19 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  rls-grants:
+    name: Grants/RLS Guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install psql client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Verify function EXECUTE grants (anon/authenticated/service_role)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: bash scripts/check-function-grants.sh
