@@ -26,6 +26,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   "org-violations": () => import("@/components/lux/OrgViolationsView"),
   "rls-discovery": () => import("@/components/lux/settings/RLSDiscoveryView"),
   monitoring: () => import("@/components/lux/monitoring/MonitoringView"),
+  automations: () => import("@/components/lux/automations/AutomationsRealtimeView"),
   "recycle-bin": () => import("@/components/lux/RecycleBinView"),
   suppressions: () => import("@/components/lux/EmailSuppressionsView"),
 };
