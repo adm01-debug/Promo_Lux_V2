@@ -69,7 +69,7 @@ type AuditLogRow = Tables<"audit_logs"> & {
 
 
 const AutomationMonitoring = () => {
-  const [activeTab, setActiveTab] = useState("runs");
+  const [activeTab, setActiveTab] = useState("realtime");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [periodFilter, setPeriodFilter] = useState<string>("7"); // days
