@@ -81,7 +81,7 @@ describe("CompanyTable — Virtualized list", () => {
   });
 
   it("shows empty state when no companies", () => {
-    vi.mocked(useVirtualCompanies).mockReturnValue({ data: [], isLoading: false } as ReturnType<typeof useVirtualCompanies>);
+    vi.mocked(useVirtualCompanies).mockReturnValue({ data: [], isLoading: false } as unknown as ReturnType<typeof useVirtualCompanies>);
     render(<CompanyTable />, { wrapper });
     expect(screen.getByText("Nenhuma empresa ainda")).toBeInTheDocument();
   });

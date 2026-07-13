@@ -105,7 +105,7 @@ describe("useRealtimeCompanies", () => {
 
   it("invalidates queries on any event", async () => {
     renderHook(() => useRealtimeCompanies());
-    await subscribeCb({ eventType: "UPDATE", new: {} });
+    await subscribeCb!({ eventType: "UPDATE", new: {} });
     expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ["companies-list"] });
     expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ["companies-map"] });
     expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ["dashboard-stats"] });
@@ -114,7 +114,7 @@ describe("useRealtimeCompanies", () => {
 
   it("shows toast on INSERT event for scraped company", async () => {
     renderHook(() => useRealtimeCompanies());
-    await subscribeCb({
+    await subscribeCb!({
       eventType: "INSERT",
       new: { name: "TestCo", source: "gmaps", sector: "Tech", location: "SP" },
     });
@@ -125,7 +125,7 @@ describe("useRealtimeCompanies", () => {
 
   it("shows different title for manual source", async () => {
     renderHook(() => useRealtimeCompanies());
-    await subscribeCb({
+    await subscribeCb!({
       eventType: "INSERT",
       new: { name: "ManualCo", source: "manual", sector: "", location: "" },
     });
@@ -136,7 +136,7 @@ describe("useRealtimeCompanies", () => {
 
   it("persists notification to database on INSERT", async () => {
     renderHook(() => useRealtimeCompanies());
-    await subscribeCb({
+    await subscribeCb!({
       eventType: "INSERT",
       new: { id: "abc", name: "PersistCo", source: "gmaps", sector: "IT", location: "RJ" },
     });
@@ -150,7 +150,7 @@ describe("useRealtimeCompanies", () => {
 
   it("does not toast or persist on UPDATE event", async () => {
     renderHook(() => useRealtimeCompanies());
-    await subscribeCb({ eventType: "UPDATE", new: {} });
+    await subscribeCb!({ eventType: "UPDATE", new: {} });
     expect(mockToast).not.toHaveBeenCalled();
     expect(mockInsert).not.toHaveBeenCalled();
   });
