@@ -22,7 +22,7 @@ vi.mock("@/hooks/use-toast", () => ({
 const mockUser = { id: "test-user-id" };
 let currentUser: typeof mockUser | null = mockUser;
 
-vi.mock("@/contexts/AuthContext", () => ({
+vi.mock("@/contexts/auth-context", () => ({
   useAuth: () => ({ user: currentUser }),
 }));
 
