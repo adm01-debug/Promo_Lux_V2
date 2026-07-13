@@ -14,7 +14,7 @@ import { KeyboardShortcutsDialog } from "@/components/lux/KeyboardShortcutsDialo
 import { useRealtimeCompanies } from "@/hooks/useRealtimeCompanies";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { OnboardingTour } from "@/components/lux/OnboardingTour";
-import { getViewSkeleton } from "@/components/lux/ViewSkeleton";
+import { getViewSkeleton } from "@/components/lux/view-skeleton-map";
 import { Sidebar } from "@/components/lux/layout/Sidebar";
 import { Header } from "@/components/lux/layout/Header";
 import { MobileBottomNav } from "@/components/lux/layout/MobileBottomNav";
