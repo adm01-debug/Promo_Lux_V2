@@ -34,7 +34,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
-import { ListChecks, Layers, ShieldAlert, FileText, Gauge } from "lucide-react";
+import { ListChecks, Layers, ShieldAlert, FileText, Gauge, Activity } from "lucide-react";
+import { AutomationsRealtimeView } from "@/components/lux/automations/AutomationsRealtimeView";
 import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdvisoryPanel";
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
 import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
@@ -69,7 +70,7 @@ type AuditLogRow = Tables<"audit_logs"> & {
 
 
 const AutomationMonitoring = () => {
-  const [activeTab, setActiveTab] = useState("runs");
+  const [activeTab, setActiveTab] = useState("realtime");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [periodFilter, setPeriodFilter] = useState<string>("7"); // days
@@ -371,6 +372,10 @@ const AutomationMonitoring = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="bg-secondary/50 border border-border/50">
+          <TabsTrigger value="realtime" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Tempo Real
+          </TabsTrigger>
           <TabsTrigger value="runs" className="gap-2">
             <History className="h-4 w-4" />
             Execuções
@@ -409,6 +414,10 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
 
         </TabsList>
+
+        <TabsContent value="realtime" className="space-y-4">
+          <AutomationsRealtimeView />
+        </TabsContent>
 
         <TabsContent value="runs" className="space-y-4">
           {jobsLoading ? (
