@@ -90,10 +90,16 @@ serve(async (req) => {
       results.push({
         domain: item.domain,
         companyId: item.companyId,
+        companyType: item.company?.companyType ?? null,
+        companyLinkedinFollowers: item.company?.linkedinFollowers ?? null,
+        companyEmailDomain: item.company?.emailDomain ?? null,
+        lushaPopularityTier: item.company?.lushaPopularityTier ?? null,
+        companyLocations: item.company?.companyLocations ?? [],
         clientReferenceId: item.clientReferenceId,
         total: decisionMakers.length,
         decisionMakers,
       });
+
     }
 
     return new Response(
