@@ -63,6 +63,36 @@ interface SearchResponse {
   contacts: LushaContact[];
 }
 
+interface DecisionMaker {
+  id: string;
+  fullName: string;
+  jobTitle: string;
+  departments: string[];
+  seniority: string;
+  company: string;
+  location: string;
+  linkedin: string;
+  hasEmail: boolean;
+  hasPhone: boolean;
+  emailCredits: number;
+  phoneCredits: number;
+}
+
+interface DMCompanyResult {
+  domain: string;
+  companyId?: string;
+  total?: number;
+  error?: string;
+  decisionMakers: DecisionMaker[];
+}
+
+interface DMResponse {
+  requestId: string;
+  creditsCharged: number;
+  totalDecisionMakers: number;
+  results: DMCompanyResult[];
+}
+
 // ── Badge de status ──
 function StatusBadge({ status }: { status: string | null }) {
   const map: Record<string, { label: string; className: string }> = {
