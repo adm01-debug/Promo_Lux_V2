@@ -29,6 +29,7 @@ const viewImports: Record<View, () => Promise<unknown>> = {
   automations: () => import("@/components/lux/automations/AutomationsRealtimeView"),
   "recycle-bin": () => import("@/components/lux/RecycleBinView"),
   suppressions: () => import("@/components/lux/EmailSuppressionsView"),
+  lusha: () => import("@/components/lux/LushaIntelligenceView"),
 };
 
 // Cache to avoid double-prefetch
@@ -65,4 +66,5 @@ export const VIEW_MAP: Record<View, React.LazyExoticComponent<React.ComponentTyp
   automations: lazy(() => import("@/components/lux/automations/AutomationsRealtimeView").then(m => ({ default: m.AutomationsRealtimeView }))),
   "recycle-bin": lazy(() => import("@/components/lux/RecycleBinView").then(m => ({ default: m.RecycleBinView }))),
   suppressions: lazy(() => import("@/components/lux/EmailSuppressionsView").then(m => ({ default: m.EmailSuppressionsView }))),
+  lusha: lazy(() => import("@/components/lux/LushaIntelligenceView").then(m => ({ default: m.LushaIntelligenceView }))),
 };

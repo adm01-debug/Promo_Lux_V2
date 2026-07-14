@@ -1,4 +1,5 @@
 import {
+  Search,
   LayoutDashboard,
   Target,
   Workflow,
@@ -37,6 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "companies", label: "Empresas", icon: Building2 },
   { id: "intent", label: "Sinais de Intenção", icon: Radar },
   { id: "stakeholders", label: "Stakeholders", icon: Users },
+  { id: "lusha", label: "Lusha", icon: Search },
   { id: "deals", label: "Pipeline (Deals)", icon: Kanban, section: "Vendas" },
   { id: "workflows", label: "Workflows", icon: Workflow, section: "Automação" },
   { id: "gmaps", label: "Google Maps", icon: MapPin },

@@ -121,6 +121,7 @@ function AnimatedRoutes() {
         <Route path="/invite/:token" element={<PageTransition><AcceptInvite /></PageTransition>} />
         <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
         <Route path="/monitoring" element={<ProtectedRoute><PageTransition><Monitoring /></PageTransition></ProtectedRoute>} />
+        <Route path="/lusha" element={<Navigate to="/?view=lusha" replace />} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>

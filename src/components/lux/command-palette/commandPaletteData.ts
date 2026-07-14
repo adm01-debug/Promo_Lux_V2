@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Target, Workflow, Building2, BarChart3, Radar,
-  Mail, Bot, MapPin, Globe, Users, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Activity, Trash2, ShieldOff,
+  Mail, Bot, MapPin, Globe, Users, Search, Settings, Database, Users2, Kanban, Webhook, ShieldAlert, ShieldCheck, Activity, Trash2, ShieldOff,
   HelpCircle, Keyboard, LifeBuoy, FileText, Radio,
 } from "lucide-react";
 import type { View } from "@/hooks/useNavigationHistory";
@@ -28,6 +28,7 @@ export const VIEW_ICONS: Record<View, React.ElementType> = {
   automations: Radio,
   "recycle-bin": Trash2,
   suppressions: ShieldOff,
+  lusha: Search,
 };
 
 export const VIEW_LABELS: Record<View, string> = {
@@ -53,6 +54,7 @@ export const VIEW_LABELS: Record<View, string> = {
   automations: "Automações (Tempo Real)",
   "recycle-bin": "Lixeira",
   suppressions: "Lista de Supressão",
+  lusha: "Lusha Intelligence",
 };
 
 export const helpItems = [
@@ -77,6 +79,7 @@ export const sections = [
       { id: "companies" as View, label: "Empresas", icon: Building2 },
       { id: "intent" as View, label: "Sinais de Intenção", icon: Radar },
       { id: "stakeholders" as View, label: "Stakeholders", icon: Users },
+      { id: "lusha" as View, label: "Lusha Intelligence", icon: Search },
     ],
   },
   {
