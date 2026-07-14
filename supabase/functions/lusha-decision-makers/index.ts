@@ -190,6 +190,7 @@ serve(async (req) => {
           (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
           0
         ),
+        persistence,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
