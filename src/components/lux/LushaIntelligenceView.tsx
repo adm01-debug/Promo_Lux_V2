@@ -402,6 +402,34 @@ export const LushaIntelligenceView = () => {
                                       ))}
                                     </div>
                                   )}
+                                  {dm.linkedinCertifications && dm.linkedinCertifications.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {dm.linkedinCertifications.slice(0, 2).map((c) => (
+                                        <Badge
+                                          key={c}
+                                          variant="secondary"
+                                          className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border border-primary/20"
+                                          title="Certificação"
+                                        >
+                                          🎓 {c}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                  {dm.linkedinCourses && dm.linkedinCourses.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {dm.linkedinCourses.slice(0, 2).map((c) => (
+                                        <Badge
+                                          key={c}
+                                          variant="secondary"
+                                          className="text-[10px] px-1.5 py-0 bg-accent/10 text-accent-foreground border border-border/50"
+                                          title="Curso"
+                                        >
+                                          📚 {c}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
                                 </div>
                               </TableCell>
 
