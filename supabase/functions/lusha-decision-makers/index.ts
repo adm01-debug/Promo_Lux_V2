@@ -345,6 +345,11 @@ serve(async (req) => {
       });
     }
 
+    // ── Merge: resultados frescos + cache ──
+    for (const cached of cachedResults) {
+      results.push(cached);
+    }
+
     const totalDMs = results.reduce(
       (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
       0
@@ -353,9 +358,10 @@ serve(async (req) => {
       companies: results.length,
       total_decision_makers: totalDMs,
       warnings: warnings.length,
+      from_cache: cachedResults.length,
     });
 
-    // ── 4. Persistência em public.lusha_contacts ──
+    // ── 4. Persistência em public.lusha_contacts (apenas resultados frescos) ──
     const persistence: {
       attempted: number;
       upserted: number;
@@ -363,18 +369,11 @@ serve(async (req) => {
       errors: string[];
     } = { attempted: 0, upserted: 0, skipped: 0, errors: [] };
 
-    const authHeader = req.headers.get("Authorization") ?? "";
-    if (authHeader.startsWith("Bearer ")) {
+    if (supabase) {
       try {
-        const supabase = createClient(
-          Deno.env.get("SUPABASE_URL")!,
-          Deno.env.get("SUPABASE_ANON_KEY")!,
-          { global: { headers: { Authorization: authHeader } } }
-        );
-
         const rows: Record<string, unknown>[] = [];
         for (const r of results) {
-          if (r.error) continue;
+          if (r.error || r.fromCache) continue; // não regrava cache
           for (const dm of r.decisionMakers as any[]) {
             persistence.attempted++;
             if (!dm.linkedin) {
@@ -453,6 +452,7 @@ serve(async (req) => {
       duration_ms: durationMs,
       total_decision_makers: totalDMs,
       persistence,
+      cache: cacheStats,
     });
 
     return new Response(
@@ -465,6 +465,11 @@ serve(async (req) => {
         totalDecisionMakers: totalDMs,
         warnings,
         persistence,
+        cache: {
+          ...cacheStats,
+          ttl_hours: ttlHours,
+          force_refresh: skipCache,
+        },
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
