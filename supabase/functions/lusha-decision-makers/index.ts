@@ -3,110 +3,238 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const LUSHA_API_KEY = "07668666-792b-42bd-a933-b16a74bd10cf";
 const LUSHA_API_URL = "https://api.lusha.com/v3/contacts/decision-makers";
+const FUNCTION_NAME = "lusha-decision-makers";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// ── Logger estruturado (JSON em stdout — consumido pelo Edge Function Logs) ──
+type LogLevel = "debug" | "info" | "warn" | "error";
+function log(level: LogLevel, correlationId: string, event: string, fields: Record<string, unknown> = {}) {
+  const line = JSON.stringify({
+    ts: new Date().toISOString(),
+    level,
+    fn: FUNCTION_NAME,
+    correlation_id: correlationId,
+    event,
+    ...fields,
+  });
+  if (level === "error") console.error(line);
+  else if (level === "warn") console.warn(line);
+  else console.log(line);
+}
+
+// ── Helpers de normalização defensiva para payload V3 parcial ──
+const str = (v: unknown): string | null =>
+  typeof v === "string" && v.trim().length > 0 ? v : null;
+const num = (v: unknown): number | null =>
+  typeof v === "number" && Number.isFinite(v) ? v : null;
+const arrStr = (v: unknown): string[] =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && x.length > 0) : [];
+const bool = (v: unknown): boolean => v === true;
+
+function errorResponse(
+  correlationId: string,
+  status: number,
+  code: string,
+  message: string,
+  detail?: unknown
+) {
+  return new Response(
+    JSON.stringify({
+      error: { code, message, detail: detail ?? null },
+      correlation_id: correlationId,
+    }),
+    { status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+  );
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  try {
-    const { domains, bitrix_card_id } = await req.json();
+  const correlationId =
+    req.headers.get("x-correlation-id") ?? crypto.randomUUID();
+  const startedAt = Date.now();
+  const warnings: Array<{ scope: string; reason: string; ref?: string }> = [];
 
-    if (!domains || !Array.isArray(domains) || domains.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "Campo 'domains' obrigatório (array de domínios)" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+  try {
+    // ── 1. Parse do body (tolerante) ──
+    let body: any;
+    try {
+      body = await req.json();
+    } catch (e) {
+      log("warn", correlationId, "invalid_json_body", { detail: (e as Error).message });
+      return errorResponse(correlationId, 400, "invalid_json", "Body inválido: JSON esperado");
     }
 
-    const companies = domains.map((domain: string, idx: number) => ({
-      domain: domain.toLowerCase().trim(),
+    const { domains, bitrix_card_id } = body ?? {};
+    if (!Array.isArray(domains) || domains.length === 0) {
+      return errorResponse(correlationId, 400, "missing_domains", "Campo 'domains' obrigatório (array não vazio)");
+    }
+    const cleanDomains = domains
+      .filter((d: unknown) => typeof d === "string" && d.trim().length > 0)
+      .map((d: string) => d.toLowerCase().trim());
+    if (cleanDomains.length === 0) {
+      return errorResponse(correlationId, 400, "empty_domains", "Nenhum domínio válido informado");
+    }
+
+    log("info", correlationId, "request_received", {
+      domains: cleanDomains.length,
+      bitrix_card_id: bitrix_card_id ?? null,
+    });
+
+    const companies = cleanDomains.map((domain, idx) => ({
+      domain,
       clientReferenceId: bitrix_card_id ? `${bitrix_card_id}-${idx}` : `req-${idx}`,
     }));
 
-    const lushaResp = await fetch(LUSHA_API_URL, {
-      method: "POST",
-      headers: {
-        "x-api-key": LUSHA_API_KEY,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({ companies }),
-    });
+    // ── 2. Chamada Lusha V3 ──
+    let lushaResp: Response;
+    try {
+      lushaResp = await fetch(LUSHA_API_URL, {
+        method: "POST",
+        headers: {
+          "x-api-key": LUSHA_API_KEY,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ companies }),
+      });
+    } catch (fetchErr) {
+      log("error", correlationId, "lusha_fetch_failed", { detail: (fetchErr as Error).message });
+      return errorResponse(correlationId, 502, "lusha_unreachable", "Falha ao contatar Lusha", (fetchErr as Error).message);
+    }
 
     if (!lushaResp.ok) {
-      const errText = await lushaResp.text();
-      return new Response(
-        JSON.stringify({ error: "Lusha API error", status: lushaResp.status, detail: errText }),
-        { status: lushaResp.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      const errText = await lushaResp.text().catch(() => "");
+      log("error", correlationId, "lusha_error_status", {
+        status: lushaResp.status,
+        detail: errText.slice(0, 500),
+      });
+      return errorResponse(
+        correlationId,
+        lushaResp.status,
+        "lusha_api_error",
+        `Lusha retornou status ${lushaResp.status}`,
+        errText
       );
     }
 
-    const data = await lushaResp.json();
+    let data: any;
+    try {
+      data = await lushaResp.json();
+    } catch (e) {
+      log("error", correlationId, "lusha_invalid_json", { detail: (e as Error).message });
+      return errorResponse(correlationId, 502, "lusha_invalid_json", "Resposta Lusha não é JSON válido");
+    }
 
-    const results = [];
-    for (const item of data.results || []) {
-      if (item.error) {
+    // ── 3. Normalização defensiva por item / DM (tolerante a nulls V3) ──
+    const results: any[] = [];
+    const rawResults = Array.isArray(data?.results) ? data.results : [];
+
+    for (const item of rawResults) {
+      const itemDomain = str(item?.domain) ?? "unknown";
+
+      if (item?.error) {
+        warnings.push({
+          scope: "company",
+          reason: str(item?.error?.code) ?? "lusha_item_error",
+          ref: itemDomain,
+        });
         results.push({
-          domain: item.domain,
-          clientReferenceId: item.clientReferenceId,
-          error: item.error.code,
+          domain: itemDomain,
+          clientReferenceId: str(item?.clientReferenceId),
+          error: str(item?.error?.code) ?? "unknown_error",
           decisionMakers: [],
         });
         continue;
       }
 
-      const decisionMakers = (item.decisionMakers || []).map((dm: any) => ({
-        id: dm.id,
-        firstName: dm.firstName,
-        lastName: dm.lastName,
-        fullName: `${dm.firstName || ""} ${dm.lastName || ""}`.trim(),
-        jobTitle: dm.jobTitle?.title || "",
-        departments: dm.jobTitle?.departments || [],
-        seniority: dm.jobTitle?.seniority || "",
-        company: dm.company?.name || "",
-        companyId: item.companyId,
-        location: dm.location?.country || "",
-        linkedin: dm.socialLinks?.linkedin || "",
-        hasEmail: dm.has?.includes("emails") || false,
-        hasPhone: dm.has?.includes("phones") || false,
-        emailCredits: dm.canReveal?.find((r: any) => r.field === "emails")?.credits || 0,
-        phoneCredits: dm.canReveal?.find((r: any) => r.field === "phones")?.credits || 0,
-        linkedinFollowersCount: dm.linkedinFollowersCount ?? null,
-        linkedinConnectionsCount: dm.linkedinConnectionsCount ?? null,
-        linkedinSkills: dm.linkedinSkills ?? [],
-        linkedinCertifications: dm.linkedinCertifications ?? [],
-        linkedinCourses: dm.linkedinCourses ?? [],
-        linkedinAwards: dm.linkedinAwards ?? [],
-        xUrl: dm.socialLinks?.xUrl ?? null,
-      }));
+      const rawDMs = Array.isArray(item?.decisionMakers) ? item.decisionMakers : [];
+      const decisionMakers: any[] = [];
 
+      for (const dm of rawDMs) {
+        try {
+          if (!dm || typeof dm !== "object") {
+            warnings.push({ scope: "dm", reason: "not_object", ref: itemDomain });
+            continue;
+          }
+          const firstName = str(dm.firstName) ?? "";
+          const lastName = str(dm.lastName) ?? "";
+          const fullName = `${firstName} ${lastName}`.trim();
+          if (!fullName) {
+            warnings.push({ scope: "dm", reason: "missing_name", ref: str(dm.id) ?? itemDomain });
+          }
 
+          const canReveal = Array.isArray(dm.canReveal) ? dm.canReveal : [];
+          const hasArr = Array.isArray(dm.has) ? dm.has : [];
+
+          decisionMakers.push({
+            id: str(dm.id),
+            firstName: firstName || null,
+            lastName: lastName || null,
+            fullName: fullName || null,
+            jobTitle: str(dm.jobTitle?.title) ?? "",
+            departments: arrStr(dm.jobTitle?.departments),
+            seniority: str(dm.jobTitle?.seniority) ?? "",
+            company: str(dm.company?.name) ?? "",
+            companyId: str(item?.companyId),
+            location: str(dm.location?.country) ?? "",
+            linkedin: str(dm.socialLinks?.linkedin) ?? "",
+            hasEmail: hasArr.includes("emails"),
+            hasPhone: hasArr.includes("phones"),
+            emailCredits:
+              num(canReveal.find((r: any) => r?.field === "emails")?.credits) ?? 0,
+            phoneCredits:
+              num(canReveal.find((r: any) => r?.field === "phones")?.credits) ?? 0,
+            linkedinFollowersCount: num(dm.linkedinFollowersCount),
+            linkedinConnectionsCount: num(dm.linkedinConnectionsCount),
+            linkedinSkills: arrStr(dm.linkedinSkills),
+            linkedinCertifications: arrStr(dm.linkedinCertifications),
+            linkedinCourses: arrStr(dm.linkedinCourses),
+            linkedinAwards: arrStr(dm.linkedinAwards),
+            xUrl: str(dm.socialLinks?.xUrl),
+          });
+        } catch (mapErr) {
+          warnings.push({
+            scope: "dm",
+            reason: `map_failed:${(mapErr as Error).message}`,
+            ref: str(dm?.id) ?? itemDomain,
+          });
+        }
+      }
 
       results.push({
-        domain: item.domain,
-        companyId: item.companyId,
-        companyType: item.company?.companyType ?? null,
-        companyLinkedinFollowers: item.company?.linkedinFollowers ?? null,
-        companyEmailDomain: item.company?.emailDomain ?? null,
-        lushaPopularityTier: item.company?.lushaPopularityTier ?? null,
-        companyLocations: item.company?.companyLocations ?? [],
-        clientReferenceId: item.clientReferenceId,
+        domain: itemDomain,
+        companyId: str(item?.companyId),
+        companyType: str(item?.company?.companyType),
+        companyLinkedinFollowers: num(item?.company?.linkedinFollowers),
+        companyEmailDomain: str(item?.company?.emailDomain),
+        lushaPopularityTier: str(item?.company?.lushaPopularityTier),
+        companyLocations: Array.isArray(item?.company?.companyLocations)
+          ? item.company.companyLocations
+          : [],
+        clientReferenceId: str(item?.clientReferenceId),
         total: decisionMakers.length,
         decisionMakers,
       });
-
     }
 
-    // ── Persistência em public.lusha_contacts ──
-    // Usa o JWT do chamador para que user_id/organization_id venham dos defaults
-    // (auth.uid() e default_org_for_current_user()) e as políticas de RLS sejam
-    // respeitadas. Só persiste decisores com linkedin_url (unique index).
+    const totalDMs = results.reduce(
+      (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
+      0
+    );
+    log("info", correlationId, "normalization_done", {
+      companies: results.length,
+      total_decision_makers: totalDMs,
+      warnings: warnings.length,
+    });
+
+    // ── 4. Persistência em public.lusha_contacts ──
     const persistence: {
       attempted: number;
       upserted: number;
@@ -135,7 +263,10 @@ serve(async (req) => {
             rows.push({
               lusha_company_name: r.domain,
               lusha_company_lid: r.companyId ?? null,
-              full_name: dm.fullName || `${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() || "Desconhecido",
+              full_name:
+                dm.fullName ||
+                `${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() ||
+                "Desconhecido",
               job_title: dm.jobTitle || null,
               department_en: dm.departments?.[0] ?? null,
               seniority: dm.seniority || null,
@@ -144,10 +275,12 @@ serve(async (req) => {
               bitrix_card_id: bitrix_card_id ?? null,
               confidence_score: 60,
               raw_lusha_payload: dm,
-              linkedin_followers_count: dm.linkedinFollowersCount ?? null,
-              linkedin_connections_count: dm.linkedinConnectionsCount ?? null,
+              linkedin_followers_count: dm.linkedinFollowersCount,
+              linkedin_connections_count: dm.linkedinConnectionsCount,
               linkedin_skills: dm.linkedinSkills?.length ? dm.linkedinSkills : null,
-              linkedin_certifications: dm.linkedinCertifications?.length ? dm.linkedinCertifications : null,
+              linkedin_certifications: dm.linkedinCertifications?.length
+                ? dm.linkedinCertifications
+                : null,
               linkedin_courses: dm.linkedinCourses?.length ? dm.linkedinCourses : null,
               linkedin_awards: dm.linkedinAwards?.length ? dm.linkedinAwards : null,
               x_url: dm.xUrl ?? null,
@@ -169,35 +302,62 @@ serve(async (req) => {
               count: "exact",
             });
           if (upsertErr) {
+            log("error", correlationId, "persistence_upsert_failed", {
+              detail: upsertErr.message,
+              rows: rows.length,
+            });
             persistence.errors.push(upsertErr.message);
           } else {
             persistence.upserted = count ?? rows.length;
+            log("info", correlationId, "persistence_ok", {
+              upserted: persistence.upserted,
+              skipped: persistence.skipped,
+              attempted: persistence.attempted,
+            });
           }
         }
       } catch (persistErr) {
+        log("error", correlationId, "persistence_exception", {
+          detail: (persistErr as Error).message,
+        });
         persistence.errors.push((persistErr as Error).message);
       }
     } else {
+      log("warn", correlationId, "no_auth_header", {});
       persistence.errors.push("no_auth_header_skipping_persistence");
     }
 
+    const durationMs = Date.now() - startedAt;
+    log("info", correlationId, "request_completed", {
+      duration_ms: durationMs,
+      total_decision_makers: totalDMs,
+      persistence,
+    });
+
     return new Response(
       JSON.stringify({
-        requestId: data.requestId,
+        correlation_id: correlationId,
+        requestId: str(data?.requestId),
         creditsCharged: 0,
+        duration_ms: durationMs,
         results,
-        totalDecisionMakers: results.reduce(
-          (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
-          0
-        ),
+        totalDecisionMakers: totalDMs,
+        warnings,
         persistence,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: "Internal error", detail: (err as Error).message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    log("error", correlationId, "unhandled_exception", {
+      detail: (err as Error).message,
+      stack: (err as Error).stack?.split("\n").slice(0, 5).join("\n"),
+    });
+    return errorResponse(
+      correlationId,
+      500,
+      "internal_error",
+      "Erro interno na função",
+      (err as Error).message
     );
   }
 });
