@@ -103,6 +103,84 @@ serve(async (req) => {
 
     }
 
+    // ── Persistência em public.lusha_contacts ──
+    // Usa o JWT do chamador para que user_id/organization_id venham dos defaults
+    // (auth.uid() e default_org_for_current_user()) e as políticas de RLS sejam
+    // respeitadas. Só persiste decisores com linkedin_url (unique index).
+    const persistence: {
+      attempted: number;
+      upserted: number;
+      skipped: number;
+      errors: string[];
+    } = { attempted: 0, upserted: 0, skipped: 0, errors: [] };
+
+    const authHeader = req.headers.get("Authorization") ?? "";
+    if (authHeader.startsWith("Bearer ")) {
+      try {
+        const supabase = createClient(
+          Deno.env.get("SUPABASE_URL")!,
+          Deno.env.get("SUPABASE_ANON_KEY")!,
+          { global: { headers: { Authorization: authHeader } } }
+        );
+
+        const rows: Record<string, unknown>[] = [];
+        for (const r of results) {
+          if (r.error) continue;
+          for (const dm of r.decisionMakers as any[]) {
+            persistence.attempted++;
+            if (!dm.linkedin) {
+              persistence.skipped++;
+              continue;
+            }
+            rows.push({
+              lusha_company_name: r.domain,
+              lusha_company_lid: r.companyId ?? null,
+              full_name: dm.fullName || `${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() || "Desconhecido",
+              job_title: dm.jobTitle || null,
+              department_en: dm.departments?.[0] ?? null,
+              seniority: dm.seniority || null,
+              linkedin_url: dm.linkedin,
+              enrichment_status: "pending",
+              bitrix_card_id: bitrix_card_id ?? null,
+              confidence_score: 60,
+              raw_lusha_payload: dm,
+              linkedin_followers_count: dm.linkedinFollowersCount ?? null,
+              linkedin_connections_count: dm.linkedinConnectionsCount ?? null,
+              linkedin_skills: dm.linkedinSkills?.length ? dm.linkedinSkills : null,
+              linkedin_certifications: dm.linkedinCertifications?.length ? dm.linkedinCertifications : null,
+              linkedin_courses: dm.linkedinCourses?.length ? dm.linkedinCourses : null,
+              linkedin_awards: dm.linkedinAwards?.length ? dm.linkedinAwards : null,
+              x_url: dm.xUrl ?? null,
+              company_locations: r.companyLocations?.length ? r.companyLocations : null,
+              company_type: r.companyType ?? null,
+              company_linkedin_followers: r.companyLinkedinFollowers ?? null,
+              company_email_domain: r.companyEmailDomain ?? null,
+              lusha_popularity_tier: r.lushaPopularityTier ?? null,
+            });
+          }
+        }
+
+        if (rows.length > 0) {
+          const { error: upsertErr, count } = await supabase
+            .from("lusha_contacts")
+            .upsert(rows, {
+              onConflict: "organization_id,linkedin_url",
+              ignoreDuplicates: false,
+              count: "exact",
+            });
+          if (upsertErr) {
+            persistence.errors.push(upsertErr.message);
+          } else {
+            persistence.upserted = count ?? rows.length;
+          }
+        }
+      } catch (persistErr) {
+        persistence.errors.push((persistErr as Error).message);
+      }
+    } else {
+      persistence.errors.push("no_auth_header_skipping_persistence");
+    }
+
     return new Response(
       JSON.stringify({
         requestId: data.requestId,
