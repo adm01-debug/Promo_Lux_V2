@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -403,32 +404,78 @@ export const LushaIntelligenceView = () => {
                                     </div>
                                   )}
                                   {dm.linkedinCertifications && dm.linkedinCertifications.length > 0 && (
-                                    <div className="flex flex-wrap gap-1">
-                                      {dm.linkedinCertifications.slice(0, 2).map((c) => (
-                                        <Badge
-                                          key={c}
-                                          variant="secondary"
-                                          className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border border-primary/20"
-                                          title="Certificação"
-                                        >
-                                          🎓 {c}
-                                        </Badge>
-                                      ))}
-                                    </div>
+                                    <Tooltip delayDuration={200}>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                          {dm.linkedinCertifications.slice(0, 2).map((c) => (
+                                            <Badge
+                                              key={c}
+                                              variant="secondary"
+                                              className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border border-primary/20"
+                                            >
+                                              🎓 {c}
+                                            </Badge>
+                                          ))}
+                                          {dm.linkedinCertifications.length > 2 && (
+                                            <Badge
+                                              variant="secondary"
+                                              className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border border-primary/20"
+                                            >
+                                              +{dm.linkedinCertifications.length - 2}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" className="max-w-xs">
+                                        <div className="space-y-1">
+                                          <p className="text-xs font-semibold text-primary">
+                                            🎓 Certificações ({dm.linkedinCertifications.length})
+                                          </p>
+                                          <ul className="text-xs space-y-0.5 list-disc list-inside">
+                                            {dm.linkedinCertifications.map((c) => (
+                                              <li key={c}>{c}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </TooltipContent>
+                                    </Tooltip>
                                   )}
                                   {dm.linkedinCourses && dm.linkedinCourses.length > 0 && (
-                                    <div className="flex flex-wrap gap-1">
-                                      {dm.linkedinCourses.slice(0, 2).map((c) => (
-                                        <Badge
-                                          key={c}
-                                          variant="secondary"
-                                          className="text-[10px] px-1.5 py-0 bg-accent/10 text-accent-foreground border border-border/50"
-                                          title="Curso"
-                                        >
-                                          📚 {c}
-                                        </Badge>
-                                      ))}
-                                    </div>
+                                    <Tooltip delayDuration={200}>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                          {dm.linkedinCourses.slice(0, 2).map((c) => (
+                                            <Badge
+                                              key={c}
+                                              variant="secondary"
+                                              className="text-[10px] px-1.5 py-0 bg-accent/10 text-accent-foreground border border-border/50"
+                                            >
+                                              📚 {c}
+                                            </Badge>
+                                          ))}
+                                          {dm.linkedinCourses.length > 2 && (
+                                            <Badge
+                                              variant="secondary"
+                                              className="text-[10px] px-1.5 py-0 bg-accent/10 text-accent-foreground border border-border/50"
+                                            >
+                                              +{dm.linkedinCourses.length - 2}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" className="max-w-xs">
+                                        <div className="space-y-1">
+                                          <p className="text-xs font-semibold">
+                                            📚 Cursos ({dm.linkedinCourses.length})
+                                          </p>
+                                          <ul className="text-xs space-y-0.5 list-disc list-inside">
+                                            {dm.linkedinCourses.map((c) => (
+                                              <li key={c}>{c}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </TooltipContent>
+                                    </Tooltip>
                                   )}
                                 </div>
                               </TableCell>
