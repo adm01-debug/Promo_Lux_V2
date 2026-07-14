@@ -872,6 +872,74 @@ export const LushaIntelligenceView = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!detailsModal} onOpenChange={(o) => !o && setDetailsModal(null)}>
+        <DialogContent className="max-w-lg">
+          {detailsModal && (() => {
+            const { type, dm } = detailsModal;
+            const config = {
+              certifications: {
+                emoji: "🎓",
+                title: "Certificações",
+                items: dm.linkedinCertifications ?? [],
+                color: "text-primary",
+              },
+              courses: {
+                emoji: "📚",
+                title: "Cursos",
+                items: dm.linkedinCourses ?? [],
+                color: "text-foreground",
+              },
+              awards: {
+                emoji: "🏆",
+                title: "Prêmios",
+                items: dm.linkedinAwards ?? [],
+                color: "text-amber-500",
+              },
+            }[type];
+
+            return (
+              <>
+                <DialogHeader>
+                  <DialogTitle className={`flex items-center gap-2 ${config.color}`}>
+                    <span className="text-2xl">{config.emoji}</span>
+                    {config.title} ({config.items.length})
+                  </DialogTitle>
+                  <DialogDescription>
+                    {dm.fullName}
+                    {dm.jobTitle && ` — ${dm.jobTitle}`}
+                    {dm.company && ` @ ${dm.company}`}
+                  </DialogDescription>
+                </DialogHeader>
+                <ScrollArea className="max-h-[60vh] mt-2 pr-4">
+                  {config.items.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">
+                      Nenhum item disponível.
+                    </p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {config.items.map((item, idx) => (
+                        <li
+                          key={`${item}-${idx}`}
+                          className="flex items-start gap-3 p-3 rounded-md border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors"
+                        >
+                          <span className="text-lg leading-none mt-0.5">{config.emoji}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium break-words">{item}</p>
+                          </div>
+                          <Badge variant="outline" className="text-[10px] shrink-0">
+                            #{idx + 1}
+                          </Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </ScrollArea>
+              </>
+            );
+          })()}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
