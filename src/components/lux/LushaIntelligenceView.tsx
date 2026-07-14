@@ -508,7 +508,18 @@ export const LushaIntelligenceView = () => {
                                   {dm.linkedinAwards && dm.linkedinAwards.length > 0 && (
                                     <Tooltip delayDuration={200}>
                                       <TooltipTrigger asChild>
-                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                       <div
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={() => setDetailsModal({ type: "awards", dm })}
+                                          onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                              e.preventDefault();
+                                              setDetailsModal({ type: "awards", dm });
+                                            }
+                                          }}
+                                          className="flex flex-wrap gap-1 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-1 focus:ring-primary rounded"
+                                        >
                                           {dm.linkedinAwards.slice(0, 2).map((a) => (
                                             <Badge
                                               key={a}
