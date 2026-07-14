@@ -1866,7 +1866,11 @@ export type Database = {
         Row: {
           bitrix_card_id: string | null
           bitrix_contact_id: string | null
+          company_email_domain: string | null
           company_id: string | null
+          company_linkedin_followers: number | null
+          company_locations: Json | null
+          company_type: string | null
           confidence_score: number | null
           created_at: string
           department_en: string | null
@@ -1881,10 +1885,17 @@ export type Database = {
           id: string
           is_duplicate: boolean
           job_title: string | null
+          linkedin_awards: string[] | null
+          linkedin_certifications: string[] | null
+          linkedin_connections_count: number | null
+          linkedin_courses: string[] | null
+          linkedin_followers_count: number | null
           linkedin_public_id: string | null
+          linkedin_skills: string[] | null
           linkedin_url: string | null
           lusha_company_lid: string | null
           lusha_company_name: string
+          lusha_popularity_tier: string | null
           n8n_execution_id: string | null
           n8n_workflow_id: string | null
           organization_id: string
@@ -1899,11 +1910,16 @@ export type Database = {
           stakeholder_id: string | null
           updated_at: string
           user_id: string
+          x_url: string | null
         }
         Insert: {
           bitrix_card_id?: string | null
           bitrix_contact_id?: string | null
+          company_email_domain?: string | null
           company_id?: string | null
+          company_linkedin_followers?: number | null
+          company_locations?: Json | null
+          company_type?: string | null
           confidence_score?: number | null
           created_at?: string
           department_en?: string | null
@@ -1918,10 +1934,17 @@ export type Database = {
           id?: string
           is_duplicate?: boolean
           job_title?: string | null
+          linkedin_awards?: string[] | null
+          linkedin_certifications?: string[] | null
+          linkedin_connections_count?: number | null
+          linkedin_courses?: string[] | null
+          linkedin_followers_count?: number | null
           linkedin_public_id?: string | null
+          linkedin_skills?: string[] | null
           linkedin_url?: string | null
           lusha_company_lid?: string | null
           lusha_company_name: string
+          lusha_popularity_tier?: string | null
           n8n_execution_id?: string | null
           n8n_workflow_id?: string | null
           organization_id?: string
@@ -1936,11 +1959,16 @@ export type Database = {
           stakeholder_id?: string | null
           updated_at?: string
           user_id?: string
+          x_url?: string | null
         }
         Update: {
           bitrix_card_id?: string | null
           bitrix_contact_id?: string | null
+          company_email_domain?: string | null
           company_id?: string | null
+          company_linkedin_followers?: number | null
+          company_locations?: Json | null
+          company_type?: string | null
           confidence_score?: number | null
           created_at?: string
           department_en?: string | null
@@ -1955,10 +1983,17 @@ export type Database = {
           id?: string
           is_duplicate?: boolean
           job_title?: string | null
+          linkedin_awards?: string[] | null
+          linkedin_certifications?: string[] | null
+          linkedin_connections_count?: number | null
+          linkedin_courses?: string[] | null
+          linkedin_followers_count?: number | null
           linkedin_public_id?: string | null
+          linkedin_skills?: string[] | null
           linkedin_url?: string | null
           lusha_company_lid?: string | null
           lusha_company_name?: string
+          lusha_popularity_tier?: string | null
           n8n_execution_id?: string | null
           n8n_workflow_id?: string | null
           organization_id?: string
@@ -1973,6 +2008,7 @@ export type Database = {
           stakeholder_id?: string | null
           updated_at?: string
           user_id?: string
+          x_url?: string | null
         }
         Relationships: [
           {
@@ -1998,6 +2034,63 @@ export type Database = {
           },
         ]
       }
+      lusha_credit_usage_log: {
+        Row: {
+          api_version: string | null
+          bitrix_card_id: string | null
+          company_name: string | null
+          created_at: string
+          credits_charged: number
+          domain: string | null
+          endpoint: string
+          error_code: string | null
+          id: string
+          operation: string
+          organization_id: string
+          records_returned: number
+          request_id: string | null
+          session_id: string | null
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          api_version?: string | null
+          bitrix_card_id?: string | null
+          company_name?: string | null
+          created_at?: string
+          credits_charged?: number
+          domain?: string | null
+          endpoint: string
+          error_code?: string | null
+          id?: string
+          operation: string
+          organization_id: string
+          records_returned?: number
+          request_id?: string | null
+          session_id?: string | null
+          success?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          api_version?: string | null
+          bitrix_card_id?: string | null
+          company_name?: string | null
+          created_at?: string
+          credits_charged?: number
+          domain?: string | null
+          endpoint?: string
+          error_code?: string | null
+          id?: string
+          operation?: string
+          organization_id?: string
+          records_returned?: number
+          request_id?: string | null
+          session_id?: string | null
+          success?: boolean
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       lusha_search_sessions: {
         Row: {
           bitrix_card_id: string | null
@@ -2009,11 +2102,13 @@ export type Database = {
           departments_mapped: string[]
           departments_not_found: string[]
           departments_requested: string[]
+          domain_searched: string | null
           enrichment_rate: number | null
           error_message: string | null
           id: string
           lusha_company_lid: string | null
           organization_id: string
+          search_type: string
           started_at: string
           status: string
           total_duplicates: number
@@ -2035,11 +2130,13 @@ export type Database = {
           departments_mapped?: string[]
           departments_not_found?: string[]
           departments_requested?: string[]
+          domain_searched?: string | null
           enrichment_rate?: number | null
           error_message?: string | null
           id?: string
           lusha_company_lid?: string | null
           organization_id?: string
+          search_type?: string
           started_at?: string
           status?: string
           total_duplicates?: number
@@ -2061,11 +2158,13 @@ export type Database = {
           departments_mapped?: string[]
           departments_not_found?: string[]
           departments_requested?: string[]
+          domain_searched?: string | null
           enrichment_rate?: number | null
           error_message?: string | null
           id?: string
           lusha_company_lid?: string | null
           organization_id?: string
+          search_type?: string
           started_at?: string
           status?: string
           total_duplicates?: number

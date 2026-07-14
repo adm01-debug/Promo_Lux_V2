@@ -76,7 +76,16 @@ serve(async (req) => {
         hasPhone: dm.has?.includes("phones") || false,
         emailCredits: dm.canReveal?.find((r: any) => r.field === "emails")?.credits || 0,
         phoneCredits: dm.canReveal?.find((r: any) => r.field === "phones")?.credits || 0,
+        linkedinFollowersCount: dm.linkedinFollowersCount ?? null,
+        linkedinConnectionsCount: dm.linkedinConnectionsCount ?? null,
+        linkedinSkills: dm.linkedinSkills ?? [],
+        linkedinCertifications: dm.linkedinCertifications ?? [],
+        linkedinCourses: dm.linkedinCourses ?? [],
+        linkedinAwards: dm.linkedinAwards ?? [],
+        xUrl: dm.socialLinks?.xUrl ?? null,
       }));
+
+
 
       results.push({
         domain: item.domain,
