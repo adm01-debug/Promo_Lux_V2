@@ -145,6 +145,43 @@ export const LushaIntelligenceView = () => {
     },
   });
 
+  const dmMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
+        body: { domains: [domain.trim()] },
+      });
+      if (error) throw error;
+      return data as DMResponse;
+    },
+    onSuccess: (data) => {
+      setDmResults(data.results ?? []);
+      toast({
+        title: "Decisores encontrados",
+        description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
+      });
+    },
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
+    },
+  });
+
+  const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
+
+  function handleReveal() {
+    toast({ title: "Em breve", description: "Enriquecimento automático de email/telefone em breve." });
+  }
+
+  const seniorityBadge = (s: string) => {
+    const key = (s || "").toLowerCase();
+    if (key.includes("c") && (key.includes("suite") || key.includes("level") || key === "cxo"))
+      return "bg-violet-500/15 text-violet-300 border-violet-500/40";
+    if (key.includes("vp") || key.includes("vice")) return "bg-blue-500/15 text-blue-300 border-blue-500/40";
+    if (key.includes("director") || key.includes("head")) return "bg-emerald-500/15 text-emerald-300 border-emerald-500/40";
+    if (key.includes("manager")) return "bg-amber-500/15 text-amber-300 border-amber-500/40";
+    return "bg-muted text-muted-foreground border-border/50";
+  };
+
   const searchMutation = useMutation({
     mutationFn: async () => {
       const departments = Array.from(selectedDepts);
