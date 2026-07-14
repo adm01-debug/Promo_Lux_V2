@@ -30,6 +30,7 @@ const SKELETON_MAP: Record<View, React.FC> = {
   automations: DashboardSkeleton,
   "recycle-bin": SettingsSkeleton,
   suppressions: SettingsSkeleton,
+  lusha: StakeholdersSkeleton,
 };
 
 /** Render a view-specific skeleton with accessibility. Falls back to DashboardSkeleton. */
