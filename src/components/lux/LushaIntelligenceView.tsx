@@ -76,7 +76,15 @@ interface DecisionMaker {
   hasPhone: boolean;
   emailCredits: number;
   phoneCredits: number;
+  linkedinFollowersCount?: number | null;
+  linkedinConnectionsCount?: number | null;
+  linkedinSkills?: string[];
+  linkedinCertifications?: string[];
+  linkedinCourses?: string[];
+  linkedinAwards?: string[];
+  xUrl?: string | null;
 }
+
 
 interface DMCompanyResult {
   domain: string;
