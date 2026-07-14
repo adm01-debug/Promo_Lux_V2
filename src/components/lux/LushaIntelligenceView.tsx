@@ -382,15 +382,29 @@ export const LushaIntelligenceView = () => {
                                   <div className="text-sm">{dm.jobTitle || "—"}</div>
                                   {dm.departments.length > 0 && (
                                     <div className="flex flex-wrap gap-1">
-                                      {dm.departments.slice(0, 2).map((d) => (
+                                       {dm.departments.slice(0, 2).map((d) => (
                                         <Badge key={d} variant="outline" className="border-border/50 text-xs">
                                           {d}
                                         </Badge>
                                       ))}
                                     </div>
                                   )}
+                                  {dm.linkedinSkills && dm.linkedinSkills.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {dm.linkedinSkills.slice(0, 3).map((s) => (
+                                        <Badge
+                                          key={s}
+                                          variant="secondary"
+                                          className="text-[10px] px-1.5 py-0 bg-muted text-muted-foreground"
+                                        >
+                                          {s}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
                                 </div>
                               </TableCell>
+
                               <TableCell>
                                 <div className="text-sm">{dm.company || "—"}</div>
                                 {dm.location && (
