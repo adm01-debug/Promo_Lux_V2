@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2 } from "lucide-react";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,36 @@ interface SearchResponse {
   contacts: LushaContact[];
 }
 
+interface DecisionMaker {
+  id: string;
+  fullName: string;
+  jobTitle: string;
+  departments: string[];
+  seniority: string;
+  company: string;
+  location: string;
+  linkedin: string;
+  hasEmail: boolean;
+  hasPhone: boolean;
+  emailCredits: number;
+  phoneCredits: number;
+}
+
+interface DMCompanyResult {
+  domain: string;
+  companyId?: string;
+  total?: number;
+  error?: string;
+  decisionMakers: DecisionMaker[];
+}
+
+interface DMResponse {
+  requestId: string;
+  creditsCharged: number;
+  totalDecisionMakers: number;
+  results: DMCompanyResult[];
+}
+
 // ── Badge de status ──
 function StatusBadge({ status }: { status: string | null }) {
   const map: Record<string, { label: string; className: string }> = {
@@ -80,6 +111,8 @@ export const LushaIntelligenceView = () => {
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
   const [lastResult, setLastResult] = useState<SearchResponse | null>(null);
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
+  const [domain, setDomain] = useState("");
+  const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
 
   // Histórico de sessões
   const { data: sessions = [], refetch: refetchSessions } = useQuery({
@@ -111,6 +144,43 @@ export const LushaIntelligenceView = () => {
       return (data ?? []) as LushaContact[];
     },
   });
+
+  const dmMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
+        body: { domains: [domain.trim()] },
+      });
+      if (error) throw error;
+      return data as DMResponse;
+    },
+    onSuccess: (data) => {
+      setDmResults(data.results ?? []);
+      toast({
+        title: "Decisores encontrados",
+        description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
+      });
+    },
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
+    },
+  });
+
+  const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
+
+  function handleReveal() {
+    toast({ title: "Em breve", description: "Enriquecimento automático de email/telefone em breve." });
+  }
+
+  const seniorityBadge = (s: string) => {
+    const key = (s || "").toLowerCase();
+    if (key.includes("c") && (key.includes("suite") || key.includes("level") || key === "cxo"))
+      return "bg-violet-500/15 text-violet-300 border-violet-500/40";
+    if (key.includes("vp") || key.includes("vice")) return "bg-blue-500/15 text-blue-300 border-blue-500/40";
+    if (key.includes("director") || key.includes("head")) return "bg-emerald-500/15 text-emerald-300 border-emerald-500/40";
+    if (key.includes("manager")) return "bg-amber-500/15 text-amber-300 border-amber-500/40";
+    return "bg-muted text-muted-foreground border-border/50";
+  };
 
   const searchMutation = useMutation({
     mutationFn: async () => {
@@ -193,6 +263,189 @@ export const LushaIntelligenceView = () => {
           </div>
         </div>
       )}
+
+      {/* ── Nova seção: Busca por Domínio (Decisores) ── */}
+      <Card className="border-border/60 bg-card/60 backdrop-blur-sm">
+        <CardHeader>
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-4 w-4 text-primary" />
+                Busca por Domínio (Decisores)
+                <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/40 border ml-1">
+                  <Sparkles className="h-3 w-3 mr-1" /> GRATUITO
+                </Badge>
+              </CardTitle>
+              <CardDescription>
+                Consulta a API Decision Makers V3 da Lusha — retorna os principais decisores sem consumir créditos.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-end gap-3 flex-wrap">
+            <div className="flex-1 min-w-[260px] space-y-2">
+              <Label htmlFor="lusha-domain">Domínio da empresa</Label>
+              <div className="relative">
+                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="lusha-domain"
+                  value={domain}
+                  onChange={(e) => setDomain(e.target.value)}
+                  placeholder="Ex: natura.com.br"
+                  className="pl-9"
+                  disabled={dmMutation.isPending}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
+                  }}
+                />
+              </div>
+            </div>
+            <Button
+              onClick={() => dmMutation.mutate()}
+              disabled={!canSearchDomain}
+              className="min-w-[180px]"
+            >
+              {dmMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Buscando...
+                </>
+              ) : (
+                <>
+                  <Search className="mr-2 h-4 w-4" />
+                  Buscar Decisores
+                </>
+              )}
+            </Button>
+          </div>
+
+          {dmMutation.isPending && (
+            <div className="space-y-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-full rounded-lg" />
+              ))}
+            </div>
+          )}
+
+          {!dmMutation.isPending && dmResults && (
+            <div className="space-y-4">
+              {dmResults.map((r) => (
+                <div key={r.domain} className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Building2 className="h-3.5 w-3.5" />
+                    <span className="font-medium text-foreground">{r.domain}</span>
+                    {r.error ? (
+                      <Badge variant="outline" className="border-destructive/40 text-destructive">
+                        {r.error}
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">{r.total ?? r.decisionMakers.length} decisores</Badge>
+                    )}
+                  </div>
+                  {r.decisionMakers.length > 0 && (
+                    <div className="rounded-lg border border-border/50 overflow-hidden">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Nome</TableHead>
+                            <TableHead>Cargo / Depto.</TableHead>
+                            <TableHead>Empresa</TableHead>
+                            <TableHead>Dados</TableHead>
+                            <TableHead>LinkedIn</TableHead>
+                            <TableHead className="text-right">Ação</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {r.decisionMakers.map((dm) => (
+                            <TableRow key={dm.id}>
+                              <TableCell>
+                                <div className="space-y-1">
+                                  <div className="font-medium">{dm.fullName}</div>
+                                  {dm.seniority && (
+                                    <Badge variant="outline" className={seniorityBadge(dm.seniority)}>
+                                      {dm.seniority}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="space-y-1">
+                                  <div className="text-sm">{dm.jobTitle || "—"}</div>
+                                  {dm.departments.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {dm.departments.slice(0, 2).map((d) => (
+                                        <Badge key={d} variant="outline" className="border-border/50 text-xs">
+                                          {d}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="text-sm">{dm.company || "—"}</div>
+                                {dm.location && (
+                                  <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                                    <MapPin className="h-3 w-3" /> {dm.location}
+                                  </div>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  {dm.hasEmail && (
+                                    <Badge variant="outline" className="border-border/50 gap-1">
+                                      <Mail className="h-3 w-3" />
+                                      {dm.emailCredits}c
+                                    </Badge>
+                                  )}
+                                  {dm.hasPhone && (
+                                    <Badge variant="outline" className="border-border/50 gap-1">
+                                      <Phone className="h-3 w-3" />
+                                      {dm.phoneCredits}c
+                                    </Badge>
+                                  )}
+                                  {!dm.hasEmail && !dm.hasPhone && (
+                                    <span className="text-xs text-muted-foreground">—</span>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {dm.linkedin ? (
+                                  <a
+                                    href={dm.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-primary hover:underline text-sm"
+                                  >
+                                    Perfil <ExternalLink className="h-3 w-3" />
+                                  </a>
+                                ) : (
+                                  <span className="text-muted-foreground text-sm">—</span>
+                                )}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button size="sm" variant="outline" onClick={handleReveal}>
+                                  Revelar
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {dmResults.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground text-sm">
+                  Nenhum decisor retornado para este domínio.
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Card de busca */}
       <Card className="border-border/60 bg-card/60 backdrop-blur-sm">
