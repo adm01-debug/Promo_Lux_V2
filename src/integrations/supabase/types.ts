@@ -1862,6 +1862,231 @@ export type Database = {
           },
         ]
       }
+      lusha_contacts: {
+        Row: {
+          bitrix_card_id: string | null
+          bitrix_contact_id: string | null
+          company_id: string | null
+          confidence_score: number | null
+          created_at: string
+          department_en: string | null
+          department_pt: string | null
+          email: string | null
+          email_source: string | null
+          enrichment_status: string
+          first_name: string | null
+          full_name: string
+          has_email: boolean | null
+          has_phone: boolean | null
+          id: string
+          is_duplicate: boolean
+          job_title: string | null
+          linkedin_public_id: string | null
+          linkedin_url: string | null
+          lusha_company_lid: string | null
+          lusha_company_name: string
+          n8n_execution_id: string | null
+          n8n_workflow_id: string | null
+          organization_id: string
+          phone_formatted: string | null
+          phone_raw: string | null
+          phone_source: string | null
+          raw_leadcontact_email: Json
+          raw_leadcontact_phone: Json
+          raw_lusha_payload: Json
+          seniority: string | null
+          session_id: string | null
+          stakeholder_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bitrix_card_id?: string | null
+          bitrix_contact_id?: string | null
+          company_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          department_en?: string | null
+          department_pt?: string | null
+          email?: string | null
+          email_source?: string | null
+          enrichment_status?: string
+          first_name?: string | null
+          full_name: string
+          has_email?: boolean | null
+          has_phone?: boolean | null
+          id?: string
+          is_duplicate?: boolean
+          job_title?: string | null
+          linkedin_public_id?: string | null
+          linkedin_url?: string | null
+          lusha_company_lid?: string | null
+          lusha_company_name: string
+          n8n_execution_id?: string | null
+          n8n_workflow_id?: string | null
+          organization_id?: string
+          phone_formatted?: string | null
+          phone_raw?: string | null
+          phone_source?: string | null
+          raw_leadcontact_email?: Json
+          raw_leadcontact_phone?: Json
+          raw_lusha_payload?: Json
+          seniority?: string | null
+          session_id?: string | null
+          stakeholder_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          bitrix_card_id?: string | null
+          bitrix_contact_id?: string | null
+          company_id?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          department_en?: string | null
+          department_pt?: string | null
+          email?: string | null
+          email_source?: string | null
+          enrichment_status?: string
+          first_name?: string | null
+          full_name?: string
+          has_email?: boolean | null
+          has_phone?: boolean | null
+          id?: string
+          is_duplicate?: boolean
+          job_title?: string | null
+          linkedin_public_id?: string | null
+          linkedin_url?: string | null
+          lusha_company_lid?: string | null
+          lusha_company_name?: string
+          n8n_execution_id?: string | null
+          n8n_workflow_id?: string | null
+          organization_id?: string
+          phone_formatted?: string | null
+          phone_raw?: string | null
+          phone_source?: string | null
+          raw_leadcontact_email?: Json
+          raw_leadcontact_phone?: Json
+          raw_lusha_payload?: Json
+          seniority?: string | null
+          session_id?: string | null
+          stakeholder_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lusha_contacts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lusha_contacts_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "lusha_search_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lusha_contacts_stakeholder_id_fkey"
+            columns: ["stakeholder_id"]
+            isOneToOne: false
+            referencedRelation: "stakeholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lusha_search_sessions: {
+        Row: {
+          bitrix_card_id: string | null
+          bitrix_user_id: string | null
+          company_id: string | null
+          company_name: string
+          completed_at: string | null
+          created_at: string
+          departments_mapped: string[]
+          departments_not_found: string[]
+          departments_requested: string[]
+          enrichment_rate: number | null
+          error_message: string | null
+          id: string
+          lusha_company_lid: string | null
+          organization_id: string
+          started_at: string
+          status: string
+          total_duplicates: number
+          total_empty: number
+          total_enriched: number
+          total_errors: number
+          total_found: number
+          total_inserted_bitrix: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bitrix_card_id?: string | null
+          bitrix_user_id?: string | null
+          company_id?: string | null
+          company_name: string
+          completed_at?: string | null
+          created_at?: string
+          departments_mapped?: string[]
+          departments_not_found?: string[]
+          departments_requested?: string[]
+          enrichment_rate?: number | null
+          error_message?: string | null
+          id?: string
+          lusha_company_lid?: string | null
+          organization_id?: string
+          started_at?: string
+          status?: string
+          total_duplicates?: number
+          total_empty?: number
+          total_enriched?: number
+          total_errors?: number
+          total_found?: number
+          total_inserted_bitrix?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          bitrix_card_id?: string | null
+          bitrix_user_id?: string | null
+          company_id?: string | null
+          company_name?: string
+          completed_at?: string | null
+          created_at?: string
+          departments_mapped?: string[]
+          departments_not_found?: string[]
+          departments_requested?: string[]
+          enrichment_rate?: number | null
+          error_message?: string | null
+          id?: string
+          lusha_company_lid?: string | null
+          organization_id?: string
+          started_at?: string
+          status?: string
+          total_duplicates?: number
+          total_empty?: number
+          total_enriched?: number
+          total_errors?: number
+          total_found?: number
+          total_inserted_bitrix?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lusha_search_sessions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
