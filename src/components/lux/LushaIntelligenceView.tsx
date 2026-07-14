@@ -81,6 +81,8 @@ export const LushaIntelligenceView = () => {
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
   const [lastResult, setLastResult] = useState<SearchResponse | null>(null);
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
+  const [domain, setDomain] = useState("");
+  const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
 
   // Histórico de sessões
   const { data: sessions = [], refetch: refetchSessions } = useQuery({
