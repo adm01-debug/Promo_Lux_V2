@@ -124,6 +124,10 @@ export const LushaIntelligenceView = () => {
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
+  const [detailsModal, setDetailsModal] = useState<{
+    type: "certifications" | "courses" | "awards";
+    dm: DecisionMaker;
+  } | null>(null);
 
   // Histórico de sessões
   const { data: sessions = [], refetch: refetchSessions } = useQuery({
