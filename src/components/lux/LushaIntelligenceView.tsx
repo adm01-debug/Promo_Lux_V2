@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -122,6 +124,10 @@ export const LushaIntelligenceView = () => {
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
+  const [detailsModal, setDetailsModal] = useState<{
+    type: "certifications" | "courses" | "awards";
+    dm: DecisionMaker;
+  } | null>(null);
 
   // Histórico de sessões
   const { data: sessions = [], refetch: refetchSessions } = useQuery({
@@ -406,7 +412,18 @@ export const LushaIntelligenceView = () => {
                                   {dm.linkedinCertifications && dm.linkedinCertifications.length > 0 && (
                                     <Tooltip delayDuration={200}>
                                       <TooltipTrigger asChild>
-                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                       <div
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={() => setDetailsModal({ type: "certifications", dm })}
+                                          onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                              e.preventDefault();
+                                              setDetailsModal({ type: "certifications", dm });
+                                            }
+                                          }}
+                                          className="flex flex-wrap gap-1 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-1 focus:ring-primary rounded"
+                                        >
                                           {dm.linkedinCertifications.slice(0, 2).map((c) => (
                                             <Badge
                                               key={c}
@@ -443,7 +460,18 @@ export const LushaIntelligenceView = () => {
                                   {dm.linkedinCourses && dm.linkedinCourses.length > 0 && (
                                     <Tooltip delayDuration={200}>
                                       <TooltipTrigger asChild>
-                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                       <div
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={() => setDetailsModal({ type: "courses", dm })}
+                                          onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                              e.preventDefault();
+                                              setDetailsModal({ type: "courses", dm });
+                                            }
+                                          }}
+                                          className="flex flex-wrap gap-1 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-1 focus:ring-primary rounded"
+                                        >
                                           {dm.linkedinCourses.slice(0, 2).map((c) => (
                                             <Badge
                                               key={c}
@@ -480,7 +508,18 @@ export const LushaIntelligenceView = () => {
                                   {dm.linkedinAwards && dm.linkedinAwards.length > 0 && (
                                     <Tooltip delayDuration={200}>
                                       <TooltipTrigger asChild>
-                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                       <div
+                                          role="button"
+                                          tabIndex={0}
+                                          onClick={() => setDetailsModal({ type: "awards", dm })}
+                                          onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                              e.preventDefault();
+                                              setDetailsModal({ type: "awards", dm });
+                                            }
+                                          }}
+                                          className="flex flex-wrap gap-1 cursor-pointer hover:opacity-80 focus:outline-none focus:ring-1 focus:ring-primary rounded"
+                                        >
                                           {dm.linkedinAwards.slice(0, 2).map((a) => (
                                             <Badge
                                               key={a}
@@ -833,6 +872,74 @@ export const LushaIntelligenceView = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!detailsModal} onOpenChange={(o) => !o && setDetailsModal(null)}>
+        <DialogContent className="max-w-lg">
+          {detailsModal && (() => {
+            const { type, dm } = detailsModal;
+            const config = {
+              certifications: {
+                emoji: "🎓",
+                title: "Certificações",
+                items: dm.linkedinCertifications ?? [],
+                color: "text-primary",
+              },
+              courses: {
+                emoji: "📚",
+                title: "Cursos",
+                items: dm.linkedinCourses ?? [],
+                color: "text-foreground",
+              },
+              awards: {
+                emoji: "🏆",
+                title: "Prêmios",
+                items: dm.linkedinAwards ?? [],
+                color: "text-amber-500",
+              },
+            }[type];
+
+            return (
+              <>
+                <DialogHeader>
+                  <DialogTitle className={`flex items-center gap-2 ${config.color}`}>
+                    <span className="text-2xl">{config.emoji}</span>
+                    {config.title} ({config.items.length})
+                  </DialogTitle>
+                  <DialogDescription>
+                    {dm.fullName}
+                    {dm.jobTitle && ` — ${dm.jobTitle}`}
+                    {dm.company && ` @ ${dm.company}`}
+                  </DialogDescription>
+                </DialogHeader>
+                <ScrollArea className="max-h-[60vh] mt-2 pr-4">
+                  {config.items.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">
+                      Nenhum item disponível.
+                    </p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {config.items.map((item, idx) => (
+                        <li
+                          key={`${item}-${idx}`}
+                          className="flex items-start gap-3 p-3 rounded-md border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors"
+                        >
+                          <span className="text-lg leading-none mt-0.5">{config.emoji}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium break-words">{item}</p>
+                          </div>
+                          <Badge variant="outline" className="text-[10px] shrink-0">
+                            #{idx + 1}
+                          </Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </ScrollArea>
+              </>
+            );
+          })()}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
