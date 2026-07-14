@@ -477,6 +477,43 @@ export const LushaIntelligenceView = () => {
                                       </TooltipContent>
                                     </Tooltip>
                                   )}
+                                  {dm.linkedinAwards && dm.linkedinAwards.length > 0 && (
+                                    <Tooltip delayDuration={200}>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex flex-wrap gap-1 cursor-help">
+                                          {dm.linkedinAwards.slice(0, 2).map((a) => (
+                                            <Badge
+                                              key={a}
+                                              variant="secondary"
+                                              className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                            >
+                                              🏆 {a}
+                                            </Badge>
+                                          ))}
+                                          {dm.linkedinAwards.length > 2 && (
+                                            <Badge
+                                              variant="secondary"
+                                              className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                            >
+                                              +{dm.linkedinAwards.length - 2}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" className="max-w-xs">
+                                        <div className="space-y-1">
+                                          <p className="text-xs font-semibold text-amber-500">
+                                            🏆 Prêmios ({dm.linkedinAwards.length})
+                                          </p>
+                                          <ul className="text-xs space-y-0.5 list-disc list-inside">
+                                            {dm.linkedinAwards.map((a) => (
+                                              <li key={a}>{a}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
                                 </div>
                               </TableCell>
 
