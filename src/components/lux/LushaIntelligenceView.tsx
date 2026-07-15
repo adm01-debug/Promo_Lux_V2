@@ -124,6 +124,13 @@ export const LushaIntelligenceView = () => {
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
+  const [dmRequestId, setDmRequestId] = useState<string | null>(null);
+  const [revealingIds, setRevealingIds] = useState<Set<string>>(new Set());
+  const [revealedData, setRevealedData] = useState<Record<string, {
+    emails: { email: string; type: string | null }[];
+    phones: { number: string; type: string | null }[];
+    error?: string;
+  }>>({});
   const [detailsModal, setDetailsModal] = useState<{
     type: "certifications" | "courses" | "awards";
     dm: DecisionMaker;
