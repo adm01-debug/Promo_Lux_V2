@@ -43,6 +43,8 @@ import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsP
 import { AuditTrailPanel } from "@/components/lux/monitoring/AuditTrailPanel";
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
+import { VaultCookiesPanel } from "@/components/lux/monitoring/VaultCookiesPanel";
+import { Cookie } from "lucide-react";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
 import { 
@@ -382,6 +384,10 @@ const AutomationMonitoring = () => {
             <FileText className="h-4 w-4" />
             Auditoria de Execução
           </TabsTrigger>
+          <TabsTrigger value="vault-cookies" className="gap-2">
+            <Cookie className="h-4 w-4" />
+            Cookies do Vault
+          </TabsTrigger>
 
         </TabsList>
 
@@ -536,6 +542,10 @@ const AutomationMonitoring = () => {
         <TabsContent value="automation-logs" className="space-y-4">
 
           <AutomationLogsPanel />
+        </TabsContent>
+
+        <TabsContent value="vault-cookies" className="space-y-4">
+          <VaultCookiesPanel />
         </TabsContent>
       </Tabs>
 
