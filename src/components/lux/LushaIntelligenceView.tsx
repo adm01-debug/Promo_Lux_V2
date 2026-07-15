@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
@@ -141,12 +141,53 @@ export const LushaIntelligenceView = () => {
   } | null>(null);
 
   // ── Progresso da busca por domínio (fases visuais) ──
-  type SearchPhase = "idle" | "queued" | "processing" | "done" | "failed";
+  type SearchPhase = "idle" | "queued" | "processing" | "done" | "failed" | "cancelled";
   const [searchPhase, setSearchPhase] = useState<SearchPhase>("idle");
   const [searchProgress, setSearchProgress] = useState(0);
   const [searchStatusMsg, setSearchStatusMsg] = useState<string>("");
+  const [searchElapsedMs, setSearchElapsedMs] = useState(0);
+  const searchStartedAtRef = useRef<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const [rateLimitCountdown, setRateLimitCountdown] = useState<number | null>(null);
   const [copiedLinkedin, setCopiedLinkedin] = useState(false);
+
+  // ── Histórico local de buscas por domínio (persistido em localStorage) ──
+  type DMHistoryEntry = {
+    id: string;
+    domain: string;
+    linkedin: string | null;
+    startedAt: string;
+    finishedAt: string;
+    status: "done" | "failed" | "cancelled";
+    total: number;
+    message?: string | null;
+  };
+  const HISTORY_KEY = "lusha-dm-history";
+  const HISTORY_MAX = 15;
+  const [dmHistory, setDmHistory] = useState<DMHistoryEntry[]>(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? (JSON.parse(raw) as DMHistoryEntry[]) : [];
+    } catch { return []; }
+  });
+  const pushHistory = useCallback((entry: Omit<DMHistoryEntry, "id" | "finishedAt"> & { startedAt: string }) => {
+    setDmHistory((prev) => {
+      const next: DMHistoryEntry[] = [
+        {
+          ...entry,
+          id: crypto.randomUUID(),
+          finishedAt: new Date().toISOString(),
+        },
+        ...prev,
+      ].slice(0, HISTORY_MAX);
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      return next;
+    });
+  }, []);
+  const clearHistory = useCallback(() => {
+    setDmHistory([]);
+    try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
+  }, []);
 
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
@@ -250,6 +291,14 @@ export const LushaIntelligenceView = () => {
     return () => clearInterval(id);
   }, [rateLimitCountdown]);
 
+  // ── Cancela a busca em andamento ──
+  const cancelSearch = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+  }, []);
+
   const dmMutation = useMutation({
     mutationFn: async () => {
       const d = validateDomain(domain);
@@ -261,30 +310,73 @@ export const LushaIntelligenceView = () => {
       if (d.value !== domain) setDomain(d.value);
       if (l.value !== linkedinCompanyUrl) setLinkedinCompanyUrl(l.value);
 
-      // Fase 1: em fila
+      // Setup abort + timing
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const startedAt = Date.now();
+      searchStartedAtRef.current = startedAt;
+      setSearchElapsedMs(0);
+
+      // Sequência de fases granulares — atualiza em tempo real enquanto a Lusha responde
       setSearchPhase("queued");
-      setSearchProgress(10);
-      setSearchStatusMsg("Enviando requisição...");
+      setSearchProgress(8);
+      setSearchStatusMsg("Enfileirando requisição...");
 
-      // Fase 2: processando (com progresso simulado enquanto aguarda a Lusha)
-      const processingTimer = setTimeout(() => {
+      const phaseTimers: number[] = [];
+      phaseTimers.push(window.setTimeout(() => {
         setSearchPhase("processing");
-        setSearchStatusMsg("Consultando Lusha Decision Makers V3...");
-      }, 400);
+        setSearchStatusMsg("Autenticando com a API Lusha...");
+        setSearchProgress(22);
+      }, 250));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Resolvendo empresa pelo domínio...");
+        setSearchProgress(38);
+      }, 900));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Buscando decisores (Decision Makers V3)...");
+        setSearchProgress(55);
+      }, 2200));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Recebendo resposta e normalizando dados...");
+        setSearchProgress(72);
+      }, 4500));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Persistindo contatos no banco...");
+        setSearchProgress(85);
+      }, 7500));
 
-      const progressTimer = setInterval(() => {
-        setSearchProgress((p) => (p < 88 ? p + Math.max(1, Math.round((90 - p) / 12)) : p));
-      }, 350);
+      const progressTimer = window.setInterval(() => {
+        setSearchProgress((p) => (p < 92 ? p + Math.max(0.5, (93 - p) / 20) : p));
+        if (searchStartedAtRef.current != null) {
+          setSearchElapsedMs(Date.now() - searchStartedAtRef.current);
+        }
+      }, 200);
+
+      const cleanup = () => {
+        phaseTimers.forEach(clearTimeout);
+        clearInterval(progressTimer);
+      };
 
       try {
-        const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
+        const invokePromise = supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
           body: {
             domains: [d.value],
             company_linkedin_url: l.value || null,
           },
         });
+
+        // Corrida entre a invocação e o cancelamento
+        const abortPromise = new Promise<never>((_, reject) => {
+          controller.signal.addEventListener("abort", () => {
+            const err = new Error("cancelled_by_user");
+            (err as unknown as { cancelled: boolean }).cancelled = true;
+            reject(err);
+          }, { once: true });
+        });
+
+        const { data, error } = await Promise.race([invokePromise, abortPromise]) as Awaited<typeof invokePromise>;
+
         if (error) {
-          // supabase-js encapsula o body em error.context (Response). Extrai retry_after quando presente.
           let retryAfter: number | null = null;
           let friendly: string | null = null;
           const ctx = (error as unknown as { context?: Response }).context;
@@ -292,11 +384,8 @@ export const LushaIntelligenceView = () => {
             try {
               const body = await ctx.clone().json();
               if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
-              if (body?.error?.code === "lusha_rate_limited") {
-                friendly = body?.error?.message ?? null;
-              } else if (body?.error?.message) {
-                friendly = body.error.message;
-              }
+              if (body?.error?.code === "lusha_rate_limited") friendly = body?.error?.message ?? null;
+              else if (body?.error?.message) friendly = body.error.message;
             } catch { /* ignora parse */ }
           }
           if (retryAfter != null || /rate|429/i.test(error.message ?? "")) {
@@ -309,8 +398,8 @@ export const LushaIntelligenceView = () => {
         }
         return data as DMResponse;
       } finally {
-        clearTimeout(processingTimer);
-        clearInterval(progressTimer);
+        cleanup();
+        abortRef.current = null;
       }
     },
     onSuccess: (data) => {
@@ -320,18 +409,52 @@ export const LushaIntelligenceView = () => {
       setRevealingIds(new Set());
       setSearchPhase("done");
       setSearchProgress(100);
-      setSearchStatusMsg(`${data.totalDecisionMakers} decisor(es) localizado(s).`);
+      const total = data.totalDecisionMakers ?? 0;
+      setSearchStatusMsg(`${total} decisor(es) localizado(s).`);
+      pushHistory({
+        domain,
+        linkedin: linkedinCompanyUrl || null,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+        status: "done",
+        total,
+      });
       toast({
         title: "Decisores encontrados",
-        description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
+        description: `${total} decisor(es) localizado(s) — 0 créditos consumidos.`,
       });
     },
     onError: (err: unknown) => {
+      const cancelled = (err as { cancelled?: boolean })?.cancelled === true;
       const msg = err instanceof Error ? err.message : String(err);
       const wait = (err as { rateLimit?: number })?.rateLimit;
+
+      if (cancelled) {
+        setSearchPhase("cancelled");
+        setSearchProgress(100);
+        setSearchStatusMsg("Busca cancelada pelo usuário.");
+        pushHistory({
+          domain,
+          linkedin: linkedinCompanyUrl || null,
+          startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+          status: "cancelled",
+          total: 0,
+          message: "Cancelada pelo usuário",
+        });
+        toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
+        return;
+      }
+
       setSearchPhase("failed");
       setSearchProgress(100);
       setSearchStatusMsg(msg);
+      pushHistory({
+        domain,
+        linkedin: linkedinCompanyUrl || null,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+        status: "failed",
+        total: 0,
+        message: msg,
+      });
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
@@ -833,7 +956,19 @@ export const LushaIntelligenceView = () => {
 
 
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              {dmMutation.isPending && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={cancelSearch}
+                  className="min-w-[130px]"
+                  aria-label="Cancelar busca em andamento"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Cancelar
+                </Button>
+              )}
               <Button
                 onClick={() => dmMutation.mutate()}
                 disabled={!canSearchDomain}
@@ -864,9 +999,12 @@ export const LushaIntelligenceView = () => {
             <div
               role="status"
               aria-live="polite"
+              aria-atomic="true"
               className={`rounded-lg border p-3 space-y-2 ${
                 searchPhase === "failed"
                   ? "border-destructive/40 bg-destructive/5"
+                  : searchPhase === "cancelled"
+                  ? "border-muted-foreground/30 bg-muted/40"
                   : searchPhase === "done"
                   ? "border-emerald-500/30 bg-emerald-500/5"
                   : "border-primary/30 bg-primary/5"
@@ -878,14 +1016,22 @@ export const LushaIntelligenceView = () => {
                   {searchPhase === "processing" && (<><Loader2 className="h-4 w-4 animate-spin text-primary" /> Processando</>)}
                   {searchPhase === "done" && (<><CheckCircle2 className="h-4 w-4 text-emerald-500" /> Concluído</>)}
                   {searchPhase === "failed" && (<><XCircle className="h-4 w-4 text-destructive" /> Falhou</>)}
+                  {searchPhase === "cancelled" && (<><X className="h-4 w-4 text-muted-foreground" /> Cancelada</>)}
                 </div>
-                <span className="text-xs text-muted-foreground tabular-nums">{Math.round(searchProgress)}%</span>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground tabular-nums">
+                  {(dmMutation.isPending || searchPhase === "done" || searchPhase === "failed" || searchPhase === "cancelled") && (
+                    <span aria-label="Tempo decorrido">⏱ {(searchElapsedMs / 1000).toFixed(1)}s</span>
+                  )}
+                  <span>{Math.round(searchProgress)}%</span>
+                </div>
               </div>
               <Progress
                 value={searchProgress}
                 className={
                   searchPhase === "failed"
                     ? "[&>div]:bg-destructive"
+                    : searchPhase === "cancelled"
+                    ? "[&>div]:bg-muted-foreground"
                     : searchPhase === "done"
                     ? "[&>div]:bg-emerald-500"
                     : ""
@@ -896,12 +1042,117 @@ export const LushaIntelligenceView = () => {
                   {searchStatusMsg}
                 </p>
               )}
+              {dmMutation.isPending && (
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={cancelSearch}
+                    className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="h-3 w-3 mr-1" /> Cancelar consulta
+                  </Button>
+                </div>
+              )}
               {rateLimitCountdown != null && rateLimitCountdown > 0 && (
                 <div className="flex items-center gap-2 text-xs text-amber-500">
                   <Clock className="h-3 w-3" />
                   <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite da API Lusha).</span>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ── Histórico local de buscas por domínio ── */}
+          {dmHistory.length > 0 && (
+            <div className="rounded-lg border border-border/50 bg-card/40">
+              <div className="flex items-center justify-between px-3 py-2 border-b border-border/40">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <History className="h-4 w-4 text-muted-foreground" />
+                  Histórico de buscas <span className="text-xs text-muted-foreground font-normal">({dmHistory.length})</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearHistory}
+                  className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                  title="Limpar histórico"
+                >
+                  <Trash2 className="h-3 w-3 mr-1" /> Limpar
+                </Button>
+              </div>
+              <ScrollArea className="max-h-64">
+                <ul className="divide-y divide-border/40">
+                  {dmHistory.map((h) => {
+                    const badge =
+                      h.status === "done"
+                        ? { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Concluído", Icon: CheckCircle2 }
+                        : h.status === "cancelled"
+                        ? { cls: "bg-muted text-muted-foreground border-border/50", label: "Cancelado", Icon: X }
+                        : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
+                    return (
+                      <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            <span className="font-medium truncate">{h.domain}</span>
+                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${badge.cls}`}>
+                              <badge.Icon className="h-3 w-3 mr-1" />
+                              {badge.label}
+                            </Badge>
+                            {h.status === "done" && (
+                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                                {h.total} decisor{h.total === 1 ? "" : "es"}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-0.5 truncate">
+                            {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
+                            {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
+                            {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 text-xs"
+                            title="Preencher campos com este domínio"
+                            onClick={() => {
+                              setDomain(h.domain);
+                              setLinkedinCompanyUrl(h.linkedin ?? "");
+                              setDomainError(null);
+                              setLinkedinError(null);
+                            }}
+                          >
+                            Retomar
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-7 text-xs"
+                            title="Preencher e buscar novamente"
+                            disabled={dmMutation.isPending || (rateLimitCountdown != null && rateLimitCountdown > 0)}
+                            onClick={() => {
+                              setDomain(h.domain);
+                              setLinkedinCompanyUrl(h.linkedin ?? "");
+                              setDomainError(null);
+                              setLinkedinError(null);
+                              setTimeout(() => dmMutation.mutate(), 0);
+                            }}
+                          >
+                            <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
+                          </Button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </ScrollArea>
             </div>
           )}
 
