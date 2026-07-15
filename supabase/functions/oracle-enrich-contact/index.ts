@@ -289,13 +289,6 @@ serve(async (req) => {
     try {
       const r = await enrichOne(admin, contact, logger);
       results.push(r);
-      // Incrementa attempts
-      await admin.rpc("increment_enrichment_attempt" as never, { _id: contact.id } as never).catch(() => {
-        // fallback: update direto se RPC não existir
-        return admin.from("lusha_contacts").update({
-          enrichment_attempts: 1,
-        }).eq("id", contact.id);
-      });
       // Se cookie caiu no meio, abandona o lote
       if (r.status === "error_auth") break;
     } catch (err) {
