@@ -284,6 +284,25 @@ export const LushaIntelligenceView = () => {
   const autoRetryAttemptedRef = useRef<Set<string>>(new Set());
   const [autoRetryQueue, setAutoRetryQueue] = useState<string[]>([]);
 
+  // Popula a fila com domínios únicos que falharam e ainda não foram tentados nesta sessão
+  useEffect(() => {
+    if (!autoRetryEnabled) {
+      setAutoRetryQueue([]);
+      return;
+    }
+    const failedDomains: string[] = [];
+    const seen = new Set<string>();
+    for (const h of dmHistory) {
+      if (h.status !== "failed") continue;
+      if (seen.has(h.domain)) continue;
+      seen.add(h.domain);
+      if (autoRetryAttemptedRef.current.has(h.domain)) continue;
+      failedDomains.push(h.domain);
+    }
+    setAutoRetryQueue(failedDomains);
+  }, [autoRetryEnabled, dmHistory]);
+
+
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
   const EXAMPLE_LINKEDIN = "linkedin.com/company/natura";
