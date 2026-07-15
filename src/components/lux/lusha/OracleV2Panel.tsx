@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone } from "lucide-react";
+import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SUGGESTED_DEPARTMENTS_PT } from "@/lib/lusha/departmentMap";
 import { cn } from "@/lib/utils";
 import {
@@ -152,7 +153,7 @@ export function OracleV2Panel() {
           </div>
 
           <div className="flex gap-2 pt-2">
-            <Button onClick={handleSearch} disabled={!canSearch}>
+            <Button onClick={handleSearch} disabled={!canSearch} aria-busy={search.isPending}>
               {search.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : (
@@ -161,7 +162,12 @@ export function OracleV2Panel() {
               Buscar decisores
             </Button>
             {pendingIds.length > 0 && (
-              <Button variant="secondary" onClick={handleEnrichAll} disabled={enrich.isPending}>
+              <Button
+                variant="secondary"
+                onClick={handleEnrichAll}
+                disabled={enrich.isPending}
+                aria-busy={enrich.isPending}
+              >
                 {enrich.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 ) : (
@@ -193,11 +199,19 @@ function VaultHealthBanner({
   data: ReturnType<typeof useOraclePreflight>["data"];
   isLoading: boolean;
 }) {
-  if (isLoading || !data) return null;
+  if (isLoading) {
+    return (
+      <div aria-live="polite" aria-busy="true">
+        <Skeleton className="h-10 w-full rounded-lg" />
+      </div>
+    );
+  }
+  if (!data) return null;
   if (data.ok) {
     return (
       <div
         role="status"
+        aria-live="polite"
         className="flex items-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-900 dark:text-emerald-100"
       >
         <CheckCircle2 className="h-4 w-4" />
@@ -209,6 +223,7 @@ function VaultHealthBanner({
   return (
     <div
       role="alert"
+      aria-live="assertive"
       className="flex items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
     >
       <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
@@ -241,8 +256,10 @@ function ResultsList({
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="py-8 flex items-center justify-center text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin mr-2" /> Carregando contatos...
+        <CardContent className="py-6 space-y-2" aria-busy="true">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-14 w-full rounded-md" />
+          ))}
         </CardContent>
       </Card>
     );
@@ -250,8 +267,12 @@ function ResultsList({
   if (contacts.length === 0) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-sm text-muted-foreground">
-          Nenhum decisor encontrado nesta sessão.
+        <CardContent className="py-10 flex flex-col items-center gap-2 text-center text-sm text-muted-foreground">
+          <Inbox className="h-8 w-8 opacity-50" />
+          <p className="font-medium text-foreground">Nenhum decisor nesta sessão</p>
+          <p className="text-xs">
+            Tente outra empresa ou adicione mais departamentos à busca.
+          </p>
         </CardContent>
       </Card>
     );
