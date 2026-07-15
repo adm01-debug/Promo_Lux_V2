@@ -362,7 +362,14 @@ export const LushaIntelligenceView = () => {
   }, []);
 
 
-  const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
+  const canSearchDomain = useMemo(() => {
+    if (dmMutation.isPending) return false;
+    const d = validateDomain(domain);
+    if (d.error) return false;
+    const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+    if (l.error) return false;
+    return true;
+  }, [domain, linkedinCompanyUrl, dmMutation.isPending, validateDomain, validateLinkedinCompanyUrl]);
 
   async function handleReveal(dm: DecisionMaker) {
     if (!dmRequestId) {
