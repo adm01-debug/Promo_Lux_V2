@@ -33,7 +33,7 @@ export function useOnboardingState() {
           .from("profiles")
           .select("onboarding_completed")
           .eq("id", user.id)
-          .single();
+          .maybeSingle();
 
         if (data?.onboarding_completed) {
           localStorage.setItem(LOCAL_KEY, "true");
