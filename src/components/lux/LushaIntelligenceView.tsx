@@ -1125,7 +1125,7 @@ export const LushaIntelligenceView = () => {
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
       if (/cookie/i.test(msg) || /503/.test(msg)) {
-        setCookieAlert("A conexão com o Lusha está indisponível (cookie expirado ou ausente). Atualize o cookie em cookies_config.");
+        setCookieAlert("A conexão com o Oráculo está indisponível (credencial expirada ou ausente). Atualize a configuração de credenciais.");
       }
       toast({
         title: "Erro na busca",
