@@ -1381,6 +1381,18 @@ export const LushaIntelligenceView = () => {
                     />
                     Auto-retry de falhas
                   </label>
+                  {browserNotifPermission !== "granted" && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={requestBrowserNotifPermission}
+                      className="h-7 text-xs text-muted-foreground hover:text-primary"
+                      title="Receber notificações do navegador quando buscas longas terminarem"
+                    >
+                      🔔 Ativar notificações
+                    </Button>
+                  )}
                   <Button
                     type="button"
                     variant="ghost"
