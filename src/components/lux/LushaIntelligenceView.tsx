@@ -582,6 +582,32 @@ export const LushaIntelligenceView = () => {
     },
   });
 
+  // ── Processador do auto-retry: dispara o próximo item da fila quando livre ──
+  useEffect(() => {
+    if (!autoRetryEnabled) return;
+    if (autoRetryQueue.length === 0) return;
+    if (dmMutation.isPending) return;
+    if (rateLimitCountdown != null && rateLimitCountdown > 0) return;
+    const nextDomain = autoRetryQueue[0];
+    if (!nextDomain) return;
+    // marca como tentado e remove da fila antes de disparar (evita loop)
+    autoRetryAttemptedRef.current.add(nextDomain);
+    setAutoRetryQueue((q) => q.slice(1));
+    setDomain(nextDomain);
+    setLinkedinCompanyUrl("");
+    setDomainError(null);
+    setLinkedinError(null);
+    toast({
+      title: "Auto-retry",
+      description: `Reprocessando "${nextDomain}"…`,
+    });
+    // pequeno delay para o state settlar
+    const t = setTimeout(() => dmMutation.mutate(), 150);
+    return () => clearTimeout(t);
+  }, [autoRetryEnabled, autoRetryQueue, dmMutation.isPending, rateLimitCountdown, dmMutation]);
+
+
+
 
   // ── Hidratação: carrega emails/telefones já persistidos em lusha_contacts ──
   useEffect(() => {
