@@ -234,8 +234,21 @@ export const LushaIntelligenceView = () => {
 
   const dmMutation = useMutation({
     mutationFn: async () => {
+      const d = validateDomain(domain);
+      const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+      setDomainError(d.error);
+      setLinkedinError(l.error);
+      if (d.error) throw new Error(d.error);
+      if (l.error) throw new Error(l.error);
+      // aplica normalização de volta ao estado (feedback visual)
+      if (d.value !== domain) setDomain(d.value);
+      if (l.value !== linkedinCompanyUrl) setLinkedinCompanyUrl(l.value);
+
       const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
-        body: { domains: [domain.trim()] },
+        body: {
+          domains: [d.value],
+          company_linkedin_url: l.value || null,
+        },
       });
       if (error) throw error;
       return data as DMResponse;
@@ -256,6 +269,7 @@ export const LushaIntelligenceView = () => {
       toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
     },
   });
+
 
   // ── Hidratação: carrega emails/telefones já persistidos em lusha_contacts ──
   useEffect(() => {
