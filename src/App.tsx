@@ -128,6 +128,28 @@ function AnimatedRoutes() {
   );
 }
 
+/**
+ * Escuta o evento `lux:deep-link` (disparado por Notification.onclick que roda
+ * fora da árvore React) e navega via react-router preservando o cache do SPA.
+ */
+function DeepLinkBridge() {
+  const navigate = (() => {
+    // useNavigate precisa do BrowserRouter no ancestral, então este componente
+    // deve ser montado DENTRO de <BrowserRouter> (feito abaixo em App).
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return require("react-router-dom").useNavigate();
+  })();
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const url = (e as CustomEvent<{ url: string }>).detail?.url;
+      if (url) navigate(url);
+    };
+    window.addEventListener("lux:deep-link", handler);
+    return () => window.removeEventListener("lux:deep-link", handler);
+  }, [navigate]);
+  return null;
+}
+
 const App = () => (
   <ErrorBoundary>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
