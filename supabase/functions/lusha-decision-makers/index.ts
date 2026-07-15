@@ -86,11 +86,50 @@ serve(async (req) => {
       new Set(
         domains
           .filter((d: unknown) => typeof d === "string" && d.trim().length > 0)
-          .map((d: string) => d.toLowerCase().trim())
+          .map((d: string) =>
+            d
+              .toLowerCase()
+              .trim()
+              .replace(/^https?:\/\//i, "")
+              .replace(/^www\./i, "")
+              .split("/")[0]
+              .split("?")[0]
+              .split("#")[0]
+          )
       )
     );
     if (cleanDomains.length === 0) {
       return errorResponse(correlationId, 400, "empty_domains", "Nenhum domínio válido informado");
+    }
+
+    // Rejeita domínios de LinkedIn ou redes sociais — a API V3 espera o domínio corporativo.
+    const SOCIAL_BLOCKLIST = /(^|\.)(linkedin|facebook|instagram|twitter|x|tiktok|youtube)\.com$/i;
+    const blocked = cleanDomains.filter((d) => SOCIAL_BLOCKLIST.test(d));
+    if (blocked.length > 0) {
+      log("warn", correlationId, "blocked_social_domain", { blocked });
+      return errorResponse(
+        correlationId,
+        400,
+        "invalid_domain",
+        blocked.some((d) => /linkedin\.com$/i.test(d))
+          ? "Domínio inválido: informe o site oficial da empresa, não a URL do LinkedIn."
+          : "Redes sociais não são aceitas — informe o domínio do site oficial da empresa.",
+        { blocked }
+      );
+    }
+
+    // Formato básico de domínio (precisa ter TLD)
+    const DOMAIN_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/;
+    const malformed = cleanDomains.filter((d) => !DOMAIN_RE.test(d) || d.length > 253);
+    if (malformed.length > 0) {
+      log("warn", correlationId, "malformed_domain", { malformed });
+      return errorResponse(
+        correlationId,
+        400,
+        "invalid_domain_format",
+        "Formato inválido. Use apenas o domínio (ex.: natura.com.br).",
+        { malformed }
+      );
     }
 
     const ttlHours = Math.min(Math.max(num(cache_ttl_hours) ?? 24, 0), 720); // 0 desativa, teto 30 dias
