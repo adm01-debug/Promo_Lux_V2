@@ -1302,6 +1302,9 @@ export const LushaIntelligenceView = () => {
         </div>
       </div>
 
+      {/* P1-7: Banner de saúde do cookie Lusha (self-hosted vault) */}
+      <LushaCookieHealthBanner />
+
       {/* Banner de alerta de cookie */}
       {cookieAlert && (
         <div
