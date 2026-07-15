@@ -1776,6 +1776,16 @@ export const LushaIntelligenceView = () => {
                             >
                               <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
                             </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                              title="Excluir esta entrada do histórico"
+                              onClick={() => setConfirmDeleteId(h.id)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
                           </div>
                         </li>
                       );
