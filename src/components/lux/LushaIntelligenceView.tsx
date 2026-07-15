@@ -1056,18 +1056,35 @@ export const LushaIntelligenceView = () => {
                                   const isRevealing = revealingIds.has(dm.id);
                                   const rev = revealedData[dm.id];
                                   const isRevealed = !!rev && !rev.error;
+                                  const hasError = !!rev?.error;
                                   const disabled = isRevealing || isRevealed || (!dm.hasEmail && !dm.hasPhone);
+                                  const handleClick = () => {
+                                    if (hasError) {
+                                      // limpa erro antes de re-tentar
+                                      setRevealedData((prev) => {
+                                        const next = { ...prev };
+                                        delete next[dm.id];
+                                        return next;
+                                      });
+                                      // aguarda o próximo tick para o estado propagar
+                                      setTimeout(() => handleReveal(dm), 0);
+                                    } else {
+                                      handleReveal(dm);
+                                    }
+                                  };
                                   return (
                                     <Button
                                       size="sm"
-                                      variant={isRevealed ? "ghost" : "outline"}
-                                      onClick={() => handleReveal(dm)}
+                                      variant={isRevealed ? "ghost" : hasError ? "destructive" : "outline"}
+                                      onClick={handleClick}
                                       disabled={disabled}
                                     >
                                       {isRevealing ? (
                                         <><Loader2 className="h-3 w-3 mr-1 animate-spin" /> Revelando…</>
                                       ) : isRevealed ? (
                                         "Revelado"
+                                      ) : hasError ? (
+                                        <><AlertTriangle className="h-3 w-3 mr-1" /> Tentar novamente</>
                                       ) : (
                                         "Revelar"
                                       )}
