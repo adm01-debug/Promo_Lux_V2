@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const LUSHA_API_KEY = "07668666-792b-42bd-a933-b16a74bd10cf";
+const LUSHA_API_KEY = Deno.env.get("LUSHA_API_KEY") ?? "";
 const LUSHA_REVEAL_URL = "https://api.lusha.com/v2/person";
 
 const corsHeaders = {
