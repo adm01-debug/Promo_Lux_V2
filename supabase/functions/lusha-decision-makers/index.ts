@@ -5,9 +5,30 @@ const LUSHA_API_KEY = Deno.env.get("LUSHA_API_KEY") ?? "";
 const LUSHA_API_URL = "https://api.lusha.com/v3/contacts/decision-makers";
 const FUNCTION_NAME = "lusha-decision-makers";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+// ── CORS restrito às origens conhecidas ──────────────────────────────────
+const ALLOWED_ORIGINS = [
+  "https://lux-ai-company-finder.lovable.app",
+  "https://lux-ai-finder.lovable.app",
+  "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+  "https://id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+];
+function corsHeadersFor(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
+// Compatibilidade com código legado que ainda referencia `corsHeaders`.
+// Substituído dinamicamente por request dentro de serve().
+let corsHeaders: Record<string, string> = {
+  "Access-Control-Allow-Origin": ALLOWED_ORIGINS[0],
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Vary": "Origin",
 };
 
 // ── Logger estruturado (JSON em stdout — consumido pelo Edge Function Logs) ──
