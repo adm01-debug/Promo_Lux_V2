@@ -410,6 +410,7 @@ serve(async (req) => {
               company_type: r.companyType ?? null,
               company_linkedin_followers: r.companyLinkedinFollowers ?? null,
               company_email_domain: r.companyEmailDomain ?? null,
+              company_linkedin_url: companyLinkedinUrl,
               lusha_popularity_tier: r.lushaPopularityTier ?? null,
             });
           }
