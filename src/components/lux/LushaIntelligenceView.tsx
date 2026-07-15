@@ -317,6 +317,10 @@ export const LushaIntelligenceView = () => {
     }
   }, [queryClient]);
 
+  // ── Estado do dialog de confirmação de exclusão ──
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+
 
   // ── Preferências de notificações (persistidas em localStorage) ──
   type NotifPrefs = {
