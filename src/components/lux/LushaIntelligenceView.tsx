@@ -800,7 +800,7 @@ export const LushaIntelligenceView = () => {
         message: msg,
         startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
-      void notifyLongSearch({ domain, status: "failed", elapsedMs: elapsedFail, message: msg });
+      void notifyLongSearch({ domain, status: "failed", elapsedMs: elapsedFail, message: msg, historyId: currentHistoryIdRef.current });
       currentHistoryIdRef.current = null;
 
       if (wait) {
