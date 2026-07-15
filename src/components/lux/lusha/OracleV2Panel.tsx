@@ -76,12 +76,12 @@ export function OracleV2Panel() {
   );
 
   const handleSearch = () => {
-    if (!activeOrg?.id || !user) return;
+    if (!activeOrg?.organization_id || !user) return;
     search.mutate(
       {
         company_name: companyName.trim(),
         departments: Array.from(selectedDepts),
-        organization_id: activeOrg?.organization_id,
+        organization_id: activeOrg!.organization_id,
       },
       {
         onSuccess: (res) => setSessionId(res.session_id),
@@ -99,7 +99,7 @@ export function OracleV2Panel() {
   };
 
   const canSearch =
-    companyName.trim().length >= 2 && selectedDepts.size > 0 && !!activeOrg?.id && !search.isPending;
+    companyName.trim().length >= 2 && selectedDepts.size > 0 && !!activeOrg?.organization_id && !search.isPending;
 
   return (
     <div className="space-y-6">
