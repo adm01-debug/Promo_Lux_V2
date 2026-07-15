@@ -1052,6 +1052,23 @@ export const LushaIntelligenceView = () => {
     return true;
   }, [domain, linkedinCompanyUrl, dmMutation.isPending, rateLimitCountdown, validateDomain, validateLinkedinCompanyUrl]);
 
+  // ── Atalho global: Ctrl/Cmd+Enter dispara a busca por domínio quando válida ──
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.key !== "Enter") return;
+      // Ignora se foco estiver em textarea/select (permite Enter normal em inputs)
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      if (tag === "textarea" || tag === "select") return;
+      if (!canSearchDomain) return;
+      e.preventDefault();
+      dmMutation.mutate();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [canSearchDomain, dmMutation]);
+
+
   async function handleReveal(dm: DecisionMaker) {
     if (!dmRequestId) {
       toast({
