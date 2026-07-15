@@ -665,17 +665,20 @@ export const LushaIntelligenceView = () => {
       setSearchProgress(100);
       const total = data.totalDecisionMakers ?? 0;
       setSearchStatusMsg(`${total} decisor(es) localizado(s).`);
+      const elapsed = searchStartedAtRef.current ? Date.now() - searchStartedAtRef.current : 0;
       updateHistory(currentHistoryIdRef.current, {
         status: "done",
         total,
         message: null,
         startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
+      void notifyLongSearch({ domain, status: "done", elapsedMs: elapsed, total });
       currentHistoryIdRef.current = null;
       toast({
         title: "Decisores encontrados",
         description: `${total} decisor(es) localizado(s) — 0 créditos consumidos.`,
       });
+
     },
     onError: (err: unknown) => {
       const cancelled = (err as { cancelled?: boolean })?.cancelled === true;
