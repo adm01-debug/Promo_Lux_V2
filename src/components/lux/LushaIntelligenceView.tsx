@@ -956,7 +956,19 @@ export const LushaIntelligenceView = () => {
 
 
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              {dmMutation.isPending && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={cancelSearch}
+                  className="min-w-[130px]"
+                  aria-label="Cancelar busca em andamento"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Cancelar
+                </Button>
+              )}
               <Button
                 onClick={() => dmMutation.mutate()}
                 disabled={!canSearchDomain}
@@ -987,9 +999,12 @@ export const LushaIntelligenceView = () => {
             <div
               role="status"
               aria-live="polite"
+              aria-atomic="true"
               className={`rounded-lg border p-3 space-y-2 ${
                 searchPhase === "failed"
                   ? "border-destructive/40 bg-destructive/5"
+                  : searchPhase === "cancelled"
+                  ? "border-muted-foreground/30 bg-muted/40"
                   : searchPhase === "done"
                   ? "border-emerald-500/30 bg-emerald-500/5"
                   : "border-primary/30 bg-primary/5"
@@ -1001,14 +1016,22 @@ export const LushaIntelligenceView = () => {
                   {searchPhase === "processing" && (<><Loader2 className="h-4 w-4 animate-spin text-primary" /> Processando</>)}
                   {searchPhase === "done" && (<><CheckCircle2 className="h-4 w-4 text-emerald-500" /> Concluído</>)}
                   {searchPhase === "failed" && (<><XCircle className="h-4 w-4 text-destructive" /> Falhou</>)}
+                  {searchPhase === "cancelled" && (<><X className="h-4 w-4 text-muted-foreground" /> Cancelada</>)}
                 </div>
-                <span className="text-xs text-muted-foreground tabular-nums">{Math.round(searchProgress)}%</span>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground tabular-nums">
+                  {(dmMutation.isPending || searchPhase === "done" || searchPhase === "failed" || searchPhase === "cancelled") && (
+                    <span aria-label="Tempo decorrido">⏱ {(searchElapsedMs / 1000).toFixed(1)}s</span>
+                  )}
+                  <span>{Math.round(searchProgress)}%</span>
+                </div>
               </div>
               <Progress
                 value={searchProgress}
                 className={
                   searchPhase === "failed"
                     ? "[&>div]:bg-destructive"
+                    : searchPhase === "cancelled"
+                    ? "[&>div]:bg-muted-foreground"
                     : searchPhase === "done"
                     ? "[&>div]:bg-emerald-500"
                     : ""
@@ -1019,12 +1042,117 @@ export const LushaIntelligenceView = () => {
                   {searchStatusMsg}
                 </p>
               )}
+              {dmMutation.isPending && (
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={cancelSearch}
+                    className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="h-3 w-3 mr-1" /> Cancelar consulta
+                  </Button>
+                </div>
+              )}
               {rateLimitCountdown != null && rateLimitCountdown > 0 && (
                 <div className="flex items-center gap-2 text-xs text-amber-500">
                   <Clock className="h-3 w-3" />
                   <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite da API Lusha).</span>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ── Histórico local de buscas por domínio ── */}
+          {dmHistory.length > 0 && (
+            <div className="rounded-lg border border-border/50 bg-card/40">
+              <div className="flex items-center justify-between px-3 py-2 border-b border-border/40">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <History className="h-4 w-4 text-muted-foreground" />
+                  Histórico de buscas <span className="text-xs text-muted-foreground font-normal">({dmHistory.length})</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearHistory}
+                  className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                  title="Limpar histórico"
+                >
+                  <Trash2 className="h-3 w-3 mr-1" /> Limpar
+                </Button>
+              </div>
+              <ScrollArea className="max-h-64">
+                <ul className="divide-y divide-border/40">
+                  {dmHistory.map((h) => {
+                    const badge =
+                      h.status === "done"
+                        ? { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Concluído", Icon: CheckCircle2 }
+                        : h.status === "cancelled"
+                        ? { cls: "bg-muted text-muted-foreground border-border/50", label: "Cancelado", Icon: X }
+                        : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
+                    return (
+                      <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            <span className="font-medium truncate">{h.domain}</span>
+                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${badge.cls}`}>
+                              <badge.Icon className="h-3 w-3 mr-1" />
+                              {badge.label}
+                            </Badge>
+                            {h.status === "done" && (
+                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                                {h.total} decisor{h.total === 1 ? "" : "es"}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-0.5 truncate">
+                            {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
+                            {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
+                            {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 text-xs"
+                            title="Preencher campos com este domínio"
+                            onClick={() => {
+                              setDomain(h.domain);
+                              setLinkedinCompanyUrl(h.linkedin ?? "");
+                              setDomainError(null);
+                              setLinkedinError(null);
+                            }}
+                          >
+                            Retomar
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-7 text-xs"
+                            title="Preencher e buscar novamente"
+                            disabled={dmMutation.isPending || (rateLimitCountdown != null && rateLimitCountdown > 0)}
+                            onClick={() => {
+                              setDomain(h.domain);
+                              setLinkedinCompanyUrl(h.linkedin ?? "");
+                              setDomainError(null);
+                              setLinkedinError(null);
+                              setTimeout(() => dmMutation.mutate(), 0);
+                            }}
+                          >
+                            <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
+                          </Button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </ScrollArea>
             </div>
           )}
 
