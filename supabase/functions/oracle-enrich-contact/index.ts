@@ -157,6 +157,7 @@ async function enrichOne(
     enrichment_status: finalStatus,
     last_enriched_at: new Date().toISOString(),
     last_error: errMsg,
+    enrichment_attempts: 1,
     raw_leadcontact_email: rawEmail,
     raw_leadcontact_phone: rawPhone,
   };
