@@ -1165,88 +1165,158 @@ export const LushaIntelligenceView = () => {
               <div className="flex items-center justify-between px-3 py-2 border-b border-border/40">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <History className="h-4 w-4 text-muted-foreground" />
-                  Histórico de buscas <span className="text-xs text-muted-foreground font-normal">({dmHistory.length})</span>
+                  Histórico de buscas{" "}
+                  <span className="text-xs text-muted-foreground font-normal">
+                    ({filteredHistory.length}/{dmHistory.length})
+                  </span>
                 </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearHistory}
-                  className="h-7 text-xs text-muted-foreground hover:text-destructive"
-                  title="Limpar histórico"
-                >
-                  <Trash2 className="h-3 w-3 mr-1" /> Limpar
-                </Button>
+                <div className="flex items-center gap-2">
+                  <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer select-none">
+                    <Checkbox
+                      checked={autoRetryEnabled}
+                      onCheckedChange={(v) => setAutoRetryEnabled(v === true)}
+                      className="h-3.5 w-3.5"
+                    />
+                    Auto-retry de falhas
+                  </label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearHistory}
+                    className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                    title="Limpar histórico"
+                  >
+                    <Trash2 className="h-3 w-3 mr-1" /> Limpar
+                  </Button>
+                </div>
               </div>
+
+              {/* Filtros */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 border-b border-border/40 bg-muted/20">
+                <Input
+                  placeholder="Buscar por domínio ou LinkedIn…"
+                  value={historyQ}
+                  onChange={(e) => setHistoryQ(e.target.value)}
+                  className="h-8 text-xs md:col-span-2"
+                />
+                <select
+                  value={historyStatus}
+                  onChange={(e) => setHistoryStatus(e.target.value as typeof historyStatus)}
+                  className="h-8 rounded-md border border-input bg-background px-2 text-xs"
+                  aria-label="Filtrar por status"
+                >
+                  <option value="all">Todos os status</option>
+                  <option value="done">Concluído</option>
+                  <option value="failed">Falhou</option>
+                  <option value="cancelled">Cancelado</option>
+                  <option value="processing">Processando</option>
+                  <option value="queued">Em fila</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <Input
+                    type="date"
+                    value={historyFrom}
+                    onChange={(e) => setHistoryFrom(e.target.value)}
+                    className="h-8 text-xs"
+                    aria-label="Data inicial"
+                  />
+                  <span className="text-xs text-muted-foreground">→</span>
+                  <Input
+                    type="date"
+                    value={historyTo}
+                    onChange={(e) => setHistoryTo(e.target.value)}
+                    className="h-8 text-xs"
+                    aria-label="Data final"
+                  />
+                </div>
+              </div>
+
               <ScrollArea className="max-h-64">
-                <ul className="divide-y divide-border/40">
-                  {dmHistory.map((h) => {
-                    const badge =
-                      h.status === "done"
-                        ? { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Concluído", Icon: CheckCircle2 }
-                        : h.status === "cancelled"
-                        ? { cls: "bg-muted text-muted-foreground border-border/50", label: "Cancelado", Icon: X }
-                        : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
-                    return (
-                      <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                            <span className="font-medium truncate">{h.domain}</span>
-                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${badge.cls}`}>
-                              <badge.Icon className="h-3 w-3 mr-1" />
-                              {badge.label}
-                            </Badge>
-                            {h.status === "done" && (
-                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                                {h.total} decisor{h.total === 1 ? "" : "es"}
+                {filteredHistory.length === 0 ? (
+                  <div className="px-3 py-6 text-center text-xs text-muted-foreground">
+                    Nenhum item corresponde aos filtros atuais.
+                  </div>
+                ) : (
+                  <ul className="divide-y divide-border/40">
+                    {filteredHistory.map((h) => {
+                      const badge =
+                        h.status === "done"
+                          ? { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Concluído", Icon: CheckCircle2 }
+                          : h.status === "cancelled"
+                          ? { cls: "bg-muted text-muted-foreground border-border/50", label: "Cancelado", Icon: X }
+                          : h.status === "processing"
+                          ? { cls: "bg-primary/15 text-primary border-primary/30", label: "Processando", Icon: Loader2 }
+                          : h.status === "queued"
+                          ? { cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", label: "Em fila", Icon: Clock }
+                          : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
+                      const queuedForRetry = autoRetryQueue.includes(h.domain);
+                      return (
+                        <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              <span className="font-medium truncate">{h.domain}</span>
+                              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${badge.cls}`}>
+                                <badge.Icon className="h-3 w-3 mr-1" />
+                                {badge.label}
                               </Badge>
-                            )}
+                              {h.status === "done" && (
+                                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                                  {h.total} decisor{h.total === 1 ? "" : "es"}
+                                </Badge>
+                              )}
+                              {queuedForRetry && (
+                                <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/40 text-primary">
+                                  <Clock className="h-3 w-3 mr-1" /> Aguardando retry
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-0.5 truncate">
+                              {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
+                              {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
+                              {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
+                            </div>
                           </div>
-                          <div className="text-xs text-muted-foreground mt-0.5 truncate">
-                            {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
-                            {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
-                            {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
+                          <div className="flex items-center gap-1 shrink-0">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 text-xs"
+                              title="Preencher campos com este domínio"
+                              onClick={() => {
+                                setDomain(h.domain);
+                                setLinkedinCompanyUrl(h.linkedin ?? "");
+                                setDomainError(null);
+                                setLinkedinError(null);
+                              }}
+                            >
+                              Retomar
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs"
+                              title="Preencher e buscar novamente"
+                              disabled={dmMutation.isPending || (rateLimitCountdown != null && rateLimitCountdown > 0)}
+                              onClick={() => {
+                                setDomain(h.domain);
+                                setLinkedinCompanyUrl(h.linkedin ?? "");
+                                setDomainError(null);
+                                setLinkedinError(null);
+                                setTimeout(() => dmMutation.mutate(), 0);
+                              }}
+                            >
+                              <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
+                            </Button>
                           </div>
-                        </div>
-                        <div className="flex items-center gap-1 shrink-0">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 text-xs"
-                            title="Preencher campos com este domínio"
-                            onClick={() => {
-                              setDomain(h.domain);
-                              setLinkedinCompanyUrl(h.linkedin ?? "");
-                              setDomainError(null);
-                              setLinkedinError(null);
-                            }}
-                          >
-                            Retomar
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-7 text-xs"
-                            title="Preencher e buscar novamente"
-                            disabled={dmMutation.isPending || (rateLimitCountdown != null && rateLimitCountdown > 0)}
-                            onClick={() => {
-                              setDomain(h.domain);
-                              setLinkedinCompanyUrl(h.linkedin ?? "");
-                              setDomainError(null);
-                              setLinkedinError(null);
-                              setTimeout(() => dmMutation.mutate(), 0);
-                            }}
-                          >
-                            <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
-                          </Button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </ScrollArea>
             </div>
           )}
