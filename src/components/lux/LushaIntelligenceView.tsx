@@ -1316,27 +1316,6 @@ export const LushaIntelligenceView = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        size="icon"
-                        disabled={!isValid}
-                        onClick={async () => {
-                          if (!isValid) return;
-                          try {
-                            await navigator.clipboard.writeText(fullUrl);
-                            setCopiedLinkedin(true);
-                            toast({ title: "Link copiado", description: fullUrl });
-                            setTimeout(() => setCopiedLinkedin(false), 1500);
-                          } catch {
-                            toast({ title: "Falha ao copiar", description: "Copie manualmente.", variant: "destructive" });
-                          }
-                        }}
-                        title={isValid ? "Copiar link do LinkedIn" : "Informe uma URL válida do LinkedIn"}
-                        className="shrink-0"
-                      >
-                        {copiedLinkedin ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
                         size="default"
                         disabled={!isValid}
                         onClick={() => {
