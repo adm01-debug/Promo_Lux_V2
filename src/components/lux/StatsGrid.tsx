@@ -276,7 +276,7 @@ interface StatsGridProps {
 export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
   const { data, isLoading } = useDashboardStats();
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
@@ -284,7 +284,7 @@ export const StatsGrid = memo(({ onNavigate }: StatsGridProps) => {
     );
   }
 
-  const s = data!;
+  const s = data;
   const matchRate = s.totalCompanies > 0 ? Math.round((s.enrichedCompanies / s.totalCompanies) * 100) : 0;
   
   const stats: StatCardProps[] = [
