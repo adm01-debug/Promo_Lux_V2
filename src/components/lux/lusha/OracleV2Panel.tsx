@@ -36,7 +36,7 @@ interface OracleContact {
 
 export function OracleV2Panel() {
   const { user } = useAuth();
-  const { activeOrg } = useOrganizations();
+  const { activeOrg } = useActiveOrganization();
   const preflight = useOraclePreflight();
   const search = useOracleSearchDecisors();
   const enrich = useOracleEnrichContact();
@@ -81,7 +81,7 @@ export function OracleV2Panel() {
       {
         company_name: companyName.trim(),
         departments: Array.from(selectedDepts),
-        organization_id: activeOrg.id,
+        organization_id: activeOrg?.organization_id,
       },
       {
         onSuccess: (res) => setSessionId(res.session_id),
