@@ -76,7 +76,9 @@ serve(async (req) => {
       bitrix_card_id,
       cache_ttl_hours,
       force_refresh,
+      company_linkedin_url,
     } = body ?? {};
+    const companyLinkedinUrl = str(company_linkedin_url);
     if (!Array.isArray(domains) || domains.length === 0) {
       return errorResponse(correlationId, 400, "missing_domains", "Campo 'domains' obrigatório (array não vazio)");
     }
