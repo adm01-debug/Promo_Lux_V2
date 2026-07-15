@@ -1175,7 +1175,7 @@ export const LushaIntelligenceView = () => {
         >
           <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
           <div className="flex-1 text-sm">
-            <p className="font-medium text-amber-300">Conexão com Lusha indisponível</p>
+            <p className="font-medium text-amber-300">Conexão com o Oráculo indisponível</p>
             <p className="text-amber-200/80 mt-0.5">{cookieAlert}</p>
           </div>
         </div>
