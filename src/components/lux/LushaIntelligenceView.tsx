@@ -1454,42 +1454,75 @@ export const LushaIntelligenceView = () => {
             </div>
 
 
-
-            <div className="flex justify-end gap-2">
-              {dmMutation.isPending && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={cancelSearch}
-                  className="min-w-[130px]"
-                  aria-label="Cancelar busca em andamento"
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Cancelar
-                </Button>
-              )}
-              <Button
-                onClick={() => dmMutation.mutate()}
-                disabled={!canSearchDomain}
-                className="min-w-[180px]"
+            {/* Aviso de duplicidade recente (últimas 24h) */}
+            {recentDuplicate && !dmMutation.isPending && (
+              <div
+                role="status"
+                className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/5 px-3 py-2 text-xs text-amber-200"
               >
-                {dmMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Buscando...
-                  </>
-                ) : rateLimitCountdown != null && rateLimitCountdown > 0 ? (
-                  <>
-                    <Clock className="mr-2 h-4 w-4" />
-                    Aguarde {rateLimitCountdown}s
-                  </>
-                ) : (
-                  <>
-                    <Search className="mr-2 h-4 w-4" />
-                    Buscar Decisores
-                  </>
+                <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400" />
+                <div className="flex-1">
+                  <span className="font-medium">Domínio já consultado</span>{" "}
+                  {formatDistanceToNow(new Date(recentDuplicate.finishedAt), { addSuffix: true, locale: ptBR })}
+                  {recentDuplicate.status === "done" && recentDuplicate.total > 0 && (
+                    <> — {recentDuplicate.total} decisor{recentDuplicate.total === 1 ? "" : "es"} retornado(s)</>
+                  )}
+                  . Você pode <button
+                    type="button"
+                    className="underline hover:text-amber-100"
+                    onClick={() => {
+                      setResultsTab("history");
+                      setHighlightedHistoryId(recentDuplicate.id);
+                    }}
+                  >abrir o resultado anterior</button> para evitar consulta redundante.
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="text-[11px] text-muted-foreground inline-flex items-center gap-1">
+                <Keyboard className="h-3 w-3" />
+                Dica: <kbd className="px-1 py-0.5 rounded border border-border/50 bg-muted/50 font-mono">Ctrl</kbd>
+                <span>+</span>
+                <kbd className="px-1 py-0.5 rounded border border-border/50 bg-muted/50 font-mono">Enter</kbd>
+                para buscar
+              </div>
+              <div className="flex justify-end gap-2">
+                {dmMutation.isPending && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={cancelSearch}
+                    className="min-w-[130px]"
+                    aria-label="Cancelar busca em andamento"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Cancelar
+                  </Button>
                 )}
-              </Button>
+                <Button
+                  onClick={() => dmMutation.mutate()}
+                  disabled={!canSearchDomain}
+                  className="min-w-[180px]"
+                >
+                  {dmMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Buscando...
+                    </>
+                  ) : rateLimitCountdown != null && rateLimitCountdown > 0 ? (
+                    <>
+                      <Clock className="mr-2 h-4 w-4" />
+                      Aguarde {rateLimitCountdown}s
+                    </>
+                  ) : (
+                    <>
+                      <Search className="mr-2 h-4 w-4" />
+                      Buscar Decisores
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
 
