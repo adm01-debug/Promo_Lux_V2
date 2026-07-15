@@ -30,7 +30,7 @@ const VIEW_LABELS: Record<View, string> = {
   automations: "Automações (Tempo Real)",
   "recycle-bin": "Lixeira",
   suppressions: "Lista de Supressão",
-  lusha: "Lusha Intelligence",
+  lusha: "Oráculo",
 };
 
 const VIEW_SECTIONS: Record<View, string> = {
