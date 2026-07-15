@@ -1,6 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
+import { resolveDepartments, findPtLabelForEn } from "../_shared/departmentMap.ts";
+
+// ── Quota diária por usuário (server-side) ──
+const DAILY_SEARCH_QUOTA = Number(Deno.env.get("LUSHA_DAILY_QUOTA") ?? "50");
 
 // ── CORS ──
 const ALLOWED_ORIGINS = [
