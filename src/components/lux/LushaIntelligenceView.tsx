@@ -151,43 +151,157 @@ export const LushaIntelligenceView = () => {
   const [rateLimitCountdown, setRateLimitCountdown] = useState<number | null>(null);
   const [copiedLinkedin, setCopiedLinkedin] = useState(false);
 
-  // ── Histórico local de buscas por domínio (persistido em localStorage) ──
+  // ── Histórico de buscas por domínio (sincronizado no Supabase) ──
   type DMHistoryEntry = {
     id: string;
     domain: string;
     linkedin: string | null;
     startedAt: string;
     finishedAt: string;
-    status: "done" | "failed" | "cancelled";
+    status: "done" | "failed" | "cancelled" | "processing" | "queued";
     total: number;
     message?: string | null;
   };
-  const HISTORY_KEY = "lusha-dm-history";
-  const HISTORY_MAX = 15;
-  const [dmHistory, setDmHistory] = useState<DMHistoryEntry[]>(() => {
-    try {
-      const raw = localStorage.getItem(HISTORY_KEY);
-      return raw ? (JSON.parse(raw) as DMHistoryEntry[]) : [];
-    } catch { return []; }
+
+  type DMHistoryRow = {
+    id: string;
+    domain: string;
+    linkedin_url: string | null;
+    status: string;
+    decision_makers_count: number;
+    error_message: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+
+  const rowToEntry = (r: DMHistoryRow): DMHistoryEntry => ({
+    id: r.id,
+    domain: r.domain,
+    linkedin: r.linkedin_url,
+    startedAt: r.created_at,
+    finishedAt: r.updated_at,
+    status: (["done", "failed", "cancelled", "processing", "queued"].includes(r.status)
+      ? r.status
+      : "failed") as DMHistoryEntry["status"],
+    total: r.decision_makers_count ?? 0,
+    message: r.error_message,
   });
-  const pushHistory = useCallback((entry: Omit<DMHistoryEntry, "id" | "finishedAt"> & { startedAt: string }) => {
-    setDmHistory((prev) => {
-      const next: DMHistoryEntry[] = [
-        {
-          ...entry,
-          id: crypto.randomUUID(),
-          finishedAt: new Date().toISOString(),
+
+  const { data: dmHistory = [] } = useQuery({
+    queryKey: ["lusha-dm-history"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("lusha_dm_search_history")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      return ((data ?? []) as DMHistoryRow[]).map(rowToEntry);
+    },
+    staleTime: 30_000,
+  });
+
+  // Sincronização em tempo real entre abas/dispositivos
+  useEffect(() => {
+    const channel = supabase
+      .channel("lusha-dm-history-sync")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "lusha_dm_search_history" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
         },
-        ...prev,
-      ].slice(0, HISTORY_MAX);
-      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* quota */ }
-      return next;
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
+  const pushHistory = useCallback(
+    async (entry: {
+      domain: string;
+      linkedin: string | null;
+      startedAt: string;
+      status: DMHistoryEntry["status"];
+      total: number;
+      message?: string | null;
+    }) => {
+      try {
+        const { data: userRes } = await supabase.auth.getUser();
+        const uid = userRes?.user?.id;
+        if (!uid) return;
+        const duration = Math.max(0, Date.now() - new Date(entry.startedAt).getTime());
+        await supabase.from("lusha_dm_search_history").insert({
+          user_id: uid,
+          domain: entry.domain,
+          linkedin_url: entry.linkedin,
+          status: entry.status,
+          decision_makers_count: entry.total,
+          error_message: entry.message ?? null,
+          duration_ms: duration,
+        });
+        queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+      } catch {
+        /* silencioso — histórico é auxiliar */
+      }
+    },
+    [queryClient],
+  );
+
+  const clearHistory = useCallback(async () => {
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes?.user?.id;
+      if (!uid) return;
+      await supabase.from("lusha_dm_search_history").delete().eq("user_id", uid);
+      queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+    } catch { /* ignore */ }
+  }, [queryClient]);
+
+  // ── Filtros do histórico ──
+  const [historyQ, setHistoryQ] = useState("");
+  const [historyStatus, setHistoryStatus] = useState<"all" | DMHistoryEntry["status"]>("all");
+  const [historyFrom, setHistoryFrom] = useState<string>(""); // yyyy-mm-dd
+  const [historyTo, setHistoryTo] = useState<string>("");
+
+  const filteredHistory = useMemo(() => {
+    const q = historyQ.trim().toLowerCase();
+    const fromTs = historyFrom ? new Date(historyFrom + "T00:00:00").getTime() : null;
+    const toTs = historyTo ? new Date(historyTo + "T23:59:59").getTime() : null;
+    return dmHistory.filter((h) => {
+      if (q && !h.domain.toLowerCase().includes(q) && !(h.linkedin ?? "").toLowerCase().includes(q)) return false;
+      if (historyStatus !== "all" && h.status !== historyStatus) return false;
+      const t = new Date(h.finishedAt).getTime();
+      if (fromTs != null && t < fromTs) return false;
+      if (toTs != null && t > toTs) return false;
+      return true;
     });
-  }, []);
-  const clearHistory = useCallback(() => {
-    setDmHistory([]);
-    try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
-  }, []);
+  }, [dmHistory, historyQ, historyStatus, historyFrom, historyTo]);
+
+  // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
+  const [autoRetryEnabled, setAutoRetryEnabled] = useState(false);
+  const autoRetryAttemptedRef = useRef<Set<string>>(new Set());
+  const [autoRetryQueue, setAutoRetryQueue] = useState<string[]>([]);
+
+  // Popula a fila com domínios únicos que falharam e ainda não foram tentados nesta sessão
+  useEffect(() => {
+    if (!autoRetryEnabled) {
+      setAutoRetryQueue([]);
+      return;
+    }
+    const failedDomains: string[] = [];
+    const seen = new Set<string>();
+    for (const h of dmHistory) {
+      if (h.status !== "failed") continue;
+      if (seen.has(h.domain)) continue;
+      seen.add(h.domain);
+      if (autoRetryAttemptedRef.current.has(h.domain)) continue;
+      failedDomains.push(h.domain);
+    }
+    setAutoRetryQueue(failedDomains);
+  }, [autoRetryEnabled, dmHistory]);
+
 
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
@@ -467,6 +581,32 @@ export const LushaIntelligenceView = () => {
       }
     },
   });
+
+  // ── Processador do auto-retry: dispara o próximo item da fila quando livre ──
+  useEffect(() => {
+    if (!autoRetryEnabled) return;
+    if (autoRetryQueue.length === 0) return;
+    if (dmMutation.isPending) return;
+    if (rateLimitCountdown != null && rateLimitCountdown > 0) return;
+    const nextDomain = autoRetryQueue[0];
+    if (!nextDomain) return;
+    // marca como tentado e remove da fila antes de disparar (evita loop)
+    autoRetryAttemptedRef.current.add(nextDomain);
+    setAutoRetryQueue((q) => q.slice(1));
+    setDomain(nextDomain);
+    setLinkedinCompanyUrl("");
+    setDomainError(null);
+    setLinkedinError(null);
+    toast({
+      title: "Auto-retry",
+      description: `Reprocessando "${nextDomain}"…`,
+    });
+    // pequeno delay para o state settlar
+    const t = setTimeout(() => dmMutation.mutate(), 150);
+    return () => clearTimeout(t);
+  }, [autoRetryEnabled, autoRetryQueue, dmMutation.isPending, rateLimitCountdown, dmMutation]);
+
+
 
 
   // ── Hidratação: carrega emails/telefones já persistidos em lusha_contacts ──
@@ -1070,88 +1210,158 @@ export const LushaIntelligenceView = () => {
               <div className="flex items-center justify-between px-3 py-2 border-b border-border/40">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   <History className="h-4 w-4 text-muted-foreground" />
-                  Histórico de buscas <span className="text-xs text-muted-foreground font-normal">({dmHistory.length})</span>
+                  Histórico de buscas{" "}
+                  <span className="text-xs text-muted-foreground font-normal">
+                    ({filteredHistory.length}/{dmHistory.length})
+                  </span>
                 </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearHistory}
-                  className="h-7 text-xs text-muted-foreground hover:text-destructive"
-                  title="Limpar histórico"
-                >
-                  <Trash2 className="h-3 w-3 mr-1" /> Limpar
-                </Button>
+                <div className="flex items-center gap-2">
+                  <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer select-none">
+                    <Checkbox
+                      checked={autoRetryEnabled}
+                      onCheckedChange={(v) => setAutoRetryEnabled(v === true)}
+                      className="h-3.5 w-3.5"
+                    />
+                    Auto-retry de falhas
+                  </label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearHistory}
+                    className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                    title="Limpar histórico"
+                  >
+                    <Trash2 className="h-3 w-3 mr-1" /> Limpar
+                  </Button>
+                </div>
               </div>
+
+              {/* Filtros */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 border-b border-border/40 bg-muted/20">
+                <Input
+                  placeholder="Buscar por domínio ou LinkedIn…"
+                  value={historyQ}
+                  onChange={(e) => setHistoryQ(e.target.value)}
+                  className="h-8 text-xs md:col-span-2"
+                />
+                <select
+                  value={historyStatus}
+                  onChange={(e) => setHistoryStatus(e.target.value as typeof historyStatus)}
+                  className="h-8 rounded-md border border-input bg-background px-2 text-xs"
+                  aria-label="Filtrar por status"
+                >
+                  <option value="all">Todos os status</option>
+                  <option value="done">Concluído</option>
+                  <option value="failed">Falhou</option>
+                  <option value="cancelled">Cancelado</option>
+                  <option value="processing">Processando</option>
+                  <option value="queued">Em fila</option>
+                </select>
+                <div className="flex items-center gap-1">
+                  <Input
+                    type="date"
+                    value={historyFrom}
+                    onChange={(e) => setHistoryFrom(e.target.value)}
+                    className="h-8 text-xs"
+                    aria-label="Data inicial"
+                  />
+                  <span className="text-xs text-muted-foreground">→</span>
+                  <Input
+                    type="date"
+                    value={historyTo}
+                    onChange={(e) => setHistoryTo(e.target.value)}
+                    className="h-8 text-xs"
+                    aria-label="Data final"
+                  />
+                </div>
+              </div>
+
               <ScrollArea className="max-h-64">
-                <ul className="divide-y divide-border/40">
-                  {dmHistory.map((h) => {
-                    const badge =
-                      h.status === "done"
-                        ? { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Concluído", Icon: CheckCircle2 }
-                        : h.status === "cancelled"
-                        ? { cls: "bg-muted text-muted-foreground border-border/50", label: "Cancelado", Icon: X }
-                        : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
-                    return (
-                      <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                            <span className="font-medium truncate">{h.domain}</span>
-                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${badge.cls}`}>
-                              <badge.Icon className="h-3 w-3 mr-1" />
-                              {badge.label}
-                            </Badge>
-                            {h.status === "done" && (
-                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                                {h.total} decisor{h.total === 1 ? "" : "es"}
+                {filteredHistory.length === 0 ? (
+                  <div className="px-3 py-6 text-center text-xs text-muted-foreground">
+                    Nenhum item corresponde aos filtros atuais.
+                  </div>
+                ) : (
+                  <ul className="divide-y divide-border/40">
+                    {filteredHistory.map((h) => {
+                      const badge =
+                        h.status === "done"
+                          ? { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Concluído", Icon: CheckCircle2 }
+                          : h.status === "cancelled"
+                          ? { cls: "bg-muted text-muted-foreground border-border/50", label: "Cancelado", Icon: X }
+                          : h.status === "processing"
+                          ? { cls: "bg-primary/15 text-primary border-primary/30", label: "Processando", Icon: Loader2 }
+                          : h.status === "queued"
+                          ? { cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", label: "Em fila", Icon: Clock }
+                          : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
+                      const queuedForRetry = autoRetryQueue.includes(h.domain);
+                      return (
+                        <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              <span className="font-medium truncate">{h.domain}</span>
+                              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${badge.cls}`}>
+                                <badge.Icon className="h-3 w-3 mr-1" />
+                                {badge.label}
                               </Badge>
-                            )}
+                              {h.status === "done" && (
+                                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                                  {h.total} decisor{h.total === 1 ? "" : "es"}
+                                </Badge>
+                              )}
+                              {queuedForRetry && (
+                                <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/40 text-primary">
+                                  <Clock className="h-3 w-3 mr-1" /> Aguardando retry
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-0.5 truncate">
+                              {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
+                              {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
+                              {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
+                            </div>
                           </div>
-                          <div className="text-xs text-muted-foreground mt-0.5 truncate">
-                            {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
-                            {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
-                            {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
+                          <div className="flex items-center gap-1 shrink-0">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 text-xs"
+                              title="Preencher campos com este domínio"
+                              onClick={() => {
+                                setDomain(h.domain);
+                                setLinkedinCompanyUrl(h.linkedin ?? "");
+                                setDomainError(null);
+                                setLinkedinError(null);
+                              }}
+                            >
+                              Retomar
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs"
+                              title="Preencher e buscar novamente"
+                              disabled={dmMutation.isPending || (rateLimitCountdown != null && rateLimitCountdown > 0)}
+                              onClick={() => {
+                                setDomain(h.domain);
+                                setLinkedinCompanyUrl(h.linkedin ?? "");
+                                setDomainError(null);
+                                setLinkedinError(null);
+                                setTimeout(() => dmMutation.mutate(), 0);
+                              }}
+                            >
+                              <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
+                            </Button>
                           </div>
-                        </div>
-                        <div className="flex items-center gap-1 shrink-0">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 text-xs"
-                            title="Preencher campos com este domínio"
-                            onClick={() => {
-                              setDomain(h.domain);
-                              setLinkedinCompanyUrl(h.linkedin ?? "");
-                              setDomainError(null);
-                              setLinkedinError(null);
-                            }}
-                          >
-                            Retomar
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-7 text-xs"
-                            title="Preencher e buscar novamente"
-                            disabled={dmMutation.isPending || (rateLimitCountdown != null && rateLimitCountdown > 0)}
-                            onClick={() => {
-                              setDomain(h.domain);
-                              setLinkedinCompanyUrl(h.linkedin ?? "");
-                              setDomainError(null);
-                              setLinkedinError(null);
-                              setTimeout(() => dmMutation.mutate(), 0);
-                            }}
-                          >
-                            <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
-                          </Button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </ScrollArea>
             </div>
           )}
