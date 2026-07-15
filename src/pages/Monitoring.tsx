@@ -543,6 +543,10 @@ const AutomationMonitoring = () => {
 
           <AutomationLogsPanel />
         </TabsContent>
+
+        <TabsContent value="vault-cookies" className="space-y-4">
+          <VaultCookiesPanel />
+        </TabsContent>
       </Tabs>
 
       <JobDetailsSheet 
