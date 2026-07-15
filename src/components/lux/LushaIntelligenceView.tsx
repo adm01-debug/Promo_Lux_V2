@@ -124,6 +124,8 @@ export const LushaIntelligenceView = () => {
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
   const [linkedinCompanyUrl, setLinkedinCompanyUrl] = useState("");
+  const [domainError, setDomainError] = useState<string | null>(null);
+  const [linkedinError, setLinkedinError] = useState<string | null>(null);
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
   const [dmRequestId, setDmRequestId] = useState<string | null>(null);
   const [revealingIds, setRevealingIds] = useState<Set<string>>(new Set());
@@ -136,6 +138,68 @@ export const LushaIntelligenceView = () => {
     type: "certifications" | "courses" | "awards";
     dm: DecisionMaker;
   } | null>(null);
+
+  // ── Helpers de normalização e validação ──
+  const EXAMPLE_DOMAIN = "natura.com.br";
+  const EXAMPLE_LINKEDIN = "linkedin.com/company/natura";
+
+  const normalizeDomain = useCallback((input: string): string => {
+    let v = (input ?? "").trim().toLowerCase();
+    if (!v) return "";
+    // remove protocolo, barras finais, caminho e query
+    v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
+    v = v.split("/")[0].split("?")[0].split("#")[0];
+    return v;
+  }, []);
+
+  const validateDomain = useCallback((raw: string): { value: string; error: string | null } => {
+    const value = normalizeDomain(raw);
+    if (!value) return { value, error: "Informe o domínio do site da empresa." };
+    if (/(^|\.)linkedin\.com$/i.test(value)) {
+      return {
+        value,
+        error: "Este campo aceita apenas o domínio do site. Para o LinkedIn, use o campo abaixo.",
+      };
+    }
+    if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
+      return { value, error: "Redes sociais não são aceitas — informe o domínio do site oficial." };
+    }
+    // domínio válido: pelo menos um ponto e caracteres permitidos
+    if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(value)) {
+      return { value, error: "Formato inválido. Use apenas o domínio (ex.: natura.com.br)." };
+    }
+    if (value.length > 253) return { value, error: "Domínio muito longo." };
+    return { value, error: null };
+  }, [normalizeDomain]);
+
+  const normalizeLinkedinCompanyUrl = useCallback((input: string): string => {
+    let v = (input ?? "").trim();
+    if (!v) return "";
+    v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
+    // remove query/hash/trailing slash
+    v = v.split("?")[0].split("#")[0].replace(/\/+$/, "");
+    return v.toLowerCase();
+  }, []);
+
+  const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
+    const value = normalizeLinkedinCompanyUrl(raw);
+    if (!value) return { value, error: null }; // opcional
+    if (!/^linkedin\.com\/(company|school|showcase)\/[a-z0-9\-_.%]+\/?$/i.test(value)) {
+      return {
+        value,
+        error: "Use a URL da página da empresa no LinkedIn (ex.: linkedin.com/company/natura).",
+      };
+    }
+    return { value, error: null };
+  }, [normalizeLinkedinCompanyUrl]);
+
+  const applyExample = useCallback(() => {
+    setDomain(EXAMPLE_DOMAIN);
+    setLinkedinCompanyUrl(EXAMPLE_LINKEDIN);
+    setDomainError(null);
+    setLinkedinError(null);
+  }, []);
+
 
   // Histórico de sessões
   const { data: sessions = [], refetch: refetchSessions } = useQuery({
@@ -170,8 +234,21 @@ export const LushaIntelligenceView = () => {
 
   const dmMutation = useMutation({
     mutationFn: async () => {
+      const d = validateDomain(domain);
+      const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+      setDomainError(d.error);
+      setLinkedinError(l.error);
+      if (d.error) throw new Error(d.error);
+      if (l.error) throw new Error(l.error);
+      // aplica normalização de volta ao estado (feedback visual)
+      if (d.value !== domain) setDomain(d.value);
+      if (l.value !== linkedinCompanyUrl) setLinkedinCompanyUrl(l.value);
+
       const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
-        body: { domains: [domain.trim()] },
+        body: {
+          domains: [d.value],
+          company_linkedin_url: l.value || null,
+        },
       });
       if (error) throw error;
       return data as DMResponse;
@@ -193,6 +270,7 @@ export const LushaIntelligenceView = () => {
     },
   });
 
+
   // ── Hidratação: carrega emails/telefones já persistidos em lusha_contacts ──
   useEffect(() => {
     if (!dmResults || dmResults.length === 0) return;
@@ -204,15 +282,19 @@ export const LushaIntelligenceView = () => {
     (async () => {
       const { data, error } = await supabase
         .from("lusha_contacts")
-        .select("linkedin_url, email, phone_formatted, phone_raw, has_email, has_phone, enrichment_status")
+        .select("linkedin_url, email, phone_formatted, phone_raw, has_email, has_phone, enrichment_status, company_linkedin_url")
         .in("linkedin_url", linkedinUrls);
       if (cancelled || error || !data) return;
 
       const byUrl = new Map(data.map((row) => [row.linkedin_url, row]));
       const hydrated: Record<string, { emails: { email: string; type: string | null }[]; phones: { number: string; type: string | null }[]; error?: string }> = {};
+      let companyLinkedinFromDB: string | null = null;
       for (const dm of allDMs) {
         const row = byUrl.get(dm.linkedin);
         if (!row) continue;
+        if (!companyLinkedinFromDB && row.company_linkedin_url) {
+          companyLinkedinFromDB = row.company_linkedin_url;
+        }
         const emails = row.email ? [{ email: row.email, type: null }] : [];
         const phones = row.phone_formatted || row.phone_raw
           ? [{ number: row.phone_formatted ?? row.phone_raw!, type: null }]
@@ -224,9 +306,14 @@ export const LushaIntelligenceView = () => {
       if (Object.keys(hydrated).length > 0) {
         setRevealedData((prev) => ({ ...hydrated, ...prev }));
       }
+      // Preenche o campo de LinkedIn da empresa se estiver vazio na UI
+      if (companyLinkedinFromDB) {
+        setLinkedinCompanyUrl((prev) => prev.trim() ? prev : companyLinkedinFromDB!);
+      }
     })();
     return () => { cancelled = true; };
   }, [dmResults]);
+
 
   // ── Tradução de códigos de erro conhecidos do Lusha para PT-BR ──
   const translateRevealError = useCallback((raw: string | undefined): string => {
@@ -275,7 +362,14 @@ export const LushaIntelligenceView = () => {
   }, []);
 
 
-  const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
+  const canSearchDomain = useMemo(() => {
+    if (dmMutation.isPending) return false;
+    const d = validateDomain(domain);
+    if (d.error) return false;
+    const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+    if (l.error) return false;
+    return true;
+  }, [domain, linkedinCompanyUrl, dmMutation.isPending, validateDomain, validateLinkedinCompanyUrl]);
 
   async function handleReveal(dm: DecisionMaker) {
     if (!dmRequestId) {
@@ -503,21 +597,68 @@ export const LushaIntelligenceView = () => {
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="space-y-2">
-              <Label htmlFor="lusha-domain">Domínio da empresa</Label>
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <Label htmlFor="lusha-domain">Domínio da empresa</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs text-primary hover:text-primary"
+                  onClick={applyExample}
+                  disabled={dmMutation.isPending}
+                >
+                  <Sparkles className="h-3 w-3 mr-1" /> Preencher exemplo
+                </Button>
+              </div>
               <div className="relative">
                 <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="lusha-domain"
                   value={domain}
-                  onChange={(e) => setDomain(e.target.value)}
+                  onChange={(e) => {
+                    setDomain(e.target.value);
+                    if (domainError) setDomainError(null);
+                  }}
+                  onBlur={() => {
+                    const { value, error } = validateDomain(domain);
+                    if (value !== domain) setDomain(value);
+                    setDomainError(error);
+                  }}
+                  onPaste={(e) => {
+                    const pasted = e.clipboardData.getData("text");
+                    if (pasted && /https?:\/\//i.test(pasted)) {
+                      e.preventDefault();
+                      const { value, error } = validateDomain(pasted);
+                      setDomain(value);
+                      setDomainError(error);
+                    }
+                  }}
                   placeholder="Ex: natura.com.br"
-                  className="pl-9"
+                  className={`pl-9 ${domainError ? "border-destructive focus-visible:ring-destructive" : ""}`}
                   disabled={dmMutation.isPending}
+                  aria-invalid={!!domainError}
+                  aria-describedby="lusha-domain-help"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
                   }}
                 />
               </div>
+              {domainError ? (
+                <p className="text-xs text-destructive flex items-start gap-1">
+                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>{domainError}</span>
+                </p>
+              ) : (
+                <div id="lusha-domain-help" className="text-xs text-muted-foreground space-y-1">
+                  <p>Informe o <strong>domínio do site oficial</strong> da empresa (sem <code className="text-[10px] px-1 rounded bg-muted">https://</code> e sem <code className="text-[10px] px-1 rounded bg-muted">www</code>).</p>
+                  <p>
+                    ✅ Aceitos: <code className="text-[10px] px-1 rounded bg-muted">natura.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">magazineluiza.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">nubank.com.br</code>
+                  </p>
+                  <p>
+                    ❌ Não use: <code className="text-[10px] px-1 rounded bg-muted">linkedin.com/company/natura</code>, <code className="text-[10px] px-1 rounded bg-muted">facebook.com/natura</code>
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -529,19 +670,46 @@ export const LushaIntelligenceView = () => {
                 <Input
                   id="lusha-linkedin"
                   value={linkedinCompanyUrl}
-                  onChange={(e) => setLinkedinCompanyUrl(e.target.value)}
-                  placeholder="Ex: https://www.linkedin.com/company/natura"
-                  className="pl-9"
+                  onChange={(e) => {
+                    setLinkedinCompanyUrl(e.target.value);
+                    if (linkedinError) setLinkedinError(null);
+                  }}
+                  onBlur={() => {
+                    const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+                    if (value !== linkedinCompanyUrl) setLinkedinCompanyUrl(value);
+                    setLinkedinError(error);
+                  }}
+                  onPaste={(e) => {
+                    const pasted = e.clipboardData.getData("text");
+                    if (pasted && (/https?:\/\//i.test(pasted) || /\?/.test(pasted))) {
+                      e.preventDefault();
+                      const { value, error } = validateLinkedinCompanyUrl(pasted);
+                      setLinkedinCompanyUrl(value);
+                      setLinkedinError(error);
+                    }
+                  }}
+                  placeholder="Ex: linkedin.com/company/natura"
+                  className={`pl-9 ${linkedinError ? "border-destructive focus-visible:ring-destructive" : ""}`}
                   disabled={dmMutation.isPending}
+                  aria-invalid={!!linkedinError}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
                   }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Usado como referência adicional. A busca é feita pelo domínio.
-              </p>
+              {linkedinError ? (
+                <p className="text-xs text-destructive flex items-start gap-1">
+                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>{linkedinError}</span>
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Cole a URL da página da empresa (o sistema remove <code className="text-[10px] px-1 rounded bg-muted">https://</code>, <code className="text-[10px] px-1 rounded bg-muted">www</code> e parâmetros).
+                </p>
+              )}
             </div>
+
+
 
             <div className="flex justify-end">
               <Button

@@ -76,7 +76,9 @@ serve(async (req) => {
       bitrix_card_id,
       cache_ttl_hours,
       force_refresh,
+      company_linkedin_url,
     } = body ?? {};
+    const companyLinkedinUrl = str(company_linkedin_url);
     if (!Array.isArray(domains) || domains.length === 0) {
       return errorResponse(correlationId, 400, "missing_domains", "Campo 'domains' obrigatório (array não vazio)");
     }
@@ -150,7 +152,7 @@ serve(async (req) => {
                 id: str(dm.id),
                 firstName: str(dm.firstName),
                 lastName: str(dm.lastName),
-                fullName: str(dm.fullName) ?? `${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() || null,
+                fullName: str(dm.fullName) ?? (`${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() || null),
                 jobTitle: str(dm.jobTitle) ?? "",
                 departments: arrStr(dm.departments),
                 seniority: str(dm.seniority) ?? "",
@@ -408,6 +410,7 @@ serve(async (req) => {
               company_type: r.companyType ?? null,
               company_linkedin_followers: r.companyLinkedinFollowers ?? null,
               company_email_domain: r.companyEmailDomain ?? null,
+              company_linkedin_url: companyLinkedinUrl,
               lusha_popularity_tier: r.lushaPopularityTier ?? null,
             });
           }
