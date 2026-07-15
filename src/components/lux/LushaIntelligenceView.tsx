@@ -282,15 +282,19 @@ export const LushaIntelligenceView = () => {
     (async () => {
       const { data, error } = await supabase
         .from("lusha_contacts")
-        .select("linkedin_url, email, phone_formatted, phone_raw, has_email, has_phone, enrichment_status")
+        .select("linkedin_url, email, phone_formatted, phone_raw, has_email, has_phone, enrichment_status, company_linkedin_url")
         .in("linkedin_url", linkedinUrls);
       if (cancelled || error || !data) return;
 
       const byUrl = new Map(data.map((row) => [row.linkedin_url, row]));
       const hydrated: Record<string, { emails: { email: string; type: string | null }[]; phones: { number: string; type: string | null }[]; error?: string }> = {};
+      let companyLinkedinFromDB: string | null = null;
       for (const dm of allDMs) {
         const row = byUrl.get(dm.linkedin);
         if (!row) continue;
+        if (!companyLinkedinFromDB && row.company_linkedin_url) {
+          companyLinkedinFromDB = row.company_linkedin_url;
+        }
         const emails = row.email ? [{ email: row.email, type: null }] : [];
         const phones = row.phone_formatted || row.phone_raw
           ? [{ number: row.phone_formatted ?? row.phone_raw!, type: null }]
@@ -302,9 +306,14 @@ export const LushaIntelligenceView = () => {
       if (Object.keys(hydrated).length > 0) {
         setRevealedData((prev) => ({ ...hydrated, ...prev }));
       }
+      // Preenche o campo de LinkedIn da empresa se estiver vazio na UI
+      if (companyLinkedinFromDB) {
+        setLinkedinCompanyUrl((prev) => prev.trim() ? prev : companyLinkedinFromDB!);
+      }
     })();
     return () => { cancelled = true; };
   }, [dmResults]);
+
 
   // ── Tradução de códigos de erro conhecidos do Lusha para PT-BR ──
   const translateRevealError = useCallback((raw: string | undefined): string => {
