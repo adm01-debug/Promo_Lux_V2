@@ -844,6 +844,11 @@ export const LushaIntelligenceView = () => {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Buscando...
                   </>
+                ) : rateLimitCountdown != null && rateLimitCountdown > 0 ? (
+                  <>
+                    <Clock className="mr-2 h-4 w-4" />
+                    Aguarde {rateLimitCountdown}s
+                  </>
                 ) : (
                   <>
                     <Search className="mr-2 h-4 w-4" />
@@ -854,6 +859,51 @@ export const LushaIntelligenceView = () => {
             </div>
           </div>
 
+          {/* ── Indicador de progresso e status da busca ── */}
+          {searchPhase !== "idle" && (
+            <div
+              role="status"
+              aria-live="polite"
+              className={`rounded-lg border p-3 space-y-2 ${
+                searchPhase === "failed"
+                  ? "border-destructive/40 bg-destructive/5"
+                  : searchPhase === "done"
+                  ? "border-emerald-500/30 bg-emerald-500/5"
+                  : "border-primary/30 bg-primary/5"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3 text-sm">
+                <div className="flex items-center gap-2 font-medium">
+                  {searchPhase === "queued" && (<><Clock className="h-4 w-4 text-primary" /> Em fila</>)}
+                  {searchPhase === "processing" && (<><Loader2 className="h-4 w-4 animate-spin text-primary" /> Processando</>)}
+                  {searchPhase === "done" && (<><CheckCircle2 className="h-4 w-4 text-emerald-500" /> Concluído</>)}
+                  {searchPhase === "failed" && (<><XCircle className="h-4 w-4 text-destructive" /> Falhou</>)}
+                </div>
+                <span className="text-xs text-muted-foreground tabular-nums">{Math.round(searchProgress)}%</span>
+              </div>
+              <Progress
+                value={searchProgress}
+                className={
+                  searchPhase === "failed"
+                    ? "[&>div]:bg-destructive"
+                    : searchPhase === "done"
+                    ? "[&>div]:bg-emerald-500"
+                    : ""
+                }
+              />
+              {searchStatusMsg && (
+                <p className={`text-xs ${searchPhase === "failed" ? "text-destructive" : "text-muted-foreground"}`}>
+                  {searchStatusMsg}
+                </p>
+              )}
+              {rateLimitCountdown != null && rateLimitCountdown > 0 && (
+                <div className="flex items-center gap-2 text-xs text-amber-500">
+                  <Clock className="h-3 w-3" />
+                  <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite da API Lusha).</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {dmMutation.isPending && (
             <div className="space-y-2">
