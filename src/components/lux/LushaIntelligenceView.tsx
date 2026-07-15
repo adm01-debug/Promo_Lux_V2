@@ -1269,71 +1269,6 @@ export const LushaIntelligenceView = () => {
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2 flex-wrap">
-                <Label htmlFor="lusha-domain">Domínio da empresa</Label>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs text-primary hover:text-primary"
-                  onClick={applyExample}
-                  disabled={dmMutation.isPending}
-                >
-                  <Sparkles className="h-3 w-3 mr-1" /> Preencher exemplo
-                </Button>
-              </div>
-              <div className="relative">
-                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="lusha-domain"
-                  value={domain}
-                  onChange={(e) => {
-                    setDomain(e.target.value);
-                    if (domainError) setDomainError(null);
-                  }}
-                  onBlur={() => {
-                    const { value, error } = validateDomain(domain);
-                    if (value !== domain) setDomain(value);
-                    setDomainError(error);
-                  }}
-                  onPaste={(e) => {
-                    const pasted = e.clipboardData.getData("text");
-                    if (pasted && /https?:\/\//i.test(pasted)) {
-                      e.preventDefault();
-                      const { value, error } = validateDomain(pasted);
-                      setDomain(value);
-                      setDomainError(error);
-                    }
-                  }}
-                  placeholder="Ex: natura.com.br"
-                  className={`pl-9 ${domainError ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  disabled={dmMutation.isPending}
-                  aria-invalid={!!domainError}
-                  aria-describedby="lusha-domain-help"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
-                  }}
-                />
-              </div>
-              {domainError ? (
-                <p className="text-xs text-destructive flex items-start gap-1">
-                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
-                  <span>{domainError}</span>
-                </p>
-              ) : (
-                <div id="lusha-domain-help" className="text-xs text-muted-foreground space-y-1">
-                  <p>Informe o <strong>domínio do site oficial</strong> da empresa (sem <code className="text-[10px] px-1 rounded bg-muted">https://</code> e sem <code className="text-[10px] px-1 rounded bg-muted">www</code>).</p>
-                  <p>
-                    ✅ Aceitos: <code className="text-[10px] px-1 rounded bg-muted">natura.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">magazineluiza.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">nubank.com.br</code>
-                  </p>
-                  <p>
-                    ❌ Não use: <code className="text-[10px] px-1 rounded bg-muted">linkedin.com/company/natura</code>, <code className="text-[10px] px-1 rounded bg-muted">facebook.com/natura</code>
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="lusha-linkedin">
                 Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
               </Label>
@@ -1426,6 +1361,72 @@ export const LushaIntelligenceView = () => {
                 </p>
               )}
             </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <Label htmlFor="lusha-domain">Domínio da empresa</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs text-primary hover:text-primary"
+                  onClick={applyExample}
+                  disabled={dmMutation.isPending}
+                >
+                  <Sparkles className="h-3 w-3 mr-1" /> Preencher exemplo
+                </Button>
+              </div>
+              <div className="relative">
+                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="lusha-domain"
+                  value={domain}
+                  onChange={(e) => {
+                    setDomain(e.target.value);
+                    if (domainError) setDomainError(null);
+                  }}
+                  onBlur={() => {
+                    const { value, error } = validateDomain(domain);
+                    if (value !== domain) setDomain(value);
+                    setDomainError(error);
+                  }}
+                  onPaste={(e) => {
+                    const pasted = e.clipboardData.getData("text");
+                    if (pasted && /https?:\/\//i.test(pasted)) {
+                      e.preventDefault();
+                      const { value, error } = validateDomain(pasted);
+                      setDomain(value);
+                      setDomainError(error);
+                    }
+                  }}
+                  placeholder="Ex: natura.com.br"
+                  className={`pl-9 ${domainError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  disabled={dmMutation.isPending}
+                  aria-invalid={!!domainError}
+                  aria-describedby="lusha-domain-help"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
+                  }}
+                />
+              </div>
+              {domainError ? (
+                <p className="text-xs text-destructive flex items-start gap-1">
+                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>{domainError}</span>
+                </p>
+              ) : (
+                <div id="lusha-domain-help" className="text-xs text-muted-foreground space-y-1">
+                  <p>Informe o <strong>domínio do site oficial</strong> da empresa (sem <code className="text-[10px] px-1 rounded bg-muted">https://</code> e sem <code className="text-[10px] px-1 rounded bg-muted">www</code>).</p>
+                  <p>
+                    ✅ Aceitos: <code className="text-[10px] px-1 rounded bg-muted">natura.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">magazineluiza.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">nubank.com.br</code>
+                  </p>
+                  <p>
+                    ❌ Não use: <code className="text-[10px] px-1 rounded bg-muted">linkedin.com/company/natura</code>, <code className="text-[10px] px-1 rounded bg-muted">facebook.com/natura</code>
+                  </p>
+                </div>
+              )}
+            </div>
+
 
 
             {/* Aviso de duplicidade recente (últimas 24h) */}
