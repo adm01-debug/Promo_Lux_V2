@@ -310,6 +310,30 @@ export const LushaIntelligenceView = () => {
     });
   }, [dmHistory, historyQ, historyStatus, historyFrom, historyTo]);
 
+  // ── Tempo médio por domínio (apenas buscas concluídas com sucesso) ──
+  const avgDurationByDomain = useMemo(() => {
+    const acc = new Map<string, { total: number; count: number }>();
+    for (const h of dmHistory) {
+      if (h.status !== "done" || !h.durationMs || h.durationMs <= 0) continue;
+      const prev = acc.get(h.domain) ?? { total: 0, count: 0 };
+      prev.total += h.durationMs;
+      prev.count += 1;
+      acc.set(h.domain, prev);
+    }
+    const map = new Map<string, number>();
+    for (const [k, v] of acc.entries()) map.set(k, v.total / v.count);
+    return map;
+  }, [dmHistory]);
+
+  const formatDuration = (ms: number | null): string => {
+    if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
+    if (ms < 1000) return `${Math.round(ms)}ms`;
+    if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
+    const m = Math.floor(ms / 60_000);
+    const s = Math.round((ms % 60_000) / 1000);
+    return `${m}m ${s}s`;
+  };
+
   // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
   const [autoRetryEnabled, setAutoRetryEnabled] = useState(false);
   const autoRetryAttemptedRef = useRef<Set<string>>(new Set());
