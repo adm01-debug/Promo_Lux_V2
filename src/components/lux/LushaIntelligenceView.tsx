@@ -1258,7 +1258,7 @@ export const LushaIntelligenceView = () => {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="h-4 w-4 text-primary" />
-                Busca por Domínio (Decisores)
+                Descubra com quem se conectar
                 <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/40 border ml-1">
                   <Sparkles className="h-3 w-3 mr-1" /> GRATUITO
                 </Badge>
