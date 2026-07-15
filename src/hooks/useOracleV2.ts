@@ -85,7 +85,18 @@ export function useOracleSearchDecisors() {
         );
       }
     },
-    onError: (err: Error) => toast.error(`Busca de decisores falhou: ${err.message}`),
+    onError: (err: Error) => {
+      // HTTP 429 do rate-limit por organização vem com Retry-After em segundos.
+      const msg = err.message ?? "";
+      const rlMatch = msg.match(/retry.?after[^\d]*(\d+)/i);
+      if (msg.includes("429") || /rate.?limit/i.test(msg) || rlMatch) {
+        const secs = rlMatch ? parseInt(rlMatch[1], 10) : 60;
+        const mins = Math.max(1, Math.ceil(secs / 60));
+        toast.error(`Limite de buscas atingido. Tente novamente em ~${mins} min.`);
+        return;
+      }
+      toast.error(`Busca de decisores falhou: ${msg}`);
+    },
   });
 }
 
