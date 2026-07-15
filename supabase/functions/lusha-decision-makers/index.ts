@@ -152,7 +152,7 @@ serve(async (req) => {
                 id: str(dm.id),
                 firstName: str(dm.firstName),
                 lastName: str(dm.lastName),
-                fullName: str(dm.fullName) ?? `${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() || null,
+                fullName: str(dm.fullName) ?? (`${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() || null),
                 jobTitle: str(dm.jobTitle) ?? "",
                 departments: arrStr(dm.departments),
                 seniority: str(dm.seniority) ?? "",
