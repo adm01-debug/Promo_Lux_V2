@@ -1767,12 +1767,31 @@ export const LushaIntelligenceView = () => {
                               type="button"
                               variant="ghost"
                               size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                              title="Copiar deep-link deste resultado"
+                              onClick={async () => {
+                                const url = `${window.location.origin}/?view=lusha&tab=history&historyId=${encodeURIComponent(h.id)}`;
+                                try {
+                                  await navigator.clipboard.writeText(url);
+                                  toast({ title: "Link copiado", description: "Cole em qualquer lugar para abrir este resultado." });
+                                } catch {
+                                  toast({ title: "Falha ao copiar", description: "Copie manualmente: " + url, variant: "destructive" });
+                                }
+                              }}
+                            >
+                              <Link2 className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
                               className="h-7 w-7 text-muted-foreground hover:text-destructive"
                               title="Excluir esta entrada do histórico"
                               onClick={() => setConfirmDeleteId(h.id)}
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
+
                           </div>
                         </li>
                       );
