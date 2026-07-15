@@ -786,45 +786,65 @@ export const LushaIntelligenceView = () => {
       };
 
       try {
-        const invokePromise = supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
-          body: {
+        // ── Chamada com AbortSignal REAL: cancela a requisição HTTP no servidor ──
+        // Usamos fetch direto (em vez de supabase.functions.invoke) porque a v2
+        // do client não propaga o signal para o transport subjacente de forma
+        // confiável, o que fazia o "cancelar" ser apenas cosmético.
+        const { data: sess } = await supabase.auth.getSession();
+        const jwt = sess?.session?.access_token;
+        if (!jwt) throw new Error("Sessão expirada. Faça login novamente.");
+
+        const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lusha-decision-makers`;
+        const resp = await fetch(fnUrl, {
+          method: "POST",
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({
             domains: [d.value],
             company_linkedin_url: l.value || null,
-          },
+          }),
         });
 
-        // Corrida entre a invocação e o cancelamento
-        const abortPromise = new Promise<never>((_, reject) => {
-          controller.signal.addEventListener("abort", () => {
-            const err = new Error("cancelled_by_user");
-            (err as unknown as { cancelled: boolean }).cancelled = true;
-            reject(err);
-          }, { once: true });
-        });
-
-        const { data, error } = await Promise.race([invokePromise, abortPromise]) as Awaited<typeof invokePromise>;
-
-        if (error) {
+        if (!resp.ok) {
           let retryAfter: number | null = null;
           let friendly: string | null = null;
-          const ctx = (error as unknown as { context?: Response }).context;
-          if (ctx && typeof ctx.json === "function") {
-            try {
-              const body = await ctx.clone().json();
-              if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
-              if (body?.error?.code === "lusha_rate_limited") friendly = body?.error?.message ?? null;
-              else if (body?.error?.message) friendly = body.error.message;
-            } catch { /* ignora parse */ }
-          }
-          if (retryAfter != null || /rate|429/i.test(error.message ?? "")) {
+          try {
+            const body = await resp.clone().json();
+            if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
+            if (body?.error?.code === "lusha_rate_limited") friendly = body?.error?.message ?? null;
+            else if (body?.error?.message) friendly = body.error.message;
+            else if (body?.error) friendly = typeof body.error === "string" ? body.error : null;
+          } catch { /* ignora parse */ }
+
+          if (resp.status === 429 || retryAfter != null) {
             const wait = retryAfter ?? 60;
             const err = new Error(friendly ?? `Limite de requisições atingido. Aguarde ${wait}s antes de tentar novamente.`);
             (err as unknown as { rateLimit: number }).rateLimit = wait;
             throw err;
           }
-          throw friendly ? new Error(friendly) : error;
+          if (resp.status === 401) {
+            throw new Error(friendly ?? "Sessão expirada. Faça login novamente.");
+          }
+          if (resp.status === 503) {
+            throw new Error(friendly ?? "Serviço temporariamente indisponível.");
+          }
+          throw new Error(friendly ?? `Erro ${resp.status} ao consultar o Oráculo.`);
         }
-        return data as DMResponse;
+
+        const data = (await resp.json()) as DMResponse;
+        return data;
+      } catch (err) {
+        // AbortError do fetch → normaliza para o mesmo formato do cancel
+        if ((err as { name?: string })?.name === "AbortError") {
+          const cancelErr = new Error("cancelled_by_user");
+          (cancelErr as unknown as { cancelled: boolean }).cancelled = true;
+          throw cancelErr;
+        }
+        throw err;
       } finally {
         cleanup();
         abortRef.current = null;
