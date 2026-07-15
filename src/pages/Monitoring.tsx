@@ -43,6 +43,8 @@ import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsP
 import { AuditTrailPanel } from "@/components/lux/monitoring/AuditTrailPanel";
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
+import { VaultCookiesPanel } from "@/components/lux/monitoring/VaultCookiesPanel";
+import { Cookie } from "lucide-react";
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
 import { 
