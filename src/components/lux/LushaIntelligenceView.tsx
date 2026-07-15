@@ -454,7 +454,7 @@ export const LushaIntelligenceView = () => {
           const { data: userRes } = await supabase.auth.getUser();
           const uid = userRes?.user?.id;
           if (!uid) return;
-          await supabase.from("notifications").insert({
+          const { error: insertErr } = await supabase.from("notifications").insert({
             user_id: uid,
             title,
             message: description,
@@ -469,9 +469,16 @@ export const LushaIntelligenceView = () => {
               history_id: historyId ?? null,
             } as unknown as never,
           });
-          queryClient.invalidateQueries({ queryKey: ["notifications"] });
-          queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
-        } catch { /* ignore */ }
+          if (insertErr) {
+            // Loga em dev para diagnosticar RLS / schema drift silenciosos
+            console.warn("[oraculo] falha ao gravar notificação:", insertErr.message);
+          } else {
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+            queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+          }
+        } catch (e) {
+          console.warn("[oraculo] exceção ao gravar notificação:", (e as Error).message);
+        }
       }
     },
     [queryClient, notifPrefs, clearRepeatTimer],
