@@ -113,6 +113,14 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Healthcheck anônimo (GET / ou GET /health) — usado por probes de
+  // uptime e pelo scheduler do Supabase. Retorna 204 sem exigir auth
+  // e sem emitir warn de auth_missing, evitando ruído nos logs.
+  const url = new URL(req.url);
+  if (req.method === "GET" && (url.pathname === "/" || url.pathname.endsWith("/health"))) {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+
   const start = performance.now();
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
