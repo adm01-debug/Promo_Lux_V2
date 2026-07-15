@@ -3100,6 +3100,69 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_cookie_alert_history: {
+        Row: {
+          days_until_expiry: number | null
+          id: string
+          reason: string
+          servico: string
+          severity: string
+          triggered_at: string
+        }
+        Insert: {
+          days_until_expiry?: number | null
+          id?: string
+          reason: string
+          servico: string
+          severity: string
+          triggered_at?: string
+        }
+        Update: {
+          days_until_expiry?: number | null
+          id?: string
+          reason?: string
+          servico?: string
+          severity?: string
+          triggered_at?: string
+        }
+        Relationships: []
+      }
+      vault_cookie_snapshots: {
+        Row: {
+          checked_at: string
+          days_until_expiry: number | null
+          error_message: string | null
+          expires_at: string | null
+          health_status: string | null
+          id: string
+          is_healthy: boolean | null
+          servico: string
+          vault_available: boolean
+        }
+        Insert: {
+          checked_at?: string
+          days_until_expiry?: number | null
+          error_message?: string | null
+          expires_at?: string | null
+          health_status?: string | null
+          id?: string
+          is_healthy?: boolean | null
+          servico: string
+          vault_available?: boolean
+        }
+        Update: {
+          checked_at?: string
+          days_until_expiry?: number | null
+          error_message?: string | null
+          expires_at?: string | null
+          health_status?: string | null
+          id?: string
+          is_healthy?: boolean | null
+          servico?: string
+          vault_available?: boolean
+        }
+        Relationships: []
+      }
       webhook_deliveries: {
         Row: {
           attempts: number
@@ -3546,6 +3609,7 @@ export type Database = {
           total_bytes: number
         }[]
       }
+      evaluate_vault_cookie_alerts: { Args: never; Returns: number }
       fail_scrape_task: {
         Args: { _error: string; _id: string; _transient?: boolean }
         Returns: Database["public"]["Enums"]["scrape_queue_status"]
@@ -3657,6 +3721,10 @@ export type Database = {
           _thread_id: string
         }
         Returns: string
+      }
+      record_vault_cookie_snapshots: {
+        Args: { _payload: Json }
+        Returns: number
       }
       replay_dead_letter: { Args: { _dlq_id: string }; Returns: string }
       replay_dead_letter_batch: {
