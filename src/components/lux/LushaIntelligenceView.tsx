@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell } from "lucide-react";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard } from "lucide-react";
+import { downloadCSV } from "@/lib/exportCSV";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +17,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -292,6 +297,35 @@ export const LushaIntelligenceView = () => {
     } catch { /* ignore */ }
   }, [queryClient]);
 
+  // ── Exclusão individual de item do histórico ──
+  const deleteHistoryEntry = useCallback(async (id: string) => {
+    if (!id) return;
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes?.user?.id;
+      if (!uid) return;
+      const { error } = await supabase
+        .from("lusha_dm_search_history")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", uid); // defesa em profundidade além do RLS
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+      toast({ title: "Item removido", description: "A entrada foi removida do histórico." });
+    } catch (err) {
+      toast({
+        title: "Falha ao remover",
+        description: err instanceof Error ? err.message : String(err),
+        variant: "destructive",
+      });
+    }
+  }, [queryClient]);
+
+  // ── Estado do dialog de confirmação de exclusão ──
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+
+
   // ── Preferências de notificações (persistidas em localStorage) ──
   type NotifPrefs = {
     nativeEnabled: boolean;      // notificação nativa do navegador
@@ -527,6 +561,52 @@ export const LushaIntelligenceView = () => {
     const s = Math.round((ms % 60_000) / 1000);
     return `${m}m ${s}s`;
   };
+
+  // ── Detecção de duplicidade recente (últimas 24h) ──
+  const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000;
+  const recentDuplicate = useMemo(() => {
+    const d = domain.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "");
+    if (!d) return null;
+    const cutoff = Date.now() - DUPLICATE_WINDOW_MS;
+    // Mais recente para o mesmo domínio, ignorando entradas ainda em andamento
+    const last = dmHistory.find((h) => {
+      if (h.status === "queued" || h.status === "processing") return false;
+      const t = new Date(h.finishedAt).getTime();
+      if (!Number.isFinite(t) || t < cutoff) return false;
+      return h.domain.toLowerCase() === d;
+    });
+    return last ?? null;
+  }, [domain, dmHistory]);
+
+  // ── Exportar histórico filtrado para CSV ──
+  const exportHistoryCsv = useCallback(() => {
+    if (filteredHistory.length === 0) {
+      toast({ title: "Nada para exportar", description: "Ajuste os filtros ou faça buscas antes de exportar." });
+      return;
+    }
+    const statusLabels: Record<DMHistoryEntry["status"], string> = {
+      done: "Concluído",
+      failed: "Falhou",
+      cancelled: "Cancelado",
+      processing: "Processando",
+      queued: "Em fila",
+    };
+    const rows = filteredHistory.map((h) => ({
+      "Domínio": h.domain,
+      "LinkedIn": h.linkedin ?? "",
+      "Status": statusLabels[h.status] ?? h.status,
+      "Decisores": h.total,
+      "Duração (ms)": h.durationMs ?? "",
+      "Duração": formatDuration(h.durationMs),
+      "Iniciada em": new Date(h.startedAt).toISOString(),
+      "Finalizada em": new Date(h.finishedAt).toISOString(),
+      "Mensagem": h.message ?? "",
+    }));
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    downloadCSV(rows, `oraculo-historico-${stamp}.csv`);
+    toast({ title: "CSV exportado", description: `${rows.length} linha(s) baixada(s).` });
+  }, [filteredHistory]);
+
 
   // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
   const [autoRetryEnabled, setAutoRetryEnabled] = useState(false);
@@ -976,6 +1056,23 @@ export const LushaIntelligenceView = () => {
     return true;
   }, [domain, linkedinCompanyUrl, dmMutation.isPending, rateLimitCountdown, validateDomain, validateLinkedinCompanyUrl]);
 
+  // ── Atalho global: Ctrl/Cmd+Enter dispara a busca por domínio quando válida ──
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.key !== "Enter") return;
+      // Ignora se foco estiver em textarea/select (permite Enter normal em inputs)
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      if (tag === "textarea" || tag === "select") return;
+      if (!canSearchDomain) return;
+      e.preventDefault();
+      dmMutation.mutate();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [canSearchDomain, dmMutation]);
+
+
   async function handleReveal(dm: DecisionMaker) {
     if (!dmRequestId) {
       toast({
@@ -1361,42 +1458,75 @@ export const LushaIntelligenceView = () => {
             </div>
 
 
-
-            <div className="flex justify-end gap-2">
-              {dmMutation.isPending && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={cancelSearch}
-                  className="min-w-[130px]"
-                  aria-label="Cancelar busca em andamento"
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Cancelar
-                </Button>
-              )}
-              <Button
-                onClick={() => dmMutation.mutate()}
-                disabled={!canSearchDomain}
-                className="min-w-[180px]"
+            {/* Aviso de duplicidade recente (últimas 24h) */}
+            {recentDuplicate && !dmMutation.isPending && (
+              <div
+                role="status"
+                className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/5 px-3 py-2 text-xs text-amber-200"
               >
-                {dmMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Buscando...
-                  </>
-                ) : rateLimitCountdown != null && rateLimitCountdown > 0 ? (
-                  <>
-                    <Clock className="mr-2 h-4 w-4" />
-                    Aguarde {rateLimitCountdown}s
-                  </>
-                ) : (
-                  <>
-                    <Search className="mr-2 h-4 w-4" />
-                    Buscar Decisores
-                  </>
+                <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400" />
+                <div className="flex-1">
+                  <span className="font-medium">Domínio já consultado</span>{" "}
+                  {formatDistanceToNow(new Date(recentDuplicate.finishedAt), { addSuffix: true, locale: ptBR })}
+                  {recentDuplicate.status === "done" && recentDuplicate.total > 0 && (
+                    <> — {recentDuplicate.total} decisor{recentDuplicate.total === 1 ? "" : "es"} retornado(s)</>
+                  )}
+                  . Você pode <button
+                    type="button"
+                    className="underline hover:text-amber-100"
+                    onClick={() => {
+                      setResultsTab("history");
+                      setHighlightedHistoryId(recentDuplicate.id);
+                    }}
+                  >abrir o resultado anterior</button> para evitar consulta redundante.
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="text-[11px] text-muted-foreground inline-flex items-center gap-1">
+                <Keyboard className="h-3 w-3" />
+                Dica: <kbd className="px-1 py-0.5 rounded border border-border/50 bg-muted/50 font-mono">Ctrl</kbd>
+                <span>+</span>
+                <kbd className="px-1 py-0.5 rounded border border-border/50 bg-muted/50 font-mono">Enter</kbd>
+                para buscar
+              </div>
+              <div className="flex justify-end gap-2">
+                {dmMutation.isPending && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={cancelSearch}
+                    className="min-w-[130px]"
+                    aria-label="Cancelar busca em andamento"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Cancelar
+                  </Button>
                 )}
-              </Button>
+                <Button
+                  onClick={() => dmMutation.mutate()}
+                  disabled={!canSearchDomain}
+                  className="min-w-[180px]"
+                >
+                  {dmMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Buscando...
+                    </>
+                  ) : rateLimitCountdown != null && rateLimitCountdown > 0 ? (
+                    <>
+                      <Clock className="mr-2 h-4 w-4" />
+                      Aguarde {rateLimitCountdown}s
+                    </>
+                  ) : (
+                    <>
+                      <Search className="mr-2 h-4 w-4" />
+                      Buscar Decisores
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -1522,6 +1652,16 @@ export const LushaIntelligenceView = () => {
                     title="Preferências de notificações"
                   >
                     <Settings2 className="h-3 w-3 mr-1" /> Notificações
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={exportHistoryCsv}
+                    className="h-7 text-xs text-muted-foreground hover:text-primary"
+                    title="Exportar histórico filtrado em CSV"
+                  >
+                    <Download className="h-3 w-3 mr-1" /> CSV
                   </Button>
                   <Button
                     type="button"
@@ -1672,6 +1812,16 @@ export const LushaIntelligenceView = () => {
                               }}
                             >
                               <RotateCw className="h-3 w-3 mr-1" /> Reprocessar
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                              title="Excluir esta entrada do histórico"
+                              onClick={() => setConfirmDeleteId(h.id)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
                             </Button>
                           </div>
                         </li>
@@ -2290,6 +2440,31 @@ export const LushaIntelligenceView = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Confirmação de exclusão de item do histórico */}
+      <AlertDialog open={!!confirmDeleteId} onOpenChange={(o) => !o && setConfirmDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover entrada do histórico?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação é permanente. A entrada será removida em todos os seus dispositivos e não poderá ser recuperada.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                const id = confirmDeleteId;
+                setConfirmDeleteId(null);
+                if (id) void deleteHistoryEntry(id);
+              }}
+            >
+              Remover
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Preferências de notificações */}
       <Dialog open={prefsOpen} onOpenChange={setPrefsOpen}>
