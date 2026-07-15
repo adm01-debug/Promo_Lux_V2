@@ -558,6 +558,52 @@ export const LushaIntelligenceView = () => {
     return `${m}m ${s}s`;
   };
 
+  // ── Detecção de duplicidade recente (últimas 24h) ──
+  const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000;
+  const recentDuplicate = useMemo(() => {
+    const d = domain.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "");
+    if (!d) return null;
+    const cutoff = Date.now() - DUPLICATE_WINDOW_MS;
+    // Mais recente para o mesmo domínio, ignorando entradas ainda em andamento
+    const last = dmHistory.find((h) => {
+      if (h.status === "queued" || h.status === "processing") return false;
+      const t = new Date(h.finishedAt).getTime();
+      if (!Number.isFinite(t) || t < cutoff) return false;
+      return h.domain.toLowerCase() === d;
+    });
+    return last ?? null;
+  }, [domain, dmHistory]);
+
+  // ── Exportar histórico filtrado para CSV ──
+  const exportHistoryCsv = useCallback(() => {
+    if (filteredHistory.length === 0) {
+      toast({ title: "Nada para exportar", description: "Ajuste os filtros ou faça buscas antes de exportar." });
+      return;
+    }
+    const statusLabels: Record<DMHistoryEntry["status"], string> = {
+      done: "Concluído",
+      failed: "Falhou",
+      cancelled: "Cancelado",
+      processing: "Processando",
+      queued: "Em fila",
+    };
+    const rows = filteredHistory.map((h) => ({
+      "Domínio": h.domain,
+      "LinkedIn": h.linkedin ?? "",
+      "Status": statusLabels[h.status] ?? h.status,
+      "Decisores": h.total,
+      "Duração (ms)": h.durationMs ?? "",
+      "Duração": formatDuration(h.durationMs),
+      "Iniciada em": new Date(h.startedAt).toISOString(),
+      "Finalizada em": new Date(h.finishedAt).toISOString(),
+      "Mensagem": h.message ?? "",
+    }));
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    downloadCSV(rows, `oraculo-historico-${stamp}.csv`);
+    toast({ title: "CSV exportado", description: `${rows.length} linha(s) baixada(s).` });
+  }, [filteredHistory]);
+
+
   // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
   const [autoRetryEnabled, setAutoRetryEnabled] = useState(false);
   const autoRetryAttemptedRef = useRef<Set<string>>(new Set());
