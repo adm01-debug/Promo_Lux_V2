@@ -1366,7 +1366,7 @@ export const LushaIntelligenceView = () => {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <Label htmlFor="lusha-domain">Domínio da empresa</Label>
+                <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
                 <Button
                   type="button"
                   variant="ghost"
