@@ -328,7 +328,7 @@ function StatusBadge({ status, error }: { status: string | null; error: string |
     error_other: { label: "erro", variant: "destructive" },
     same_session_dedup: { label: "duplicado", variant: "outline" },
   };
-  const info = (status && map[status]) ?? { label: status ?? "—", variant: "outline" as const };
+  const info = (status ? map[status] : null) ?? { label: status ?? "—", variant: "outline" as const };
   return (
     <Badge variant={info.variant} title={error ?? undefined} className="text-[10px]">
       {info.label}
