@@ -279,18 +279,39 @@ serve(async (req) => {
     user_id: user.id,
   });
 
-  const deptsMapped: string[] = [];
-  const deptsNotFound: string[] = [];
-  for (const d of input.departments) {
-    const key = d.trim().toLowerCase();
-    const en = DEPT_MAP[key];
-    if (en) {
-      if (!deptsMapped.includes(en)) deptsMapped.push(en);
-    } else {
-      deptsNotFound.push(d);
-      log.warn("dept_unmapped", { dept: d });
-    }
+  // ── P1-8: Enforcement de quota diária server-side ──
+  const startOfDayIso = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00.000Z").toISOString();
+  const { count: todayCount, error: quotaErr } = await supabase
+    .from("lusha_search_sessions")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("created_at", startOfDayIso);
+  if (quotaErr) {
+    log.warn("quota_check_failed", { error: quotaErr.message });
+  } else if ((todayCount ?? 0) >= DAILY_SEARCH_QUOTA) {
+    log.warn("quota_exceeded", { user_id: user.id, used: todayCount, limit: DAILY_SEARCH_QUOTA });
+    return new Response(
+      JSON.stringify({
+        error: "quota_exceeded",
+        detail: `Limite diário de ${DAILY_SEARCH_QUOTA} buscas atingido. Tente novamente amanhã.`,
+        used: todayCount,
+        limit: DAILY_SEARCH_QUOTA,
+      }),
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Retry-After": "3600",
+          "X-RateLimit-Limit": String(DAILY_SEARCH_QUOTA),
+          "X-RateLimit-Remaining": "0",
+        },
+      }
+    );
   }
+
+  const { mapped: deptsMapped, notFound: deptsNotFound } = resolveDepartments(input.departments);
+  for (const d of deptsNotFound) log.warn("dept_unmapped", { dept: d });
 
   if (deptsMapped.length === 0) {
     return new Response(
