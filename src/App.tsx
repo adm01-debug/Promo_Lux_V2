@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -128,6 +128,24 @@ function AnimatedRoutes() {
   );
 }
 
+/**
+ * Escuta o evento `lux:deep-link` (disparado por Notification.onclick que roda
+ * fora da árvore React) e navega via react-router preservando o cache do SPA.
+ * Deve ser montado DENTRO de <BrowserRouter>.
+ */
+function DeepLinkBridge() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const url = (e as CustomEvent<{ url: string }>).detail?.url;
+      if (url) navigate(url);
+    };
+    window.addEventListener("lux:deep-link", handler);
+    return () => window.removeEventListener("lux:deep-link", handler);
+  }, [navigate]);
+  return null;
+}
+
 const App = () => (
   <ErrorBoundary>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
@@ -142,6 +160,7 @@ const App = () => (
               <Toaster />
               <Sonner />
               <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                <DeepLinkBridge />
                 <UnsavedChangesProvider>
                   <Suspense fallback={<PageLoader />}>
                     <AnimatedRoutes />

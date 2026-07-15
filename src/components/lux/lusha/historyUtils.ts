@@ -82,16 +82,27 @@ export function findRecentDuplicate(
   return last ?? null;
 }
 
+/**
+ * Sanitiza uma célula de texto para CSV, prevenindo *formula injection* no
+ * Excel/Google Sheets (CVE-2014-3524 family). Se o valor começar com um dos
+ * gatilhos de fórmula (`=`, `+`, `-`, `@`, TAB, CR) é prefixado com apóstrofo,
+ * que o Excel exibe como texto literal sem executar.
+ */
+export function sanitizeCsvCell(value: string): string {
+  if (!value) return "";
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+}
+
 export function buildHistoryCsvRows(entries: DMHistoryEntry[]): Array<Record<string, string | number>> {
   return entries.map((h) => ({
-    "Domínio": h.domain,
-    "LinkedIn": h.linkedin ?? "",
+    "Domínio": sanitizeCsvCell(h.domain),
+    "LinkedIn": sanitizeCsvCell(h.linkedin ?? ""),
     "Status": STATUS_LABELS[h.status] ?? h.status,
     "Decisores": h.total,
     "Duração (ms)": h.durationMs ?? "",
     "Duração": formatDurationMs(h.durationMs),
     "Iniciada em": new Date(h.startedAt).toISOString(),
     "Finalizada em": new Date(h.finishedAt).toISOString(),
-    "Mensagem": h.message ?? "",
+    "Mensagem": sanitizeCsvCell(h.message ?? ""),
   }));
 }

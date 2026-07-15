@@ -1,1 +1,180 @@
-IyBMdXNoYSBJbnRlbGxpZ2VuY2Ug4oCUIEludGVncmHDp8OjbyBMVVgKCj4gKipDcmlhZG86KiogMTQvMDcvMjAyNiB8ICoqQXR1YWxpemFkbyBwb3I6KiogQ2xhdWRlICh2aWEgTUNQKSAgCj4gKipTdGF0dXM6Kiog4pyFIEltcGxlbWVudGFkbyAoYWd1YXJkYW5kbyByZW5vdmHDp8OjbyBkZSBjb29raWUgTHVzaGEpCgotLS0KCiMjIPCfk4sgVmlzw6NvIEdlcmFsCgpPIG3Ds2R1bG8gKipMdXNoYSBJbnRlbGxpZ2VuY2UqKiBwZXJtaXRlIHF1ZSBvIHRpbWUgY29tZXJjaWFsIGRhIFByb21vIEJyaW5kZXMgYnVzcXVlIGRlY2lzb3JlcyAoY29tcHJhZG9yZXMsIGdlc3RvcmVzIGRlIG1hcmtldGluZywgUkgsIGV0Yy4pIGVtIGVtcHJlc2FzLWFsdm8gZGlyZXRhbWVudGUgZGEgaW50ZXJmYWNlIExVWCDigJQgc2VtIGNvbnN1bWlyIGNyw6lkaXRvcyBMdXNoYS4KCioqQXJxdWl0ZXR1cmEgZGUgemVybyBjcsOpZGl0b3M6KiogQSBpbnRlZ3Jhw6fDo28gdXNhIGEgQVBJIGludGVybmEgZG8gZGFzaGJvYXJkIEx1c2hhIChgZGFzaGJvYXJkLXNlcnZpY2VzLmx1c2hhLmNvbWApIGF1dGVudGljYWRhIHZpYSBjb29raWUgYGxsYCwgcXVlIG7Do28gY29uc29tZSBjcsOpZGl0b3MuIEEgQVBJIHDDumJsaWNhIChgYXBpLmx1c2hhLmNvbWApIG7Do28gw6kgdXNhZGEgbmVzdGUgZmx1eG8uCgotLS0KCiMjIPCfj5fvuI8gQXJxdWl0ZXR1cmEKCmBgYArilIzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJAK4pSCIExVWCBGcm9udGVuZCAobHV4LWFpLWZpbmRlci5sb3ZhYmxlLmFwcCkgICAgICAgIOKUggrilIIgIOKUlOKUgCBMdXNoYUludGVsbGlnZW5jZVZpZXcudHN4ICAgICAgICAgICAgICAgICAgIOKUggrilIIgICAgIGVtcHJlc2EgKyBkZXBhcnRhbWVudG9zIOKGkiAiQnVzY2FyIERlY2lzb3JlcyLilIIK4pSCICAgICDihpIgc3VwYWJhc2UuZnVuY3Rpb25zLmludm9rZSgnbHVzaGEtc2VhcmNoJykg4pSCCuKUlOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUrOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUmAogICAgICAgICAgICAgICAgICAg4pSCIFBPU1QgL2Z1bmN0aW9ucy92MS9sdXNoYS1zZWFyY2gK4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQCuKUgiBFZGdlIEZ1bmN0aW9uOiBsdXNoYS1zZWFyY2ggKERlbm8vU3VwYWJhc2UpICAgICDilIIK4pSCICAxLiBWYWxpZGEgSldUIGRvIHVzdcOhcmlvIExVWCAgICAgICAgICAgICAgICAgICDilIIK4pSCICAyLiBWYWxpZGEgYm9keSBjb20gWm9kICAgICAgICAgICAgICAgICAgICAgICAgIOKUggrilIIgIDMuIEJ1c2NhIGNvb2tpZSBMdXNoYSBubyBWYXVsdCAoc2VsZi1ob3N0ZWQpICAgIOKUggrilIIgIDQuIFJlc29sdmUgY29tcGFueV9saWQgdmlhIC92Mi9maWx0ZXJzL2NvbXBhbnkgIOKUggrilIIgIDUuIExvb3AgcG9yIGRlcGFydGFtZW50byAoZGVsYXkgMS41cykgICAgICAgICDilIIK4pSCICAgICDihpIgUE9TVCAvYXBpL3YxL3Byb3NwZWN0aW5nL3NlYXJjaC1hZ2VudCAgICAgIOKUggrilIIgIDYuIFVQU0VSVCBlbSBsdXNoYV9jb250YWN0cyAgICAgICAgICAgICAgICAgICDilIIK4pSCICA3LiBVUERBVEUgbHVzaGFfc2VhcmNoX3Nlc3Npb25zICAgICAgICAgICAgICAgIOKUggrilIIgIDguIElOU0VSVCBub3RpZmljYXRpb25zICAgICAgICAgICAgICAgICAgICAgICAg4pSCCuKUlOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUmAoK4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQCuKUgiBTdXBhYmFzZSBTZWxmLWhvc3RlZCAoc3VwYWJhc2UuYXRvbWljYWJyLmNvbS5icuKUggrilIIgVGFiZWxhOiBjb29raWVzX2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICDilIIK4pSCICDilJzilIAgc2Vydmljbz1sdXNoYSDihpIgY29va2llICdsbCcgKHJlbm92YXIgNjBkKSAgIOKUggrilIIgIOKUnOKUgCBzZXJ2aWNvPWxlYWRjb250YWN0IOKGkiBjb29raWUgU0VTU0lPTiAgICAgICAgIOKUggrilIIgIOKUlOKUgCBzZXJ2aWNvPWxpbmtlZGluIOKGkiBsaV9hdCArIEpTRVNTSU9OSUQgICAgICDilIIK4pSU4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSYCmBgYAoKLS0tCgojIyDwn5SnIENvbmZpZ3VyYcOnw6NvCgojIyMgVmFyacOhdmVpcyBkZSBBbWJpZW50ZSAoTG92YWJsZSBTdXBhYmFzZSkKCnwgVmFyacOhdmVsIHwgRGVzY3Jpw6fDo28gfCBTdGF0dXMgfAp8LS0tLS0tLS0tfC0tLS0tLS0tLS0tfC0tLS0tLS0tfAp8IGBTVVBBQkFTRV9VUkxgIHwgVVJMIGRvIFN1cGFiYXNlIExVWCAoYXV0by1jb25maWd1cmFkbyBwZWxvIExvdmFibGUpIHwg4pyFIHwKfCBgU1VQQUJBU0VfU0VSVklDRV9ST0xFX0tFWWAgfCBTZXJ2aWNlIHJvbGUga2V5IChhdXRvLWNvbmZpZ3VyYWRvKSB8IOKchSB8CnwgYFNVUEFCQVNFX0FOT05fS0VZYCB8IEFub24ga2V5IChhdXRvLWNvbmZpZ3VyYWRvKSB8IOKchSB8CnwgYFNVUEFCQVNFX0VYVEVSTkFMX1VSTGAgfCBVUkwgZG8gU3VwYWJhc2Ugc2VsZi1ob3N0ZWQgfCDinIUgZmFsbGJhY2sgaGFyZGNvZGVkIHwKfCBgU1VQQUJBU0VfRVhURVJOQUxfQU5PTl9LRVlgIHwgQW5vbiBrZXkgZG8gc2VsZi1ob3N0ZWQgfCDimqDvuI8gKipDT05GSUdVUkFSIHZpYSBMb3ZhYmxlIFNldHRpbmdzIOKGkiBTZWNyZXRzKiogfAoKKipTVVBBQkFTRV9FWFRFUk5BTF9BTk9OX0tFWSB2YWx1ZToqKgpgYGAKZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV3b2dJQ0p5YjJ4bElqb2dJbUZ1YjI0aUxBb2dJQ0pwYzNNaU9pQWljM1Z3WVdKaGMyVWlMQW9nSUNKcFlYUWlPaUF4TnpFMU1EVXdPREF3TEFvZ0lDSmxlSEFpT2lBeE9EY3lPREUzTWpBd0NuMC5ydmFtYzBYSHVTQ1lCMWdsQndPQ0N4Z2ZkOXl4V1ZZTG5oRnpnNS03VFJrCmBgYAoKIyMjIENvb2tpZSBWYXVsdCAoU3VwYWJhc2UgU2VsZi1ob3N0ZWQpCgpUYWJlbGE6IGBzdXBhYmFzZS5hdG9taWNhYnIuY29tLmJyYCDihpIgYHB1YmxpYy5jb29raWVzX2NvbmZpZ2AKCmBgYHNxbAotLSBWZXIgc3RhdHVzIGF0dWFsClNFTEVDVCAqIEZST00gY29va2llc19oZWFsdGhfZGFzaGJvYXJkOwoKLS0gUmVub3ZhciBjb29raWUgTHVzaGEgKHF1YW5kbyBleHBpcmFyKQpVUERBVEUgY29va2llc19jb25maWcgU0VUIAogIGNvb2tpZSA9ICdbTk9WT19MTF9DT09LSUVdJywKICBoZWFsdGhfc3RhdHVzID0gJ2hlYWx0aHknLAogIGlzX2hlYWx0aHkgPSB0cnVlLAogIGhlYWx0aF9lcnJvciA9IE5VTEwsCiAgYXR1YWxpemFkb19lbSA9IG5vdygpLAogIGV4cGlyZXNfYXQgPSBub3coKSArIElOVEVSVkFMICc2MCBkYXlzJwpXSEVSRSBzZXJ2aWNvID0gJ2x1c2hhJzsKYGBgCgoqKkNvbW8gb2J0ZXIgbyBjb29raWUgYGxsYDoqKgoxLiBBY2Vzc2FyIGBkYXNoYm9hcmQubHVzaGEuY29tYCBsb2dhZG8KMi4gRjEyIOKGkiBBcHBsaWNhdGlvbiDihpIgQ29va2llcyDihpIgYGRhc2hib2FyZC5sdXNoYS5jb21gCjMuIENvcGlhciBvIHZhbG9yIGRvIGNvb2tpZSBgbGxgCjQuIEV4ZWN1dGFyIG8gVVBEQVRFIGFjaW1hCgotLS0KCiMjIPCfl4PvuI8gRXN0cnV0dXJhIGRlIERhZG9zCgojIyMgYGx1c2hhX3NlYXJjaF9zZXNzaW9uc2AgKFN1cGFiYXNlIExVWCkKCnwgQ2FtcG8gfCBUaXBvIHwgRGVzY3Jpw6fDo28gfAp8LS0tLS0tLXwtLS0tLS18LS0tLS0tLS0tLS18CnwgYGlkYCB8IFVVSUQgfCBQSyB8CnwgYHVzZXJfaWRgIHwgVVVJRCB8IEZLIOKGkiBhdXRoLnVzZXJzIHwKfCBgY29tcGFueV9uYW1lYCB8IFRFWFQgfCBOb21lIGRhIGVtcHJlc2EgYnVzY2FkYSB8CnwgYGx1c2hhX2NvbXBhbnlfbGlkYCB8IFRFWFQgfCBJRCBpbnRlcm5vIEx1c2hhIHwKfCBgZGVwYXJ0bWVudHNfcmVxdWVzdGVkYCB8IFRFWFRbXSB8IERlcGFydGFtZW50b3Mgc29saWNpdGFkb3MgKFBUKSB8CnwgYGRlcGFydG1lbnRzX21hcHBlZGAgfCBURVhUW10gfCBEZXBhcnRhbWVudG9zIG1hcGVhZG9zIChFTikgfAp8IGBkZXBhcnRtZW50c19ub3RfZm91bmRgIHwgVEVYVFtdIHwgRGVwYXJ0YW1lbnRvcyBzZW0gbWFwZWFtZW50byB8CnwgYHRvdGFsX2ZvdW5kYCB8IElOVCB8IFRvdGFsIGRlIGNvbnRhdG9zIGVuY29udHJhZG9zIHwKfCBgZW5yaWNobWVudF9yYXRlYCB8IEZMT0FUIHwgJSBlbnJpcXVlY2lkb3MgKEdFTkVSQVRFRCkgfAp8IGBzdGF0dXNgIHwgVEVYVCB8IHJ1bm5pbmcvY29tcGxldGVkL2Vycm9yIHwKCiMjIyBgbHVzaGFfY29udGFjdHNgIChTdXBhYmFzZSBMVVgpCgp8IENhbXBvIHwgVGlwbyB8IERlc2NyacOnw6NvIHwKfC0tLS0tLS18LS0tLS0tfC0tLS0tLS0tLS0tfAp8IGBpZGAgfCBVVUlEIHwgUEsgfAp8IGBzZXNzaW9uX2lkYCB8IFVVSUQgfCBGSyDihpIgbHVzaGFfc2VhcmNoX3Nlc3Npb25zIHwKfCBgZnVsbF9uYW1lYCB8IFRFWFQgfCBOb21lIGNvbXBsZXRvIHwKfCBgZmlyc3RfbmFtZWAgfCBURVhUIHwgUHJpbWVpcm8gbm9tZSAoR0VORVJBVEVEKSB8CnwgYGpvYl90aXRsZWAgfCBURVhUIHwgQ2FyZ28gfAp8IGBkZXBhcnRtZW50X3B0YCB8IFRFWFQgfCBEZXBhcnRhbWVudG8gZW0gUFQgfAp8IGBkZXBhcnRtZW50X2VuYCB8IFRFWFQgfCBEZXBhcnRhbWVudG8gZW0gRU4gKEx1c2hhIGVudW0pIHwKfCBgbGlua2VkaW5fdXJsYCB8IFRFWFQgfCBVUkwgZG8gTGlua2VkSW4gfAp8IGBlbWFpbGAgfCBURVhUIHwgRW1haWwgfAp8IGBwaG9uZV9mb3JtYXR0ZWRgIHwgVEVYVCB8IFRlbGVmb25lIGZvcm1hdGFkbyBCUiB8CnwgYGVucmljaG1lbnRfc3RhdHVzYCB8IFRFWFQgfCBwZW5kaW5nL2ZvdW5kL25vdF9mb3VuZCB8CnwgYHJhd19sdXNoYV9wYXlsb2FkYCB8IEpTT05CIHwgUGF5bG9hZCBjb21wbGV0byBkYSBMdXNoYSB8CgotLS0KCiMjIPCfkoogTW9uaXRvcmFtZW50bwoKYGBgc3FsCi0tIFNlc3PDtWVzIGRlIGJ1c2NhIChMVVgpClNFTEVDVCBjb21wYW55X25hbWUsIHRvdGFsX2ZvdW5kLCBlbnJpY2htZW50X3JhdGUsIHN0YXR1cywgY3JlYXRlZF9hdApGUk9NIGx1c2hhX3NlYXJjaF9zZXNzaW9ucyAKT1JERVIgQlkgY3JlYXRlZF9hdCBERVNDIApMSU1JVCAyMDsKCi0tIENvbnRhdG9zIHBvciBzdGF0dXMKU0VMRUNUIGVucmljaG1lbnRfc3RhdHVzLCBDT1VOVCgqKSAKRlJPTSBsdXNoYV9jb250YWN0cyAKR1JPVVAgQlkgZW5yaWNobWVudF9zdGF0dXM7CgotLSBTYcO6ZGUgZG9zIGNvb2tpZXMKU0VMRUNUICogRlJPTSBjb29raWVzX2hlYWx0aF9kYXNoYm9hcmQ7CmBgYAoKLS0tCgojIyDimqDvuI8gTWFudXRlbsOnw6NvCgojIyMgQ29va2llIEx1c2hhIGV4cGlyYSBlbSB+MzAtOTAgZGlhcwpDb25maWd1cmUgdW0gYWxlcnRhIG5vIG44bjoKYGBgc3FsCi0tIFF1ZXJ5IHBhcmEgbyBjcm9uIGRlIHNhw7pkZQpTRUxFQ1Qgc2VydmljbywgaGVhbHRoX3N0YXR1cywgZGlhc19kZXNkZV9hdHVhbGl6YWNhbwpGUk9NIGNvb2tpZXNfaGVhbHRoX2Rhc2hib2FyZApXSEVSRSBoZWFsdGhfc3RhdHVzIElOICgnZXhwaXJlZCcsICdleHBpcmluZ19zb29uJywgJ2Vycm9yJyk7CmBgYAoKIyMjIFJhdGUgTGltaXRzIEx1c2hhIChBUEkgaW50ZXJuYSkKLSBTZW0gbGltaXRlIGRvY3VtZW50YWRvIG5hIEFQSSBpbnRlcm5hCi0gVXNhciBkZWxheSBkZSAxNTAwbXMgZW50cmUgYnVzY2FzIGRlIGRlcGFydGFtZW50b3MgKGrDoSBpbXBsZW1lbnRhZG8pCi0gUG9vbCBkZSByYXRlIGxpbWl0IHNlcGFyYWRvIGRhIEFQSSBww7pibGljYQoKLS0tCgojIyDwn5OBIEFycXVpdm9zIGRvIFByb2pldG8KCnwgQXJxdWl2byB8IERlc2NyacOnw6NvIHwKfC0tLS0tLS0tLXwtLS0tLS0tLS0tLXwKfCBgc3VwYWJhc2UvZnVuY3Rpb25zL2x1c2hhLXNlYXJjaC9pbmRleC50c2AgfCBFZGdlIEZ1bmN0aW9uIHByaW5jaXBhbCB8CnwgYHNyYy9jb21wb25lbnRzL2x1eC9MdXNoYUludGVsbGlnZW5jZVZpZXcudHN4YCB8IEludGVyZmFjZSBMVVggfAp8IGBzcmMvaG9va3MvdXNlTmF2aWdhdGlvbkhpc3RvcnkudHNgIHwgVGlwbyAibHVzaGEiIHJlZ2lzdHJhZG8gfAp8IGBzcmMvbGliL3ZpZXdSZWdpc3RyeS50c2AgfCBMYXp5IGltcG9ydCByZWdpc3RyYWRvIHwKfCBgc3JjL2NvbXBvbmVudHMvbHV4L2xheW91dC9uYXYtaXRlbXMudHNgIHwgSXRlbSAiTHVzaGEiIG5vIG1lbnUgfAoKLS0tCgoqRG9jdW1lbnRhw6fDo28gZ2VyYWRhIGVtIDE0LzA3LzIwMjYg4oCUIFNlc3PDo28gZGUgaW50ZWdyYcOnw6NvIExVWCDDlyBMdXNoYSoK
+# Lusha Intelligence — Integração LUX
+
+> **Criado:** 14/07/2026 | **Atualizado por:** Claude (via MCP)  
+> **Status:** ✅ Implementado (aguardando renovação de cookie Lusha)
+
+---
+
+## 📋 Visão Geral
+
+O módulo **Lusha Intelligence** permite que o time comercial da Promo Brindes busque decisores (compradores, gestores de marketing, RH, etc.) em empresas-alvo diretamente da interface LUX — sem consumir créditos Lusha.
+
+**Arquitetura de zero créditos:** A integração usa a API interna do dashboard Lusha (`dashboard-services.lusha.com`) autenticada via cookie `ll`, que não consome créditos. A API pública (`api.lusha.com`) não é usada neste fluxo.
+
+---
+
+## 🏗️ Arquitetura
+
+```
+┌─────────────────────────────────────────────────┐
+│ LUX Frontend (lux-ai-finder.lovable.app)        │
+│  └─ LushaIntelligenceView.tsx                   │
+│     empresa + departamentos → "Buscar Decisores"│
+│     → supabase.functions.invoke('lusha-search') │
+└────────────────────┬────────────────────────────┘
+                   │ POST /functions/v1/lusha-search
+┌─────────────────────────────────────────────────┐
+│ Edge Function: lusha-search (Deno/Supabase)     │
+│  1. Valida JWT do usuário LUX                   │
+│  2. Valida body com Zod                         │
+│  3. Busca cookie Lusha no Vault (self-hosted)    │
+│  4. Resolve company_lid via /v2/filters/company  │
+│  5. Loop por departamento (delay 1.5s)         │
+│     → POST /api/v1/prospecting/search-agent      │
+│  6. UPSERT em lusha_contacts                   │
+│  7. UPDATE lusha_search_sessions                │
+│  8. INSERT notifications                        │
+└─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────┐
+│ Supabase Self-hosted (supabase.atomicabr.com.br│
+│ Tabela: cookies_config                         │
+│  ├─ servico=lusha → cookie 'll' (renovar 60d)   │
+│  ├─ servico=leadcontact → cookie SESSION         │
+│  └─ servico=linkedin → li_at + JSESSIONID      │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔧 Configuração
+
+### Variáveis de Ambiente (Lovable Supabase)
+
+| Variável | Descrição | Status |
+|---------|-----------|--------|
+| `SUPABASE_URL` | URL do Supabase LUX (auto-configurado pelo Lovable) | ✅ |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (auto-configurado) | ✅ |
+| `SUPABASE_ANON_KEY` | Anon key (auto-configurado) | ✅ |
+| `SUPABASE_EXTERNAL_URL` | URL do Supabase self-hosted | ✅ fallback hardcoded |
+| `SUPABASE_EXTERNAL_ANON_KEY` | Anon key do self-hosted | ⚠️ **CONFIGURAR via Lovable Settings → Secrets** |
+
+**SUPABASE_EXTERNAL_ANON_KEY** (obter no dashboard do Supabase self-hosted, armazenar via `Settings → Secrets` no Lovable):
+```
+<REDACTED — armazenado em Lovable Settings → Secrets como SUPABASE_EXTERNAL_ANON_KEY>
+```
+
+### Cookie Vault (Supabase Self-hosted)
+
+Tabela: `supabase.atomicabr.com.br` → `public.cookies_config`
+
+```sql
+-- Ver status atual
+SELECT * FROM cookies_health_dashboard;
+
+-- Renovar cookie Lusha (quando expirar)
+UPDATE cookies_config SET 
+  cookie = '[NOVO_LL_COOKIE]',
+  health_status = 'healthy',
+  is_healthy = true,
+  health_error = NULL,
+  atualizado_em = now(),
+  expires_at = now() + INTERVAL '60 days'
+WHERE servico = 'lusha';
+```
+
+**Como obter o cookie `ll`:**
+1. Acessar `dashboard.lusha.com` logado
+2. F12 → Application → Cookies → `dashboard.lusha.com`
+3. Copiar o valor do cookie `ll`
+4. Executar o UPDATE acima
+
+---
+
+## 🗃️ Estrutura de Dados
+
+### `lusha_search_sessions` (Supabase LUX)
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users |
+| `company_name` | TEXT | Nome da empresa buscada |
+| `lusha_company_lid` | TEXT | ID interno Lusha |
+| `departments_requested` | TEXT[] | Departamentos solicitados (PT) |
+| `departments_mapped` | TEXT[] | Departamentos mapeados (EN) |
+| `departments_not_found` | TEXT[] | Departamentos sem mapeamento |
+| `total_found` | INT | Total de contatos encontrados |
+| `enrichment_rate` | FLOAT | % enriquecidos (GENERATED) |
+| `status` | TEXT | running/completed/error |
+
+### `lusha_contacts` (Supabase LUX)
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | UUID | PK |
+| `session_id` | UUID | FK → lusha_search_sessions |
+| `full_name` | TEXT | Nome completo |
+| `first_name` | TEXT | Primeiro nome (GENERATED) |
+| `job_title` | TEXT | Cargo |
+| `department_pt` | TEXT | Departamento em PT |
+| `department_en` | TEXT | Departamento em EN (Lusha enum) |
+| `linkedin_url` | TEXT | URL do LinkedIn |
+| `email` | TEXT | Email |
+| `phone_formatted` | TEXT | Telefone formatado BR |
+| `enrichment_status` | TEXT | pending/found/not_found |
+| `raw_lusha_payload` | JSONB | Payload completo da Lusha |
+
+---
+
+## 💊 Monitoramento
+
+```sql
+-- Sessões de busca (LUX)
+SELECT company_name, total_found, enrichment_rate, status, created_at
+FROM lusha_search_sessions 
+ORDER BY created_at DESC 
+LIMIT 20;
+
+-- Contatos por status
+SELECT enrichment_status, COUNT(*) 
+FROM lusha_contacts 
+GROUP BY enrichment_status;
+
+-- Saúde dos cookies
+SELECT * FROM cookies_health_dashboard;
+```
+
+---
+
+## ⚠️ Manutenção
+
+### Cookie Lusha expira em ~30-90 dias
+Configure um alerta no n8n:
+```sql
+-- Query para o cron de saúde
+SELECT servico, health_status, dias_desde_atualizacao
+FROM cookies_health_dashboard
+WHERE health_status IN ('expired', 'expiring_soon', 'error');
+```
+
+### Rate Limits Lusha (API interna)
+- Sem limite documentado na API interna
+- Usar delay de 1500ms entre buscas de departamentos (já implementado)
+- Pool de rate limit separado da API pública
+
+---
+
+## 📁 Arquivos do Projeto
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `supabase/functions/lusha-search/index.ts` | Edge Function principal |
+| `src/components/lux/LushaIntelligenceView.tsx` | Interface LUX |
+| `src/hooks/useNavigationHistory.ts` | Tipo "lusha" registrado |
+| `src/lib/viewRegistry.ts` | Lazy import registrado |
+| `src/components/lux/layout/nav-items.ts` | Item "Lusha" no menu |
+
+---
+
+*Documentação gerada em 14/07/2026 — Sessão de integração LUX × Lusha*

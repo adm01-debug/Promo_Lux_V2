@@ -1,13 +1,34 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const LUSHA_API_KEY = "07668666-792b-42bd-a933-b16a74bd10cf";
+const LUSHA_API_KEY = Deno.env.get("LUSHA_API_KEY") ?? "";
 const LUSHA_API_URL = "https://api.lusha.com/v3/contacts/decision-makers";
 const FUNCTION_NAME = "lusha-decision-makers";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+// ── CORS restrito às origens conhecidas ──────────────────────────────────
+const ALLOWED_ORIGINS = [
+  "https://lux-ai-company-finder.lovable.app",
+  "https://lux-ai-finder.lovable.app",
+  "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+  "https://id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+];
+function corsHeadersFor(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
+// Compatibilidade com código legado que ainda referencia `corsHeaders`.
+// Substituído dinamicamente por request dentro de serve().
+let corsHeaders: Record<string, string> = {
+  "Access-Control-Allow-Origin": ALLOWED_ORIGINS[0],
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Vary": "Origin",
 };
 
 // ── Logger estruturado (JSON em stdout — consumido pelo Edge Function Logs) ──
@@ -52,6 +73,9 @@ function errorResponse(
 }
 
 serve(async (req) => {
+  // CORS dinâmico por request
+  corsHeaders = corsHeadersFor(req);
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -61,9 +85,28 @@ serve(async (req) => {
   const startedAt = Date.now();
   const warnings: Array<{ scope: string; reason: string; ref?: string }> = [];
 
+  // ── Autenticação obrigatória (antes de qualquer chamada paga) ──────────
+  const authHeader = req.headers.get("Authorization") ?? "";
+  if (!authHeader.toLowerCase().startsWith("bearer ")) {
+    log("warn", correlationId, "unauthorized_no_bearer");
+    return errorResponse(correlationId, 401, "unauthorized", "Missing Bearer token");
+  }
+  const SUPABASE_URL_ENV = Deno.env.get("SUPABASE_URL") ?? "";
+  const SUPABASE_ANON_ENV = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  if (!SUPABASE_URL_ENV || !SUPABASE_ANON_ENV) {
+    return errorResponse(correlationId, 500, "server_misconfigured", "Supabase env ausente");
+  }
+  const authClient = createClient(SUPABASE_URL_ENV, SUPABASE_ANON_ENV, {
+    global: { headers: { Authorization: authHeader } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data: userData, error: userErr } = await authClient.auth.getUser();
+  if (userErr || !userData?.user) {
+    log("warn", correlationId, "unauthorized_invalid_token", { detail: userErr?.message });
+    return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
+  }
+
   try {
-    // ── 1. Parse do body (tolerante) ──
-    let body: any;
     try {
       body = await req.json();
     } catch (e) {
@@ -142,16 +185,19 @@ serve(async (req) => {
       force_refresh: skipCache,
     });
 
-    // ── Cliente Supabase (reusado para cache + persistência) ──
-    const authHeader = req.headers.get("Authorization") ?? "";
-    const supabase =
-      authHeader.startsWith("Bearer ")
-        ? createClient(
-            Deno.env.get("SUPABASE_URL")!,
-            Deno.env.get("SUPABASE_ANON_KEY")!,
-            { global: { headers: { Authorization: authHeader } } }
-          )
-        : null;
+    // ── Cliente Supabase autenticado (reusado do bloco de auth acima) ──
+    const supabase = authClient;
+
+    // ── Chave Lusha configurada? ──────────────────────────────────────────
+    if (!LUSHA_API_KEY) {
+      log("error", correlationId, "lusha_not_configured");
+      return errorResponse(
+        correlationId,
+        503,
+        "lusha_not_configured",
+        "LUSHA_API_KEY não configurada nas secrets do projeto."
+      );
+    }
 
     // ── 2. Cache lookup em public.lusha_contacts (por domínio + org via RLS) ──
     const cachedResults: any[] = [];

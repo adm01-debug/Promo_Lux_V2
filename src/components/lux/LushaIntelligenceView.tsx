@@ -203,19 +203,33 @@ export const LushaIntelligenceView = () => {
     staleTime: 30_000,
   });
 
-  // Sincronização em tempo real entre abas/dispositivos
+  // Sincronização em tempo real entre abas/dispositivos — com debounce para
+  // evitar N refetches quando o backend emite dezenas de eventos em rajada
+  // (auto-retry queue, importações em massa, etc.).
   useEffect(() => {
+    let debounceId: ReturnType<typeof setTimeout> | null = null;
+    const scheduleInvalidate = () => {
+      if (debounceId) clearTimeout(debounceId);
+      debounceId = setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+      }, 500);
+    };
+
     const channel = supabase
       .channel("lusha-dm-history-sync")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "lusha_dm_search_history" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
-        },
+        scheduleInvalidate,
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status !== "SUBSCRIBED" && status !== "CLOSED") {
+          console.warn("[oraculo] realtime channel status:", status);
+        }
+      });
+
     return () => {
+      if (debounceId) clearTimeout(debounceId);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
@@ -426,24 +440,30 @@ export const LushaIntelligenceView = () => {
               try {
                 window.focus();
                 n.close();
-                // navega mantendo SPA
+                // Notification.onclick roda fora da árvore React → dispara evento
+                // que o app escuta para navegar via react-router (mantém SPA + cache).
+                window.dispatchEvent(new CustomEvent("lux:deep-link", { detail: { url: deepLink } }));
+              } catch {
+                // Se o CustomEvent falhar por qualquer razão, faz hard-nav.
                 window.location.assign(deepLink);
-              } catch { /* noop */ }
+              }
             };
           }
         } catch { /* ignore */ }
       };
       fireNative();
 
-      // Repetição até o usuário focar
+      // Repetição até o usuário focar — chave por historyId (fallback: domínio)
+      // para não sobrescrever timers de buscas concorrentes no mesmo domínio.
+      const timerKey = historyId ?? `dom:${d}`;
       if (notifPrefs.repeatUntilFocus && document.hidden) {
-        clearRepeatTimer(d);
+        clearRepeatTimer(timerKey);
         const interval = Math.max(5_000, notifPrefs.repeatIntervalMs);
         const t = setInterval(() => {
-          if (!document.hidden) { clearRepeatTimer(d); return; }
+          if (!document.hidden) { clearRepeatTimer(timerKey); return; }
           fireNative();
         }, interval);
-        repeatTimersRef.current.set(d, t);
+        repeatTimersRef.current.set(timerKey, t);
       }
 
       // Centro de notificações do app
@@ -452,7 +472,7 @@ export const LushaIntelligenceView = () => {
           const { data: userRes } = await supabase.auth.getUser();
           const uid = userRes?.user?.id;
           if (!uid) return;
-          await supabase.from("notifications").insert({
+          const { error: insertErr } = await supabase.from("notifications").insert({
             user_id: uid,
             title,
             message: description,
@@ -467,9 +487,16 @@ export const LushaIntelligenceView = () => {
               history_id: historyId ?? null,
             } as unknown as never,
           });
-          queryClient.invalidateQueries({ queryKey: ["notifications"] });
-          queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
-        } catch { /* ignore */ }
+          if (insertErr) {
+            // Loga em dev para diagnosticar RLS / schema drift silenciosos
+            console.warn("[oraculo] falha ao gravar notificação:", insertErr.message);
+          } else {
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+            queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+          }
+        } catch (e) {
+          console.warn("[oraculo] exceção ao gravar notificação:", (e as Error).message);
+        }
       }
     },
     [queryClient, notifPrefs, clearRepeatTimer],
@@ -612,9 +639,18 @@ export const LushaIntelligenceView = () => {
   const normalizeDomain = useCallback((input: string): string => {
     let v = (input ?? "").trim().toLowerCase();
     if (!v) return "";
-    // remove protocolo, barras finais, caminho e query
+    // remove protocolo, www, path, query e hash
     v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
     v = v.split("/")[0].split("?")[0].split("#")[0];
+    // Converte IDN (ex.: "café.com.br") para punycode ("xn--caf-dma.com.br")
+    // usando o parser nativo do navegador — cobre unicode/emoji domains.
+    try {
+      if (/[^\x00-\x7f]/.test(v)) {
+        const u = new URL(`http://${v}`);
+        // u.hostname já vem em ASCII/punycode
+        if (u.hostname) v = u.hostname.toLowerCase();
+      }
+    } catch { /* mantém v como está — validação abaixo pegará o erro */ }
     return v;
   }, []);
 
@@ -630,7 +666,7 @@ export const LushaIntelligenceView = () => {
     if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
       return { value, error: "Redes sociais não são aceitas — informe o domínio do site oficial." };
     }
-    // domínio válido: pelo menos um ponto e caracteres permitidos
+    // Aceita rótulos ASCII e punycode (xn--…). IDN já foi convertido no normalize.
     if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(value)) {
       return { value, error: "Formato inválido. Use apenas o domínio (ex.: natura.com.br)." };
     }
@@ -641,16 +677,23 @@ export const LushaIntelligenceView = () => {
   const normalizeLinkedinCompanyUrl = useCallback((input: string): string => {
     let v = (input ?? "").trim();
     if (!v) return "";
-    v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
-    // remove query/hash/trailing slash
+    // Remove protocolo + www + qualquer subdomínio locale (br., pt., de., www2., etc.)
+    v = v.replace(/^https?:\/\//i, "");
+    v = v.replace(/^([a-z0-9-]+\.)*(?=linkedin\.com\/)/i, "");
+    // Remove query/hash/trailing slash
     v = v.split("?")[0].split("#")[0].replace(/\/+$/, "");
+    // Se o usuário colou um path extra tipo /company/natura/about/posts,
+    // reduz para linkedin.com/<tipo>/<slug>
+    const m = v.match(/^linkedin\.com\/(company|school|showcase)\/([^/?#]+)/i);
+    if (m) v = `linkedin.com/${m[1].toLowerCase()}/${m[2]}`;
     return v.toLowerCase();
   }, []);
 
   const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeLinkedinCompanyUrl(raw);
     if (!value) return { value, error: "Informe a URL da página da empresa no LinkedIn." };
-    if (!/^linkedin\.com\/(company|school|showcase)\/[a-z0-9\-_.%]+\/?$/i.test(value)) {
+    // Aceita slugs unicode (empresas com nomes acentuados) além de ASCII
+    if (!/^linkedin\.com\/(company|school|showcase)\/[\p{L}\p{N}\-_.%]+$/u.test(value)) {
       return {
         value,
         error: "Use a URL da página da empresa no LinkedIn (ex.: linkedin.com/company/natura).",
@@ -786,45 +829,65 @@ export const LushaIntelligenceView = () => {
       };
 
       try {
-        const invokePromise = supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
-          body: {
+        // ── Chamada com AbortSignal REAL: cancela a requisição HTTP no servidor ──
+        // Usamos fetch direto (em vez de supabase.functions.invoke) porque a v2
+        // do client não propaga o signal para o transport subjacente de forma
+        // confiável, o que fazia o "cancelar" ser apenas cosmético.
+        const { data: sess } = await supabase.auth.getSession();
+        const jwt = sess?.session?.access_token;
+        if (!jwt) throw new Error("Sessão expirada. Faça login novamente.");
+
+        const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/lusha-decision-makers`;
+        const resp = await fetch(fnUrl, {
+          method: "POST",
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({
             domains: [d.value],
             company_linkedin_url: l.value || null,
-          },
+          }),
         });
 
-        // Corrida entre a invocação e o cancelamento
-        const abortPromise = new Promise<never>((_, reject) => {
-          controller.signal.addEventListener("abort", () => {
-            const err = new Error("cancelled_by_user");
-            (err as unknown as { cancelled: boolean }).cancelled = true;
-            reject(err);
-          }, { once: true });
-        });
-
-        const { data, error } = await Promise.race([invokePromise, abortPromise]) as Awaited<typeof invokePromise>;
-
-        if (error) {
+        if (!resp.ok) {
           let retryAfter: number | null = null;
           let friendly: string | null = null;
-          const ctx = (error as unknown as { context?: Response }).context;
-          if (ctx && typeof ctx.json === "function") {
-            try {
-              const body = await ctx.clone().json();
-              if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
-              if (body?.error?.code === "lusha_rate_limited") friendly = body?.error?.message ?? null;
-              else if (body?.error?.message) friendly = body.error.message;
-            } catch { /* ignora parse */ }
-          }
-          if (retryAfter != null || /rate|429/i.test(error.message ?? "")) {
+          try {
+            const body = await resp.clone().json();
+            if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
+            if (body?.error?.code === "lusha_rate_limited") friendly = body?.error?.message ?? null;
+            else if (body?.error?.message) friendly = body.error.message;
+            else if (body?.error) friendly = typeof body.error === "string" ? body.error : null;
+          } catch { /* ignora parse */ }
+
+          if (resp.status === 429 || retryAfter != null) {
             const wait = retryAfter ?? 60;
             const err = new Error(friendly ?? `Limite de requisições atingido. Aguarde ${wait}s antes de tentar novamente.`);
             (err as unknown as { rateLimit: number }).rateLimit = wait;
             throw err;
           }
-          throw friendly ? new Error(friendly) : error;
+          if (resp.status === 401) {
+            throw new Error(friendly ?? "Sessão expirada. Faça login novamente.");
+          }
+          if (resp.status === 503) {
+            throw new Error(friendly ?? "Serviço temporariamente indisponível.");
+          }
+          throw new Error(friendly ?? `Erro ${resp.status} ao consultar o Oráculo.`);
         }
-        return data as DMResponse;
+
+        const data = (await resp.json()) as DMResponse;
+        return data;
+      } catch (err) {
+        // AbortError do fetch → normaliza para o mesmo formato do cancel
+        if ((err as { name?: string })?.name === "AbortError") {
+          const cancelErr = new Error("cancelled_by_user");
+          (cancelErr as unknown as { cancelled: boolean }).cancelled = true;
+          throw cancelErr;
+        }
+        throw err;
       } finally {
         cleanup();
         abortRef.current = null;
