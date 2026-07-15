@@ -695,6 +695,8 @@ export const LushaIntelligenceView = () => {
           message: "Cancelada pelo usuário",
           startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
         });
+        const elapsedCancel = searchStartedAtRef.current ? Date.now() - searchStartedAtRef.current : 0;
+        void notifyLongSearch({ domain, status: "cancelled", elapsedMs: elapsedCancel });
         currentHistoryIdRef.current = null;
         toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
         return;
@@ -703,13 +705,16 @@ export const LushaIntelligenceView = () => {
       setSearchPhase("failed");
       setSearchProgress(100);
       setSearchStatusMsg(msg);
+      const elapsedFail = searchStartedAtRef.current ? Date.now() - searchStartedAtRef.current : 0;
       updateHistory(currentHistoryIdRef.current, {
         status: "failed",
         total: 0,
         message: msg,
         startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
+      void notifyLongSearch({ domain, status: "failed", elapsedMs: elapsedFail, message: msg });
       currentHistoryIdRef.current = null;
+
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
