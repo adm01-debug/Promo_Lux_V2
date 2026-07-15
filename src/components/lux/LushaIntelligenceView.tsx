@@ -2291,6 +2291,140 @@ export const LushaIntelligenceView = () => {
         </TabsContent>
       </Tabs>
 
+      {/* Preferências de notificações */}
+      <Dialog open={prefsOpen} onOpenChange={setPrefsOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Bell className="h-4 w-4 text-primary" /> Preferências de notificações
+            </DialogTitle>
+            <DialogDescription>
+              Controle como você é avisado quando uma busca termina.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            {/* Canais */}
+            <div className="space-y-3">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Canais</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Notificação nativa do navegador</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Alerta do sistema operacional {browserNotifPermission !== "granted" && "(permissão necessária)"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {notifPrefs.nativeEnabled && browserNotifPermission !== "granted" && (
+                    <Button type="button" size="sm" variant="outline" className="h-7 text-xs" onClick={requestBrowserNotifPermission}>
+                      Permitir
+                    </Button>
+                  )}
+                  <Switch
+                    checked={notifPrefs.nativeEnabled}
+                    onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, nativeEnabled: v }))}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Centro de notificações do app</Label>
+                  <p className="text-xs text-muted-foreground">Persistido no seu histórico entre dispositivos.</p>
+                </div>
+                <Switch
+                  checked={notifPrefs.inAppEnabled}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, inAppEnabled: v }))}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Apenas quando a aba estiver oculta</Label>
+                  <p className="text-xs text-muted-foreground">Silencia notificações se você estiver com a página em foco.</p>
+                </div>
+                <Switch
+                  checked={notifPrefs.hiddenTabOnly}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, hiddenTabOnly: v }))}
+                />
+              </div>
+            </div>
+
+            {/* Eventos */}
+            <div className="space-y-3 border-t border-border/50 pt-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Eventos</p>
+              <div className="flex items-center justify-between gap-3">
+                <Label className="text-sm">Notificar em falhas</Label>
+                <Switch
+                  checked={notifPrefs.notifyOnFailure}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, notifyOnFailure: v }))}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <Label className="text-sm">Notificar em cancelamentos</Label>
+                <Switch
+                  checked={notifPrefs.notifyOnCancel}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, notifyOnCancel: v }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm">Considerar "longa" a partir de (segundos)</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={600}
+                  value={Math.round(notifPrefs.thresholdMs / 1000)}
+                  onChange={(e) => {
+                    const s = Math.max(1, Math.min(600, Number(e.target.value) || 15));
+                    setNotifPrefs((p) => ({ ...p, thresholdMs: s * 1000 }));
+                  }}
+                  className="h-8"
+                />
+              </div>
+            </div>
+
+            {/* Repetição */}
+            <div className="space-y-3 border-t border-border/50 pt-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Repetição</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Repetir até você focar a aba</Label>
+                  <p className="text-xs text-muted-foreground">Reenvia a notificação nativa em intervalos regulares.</p>
+                </div>
+                <Switch
+                  checked={notifPrefs.repeatUntilFocus}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, repeatUntilFocus: v }))}
+                />
+              </div>
+              {notifPrefs.repeatUntilFocus && (
+                <div className="space-y-1">
+                  <Label className="text-sm">Intervalo (segundos)</Label>
+                  <Input
+                    type="number"
+                    min={5}
+                    max={600}
+                    value={Math.round(notifPrefs.repeatIntervalMs / 1000)}
+                    onChange={(e) => {
+                      const s = Math.max(5, Math.min(600, Number(e.target.value) || 30));
+                      setNotifPrefs((p) => ({ ...p, repeatIntervalMs: s * 1000 }));
+                    }}
+                    className="h-8"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-3 pt-2 border-t border-border/50">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setNotifPrefs(DEFAULT_NOTIF_PREFS)}
+            >
+              Restaurar padrões
+            </Button>
+            <Button type="button" size="sm" onClick={() => setPrefsOpen(false)}>Concluído</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={!!detailsModal} onOpenChange={(o) => !o && setDetailsModal(null)}>
         <DialogContent className="max-w-lg">
           {detailsModal && (() => {
