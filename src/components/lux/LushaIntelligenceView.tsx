@@ -435,15 +435,17 @@ export const LushaIntelligenceView = () => {
       };
       fireNative();
 
-      // Repetição até o usuário focar
+      // Repetição até o usuário focar — chave por historyId (fallback: domínio)
+      // para não sobrescrever timers de buscas concorrentes no mesmo domínio.
+      const timerKey = historyId ?? `dom:${d}`;
       if (notifPrefs.repeatUntilFocus && document.hidden) {
-        clearRepeatTimer(d);
+        clearRepeatTimer(timerKey);
         const interval = Math.max(5_000, notifPrefs.repeatIntervalMs);
         const t = setInterval(() => {
-          if (!document.hidden) { clearRepeatTimer(d); return; }
+          if (!document.hidden) { clearRepeatTimer(timerKey); return; }
           fireNative();
         }, interval);
-        repeatTimersRef.current.set(d, t);
+        repeatTimersRef.current.set(timerKey, t);
       }
 
       // Centro de notificações do app
