@@ -180,6 +180,7 @@ export const LushaIntelligenceView = () => {
       setDmRequestId(data.requestId ?? null);
       setRevealedData({});
       setRevealingIds(new Set());
+      // Hidratação de dados persistidos ocorre no useEffect abaixo
       toast({
         title: "Decisores encontrados",
         description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -190,6 +191,88 @@ export const LushaIntelligenceView = () => {
       toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
     },
   });
+
+  // ── Hidratação: carrega emails/telefones já persistidos em lusha_contacts ──
+  useEffect(() => {
+    if (!dmResults || dmResults.length === 0) return;
+    const allDMs = dmResults.flatMap((r) => r.decisionMakers);
+    const linkedinUrls = allDMs.map((dm) => dm.linkedin).filter(Boolean);
+    if (linkedinUrls.length === 0) return;
+
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("lusha_contacts")
+        .select("linkedin_url, email, phone_formatted, phone_raw, has_email, has_phone, enrichment_status")
+        .in("linkedin_url", linkedinUrls);
+      if (cancelled || error || !data) return;
+
+      const byUrl = new Map(data.map((row) => [row.linkedin_url, row]));
+      const hydrated: Record<string, { emails: { email: string; type: string | null }[]; phones: { number: string; type: string | null }[]; error?: string }> = {};
+      for (const dm of allDMs) {
+        const row = byUrl.get(dm.linkedin);
+        if (!row) continue;
+        const emails = row.email ? [{ email: row.email, type: null }] : [];
+        const phones = row.phone_formatted || row.phone_raw
+          ? [{ number: row.phone_formatted ?? row.phone_raw!, type: null }]
+          : [];
+        if (emails.length > 0 || phones.length > 0) {
+          hydrated[dm.id] = { emails, phones };
+        }
+      }
+      if (Object.keys(hydrated).length > 0) {
+        setRevealedData((prev) => ({ ...hydrated, ...prev }));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [dmResults]);
+
+  // ── Tradução de códigos de erro conhecidos do Lusha para PT-BR ──
+  const translateRevealError = useCallback((raw: string | undefined): string => {
+    if (!raw) return "Falha desconhecida ao revelar.";
+    const code = raw.toLowerCase();
+    if (code.includes("not_found") || code.includes("no_data")) return "Sem dados disponíveis para este decisor.";
+    if (code.includes("credit")) return "Sem créditos Lusha suficientes para revelar.";
+    if (code.includes("rate") || code.includes("429")) return "Limite de requisições atingido — tente novamente em instantes.";
+    if (code.includes("unauthor") || code.includes("401") || code.includes("403")) return "Chave da API Lusha inválida ou sem permissão.";
+    if (code.includes("timeout")) return "Tempo esgotado ao consultar o Lusha.";
+    if (code.includes("network") || code.includes("fetch")) return "Falha de rede ao contatar o Lusha.";
+    if (code.includes("invalid")) return "Requisição inválida (contactId ou requestId expirado).";
+    return raw;
+  }, []);
+
+  // ── Persiste email/telefone revelado em lusha_contacts (por linkedin_url) ──
+  const persistRevealed = useCallback(async (dm: DecisionMaker, entry: {
+    emailAddresses?: { email: string; type: string | null }[];
+    phoneNumbers?: { number: string; type: string | null }[];
+  }) => {
+    if (!dm.linkedin) return;
+    const email = entry.emailAddresses?.[0]?.email ?? null;
+    const phone = entry.phoneNumbers?.[0]?.number ?? null;
+    if (!email && !phone) return;
+    const update: Record<string, unknown> = {
+      enrichment_status: "found",
+      updated_at: new Date().toISOString(),
+    };
+    if (email) { update.email = email; update.email_source = "lusha_reveal"; update.has_email = true; }
+    if (phone) {
+      update.phone_formatted = phone;
+      update.phone_raw = phone;
+      update.phone_source = "lusha_reveal";
+      update.has_phone = true;
+    }
+    if (entry.emailAddresses?.length) update.raw_leadcontact_email = entry.emailAddresses;
+    if (entry.phoneNumbers?.length) update.raw_leadcontact_phone = entry.phoneNumbers;
+
+    const { error } = await supabase
+      .from("lusha_contacts")
+      .update(update)
+      .eq("linkedin_url", dm.linkedin);
+    if (error) {
+      console.warn("[lusha-reveal] falha ao persistir contato", error.message);
+    }
+  }, []);
+
 
   const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
 
