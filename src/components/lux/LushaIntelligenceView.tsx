@@ -1689,12 +1689,31 @@ export const LushaIntelligenceView = () => {
                 </div>
               </div>
 
+              {(historyQ || historyStatus !== "all" || historyFrom || historyTo) && (
+                <div className="flex items-center justify-between gap-2 px-3 py-1.5 border-b border-border/40 bg-muted/10 text-xs text-muted-foreground">
+                  <span>
+                    Mostrando <strong className="text-foreground">{filteredHistory.length}</strong> de {dmHistory.length}
+                    {" · "}filtros ativos
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 text-xs"
+                    onClick={() => { setHistoryQ(""); setHistoryStatus("all"); setHistoryFrom(""); setHistoryTo(""); }}
+                  >
+                    <X className="h-3 w-3 mr-1" /> Limpar filtros
+                  </Button>
+                </div>
+              )}
+
               <ScrollArea className="max-h-64">
                 {filteredHistory.length === 0 ? (
                   <div className="px-3 py-6 text-center text-xs text-muted-foreground">
                     Nenhum item corresponde aos filtros atuais.
                   </div>
                 ) : (
+
                   <ul className="divide-y divide-border/40">
                     {filteredHistory.map((h) => {
                       const badge =
