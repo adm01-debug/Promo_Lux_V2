@@ -271,6 +271,47 @@ serve(async (req) => {
 
       if (!lushaResp.ok) {
         const errText = await lushaResp.text().catch(() => "");
+        // ── Rate limit dedicado: extrai Retry-After (segundos ou HTTP date) ──
+        if (lushaResp.status === 429) {
+          const retryAfterHeader = lushaResp.headers.get("retry-after");
+          let retryAfterSeconds: number | null = null;
+          if (retryAfterHeader) {
+            const asInt = parseInt(retryAfterHeader, 10);
+            if (Number.isFinite(asInt) && asInt >= 0) {
+              retryAfterSeconds = asInt;
+            } else {
+              const asDate = Date.parse(retryAfterHeader);
+              if (!Number.isNaN(asDate)) {
+                retryAfterSeconds = Math.max(0, Math.ceil((asDate - Date.now()) / 1000));
+              }
+            }
+          }
+          if (retryAfterSeconds == null) retryAfterSeconds = 60; // fallback amigável
+          log("warn", correlationId, "lusha_rate_limited", {
+            status: 429,
+            retry_after_seconds: retryAfterSeconds,
+            detail: errText.slice(0, 300),
+          });
+          return new Response(
+            JSON.stringify({
+              error: {
+                code: "lusha_rate_limited",
+                message: `Limite de requisições da Lusha atingido. Aguarde ${retryAfterSeconds}s antes de tentar novamente.`,
+                detail: { retry_after_seconds: retryAfterSeconds, raw: errText.slice(0, 300) },
+              },
+              retry_after_seconds: retryAfterSeconds,
+              correlation_id: correlationId,
+            }),
+            {
+              status: 429,
+              headers: {
+                ...corsHeaders,
+                "Content-Type": "application/json",
+                "Retry-After": String(retryAfterSeconds),
+              },
+            }
+          );
+        }
         log("error", correlationId, "lusha_error_status", {
           status: lushaResp.status,
           detail: errText.slice(0, 500),

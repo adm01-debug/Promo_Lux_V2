@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2 } from "lucide-react";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -139,6 +140,14 @@ export const LushaIntelligenceView = () => {
     dm: DecisionMaker;
   } | null>(null);
 
+  // ── Progresso da busca por domínio (fases visuais) ──
+  type SearchPhase = "idle" | "queued" | "processing" | "done" | "failed";
+  const [searchPhase, setSearchPhase] = useState<SearchPhase>("idle");
+  const [searchProgress, setSearchProgress] = useState(0);
+  const [searchStatusMsg, setSearchStatusMsg] = useState<string>("");
+  const [rateLimitCountdown, setRateLimitCountdown] = useState<number | null>(null);
+  const [copiedLinkedin, setCopiedLinkedin] = useState(false);
+
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
   const EXAMPLE_LINKEDIN = "linkedin.com/company/natura";
@@ -232,6 +241,15 @@ export const LushaIntelligenceView = () => {
     },
   });
 
+  // ── Countdown do rate limit (decrementa 1s a 1s) ──
+  useEffect(() => {
+    if (rateLimitCountdown == null || rateLimitCountdown <= 0) return;
+    const id = setInterval(() => {
+      setRateLimitCountdown((prev) => (prev == null ? null : prev <= 1 ? null : prev - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [rateLimitCountdown]);
+
   const dmMutation = useMutation({
     mutationFn: async () => {
       const d = validateDomain(domain);
@@ -240,25 +258,69 @@ export const LushaIntelligenceView = () => {
       setLinkedinError(l.error);
       if (d.error) throw new Error(d.error);
       if (l.error) throw new Error(l.error);
-      // aplica normalização de volta ao estado (feedback visual)
       if (d.value !== domain) setDomain(d.value);
       if (l.value !== linkedinCompanyUrl) setLinkedinCompanyUrl(l.value);
 
-      const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
-        body: {
-          domains: [d.value],
-          company_linkedin_url: l.value || null,
-        },
-      });
-      if (error) throw error;
-      return data as DMResponse;
+      // Fase 1: em fila
+      setSearchPhase("queued");
+      setSearchProgress(10);
+      setSearchStatusMsg("Enviando requisição...");
+
+      // Fase 2: processando (com progresso simulado enquanto aguarda a Lusha)
+      const processingTimer = setTimeout(() => {
+        setSearchPhase("processing");
+        setSearchStatusMsg("Consultando Lusha Decision Makers V3...");
+      }, 400);
+
+      const progressTimer = setInterval(() => {
+        setSearchProgress((p) => (p < 88 ? p + Math.max(1, Math.round((90 - p) / 12)) : p));
+      }, 350);
+
+      try {
+        const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
+          body: {
+            domains: [d.value],
+            company_linkedin_url: l.value || null,
+          },
+        });
+        if (error) {
+          // supabase-js encapsula o body em error.context (Response). Extrai retry_after quando presente.
+          let retryAfter: number | null = null;
+          let friendly: string | null = null;
+          const ctx = (error as unknown as { context?: Response }).context;
+          if (ctx && typeof ctx.json === "function") {
+            try {
+              const body = await ctx.clone().json();
+              if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
+              if (body?.error?.code === "lusha_rate_limited") {
+                friendly = body?.error?.message ?? null;
+              } else if (body?.error?.message) {
+                friendly = body.error.message;
+              }
+            } catch { /* ignora parse */ }
+          }
+          if (retryAfter != null || /rate|429/i.test(error.message ?? "")) {
+            const wait = retryAfter ?? 60;
+            const err = new Error(friendly ?? `Limite de requisições atingido. Aguarde ${wait}s antes de tentar novamente.`);
+            (err as unknown as { rateLimit: number }).rateLimit = wait;
+            throw err;
+          }
+          throw friendly ? new Error(friendly) : error;
+        }
+        return data as DMResponse;
+      } finally {
+        clearTimeout(processingTimer);
+        clearInterval(progressTimer);
+      }
     },
     onSuccess: (data) => {
       setDmResults(data.results ?? []);
       setDmRequestId(data.requestId ?? null);
       setRevealedData({});
       setRevealingIds(new Set());
-      // Hidratação de dados persistidos ocorre no useEffect abaixo
+      setSearchPhase("done");
+      setSearchProgress(100);
+      setSearchStatusMsg(`${data.totalDecisionMakers} decisor(es) localizado(s).`);
       toast({
         title: "Decisores encontrados",
         description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -266,7 +328,20 @@ export const LushaIntelligenceView = () => {
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
-      toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
+      const wait = (err as { rateLimit?: number })?.rateLimit;
+      setSearchPhase("failed");
+      setSearchProgress(100);
+      setSearchStatusMsg(msg);
+      if (wait) {
+        setRateLimitCountdown(wait);
+        toast({
+          title: "Limite de requisições da Lusha",
+          description: `${msg} Você poderá tentar novamente em ${wait}s.`,
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
+      }
     },
   });
 
@@ -364,12 +439,13 @@ export const LushaIntelligenceView = () => {
 
   const canSearchDomain = useMemo(() => {
     if (dmMutation.isPending) return false;
+    if (rateLimitCountdown != null && rateLimitCountdown > 0) return false;
     const d = validateDomain(domain);
     if (d.error) return false;
     const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
     if (l.error) return false;
     return true;
-  }, [domain, linkedinCompanyUrl, dmMutation.isPending, validateDomain, validateLinkedinCompanyUrl]);
+  }, [domain, linkedinCompanyUrl, dmMutation.isPending, rateLimitCountdown, validateDomain, validateLinkedinCompanyUrl]);
 
   async function handleReveal(dm: DecisionMaker) {
     if (!dmRequestId) {
@@ -701,21 +777,45 @@ export const LushaIntelligenceView = () => {
                 {(() => {
                   const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
                   const isValid = !!value && !error;
+                  const fullUrl = isValid ? `https://${value}` : "";
                   return (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="default"
-                      disabled={!isValid}
-                      onClick={() => {
-                        if (isValid) window.open(`https://${value}`, "_blank", "noopener,noreferrer");
-                      }}
-                      title={isValid ? "Abrir página no LinkedIn" : "Informe uma URL válida do LinkedIn"}
-                      className="shrink-0"
-                    >
-                      <ExternalLink className="h-4 w-4 mr-1" />
-                      Abrir LinkedIn
-                    </Button>
+                    <>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        disabled={!isValid}
+                        onClick={async () => {
+                          if (!isValid) return;
+                          try {
+                            await navigator.clipboard.writeText(fullUrl);
+                            setCopiedLinkedin(true);
+                            toast({ title: "Link copiado", description: fullUrl });
+                            setTimeout(() => setCopiedLinkedin(false), 1500);
+                          } catch {
+                            toast({ title: "Falha ao copiar", description: "Copie manualmente.", variant: "destructive" });
+                          }
+                        }}
+                        title={isValid ? "Copiar link do LinkedIn" : "Informe uma URL válida do LinkedIn"}
+                        className="shrink-0"
+                      >
+                        {copiedLinkedin ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="default"
+                        disabled={!isValid}
+                        onClick={() => {
+                          if (isValid) window.open(fullUrl, "_blank", "noopener,noreferrer");
+                        }}
+                        title={isValid ? "Abrir página no LinkedIn" : "Informe uma URL válida do LinkedIn"}
+                        className="shrink-0"
+                      >
+                        <ExternalLink className="h-4 w-4 mr-1" />
+                        Abrir LinkedIn
+                      </Button>
+                    </>
                   );
                 })()}
               </div>
@@ -744,6 +844,11 @@ export const LushaIntelligenceView = () => {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Buscando...
                   </>
+                ) : rateLimitCountdown != null && rateLimitCountdown > 0 ? (
+                  <>
+                    <Clock className="mr-2 h-4 w-4" />
+                    Aguarde {rateLimitCountdown}s
+                  </>
                 ) : (
                   <>
                     <Search className="mr-2 h-4 w-4" />
@@ -754,6 +859,51 @@ export const LushaIntelligenceView = () => {
             </div>
           </div>
 
+          {/* ── Indicador de progresso e status da busca ── */}
+          {searchPhase !== "idle" && (
+            <div
+              role="status"
+              aria-live="polite"
+              className={`rounded-lg border p-3 space-y-2 ${
+                searchPhase === "failed"
+                  ? "border-destructive/40 bg-destructive/5"
+                  : searchPhase === "done"
+                  ? "border-emerald-500/30 bg-emerald-500/5"
+                  : "border-primary/30 bg-primary/5"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3 text-sm">
+                <div className="flex items-center gap-2 font-medium">
+                  {searchPhase === "queued" && (<><Clock className="h-4 w-4 text-primary" /> Em fila</>)}
+                  {searchPhase === "processing" && (<><Loader2 className="h-4 w-4 animate-spin text-primary" /> Processando</>)}
+                  {searchPhase === "done" && (<><CheckCircle2 className="h-4 w-4 text-emerald-500" /> Concluído</>)}
+                  {searchPhase === "failed" && (<><XCircle className="h-4 w-4 text-destructive" /> Falhou</>)}
+                </div>
+                <span className="text-xs text-muted-foreground tabular-nums">{Math.round(searchProgress)}%</span>
+              </div>
+              <Progress
+                value={searchProgress}
+                className={
+                  searchPhase === "failed"
+                    ? "[&>div]:bg-destructive"
+                    : searchPhase === "done"
+                    ? "[&>div]:bg-emerald-500"
+                    : ""
+                }
+              />
+              {searchStatusMsg && (
+                <p className={`text-xs ${searchPhase === "failed" ? "text-destructive" : "text-muted-foreground"}`}>
+                  {searchStatusMsg}
+                </p>
+              )}
+              {rateLimitCountdown != null && rateLimitCountdown > 0 && (
+                <div className="flex items-center gap-2 text-xs text-amber-500">
+                  <Clock className="h-3 w-3" />
+                  <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite da API Lusha).</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {dmMutation.isPending && (
             <div className="space-y-2">
