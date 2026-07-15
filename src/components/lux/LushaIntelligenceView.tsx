@@ -621,9 +621,18 @@ export const LushaIntelligenceView = () => {
   const normalizeDomain = useCallback((input: string): string => {
     let v = (input ?? "").trim().toLowerCase();
     if (!v) return "";
-    // remove protocolo, barras finais, caminho e query
+    // remove protocolo, www, path, query e hash
     v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
     v = v.split("/")[0].split("?")[0].split("#")[0];
+    // Converte IDN (ex.: "café.com.br") para punycode ("xn--caf-dma.com.br")
+    // usando o parser nativo do navegador — cobre unicode/emoji domains.
+    try {
+      if (/[^\x00-\x7f]/.test(v)) {
+        const u = new URL(`http://${v}`);
+        // u.hostname já vem em ASCII/punycode
+        if (u.hostname) v = u.hostname.toLowerCase();
+      }
+    } catch { /* mantém v como está — validação abaixo pegará o erro */ }
     return v;
   }, []);
 
@@ -639,7 +648,7 @@ export const LushaIntelligenceView = () => {
     if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
       return { value, error: "Redes sociais não são aceitas — informe o domínio do site oficial." };
     }
-    // domínio válido: pelo menos um ponto e caracteres permitidos
+    // Aceita rótulos ASCII e punycode (xn--…). IDN já foi convertido no normalize.
     if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(value)) {
       return { value, error: "Formato inválido. Use apenas o domínio (ex.: natura.com.br)." };
     }
