@@ -3220,7 +3220,26 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      oracle_v2_health: {
+        Row: {
+          errors_24h: number | null
+          events_24h: number | null
+          last_event_at: string | null
+          organization_id: string | null
+          source: string | null
+          success_24h: number | null
+          success_rate_pct: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_execution_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
