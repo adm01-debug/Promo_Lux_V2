@@ -40,7 +40,7 @@ async function sleep(ms: number) {
  */
 export async function fetchAllCookies(): Promise<Map<ServicoCookie, VaultCookie>> {
   const externalUrl = Deno.env.get("SUPABASE_EXTERNAL_URL") ?? "https://supabase.atomicabr.com.br";
-  const externalKey = Deno.env.get("SUPABASE_EXTERNAL_ANON_KEY");
+  const externalKey = Deno.env.get("EXTERNAL_VAULT_ANON_KEY") ?? Deno.env.get("SUPABASE_EXTERNAL_ANON_KEY");
   if (!externalKey) {
     throw new CookieVaultUnavailable("SUPABASE_EXTERNAL_ANON_KEY ausente");
   }
