@@ -291,6 +291,14 @@ export const LushaIntelligenceView = () => {
     return () => clearInterval(id);
   }, [rateLimitCountdown]);
 
+  // ── Cancela a busca em andamento ──
+  const cancelSearch = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+  }, []);
+
   const dmMutation = useMutation({
     mutationFn: async () => {
       const d = validateDomain(domain);
@@ -302,30 +310,73 @@ export const LushaIntelligenceView = () => {
       if (d.value !== domain) setDomain(d.value);
       if (l.value !== linkedinCompanyUrl) setLinkedinCompanyUrl(l.value);
 
-      // Fase 1: em fila
+      // Setup abort + timing
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const startedAt = Date.now();
+      searchStartedAtRef.current = startedAt;
+      setSearchElapsedMs(0);
+
+      // Sequência de fases granulares — atualiza em tempo real enquanto a Lusha responde
       setSearchPhase("queued");
-      setSearchProgress(10);
-      setSearchStatusMsg("Enviando requisição...");
+      setSearchProgress(8);
+      setSearchStatusMsg("Enfileirando requisição...");
 
-      // Fase 2: processando (com progresso simulado enquanto aguarda a Lusha)
-      const processingTimer = setTimeout(() => {
+      const phaseTimers: number[] = [];
+      phaseTimers.push(window.setTimeout(() => {
         setSearchPhase("processing");
-        setSearchStatusMsg("Consultando Lusha Decision Makers V3...");
-      }, 400);
+        setSearchStatusMsg("Autenticando com a API Lusha...");
+        setSearchProgress(22);
+      }, 250));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Resolvendo empresa pelo domínio...");
+        setSearchProgress(38);
+      }, 900));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Buscando decisores (Decision Makers V3)...");
+        setSearchProgress(55);
+      }, 2200));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Recebendo resposta e normalizando dados...");
+        setSearchProgress(72);
+      }, 4500));
+      phaseTimers.push(window.setTimeout(() => {
+        setSearchStatusMsg("Persistindo contatos no banco...");
+        setSearchProgress(85);
+      }, 7500));
 
-      const progressTimer = setInterval(() => {
-        setSearchProgress((p) => (p < 88 ? p + Math.max(1, Math.round((90 - p) / 12)) : p));
-      }, 350);
+      const progressTimer = window.setInterval(() => {
+        setSearchProgress((p) => (p < 92 ? p + Math.max(0.5, (93 - p) / 20) : p));
+        if (searchStartedAtRef.current != null) {
+          setSearchElapsedMs(Date.now() - searchStartedAtRef.current);
+        }
+      }, 200);
+
+      const cleanup = () => {
+        phaseTimers.forEach(clearTimeout);
+        clearInterval(progressTimer);
+      };
 
       try {
-        const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
+        const invokePromise = supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
           body: {
             domains: [d.value],
             company_linkedin_url: l.value || null,
           },
         });
+
+        // Corrida entre a invocação e o cancelamento
+        const abortPromise = new Promise<never>((_, reject) => {
+          controller.signal.addEventListener("abort", () => {
+            const err = new Error("cancelled_by_user");
+            (err as unknown as { cancelled: boolean }).cancelled = true;
+            reject(err);
+          }, { once: true });
+        });
+
+        const { data, error } = await Promise.race([invokePromise, abortPromise]) as Awaited<typeof invokePromise>;
+
         if (error) {
-          // supabase-js encapsula o body em error.context (Response). Extrai retry_after quando presente.
           let retryAfter: number | null = null;
           let friendly: string | null = null;
           const ctx = (error as unknown as { context?: Response }).context;
@@ -333,11 +384,8 @@ export const LushaIntelligenceView = () => {
             try {
               const body = await ctx.clone().json();
               if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
-              if (body?.error?.code === "lusha_rate_limited") {
-                friendly = body?.error?.message ?? null;
-              } else if (body?.error?.message) {
-                friendly = body.error.message;
-              }
+              if (body?.error?.code === "lusha_rate_limited") friendly = body?.error?.message ?? null;
+              else if (body?.error?.message) friendly = body.error.message;
             } catch { /* ignora parse */ }
           }
           if (retryAfter != null || /rate|429/i.test(error.message ?? "")) {
@@ -350,8 +398,8 @@ export const LushaIntelligenceView = () => {
         }
         return data as DMResponse;
       } finally {
-        clearTimeout(processingTimer);
-        clearInterval(progressTimer);
+        cleanup();
+        abortRef.current = null;
       }
     },
     onSuccess: (data) => {
@@ -361,18 +409,52 @@ export const LushaIntelligenceView = () => {
       setRevealingIds(new Set());
       setSearchPhase("done");
       setSearchProgress(100);
-      setSearchStatusMsg(`${data.totalDecisionMakers} decisor(es) localizado(s).`);
+      const total = data.totalDecisionMakers ?? 0;
+      setSearchStatusMsg(`${total} decisor(es) localizado(s).`);
+      pushHistory({
+        domain,
+        linkedin: linkedinCompanyUrl || null,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+        status: "done",
+        total,
+      });
       toast({
         title: "Decisores encontrados",
-        description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
+        description: `${total} decisor(es) localizado(s) — 0 créditos consumidos.`,
       });
     },
     onError: (err: unknown) => {
+      const cancelled = (err as { cancelled?: boolean })?.cancelled === true;
       const msg = err instanceof Error ? err.message : String(err);
       const wait = (err as { rateLimit?: number })?.rateLimit;
+
+      if (cancelled) {
+        setSearchPhase("cancelled");
+        setSearchProgress(100);
+        setSearchStatusMsg("Busca cancelada pelo usuário.");
+        pushHistory({
+          domain,
+          linkedin: linkedinCompanyUrl || null,
+          startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+          status: "cancelled",
+          total: 0,
+          message: "Cancelada pelo usuário",
+        });
+        toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
+        return;
+      }
+
       setSearchPhase("failed");
       setSearchProgress(100);
       setSearchStatusMsg(msg);
+      pushHistory({
+        domain,
+        linkedin: linkedinCompanyUrl || null,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+        status: "failed",
+        total: 0,
+        message: msg,
+      });
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
