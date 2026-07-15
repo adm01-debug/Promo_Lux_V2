@@ -695,7 +695,7 @@ export const LushaIntelligenceView = () => {
       const phaseTimers: number[] = [];
       phaseTimers.push(window.setTimeout(() => {
         setSearchPhase("processing");
-        setSearchStatusMsg("Autenticando com a API Lusha...");
+        setSearchStatusMsg("Autenticando com o Oráculo...");
         setSearchProgress(22);
         void updateHistory(currentHistoryIdRef.current, {
           status: "processing",
