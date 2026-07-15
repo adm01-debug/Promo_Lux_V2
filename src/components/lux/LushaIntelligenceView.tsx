@@ -467,11 +467,22 @@ export const LushaIntelligenceView = () => {
       setSearchProgress(8);
       setSearchStatusMsg("Enfileirando requisição...");
 
+      // Registra o evento "queued" no histórico já com id — as fases seguintes
+      // atualizam o mesmo registro para que outros dispositivos acompanhem.
+      currentHistoryIdRef.current = await startHistory({
+        domain: d.value,
+        linkedin: l.value || null,
+      });
+
       const phaseTimers: number[] = [];
       phaseTimers.push(window.setTimeout(() => {
         setSearchPhase("processing");
         setSearchStatusMsg("Autenticando com a API Lusha...");
         setSearchProgress(22);
+        void updateHistory(currentHistoryIdRef.current, {
+          status: "processing",
+          startedAt: new Date(startedAt).toISOString(),
+        });
       }, 250));
       phaseTimers.push(window.setTimeout(() => {
         setSearchStatusMsg("Resolvendo empresa pelo domínio...");
