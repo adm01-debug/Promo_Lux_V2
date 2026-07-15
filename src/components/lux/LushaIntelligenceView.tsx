@@ -18,6 +18,10 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
