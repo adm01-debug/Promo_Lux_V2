@@ -838,7 +838,7 @@ export const LushaIntelligenceView = () => {
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
-          title: "Limite de requisições da Lusha",
+          title: "Limite de requisições do Oráculo",
           description: `${msg} Você poderá tentar novamente em ${wait}s.`,
           variant: "destructive",
         });
