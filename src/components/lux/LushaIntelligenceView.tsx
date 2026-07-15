@@ -7,6 +7,7 @@ import { downloadCSV } from "@/lib/exportCSV";
 import { filterHistory, formatDurationMs, findRecentDuplicate, buildHistoryCsvRows, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
 import { LushaCookieHealthBanner } from "@/components/lux/lusha/LushaCookieHealthBanner";
 import { OracleV2Panel } from "@/components/lux/lusha/OracleV2Panel";
+import { OracleV2ErrorBoundary } from "@/components/lux/lusha/OracleV2ErrorBoundary";
 import { useFeatureFlag } from "@/hooks/useFeatureFlags";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -2368,7 +2369,9 @@ export const LushaIntelligenceView = () => {
 
         {oracleV2Enabled && (
           <TabsContent value="oracle">
-            <OracleV2Panel />
+            <OracleV2ErrorBoundary>
+              <OracleV2Panel />
+            </OracleV2ErrorBoundary>
           </TabsContent>
         )}
 
