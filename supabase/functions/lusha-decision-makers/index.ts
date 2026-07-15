@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const LUSHA_API_KEY = "07668666-792b-42bd-a933-b16a74bd10cf";
+const LUSHA_API_KEY = Deno.env.get("LUSHA_API_KEY") ?? "";
 const LUSHA_API_URL = "https://api.lusha.com/v3/contacts/decision-makers";
 const FUNCTION_NAME = "lusha-decision-makers";
 
