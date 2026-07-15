@@ -2348,10 +2348,15 @@ export const LushaIntelligenceView = () => {
       </Card>
 
       {/* Resultados / Histórico */}
-      <Tabs value={resultsTab} onValueChange={(v) => setResultsTab(v as "results" | "history")} className="space-y-4">
+      <Tabs value={resultsTab} onValueChange={(v) => setResultsTab(v as "oracle" | "results" | "history")} className="space-y-4">
         <TabsList>
+          {oracleV2Enabled && (
+            <TabsTrigger value="oracle" className="gap-2">
+              <Sparkles className="h-4 w-4" /> Oracle v2 <Badge variant="secondary" className="ml-1">grátis</Badge>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="results" className="gap-2">
-            <Users2 className="h-4 w-4" /> Resultados
+            <Users2 className="h-4 w-4" /> Resultados (Lusha pago)
             {contacts.length > 0 && (
               <Badge variant="secondary" className="ml-1">{contacts.length}</Badge>
             )}
@@ -2360,6 +2365,13 @@ export const LushaIntelligenceView = () => {
             <History className="h-4 w-4" /> Histórico
           </TabsTrigger>
         </TabsList>
+
+        {oracleV2Enabled && (
+          <TabsContent value="oracle">
+            <OracleV2Panel />
+          </TabsContent>
+        )}
+
 
         <TabsContent value="results">
           <Card className="border-border/60 bg-card/60 backdrop-blur-sm">
