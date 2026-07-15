@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
@@ -290,9 +292,56 @@ export const LushaIntelligenceView = () => {
     } catch { /* ignore */ }
   }, [queryClient]);
 
+  // ── Preferências de notificações (persistidas em localStorage) ──
+  type NotifPrefs = {
+    nativeEnabled: boolean;      // notificação nativa do navegador
+    inAppEnabled: boolean;       // grava no centro de notificações do app
+    hiddenTabOnly: boolean;      // só notifica se a aba estiver oculta
+    notifyOnFailure: boolean;    // notificar em falhas
+    notifyOnCancel: boolean;     // notificar em cancelamentos
+    thresholdMs: number;         // duração mínima para considerar "longa"
+    repeatUntilFocus: boolean;   // renotifica a cada N segundos até o usuário focar
+    repeatIntervalMs: number;    // intervalo do repeat
+  };
+  const NOTIF_PREFS_KEY = "lusha-dm:notif-prefs:v1";
+  const DEFAULT_NOTIF_PREFS: NotifPrefs = {
+    nativeEnabled: true,
+    inAppEnabled: true,
+    hiddenTabOnly: false,
+    notifyOnFailure: true,
+    notifyOnCancel: false,
+    thresholdMs: 15_000,
+    repeatUntilFocus: false,
+    repeatIntervalMs: 30_000,
+  };
+  const [notifPrefs, setNotifPrefs] = useState<NotifPrefs>(() => {
+    try {
+      const raw = typeof localStorage !== "undefined" ? localStorage.getItem(NOTIF_PREFS_KEY) : null;
+      if (!raw) return DEFAULT_NOTIF_PREFS;
+      const parsed = JSON.parse(raw) as Partial<NotifPrefs>;
+      return { ...DEFAULT_NOTIF_PREFS, ...parsed };
+    } catch { return DEFAULT_NOTIF_PREFS; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(NOTIF_PREFS_KEY, JSON.stringify(notifPrefs)); } catch { /* ignore */ }
+  }, [notifPrefs]);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+  const repeatTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
+  const clearRepeatTimer = useCallback((key: string) => {
+    const t = repeatTimersRef.current.get(key);
+    if (t) { clearInterval(t); repeatTimersRef.current.delete(key); }
+  }, []);
+  useEffect(() => {
+    const onFocus = () => {
+      for (const [, t] of repeatTimersRef.current) clearInterval(t);
+      repeatTimersRef.current.clear();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) onFocus(); });
+    return () => window.removeEventListener("focus", onFocus);
+  }, []);
+
   // ── Notificações de buscas longas ──
-  // Considera "longa" acima de 15s OU quando a aba está oculta (usuário saiu da tela).
-  const LONG_SEARCH_THRESHOLD_MS = 15_000;
   const [browserNotifPermission, setBrowserNotifPermission] = useState<NotificationPermission>(
     typeof Notification !== "undefined" ? Notification.permission : "denied",
   );
@@ -311,56 +360,95 @@ export const LushaIntelligenceView = () => {
   }, []);
 
   const notifyLongSearch = useCallback(
-    async (params: { domain: string; status: "done" | "failed" | "cancelled"; elapsedMs: number; total?: number; message?: string | null }) => {
-      const { domain: d, status, elapsedMs, total, message } = params;
-      const isLong = elapsedMs >= LONG_SEARCH_THRESHOLD_MS;
+    async (params: { domain: string; status: "done" | "failed" | "cancelled"; elapsedMs: number; total?: number; message?: string | null; historyId?: string | null }) => {
+      const { domain: d, status, elapsedMs, total, message, historyId } = params;
+      if (status === "failed" && !notifPrefs.notifyOnFailure) return;
+      if (status === "cancelled" && !notifPrefs.notifyOnCancel) return;
+
+      const isLong = elapsedMs >= notifPrefs.thresholdMs;
       const wasAway = typeof document !== "undefined" && document.hidden;
-      if (!isLong && !wasAway) return;
+      const shouldNotify = notifPrefs.hiddenTabOnly ? wasAway : (isLong || wasAway);
+      if (!shouldNotify) return;
 
       const seconds = (elapsedMs / 1000).toFixed(1);
       const title =
-        status === "done"
-          ? `Busca concluída — ${d}`
-          : status === "failed"
-          ? `Busca falhou — ${d}`
-          : `Busca cancelada — ${d}`;
+        status === "done" ? `Busca concluída — ${d}`
+        : status === "failed" ? `Busca falhou — ${d}`
+        : `Busca cancelada — ${d}`;
       const description =
-        status === "done"
-          ? `${total ?? 0} decisor(es) localizado(s) em ${seconds}s.`
-          : status === "failed"
-          ? `${message ?? "Erro desconhecido"} (após ${seconds}s).`
-          : `Interrompida após ${seconds}s.`;
+        status === "done" ? `${total ?? 0} decisor(es) localizado(s) em ${seconds}s.`
+        : status === "failed" ? `${message ?? "Erro desconhecido"} (após ${seconds}s).`
+        : `Interrompida após ${seconds}s.`;
 
-      // 1) Notificação nativa do navegador (se permitida e aba oculta ou busca longa)
-      try {
-        if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-          const n = new Notification(title, {
-            body: description,
-            tag: `lusha-dm-${d}`,
-            icon: "/favicon.ico",
+      // Deep-link direto para o histórico/resultado
+      const deepLink = `/?view=lusha&tab=history${historyId ? `&historyId=${encodeURIComponent(historyId)}` : ""}`;
+
+      const fireNative = () => {
+        try {
+          if (
+            notifPrefs.nativeEnabled &&
+            typeof Notification !== "undefined" &&
+            Notification.permission === "granted"
+          ) {
+            const n = new Notification(title, {
+              body: description,
+              tag: `lusha-dm-${d}`,
+              icon: "/favicon.ico",
+              data: { deepLink },
+            });
+            n.onclick = () => {
+              try {
+                window.focus();
+                n.close();
+                // navega mantendo SPA
+                window.location.assign(deepLink);
+              } catch { /* noop */ }
+            };
+          }
+        } catch { /* ignore */ }
+      };
+      fireNative();
+
+      // Repetição até o usuário focar
+      if (notifPrefs.repeatUntilFocus && document.hidden) {
+        clearRepeatTimer(d);
+        const interval = Math.max(5_000, notifPrefs.repeatIntervalMs);
+        const t = setInterval(() => {
+          if (!document.hidden) { clearRepeatTimer(d); return; }
+          fireNative();
+        }, interval);
+        repeatTimersRef.current.set(d, t);
+      }
+
+      // Centro de notificações do app
+      if (notifPrefs.inAppEnabled) {
+        try {
+          const { data: userRes } = await supabase.auth.getUser();
+          const uid = userRes?.user?.id;
+          if (!uid) return;
+          await supabase.from("notifications").insert({
+            user_id: uid,
+            title,
+            message: description,
+            type: status === "failed" ? "system" : "enrichment",
+            metadata: {
+              source: "lusha_dm",
+              domain: d,
+              status,
+              elapsed_ms: elapsedMs,
+              total: total ?? 0,
+              deep_link: deepLink,
+              history_id: historyId ?? null,
+            } as unknown as never,
           });
-          n.onclick = () => { try { window.focus(); n.close(); } catch { /* noop */ } };
-        }
-      } catch { /* ignore */ }
-
-      // 2) Persiste no centro de notificações do app (sincroniza entre dispositivos)
-      try {
-        const { data: userRes } = await supabase.auth.getUser();
-        const uid = userRes?.user?.id;
-        if (!uid) return;
-        await supabase.from("notifications").insert({
-          user_id: uid,
-          title,
-          message: description,
-          type: status === "failed" ? "system" : "enrichment",
-          metadata: { source: "lusha_dm", domain: d, status, elapsed_ms: elapsedMs, total: total ?? 0 } as unknown as never,
-        });
-        queryClient.invalidateQueries({ queryKey: ["notifications"] });
-        queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
-      } catch { /* ignore */ }
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+          queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+        } catch { /* ignore */ }
+      }
     },
-    [queryClient],
+    [queryClient, notifPrefs, clearRepeatTimer],
   );
+
 
 
 
@@ -398,6 +486,38 @@ export const LushaIntelligenceView = () => {
     for (const [k, v] of acc.entries()) map.set(k, v.total / v.count);
     return map;
   }, [dmHistory]);
+
+  // ── Deep-link: abrir aba de histórico e destacar item quando ?tab=history&historyId=... ──
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [resultsTab, setResultsTab] = useState<"results" | "history">(
+    (searchParams.get("tab") === "history" ? "history" : "results"),
+  );
+  const [highlightedHistoryId, setHighlightedHistoryId] = useState<string | null>(
+    searchParams.get("historyId"),
+  );
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    const hid = searchParams.get("historyId");
+    if (tab === "history") setResultsTab("history");
+    if (hid) setHighlightedHistoryId(hid);
+  }, [searchParams]);
+  useEffect(() => {
+    if (!highlightedHistoryId) return;
+    // Aguarda a renderização e faz scroll suave até o item
+    const t = setTimeout(() => {
+      const el = document.getElementById(`dm-history-${highlightedHistoryId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+    // Auto-limpa o destaque após 6s e remove parâmetro da URL
+    const clear = setTimeout(() => {
+      setHighlightedHistoryId(null);
+      const next = new URLSearchParams(searchParams);
+      next.delete("historyId");
+      setSearchParams(next, { replace: true });
+    }, 6000);
+    return () => { clearTimeout(t); clearTimeout(clear); };
+  }, [highlightedHistoryId, searchParams, setSearchParams]);
+
 
   const formatDuration = (ms: number | null): string => {
     if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
@@ -672,7 +792,7 @@ export const LushaIntelligenceView = () => {
         message: null,
         startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
-      void notifyLongSearch({ domain, status: "done", elapsedMs: elapsed, total });
+      void notifyLongSearch({ domain, status: "done", elapsedMs: elapsed, total, historyId: currentHistoryIdRef.current });
       currentHistoryIdRef.current = null;
       toast({
         title: "Decisores encontrados",
@@ -696,7 +816,7 @@ export const LushaIntelligenceView = () => {
           startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
         });
         const elapsedCancel = searchStartedAtRef.current ? Date.now() - searchStartedAtRef.current : 0;
-        void notifyLongSearch({ domain, status: "cancelled", elapsedMs: elapsedCancel });
+        void notifyLongSearch({ domain, status: "cancelled", elapsedMs: elapsedCancel, historyId: currentHistoryIdRef.current });
         currentHistoryIdRef.current = null;
         toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
         return;
@@ -712,7 +832,7 @@ export const LushaIntelligenceView = () => {
         message: msg,
         startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
-      void notifyLongSearch({ domain, status: "failed", elapsedMs: elapsedFail, message: msg });
+      void notifyLongSearch({ domain, status: "failed", elapsedMs: elapsedFail, message: msg, historyId: currentHistoryIdRef.current });
       currentHistoryIdRef.current = null;
 
       if (wait) {
@@ -1397,6 +1517,16 @@ export const LushaIntelligenceView = () => {
                     type="button"
                     variant="ghost"
                     size="sm"
+                    onClick={() => setPrefsOpen(true)}
+                    className="h-7 text-xs text-muted-foreground hover:text-primary"
+                    title="Preferências de notificações"
+                  >
+                    <Settings2 className="h-3 w-3 mr-1" /> Notificações
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={clearHistory}
                     className="h-7 text-xs text-muted-foreground hover:text-destructive"
                     title="Limpar histórico"
@@ -1466,7 +1596,13 @@ export const LushaIntelligenceView = () => {
                           : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
                       const queuedForRetry = autoRetryQueue.includes(h.domain);
                       return (
-                        <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                        <li
+                          key={h.id}
+                          id={`dm-history-${h.id}`}
+                          className={`flex items-center justify-between gap-3 px-3 py-2 text-sm transition-colors ${
+                            highlightedHistoryId === h.id ? "bg-primary/10 ring-1 ring-primary/40" : ""
+                          }`}
+                        >
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
@@ -2004,7 +2140,7 @@ export const LushaIntelligenceView = () => {
       </Card>
 
       {/* Resultados / Histórico */}
-      <Tabs defaultValue="results" className="space-y-4">
+      <Tabs value={resultsTab} onValueChange={(v) => setResultsTab(v as "results" | "history")} className="space-y-4">
         <TabsList>
           <TabsTrigger value="results" className="gap-2">
             <Users2 className="h-4 w-4" /> Resultados
@@ -2154,6 +2290,140 @@ export const LushaIntelligenceView = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Preferências de notificações */}
+      <Dialog open={prefsOpen} onOpenChange={setPrefsOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Bell className="h-4 w-4 text-primary" /> Preferências de notificações
+            </DialogTitle>
+            <DialogDescription>
+              Controle como você é avisado quando uma busca termina.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            {/* Canais */}
+            <div className="space-y-3">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Canais</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Notificação nativa do navegador</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Alerta do sistema operacional {browserNotifPermission !== "granted" && "(permissão necessária)"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {notifPrefs.nativeEnabled && browserNotifPermission !== "granted" && (
+                    <Button type="button" size="sm" variant="outline" className="h-7 text-xs" onClick={requestBrowserNotifPermission}>
+                      Permitir
+                    </Button>
+                  )}
+                  <Switch
+                    checked={notifPrefs.nativeEnabled}
+                    onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, nativeEnabled: v }))}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Centro de notificações do app</Label>
+                  <p className="text-xs text-muted-foreground">Persistido no seu histórico entre dispositivos.</p>
+                </div>
+                <Switch
+                  checked={notifPrefs.inAppEnabled}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, inAppEnabled: v }))}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Apenas quando a aba estiver oculta</Label>
+                  <p className="text-xs text-muted-foreground">Silencia notificações se você estiver com a página em foco.</p>
+                </div>
+                <Switch
+                  checked={notifPrefs.hiddenTabOnly}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, hiddenTabOnly: v }))}
+                />
+              </div>
+            </div>
+
+            {/* Eventos */}
+            <div className="space-y-3 border-t border-border/50 pt-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Eventos</p>
+              <div className="flex items-center justify-between gap-3">
+                <Label className="text-sm">Notificar em falhas</Label>
+                <Switch
+                  checked={notifPrefs.notifyOnFailure}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, notifyOnFailure: v }))}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <Label className="text-sm">Notificar em cancelamentos</Label>
+                <Switch
+                  checked={notifPrefs.notifyOnCancel}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, notifyOnCancel: v }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-sm">Considerar "longa" a partir de (segundos)</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={600}
+                  value={Math.round(notifPrefs.thresholdMs / 1000)}
+                  onChange={(e) => {
+                    const s = Math.max(1, Math.min(600, Number(e.target.value) || 15));
+                    setNotifPrefs((p) => ({ ...p, thresholdMs: s * 1000 }));
+                  }}
+                  className="h-8"
+                />
+              </div>
+            </div>
+
+            {/* Repetição */}
+            <div className="space-y-3 border-t border-border/50 pt-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Repetição</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <Label className="text-sm">Repetir até você focar a aba</Label>
+                  <p className="text-xs text-muted-foreground">Reenvia a notificação nativa em intervalos regulares.</p>
+                </div>
+                <Switch
+                  checked={notifPrefs.repeatUntilFocus}
+                  onCheckedChange={(v) => setNotifPrefs((p) => ({ ...p, repeatUntilFocus: v }))}
+                />
+              </div>
+              {notifPrefs.repeatUntilFocus && (
+                <div className="space-y-1">
+                  <Label className="text-sm">Intervalo (segundos)</Label>
+                  <Input
+                    type="number"
+                    min={5}
+                    max={600}
+                    value={Math.round(notifPrefs.repeatIntervalMs / 1000)}
+                    onChange={(e) => {
+                      const s = Math.max(5, Math.min(600, Number(e.target.value) || 30));
+                      setNotifPrefs((p) => ({ ...p, repeatIntervalMs: s * 1000 }));
+                    }}
+                    className="h-8"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-3 pt-2 border-t border-border/50">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setNotifPrefs(DEFAULT_NOTIF_PREFS)}
+            >
+              Restaurar padrões
+            </Button>
+            <Button type="button" size="sm" onClick={() => setPrefsOpen(false)}>Concluído</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!detailsModal} onOpenChange={(o) => !o && setDetailsModal(null)}>
         <DialogContent className="max-w-lg">

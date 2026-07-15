@@ -245,7 +245,16 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
                         animate={{ opacity: 1, x: 0, scale: 1 }}
                         exit={{ opacity: 0, x: -20, height: 0, scale: 0.95 }}
                         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                        onClick={() => !n.read && markRead(n.id)}
+                        onClick={() => {
+                          if (!n.read) markRead(n.id);
+                          const meta = (n.metadata ?? {}) as Record<string, unknown>;
+                          const link = typeof meta.deep_link === "string" ? meta.deep_link : null;
+                          if (link) {
+                            onClose();
+                            // Usa location.assign para SPA (respeita BrowserRouter) — o param dispara o handler dentro da view.
+                            setTimeout(() => { window.location.assign(link); }, 50);
+                          }
+                        }}
                         className={cn(
                           "p-4 flex items-start gap-3 cursor-pointer transition-colors group",
                           "hover:bg-secondary/20",
