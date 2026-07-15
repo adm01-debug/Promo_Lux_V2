@@ -2342,6 +2342,36 @@ export type Database = {
         }
         Relationships: []
       }
+      oracle_rate_limits: {
+        Row: {
+          action: string
+          count: number
+          created_at: string
+          id: string
+          organization_id: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          action?: string
+          count?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          action?: string
+          count?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       org_violation_alert_settings: {
         Row: {
           cooldown_minutes: number
@@ -3190,7 +3220,26 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      oracle_v2_health: {
+        Row: {
+          errors_24h: number | null
+          events_24h: number | null
+          last_event_at: string | null
+          organization_id: string | null
+          source: string | null
+          success_24h: number | null
+          success_rate_pct: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_execution_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
@@ -3273,6 +3322,14 @@ export type Database = {
         }
       }
       capture_dlq_health_snapshots: { Args: never; Returns: number }
+      check_oracle_rate_limit: {
+        Args: { _action?: string; _limit?: number; _organization_id: string }
+        Returns: {
+          allowed: boolean
+          current_count: number
+          reset_at: string
+        }[]
+      }
       claim_scrape_tasks: {
         Args: { _limit?: number; _worker?: string }
         Returns: {
