@@ -641,16 +641,23 @@ export const LushaIntelligenceView = () => {
   const normalizeLinkedinCompanyUrl = useCallback((input: string): string => {
     let v = (input ?? "").trim();
     if (!v) return "";
-    v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
-    // remove query/hash/trailing slash
+    // Remove protocolo + www + qualquer subdomínio locale (br., pt., de., www2., etc.)
+    v = v.replace(/^https?:\/\//i, "");
+    v = v.replace(/^([a-z0-9-]+\.)*(?=linkedin\.com\/)/i, "");
+    // Remove query/hash/trailing slash
     v = v.split("?")[0].split("#")[0].replace(/\/+$/, "");
+    // Se o usuário colou um path extra tipo /company/natura/about/posts,
+    // reduz para linkedin.com/<tipo>/<slug>
+    const m = v.match(/^linkedin\.com\/(company|school|showcase)\/([^/?#]+)/i);
+    if (m) v = `linkedin.com/${m[1].toLowerCase()}/${m[2]}`;
     return v.toLowerCase();
   }, []);
 
   const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeLinkedinCompanyUrl(raw);
     if (!value) return { value, error: "Informe a URL da página da empresa no LinkedIn." };
-    if (!/^linkedin\.com\/(company|school|showcase)\/[a-z0-9\-_.%]+\/?$/i.test(value)) {
+    // Aceita slugs unicode (empresas com nomes acentuados) além de ASCII
+    if (!/^linkedin\.com\/(company|school|showcase)\/[\p{L}\p{N}\-_.%]+$/u.test(value)) {
       return {
         value,
         error: "Use a URL da página da empresa no LinkedIn (ex.: linkedin.com/company/natura).",
