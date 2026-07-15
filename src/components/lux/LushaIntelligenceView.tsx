@@ -665,37 +665,59 @@ export const LushaIntelligenceView = () => {
               <Label htmlFor="lusha-linkedin">
                 Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
               </Label>
-              <div className="relative">
-                <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="lusha-linkedin"
-                  value={linkedinCompanyUrl}
-                  onChange={(e) => {
-                    setLinkedinCompanyUrl(e.target.value);
-                    if (linkedinError) setLinkedinError(null);
-                  }}
-                  onBlur={() => {
-                    const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
-                    if (value !== linkedinCompanyUrl) setLinkedinCompanyUrl(value);
-                    setLinkedinError(error);
-                  }}
-                  onPaste={(e) => {
-                    const pasted = e.clipboardData.getData("text");
-                    if (pasted && (/https?:\/\//i.test(pasted) || /\?/.test(pasted))) {
-                      e.preventDefault();
-                      const { value, error } = validateLinkedinCompanyUrl(pasted);
-                      setLinkedinCompanyUrl(value);
+              <div className="relative flex gap-2">
+                <div className="relative flex-1">
+                  <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="lusha-linkedin"
+                    value={linkedinCompanyUrl}
+                    onChange={(e) => {
+                      setLinkedinCompanyUrl(e.target.value);
+                      if (linkedinError) setLinkedinError(null);
+                    }}
+                    onBlur={() => {
+                      const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+                      if (value !== linkedinCompanyUrl) setLinkedinCompanyUrl(value);
                       setLinkedinError(error);
-                    }
-                  }}
-                  placeholder="Ex: linkedin.com/company/natura"
-                  className={`pl-9 ${linkedinError ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                  disabled={dmMutation.isPending}
-                  aria-invalid={!!linkedinError}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
-                  }}
-                />
+                    }}
+                    onPaste={(e) => {
+                      const pasted = e.clipboardData.getData("text");
+                      if (pasted && (/https?:\/\//i.test(pasted) || /\?/.test(pasted))) {
+                        e.preventDefault();
+                        const { value, error } = validateLinkedinCompanyUrl(pasted);
+                        setLinkedinCompanyUrl(value);
+                        setLinkedinError(error);
+                      }
+                    }}
+                    placeholder="Ex: linkedin.com/company/natura"
+                    className={`pl-9 ${linkedinError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    disabled={dmMutation.isPending}
+                    aria-invalid={!!linkedinError}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
+                    }}
+                  />
+                </div>
+                {(() => {
+                  const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+                  const isValid = !!value && !error;
+                  return (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="default"
+                      disabled={!isValid}
+                      onClick={() => {
+                        if (isValid) window.open(`https://${value}`, "_blank", "noopener,noreferrer");
+                      }}
+                      title={isValid ? "Abrir página no LinkedIn" : "Informe uma URL válida do LinkedIn"}
+                      className="shrink-0"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Abrir LinkedIn
+                    </Button>
+                  );
+                })()}
               </div>
               {linkedinError ? (
                 <p className="text-xs text-destructive flex items-start gap-1">
