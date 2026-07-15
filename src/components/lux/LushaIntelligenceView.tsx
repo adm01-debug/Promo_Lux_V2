@@ -141,12 +141,53 @@ export const LushaIntelligenceView = () => {
   } | null>(null);
 
   // ── Progresso da busca por domínio (fases visuais) ──
-  type SearchPhase = "idle" | "queued" | "processing" | "done" | "failed";
+  type SearchPhase = "idle" | "queued" | "processing" | "done" | "failed" | "cancelled";
   const [searchPhase, setSearchPhase] = useState<SearchPhase>("idle");
   const [searchProgress, setSearchProgress] = useState(0);
   const [searchStatusMsg, setSearchStatusMsg] = useState<string>("");
+  const [searchElapsedMs, setSearchElapsedMs] = useState(0);
+  const searchStartedAtRef = useRef<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const [rateLimitCountdown, setRateLimitCountdown] = useState<number | null>(null);
   const [copiedLinkedin, setCopiedLinkedin] = useState(false);
+
+  // ── Histórico local de buscas por domínio (persistido em localStorage) ──
+  type DMHistoryEntry = {
+    id: string;
+    domain: string;
+    linkedin: string | null;
+    startedAt: string;
+    finishedAt: string;
+    status: "done" | "failed" | "cancelled";
+    total: number;
+    message?: string | null;
+  };
+  const HISTORY_KEY = "lusha-dm-history";
+  const HISTORY_MAX = 15;
+  const [dmHistory, setDmHistory] = useState<DMHistoryEntry[]>(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? (JSON.parse(raw) as DMHistoryEntry[]) : [];
+    } catch { return []; }
+  });
+  const pushHistory = useCallback((entry: Omit<DMHistoryEntry, "id" | "finishedAt"> & { startedAt: string }) => {
+    setDmHistory((prev) => {
+      const next: DMHistoryEntry[] = [
+        {
+          ...entry,
+          id: crypto.randomUUID(),
+          finishedAt: new Date().toISOString(),
+        },
+        ...prev,
+      ].slice(0, HISTORY_MAX);
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      return next;
+    });
+  }, []);
+  const clearHistory = useCallback(() => {
+    setDmHistory([]);
+    try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
+  }, []);
 
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
