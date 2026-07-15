@@ -487,6 +487,38 @@ export const LushaIntelligenceView = () => {
     return map;
   }, [dmHistory]);
 
+  // ── Deep-link: abrir aba de histórico e destacar item quando ?tab=history&historyId=... ──
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [resultsTab, setResultsTab] = useState<"results" | "history">(
+    (searchParams.get("tab") === "history" ? "history" : "results"),
+  );
+  const [highlightedHistoryId, setHighlightedHistoryId] = useState<string | null>(
+    searchParams.get("historyId"),
+  );
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    const hid = searchParams.get("historyId");
+    if (tab === "history") setResultsTab("history");
+    if (hid) setHighlightedHistoryId(hid);
+  }, [searchParams]);
+  useEffect(() => {
+    if (!highlightedHistoryId) return;
+    // Aguarda a renderização e faz scroll suave até o item
+    const t = setTimeout(() => {
+      const el = document.getElementById(`dm-history-${highlightedHistoryId}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+    // Auto-limpa o destaque após 6s e remove parâmetro da URL
+    const clear = setTimeout(() => {
+      setHighlightedHistoryId(null);
+      const next = new URLSearchParams(searchParams);
+      next.delete("historyId");
+      setSearchParams(next, { replace: true });
+    }, 6000);
+    return () => { clearTimeout(t); clearTimeout(clear); };
+  }, [highlightedHistoryId, searchParams, setSearchParams]);
+
+
   const formatDuration = (ms: number | null): string => {
     if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
     if (ms < 1000) return `${Math.round(ms)}ms`;
