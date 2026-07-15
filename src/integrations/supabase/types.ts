@@ -2094,6 +2094,51 @@ export type Database = {
         }
         Relationships: []
       }
+      lusha_dm_search_history: {
+        Row: {
+          created_at: string
+          decision_makers_count: number
+          domain: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          linkedin_url: string | null
+          metadata: Json
+          organization_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          decision_makers_count?: number
+          domain: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          linkedin_url?: string | null
+          metadata?: Json
+          organization_id?: string | null
+          status: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          decision_makers_count?: number
+          domain?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          linkedin_url?: string | null
+          metadata?: Json
+          organization_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lusha_search_sessions: {
         Row: {
           bitrix_card_id: string | null
