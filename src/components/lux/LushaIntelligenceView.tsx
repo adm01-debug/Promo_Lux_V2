@@ -1271,8 +1271,9 @@ export const LushaIntelligenceView = () => {
           <div className="space-y-3">
             <div className="space-y-2">
               <Label htmlFor="lusha-linkedin">
-                Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
+                Página da empresa no LinkedIn
               </Label>
+
               <div className="relative flex gap-2">
                 <div className="relative flex-1">
                   <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
