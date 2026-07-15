@@ -203,19 +203,33 @@ export const LushaIntelligenceView = () => {
     staleTime: 30_000,
   });
 
-  // Sincronização em tempo real entre abas/dispositivos
+  // Sincronização em tempo real entre abas/dispositivos — com debounce para
+  // evitar N refetches quando o backend emite dezenas de eventos em rajada
+  // (auto-retry queue, importações em massa, etc.).
   useEffect(() => {
+    let debounceId: ReturnType<typeof setTimeout> | null = null;
+    const scheduleInvalidate = () => {
+      if (debounceId) clearTimeout(debounceId);
+      debounceId = setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+      }, 500);
+    };
+
     const channel = supabase
       .channel("lusha-dm-history-sync")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "lusha_dm_search_history" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
-        },
+        scheduleInvalidate,
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status !== "SUBSCRIBED" && status !== "CLOSED") {
+          console.warn("[oraculo] realtime channel status:", status);
+        }
+      });
+
     return () => {
+      if (debounceId) clearTimeout(debounceId);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
