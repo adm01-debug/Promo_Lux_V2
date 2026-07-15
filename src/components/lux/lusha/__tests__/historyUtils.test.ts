@@ -9,15 +9,16 @@ import {
 } from "../historyUtils";
 
 const mk = (over: Partial<DMHistoryEntry> = {}): DMHistoryEntry => ({
-  id: over.id ?? "1",
-  domain: over.domain ?? "acme.com",
-  linkedin: over.linkedin ?? null,
-  startedAt: over.startedAt ?? "2026-07-15T10:00:00.000Z",
-  finishedAt: over.finishedAt ?? "2026-07-15T10:00:05.000Z",
-  status: over.status ?? "done",
-  total: over.total ?? 3,
-  message: over.message,
-  durationMs: over.durationMs ?? 5000,
+  id: "1",
+  domain: "acme.com",
+  linkedin: null,
+  startedAt: "2026-07-15T10:00:00.000Z",
+  finishedAt: "2026-07-15T10:00:05.000Z",
+  status: "done",
+  total: 3,
+  message: null,
+  durationMs: 5000,
+  ...over,
 });
 
 describe("filterHistory", () => {
