@@ -290,6 +290,80 @@ export const LushaIntelligenceView = () => {
     } catch { /* ignore */ }
   }, [queryClient]);
 
+  // ── Notificações de buscas longas ──
+  // Considera "longa" acima de 15s OU quando a aba está oculta (usuário saiu da tela).
+  const LONG_SEARCH_THRESHOLD_MS = 15_000;
+  const [browserNotifPermission, setBrowserNotifPermission] = useState<NotificationPermission>(
+    typeof Notification !== "undefined" ? Notification.permission : "denied",
+  );
+  const requestBrowserNotifPermission = useCallback(async () => {
+    if (typeof Notification === "undefined") {
+      toast({ title: "Notificações indisponíveis", description: "Seu navegador não suporta notificações.", variant: "destructive" });
+      return;
+    }
+    try {
+      const p = await Notification.requestPermission();
+      setBrowserNotifPermission(p);
+      if (p === "granted") {
+        toast({ title: "Notificações ativadas", description: "Você será avisado quando buscas longas terminarem." });
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  const notifyLongSearch = useCallback(
+    async (params: { domain: string; status: "done" | "failed" | "cancelled"; elapsedMs: number; total?: number; message?: string | null }) => {
+      const { domain: d, status, elapsedMs, total, message } = params;
+      const isLong = elapsedMs >= LONG_SEARCH_THRESHOLD_MS;
+      const wasAway = typeof document !== "undefined" && document.hidden;
+      if (!isLong && !wasAway) return;
+
+      const seconds = (elapsedMs / 1000).toFixed(1);
+      const title =
+        status === "done"
+          ? `Busca concluída — ${d}`
+          : status === "failed"
+          ? `Busca falhou — ${d}`
+          : `Busca cancelada — ${d}`;
+      const description =
+        status === "done"
+          ? `${total ?? 0} decisor(es) localizado(s) em ${seconds}s.`
+          : status === "failed"
+          ? `${message ?? "Erro desconhecido"} (após ${seconds}s).`
+          : `Interrompida após ${seconds}s.`;
+
+      // 1) Notificação nativa do navegador (se permitida e aba oculta ou busca longa)
+      try {
+        if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+          const n = new Notification(title, {
+            body: description,
+            tag: `lusha-dm-${d}`,
+            icon: "/favicon.ico",
+          });
+          n.onclick = () => { try { window.focus(); n.close(); } catch { /* noop */ } };
+        }
+      } catch { /* ignore */ }
+
+      // 2) Persiste no centro de notificações do app (sincroniza entre dispositivos)
+      try {
+        const { data: userRes } = await supabase.auth.getUser();
+        const uid = userRes?.user?.id;
+        if (!uid) return;
+        await supabase.from("notifications").insert({
+          user_id: uid,
+          title,
+          message: description,
+          type: status === "failed" ? "system" : "enrichment",
+          metadata: { source: "lusha_dm", domain: d, status, elapsed_ms: elapsedMs, total: total ?? 0 } as unknown as never,
+        });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+      } catch { /* ignore */ }
+    },
+    [queryClient],
+  );
+
+
+
   // ── Filtros do histórico ──
   const [historyQ, setHistoryQ] = useState("");
   const [historyStatus, setHistoryStatus] = useState<"all" | DMHistoryEntry["status"]>("all");
