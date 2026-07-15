@@ -643,23 +643,49 @@ export const LushaIntelligenceView = () => {
                                 )}
                               </TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-2">
-                                  {dm.hasEmail && (
-                                    <Badge variant="outline" className="border-border/50 gap-1">
-                                      <Mail className="h-3 w-3" />
-                                      {dm.emailCredits}c
-                                    </Badge>
-                                  )}
-                                  {dm.hasPhone && (
-                                    <Badge variant="outline" className="border-border/50 gap-1">
-                                      <Phone className="h-3 w-3" />
-                                      {dm.phoneCredits}c
-                                    </Badge>
-                                  )}
-                                  {!dm.hasEmail && !dm.hasPhone && (
-                                    <span className="text-xs text-muted-foreground">—</span>
-                                  )}
-                                </div>
+                                {(() => {
+                                  const rev = revealedData[dm.id];
+                                  if (rev && !rev.error) {
+                                    return (
+                                      <div className="space-y-1 text-xs">
+                                        {rev.emails.map((e, i) => (
+                                          <div key={`e${i}`} className="flex items-center gap-1 text-foreground">
+                                            <Mail className="h-3 w-3 text-primary" />
+                                            <a href={`mailto:${e.email}`} className="hover:underline break-all">{e.email}</a>
+                                          </div>
+                                        ))}
+                                        {rev.phones.map((p, i) => (
+                                          <div key={`p${i}`} className="flex items-center gap-1 text-foreground">
+                                            <Phone className="h-3 w-3 text-primary" />
+                                            <a href={`tel:${p.number}`} className="hover:underline">{p.number}</a>
+                                          </div>
+                                        ))}
+                                        {rev.emails.length === 0 && rev.phones.length === 0 && (
+                                          <span className="text-muted-foreground">Sem dados retornados</span>
+                                        )}
+                                      </div>
+                                    );
+                                  }
+                                  return (
+                                    <div className="flex items-center gap-2">
+                                      {dm.hasEmail && (
+                                        <Badge variant="outline" className="border-border/50 gap-1">
+                                          <Mail className="h-3 w-3" />
+                                          {dm.emailCredits}c
+                                        </Badge>
+                                      )}
+                                      {dm.hasPhone && (
+                                        <Badge variant="outline" className="border-border/50 gap-1">
+                                          <Phone className="h-3 w-3" />
+                                          {dm.phoneCredits}c
+                                        </Badge>
+                                      )}
+                                      {!dm.hasEmail && !dm.hasPhone && (
+                                        <span className="text-xs text-muted-foreground">—</span>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
                               </TableCell>
                               <TableCell>
                                 {dm.linkedin ? (
@@ -676,9 +702,28 @@ export const LushaIntelligenceView = () => {
                                 )}
                               </TableCell>
                               <TableCell className="text-right">
-                                <Button size="sm" variant="outline" onClick={handleReveal}>
-                                  Revelar
-                                </Button>
+                                {(() => {
+                                  const isRevealing = revealingIds.has(dm.id);
+                                  const rev = revealedData[dm.id];
+                                  const isRevealed = !!rev && !rev.error;
+                                  const disabled = isRevealing || isRevealed || (!dm.hasEmail && !dm.hasPhone);
+                                  return (
+                                    <Button
+                                      size="sm"
+                                      variant={isRevealed ? "ghost" : "outline"}
+                                      onClick={() => handleReveal(dm)}
+                                      disabled={disabled}
+                                    >
+                                      {isRevealing ? (
+                                        <><Loader2 className="h-3 w-3 mr-1 animate-spin" /> Revelando…</>
+                                      ) : isRevealed ? (
+                                        "Revelado"
+                                      ) : (
+                                        "Revelar"
+                                      )}
+                                    </Button>
+                                  );
+                                })()}
                               </TableCell>
                             </TableRow>
                           ))}
