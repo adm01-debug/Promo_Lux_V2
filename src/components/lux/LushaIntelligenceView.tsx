@@ -440,8 +440,11 @@ export const LushaIntelligenceView = () => {
               try {
                 window.focus();
                 n.close();
-                // navega mantendo SPA
-                window.location.assign(deepLink);
+                // Notification.onclick roda fora da árvore React → dispara evento
+                // que o app escuta para navegar via react-router (mantém SPA + cache).
+                window.dispatchEvent(new CustomEvent("lux:deep-link", { detail: { url: deepLink } }));
+                // Fallback: se ninguém escutar em ~150ms, faz hard-nav.
+                setTimeout(() => { window.location.assign(deepLink); }, 150);
               } catch { /* noop */ }
             };
           }
