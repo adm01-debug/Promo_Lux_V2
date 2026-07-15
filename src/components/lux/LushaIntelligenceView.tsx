@@ -784,7 +784,7 @@ export const LushaIntelligenceView = () => {
           startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
         });
         const elapsedCancel = searchStartedAtRef.current ? Date.now() - searchStartedAtRef.current : 0;
-        void notifyLongSearch({ domain, status: "cancelled", elapsedMs: elapsedCancel });
+        void notifyLongSearch({ domain, status: "cancelled", elapsedMs: elapsedCancel, historyId: currentHistoryIdRef.current });
         currentHistoryIdRef.current = null;
         toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
         return;
