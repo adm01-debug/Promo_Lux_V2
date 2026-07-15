@@ -1386,6 +1386,15 @@ export const LushaIntelligenceView = () => {
                                   {h.total} decisor{h.total === 1 ? "" : "es"}
                                 </Badge>
                               )}
+                              {h.durationMs != null && h.durationMs > 0 && (h.status === "done" || h.status === "failed" || h.status === "cancelled") && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-[10px] px-1.5 py-0 border-border/60 text-muted-foreground"
+                                  title="duration_ms desta busca"
+                                >
+                                  <Clock className="h-3 w-3 mr-1" /> {formatDuration(h.durationMs)}
+                                </Badge>
+                              )}
                               {queuedForRetry && (
                                 <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/40 text-primary">
                                   <Clock className="h-3 w-3 mr-1" /> Aguardando retry
@@ -1394,6 +1403,9 @@ export const LushaIntelligenceView = () => {
                             </div>
                             <div className="text-xs text-muted-foreground mt-0.5 truncate">
                               {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
+                              {avgDurationByDomain.get(h.domain) != null && (
+                                <> · <span title="Tempo médio deste domínio">μ {formatDuration(avgDurationByDomain.get(h.domain) ?? null)}</span></>
+                              )}
                               {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
                               {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
                             </div>
