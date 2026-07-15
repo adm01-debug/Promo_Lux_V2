@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
 import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard } from "lucide-react";
 import { downloadCSV } from "@/lib/exportCSV";
+import { filterHistory, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
@@ -159,17 +160,8 @@ export const LushaIntelligenceView = () => {
   const [copiedLinkedin, setCopiedLinkedin] = useState(false);
 
   // ── Histórico de buscas por domínio (sincronizado no Supabase) ──
-  type DMHistoryEntry = {
-    id: string;
-    domain: string;
-    linkedin: string | null;
-    startedAt: string;
-    finishedAt: string;
-    status: "done" | "failed" | "cancelled" | "processing" | "queued";
-    total: number;
-    message?: string | null;
-    durationMs: number | null;
-  };
+  type DMHistoryEntry = DMHistoryEntryShared;
+
 
   type DMHistoryRow = {
     id: string;
@@ -492,19 +484,10 @@ export const LushaIntelligenceView = () => {
   const [historyFrom, setHistoryFrom] = useState<string>(""); // yyyy-mm-dd
   const [historyTo, setHistoryTo] = useState<string>("");
 
-  const filteredHistory = useMemo(() => {
-    const q = historyQ.trim().toLowerCase();
-    const fromTs = historyFrom ? new Date(historyFrom + "T00:00:00").getTime() : null;
-    const toTs = historyTo ? new Date(historyTo + "T23:59:59").getTime() : null;
-    return dmHistory.filter((h) => {
-      if (q && !h.domain.toLowerCase().includes(q) && !(h.linkedin ?? "").toLowerCase().includes(q)) return false;
-      if (historyStatus !== "all" && h.status !== historyStatus) return false;
-      const t = new Date(h.finishedAt).getTime();
-      if (fromTs != null && t < fromTs) return false;
-      if (toTs != null && t > toTs) return false;
-      return true;
-    });
-  }, [dmHistory, historyQ, historyStatus, historyFrom, historyTo]);
+  const filteredHistory = useMemo(
+    () => filterHistory(dmHistory, { q: historyQ, status: historyStatus, from: historyFrom, to: historyTo }),
+    [dmHistory, historyQ, historyStatus, historyFrom, historyTo],
+  );
 
   // ── Tempo médio por domínio (apenas buscas concluídas com sucesso) ──
   const avgDurationByDomain = useMemo(() => {
