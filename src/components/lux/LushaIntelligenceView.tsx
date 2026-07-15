@@ -1008,6 +1008,14 @@ export const LushaIntelligenceView = () => {
                                       </div>
                                     );
                                   }
+                                  if (rev?.error) {
+                                    return (
+                                      <div className="flex items-start gap-1 text-xs text-destructive max-w-[220px]">
+                                        <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                                        <span>{rev.error}</span>
+                                      </div>
+                                    );
+                                  }
                                   return (
                                     <div className="flex items-center gap-2">
                                       {dm.hasEmail && (
