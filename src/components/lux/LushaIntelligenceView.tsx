@@ -1475,7 +1475,7 @@ export const LushaIntelligenceView = () => {
               {rateLimitCountdown != null && rateLimitCountdown > 0 && (
                 <div className="flex items-center gap-2 text-xs text-amber-500">
                   <Clock className="h-3 w-3" />
-                  <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite da API Lusha).</span>
+                  <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite do Oráculo).</span>
                 </div>
               )}
             </div>
