@@ -1874,10 +1874,12 @@ export type Database = {
           company_type: string | null
           confidence_score: number | null
           created_at: string
+          dedup_hash: string | null
           department_en: string | null
           department_pt: string | null
           email: string | null
           email_source: string | null
+          enrichment_attempts: number
           enrichment_status: string
           first_name: string | null
           full_name: string
@@ -1886,6 +1888,8 @@ export type Database = {
           id: string
           is_duplicate: boolean
           job_title: string | null
+          last_enriched_at: string | null
+          last_error: string | null
           linkedin_awards: string[] | null
           linkedin_certifications: string[] | null
           linkedin_connections_count: number | null
@@ -1924,10 +1928,12 @@ export type Database = {
           company_type?: string | null
           confidence_score?: number | null
           created_at?: string
+          dedup_hash?: string | null
           department_en?: string | null
           department_pt?: string | null
           email?: string | null
           email_source?: string | null
+          enrichment_attempts?: number
           enrichment_status?: string
           first_name?: string | null
           full_name: string
@@ -1936,6 +1942,8 @@ export type Database = {
           id?: string
           is_duplicate?: boolean
           job_title?: string | null
+          last_enriched_at?: string | null
+          last_error?: string | null
           linkedin_awards?: string[] | null
           linkedin_certifications?: string[] | null
           linkedin_connections_count?: number | null
@@ -1974,10 +1982,12 @@ export type Database = {
           company_type?: string | null
           confidence_score?: number | null
           created_at?: string
+          dedup_hash?: string | null
           department_en?: string | null
           department_pt?: string | null
           email?: string | null
           email_source?: string | null
+          enrichment_attempts?: number
           enrichment_status?: string
           first_name?: string | null
           full_name?: string
@@ -1986,6 +1996,8 @@ export type Database = {
           id?: string
           is_duplicate?: boolean
           job_title?: string | null
+          last_enriched_at?: string | null
+          last_error?: string | null
           linkedin_awards?: string[] | null
           linkedin_certifications?: string[] | null
           linkedin_connections_count?: number | null
@@ -2154,8 +2166,10 @@ export type Database = {
           enrichment_rate: number | null
           error_message: string | null
           id: string
+          idempotency_key: string | null
           lusha_company_lid: string | null
           organization_id: string
+          progress_pct: number
           search_type: string
           started_at: string
           status: string
@@ -2182,8 +2196,10 @@ export type Database = {
           enrichment_rate?: number | null
           error_message?: string | null
           id?: string
+          idempotency_key?: string | null
           lusha_company_lid?: string | null
           organization_id?: string
+          progress_pct?: number
           search_type?: string
           started_at?: string
           status?: string
@@ -2210,8 +2226,10 @@ export type Database = {
           enrichment_rate?: number | null
           error_message?: string | null
           id?: string
+          idempotency_key?: string | null
           lusha_company_lid?: string | null
           organization_id?: string
+          progress_pct?: number
           search_type?: string
           started_at?: string
           status?: string
