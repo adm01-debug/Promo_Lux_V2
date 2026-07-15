@@ -123,6 +123,7 @@ export const LushaIntelligenceView = () => {
   const [lastResult, setLastResult] = useState<SearchResponse | null>(null);
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
+  const [linkedinCompanyUrl, setLinkedinCompanyUrl] = useState("");
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
   const [dmRequestId, setDmRequestId] = useState<string | null>(null);
   const [revealingIds, setRevealingIds] = useState<Set<string>>(new Set());
