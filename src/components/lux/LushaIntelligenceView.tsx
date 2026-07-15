@@ -919,16 +919,16 @@ export const LushaIntelligenceView = () => {
   }, [dmResults]);
 
 
-  // ── Tradução de códigos de erro conhecidos do Lusha para PT-BR ──
+  // ── Tradução de códigos de erro conhecidos do Oráculo para PT-BR ──
   const translateRevealError = useCallback((raw: string | undefined): string => {
     if (!raw) return "Falha desconhecida ao revelar.";
     const code = raw.toLowerCase();
     if (code.includes("not_found") || code.includes("no_data")) return "Sem dados disponíveis para este decisor.";
-    if (code.includes("credit")) return "Sem créditos Lusha suficientes para revelar.";
+    if (code.includes("credit")) return "Sem créditos suficientes no Oráculo para revelar.";
     if (code.includes("rate") || code.includes("429")) return "Limite de requisições atingido — tente novamente em instantes.";
-    if (code.includes("unauthor") || code.includes("401") || code.includes("403")) return "Chave da API Lusha inválida ou sem permissão.";
-    if (code.includes("timeout")) return "Tempo esgotado ao consultar o Lusha.";
-    if (code.includes("network") || code.includes("fetch")) return "Falha de rede ao contatar o Lusha.";
+    if (code.includes("unauthor") || code.includes("401") || code.includes("403")) return "Credenciais do Oráculo inválidas ou sem permissão.";
+    if (code.includes("timeout")) return "Tempo esgotado ao consultar o Oráculo.";
+    if (code.includes("network") || code.includes("fetch")) return "Falha de rede ao contatar o Oráculo.";
     if (code.includes("invalid")) return "Requisição inválida (contactId ou requestId expirado).";
     return raw;
   }, []);
