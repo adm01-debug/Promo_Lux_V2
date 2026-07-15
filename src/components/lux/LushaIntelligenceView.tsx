@@ -2130,7 +2130,7 @@ export const LushaIntelligenceView = () => {
       </Card>
 
       {/* Resultados / Histórico */}
-      <Tabs defaultValue="results" className="space-y-4">
+      <Tabs value={resultsTab} onValueChange={(v) => setResultsTab(v as "results" | "history")} className="space-y-4">
         <TabsList>
           <TabsTrigger value="results" className="gap-2">
             <Users2 className="h-4 w-4" /> Resultados
