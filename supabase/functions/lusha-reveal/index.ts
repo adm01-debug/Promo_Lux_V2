@@ -189,8 +189,8 @@ serve(async (req) => {
         lastName: person.lastName ?? null,
         fullName:
           person.fullName ??
-          `${person.firstName ?? ""} ${person.lastName ?? ""}`.trim() ||
-          null,
+          (`${person.firstName ?? ""} ${person.lastName ?? ""}`.trim() ||
+            null),
         jobTitle: person.jobTitle ?? null,
         emailAddresses: (person.emailAddresses || []).map((e: any) => ({
           email: e.email,
