@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin } from "lucide-react";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -123,6 +123,7 @@ export const LushaIntelligenceView = () => {
   const [lastResult, setLastResult] = useState<SearchResponse | null>(null);
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
+  const [linkedinCompanyUrl, setLinkedinCompanyUrl] = useState("");
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
   const [dmRequestId, setDmRequestId] = useState<string | null>(null);
   const [revealingIds, setRevealingIds] = useState<Set<string>>(new Set());
@@ -500,8 +501,8 @@ export const LushaIntelligenceView = () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-end gap-3 flex-wrap">
-            <div className="flex-1 min-w-[260px] space-y-2">
+          <div className="space-y-3">
+            <div className="space-y-2">
               <Label htmlFor="lusha-domain">Domínio da empresa</Label>
               <div className="relative">
                 <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -518,24 +519,51 @@ export const LushaIntelligenceView = () => {
                 />
               </div>
             </div>
-            <Button
-              onClick={() => dmMutation.mutate()}
-              disabled={!canSearchDomain}
-              className="min-w-[180px]"
-            >
-              {dmMutation.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Buscando...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-2 h-4 w-4" />
-                  Buscar Decisores
-                </>
-              )}
-            </Button>
+
+            <div className="space-y-2">
+              <Label htmlFor="lusha-linkedin">
+                Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
+              </Label>
+              <div className="relative">
+                <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="lusha-linkedin"
+                  value={linkedinCompanyUrl}
+                  onChange={(e) => setLinkedinCompanyUrl(e.target.value)}
+                  placeholder="Ex: https://www.linkedin.com/company/natura"
+                  className="pl-9"
+                  disabled={dmMutation.isPending}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
+                  }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Usado como referência adicional. A busca é feita pelo domínio.
+              </p>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                onClick={() => dmMutation.mutate()}
+                disabled={!canSearchDomain}
+                className="min-w-[180px]"
+              >
+                {dmMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Buscando...
+                  </>
+                ) : (
+                  <>
+                    <Search className="mr-2 h-4 w-4" />
+                    Buscar Decisores
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
+
 
           {dmMutation.isPending && (
             <div className="space-y-2">
