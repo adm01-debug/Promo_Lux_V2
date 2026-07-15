@@ -151,7 +151,6 @@ serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const url = new URL(req.url);
   const actionRaw = url.searchParams.get("action");
 
   // Validate action param
