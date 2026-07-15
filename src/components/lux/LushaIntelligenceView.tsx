@@ -620,11 +620,11 @@ export const LushaIntelligenceView = () => {
 
   const validateDomain = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeDomain(raw);
-    if (!value) return { value, error: "Informe o domínio do site da empresa." };
+    if (!value) return { value, error: null }; // opcional
     if (/(^|\.)linkedin\.com$/i.test(value)) {
       return {
         value,
-        error: "Este campo aceita apenas o domínio do site. Para o LinkedIn, use o campo abaixo.",
+        error: "Este campo aceita apenas o domínio do site. Para o LinkedIn, use o campo acima.",
       };
     }
     if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
@@ -649,7 +649,7 @@ export const LushaIntelligenceView = () => {
 
   const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeLinkedinCompanyUrl(raw);
-    if (!value) return { value, error: null }; // opcional
+    if (!value) return { value, error: "Informe a URL da página da empresa no LinkedIn." };
     if (!/^linkedin\.com\/(company|school|showcase)\/[a-z0-9\-_.%]+\/?$/i.test(value)) {
       return {
         value,
@@ -658,6 +658,7 @@ export const LushaIntelligenceView = () => {
     }
     return { value, error: null };
   }, [normalizeLinkedinCompanyUrl]);
+
 
   const applyExample = useCallback(() => {
     setDomain(EXAMPLE_DOMAIN);
@@ -1270,8 +1271,9 @@ export const LushaIntelligenceView = () => {
           <div className="space-y-3">
             <div className="space-y-2">
               <Label htmlFor="lusha-linkedin">
-                Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
+                Página da empresa no LinkedIn
               </Label>
+
               <div className="relative flex gap-2">
                 <div className="relative flex-1">
                   <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -1364,7 +1366,7 @@ export const LushaIntelligenceView = () => {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <Label htmlFor="lusha-domain">Domínio da empresa</Label>
+                <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
                 <Button
                   type="button"
                   variant="ghost"
