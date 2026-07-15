@@ -151,43 +151,138 @@ export const LushaIntelligenceView = () => {
   const [rateLimitCountdown, setRateLimitCountdown] = useState<number | null>(null);
   const [copiedLinkedin, setCopiedLinkedin] = useState(false);
 
-  // ── Histórico local de buscas por domínio (persistido em localStorage) ──
+  // ── Histórico de buscas por domínio (sincronizado no Supabase) ──
   type DMHistoryEntry = {
     id: string;
     domain: string;
     linkedin: string | null;
     startedAt: string;
     finishedAt: string;
-    status: "done" | "failed" | "cancelled";
+    status: "done" | "failed" | "cancelled" | "processing" | "queued";
     total: number;
     message?: string | null;
   };
-  const HISTORY_KEY = "lusha-dm-history";
-  const HISTORY_MAX = 15;
-  const [dmHistory, setDmHistory] = useState<DMHistoryEntry[]>(() => {
-    try {
-      const raw = localStorage.getItem(HISTORY_KEY);
-      return raw ? (JSON.parse(raw) as DMHistoryEntry[]) : [];
-    } catch { return []; }
+
+  type DMHistoryRow = {
+    id: string;
+    domain: string;
+    linkedin_url: string | null;
+    status: string;
+    decision_makers_count: number;
+    error_message: string | null;
+    created_at: string;
+    updated_at: string;
+  };
+
+  const rowToEntry = (r: DMHistoryRow): DMHistoryEntry => ({
+    id: r.id,
+    domain: r.domain,
+    linkedin: r.linkedin_url,
+    startedAt: r.created_at,
+    finishedAt: r.updated_at,
+    status: (["done", "failed", "cancelled", "processing", "queued"].includes(r.status)
+      ? r.status
+      : "failed") as DMHistoryEntry["status"],
+    total: r.decision_makers_count ?? 0,
+    message: r.error_message,
   });
-  const pushHistory = useCallback((entry: Omit<DMHistoryEntry, "id" | "finishedAt"> & { startedAt: string }) => {
-    setDmHistory((prev) => {
-      const next: DMHistoryEntry[] = [
-        {
-          ...entry,
-          id: crypto.randomUUID(),
-          finishedAt: new Date().toISOString(),
+
+  const { data: dmHistory = [] } = useQuery({
+    queryKey: ["lusha-dm-history"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("lusha_dm_search_history")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      return ((data ?? []) as DMHistoryRow[]).map(rowToEntry);
+    },
+    staleTime: 30_000,
+  });
+
+  // Sincronização em tempo real entre abas/dispositivos
+  useEffect(() => {
+    const channel = supabase
+      .channel("lusha-dm-history-sync")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "lusha_dm_search_history" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
         },
-        ...prev,
-      ].slice(0, HISTORY_MAX);
-      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* quota */ }
-      return next;
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
+  const pushHistory = useCallback(
+    async (entry: {
+      domain: string;
+      linkedin: string | null;
+      startedAt: string;
+      status: DMHistoryEntry["status"];
+      total: number;
+      message?: string | null;
+    }) => {
+      try {
+        const { data: userRes } = await supabase.auth.getUser();
+        const uid = userRes?.user?.id;
+        if (!uid) return;
+        const duration = Math.max(0, Date.now() - new Date(entry.startedAt).getTime());
+        await supabase.from("lusha_dm_search_history").insert({
+          user_id: uid,
+          domain: entry.domain,
+          linkedin_url: entry.linkedin,
+          status: entry.status,
+          decision_makers_count: entry.total,
+          error_message: entry.message ?? null,
+          duration_ms: duration,
+        });
+        queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+      } catch {
+        /* silencioso — histórico é auxiliar */
+      }
+    },
+    [queryClient],
+  );
+
+  const clearHistory = useCallback(async () => {
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes?.user?.id;
+      if (!uid) return;
+      await supabase.from("lusha_dm_search_history").delete().eq("user_id", uid);
+      queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+    } catch { /* ignore */ }
+  }, [queryClient]);
+
+  // ── Filtros do histórico ──
+  const [historyQ, setHistoryQ] = useState("");
+  const [historyStatus, setHistoryStatus] = useState<"all" | DMHistoryEntry["status"]>("all");
+  const [historyFrom, setHistoryFrom] = useState<string>(""); // yyyy-mm-dd
+  const [historyTo, setHistoryTo] = useState<string>("");
+
+  const filteredHistory = useMemo(() => {
+    const q = historyQ.trim().toLowerCase();
+    const fromTs = historyFrom ? new Date(historyFrom + "T00:00:00").getTime() : null;
+    const toTs = historyTo ? new Date(historyTo + "T23:59:59").getTime() : null;
+    return dmHistory.filter((h) => {
+      if (q && !h.domain.toLowerCase().includes(q) && !(h.linkedin ?? "").toLowerCase().includes(q)) return false;
+      if (historyStatus !== "all" && h.status !== historyStatus) return false;
+      const t = new Date(h.finishedAt).getTime();
+      if (fromTs != null && t < fromTs) return false;
+      if (toTs != null && t > toTs) return false;
+      return true;
     });
-  }, []);
-  const clearHistory = useCallback(() => {
-    setDmHistory([]);
-    try { localStorage.removeItem(HISTORY_KEY); } catch { /* ignore */ }
-  }, []);
+  }, [dmHistory, historyQ, historyStatus, historyFrom, historyTo]);
+
+  // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
+  const [autoRetryEnabled, setAutoRetryEnabled] = useState(false);
+  const autoRetryAttemptedRef = useRef<Set<string>>(new Set());
+  const [autoRetryQueue, setAutoRetryQueue] = useState<string[]>([]);
 
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
