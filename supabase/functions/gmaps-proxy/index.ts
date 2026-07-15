@@ -113,11 +113,18 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Healthcheck anônimo (GET / ou GET /health) — usado por probes de
-  // uptime e pelo scheduler do Supabase. Retorna 204 sem exigir auth
-  // e sem emitir warn de auth_missing, evitando ruído nos logs.
+  // Healthcheck anônimo — usado por probes de uptime e pelo scheduler do
+  // Supabase (que bate na raiz da função sem Authorization). Retorna 204 sem
+  // exigir auth e sem emitir warn de auth_missing, evitando ruído nos logs.
+  // Considera healthcheck qualquer GET sem Authorization em rotas neutras
+  // ("/", "/gmaps-proxy", "/health"), o que cobre tanto invocações via
+  // supabase.functions.invoke quanto probes diretos ao domínio da função.
   const url = new URL(req.url);
-  if (req.method === "GET" && (url.pathname === "/" || url.pathname.endsWith("/health"))) {
+  const isNeutralPath =
+    url.pathname === "/" ||
+    url.pathname.endsWith("/gmaps-proxy") ||
+    url.pathname.endsWith("/health");
+  if (req.method === "GET" && isNeutralPath && !req.headers.get("Authorization")) {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
 
