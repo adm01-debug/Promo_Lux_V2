@@ -935,6 +935,99 @@ export type Database = {
         }
         Relationships: []
       }
+      circuit_breaker_alert_history: {
+        Row: {
+          admins_notified: number
+          failure_count: number
+          id: string
+          reason: string
+          service_name: string
+          state: string
+          triggered_at: string
+        }
+        Insert: {
+          admins_notified?: number
+          failure_count: number
+          id?: string
+          reason: string
+          service_name: string
+          state: string
+          triggered_at?: string
+        }
+        Update: {
+          admins_notified?: number
+          failure_count?: number
+          id?: string
+          reason?: string
+          service_name?: string
+          state?: string
+          triggered_at?: string
+        }
+        Relationships: []
+      }
+      circuit_breaker_alert_settings: {
+        Row: {
+          alert_on_open: boolean
+          cooldown_minutes: number
+          created_at: string
+          enabled: boolean
+          failure_count_threshold: number
+          id: boolean
+          updated_at: string
+        }
+        Insert: {
+          alert_on_open?: boolean
+          cooldown_minutes?: number
+          created_at?: string
+          enabled?: boolean
+          failure_count_threshold?: number
+          id?: boolean
+          updated_at?: string
+        }
+        Update: {
+          alert_on_open?: boolean
+          cooldown_minutes?: number
+          created_at?: string
+          enabled?: boolean
+          failure_count_threshold?: number
+          id?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      circuit_breaker_snapshots: {
+        Row: {
+          captured_at: string
+          failure_count: number
+          id: string
+          last_failure_at: string | null
+          opened_at: string | null
+          service_name: string
+          state: string
+          threshold: number
+        }
+        Insert: {
+          captured_at?: string
+          failure_count?: number
+          id?: string
+          last_failure_at?: string | null
+          opened_at?: string | null
+          service_name: string
+          state: string
+          threshold: number
+        }
+        Update: {
+          captured_at?: string
+          failure_count?: number
+          id?: string
+          last_failure_at?: string | null
+          opened_at?: string | null
+          service_name?: string
+          state?: string
+          threshold?: number
+        }
+        Relationships: []
+      }
       circuit_breakers: {
         Row: {
           failure_count: number | null
@@ -3297,6 +3390,7 @@ export type Database = {
         Args: { _hours?: number }
         Returns: number
       }
+      capture_circuit_breaker_snapshots: { Args: never; Returns: number }
       capture_db_health_snapshot: {
         Args: never
         Returns: {
@@ -3419,6 +3513,7 @@ export type Database = {
         }
         Returns: number
       }
+      evaluate_circuit_breaker_alerts: { Args: never; Returns: number }
       evaluate_dlq_alerts: {
         Args: {
           _consecutive?: number
