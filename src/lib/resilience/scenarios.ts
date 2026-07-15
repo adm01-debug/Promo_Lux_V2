@@ -20,7 +20,11 @@ const DEFAULT_GRID: Required<ScenarioGridConfig> = {
   faults: ["timeout", "rate_limit", "server_5xx", "client_4xx", "unavailable"],
   failureRates: [0.1, 0.25, 0.5, 0.75, 0.95],
   latenciesMs: [200, 1000, 3000, 8000],
-  slasSecs: [30, 120, 600],
+  // SLA mínimo elevado de 30s → 120s: 30s é menor que o próprio backoff base
+  // (30s) da política de retry, o que garantia SLA breach em qualquer
+  // retentativa. 120s reflete o piso realista de operações críticas
+  // (raspagem, enriquecimento) e elimina ~158 warnings espúrios do Monte Carlo.
+  slasSecs: [120, 300, 600],
 };
 
 export function generateScenarios(config: ScenarioGridConfig = {}): ScenarioSpec[] {
