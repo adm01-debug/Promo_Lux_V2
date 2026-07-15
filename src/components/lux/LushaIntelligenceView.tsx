@@ -760,7 +760,7 @@ export const LushaIntelligenceView = () => {
         message: null,
         startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
-      void notifyLongSearch({ domain, status: "done", elapsedMs: elapsed, total });
+      void notifyLongSearch({ domain, status: "done", elapsedMs: elapsed, total, historyId: currentHistoryIdRef.current });
       currentHistoryIdRef.current = null;
       toast({
         title: "Decisores encontrados",
