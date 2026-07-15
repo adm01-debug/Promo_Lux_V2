@@ -177,6 +177,9 @@ export const LushaIntelligenceView = () => {
     },
     onSuccess: (data) => {
       setDmResults(data.results ?? []);
+      setDmRequestId(data.requestId ?? null);
+      setRevealedData({});
+      setRevealingIds(new Set());
       toast({
         title: "Decisores encontrados",
         description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -190,8 +193,76 @@ export const LushaIntelligenceView = () => {
 
   const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
 
-  function handleReveal() {
-    toast({ title: "Em breve", description: "Enriquecimento automático de email/telefone em breve." });
+  async function handleReveal(dm: DecisionMaker) {
+    if (!dmRequestId) {
+      toast({
+        title: "Sessão de busca não encontrada",
+        description: "Refaça a busca por domínio antes de revelar dados.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (revealingIds.has(dm.id) || revealedData[dm.id]) return;
+
+    setRevealingIds((prev) => new Set(prev).add(dm.id));
+    try {
+      const { data, error } = await supabase.functions.invoke<{
+        requestId: string;
+        creditsCharged: number | null;
+        totalRevealed: number;
+        totalRequested: number;
+        revealed: Array<{
+          contactId: string;
+          error?: string;
+          emailAddresses?: { email: string; type: string | null }[];
+          phoneNumbers?: { number: string; type: string | null; doNotCall?: boolean | null }[];
+        }>;
+      }>("lusha-reveal", {
+        body: {
+          requestId: dmRequestId,
+          contactIds: [dm.id],
+          revealEmails: dm.hasEmail,
+          revealPhones: dm.hasPhone,
+        },
+      });
+      if (error) throw error;
+      const entry = data?.revealed?.find((r) => r.contactId === dm.id);
+      if (!entry) {
+        throw new Error("Nenhum dado retornado para este decisor.");
+      }
+      if (entry.error) {
+        setRevealedData((prev) => ({
+          ...prev,
+          [dm.id]: { emails: [], phones: [], error: entry.error },
+        }));
+        toast({
+          title: "Não foi possível revelar",
+          description: entry.error,
+          variant: "destructive",
+        });
+      } else {
+        setRevealedData((prev) => ({
+          ...prev,
+          [dm.id]: {
+            emails: entry.emailAddresses ?? [],
+            phones: entry.phoneNumbers ?? [],
+          },
+        }));
+        toast({
+          title: "Dados revelados",
+          description: `${dm.fullName}${data?.creditsCharged != null ? ` — ${data.creditsCharged} crédito(s) consumido(s)` : ""}.`,
+        });
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: "Erro ao revelar", description: msg, variant: "destructive" });
+    } finally {
+      setRevealingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(dm.id);
+        return next;
+      });
+    }
   }
 
   const seniorityBadge = (s: string) => {
