@@ -54,7 +54,7 @@ type SearchInput = z.infer<typeof SearchSchema>;
 
 async function fetchLushaCookie(log: ReturnType<typeof createLogger>): Promise<{ cookie: string; token: string; cnpj: string } | null> {
   const selfHostedUrl = Deno.env.get("SUPABASE_EXTERNAL_URL") ?? "https://supabase.atomicabr.com.br";
-  const selfHostedKey = Deno.env.get("SUPABASE_EXTERNAL_ANON_KEY") ?? "";
+  const selfHostedKey = (Deno.env.get("EXTERNAL_VAULT_ANON_KEY") ?? Deno.env.get("SUPABASE_EXTERNAL_ANON_KEY") ?? "");
 
   if (!selfHostedKey) {
     log.error("cookie_fetch_missing_env", { hint: "Set SUPABASE_EXTERNAL_ANON_KEY" });
