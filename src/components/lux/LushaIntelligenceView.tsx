@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard } from "lucide-react";
 import { downloadCSV } from "@/lib/exportCSV";
 import { filterHistory, formatDurationMs, findRecentDuplicate, buildHistoryCsvRows, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
+import { LushaCookieHealthBanner } from "@/components/lux/lusha/LushaCookieHealthBanner";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
