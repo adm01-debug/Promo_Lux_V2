@@ -161,6 +161,7 @@ export const LushaIntelligenceView = () => {
     status: "done" | "failed" | "cancelled" | "processing" | "queued";
     total: number;
     message?: string | null;
+    durationMs: number | null;
   };
 
   type DMHistoryRow = {
@@ -170,6 +171,7 @@ export const LushaIntelligenceView = () => {
     status: string;
     decision_makers_count: number;
     error_message: string | null;
+    duration_ms: number | null;
     created_at: string;
     updated_at: string;
   };
@@ -185,6 +187,7 @@ export const LushaIntelligenceView = () => {
       : "failed") as DMHistoryEntry["status"],
     total: r.decision_makers_count ?? 0,
     message: r.error_message,
+    durationMs: r.duration_ms ?? null,
   });
 
   const { data: dmHistory = [] } = useQuery({
@@ -218,32 +221,60 @@ export const LushaIntelligenceView = () => {
     };
   }, [queryClient]);
 
-  const pushHistory = useCallback(
-    async (entry: {
-      domain: string;
-      linkedin: string | null;
-      startedAt: string;
-      status: DMHistoryEntry["status"];
-      total: number;
-      message?: string | null;
-    }) => {
+  // Ref do id da linha da busca em andamento — permite atualizar o mesmo registro
+  // conforme a busca avança pelas fases (queued → processing → done/failed/cancelled).
+  const currentHistoryIdRef = useRef<string | null>(null);
+
+  const startHistory = useCallback(
+    async (entry: { domain: string; linkedin: string | null }): Promise<string | null> => {
       try {
         const { data: userRes } = await supabase.auth.getUser();
         const uid = userRes?.user?.id;
-        if (!uid) return;
-        const duration = Math.max(0, Date.now() - new Date(entry.startedAt).getTime());
-        await supabase.from("lusha_dm_search_history").insert({
-          user_id: uid,
-          domain: entry.domain,
-          linkedin_url: entry.linkedin,
-          status: entry.status,
-          decision_makers_count: entry.total,
-          error_message: entry.message ?? null,
-          duration_ms: duration,
-        });
+        if (!uid) return null;
+        const { data, error } = await supabase
+          .from("lusha_dm_search_history")
+          .insert({
+            user_id: uid,
+            domain: entry.domain,
+            linkedin_url: entry.linkedin,
+            status: "queued",
+            decision_makers_count: 0,
+            duration_ms: 0,
+          })
+          .select("id")
+          .single();
+        if (error) return null;
+        queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+        return data?.id ?? null;
+      } catch {
+        return null;
+      }
+    },
+    [queryClient],
+  );
+
+  const updateHistory = useCallback(
+    async (
+      id: string | null,
+      patch: {
+        status: DMHistoryEntry["status"];
+        total?: number;
+        message?: string | null;
+        startedAt?: string;
+      },
+    ) => {
+      if (!id) return;
+      try {
+        const payload: Record<string, unknown> = { status: patch.status };
+        if (patch.total != null) payload.decision_makers_count = patch.total;
+        if (patch.message !== undefined) payload.error_message = patch.message;
+        if (patch.startedAt) {
+          payload.duration_ms = Math.max(0, Date.now() - new Date(patch.startedAt).getTime());
+        }
+        await supabase.from("lusha_dm_search_history").update(payload).eq("id", id);
         queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
       } catch {
-        /* silencioso — histórico é auxiliar */
+        /* silencioso */
       }
     },
     [queryClient],
