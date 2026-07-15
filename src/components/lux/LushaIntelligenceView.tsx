@@ -292,9 +292,56 @@ export const LushaIntelligenceView = () => {
     } catch { /* ignore */ }
   }, [queryClient]);
 
+  // ── Preferências de notificações (persistidas em localStorage) ──
+  type NotifPrefs = {
+    nativeEnabled: boolean;      // notificação nativa do navegador
+    inAppEnabled: boolean;       // grava no centro de notificações do app
+    hiddenTabOnly: boolean;      // só notifica se a aba estiver oculta
+    notifyOnFailure: boolean;    // notificar em falhas
+    notifyOnCancel: boolean;     // notificar em cancelamentos
+    thresholdMs: number;         // duração mínima para considerar "longa"
+    repeatUntilFocus: boolean;   // renotifica a cada N segundos até o usuário focar
+    repeatIntervalMs: number;    // intervalo do repeat
+  };
+  const NOTIF_PREFS_KEY = "lusha-dm:notif-prefs:v1";
+  const DEFAULT_NOTIF_PREFS: NotifPrefs = {
+    nativeEnabled: true,
+    inAppEnabled: true,
+    hiddenTabOnly: false,
+    notifyOnFailure: true,
+    notifyOnCancel: false,
+    thresholdMs: 15_000,
+    repeatUntilFocus: false,
+    repeatIntervalMs: 30_000,
+  };
+  const [notifPrefs, setNotifPrefs] = useState<NotifPrefs>(() => {
+    try {
+      const raw = typeof localStorage !== "undefined" ? localStorage.getItem(NOTIF_PREFS_KEY) : null;
+      if (!raw) return DEFAULT_NOTIF_PREFS;
+      const parsed = JSON.parse(raw) as Partial<NotifPrefs>;
+      return { ...DEFAULT_NOTIF_PREFS, ...parsed };
+    } catch { return DEFAULT_NOTIF_PREFS; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(NOTIF_PREFS_KEY, JSON.stringify(notifPrefs)); } catch { /* ignore */ }
+  }, [notifPrefs]);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+  const repeatTimersRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
+  const clearRepeatTimer = useCallback((key: string) => {
+    const t = repeatTimersRef.current.get(key);
+    if (t) { clearInterval(t); repeatTimersRef.current.delete(key); }
+  }, []);
+  useEffect(() => {
+    const onFocus = () => {
+      for (const [, t] of repeatTimersRef.current) clearInterval(t);
+      repeatTimersRef.current.clear();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) onFocus(); });
+    return () => window.removeEventListener("focus", onFocus);
+  }, []);
+
   // ── Notificações de buscas longas ──
-  // Considera "longa" acima de 15s OU quando a aba está oculta (usuário saiu da tela).
-  const LONG_SEARCH_THRESHOLD_MS = 15_000;
   const [browserNotifPermission, setBrowserNotifPermission] = useState<NotificationPermission>(
     typeof Notification !== "undefined" ? Notification.permission : "denied",
   );
@@ -313,56 +360,95 @@ export const LushaIntelligenceView = () => {
   }, []);
 
   const notifyLongSearch = useCallback(
-    async (params: { domain: string; status: "done" | "failed" | "cancelled"; elapsedMs: number; total?: number; message?: string | null }) => {
-      const { domain: d, status, elapsedMs, total, message } = params;
-      const isLong = elapsedMs >= LONG_SEARCH_THRESHOLD_MS;
+    async (params: { domain: string; status: "done" | "failed" | "cancelled"; elapsedMs: number; total?: number; message?: string | null; historyId?: string | null }) => {
+      const { domain: d, status, elapsedMs, total, message, historyId } = params;
+      if (status === "failed" && !notifPrefs.notifyOnFailure) return;
+      if (status === "cancelled" && !notifPrefs.notifyOnCancel) return;
+
+      const isLong = elapsedMs >= notifPrefs.thresholdMs;
       const wasAway = typeof document !== "undefined" && document.hidden;
-      if (!isLong && !wasAway) return;
+      const shouldNotify = notifPrefs.hiddenTabOnly ? wasAway : (isLong || wasAway);
+      if (!shouldNotify) return;
 
       const seconds = (elapsedMs / 1000).toFixed(1);
       const title =
-        status === "done"
-          ? `Busca concluída — ${d}`
-          : status === "failed"
-          ? `Busca falhou — ${d}`
-          : `Busca cancelada — ${d}`;
+        status === "done" ? `Busca concluída — ${d}`
+        : status === "failed" ? `Busca falhou — ${d}`
+        : `Busca cancelada — ${d}`;
       const description =
-        status === "done"
-          ? `${total ?? 0} decisor(es) localizado(s) em ${seconds}s.`
-          : status === "failed"
-          ? `${message ?? "Erro desconhecido"} (após ${seconds}s).`
-          : `Interrompida após ${seconds}s.`;
+        status === "done" ? `${total ?? 0} decisor(es) localizado(s) em ${seconds}s.`
+        : status === "failed" ? `${message ?? "Erro desconhecido"} (após ${seconds}s).`
+        : `Interrompida após ${seconds}s.`;
 
-      // 1) Notificação nativa do navegador (se permitida e aba oculta ou busca longa)
-      try {
-        if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-          const n = new Notification(title, {
-            body: description,
-            tag: `lusha-dm-${d}`,
-            icon: "/favicon.ico",
+      // Deep-link direto para o histórico/resultado
+      const deepLink = `/?view=lusha&tab=history${historyId ? `&historyId=${encodeURIComponent(historyId)}` : ""}`;
+
+      const fireNative = () => {
+        try {
+          if (
+            notifPrefs.nativeEnabled &&
+            typeof Notification !== "undefined" &&
+            Notification.permission === "granted"
+          ) {
+            const n = new Notification(title, {
+              body: description,
+              tag: `lusha-dm-${d}`,
+              icon: "/favicon.ico",
+              data: { deepLink },
+            });
+            n.onclick = () => {
+              try {
+                window.focus();
+                n.close();
+                // navega mantendo SPA
+                window.location.assign(deepLink);
+              } catch { /* noop */ }
+            };
+          }
+        } catch { /* ignore */ }
+      };
+      fireNative();
+
+      // Repetição até o usuário focar
+      if (notifPrefs.repeatUntilFocus && document.hidden) {
+        clearRepeatTimer(d);
+        const interval = Math.max(5_000, notifPrefs.repeatIntervalMs);
+        const t = setInterval(() => {
+          if (!document.hidden) { clearRepeatTimer(d); return; }
+          fireNative();
+        }, interval);
+        repeatTimersRef.current.set(d, t);
+      }
+
+      // Centro de notificações do app
+      if (notifPrefs.inAppEnabled) {
+        try {
+          const { data: userRes } = await supabase.auth.getUser();
+          const uid = userRes?.user?.id;
+          if (!uid) return;
+          await supabase.from("notifications").insert({
+            user_id: uid,
+            title,
+            message: description,
+            type: status === "failed" ? "system" : "enrichment",
+            metadata: {
+              source: "lusha_dm",
+              domain: d,
+              status,
+              elapsed_ms: elapsedMs,
+              total: total ?? 0,
+              deep_link: deepLink,
+              history_id: historyId ?? null,
+            } as unknown as never,
           });
-          n.onclick = () => { try { window.focus(); n.close(); } catch { /* noop */ } };
-        }
-      } catch { /* ignore */ }
-
-      // 2) Persiste no centro de notificações do app (sincroniza entre dispositivos)
-      try {
-        const { data: userRes } = await supabase.auth.getUser();
-        const uid = userRes?.user?.id;
-        if (!uid) return;
-        await supabase.from("notifications").insert({
-          user_id: uid,
-          title,
-          message: description,
-          type: status === "failed" ? "system" : "enrichment",
-          metadata: { source: "lusha_dm", domain: d, status, elapsed_ms: elapsedMs, total: total ?? 0 } as unknown as never,
-        });
-        queryClient.invalidateQueries({ queryKey: ["notifications"] });
-        queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
-      } catch { /* ignore */ }
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+          queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+        } catch { /* ignore */ }
+      }
     },
-    [queryClient],
+    [queryClient, notifPrefs, clearRepeatTimer],
   );
+
 
 
 
