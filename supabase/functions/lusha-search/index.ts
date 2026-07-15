@@ -412,7 +412,7 @@ serve(async (req) => {
 
       totalFound += contacts.length;
 
-      const deptPt = input.departments.find(d => DEPT_MAP[d.trim().toLowerCase()] === deptEn) ?? deptEn;
+      const deptPt = findPtLabelForEn(deptEn, input.departments);
 
       for (const contact of contacts) {
         const socialLink = (contact.social_link as string) ?? null;
