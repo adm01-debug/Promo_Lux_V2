@@ -1224,7 +1224,18 @@ export const LushaIntelligenceView = () => {
                 </div>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground tabular-nums">
                   {(dmMutation.isPending || searchPhase === "done" || searchPhase === "failed" || searchPhase === "cancelled") && (
-                    <span aria-label="Tempo decorrido">⏱ {(searchElapsedMs / 1000).toFixed(1)}s</span>
+                    <span aria-label="Tempo decorrido" title="Duração desta busca (duration_ms)">
+                      ⏱ {formatDuration(searchElapsedMs)}
+                    </span>
+                  )}
+                  {avgDurationByDomain.get(domain) != null && (
+                    <span
+                      aria-label="Média histórica deste domínio"
+                      title="Tempo médio das buscas anteriores concluídas para este domínio"
+                      className="hidden sm:inline"
+                    >
+                      μ {formatDuration(avgDurationByDomain.get(domain) ?? null)}
+                    </span>
                   )}
                   <span>{Math.round(searchProgress)}%</span>
                 </div>
