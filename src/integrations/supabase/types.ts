@@ -1869,6 +1869,7 @@ export type Database = {
           company_email_domain: string | null
           company_id: string | null
           company_linkedin_followers: number | null
+          company_linkedin_url: string | null
           company_locations: Json | null
           company_type: string | null
           confidence_score: number | null
@@ -1918,6 +1919,7 @@ export type Database = {
           company_email_domain?: string | null
           company_id?: string | null
           company_linkedin_followers?: number | null
+          company_linkedin_url?: string | null
           company_locations?: Json | null
           company_type?: string | null
           confidence_score?: number | null
@@ -1967,6 +1969,7 @@ export type Database = {
           company_email_domain?: string | null
           company_id?: string | null
           company_linkedin_followers?: number | null
+          company_linkedin_url?: string | null
           company_locations?: Json | null
           company_type?: string | null
           confidence_score?: number | null

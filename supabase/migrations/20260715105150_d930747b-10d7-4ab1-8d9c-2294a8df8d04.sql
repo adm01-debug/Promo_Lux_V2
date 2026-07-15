@@ -1,0 +1,2 @@
+ALTER TABLE public.lusha_contacts ADD COLUMN IF NOT EXISTS company_linkedin_url TEXT;
+CREATE INDEX IF NOT EXISTS lusha_contacts_company_linkedin_url_idx ON public.lusha_contacts (company_linkedin_url) WHERE company_linkedin_url IS NOT NULL;
