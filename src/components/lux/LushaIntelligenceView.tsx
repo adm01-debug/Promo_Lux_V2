@@ -241,6 +241,15 @@ export const LushaIntelligenceView = () => {
     },
   });
 
+  // ── Countdown do rate limit (decrementa 1s a 1s) ──
+  useEffect(() => {
+    if (rateLimitCountdown == null || rateLimitCountdown <= 0) return;
+    const id = setInterval(() => {
+      setRateLimitCountdown((prev) => (prev == null ? null : prev <= 1 ? null : prev - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [rateLimitCountdown]);
+
   const dmMutation = useMutation({
     mutationFn: async () => {
       const d = validateDomain(domain);
@@ -249,25 +258,69 @@ export const LushaIntelligenceView = () => {
       setLinkedinError(l.error);
       if (d.error) throw new Error(d.error);
       if (l.error) throw new Error(l.error);
-      // aplica normalização de volta ao estado (feedback visual)
       if (d.value !== domain) setDomain(d.value);
       if (l.value !== linkedinCompanyUrl) setLinkedinCompanyUrl(l.value);
 
-      const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
-        body: {
-          domains: [d.value],
-          company_linkedin_url: l.value || null,
-        },
-      });
-      if (error) throw error;
-      return data as DMResponse;
+      // Fase 1: em fila
+      setSearchPhase("queued");
+      setSearchProgress(10);
+      setSearchStatusMsg("Enviando requisição...");
+
+      // Fase 2: processando (com progresso simulado enquanto aguarda a Lusha)
+      const processingTimer = setTimeout(() => {
+        setSearchPhase("processing");
+        setSearchStatusMsg("Consultando Lusha Decision Makers V3...");
+      }, 400);
+
+      const progressTimer = setInterval(() => {
+        setSearchProgress((p) => (p < 88 ? p + Math.max(1, Math.round((90 - p) / 12)) : p));
+      }, 350);
+
+      try {
+        const { data, error } = await supabase.functions.invoke<DMResponse>("lusha-decision-makers", {
+          body: {
+            domains: [d.value],
+            company_linkedin_url: l.value || null,
+          },
+        });
+        if (error) {
+          // supabase-js encapsula o body em error.context (Response). Extrai retry_after quando presente.
+          let retryAfter: number | null = null;
+          let friendly: string | null = null;
+          const ctx = (error as unknown as { context?: Response }).context;
+          if (ctx && typeof ctx.json === "function") {
+            try {
+              const body = await ctx.clone().json();
+              if (body?.retry_after_seconds != null) retryAfter = Number(body.retry_after_seconds);
+              if (body?.error?.code === "lusha_rate_limited") {
+                friendly = body?.error?.message ?? null;
+              } else if (body?.error?.message) {
+                friendly = body.error.message;
+              }
+            } catch { /* ignora parse */ }
+          }
+          if (retryAfter != null || /rate|429/i.test(error.message ?? "")) {
+            const wait = retryAfter ?? 60;
+            const err = new Error(friendly ?? `Limite de requisições atingido. Aguarde ${wait}s antes de tentar novamente.`);
+            (err as unknown as { rateLimit: number }).rateLimit = wait;
+            throw err;
+          }
+          throw friendly ? new Error(friendly) : error;
+        }
+        return data as DMResponse;
+      } finally {
+        clearTimeout(processingTimer);
+        clearInterval(progressTimer);
+      }
     },
     onSuccess: (data) => {
       setDmResults(data.results ?? []);
       setDmRequestId(data.requestId ?? null);
       setRevealedData({});
       setRevealingIds(new Set());
-      // Hidratação de dados persistidos ocorre no useEffect abaixo
+      setSearchPhase("done");
+      setSearchProgress(100);
+      setSearchStatusMsg(`${data.totalDecisionMakers} decisor(es) localizado(s).`);
       toast({
         title: "Decisores encontrados",
         description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -275,7 +328,20 @@ export const LushaIntelligenceView = () => {
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
-      toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
+      const wait = (err as { rateLimit?: number })?.rateLimit;
+      setSearchPhase("failed");
+      setSearchProgress(100);
+      setSearchStatusMsg(msg);
+      if (wait) {
+        setRateLimitCountdown(wait);
+        toast({
+          title: "Limite de requisições da Lusha",
+          description: `${msg} Você poderá tentar novamente em ${wait}s.`,
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
+      }
     },
   });
 
