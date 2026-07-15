@@ -124,6 +124,8 @@ export const LushaIntelligenceView = () => {
   const [cookieAlert, setCookieAlert] = useState<string | null>(null);
   const [domain, setDomain] = useState("");
   const [linkedinCompanyUrl, setLinkedinCompanyUrl] = useState("");
+  const [domainError, setDomainError] = useState<string | null>(null);
+  const [linkedinError, setLinkedinError] = useState<string | null>(null);
   const [dmResults, setDmResults] = useState<DMCompanyResult[] | null>(null);
   const [dmRequestId, setDmRequestId] = useState<string | null>(null);
   const [revealingIds, setRevealingIds] = useState<Set<string>>(new Set());
@@ -136,6 +138,68 @@ export const LushaIntelligenceView = () => {
     type: "certifications" | "courses" | "awards";
     dm: DecisionMaker;
   } | null>(null);
+
+  // ── Helpers de normalização e validação ──
+  const EXAMPLE_DOMAIN = "natura.com.br";
+  const EXAMPLE_LINKEDIN = "linkedin.com/company/natura";
+
+  const normalizeDomain = useCallback((input: string): string => {
+    let v = (input ?? "").trim().toLowerCase();
+    if (!v) return "";
+    // remove protocolo, barras finais, caminho e query
+    v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
+    v = v.split("/")[0].split("?")[0].split("#")[0];
+    return v;
+  }, []);
+
+  const validateDomain = useCallback((raw: string): { value: string; error: string | null } => {
+    const value = normalizeDomain(raw);
+    if (!value) return { value, error: "Informe o domínio do site da empresa." };
+    if (/(^|\.)linkedin\.com$/i.test(value)) {
+      return {
+        value,
+        error: "Este campo aceita apenas o domínio do site. Para o LinkedIn, use o campo abaixo.",
+      };
+    }
+    if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
+      return { value, error: "Redes sociais não são aceitas — informe o domínio do site oficial." };
+    }
+    // domínio válido: pelo menos um ponto e caracteres permitidos
+    if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(value)) {
+      return { value, error: "Formato inválido. Use apenas o domínio (ex.: natura.com.br)." };
+    }
+    if (value.length > 253) return { value, error: "Domínio muito longo." };
+    return { value, error: null };
+  }, [normalizeDomain]);
+
+  const normalizeLinkedinCompanyUrl = useCallback((input: string): string => {
+    let v = (input ?? "").trim();
+    if (!v) return "";
+    v = v.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
+    // remove query/hash/trailing slash
+    v = v.split("?")[0].split("#")[0].replace(/\/+$/, "");
+    return v.toLowerCase();
+  }, []);
+
+  const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
+    const value = normalizeLinkedinCompanyUrl(raw);
+    if (!value) return { value, error: null }; // opcional
+    if (!/^linkedin\.com\/(company|school|showcase)\/[a-z0-9\-_.%]+\/?$/i.test(value)) {
+      return {
+        value,
+        error: "Use a URL da página da empresa no LinkedIn (ex.: linkedin.com/company/natura).",
+      };
+    }
+    return { value, error: null };
+  }, [normalizeLinkedinCompanyUrl]);
+
+  const applyExample = useCallback(() => {
+    setDomain(EXAMPLE_DOMAIN);
+    setLinkedinCompanyUrl(EXAMPLE_LINKEDIN);
+    setDomainError(null);
+    setLinkedinError(null);
+  }, []);
+
 
   // Histórico de sessões
   const { data: sessions = [], refetch: refetchSessions } = useQuery({
