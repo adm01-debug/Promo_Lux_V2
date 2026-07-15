@@ -1,6 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
+import { resolveDepartments, findPtLabelForEn } from "../_shared/departmentMap.ts";
+
+// ── Quota diária por usuário (server-side) ──
+const DAILY_SEARCH_QUOTA = Number(Deno.env.get("LUSHA_DAILY_QUOTA") ?? "50");
 
 // ── CORS ──
 const ALLOWED_ORIGINS = [
@@ -33,122 +37,8 @@ function createLogger(requestId: string) {
   };
 }
 
-// ── Mapeamento de Departamentos PT → EN (Lusha enum) ──
-const DEPT_MAP: Record<string, string> = {
-  "compras": "Operations",
-  "suprimentos": "Operations",
-  "logistica": "Operations",
-  "logística": "Operations",
-  "operacoes": "Operations",
-  "operações": "Operations",
-  "supply chain": "Operations",
-  "supply": "Operations",
-  "procurement": "Operations",
-  "estoque": "Operations",
-  "almoxarifado": "Operations",
-  "marketing": "Marketing",
-  "comunicacao": "Marketing",
-  "comunicação": "Marketing",
-  "publicidade": "Marketing",
-  "branding": "Marketing",
-  "growth": "Marketing",
-  "digital": "Marketing",
-  "recursos humanos": "Human Resources",
-  "rh": "Human Resources",
-  "gente": "Human Resources",
-  "pessoas": "Human Resources",
-  "talentos": "Human Resources",
-  "dp": "Human Resources",
-  "departamento pessoal": "Human Resources",
-  "cultura": "Human Resources",
-  "financeiro": "Finance",
-  "financeira": "Finance",
-  "controladoria": "Finance",
-  "contabilidade": "Finance",
-  "contabil": "Finance",
-  "contábil": "Finance",
-  "tesouraria": "Finance",
-  "fiscal": "Finance",
-  "tributario": "Finance",
-  "tributário": "Finance",
-  "financas": "Finance",
-  "finanças": "Finance",
-  "ti": "Information Technology",
-  "tecnologia": "Information Technology",
-  "sistemas": "Information Technology",
-  "tic": "Information Technology",
-  "infraestrutura": "Information Technology",
-  "infra": "Information Technology",
-  "desenvolvimento": "Information Technology",
-  "dev": "Information Technology",
-  "dados": "Information Technology",
-  "data": "Information Technology",
-  "segurança": "Information Technology",
-  "seguranca": "Information Technology",
-  "helpdesk": "Information Technology",
-  "vendas": "Business Development",
-  "comercial": "Business Development",
-  "negocios": "Business Development",
-  "negócios": "Business Development",
-  "desenvolvimento de negocios": "Business Development",
-  "desenvolvimento de negócios": "Business Development",
-  "bd": "Business Development",
-  "account": "Business Development",
-  "key account": "Business Development",
-  "cs": "Customer Success",
-  "customer success": "Customer Success",
-  "sucesso do cliente": "Customer Success",
-  "diretoria": "General Management",
-  "presidencia": "General Management",
-  "presidência": "General Management",
-  "ceo": "General Management",
-  "coo": "General Management",
-  "cfo": "General Management",
-  "cto": "General Management",
-  "chro": "General Management",
-  "diretores": "General Management",
-  "gestao": "General Management",
-  "gestão": "General Management",
-  "gerencia": "General Management",
-  "gerência": "General Management",
-  "board": "General Management",
-  "engenharia": "Engineering & Technical",
-  "p&d": "Engineering & Technical",
-  "p e d": "Engineering & Technical",
-  "pesquisa": "Engineering & Technical",
-  "qualidade": "Engineering & Technical",
-  "qa": "Engineering & Technical",
-  "producao": "Engineering & Technical",
-  "produção": "Engineering & Technical",
-  "manutencao": "Engineering & Technical",
-  "manutenção": "Engineering & Technical",
-  "tecnico": "Engineering & Technical",
-  "técnico": "Engineering & Technical",
-  "bi": "Research & Analytics",
-  "inteligencia": "Research & Analytics",
-  "inteligência": "Research & Analytics",
-  "analytics": "Research & Analytics",
-  "pesquisa de mercado": "Research & Analytics",
-  "produto": "Product",
-  "produtos": "Product",
-  "product": "Product",
-  "pm": "Product",
-  "ux": "Design",
-  "design": "Design",
-  "juridico": "Legal",
-  "jurídico": "Legal",
-  "legal": "Legal",
-  "compliance": "Legal",
-  "administrativo": "Operations",
-  "administracao": "Operations",
-  "administração": "Operations",
-  "secretaria": "Operations",
-  "saude": "Health, Safety and Security",
-  "saúde": "Health, Safety and Security",
-  "ssma": "Health, Safety and Security",
-  "seguranca do trabalho": "Health, Safety and Security",
-  "medicina": "Health, Safety and Security",
-};
+// DEPT_MAP e resolveDepartments movidos para ../_shared/departmentMap.ts
+// (P2-15: single source of truth entre Edge Function e front-end)
 
 // ── Schema de entrada ──
 const SearchSchema = z.object({
@@ -389,18 +279,39 @@ serve(async (req) => {
     user_id: user.id,
   });
 
-  const deptsMapped: string[] = [];
-  const deptsNotFound: string[] = [];
-  for (const d of input.departments) {
-    const key = d.trim().toLowerCase();
-    const en = DEPT_MAP[key];
-    if (en) {
-      if (!deptsMapped.includes(en)) deptsMapped.push(en);
-    } else {
-      deptsNotFound.push(d);
-      log.warn("dept_unmapped", { dept: d });
-    }
+  // ── P1-8: Enforcement de quota diária server-side ──
+  const startOfDayIso = new Date(new Date().toISOString().slice(0, 10) + "T00:00:00.000Z").toISOString();
+  const { count: todayCount, error: quotaErr } = await supabase
+    .from("lusha_search_sessions")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("created_at", startOfDayIso);
+  if (quotaErr) {
+    log.warn("quota_check_failed", { error: quotaErr.message });
+  } else if ((todayCount ?? 0) >= DAILY_SEARCH_QUOTA) {
+    log.warn("quota_exceeded", { user_id: user.id, used: todayCount, limit: DAILY_SEARCH_QUOTA });
+    return new Response(
+      JSON.stringify({
+        error: "quota_exceeded",
+        detail: `Limite diário de ${DAILY_SEARCH_QUOTA} buscas atingido. Tente novamente amanhã.`,
+        used: todayCount,
+        limit: DAILY_SEARCH_QUOTA,
+      }),
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Retry-After": "3600",
+          "X-RateLimit-Limit": String(DAILY_SEARCH_QUOTA),
+          "X-RateLimit-Remaining": "0",
+        },
+      }
+    );
   }
+
+  const { mapped: deptsMapped, notFound: deptsNotFound } = resolveDepartments(input.departments);
+  for (const d of deptsNotFound) log.warn("dept_unmapped", { dept: d });
 
   if (deptsMapped.length === 0) {
     return new Response(
@@ -501,7 +412,7 @@ serve(async (req) => {
 
       totalFound += contacts.length;
 
-      const deptPt = input.departments.find(d => DEPT_MAP[d.trim().toLowerCase()] === deptEn) ?? deptEn;
+      const deptPt = findPtLabelForEn(deptEn, input.departments);
 
       for (const contact of contacts) {
         const socialLink = (contact.social_link as string) ?? null;
