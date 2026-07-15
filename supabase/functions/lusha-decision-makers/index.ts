@@ -73,9 +73,42 @@ function errorResponse(
 }
 
 serve(async (req) => {
+  // CORS dinâmico por request
+  corsHeaders = corsHeadersFor(req);
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
+
+  const correlationId =
+    req.headers.get("x-correlation-id") ?? crypto.randomUUID();
+  const startedAt = Date.now();
+  const warnings: Array<{ scope: string; reason: string; ref?: string }> = [];
+
+  // ── Autenticação obrigatória (antes de qualquer chamada paga) ──────────
+  const authHeader = req.headers.get("Authorization") ?? "";
+  if (!authHeader.toLowerCase().startsWith("bearer ")) {
+    log("warn", correlationId, "unauthorized_no_bearer");
+    return errorResponse(correlationId, 401, "unauthorized", "Missing Bearer token");
+  }
+  const SUPABASE_URL_ENV = Deno.env.get("SUPABASE_URL") ?? "";
+  const SUPABASE_ANON_ENV = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  if (!SUPABASE_URL_ENV || !SUPABASE_ANON_ENV) {
+    return errorResponse(correlationId, 500, "server_misconfigured", "Supabase env ausente");
+  }
+  const authClient = createClient(SUPABASE_URL_ENV, SUPABASE_ANON_ENV, {
+    global: { headers: { Authorization: authHeader } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data: userData, error: userErr } = await authClient.auth.getUser();
+  if (userErr || !userData?.user) {
+    log("warn", correlationId, "unauthorized_invalid_token", { detail: userErr?.message });
+    return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
+  }
+
+  try {
+    // ── 1. Parse do body (tolerante) ──
+    let body: any;
 
   const correlationId =
     req.headers.get("x-correlation-id") ?? crypto.randomUUID();
