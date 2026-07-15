@@ -439,12 +439,13 @@ export const LushaIntelligenceView = () => {
 
   const canSearchDomain = useMemo(() => {
     if (dmMutation.isPending) return false;
+    if (rateLimitCountdown != null && rateLimitCountdown > 0) return false;
     const d = validateDomain(domain);
     if (d.error) return false;
     const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
     if (l.error) return false;
     return true;
-  }, [domain, linkedinCompanyUrl, dmMutation.isPending, validateDomain, validateLinkedinCompanyUrl]);
+  }, [domain, linkedinCompanyUrl, dmMutation.isPending, rateLimitCountdown, validateDomain, validateLinkedinCompanyUrl]);
 
   async function handleReveal(dm: DecisionMaker) {
     if (!dmRequestId) {
