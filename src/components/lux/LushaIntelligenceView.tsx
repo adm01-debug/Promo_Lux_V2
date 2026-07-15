@@ -2441,6 +2441,31 @@ export const LushaIntelligenceView = () => {
         </TabsContent>
       </Tabs>
 
+      {/* Confirmação de exclusão de item do histórico */}
+      <AlertDialog open={!!confirmDeleteId} onOpenChange={(o) => !o && setConfirmDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover entrada do histórico?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação é permanente. A entrada será removida em todos os seus dispositivos e não poderá ser recuperada.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                const id = confirmDeleteId;
+                setConfirmDeleteId(null);
+                if (id) void deleteHistoryEntry(id);
+              }}
+            >
+              Remover
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Preferências de notificações */}
       <Dialog open={prefsOpen} onOpenChange={setPrefsOpen}>
         <DialogContent className="max-w-md">
