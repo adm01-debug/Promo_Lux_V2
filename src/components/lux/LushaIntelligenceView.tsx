@@ -1194,7 +1194,7 @@ export const LushaIntelligenceView = () => {
                 </Badge>
               </CardTitle>
               <CardDescription>
-                Consulta a API Decision Makers V3 da Lusha — retorna os principais decisores sem consumir créditos.
+                Consulta o Oráculo — retorna os principais decisores sem consumir créditos.
               </CardDescription>
             </div>
           </div>
