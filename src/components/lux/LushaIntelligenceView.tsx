@@ -292,6 +292,31 @@ export const LushaIntelligenceView = () => {
     } catch { /* ignore */ }
   }, [queryClient]);
 
+  // ── Exclusão individual de item do histórico ──
+  const deleteHistoryEntry = useCallback(async (id: string) => {
+    if (!id) return;
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes?.user?.id;
+      if (!uid) return;
+      const { error } = await supabase
+        .from("lusha_dm_search_history")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", uid); // defesa em profundidade além do RLS
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+      toast({ title: "Item removido", description: "A entrada foi removida do histórico." });
+    } catch (err) {
+      toast({
+        title: "Falha ao remover",
+        description: err instanceof Error ? err.message : String(err),
+        variant: "destructive",
+      });
+    }
+  }, [queryClient]);
+
+
   // ── Preferências de notificações (persistidas em localStorage) ──
   type NotifPrefs = {
     nativeEnabled: boolean;      // notificação nativa do navegador
