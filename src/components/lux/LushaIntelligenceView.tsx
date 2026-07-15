@@ -1620,6 +1620,16 @@ export const LushaIntelligenceView = () => {
                     type="button"
                     variant="ghost"
                     size="sm"
+                    onClick={exportHistoryCsv}
+                    className="h-7 text-xs text-muted-foreground hover:text-primary"
+                    title="Exportar histórico filtrado em CSV"
+                  >
+                    <Download className="h-3 w-3 mr-1" /> CSV
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={clearHistory}
                     className="h-7 text-xs text-muted-foreground hover:text-destructive"
                     title="Limpar histórico"
