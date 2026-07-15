@@ -695,7 +695,7 @@ export const LushaIntelligenceView = () => {
       const phaseTimers: number[] = [];
       phaseTimers.push(window.setTimeout(() => {
         setSearchPhase("processing");
-        setSearchStatusMsg("Autenticando com a API Lusha...");
+        setSearchStatusMsg("Autenticando com o Oráculo...");
         setSearchProgress(22);
         void updateHistory(currentHistoryIdRef.current, {
           status: "processing",
@@ -838,7 +838,7 @@ export const LushaIntelligenceView = () => {
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
-          title: "Limite de requisições da Lusha",
+          title: "Limite de requisições do Oráculo",
           description: `${msg} Você poderá tentar novamente em ${wait}s.`,
           variant: "destructive",
         });
@@ -919,16 +919,16 @@ export const LushaIntelligenceView = () => {
   }, [dmResults]);
 
 
-  // ── Tradução de códigos de erro conhecidos do Lusha para PT-BR ──
+  // ── Tradução de códigos de erro conhecidos do Oráculo para PT-BR ──
   const translateRevealError = useCallback((raw: string | undefined): string => {
     if (!raw) return "Falha desconhecida ao revelar.";
     const code = raw.toLowerCase();
     if (code.includes("not_found") || code.includes("no_data")) return "Sem dados disponíveis para este decisor.";
-    if (code.includes("credit")) return "Sem créditos Lusha suficientes para revelar.";
+    if (code.includes("credit")) return "Sem créditos suficientes no Oráculo para revelar.";
     if (code.includes("rate") || code.includes("429")) return "Limite de requisições atingido — tente novamente em instantes.";
-    if (code.includes("unauthor") || code.includes("401") || code.includes("403")) return "Chave da API Lusha inválida ou sem permissão.";
-    if (code.includes("timeout")) return "Tempo esgotado ao consultar o Lusha.";
-    if (code.includes("network") || code.includes("fetch")) return "Falha de rede ao contatar o Lusha.";
+    if (code.includes("unauthor") || code.includes("401") || code.includes("403")) return "Credenciais do Oráculo inválidas ou sem permissão.";
+    if (code.includes("timeout")) return "Tempo esgotado ao consultar o Oráculo.";
+    if (code.includes("network") || code.includes("fetch")) return "Falha de rede ao contatar o Oráculo.";
     if (code.includes("invalid")) return "Requisição inválida (contactId ou requestId expirado).";
     return raw;
   }, []);
@@ -1125,7 +1125,7 @@ export const LushaIntelligenceView = () => {
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
       if (/cookie/i.test(msg) || /503/.test(msg)) {
-        setCookieAlert("A conexão com o Lusha está indisponível (cookie expirado ou ausente). Atualize o cookie em cookies_config.");
+        setCookieAlert("A conexão com o Oráculo está indisponível (credencial expirada ou ausente). Atualize a configuração de credenciais.");
       }
       toast({
         title: "Erro na busca",
@@ -1175,7 +1175,7 @@ export const LushaIntelligenceView = () => {
         >
           <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
           <div className="flex-1 text-sm">
-            <p className="font-medium text-amber-300">Conexão com Lusha indisponível</p>
+            <p className="font-medium text-amber-300">Conexão com o Oráculo indisponível</p>
             <p className="text-amber-200/80 mt-0.5">{cookieAlert}</p>
           </div>
         </div>
@@ -1194,7 +1194,7 @@ export const LushaIntelligenceView = () => {
                 </Badge>
               </CardTitle>
               <CardDescription>
-                Consulta a API Decision Makers V3 da Lusha — retorna os principais decisores sem consumir créditos.
+                Consulta o Oráculo — retorna os principais decisores sem consumir créditos.
               </CardDescription>
             </div>
           </div>
@@ -1475,7 +1475,7 @@ export const LushaIntelligenceView = () => {
               {rateLimitCountdown != null && rateLimitCountdown > 0 && (
                 <div className="flex items-center gap-2 text-xs text-amber-500">
                   <Clock className="h-3 w-3" />
-                  <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite da API Lusha).</span>
+                  <span>Aguarde <strong className="tabular-nums">{rateLimitCountdown}s</strong> antes de tentar novamente (limite do Oráculo).</span>
                 </div>
               )}
             </div>
