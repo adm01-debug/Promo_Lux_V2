@@ -185,16 +185,19 @@ serve(async (req) => {
       force_refresh: skipCache,
     });
 
-    // ── Cliente Supabase (reusado para cache + persistência) ──
-    const authHeader = req.headers.get("Authorization") ?? "";
-    const supabase =
-      authHeader.startsWith("Bearer ")
-        ? createClient(
-            Deno.env.get("SUPABASE_URL")!,
-            Deno.env.get("SUPABASE_ANON_KEY")!,
-            { global: { headers: { Authorization: authHeader } } }
-          )
-        : null;
+    // ── Cliente Supabase autenticado (reusado do bloco de auth acima) ──
+    const supabase = authClient;
+
+    // ── Chave Lusha configurada? ──────────────────────────────────────────
+    if (!LUSHA_API_KEY) {
+      log("error", correlationId, "lusha_not_configured");
+      return errorResponse(
+        correlationId,
+        503,
+        "lusha_not_configured",
+        "LUSHA_API_KEY não configurada nas secrets do projeto."
+      );
+    }
 
     // ── 2. Cache lookup em public.lusha_contacts (por domínio + org via RLS) ──
     const cachedResults: any[] = [];
