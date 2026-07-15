@@ -140,6 +140,14 @@ export const LushaIntelligenceView = () => {
     dm: DecisionMaker;
   } | null>(null);
 
+  // ── Progresso da busca por domínio (fases visuais) ──
+  type SearchPhase = "idle" | "queued" | "processing" | "done" | "failed";
+  const [searchPhase, setSearchPhase] = useState<SearchPhase>("idle");
+  const [searchProgress, setSearchProgress] = useState(0);
+  const [searchStatusMsg, setSearchStatusMsg] = useState<string>("");
+  const [rateLimitCountdown, setRateLimitCountdown] = useState<number | null>(null);
+  const [copiedLinkedin, setCopiedLinkedin] = useState(false);
+
   // ── Helpers de normalização e validação ──
   const EXAMPLE_DOMAIN = "natura.com.br";
   const EXAMPLE_LINKEDIN = "linkedin.com/company/natura";
