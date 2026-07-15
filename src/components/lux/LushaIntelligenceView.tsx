@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -180,6 +180,7 @@ export const LushaIntelligenceView = () => {
       setDmRequestId(data.requestId ?? null);
       setRevealedData({});
       setRevealingIds(new Set());
+      // Hidratação de dados persistidos ocorre no useEffect abaixo
       toast({
         title: "Decisores encontrados",
         description: `${data.totalDecisionMakers} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -190,6 +191,88 @@ export const LushaIntelligenceView = () => {
       toast({ title: "Erro na busca por domínio", description: msg, variant: "destructive" });
     },
   });
+
+  // ── Hidratação: carrega emails/telefones já persistidos em lusha_contacts ──
+  useEffect(() => {
+    if (!dmResults || dmResults.length === 0) return;
+    const allDMs = dmResults.flatMap((r) => r.decisionMakers);
+    const linkedinUrls = allDMs.map((dm) => dm.linkedin).filter(Boolean);
+    if (linkedinUrls.length === 0) return;
+
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("lusha_contacts")
+        .select("linkedin_url, email, phone_formatted, phone_raw, has_email, has_phone, enrichment_status")
+        .in("linkedin_url", linkedinUrls);
+      if (cancelled || error || !data) return;
+
+      const byUrl = new Map(data.map((row) => [row.linkedin_url, row]));
+      const hydrated: Record<string, { emails: { email: string; type: string | null }[]; phones: { number: string; type: string | null }[]; error?: string }> = {};
+      for (const dm of allDMs) {
+        const row = byUrl.get(dm.linkedin);
+        if (!row) continue;
+        const emails = row.email ? [{ email: row.email, type: null }] : [];
+        const phones = row.phone_formatted || row.phone_raw
+          ? [{ number: row.phone_formatted ?? row.phone_raw!, type: null }]
+          : [];
+        if (emails.length > 0 || phones.length > 0) {
+          hydrated[dm.id] = { emails, phones };
+        }
+      }
+      if (Object.keys(hydrated).length > 0) {
+        setRevealedData((prev) => ({ ...hydrated, ...prev }));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [dmResults]);
+
+  // ── Tradução de códigos de erro conhecidos do Lusha para PT-BR ──
+  const translateRevealError = useCallback((raw: string | undefined): string => {
+    if (!raw) return "Falha desconhecida ao revelar.";
+    const code = raw.toLowerCase();
+    if (code.includes("not_found") || code.includes("no_data")) return "Sem dados disponíveis para este decisor.";
+    if (code.includes("credit")) return "Sem créditos Lusha suficientes para revelar.";
+    if (code.includes("rate") || code.includes("429")) return "Limite de requisições atingido — tente novamente em instantes.";
+    if (code.includes("unauthor") || code.includes("401") || code.includes("403")) return "Chave da API Lusha inválida ou sem permissão.";
+    if (code.includes("timeout")) return "Tempo esgotado ao consultar o Lusha.";
+    if (code.includes("network") || code.includes("fetch")) return "Falha de rede ao contatar o Lusha.";
+    if (code.includes("invalid")) return "Requisição inválida (contactId ou requestId expirado).";
+    return raw;
+  }, []);
+
+  // ── Persiste email/telefone revelado em lusha_contacts (por linkedin_url) ──
+  const persistRevealed = useCallback(async (dm: DecisionMaker, entry: {
+    emailAddresses?: { email: string; type: string | null }[];
+    phoneNumbers?: { number: string; type: string | null }[];
+  }) => {
+    if (!dm.linkedin) return;
+    const email = entry.emailAddresses?.[0]?.email ?? null;
+    const phone = entry.phoneNumbers?.[0]?.number ?? null;
+    if (!email && !phone) return;
+    const update: Record<string, unknown> = {
+      enrichment_status: "found",
+      updated_at: new Date().toISOString(),
+    };
+    if (email) { update.email = email; update.email_source = "lusha_reveal"; update.has_email = true; }
+    if (phone) {
+      update.phone_formatted = phone;
+      update.phone_raw = phone;
+      update.phone_source = "lusha_reveal";
+      update.has_phone = true;
+    }
+    if (entry.emailAddresses?.length) update.raw_leadcontact_email = entry.emailAddresses;
+    if (entry.phoneNumbers?.length) update.raw_leadcontact_phone = entry.phoneNumbers;
+
+    const { error } = await supabase
+      .from("lusha_contacts")
+      .update(update)
+      .eq("linkedin_url", dm.linkedin);
+    if (error) {
+      console.warn("[lusha-reveal] falha ao persistir contato", error.message);
+    }
+  }, []);
+
 
   const canSearchDomain = domain.trim().length > 3 && domain.includes(".") && !dmMutation.isPending;
 
@@ -205,57 +288,97 @@ export const LushaIntelligenceView = () => {
     if (revealingIds.has(dm.id) || revealedData[dm.id]) return;
 
     setRevealingIds((prev) => new Set(prev).add(dm.id));
+
+    const MAX_ATTEMPTS = 3;
+    const isRetryable = (raw?: string) => {
+      if (!raw) return true;
+      const c = raw.toLowerCase();
+      return c.includes("timeout") || c.includes("network") || c.includes("fetch") ||
+             c.includes("rate") || c.includes("429") || c.includes("503") ||
+             c.includes("502") || c.includes("500") || c.includes("temporarily");
+    };
+
+    let attempt = 0;
+    let lastError: string | undefined;
     try {
-      const { data, error } = await supabase.functions.invoke<{
-        requestId: string;
-        creditsCharged: number | null;
-        totalRevealed: number;
-        totalRequested: number;
-        revealed: Array<{
-          contactId: string;
-          error?: string;
-          emailAddresses?: { email: string; type: string | null }[];
-          phoneNumbers?: { number: string; type: string | null; doNotCall?: boolean | null }[];
-        }>;
-      }>("lusha-reveal", {
-        body: {
-          requestId: dmRequestId,
-          contactIds: [dm.id],
-          revealEmails: dm.hasEmail,
-          revealPhones: dm.hasPhone,
-        },
-      });
-      if (error) throw error;
-      const entry = data?.revealed?.find((r) => r.contactId === dm.id);
-      if (!entry) {
-        throw new Error("Nenhum dado retornado para este decisor.");
-      }
-      if (entry.error) {
-        setRevealedData((prev) => ({
-          ...prev,
-          [dm.id]: { emails: [], phones: [], error: entry.error },
-        }));
-        toast({
-          title: "Não foi possível revelar",
-          description: entry.error,
-          variant: "destructive",
-        });
-      } else {
-        setRevealedData((prev) => ({
-          ...prev,
-          [dm.id]: {
-            emails: entry.emailAddresses ?? [],
-            phones: entry.phoneNumbers ?? [],
-          },
-        }));
-        toast({
-          title: "Dados revelados",
-          description: `${dm.fullName}${data?.creditsCharged != null ? ` — ${data.creditsCharged} crédito(s) consumido(s)` : ""}.`,
-        });
+      while (attempt < MAX_ATTEMPTS) {
+        attempt++;
+        try {
+          const { data, error } = await supabase.functions.invoke<{
+            requestId: string;
+            creditsCharged: number | null;
+            totalRevealed: number;
+            totalRequested: number;
+            revealed: Array<{
+              contactId: string;
+              error?: string;
+              emailAddresses?: { email: string; type: string | null }[];
+              phoneNumbers?: { number: string; type: string | null; doNotCall?: boolean | null }[];
+            }>;
+          }>("lusha-reveal", {
+            body: {
+              requestId: dmRequestId,
+              contactIds: [dm.id],
+              revealEmails: dm.hasEmail,
+              revealPhones: dm.hasPhone,
+            },
+          });
+          if (error) throw new Error(error.message || "network_error");
+          const entry = data?.revealed?.find((r) => r.contactId === dm.id);
+          if (!entry) throw new Error("no_data_returned");
+
+          if (entry.error) {
+            lastError = entry.error;
+            if (isRetryable(entry.error) && attempt < MAX_ATTEMPTS) {
+              await new Promise((r) => setTimeout(r, 600 * 2 ** (attempt - 1)));
+              continue;
+            }
+            setRevealedData((prev) => ({
+              ...prev,
+              [dm.id]: { emails: [], phones: [], error: translateRevealError(entry.error) },
+            }));
+            toast({
+              title: `Falha ao revelar (${attempt}/${MAX_ATTEMPTS})`,
+              description: `${dm.fullName}: ${translateRevealError(entry.error)}`,
+              variant: "destructive",
+            });
+            return;
+          }
+
+          // sucesso
+          setRevealedData((prev) => ({
+            ...prev,
+            [dm.id]: {
+              emails: entry.emailAddresses ?? [],
+              phones: entry.phoneNumbers ?? [],
+            },
+          }));
+          await persistRevealed(dm, entry);
+          toast({
+            title: "Dados revelados",
+            description: `${dm.fullName}${data?.creditsCharged != null ? ` — ${data.creditsCharged} crédito(s) consumido(s)` : ""}${attempt > 1 ? ` (tentativa ${attempt})` : ""}.`,
+          });
+          return;
+        } catch (innerErr) {
+          lastError = innerErr instanceof Error ? innerErr.message : String(innerErr);
+          if (attempt < MAX_ATTEMPTS && isRetryable(lastError)) {
+            await new Promise((r) => setTimeout(r, 600 * 2 ** (attempt - 1)));
+            continue;
+          }
+          throw innerErr;
+        }
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast({ title: "Erro ao revelar", description: msg, variant: "destructive" });
+      setRevealedData((prev) => ({
+        ...prev,
+        [dm.id]: { emails: [], phones: [], error: translateRevealError(msg) },
+      }));
+      toast({
+        title: `Erro ao revelar (após ${attempt} tentativa(s))`,
+        description: `${dm.fullName}: ${translateRevealError(lastError ?? msg)}`,
+        variant: "destructive",
+      });
     } finally {
       setRevealingIds((prev) => {
         const next = new Set(prev);
@@ -264,6 +387,7 @@ export const LushaIntelligenceView = () => {
       });
     }
   }
+
 
   const seniorityBadge = (s: string) => {
     const key = (s || "").toLowerCase();
