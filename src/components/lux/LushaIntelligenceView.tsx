@@ -559,8 +559,9 @@ export const LushaIntelligenceView = () => {
 
   // ── Deep-link: abrir aba de histórico e destacar item quando ?tab=history&historyId=... ──
   const [searchParams, setSearchParams] = useSearchParams();
-  const [resultsTab, setResultsTab] = useState<"results" | "history">(
-    (searchParams.get("tab") === "history" ? "history" : "results"),
+  const oracleV2Enabled = useFeatureFlag("oracle_v2");
+  const [resultsTab, setResultsTab] = useState<"oracle" | "results" | "history">(
+    (searchParams.get("tab") === "history" ? "history" : oracleV2Enabled ? "oracle" : "results"),
   );
   const [highlightedHistoryId, setHighlightedHistoryId] = useState<string | null>(
     searchParams.get("historyId"),
