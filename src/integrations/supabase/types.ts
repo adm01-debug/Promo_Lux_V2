@@ -2342,6 +2342,36 @@ export type Database = {
         }
         Relationships: []
       }
+      oracle_rate_limits: {
+        Row: {
+          action: string
+          count: number
+          created_at: string
+          id: string
+          organization_id: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          action?: string
+          count?: number
+          created_at?: string
+          id?: string
+          organization_id: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          action?: string
+          count?: number
+          created_at?: string
+          id?: string
+          organization_id?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       org_violation_alert_settings: {
         Row: {
           cooldown_minutes: number
@@ -3273,6 +3303,14 @@ export type Database = {
         }
       }
       capture_dlq_health_snapshots: { Args: never; Returns: number }
+      check_oracle_rate_limit: {
+        Args: { _action?: string; _limit?: number; _organization_id: string }
+        Returns: {
+          allowed: boolean
+          current_count: number
+          reset_at: string
+        }[]
+      }
       claim_scrape_tasks: {
         Args: { _limit?: number; _worker?: string }
         Returns: {
