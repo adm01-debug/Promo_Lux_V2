@@ -161,6 +161,7 @@ export const LushaIntelligenceView = () => {
     status: "done" | "failed" | "cancelled" | "processing" | "queued";
     total: number;
     message?: string | null;
+    durationMs: number | null;
   };
 
   type DMHistoryRow = {
@@ -170,6 +171,7 @@ export const LushaIntelligenceView = () => {
     status: string;
     decision_makers_count: number;
     error_message: string | null;
+    duration_ms: number | null;
     created_at: string;
     updated_at: string;
   };
@@ -185,6 +187,7 @@ export const LushaIntelligenceView = () => {
       : "failed") as DMHistoryEntry["status"],
     total: r.decision_makers_count ?? 0,
     message: r.error_message,
+    durationMs: r.duration_ms ?? null,
   });
 
   const { data: dmHistory = [] } = useQuery({
@@ -218,32 +221,60 @@ export const LushaIntelligenceView = () => {
     };
   }, [queryClient]);
 
-  const pushHistory = useCallback(
-    async (entry: {
-      domain: string;
-      linkedin: string | null;
-      startedAt: string;
-      status: DMHistoryEntry["status"];
-      total: number;
-      message?: string | null;
-    }) => {
+  // Ref do id da linha da busca em andamento — permite atualizar o mesmo registro
+  // conforme a busca avança pelas fases (queued → processing → done/failed/cancelled).
+  const currentHistoryIdRef = useRef<string | null>(null);
+
+  const startHistory = useCallback(
+    async (entry: { domain: string; linkedin: string | null }): Promise<string | null> => {
       try {
         const { data: userRes } = await supabase.auth.getUser();
         const uid = userRes?.user?.id;
-        if (!uid) return;
-        const duration = Math.max(0, Date.now() - new Date(entry.startedAt).getTime());
-        await supabase.from("lusha_dm_search_history").insert({
-          user_id: uid,
-          domain: entry.domain,
-          linkedin_url: entry.linkedin,
-          status: entry.status,
-          decision_makers_count: entry.total,
-          error_message: entry.message ?? null,
-          duration_ms: duration,
-        });
+        if (!uid) return null;
+        const { data, error } = await supabase
+          .from("lusha_dm_search_history")
+          .insert({
+            user_id: uid,
+            domain: entry.domain,
+            linkedin_url: entry.linkedin,
+            status: "queued",
+            decision_makers_count: 0,
+            duration_ms: 0,
+          })
+          .select("id")
+          .single();
+        if (error) return null;
+        queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
+        return data?.id ?? null;
+      } catch {
+        return null;
+      }
+    },
+    [queryClient],
+  );
+
+  const updateHistory = useCallback(
+    async (
+      id: string | null,
+      patch: {
+        status: DMHistoryEntry["status"];
+        total?: number;
+        message?: string | null;
+        startedAt?: string;
+      },
+    ) => {
+      if (!id) return;
+      try {
+        const payload: Record<string, unknown> = { status: patch.status };
+        if (patch.total != null) payload.decision_makers_count = patch.total;
+        if (patch.message !== undefined) payload.error_message = patch.message;
+        if (patch.startedAt) {
+          payload.duration_ms = Math.max(0, Date.now() - new Date(patch.startedAt).getTime());
+        }
+        await supabase.from("lusha_dm_search_history").update(payload).eq("id", id);
         queryClient.invalidateQueries({ queryKey: ["lusha-dm-history"] });
       } catch {
-        /* silencioso — histórico é auxiliar */
+        /* silencioso */
       }
     },
     [queryClient],
@@ -278,6 +309,30 @@ export const LushaIntelligenceView = () => {
       return true;
     });
   }, [dmHistory, historyQ, historyStatus, historyFrom, historyTo]);
+
+  // ── Tempo médio por domínio (apenas buscas concluídas com sucesso) ──
+  const avgDurationByDomain = useMemo(() => {
+    const acc = new Map<string, { total: number; count: number }>();
+    for (const h of dmHistory) {
+      if (h.status !== "done" || !h.durationMs || h.durationMs <= 0) continue;
+      const prev = acc.get(h.domain) ?? { total: 0, count: 0 };
+      prev.total += h.durationMs;
+      prev.count += 1;
+      acc.set(h.domain, prev);
+    }
+    const map = new Map<string, number>();
+    for (const [k, v] of acc.entries()) map.set(k, v.total / v.count);
+    return map;
+  }, [dmHistory]);
+
+  const formatDuration = (ms: number | null): string => {
+    if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
+    if (ms < 1000) return `${Math.round(ms)}ms`;
+    if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
+    const m = Math.floor(ms / 60_000);
+    const s = Math.round((ms % 60_000) / 1000);
+    return `${m}m ${s}s`;
+  };
 
   // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
   const [autoRetryEnabled, setAutoRetryEnabled] = useState(false);
@@ -436,11 +491,22 @@ export const LushaIntelligenceView = () => {
       setSearchProgress(8);
       setSearchStatusMsg("Enfileirando requisição...");
 
+      // Registra o evento "queued" no histórico já com id — as fases seguintes
+      // atualizam o mesmo registro para que outros dispositivos acompanhem.
+      currentHistoryIdRef.current = await startHistory({
+        domain: d.value,
+        linkedin: l.value || null,
+      });
+
       const phaseTimers: number[] = [];
       phaseTimers.push(window.setTimeout(() => {
         setSearchPhase("processing");
         setSearchStatusMsg("Autenticando com a API Lusha...");
         setSearchProgress(22);
+        void updateHistory(currentHistoryIdRef.current, {
+          status: "processing",
+          startedAt: new Date(startedAt).toISOString(),
+        });
       }, 250));
       phaseTimers.push(window.setTimeout(() => {
         setSearchStatusMsg("Resolvendo empresa pelo domínio...");
@@ -525,13 +591,13 @@ export const LushaIntelligenceView = () => {
       setSearchProgress(100);
       const total = data.totalDecisionMakers ?? 0;
       setSearchStatusMsg(`${total} decisor(es) localizado(s).`);
-      pushHistory({
-        domain,
-        linkedin: linkedinCompanyUrl || null,
-        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+      updateHistory(currentHistoryIdRef.current, {
         status: "done",
         total,
+        message: null,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
+      currentHistoryIdRef.current = null;
       toast({
         title: "Decisores encontrados",
         description: `${total} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -546,14 +612,13 @@ export const LushaIntelligenceView = () => {
         setSearchPhase("cancelled");
         setSearchProgress(100);
         setSearchStatusMsg("Busca cancelada pelo usuário.");
-        pushHistory({
-          domain,
-          linkedin: linkedinCompanyUrl || null,
-          startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+        updateHistory(currentHistoryIdRef.current, {
           status: "cancelled",
           total: 0,
           message: "Cancelada pelo usuário",
+          startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
         });
+        currentHistoryIdRef.current = null;
         toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
         return;
       }
@@ -561,14 +626,13 @@ export const LushaIntelligenceView = () => {
       setSearchPhase("failed");
       setSearchProgress(100);
       setSearchStatusMsg(msg);
-      pushHistory({
-        domain,
-        linkedin: linkedinCompanyUrl || null,
-        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+      updateHistory(currentHistoryIdRef.current, {
         status: "failed",
         total: 0,
         message: msg,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
+      currentHistoryIdRef.current = null;
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
@@ -1160,7 +1224,18 @@ export const LushaIntelligenceView = () => {
                 </div>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground tabular-nums">
                   {(dmMutation.isPending || searchPhase === "done" || searchPhase === "failed" || searchPhase === "cancelled") && (
-                    <span aria-label="Tempo decorrido">⏱ {(searchElapsedMs / 1000).toFixed(1)}s</span>
+                    <span aria-label="Tempo decorrido" title="Duração desta busca (duration_ms)">
+                      ⏱ {formatDuration(searchElapsedMs)}
+                    </span>
+                  )}
+                  {avgDurationByDomain.get(domain) != null && (
+                    <span
+                      aria-label="Média histórica deste domínio"
+                      title="Tempo médio das buscas anteriores concluídas para este domínio"
+                      className="hidden sm:inline"
+                    >
+                      μ {formatDuration(avgDurationByDomain.get(domain) ?? null)}
+                    </span>
                   )}
                   <span>{Math.round(searchProgress)}%</span>
                 </div>
@@ -1311,6 +1386,15 @@ export const LushaIntelligenceView = () => {
                                   {h.total} decisor{h.total === 1 ? "" : "es"}
                                 </Badge>
                               )}
+                              {h.durationMs != null && h.durationMs > 0 && (h.status === "done" || h.status === "failed" || h.status === "cancelled") && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-[10px] px-1.5 py-0 border-border/60 text-muted-foreground"
+                                  title="duration_ms desta busca"
+                                >
+                                  <Clock className="h-3 w-3 mr-1" /> {formatDuration(h.durationMs)}
+                                </Badge>
+                              )}
                               {queuedForRetry && (
                                 <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/40 text-primary">
                                   <Clock className="h-3 w-3 mr-1" /> Aguardando retry
@@ -1319,6 +1403,9 @@ export const LushaIntelligenceView = () => {
                             </div>
                             <div className="text-xs text-muted-foreground mt-0.5 truncate">
                               {formatDistanceToNow(new Date(h.finishedAt), { addSuffix: true, locale: ptBR })}
+                              {avgDurationByDomain.get(h.domain) != null && (
+                                <> · <span title="Tempo médio deste domínio">μ {formatDuration(avgDurationByDomain.get(h.domain) ?? null)}</span></>
+                              )}
                               {h.linkedin && <> · <span className="truncate">{h.linkedin}</span></>}
                               {h.message && <> · <span className="text-destructive/80">{h.message}</span></>}
                             </div>
