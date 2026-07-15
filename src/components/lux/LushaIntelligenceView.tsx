@@ -1261,7 +1261,7 @@ export const LushaIntelligenceView = () => {
                 Descubra com quem se conectar
               </CardTitle>
               <CardDescription>
-                Consulta o Oráculo — retorna os principais decisores sem consumir créditos.
+                Consulte o Oráculo — crie conexão com os principais decisores!
               </CardDescription>
             </div>
           </div>
