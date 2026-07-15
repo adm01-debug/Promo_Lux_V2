@@ -1517,6 +1517,16 @@ export const LushaIntelligenceView = () => {
                     type="button"
                     variant="ghost"
                     size="sm"
+                    onClick={() => setPrefsOpen(true)}
+                    className="h-7 text-xs text-muted-foreground hover:text-primary"
+                    title="Preferências de notificações"
+                  >
+                    <Settings2 className="h-3 w-3 mr-1" /> Notificações
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={clearHistory}
                     className="h-7 text-xs text-muted-foreground hover:text-destructive"
                     title="Limpar histórico"
