@@ -567,13 +567,13 @@ export const LushaIntelligenceView = () => {
       setSearchProgress(100);
       const total = data.totalDecisionMakers ?? 0;
       setSearchStatusMsg(`${total} decisor(es) localizado(s).`);
-      pushHistory({
-        domain,
-        linkedin: linkedinCompanyUrl || null,
-        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+      updateHistory(currentHistoryIdRef.current, {
         status: "done",
         total,
+        message: null,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
+      currentHistoryIdRef.current = null;
       toast({
         title: "Decisores encontrados",
         description: `${total} decisor(es) localizado(s) — 0 créditos consumidos.`,
@@ -588,14 +588,13 @@ export const LushaIntelligenceView = () => {
         setSearchPhase("cancelled");
         setSearchProgress(100);
         setSearchStatusMsg("Busca cancelada pelo usuário.");
-        pushHistory({
-          domain,
-          linkedin: linkedinCompanyUrl || null,
-          startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+        updateHistory(currentHistoryIdRef.current, {
           status: "cancelled",
           total: 0,
           message: "Cancelada pelo usuário",
+          startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
         });
+        currentHistoryIdRef.current = null;
         toast({ title: "Busca cancelada", description: "Você pode iniciar uma nova busca a qualquer momento." });
         return;
       }
@@ -603,14 +602,13 @@ export const LushaIntelligenceView = () => {
       setSearchPhase("failed");
       setSearchProgress(100);
       setSearchStatusMsg(msg);
-      pushHistory({
-        domain,
-        linkedin: linkedinCompanyUrl || null,
-        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
+      updateHistory(currentHistoryIdRef.current, {
         status: "failed",
         total: 0,
         message: msg,
+        startedAt: new Date(searchStartedAtRef.current ?? Date.now()).toISOString(),
       });
+      currentHistoryIdRef.current = null;
       if (wait) {
         setRateLimitCountdown(wait);
         toast({
