@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
 import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard } from "lucide-react";
 import { downloadCSV } from "@/lib/exportCSV";
-import { filterHistory, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
+import { filterHistory, formatDurationMs, findRecentDuplicate, buildHistoryCsvRows, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
@@ -536,30 +536,13 @@ export const LushaIntelligenceView = () => {
   }, [highlightedHistoryId, searchParams, setSearchParams]);
 
 
-  const formatDuration = (ms: number | null): string => {
-    if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
-    if (ms < 1000) return `${Math.round(ms)}ms`;
-    if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
-    const m = Math.floor(ms / 60_000);
-    const s = Math.round((ms % 60_000) / 1000);
-    return `${m}m ${s}s`;
-  };
+  const formatDuration = formatDurationMs;
 
-  // ── Detecção de duplicidade recente (últimas 24h) ──
-  const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000;
-  const recentDuplicate = useMemo(() => {
-    const d = domain.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "");
-    if (!d) return null;
-    const cutoff = Date.now() - DUPLICATE_WINDOW_MS;
-    // Mais recente para o mesmo domínio, ignorando entradas ainda em andamento
-    const last = dmHistory.find((h) => {
-      if (h.status === "queued" || h.status === "processing") return false;
-      const t = new Date(h.finishedAt).getTime();
-      if (!Number.isFinite(t) || t < cutoff) return false;
-      return h.domain.toLowerCase() === d;
-    });
-    return last ?? null;
-  }, [domain, dmHistory]);
+  // ── Detecção de duplicidade recente (últimas 24h) — via utilitário testado ──
+  const recentDuplicate = useMemo(
+    () => findRecentDuplicate(dmHistory, domain),
+    [domain, dmHistory],
+  );
 
   // ── Exportar histórico filtrado para CSV ──
   const exportHistoryCsv = useCallback(() => {
@@ -567,28 +550,12 @@ export const LushaIntelligenceView = () => {
       toast({ title: "Nada para exportar", description: "Ajuste os filtros ou faça buscas antes de exportar." });
       return;
     }
-    const statusLabels: Record<DMHistoryEntry["status"], string> = {
-      done: "Concluído",
-      failed: "Falhou",
-      cancelled: "Cancelado",
-      processing: "Processando",
-      queued: "Em fila",
-    };
-    const rows = filteredHistory.map((h) => ({
-      "Domínio": h.domain,
-      "LinkedIn": h.linkedin ?? "",
-      "Status": statusLabels[h.status] ?? h.status,
-      "Decisores": h.total,
-      "Duração (ms)": h.durationMs ?? "",
-      "Duração": formatDuration(h.durationMs),
-      "Iniciada em": new Date(h.startedAt).toISOString(),
-      "Finalizada em": new Date(h.finishedAt).toISOString(),
-      "Mensagem": h.message ?? "",
-    }));
+    const rows = buildHistoryCsvRows(filteredHistory);
     const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
     downloadCSV(rows, `oraculo-historico-${stamp}.csv`);
     toast({ title: "CSV exportado", description: `${rows.length} linha(s) baixada(s).` });
   }, [filteredHistory]);
+
 
 
   // ── Auto-retry de buscas falhadas (respeita fila + rate-limit) ──
