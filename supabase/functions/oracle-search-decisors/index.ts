@@ -146,7 +146,24 @@ serve(async (req) => {
     );
   }
 
+  // Rate limit por organização (30 buscas/hora)
+  const { data: rl, error: rlErr } = await admin.rpc("check_oracle_rate_limit", {
+    _organization_id: input.organization_id,
+    _action: "search_decisors",
+    _limit: 30,
+  });
+  if (rlErr) {
+    await logger.log({ step: "rate_limit", status: "warning", level: "warn", message: "rate_limit_check_failed", errorDetail: rlErr.message });
+  } else if (rl && Array.isArray(rl) && rl[0] && rl[0].allowed === false) {
+    await logger.log({ step: "rate_limit", status: "error", level: "warn", message: "rate_limit_exceeded", metadata: { count: rl[0].current_count } });
+    return new Response(
+      JSON.stringify({ error: "rate_limit_exceeded", current_count: rl[0].current_count, reset_at: rl[0].reset_at, limit: 30 }),
+      { status: 429, headers: { ...cors, "Content-Type": "application/json", "Retry-After": "3600" } },
+    );
+  }
+
   // Resolve departments
+
   const resolution = resolveDepartments(input.departments);
   if (resolution.mapped.length === 0) {
     await logger.log({
