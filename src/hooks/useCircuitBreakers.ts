@@ -16,7 +16,9 @@ export interface CircuitBreaker {
 
 /**
  * Lê o estado dos disjuntores (circuit breakers) dos serviços externos.
- * Atualiza a cada 10s para refletir aberturas/fechamentos quase em tempo real.
+ * Atualiza a cada 30s: equilíbrio entre reatividade e carga no banco
+ * (reduz ~66% das queries vs. o polling anterior de 10s sem perda
+ * perceptível de sinal, já que reset_timeout_ms típico é 60s).
  */
 export function useCircuitBreakers() {
   return useQuery({
@@ -29,7 +31,7 @@ export function useCircuitBreakers() {
       if (error) throw error;
       return (data ?? []) as CircuitBreaker[];
     },
-    refetchInterval: 10_000,
+    refetchInterval: 30_000,
   });
 }
 
