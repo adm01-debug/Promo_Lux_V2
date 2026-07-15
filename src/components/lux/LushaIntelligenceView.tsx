@@ -1586,7 +1586,13 @@ export const LushaIntelligenceView = () => {
                           : { cls: "bg-destructive/15 text-destructive border-destructive/30", label: "Falhou", Icon: XCircle };
                       const queuedForRetry = autoRetryQueue.includes(h.domain);
                       return (
-                        <li key={h.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                        <li
+                          key={h.id}
+                          id={`dm-history-${h.id}`}
+                          className={`flex items-center justify-between gap-3 px-3 py-2 text-sm transition-colors ${
+                            highlightedHistoryId === h.id ? "bg-primary/10 ring-1 ring-primary/40" : ""
+                          }`}
+                        >
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
