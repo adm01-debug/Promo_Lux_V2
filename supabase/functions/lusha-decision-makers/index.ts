@@ -107,17 +107,6 @@ serve(async (req) => {
   }
 
   try {
-    // ── 1. Parse do body (tolerante) ──
-    let body: any;
-
-  const correlationId =
-    req.headers.get("x-correlation-id") ?? crypto.randomUUID();
-  const startedAt = Date.now();
-  const warnings: Array<{ scope: string; reason: string; ref?: string }> = [];
-
-  try {
-    // ── 1. Parse do body (tolerante) ──
-    let body: any;
     try {
       body = await req.json();
     } catch (e) {
