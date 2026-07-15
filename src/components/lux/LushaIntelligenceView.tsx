@@ -1268,82 +1268,8 @@ export const LushaIntelligenceView = () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="space-y-2">
-              <Label htmlFor="lusha-linkedin">
-                Página da empresa no LinkedIn
-              </Label>
-
-              <div className="relative flex gap-2">
-                <div className="relative flex-1">
-                  <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="lusha-linkedin"
-                    value={linkedinCompanyUrl}
-                    onChange={(e) => {
-                      setLinkedinCompanyUrl(e.target.value);
-                      if (linkedinError) setLinkedinError(null);
-                    }}
-                    onBlur={() => {
-                      const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
-                      if (value !== linkedinCompanyUrl) setLinkedinCompanyUrl(value);
-                      setLinkedinError(error);
-                    }}
-                    onPaste={(e) => {
-                      const pasted = e.clipboardData.getData("text");
-                      if (pasted && (/https?:\/\//i.test(pasted) || /\?/.test(pasted))) {
-                        e.preventDefault();
-                        const { value, error } = validateLinkedinCompanyUrl(pasted);
-                        setLinkedinCompanyUrl(value);
-                        setLinkedinError(error);
-                      }
-                    }}
-                    placeholder="Ex: linkedin.com/company/natura"
-                    className={`pl-9 ${linkedinError ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                    disabled={dmMutation.isPending}
-                    aria-invalid={!!linkedinError}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
-                    }}
-                  />
-                </div>
-                {(() => {
-                  const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
-                  const isValid = !!value && !error;
-                  const fullUrl = isValid ? `https://${value}` : "";
-                  return (
-                    <>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="default"
-                        disabled={!isValid}
-                        onClick={() => {
-                          if (isValid) window.open(fullUrl, "_blank", "noopener,noreferrer");
-                        }}
-                        title={isValid ? "Abrir página no LinkedIn" : "Informe uma URL válida do LinkedIn"}
-                        className="shrink-0"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-1" />
-                        Abrir LinkedIn
-                      </Button>
-                    </>
-                  );
-                })()}
-              </div>
-              {linkedinError ? (
-                <p className="text-xs text-destructive flex items-start gap-1">
-                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
-                  <span>{linkedinError}</span>
-                </p>
-              ) : (
-                <p className="text-xs text-muted-foreground">
-                  Cole a URL da página da empresa (o sistema remove <code className="text-[10px] px-1 rounded bg-muted">https://</code>, <code className="text-[10px] px-1 rounded bg-muted">www</code> e parâmetros).
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+            <div className="space-y-2 rounded-lg border border-border/50 bg-card/30 p-3">
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
                 <Button
@@ -1399,12 +1325,84 @@ export const LushaIntelligenceView = () => {
                 <div id="lusha-domain-help" className="text-xs text-muted-foreground space-y-1">
                   <p>Informe o <strong>domínio do site oficial</strong> da empresa (sem <code className="text-[10px] px-1 rounded bg-muted">https://</code> e sem <code className="text-[10px] px-1 rounded bg-muted">www</code>).</p>
                   <p>
-                    ✅ Aceitos: <code className="text-[10px] px-1 rounded bg-muted">natura.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">magazineluiza.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">nubank.com.br</code>
+                    ✅ Aceitos: <code className="text-[10px] px-1 rounded bg-muted">natura.com.br</code>, <code className="text-[10px] px-1 rounded bg-muted">magazineluiza.com.br</code>
                   </p>
                   <p>
-                    ❌ Não use: <code className="text-[10px] px-1 rounded bg-muted">linkedin.com/company/natura</code>, <code className="text-[10px] px-1 rounded bg-muted">facebook.com/natura</code>
+                    ❌ Não use: <code className="text-[10px] px-1 rounded bg-muted">linkedin.com/company/natura</code>
                   </p>
                 </div>
+              )}
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-border/50 bg-card/30 p-3">
+              <Label htmlFor="lusha-linkedin">
+                Página da empresa no LinkedIn
+              </Label>
+
+              <div className="relative flex gap-2">
+                <div className="relative flex-1">
+                  <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="lusha-linkedin"
+                    value={linkedinCompanyUrl}
+                    onChange={(e) => {
+                      setLinkedinCompanyUrl(e.target.value);
+                      if (linkedinError) setLinkedinError(null);
+                    }}
+                    onBlur={() => {
+                      const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+                      if (value !== linkedinCompanyUrl) setLinkedinCompanyUrl(value);
+                      setLinkedinError(error);
+                    }}
+                    onPaste={(e) => {
+                      const pasted = e.clipboardData.getData("text");
+                      if (pasted && (/https?:\/\//i.test(pasted) || /\?/.test(pasted))) {
+                        e.preventDefault();
+                        const { value, error } = validateLinkedinCompanyUrl(pasted);
+                        setLinkedinCompanyUrl(value);
+                        setLinkedinError(error);
+                      }
+                    }}
+                    placeholder="Ex: linkedin.com/company/natura"
+                    className={`pl-9 ${linkedinError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    disabled={dmMutation.isPending}
+                    aria-invalid={!!linkedinError}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && canSearchDomain) dmMutation.mutate();
+                    }}
+                  />
+                </div>
+                {(() => {
+                  const { value, error } = validateLinkedinCompanyUrl(linkedinCompanyUrl);
+                  const isValid = !!value && !error;
+                  const fullUrl = isValid ? `https://${value}` : "";
+                  return (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="default"
+                      disabled={!isValid}
+                      onClick={() => {
+                        if (isValid) window.open(fullUrl, "_blank", "noopener,noreferrer");
+                      }}
+                      title={isValid ? "Abrir página no LinkedIn" : "Informe uma URL válida do LinkedIn"}
+                      className="shrink-0"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Abrir LinkedIn
+                    </Button>
+                  );
+                })()}
+              </div>
+              {linkedinError ? (
+                <p className="text-xs text-destructive flex items-start gap-1">
+                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>{linkedinError}</span>
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Cole a URL da página da empresa (o sistema remove <code className="text-[10px] px-1 rounded bg-muted">https://</code>, <code className="text-[10px] px-1 rounded bg-muted">www</code> e parâmetros).
+                </p>
               )}
             </div>
 
