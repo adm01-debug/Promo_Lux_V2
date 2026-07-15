@@ -22,7 +22,7 @@ export function useSkin() {
       .from("profiles")
       .select("skin")
       .eq("id", user.id)
-      .single()
+      .maybeSingle()
       .then(({ data }) => {
         if (data?.skin) {
           const dbSkin = data.skin as Skin;
