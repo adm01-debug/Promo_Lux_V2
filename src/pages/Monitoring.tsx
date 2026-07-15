@@ -384,6 +384,10 @@ const AutomationMonitoring = () => {
             <FileText className="h-4 w-4" />
             Auditoria de Execução
           </TabsTrigger>
+          <TabsTrigger value="vault-cookies" className="gap-2">
+            <Cookie className="h-4 w-4" />
+            Cookies do Vault
+          </TabsTrigger>
 
         </TabsList>
 
