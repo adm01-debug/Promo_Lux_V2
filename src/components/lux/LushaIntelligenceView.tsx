@@ -1159,7 +1159,7 @@ export const LushaIntelligenceView = () => {
             <Users2 className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Lusha Intelligence</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Oráculo</h1>
             <p className="text-sm text-muted-foreground">
               Busca gratuita de decisores por empresa e departamento
             </p>

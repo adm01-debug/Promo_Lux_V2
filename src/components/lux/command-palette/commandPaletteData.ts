@@ -54,7 +54,7 @@ export const VIEW_LABELS: Record<View, string> = {
   automations: "Automações (Tempo Real)",
   "recycle-bin": "Lixeira",
   suppressions: "Lista de Supressão",
-  lusha: "Lusha Intelligence",
+  lusha: "Oráculo",
 };
 
 export const helpItems = [
@@ -79,7 +79,7 @@ export const sections = [
       { id: "companies" as View, label: "Empresas", icon: Building2 },
       { id: "intent" as View, label: "Sinais de Intenção", icon: Radar },
       { id: "stakeholders" as View, label: "Stakeholders", icon: Users },
-      { id: "lusha" as View, label: "Lusha Intelligence", icon: Search },
+      { id: "lusha" as View, label: "Oráculo", icon: Search },
     ],
   },
   {
