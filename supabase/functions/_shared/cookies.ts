@@ -78,9 +78,10 @@ export async function fetchAllCookies(): Promise<Map<ServicoCookie, VaultCookie>
       return map;
     } catch (err) {
       lastErr = err;
-      if (attempt < DELAYS_MS.length - 1) await sleep(DELAYS_MS[attempt]);
+      if (attempt < DELAYS_MS.length - 1) await sleep(jittered(DELAYS_MS[attempt]));
     }
   }
+
   throw new CookieVaultUnavailable(
     `Vault indisponível após 3 tentativas: ${(lastErr as Error)?.message ?? "erro desconhecido"}`,
     lastErr,
