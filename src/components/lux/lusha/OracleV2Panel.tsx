@@ -15,7 +15,7 @@ import {
   useOracleSearchDecisors,
   useOracleEnrichContact,
 } from "@/hooks/useOracleV2";
-import { useOrganizations } from "@/hooks/useOrganizations";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
 
 // ============================================================================
 // Oracle v2 Panel — busca decisores + enriquece contatos
