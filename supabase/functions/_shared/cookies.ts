@@ -34,6 +34,13 @@ async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+// Jitter ±30% para evitar thundering herd quando múltiplas edges falham simultaneamente
+function jittered(base: number): number {
+  const jitter = base * 0.3 * (Math.random() * 2 - 1);
+  return Math.max(100, Math.round(base + jitter));
+}
+
+
 /**
  * Busca todos os cookies do vault. Faz 3 tentativas com backoff.
  * Lança CookieVaultUnavailable se todas falharem.
