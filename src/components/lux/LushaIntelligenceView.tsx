@@ -478,11 +478,34 @@ export const LushaIntelligenceView = () => {
 
 
 
-  // ── Filtros do histórico ──
-  const [historyQ, setHistoryQ] = useState("");
-  const [historyStatus, setHistoryStatus] = useState<"all" | DMHistoryEntry["status"]>("all");
-  const [historyFrom, setHistoryFrom] = useState<string>(""); // yyyy-mm-dd
-  const [historyTo, setHistoryTo] = useState<string>("");
+  // ── Filtros do histórico (persistidos em localStorage) ──
+  const HISTORY_FILTERS_KEY = "oraculo:historyFilters:v1";
+  type PersistedFilters = { q: string; status: "all" | DMHistoryEntry["status"]; from: string; to: string };
+  const loadPersistedFilters = (): PersistedFilters => {
+    try {
+      const raw = localStorage.getItem(HISTORY_FILTERS_KEY);
+      if (!raw) return { q: "", status: "all", from: "", to: "" };
+      const p = JSON.parse(raw) as Partial<PersistedFilters>;
+      const allowedStatus: PersistedFilters["status"][] = ["all", "done", "failed", "cancelled", "processing", "queued"];
+      return {
+        q: typeof p.q === "string" ? p.q : "",
+        status: allowedStatus.includes(p.status as PersistedFilters["status"]) ? (p.status as PersistedFilters["status"]) : "all",
+        from: typeof p.from === "string" ? p.from : "",
+        to: typeof p.to === "string" ? p.to : "",
+      };
+    } catch { return { q: "", status: "all", from: "", to: "" }; }
+  };
+  const initialFilters = loadPersistedFilters();
+  const [historyQ, setHistoryQ] = useState(initialFilters.q);
+  const [historyStatus, setHistoryStatus] = useState<"all" | DMHistoryEntry["status"]>(initialFilters.status);
+  const [historyFrom, setHistoryFrom] = useState<string>(initialFilters.from);
+  const [historyTo, setHistoryTo] = useState<string>(initialFilters.to);
+  useEffect(() => {
+    try {
+      localStorage.setItem(HISTORY_FILTERS_KEY, JSON.stringify({ q: historyQ, status: historyStatus, from: historyFrom, to: historyTo }));
+    } catch { /* quota/private mode — silencioso */ }
+  }, [historyQ, historyStatus, historyFrom, historyTo]);
+
 
   const filteredHistory = useMemo(
     () => filterHistory(dmHistory, { q: historyQ, status: historyStatus, from: historyFrom, to: historyTo }),
