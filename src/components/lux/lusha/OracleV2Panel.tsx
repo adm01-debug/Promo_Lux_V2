@@ -64,6 +64,11 @@ export function OracleV2Panel() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [bitrixCompanyId, setBitrixCompanyId] = useState("");
   const [bitrixUserId, setBitrixUserId] = useState("");
+  const [pushConfirm, setPushConfirm] = useState<
+    | { kind: "all"; ids: string[] }
+    | { kind: "one"; id: string; name: string }
+    | null
+  >(null);
 
 
   const toggleDept = (d: string) => {
