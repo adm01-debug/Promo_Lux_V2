@@ -355,6 +355,7 @@ function ResultsList({
   onPushOne,
   pushingContactIds,
   bitrixPronto,
+  bitrixMotivoBloqueio,
 }: {
   contacts: OracleContact[];
   isLoading: boolean;
@@ -363,6 +364,7 @@ function ResultsList({
   onPushOne: (id: string) => void;
   pushingContactIds: Set<string>;
   bitrixPronto: boolean;
+  bitrixMotivoBloqueio: string | null;
 }) {
   if (isLoading) {
     return (
@@ -403,6 +405,7 @@ function ResultsList({
             onPush={() => onPushOne(c.id)}
             isPushing={pushingContactIds.has(c.id)}
             bitrixPronto={bitrixPronto}
+            bitrixMotivoBloqueio={bitrixMotivoBloqueio}
           />
         ))}
       </CardContent>
