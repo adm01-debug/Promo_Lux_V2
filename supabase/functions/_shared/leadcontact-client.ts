@@ -56,6 +56,30 @@ function envelope(publicId: string): Record<string, unknown> {
   };
 }
 
+/**
+ * A API do LeadContact devolve HTTP 200 mesmo em erro de negócio.
+ * Comprovado por chamada real em 16/07/2026:
+ *   HTTP 200 {"code":4010001,"msg":"Not login or login expired"}
+ * Sem esta checagem o erro passa como sucesso, extractSources() devolve [],
+ * e todo contato vira not_found em silêncio — com a sessão morta.
+ */
+export function assertLeadContactOk(path: string, json: unknown): void {
+  const j = json as { code?: unknown; msg?: unknown };
+  const code = typeof j?.code === "number" ? j.code : null;
+  // Sem `code` (ou code de sucesso) → resposta boa, segue o baile.
+  if (code === null || code === 0 || code === 200) return;
+
+  const msg = typeof j?.msg === "string" ? j.msg : "erro desconhecido";
+  const s = String(code);
+  const isAuth = s.startsWith("401") || s.startsWith("403");
+  const isRate = s.startsWith("429");
+  throw new LeadContactError(
+    `leadcontact ${path}: code ${code} — ${msg}`,
+    isAuth ? 401 : isRate ? 429 : 400,
+    isRate,
+  );
+}
+
 async function postLeadContact(
   path: string,
   cookie: string,
@@ -81,8 +105,11 @@ async function postLeadContact(
     );
   }
   try {
-    return JSON.parse(text);
-  } catch {
+    const parsed = JSON.parse(text);
+    assertLeadContactOk(path, parsed);
+    return parsed;
+  } catch (e) {
+    if (e instanceof LeadContactError) throw e; // não engolir o nosso próprio erro
     return { raw: text };
   }
 }
