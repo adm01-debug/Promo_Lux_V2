@@ -19,6 +19,7 @@ import { findEmailAll, findPhone, LeadContactError, type FoundEmail, type FoundP
 import { formatPhoneBitrix } from "../_shared/phone-br.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
+import { updateContact } from "../_shared/safe-update.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -81,11 +82,11 @@ async function enrichOne(
   logger: OracleLogger,
 ): Promise<EnrichResult> {
   if (!contact.linkedin_url) {
-    await admin.from("lusha_contacts").update({
+    await updateContact(admin, logger, contact.id, {
       enrichment_status: "not_found",
       last_error: "sem linkedin_url",
       last_enriched_at: new Date().toISOString(),
-    }).eq("id", contact.id);
+    }, "mark_not_found");
     return { contact_id: contact.id, status: "not_found", error: "sem linkedin_url" };
   }
 
@@ -173,7 +174,7 @@ async function enrichOne(
   }
 
 
-  await admin.from("lusha_contacts").update(updates).eq("id", contact.id);
+  await updateContact(admin, logger, contact.id, updates, "save_enrichment");
 
   return {
     contact_id: contact.id,
@@ -294,11 +295,11 @@ serve(async (req) => {
       if (r.status === "error_auth") break;
     } catch (err) {
       results.push({ contact_id: contact.id, status: "error_other", error: (err as Error).message });
-      await admin.from("lusha_contacts").update({
+      await updateContact(admin, logger, contact.id, {
         enrichment_status: "error_other",
         last_error: (err as Error).message,
         last_enriched_at: new Date().toISOString(),
-      }).eq("id", contact.id);
+      }, "mark_error");
     }
   }
 

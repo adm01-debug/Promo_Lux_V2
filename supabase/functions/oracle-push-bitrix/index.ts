@@ -15,6 +15,7 @@ import {
 } from "../_shared/bitrix-client.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
+import { updateContact } from "../_shared/safe-update.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -217,7 +218,10 @@ serve(async (req) => {
 
     if (!ctx.codEmpresa || !ctx.assignedById) {
       const msg = "contexto Bitrix ausente (bitrix_company_id / bitrix_assigned_by_id)";
-      await admin.from("lusha_contacts").update({ enrichment_status: "error_bitrix", last_error: msg }).eq("id", c.id);
+      await updateContact(admin, logger, c.id, {
+        enrichment_status: "error_bitrix",
+        last_error: msg,
+      }, "ctx_missing");
       results.push({ contact_id: c.id, status: "error_bitrix", error: msg });
       continue;
     }
@@ -226,10 +230,10 @@ serve(async (req) => {
     // telefone não existe contato útil — não polui o CRM com casca vazia.
     if (!c.email && !c.phone_formatted) {
       const msg = "contato sem email e sem telefone";
-      await admin.from("lusha_contacts").update({
+      await updateContact(admin, logger, c.id, {
         enrichment_status: "not_found",
         last_error: msg,
-      }).eq("id", c.id);
+      }, "sem_dado");
       results.push({ contact_id: c.id, status: "skipped", error: msg });
       continue;
     }
@@ -249,13 +253,25 @@ serve(async (req) => {
           codEmpresa: ctx.codEmpresa,
           assignedById: ctx.assignedById,
         });
-        await admin.from("lusha_contacts").update({
+        const ok = await updateContact(admin, logger, c.id, {
           enrichment_status: "bitrix_duplicate",
           bitrix_contact_id: dup.contactId,
-          bitrix_card_id: cardId || null,
+          bitrix_card_id: cardId,
           is_duplicate: true,
           last_error: null,
-        }).eq("id", c.id);
+        }, "save_duplicate");
+        if (!ok) {
+          // Card já foi criado no Bitrix, mas o banco não registrou.
+          // Reportamos como erro para o usuário conferir manualmente.
+          results.push({
+            contact_id: c.id,
+            status: "error_bitrix",
+            bitrix_contact_id: dup.contactId,
+            bitrix_card_id: cardId,
+            error: "card criado no Bitrix mas o banco não registrou — verifique manualmente",
+          });
+          continue;
+        }
 
         await reportSuccess(admin, "bitrix");
         results.push({ contact_id: c.id, status: "bitrix_duplicate", bitrix_contact_id: dup.contactId, bitrix_card_id: cardId, matched_by: dup.matchedBy });
@@ -288,12 +304,24 @@ serve(async (req) => {
         contactId: bitrixContactId,
       });
 
-      await admin.from("lusha_contacts").update({
+      const ok = await updateContact(admin, logger, c.id, {
         enrichment_status: "sent_to_bitrix",
         bitrix_contact_id: bitrixContactId,
-        bitrix_card_id: cardId || null,
+        bitrix_card_id: cardId,
         last_error: null,
-      }).eq("id", c.id);
+      }, "save_sent");
+      if (!ok) {
+        // Contato + card já criados no Bitrix, mas o banco não registrou.
+        // Não conta como sucesso — usuário precisa saber para conferir manualmente.
+        results.push({
+          contact_id: c.id,
+          status: "error_bitrix",
+          bitrix_contact_id: bitrixContactId,
+          bitrix_card_id: cardId,
+          error: "card criado no Bitrix mas o banco não registrou — verifique manualmente",
+        });
+        continue;
+      }
 
       await reportSuccess(admin, "bitrix");
       results.push({ contact_id: c.id, status: "sent_to_bitrix", bitrix_contact_id: bitrixContactId, bitrix_card_id: cardId });
@@ -302,10 +330,10 @@ serve(async (req) => {
       const be = err instanceof BitrixError ? err : null;
       await reportFailure(admin, "bitrix");
       const msg = (err as Error).message.slice(0, 300);
-      await admin.from("lusha_contacts").update({
+      await updateContact(admin, logger, c.id, {
         enrichment_status: "error_bitrix",
         last_error: msg,
-      }).eq("id", c.id);
+      }, "save_error");
       results.push({ contact_id: c.id, status: "error_bitrix", error: msg });
       await logger.log({
         step: "push_failed", status: "error", level: "error",

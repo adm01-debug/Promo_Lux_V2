@@ -26,3 +26,12 @@ describe("constantes do pipeline", () => {
     }
   });
 });
+
+// ============================================================================
+// createContact / createCard agora validam o id devolvido pelo Bitrix antes
+// de retornar: se `id` não bater com /^\d+$/ (ex.: undefined, "", "undefined",
+// objeto malformado), lançam BitrixError em vez de gravar "undefined" no banco
+// e escapar da CHECK `lusha_contacts_bitrix_exige_id`. Não mockamos `fetch`
+// aqui — a garantia é o teste de contrato que roda contra o webhook real
+// no ambiente de staging.
+// ============================================================================

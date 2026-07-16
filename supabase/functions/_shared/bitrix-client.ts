@@ -192,7 +192,11 @@ export async function createContact(input: CreateContactInput): Promise<string> 
   }
 
   const id = await callBitrix<number | string>("crm.contact.add", { fields });
-  return String(id);
+  const contactId = String(id ?? "").trim();
+  if (!/^\d+$/.test(contactId)) {
+    throw new BitrixError(`crm.contact.add: id inválido na resposta (${JSON.stringify(id)})`);
+  }
+  return contactId;
 }
 
 export interface CreateCardInput {
@@ -220,7 +224,11 @@ export async function createCard(input: CreateCardInput): Promise<string> {
     { fields },
     { entityTypeId: BITRIX_ENTITY_TYPE_ID },
   );
-  return String(result?.item?.id ?? "");
+  const cardId = String(result?.item?.id ?? "").trim();
+  if (!/^\d+$/.test(cardId)) {
+    throw new BitrixError(`crm.item.add: id inválido na resposta (${JSON.stringify(result)})`);
+  }
+  return cardId;
 }
 
 export async function updateCardStage(cardId: number | string, stageId: string): Promise<void> {

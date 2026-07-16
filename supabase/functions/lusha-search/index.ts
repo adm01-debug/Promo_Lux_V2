@@ -449,6 +449,7 @@ serve(async (req) => {
         if (insertError) {
           log.warn("contact_insert_error", {
             error: insertError.message,
+            code: (insertError as { code?: string }).code ?? null,
             name: fullName,
             linkedin: socialLink,
           });
