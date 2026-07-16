@@ -1497,7 +1497,7 @@ export const LushaIntelligenceView = () => {
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Cole a URL da página da empresa (o sistema remove <code className="text-[10px] px-1 rounded bg-muted">https://</code>, <code className="text-[10px] px-1 rounded bg-muted">www</code> e parâmetros).
+                  Opcional. Guardado junto do contato para referência — a busca é feita pelo domínio.
                 </p>
               )}
             </div>
