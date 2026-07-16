@@ -1367,7 +1367,7 @@ export const LushaIntelligenceView = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-2 rounded-lg border border-border/50 bg-card/30 p-3">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-destructive" aria-label="obrigatório">*</span></Label>
                 <Button
                   type="button"
                   variant="ghost"
