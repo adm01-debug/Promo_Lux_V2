@@ -141,20 +141,24 @@ export function OracleV2Panel() {
 
   const handlePushAll = () => {
     if (enrichedIds.length === 0 || !bitrixPronto) return;
-    pushBitrix.mutate({
-      contact_ids: enrichedIds.slice(0, 50),
-      bitrix_company_id: bitrixCompanyId.trim(),
-      bitrix_assigned_by_id: Number(bitrixUserId.trim()),
-    });
+    setPushConfirm({ kind: "all", ids: enrichedIds.slice(0, 50) });
   };
 
   const handlePushOne = (id: string) => {
     if (!bitrixPronto) return;
+    const contato = contacts.find((c) => c.id === id);
+    setPushConfirm({ kind: "one", id, name: contato?.full_name ?? "este contato" });
+  };
+
+  const confirmPush = () => {
+    if (!pushConfirm || !bitrixPronto) return;
+    const ids = pushConfirm.kind === "all" ? pushConfirm.ids : [pushConfirm.id];
     pushBitrix.mutate({
-      contact_ids: [id],
+      contact_ids: ids,
       bitrix_company_id: bitrixCompanyId.trim(),
       bitrix_assigned_by_id: Number(bitrixUserId.trim()),
     });
+    setPushConfirm(null);
   };
 
 
