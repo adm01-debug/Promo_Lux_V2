@@ -661,15 +661,23 @@ export const LushaIntelligenceView = () => {
 
   const validateDomain = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeDomain(raw);
-    if (!value) return { value, error: null }; // opcional
+    if (!value) {
+      return {
+        value,
+        error: "Informe o domínio do site oficial da empresa (ex.: natura.com.br). A busca é feita por domínio — o LinkedIn sozinho não basta.",
+      };
+    }
     if (/(^|\.)linkedin\.com$/i.test(value)) {
       return {
         value,
-        error: "Este campo aceita apenas o domínio do site. Para o LinkedIn, use o campo acima.",
+        error: "Use o domínio do site oficial (ex.: natura.com.br), não a URL de uma rede social.",
       };
     }
     if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
-      return { value, error: "Redes sociais não são aceitas — informe o domínio do site oficial." };
+      return {
+        value,
+        error: "Use o domínio do site oficial (ex.: natura.com.br), não a URL de uma rede social.",
+      };
     }
     // Aceita rótulos ASCII e punycode (xn--…). IDN já foi convertido no normalize.
     if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(value)) {
