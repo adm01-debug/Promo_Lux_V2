@@ -35,6 +35,8 @@ interface OracleContact {
   phone_formatted: string | null;
   enrichment_status: string | null;
   last_error: string | null;
+  bitrix_contact_id: string | null;
+  bitrix_card_id: string | null;
 }
 
 export function OracleV2Panel() {
@@ -43,6 +45,8 @@ export function OracleV2Panel() {
   const preflight = useOraclePreflight();
   const search = useOracleSearchDecisors();
   const enrich = useOracleEnrichContact();
+  const pushBitrix = useOraclePushBitrix();
+
 
   const [companyName, setCompanyName] = useState("");
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
