@@ -16,6 +16,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
 import { getCookie, CookieVaultUnavailable, CookieNotReady } from "../_shared/cookies.ts";
 import { findEmailAll, findPhone, LeadContactError, type FoundEmail, type FoundPhone } from "../_shared/leadcontact-client.ts";
+import { formatPhoneBitrix } from "../_shared/phone-br.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 
