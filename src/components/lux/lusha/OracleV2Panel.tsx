@@ -85,7 +85,7 @@ export function OracleV2Panel() {
   const contactsQuery = useQuery({
     queryKey: ["oracle", "contacts", sessionId],
     enabled: !!sessionId,
-    refetchInterval: 5000,
+    refetchInterval: pushBitrix.isPending || enrich.isPending ? 1500 : 5000,
     queryFn: async (): Promise<OracleContact[]> => {
       const { data, error } = await supabase
         .from("lusha_contacts")
