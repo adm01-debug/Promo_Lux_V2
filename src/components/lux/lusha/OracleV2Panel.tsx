@@ -306,6 +306,8 @@ export function OracleV2Panel() {
         </CardContent>
       </Card>
 
+      {pushResult && <PushResultSummary result={pushResult} contacts={contacts} />}
+
       {sessionId && (
         <ResultsList
           contacts={contacts}
@@ -316,6 +318,7 @@ export function OracleV2Panel() {
           pushingContactIds={pushBitrix.isPending ? new Set(pushBitrix.variables?.contact_ids ?? []) : new Set()}
           bitrixPronto={bitrixPronto}
           bitrixMotivoBloqueio={bitrixMotivoBloqueio}
+          pushResultByContact={pushResultByContact}
         />
       )}
 
