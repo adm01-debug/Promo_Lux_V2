@@ -187,6 +187,36 @@ export function OracleV2Panel() {
             </div>
           </div>
 
+
+          <div className="space-y-2 rounded-lg border border-dashed p-3">
+            <Label className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Building2 className="h-3.5 w-3.5" />
+              Destino no Bitrix24 (necessário para cadastrar os contatos)
+            </Label>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="space-y-1">
+                <Label htmlFor="bitrix-company" className="text-xs">ID da empresa</Label>
+                <Input
+                  id="bitrix-company"
+                  inputMode="numeric"
+                  placeholder="Ex.: 12345"
+                  value={bitrixCompanyId}
+                  onChange={(e) => setBitrixCompanyId(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="bitrix-user" className="text-xs">ID do responsável</Label>
+                <Input
+                  id="bitrix-user"
+                  inputMode="numeric"
+                  placeholder="Ex.: 14"
+                  value={bitrixUserId}
+                  onChange={(e) => setBitrixUserId(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="flex gap-2 pt-2">
             <Button onClick={handleSearch} disabled={!canSearch} aria-busy={search.isPending}>
               {search.isPending ? (
@@ -211,6 +241,22 @@ export function OracleV2Panel() {
                 Enriquecer {pendingIds.length} pendente(s)
               </Button>
             )}
+            {enrichedIds.length > 0 && (
+              <Button
+                variant="default"
+                onClick={handlePushAll}
+                disabled={pushBitrix.isPending || !bitrixPronto}
+                aria-busy={pushBitrix.isPending}
+                title={bitrixPronto ? undefined : "Preencha o ID da empresa e do responsável no Bitrix"}
+              >
+                {pushBitrix.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Building2 className="h-4 w-4 mr-2" />
+                )}
+                Enviar {enrichedIds.length} ao Bitrix
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -221,11 +267,15 @@ export function OracleV2Panel() {
           isLoading={contactsQuery.isLoading}
           onEnrichOne={handleEnrichOne}
           enrichingContactIds={enrich.isPending ? new Set(enrich.variables?.contact_ids ?? []) : new Set()}
+          onPushOne={handlePushOne}
+          pushingContactIds={pushBitrix.isPending ? new Set(pushBitrix.variables?.contact_ids ?? []) : new Set()}
+          bitrixPronto={bitrixPronto}
         />
       )}
     </div>
   );
 }
+
 
 function VaultHealthBanner({
   data,
