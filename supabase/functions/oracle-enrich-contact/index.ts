@@ -82,11 +82,11 @@ async function enrichOne(
   logger: OracleLogger,
 ): Promise<EnrichResult> {
   if (!contact.linkedin_url) {
-    await admin.from("lusha_contacts").update({
+    await updateContact(admin, logger, contact.id, {
       enrichment_status: "not_found",
       last_error: "sem linkedin_url",
       last_enriched_at: new Date().toISOString(),
-    }).eq("id", contact.id);
+    }, "mark_not_found");
     return { contact_id: contact.id, status: "not_found", error: "sem linkedin_url" };
   }
 
