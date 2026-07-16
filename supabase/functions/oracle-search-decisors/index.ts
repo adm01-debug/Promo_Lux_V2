@@ -315,6 +315,7 @@ serve(async (req) => {
     first_name: c.firstName ?? null,
     job_title: c.jobTitle ?? null,
     department_en: c.department ?? null,
+    department_pt: findPtLabelForEn(c.department ?? "", input.departments),
     seniority: c.seniority ?? null,
     linkedin_url: c.linkedinUrl ?? null,
     linkedin_public_id: c.linkedinPublicId ?? null,
