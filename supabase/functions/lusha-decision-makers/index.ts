@@ -548,7 +548,7 @@ serve(async (req) => {
           const { error: upsertErr, count } = await supabase
             .from("lusha_contacts")
             .upsert(rows, {
-              onConflict: "organization_id,linkedin_url",
+              onConflict: "organization_id,linkedin_public_id",
               ignoreDuplicates: false,
               count: "exact",
             });
