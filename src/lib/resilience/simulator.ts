@@ -2,8 +2,8 @@
  * Simulador de Resiliência — modelo de domínio.
  *
  * Modela o comportamento real do sistema de fila (fail_scrape_task):
- *  - backoff exponencial com jitter (base 30s, cap 3600s, 20% jitter)
- *  - até max_attempts tentativas
+ *  - backoff exponencial com jitter (base 5s, cap 300s, 20% jitter)
+ *  - até max_attempts tentativas (default 6, ajustado via Monte Carlo)
  *  - erros transitórios são reprocessados; permanentes vão direto p/ DLQ
  *  - circuit breaker (gmaps-proxy): 5 falhas em 60s abre o circuito
  *
