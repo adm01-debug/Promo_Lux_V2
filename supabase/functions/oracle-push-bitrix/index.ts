@@ -218,7 +218,10 @@ serve(async (req) => {
 
     if (!ctx.codEmpresa || !ctx.assignedById) {
       const msg = "contexto Bitrix ausente (bitrix_company_id / bitrix_assigned_by_id)";
-      await admin.from("lusha_contacts").update({ enrichment_status: "error_bitrix", last_error: msg }).eq("id", c.id);
+      await updateContact(admin, logger, c.id, {
+        enrichment_status: "error_bitrix",
+        last_error: msg,
+      }, "ctx_missing");
       results.push({ contact_id: c.id, status: "error_bitrix", error: msg });
       continue;
     }
@@ -227,10 +230,10 @@ serve(async (req) => {
     // telefone não existe contato útil — não polui o CRM com casca vazia.
     if (!c.email && !c.phone_formatted) {
       const msg = "contato sem email e sem telefone";
-      await admin.from("lusha_contacts").update({
+      await updateContact(admin, logger, c.id, {
         enrichment_status: "not_found",
         last_error: msg,
-      }).eq("id", c.id);
+      }, "sem_dado");
       results.push({ contact_id: c.id, status: "skipped", error: msg });
       continue;
     }
