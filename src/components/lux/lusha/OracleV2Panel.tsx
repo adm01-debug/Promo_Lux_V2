@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SUGGESTED_DEPARTMENTS_PT } from "@/lib/lusha/departmentMap";
 import { cn } from "@/lib/utils";
 import {
@@ -89,6 +90,14 @@ export function OracleV2Panel() {
     [contacts],
   );
   const bitrixPronto = bitrixCompanyId.trim().length > 0 && /^\d+$/.test(bitrixUserId.trim());
+  const bitrixMotivoBloqueio = (() => {
+    if (bitrixPronto) return null;
+    const faltas: string[] = [];
+    if (bitrixCompanyId.trim().length === 0) faltas.push("ID da empresa no Bitrix");
+    if (bitrixUserId.trim().length === 0) faltas.push("ID do responsável no Bitrix");
+    else if (!/^\d+$/.test(bitrixUserId.trim())) faltas.push("ID do responsável precisa ser numérico");
+    return `Preencha: ${faltas.join(" e ")}.`;
+  })();
 
   const handleSearch = () => {
     if (!activeOrg?.organization_id || !user) return;
@@ -242,20 +251,30 @@ export function OracleV2Panel() {
               </Button>
             )}
             {enrichedIds.length > 0 && (
-              <Button
-                variant="default"
-                onClick={handlePushAll}
-                disabled={pushBitrix.isPending || !bitrixPronto}
-                aria-busy={pushBitrix.isPending}
-                title={bitrixPronto ? undefined : "Preencha o ID da empresa e do responsável no Bitrix"}
-              >
-                {pushBitrix.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                ) : (
-                  <Building2 className="h-4 w-4 mr-2" />
-                )}
-                Enviar {enrichedIds.length} ao Bitrix
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={bitrixPronto ? -1 : 0}>
+                    <Button
+                      variant="default"
+                      onClick={handlePushAll}
+                      disabled={pushBitrix.isPending || !bitrixPronto}
+                      aria-busy={pushBitrix.isPending}
+                    >
+                      {pushBitrix.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <Building2 className="h-4 w-4 mr-2" />
+                      )}
+                      Enviar {enrichedIds.length} ao Bitrix
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs text-xs">
+                  {bitrixPronto
+                    ? "Envia todos os contatos enriquecidos desta busca ao Bitrix (limite de 50 por lote)."
+                    : `Envio bloqueado. ${bitrixMotivoBloqueio ?? ""}`}
+                </TooltipContent>
+              </Tooltip>
             )}
           </div>
         </CardContent>
@@ -270,6 +289,7 @@ export function OracleV2Panel() {
           onPushOne={handlePushOne}
           pushingContactIds={pushBitrix.isPending ? new Set(pushBitrix.variables?.contact_ids ?? []) : new Set()}
           bitrixPronto={bitrixPronto}
+          bitrixMotivoBloqueio={bitrixMotivoBloqueio}
         />
       )}
     </div>
@@ -335,6 +355,7 @@ function ResultsList({
   onPushOne,
   pushingContactIds,
   bitrixPronto,
+  bitrixMotivoBloqueio,
 }: {
   contacts: OracleContact[];
   isLoading: boolean;
@@ -343,6 +364,7 @@ function ResultsList({
   onPushOne: (id: string) => void;
   pushingContactIds: Set<string>;
   bitrixPronto: boolean;
+  bitrixMotivoBloqueio: string | null;
 }) {
   if (isLoading) {
     return (
@@ -383,6 +405,7 @@ function ResultsList({
             onPush={() => onPushOne(c.id)}
             isPushing={pushingContactIds.has(c.id)}
             bitrixPronto={bitrixPronto}
+            bitrixMotivoBloqueio={bitrixMotivoBloqueio}
           />
         ))}
       </CardContent>
@@ -397,6 +420,7 @@ function ContactRow({
   onPush,
   isPushing,
   bitrixPronto,
+  bitrixMotivoBloqueio,
 }: {
   contact: OracleContact;
   onEnrich: () => void;
@@ -404,6 +428,7 @@ function ContactRow({
   onPush: () => void;
   isPushing: boolean;
   bitrixPronto: boolean;
+  bitrixMotivoBloqueio: string | null;
 }) {
   const status = contact.enrichment_status;
   const revealed = !!contact.email || !!contact.phone_formatted;
@@ -435,14 +460,24 @@ function ContactRow({
         </Button>
       )}
       {contact.enrichment_status === "enriched" && !contact.bitrix_contact_id && (
-        <Button
-          size="sm"
-          onClick={onPush}
-          disabled={isPushing || !bitrixPronto}
-          title={bitrixPronto ? undefined : "Preencha o destino no Bitrix acima"}
-        >
-          {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span tabIndex={bitrixPronto ? -1 : 0}>
+              <Button
+                size="sm"
+                onClick={onPush}
+                disabled={isPushing || !bitrixPronto}
+              >
+                {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs text-xs">
+            {bitrixPronto
+              ? "Cadastra este contato no Bitrix e cria o card na esteira."
+              : `Envio bloqueado. ${bitrixMotivoBloqueio ?? ""}`}
+          </TooltipContent>
+        </Tooltip>
       )}
       {contact.bitrix_card_id && (
         <a
@@ -458,26 +493,96 @@ function ContactRow({
   );
 }
 
+const STATUS_INFO: Record<
+  string,
+  { label: string; variant: "default" | "secondary" | "destructive" | "outline"; explanation: string }
+> = {
+  pending_enrichment: {
+    label: "pendente",
+    variant: "outline",
+    explanation: "Decisor encontrado na Lusha. Ainda não foi enviado ao LeadContact para revelar e-mail/telefone.",
+  },
+  enriching: {
+    label: "enriquecendo…",
+    variant: "secondary",
+    explanation: "LeadContact está processando este contato agora. Aguarde alguns segundos.",
+  },
+  enriched: {
+    label: "enriquecido",
+    variant: "default",
+    explanation: "E-mail e/ou telefone revelados. Pronto para enviar ao Bitrix (preencha os IDs de destino).",
+  },
+  not_found: {
+    label: "sem dado",
+    variant: "secondary",
+    explanation:
+      "Este contato foi PULADO porque o LeadContact não retornou nem e-mail nem telefone — sem esses dados o Bitrix rejeita o cadastro. Você pode tentar Revelar novamente mais tarde.",
+  },
+  error_auth: {
+    label: "cookie inválido",
+    variant: "destructive",
+    explanation: "O cookie salvo no Vault expirou ou foi invalidado. Atualize o cookie e tente novamente.",
+  },
+  error_rate_limit: {
+    label: "rate limit",
+    variant: "destructive",
+    explanation: "Muitas chamadas em pouco tempo. Aguarde alguns minutos antes de tentar de novo.",
+  },
+  error_other: {
+    label: "erro",
+    variant: "destructive",
+    explanation: "Erro não classificado no enriquecimento. Consulte a mensagem detalhada.",
+  },
+  same_session_dedup: {
+    label: "duplicado",
+    variant: "outline",
+    explanation: "Contato duplicado dentro desta mesma busca — ignorado para não gerar cadastro repetido.",
+  },
+  pushing_bitrix: {
+    label: "enviando ao Bitrix…",
+    variant: "secondary",
+    explanation: "Envio para o Bitrix em andamento.",
+  },
+  sent_to_bitrix: {
+    label: "no Bitrix",
+    variant: "default",
+    explanation: "Contato cadastrado no Bitrix com sucesso. Clique em 'ver card' para abrir.",
+  },
+  bitrix_duplicate: {
+    label: "já existia no Bitrix",
+    variant: "outline",
+    explanation:
+      "O Bitrix já tinha esse contato (mesmo e-mail, telefone ou LinkedIn). Vinculamos ao card existente em vez de duplicar.",
+  },
+  error_bitrix: {
+    label: "erro no Bitrix",
+    variant: "destructive",
+    explanation: "O Bitrix rejeitou o cadastro. Veja a mensagem para o motivo exato.",
+  },
+};
+
 function StatusBadge({ status, error }: { status: string | null; error: string | null }) {
-  const map: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-    pending_enrichment: { label: "pendente", variant: "outline" },
-    enriching: { label: "enriquecendo…", variant: "secondary" },
-    enriched: { label: "enriquecido", variant: "default" },
-    not_found: { label: "sem dado", variant: "secondary" },
-    error_auth: { label: "cookie inválido", variant: "destructive" },
-    error_rate_limit: { label: "rate limit", variant: "destructive" },
-    error_other: { label: "erro", variant: "destructive" },
-    same_session_dedup: { label: "duplicado", variant: "outline" },
-    pushing_bitrix: { label: "enviando ao Bitrix…", variant: "secondary" },
-    sent_to_bitrix: { label: "no Bitrix", variant: "default" },
-    bitrix_duplicate: { label: "já existia no Bitrix", variant: "outline" },
-    error_bitrix: { label: "erro no Bitrix", variant: "destructive" },
-  };
-  const info = (status ? map[status] : null) ?? { label: status ?? "—", variant: "outline" as const };
+  const info =
+    (status ? STATUS_INFO[status] : null) ??
+    { label: status ?? "—", variant: "outline" as const, explanation: "Status desconhecido." };
   return (
-    <Badge variant={info.variant} title={error ?? undefined} className="text-[10px]">
-      {info.label}
-    </Badge>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge variant={info.variant} className="text-[10px] cursor-help">
+          {info.label}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs text-xs">
+        <p className="font-medium mb-1">{info.label}</p>
+        <p className="text-muted-foreground">{info.explanation}</p>
+        {error && (
+          <p className="mt-1 pt-1 border-t border-border/40">
+            <span className="font-medium">Detalhe:</span> {error}
+          </p>
+        )}
+      </TooltipContent>
+    </Tooltip>
   );
 }
+
 
