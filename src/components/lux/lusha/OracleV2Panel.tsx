@@ -29,6 +29,7 @@ import {
   useOraclePushBitrix,
   type PushBitrixResultItem,
 } from "@/hooks/useOracleV2";
+import { computeBitrixReadiness } from "@/hooks/oracleV2Helpers";
 
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 
