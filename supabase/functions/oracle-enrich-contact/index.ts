@@ -165,14 +165,13 @@ async function enrichOne(
   if (bestEmail && !contact.email) {
     updates.email = bestEmail.email;
     updates.email_source = "leadcontact";
-    updates.has_email = true;
   }
   if (bestPhone && !contact.phone_formatted) {
     updates.phone_raw = bestPhone.raw;
     updates.phone_formatted = formatPhoneBitrix(bestPhone.normalized) ?? bestPhone.raw;
     updates.phone_source = "leadcontact";
-    updates.has_phone = true;
   }
+
 
   await admin.from("lusha_contacts").update(updates).eq("id", contact.id);
 
