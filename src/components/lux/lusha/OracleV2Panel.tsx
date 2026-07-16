@@ -71,7 +71,7 @@ export function OracleV2Panel() {
     queryFn: async (): Promise<OracleContact[]> => {
       const { data, error } = await supabase
         .from("lusha_contacts")
-        .select("id, full_name, job_title, department_en, linkedin_url, email, phone_formatted, enrichment_status, last_error")
+        .select("id, full_name, job_title, department_en, linkedin_url, email, phone_formatted, enrichment_status, last_error, bitrix_contact_id, bitrix_card_id")
         .eq("session_id", sessionId!)
         .order("created_at", { ascending: true });
       if (error) throw error;
