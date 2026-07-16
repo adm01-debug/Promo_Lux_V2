@@ -1432,7 +1432,7 @@ export const LushaIntelligenceView = () => {
 
             <div className="space-y-2 rounded-lg border border-border/50 bg-card/30 p-3">
               <Label htmlFor="lusha-linkedin">
-                Página da empresa no LinkedIn
+                Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
               </Label>
 
               <div className="relative flex gap-2">
