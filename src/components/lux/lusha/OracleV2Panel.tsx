@@ -51,6 +51,9 @@ export function OracleV2Panel() {
   const [companyName, setCompanyName] = useState("");
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [bitrixCompanyId, setBitrixCompanyId] = useState("");
+  const [bitrixUserId, setBitrixUserId] = useState("");
+
 
   const toggleDept = (d: string) => {
     setSelectedDepts((s) => {
