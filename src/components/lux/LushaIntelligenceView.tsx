@@ -1554,6 +1554,13 @@ export const LushaIntelligenceView = () => {
                   onClick={() => dmMutation.mutate()}
                   disabled={!canSearchDomain}
                   className="min-w-[180px]"
+                  title={
+                    !domain.trim()
+                      ? "Informe o domínio do site oficial da empresa (ex.: natura.com.br). A busca é feita por domínio."
+                      : rateLimitCountdown != null && rateLimitCountdown > 0
+                      ? `Aguarde ${rateLimitCountdown}s antes da próxima busca`
+                      : undefined
+                  }
                 >
                   {dmMutation.isPending ? (
                     <>
