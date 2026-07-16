@@ -8,7 +8,7 @@
 //  3. header `origin: chrome-extension://imhlnhlbiencamnbpigopiibddajimep` é obrigatório
 //  4. resposta útil vem em data.sources[]
 // ============================================================================
-import { extractLinkedInCsrfToken, getCookie } from "./cookies.ts";
+import { extractLinkedInCsrfToken, getCookie, markCookieUnhealthy } from "./cookies.ts";
 import { normalizePhoneBR, type NormalizedPhone } from "./phone-br.ts";
 import { publicIdFromLinkedInUrl } from "./linkedin-url.ts";
 export { publicIdFromLinkedInUrl };
