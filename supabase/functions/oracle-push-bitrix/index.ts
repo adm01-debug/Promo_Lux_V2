@@ -304,12 +304,24 @@ serve(async (req) => {
         contactId: bitrixContactId,
       });
 
-      await admin.from("lusha_contacts").update({
+      const ok = await updateContact(admin, logger, c.id, {
         enrichment_status: "sent_to_bitrix",
         bitrix_contact_id: bitrixContactId,
-        bitrix_card_id: cardId || null,
+        bitrix_card_id: cardId,
         last_error: null,
-      }).eq("id", c.id);
+      }, "save_sent");
+      if (!ok) {
+        // Contato + card já criados no Bitrix, mas o banco não registrou.
+        // Não conta como sucesso — usuário precisa saber para conferir manualmente.
+        results.push({
+          contact_id: c.id,
+          status: "error_bitrix",
+          bitrix_contact_id: bitrixContactId,
+          bitrix_card_id: cardId,
+          error: "card criado no Bitrix mas o banco não registrou — verifique manualmente",
+        });
+        continue;
+      }
 
       await reportSuccess(admin, "bitrix");
       results.push({ contact_id: c.id, status: "sent_to_bitrix", bitrix_contact_id: bitrixContactId, bitrix_card_id: cardId });
@@ -318,10 +330,10 @@ serve(async (req) => {
       const be = err instanceof BitrixError ? err : null;
       await reportFailure(admin, "bitrix");
       const msg = (err as Error).message.slice(0, 300);
-      await admin.from("lusha_contacts").update({
+      await updateContact(admin, logger, c.id, {
         enrichment_status: "error_bitrix",
         last_error: msg,
-      }).eq("id", c.id);
+      }, "save_error");
       results.push({ contact_id: c.id, status: "error_bitrix", error: msg });
       await logger.log({
         step: "push_failed", status: "error", level: "error",
