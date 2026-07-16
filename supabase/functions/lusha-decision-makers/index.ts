@@ -106,6 +106,8 @@ serve(async (req) => {
     return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
   }
 
+  // deno-lint-ignore no-explicit-any
+  let body: any = null;
   try {
     try {
       body = await req.json();
@@ -546,7 +548,7 @@ serve(async (req) => {
           const { error: upsertErr, count } = await supabase
             .from("lusha_contacts")
             .upsert(rows, {
-              onConflict: "organization_id,linkedin_url",
+              onConflict: "organization_id,linkedin_public_id",
               ignoreDuplicates: false,
               count: "exact",
             });
