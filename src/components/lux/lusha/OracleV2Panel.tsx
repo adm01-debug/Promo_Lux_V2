@@ -84,6 +84,11 @@ export function OracleV2Panel() {
     () => contacts.filter((c) => c.enrichment_status === "pending_enrichment").map((c) => c.id),
     [contacts],
   );
+  const enrichedIds = useMemo(
+    () => contacts.filter((c) => c.enrichment_status === "enriched" && !c.bitrix_contact_id).map((c) => c.id),
+    [contacts],
+  );
+  const bitrixPronto = bitrixCompanyId.trim().length > 0 && /^\d+$/.test(bitrixUserId.trim());
 
   const handleSearch = () => {
     if (!activeOrg?.organization_id || !user) return;
@@ -92,6 +97,8 @@ export function OracleV2Panel() {
         company_name: companyName.trim(),
         departments: Array.from(selectedDepts),
         organization_id: activeOrg!.organization_id,
+        bitrix_company_id: bitrixCompanyId.trim() || undefined,
+        bitrix_user_id: bitrixUserId.trim() || undefined,
       },
       {
         onSuccess: (res) => setSessionId(res.session_id),
@@ -107,6 +114,25 @@ export function OracleV2Panel() {
   const handleEnrichOne = (id: string) => {
     enrich.mutate({ contact_ids: [id] });
   };
+
+  const handlePushAll = () => {
+    if (enrichedIds.length === 0 || !bitrixPronto) return;
+    pushBitrix.mutate({
+      contact_ids: enrichedIds.slice(0, 50),
+      bitrix_company_id: bitrixCompanyId.trim(),
+      bitrix_assigned_by_id: Number(bitrixUserId.trim()),
+    });
+  };
+
+  const handlePushOne = (id: string) => {
+    if (!bitrixPronto) return;
+    pushBitrix.mutate({
+      contact_ids: [id],
+      bitrix_company_id: bitrixCompanyId.trim(),
+      bitrix_assigned_by_id: Number(bitrixUserId.trim()),
+    });
+  };
+
 
   const canSearch =
     companyName.trim().length >= 2 && selectedDepts.size > 0 && !!activeOrg?.organization_id && !search.isPending;
