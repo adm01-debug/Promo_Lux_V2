@@ -174,7 +174,7 @@ async function enrichOne(
   }
 
 
-  await admin.from("lusha_contacts").update(updates).eq("id", contact.id);
+  await updateContact(admin, logger, contact.id, updates, "save_enrichment");
 
   return {
     contact_id: contact.id,
