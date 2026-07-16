@@ -216,6 +216,8 @@ serve(async (req) => {
           idempotency_key: idemKey,
           search_type: "oracle_v2",
           started_at: new Date().toISOString(),
+          bitrix_company_id: input.bitrix_company_id ?? null,
+          bitrix_user_id: input.bitrix_user_id ?? null,
         })
         .select("id")
         .single();
