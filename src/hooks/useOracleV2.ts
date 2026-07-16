@@ -78,8 +78,10 @@ export function useOracleSearchDecisors() {
       return data!;
     },
     onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ["oracle", "contacts"] });
       qc.invalidateQueries({ queryKey: ["lusha", "contacts"] });
       qc.invalidateQueries({ queryKey: ["lusha", "sessions"] });
+
       if (data.warning === "company_not_found") {
         toast.warning("Empresa não encontrada na Lusha.");
       } else {
