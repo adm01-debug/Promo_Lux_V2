@@ -34,12 +34,13 @@ export function normalizePhoneBR(input: string | null | undefined): NormalizedPh
     return { raw, e164: raw.replace(/[^\d+]/g, ""), ddd: null, is_mobile: false, country: "INTL" };
   }
 
-  const digits = raw.replace(/\D/g, "");
-  let local = digits;
+  // TD-6: descarta ramal antes de extrair dígitos ("11912345678 ramal 22")
+  const semRamal = raw.replace(/\s*(?:ramal|ramais|r\.|ext\.?|x)\s*\d+\s*$/i, "");
+  const digits = semRamal.replace(/\D/g, "");
+  // TD-6: prefixo legado de operadora/DDI ("011...", "0055...")
+  let local = digits.replace(/^0+/, "");
   if (local.startsWith("55") && (local.length === 12 || local.length === 13)) {
     local = local.slice(2);
-  } else if (local.startsWith("0055")) {
-    local = local.slice(4);
   }
 
   if (local.length !== 10 && local.length !== 11) {

@@ -10,6 +10,8 @@
 // ============================================================================
 import { extractLinkedInCsrfToken, getCookie } from "./cookies.ts";
 import { normalizePhoneBR, type NormalizedPhone } from "./phone-br.ts";
+import { publicIdFromLinkedInUrl } from "./linkedin-url.ts";
+export { publicIdFromLinkedInUrl };
 
 const BASE = "https://api.leadcontact.ai/api/contact";
 const EXT_ORIGIN = "chrome-extension://imhlnhlbiencamnbpigopiibddajimep";
@@ -23,13 +25,6 @@ export class LeadContactError extends Error {
   }
 }
 
-export function publicIdFromLinkedInUrl(url: string): string {
-  return url
-    .split("?")[0]
-    .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "")
-    .replace(/\/+$/, "")
-    .trim();
-}
 
 function envelope(publicId: string): Record<string, unknown> {
   return {
