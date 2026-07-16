@@ -4,19 +4,10 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: { "@": path.resolve(__dirname, "./src") },
+  },
   test: {
-    environment: "jsdom",
-    globals: true,
-    setupFiles: ["./src/test/setup.ts"],
-    include: [
-      "src/**/*.{test,spec}.{ts,tsx}",
-      "supabase/functions/**/__tests__/**/*.test.ts",
-    ],
-    // Edge functions rodam em Deno/Node — não precisam de jsdom.
-    // Mantém jsdom como default para src/** e força node só onde faz sentido.
-    environmentMatchGlobs: [
-      ["supabase/functions/**", "node"],
-    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
@@ -35,8 +26,27 @@ export default defineConfig({
         "src/integrations/supabase/client.ts",
       ],
     },
-  },
-  resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") },
+    projects: [
+      {
+        plugins: [react()],
+        resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
+        test: {
+          name: "app",
+          environment: "jsdom",
+          globals: true,
+          setupFiles: ["./src/test/setup.ts"],
+          include: ["src/**/*.{test,spec}.{ts,tsx}"],
+        },
+      },
+      {
+        resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
+        test: {
+          name: "edge",
+          environment: "node",
+          globals: true,
+          include: ["supabase/functions/**/__tests__/**/*.test.ts"],
+        },
+      },
+    ],
   },
 });
