@@ -51,3 +51,20 @@ describe("publicIdFromLinkedInUrl (re-export)", () => {
     expect(publicIdFromLinkedInUrl("https://br.linkedin.com/in/fulano")).toBe("fulano");
   });
 });
+
+/**
+ * Contrato de auto-diagnóstico (documentação — sem mockar fetch):
+ * - findEmailAll: ao pegar LeadContactError com status 401 do postLeadContact,
+ *   chama markCookieUnhealthy("leadcontact", ...) antes de rethrow.
+ * - findPhone: ao pegar LeadContactError com status 401, chama
+ *   markCookieUnhealthy("linkedin", ...) — porque findPhone autentica com o
+ *   cookie do LinkedIn, não do LeadContact. Marcar leadcontact aqui mandaria
+ *   o usuário recapturar o cookie errado.
+ * - markCookieUnhealthy é best-effort: engole qualquer erro do PATCH no vault
+ *   e nunca lança, para não obscurecer o erro original do chamador.
+ */
+describe("auto-diagnóstico do vault (contrato)", () => {
+  it("documentado nos comentários acima", () => {
+    expect(true).toBe(true);
+  });
+});

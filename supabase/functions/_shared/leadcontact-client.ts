@@ -8,7 +8,7 @@
 //  3. header `origin: chrome-extension://imhlnhlbiencamnbpigopiibddajimep` é obrigatório
 //  4. resposta útil vem em data.sources[]
 // ============================================================================
-import { extractLinkedInCsrfToken, getCookie } from "./cookies.ts";
+import { extractLinkedInCsrfToken, getCookie, markCookieUnhealthy } from "./cookies.ts";
 import { normalizePhoneBR, type NormalizedPhone } from "./phone-br.ts";
 import { publicIdFromLinkedInUrl } from "./linkedin-url.ts";
 export { publicIdFromLinkedInUrl };
@@ -132,7 +132,15 @@ export async function findEmailAll(linkedinUrl: string): Promise<{ emails: Found
   const publicId = publicIdFromLinkedInUrl(linkedinUrl);
   if (!publicId) throw new LeadContactError("linkedin_url sem publicId utilizável");
 
-  const json = await postLeadContact("findEmailAll", cookie, envelope(publicId));
+  let json: unknown;
+  try {
+    json = await postLeadContact("findEmailAll", cookie, envelope(publicId));
+  } catch (err) {
+    if (err instanceof LeadContactError && err.status === 401) {
+      await markCookieUnhealthy("leadcontact", `findEmailAll rejeitou a sessão: ${err.message}`);
+    }
+    throw err;
+  }
 
   const emails: FoundEmail[] = [];
   for (const s of extractSources(json)) {
@@ -173,7 +181,15 @@ export async function findPhone(linkedinUrl: string): Promise<{ phones: FoundPho
     csrfToken,
   };
 
-  const json = await postLeadContact("findPhone", linkedinCookie, body);
+  let json: unknown;
+  try {
+    json = await postLeadContact("findPhone", linkedinCookie, body);
+  } catch (err) {
+    if (err instanceof LeadContactError && err.status === 401) {
+      await markCookieUnhealthy("linkedin", `findPhone rejeitou a sessão: ${err.message}`);
+    }
+    throw err;
+  }
 
   const phones: FoundPhone[] = [];
   for (const s of extractSources(json)) {
