@@ -440,7 +440,7 @@ serve(async (req) => {
             n8n_workflow_id:   "lusha-search-edge-fn",
             n8n_execution_id:  requestId,
           }, {
-            onConflict: "organization_id,linkedin_url",
+            onConflict: "organization_id,linkedin_public_id",
             ignoreDuplicates: false,
           })
           .select("id, full_name, linkedin_url, enrichment_status")
