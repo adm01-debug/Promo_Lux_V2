@@ -19,6 +19,7 @@ import { findEmailAll, findPhone, LeadContactError, type FoundEmail, type FoundP
 import { formatPhoneBitrix } from "../_shared/phone-br.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
+import { updateContact } from "../_shared/safe-update.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
