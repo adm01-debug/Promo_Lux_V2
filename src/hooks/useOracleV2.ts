@@ -160,3 +160,75 @@ export function useOracleEnrichContact() {
     onError: (err: Error) => toast.error(`Enriquecimento falhou: ${err.message}`),
   });
 }
+
+export interface PushBitrixInput {
+  contact_ids: string[];
+  bitrix_company_id?: string;
+  bitrix_assigned_by_id?: number;
+}
+
+export interface PushBitrixResultItem {
+  contact_id: string;
+  status: "sent_to_bitrix" | "bitrix_duplicate" | "error_bitrix" | "skipped";
+  bitrix_contact_id?: string | null;
+  bitrix_card_id?: string | null;
+  matched_by?: string;
+  error?: string;
+}
+
+export interface PushBitrixResponse {
+  results: PushBitrixResultItem[];
+  summary: {
+    sent: number;
+    duplicates: number;
+    errors: number;
+    sem_dado: number;
+    skipped: number;
+  };
+  skipped: string[];
+  correlation_id: string;
+}
+
+export function useOraclePushBitrix() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: PushBitrixInput): Promise<PushBitrixResponse> => {
+      const { data, error } = await supabase.functions.invoke<PushBitrixResponse>(
+        "oracle-push-bitrix",
+        { body: input },
+      );
+      if (error) throw error;
+      return data!;
+    },
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ["oracle", "contacts"] });
+      qc.invalidateQueries({ queryKey: ["lusha", "contacts"] });
+      const { sent, duplicates, errors, sem_dado } = data.summary;
+      const partes: string[] = [];
+      if (sent > 0) partes.push(`${sent} cadastrado(s)`);
+      if (duplicates > 0) partes.push(`${duplicates} já existia(m)`);
+      if (sem_dado > 0) partes.push(`${sem_dado} sem email/telefone`);
+      if (errors > 0) partes.push(`${errors} com erro`);
+      const resumo = partes.join(", ") || "nada a enviar";
+      if (errors > 0 && sent === 0) toast.error(`Envio ao Bitrix falhou: ${resumo}.`);
+      else if (errors > 0) toast.warning(`Bitrix: ${resumo}.`);
+      else toast.success(`Bitrix: ${resumo}.`);
+    },
+    onError: (err: Error) => {
+      const msg = err.message ?? "";
+      if (/bitrix_not_configured/i.test(msg)) {
+        toast.error("Bitrix não configurado (secret BITRIX_WEBHOOK_BASE ausente).");
+        return;
+      }
+      if (/bitrix_open/i.test(msg)) {
+        toast.error("Bitrix indisponível — circuit breaker aberto. Tente em 1 min.");
+        return;
+      }
+      if (msg.includes("429") || /rate.?limit/i.test(msg)) {
+        toast.error("Limite de envios ao Bitrix atingido. Tente mais tarde.");
+        return;
+      }
+      toast.error(`Envio ao Bitrix falhou: ${msg}`);
+    },
+  });
+}
