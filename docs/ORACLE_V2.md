@@ -2,9 +2,9 @@
 
 ## Visão geral
 
-Oracle v2 substitui o workflow do n8n que buscava decisores na Lusha e enriquecia
-contatos com LeadContact. **Não consome crédito Lusha pago** — usa apenas
-endpoints de dashboard autenticados por cookie.
+Oracle v2 substitui o workflow do n8n que buscava decisores na Lusha, enriquecia
+contatos com LeadContact e cadastrava tudo no Bitrix24. **Não consome crédito
+Lusha pago** — usa apenas endpoints de dashboard autenticados por cookie.
 
 Componentes:
 
@@ -14,6 +14,7 @@ Componentes:
 | Edge    | `oracle-cookies-preflight`             | Valida saúde dos 3 cookies                                      |
 | Edge    | `oracle-search-decisors`               | Busca empresa + decisores (Lusha dashboard, grátis)             |
 | Edge    | `oracle-enrich-contact`                | Enriquece email/telefone (LeadContact)                          |
+| Edge    | `oracle-push-bitrix`                   | Anti-duplicata + cadastro de contato e card no Bitrix24         |
 | Front   | `OracleV2Panel`                        | UI dedicada, atrás da feature flag `oracle_v2`                  |
 
 ## Fluxo end-to-end
@@ -40,6 +41,17 @@ oracle-enrich-contact
      │  4. pick best email/phone + normaliza BR
      │  5. UPSERT parcial (só se antes era null)
      │  6. status → enriched | not_found | error_*
+     ▼
+Usuário clica "Enviar ao Bitrix"
+     │
+     ▼
+oracle-push-bitrix
+     │  1. lock atômico (status='pushing_bitrix'), só 'enriched' sem bitrix_contact_id
+     │  2. guarda: sem email e sem telefone → not_found, não polui o CRM
+     │  3. crm.contact.list por email → telefone → linkedin
+     │  4a. duplicado → crm.item.add estágio DUPLICADO → bitrix_duplicate
+     │  4b. novo → crm.contact.add + crm.item.add CADASTRADO → sent_to_bitrix
+     │  5. atualiza total_inserted_bitrix na sessão
 ```
 
 ## Feature flag
@@ -55,6 +67,7 @@ oracle-enrich-contact
 | `lusha_search`      | 5         | 60s    |
 | `leadcontact_email` | 5         | 120s   |
 | `leadcontact_phone` | 5         | 120s   |
+| `bitrix`            | 5         | 60s    |
 
 Reset manual: `SELECT reset_circuit_breaker('nome_do_servico');` (admin only).
 
@@ -75,8 +88,23 @@ de falhar. Se todas falharem, o circuit breaker `cookie_vault` abre por 30s.
 
 - **Sessões**: hash SHA-256(user + org + empresa + deps ordenados). Rechamar
   com mesmos parâmetros retorna a sessão anterior sem reprocessar.
-- **Contatos**: unique parcial `(organization_id, linkedin_public_id)` — mesma
-  pessoa nunca duplica dentro da organização.
+- **Contatos**: unique total `(organization_id, linkedin_public_id)` — mesma
+  pessoa nunca duplica dentro da organização. O índice deixou de ser parcial
+  porque `ON CONFLICT` do Postgres não infere índices parciais (erro 42P10);
+  agora é um UNIQUE total sobre as duas colunas.
+
+## Configuração
+
+- Secret `BITRIX_WEBHOOK_BASE` guarda a URL completa do webhook REST do
+  Bitrix24 (ex.: `https://promobrindes.bitrix24.com.br/rest/<user>/<token>/`).
+  Sem ele, `oracle-push-bitrix` devolve `bitrix_not_configured`.
+- Pipeline de destino: `entityTypeId = 1328`, `categoryId = 284`. Estágios
+  (CADASTRADO / DUPLICADO) e enums de departamento vivem em
+  `_shared/bitrix-constants.ts`.
+- A coluna `lusha_contacts.linkedin_public_id` é `GENERATED ALWAYS` no banco
+  e espelha a lógica de `_shared/linkedin-url.ts` (suporta subdomínios de país
+  como `br.linkedin.com`). **Alterar a regra no TS exige alterar a expressão
+  GENERATED no banco no mesmo commit**, caso contrário edge e DB divergem.
 
 ## Observabilidade
 
