@@ -222,6 +222,19 @@ serve(async (req) => {
       continue;
     }
 
+    // Paridade com o n8n (nó "verifica se retornou dados"): sem email e sem
+    // telefone não existe contato útil — não polui o CRM com casca vazia.
+    if (!c.email && !c.phone_formatted) {
+      const msg = "contato sem email e sem telefone";
+      await admin.from("lusha_contacts").update({
+        enrichment_status: "not_found",
+        last_error: msg,
+      }).eq("id", c.id);
+      results.push({ contact_id: c.id, status: "skipped", error: msg });
+      continue;
+    }
+
+
     try {
       const dup = await findDuplicateContact({
         email: c.email,
@@ -320,6 +333,7 @@ serve(async (req) => {
     sent: results.filter((r) => r.status === "sent_to_bitrix").length,
     duplicates: results.filter((r) => r.status === "bitrix_duplicate").length,
     errors: results.filter((r) => r.status === "error_bitrix").length,
+    sem_dado: results.filter((r) => r.status === "skipped").length,
     skipped: skipped.length,
   };
 
