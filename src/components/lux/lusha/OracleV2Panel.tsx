@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox } from "lucide-react";
+import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox, Building2, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,9 @@ import {
   useOraclePreflight,
   useOracleSearchDecisors,
   useOracleEnrichContact,
+  useOraclePushBitrix,
 } from "@/hooks/useOracleV2";
+
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 
 // ============================================================================
@@ -33,6 +35,8 @@ interface OracleContact {
   phone_formatted: string | null;
   enrichment_status: string | null;
   last_error: string | null;
+  bitrix_contact_id: string | null;
+  bitrix_card_id: string | null;
 }
 
 export function OracleV2Panel() {
@@ -41,10 +45,15 @@ export function OracleV2Panel() {
   const preflight = useOraclePreflight();
   const search = useOracleSearchDecisors();
   const enrich = useOracleEnrichContact();
+  const pushBitrix = useOraclePushBitrix();
+
 
   const [companyName, setCompanyName] = useState("");
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [bitrixCompanyId, setBitrixCompanyId] = useState("");
+  const [bitrixUserId, setBitrixUserId] = useState("");
+
 
   const toggleDept = (d: string) => {
     setSelectedDepts((s) => {
@@ -62,7 +71,7 @@ export function OracleV2Panel() {
     queryFn: async (): Promise<OracleContact[]> => {
       const { data, error } = await supabase
         .from("lusha_contacts")
-        .select("id, full_name, job_title, department_en, linkedin_url, email, phone_formatted, enrichment_status, last_error")
+        .select("id, full_name, job_title, department_en, linkedin_url, email, phone_formatted, enrichment_status, last_error, bitrix_contact_id, bitrix_card_id")
         .eq("session_id", sessionId!)
         .order("created_at", { ascending: true });
       if (error) throw error;
@@ -75,6 +84,11 @@ export function OracleV2Panel() {
     () => contacts.filter((c) => c.enrichment_status === "pending_enrichment").map((c) => c.id),
     [contacts],
   );
+  const enrichedIds = useMemo(
+    () => contacts.filter((c) => c.enrichment_status === "enriched" && !c.bitrix_contact_id).map((c) => c.id),
+    [contacts],
+  );
+  const bitrixPronto = bitrixCompanyId.trim().length > 0 && /^\d+$/.test(bitrixUserId.trim());
 
   const handleSearch = () => {
     if (!activeOrg?.organization_id || !user) return;
@@ -83,6 +97,8 @@ export function OracleV2Panel() {
         company_name: companyName.trim(),
         departments: Array.from(selectedDepts),
         organization_id: activeOrg!.organization_id,
+        bitrix_company_id: bitrixCompanyId.trim() || undefined,
+        bitrix_user_id: bitrixUserId.trim() || undefined,
       },
       {
         onSuccess: (res) => setSessionId(res.session_id),
@@ -98,6 +114,25 @@ export function OracleV2Panel() {
   const handleEnrichOne = (id: string) => {
     enrich.mutate({ contact_ids: [id] });
   };
+
+  const handlePushAll = () => {
+    if (enrichedIds.length === 0 || !bitrixPronto) return;
+    pushBitrix.mutate({
+      contact_ids: enrichedIds.slice(0, 50),
+      bitrix_company_id: bitrixCompanyId.trim(),
+      bitrix_assigned_by_id: Number(bitrixUserId.trim()),
+    });
+  };
+
+  const handlePushOne = (id: string) => {
+    if (!bitrixPronto) return;
+    pushBitrix.mutate({
+      contact_ids: [id],
+      bitrix_company_id: bitrixCompanyId.trim(),
+      bitrix_assigned_by_id: Number(bitrixUserId.trim()),
+    });
+  };
+
 
   const canSearch =
     companyName.trim().length >= 2 && selectedDepts.size > 0 && !!activeOrg?.organization_id && !search.isPending;
@@ -152,6 +187,36 @@ export function OracleV2Panel() {
             </div>
           </div>
 
+
+          <div className="space-y-2 rounded-lg border border-dashed p-3">
+            <Label className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Building2 className="h-3.5 w-3.5" />
+              Destino no Bitrix24 (necessário para cadastrar os contatos)
+            </Label>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="space-y-1">
+                <Label htmlFor="bitrix-company" className="text-xs">ID da empresa</Label>
+                <Input
+                  id="bitrix-company"
+                  inputMode="numeric"
+                  placeholder="Ex.: 12345"
+                  value={bitrixCompanyId}
+                  onChange={(e) => setBitrixCompanyId(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="bitrix-user" className="text-xs">ID do responsável</Label>
+                <Input
+                  id="bitrix-user"
+                  inputMode="numeric"
+                  placeholder="Ex.: 14"
+                  value={bitrixUserId}
+                  onChange={(e) => setBitrixUserId(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="flex gap-2 pt-2">
             <Button onClick={handleSearch} disabled={!canSearch} aria-busy={search.isPending}>
               {search.isPending ? (
@@ -176,6 +241,22 @@ export function OracleV2Panel() {
                 Enriquecer {pendingIds.length} pendente(s)
               </Button>
             )}
+            {enrichedIds.length > 0 && (
+              <Button
+                variant="default"
+                onClick={handlePushAll}
+                disabled={pushBitrix.isPending || !bitrixPronto}
+                aria-busy={pushBitrix.isPending}
+                title={bitrixPronto ? undefined : "Preencha o ID da empresa e do responsável no Bitrix"}
+              >
+                {pushBitrix.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Building2 className="h-4 w-4 mr-2" />
+                )}
+                Enviar {enrichedIds.length} ao Bitrix
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -186,11 +267,15 @@ export function OracleV2Panel() {
           isLoading={contactsQuery.isLoading}
           onEnrichOne={handleEnrichOne}
           enrichingContactIds={enrich.isPending ? new Set(enrich.variables?.contact_ids ?? []) : new Set()}
+          onPushOne={handlePushOne}
+          pushingContactIds={pushBitrix.isPending ? new Set(pushBitrix.variables?.contact_ids ?? []) : new Set()}
+          bitrixPronto={bitrixPronto}
         />
       )}
     </div>
   );
 }
+
 
 function VaultHealthBanner({
   data,
@@ -247,11 +332,17 @@ function ResultsList({
   isLoading,
   onEnrichOne,
   enrichingContactIds,
+  onPushOne,
+  pushingContactIds,
+  bitrixPronto,
 }: {
   contacts: OracleContact[];
   isLoading: boolean;
   onEnrichOne: (id: string) => void;
   enrichingContactIds: Set<string>;
+  onPushOne: (id: string) => void;
+  pushingContactIds: Set<string>;
+  bitrixPronto: boolean;
 }) {
   if (isLoading) {
     return (
@@ -289,6 +380,9 @@ function ResultsList({
             contact={c}
             onEnrich={() => onEnrichOne(c.id)}
             isEnriching={enrichingContactIds.has(c.id) || c.enrichment_status === "enriching"}
+            onPush={() => onPushOne(c.id)}
+            isPushing={pushingContactIds.has(c.id)}
+            bitrixPronto={bitrixPronto}
           />
         ))}
       </CardContent>
@@ -300,10 +394,16 @@ function ContactRow({
   contact,
   onEnrich,
   isEnriching,
+  onPush,
+  isPushing,
+  bitrixPronto,
 }: {
   contact: OracleContact;
   onEnrich: () => void;
   isEnriching: boolean;
+  onPush: () => void;
+  isPushing: boolean;
+  bitrixPronto: boolean;
 }) {
   const status = contact.enrichment_status;
   const revealed = !!contact.email || !!contact.phone_formatted;
@@ -334,6 +434,26 @@ function ContactRow({
           {isEnriching ? <Loader2 className="h-3 w-3 animate-spin" /> : "Revelar"}
         </Button>
       )}
+      {contact.enrichment_status === "enriched" && !contact.bitrix_contact_id && (
+        <Button
+          size="sm"
+          onClick={onPush}
+          disabled={isPushing || !bitrixPronto}
+          title={bitrixPronto ? undefined : "Preencha o destino no Bitrix acima"}
+        >
+          {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
+        </Button>
+      )}
+      {contact.bitrix_card_id && (
+        <a
+          href={`https://promobrindes.bitrix24.com.br/crm/type/1328/details/${contact.bitrix_card_id}/`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-xs text-primary hover:underline"
+        >
+          <ExternalLink className="h-3 w-3" /> ver card
+        </a>
+      )}
     </div>
   );
 }
@@ -348,6 +468,10 @@ function StatusBadge({ status, error }: { status: string | null; error: string |
     error_rate_limit: { label: "rate limit", variant: "destructive" },
     error_other: { label: "erro", variant: "destructive" },
     same_session_dedup: { label: "duplicado", variant: "outline" },
+    pushing_bitrix: { label: "enviando ao Bitrix…", variant: "secondary" },
+    sent_to_bitrix: { label: "no Bitrix", variant: "default" },
+    bitrix_duplicate: { label: "já existia no Bitrix", variant: "outline" },
+    error_bitrix: { label: "erro no Bitrix", variant: "destructive" },
   };
   const info = (status ? map[status] : null) ?? { label: status ?? "—", variant: "outline" as const };
   return (
@@ -356,3 +480,4 @@ function StatusBadge({ status, error }: { status: string | null; error: string |
     </Badge>
   );
 }
+
