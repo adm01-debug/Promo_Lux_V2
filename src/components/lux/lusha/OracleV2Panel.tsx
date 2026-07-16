@@ -10,6 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { SUGGESTED_DEPARTMENTS_PT } from "@/lib/lusha/departmentMap";
 import { cn } from "@/lib/utils";
 import {
@@ -54,6 +64,11 @@ export function OracleV2Panel() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [bitrixCompanyId, setBitrixCompanyId] = useState("");
   const [bitrixUserId, setBitrixUserId] = useState("");
+  const [pushConfirm, setPushConfirm] = useState<
+    | { kind: "all"; ids: string[] }
+    | { kind: "one"; id: string; name: string }
+    | null
+  >(null);
 
 
   const toggleDept = (d: string) => {
@@ -126,20 +141,24 @@ export function OracleV2Panel() {
 
   const handlePushAll = () => {
     if (enrichedIds.length === 0 || !bitrixPronto) return;
-    pushBitrix.mutate({
-      contact_ids: enrichedIds.slice(0, 50),
-      bitrix_company_id: bitrixCompanyId.trim(),
-      bitrix_assigned_by_id: Number(bitrixUserId.trim()),
-    });
+    setPushConfirm({ kind: "all", ids: enrichedIds.slice(0, 50) });
   };
 
   const handlePushOne = (id: string) => {
     if (!bitrixPronto) return;
+    const contato = contacts.find((c) => c.id === id);
+    setPushConfirm({ kind: "one", id, name: contato?.full_name ?? "este contato" });
+  };
+
+  const confirmPush = () => {
+    if (!pushConfirm || !bitrixPronto) return;
+    const ids = pushConfirm.kind === "all" ? pushConfirm.ids : [pushConfirm.id];
     pushBitrix.mutate({
-      contact_ids: [id],
+      contact_ids: ids,
       bitrix_company_id: bitrixCompanyId.trim(),
       bitrix_assigned_by_id: Number(bitrixUserId.trim()),
     });
+    setPushConfirm(null);
   };
 
 
@@ -292,6 +311,43 @@ export function OracleV2Panel() {
           bitrixMotivoBloqueio={bitrixMotivoBloqueio}
         />
       )}
+
+      <AlertDialog
+        open={pushConfirm !== null}
+        onOpenChange={(open) => {
+          if (!open) setPushConfirm(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar envio ao Bitrix</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                {pushConfirm?.kind === "all" ? (
+                  <p>
+                    Você vai enviar <strong>{pushConfirm.ids.length} contato(s)</strong> enriquecido(s)
+                    ao Bitrix. Cada um vira um contato + card na esteira e não pode ser desfeito por aqui.
+                  </p>
+                ) : pushConfirm?.kind === "one" ? (
+                  <p>
+                    Você vai cadastrar <strong>{pushConfirm.name}</strong> no Bitrix e criar o card na esteira.
+                  </p>
+                ) : null}
+                <ul className="text-xs text-muted-foreground list-disc pl-4">
+                  <li>Empresa destino: <strong>{bitrixCompanyId.trim() || "—"}</strong></li>
+                  <li>Responsável: <strong>{bitrixUserId.trim() || "—"}</strong></li>
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmPush}>
+              Confirmar envio
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
