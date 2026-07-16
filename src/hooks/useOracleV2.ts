@@ -48,7 +48,10 @@ export interface SearchDecisorsInput {
   organization_id: string;
   company_id?: string;
   max_per_department?: number;
+  bitrix_company_id?: string;
+  bitrix_user_id?: string;
 }
+
 
 export interface SearchDecisorsResponse {
   session_id: string;
