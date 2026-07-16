@@ -774,6 +774,23 @@ export const LushaIntelligenceView = () => {
 
   const dmMutation = useMutation({
     mutationFn: async () => {
+      // Guardas de UX — feedback imediato antes de bater na edge.
+      // A edge continua sendo a autoridade (valida no servidor); isto aqui é
+      // apenas conveniência para evitar 400 previsível.
+      const rawDomain = (domain ?? "").trim();
+      if (!rawDomain) {
+        const msg = "Informe o domínio do site oficial da empresa (ex.: natura.com.br). A busca é feita por domínio — o LinkedIn sozinho não basta.";
+        setDomainError(msg);
+        toast({ title: "Domínio obrigatório", description: msg, variant: "destructive" });
+        throw new Error(msg);
+      }
+      if (/(?:^|[./])(?:linkedin|facebook|instagram|twitter|x|tiktok|youtube)\.com(?:[/?#]|$)/i.test(rawDomain)) {
+        const msg = "Use o domínio do site oficial (ex.: natura.com.br), não a URL de uma rede social.";
+        setDomainError(msg);
+        toast({ title: "Domínio inválido", description: msg, variant: "destructive" });
+        throw new Error(msg);
+      }
+
       const d = validateDomain(domain);
       const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
       setDomainError(d.error);
