@@ -85,7 +85,7 @@ export function OracleV2Panel() {
   const contactsQuery = useQuery({
     queryKey: ["oracle", "contacts", sessionId],
     enabled: !!sessionId,
-    refetchInterval: 5000,
+    refetchInterval: pushBitrix.isPending || enrich.isPending ? 1500 : 5000,
     queryFn: async (): Promise<OracleContact[]> => {
       const { data, error } = await supabase
         .from("lusha_contacts")
@@ -301,6 +301,13 @@ export function OracleV2Panel() {
           </div>
         </CardContent>
       </Card>
+
+      {pushBitrix.isPending && pushBitrix.variables?.contact_ids && (
+        <PushProgressBar
+          batchIds={pushBitrix.variables.contact_ids}
+          contacts={contacts}
+        />
+      )}
 
       {pushResult && <PushResultSummary result={pushResult} contacts={contacts} />}
 
@@ -584,6 +591,66 @@ function PushResultLine({ result }: { result: PushBitrixResultItem }) {
   };
   const info = map[result.status];
   return <p className={cn("text-xs pl-1", info.className)}>{info.label}</p>;
+}
+
+function PushProgressBar({
+  batchIds,
+  contacts,
+}: {
+  batchIds: string[];
+  contacts: OracleContact[];
+}) {
+  const total = batchIds.length;
+  const batch = contacts.filter((c) => batchIds.includes(c.id));
+
+  const sent = batch.filter((c) => c.enrichment_status === "sent_to_bitrix").length;
+  const duplicates = batch.filter((c) => c.enrichment_status === "bitrix_duplicate").length;
+  const skipped = batch.filter((c) => c.enrichment_status === "not_found").length;
+  const errors = batch.filter((c) => c.enrichment_status === "error_bitrix").length;
+  const processed = sent + duplicates + skipped + errors;
+  const pending = Math.max(0, total - processed);
+  const pct = total > 0 ? Math.round((processed / total) * 100) : 0;
+
+  const chips: Array<{ label: string; value: number; className: string }> = [
+    { label: "Enviados", value: sent, className: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Duplicados", value: duplicates, className: "text-muted-foreground" },
+    { label: "Sem dado", value: skipped, className: "text-amber-600 dark:text-amber-400" },
+    { label: "Erros", value: errors, className: "text-destructive" },
+    { label: "Restantes", value: pending, className: "text-primary" },
+  ];
+
+  return (
+    <Card role="status" aria-live="polite" aria-busy="true">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          Enviando ao Bitrix… {processed}/{total} ({pct}%)
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-0 space-y-3">
+        <div
+          className="h-2 w-full overflow-hidden rounded-full bg-muted"
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          <div
+            className="h-full bg-primary transition-all duration-500 ease-out"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          {chips.map((c) => (
+            <div key={c.label} className="rounded-md border px-2 py-1.5 text-center">
+              <p className={cn("text-base font-semibold tabular-nums", c.className)}>{c.value}</p>
+              <p className="text-[10px] text-muted-foreground">{c.label}</p>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 function PushResultSummary({
