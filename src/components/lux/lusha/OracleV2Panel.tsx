@@ -332,11 +332,17 @@ function ResultsList({
   isLoading,
   onEnrichOne,
   enrichingContactIds,
+  onPushOne,
+  pushingContactIds,
+  bitrixPronto,
 }: {
   contacts: OracleContact[];
   isLoading: boolean;
   onEnrichOne: (id: string) => void;
   enrichingContactIds: Set<string>;
+  onPushOne: (id: string) => void;
+  pushingContactIds: Set<string>;
+  bitrixPronto: boolean;
 }) {
   if (isLoading) {
     return (
@@ -374,6 +380,9 @@ function ResultsList({
             contact={c}
             onEnrich={() => onEnrichOne(c.id)}
             isEnriching={enrichingContactIds.has(c.id) || c.enrichment_status === "enriching"}
+            onPush={() => onPushOne(c.id)}
+            isPushing={pushingContactIds.has(c.id)}
+            bitrixPronto={bitrixPronto}
           />
         ))}
       </CardContent>
@@ -385,10 +394,16 @@ function ContactRow({
   contact,
   onEnrich,
   isEnriching,
+  onPush,
+  isPushing,
+  bitrixPronto,
 }: {
   contact: OracleContact;
   onEnrich: () => void;
   isEnriching: boolean;
+  onPush: () => void;
+  isPushing: boolean;
+  bitrixPronto: boolean;
 }) {
   const status = contact.enrichment_status;
   const revealed = !!contact.email || !!contact.phone_formatted;
@@ -419,6 +434,26 @@ function ContactRow({
           {isEnriching ? <Loader2 className="h-3 w-3 animate-spin" /> : "Revelar"}
         </Button>
       )}
+      {contact.enrichment_status === "enriched" && !contact.bitrix_contact_id && (
+        <Button
+          size="sm"
+          onClick={onPush}
+          disabled={isPushing || !bitrixPronto}
+          title={bitrixPronto ? undefined : "Preencha o destino no Bitrix acima"}
+        >
+          {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
+        </Button>
+      )}
+      {contact.bitrix_card_id && (
+        <a
+          href={`https://promobrindes.bitrix24.com.br/crm/type/1328/details/${contact.bitrix_card_id}/`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-xs text-primary hover:underline"
+        >
+          <ExternalLink className="h-3 w-3" /> ver card
+        </a>
+      )}
     </div>
   );
 }
@@ -433,6 +468,10 @@ function StatusBadge({ status, error }: { status: string | null; error: string |
     error_rate_limit: { label: "rate limit", variant: "destructive" },
     error_other: { label: "erro", variant: "destructive" },
     same_session_dedup: { label: "duplicado", variant: "outline" },
+    pushing_bitrix: { label: "enviando ao Bitrix…", variant: "secondary" },
+    sent_to_bitrix: { label: "no Bitrix", variant: "default" },
+    bitrix_duplicate: { label: "já existia no Bitrix", variant: "outline" },
+    error_bitrix: { label: "erro no Bitrix", variant: "destructive" },
   };
   const info = (status ? map[status] : null) ?? { label: status ?? "—", variant: "outline" as const };
   return (
@@ -441,3 +480,4 @@ function StatusBadge({ status, error }: { status: string | null; error: string |
     </Badge>
   );
 }
+
