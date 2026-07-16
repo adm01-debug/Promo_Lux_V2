@@ -12,11 +12,12 @@ import { buildGapReport, DEFAULT_THRESHOLDS } from "./report";
 describe("simulator - backoff", () => {
   it("cresce exponencialmente e respeita o cap", () => {
     const noJitter = () => 0;
-    expect(backoffSecs(1, DEFAULT_POLICY, noJitter)).toBe(30);
-    expect(backoffSecs(2, DEFAULT_POLICY, noJitter)).toBe(60);
-    expect(backoffSecs(3, DEFAULT_POLICY, noJitter)).toBe(120);
-    // cap em 3600
-    expect(backoffSecs(20, DEFAULT_POLICY, noJitter)).toBe(3600);
+    // Política atual: base 5s, cap 300s — otimizada via Monte Carlo.
+    expect(backoffSecs(1, DEFAULT_POLICY, noJitter)).toBe(5);
+    expect(backoffSecs(2, DEFAULT_POLICY, noJitter)).toBe(10);
+    expect(backoffSecs(3, DEFAULT_POLICY, noJitter)).toBe(20);
+    // cap em 300s
+    expect(backoffSecs(20, DEFAULT_POLICY, noJitter)).toBe(300);
   });
 });
 
