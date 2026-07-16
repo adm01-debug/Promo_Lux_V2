@@ -210,9 +210,10 @@ export function useOraclePushBitrix() {
       if (sem_dado > 0) partes.push(`${sem_dado} sem email/telefone`);
       if (errors > 0) partes.push(`${errors} com erro`);
       const resumo = partes.join(", ") || "nada a enviar";
-      if (errors > 0 && sent === 0) toast.error(`Envio ao Bitrix falhou: ${resumo}.`);
-      else if (errors > 0) toast.warning(`Bitrix: ${resumo}.`);
-      else toast.success(`Bitrix: ${resumo}.`);
+      const cid = data.correlation_id ? ` (ref: ${data.correlation_id.slice(0, 8)})` : "";
+      if (errors > 0 && sent === 0) toast.error(`Envio ao Bitrix falhou: ${resumo}.${cid}`);
+      else if (errors > 0) toast.warning(`Bitrix: ${resumo}.${cid}`);
+      else toast.success(`Bitrix: ${resumo}.${cid}`);
     },
     onError: (err: Error) => {
       const msg = err.message ?? "";
