@@ -704,7 +704,7 @@ export const LushaIntelligenceView = () => {
 
   const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeLinkedinCompanyUrl(raw);
-    if (!value) return { value, error: "Informe a URL da página da empresa no LinkedIn." };
+    if (!value) return { value, error: null }; // opcional — apenas referência
     // Aceita slugs unicode (empresas com nomes acentuados) além de ASCII
     if (!/^linkedin\.com\/(company|school|showcase)\/[\p{L}\p{N}\-_.%]+$/u.test(value)) {
       return {
