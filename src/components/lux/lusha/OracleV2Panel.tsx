@@ -105,6 +105,12 @@ export function OracleV2Panel() {
     () => contacts.filter((c) => c.enrichment_status === "enriched" && !c.bitrix_contact_id).map((c) => c.id),
     [contacts],
   );
+  const pushResult = pushBitrix.data ?? null;
+  const pushResultByContact = useMemo(() => {
+    const map = new Map<string, PushBitrixResultItem>();
+    pushResult?.results.forEach((r) => map.set(r.contact_id, r));
+    return map;
+  }, [pushResult]);
   const bitrixPronto = bitrixCompanyId.trim().length > 0 && /^\d+$/.test(bitrixUserId.trim());
   const bitrixMotivoBloqueio = (() => {
     if (bitrixPronto) return null;
