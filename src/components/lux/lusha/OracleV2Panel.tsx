@@ -311,6 +311,43 @@ export function OracleV2Panel() {
           bitrixMotivoBloqueio={bitrixMotivoBloqueio}
         />
       )}
+
+      <AlertDialog
+        open={pushConfirm !== null}
+        onOpenChange={(open) => {
+          if (!open) setPushConfirm(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar envio ao Bitrix</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm">
+                {pushConfirm?.kind === "all" ? (
+                  <p>
+                    Você vai enviar <strong>{pushConfirm.ids.length} contato(s)</strong> enriquecido(s)
+                    ao Bitrix. Cada um vira um contato + card na esteira e não pode ser desfeito por aqui.
+                  </p>
+                ) : pushConfirm?.kind === "one" ? (
+                  <p>
+                    Você vai cadastrar <strong>{pushConfirm.name}</strong> no Bitrix e criar o card na esteira.
+                  </p>
+                ) : null}
+                <ul className="text-xs text-muted-foreground list-disc pl-4">
+                  <li>Empresa destino: <strong>{bitrixCompanyId.trim() || "—"}</strong></li>
+                  <li>Responsável: <strong>{bitrixUserId.trim() || "—"}</strong></li>
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmPush}>
+              Confirmar envio
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
