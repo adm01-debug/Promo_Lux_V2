@@ -420,6 +420,7 @@ function ContactRow({
   onPush,
   isPushing,
   bitrixPronto,
+  bitrixMotivoBloqueio,
 }: {
   contact: OracleContact;
   onEnrich: () => void;
@@ -427,6 +428,7 @@ function ContactRow({
   onPush: () => void;
   isPushing: boolean;
   bitrixPronto: boolean;
+  bitrixMotivoBloqueio: string | null;
 }) {
   const status = contact.enrichment_status;
   const revealed = !!contact.email || !!contact.phone_formatted;
@@ -458,14 +460,24 @@ function ContactRow({
         </Button>
       )}
       {contact.enrichment_status === "enriched" && !contact.bitrix_contact_id && (
-        <Button
-          size="sm"
-          onClick={onPush}
-          disabled={isPushing || !bitrixPronto}
-          title={bitrixPronto ? undefined : "Preencha o destino no Bitrix acima"}
-        >
-          {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span tabIndex={bitrixPronto ? -1 : 0}>
+              <Button
+                size="sm"
+                onClick={onPush}
+                disabled={isPushing || !bitrixPronto}
+              >
+                {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs text-xs">
+            {bitrixPronto
+              ? "Cadastra este contato no Bitrix e cria o card na esteira."
+              : `Envio bloqueado. ${bitrixMotivoBloqueio ?? ""}`}
+          </TooltipContent>
+        </Tooltip>
       )}
       {contact.bitrix_card_id && (
         <a
