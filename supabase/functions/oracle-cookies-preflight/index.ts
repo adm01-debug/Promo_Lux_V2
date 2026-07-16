@@ -102,6 +102,7 @@ function buildReport(rows: VaultRow[]): ServiceReport[] {
         expires_in_minutes: null,
         updated_minutes_ago: null,
         error: "não encontrado no vault",
+        verificado_de_verdade: false,
       };
     }
     const expiresInMin = row.expires_at
