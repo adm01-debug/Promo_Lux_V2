@@ -686,13 +686,11 @@ function PushResultSummary({
           <Building2 className="h-4 w-4 text-primary" />
           Resultado do último envio ao Bitrix
         </CardTitle>
-        <CardDescription asChild>
-          <div className="flex items-center gap-2 text-[10px] font-mono">
-            <span className="text-muted-foreground shrink-0">correlation_id:</span>
-            <span className="break-all">{result.correlation_id}</span>
-            <CopyIdButton value={result.correlation_id} />
-          </div>
-        </CardDescription>
+        <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground">
+          <span className="shrink-0">correlation_id:</span>
+          <span className="break-all text-foreground">{result.correlation_id}</span>
+          <CopyIdButton value={result.correlation_id} />
+        </div>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
