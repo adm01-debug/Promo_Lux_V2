@@ -224,7 +224,11 @@ export async function createCard(input: CreateCardInput): Promise<string> {
     { fields },
     { entityTypeId: BITRIX_ENTITY_TYPE_ID },
   );
-  return String(result?.item?.id ?? "");
+  const cardId = String(result?.item?.id ?? "").trim();
+  if (!/^\d+$/.test(cardId)) {
+    throw new BitrixError(`crm.item.add: id inválido na resposta (${JSON.stringify(result)})`);
+  }
+  return cardId;
 }
 
 export async function updateCardStage(cardId: number | string, stageId: string): Promise<void> {
