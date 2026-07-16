@@ -132,7 +132,15 @@ export async function findEmailAll(linkedinUrl: string): Promise<{ emails: Found
   const publicId = publicIdFromLinkedInUrl(linkedinUrl);
   if (!publicId) throw new LeadContactError("linkedin_url sem publicId utilizável");
 
-  const json = await postLeadContact("findEmailAll", cookie, envelope(publicId));
+  let json: unknown;
+  try {
+    json = await postLeadContact("findEmailAll", cookie, envelope(publicId));
+  } catch (err) {
+    if (err instanceof LeadContactError && err.status === 401) {
+      await markCookieUnhealthy("leadcontact", `findEmailAll rejeitou a sessão: ${err.message}`);
+    }
+    throw err;
+  }
 
   const emails: FoundEmail[] = [];
   for (const s of extractSources(json)) {
