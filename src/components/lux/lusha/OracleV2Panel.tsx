@@ -422,6 +422,7 @@ function ResultsList({
   pushingContactIds,
   bitrixPronto,
   bitrixMotivoBloqueio,
+  pushResultByContact,
 }: {
   contacts: OracleContact[];
   isLoading: boolean;
@@ -431,6 +432,7 @@ function ResultsList({
   pushingContactIds: Set<string>;
   bitrixPronto: boolean;
   bitrixMotivoBloqueio: string | null;
+  pushResultByContact: Map<string, PushBitrixResultItem>;
 }) {
   if (isLoading) {
     return (
@@ -472,6 +474,7 @@ function ResultsList({
             isPushing={pushingContactIds.has(c.id)}
             bitrixPronto={bitrixPronto}
             bitrixMotivoBloqueio={bitrixMotivoBloqueio}
+            pushResult={pushResultByContact.get(c.id) ?? null}
           />
         ))}
       </CardContent>
