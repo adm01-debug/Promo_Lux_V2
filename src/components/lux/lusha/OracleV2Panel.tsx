@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox, Building2, ExternalLink } from "lucide-react";
+import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox, Building2, ExternalLink, Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
@@ -350,6 +351,13 @@ export function OracleV2Panel() {
                   <li>Empresa destino: <strong>{bitrixCompanyId.trim() || "—"}</strong></li>
                   <li>Responsável: <strong>{bitrixUserId.trim() || "—"}</strong></li>
                 </ul>
+                {pushBitrix.data?.correlation_id && (
+                  <div className="flex items-center gap-2 rounded-md border border-dashed px-2 py-1.5">
+                    <span className="text-[10px] text-muted-foreground">Último envio:</span>
+                    <code className="text-[10px] font-mono truncate flex-1">{pushBitrix.data.correlation_id}</code>
+                    <CopyIdButton value={pushBitrix.data.correlation_id} />
+                  </div>
+                )}
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -678,9 +686,11 @@ function PushResultSummary({
           <Building2 className="h-4 w-4 text-primary" />
           Resultado do último envio ao Bitrix
         </CardTitle>
-        <CardDescription className="text-[10px] font-mono break-all">
-          correlation_id: {result.correlation_id}
-        </CardDescription>
+        <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground">
+          <span className="shrink-0">correlation_id:</span>
+          <span className="break-all text-foreground">{result.correlation_id}</span>
+          <CopyIdButton value={result.correlation_id} />
+        </div>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -795,3 +805,35 @@ function StatusBadge({ status, error }: { status: string | null; error: string |
 }
 
 
+function CopyIdButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      toast.success("correlation_id copiado");
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error("Não foi possível copiar. Copie manualmente.");
+    }
+  };
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 shrink-0"
+          onClick={handleCopy}
+          aria-label="Copiar correlation_id"
+        >
+          {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="text-xs">
+        {copied ? "Copiado!" : "Copiar correlation_id"}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
