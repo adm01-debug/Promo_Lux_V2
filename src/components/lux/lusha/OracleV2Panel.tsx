@@ -27,6 +27,7 @@ import {
   useOracleSearchDecisors,
   useOracleEnrichContact,
   useOraclePushBitrix,
+  type PushBitrixResultItem,
 } from "@/hooks/useOracleV2";
 
 import { useActiveOrganization } from "@/hooks/useOrganizations";
