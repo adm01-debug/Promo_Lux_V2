@@ -251,20 +251,30 @@ export function OracleV2Panel() {
               </Button>
             )}
             {enrichedIds.length > 0 && (
-              <Button
-                variant="default"
-                onClick={handlePushAll}
-                disabled={pushBitrix.isPending || !bitrixPronto}
-                aria-busy={pushBitrix.isPending}
-                title={bitrixPronto ? undefined : "Preencha o ID da empresa e do responsável no Bitrix"}
-              >
-                {pushBitrix.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                ) : (
-                  <Building2 className="h-4 w-4 mr-2" />
-                )}
-                Enviar {enrichedIds.length} ao Bitrix
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={bitrixPronto ? -1 : 0}>
+                    <Button
+                      variant="default"
+                      onClick={handlePushAll}
+                      disabled={pushBitrix.isPending || !bitrixPronto}
+                      aria-busy={pushBitrix.isPending}
+                    >
+                      {pushBitrix.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <Building2 className="h-4 w-4 mr-2" />
+                      )}
+                      Enviar {enrichedIds.length} ao Bitrix
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs text-xs">
+                  {bitrixPronto
+                    ? "Envia todos os contatos enriquecidos desta busca ao Bitrix (limite de 50 por lote)."
+                    : `Envio bloqueado. ${bitrixMotivoBloqueio ?? ""}`}
+                </TooltipContent>
+              </Tooltip>
             )}
           </div>
         </CardContent>
