@@ -27,6 +27,7 @@ import {
   useOracleSearchDecisors,
   useOracleEnrichContact,
   useOraclePushBitrix,
+  type PushBitrixResultItem,
 } from "@/hooks/useOracleV2";
 
 import { useActiveOrganization } from "@/hooks/useOrganizations";
@@ -104,6 +105,12 @@ export function OracleV2Panel() {
     () => contacts.filter((c) => c.enrichment_status === "enriched" && !c.bitrix_contact_id).map((c) => c.id),
     [contacts],
   );
+  const pushResult = pushBitrix.data ?? null;
+  const pushResultByContact = useMemo(() => {
+    const map = new Map<string, PushBitrixResultItem>();
+    pushResult?.results.forEach((r) => map.set(r.contact_id, r));
+    return map;
+  }, [pushResult]);
   const bitrixPronto = bitrixCompanyId.trim().length > 0 && /^\d+$/.test(bitrixUserId.trim());
   const bitrixMotivoBloqueio = (() => {
     if (bitrixPronto) return null;
@@ -299,6 +306,8 @@ export function OracleV2Panel() {
         </CardContent>
       </Card>
 
+      {pushResult && <PushResultSummary result={pushResult} contacts={contacts} />}
+
       {sessionId && (
         <ResultsList
           contacts={contacts}
@@ -309,6 +318,7 @@ export function OracleV2Panel() {
           pushingContactIds={pushBitrix.isPending ? new Set(pushBitrix.variables?.contact_ids ?? []) : new Set()}
           bitrixPronto={bitrixPronto}
           bitrixMotivoBloqueio={bitrixMotivoBloqueio}
+          pushResultByContact={pushResultByContact}
         />
       )}
 
@@ -412,6 +422,7 @@ function ResultsList({
   pushingContactIds,
   bitrixPronto,
   bitrixMotivoBloqueio,
+  pushResultByContact,
 }: {
   contacts: OracleContact[];
   isLoading: boolean;
@@ -421,6 +432,7 @@ function ResultsList({
   pushingContactIds: Set<string>;
   bitrixPronto: boolean;
   bitrixMotivoBloqueio: string | null;
+  pushResultByContact: Map<string, PushBitrixResultItem>;
 }) {
   if (isLoading) {
     return (
@@ -462,6 +474,7 @@ function ResultsList({
             isPushing={pushingContactIds.has(c.id)}
             bitrixPronto={bitrixPronto}
             bitrixMotivoBloqueio={bitrixMotivoBloqueio}
+            pushResult={pushResultByContact.get(c.id) ?? null}
           />
         ))}
       </CardContent>
@@ -477,6 +490,7 @@ function ContactRow({
   isPushing,
   bitrixPronto,
   bitrixMotivoBloqueio,
+  pushResult,
 }: {
   contact: OracleContact;
   onEnrich: () => void;
@@ -485,67 +499,143 @@ function ContactRow({
   isPushing: boolean;
   bitrixPronto: boolean;
   bitrixMotivoBloqueio: string | null;
+  pushResult: PushBitrixResultItem | null;
 }) {
   const status = contact.enrichment_status;
   const revealed = !!contact.email || !!contact.phone_formatted;
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-md border px-3 py-2 hover:bg-muted/50">
-      <div className="flex-1 min-w-[200px]">
-        <p className="font-medium text-sm">{contact.full_name}</p>
-        <p className="text-xs text-muted-foreground">
-          {contact.job_title ?? "—"}
-          {contact.department_en && <> · {contact.department_en}</>}
-        </p>
-      </div>
-      <div className="flex items-center gap-3 text-xs">
-        {contact.email && (
-          <span className="flex items-center gap-1 text-foreground">
-            <Mail className="h-3 w-3" /> {contact.email}
-          </span>
-        )}
-        {contact.phone_formatted && (
-          <span className="flex items-center gap-1 text-foreground">
-            <Phone className="h-3 w-3" /> {contact.phone_formatted}
-          </span>
-        )}
-      </div>
-      <StatusBadge status={status} error={contact.last_error} />
-      {!revealed && status !== "enriching" && (
-        <Button size="sm" variant="outline" onClick={onEnrich} disabled={isEnriching}>
-          {isEnriching ? <Loader2 className="h-3 w-3 animate-spin" /> : "Revelar"}
-        </Button>
-      )}
-      {contact.enrichment_status === "enriched" && !contact.bitrix_contact_id && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span tabIndex={bitrixPronto ? -1 : 0}>
-              <Button
-                size="sm"
-                onClick={onPush}
-                disabled={isPushing || !bitrixPronto}
-              >
-                {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
-              </Button>
+    <div className="flex flex-col gap-1 rounded-md border px-3 py-2 hover:bg-muted/50">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex-1 min-w-[200px]">
+          <p className="font-medium text-sm">{contact.full_name}</p>
+          <p className="text-xs text-muted-foreground">
+            {contact.job_title ?? "—"}
+            {contact.department_en && <> · {contact.department_en}</>}
+          </p>
+        </div>
+        <div className="flex items-center gap-3 text-xs">
+          {contact.email && (
+            <span className="flex items-center gap-1 text-foreground">
+              <Mail className="h-3 w-3" /> {contact.email}
             </span>
-          </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-xs text-xs">
-            {bitrixPronto
-              ? "Cadastra este contato no Bitrix e cria o card na esteira."
-              : `Envio bloqueado. ${bitrixMotivoBloqueio ?? ""}`}
-          </TooltipContent>
-        </Tooltip>
-      )}
-      {contact.bitrix_card_id && (
-        <a
-          href={`https://promobrindes.bitrix24.com.br/crm/type/1328/details/${contact.bitrix_card_id}/`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1 text-xs text-primary hover:underline"
-        >
-          <ExternalLink className="h-3 w-3" /> ver card
-        </a>
-      )}
+          )}
+          {contact.phone_formatted && (
+            <span className="flex items-center gap-1 text-foreground">
+              <Phone className="h-3 w-3" /> {contact.phone_formatted}
+            </span>
+          )}
+        </div>
+        <StatusBadge status={status} error={contact.last_error} />
+        {!revealed && status !== "enriching" && (
+          <Button size="sm" variant="outline" onClick={onEnrich} disabled={isEnriching}>
+            {isEnriching ? <Loader2 className="h-3 w-3 animate-spin" /> : "Revelar"}
+          </Button>
+        )}
+        {contact.enrichment_status === "enriched" && !contact.bitrix_contact_id && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span tabIndex={bitrixPronto ? -1 : 0}>
+                <Button
+                  size="sm"
+                  onClick={onPush}
+                  disabled={isPushing || !bitrixPronto}
+                >
+                  {isPushing ? <Loader2 className="h-3 w-3 animate-spin" /> : "Enviar ao Bitrix"}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs text-xs">
+              {bitrixPronto
+                ? "Cadastra este contato no Bitrix e cria o card na esteira."
+                : `Envio bloqueado. ${bitrixMotivoBloqueio ?? ""}`}
+            </TooltipContent>
+          </Tooltip>
+        )}
+        {contact.bitrix_card_id && (
+          <a
+            href={`https://promobrindes.bitrix24.com.br/crm/type/1328/details/${contact.bitrix_card_id}/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs text-primary hover:underline"
+          >
+            <ExternalLink className="h-3 w-3" /> ver card
+          </a>
+        )}
+      </div>
+      {pushResult && <PushResultLine result={pushResult} />}
     </div>
+  );
+}
+
+function PushResultLine({ result }: { result: PushBitrixResultItem }) {
+  const map: Record<PushBitrixResultItem["status"], { label: string; className: string }> = {
+    sent_to_bitrix: {
+      label: `✓ Enviado ao Bitrix (contato #${result.bitrix_contact_id ?? "?"})`,
+      className: "text-emerald-600 dark:text-emerald-400",
+    },
+    bitrix_duplicate: {
+      label: `↺ Já existia no Bitrix${result.matched_by ? ` — casou por ${result.matched_by}` : ""}`,
+      className: "text-muted-foreground",
+    },
+    skipped: {
+      label: `⤼ Pulado — ${result.error ?? "sem email nem telefone"}`,
+      className: "text-amber-600 dark:text-amber-400",
+    },
+    error_bitrix: {
+      label: `✗ Erro no Bitrix — ${result.error ?? "sem detalhe"}`,
+      className: "text-destructive",
+    },
+  };
+  const info = map[result.status];
+  return <p className={cn("text-xs pl-1", info.className)}>{info.label}</p>;
+}
+
+function PushResultSummary({
+  result,
+  contacts,
+}: {
+  result: { summary: { sent: number; duplicates: number; errors: number; sem_dado: number; skipped: number }; skipped: string[]; correlation_id: string };
+  contacts: OracleContact[];
+}) {
+  const { sent, duplicates, errors, sem_dado, skipped } = result.summary;
+  const skippedNames = result.skipped
+    .map((id) => contacts.find((c) => c.id === id)?.full_name ?? id.slice(0, 8))
+    .slice(0, 5);
+  const items: Array<{ label: string; value: number; className: string }> = [
+    { label: "Enviados", value: sent, className: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Duplicados", value: duplicates, className: "text-muted-foreground" },
+    { label: "Sem email/telefone", value: sem_dado, className: "text-amber-600 dark:text-amber-400" },
+    { label: "Erros", value: errors, className: "text-destructive" },
+    { label: "Não elegíveis", value: skipped, className: "text-muted-foreground" },
+  ];
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm flex items-center gap-2">
+          <Building2 className="h-4 w-4 text-primary" />
+          Resultado do último envio ao Bitrix
+        </CardTitle>
+        <CardDescription className="text-[10px] font-mono break-all">
+          correlation_id: {result.correlation_id}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          {items.map((it) => (
+            <div key={it.label} className="rounded-md border px-2 py-1.5 text-center">
+              <p className={cn("text-lg font-semibold tabular-nums", it.className)}>{it.value}</p>
+              <p className="text-[10px] text-muted-foreground">{it.label}</p>
+            </div>
+          ))}
+        </div>
+        {skippedNames.length > 0 && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Não elegíveis (precisam estar enriquecidos e sem Bitrix): {skippedNames.join(", ")}
+            {result.skipped.length > skippedNames.length && ` (+${result.skipped.length - skippedNames.length})`}
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
