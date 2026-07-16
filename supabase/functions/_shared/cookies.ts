@@ -126,3 +126,50 @@ export function extractLeadContactSession(leadContactCookie: string): string {
   const match = leadContactCookie.match(/SESSION=([^;]+)/i);
   return (match?.[1] ?? leadContactCookie).trim();
 }
+
+/**
+ * Marca um cookie como morto no vault, no momento exato em que a API rejeitou.
+ *
+ * Existe porque o health_status do vault era um carimbo de data que nunca
+ * provava nada: em 16/07/2026 o cookie do LeadContact estava expirado há dias
+ * e o vault, o preflight e o banner juravam "healthy". Quem descobre a verdade
+ * é quem toma o 401 — então é quem tem que registrar.
+ *
+ * Best-effort: NUNCA lança. Se o vault estiver fora, o erro original do
+ * chamador é mais importante que a falha em registrar.
+ */
+export async function markCookieUnhealthy(servico: string, motivo: string): Promise<void> {
+  try {
+    const externalUrl = Deno.env.get("SUPABASE_EXTERNAL_URL") ?? "https://supabase.atomicabr.com.br";
+    const externalKey = Deno.env.get("EXTERNAL_VAULT_ANON_KEY") ?? Deno.env.get("SUPABASE_EXTERNAL_ANON_KEY");
+    if (!externalKey) {
+      console.warn(`[cookies] markCookieUnhealthy(${servico}): anon key ausente, pulando`);
+      return;
+    }
+    const res = await fetch(
+      `${externalUrl}/rest/v1/cookies_config?servico=eq.${encodeURIComponent(servico)}`,
+      {
+        method: "PATCH",
+        headers: {
+          apikey: externalKey,
+          Authorization: `Bearer ${externalKey}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          is_healthy: false,
+          health_status: "expired",
+          health_error: motivo.slice(0, 500),
+          last_health_check_at: new Date().toISOString(),
+        }),
+        signal: AbortSignal.timeout(8000),
+      },
+    );
+    if (!res.ok) {
+      console.warn(`[cookies] falha ao marcar ${servico} como unhealthy: HTTP ${res.status}`);
+    }
+  } catch (e) {
+    console.warn(`[cookies] falha ao marcar ${servico} como unhealthy:`, (e as Error).message);
+  }
+}
+
