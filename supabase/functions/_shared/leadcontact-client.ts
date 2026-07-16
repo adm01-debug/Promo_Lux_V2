@@ -181,7 +181,15 @@ export async function findPhone(linkedinUrl: string): Promise<{ phones: FoundPho
     csrfToken,
   };
 
-  const json = await postLeadContact("findPhone", linkedinCookie, body);
+  let json: unknown;
+  try {
+    json = await postLeadContact("findPhone", linkedinCookie, body);
+  } catch (err) {
+    if (err instanceof LeadContactError && err.status === 401) {
+      await markCookieUnhealthy("linkedin", `findPhone rejeitou a sessão: ${err.message}`);
+    }
+    throw err;
+  }
 
   const phones: FoundPhone[] = [];
   for (const s of extractSources(json)) {
