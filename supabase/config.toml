@@ -1,1 +1,4 @@
 project_id = "pesfxhlbsjfmlysdkzhr"
+
+[functions.oracle-push-bitrix]
+verify_jwt = true
