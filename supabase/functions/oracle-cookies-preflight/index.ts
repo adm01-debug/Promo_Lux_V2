@@ -38,6 +38,13 @@ type VaultRow = {
   cookie: string | null;
 };
 
+/**
+ * Este preflight NÃO chama a API do serviço — ele apenas lê o que o vault
+ * declara. Se a sessão morreu no servidor mas o cookie continua bem-formado,
+ * este relatório dirá "ready" mesmo assim. A verdade só aparece na primeira
+ * chamada real (que hoje registra o 401 de volta no vault via
+ * markCookieUnhealthy). Aconteceu em 16/07/2026 com o LeadContact.
+ */
 type ServiceReport = {
   servico: Servico;
   present: boolean;
@@ -46,6 +53,7 @@ type ServiceReport = {
   expires_in_minutes: number | null;
   updated_minutes_ago: number | null;
   error: string | null;
+  verificado_de_verdade: false;
 };
 
 async function fetchVault(): Promise<VaultRow[]> {
