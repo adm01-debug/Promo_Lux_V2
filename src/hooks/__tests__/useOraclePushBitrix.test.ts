@@ -15,7 +15,10 @@ vi.mock("sonner", () => ({
   },
 }));
 
+import { supabase } from "@/integrations/supabase/client";
 import { useOraclePushBitrix, type PushBitrixResponse } from "../useOracleV2";
+
+const invokeMock = supabase.functions.invoke as ReturnType<typeof vi.fn>;
 
 function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
