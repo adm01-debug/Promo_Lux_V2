@@ -106,6 +106,8 @@ serve(async (req) => {
     return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
   }
 
+  // deno-lint-ignore no-explicit-any
+  let body: any = null;
   try {
     try {
       body = await req.json();
