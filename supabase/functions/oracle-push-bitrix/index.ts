@@ -333,6 +333,7 @@ serve(async (req) => {
     sent: results.filter((r) => r.status === "sent_to_bitrix").length,
     duplicates: results.filter((r) => r.status === "bitrix_duplicate").length,
     errors: results.filter((r) => r.status === "error_bitrix").length,
+    sem_dado: results.filter((r) => r.status === "skipped").length,
     skipped: skipped.length,
   };
 
