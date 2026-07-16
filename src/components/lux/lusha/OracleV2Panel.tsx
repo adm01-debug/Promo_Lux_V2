@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox } from "lucide-react";
+import { Loader2, Search, Sparkles, ShieldAlert, CheckCircle2, Mail, Phone, Inbox, Building2, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
