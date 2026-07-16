@@ -661,15 +661,23 @@ export const LushaIntelligenceView = () => {
 
   const validateDomain = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeDomain(raw);
-    if (!value) return { value, error: null }; // opcional
+    if (!value) {
+      return {
+        value,
+        error: "Informe o domínio do site oficial da empresa (ex.: natura.com.br). A busca é feita por domínio — o LinkedIn sozinho não basta.",
+      };
+    }
     if (/(^|\.)linkedin\.com$/i.test(value)) {
       return {
         value,
-        error: "Este campo aceita apenas o domínio do site. Para o LinkedIn, use o campo acima.",
+        error: "Use o domínio do site oficial (ex.: natura.com.br), não a URL de uma rede social.",
       };
     }
     if (/(^|\.)(facebook|instagram|twitter|x|tiktok|youtube)\.com$/i.test(value)) {
-      return { value, error: "Redes sociais não são aceitas — informe o domínio do site oficial." };
+      return {
+        value,
+        error: "Use o domínio do site oficial (ex.: natura.com.br), não a URL de uma rede social.",
+      };
     }
     // Aceita rótulos ASCII e punycode (xn--…). IDN já foi convertido no normalize.
     if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(value)) {
@@ -696,7 +704,7 @@ export const LushaIntelligenceView = () => {
 
   const validateLinkedinCompanyUrl = useCallback((raw: string): { value: string; error: string | null } => {
     const value = normalizeLinkedinCompanyUrl(raw);
-    if (!value) return { value, error: "Informe a URL da página da empresa no LinkedIn." };
+    if (!value) return { value, error: null }; // opcional — apenas referência
     // Aceita slugs unicode (empresas com nomes acentuados) além de ASCII
     if (!/^linkedin\.com\/(company|school|showcase)\/[\p{L}\p{N}\-_.%]+$/u.test(value)) {
       return {
@@ -766,6 +774,23 @@ export const LushaIntelligenceView = () => {
 
   const dmMutation = useMutation({
     mutationFn: async () => {
+      // Guardas de UX — feedback imediato antes de bater na edge.
+      // A edge continua sendo a autoridade (valida no servidor); isto aqui é
+      // apenas conveniência para evitar 400 previsível.
+      const rawDomain = (domain ?? "").trim();
+      if (!rawDomain) {
+        const msg = "Informe o domínio do site oficial da empresa (ex.: natura.com.br). A busca é feita por domínio — o LinkedIn sozinho não basta.";
+        setDomainError(msg);
+        toast({ title: "Domínio obrigatório", description: msg, variant: "destructive" });
+        throw new Error(msg);
+      }
+      if (/(?:^|[./])(?:linkedin|facebook|instagram|twitter|x|tiktok|youtube)\.com(?:[/?#]|$)/i.test(rawDomain)) {
+        const msg = "Use o domínio do site oficial (ex.: natura.com.br), não a URL de uma rede social.";
+        setDomainError(msg);
+        toast({ title: "Domínio inválido", description: msg, variant: "destructive" });
+        throw new Error(msg);
+      }
+
       const d = validateDomain(domain);
       const l = validateLinkedinCompanyUrl(linkedinCompanyUrl);
       setDomainError(d.error);
@@ -1342,7 +1367,7 @@ export const LushaIntelligenceView = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
             <div className="space-y-2 rounded-lg border border-border/50 bg-card/30 p-3">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <Label htmlFor="lusha-domain">Domínio da empresa <span className="text-destructive" aria-label="obrigatório">*</span></Label>
                 <Button
                   type="button"
                   variant="ghost"
@@ -1407,7 +1432,7 @@ export const LushaIntelligenceView = () => {
 
             <div className="space-y-2 rounded-lg border border-border/50 bg-card/30 p-3">
               <Label htmlFor="lusha-linkedin">
-                Página da empresa no LinkedIn
+                Página da empresa no LinkedIn <span className="text-muted-foreground font-normal">(opcional)</span>
               </Label>
 
               <div className="relative flex gap-2">
@@ -1472,7 +1497,7 @@ export const LushaIntelligenceView = () => {
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Cole a URL da página da empresa (o sistema remove <code className="text-[10px] px-1 rounded bg-muted">https://</code>, <code className="text-[10px] px-1 rounded bg-muted">www</code> e parâmetros).
+                  Opcional. Guardado junto do contato para referência — a busca é feita pelo domínio.
                 </p>
               )}
             </div>
@@ -1529,6 +1554,13 @@ export const LushaIntelligenceView = () => {
                   onClick={() => dmMutation.mutate()}
                   disabled={!canSearchDomain}
                   className="min-w-[180px]"
+                  title={
+                    !domain.trim()
+                      ? "Informe o domínio do site oficial da empresa (ex.: natura.com.br). A busca é feita por domínio."
+                      : rateLimitCountdown != null && rateLimitCountdown > 0
+                      ? `Aguarde ${rateLimitCountdown}s antes da próxima busca`
+                      : undefined
+                  }
                 >
                   {dmMutation.isPending ? (
                     <>
