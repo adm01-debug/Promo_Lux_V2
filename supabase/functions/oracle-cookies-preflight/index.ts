@@ -123,6 +123,7 @@ function buildReport(rows: VaultRow[]): ServiceReport[] {
       expires_in_minutes: expiresInMin,
       updated_minutes_ago: updatedMinAgo,
       error: ready ? null : row.health_error ?? (!hasCookie ? "cookie vazio" : !notExpired ? "expirado" : "unhealthy"),
+      verificado_de_verdade: false,
     };
   });
 }
