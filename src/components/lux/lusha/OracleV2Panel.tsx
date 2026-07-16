@@ -351,6 +351,13 @@ export function OracleV2Panel() {
                   <li>Empresa destino: <strong>{bitrixCompanyId.trim() || "—"}</strong></li>
                   <li>Responsável: <strong>{bitrixUserId.trim() || "—"}</strong></li>
                 </ul>
+                {pushBitrix.data?.correlation_id && (
+                  <div className="flex items-center gap-2 rounded-md border border-dashed px-2 py-1.5">
+                    <span className="text-[10px] text-muted-foreground">Último envio:</span>
+                    <code className="text-[10px] font-mono truncate flex-1">{pushBitrix.data.correlation_id}</code>
+                    <CopyIdButton value={pushBitrix.data.correlation_id} />
+                  </div>
+                )}
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
