@@ -295,11 +295,11 @@ serve(async (req) => {
       if (r.status === "error_auth") break;
     } catch (err) {
       results.push({ contact_id: contact.id, status: "error_other", error: (err as Error).message });
-      await admin.from("lusha_contacts").update({
+      await updateContact(admin, logger, contact.id, {
         enrichment_status: "error_other",
         last_error: (err as Error).message,
         last_enriched_at: new Date().toISOString(),
-      }).eq("id", contact.id);
+      }, "mark_error");
     }
   }
 
