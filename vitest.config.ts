@@ -8,7 +8,15 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    include: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      "supabase/functions/**/__tests__/**/*.test.ts",
+    ],
+    // Edge functions rodam em Deno/Node — não precisam de jsdom.
+    // Mantém jsdom como default para src/** e força node só onde faz sentido.
+    environmentMatchGlobs: [
+      ["supabase/functions/**", "node"],
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
