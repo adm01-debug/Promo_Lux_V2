@@ -192,7 +192,11 @@ export async function createContact(input: CreateContactInput): Promise<string> 
   }
 
   const id = await callBitrix<number | string>("crm.contact.add", { fields });
-  return String(id);
+  const contactId = String(id ?? "").trim();
+  if (!/^\d+$/.test(contactId)) {
+    throw new BitrixError(`crm.contact.add: id inválido na resposta (${JSON.stringify(id)})`);
+  }
+  return contactId;
 }
 
 export interface CreateCardInput {
