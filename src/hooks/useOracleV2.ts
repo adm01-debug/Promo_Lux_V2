@@ -143,7 +143,9 @@ export function useOracleEnrichContact() {
       return data!;
     },
     onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ["oracle", "contacts"] });
       qc.invalidateQueries({ queryKey: ["lusha", "contacts"] });
+
       const { enriched, not_found, error_auth, error_rate_limit, error_other } = data.summary;
       if (error_auth > 0) {
         toast.error("Cookie LeadContact expirou. Renove no vault.");
