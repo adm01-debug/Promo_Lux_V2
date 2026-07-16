@@ -289,6 +289,7 @@ export function OracleV2Panel() {
           onPushOne={handlePushOne}
           pushingContactIds={pushBitrix.isPending ? new Set(pushBitrix.variables?.contact_ids ?? []) : new Set()}
           bitrixPronto={bitrixPronto}
+          bitrixMotivoBloqueio={bitrixMotivoBloqueio}
         />
       )}
     </div>
