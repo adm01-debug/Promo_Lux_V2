@@ -29,6 +29,7 @@ import {
   useOraclePushBitrix,
   type PushBitrixResultItem,
 } from "@/hooks/useOracleV2";
+import { computeBitrixReadiness } from "@/hooks/oracleV2Helpers";
 
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 
@@ -111,15 +112,10 @@ export function OracleV2Panel() {
     pushResult?.results.forEach((r) => map.set(r.contact_id, r));
     return map;
   }, [pushResult]);
-  const bitrixPronto = bitrixCompanyId.trim().length > 0 && /^\d+$/.test(bitrixUserId.trim());
-  const bitrixMotivoBloqueio = (() => {
-    if (bitrixPronto) return null;
-    const faltas: string[] = [];
-    if (bitrixCompanyId.trim().length === 0) faltas.push("ID da empresa no Bitrix");
-    if (bitrixUserId.trim().length === 0) faltas.push("ID do responsável no Bitrix");
-    else if (!/^\d+$/.test(bitrixUserId.trim())) faltas.push("ID do responsável precisa ser numérico");
-    return `Preencha: ${faltas.join(" e ")}.`;
-  })();
+  const { pronto: bitrixPronto, motivoBloqueio: bitrixMotivoBloqueio } = useMemo(
+    () => computeBitrixReadiness(bitrixCompanyId, bitrixUserId),
+    [bitrixCompanyId, bitrixUserId],
+  );
 
   const handleSearch = () => {
     if (!activeOrg?.organization_id || !user) return;

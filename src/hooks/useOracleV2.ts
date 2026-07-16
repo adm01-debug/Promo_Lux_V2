@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { formatPushResumo } from "./oracleV2Helpers";
 
 // ============================================================================
 // Oracle v2 — hooks para as edges oracle-* (busca + enriquecimento)
@@ -203,16 +204,10 @@ export function useOraclePushBitrix() {
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ["oracle", "contacts"] });
       qc.invalidateQueries({ queryKey: ["lusha", "contacts"] });
-      const { sent, duplicates, errors, sem_dado } = data.summary;
-      const partes: string[] = [];
-      if (sent > 0) partes.push(`${sent} cadastrado(s)`);
-      if (duplicates > 0) partes.push(`${duplicates} já existia(m)`);
-      if (sem_dado > 0) partes.push(`${sem_dado} sem email/telefone`);
-      if (errors > 0) partes.push(`${errors} com erro`);
-      const resumo = partes.join(", ") || "nada a enviar";
-      if (errors > 0 && sent === 0) toast.error(`Envio ao Bitrix falhou: ${resumo}.`);
-      else if (errors > 0) toast.warning(`Bitrix: ${resumo}.`);
-      else toast.success(`Bitrix: ${resumo}.`);
+      const { tone, mensagem } = formatPushResumo(data);
+      if (tone === "error") toast.error(mensagem);
+      else if (tone === "warning") toast.warning(mensagem);
+      else toast.success(mensagem);
     },
     onError: (err: Error) => {
       const msg = err.message ?? "";
