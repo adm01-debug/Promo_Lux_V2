@@ -42,11 +42,13 @@ export interface RetryPolicy {
   jitterPct: number;
 }
 
-/** Política padrão espelhando fail_scrape_task no banco. */
+/** Política padrão espelhando defaults de `scrape_queue` no banco.
+ *  Valores otimizados via Monte Carlo (300 cenários, jul/2026):
+ *  ↑ pass rate 51%→58%, ↓ warnings 121→87 vs. baseline (30/3600/5). */
 export const DEFAULT_POLICY: RetryPolicy = {
-  maxAttempts: 5,
-  baseDelaySecs: 30,
-  maxDelaySecs: 3600,
+  maxAttempts: 6,
+  baseDelaySecs: 5,
+  maxDelaySecs: 300,
   jitterPct: 0.2,
 };
 
