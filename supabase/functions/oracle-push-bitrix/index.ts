@@ -253,13 +253,25 @@ serve(async (req) => {
           codEmpresa: ctx.codEmpresa,
           assignedById: ctx.assignedById,
         });
-        await admin.from("lusha_contacts").update({
+        const ok = await updateContact(admin, logger, c.id, {
           enrichment_status: "bitrix_duplicate",
           bitrix_contact_id: dup.contactId,
-          bitrix_card_id: cardId || null,
+          bitrix_card_id: cardId,
           is_duplicate: true,
           last_error: null,
-        }).eq("id", c.id);
+        }, "save_duplicate");
+        if (!ok) {
+          // Card já foi criado no Bitrix, mas o banco não registrou.
+          // Reportamos como erro para o usuário conferir manualmente.
+          results.push({
+            contact_id: c.id,
+            status: "error_bitrix",
+            bitrix_contact_id: dup.contactId,
+            bitrix_card_id: cardId,
+            error: "card criado no Bitrix mas o banco não registrou — verifique manualmente",
+          });
+          continue;
+        }
 
         await reportSuccess(admin, "bitrix");
         results.push({ contact_id: c.id, status: "bitrix_duplicate", bitrix_contact_id: dup.contactId, bitrix_card_id: cardId, matched_by: dup.matchedBy });
