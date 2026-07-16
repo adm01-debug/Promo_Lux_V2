@@ -2247,6 +2247,7 @@ export type Database = {
       lusha_search_sessions: {
         Row: {
           bitrix_card_id: string | null
+          bitrix_company_id: string | null
           bitrix_user_id: string | null
           company_id: string | null
           company_name: string
@@ -2277,6 +2278,7 @@ export type Database = {
         }
         Insert: {
           bitrix_card_id?: string | null
+          bitrix_company_id?: string | null
           bitrix_user_id?: string | null
           company_id?: string | null
           company_name: string
@@ -2307,6 +2309,7 @@ export type Database = {
         }
         Update: {
           bitrix_card_id?: string | null
+          bitrix_company_id?: string | null
           bitrix_user_id?: string | null
           company_id?: string | null
           company_name?: string

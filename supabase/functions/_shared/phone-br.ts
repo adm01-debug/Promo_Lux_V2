@@ -59,3 +59,18 @@ export function normalizePhoneBR(input: string | null | undefined): NormalizedPh
     country: "BR",
   };
 }
+
+/**
+ * Formata no padrão que o n8n gravava no Bitrix: "+55 11 91234-5678".
+ * Paridade obrigatória: sem isso, o dedup por telefone nunca casa com os
+ * contatos que o n8n já inseriu no CRM (que estão nesse formato).
+ * Quirk herdado do n8n: números de 10 dígitos ganham um "9" injetado.
+ */
+export function formatPhoneBitrix(n: NormalizedPhone): string | null {
+  if (n.country === "INTL") return n.e164;
+  if (n.country !== "BR" || !n.e164) return null;
+  let num = n.e164.slice(3);
+  if (num.length === 10) num = num.slice(0, 2) + "9" + num.slice(2);
+  const m = num.match(/^(\d{2})(\d{5})(\d{4})$/);
+  return m ? `+55 ${m[1]} ${m[2]}-${m[3]}` : null;
+}

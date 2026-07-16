@@ -15,7 +15,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
-import { resolveDepartments } from "../_shared/departmentMap.ts";
+import { resolveDepartments, findPtLabelForEn } from "../_shared/departmentMap.ts";
 import {
   searchCompanyByName,
   searchDecisors,
@@ -49,6 +49,8 @@ const InputSchema = z.object({
   company_id: z.string().uuid().optional(),
   session_id: z.string().uuid().optional(),
   max_per_department: z.number().int().min(1).max(50).default(25),
+  bitrix_company_id: z.string().min(1).max(32).optional(),
+  bitrix_user_id: z.string().min(1).max(32).optional(),
 });
 
 async function hashIdempotency(parts: string[]): Promise<string> {
@@ -214,6 +216,8 @@ serve(async (req) => {
           idempotency_key: idemKey,
           search_type: "oracle_v2",
           started_at: new Date().toISOString(),
+          bitrix_company_id: input.bitrix_company_id ?? null,
+          bitrix_user_id: input.bitrix_user_id ?? null,
         })
         .select("id")
         .single();
@@ -311,6 +315,7 @@ serve(async (req) => {
     first_name: c.firstName ?? null,
     job_title: c.jobTitle ?? null,
     department_en: c.department ?? null,
+    department_pt: findPtLabelForEn(c.department ?? "", input.departments),
     seniority: c.seniority ?? null,
     linkedin_url: c.linkedinUrl ?? null,
     linkedin_public_id: c.linkedinPublicId ?? null,
