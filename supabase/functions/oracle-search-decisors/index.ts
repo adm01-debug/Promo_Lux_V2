@@ -49,6 +49,8 @@ const InputSchema = z.object({
   company_id: z.string().uuid().optional(),
   session_id: z.string().uuid().optional(),
   max_per_department: z.number().int().min(1).max(50).default(25),
+  bitrix_company_id: z.string().min(1).max(32).optional(),
+  bitrix_user_id: z.string().min(1).max(32).optional(),
 });
 
 async function hashIdempotency(parts: string[]): Promise<string> {
