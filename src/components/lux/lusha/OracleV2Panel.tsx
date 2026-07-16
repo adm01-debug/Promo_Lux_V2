@@ -302,6 +302,13 @@ export function OracleV2Panel() {
         </CardContent>
       </Card>
 
+      {pushBitrix.isPending && pushBitrix.variables?.contact_ids && (
+        <PushProgressBar
+          batchIds={pushBitrix.variables.contact_ids}
+          contacts={contacts}
+        />
+      )}
+
       {pushResult && <PushResultSummary result={pushResult} contacts={contacts} />}
 
       {sessionId && (
