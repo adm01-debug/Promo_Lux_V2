@@ -391,7 +391,7 @@ serve(async (req) => {
   return new Response(
     JSON.stringify({
       session_id: sessionId,
-      company: { id: companyMatch.id, name: companyMatch.name },
+      company: { lid: companyMatch.companyLid, name: companyMatch.name },
       total_found: uniqueContacts.length,
       inserted: insertedCount,
       duplicates: dedupCount,
