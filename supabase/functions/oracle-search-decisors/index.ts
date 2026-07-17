@@ -337,12 +337,15 @@ serve(async (req) => {
     user_id: userId,
     organization_id: input.organization_id,
     lusha_company_name: companyMatch.name,
-    lusha_company_lid: String(companyMatch.id),
+    lusha_company_lid: String(companyMatch.companyLid),
     full_name: c.fullName,
-    job_title: c.jobTitle ?? null,
-    department_en: c.department ?? null,
-    department_pt: findPtLabelForEn(c.department ?? "", input.departments),
-    seniority: c.seniority ?? null,
+    job_title: c.jobTitle || null,
+    // department_en = o que a LUSHA classificou (job_title.department[0])
+    department_en: c.department || null,
+    // department_pt = o rótulo que o USUÁRIO pediu nesta volta do loop
+    department_pt: c.requestedPt || null,
+    // seniority existe de verdade no payload: job_title.seniority ("Vice President")
+    seniority: c.seniority || null,
     linkedin_url: c.linkedinUrl ?? null,
     enrichment_status: "pending_enrichment",
     raw_lusha_payload: c.raw as Record<string, unknown>,
