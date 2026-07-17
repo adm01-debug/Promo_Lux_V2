@@ -385,7 +385,7 @@ serve(async (req) => {
     status: finalStatus === "completed" ? "success" : "error",
     message: `concluído: ${insertedCount} inseridos, ${dedupCount} duplicados, ${errors.length} erros`,
     durationMs: Date.now() - startedAt,
-    metadata: { perDeptCount, errors, companyId: companyMatch.id },
+    metadata: { perDeptCount, errors, company_lid: companyMatch.companyLid },
   });
 
   return new Response(
