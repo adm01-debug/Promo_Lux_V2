@@ -15,7 +15,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
-import { resolveDepartments, findPtLabelForEn } from "../_shared/departmentMap.ts";
+import { resolveDepartments } from "../_shared/lusha-departments.ts";
+import { publicIdFromLinkedInUrl } from "../_shared/linkedin-url.ts";
 import {
   searchCompanyByName,
   searchDecisors,
@@ -177,10 +178,17 @@ serve(async (req) => {
     });
   }
 
+  // departments_mapped é text[] NOT NULL no banco. resolution.mapped agora é
+  // Array<{pt, en:string[]}> — achata para os enums, sem repetir.
+  const departmentsMappedFlat = [...new Set(resolution.mapped.flatMap((d) => d.en))];
+
   // Idempotency
+  // ⚠️ ANTES: resolution.mapped.slice().sort().join(",") — com objetos isso vira
+  // "[object Object]" e TODA busca colidiria na mesma chave: a 2ª busca de
+  // qualquer empresa devolveria o resultado da 1ª. Não quebra, só mente.
   const idemKey = await hashIdempotency([
     userId, input.organization_id, input.company_name.toLowerCase().trim(),
-    resolution.mapped.slice().sort().join(","),
+    resolution.mapped.map((d) => `${d.pt}:${d.en.slice().sort().join("+")}`).sort().join(","),
   ]);
 
   // Sessão (idempotente)
@@ -209,7 +217,7 @@ serve(async (req) => {
           company_id: input.company_id ?? null,
           company_name: input.company_name,
           departments_requested: input.departments,
-          departments_mapped: resolution.mapped,
+          departments_mapped: departmentsMappedFlat,
           departments_not_found: resolution.notFound,
           status: "running",
           progress_pct: 0,
@@ -234,7 +242,7 @@ serve(async (req) => {
   // 1) Empresa
   let companyMatch;
   try {
-    const matches = await searchCompanyByName(input.company_name, 5);
+    const matches = await searchCompanyByName(input.company_name);
     if (matches.length === 0) {
       await admin.from("lusha_search_sessions").update({
         status: "completed", progress_pct: 100, total_found: 0,
@@ -247,7 +255,7 @@ serve(async (req) => {
     }
     companyMatch = matches[0];
     await reportSuccess(admin, "lusha_company");
-    await logger.log({ step: "company_search", status: "success", message: `empresa encontrada: ${companyMatch.name}`, metadata: { id: companyMatch.id, matches: matches.length } });
+    await logger.log({ step: "company_search", status: "success", message: `empresa encontrada: ${companyMatch.name}`, metadata: { company_lid: companyMatch.companyLid, matches: matches.length } });
   } catch (err) {
     await reportFailure(admin, "lusha_company");
     const status = (err as { status?: number }).status;
@@ -259,33 +267,48 @@ serve(async (req) => {
   }
 
   await admin.from("lusha_search_sessions").update({
-    lusha_company_lid: String(companyMatch.id),
+    lusha_company_lid: String(companyMatch.companyLid),
   }).eq("id", sessionId);
 
-  // 2) Loop por departamento
-  const allContacts: LushaSearchContact[] = [];
+  // 2) Loop por departamento PEDIDO (preserva o significado de max_per_department:
+  //    N por departamento escolhido, não N no total). Cada volta manda o ARRAY de
+  //    enums daquele departamento — a Lusha faz OR + dedup nativo numa requisição
+  //    só. Provado 17/07/2026: Sales(1421) + BusinessDevelopment(27) juntos = 1444,
+  //    não 1448 — ela tira os 4 repetidos sozinha. Por isso "vendas" é 1 request.
+  type ContatoComOrigem = LushaSearchContact & { requestedPt: string };
+  const allContacts: ContatoComOrigem[] = [];
   const perDeptCount: Record<string, number> = {};
   const errors: Array<{ department: string; error: string }> = [];
 
   for (let i = 0; i < resolution.mapped.length; i++) {
     const dept = resolution.mapped[i];
     try {
-      const contacts = await searchDecisors({
-        companyId: companyMatch.id,
+      const result = await searchDecisors({
         companyName: companyMatch.name,
-        department: dept,
+        companyLid: companyMatch.companyLid,
+        departmentsEn: dept.en,
         size: input.max_per_department,
       });
-      perDeptCount[dept] = contacts.length;
-      allContacts.push(...contacts);
+      perDeptCount[dept.pt] = result.contacts.length;
+      // O rótulo PT vem do que o usuário PEDIU nesta volta. Não usa lookup
+      // reverso (findPtLabelForEn): era ambíguo quando 2 rótulos PT caem no
+      // mesmo enum (ex.: "Compras" e "Logística" -> ambos Operations).
+      allContacts.push(...result.contacts.map((c) => ({ ...c, requestedPt: dept.pt })));
       await reportSuccess(admin, "lusha_search");
-      await logger.log({ step: "dept_search", status: "success", message: `${dept}: ${contacts.length}`, metadata: { department: dept, count: contacts.length } });
+      await logger.log({
+        step: "dept_search", status: "success",
+        message: `${dept.pt} [${dept.en.join(" | ")}]: ${result.contacts.length} de ${result.total}`,
+        metadata: {
+          department_pt: dept.pt, departments_en: dept.en,
+          count: result.contacts.length, total_disponivel: result.total,
+        },
+      });
     } catch (err) {
       await reportFailure(admin, "lusha_search");
-      errors.push({ department: dept, error: (err as Error).message });
+      errors.push({ department: dept.pt, error: (err as Error).message });
       await logger.log({
         step: "dept_search", status: "error", level: "error",
-        message: `falha em departamento ${dept}`,
+        message: `falha em departamento ${dept.pt}`,
         errorDetail: (err as Error).message,
         httpStatus: (err as { status?: number }).status,
       });
@@ -295,9 +318,13 @@ serve(async (req) => {
   }
 
   // 3) Dedup por linkedin_public_id
+  // c.linkedinPublicId NÃO EXISTE no payload real da Lusha (o campo é social_link).
+  // Usa publicIdFromLinkedInUrl, que espelha o SQL da coluna GENERATED — se
+  // divergir, o upsert em (organization_id, linkedin_public_id) recebe duplicata.
   const seen = new Set<string>();
   const uniqueContacts = allContacts.filter((c) => {
-    const key = c.linkedinPublicId ?? c.linkedinUrl ?? `noid:${c.fullName}:${c.jobTitle}`;
+    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
+    const key = pid || `noid:${c.fullName}:${c.jobTitle}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -310,12 +337,15 @@ serve(async (req) => {
     user_id: userId,
     organization_id: input.organization_id,
     lusha_company_name: companyMatch.name,
-    lusha_company_lid: String(companyMatch.id),
+    lusha_company_lid: String(companyMatch.companyLid),
     full_name: c.fullName,
-    job_title: c.jobTitle ?? null,
-    department_en: c.department ?? null,
-    department_pt: findPtLabelForEn(c.department ?? "", input.departments),
-    seniority: c.seniority ?? null,
+    job_title: c.jobTitle || null,
+    // department_en = o que a LUSHA classificou (job_title.department[0])
+    department_en: c.department || null,
+    // department_pt = o rótulo que o USUÁRIO pediu nesta volta do loop
+    department_pt: c.requestedPt || null,
+    // seniority existe de verdade no payload: job_title.seniority ("Vice President")
+    seniority: c.seniority || null,
     linkedin_url: c.linkedinUrl ?? null,
     enrichment_status: "pending_enrichment",
     raw_lusha_payload: c.raw as Record<string, unknown>,
@@ -355,13 +385,13 @@ serve(async (req) => {
     status: finalStatus === "completed" ? "success" : "error",
     message: `concluído: ${insertedCount} inseridos, ${dedupCount} duplicados, ${errors.length} erros`,
     durationMs: Date.now() - startedAt,
-    metadata: { perDeptCount, errors, companyId: companyMatch.id },
+    metadata: { perDeptCount, errors, company_lid: companyMatch.companyLid },
   });
 
   return new Response(
     JSON.stringify({
       session_id: sessionId,
-      company: { id: companyMatch.id, name: companyMatch.name },
+      company: { lid: companyMatch.companyLid, name: companyMatch.name },
       total_found: uniqueContacts.length,
       inserted: insertedCount,
       duplicates: dedupCount,
