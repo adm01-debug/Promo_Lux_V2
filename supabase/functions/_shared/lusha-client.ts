@@ -264,7 +264,7 @@ export function buildSearchAgentBody(input: SearchAgentInput): Record<string, un
       ],
       companyLocation: [],
       contactLocation: [],
-      contactDepartment: [{ value: dep, label: dep, isExclude: false }],
+      contactDepartment: input.departmentsEn.map((d) => ({ value: d, label: d, isExclude: false })),
       contactJobTitle: [],
       companyRevenue: [],
       contactExistingDataPoints: [],
