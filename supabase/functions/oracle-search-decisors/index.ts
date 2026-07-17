@@ -267,7 +267,7 @@ serve(async (req) => {
   }
 
   await admin.from("lusha_search_sessions").update({
-    lusha_company_lid: String(companyMatch.id),
+    lusha_company_lid: String(companyMatch.companyLid),
   }).eq("id", sessionId);
 
   // 2) Loop por departamento
