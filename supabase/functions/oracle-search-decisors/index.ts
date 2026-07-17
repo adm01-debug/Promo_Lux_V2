@@ -242,7 +242,7 @@ serve(async (req) => {
   // 1) Empresa
   let companyMatch;
   try {
-    const matches = await searchCompanyByName(input.company_name, 5);
+    const matches = await searchCompanyByName(input.company_name);
     if (matches.length === 0) {
       await admin.from("lusha_search_sessions").update({
         status: "completed", progress_pct: 100, total_found: 0,
