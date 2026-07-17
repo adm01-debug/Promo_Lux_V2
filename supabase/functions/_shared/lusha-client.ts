@@ -364,13 +364,19 @@ export function findPayloadPhone(item: Record<string, unknown>): string {
 
 export function normalizeSearchContact(
   item: Record<string, unknown>,
-  departmentEn: string,
+  fallbackDepartments: string[],
 ): LushaSearchContact {
+  const jt = (item?.job_title ?? {}) as Record<string, unknown>;
+  const deps = Array.isArray(jt.department)
+    ? (jt.department as unknown[]).filter((d): d is string => typeof d === "string")
+    : [];
   return {
     fullName: pickStr(item, "name", "full"),
     jobTitle: pickStr(item, "job_title", "raw"),
+    seniority: pickStr(item, "job_title", "seniority"),
     linkedinUrl: pickStr(item, "social_link"),
-    department: departmentEn,
+    department: deps[0] ?? fallbackDepartments[0] ?? "",
+    departmentsAll: deps,
     hasRevealedEmail: findRevealedEmail(item) !== "",
     hasPhone: findPayloadPhone(item) !== "",
     raw: item,
@@ -378,14 +384,14 @@ export function normalizeSearchContact(
 }
 
 /** Aceita o shape real: { contacts: { total, results[] } }. */
-export function parseSearchAgent(json: unknown, departmentEn: string): LushaSearchResult {
+export function parseSearchAgent(json: unknown, fallbackDepartments: string[]): LushaSearchResult {
   const c = (json as { contacts?: { total?: unknown; results?: unknown } })?.contacts;
   const results = Array.isArray(c?.results) ? c!.results : [];
   return {
     total: typeof c?.total === "number" ? c.total : 0,
     contacts: results
       .filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
-      .map((r) => normalizeSearchContact(r, departmentEn)),
+      .map((r) => normalizeSearchContact(r, fallbackDepartments)),
   };
 }
 
@@ -397,5 +403,5 @@ export async function searchDecisors(input: SearchAgentInput): Promise<LushaSear
     body: JSON.stringify(buildSearchAgentBody(input)),
     signal: AbortSignal.timeout(20000),
   });
-  return parseSearchAgent(await readJson(res, "search-agent"), input.departmentEn);
+  return parseSearchAgent(await readJson(res, "search-agent"), input.departmentsEn);
 }
