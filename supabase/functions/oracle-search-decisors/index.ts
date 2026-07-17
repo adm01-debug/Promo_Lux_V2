@@ -270,30 +270,45 @@ serve(async (req) => {
     lusha_company_lid: String(companyMatch.companyLid),
   }).eq("id", sessionId);
 
-  // 2) Loop por departamento
-  const allContacts: LushaSearchContact[] = [];
+  // 2) Loop por departamento PEDIDO (preserva o significado de max_per_department:
+  //    N por departamento escolhido, não N no total). Cada volta manda o ARRAY de
+  //    enums daquele departamento — a Lusha faz OR + dedup nativo numa requisição
+  //    só. Provado 17/07/2026: Sales(1421) + BusinessDevelopment(27) juntos = 1444,
+  //    não 1448 — ela tira os 4 repetidos sozinha. Por isso "vendas" é 1 request.
+  type ContatoComOrigem = LushaSearchContact & { requestedPt: string };
+  const allContacts: ContatoComOrigem[] = [];
   const perDeptCount: Record<string, number> = {};
   const errors: Array<{ department: string; error: string }> = [];
 
   for (let i = 0; i < resolution.mapped.length; i++) {
     const dept = resolution.mapped[i];
     try {
-      const contacts = await searchDecisors({
-        companyId: companyMatch.id,
+      const result = await searchDecisors({
         companyName: companyMatch.name,
-        department: dept,
+        companyLid: companyMatch.companyLid,
+        departmentsEn: dept.en,
         size: input.max_per_department,
       });
-      perDeptCount[dept] = contacts.length;
-      allContacts.push(...contacts);
+      perDeptCount[dept.pt] = result.contacts.length;
+      // O rótulo PT vem do que o usuário PEDIU nesta volta. Não usa lookup
+      // reverso (findPtLabelForEn): era ambíguo quando 2 rótulos PT caem no
+      // mesmo enum (ex.: "Compras" e "Logística" -> ambos Operations).
+      allContacts.push(...result.contacts.map((c) => ({ ...c, requestedPt: dept.pt })));
       await reportSuccess(admin, "lusha_search");
-      await logger.log({ step: "dept_search", status: "success", message: `${dept}: ${contacts.length}`, metadata: { department: dept, count: contacts.length } });
+      await logger.log({
+        step: "dept_search", status: "success",
+        message: `${dept.pt} [${dept.en.join(" | ")}]: ${result.contacts.length} de ${result.total}`,
+        metadata: {
+          department_pt: dept.pt, departments_en: dept.en,
+          count: result.contacts.length, total_disponivel: result.total,
+        },
+      });
     } catch (err) {
       await reportFailure(admin, "lusha_search");
-      errors.push({ department: dept, error: (err as Error).message });
+      errors.push({ department: dept.pt, error: (err as Error).message });
       await logger.log({
         step: "dept_search", status: "error", level: "error",
-        message: `falha em departamento ${dept}`,
+        message: `falha em departamento ${dept.pt}`,
         errorDetail: (err as Error).message,
         httpStatus: (err as { status?: number }).status,
       });
