@@ -16,6 +16,7 @@
 // Autenticação: cookie `ll` do vault (serviço "lusha").
 // ============================================================================
 import { getCookie } from "./cookies.ts";
+import { assertValidDepartments } from "./lusha-departments.ts";
 
 const LUSHA_COMPANY_URL = "https://dashboard-services.lusha.com/v2/filters/companyName";
 const LUSHA_SEARCH_URL = "https://dashboard-services.lusha.com/api/v1/prospecting/search-agent";
