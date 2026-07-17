@@ -217,7 +217,7 @@ serve(async (req) => {
           company_id: input.company_id ?? null,
           company_name: input.company_name,
           departments_requested: input.departments,
-          departments_mapped: resolution.mapped,
+          departments_mapped: departmentsMappedFlat,
           departments_not_found: resolution.notFound,
           status: "running",
           progress_pct: 0,
