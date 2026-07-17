@@ -26,6 +26,11 @@ const JWT_ANONIMO =
 const JWT_SESSAO =
   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6NDEwMjQ0NDgwMH0.assinatura_falsa";
 
+// JWT de SESSÃO (sub real, não anônimo) mas EXPIRADO: { "sub":"user-123", "exp":1000000000 } (2001)
+// Precisa ter sub válido para exercitar o ramo EXPIRADO sem cair antes no ramo ANÔNIMO.
+const JWT_EXPIRADO =
+  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6MTAwMDAwMDAwMH0.assinatura_falsa";
+
 describe("normalizeLushaCookie", () => {
   it("JWT cru ganha o nome `ll=` (o n8n mandava cru e o servidor ignorava)", () => {
     expect(normalizeLushaCookie(JWT_ANONIMO)).toBe(`ll=${JWT_ANONIMO}`);
@@ -90,9 +95,20 @@ describe("assertLushaSessionToken", () => {
       expect((e as { status?: number }).status).toBe(401);
     }
   });
-  it("lança em token expirado", () => {
+  it("lança em token de sessão EXPIRADO", () => {
+    expect(() => assertLushaSessionToken(`ll=${JWT_EXPIRADO}`)).toThrow(/EXPIRADO/i);
+  });
+  it("token expirado também é 401", () => {
+    try {
+      assertLushaSessionToken(`ll=${JWT_EXPIRADO}`);
+      expect.unreachable("deveria ter lançado");
+    } catch (e) {
+      expect((e as { status?: number }).status).toBe(401);
+    }
+  });
+  it("PRECEDÊNCIA PROPOSITAL: anônimo+expirado reporta ANÔNIMO (mensagem mais acionável)", () => {
     expect(() => assertLushaSessionToken(`ll=${JWT_ANONIMO}`, new Date("2027-01-01").getTime()))
-      .toThrow(/EXPIRADO/i);
+      .toThrow(/ANÔNIMO/i);
   });
   it("deixa passar sessão válida", () => {
     expect(() => assertLushaSessionToken(`ll=${JWT_SESSAO}`)).not.toThrow();
