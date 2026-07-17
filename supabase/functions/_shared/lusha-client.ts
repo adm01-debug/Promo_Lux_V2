@@ -255,7 +255,7 @@ export function newSessionId(): string {
  * chave — o n8n manda TODAS, inclusive as vazias. Mantenha assim.
  */
 export function buildSearchAgentBody(input: SearchAgentInput): Record<string, unknown> {
-  const dep = input.departmentEn;
+  assertValidDepartments(input.departmentsEn);
   return {
     filters: {
       contactName: [],
