@@ -318,9 +318,13 @@ serve(async (req) => {
   }
 
   // 3) Dedup por linkedin_public_id
+  // c.linkedinPublicId NÃO EXISTE no payload real da Lusha (o campo é social_link).
+  // Usa publicIdFromLinkedInUrl, que espelha o SQL da coluna GENERATED — se
+  // divergir, o upsert em (organization_id, linkedin_public_id) recebe duplicata.
   const seen = new Set<string>();
   const uniqueContacts = allContacts.filter((c) => {
-    const key = c.linkedinPublicId ?? c.linkedinUrl ?? `noid:${c.fullName}:${c.jobTitle}`;
+    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
+    const key = pid || `noid:${c.fullName}:${c.jobTitle}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
