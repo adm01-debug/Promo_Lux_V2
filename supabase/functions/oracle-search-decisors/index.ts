@@ -178,10 +178,17 @@ serve(async (req) => {
     });
   }
 
+  // departments_mapped é text[] NOT NULL no banco. resolution.mapped agora é
+  // Array<{pt, en:string[]}> — achata para os enums, sem repetir.
+  const departmentsMappedFlat = [...new Set(resolution.mapped.flatMap((d) => d.en))];
+
   // Idempotency
+  // ⚠️ ANTES: resolution.mapped.slice().sort().join(",") — com objetos isso vira
+  // "[object Object]" e TODA busca colidiria na mesma chave: a 2ª busca de
+  // qualquer empresa devolveria o resultado da 1ª. Não quebra, só mente.
   const idemKey = await hashIdempotency([
     userId, input.organization_id, input.company_name.toLowerCase().trim(),
-    resolution.mapped.slice().sort().join(","),
+    resolution.mapped.map((d) => `${d.pt}:${d.en.slice().sort().join("+")}`).sort().join(","),
   ]);
 
   // Sessão (idempotente)
