@@ -16,6 +16,7 @@
 // Autenticação: cookie `ll` do vault (serviço "lusha").
 // ============================================================================
 import { getCookie } from "./cookies.ts";
+import { assertValidDepartments } from "./lusha-departments.ts";
 
 const LUSHA_COMPANY_URL = "https://dashboard-services.lusha.com/v2/filters/companyName";
 const LUSHA_SEARCH_URL = "https://dashboard-services.lusha.com/api/v1/prospecting/search-agent";
@@ -109,21 +110,24 @@ export function inspectLushaToken(cookie: string, now: number = Date.now()): Lus
 }
 
 /**
- * Falha rápido e com mensagem acionável, ANTES de gastar a chamada de rede.
- * Foi exatamente isto que custou uma sessão inteira de debug: o vault dizia
- * `is_healthy=true` enquanto guardava um token `sub:"anonymous"`.
+ * Falha rápido ANTES da chamada de rede — mas só no que dá para provar offline.
+ *
+ * ⚠️ NÃO checa `sub === "anonymous"`. Provado em 17/07/2026 que token anônimo
+ * FUNCIONA: o cookie `ll` do dashboard tem sub:"anonymous" e trouxe HTTP 201 com
+ * 6.970 contatos. O servidor amarra o `iss` (uuid do visitante) à sessão logada
+ * do lado dele — a anonimidade do payload não diz nada sobre a validade.
+ *
+ * O modo real de morte é o `iss` expirar NO SERVIDOR antes do `exp` do JWT, e
+ * isso é INDETECTÁVEL offline: só aparece como 401 "No credentials found for
+ * given 'iss'". Não invente guarda para isso aqui — trate no erro da chamada.
  */
 export function assertLushaSessionToken(cookie: string, now: number = Date.now()): void {
   const info = inspectLushaToken(cookie, now);
-  if (info.anonymous) {
+  if (info.expired) {
     throw makeLushaError(
-      "cookie lusha é um token ANÔNIMO (sub=anonymous) — não é sessão logada. " +
-        "Recapture o cookie `ll` em dashboard.lusha.com já logado (F12 > Application > Cookies).",
+      "cookie lusha EXPIRADO (exp no passado) — recapture o `ll` em dashboard.lusha.com (F12 > Application > Cookies).",
       401,
     );
-  }
-  if (info.expired) {
-    throw makeLushaError("cookie lusha EXPIRADO (exp no passado) — recapture o cookie `ll`.", 401);
   }
 }
 
@@ -138,7 +142,17 @@ export function assertLushaOk(op: string, json: unknown): void {
     throw makeLushaError(`lusha ${op}: ${msg}`, 401);
   }
   if (typeof j.error === "string" && j.error) {
-    throw makeLushaError(`lusha ${op}: ${j.error}`, 400);
+    // Caso real 17/07/2026: enum de departamento inválido devolve HTTP 201 com
+    // {"error":"SEARCH_ENGINE_ERROR","statusCode":422,
+    //  "additionalInfo":{"errorDetails":[{"category":"departments",...}]}}
+    const sc = typeof j.statusCode === "number" ? j.statusCode : 400;
+    const cats = ((j.additionalInfo as { errorDetails?: Array<{ category?: string }> } | undefined)
+      ?.errorDetails ?? [])
+      .map((d) => d?.category).filter(Boolean).join(", ");
+    throw makeLushaError(
+      `lusha ${op}: ${j.error}${sc ? ` (statusCode ${sc})` : ""}${cats ? ` — campo(s): ${cats}` : ""}`,
+      sc,
+    );
   }
 }
 
@@ -217,7 +231,12 @@ export async function searchCompanyByName(name: string): Promise<LushaCompanyMat
 export interface SearchAgentInput {
   companyName: string;
   companyLid: string | number;
-  departmentEn: string; // enum Lusha já traduzido
+  /**
+   * Enums já traduzidos. Array porque contactDepartment é OR + dedup nativo na
+   * Lusha. Provado 17/07/2026: Sales(1421)+BusinessDevelopment(27) = 1444, não
+   * 1448 — ela tira os 4 repetidos sozinha. Use isto em vez de 2 requisições.
+   */
+  departmentsEn: string[];
   offset?: number;
   size?: number;
   sessionId?: string;
@@ -236,7 +255,7 @@ export function newSessionId(): string {
  * chave — o n8n manda TODAS, inclusive as vazias. Mantenha assim.
  */
 export function buildSearchAgentBody(input: SearchAgentInput): Record<string, unknown> {
-  const dep = input.departmentEn;
+  assertValidDepartments(input.departmentsEn);
   return {
     filters: {
       contactName: [],
@@ -245,7 +264,7 @@ export function buildSearchAgentBody(input: SearchAgentInput): Record<string, un
       ],
       companyLocation: [],
       contactLocation: [],
-      contactDepartment: [{ value: dep, label: dep, isExclude: false }],
+      contactDepartment: input.departmentsEn.map((d) => ({ value: d, label: d, isExclude: false })),
       contactJobTitle: [],
       companyRevenue: [],
       contactExistingDataPoints: [],
@@ -284,14 +303,19 @@ export function buildSearchAgentBody(input: SearchAgentInput): Record<string, un
 }
 
 // ── Shape REAL do resultado (aninhado, snake_case) ──────────────────────────
-// item.name.full · item.job_title.raw · item.social_link
+// item.name.full · item.job_title.raw · item.job_title.seniority · item.social_link
+// item.job_title.department[] = enums que a LUSHA atribuiu ao contato
 // item.emails[] = { address, status:"masked"|... } · item.phones[] = { phone|number }
-// item.previous_job.emails[] = string[]
 export interface LushaSearchContact {
   fullName: string;
   jobTitle: string;
+  /** job_title.seniority — ex.: "Vice President". Existe no payload real. */
+  seniority: string;
   linkedinUrl: string;
+  /** o que a LUSHA classificou (job_title.department[0]), não o que pedimos */
   department: string;
+  /** todos os departamentos do contato — pode ter mais de um */
+  departmentsAll: string[];
   hasRevealedEmail: boolean;
   hasPhone: boolean;
   raw: Record<string, unknown>;
@@ -340,13 +364,19 @@ export function findPayloadPhone(item: Record<string, unknown>): string {
 
 export function normalizeSearchContact(
   item: Record<string, unknown>,
-  departmentEn: string,
+  fallbackDepartments: string[],
 ): LushaSearchContact {
+  const jt = (item?.job_title ?? {}) as Record<string, unknown>;
+  const deps = Array.isArray(jt.department)
+    ? (jt.department as unknown[]).filter((d): d is string => typeof d === "string")
+    : [];
   return {
     fullName: pickStr(item, "name", "full"),
     jobTitle: pickStr(item, "job_title", "raw"),
+    seniority: pickStr(item, "job_title", "seniority"),
     linkedinUrl: pickStr(item, "social_link"),
-    department: departmentEn,
+    department: deps[0] ?? fallbackDepartments[0] ?? "",
+    departmentsAll: deps,
     hasRevealedEmail: findRevealedEmail(item) !== "",
     hasPhone: findPayloadPhone(item) !== "",
     raw: item,
@@ -354,14 +384,14 @@ export function normalizeSearchContact(
 }
 
 /** Aceita o shape real: { contacts: { total, results[] } }. */
-export function parseSearchAgent(json: unknown, departmentEn: string): LushaSearchResult {
+export function parseSearchAgent(json: unknown, fallbackDepartments: string[]): LushaSearchResult {
   const c = (json as { contacts?: { total?: unknown; results?: unknown } })?.contacts;
   const results = Array.isArray(c?.results) ? c!.results : [];
   return {
     total: typeof c?.total === "number" ? c.total : 0,
     contacts: results
       .filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
-      .map((r) => normalizeSearchContact(r, departmentEn)),
+      .map((r) => normalizeSearchContact(r, fallbackDepartments)),
   };
 }
 
@@ -373,5 +403,5 @@ export async function searchDecisors(input: SearchAgentInput): Promise<LushaSear
     body: JSON.stringify(buildSearchAgentBody(input)),
     signal: AbortSignal.timeout(20000),
   });
-  return parseSearchAgent(await readJson(res, "search-agent"), input.departmentEn);
+  return parseSearchAgent(await readJson(res, "search-agent"), input.departmentsEn);
 }

@@ -1,95 +1,123 @@
 // ============================================================================
 // _shared/lusha-departments.ts
-// Mapa PT-BR -> enum de departamento da Lusha (EN).
-// PORTADO BYTE-A-BYTE do nó "Prepara payload" do n8n
-// "Captação de lead - Linkedin" (workflow ZRnakqmCSpGub7Wu), extraído em
-// 17/07/2026 da instância viva. Fonte da verdade = n8n, NÃO a documentação.
+// Mapa PT-BR -> enums de departamento da Lusha.
 //
-// Se mudar aqui, mude no n8n também enquanto os dois coexistirem.
+// ⚠️ OS 16 ENUMS ABAIXO SÃO OS ÚNICOS VÁLIDOS. Provado em 17/07/2026 por:
+//   1. GET api.lusha.com/prospecting/filters/contacts/departments (grátis)
+//   2. Chamada real ao dashboard: enum inválido devolve HTTP 201 com corpo
+//      {"error":"SEARCH_ENGINE_ERROR","statusCode":422,
+//       "additionalInfo":{"errorDetails":[{"category":"departments"}]}}
+//
+// Erros corrigidos (existiam no n8n E no departmentMap.ts):
+//   • "Customer Success"            -> NÃO EXISTE. O certo é "Customer Service".
+//   • "Design"                      -> NÃO EXISTE.
+//   • "Health & Safety"             -> NÃO EXISTE (valor do n8n).
+//   • "Health, Safety and Security" -> NÃO EXISTE (valor do departmentMap.ts).
+//   • "Sales" existia e ninguém usava: o n8n jogava "vendas" em
+//     "Business Development" (27 na Lactalis) e perdia "Sales" (1421).
+//
+// SSMA/segurança do trabalho -> Operations. Não é chute: a busca real por
+// Operations na Ambev devolveu "Environment, Health and Safety Manager".
+//
+// mapDepartment devolve string[] porque contactDepartment é array com OR +
+// dedup nativo. Provado: Sales(1421)+BusinessDevelopment(27) = 1444, não 1448.
 // ============================================================================
 
-export const DEPARTMENT_MAP: Readonly<Record<string, string>> = Object.freeze({
-  // Operations
-  "compras": "Operations", "suprimentos": "Operations", "procurement": "Operations",
-  "logistica": "Operations", "logística": "Operations", "supply chain": "Operations",
-  "operacoes": "Operations", "operações": "Operations", "operations": "Operations",
-  "producao": "Operations", "produção": "Operations", "manufacturing": "Operations",
-  "qualidade": "Operations", "quality": "Operations", "facilities": "Operations",
-  "manutencao": "Operations", "manutenção": "Operations", "almoxarifado": "Operations",
-  // Marketing
-  "marketing": "Marketing", "comunicacao": "Marketing", "comunicação": "Marketing",
-  "publicidade": "Marketing", "branding": "Marketing", "digital": "Marketing",
-  "conteudo": "Marketing", "conteúdo": "Marketing", "growth": "Marketing",
-  "social media": "Marketing", "trade": "Marketing", "eventos": "Marketing",
-  // Human Resources
-  "recursos humanos": "Human Resources", "rh": "Human Resources", "hr": "Human Resources",
-  "gente": "Human Resources", "pessoas": "Human Resources", "people": "Human Resources",
-  "talent": "Human Resources", "talentos": "Human Resources", "dp": "Human Resources",
-  "departamento pessoal": "Human Resources", "recrutamento": "Human Resources",
-  "treinamento": "Human Resources", "beneficios": "Human Resources",
-  // Finance
-  "financeiro": "Finance", "financeira": "Finance", "finance": "Finance",
-  "controladoria": "Finance", "contabilidade": "Finance", "fiscal": "Finance",
-  "tesouraria": "Finance", "treasury": "Finance", "auditoria": "Finance",
-  "contabil": "Finance", "contábil": "Finance", "custos": "Finance",
-  "orcamento": "Finance", "orçamento": "Finance",
-  // Information Technology
-  "ti": "Information Technology", "it": "Information Technology",
-  "tecnologia": "Information Technology", "technology": "Information Technology",
-  "sistemas": "Information Technology", "informatica": "Information Technology",
-  "infra": "Information Technology", "infraestrutura": "Information Technology",
-  "dados": "Information Technology", "data": "Information Technology",
-  "seguranca": "Information Technology", "segurança": "Information Technology",
-  "cloud": "Information Technology", "devops": "Information Technology",
-  // Business Development
-  "vendas": "Business Development", "comercial": "Business Development",
-  "negocios": "Business Development", "negócios": "Business Development",
-  "sales": "Business Development", "business development": "Business Development",
-  "expansao": "Business Development", "expansão": "Business Development",
-  "parcerias": "Business Development", "partnerships": "Business Development",
-  // General Management
-  "diretoria": "General Management", "presidencia": "General Management",
-  "presidência": "General Management", "ceo": "General Management",
-  "board": "General Management", "conselho": "General Management",
-  "gestao": "General Management", "gestão": "General Management",
-  "administracao": "General Management", "administração": "General Management",
-  "gerencia": "General Management", "gerência": "General Management",
-  // Engineering & Technical
-  "engenharia": "Engineering & Technical", "engineering": "Engineering & Technical",
-  "p&d": "Engineering & Technical", "pesquisa": "Engineering & Technical",
-  "desenvolvimento": "Engineering & Technical", "tecnico": "Engineering & Technical",
-  "técnico": "Engineering & Technical", "projetos": "Engineering & Technical",
-  "arquitetura": "Engineering & Technical",
-  // Customer Success
-  "atendimento": "Customer Success", "customer success": "Customer Success",
-  "cs": "Customer Success", "suporte": "Customer Success", "support": "Customer Success",
-  "sac": "Customer Success", "pos venda": "Customer Success", "pós venda": "Customer Success",
-  // Research & Analytics
-  "bi": "Research & Analytics", "inteligencia": "Research & Analytics",
-  "inteligência": "Research & Analytics", "analytics": "Research & Analytics",
-  "dados estrategicos": "Research & Analytics", "pesquisa de mercado": "Research & Analytics",
-  // Legal
-  "juridico": "Legal", "jurídico": "Legal", "legal": "Legal",
-  "compliance": "Legal", "regulatorio": "Legal", "regulatório": "Legal",
-  // Product
-  "produto": "Product", "produtos": "Product", "product": "Product",
-  "ux": "Product", "design": "Product",
-  // Health & Safety
-  "saude": "Health & Safety", "saúde": "Health & Safety", "health": "Health & Safety",
-  "seguranca do trabalho": "Health & Safety", "ssma": "Health & Safety",
-  "meio ambiente": "Health & Safety",
-  // Design
-  "arte": "Design", "criacao": "Design", "criação": "Design", "creative": "Design",
+/** Os 16 únicos valores aceitos. Qualquer outro -> 422 SEARCH_ENGINE_ERROR. */
+export const LUSHA_DEPARTMENTS: readonly string[] = Object.freeze([
+  "Business Development", "Consulting", "Customer Service", "Engineering & Technical",
+  "Finance", "General Management", "Health Care & Medical", "Human Resources",
+  "Information Technology", "Legal", "Marketing", "Operations", "Other", "Product",
+  "Research & Analytics", "Sales",
+]);
+
+const OPS = ["Operations"];
+const MKT = ["Marketing"];
+const HR = ["Human Resources"];
+const FIN = ["Finance"];
+const IT = ["Information Technology"];
+const BD = ["Business Development"];
+const GM = ["General Management"];
+const ENG = ["Engineering & Technical"];
+const CS = ["Customer Service"];
+const RA = ["Research & Analytics"];
+const LEG = ["Legal"];
+const PRD = ["Product"];
+const MED = ["Health Care & Medical"];
+const CON = ["Consulting"];
+/** Decisão do Joaquim (17/07/2026): "vendas" busca os dois. */
+const VENDAS = ["Sales", "Business Development"];
+/** "desenvolvimento" é ambíguo em PT: software (IT) ou produto (Engenharia). */
+const DEV = ["Information Technology", "Engineering & Technical"];
+
+export const DEPARTMENT_MAP: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  // ── Operations
+  "compras": OPS, "suprimentos": OPS, "procurement": OPS, "logistica": OPS, "logística": OPS,
+  "supply chain": OPS, "supply": OPS, "operacoes": OPS, "operações": OPS, "operations": OPS,
+  "producao": OPS, "produção": OPS, "manufacturing": OPS, "qualidade": OPS, "quality": OPS,
+  "qa": OPS, "facilities": OPS, "manutencao": OPS, "manutenção": OPS, "almoxarifado": OPS,
+  "estoque": OPS, "pcp": OPS,
+  "seguranca do trabalho": OPS, "segurança do trabalho": OPS, "ssma": OPS,
+  "meio ambiente": OPS, "sesmt": OPS,
+  // ── Marketing (inclui arte/criação: "Design" não existe na Lusha)
+  "marketing": MKT, "comunicacao": MKT, "comunicação": MKT, "publicidade": MKT,
+  "branding": MKT, "digital": MKT, "conteudo": MKT, "conteúdo": MKT, "growth": MKT,
+  "social media": MKT, "trade": MKT, "trade marketing": MKT, "eventos": MKT,
+  "arte": MKT, "criacao": MKT, "criação": MKT, "creative": MKT,
+  // ── Human Resources
+  "recursos humanos": HR, "rh": HR, "hr": HR, "gente": HR, "pessoas": HR, "people": HR,
+  "gente e gestao": HR, "gente e gestão": HR, "talent": HR, "talentos": HR, "dp": HR,
+  "departamento pessoal": HR, "recrutamento": HR, "treinamento": HR, "beneficios": HR,
+  "benefícios": HR, "cultura": HR,
+  // ── Finance
+  "financeiro": FIN, "financeira": FIN, "finance": FIN, "financas": FIN, "finanças": FIN,
+  "controladoria": FIN, "contabilidade": FIN, "contabil": FIN, "contábil": FIN,
+  "fiscal": FIN, "tributario": FIN, "tributário": FIN, "tesouraria": FIN, "treasury": FIN,
+  "auditoria": FIN, "custos": FIN, "orcamento": FIN, "orçamento": FIN, "faturamento": FIN,
+  // ── Information Technology
+  "ti": IT, "it": IT, "tic": IT, "tecnologia": IT, "technology": IT, "sistemas": IT,
+  "informatica": IT, "informática": IT, "infra": IT, "infraestrutura": IT, "dados": IT,
+  "data": IT, "seguranca": IT, "segurança": IT, "seguranca da informacao": IT,
+  "segurança da informação": IT, "cloud": IT, "devops": IT, "helpdesk": IT, "suporte tecnico": IT,
+  // ── Sales / Business Development
+  "vendas": VENDAS, "comercial": VENDAS, "sales": VENDAS,
+  "negocios": BD, "negócios": BD, "business development": BD, "bd": BD,
+  "desenvolvimento de negocios": BD, "desenvolvimento de negócios": BD,
+  "expansao": BD, "expansão": BD, "parcerias": BD, "partnerships": BD,
+  "account": BD, "key account": BD,
+  // ── General Management
+  "diretoria": GM, "diretores": GM, "presidencia": GM, "presidência": GM, "ceo": GM,
+  "coo": GM, "cfo": GM, "cto": GM, "chro": GM, "board": GM, "conselho": GM,
+  "gestao": GM, "gestão": GM, "administracao": GM, "administração": GM,
+  "administrativo": GM, "gerencia": GM, "gerência": GM, "socios": GM, "sócios": GM,
+  // ── Engineering & Technical
+  "engenharia": ENG, "engineering": ENG, "p&d": ENG, "p & d": ENG, "p e d": ENG,
+  "pesquisa": ENG, "tecnico": ENG, "técnico": ENG, "projetos": ENG, "arquitetura": ENG,
+  "desenvolvimento": DEV, "dev": DEV,
+  // ── Customer Service ("Customer Success" NÃO existe -> era 422)
+  "atendimento": CS, "customer success": CS, "customer service": CS, "cs": CS,
+  "sucesso do cliente": CS, "suporte": CS, "support": CS, "sac": CS,
+  "pos venda": CS, "pós venda": CS, "relacionamento": CS, "ouvidoria": CS,
+  // ── Research & Analytics
+  "bi": RA, "inteligencia": RA, "inteligência": RA, "analytics": RA,
+  "inteligencia de mercado": RA, "inteligência de mercado": RA,
+  "dados estrategicos": RA, "pesquisa de mercado": RA,
+  // ── Legal
+  "juridico": LEG, "jurídico": LEG, "legal": LEG, "compliance": LEG,
+  "regulatorio": LEG, "regulatório": LEG, "contratos": LEG, "lgpd": LEG,
+  // ── Product ("Design" NÃO existe -> ux/design caem aqui)
+  "produto": PRD, "produtos": PRD, "product": PRD, "pm": PRD, "ux": PRD, "design": PRD,
+  // ── Health Care & Medical (saúde de verdade; NÃO segurança do trabalho)
+  "saude": MED, "saúde": MED, "health": MED, "medicina": MED,
+  "medicina do trabalho": MED, "ambulatorio": MED, "ambulatório": MED,
+  // ── Consulting
+  "consultoria": CON, "consulting": CON,
 });
 
 /**
- * Normaliza o texto do departamento igual ao n8n:
- *   trim -> lowercase -> troca [.-] por espaço -> colapsa espaços -> trim
- *
- * ATENÇÃO — divergência consciente com o n8n: lá o mapa tem as chaves
- * "pos-venda"/"pós-venda", mas a própria normalização troca "-" por " " antes
- * do lookup, então essas chaves eram INALCANÇÁVEIS (bug latente no n8n).
- * Aqui as chaves estão gravadas como "pos venda"/"pós venda" para funcionarem.
+ * Normaliza igual ao n8n: trim -> lower -> [.-] vira espaço -> colapsa -> trim.
+ * BUG DO n8n CORRIGIDO: lá as chaves eram "pos-venda"/"pós-venda", mas a
+ * normalização troca "-" por " " ANTES do lookup — eram inalcançáveis.
  */
 export function normalizeDepartmentKey(raw: string): string {
   return String(raw ?? "")
@@ -100,30 +128,60 @@ export function normalizeDepartmentKey(raw: string): string {
     .trim();
 }
 
-/** Traduz um departamento PT-BR para o enum da Lusha. `null` se não mapeado. */
-export function mapDepartment(raw: string): string | null {
+/**
+ * PT-BR -> enums da Lusha. Array porque o filtro é OR nativo:
+ *   "compras" -> ["Operations"]
+ *   "vendas"  -> ["Sales", "Business Development"]
+ * `[]` se não mapeado (o chamador decide — não descarte em silêncio).
+ */
+export function mapDepartment(raw: string): string[] {
   const key = normalizeDepartmentKey(raw);
-  if (!key) return null;
-  return DEPARTMENT_MAP[key] ?? null;
+  if (!key) return [];
+  const hit = DEPARTMENT_MAP[key];
+  return hit ? [...hit] : [];
 }
 
-/**
- * Traduz uma lista separada por vírgula ("COMPRAS, MARKETING, RH").
- * Retorna os mapeados e os rejeitados — o chamador decide o que fazer com
- * os rejeitados (o n8n só logava e descartava em silêncio).
- */
-export function mapDepartmentList(csv: string): {
-  mapped: Array<{ pt: string; en: string }>;
-  unmapped: string[];
-} {
-  const mapped: Array<{ pt: string; en: string }> = [];
-  const unmapped: string[] = [];
-  for (const part of String(csv ?? "").split(",")) {
-    const pt = normalizeDepartmentKey(part);
-    if (!pt) continue;
-    const en = DEPARTMENT_MAP[pt];
-    if (en) mapped.push({ pt, en });
-    else unmapped.push(pt);
-  }
-  return { mapped, unmapped };
+export interface DepartmentResolution {
+  /** um item por departamento PEDIDO — o loop de busca itera aqui */
+  mapped: Array<{ pt: string; en: string[] }>;
+  /** entradas não reconhecidas — reporte, não engula */
+  notFound: string[];
 }
+
+/** Resolve a lista escolhida pelo usuário, preservando ordem e sem duplicar. */
+export function resolveDepartments(input: readonly string[]): DepartmentResolution {
+  const mapped: Array<{ pt: string; en: string[] }> = [];
+  const notFound: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of input) {
+    const key = normalizeDepartmentKey(raw);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    const en = mapDepartment(key);
+    if (en.length > 0) mapped.push({ pt: raw.trim(), en });
+    else notFound.push(raw.trim());
+  }
+  return { mapped, notFound };
+}
+
+/** Aceita "COMPRAS, MARKETING, RH" (como o n8n recebia). */
+export function resolveDepartmentsCsv(csv: string): DepartmentResolution {
+  return resolveDepartments(String(csv ?? "").split(","));
+}
+
+/** Guarda de sanidade: nenhum enum inválido pode vazar para a Lusha. */
+export function assertValidDepartments(en: readonly string[]): void {
+  const bad = en.filter((d) => !LUSHA_DEPARTMENTS.includes(d));
+  if (bad.length > 0) {
+    throw new Error(
+      `departamento inválido para a Lusha: ${bad.join(", ")}. ` +
+        `Válidos: ${LUSHA_DEPARTMENTS.join(", ")}`,
+    );
+  }
+}
+
+/** Rótulos PT sugeridos na UI. */
+export const SUGGESTED_DEPARTMENTS_PT: readonly string[] = Object.freeze([
+  "Compras", "Marketing", "RH", "Financeiro", "TI", "Vendas",
+  "Diretoria", "Engenharia", "Produto", "Jurídico", "Atendimento", "Operações",
+]);

@@ -13,26 +13,28 @@ import {
   findPayloadPhone,
   newSessionId,
 } from "../lusha-client";
-import { mapDepartment, mapDepartmentList, normalizeDepartmentKey } from "../lusha-departments";
+import {
+  mapDepartment,
+  resolveDepartments,
+  normalizeDepartmentKey,
+  LUSHA_DEPARTMENTS,
+  assertValidDepartments,
+  DEPARTMENT_MAP,
+} from "../lusha-departments";
 
-// JWT REAL que estava no vault em 17/07/2026 — payload:
-// { iat, exp:1786465701, aud:"https://www.lusha.co", iss:"dbf97643-...", sub:"anonymous" }
 const JWT_ANONIMO =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInR5cGUiOiJKV1QifQ." +
   "eyJpYXQiOjE3ODQwNDY1MDEsImV4cCI6MTc4NjQ2NTcwMSwiYXVkIjoiaHR0cHM6Ly93d3cubHVzaGEuY28iLCJpc3MiOiJkYmY5NzY0My03ZTc2LTRjMjItOTRjOS01NTBjZTBmOGE3YjgiLCJzdWIiOiJhbm9ueW1vdXMifQ." +
   "OR8jniXUKa61hKIoHJp4S-ydcIuIahkA1ytn-de6dnU";
 
-// JWT de sessão fictício: { "sub": "user-123", "exp": 4102444800 } (2100)
 const JWT_SESSAO =
   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6NDEwMjQ0NDgwMH0.assinatura_falsa";
 
-// JWT de SESSÃO (sub real, não anônimo) mas EXPIRADO: { "sub":"user-123", "exp":1000000000 } (2001)
-// Precisa ter sub válido para exercitar o ramo EXPIRADO sem cair antes no ramo ANÔNIMO.
 const JWT_EXPIRADO =
   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6MTAwMDAwMDAwMH0.assinatura_falsa";
 
 describe("normalizeLushaCookie", () => {
-  it("JWT cru ganha o nome `ll=` (o n8n mandava cru e o servidor ignorava)", () => {
+  it("JWT cru ganha o nome `ll=`", () => {
     expect(normalizeLushaCookie(JWT_ANONIMO)).toBe(`ll=${JWT_ANONIMO}`);
   });
   it("cookie string já nomeado passa intacto", () => {
@@ -84,16 +86,8 @@ describe("inspectLushaToken", () => {
 });
 
 describe("assertLushaSessionToken", () => {
-  it("lança mensagem acionável no token anônimo (o bug real de 17/07)", () => {
-    expect(() => assertLushaSessionToken(`ll=${JWT_ANONIMO}`)).toThrow(/ANÔNIMO|anonymous/i);
-  });
-  it("o erro do anônimo é 401", () => {
-    try {
-      assertLushaSessionToken(`ll=${JWT_ANONIMO}`);
-      expect.unreachable("deveria ter lançado");
-    } catch (e) {
-      expect((e as { status?: number }).status).toBe(401);
-    }
+  it("PROVADO 17/07: token anônimo NÃO é bloqueado (é o que funciona em produção)", () => {
+    expect(() => assertLushaSessionToken(`ll=${JWT_ANONIMO}`)).not.toThrow();
   });
   it("lança em token de sessão EXPIRADO", () => {
     expect(() => assertLushaSessionToken(`ll=${JWT_EXPIRADO}`)).toThrow(/EXPIRADO/i);
@@ -105,10 +99,6 @@ describe("assertLushaSessionToken", () => {
     } catch (e) {
       expect((e as { status?: number }).status).toBe(401);
     }
-  });
-  it("PRECEDÊNCIA PROPOSITAL: anônimo+expirado reporta ANÔNIMO (mensagem mais acionável)", () => {
-    expect(() => assertLushaSessionToken(`ll=${JWT_ANONIMO}`, new Date("2027-01-01").getTime()))
-      .toThrow(/ANÔNIMO/i);
   });
   it("deixa passar sessão válida", () => {
     expect(() => assertLushaSessionToken(`ll=${JWT_SESSAO}`)).not.toThrow();
@@ -183,7 +173,7 @@ describe("buildSearchAgentBody — envelope de 24 filtros", () => {
   const body = buildSearchAgentBody({
     companyName: "Lactalis",
     companyLid: "abc123",
-    departmentEn: "Operations",
+    departmentsEn: ["Operations"],
     sessionId: "fixo-1234",
   });
   const f = body.filters as Record<string, unknown>;
@@ -213,7 +203,7 @@ describe("buildSearchAgentBody — envelope de 24 filtros", () => {
   });
   it("paginação respeita offset/size", () => {
     const b = buildSearchAgentBody({
-      companyName: "X", companyLid: 1, departmentEn: "Marketing", offset: 25, size: 50,
+      companyName: "X", companyLid: 1, departmentsEn: ["Marketing"], offset: 25, size: 50,
     });
     expect(b.results_offset).toEqual({ offset: 25, size: 50 });
   });
@@ -226,21 +216,34 @@ describe("buildSearchAgentBody — envelope de 24 filtros", () => {
     expect(body.sessionId).toBe("fixo-1234");
     expect(() => JSON.stringify(body)).not.toThrow();
   });
+  it("array de departamentos vira N entradas em contactDepartment (OR nativo)", () => {
+    const b = buildSearchAgentBody({
+      companyName: "X", companyLid: 1, departmentsEn: ["Sales", "Business Development"],
+    });
+    expect((b.filters as Record<string, unknown>).contactDepartment).toEqual([
+      { value: "Sales", label: "Sales", isExclude: false },
+      { value: "Business Development", label: "Business Development", isExclude: false },
+    ]);
+  });
+  it("enum inválido é barrado ANTES de sair a requisição", () => {
+    expect(() => buildSearchAgentBody({
+      companyName: "X", companyLid: 1, departmentsEn: ["Customer Success"],
+    })).toThrow(/inválido/i);
+  });
 });
 
 describe("newSessionId", () => {
   it("é UUID v4", () => {
     expect(newSessionId()).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   });
-  it("não repete (evita colisão entre sessões paralelas)", () => {
+  it("não repete", () => {
     expect(new Set(Array.from({ length: 50 }, newSessionId)).size).toBe(50);
   });
 });
 
-// Fixture com o shape REAL: aninhado e snake_case
 const ITEM_REAL: Record<string, unknown> = {
   name: { full: "Ozgur Cesmeci", first: "Ozgur" },
-  job_title: { raw: "Purchasing Manager" },
+  job_title: { raw: "Purchasing Manager", department: ["Operations"], seniority: "Vice President" },
   social_link: "https://www.linkedin.com/in/ozgurcesmeci",
   emails: [{ address: "o...@x.com", status: "masked" }, { address: "ozgur@x.com", status: "revealed" }],
   phones: [{ phone: "+90 530 962 03 04" }],
@@ -248,26 +251,32 @@ const ITEM_REAL: Record<string, unknown> = {
 
 describe("normalizeSearchContact — campos aninhados", () => {
   it("lê name.full / job_title.raw / social_link", () => {
-    const c = normalizeSearchContact(ITEM_REAL, "Operations");
+    const c = normalizeSearchContact(ITEM_REAL, ["Operations"]);
     expect(c.fullName).toBe("Ozgur Cesmeci");
     expect(c.jobTitle).toBe("Purchasing Manager");
     expect(c.linkedinUrl).toBe("https://www.linkedin.com/in/ozgurcesmeci");
     expect(c.department).toBe("Operations");
   });
   it("REGRESSÃO: campos flat (fullName/jobTitle/linkedinUrl) não existem", () => {
-    const c = normalizeSearchContact({ fullName: "X", jobTitle: "Y", linkedinUrl: "Z" }, "Marketing");
+    const c = normalizeSearchContact({ fullName: "X", jobTitle: "Y", linkedinUrl: "Z" }, ["Marketing"]);
     expect(c.fullName).toBe("");
     expect(c.jobTitle).toBe("");
     expect(c.linkedinUrl).toBe("");
   });
-  it("preserva o raw (chave do diagnóstico)", () => {
-    expect(normalizeSearchContact(ITEM_REAL, "Operations").raw).toEqual(ITEM_REAL);
+  it("preserva o raw", () => {
+    expect(normalizeSearchContact(ITEM_REAL, ["Operations"]).raw).toEqual(ITEM_REAL);
   });
   it("item vazio não quebra", () => {
-    const c = normalizeSearchContact({}, "Finance");
+    const c = normalizeSearchContact({}, ["Finance"]);
     expect(c.fullName).toBe("");
     expect(c.hasRevealedEmail).toBe(false);
     expect(c.hasPhone).toBe(false);
+  });
+  it("lê seniority de job_title.seniority", () => {
+    expect(normalizeSearchContact(ITEM_REAL, ["Operations"]).seniority).toBe("Vice President");
+  });
+  it("department vem do payload, não do filtro pedido", () => {
+    expect(normalizeSearchContact(ITEM_REAL, ["Marketing"]).department).toBe("Operations");
   });
 });
 
@@ -309,58 +318,78 @@ describe("findPayloadPhone", () => {
 describe("parseSearchAgent — shape REAL { contacts: { total, results } }", () => {
   const real = { contacts: { total: 61, results: [ITEM_REAL] } };
   it("lê total e results", () => {
-    const r = parseSearchAgent(real, "Operations");
+    const r = parseSearchAgent(real, ["Operations"]);
     expect(r.total).toBe(61);
     expect(r.contacts).toHaveLength(1);
     expect(r.contacts[0].fullName).toBe("Ozgur Cesmeci");
   });
   it("REGRESSÃO: o shape antigo { contacts: [...] } devolve vazio", () => {
-    expect(parseSearchAgent({ contacts: [ITEM_REAL] }, "Operations").contacts).toEqual([]);
+    expect(parseSearchAgent({ contacts: [ITEM_REAL] }, ["Operations"]).contacts).toEqual([]);
   });
   it("zero resultados não quebra", () => {
-    expect(parseSearchAgent({ contacts: { total: 0, results: [] } }, "Finance"))
+    expect(parseSearchAgent({ contacts: { total: 0, results: [] } }, ["Finance"]))
       .toEqual({ total: 0, contacts: [] });
   });
   it("resposta malformada devolve vazio", () => {
-    expect(parseSearchAgent({}, "x")).toEqual({ total: 0, contacts: [] });
-    expect(parseSearchAgent(null, "x")).toEqual({ total: 0, contacts: [] });
+    expect(parseSearchAgent({}, ["x"])).toEqual({ total: 0, contacts: [] });
+    expect(parseSearchAgent(null, ["x"])).toEqual({ total: 0, contacts: [] });
   });
 });
 
-describe("mapDepartment (137 chaves portadas do n8n)", () => {
-  it("compras -> Operations", () => expect(mapDepartment("COMPRAS")).toBe("Operations"));
-  it("recursos humanos -> Human Resources", () =>
-    expect(mapDepartment("RECURSOS HUMANOS")).toBe("Human Resources"));
-  it("aceita acento", () => expect(mapDepartment("Logística")).toBe("Operations"));
-  it("aceita hífen/ponto (viram espaço)", () =>
-    expect(mapDepartment("supply-chain")).toBe("Operations"));
-  it("BUG DO n8n CORRIGIDO: pós-venda agora resolve", () =>
-    expect(mapDepartment("pós-venda")).toBe("Customer Success"));
-  it("colapsa espaços múltiplos", () =>
-    expect(mapDepartment("  recursos    humanos ")).toBe("Human Resources"));
-  it("desconhecido -> null", () => expect(mapDepartment("departamento inventado")).toBeNull());
-  it("vazio -> null", () => {
-    expect(mapDepartment("")).toBeNull();
-    expect(mapDepartment("   ")).toBeNull();
+describe("mapDepartment (devolve array — 16 enums oficiais)", () => {
+  it("compras -> [Operations]", () => expect(mapDepartment("COMPRAS")).toEqual(["Operations"]));
+  it("DECISÃO 17/07: vendas busca Sales E Business Development", () =>
+    expect(mapDepartment("VENDAS")).toEqual(["Sales", "Business Development"]));
+  it("comercial idem", () => expect(mapDepartment("Comercial")).toEqual(["Sales", "Business Development"]));
+  it("negocios -> só Business Development", () => expect(mapDepartment("negócios")).toEqual(["Business Development"]));
+  it("CORRIGIDO: atendimento -> Customer Service (Customer Success dava 422)", () =>
+    expect(mapDepartment("Atendimento")).toEqual(["Customer Service"]));
+  it("BUG DO n8n CORRIGIDO: pós-venda resolve", () =>
+    expect(mapDepartment("pós-venda")).toEqual(["Customer Service"]));
+  it("CORRIGIDO: arte -> Marketing (Design não existe na Lusha)", () =>
+    expect(mapDepartment("arte")).toEqual(["Marketing"]));
+  it("PROVADO: ssma -> Operations (EHS Manager voltou na busca Operations)", () =>
+    expect(mapDepartment("SSMA")).toEqual(["Operations"]));
+  it("saude -> Health Care & Medical", () => expect(mapDepartment("Saúde")).toEqual(["Health Care & Medical"]));
+  it("aceita hífen", () => expect(mapDepartment("supply-chain")).toEqual(["Operations"]));
+  it("desconhecido -> []", () => expect(mapDepartment("xpto inventado")).toEqual([]));
+  it("vazio -> []", () => expect(mapDepartment("   ")).toEqual([]));
+});
+
+describe("GUARDA: nenhum enum inválido no mapa", () => {
+  it("todos os 16 valores do DEPARTMENT_MAP existem em LUSHA_DEPARTMENTS", () => {
+    const bad: string[] = [];
+    for (const [k, v] of Object.entries(DEPARTMENT_MAP)) {
+      for (const e of v) if (!LUSHA_DEPARTMENTS.includes(e)) bad.push(`${k} -> ${e}`);
+    }
+    expect(bad).toEqual([]);
+  });
+  it("assertValidDepartments barra os enums que a Lusha rejeita com 422", () => {
+    for (const morto of ["Customer Success", "Design", "Health & Safety", "Health, Safety and Security"]) {
+      expect(() => assertValidDepartments([morto])).toThrow(/inválido/i);
+    }
   });
 });
 
-describe("mapDepartmentList", () => {
-  it("separa mapeados de não-mapeados (o n8n descartava em silêncio)", () => {
-    const r = mapDepartmentList("COMPRAS, MARKETING, RECURSOS HUMANOS");
-    expect(r.mapped.map((m) => m.en)).toEqual(["Operations", "Marketing", "Human Resources"]);
-    expect(r.unmapped).toEqual([]);
+describe("resolveDepartments", () => {
+  it("um item por departamento PEDIDO, com os enums de cada um", () => {
+    const r = resolveDepartments(["Compras", "Vendas"]);
+    expect(r.mapped).toEqual([
+      { pt: "Compras", en: ["Operations"] },
+      { pt: "Vendas", en: ["Sales", "Business Development"] },
+    ]);
+    expect(r.notFound).toEqual([]);
   });
   it("reporta o não-mapeado em vez de sumir com ele", () => {
-    const r = mapDepartmentList("COMPRAS, XPTO");
+    const r = resolveDepartments(["Compras", "XPTO"]);
     expect(r.mapped).toHaveLength(1);
-    expect(r.unmapped).toEqual(["xpto"]);
+    expect(r.notFound).toEqual(["XPTO"]);
   });
-  it("ignora itens vazios", () => {
-    expect(mapDepartmentList("COMPRAS, ,").mapped).toHaveLength(1);
+  it("não duplica departamento repetido", () => {
+    expect(resolveDepartments(["Compras", "compras", "COMPRAS"]).mapped).toHaveLength(1);
   });
-  it("string vazia devolve tudo vazio", () => {
-    expect(mapDepartmentList("")).toEqual({ mapped: [], unmapped: [] });
+  it("lista vazia devolve tudo vazio", () => {
+    expect(resolveDepartments([])).toEqual({ mapped: [], notFound: [] });
   });
 });
 
