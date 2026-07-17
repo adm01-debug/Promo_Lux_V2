@@ -95,9 +95,20 @@ describe("assertLushaSessionToken", () => {
       expect((e as { status?: number }).status).toBe(401);
     }
   });
-  it("lança em token expirado", () => {
+  it("lança em token de sessão EXPIRADO", () => {
+    expect(() => assertLushaSessionToken(`ll=${JWT_EXPIRADO}`)).toThrow(/EXPIRADO/i);
+  });
+  it("token expirado também é 401", () => {
+    try {
+      assertLushaSessionToken(`ll=${JWT_EXPIRADO}`);
+      expect.unreachable("deveria ter lançado");
+    } catch (e) {
+      expect((e as { status?: number }).status).toBe(401);
+    }
+  });
+  it("PRECEDÊNCIA PROPOSITAL: anônimo+expirado reporta ANÔNIMO (mensagem mais acionável)", () => {
     expect(() => assertLushaSessionToken(`ll=${JWT_ANONIMO}`, new Date("2027-01-01").getTime()))
-      .toThrow(/EXPIRADO/i);
+      .toThrow(/ANÔNIMO/i);
   });
   it("deixa passar sessão válida", () => {
     expect(() => assertLushaSessionToken(`ll=${JWT_SESSAO}`)).not.toThrow();
