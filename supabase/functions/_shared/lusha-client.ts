@@ -231,7 +231,12 @@ export async function searchCompanyByName(name: string): Promise<LushaCompanyMat
 export interface SearchAgentInput {
   companyName: string;
   companyLid: string | number;
-  departmentEn: string; // enum Lusha já traduzido
+  /**
+   * Enums já traduzidos. Array porque contactDepartment é OR + dedup nativo na
+   * Lusha. Provado 17/07/2026: Sales(1421)+BusinessDevelopment(27) = 1444, não
+   * 1448 — ela tira os 4 repetidos sozinha. Use isto em vez de 2 requisições.
+   */
+  departmentsEn: string[];
   offset?: number;
   size?: number;
   sessionId?: string;
