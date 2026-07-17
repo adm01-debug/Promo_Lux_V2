@@ -255,7 +255,7 @@ serve(async (req) => {
     }
     companyMatch = matches[0];
     await reportSuccess(admin, "lusha_company");
-    await logger.log({ step: "company_search", status: "success", message: `empresa encontrada: ${companyMatch.name}`, metadata: { id: companyMatch.id, matches: matches.length } });
+    await logger.log({ step: "company_search", status: "success", message: `empresa encontrada: ${companyMatch.name}`, metadata: { company_lid: companyMatch.companyLid, matches: matches.length } });
   } catch (err) {
     await reportFailure(admin, "lusha_company");
     const status = (err as { status?: number }).status;
