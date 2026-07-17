@@ -26,6 +26,11 @@ const JWT_ANONIMO =
 const JWT_SESSAO =
   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6NDEwMjQ0NDgwMH0.assinatura_falsa";
 
+// JWT de SESSÃO (sub real, não anônimo) mas EXPIRADO: { "sub":"user-123", "exp":1000000000 } (2001)
+// Precisa ter sub válido para exercitar o ramo EXPIRADO sem cair antes no ramo ANÔNIMO.
+const JWT_EXPIRADO =
+  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6MTAwMDAwMDAwMH0.assinatura_falsa";
+
 describe("normalizeLushaCookie", () => {
   it("JWT cru ganha o nome `ll=` (o n8n mandava cru e o servidor ignorava)", () => {
     expect(normalizeLushaCookie(JWT_ANONIMO)).toBe(`ll=${JWT_ANONIMO}`);
