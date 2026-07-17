@@ -110,21 +110,24 @@ export function inspectLushaToken(cookie: string, now: number = Date.now()): Lus
 }
 
 /**
- * Falha rápido e com mensagem acionável, ANTES de gastar a chamada de rede.
- * Foi exatamente isto que custou uma sessão inteira de debug: o vault dizia
- * `is_healthy=true` enquanto guardava um token `sub:"anonymous"`.
+ * Falha rápido ANTES da chamada de rede — mas só no que dá para provar offline.
+ *
+ * ⚠️ NÃO checa `sub === "anonymous"`. Provado em 17/07/2026 que token anônimo
+ * FUNCIONA: o cookie `ll` do dashboard tem sub:"anonymous" e trouxe HTTP 201 com
+ * 6.970 contatos. O servidor amarra o `iss` (uuid do visitante) à sessão logada
+ * do lado dele — a anonimidade do payload não diz nada sobre a validade.
+ *
+ * O modo real de morte é o `iss` expirar NO SERVIDOR antes do `exp` do JWT, e
+ * isso é INDETECTÁVEL offline: só aparece como 401 "No credentials found for
+ * given 'iss'". Não invente guarda para isso aqui — trate no erro da chamada.
  */
 export function assertLushaSessionToken(cookie: string, now: number = Date.now()): void {
   const info = inspectLushaToken(cookie, now);
-  if (info.anonymous) {
+  if (info.expired) {
     throw makeLushaError(
-      "cookie lusha é um token ANÔNIMO (sub=anonymous) — não é sessão logada. " +
-        "Recapture o cookie `ll` em dashboard.lusha.com já logado (F12 > Application > Cookies).",
+      "cookie lusha EXPIRADO (exp no passado) — recapture o `ll` em dashboard.lusha.com (F12 > Application > Cookies).",
       401,
     );
-  }
-  if (info.expired) {
-    throw makeLushaError("cookie lusha EXPIRADO (exp no passado) — recapture o cookie `ll`.", 401);
   }
 }
 
