@@ -303,14 +303,19 @@ export function buildSearchAgentBody(input: SearchAgentInput): Record<string, un
 }
 
 // ── Shape REAL do resultado (aninhado, snake_case) ──────────────────────────
-// item.name.full · item.job_title.raw · item.social_link
+// item.name.full · item.job_title.raw · item.job_title.seniority · item.social_link
+// item.job_title.department[] = enums que a LUSHA atribuiu ao contato
 // item.emails[] = { address, status:"masked"|... } · item.phones[] = { phone|number }
-// item.previous_job.emails[] = string[]
 export interface LushaSearchContact {
   fullName: string;
   jobTitle: string;
+  /** job_title.seniority — ex.: "Vice President". Existe no payload real. */
+  seniority: string;
   linkedinUrl: string;
+  /** o que a LUSHA classificou (job_title.department[0]), não o que pedimos */
   department: string;
+  /** todos os departamentos do contato — pode ter mais de um */
+  departmentsAll: string[];
   hasRevealedEmail: boolean;
   hasPhone: boolean;
   raw: Record<string, unknown>;
