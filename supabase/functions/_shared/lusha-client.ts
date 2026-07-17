@@ -142,7 +142,17 @@ export function assertLushaOk(op: string, json: unknown): void {
     throw makeLushaError(`lusha ${op}: ${msg}`, 401);
   }
   if (typeof j.error === "string" && j.error) {
-    throw makeLushaError(`lusha ${op}: ${j.error}`, 400);
+    // Caso real 17/07/2026: enum de departamento inválido devolve HTTP 201 com
+    // {"error":"SEARCH_ENGINE_ERROR","statusCode":422,
+    //  "additionalInfo":{"errorDetails":[{"category":"departments",...}]}}
+    const sc = typeof j.statusCode === "number" ? j.statusCode : 400;
+    const cats = ((j.additionalInfo as { errorDetails?: Array<{ category?: string }> } | undefined)
+      ?.errorDetails ?? [])
+      .map((d) => d?.category).filter(Boolean).join(", ");
+    throw makeLushaError(
+      `lusha ${op}: ${j.error}${sc ? ` (statusCode ${sc})` : ""}${cats ? ` — campo(s): ${cats}` : ""}`,
+      sc,
+    );
   }
 }
 
