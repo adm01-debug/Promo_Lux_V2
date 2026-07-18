@@ -439,7 +439,7 @@ serve(async (req) => {
   await admin.from("lusha_search_sessions").update({
     status: finalStatus,
     progress_pct: 100,
-    total_found: uniqueContacts.length,
+    total_found: totalUnicos,
     total_duplicates: dedupCount,
     total_errors: errors.length,
     completed_at: new Date().toISOString(),
@@ -458,7 +458,7 @@ serve(async (req) => {
     JSON.stringify({
       session_id: sessionId,
       company: { lid: companyMatch.companyLid, name: companyMatch.name },
-      total_found: uniqueContacts.length,
+      total_found: totalUnicos,
       inserted: insertedCount,
       duplicates: dedupCount,
       errors,
