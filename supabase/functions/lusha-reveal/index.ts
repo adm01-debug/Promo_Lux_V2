@@ -225,7 +225,7 @@ serve(async (req) => {
       JSON.stringify({
         requestId: data.requestId ?? requestId,
         creditsCharged: data.creditsCharged ?? null,
-        totalRevealed: revealed.filter((r: any) => !r.error).length,
+        totalRevealed: revealed.filter((r: Record<string, unknown>) => !r.error).length,
         totalRequested: contactIds.length,
         revealed,
         metadata: metadata ?? null,
