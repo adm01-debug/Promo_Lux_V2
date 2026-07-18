@@ -322,10 +322,7 @@ serve(async (req) => {
     await admin.from("lusha_search_sessions").update({ progress_pct: pct }).eq("id", sessionId);
   }
 
-  // 3) Dedup por linkedin_public_id
-  // c.linkedinPublicId NÃO EXISTE no payload real da Lusha (o campo é social_link).
-  // Usa publicIdFromLinkedInUrl, que espelha o SQL da coluna GENERATED — se
-  // divergir, o upsert em (organization_id, linkedin_public_id) recebe duplicata.
+  // 3) Dedup inicial por linkedin_public_id (mantido para reduzir trabalho a jusante)
   const seen = new Set<string>();
   const uniqueContacts = allContacts.filter((c) => {
     const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
@@ -335,8 +332,35 @@ serve(async (req) => {
     return true;
   });
 
-  // 4) Insere em lusha_contacts (idempotente por unique index)
-  const toInsert = uniqueContacts.map((c) => ({
+  // 3) Particiona: contatos COM linkedin_public_id vs SEM.
+  //    publicIdFromLinkedInUrl espelha o SQL da coluna GENERATED linkedin_public_id.
+  //    - COM pid  -> upsert por (organization_id, linkedin_public_id), o índice
+  //      único deduplica no banco.
+  //    - SEM pid  -> linkedin_public_id vira NULL, e no Postgres NULL não conflita
+  //      com NULL (o ON CONFLICT NUNCA dispara). Sem tratamento, cada re-execução
+  //      DUPLICA. Provado por sonda SQL em 17/07/2026. Então esses passam por um
+  //      guard explícito .maybeSingle() antes de inserir.
+  const dedupIntra = new Set<string>();
+  const comLinkedin: typeof allContacts = [];
+  const semLinkedinSeen = new Set<string>();
+  const semLinkedin: typeof allContacts = [];
+
+  for (const c of uniqueContacts) {
+    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
+    if (pid) {
+      if (dedupIntra.has(pid)) continue; // já deduplicado no passo anterior, mas garante
+      dedupIntra.add(pid);
+      comLinkedin.push(c);
+    } else {
+      const k = `${(c.fullName || "").toLowerCase().trim()}|${(c.jobTitle || "").toLowerCase().trim()}`;
+      if (!k.replace("|", "")) continue; // sem nome E sem cargo -> descarta
+      if (semLinkedinSeen.has(k)) continue;
+      semLinkedinSeen.add(k);
+      semLinkedin.push(c);
+    }
+  }
+
+  const mkRow = (c: ContatoComOrigem) => ({
     session_id: sessionId,
     company_id: input.company_id ?? null,
     user_id: userId,
@@ -345,40 +369,77 @@ serve(async (req) => {
     lusha_company_lid: String(companyMatch.companyLid),
     full_name: c.fullName,
     job_title: c.jobTitle || null,
-    // department_en = o que a LUSHA classificou (job_title.department[0])
     department_en: c.department || null,
-    // department_pt = o rótulo que o USUÁRIO pediu nesta volta do loop
     department_pt: c.requestedPt || null,
-    // seniority existe de verdade no payload: job_title.seniority ("Vice President")
     seniority: c.seniority || null,
     linkedin_url: c.linkedinUrl ?? null,
     enrichment_status: "pending_enrichment",
     raw_lusha_payload: c.raw as Record<string, unknown>,
-  }));
+  });
 
   let insertedCount = 0;
   let dedupCount = 0;
-  if (toInsert.length > 0) {
-    const { data: inserted, error: insErr } = await admin
+
+  // 4a) COM linkedin: upsert por índice único. Para CONTAR certo (o .select() com
+  //     ignoreDuplicates não devolve as puladas de forma confiável), pergunto ao
+  //     banco quais pids JÁ existiam ANTES, e conto a diferença.
+  if (comLinkedin.length > 0) {
+    const pids = comLinkedin
+      .map((c) => publicIdFromLinkedInUrl(c.linkedinUrl))
+      .filter((p) => p.length > 0);
+
+    const { data: jaExistem } = await admin
       .from("lusha_contacts")
-      .upsert(toInsert, {
+      .select("linkedin_public_id")
+      .eq("organization_id", input.organization_id)
+      .in("linkedin_public_id", pids);
+    const existentes = new Set((jaExistem ?? []).map((r) => (r as { linkedin_public_id: string }).linkedin_public_id));
+
+    const { error: upErr } = await admin
+      .from("lusha_contacts")
+      .upsert(comLinkedin.map(mkRow), {
         onConflict: "organization_id,linkedin_public_id",
         ignoreDuplicates: true,
-      })
-      .select("id");
-    if (insErr) {
-      await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha ao inserir contatos", errorDetail: insErr.message });
+      });
+    if (upErr) {
+      await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha no upsert (com linkedin)", errorDetail: upErr.message });
     } else {
-      insertedCount = inserted?.length ?? 0;
-      dedupCount = toInsert.length - insertedCount;
+      const novos = pids.filter((p) => !existentes.has(p)).length;
+      insertedCount += novos;
+      dedupCount += comLinkedin.length - novos;
     }
   }
+
+  // 4b) SEM linkedin: guard explícito, um a um (são raros — 0 de 100 na medição real).
+  for (const c of semLinkedin) {
+    const { data: existe } = await admin
+      .from("lusha_contacts")
+      .select("id")
+      .eq("organization_id", input.organization_id)
+      .is("linkedin_public_id", null)
+      .eq("full_name", c.fullName)
+      .eq("job_title", c.jobTitle || "")
+      .maybeSingle();
+    if (existe) { dedupCount += 1; continue; }
+
+    const { error: insErr } = await admin.from("lusha_contacts").insert(mkRow(c));
+    if (insErr) {
+      // 23505 aqui = corrida (outra execução inseriu o mesmo entre o SELECT e o INSERT).
+      // Não é erro fatal: trata como duplicado.
+      if ((insErr as { code?: string }).code === "23505") { dedupCount += 1; }
+      else { await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha no insert (sem linkedin)", errorDetail: insErr.message }); }
+    } else {
+      insertedCount += 1;
+    }
+  }
+
+  const totalUnicos = comLinkedin.length + semLinkedin.length;
 
   const finalStatus = errors.length > 0 && insertedCount === 0 ? "error" : "completed";
   await admin.from("lusha_search_sessions").update({
     status: finalStatus,
     progress_pct: 100,
-    total_found: uniqueContacts.length,
+    total_found: totalUnicos,
     total_duplicates: dedupCount,
     total_errors: errors.length,
     completed_at: new Date().toISOString(),
@@ -397,7 +458,7 @@ serve(async (req) => {
     JSON.stringify({
       session_id: sessionId,
       company: { lid: companyMatch.companyLid, name: companyMatch.name },
-      total_found: uniqueContacts.length,
+      total_found: totalUnicos,
       inserted: insertedCount,
       duplicates: dedupCount,
       errors,
