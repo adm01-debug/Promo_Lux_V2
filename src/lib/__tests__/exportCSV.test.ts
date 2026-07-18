@@ -1,5 +1,37 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { downloadCSV } from "../exportCSV";
+import { downloadCSV, sanitizeCell } from "../exportCSV";
+
+describe("sanitizeCell", () => {
+  it("prefixes formula injection with a quote", () => {
+    expect(sanitizeCell("=SUM(A1:A2)")).toBe("'=SUM(A1:A2)");
+    expect(sanitizeCell("+cmd")).toBe("'+cmd");
+    expect(sanitizeCell("@import")).toBe("'@import");
+    expect(sanitizeCell("\tsneaky")).toBe("'\tsneaky");
+  });
+
+  it("does not corrupt legitimate negative numbers", () => {
+    expect(sanitizeCell(-5)).toBe("-5");
+    expect(sanitizeCell("-5")).toBe("-5");
+    expect(sanitizeCell(-12.34)).toBe("-12.34");
+    expect(sanitizeCell("-0")).toBe("-0");
+  });
+
+  it("still blocks a non-numeric string that merely starts with -", () => {
+    // "-cmd" is not a valid number, so it's still a plausible formula/command
+    // injection vector and must be neutralized.
+    expect(sanitizeCell("-cmd")).toBe("'-cmd");
+  });
+
+  it("passes through safe strings unchanged", () => {
+    expect(sanitizeCell("Acme Inc.")).toBe("Acme Inc.");
+    expect(sanitizeCell(42)).toBe("42");
+  });
+
+  it("handles null/undefined as empty string", () => {
+    expect(sanitizeCell(null)).toBe("");
+    expect(sanitizeCell(undefined)).toBe("");
+  });
+});
 
 describe("downloadCSV", () => {
   let clickSpy: ReturnType<typeof vi.fn>;
