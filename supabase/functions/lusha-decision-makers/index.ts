@@ -401,7 +401,7 @@ serve(async (req) => {
       }
 
       try {
-        data = await lushaResp.json();
+        data = (await lushaResp.json()) as Record<string, unknown>;
       } catch (e) {
         log("error", correlationId, "lusha_invalid_json", { detail: (e as Error).message });
         return errorResponse(correlationId, 502, "lusha_invalid_json", "Resposta Lusha não é JSON válido");
@@ -466,9 +466,9 @@ serve(async (req) => {
             hasEmail: hasArr.includes("emails"),
             hasPhone: hasArr.includes("phones"),
             emailCredits:
-              num(canReveal.find((r: any) => r?.field === "emails")?.credits) ?? 0,
+              num(canReveal.find((r: Record<string, unknown>) => r?.field === "emails")?.credits) ?? 0,
             phoneCredits:
-              num(canReveal.find((r: any) => r?.field === "phones")?.credits) ?? 0,
+              num(canReveal.find((r: Record<string, unknown>) => r?.field === "phones")?.credits) ?? 0,
             linkedinFollowersCount: num(dm.linkedinFollowersCount),
             linkedinConnectionsCount: num(dm.linkedinConnectionsCount),
             linkedinSkills: arrStr(dm.linkedinSkills),
@@ -508,7 +508,7 @@ serve(async (req) => {
     }
 
     const totalDMs = results.reduce(
-      (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
+      (acc: number, r: Record<string, unknown>) => acc + ((r.decisionMakers as Record<string, unknown>[])?.length || 0),
       0
     );
     log("info", correlationId, "normalization_done", {
