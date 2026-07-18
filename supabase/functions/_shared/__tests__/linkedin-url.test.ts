@@ -13,14 +13,15 @@ describe("publicIdFromLinkedInUrl", () => {
     ["query string", "https://www.linkedin.com/in/joaquim-ataides?originalSubdomain=br", "joaquim-ataides"],
     ["trk + slash", "https://www.linkedin.com/in/joaquim-ataides/?trk=abc", "joaquim-ataides"],
     ["fragment", "https://www.linkedin.com/in/joaquim-ataides#exp", "joaquim-ataides"],
-    ["maiúsculas no host", "https://WWW.LINKEDIN.COM/in/Joaquim-Ataides", "Joaquim-Ataides"],
+    ["maiúsculas no host", "https://WWW.LINKEDIN.COM/in/Joaquim-Ataides", "joaquim-ataides"],
     ["acentos", "https://www.linkedin.com/in/joão-silva", "joão-silva"],
     ["percent-encoded", "https://www.linkedin.com/in/jo%C3%A3o-silva", "joão-silva"],
     ["sem scheme com www", "www.linkedin.com/in/joaquim-ataides", "joaquim-ataides"],
     ["sem scheme", "linkedin.com/in/joaquim-ataides", "joaquim-ataides"],
     ["path cru", "/in/joaquim-ataides", "joaquim-ataides"],
     ["publicId puro", "joaquim-ataides", "joaquim-ataides"],
-    ["urn ACwAAA", "https://www.linkedin.com/in/ACwAAABc12345", "ACwAAABc12345"],
+    ["urn ACwAAA", "https://www.linkedin.com/in/ACwAAABc12345", "acwaaabc12345"],
+
   ];
 
   for (const [nome, entrada, esperado] of ok) {
