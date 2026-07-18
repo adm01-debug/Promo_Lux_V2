@@ -539,6 +539,8 @@ serve(async (req) => {
             }
             rows.push({
               lusha_company_name: r.domain,
+              user_id: userId,
+              organization_id: organizationId,
               lusha_company_lid: r.companyId ?? null,
               full_name:
                 dm.fullName ||
