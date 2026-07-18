@@ -133,7 +133,6 @@ serve(async (req) => {
     organizationId = membership.organization_id;
   }
 
-  // deno-lint-ignore no-explicit-any
   let body: Record<string, unknown> | null = null;
   try {
     try {
