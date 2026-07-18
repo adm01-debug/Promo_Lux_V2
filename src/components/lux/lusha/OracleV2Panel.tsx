@@ -98,7 +98,7 @@ export function OracleV2Panel() {
     },
   });
 
-  const contacts = contactsQuery.data ?? [];
+  const contacts = useMemo(() => contactsQuery.data ?? [], [contactsQuery.data]);
   const pendingIds = useMemo(
     () => contacts.filter((c) => c.enrichment_status === "pending_enrichment").map((c) => c.id),
     [contacts],

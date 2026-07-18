@@ -167,48 +167,57 @@ serve(async (req) => {
       );
     }
 
-    const data = await lushaResp.json();
+    const data = (await lushaResp.json()) as Record<string, unknown>;
 
     // Estrutura da V2: data.contacts[contactId] => { data: {...}, error: {...} }
     const revealed = [];
-    const contactsMap = data.contacts || {};
+    const contactsMap = (data.contacts as Record<string, unknown>) || {};
 
-    for (const [contactId, entry] of Object.entries<any>(contactsMap)) {
+    for (const [contactId, entry] of Object.entries<Record<string, unknown>>(contactsMap)) {
       if (entry.error) {
+        const err = entry.error as { message?: string; code?: string };
         revealed.push({
           contactId,
-          error: entry.error.message || entry.error.code || "reveal_failed",
+          error: err.message || err.code || "reveal_failed",
         });
         continue;
       }
 
-      const person = entry.data || {};
+      const person = (entry.data as Record<string, unknown>) || {};
+      const fullName = person.fullName as string | null;
+      const firstName = person.firstName as string | null;
+      const lastName = person.lastName as string | null;
+      const jobTitle = person.jobTitle as string | null;
+      const emailAddresses = (person.emailAddresses as Record<string, unknown>[]) || [];
+      const phoneNumbers = (person.phoneNumbers as Record<string, unknown>[]) || [];
+      const company = person.company as Record<string, unknown> | null;
+      const socialLinks = person.socialLinks as Record<string, unknown> | null;
       revealed.push({
         contactId,
-        firstName: person.firstName ?? null,
-        lastName: person.lastName ?? null,
+        firstName: firstName ?? null,
+        lastName: lastName ?? null,
         fullName:
-          person.fullName ??
-          (`${person.firstName ?? ""} ${person.lastName ?? ""}`.trim() ||
+          fullName ??
+          (`${firstName ?? ""} ${lastName ?? ""}`.trim() ||
             null),
-        jobTitle: person.jobTitle ?? null,
-        emailAddresses: (person.emailAddresses || []).map((e: any) => ({
-          email: e.email,
+        jobTitle: jobTitle ?? null,
+        emailAddresses: emailAddresses.map((e: Record<string, unknown>) => ({
+          email: e.email as string,
           type: e.type ?? null,
         })),
-        phoneNumbers: (person.phoneNumbers || []).map((p: any) => ({
-          number: p.number,
+        phoneNumbers: phoneNumbers.map((p: Record<string, unknown>) => ({
+          number: p.number as string,
           type: p.type ?? null,
           doNotCall: p.doNotCall ?? null,
         })),
-        company: person.company
+        company: company
           ? {
-              name: person.company.name ?? null,
-              domain: person.company.domain ?? null,
-              website: person.company.website ?? null,
+              name: company.name ?? null,
+              domain: company.domain ?? null,
+              website: company.website ?? null,
             }
           : null,
-        linkedin: person.socialLinks?.linkedin ?? null,
+        linkedin: socialLinks?.linkedin ?? null,
       });
     }
 
@@ -216,7 +225,7 @@ serve(async (req) => {
       JSON.stringify({
         requestId: data.requestId ?? requestId,
         creditsCharged: data.creditsCharged ?? null,
-        totalRevealed: revealed.filter((r: any) => !r.error).length,
+        totalRevealed: revealed.filter((r: Record<string, unknown>) => !r.error).length,
         totalRequested: contactIds.length,
         revealed,
         metadata: metadata ?? null,

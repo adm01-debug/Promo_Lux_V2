@@ -134,7 +134,7 @@ serve(async (req) => {
   }
 
   // deno-lint-ignore no-explicit-any
-  let body: any = null;
+  let body: Record<string, unknown> | null = null;
   try {
     try {
       body = await req.json();
@@ -229,7 +229,7 @@ serve(async (req) => {
     }
 
     // ── 2. Cache lookup em public.lusha_contacts (por domínio + org via RLS) ──
-    const cachedResults: any[] = [];
+    const cachedResults: Record<string, unknown>[] = [];
     const cacheHitDomains = new Set<string>();
     const cacheStats = { hits: 0, misses: 0, checked: 0 };
 
@@ -248,7 +248,7 @@ serve(async (req) => {
           log("warn", correlationId, "cache_lookup_failed", { detail: cacheErr.message });
         } else if (cachedRows && cachedRows.length > 0) {
           // Agrupa por domínio
-          const byDomain = new Map<string, any[]>();
+          const byDomain = new Map<string, Record<string, unknown>[]>();
           for (const row of cachedRows) {
             const d = row.lusha_company_name;
             if (!byDomain.has(d)) byDomain.set(d, []);
@@ -256,11 +256,12 @@ serve(async (req) => {
           }
 
           for (const [domain, rows] of byDomain.entries()) {
-            const head = rows[0];
-            const decisionMakers = rows.map((row: any) => {
+            const head = rows[0] as Record<string, unknown>;
+            const decisionMakers = rows.map((row: Record<string, unknown>) => {
               // Prefere o payload cru quando disponível (contém todos os campos V3)
-              const dm = (row.raw_lusha_payload && typeof row.raw_lusha_payload === "object")
-                ? row.raw_lusha_payload
+              const rawPayload = row.raw_lusha_payload;
+              const dm = (rawPayload && typeof rawPayload === "object")
+                ? (rawPayload as Record<string, unknown>)
                 : {};
               return {
                 id: str(dm.id),
@@ -320,7 +321,7 @@ serve(async (req) => {
     log("info", correlationId, "cache_summary", cacheStats);
 
     // Se tudo veio do cache, pula Lusha por completo
-    let data: any = { requestId: null, results: [] };
+    let data: Record<string, unknown> = { requestId: null, results: [] };
     if (pendingDomains.length > 0) {
       const companies = pendingDomains.map((domain, idx) => ({
         domain,
@@ -401,7 +402,7 @@ serve(async (req) => {
       }
 
       try {
-        data = await lushaResp.json();
+        data = (await lushaResp.json()) as Record<string, unknown>;
       } catch (e) {
         log("error", correlationId, "lusha_invalid_json", { detail: (e as Error).message });
         return errorResponse(correlationId, 502, "lusha_invalid_json", "Resposta Lusha não é JSON válido");
@@ -411,7 +412,7 @@ serve(async (req) => {
     }
 
     // ── 3. Normalização defensiva por item / DM (tolerante a nulls V3) ──
-    const results: any[] = [];
+    const results: Record<string, unknown>[] = [];
     const rawResults = Array.isArray(data?.results) ? data.results : [];
 
     for (const item of rawResults) {
@@ -433,7 +434,7 @@ serve(async (req) => {
       }
 
       const rawDMs = Array.isArray(item?.decisionMakers) ? item.decisionMakers : [];
-      const decisionMakers: any[] = [];
+      const decisionMakers: Record<string, unknown>[] = [];
 
       for (const dm of rawDMs) {
         try {
@@ -466,9 +467,9 @@ serve(async (req) => {
             hasEmail: hasArr.includes("emails"),
             hasPhone: hasArr.includes("phones"),
             emailCredits:
-              num(canReveal.find((r: any) => r?.field === "emails")?.credits) ?? 0,
+              num(canReveal.find((r: Record<string, unknown>) => r?.field === "emails")?.credits) ?? 0,
             phoneCredits:
-              num(canReveal.find((r: any) => r?.field === "phones")?.credits) ?? 0,
+              num(canReveal.find((r: Record<string, unknown>) => r?.field === "phones")?.credits) ?? 0,
             linkedinFollowersCount: num(dm.linkedinFollowersCount),
             linkedinConnectionsCount: num(dm.linkedinConnectionsCount),
             linkedinSkills: arrStr(dm.linkedinSkills),
@@ -508,7 +509,7 @@ serve(async (req) => {
     }
 
     const totalDMs = results.reduce(
-      (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
+      (acc: number, r: Record<string, unknown>) => acc + ((r.decisionMakers as Record<string, unknown>[])?.length || 0),
       0
     );
     log("info", correlationId, "normalization_done", {
@@ -531,44 +532,46 @@ serve(async (req) => {
         const rows: Record<string, unknown>[] = [];
         for (const r of results) {
           if (r.error || r.fromCache) continue; // não regrava cache
-          for (const dm of r.decisionMakers as any[]) {
+          for (const rawDm of r.decisionMakers as Record<string, unknown>[]) {
+            const dm = rawDm as Record<string, unknown>;
             persistence.attempted++;
-            if (!dm.linkedin) {
+            const linkedin = dm.linkedin as string;
+            if (!linkedin) {
               persistence.skipped++;
               continue;
             }
             rows.push({
-              lusha_company_name: r.domain,
+              lusha_company_name: r.domain as string,
               user_id: userId,
               organization_id: organizationId,
-              lusha_company_lid: r.companyId ?? null,
+              lusha_company_lid: (r.companyId as string | null) ?? null,
               full_name:
-                dm.fullName ||
-                `${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() ||
+                (dm.fullName as string) ||
+                (`${dm.firstName ?? ""} ${dm.lastName ?? ""}`.trim() as string) ||
                 "Desconhecido",
-              job_title: dm.jobTitle || null,
-              department_en: dm.departments?.[0] ?? null,
-              seniority: dm.seniority || null,
-              linkedin_url: dm.linkedin,
+              job_title: (dm.jobTitle as string) || null,
+              department_en: (dm.departments as string[])?.[0] ?? null,
+              seniority: (dm.seniority as string) || null,
+              linkedin_url: linkedin,
               enrichment_status: "pending",
               bitrix_card_id: bitrix_card_id ?? null,
               confidence_score: 60,
               raw_lusha_payload: dm,
-              linkedin_followers_count: dm.linkedinFollowersCount,
-              linkedin_connections_count: dm.linkedinConnectionsCount,
-              linkedin_skills: dm.linkedinSkills?.length ? dm.linkedinSkills : null,
-              linkedin_certifications: dm.linkedinCertifications?.length
+              linkedin_followers_count: dm.linkedinFollowersCount as number | null,
+              linkedin_connections_count: dm.linkedinConnectionsCount as number | null,
+              linkedin_skills: (dm.linkedinSkills as string[])?.length ? dm.linkedinSkills : null,
+              linkedin_certifications: (dm.linkedinCertifications as string[])?.length
                 ? dm.linkedinCertifications
                 : null,
-              linkedin_courses: dm.linkedinCourses?.length ? dm.linkedinCourses : null,
-              linkedin_awards: dm.linkedinAwards?.length ? dm.linkedinAwards : null,
-              x_url: dm.xUrl ?? null,
-              company_locations: r.companyLocations?.length ? r.companyLocations : null,
-              company_type: r.companyType ?? null,
-              company_linkedin_followers: r.companyLinkedinFollowers ?? null,
-              company_email_domain: r.companyEmailDomain ?? null,
+              linkedin_courses: (dm.linkedinCourses as string[])?.length ? dm.linkedinCourses : null,
+              linkedin_awards: (dm.linkedinAwards as string[])?.length ? dm.linkedinAwards : null,
+              x_url: (dm.xUrl as string) ?? null,
+              company_locations: (r.companyLocations as unknown[])?.length ? r.companyLocations : null,
+              company_type: (r.companyType as string) ?? null,
+              company_linkedin_followers: r.companyLinkedinFollowers as number | null,
+              company_email_domain: (r.companyEmailDomain as string) ?? null,
               company_linkedin_url: companyLinkedinUrl,
-              lusha_popularity_tier: r.lushaPopularityTier ?? null,
+              lusha_popularity_tier: (r.lushaPopularityTier as string) ?? null,
             });
           }
         }
