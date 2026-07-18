@@ -222,7 +222,12 @@ serve(async (req) => {
           status: "running",
           progress_pct: 0,
           idempotency_key: idemKey,
-          search_type: "oracle_v2",
+          // ⚠️ NÃO troque para "oracle_v2" nem invente valor novo. O CHECK
+          // lusha_search_sessions_search_type_check só aceita 'department_search'
+          // ou 'decision_makers_domain'. Provado por sonda em 17/07/2026:
+          // 'oracle_v2' devolve 23514 e mata a função no passo 3 de 8, antes de
+          // chamar a Lusha. Se precisar de um valor novo, faça MIGRATION ANTES.
+          search_type: "department_search",
           started_at: new Date().toISOString(),
           bitrix_company_id: input.bitrix_company_id ?? null,
           bitrix_user_id: input.bitrix_user_id ?? null,
