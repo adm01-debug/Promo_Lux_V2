@@ -32,6 +32,38 @@ async function sha256Hex(input: string): Promise<string> {
 const ALLOWED_TABLES = ["companies", "deals", "stakeholders"] as const;
 type AllowedTable = (typeof ALLOWED_TABLES)[number];
 
+// Allowlist de colunas graváveis por integradores externos via API pública.
+// Antes o POST fazia `{ ...body, user_id }` — o corpo inteiro era gravado,
+// então um cliente da API podia injetar organization_id (escrevendo numa
+// org alheia), id, ipc_score, enriched, raw_data, version, deleted_at etc.
+// Só os campos de negócio legítimos abaixo passam; tudo mais é descartado
+// silenciosamente (id/user_id/organization_id são sempre definidos pelo
+// servidor, nunca pelo corpo da requisição).
+const WRITABLE_COLUMNS: Record<AllowedTable, readonly string[]> = {
+  companies: [
+    "name", "sector", "location", "website", "phone", "email", "employees",
+    "revenue", "cnpj", "linkedin_url", "instagram_url", "description",
+    "logo_url", "starred", "lat", "lng",
+  ],
+  deals: [
+    "title", "description", "value", "currency", "company_id",
+    "stakeholder_id", "expected_close_date", "closed_at", "priority",
+    "tags", "position", "stage_id",
+  ],
+  stakeholders: [
+    "company_id", "full_name", "role", "department", "seniority", "email",
+    "phone", "linkedin_url", "avatar_url", "tags", "notes", "last_contacted_at",
+  ],
+};
+
+function pickWritable(table: AllowedTable, body: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const key of WRITABLE_COLUMNS[table]) {
+    if (key in body) out[key] = body[key];
+  }
+  return out;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -188,7 +220,7 @@ Deno.serve(async (req) => {
     if (req.method === "POST" && !id) {
       const body = await req.json().catch(() => null);
       if (!body || typeof body !== "object") return await respond({ error: "Invalid JSON body" }, 400);
-      const insert = { ...body, user_id };
+      const insert = { ...pickWritable(table, body as Record<string, unknown>), user_id };
       const { data, error } = await supabase.from(table).insert(insert).select().single();
       if (error) return await respond({ error: error.message }, 400);
       return await respond({ data }, 201);
@@ -198,10 +230,9 @@ Deno.serve(async (req) => {
     if (req.method === "PATCH" && id) {
       const body = await req.json().catch(() => null);
       if (!body || typeof body !== "object") return await respond({ error: "Invalid JSON body" }, 400);
-      delete (body as Record<string, unknown>).user_id;
-      delete (body as Record<string, unknown>).id;
+      const patch = pickWritable(table, body as Record<string, unknown>);
       const { data, error } = await supabase
-        .from(table).update(body).eq("user_id", user_id).eq("id", id).select().single();
+        .from(table).update(patch).eq("user_id", user_id).eq("id", id).select().single();
       if (error) return await respond({ error: error.message }, 400);
       return await respond({ data });
     }
