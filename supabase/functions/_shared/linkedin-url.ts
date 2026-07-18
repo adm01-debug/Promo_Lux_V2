@@ -14,12 +14,13 @@ export function publicIdFromLinkedInUrl(url: string | null | undefined): string 
   if (!url) return "";
   const s = url.trim().split("?")[0].split("#")[0];
   const m = s.match(/(?:^|\/\/)(?:[a-z0-9-]+\.)*linkedin\.com\/in\/([^/?#]+)/i);
-  if (m) return safeDecode(m[1]);
+  if (m) return safeDecode(m[1]).toLowerCase();
   const m2 = s.match(/^\/?in\/([^/?#]+)/i);
-  if (m2) return safeDecode(m2[1]);
-  if (!s.includes("/") && !s.includes(".") && !s.includes(":")) return safeDecode(s);
+  if (m2) return safeDecode(m2[1]).toLowerCase();
+  if (!s.includes("/") && !s.includes(".") && !s.includes(":")) return safeDecode(s).toLowerCase();
   return "";
 }
+
 
 function safeDecode(v: string): string {
   try {
