@@ -458,10 +458,17 @@ serve(async (req) => {
       for (const result of results) {
         const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as IPCHittingCriteria | undefined);
 
+        // organization_id vem do job (não do DEFAULT da coluna): este client
+        // usa a service_role key sem repassar o Authorization do usuário, então
+        // auth.uid() não resolve dentro do banco e default_org_for_current_user()
+        // gravaria NULL — violando o NOT NULL e, pior, colidindo silenciosamente
+        // com empresas de outra organização na chave única (organization_id,
+        // name, source) caso o DEFAULT resolvesse para outro valor incorreto.
         const { data: company } = await supabase
           .from("companies")
           .upsert({
             user_id: userId,
+            organization_id: job.organization_id,
             name: result.name || result.title || "Unknown",
             sector: result.category || result.type || "Não classificado",
             location: result.address || result.city || "",
@@ -472,7 +479,7 @@ serve(async (req) => {
             ipc_score: ipcScore,
             enriched: !!(result.email || result.phone),
             raw_data: result,
-          }, { onConflict: "name,source" })
+          }, { onConflict: "organization_id,name,source" })
           .select()
           .single();
 
