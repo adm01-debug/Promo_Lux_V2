@@ -552,7 +552,7 @@ serve(async (req) => {
               department_en: (dm.departments as string[])?.[0] ?? null,
               seniority: (dm.seniority as string) || null,
               linkedin_url: linkedin,
-              enrichment_status: "pending",
+              enrichment_status: "pending_enrichment",
               bitrix_card_id: bitrix_card_id ?? null,
               confidence_score: 60,
               raw_lusha_payload: dm,
