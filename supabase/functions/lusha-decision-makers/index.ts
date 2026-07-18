@@ -256,11 +256,12 @@ serve(async (req) => {
           }
 
           for (const [domain, rows] of byDomain.entries()) {
-            const head = rows[0];
-            const decisionMakers = rows.map((row: any) => {
+            const head = rows[0] as Record<string, unknown>;
+            const decisionMakers = rows.map((row: Record<string, unknown>) => {
               // Prefere o payload cru quando disponível (contém todos os campos V3)
-              const dm = (row.raw_lusha_payload && typeof row.raw_lusha_payload === "object")
-                ? row.raw_lusha_payload
+              const rawPayload = row.raw_lusha_payload;
+              const dm = (rawPayload && typeof rawPayload === "object")
+                ? (rawPayload as Record<string, unknown>)
                 : {};
               return {
                 id: str(dm.id),
