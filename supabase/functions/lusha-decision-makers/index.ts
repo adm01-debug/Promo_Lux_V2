@@ -119,7 +119,7 @@ serve(async (req) => {
   } catch { /* body já foi lido ou inválido — ignora */ }
 
   if (!organizationId) {
-    const { data: membership, error: memErr } = await supabase
+    const { data: membership, error: memErr } = await authClient
       .from("organization_members")
       .select("organization_id")
       .eq("user_id", userId)
