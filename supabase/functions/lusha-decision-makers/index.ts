@@ -134,7 +134,7 @@ serve(async (req) => {
   }
 
   // deno-lint-ignore no-explicit-any
-  let body: any = null;
+  let body: Record<string, unknown> | null = null;
   try {
     try {
       body = await req.json();
@@ -229,7 +229,7 @@ serve(async (req) => {
     }
 
     // ── 2. Cache lookup em public.lusha_contacts (por domínio + org via RLS) ──
-    const cachedResults: any[] = [];
+    const cachedResults: Record<string, unknown>[] = [];
     const cacheHitDomains = new Set<string>();
     const cacheStats = { hits: 0, misses: 0, checked: 0 };
 
@@ -248,7 +248,7 @@ serve(async (req) => {
           log("warn", correlationId, "cache_lookup_failed", { detail: cacheErr.message });
         } else if (cachedRows && cachedRows.length > 0) {
           // Agrupa por domínio
-          const byDomain = new Map<string, any[]>();
+          const byDomain = new Map<string, Record<string, unknown>[]>();
           for (const row of cachedRows) {
             const d = row.lusha_company_name;
             if (!byDomain.has(d)) byDomain.set(d, []);
@@ -320,7 +320,7 @@ serve(async (req) => {
     log("info", correlationId, "cache_summary", cacheStats);
 
     // Se tudo veio do cache, pula Lusha por completo
-    let data: any = { requestId: null, results: [] };
+    let data: Record<string, unknown> = { requestId: null, results: [] };
     if (pendingDomains.length > 0) {
       const companies = pendingDomains.map((domain, idx) => ({
         domain,
@@ -411,7 +411,7 @@ serve(async (req) => {
     }
 
     // ── 3. Normalização defensiva por item / DM (tolerante a nulls V3) ──
-    const results: any[] = [];
+    const results: Record<string, unknown>[] = [];
     const rawResults = Array.isArray(data?.results) ? data.results : [];
 
     for (const item of rawResults) {
@@ -433,7 +433,7 @@ serve(async (req) => {
       }
 
       const rawDMs = Array.isArray(item?.decisionMakers) ? item.decisionMakers : [];
-      const decisionMakers: any[] = [];
+      const decisionMakers: Record<string, unknown>[] = [];
 
       for (const dm of rawDMs) {
         try {
