@@ -24,6 +24,13 @@ export default defineConfig({
         "**/*.test.tsx",
         "src/integrations/supabase/types.ts",
         "src/integrations/supabase/client.ts",
+        // Entry points das edge functions (Deno) são orquestração de IO
+        // (fetch/DB/auth) — a convenção deste projeto é testar só a lógica
+        // pura extraída para _shared/** (que os testes "edge" cobrem).
+        // Contá-los no threshold de cobertura de unidade mede a métrica
+        // errada: index.ts nunca teve, nem deveria ter, teste unitário.
+        "supabase/functions/*/index.ts",
+        "supabase/functions/_shared/__tests__/**",
       ],
     },
     projects: [
