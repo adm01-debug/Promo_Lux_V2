@@ -105,6 +105,33 @@ serve(async (req) => {
     log("warn", correlationId, "unauthorized_invalid_token", { detail: userErr?.message });
     return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
   }
+  const userId = userData.user.id;
+
+  // ── Resolver a organização do usuário ──
+  // Aceita organization_id opcional no body (para suporte futuro a multi-org),
+  // senão busca a primeira org ativa do usuário.
+  let organizationId: string | null = null;
+  try {
+    const rawBody = await req.clone().json();
+    if (rawBody?.organization_id && typeof rawBody.organization_id === 'string') {
+      organizationId = rawBody.organization_id;
+    }
+  } catch { /* body já foi lido ou inválido — ignora */ }
+
+  if (!organizationId) {
+    const { data: membership, error: memErr } = await authClient
+      .from("organization_members")
+      .select("organization_id")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (memErr || !membership) {
+      log("error", correlationId, "no_organization", { detail: memErr?.message });
+      return errorResponse(correlationId, 403, "no_organization", "Usuário não pertence a nenhuma organização");
+    }
+    organizationId = membership.organization_id;
+  }
 
   // deno-lint-ignore no-explicit-any
   let body: any = null;
@@ -512,6 +539,8 @@ serve(async (req) => {
             }
             rows.push({
               lusha_company_name: r.domain,
+              user_id: userId,
+              organization_id: organizationId,
               lusha_company_lid: r.companyId ?? null,
               full_name:
                 dm.fullName ||
