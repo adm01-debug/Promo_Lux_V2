@@ -20,6 +20,7 @@ import { formatPhoneBitrix } from "../_shared/phone-br.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { updateContact } from "../_shared/safe-update.ts";
+import { getUserOrgIds } from "../_shared/org-membership.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -267,11 +268,25 @@ serve(async (req) => {
     );
   }
 
+  // service_role ignora RLS: sem esta checagem, um usuário autenticado em
+  // qualquer org poderia enviar contact_ids de outra organização e a função
+  // gastaria créditos LeadContact e gravaria email/telefone descoberto em
+  // contatos de um tenant alheio (IDOR cross-tenant).
+  const allowedOrgIds = await getUserOrgIds(admin, userId);
+  if (allowedOrgIds.length === 0) {
+    await logger.log({ step: "org_check", status: "skipped", level: "warn", message: "usuário sem organização — nenhum contato elegível" });
+    return new Response(
+      JSON.stringify({ results: [], summary: { enriched: 0, not_found: 0, error_auth: 0, error_rate_limit: 0, error_other: 0, skipped: input.contact_ids.length }, skipped: input.contact_ids, correlation_id: correlationId }),
+      { headers: { ...cors, "Content-Type": "application/json" } },
+    );
+  }
+
   // Carrega contatos e "trava" via UPDATE atômico (só quem ainda não está enriching)
   const { data: locked, error: lockErr } = await admin
     .from("lusha_contacts")
     .update({ enrichment_status: "enriching", enrichment_attempts: 0 })
     .in("id", input.contact_ids)
+    .in("organization_id", allowedOrgIds)
     .neq("enrichment_status", "enriching")
     .select("id, organization_id, user_id, linkedin_url, email, phone_formatted, enrichment_status");
 

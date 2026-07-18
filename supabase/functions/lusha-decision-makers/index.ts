@@ -22,15 +22,6 @@ function corsHeadersFor(req: Request) {
     "Vary": "Origin",
   };
 }
-// Compatibilidade com código legado que ainda referencia `corsHeaders`.
-// Substituído dinamicamente por request dentro de serve().
-let corsHeaders: Record<string, string> = {
-  "Access-Control-Allow-Origin": ALLOWED_ORIGINS[0],
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Vary": "Origin",
-};
-
 // ── Logger estruturado (JSON em stdout — consumido pelo Edge Function Logs) ──
 type LogLevel = "debug" | "info" | "warn" | "error";
 function log(level: LogLevel, correlationId: string, event: string, fields: Record<string, unknown> = {}) {
@@ -56,28 +47,133 @@ const arrStr = (v: unknown): string[] =>
   Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && x.length > 0) : [];
 const bool = (v: unknown): boolean => v === true;
 
-function errorResponse(
-  correlationId: string,
-  status: number,
-  code: string,
-  message: string,
-  detail?: unknown
-) {
-  return new Response(
-    JSON.stringify({
-      error: { code, message, detail: detail ?? null },
-      correlation_id: correlationId,
-    }),
-    { status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-  );
+// ── Shapes de payload externo (Lusha V3 é parcial/opcional em quase tudo) ──
+// Formato já normalizado, usado tanto na saída de `decisionMakers` quanto no
+// cache (raw_lusha_payload grava exatamente este objeto — ver bloco de
+// persistência mais abaixo).
+interface NormalizedDecisionMaker {
+  id?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  fullName?: string | null;
+  jobTitle?: string | null;
+  departments?: string[];
+  seniority?: string | null;
+  company?: string | null;
+  location?: string | null;
+  linkedin?: string | null;
+  hasEmail?: boolean;
+  hasPhone?: boolean;
+  emailCredits?: number;
+  phoneCredits?: number;
+  linkedinFollowersCount?: number | null;
+  linkedinConnectionsCount?: number | null;
+  linkedinSkills?: string[];
+  linkedinCertifications?: string[];
+  linkedinCourses?: string[];
+  linkedinAwards?: string[];
+  xUrl?: string | null;
+}
+
+// Payload cru retornado pela API Lusha V3 (estrutura aninhada e opcional).
+interface LushaRawDecisionMaker {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: { title?: string; departments?: string[]; seniority?: string };
+  company?: { name?: string };
+  location?: { country?: string };
+  socialLinks?: { linkedin?: string; xUrl?: string };
+  has?: string[];
+  canReveal?: Array<{ field?: string; credits?: number }>;
+  linkedinFollowersCount?: number;
+  linkedinConnectionsCount?: number;
+  linkedinSkills?: string[];
+  linkedinCertifications?: string[];
+  linkedinCourses?: string[];
+  linkedinAwards?: string[];
+}
+
+interface LushaRawItem {
+  domain?: string;
+  clientReferenceId?: string;
+  error?: { code?: string };
+  companyId?: string;
+  company?: {
+    companyType?: string;
+    linkedinFollowers?: number;
+    emailDomain?: string;
+    lushaPopularityTier?: string;
+    companyLocations?: unknown[];
+  };
+  decisionMakers?: LushaRawDecisionMaker[];
+}
+
+interface LushaApiResponse {
+  requestId?: string | null;
+  results?: LushaRawItem[];
+}
+
+// Linha de public.lusha_contacts conforme o `.select(...)` do cache lookup.
+interface CachedContactRow {
+  lusha_company_name: string;
+  lusha_company_lid: string | null;
+  company_type: string | null;
+  company_linkedin_followers: number | null;
+  company_email_domain: string | null;
+  company_locations: unknown[] | null;
+  lusha_popularity_tier: string | null;
+  raw_lusha_payload: NormalizedDecisionMaker | null;
+  linkedin_url: string | null;
+  linkedin_followers_count: number | null;
+  linkedin_connections_count: number | null;
+  linkedin_skills: string[] | null;
+  linkedin_certifications: string[] | null;
+  linkedin_courses: string[] | null;
+  linkedin_awards: string[] | null;
+  x_url: string | null;
+  created_at: string;
+}
+
+interface NormalizedResultItem {
+  domain: string;
+  companyId: string | null;
+  companyType?: string | null;
+  companyLinkedinFollowers?: number | null;
+  companyEmailDomain?: string | null;
+  lushaPopularityTier?: string | null;
+  companyLocations?: unknown[];
+  clientReferenceId: string | null;
+  total: number;
+  decisionMakers: NormalizedDecisionMaker[];
+  error?: string;
+  fromCache?: boolean;
+  cachedAt?: string;
 }
 
 serve(async (req) => {
-  // CORS dinâmico por request
-  corsHeaders = corsHeadersFor(req);
+  // CORS por request — local ao closure, nunca compartilhado entre requests
+  // concorrentes no mesmo isolate (um `let` de módulo reatribuído por
+  // request permitiria uma resposta sair com o Allow-Origin de outra).
+  const cors = corsHeadersFor(req);
+  function errorResponse(
+    correlationId: string,
+    status: number,
+    code: string,
+    message: string,
+    detail?: unknown
+  ) {
+    return new Response(
+      JSON.stringify({
+        error: { code, message, detail: detail ?? null },
+        correlation_id: correlationId,
+      }),
+      { status, headers: { ...cors, "Content-Type": "application/json" } }
+    );
+  }
 
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: cors });
   }
 
   const correlationId =
@@ -106,8 +202,7 @@ serve(async (req) => {
     return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
   }
 
-  // deno-lint-ignore no-explicit-any
-  let body: any = null;
+  let body: Record<string, unknown> | null = null;
   try {
     try {
       body = await req.json();
@@ -124,6 +219,7 @@ serve(async (req) => {
       company_linkedin_url,
     } = body ?? {};
     const companyLinkedinUrl = str(company_linkedin_url);
+    const bitrixCardId = str(bitrix_card_id);
     if (!Array.isArray(domains) || domains.length === 0) {
       return errorResponse(correlationId, 400, "missing_domains", "Campo 'domains' obrigatório (array não vazio)");
     }
@@ -182,7 +278,7 @@ serve(async (req) => {
 
     log("info", correlationId, "request_received", {
       domains: cleanDomains.length,
-      bitrix_card_id: bitrix_card_id ?? null,
+      bitrix_card_id: bitrixCardId,
       cache_ttl_hours: ttlHours,
       force_refresh: skipCache,
     });
@@ -202,7 +298,7 @@ serve(async (req) => {
     }
 
     // ── 2. Cache lookup em public.lusha_contacts (por domínio + org via RLS) ──
-    const cachedResults: any[] = [];
+    const cachedResults: NormalizedResultItem[] = [];
     const cacheHitDomains = new Set<string>();
     const cacheStats = { hits: 0, misses: 0, checked: 0 };
 
@@ -221,8 +317,8 @@ serve(async (req) => {
           log("warn", correlationId, "cache_lookup_failed", { detail: cacheErr.message });
         } else if (cachedRows && cachedRows.length > 0) {
           // Agrupa por domínio
-          const byDomain = new Map<string, any[]>();
-          for (const row of cachedRows) {
+          const byDomain = new Map<string, CachedContactRow[]>();
+          for (const row of cachedRows as unknown as CachedContactRow[]) {
             const d = row.lusha_company_name;
             if (!byDomain.has(d)) byDomain.set(d, []);
             byDomain.get(d)!.push(row);
@@ -230,11 +326,12 @@ serve(async (req) => {
 
           for (const [domain, rows] of byDomain.entries()) {
             const head = rows[0];
-            const decisionMakers = rows.map((row: any) => {
+            const decisionMakers = rows.map((row: CachedContactRow) => {
               // Prefere o payload cru quando disponível (contém todos os campos V3)
-              const dm = (row.raw_lusha_payload && typeof row.raw_lusha_payload === "object")
-                ? row.raw_lusha_payload
-                : {};
+              const dm: Partial<NormalizedDecisionMaker> =
+                row.raw_lusha_payload && typeof row.raw_lusha_payload === "object"
+                  ? row.raw_lusha_payload
+                  : {};
               return {
                 id: str(dm.id),
                 firstName: str(dm.firstName),
@@ -293,11 +390,11 @@ serve(async (req) => {
     log("info", correlationId, "cache_summary", cacheStats);
 
     // Se tudo veio do cache, pula Lusha por completo
-    let data: any = { requestId: null, results: [] };
+    let data: LushaApiResponse = { requestId: null, results: [] };
     if (pendingDomains.length > 0) {
       const companies = pendingDomains.map((domain, idx) => ({
         domain,
-        clientReferenceId: bitrix_card_id ? `${bitrix_card_id}-${idx}` : `req-${idx}`,
+        clientReferenceId: bitrixCardId ? `${bitrixCardId}-${idx}` : `req-${idx}`,
       }));
 
       // ── 3. Chamada Lusha V3 (apenas domínios sem cache) ──
@@ -353,7 +450,7 @@ serve(async (req) => {
             {
               status: 429,
               headers: {
-                ...corsHeaders,
+                ...cors,
                 "Content-Type": "application/json",
                 "Retry-After": String(retryAfterSeconds),
               },
@@ -384,7 +481,7 @@ serve(async (req) => {
     }
 
     // ── 3. Normalização defensiva por item / DM (tolerante a nulls V3) ──
-    const results: any[] = [];
+    const results: NormalizedResultItem[] = [];
     const rawResults = Array.isArray(data?.results) ? data.results : [];
 
     for (const item of rawResults) {
@@ -406,7 +503,7 @@ serve(async (req) => {
       }
 
       const rawDMs = Array.isArray(item?.decisionMakers) ? item.decisionMakers : [];
-      const decisionMakers: any[] = [];
+      const decisionMakers: NormalizedDecisionMaker[] = [];
 
       for (const dm of rawDMs) {
         try {
@@ -439,9 +536,9 @@ serve(async (req) => {
             hasEmail: hasArr.includes("emails"),
             hasPhone: hasArr.includes("phones"),
             emailCredits:
-              num(canReveal.find((r: any) => r?.field === "emails")?.credits) ?? 0,
+              num(canReveal.find((r) => r?.field === "emails")?.credits) ?? 0,
             phoneCredits:
-              num(canReveal.find((r: any) => r?.field === "phones")?.credits) ?? 0,
+              num(canReveal.find((r) => r?.field === "phones")?.credits) ?? 0,
             linkedinFollowersCount: num(dm.linkedinFollowersCount),
             linkedinConnectionsCount: num(dm.linkedinConnectionsCount),
             linkedinSkills: arrStr(dm.linkedinSkills),
@@ -481,7 +578,7 @@ serve(async (req) => {
     }
 
     const totalDMs = results.reduce(
-      (acc: number, r: any) => acc + (r.decisionMakers?.length || 0),
+      (acc, r) => acc + (r.decisionMakers?.length || 0),
       0
     );
     log("info", correlationId, "normalization_done", {
@@ -504,7 +601,7 @@ serve(async (req) => {
         const rows: Record<string, unknown>[] = [];
         for (const r of results) {
           if (r.error || r.fromCache) continue; // não regrava cache
-          for (const dm of r.decisionMakers as any[]) {
+          for (const dm of r.decisionMakers) {
             persistence.attempted++;
             if (!dm.linkedin) {
               persistence.skipped++;
@@ -522,7 +619,7 @@ serve(async (req) => {
               seniority: dm.seniority || null,
               linkedin_url: dm.linkedin,
               enrichment_status: "pending",
-              bitrix_card_id: bitrix_card_id ?? null,
+              bitrix_card_id: bitrixCardId,
               confidence_score: 60,
               raw_lusha_payload: dm,
               linkedin_followers_count: dm.linkedinFollowersCount,
@@ -602,7 +699,7 @@ serve(async (req) => {
           force_refresh: skipCache,
         },
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...cors, "Content-Type": "application/json" } }
     );
   } catch (err) {
     log("error", correlationId, "unhandled_exception", {

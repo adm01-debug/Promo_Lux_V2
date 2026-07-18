@@ -16,6 +16,7 @@ import {
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { updateContact } from "../_shared/safe-update.ts";
+import { getUserOrgIds } from "../_shared/org-membership.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -134,9 +135,23 @@ serve(async (req) => {
     });
   }
 
+  // service_role ignora RLS: sem esta checagem, um usuário autenticado em
+  // qualquer org poderia enviar contact_ids de outra organização e a função
+  // travaria/leria/pusharia PII alheia para o Bitrix (IDOR cross-tenant),
+  // além de manipular o rate limit de uma org à qual não pertence.
+  const allowedOrgIds = await getUserOrgIds(admin, userId);
+  if (allowedOrgIds.length === 0) {
+    await logger.log({ step: "org_check", status: "skipped", level: "warn", message: "usuário sem organização — nenhum contato elegível" });
+    return new Response(
+      JSON.stringify({ results: [], summary: { sent: 0, duplicates: 0, errors: 0, skipped: input.contact_ids.length }, skipped: input.contact_ids, correlation_id: correlationId }),
+      { headers: { ...cors, "Content-Type": "application/json" } },
+    );
+  }
+
   const { data: orgRow } = await admin
     .from("lusha_contacts").select("organization_id").eq("id", input.contact_ids[0]).maybeSingle();
-  const organizationId = (orgRow as { organization_id?: string } | null)?.organization_id ?? null;
+  const firstContactOrgId = (orgRow as { organization_id?: string } | null)?.organization_id ?? null;
+  const organizationId = firstContactOrgId && allowedOrgIds.includes(firstContactOrgId) ? firstContactOrgId : null;
 
   if (organizationId) {
     const { data: rl } = await admin.rpc("check_oracle_rate_limit", {
@@ -157,6 +172,7 @@ serve(async (req) => {
     .from("lusha_contacts")
     .update({ enrichment_status: "pushing_bitrix" })
     .in("id", input.contact_ids)
+    .in("organization_id", allowedOrgIds)
     .eq("enrichment_status", "enriched")
     .is("bitrix_contact_id", null)
     .select("id, session_id, organization_id, full_name, job_title, department_pt, linkedin_url, email, phone_formatted, bitrix_contact_id");

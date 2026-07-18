@@ -23,6 +23,54 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// Reveal (V2) é crédito pago da Lusha por contato — sem limite por org, um
+// único usuário autenticado poderia drenar o saldo pago da organização
+// inteira em loop. 50/hora é generoso para uso legítimo (bound de 100
+// contactIds por chamada já limita o pico de uma única requisição).
+const REVEAL_RATE_LIMIT_PER_HOUR = 50;
+
+// ── Shapes da resposta Lusha V2 Person (parcial/opcional em quase tudo) ──
+interface LushaRevealEmail {
+  email?: string;
+  type?: string;
+}
+interface LushaRevealPhone {
+  number?: string;
+  type?: string;
+  doNotCall?: boolean;
+}
+interface LushaRevealPerson {
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  jobTitle?: string;
+  emailAddresses?: LushaRevealEmail[];
+  phoneNumbers?: LushaRevealPhone[];
+  company?: { name?: string; domain?: string; website?: string };
+  socialLinks?: { linkedin?: string };
+}
+interface LushaRevealEntry {
+  data?: LushaRevealPerson;
+  error?: { message?: string; code?: string };
+}
+interface LushaRevealResponse {
+  requestId?: string;
+  creditsCharged?: number;
+  contacts?: Record<string, LushaRevealEntry>;
+}
+interface RevealedContact {
+  contactId: string;
+  error?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  fullName?: string | null;
+  jobTitle?: string | null;
+  emailAddresses?: { email?: string; type: string | null }[];
+  phoneNumbers?: { number?: string; type: string | null; doNotCall: boolean | null }[];
+  company?: { name: string | null; domain: string | null; website: string | null } | null;
+  linkedin?: string | null;
+}
+
 /**
  * Revela contatos (emails + telefones) de decisores previamente enfileirados
  * via lusha-decision-makers, usando requestId + contactIds (Lusha V2 Person).
@@ -81,6 +129,32 @@ serve(async (req) => {
       JSON.stringify({ error: "unauthorized", detail: "Invalid or expired token" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
+  }
+
+  // ── 1b) Rate limit por organização — reveal gasta crédito pago da Lusha.
+  // Sem isto, qualquer usuário autenticado poderia drenar o saldo pago da
+  // org em loop (autenticação sozinha não limita volume de gasto).
+  const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  const { data: orgId } = await supabase.rpc("default_org_for_current_user");
+  if (!orgId) {
+    return new Response(
+      JSON.stringify({ error: "no_organization", detail: "Usuário sem organização associada" }),
+      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+  if (SUPABASE_SERVICE_ROLE) {
+    const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, { auth: { persistSession: false } });
+    const { data: rl } = await admin.rpc("check_oracle_rate_limit", {
+      _organization_id: orgId,
+      _action: "lusha_reveal",
+      _limit: REVEAL_RATE_LIMIT_PER_HOUR,
+    });
+    if (rl && Array.isArray(rl) && rl[0] && rl[0].allowed === false) {
+      return new Response(
+        JSON.stringify({ error: "rate_limit_exceeded", reset_at: rl[0].reset_at, limit: REVEAL_RATE_LIMIT_PER_HOUR }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "3600" } }
+      );
+    }
   }
 
   // ── 2) Chave Lusha configurada? ─────────────────────────────────────────
@@ -167,13 +241,13 @@ serve(async (req) => {
       );
     }
 
-    const data = await lushaResp.json();
+    const data: LushaRevealResponse = await lushaResp.json();
 
     // Estrutura da V2: data.contacts[contactId] => { data: {...}, error: {...} }
-    const revealed = [];
-    const contactsMap = data.contacts || {};
+    const revealed: RevealedContact[] = [];
+    const contactsMap = data.contacts ?? {};
 
-    for (const [contactId, entry] of Object.entries<any>(contactsMap)) {
+    for (const [contactId, entry] of Object.entries(contactsMap)) {
       if (entry.error) {
         revealed.push({
           contactId,
@@ -182,7 +256,7 @@ serve(async (req) => {
         continue;
       }
 
-      const person = entry.data || {};
+      const person = entry.data ?? {};
       revealed.push({
         contactId,
         firstName: person.firstName ?? null,
@@ -192,11 +266,11 @@ serve(async (req) => {
           (`${person.firstName ?? ""} ${person.lastName ?? ""}`.trim() ||
             null),
         jobTitle: person.jobTitle ?? null,
-        emailAddresses: (person.emailAddresses || []).map((e: any) => ({
+        emailAddresses: (person.emailAddresses ?? []).map((e) => ({
           email: e.email,
           type: e.type ?? null,
         })),
-        phoneNumbers: (person.phoneNumbers || []).map((p: any) => ({
+        phoneNumbers: (person.phoneNumbers ?? []).map((p) => ({
           number: p.number,
           type: p.type ?? null,
           doNotCall: p.doNotCall ?? null,
@@ -216,7 +290,7 @@ serve(async (req) => {
       JSON.stringify({
         requestId: data.requestId ?? requestId,
         creditsCharged: data.creditsCharged ?? null,
-        totalRevealed: revealed.filter((r: any) => !r.error).length,
+        totalRevealed: revealed.filter((r) => !r.error).length,
         totalRequested: contactIds.length,
         revealed,
         metadata: metadata ?? null,
