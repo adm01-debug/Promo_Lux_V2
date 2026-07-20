@@ -60,6 +60,7 @@ interface NormalizedDecisionMaker {
   departments?: string[];
   seniority?: string | null;
   company?: string | null;
+  companyId?: string | null;
   location?: string | null;
   linkedin?: string | null;
   hasEmail?: boolean;
@@ -200,6 +201,33 @@ serve(async (req) => {
   if (userErr || !userData?.user) {
     log("warn", correlationId, "unauthorized_invalid_token", { detail: userErr?.message });
     return errorResponse(correlationId, 401, "unauthorized", "Invalid or expired token");
+  }
+  const userId = userData.user.id;
+
+  // ── Resolver a organização do usuário ──
+  // Aceita organization_id opcional no body (para suporte futuro a multi-org),
+  // senão busca a primeira org ativa do usuário.
+  let organizationId: string | null = null;
+  try {
+    const rawBody = await req.clone().json();
+    if (rawBody?.organization_id && typeof rawBody.organization_id === 'string') {
+      organizationId = rawBody.organization_id;
+    }
+  } catch { /* body já foi lido ou inválido — ignora */ }
+
+  if (!organizationId) {
+    const { data: membership, error: memErr } = await authClient
+      .from("organization_members")
+      .select("organization_id")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (memErr || !membership) {
+      log("error", correlationId, "no_organization", { detail: memErr?.message });
+      return errorResponse(correlationId, 403, "no_organization", "Usuário não pertence a nenhuma organização");
+    }
+    organizationId = membership.organization_id;
   }
 
   let body: Record<string, unknown> | null = null;
@@ -471,7 +499,7 @@ serve(async (req) => {
       }
 
       try {
-        data = await lushaResp.json();
+        data = (await lushaResp.json()) as LushaApiResponse;
       } catch (e) {
         log("error", correlationId, "lusha_invalid_json", { detail: (e as Error).message });
         return errorResponse(correlationId, 502, "lusha_invalid_json", "Resposta Lusha não é JSON válido");
@@ -495,7 +523,9 @@ serve(async (req) => {
         });
         results.push({
           domain: itemDomain,
+          companyId: str(item?.companyId),
           clientReferenceId: str(item?.clientReferenceId),
+          total: 0,
           error: str(item?.error?.code) ?? "unknown_error",
           decisionMakers: [],
         });
@@ -603,12 +633,15 @@ serve(async (req) => {
           if (r.error || r.fromCache) continue; // não regrava cache
           for (const dm of r.decisionMakers) {
             persistence.attempted++;
-            if (!dm.linkedin) {
+            const linkedin = dm.linkedin;
+            if (!linkedin) {
               persistence.skipped++;
               continue;
             }
             rows.push({
               lusha_company_name: r.domain,
+              user_id: userId,
+              organization_id: organizationId,
               lusha_company_lid: r.companyId ?? null,
               full_name:
                 dm.fullName ||
@@ -617,26 +650,29 @@ serve(async (req) => {
               job_title: dm.jobTitle || null,
               department_en: dm.departments?.[0] ?? null,
               seniority: dm.seniority || null,
-              linkedin_url: dm.linkedin,
-              enrichment_status: "pending",
+              linkedin_url: linkedin,
+              // "pending_enrichment" (não "pending") — valor padronizado em
+              // toda a base pela mesma migração/commit que introduziu o
+              // índice parcial em enrichment_status = 'pending_enrichment'.
+              enrichment_status: "pending_enrichment",
               bitrix_card_id: bitrixCardId,
               confidence_score: 60,
               raw_lusha_payload: dm,
-              linkedin_followers_count: dm.linkedinFollowersCount,
-              linkedin_connections_count: dm.linkedinConnectionsCount,
-              linkedin_skills: dm.linkedinSkills?.length ? dm.linkedinSkills : null,
-              linkedin_certifications: dm.linkedinCertifications?.length
+              linkedin_followers_count: dm.linkedinFollowersCount as number | null,
+              linkedin_connections_count: dm.linkedinConnectionsCount as number | null,
+              linkedin_skills: (dm.linkedinSkills as string[])?.length ? dm.linkedinSkills : null,
+              linkedin_certifications: (dm.linkedinCertifications as string[])?.length
                 ? dm.linkedinCertifications
                 : null,
-              linkedin_courses: dm.linkedinCourses?.length ? dm.linkedinCourses : null,
-              linkedin_awards: dm.linkedinAwards?.length ? dm.linkedinAwards : null,
-              x_url: dm.xUrl ?? null,
-              company_locations: r.companyLocations?.length ? r.companyLocations : null,
-              company_type: r.companyType ?? null,
-              company_linkedin_followers: r.companyLinkedinFollowers ?? null,
-              company_email_domain: r.companyEmailDomain ?? null,
+              linkedin_courses: (dm.linkedinCourses as string[])?.length ? dm.linkedinCourses : null,
+              linkedin_awards: (dm.linkedinAwards as string[])?.length ? dm.linkedinAwards : null,
+              x_url: (dm.xUrl as string) ?? null,
+              company_locations: (r.companyLocations as unknown[])?.length ? r.companyLocations : null,
+              company_type: (r.companyType as string) ?? null,
+              company_linkedin_followers: r.companyLinkedinFollowers as number | null,
+              company_email_domain: (r.companyEmailDomain as string) ?? null,
               company_linkedin_url: companyLinkedinUrl,
-              lusha_popularity_tier: r.lushaPopularityTier ?? null,
+              lusha_popularity_tier: (r.lushaPopularityTier as string) ?? null,
             });
           }
         }

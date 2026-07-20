@@ -249,9 +249,10 @@ serve(async (req) => {
 
     for (const [contactId, entry] of Object.entries(contactsMap)) {
       if (entry.error) {
+        const err = entry.error as { message?: string; code?: string };
         revealed.push({
           contactId,
-          error: entry.error.message || entry.error.code || "reveal_failed",
+          error: err.message || err.code || "reveal_failed",
         });
         continue;
       }
