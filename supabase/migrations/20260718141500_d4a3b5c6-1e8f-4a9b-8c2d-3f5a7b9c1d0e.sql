@@ -1,0 +1,11 @@
+-- ============================================================================
+-- circuit-breaker.ts corrigido: a transição open→half-open deixava TODO
+-- request concorrente passar de uma vez quando o cooldown expirava
+-- (thundering herd contra um serviço que acabou de cair), e uma vez em
+-- half-open não havia limite algum de tráfego até o próximo
+-- reportSuccess/reportFailure. Precisa de um timestamp separado de "quando
+-- o probe atual começou" para implementar claim atômico de um único probe
+-- por vez (distinto de opened_at, que marca quando o episódio 'open'
+-- começou).
+-- ============================================================================
+ALTER TABLE public.circuit_breakers ADD COLUMN IF NOT EXISTS half_open_at TIMESTAMPTZ;

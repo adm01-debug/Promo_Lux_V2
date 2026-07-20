@@ -186,12 +186,12 @@ export const SettingsView = () => {
               <h3 className="text-lg font-semibold text-foreground">Informações da Conta</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">Nome</Label>
-                  <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="h-9 text-sm" />
+                  <Label htmlFor="settings-full-name" className="text-xs text-muted-foreground">Nome</Label>
+                  <Input id="settings-full-name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="h-9 text-sm" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">Email</Label>
-                  <Input value={user?.email || ""} disabled className="h-9 text-sm opacity-60" />
+                  <Label htmlFor="settings-email" className="text-xs text-muted-foreground">Email</Label>
+                  <Input id="settings-email" value={user?.email || ""} disabled className="h-9 text-sm opacity-60" />
                 </div>
               </div>
               <Separator className="bg-border/30" />
@@ -201,8 +201,9 @@ export const SettingsView = () => {
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Nova Senha</Label>
+                    <Label htmlFor="settings-new-password" className="text-xs text-muted-foreground">Nova Senha</Label>
                     <Input
+                      id="settings-new-password"
                       type="password"
                       placeholder="Mín. 8 caracteres"
                       className="h-9 text-sm"
@@ -211,8 +212,9 @@ export const SettingsView = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs text-muted-foreground">Confirmar Senha</Label>
+                    <Label htmlFor="settings-confirm-password" className="text-xs text-muted-foreground">Confirmar Senha</Label>
                     <Input
+                      id="settings-confirm-password"
                       type="password"
                       placeholder="Repita a senha"
                       className="h-9 text-sm"

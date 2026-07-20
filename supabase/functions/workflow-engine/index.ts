@@ -423,9 +423,14 @@ serve(async (req) => {
               }
 
               if (batchCompanies.length > 0) {
+                // upsert (não insert): um único name+source repetido no lote —
+                // ou já existente na org — antes abortava o INSERT inteiro por
+                // violar a constraint única, descartando silenciosamente todo o
+                // resto do lote (0 empresas importadas, só logado). Upsert com
+                // onConflict mescla a duplicata em vez de derrubar o lote.
                 const { data: insertedCompanies, error: insError } = await supabase
                   .from("companies")
-                  .insert(batchCompanies)
+                  .upsert(batchCompanies, { onConflict: "organization_id,name,source" })
                   .select();
 
                 if (insError) {

@@ -2,6 +2,7 @@
 // Retry policy: exponential backoff up to 5 attempts.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { assertSafeOutboundUrl } from "../_shared/ssrf-guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,28 +38,54 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
-  // If a single delivery_id is provided, process only it (manual replay)
+  // If a single delivery_id is provided, process only it (manual replay) —
+  // ainda assim precisa estar pending/retrying e dentro do limite de
+  // tentativas: sem isso, replay manual reenviava entregas já concluídas
+  // (status='success') ou já esgotadas (attempts>=MAX_ATTEMPTS).
   let deliveryIds: string[] | null = null;
   if (req.method === "POST") {
     const body = await req.json().catch(() => ({}));
     if (body?.delivery_id) deliveryIds = [body.delivery_id];
   }
 
-  let q = supabase
+  let candidatesQ = supabase
     .from("webhook_deliveries")
-    .select("*")
+    .select("id")
     .in("status", ["pending", "retrying"])
-    .lte("next_retry_at", new Date().toISOString())
-    .lt("attempts", MAX_ATTEMPTS)
-    .limit(BATCH);
-  if (deliveryIds) q = supabase.from("webhook_deliveries").select("*").in("id", deliveryIds);
+    .lt("attempts", MAX_ATTEMPTS);
+  candidatesQ = deliveryIds
+    ? candidatesQ.in("id", deliveryIds)
+    : candidatesQ.lte("next_retry_at", new Date().toISOString()).limit(BATCH);
 
-  const { data: deliveries, error } = await q;
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  const { data: candidates, error: candErr } = await candidatesQ;
+  if (candErr) {
+    return new Response(JSON.stringify({ error: candErr.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+  }
+  const candidateIds = (candidates ?? []).map((c) => c.id as string);
+
+  // Claim atômico: só as linhas que AINDA estiverem pending/retrying no
+  // momento exato deste UPDATE são travadas (status='sending'). Uma segunda
+  // invocação concorrente (cron sobreposto + replay manual, por exemplo) vai
+  // re-checar a mesma condição após esperar o lock da primeira e não vai
+  // mais encontrar essas linhas — evita envio duplicado da mesma entrega.
+  let deliveries = [];
+  if (candidateIds.length > 0) {
+    const { data: claimed, error: claimErr } = await supabase
+      .from("webhook_deliveries")
+      .update({ status: "sending" })
+      .in("id", candidateIds)
+      .in("status", ["pending", "retrying"])
+      .select("*");
+    if (claimErr) {
+      return new Response(JSON.stringify({ error: claimErr.message }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    deliveries = claimed ?? [];
   }
 
   const results: Array<Record<string, unknown>> = [];
@@ -76,6 +103,24 @@ Deno.serve(async (req) => {
     const payloadStr = JSON.stringify(d.payload);
     const signature = await hmacHex(wh.secret, payloadStr);
     const attempts = d.attempts + 1;
+
+    // SSRF guard: a URL do webhook é fornecida pelo dono do webhook e não é
+    // revalidada desde o cadastro. Sem checar de novo aqui, um usuário
+    // poderia apontar para http://169.254.169.254/... (metadata da cloud) ou
+    // um host interno e usar esta função como proxy para a rede interna do
+    // provedor — a checagem roda a cada envio (não só no cadastro) porque o
+    // DNS do host pode mudar depois de criado.
+    const urlCheck = await assertSafeOutboundUrl(wh.url);
+    if (!urlCheck.safe) {
+      await supabase.from("webhook_deliveries").update({
+        status: "failed",
+        attempts,
+        error_message: `URL de destino bloqueada (${urlCheck.reason})`,
+        next_retry_at: null,
+      }).eq("id", d.id);
+      results.push({ id: d.id, status: "blocked", reason: urlCheck.reason });
+      continue;
+    }
 
     try {
       const ctrl = new AbortController();

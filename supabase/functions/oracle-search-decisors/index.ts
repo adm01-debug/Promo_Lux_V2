@@ -25,6 +25,7 @@ import {
 import { CookieVaultUnavailable, CookieNotReady, getCookie } from "../_shared/cookies.ts";
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
+import { isUserOrgMember } from "../_shared/org-membership.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -111,6 +112,17 @@ serve(async (req) => {
     admin, source: "oracle-search-decisors", correlationId,
     userId, organizationId: input.organization_id,
   });
+
+  // service_role ignora RLS: sem esta checagem, um usuário autenticado em
+  // qualquer org poderia passar o organization_id de outro tenant e a função
+  // gravaria lusha_search_sessions/lusha_contacts nesse tenant alheio, além
+  // de consumir o rate limit de busca da vítima (IDOR cross-tenant).
+  if (!(await isUserOrgMember(admin, userId, input.organization_id))) {
+    await logger.log({ step: "org_check", status: "error", level: "error", message: "usuário não pertence à organização informada" });
+    return new Response(JSON.stringify({ error: "forbidden" }), {
+      status: 403, headers: { ...cors, "Content-Type": "application/json" },
+    });
+  }
 
   // Circuit breakers
   if (!(await checkCircuitBreaker(admin, "cookie_vault"))) {

@@ -1,8 +1,6 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
-import { setActiveOrgId } from "@/integrations/supabase/withOrg";
 import type { Database } from "@/integrations/supabase/types";
 
 export type AppRole = Database["public"]["Enums"]["app_role"];
@@ -32,8 +30,6 @@ export interface Invite {
   created_by_profile?: { full_name: string | null; avatar_url: string | null } | null;
 }
 
-const STORAGE_KEY = "lux:active-org";
-
 export function useMyOrganizations() {
   const { user } = useAuth();
   return useQuery({
@@ -50,47 +46,12 @@ export function useMyOrganizations() {
   });
 }
 
-export function useActiveOrganization() {
-  const { data: orgs } = useMyOrganizations();
-  const qc = useQueryClient();
-  const [activeId, setActiveId] = useState<string | null>(() =>
-    typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null
-  );
-
-  useEffect(() => {
-    if (!orgs || orgs.length === 0) return;
-    const valid = orgs.find(o => o.organization_id === activeId);
-    if (!valid) {
-      const first = orgs[0].organization_id;
-      setActiveId(first);
-      localStorage.setItem(STORAGE_KEY, first);
-      setActiveOrgId(first);
-    } else {
-      setActiveOrgId(activeId);
-    }
-  }, [orgs, activeId]);
-
-  const setActive = useCallback((id: string) => {
-    if (id === activeId) return;
-    setActiveId(id);
-    localStorage.setItem(STORAGE_KEY, id);
-    setActiveOrgId(id);
-    // Invalidate all workspace-scoped data so it refetches under the new org
-    qc.invalidateQueries();
-    // Notify other tabs / listeners via storage event
-    window.dispatchEvent(new StorageEvent("storage", {
-      key: STORAGE_KEY,
-      newValue: id,
-    }));
-  }, [activeId, qc]);
-
-  const active = useMemo(
-    () => (orgs ?? []).find(o => o.organization_id === activeId) ?? null,
-    [orgs, activeId]
-  );
-
-  return { activeOrgId: activeId, activeOrg: active, setActive };
-}
+// useActiveOrganization foi movido para src/contexts/active-org-context.ts —
+// era estado local por instância (cada componente com sua própria cópia de
+// activeId, dessincronizando entre eles); agora é um Context com fonte
+// única de verdade + sync entre abas via evento `storage` (Provider em
+// src/contexts/ActiveOrgContext.tsx).
+export { useActiveOrganization } from "@/contexts/active-org-context";
 
 export function useOrgMembers(orgId: string | null) {
   return useQuery({

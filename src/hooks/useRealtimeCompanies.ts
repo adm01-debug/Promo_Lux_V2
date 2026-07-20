@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
+import { db } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 
 /**
  * Subscribe to realtime changes on the companies table.
@@ -14,7 +15,11 @@ export function useRealtimeCompanies() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
-  const activeOrgId = getActiveOrgId();
+  // Lido via Context (reativo) em vez de getActiveOrgId() (snapshot lido só
+  // na renderização) — sem isso, trocar de workspace pelo WorkspaceSwitcher
+  // não recriava a subscription, e o canal continuava filtrando pelo
+  // organization_id antigo até este componente re-renderizar por outro motivo.
+  const { activeOrgId } = useActiveOrganization();
 
   useEffect(() => {
     if (!user?.id || !activeOrgId) return;

@@ -23,6 +23,54 @@ function getCorsHeaders(req: Request) {
   };
 }
 
+// Reveal (V2) é crédito pago da Lusha por contato — sem limite por org, um
+// único usuário autenticado poderia drenar o saldo pago da organização
+// inteira em loop. 50/hora é generoso para uso legítimo (bound de 100
+// contactIds por chamada já limita o pico de uma única requisição).
+const REVEAL_RATE_LIMIT_PER_HOUR = 50;
+
+// ── Shapes da resposta Lusha V2 Person (parcial/opcional em quase tudo) ──
+interface LushaRevealEmail {
+  email?: string;
+  type?: string;
+}
+interface LushaRevealPhone {
+  number?: string;
+  type?: string;
+  doNotCall?: boolean;
+}
+interface LushaRevealPerson {
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  jobTitle?: string;
+  emailAddresses?: LushaRevealEmail[];
+  phoneNumbers?: LushaRevealPhone[];
+  company?: { name?: string; domain?: string; website?: string };
+  socialLinks?: { linkedin?: string };
+}
+interface LushaRevealEntry {
+  data?: LushaRevealPerson;
+  error?: { message?: string; code?: string };
+}
+interface LushaRevealResponse {
+  requestId?: string;
+  creditsCharged?: number;
+  contacts?: Record<string, LushaRevealEntry>;
+}
+interface RevealedContact {
+  contactId: string;
+  error?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  fullName?: string | null;
+  jobTitle?: string | null;
+  emailAddresses?: { email?: string; type: string | null }[];
+  phoneNumbers?: { number?: string; type: string | null; doNotCall: boolean | null }[];
+  company?: { name: string | null; domain: string | null; website: string | null } | null;
+  linkedin?: string | null;
+}
+
 /**
  * Revela contatos (emails + telefones) de decisores previamente enfileirados
  * via lusha-decision-makers, usando requestId + contactIds (Lusha V2 Person).
@@ -81,6 +129,32 @@ serve(async (req) => {
       JSON.stringify({ error: "unauthorized", detail: "Invalid or expired token" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
+  }
+
+  // ── 1b) Rate limit por organização — reveal gasta crédito pago da Lusha.
+  // Sem isto, qualquer usuário autenticado poderia drenar o saldo pago da
+  // org em loop (autenticação sozinha não limita volume de gasto).
+  const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  const { data: orgId } = await supabase.rpc("default_org_for_current_user");
+  if (!orgId) {
+    return new Response(
+      JSON.stringify({ error: "no_organization", detail: "Usuário sem organização associada" }),
+      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+  if (SUPABASE_SERVICE_ROLE) {
+    const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, { auth: { persistSession: false } });
+    const { data: rl } = await admin.rpc("check_oracle_rate_limit", {
+      _organization_id: orgId,
+      _action: "lusha_reveal",
+      _limit: REVEAL_RATE_LIMIT_PER_HOUR,
+    });
+    if (rl && Array.isArray(rl) && rl[0] && rl[0].allowed === false) {
+      return new Response(
+        JSON.stringify({ error: "rate_limit_exceeded", reset_at: rl[0].reset_at, limit: REVEAL_RATE_LIMIT_PER_HOUR }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "3600" } }
+      );
+    }
   }
 
   // ── 2) Chave Lusha configurada? ─────────────────────────────────────────
@@ -167,13 +241,13 @@ serve(async (req) => {
       );
     }
 
-    const data = (await lushaResp.json()) as Record<string, unknown>;
+    const data: LushaRevealResponse = await lushaResp.json();
 
     // Estrutura da V2: data.contacts[contactId] => { data: {...}, error: {...} }
-    const revealed = [];
-    const contactsMap = (data.contacts as Record<string, unknown>) || {};
+    const revealed: RevealedContact[] = [];
+    const contactsMap = data.contacts ?? {};
 
-    for (const [contactId, entry] of Object.entries<Record<string, unknown>>(contactsMap)) {
+    for (const [contactId, entry] of Object.entries(contactsMap)) {
       if (entry.error) {
         const err = entry.error as { message?: string; code?: string };
         revealed.push({
@@ -183,41 +257,33 @@ serve(async (req) => {
         continue;
       }
 
-      const person = (entry.data as Record<string, unknown>) || {};
-      const fullName = person.fullName as string | null;
-      const firstName = person.firstName as string | null;
-      const lastName = person.lastName as string | null;
-      const jobTitle = person.jobTitle as string | null;
-      const emailAddresses = (person.emailAddresses as Record<string, unknown>[]) || [];
-      const phoneNumbers = (person.phoneNumbers as Record<string, unknown>[]) || [];
-      const company = person.company as Record<string, unknown> | null;
-      const socialLinks = person.socialLinks as Record<string, unknown> | null;
+      const person = entry.data ?? {};
       revealed.push({
         contactId,
-        firstName: firstName ?? null,
-        lastName: lastName ?? null,
+        firstName: person.firstName ?? null,
+        lastName: person.lastName ?? null,
         fullName:
-          fullName ??
-          (`${firstName ?? ""} ${lastName ?? ""}`.trim() ||
+          person.fullName ??
+          (`${person.firstName ?? ""} ${person.lastName ?? ""}`.trim() ||
             null),
-        jobTitle: jobTitle ?? null,
-        emailAddresses: emailAddresses.map((e: Record<string, unknown>) => ({
-          email: e.email as string,
+        jobTitle: person.jobTitle ?? null,
+        emailAddresses: (person.emailAddresses ?? []).map((e) => ({
+          email: e.email,
           type: e.type ?? null,
         })),
-        phoneNumbers: phoneNumbers.map((p: Record<string, unknown>) => ({
-          number: p.number as string,
+        phoneNumbers: (person.phoneNumbers ?? []).map((p) => ({
+          number: p.number,
           type: p.type ?? null,
           doNotCall: p.doNotCall ?? null,
         })),
-        company: company
+        company: person.company
           ? {
-              name: company.name ?? null,
-              domain: company.domain ?? null,
-              website: company.website ?? null,
+              name: person.company.name ?? null,
+              domain: person.company.domain ?? null,
+              website: person.company.website ?? null,
             }
           : null,
-        linkedin: socialLinks?.linkedin ?? null,
+        linkedin: person.socialLinks?.linkedin ?? null,
       });
     }
 
@@ -225,7 +291,7 @@ serve(async (req) => {
       JSON.stringify({
         requestId: data.requestId ?? requestId,
         creditsCharged: data.creditsCharged ?? null,
-        totalRevealed: revealed.filter((r: Record<string, unknown>) => !r.error).length,
+        totalRevealed: revealed.filter((r) => !r.error).length,
         totalRequested: contactIds.length,
         revealed,
         metadata: metadata ?? null,

@@ -22,7 +22,7 @@ export interface WebhookDelivery {
   webhook_id: string;
   event: string;
   payload: unknown;
-  status: "pending" | "success" | "failed" | "retrying";
+  status: "pending" | "sending" | "success" | "failed" | "retrying";
   status_code: number | null;
   response_body: string | null;
   error_message: string | null;

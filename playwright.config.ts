@@ -20,6 +20,14 @@ export default defineConfig({
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:8080",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
+    // Ambientes com um Chromium pré-instalado cujo build não bate com o que
+    // este @playwright/test espera (e sem acesso de rede para baixar o
+    // certo) podem apontar aqui em vez de falhar com "Executable doesn't
+    // exist". Sem a env var, comportamento padrão (resolve o browser
+    // baixado pelo próprio Playwright) — não afeta CI/dev normal.
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE }
+      : undefined,
   },
   projects: [
     {

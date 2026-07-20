@@ -17,6 +17,7 @@ const STATUS_COLORS: Record<string, string> = {
   success: "bg-success/20 text-success",
   failed: "bg-destructive/20 text-destructive",
   pending: "bg-muted text-muted-foreground",
+  sending: "bg-primary/20 text-primary animate-pulse",
   retrying: "bg-primary/20 text-primary",
 };
 

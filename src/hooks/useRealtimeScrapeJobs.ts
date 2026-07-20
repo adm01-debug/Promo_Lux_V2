@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
+import { db } from "@/integrations/supabase/withOrg";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 
 /**
  * Subscribe to realtime changes on scrape_jobs.
@@ -13,7 +14,8 @@ export function useRealtimeScrapeJobs() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { user } = useAuth();
-  const activeOrgId = getActiveOrgId();
+  // Ver useRealtimeCompanies.ts: Context reativo em vez de snapshot estático.
+  const { activeOrgId } = useActiveOrganization();
 
   useEffect(() => {
     if (!user?.id || !activeOrgId) return;

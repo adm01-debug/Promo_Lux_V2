@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useAuth } from "@/contexts/auth-context";
+import { ActiveOrgProvider } from "@/contexts/ActiveOrgContext";
 import { DemoProvider } from "@/contexts/DemoContext";
 import { useDemo } from "@/contexts/demo-context";
 import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
@@ -36,10 +37,21 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 2, // 2 min
       retry: (failureCount, error) => {
-        // Don't retry on 401/403 (auth issues)
-        if (error && typeof error === "object" && "status" in error) {
-          const status = (error as { status: number }).status;
-          if (status === 401 || status === 403) return false;
+        if (error && typeof error === "object") {
+          // AuthError/fetch errors carregam `.status` numérico (401/403).
+          if ("status" in error) {
+            const status = (error as { status: number }).status;
+            if (status === 401 || status === 403) return false;
+          }
+          // A maioria das queries passa por withOrg.ts (PostgREST), cujos
+          // erros são PostgrestError — sem `.status`, só `.code`. Sem checar
+          // isso também, um erro de auth/RLS nunca batia no early-return
+          // acima e a query tentava de novo 3x antes de desistir.
+          if ("code" in error) {
+            const code = (error as { code: string }).code;
+            // PGRST301/PGRST302: JWT ausente/expirado. 42501: RLS/permissão negada.
+            if (code === "PGRST301" || code === "PGRST302" || code === "42501") return false;
+          }
         }
         return failureCount < 3;
       },
@@ -152,22 +164,24 @@ const App = () => (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <AuthProvider>
-            <DemoProvider>
-              <GlobalOrgErrorListener />
-              <AutoTopProgressBar />
-              <UnsavedChangesDialog />
-              <OrgErrorBanner />
-              <Toaster />
-              <Sonner />
-              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                <DeepLinkBridge />
-                <UnsavedChangesProvider>
-                  <Suspense fallback={<PageLoader />}>
-                    <AnimatedRoutes />
-                  </Suspense>
-                </UnsavedChangesProvider>
-              </BrowserRouter>
-            </DemoProvider>
+            <ActiveOrgProvider>
+              <DemoProvider>
+                <GlobalOrgErrorListener />
+                <AutoTopProgressBar />
+                <UnsavedChangesDialog />
+                <OrgErrorBanner />
+                <Toaster />
+                <Sonner />
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                  <DeepLinkBridge />
+                  <UnsavedChangesProvider>
+                    <Suspense fallback={<PageLoader />}>
+                      <AnimatedRoutes />
+                    </Suspense>
+                  </UnsavedChangesProvider>
+                </BrowserRouter>
+              </DemoProvider>
+            </ActiveOrgProvider>
           </AuthProvider>
         </TooltipProvider>
       </QueryClientProvider>

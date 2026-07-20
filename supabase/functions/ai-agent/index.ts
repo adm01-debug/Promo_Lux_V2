@@ -7,9 +7,20 @@ const ALLOWED_ORIGINS = [
   "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
 ];
 
+function isLocalDevOrigin(origin: string): boolean {
+  try {
+    // origin.includes("localhost") também casa "https://evil-localhost.com"
+    // ou "https://localhost.attacker.com" — só o hostname exato conta.
+    const { hostname } = new URL(origin);
+    return hostname === "localhost" || hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+}
+
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get("Origin") ?? "";
-  const isAllowed = ALLOWED_ORIGINS.includes(origin) || origin.includes("localhost") || origin.includes("127.0.0.1");
+  const isAllowed = ALLOWED_ORIGINS.includes(origin) || isLocalDevOrigin(origin);
   const allowedOrigin = isAllowed ? origin : ALLOWED_ORIGINS[0];
   
   return {

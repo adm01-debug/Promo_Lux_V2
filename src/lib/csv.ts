@@ -2,10 +2,16 @@
  * Utilitário de exportação CSV compatível com Excel/PT-BR (BOM UTF-8),
  * com escape correto de vírgulas, aspas e quebras de linha.
  */
+import { sanitizeCell } from "./exportCSV";
+
 export type CsvValue = string | number | null | undefined;
 
 function escapeCell(value: CsvValue): string {
-  const s = value === null || value === undefined ? "" : String(value);
+  // sanitizeCell neutraliza injeção de fórmula (=, +, -, @, tab, CR) sem
+  // corromper números negativos legítimos — mesma proteção de exportCSV.ts,
+  // importada em vez de duplicada (a cópia anterior deste arquivo não tinha
+  // a proteção e havia divergido).
+  const s = sanitizeCell(value);
   return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 

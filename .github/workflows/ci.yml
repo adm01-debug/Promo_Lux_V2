@@ -19,7 +19,14 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        # --legacy-peer-deps: parte da árvore (next-themes@0.3, react-day-picker@8
+        # + date-fns@4) ainda declara peer ranges de React 17/18 e date-fns 2/3,
+        # sem ter sido republicada para as versões usadas aqui (React 19,
+        # date-fns 4). Funcionam na prática (é assim que o projeto já roda via
+        # `bun install`, mais permissivo por padrão) — sem essa flag, um
+        # `npm install` limpo aborta com ERESOLVE antes de instalar qualquer
+        # coisa.
+        run: npm install --legacy-peer-deps
 
       - name: Lint
         run: npm run lint

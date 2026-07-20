@@ -659,7 +659,8 @@ export const LushaIntelligenceView = () => {
     // Converte IDN (ex.: "café.com.br") para punycode ("xn--caf-dma.com.br")
     // usando o parser nativo do navegador — cobre unicode/emoji domains.
     try {
-      if (Array.from(v).some((c) => (c.codePointAt(0) ?? 0) > 127)) {
+      const hasNonAscii = Array.from(v).some((ch) => ch.codePointAt(0)! > 127);
+      if (hasNonAscii) {
         const u = new URL(`http://${v}`);
         // u.hostname já vem em ASCII/punycode
         if (u.hostname) v = u.hostname.toLowerCase();

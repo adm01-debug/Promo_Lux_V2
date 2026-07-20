@@ -3,12 +3,15 @@
  * Includes CSV injection protection against formula injection attacks.
  */
 
-const DANGEROUS_PREFIXES = ["=", "+", "-", "@", "\t", "\r"];
+export const DANGEROUS_PREFIXES = ["=", "+", "-", "@", "\t", "\r"];
 
-function sanitizeCell(value: unknown): string {
+export function sanitizeCell(value: unknown): string {
   const str = value === null || value === undefined ? "" : String(value);
-  // Prevent CSV injection: prefix dangerous chars with a single quote
-  if (str.length > 0 && DANGEROUS_PREFIXES.some((p) => str.startsWith(p))) {
+  // Prevent CSV injection: prefix dangerous chars with a single quote.
+  // Skip valid numbers — a legitimate "-5" (delta, saldo negativo) starts
+  // with "-" too, and prefixing it with "'" turns a numeric column into a
+  // corrupted text cell ("'-5") in every spreadsheet reader.
+  if (str.length > 0 && DANGEROUS_PREFIXES.some((p) => str.startsWith(p)) && Number.isNaN(Number(str))) {
     return `'${str}`;
   }
   return str;
