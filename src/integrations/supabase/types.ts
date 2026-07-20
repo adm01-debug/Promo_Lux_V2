@@ -3619,7 +3619,7 @@ export type Database = {
       }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
-        Args: { p_org_id: string }
+        Args: { p_user_id: string }
         Returns: {
           count: number
           sector: string
