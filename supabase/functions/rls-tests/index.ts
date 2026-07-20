@@ -312,7 +312,7 @@ Deno.serve(async (req) => {
     // Garante que toda nova tabela multi-tenant adicionada ao registry
     // ganha automaticamente o teste de leitura cross-org.
     const ctx: Record<string, string> = {};
-    const createdRows: Array<{ table: string; id: string }> = [];
+    const createdRows: Array<{ table: string; id: string; idColumn: string }> = [];
     for (const spec of RLS_TABLES) {
       // Pula tabelas isentas no ambiente atual
       if (spec.envExempt?.includes(currentEnv)) {
@@ -335,11 +335,12 @@ Deno.serve(async (req) => {
             continue;
           }
         }
+        const idColumn = spec.idColumn ?? "id";
         const payload = spec.payload(orgB.id, userB.id, ctx);
         const { data: row, error: insertErr } = await admin
           .from(spec.table)
           .insert(payload)
-          .select("id")
+          .select(idColumn)
           .single();
         if (insertErr || !row) {
           results.push({
@@ -349,9 +350,10 @@ Deno.serve(async (req) => {
           });
           continue;
         }
-        ctx[spec.table] = row.id;
-        createdRows.push({ table: spec.table, id: row.id });
-        const { data: aSees } = await clientA.from(spec.table).select("id").eq("id", row.id);
+        const rowId = String((row as Record<string, unknown>)[idColumn]);
+        ctx[spec.table] = rowId;
+        createdRows.push({ table: spec.table, id: rowId, idColumn });
+        const { data: aSees } = await clientA.from(spec.table).select(idColumn).eq(idColumn, rowId);
         results.push({
           name: `orgA_member_cannot_read_orgB_${spec.table}`,
           passed: (aSees?.length ?? 0) === 0,
@@ -366,8 +368,8 @@ Deno.serve(async (req) => {
       }
     }
     // Cleanup created rows in reverse order to respect FK dependencies
-    for (const { table, id } of createdRows.reverse()) {
-      await admin.from(table).delete().eq("id", id);
+    for (const { table, id, idColumn } of createdRows.reverse()) {
+      await admin.from(table).delete().eq(idColumn, id);
     }
 
     // 10g. Coverage check: detecta tabelas RLS-enabled novas que ainda não

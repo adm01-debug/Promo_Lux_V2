@@ -26,6 +26,30 @@ export const RLS_REGISTRY_TABLES: string[] = [
   "webhooks",
   "webhook_deliveries",
   "agent_chat_messages",
+  // Adicionadas ao auditar o registry contra `ALTER TABLE ... ENABLE ROW
+  // LEVEL SECURITY` em todas as migrations — estavam com RLS ativo há tempo
+  // mas nunca tinham sido incluídas aqui (o painel de cobertura nunca as
+  // sinalizava como faltantes nem como isentas).
+  "api_latency_alert_history",
+  "api_latency_alert_settings",
+  "api_latency_snapshots",
+  "automation_alerts",
+  "automation_execution_logs",
+  "automation_steps",
+  "dlq_alert_history",
+  "dlq_alert_settings",
+  "dlq_health_snapshots",
+  "email_suppressions",
+  "email_sync_log",
+  "job_exports",
+  "lusha_contacts",
+  "lusha_dm_search_history",
+  "oauth_sandbox_snapshots",
+  "oracle_rate_limits",
+  "org_violation_alert_settings",
+  "org_violation_alerts",
+  "scrape_dead_letter",
+  "scrape_queue",
 ];
 
 export const RLS_REGISTRY_EXEMPT: string[] = [
@@ -42,4 +66,23 @@ export const RLS_REGISTRY_EXEMPT: string[] = [
   "scrape_results",
   "email_accounts",
   "workflow_runs",
+  // Mesma auditoria acima: tabelas globais/operacionais sem organization_id
+  // (dashboards internos de saúde/circuit-breaker/vault, rate limiting por
+  // identificador, flags globais) — isentas do modelo multi-tenant por
+  // desenho (ver task #9 do audit: confirmado que não são multi-tenant, não
+  // que estejam mal protegidas).
+  "auth_rate_limits",
+  "circuit_breaker_alert_history",
+  "circuit_breaker_alert_settings",
+  "circuit_breaker_snapshots",
+  "circuit_breakers",
+  "db_health_snapshots",
+  "feature_flags",
+  "health_checks",
+  "idempotency_keys",
+  "partition_advisories",
+  "partition_policies",
+  "user_roles",
+  "vault_cookie_alert_history",
+  "vault_cookie_snapshots",
 ];
