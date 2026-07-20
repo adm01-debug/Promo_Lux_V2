@@ -117,7 +117,7 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
                         <span className="truncate group-hover:translate-x-0.5 transition-transform">{crumb.label}</span>
                       </BreadcrumbLink>
                     ) : (
-                      <span className="text-xs text-muted-foreground/40 flex items-center gap-1.5 truncate max-w-[100px] italic">
+                      <span className="text-xs text-muted-foreground/80 flex items-center gap-1.5 truncate max-w-[100px] italic">
                         <span className="truncate">{crumb.label}</span>
                       </span>
                     )}

@@ -172,6 +172,7 @@ export const Header = memo(({
                 size="icon"
                 className="h-8 w-8 text-muted-foreground hover:text-foreground sm:hidden"
                 onClick={openCommandPalette}
+                aria-label="Buscar"
               >
                 <Search className="h-4 w-4" />
               </Button>
@@ -186,6 +187,7 @@ export const Header = memo(({
                 size="icon"
                 className="h-8 w-8 text-muted-foreground hover:text-foreground hidden sm:inline-flex"
                 onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "?" }))}
+                aria-label="Atalhos de teclado"
               >
                 <Keyboard className="h-4 w-4" />
               </Button>
@@ -200,6 +202,7 @@ export const Header = memo(({
                   size="icon"
                   className="h-8 w-8 text-muted-foreground hover:text-foreground hidden sm:inline-flex"
                   onClick={onToggleFocusMode}
+                  aria-label="Modo Foco"
                 >
                   <Maximize2 className="h-4 w-4" />
                 </Button>
@@ -216,6 +219,7 @@ export const Header = memo(({
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-foreground relative"
               onClick={() => setNotificationsOpen(!notificationsOpen)}
+              aria-label={unreadCount > 0 ? `Notificações (${unreadCount} não lidas)` : "Notificações"}
             >
               <motion.div
                 animate={unreadCount > 0 ? {
