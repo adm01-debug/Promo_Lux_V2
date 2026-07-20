@@ -6,7 +6,11 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
+    // `true` (não o literal "::") — expõe em 0.0.0.0/:: quando disponível,
+    // mas não EXIGE IPv6: um "::" hardcoded falha com EAFNOSUPPORT em
+    // qualquer sandbox/container sem stack IPv6 (inclusive o webServer que
+    // o playwright.config.ts sobe sozinho para os testes e2e).
+    host: true,
     port: 8080,
     hmr: {
       overlay: false,
