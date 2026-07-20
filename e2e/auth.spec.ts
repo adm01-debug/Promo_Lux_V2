@@ -47,6 +47,10 @@ test.describe("Auth — Login Page", () => {
     const back = page.getByRole("button", { name: /Voltar|Cancelar/i });
     if (await back.count()) {
       await back.first().click();
+      // O overlay fica posicionado sobre o form (não remove o input de login
+      // do DOM), então os dois campos "seu@email.com" coexistem enquanto o
+      // overlay está montado — espera ele fechar antes de checar o form.
+      await expect(page.getByText("Redefinir senha")).not.toBeVisible();
       await expect(page.getByPlaceholder("seu@email.com")).toBeVisible();
     }
   });
@@ -61,9 +65,15 @@ test.describe("Auth — Login Page", () => {
     // Clear any demo state first
     await page.goto("/login");
     await page.evaluate(() => localStorage.removeItem("lux-demo-mode"));
-    await page.goto("/");
+    // "domcontentloaded" em vez do "load" padrão: o app carrega fontes de
+    // terceiros (Google Fonts) que podem ficar lentas/bloqueadas conforme o
+    // ambiente de rede, e o redirect que este teste verifica já acontece
+    // antes de qualquer recurso terminar de carregar — esperar "load"
+    // deixava o teste refém da latência/disponibilidade desse recurso
+    // externo, sem relação com o comportamento sendo testado.
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     // App should redirect to /login when no session and no demo
-    await expect(page).toHaveURL(/\/login/, { timeout: 5000 });
+    await expect(page).toHaveURL(/\/login/, { timeout: 8000 });
   });
 
   test("demo mode enters app shell", async ({ page }) => {
