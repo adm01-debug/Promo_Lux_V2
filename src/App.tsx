@@ -37,10 +37,21 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 2, // 2 min
       retry: (failureCount, error) => {
-        // Don't retry on 401/403 (auth issues)
-        if (error && typeof error === "object" && "status" in error) {
-          const status = (error as { status: number }).status;
-          if (status === 401 || status === 403) return false;
+        if (error && typeof error === "object") {
+          // AuthError/fetch errors carregam `.status` numérico (401/403).
+          if ("status" in error) {
+            const status = (error as { status: number }).status;
+            if (status === 401 || status === 403) return false;
+          }
+          // A maioria das queries passa por withOrg.ts (PostgREST), cujos
+          // erros são PostgrestError — sem `.status`, só `.code`. Sem checar
+          // isso também, um erro de auth/RLS nunca batia no early-return
+          // acima e a query tentava de novo 3x antes de desistir.
+          if ("code" in error) {
+            const code = (error as { code: string }).code;
+            // PGRST301/PGRST302: JWT ausente/expirado. 42501: RLS/permissão negada.
+            if (code === "PGRST301" || code === "PGRST302" || code === "42501") return false;
+          }
         }
         return failureCount < 3;
       },

@@ -21,7 +21,12 @@ export function escapeHtml(str: string): string {
 
 /** Strip all HTML tags from a string */
 export function stripTags(str: string): string {
-  return str.replace(/<[^>]*>/g, "");
+  // O primeiro replace só casa tags fechadas (<...>). Uma tag sem `>` no
+  // fim da string (ex.: entrada truncada em maxLength, ou um payload como
+  // "<script src=//evil") sobrevivia intacta — se essa string depois for
+  // concatenada com outro HTML que contenha um `>` posterior, o navegador
+  // pode interpretar tudo entre os dois como uma tag válida.
+  return str.replace(/<[^>]*>/g, "").replace(/<[^>]*$/g, "");
 }
 
 /** Sanitize user input: trim, strip tags, limit length */

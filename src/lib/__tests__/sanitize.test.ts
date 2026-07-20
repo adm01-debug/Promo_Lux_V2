@@ -41,6 +41,14 @@ describe("stripTags", () => {
   it("handles empty string", () => {
     expect(stripTags("")).toBe("");
   });
+
+  it("strips an unclosed tag at the end of the string", () => {
+    expect(stripTags("hello <script src=//evil.js")).toBe("hello ");
+  });
+
+  it("strips a trailing < with no matching >", () => {
+    expect(stripTags("5 < 10")).toBe("5 ");
+  });
 });
 
 describe("sanitizeInput", () => {

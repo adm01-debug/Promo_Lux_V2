@@ -247,7 +247,16 @@ async function ensureFreshToken(admin: SupabaseClient, acc: EmailAccount): Promi
     body: new URLSearchParams({ client_id: clientId, client_secret: secret, refresh_token: acc.refresh_token, grant_type: "refresh_token" }),
   });
   const tokens = await r.json();
-  if (!r.ok) throw new RefreshError(`Refresh failed: ${JSON.stringify(tokens)}`, isFatalRefreshError(tokens));
+  if (!r.ok) {
+    // Guarda só error/error_description (nunca o corpo bruto): last_error é
+    // persistido em email_accounts, e não há garantia contratual de que o
+    // provedor OAuth jamais inclua algo mais sensível numa resposta de erro
+    // futura — melhor nunca depender disso do que confiar caso a caso.
+    const errCode = typeof tokens?.error === "string" ? tokens.error : "unknown_error";
+    const errDesc = typeof tokens?.error_description === "string" ? tokens.error_description : "";
+    const summary = [errCode, errDesc].filter(Boolean).join(": ").slice(0, 300);
+    throw new RefreshError(`Refresh failed: ${summary}`, isFatalRefreshError(tokens));
+  }
 
   const newExpires = new Date(Date.now() + (tokens.expires_in - 60) * 1000).toISOString();
   await admin.from("email_accounts").update({
