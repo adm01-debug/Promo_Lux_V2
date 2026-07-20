@@ -43,11 +43,13 @@ test.describe("Navegação protegida — modo demo", () => {
   });
 
   test("navega entre views principais pela sidebar", async ({ page }) => {
+    // O nome acessível do botão inclui o atalho de teclado (ex.: "Empresas
+    // Alt+4") — âncora só no início, não no fim (`^label$` nunca casava).
     for (const label of ["Empresas", "Analytics", "Configurar IPC", "Dashboard"]) {
-      await page.getByRole("button", { name: new RegExp(`^${label}$`) }).first().click();
+      await page.getByRole("button", { name: new RegExp(`^${label}`) }).first().click();
       // A view muda sem derrubar o shell (o botão da view continua acessível).
       await expect(
-        page.getByRole("button", { name: new RegExp(`^${label}$`) }).first(),
+        page.getByRole("button", { name: new RegExp(`^${label}`) }).first(),
       ).toBeVisible({ timeout: 8000 });
     }
   });
