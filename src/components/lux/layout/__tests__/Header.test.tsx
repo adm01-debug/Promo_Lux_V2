@@ -21,6 +21,16 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
+// Header renderiza WorkspaceSwitcher, que consome useActiveOrganization —
+// desde a migração para Context (src/contexts/active-org-context.ts), o
+// hook lança se chamado fora de <ActiveOrgProvider>. Mocka no nível do
+// módulo (mesmo padrão de DlqAlertSettingsCard/DlqHealthCard.test.tsx) em
+// vez de envolver o teste com o Provider real, que arrastaria AuthProvider.
+vi.mock("@/hooks/useOrganizations", () => ({
+  useMyOrganizations: () => ({ data: [] }),
+  useActiveOrganization: () => ({ activeOrgId: null, activeOrg: null, setActive: vi.fn() }),
+}));
+
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false } },
 });

@@ -43,12 +43,28 @@ interface OrgDispatchBuilder {
   select: (...args: unknown[]) => OrgChain;
 }
 
-const STORAGE_KEY = "lux:active-org";
+export const ACTIVE_ORG_STORAGE_KEY = "lux:active-org";
+const STORAGE_KEY = ACTIVE_ORG_STORAGE_KEY;
 let activeOrgIdMem: string | null = null;
 
 /** Define a organização ativa em memória. */
 export function setActiveOrgId(id: string | null) {
   activeOrgIdMem = id;
+}
+
+/**
+ * Limpa a organização ativa em memória E no localStorage. Use no sign-out —
+ * `setActiveOrgId(null)` sozinho não é suficiente porque `getActiveOrgId()`
+ * cai de volta pro localStorage quando a memória está vazia (linha abaixo),
+ * então uma sessão nova no mesmo navegador ainda herdaria a org do usuário
+ * anterior até o efeito de `useActiveOrganization` se autocorrigir — nesse
+ * intervalo, qualquer query que rode antes disso usa a org errada.
+ */
+export function clearActiveOrgId() {
+  activeOrgIdMem = null;
+  if (typeof window !== "undefined") {
+    window.localStorage.removeItem(STORAGE_KEY);
+  }
 }
 
 /** Lê a organização ativa: memória → localStorage → null. */

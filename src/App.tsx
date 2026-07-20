@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useAuth } from "@/contexts/auth-context";
+import { ActiveOrgProvider } from "@/contexts/ActiveOrgContext";
 import { DemoProvider } from "@/contexts/DemoContext";
 import { useDemo } from "@/contexts/demo-context";
 import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
@@ -152,22 +153,24 @@ const App = () => (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <AuthProvider>
-            <DemoProvider>
-              <GlobalOrgErrorListener />
-              <AutoTopProgressBar />
-              <UnsavedChangesDialog />
-              <OrgErrorBanner />
-              <Toaster />
-              <Sonner />
-              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                <DeepLinkBridge />
-                <UnsavedChangesProvider>
-                  <Suspense fallback={<PageLoader />}>
-                    <AnimatedRoutes />
-                  </Suspense>
-                </UnsavedChangesProvider>
-              </BrowserRouter>
-            </DemoProvider>
+            <ActiveOrgProvider>
+              <DemoProvider>
+                <GlobalOrgErrorListener />
+                <AutoTopProgressBar />
+                <UnsavedChangesDialog />
+                <OrgErrorBanner />
+                <Toaster />
+                <Sonner />
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                  <DeepLinkBridge />
+                  <UnsavedChangesProvider>
+                    <Suspense fallback={<PageLoader />}>
+                      <AnimatedRoutes />
+                    </Suspense>
+                  </UnsavedChangesProvider>
+                </BrowserRouter>
+              </DemoProvider>
+            </ActiveOrgProvider>
           </AuthProvider>
         </TooltipProvider>
       </QueryClientProvider>
