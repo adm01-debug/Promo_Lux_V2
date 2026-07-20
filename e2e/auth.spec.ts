@@ -6,7 +6,9 @@ test.describe("Auth — Login Page", () => {
   });
 
   test("renders login card with brand and core elements", async ({ page }) => {
-    await expect(page.locator("text=LUX")).toBeVisible();
+    // "LUX" também aparece no rodapé ("Powered by LUX IA") — casa múltiplos
+    // elementos e viola o strict mode; o heading é o elemento inequívoco.
+    await expect(page.getByRole("heading", { name: "LUX IA" })).toBeVisible();
     await expect(page.locator("text=SALES INTELLIGENCE PLATFORM")).toBeVisible();
     await expect(page.getByPlaceholder("seu@email.com")).toBeVisible();
     await expect(page.getByText("Entrar com Google")).toBeVisible();
@@ -40,7 +42,7 @@ test.describe("Auth — Login Page", () => {
 
   test("forgot password overlay opens and closes", async ({ page }) => {
     await page.getByText("Esqueceu a senha?").click();
-    await expect(page.getByText("Recuperar Senha")).toBeVisible();
+    await expect(page.getByText("Redefinir senha")).toBeVisible();
     // Overlay typically has a back button
     const back = page.getByRole("button", { name: /Voltar|Cancelar/i });
     if (await back.count()) {

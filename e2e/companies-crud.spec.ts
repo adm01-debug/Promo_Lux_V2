@@ -1,5 +1,5 @@
 import { test, expect } from "../playwright-fixture";
-import { enterDemoMode, navigateToView } from "./helpers/auth";
+import { enterDemoMode, loginOrDemo, navigateToView } from "./helpers/auth";
 
 const companies = {
   valid: {
@@ -13,7 +13,7 @@ const companies = {
   },
 };
 
-test.describe("Companies — CRUD Flow (Demo)", () => {
+test.describe("Companies — List & Filters (Demo)", () => {
   test.beforeEach(async ({ page }) => {
     await enterDemoMode(page);
     await navigateToView(page, /Empresas/);
@@ -23,7 +23,10 @@ test.describe("Companies — CRUD Flow (Demo)", () => {
   test("loads company list with header controls", async ({ page }) => {
     await expect(page.getByText("Filtros")).toBeVisible();
     await expect(page.getByText("Exportar CSV")).toBeVisible();
-    await expect(page.getByText("Nova Empresa")).toBeVisible();
+    // "Nova Empresa" é gated por useCan("companies","create"), que exige um
+    // usuário autenticado — modo demo não tem sessão real, então a ação de
+    // criar fica corretamente oculta (demo é read-only).
+    await expect(page.getByText("Nova Empresa")).toHaveCount(0);
   });
 
   test("real-time search filters list", async ({ page }) => {
@@ -32,6 +35,45 @@ test.describe("Companies — CRUD Flow (Demo)", () => {
     await page.waitForTimeout(400);
     await expect(page.getByText(/0 resultado/i)).toBeVisible();
     await search.fill("");
+  });
+
+  test("filters panel exposes sector and IPC score facets", async ({ page }) => {
+    // "Setor" (case-insensitive) também casa a coluna da tabela e o botão de
+    // ordenação — .first() pega o rótulo do facet no painel de filtros.
+    await expect(page.getByText("SETOR").first()).toBeVisible();
+    await expect(page.getByText("SCORE IPC").first()).toBeVisible();
+  });
+
+  test("sort controls are visible", async ({ page }) => {
+    await expect(page.getByText("Score ↓").first()).toBeVisible();
+    await expect(page.getByText("Nome")).toBeVisible();
+  });
+
+  test("Export CSV button is present and enabled", async ({ page }) => {
+    const btn = page.getByRole("button", { name: /Exportar CSV/ });
+    await expect(btn).toBeVisible();
+    await expect(btn).toBeEnabled();
+  });
+
+  test("IPC score tooltip information available in table headers", async ({ page }) => {
+    // Score IPC header has a help icon — hover should not crash
+    const header = page.getByText(/Score IPC/i).first();
+    await expect(header).toBeVisible();
+    await header.hover();
+  });
+});
+
+// AddCompanyDialog só renderiza para usuários com role de membership real
+// (useCan("companies","create")) — modo demo não autentica ninguém, então
+// esses testes exigem credenciais reais via E2E_TEST_EMAIL/E2E_TEST_PASSWORD
+// (ver helpers/auth.ts). Sem elas, ficam pulados em vez de falhar tentando
+// clicar num botão que o próprio app oculta corretamente.
+test.describe("Companies — Create Flow (requires real credentials)", () => {
+  test.beforeEach(async ({ page }) => {
+    test.skip(!process.env.E2E_TEST_EMAIL, "E2E_TEST_EMAIL/E2E_TEST_PASSWORD não configurados");
+    await loginOrDemo(page);
+    await navigateToView(page, /Empresas/);
+    await expect(page.getByText("Empresas Identificadas")).toBeVisible({ timeout: 5000 });
   });
 
   test("opens Add Company dialog", async ({ page }) => {
@@ -63,28 +105,5 @@ test.describe("Companies — CRUD Flow (Demo)", () => {
     await expect(page.getByPlaceholder("Nome da empresa")).toBeVisible();
     await page.locator("[role='dialog'] button:has(svg.lucide-x)").first().click();
     await expect(page.getByPlaceholder("Nome da empresa")).not.toBeVisible({ timeout: 3000 });
-  });
-
-  test("filters panel exposes sector and IPC score facets", async ({ page }) => {
-    await expect(page.getByText("SETOR")).toBeVisible();
-    await expect(page.getByText("SCORE IPC")).toBeVisible();
-  });
-
-  test("sort controls are visible", async ({ page }) => {
-    await expect(page.getByText("Score ↓").first()).toBeVisible();
-    await expect(page.getByText("Nome")).toBeVisible();
-  });
-
-  test("Export CSV button is present and enabled", async ({ page }) => {
-    const btn = page.getByRole("button", { name: /Exportar CSV/ });
-    await expect(btn).toBeVisible();
-    await expect(btn).toBeEnabled();
-  });
-
-  test("IPC score tooltip information available in table headers", async ({ page }) => {
-    // Score IPC header has a help icon — hover should not crash
-    const header = page.getByText(/Score IPC/i).first();
-    await expect(header).toBeVisible();
-    await header.hover();
   });
 });
