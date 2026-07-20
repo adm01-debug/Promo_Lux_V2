@@ -51,7 +51,10 @@ vi.mock("@/integrations/supabase/withOrg", () => ({
       select: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ data: [], error: null }) }),
     }),
   },
-  getActiveOrgId: () => "test-org-id",
+}));
+
+vi.mock("@/contexts/active-org-context", () => ({
+  useActiveOrganization: () => ({ activeOrgId: "test-org-id", activeOrg: null, setActive: vi.fn() }),
 }));
 
 import { renderHook } from "@testing-library/react";

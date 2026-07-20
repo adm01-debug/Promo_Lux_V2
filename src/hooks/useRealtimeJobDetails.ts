@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { getActiveOrgId } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 
 export function useRealtimeJobDetails(jobId: string | null) {
   const queryClient = useQueryClient();
-  const activeOrgId = getActiveOrgId();
+  // Ver useRealtimeCompanies.ts: Context reativo em vez de snapshot estático.
+  const { activeOrgId } = useActiveOrganization();
 
   useEffect(() => {
     if (!jobId || !activeOrgId) return;
