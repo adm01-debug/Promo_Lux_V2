@@ -62,9 +62,11 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  // 'planned' usa o planner (EXPLAIN) — respeita filtros WHERE sem executar scan.
+  // Estimativa suficiente para paginação de auditoria (dezenas de milhares de linhas).
   let query = db
     .from("audit_logs")
-    .select("*", { count: "exact" })
+    .select("*", { count: "planned" })
     .order("created_at", { ascending: false });
 
   if (table === "automations") {
