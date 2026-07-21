@@ -288,12 +288,21 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Chaos: lê feature flag global (organization_id NULL) uma vez por batch.
+    const { data: chaosFlag } = await supabase
+      .from("feature_flags")
+      .select("enabled")
+      .eq("flag_name", "chaos_scrape_enabled")
+      .is("organization_id", null)
+      .maybeSingle();
+    const chaosOn = chaosFlag?.enabled === true;
+
     // Melhoria #2: processa em chunks paralelos (PARALLEL_CHUNK) — evita
     // enviar 10 requests simultâneos ao provedor mas dobra o throughput vs. serial.
     const results: PromiseSettledResult<void>[] = [];
     for (let i = 0; i < claimed.length; i += PARALLEL_CHUNK) {
       const chunk = claimed.slice(i, i + PARALLEL_CHUNK);
-      const settled = await Promise.allSettled(chunk.map((t) => processTask(supabase, t)));
+      const settled = await Promise.allSettled(chunk.map((t) => processTask(supabase, t, chaosOn)));
       results.push(...settled);
     }
     const failed = results.filter((r) => r.status === "rejected").length;
