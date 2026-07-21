@@ -26,5 +26,10 @@ replay_dead_letter_batch
 reset_circuit_breaker
 
 # Scrape engine 10/10 (ADR-010)
+# Scrape engine 10/10 (ADR-010)
 dlq_top_reasons
 api_latency_percentiles
+
+# Retry policy approval/rollback flow
+apply_retry_advisory
+rollback_retry_advisory
