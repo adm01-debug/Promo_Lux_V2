@@ -4519,7 +4519,15 @@ export type Database = {
         Args: { retention_days?: number }
         Returns: number
       }
+      prune_campaign_events: {
+        Args: { retention_days?: number }
+        Returns: number
+      }
       prune_dlq_health_snapshots: { Args: never; Returns: number }
+      prune_email_sync_log: {
+        Args: { retention_days?: number }
+        Returns: number
+      }
       purge_dead_letter: {
         Args: {
           _replayed_retention_days?: number
