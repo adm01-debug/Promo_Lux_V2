@@ -132,12 +132,13 @@ export function useWebScrapeExtract() {
 export function useReplayWebDlq() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (limit = 100) => {
-      const { data, error } = await supabase.rpc("replay_web_dead_letter_batch", { _limit: limit });
+    mutationFn: async (limit = 100): Promise<number> => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase.rpc as any)("replay_web_dead_letter_batch", { _limit: limit });
       if (error) throw error;
-      return data as number;
+      return (data as number) ?? 0;
     },
-    onSuccess: (count) => {
+    onSuccess: (count: number) => {
       qc.invalidateQueries({ queryKey: ["web-scrape-tasks"] });
       toast.success(`${count} tarefas reenviadas para a fila.`);
     },
