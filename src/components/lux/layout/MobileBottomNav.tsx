@@ -30,14 +30,17 @@ const triggerHaptic = (style: "light" | "medium" | "heavy" = "light") => {
 };
 
 export function MobileBottomNav({ activeView, onNavigate, onOpenMenu }: MobileBottomNavProps) {
+  // Reutiliza mesma queryKey do Header para deduplicar a request (index-only scan).
   const { data: unreadCount } = useQuery({
-    queryKey: ["unread-notifications-count"],
+    queryKey: ["notifications-count", false],
     queryFn: async () => {
-      const { count } = await db
+      const MAX_UNREAD = 99;
+      const { data } = await db
         .from("notifications")
-        .select("*", { count: "exact", head: true })
-        .eq("read", false);
-      return count ?? 0;
+        .select("id")
+        .eq("read", false)
+        .limit(MAX_UNREAD + 1);
+      return data?.length ?? 0;
     },
     staleTime: 30_000,
   });
