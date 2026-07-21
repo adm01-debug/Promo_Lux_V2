@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [Unreleased] - 2026-07-21
+### Adicionado
+- **Relatório comparativo de resiliência**: aba "Resiliência" em Monitoring com cards de Δ successRate/p95/DLQ, gráficos (barras dos 20 piores cenários + linhas de p95) e tabela completa. Download JSON e CSV client-side. Snapshots servidos como assets estáticos em `public/reports/` (`baseline.json`, `current.json`). Módulo `src/lib/resilience/compareReport.ts` com testes unitários cobrindo cenários novos/removidos, empates e regressão.
+
+
 ## [10.0.0] - 2026-05-13
 ### Adicionado
 - **Maturidade 10/10 Concluída**: Sistema em estado de perfeição técnica e operacional.
