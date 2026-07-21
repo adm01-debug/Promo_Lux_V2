@@ -37,7 +37,7 @@ export const EnrichmentFunnel = () => {
       ? () => DEMO_FUNNEL
       : async () => {
           // 1 scan atômico via RPC — substitui 4 count=exact paralelos.
-          const { data, error } = await db.rpc("enrichment_funnel_counts");
+          const { data, error } = await supabase.rpc("enrichment_funnel_counts");
           if (error) throw error;
           const row = Array.isArray(data) ? data[0] : data;
           return {
