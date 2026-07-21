@@ -45,7 +45,10 @@ import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
 import { VaultCookiesPanel } from "@/components/lux/monitoring/VaultCookiesPanel";
 import { OrgProxiesView } from "@/components/lux/OrgProxiesView";
-import { Cookie, Shield } from "lucide-react";
+import { DlqTriageView } from "@/components/lux/monitoring/DlqTriageView";
+import { ScrapeLatencyPanel } from "@/components/lux/monitoring/ScrapeLatencyPanel";
+import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
@@ -394,9 +397,18 @@ const AutomationMonitoring = () => {
             <Shield className="h-4 w-4" />
             Proxies
           </TabsTrigger>
-
-
-
+          <TabsTrigger value="dlq-triage" className="gap-2">
+            <ShieldAlertIcon className="h-4 w-4" />
+            Triagem DLQ
+          </TabsTrigger>
+          <TabsTrigger value="scrape-latency" className="gap-2">
+            <Timer className="h-4 w-4" />
+            Latência Motor
+          </TabsTrigger>
+          <TabsTrigger value="rate-limits" className="gap-2">
+            <Gauge className="h-4 w-4" />
+            Rate Limits
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
@@ -558,6 +570,18 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="proxies" className="space-y-4">
           <OrgProxiesView />
+        </TabsContent>
+
+        <TabsContent value="dlq-triage" className="space-y-4">
+          <DlqTriageView />
+        </TabsContent>
+
+        <TabsContent value="scrape-latency" className="space-y-4">
+          <ScrapeLatencyPanel />
+        </TabsContent>
+
+        <TabsContent value="rate-limits" className="space-y-4">
+          <OrgRateLimitsView />
         </TabsContent>
 
       </Tabs>

@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PlacesApiNewToggle } from "@/components/lux/PlacesApiNewToggle";
+import { PlacesApiUsageCard } from "@/components/lux/PlacesApiUsageCard";
 
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -258,7 +259,11 @@ export const GmapsScraperView = () => {
         ))}
       </div>
 
-      <PlacesApiNewToggle />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <PlacesApiNewToggle />
+        <PlacesApiUsageCard />
+      </div>
+
 
 
       {/* Jobs list */}

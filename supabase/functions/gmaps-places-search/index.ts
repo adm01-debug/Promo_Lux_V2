@@ -12,6 +12,7 @@ import { z } from "https://esm.sh/zod@3.23.8";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 const GOOGLE_MAPS_API_KEY = Deno.env.get("GOOGLE_MAPS_API_KEY");
 
@@ -92,7 +93,27 @@ Deno.serve(async (req) => {
     }
 
     const data = await res.json() as { places?: unknown[] };
-    return json(200, { source: "places_api_new", places: data.places ?? [], trace_id: traceId });
+    const places = data.places ?? [];
+
+    // Registra consumo (tier "pro" pois FIELD_MASK inclui rating/phone/website).
+    // Falha silenciosa: contabilidade não deve derrubar a resposta.
+    try {
+      if (SUPABASE_SERVICE_ROLE_KEY && places.length > 0) {
+        const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+        const { data: orgId } = await supabase.rpc("default_org_for_current_user");
+        if (orgId) {
+          await admin.rpc("record_places_api_call", {
+            _organization_id: orgId,
+            _tier: "pro",
+            _calls: places.length,
+          });
+        }
+      }
+    } catch (accErr) {
+      console.warn(JSON.stringify({ level: "warn", trace_id: traceId, msg: "usage_record_failed", err: (accErr as Error).message }));
+    }
+
+    return json(200, { source: "places_api_new", places, trace_id: traceId });
   } catch (err) {
     console.error(JSON.stringify({ level: "error", trace_id: traceId, err: (err as Error).message }));
     return json(500, { error: "internal_error", details: (err as Error).message, trace_id: traceId });
