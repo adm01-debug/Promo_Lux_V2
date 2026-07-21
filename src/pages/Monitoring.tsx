@@ -45,7 +45,10 @@ import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
 import { VaultCookiesPanel } from "@/components/lux/monitoring/VaultCookiesPanel";
 import { OrgProxiesView } from "@/components/lux/OrgProxiesView";
-import { Cookie, Shield } from "lucide-react";
+import { DlqTriageView } from "@/components/lux/monitoring/DlqTriageView";
+import { ScrapeLatencyPanel } from "@/components/lux/monitoring/ScrapeLatencyPanel";
+import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
