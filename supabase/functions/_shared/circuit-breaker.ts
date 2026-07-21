@@ -48,7 +48,10 @@ export async function checkCircuitBreaker(supabase: SupabaseClient, serviceName:
     return true;
   }
 
-  if (cb.state === "closed") return true;
+  if (cb.state === "closed") {
+    closedCache.set(serviceName, Date.now() + CLOSED_CACHE_TTL_MS);
+    return true;
+  }
 
   const now = Date.now();
 
