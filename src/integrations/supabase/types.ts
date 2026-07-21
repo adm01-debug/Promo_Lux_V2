@@ -4509,7 +4509,16 @@ export type Database = {
         }[]
       }
       prune_api_latency_snapshots: { Args: never; Returns: number }
+      prune_api_request_logs: {
+        Args: { retention_days?: number }
+        Returns: number
+      }
+      prune_audit_logs: { Args: { retention_days?: number }; Returns: number }
       prune_auth_rate_limits: { Args: never; Returns: undefined }
+      prune_automation_execution_logs: {
+        Args: { retention_days?: number }
+        Returns: number
+      }
       prune_dlq_health_snapshots: { Args: never; Returns: number }
       purge_dead_letter: {
         Args: {
