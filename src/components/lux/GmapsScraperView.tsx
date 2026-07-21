@@ -219,6 +219,13 @@ export const GmapsScraperView = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
+                    <p className="text-sm text-foreground">Reviews individuais</p>
+                    <p className="text-[10px] text-muted-foreground">Coleta reviews adicionais de cada empresa</p>
+                  </div>
+                  <Switch checked={extraReviews} onCheckedChange={setExtraReviews} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
                     <p className="text-sm text-foreground">Sincronização automática</p>
                     <p className="text-[10px] text-muted-foreground">Importa para o CRM assim que concluir</p>
                   </div>
