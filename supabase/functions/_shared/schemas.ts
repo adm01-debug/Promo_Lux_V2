@@ -12,6 +12,7 @@ export const ScrapeJobConfigSchema = z.object({
   email: z.boolean().default(true),
   max_time: z.number().int().positive().default(480000000000),
   proxies: z.array(z.string().max(500)).max(10).default([]),
+  extra_reviews: z.boolean().default(false),
 });
 
 export const CreateScrapeJobSchema = z.object({

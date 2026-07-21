@@ -1060,93 +1060,216 @@ export type Database = {
       }
       companies: {
         Row: {
+          business_status: string | null
+          cid: string | null
           cnpj: string | null
           created_at: string
           deleted_at: string | null
           description: string | null
+          descriptions: string | null
           email: string | null
           employees: string | null
           enriched: boolean | null
+          google_maps_url: string | null
           id: string
+          images: string[] | null
           instagram_url: string | null
           ipc_score: number | null
           lat: number | null
+          latitude: number | null
           linkedin_url: string | null
           lng: number | null
           location: string | null
           logo_url: string | null
+          longitude: number | null
+          menu_url: string | null
           name: string
+          open_hours: Json | null
+          order_online_url: string | null
           organization_id: string
+          owner_claimed: boolean | null
           phone: string | null
+          place_id: string | null
+          plus_code: string | null
+          popular_times: Json | null
+          price_range: string | null
+          rating: number | null
           raw_data: Json | null
+          reservations_url: string | null
           revenue: number | null
+          review_count: number | null
           sector: string | null
           source: string
           starred: boolean | null
+          street_view_url: string | null
+          thumbnail_url: string | null
+          timezone: string | null
           updated_at: string
           user_id: string
           version: number
           website: string | null
         }
         Insert: {
+          business_status?: string | null
+          cid?: string | null
           cnpj?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
+          descriptions?: string | null
           email?: string | null
           employees?: string | null
           enriched?: boolean | null
+          google_maps_url?: string | null
           id?: string
+          images?: string[] | null
           instagram_url?: string | null
           ipc_score?: number | null
           lat?: number | null
+          latitude?: number | null
           linkedin_url?: string | null
           lng?: number | null
           location?: string | null
           logo_url?: string | null
+          longitude?: number | null
+          menu_url?: string | null
           name: string
+          open_hours?: Json | null
+          order_online_url?: string | null
           organization_id?: string
+          owner_claimed?: boolean | null
           phone?: string | null
+          place_id?: string | null
+          plus_code?: string | null
+          popular_times?: Json | null
+          price_range?: string | null
+          rating?: number | null
           raw_data?: Json | null
+          reservations_url?: string | null
           revenue?: number | null
+          review_count?: number | null
           sector?: string | null
           source?: string
           starred?: boolean | null
+          street_view_url?: string | null
+          thumbnail_url?: string | null
+          timezone?: string | null
           updated_at?: string
           user_id?: string
           version?: number
           website?: string | null
         }
         Update: {
+          business_status?: string | null
+          cid?: string | null
           cnpj?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
+          descriptions?: string | null
           email?: string | null
           employees?: string | null
           enriched?: boolean | null
+          google_maps_url?: string | null
           id?: string
+          images?: string[] | null
           instagram_url?: string | null
           ipc_score?: number | null
           lat?: number | null
+          latitude?: number | null
           linkedin_url?: string | null
           lng?: number | null
           location?: string | null
           logo_url?: string | null
+          longitude?: number | null
+          menu_url?: string | null
           name?: string
+          open_hours?: Json | null
+          order_online_url?: string | null
           organization_id?: string
+          owner_claimed?: boolean | null
           phone?: string | null
+          place_id?: string | null
+          plus_code?: string | null
+          popular_times?: Json | null
+          price_range?: string | null
+          rating?: number | null
           raw_data?: Json | null
+          reservations_url?: string | null
           revenue?: number | null
+          review_count?: number | null
           sector?: string | null
           source?: string
           starred?: boolean | null
+          street_view_url?: string | null
+          thumbnail_url?: string | null
+          timezone?: string | null
           updated_at?: string
           user_id?: string
           version?: number
           website?: string | null
         }
         Relationships: []
+      }
+      company_reviews: {
+        Row: {
+          author_avatar: string | null
+          author_name: string | null
+          comment: string | null
+          company_id: string
+          created_at: string
+          external_id: string | null
+          id: string
+          organization_id: string
+          owner_response: string | null
+          rating: number | null
+          raw_data: Json | null
+          reviewed_at: string | null
+        }
+        Insert: {
+          author_avatar?: string | null
+          author_name?: string | null
+          comment?: string | null
+          company_id: string
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          organization_id: string
+          owner_response?: string | null
+          rating?: number | null
+          raw_data?: Json | null
+          reviewed_at?: string | null
+        }
+        Update: {
+          author_avatar?: string | null
+          author_name?: string | null
+          comment?: string | null
+          company_id?: string
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          organization_id?: string
+          owner_response?: string | null
+          rating?: number | null
+          raw_data?: Json | null
+          reviewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_reviews_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       db_health_snapshots: {
         Row: {
@@ -2468,6 +2591,53 @@ export type Database = {
         }
         Relationships: []
       }
+      org_proxies: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string
+          last_used_at: string | null
+          organization_id: string
+          proxy_type: string
+          updated_at: string
+          url: string
+          usage_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          last_used_at?: string | null
+          organization_id: string
+          proxy_type?: string
+          updated_at?: string
+          url: string
+          usage_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          last_used_at?: string | null
+          organization_id?: string
+          proxy_type?: string
+          updated_at?: string
+          url?: string
+          usage_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_proxies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_scrape_rate_limits: {
         Row: {
           created_at: string
@@ -2879,6 +3049,7 @@ export type Database = {
           created_at: string
           error_message: string | null
           external_id: string | null
+          extra_reviews: boolean | null
           id: string
           name: string
           organization_id: string
@@ -2898,6 +3069,7 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           external_id?: string | null
+          extra_reviews?: boolean | null
           id?: string
           name: string
           organization_id?: string
@@ -2917,6 +3089,7 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           external_id?: string | null
+          extra_reviews?: boolean | null
           id?: string
           name?: string
           organization_id?: string

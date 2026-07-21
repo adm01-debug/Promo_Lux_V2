@@ -40,6 +40,7 @@ import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
 import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ipc/scoring.ts";
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
+import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -100,7 +101,7 @@ const SyncResultsSchema = z.object({
   job_id: z.string().uuid("Invalid job_id"),
 });
 
-const ActionSchema = z.enum(["list", "create", "delete", "sync-results"]);
+const ActionSchema = z.enum(["list", "create", "delete", "sync-results", "export"]);
 
 serve(async (req) => {
   const requestId = crypto.randomUUID();
@@ -280,6 +281,19 @@ serve(async (req) => {
       }
       const body = { name: parsed.data.name, ...parsed.data.config };
 
+      // G4: injeta proxies ativos da organização quando o usuário não passou explícitos.
+      let orgProxies: string[] = [];
+      if (!parsed.data.config.proxies?.length) {
+        const { data: proxyRows } = await supabase
+          .from("org_proxies")
+          .select("url")
+          .eq("is_active", true)
+          .order("last_used_at", { ascending: true, nullsFirst: true })
+          .limit(10);
+        orgProxies = (proxyRows ?? []).map((p: { url: string }) => p.url);
+        if (orgProxies.length) body.proxies = orgProxies;
+      }
+
       // Melhoria #8: trace_id correlacionado (gmaps-proxy → scrape_jobs → worker)
       const traceId = crypto.randomUUID();
       const configPayload = {
@@ -293,7 +307,8 @@ serve(async (req) => {
         depth: parsed.data.config.depth,
         email: parsed.data.config.email,
         max_time: parsed.data.config.max_time,
-        proxies: parsed.data.config.proxies,
+        proxies: body.proxies ?? [],
+        extra_reviews: parsed.data.config.extra_reviews,
       };
 
       const { data: dbJob, error: dbError } = await supabase
@@ -304,6 +319,7 @@ serve(async (req) => {
           status: "pending",
           source: "gmaps",
           auto_sync: parsed.data.auto_sync,
+          extra_reviews: parsed.data.config.extra_reviews,
           config: configPayload,
           trace_id: traceId,
         })
@@ -448,22 +464,30 @@ serve(async (req) => {
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
 
-      let results: Record<string, string>[] = [];
+      let results: RawGmapsRow[] = [];
       try {
-        const res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+        // Tenta JSON primeiro (endpoint mais rico), fallback para CSV.
+        let res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download?format=json`, {
           signal: AbortSignal.timeout(30000),
         });
+        let isJson = res.ok && (res.headers.get("content-type") || "").includes("json");
+        if (!res.ok) {
+          res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+            signal: AbortSignal.timeout(30000),
+          });
+          isJson = (res.headers.get("content-type") || "").includes("json");
+        }
         if (res.ok) {
           const text = await res.text();
-          const lines = text.split("\n").filter(Boolean);
-          if (lines.length > 1) {
-            const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
-            results = lines.slice(1).map((line: string) => {
-              const values = line.split(",").map((v: string) => v.trim().replace(/"/g, ""));
-              const obj: Record<string, string> = {};
-              headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
-              return obj;
-            });
+          if (isJson) {
+            try {
+              const parsed = JSON.parse(text);
+              results = Array.isArray(parsed) ? parsed as RawGmapsRow[] : [];
+            } catch {
+              results = parseCsv(text);
+            }
+          } else {
+            results = parseCsv(text);
           }
         }
       } catch (err) {
@@ -481,33 +505,74 @@ serve(async (req) => {
 
       let companiesCreated = 0;
 
-      for (const result of results) {
-        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as IPCHittingCriteria | undefined);
+      for (const rawRow of results) {
+        const mapped = mapGmapsRow(rawRow);
+        const ipcScore = calculateIPCScore(
+          {
+            category: mapped.sector,
+            address: mapped.location,
+            email: mapped.email,
+            phone: mapped.phone,
+            website: mapped.website,
+            rating: mapped.rating ?? undefined,
+          },
+          ipcConfig?.criteria as IPCHittingCriteria | undefined,
+        );
 
-        // organization_id vem do job (não do DEFAULT da coluna): este client
-        // usa a service_role key sem repassar o Authorization do usuário, então
-        // auth.uid() não resolve dentro do banco e default_org_for_current_user()
-        // gravaria NULL — violando o NOT NULL e, pior, colidindo silenciosamente
-        // com empresas de outra organização na chave única (organization_id,
-        // name, source) caso o DEFAULT resolvesse para outro valor incorreto.
-        const { data: company } = await supabase
+        // G9: deduplicação por place_id quando disponível (o Google garante
+        // unicidade global); senão cai no par legado (org, name, source).
+        const conflictTarget = mapped.place_id
+          ? "organization_id,place_id"
+          : "organization_id,name,source";
+
+        // organization_id vem do job (não do DEFAULT da coluna): o client
+        // service_role não repassa Authorization, então auth.uid() é NULL.
+        const payload = {
+          user_id: userId,
+          organization_id: job.organization_id,
+          name: mapped.name,
+          sector: mapped.sector,
+          location: mapped.location,
+          website: mapped.website,
+          phone: mapped.phone,
+          email: mapped.email,
+          source: "gmaps",
+          ipc_score: ipcScore,
+          enriched: !!(mapped.email || mapped.phone),
+          raw_data: rawRow,
+          latitude: mapped.latitude,
+          longitude: mapped.longitude,
+          place_id: mapped.place_id,
+          cid: mapped.cid,
+          plus_code: mapped.plus_code,
+          google_maps_url: mapped.google_maps_url,
+          street_view_url: mapped.street_view_url,
+          rating: mapped.rating,
+          review_count: mapped.review_count,
+          price_range: mapped.price_range,
+          business_status: mapped.business_status,
+          thumbnail_url: mapped.thumbnail_url,
+          images: mapped.images,
+          open_hours: mapped.open_hours,
+          popular_times: mapped.popular_times,
+          timezone: mapped.timezone,
+          descriptions: mapped.descriptions,
+          owner_claimed: mapped.owner_claimed,
+          reservations_url: mapped.reservations_url,
+          order_online_url: mapped.order_online_url,
+          menu_url: mapped.menu_url,
+        };
+
+        const { data: company, error: upsertError } = await supabase
           .from("companies")
-          .upsert({
-            user_id: userId,
-            organization_id: job.organization_id,
-            name: result.name || result.title || "Unknown",
-            sector: result.category || result.type || "Não classificado",
-            location: result.address || result.city || "",
-            website: result.website || result.web_site || "",
-            phone: result.phone || "",
-            email: result.email || "",
-            source: "gmaps",
-            ipc_score: ipcScore,
-            enriched: !!(result.email || result.phone),
-            raw_data: result,
-          }, { onConflict: "organization_id,name,source" })
+          .upsert(payload, { onConflict: conflictTarget })
           .select()
           .single();
+
+        if (upsertError) {
+          log.warn("company_upsert_failed", { error: upsertError.message, name: mapped.name });
+          continue;
+        }
 
         if (company) {
           companiesCreated++;
@@ -515,11 +580,12 @@ serve(async (req) => {
             user_id: userId,
             job_id: job_id,
             company_id: company.id,
-            raw_data: result,
+            raw_data: rawRow,
             processed: true,
           });
         }
       }
+
 
       await supabase
         .from("scrape_jobs")
@@ -549,6 +615,69 @@ serve(async (req) => {
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // EXPORT — CSV/JSON das empresas de um job (G5)
+    if (action === "export" && req.method === "GET") {
+      const jobId = url.searchParams.get("id");
+      const format = (url.searchParams.get("format") || "csv").toLowerCase();
+      if (!jobId || !z.string().uuid().safeParse(jobId).success) {
+        return badRequest(corsHeaders, { id: "Valid UUID required" });
+      }
+      if (format !== "csv" && format !== "json") {
+        return badRequest(corsHeaders, { format: "Must be csv or json" });
+      }
+
+      // Confirma que o job pertence ao usuário (RLS backup).
+      const { data: job } = await supabase
+        .from("scrape_jobs")
+        .select("id, name, organization_id")
+        .eq("id", jobId)
+        .eq("user_id", userId)
+        .single();
+      if (!job) return badRequest(corsHeaders, { id: "Job not found" });
+
+      const { data: rows } = await supabase
+        .from("scrape_results")
+        .select("company_id, companies(name, sector, location, website, phone, email, latitude, longitude, place_id, cid, rating, review_count, price_range, business_status, thumbnail_url, google_maps_url, ipc_score)")
+        .eq("job_id", jobId);
+
+      const companies = (rows ?? [])
+        .map((r: { companies: unknown }) => r.companies)
+        .filter(Boolean) as Record<string, unknown>[];
+
+      const safeName = job.name.replace(/[^a-z0-9-_]+/gi, "_").slice(0, 60);
+
+      if (format === "json") {
+        return new Response(JSON.stringify(companies, null, 2), {
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Content-Disposition": `attachment; filename="${safeName}.json"`,
+          },
+        });
+      }
+
+      const cols = [
+        "name", "sector", "location", "website", "phone", "email",
+        "latitude", "longitude", "place_id", "cid", "rating", "review_count",
+        "price_range", "business_status", "thumbnail_url", "google_maps_url", "ipc_score",
+      ];
+      const escape = (v: unknown) => {
+        if (v === null || v === undefined) return "";
+        const s = String(v).replace(/"/g, '""');
+        return /[",\n\r]/.test(s) ? `"${s}"` : s;
+      };
+      const csv = [cols.join(","), ...companies.map((c) => cols.map((k) => escape(c[k])).join(","))].join("\n");
+
+      return new Response(csv, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": `attachment; filename="${safeName}.csv"`,
+        },
+      });
+    }
+
 
     return new Response(JSON.stringify({ error: "Unknown action" }), {
       status: 400,

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { validateScrapeJob } from "@/lib/schemas/scrapeJob";
 import { useAuth } from "@/contexts/auth-context";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { MapPin, Plus, Trash2, Download, RefreshCw, Search, Globe, Mail, Clock, CheckCircle2, AlertCircle, Loader2, Zap, Eye, DatabaseIcon } from "lucide-react";
+import { MapPin, Plus, Trash2, Download, RefreshCw, Search, Globe, Mail, Clock, CheckCircle2, AlertCircle, Loader2, Zap, Eye, DatabaseIcon, FileDown } from "lucide-react";
 import { DataError } from "@/components/lux/DataError";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,7 @@ export const GmapsScraperView = () => {
   const [depth, setDepth] = useState(1);
   const [extractEmail, setExtractEmail] = useState(true);
   const [fastMode, setFastMode] = useState(false);
+  const [extraReviews, setExtraReviews] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
   const [expandedJob, setExpandedJob] = useState<string | null>(null);
 
@@ -106,6 +107,12 @@ export const GmapsScraperView = () => {
     },
   });
 
+  const exportMutation = useMutation({
+    mutationFn: ({ jobId, format }: { jobId: string; format: "csv" | "json" }) => gmapsApi.exportJob(jobId, format),
+    onSuccess: (_, vars) => toast({ title: "Exportação iniciada", description: `Arquivo ${vars.format.toUpperCase()} baixado.` }),
+    onError: (err) => toast({ title: "Erro", description: `Falha ao exportar: ${err.message}`, variant: "destructive" }),
+  });
+
   const handleCreate = () => {
     const result = validateScrapeJob({
       name: jobName,
@@ -130,6 +137,7 @@ export const GmapsScraperView = () => {
       depth,
       email: extractEmail,
       fast_mode: fastMode,
+      extra_reviews: extraReviews,
       auto_sync: autoSync,
     });
   };
@@ -208,6 +216,13 @@ export const GmapsScraperView = () => {
                     <p className="text-[10px] text-muted-foreground">Busca emails no site de cada empresa</p>
                   </div>
                   <Switch checked={extractEmail} onCheckedChange={setExtractEmail} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-foreground">Reviews individuais</p>
+                    <p className="text-[10px] text-muted-foreground">Coleta reviews adicionais de cada empresa</p>
+                  </div>
+                  <Switch checked={extraReviews} onCheckedChange={setExtraReviews} />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
@@ -356,6 +371,28 @@ export const GmapsScraperView = () => {
                                   {syncMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <DatabaseIcon className="h-3.5 w-3.5" />}
                                   Importar & Qualificar IPC
                                 </Button>
+                              )}
+                              {(job.status === "completed" || job.status === "ok") && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-1.5 text-xs"
+                                    disabled={exportMutation.isPending}
+                                    onClick={(e) => { e.stopPropagation(); exportMutation.mutate({ jobId: job.id, format: "csv" }); }}
+                                  >
+                                    <FileDown className="h-3.5 w-3.5" /> CSV
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-1.5 text-xs"
+                                    disabled={exportMutation.isPending}
+                                    onClick={(e) => { e.stopPropagation(); exportMutation.mutate({ jobId: job.id, format: "json" }); }}
+                                  >
+                                    <FileDown className="h-3.5 w-3.5" /> JSON
+                                  </Button>
+                                </>
                               )}
                               {job.status === "running" || job.status === "working" || job.status === "pending" ? (
                                 <Button
