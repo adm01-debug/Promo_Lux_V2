@@ -4308,6 +4308,15 @@ export type Database = {
         }
         Returns: string
       }
+      enrichment_funnel_counts: {
+        Args: never
+        Returns: {
+          enriched: number
+          high_score: number
+          qualified: number
+          total: number
+        }[]
+      }
       evaluate_api_latency_alerts: {
         Args: {
           _consecutive?: number
