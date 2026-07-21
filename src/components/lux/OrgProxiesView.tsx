@@ -102,7 +102,7 @@ export const OrgProxiesView = () => {
             icon={Globe}
             title="Nenhum proxy cadastrado"
             description="Cadastre proxies para distribuir requisições de raspagem e evitar bloqueios do Google Maps."
-            actions={[{ label: "Cadastrar primeiro proxy", onClick: openNew, icon: Plus }]}
+            actions={[{ label: "Cadastrar primeiro proxy", onClick: openNew }]}
           />
 
         ) : (
