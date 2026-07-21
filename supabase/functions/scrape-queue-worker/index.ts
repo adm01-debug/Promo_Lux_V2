@@ -291,11 +291,11 @@ Deno.serve(async (req) => {
     // Chaos: lê feature flag global (organization_id NULL) uma vez por batch.
     const { data: chaosFlag } = await supabase
       .from("feature_flags")
-      .select("enabled")
-      .eq("flag_name", "chaos_scrape_enabled")
+      .select("is_enabled")
+      .eq("flag_key", "chaos_scrape_enabled")
       .is("organization_id", null)
       .maybeSingle();
-    const chaosOn = chaosFlag?.enabled === true;
+    const chaosOn = chaosFlag?.is_enabled === true;
 
     // Melhoria #2: processa em chunks paralelos (PARALLEL_CHUNK) — evita
     // enviar 10 requests simultâneos ao provedor mas dobra o throughput vs. serial.
