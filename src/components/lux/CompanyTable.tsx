@@ -1,4 +1,4 @@
-import { Building2, ExternalLink, MapPin, Tag, HelpCircle, Sparkles } from "lucide-react";
+import { Building2, ExternalLink, MapPin, Tag, Sparkles, Star } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { useVirtualCompanies } from "@/hooks/useVirtualCompanies";
@@ -156,8 +156,18 @@ export const CompanyTable = () => {
                     >
                       <td className="p-3 flex-1 min-w-0">
                         <div className="flex items-center gap-2.5 truncate">
-                          <div className="h-9 w-9 rounded-lg bg-secondary/80 flex items-center justify-center shrink-0 ring-1 ring-border/30 group-hover:ring-primary/30 transition-all">
-                            <Building2 className="h-4 w-4 text-primary" />
+                          <div className="h-9 w-9 rounded-lg bg-secondary/80 flex items-center justify-center shrink-0 ring-1 ring-border/30 group-hover:ring-primary/30 transition-all overflow-hidden">
+                            {(company as { thumbnail_url?: string }).thumbnail_url ? (
+                              <img
+                                src={(company as { thumbnail_url: string }).thumbnail_url}
+                                alt=""
+                                loading="lazy"
+                                className="h-full w-full object-cover"
+                                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                              />
+                            ) : (
+                              <Building2 className="h-4 w-4 text-primary" />
+                            )}
                           </div>
                           <div className="truncate">
                             <div className="flex items-center gap-1.5 truncate">
@@ -171,6 +181,15 @@ export const CompanyTable = () => {
                               )}
                               {company.enriched && (
                                 <Sparkles className="h-3 w-3 text-primary/70 animate-pulse shrink-0" />
+                              )}
+                              {(company as { rating?: number | null }).rating != null && (
+                                <span className="shrink-0 inline-flex items-center gap-0.5 text-[10px] text-warning font-medium">
+                                  <Star className="h-2.5 w-2.5 fill-warning" />
+                                  {(company as { rating: number }).rating.toFixed(1)}
+                                  {(company as { review_count?: number | null }).review_count ? (
+                                    <span className="text-muted-foreground/60">({(company as { review_count: number }).review_count})</span>
+                                  ) : null}
+                                </span>
                               )}
                             </div>
                             {company.cnpj && (

@@ -311,6 +311,22 @@ export const GmapsScraperView = () => {
                               </Badge>
                             )}
                           </div>
+                          {(job.status === "running" || job.status === "working" || job.status === "pending") && (
+                            <div className="mt-2">
+                              <div className="h-1 w-full bg-secondary/40 rounded-full overflow-hidden">
+                                <div className="h-full w-1/3 bg-primary/70 animate-[progress-slide_1.5s_ease-in-out_infinite]" style={{
+                                  animation: "progress-slide 1.4s ease-in-out infinite",
+                                }} />
+                              </div>
+                              <div className="flex items-center justify-between mt-1 text-[10px] text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                                  Raspagem ao vivo
+                                </span>
+                                <span className="font-mono">{job.results_count} coletadas</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
