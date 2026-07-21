@@ -91,10 +91,38 @@ interface QueueTask {
   max_attempts: number;
 }
 
-async function processTask(supabase: ReturnType<typeof createClient>, task: QueueTask): Promise<void> {
+async function processTask(supabase: ReturnType<typeof createClient>, task: QueueTask, chaosOn = false): Promise<void> {
   const cfg = (task.payload ?? {}) as Record<string, unknown>;
   const startedAt = performance.now();
   const attempt = task.attempts + 1;
+
+  // Chaos Engineering: injeta falha sintética em 1% das tasks quando habilitado
+  // via feature flag global `chaos_scrape_enabled`. Cria pressão realista sobre
+  // retry/backoff/DLQ em produção sem comprometer o SLA agregado.
+  if (chaosOn && Math.random() < 0.01) {
+    const modes = [
+      { status: 429, msg: "chaos: rate_limit sintetico" },
+      { status: 503, msg: "chaos: unavailable sintetico" },
+      { status: null, msg: "chaos: timeout sintetico" },
+    ];
+    const mode = modes[Math.floor(Math.random() * modes.length)];
+    const transient = true;
+    const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: mode.msg, _transient: transient });
+    await audit(supabase, task, {
+      _phase: result.data === "dead" ? "dead_letter" : "retry",
+      _status: result.data === "dead" ? "dead" : "retrying",
+      _level: "warn",
+      _message: mode.msg,
+      _failure_reason: "chaos_synthetic",
+      _http_status: mode.status,
+      _transient: transient,
+      _attempt: attempt,
+      _duration_ms: Math.round(performance.now() - startedAt),
+      _metadata: { chaos: true },
+    });
+    log("warn", "task_chaos_injected", { task_id: task.id, mode: mode.msg });
+    return;
+  }
 
   await audit(supabase, task, {
     _phase: "execute",
