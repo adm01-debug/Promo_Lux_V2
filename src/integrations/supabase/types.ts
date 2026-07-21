@@ -2638,6 +2638,45 @@ export type Database = {
           },
         ]
       }
+      org_retry_policies: {
+        Row: {
+          organization_id: string
+          policy: Json
+          source_advisory_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          organization_id: string
+          policy: Json
+          source_advisory_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          organization_id?: string
+          policy?: Json
+          source_advisory_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_retry_policies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_retry_policies_source_advisory_id_fkey"
+            columns: ["source_advisory_id"]
+            isOneToOne: false
+            referencedRelation: "retry_policy_advisories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_scrape_rate_limits: {
         Row: {
           created_at: string
@@ -3046,6 +3085,7 @@ export type Database = {
         Row: {
           applied_at: string | null
           applied_by: string | null
+          applied_scope: string | null
           candidate_dlq_rate: number
           candidate_policy: Json
           candidate_success_rate: number
@@ -3057,11 +3097,16 @@ export type Database = {
           improvement_pp: number
           notes: string | null
           observed_success_rate: number
+          organization_id: string | null
+          previous_policy: Json | null
+          rolled_back_at: string | null
+          rolled_back_by: string | null
           sample_size: number
         }
         Insert: {
           applied_at?: string | null
           applied_by?: string | null
+          applied_scope?: string | null
           candidate_dlq_rate: number
           candidate_policy: Json
           candidate_success_rate: number
@@ -3073,11 +3118,16 @@ export type Database = {
           improvement_pp: number
           notes?: string | null
           observed_success_rate: number
+          organization_id?: string | null
+          previous_policy?: Json | null
+          rolled_back_at?: string | null
+          rolled_back_by?: string | null
           sample_size: number
         }
         Update: {
           applied_at?: string | null
           applied_by?: string | null
+          applied_scope?: string | null
           candidate_dlq_rate?: number
           candidate_policy?: Json
           candidate_success_rate?: number
@@ -3089,9 +3139,21 @@ export type Database = {
           improvement_pp?: number
           notes?: string | null
           observed_success_rate?: number
+          organization_id?: string | null
+          previous_policy?: Json | null
+          rolled_back_at?: string | null
+          rolled_back_by?: string | null
           sample_size?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "retry_policy_advisories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scrape_dead_letter: {
         Row: {
@@ -3788,6 +3850,22 @@ export type Database = {
           requests: number
         }[]
       }
+      apply_retry_advisory: {
+        Args: { _advisory_id: string }
+        Returns: {
+          organization_id: string
+          policy: Json
+          source_advisory_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "org_retry_policies"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       campaign_ab_stats: {
         Args: { _campaign_id: string }
         Returns: {
@@ -4117,6 +4195,22 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "circuit_breakers"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      rollback_retry_advisory: {
+        Args: { _advisory_id: string }
+        Returns: {
+          organization_id: string
+          policy: Json
+          source_advisory_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "org_retry_policies"
           isOneToOne: true
           isSetofReturn: false
         }
