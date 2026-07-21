@@ -1060,87 +1060,150 @@ export type Database = {
       }
       companies: {
         Row: {
+          business_status: string | null
+          cid: string | null
           cnpj: string | null
           created_at: string
           deleted_at: string | null
           description: string | null
+          descriptions: string | null
           email: string | null
           employees: string | null
           enriched: boolean | null
+          google_maps_url: string | null
           id: string
+          images: string[] | null
           instagram_url: string | null
           ipc_score: number | null
           lat: number | null
+          latitude: number | null
           linkedin_url: string | null
           lng: number | null
           location: string | null
           logo_url: string | null
+          longitude: number | null
+          menu_url: string | null
           name: string
+          open_hours: Json | null
+          order_online_url: string | null
           organization_id: string
+          owner_claimed: boolean | null
           phone: string | null
+          place_id: string | null
+          plus_code: string | null
+          popular_times: Json | null
+          price_range: string | null
+          rating: number | null
           raw_data: Json | null
+          reservations_url: string | null
           revenue: number | null
+          review_count: number | null
           sector: string | null
           source: string
           starred: boolean | null
+          street_view_url: string | null
+          thumbnail_url: string | null
+          timezone: string | null
           updated_at: string
           user_id: string
           version: number
           website: string | null
         }
         Insert: {
+          business_status?: string | null
+          cid?: string | null
           cnpj?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
+          descriptions?: string | null
           email?: string | null
           employees?: string | null
           enriched?: boolean | null
+          google_maps_url?: string | null
           id?: string
+          images?: string[] | null
           instagram_url?: string | null
           ipc_score?: number | null
           lat?: number | null
+          latitude?: number | null
           linkedin_url?: string | null
           lng?: number | null
           location?: string | null
           logo_url?: string | null
+          longitude?: number | null
+          menu_url?: string | null
           name: string
+          open_hours?: Json | null
+          order_online_url?: string | null
           organization_id?: string
+          owner_claimed?: boolean | null
           phone?: string | null
+          place_id?: string | null
+          plus_code?: string | null
+          popular_times?: Json | null
+          price_range?: string | null
+          rating?: number | null
           raw_data?: Json | null
+          reservations_url?: string | null
           revenue?: number | null
+          review_count?: number | null
           sector?: string | null
           source?: string
           starred?: boolean | null
+          street_view_url?: string | null
+          thumbnail_url?: string | null
+          timezone?: string | null
           updated_at?: string
           user_id?: string
           version?: number
           website?: string | null
         }
         Update: {
+          business_status?: string | null
+          cid?: string | null
           cnpj?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
+          descriptions?: string | null
           email?: string | null
           employees?: string | null
           enriched?: boolean | null
+          google_maps_url?: string | null
           id?: string
+          images?: string[] | null
           instagram_url?: string | null
           ipc_score?: number | null
           lat?: number | null
+          latitude?: number | null
           linkedin_url?: string | null
           lng?: number | null
           location?: string | null
           logo_url?: string | null
+          longitude?: number | null
+          menu_url?: string | null
           name?: string
+          open_hours?: Json | null
+          order_online_url?: string | null
           organization_id?: string
+          owner_claimed?: boolean | null
           phone?: string | null
+          place_id?: string | null
+          plus_code?: string | null
+          popular_times?: Json | null
+          price_range?: string | null
+          rating?: number | null
           raw_data?: Json | null
+          reservations_url?: string | null
           revenue?: number | null
+          review_count?: number | null
           sector?: string | null
           source?: string
           starred?: boolean | null
+          street_view_url?: string | null
+          thumbnail_url?: string | null
+          timezone?: string | null
           updated_at?: string
           user_id?: string
           version?: number
