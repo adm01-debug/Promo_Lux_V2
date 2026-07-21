@@ -24,3 +24,7 @@ purge_dead_letter
 replay_dead_letter
 replay_dead_letter_batch
 reset_circuit_breaker
+
+# Scrape engine 10/10 (ADR-010)
+dlq_top_reasons
+api_latency_percentiles
