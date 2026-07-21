@@ -36,22 +36,15 @@ export const EnrichmentFunnel = () => {
     queryFn: isDemoMode
       ? () => DEMO_FUNNEL
       : async () => {
-          const [
-            { count: total },
-            { count: enriched },
-            { count: highScore },
-            { count: qualified },
-          ] = await Promise.all([
-            db.from("companies").select("*", { count: "exact", head: true }),
-            db.from("companies").select("*", { count: "exact", head: true }).eq("enriched", true),
-            db.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 60),
-            db.from("companies").select("*", { count: "exact", head: true }).gte("ipc_score", 75),
-          ]);
+          // 1 scan atômico via RPC — substitui 4 count=exact paralelos.
+          const { data, error } = await db.rpc("enrichment_funnel_counts");
+          if (error) throw error;
+          const row = Array.isArray(data) ? data[0] : data;
           return {
-            total: total ?? 0,
-            enriched: enriched ?? 0,
-            highScore: highScore ?? 0,
-            qualified: qualified ?? 0,
+            total: Number(row?.total ?? 0),
+            enriched: Number(row?.enriched ?? 0),
+            highScore: Number(row?.high_score ?? 0),
+            qualified: Number(row?.qualified ?? 0),
           };
         },
     staleTime: isDemoMode ? Infinity : 15_000,
