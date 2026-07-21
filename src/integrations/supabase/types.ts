@@ -2468,6 +2468,41 @@ export type Database = {
         }
         Relationships: []
       }
+      org_scrape_rate_limits: {
+        Row: {
+          created_at: string
+          max_concurrent: number
+          max_per_hour: number
+          notes: string | null
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          max_concurrent?: number
+          max_per_hour?: number
+          notes?: string | null
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          max_concurrent?: number
+          max_per_hour?: number
+          notes?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_scrape_rate_limits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_violation_alert_settings: {
         Row: {
           cooldown_minutes: number
@@ -2840,6 +2875,7 @@ export type Database = {
           auto_sync: boolean | null
           completed_at: string | null
           config: Json
+          config_hash: string | null
           created_at: string
           error_message: string | null
           external_id: string | null
@@ -2850,6 +2886,7 @@ export type Database = {
           source: string
           started_at: string | null
           status: Database["public"]["Enums"]["scrape_job_status"]
+          trace_id: string | null
           updated_at: string
           user_id: string
         }
@@ -2857,6 +2894,7 @@ export type Database = {
           auto_sync?: boolean | null
           completed_at?: string | null
           config?: Json
+          config_hash?: string | null
           created_at?: string
           error_message?: string | null
           external_id?: string | null
@@ -2867,6 +2905,7 @@ export type Database = {
           source?: string
           started_at?: string | null
           status?: Database["public"]["Enums"]["scrape_job_status"]
+          trace_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -2874,6 +2913,7 @@ export type Database = {
           auto_sync?: boolean | null
           completed_at?: string | null
           config?: Json
+          config_hash?: string | null
           created_at?: string
           error_message?: string | null
           external_id?: string | null
@@ -2884,6 +2924,7 @@ export type Database = {
           source?: string
           started_at?: string | null
           status?: Database["public"]["Enums"]["scrape_job_status"]
+          trace_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -3007,6 +3048,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      scrape_worker_state: {
+        Row: {
+          consecutive_empty_batches: number
+          last_batch_size: number
+          last_run_at: string | null
+          next_run_at: string
+          updated_at: string
+          worker_name: string
+        }
+        Insert: {
+          consecutive_empty_batches?: number
+          last_batch_size?: number
+          last_run_at?: string | null
+          next_run_at?: string
+          updated_at?: string
+          worker_name: string
+        }
+        Update: {
+          consecutive_empty_batches?: number
+          last_batch_size?: number
+          last_run_at?: string | null
+          next_run_at?: string
+          updated_at?: string
+          worker_name?: string
+        }
+        Relationships: []
       }
       stakeholders: {
         Row: {
@@ -3412,6 +3480,18 @@ export type Database = {
         }
         Returns: undefined
       }
+      api_latency_percentiles: {
+        Args: { _hours?: number; _path?: string }
+        Returns: {
+          avg_error_rate: number
+          bucket: string
+          p50_ms: number
+          p95_ms: number
+          p99_ms: number
+          path: string
+          samples: number
+        }[]
+      }
       api_latency_stats: {
         Args: { _hours?: number; _limit?: number }
         Returns: {
@@ -3559,6 +3639,20 @@ export type Database = {
           pending_items: number
           replayed_items: number
           total_items: number
+        }[]
+      }
+      dlq_purge_stale_network_errors: {
+        Args: { _days?: number }
+        Returns: number
+      }
+      dlq_top_reasons: {
+        Args: { _limit?: number }
+        Returns: {
+          failure_reason: string
+          first_seen: string
+          last_seen: string
+          occurrences: number
+          sample_error: string
         }[]
       }
       enqueue_scrape_task: {
@@ -3761,6 +3855,11 @@ export type Database = {
           user_id: string
         }[]
       }
+      worker_report_batch: {
+        Args: { _size: number; _worker: string }
+        Returns: undefined
+      }
+      worker_should_run: { Args: { _worker: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "sdr" | "viewer"

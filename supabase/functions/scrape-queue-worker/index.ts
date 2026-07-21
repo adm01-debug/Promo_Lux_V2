@@ -23,7 +23,10 @@ const DEFER_DELAY_SECS = 60;
  */
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
-const BATCH_SIZE = 5;
+// Melhoria #2: batch dobrado (5→10) com paralelismo controlado em chunks
+// de 3 para evitar thundering herd contra o provedor externo.
+const BATCH_SIZE = 10;
+const PARALLEL_CHUNK = 3;
 const WORKER_ID = `worker-${crypto.randomUUID().slice(0, 8)}`;
 
 const corsHeaders = {
@@ -36,6 +39,11 @@ function log(level: "info" | "warn" | "error", msg: string, data?: Record<string
   console[level === "info" ? "log" : level](
     JSON.stringify({ function: "scrape-queue-worker", worker: WORKER_ID, level, msg, ...data, ts: new Date().toISOString() }),
   );
+}
+
+// Melhoria #8: propaga trace_id do payload/job em todos os logs estruturados
+function traceOf(task: { payload?: Record<string, unknown>; scrape_job_id?: string | null }): string | null {
+  return (task.payload?.trace_id as string | undefined) ?? null;
 }
 
 /**
@@ -203,7 +211,18 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceKey);
 
   const start = performance.now();
+  const WORKER_NAME = "scrape-queue-worker";
   try {
+    // Melhoria #1: Adaptive polling — evita trabalho quando a fila está
+    // vazia recorrentemente (backoff exponencial 20s→300s no banco).
+    const { data: shouldRun } = await supabase.rpc("worker_should_run", { _worker: WORKER_NAME });
+    if (shouldRun === false) {
+      return new Response(
+        JSON.stringify({ skipped: true, reason: "adaptive_backoff", duration_ms: Math.round(performance.now() - start) }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     const { data: tasks, error } = await supabase.rpc("claim_scrape_tasks", {
       _limit: BATCH_SIZE,
       _worker: WORKER_ID,
@@ -211,6 +230,8 @@ Deno.serve(async (req) => {
     if (error) throw error;
 
     const claimed = (tasks ?? []) as QueueTask[];
+    // Registra tamanho do lote — dispara backoff se vazio, reseta se houver trabalho.
+    await supabase.rpc("worker_report_batch", { _worker: WORKER_NAME, _size: claimed.length }).catch(() => {});
     log("info", "batch_claimed", { count: claimed.length });
 
     // Circuit breaker: se o provedor está em outage (circuito aberto), NÃO
@@ -239,8 +260,14 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Processa em paralelo — cada tarefa isola seu próprio erro.
-    const results = await Promise.allSettled(claimed.map((t) => processTask(supabase, t)));
+    // Melhoria #2: processa em chunks paralelos (PARALLEL_CHUNK) — evita
+    // enviar 10 requests simultâneos ao provedor mas dobra o throughput vs. serial.
+    const results: PromiseSettledResult<void>[] = [];
+    for (let i = 0; i < claimed.length; i += PARALLEL_CHUNK) {
+      const chunk = claimed.slice(i, i + PARALLEL_CHUNK);
+      const settled = await Promise.allSettled(chunk.map((t) => processTask(supabase, t)));
+      results.push(...settled);
+    }
     const failed = results.filter((r) => r.status === "rejected").length;
 
     // Salvaguarda: se processTask lançar antes de reportar, marca como falha transitória.
