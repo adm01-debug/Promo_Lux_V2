@@ -410,6 +410,10 @@ const AutomationMonitoring = () => {
             <Gauge className="h-4 w-4" />
             Rate Limits
           </TabsTrigger>
+          <TabsTrigger value="resilience-report" className="gap-2">
+            <LineChartIcon className="h-4 w-4" />
+            Resiliência
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
@@ -583,6 +587,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="rate-limits" className="space-y-4">
           <OrgRateLimitsView />
+        </TabsContent>
+
+        <TabsContent value="resilience-report" className="space-y-4">
+          <ResilienceReport />
         </TabsContent>
 
       </Tabs>
