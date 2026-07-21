@@ -1211,6 +1211,66 @@ export type Database = {
         }
         Relationships: []
       }
+      company_reviews: {
+        Row: {
+          author_avatar: string | null
+          author_name: string | null
+          comment: string | null
+          company_id: string
+          created_at: string
+          external_id: string | null
+          id: string
+          organization_id: string
+          owner_response: string | null
+          rating: number | null
+          raw_data: Json | null
+          reviewed_at: string | null
+        }
+        Insert: {
+          author_avatar?: string | null
+          author_name?: string | null
+          comment?: string | null
+          company_id: string
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          organization_id: string
+          owner_response?: string | null
+          rating?: number | null
+          raw_data?: Json | null
+          reviewed_at?: string | null
+        }
+        Update: {
+          author_avatar?: string | null
+          author_name?: string | null
+          comment?: string | null
+          company_id?: string
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          organization_id?: string
+          owner_response?: string | null
+          rating?: number | null
+          raw_data?: Json | null
+          reviewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_reviews_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       db_health_snapshots: {
         Row: {
           active_connections: number
@@ -2531,6 +2591,53 @@ export type Database = {
         }
         Relationships: []
       }
+      org_proxies: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string
+          last_used_at: string | null
+          organization_id: string
+          proxy_type: string
+          updated_at: string
+          url: string
+          usage_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          last_used_at?: string | null
+          organization_id: string
+          proxy_type?: string
+          updated_at?: string
+          url: string
+          usage_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          last_used_at?: string | null
+          organization_id?: string
+          proxy_type?: string
+          updated_at?: string
+          url?: string
+          usage_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_proxies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_scrape_rate_limits: {
         Row: {
           created_at: string
@@ -2942,6 +3049,7 @@ export type Database = {
           created_at: string
           error_message: string | null
           external_id: string | null
+          extra_reviews: boolean | null
           id: string
           name: string
           organization_id: string
@@ -2961,6 +3069,7 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           external_id?: string | null
+          extra_reviews?: boolean | null
           id?: string
           name: string
           organization_id?: string
@@ -2980,6 +3089,7 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           external_id?: string | null
+          extra_reviews?: boolean | null
           id?: string
           name?: string
           organization_id?: string
