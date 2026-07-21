@@ -616,6 +616,10 @@ const AutomationMonitoring = () => {
           <ChaosEngineeringPanel />
         </TabsContent>
 
+        <TabsContent value="monte-carlo" className="space-y-4">
+          <MonteCarloReportPanel />
+        </TabsContent>
+
       </Tabs>
 
       <JobDetailsSheet 
