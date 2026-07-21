@@ -33,3 +33,7 @@ api_latency_percentiles
 # Retry policy approval/rollback flow
 apply_retry_advisory
 rollback_retry_advisory
+
+# Web scrape engine (Opção C) — user-facing RPCs
+replay_web_dead_letter_batch
+web_dlq_health_metrics
