@@ -280,6 +280,22 @@ serve(async (req) => {
       }
       const body = { name: parsed.data.name, ...parsed.data.config };
 
+      // Melhoria #8: trace_id correlacionado (gmaps-proxy → scrape_jobs → worker)
+      const traceId = crypto.randomUUID();
+      const configPayload = {
+        keywords: parsed.data.config.keywords,
+        lang: parsed.data.config.lang,
+        zoom: parsed.data.config.zoom,
+        lat: parsed.data.config.lat,
+        lon: parsed.data.config.lon,
+        fast_mode: parsed.data.config.fast_mode,
+        radius: parsed.data.config.radius,
+        depth: parsed.data.config.depth,
+        email: parsed.data.config.email,
+        max_time: parsed.data.config.max_time,
+        proxies: parsed.data.config.proxies,
+      };
+
       const { data: dbJob, error: dbError } = await supabase
         .from("scrape_jobs")
         .insert({
@@ -288,27 +304,34 @@ serve(async (req) => {
           status: "pending",
           source: "gmaps",
           auto_sync: parsed.data.auto_sync,
-          config: {
-            keywords: parsed.data.config.keywords,
-            lang: parsed.data.config.lang,
-            zoom: parsed.data.config.zoom,
-            lat: parsed.data.config.lat,
-            lon: parsed.data.config.lon,
-            fast_mode: parsed.data.config.fast_mode,
-            radius: parsed.data.config.radius,
-            depth: parsed.data.config.depth,
-            email: parsed.data.config.email,
-            max_time: parsed.data.config.max_time,
-            proxies: parsed.data.config.proxies,
-          },
+          config: configPayload,
+          trace_id: traceId,
         })
         .select()
         .single();
 
+      // Melhoria #4: idempotência forte — se já existe job ativo com mesma
+      // config (config_hash único parcial disparou 23505), retorna o existente
+      // em vez de estourar 500.
+      if (dbError && (dbError as { code?: string }).code === "23505") {
+        const { data: existing } = await supabase
+          .from("scrape_jobs")
+          .select("id, external_id, status, trace_id")
+          .eq("organization_id", (dbError as { details?: string }).details?.match(/organization_id[^,]*, ([^)]+)/)?.[1] ?? "")
+          .eq("config_hash", null as unknown as string)
+          .in("status", ["pending", "running", "working"])
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (existing) {
+          log.info("gmaps_create_dedup_hit", { existing_id: existing.id, trace_id: existing.trace_id });
+          return json(corsHeaders, { id: existing.id, external_id: existing.external_id, status: existing.status, deduplicated: true });
+        }
+      }
       if (dbError) throw dbError;
 
       let externalId: string | null = null;
-      let responseBody: Record<string, unknown> = { id: dbJob.id, status: "pending" };
+      let responseBody: Record<string, unknown> = { id: dbJob.id, status: "pending", trace_id: traceId };
       
       try {
         const isHealthy = await checkCircuitBreaker(supabase, "gmaps-api");
