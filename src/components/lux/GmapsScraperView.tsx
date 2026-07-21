@@ -40,6 +40,7 @@ export const GmapsScraperView = () => {
   const [depth, setDepth] = useState(1);
   const [extractEmail, setExtractEmail] = useState(true);
   const [fastMode, setFastMode] = useState(false);
+  const [extraReviews, setExtraReviews] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
   const [expandedJob, setExpandedJob] = useState<string | null>(null);
 
