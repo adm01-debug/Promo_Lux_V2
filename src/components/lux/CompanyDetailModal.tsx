@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Building2, MapPin, Tag, Globe, Mail, Phone, TrendingUp, Radar, ExternalLink,
   Briefcase, DollarSign, Users, Star, Copy, Check, Send,
@@ -13,6 +13,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { useCompanyDetails } from "@/hooks/useCompanyDetails";
+import { CompanyOpenHours } from "@/components/lux/CompanyOpenHours";
+import { CompanyReviewsList } from "@/components/lux/CompanyReviewsList";
+import { supabase } from "@/integrations/supabase/client";
+
 
 interface Company {
   id: string;
@@ -112,6 +116,22 @@ const CopyButton = ({ text }: { text: string }) => {
 
 export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetailModalProps) => {
   const { data, isLoading } = useCompanyDetails(company?.id, open && !!company);
+  const [gmbData, setGmbData] = useState<{ open_hours: unknown; rating: number | null; review_count: number | null } | null>(null);
+
+  useEffect(() => {
+    if (!company?.id || !open) { setGmbData(null); return; }
+    let cancelled = false;
+    supabase
+      .from("companies")
+      .select("open_hours, rating, review_count")
+      .eq("id", company.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled && data) setGmbData(data as typeof gmbData);
+      });
+    return () => { cancelled = true; };
+  }, [company?.id, open]);
+
   if (!company) return null;
 
   const contacts = data?.contacts ?? [];
@@ -122,6 +142,7 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl bg-card border-border/50 p-0 gap-0 max-h-[90vh] flex flex-col">
+
         {/* Header */}
         <div className="p-6 pb-4 flex-shrink-0">
           <DialogHeader>
@@ -224,7 +245,11 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
             <TabsTrigger value="tech" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
               <Globe className="h-3 w-3" /> Tech Stack
             </TabsTrigger>
+            <TabsTrigger value="gmb" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
+              <MapPin className="h-3 w-3" /> Google
+            </TabsTrigger>
           </TabsList>
+
 
           <div className="flex-1 overflow-y-auto">
             {/* Signals Tab */}
@@ -373,8 +398,31 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
                 </div>
               </div>
             </TabsContent>
+
+            {/* Google (GMB) Tab */}
+            <TabsContent value="gmb" className="p-5 space-y-4 mt-0">
+              {gmbData?.rating != null && (
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                    <span className="font-mono text-foreground font-semibold">{gmbData.rating.toFixed(1)}</span>
+                  </div>
+                  {gmbData.review_count != null && (
+                    <span>· {gmbData.review_count} avaliações totais</span>
+                  )}
+                </div>
+              )}
+              <CompanyOpenHours data={gmbData?.open_hours} />
+              <div>
+                <div className="text-xs font-medium text-foreground mb-2 flex items-center gap-1.5">
+                  <Star className="h-3 w-3 text-primary" /> Avaliações recentes
+                </div>
+                <CompanyReviewsList companyId={company.id} />
+              </div>
+            </TabsContent>
           </div>
         </Tabs>
+
 
         <Separator className="bg-border/30 flex-shrink-0" />
 

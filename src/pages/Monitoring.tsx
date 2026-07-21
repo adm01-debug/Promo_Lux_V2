@@ -44,7 +44,9 @@ import { AuditTrailPanel } from "@/components/lux/monitoring/AuditTrailPanel";
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
 import { VaultCookiesPanel } from "@/components/lux/monitoring/VaultCookiesPanel";
-import { Cookie } from "lucide-react";
+import { OrgProxiesView } from "@/components/lux/OrgProxiesView";
+import { Cookie, Shield } from "lucide-react";
+
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
 import { 
@@ -388,6 +390,12 @@ const AutomationMonitoring = () => {
             <Cookie className="h-4 w-4" />
             Cookies do Vault
           </TabsTrigger>
+          <TabsTrigger value="proxies" className="gap-2">
+            <Shield className="h-4 w-4" />
+            Proxies
+          </TabsTrigger>
+
+
 
         </TabsList>
 
@@ -547,6 +555,11 @@ const AutomationMonitoring = () => {
         <TabsContent value="vault-cookies" className="space-y-4">
           <VaultCookiesPanel />
         </TabsContent>
+
+        <TabsContent value="proxies" className="space-y-4">
+          <OrgProxiesView />
+        </TabsContent>
+
       </Tabs>
 
       <JobDetailsSheet 
