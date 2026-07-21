@@ -3155,6 +3155,30 @@ export type Database = {
           },
         ]
       }
+      robots_cache: {
+        Row: {
+          expires_at: string
+          fetched_at: string
+          host: string
+          http_status: number | null
+          robots_txt: string
+        }
+        Insert: {
+          expires_at?: string
+          fetched_at?: string
+          host: string
+          http_status?: number | null
+          robots_txt: string
+        }
+        Update: {
+          expires_at?: string
+          fetched_at?: string
+          host?: string
+          http_status?: number | null
+          robots_txt?: string
+        }
+        Relationships: []
+      }
       scrape_dead_letter: {
         Row: {
           attempts: number
@@ -3567,6 +3591,229 @@ export type Database = {
         }
         Relationships: []
       }
+      web_scrape_dead_letter: {
+        Row: {
+          attempts: number
+          created_at: string
+          failed_at: string
+          failure_reason: string | null
+          id: string
+          last_error: string | null
+          organization_id: string
+          original_task_id: string | null
+          payload: Json
+          replayed_at: string | null
+          trace_id: string | null
+          url: string
+          user_id: string
+        }
+        Insert: {
+          attempts: number
+          created_at?: string
+          failed_at?: string
+          failure_reason?: string | null
+          id?: string
+          last_error?: string | null
+          organization_id: string
+          original_task_id?: string | null
+          payload: Json
+          replayed_at?: string | null
+          trace_id?: string | null
+          url: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          failed_at?: string
+          failure_reason?: string | null
+          id?: string
+          last_error?: string | null
+          organization_id?: string
+          original_task_id?: string | null
+          payload?: Json
+          replayed_at?: string | null
+          trace_id?: string | null
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_scrape_dead_letter_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      web_scrape_queue: {
+        Row: {
+          attempts: number
+          config_hash: string
+          created_at: string
+          extract_schema: Json | null
+          extract_schema_hash: string | null
+          formats: string[]
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          max_bytes: number
+          next_run_at: string
+          organization_id: string
+          priority: number
+          result_id: string | null
+          status: Database["public"]["Enums"]["web_scrape_status"]
+          trace_id: string
+          updated_at: string
+          url: string
+          user_id: string
+          wait_for_ms: number
+        }
+        Insert: {
+          attempts?: number
+          config_hash: string
+          created_at?: string
+          extract_schema?: Json | null
+          extract_schema_hash?: string | null
+          formats?: string[]
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          max_bytes?: number
+          next_run_at?: string
+          organization_id: string
+          priority?: number
+          result_id?: string | null
+          status?: Database["public"]["Enums"]["web_scrape_status"]
+          trace_id?: string
+          updated_at?: string
+          url: string
+          user_id: string
+          wait_for_ms?: number
+        }
+        Update: {
+          attempts?: number
+          config_hash?: string
+          created_at?: string
+          extract_schema?: Json | null
+          extract_schema_hash?: string | null
+          formats?: string[]
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          max_bytes?: number
+          next_run_at?: string
+          organization_id?: string
+          priority?: number
+          result_id?: string | null
+          status?: Database["public"]["Enums"]["web_scrape_status"]
+          trace_id?: string
+          updated_at?: string
+          url?: string
+          user_id?: string
+          wait_for_ms?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_scrape_queue_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      web_scrape_results: {
+        Row: {
+          bytes: number | null
+          content_type: string | null
+          created_at: string
+          description: string | null
+          duration_ms: number | null
+          extract_schema_hash: string | null
+          extracted_json: Json | null
+          fetched_at: string
+          final_url: string | null
+          http_status: number | null
+          id: string
+          links: Json
+          markdown: string | null
+          organization_id: string
+          partial_content: boolean
+          queue_task_id: string | null
+          title: string | null
+          trace_id: string | null
+          url: string
+          user_id: string
+        }
+        Insert: {
+          bytes?: number | null
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          duration_ms?: number | null
+          extract_schema_hash?: string | null
+          extracted_json?: Json | null
+          fetched_at?: string
+          final_url?: string | null
+          http_status?: number | null
+          id?: string
+          links?: Json
+          markdown?: string | null
+          organization_id: string
+          partial_content?: boolean
+          queue_task_id?: string | null
+          title?: string | null
+          trace_id?: string | null
+          url: string
+          user_id: string
+        }
+        Update: {
+          bytes?: number | null
+          content_type?: string | null
+          created_at?: string
+          description?: string | null
+          duration_ms?: number | null
+          extract_schema_hash?: string | null
+          extracted_json?: Json | null
+          fetched_at?: string
+          final_url?: string | null
+          http_status?: number | null
+          id?: string
+          links?: Json
+          markdown?: string | null
+          organization_id?: string
+          partial_content?: boolean
+          queue_task_id?: string | null
+          title?: string | null
+          trace_id?: string | null
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_scrape_results_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "web_scrape_results_queue_task_id_fkey"
+            columns: ["queue_task_id"]
+            isOneToOne: false
+            referencedRelation: "web_scrape_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_deliveries: {
         Row: {
           attempts: number
@@ -3948,7 +4195,44 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      claim_web_scrape_tasks: {
+        Args: { _limit?: number; _worker?: string }
+        Returns: {
+          attempts: number
+          config_hash: string
+          created_at: string
+          extract_schema: Json | null
+          extract_schema_hash: string | null
+          formats: string[]
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          max_bytes: number
+          next_run_at: string
+          organization_id: string
+          priority: number
+          result_id: string | null
+          status: Database["public"]["Enums"]["web_scrape_status"]
+          trace_id: string
+          updated_at: string
+          url: string
+          user_id: string
+          wait_for_ms: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "web_scrape_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       complete_scrape_task: { Args: { _id: string }; Returns: undefined }
+      complete_web_scrape_task: {
+        Args: { _id: string; _result_id?: string }
+        Returns: undefined
+      }
       count_recent_org_violations: {
         Args: { _window_minutes?: number }
         Returns: {
@@ -3968,6 +4252,10 @@ export type Database = {
       defer_scrape_task: {
         Args: { _delay_secs?: number; _id: string; _reason?: string }
         Returns: Database["public"]["Enums"]["scrape_queue_status"]
+      }
+      defer_web_scrape_task: {
+        Args: { _delay_secs?: number; _id: string; _reason?: string }
+        Returns: undefined
       }
       dlq_health_metrics: {
         Args: never
@@ -4059,6 +4347,15 @@ export type Database = {
       fail_scrape_task: {
         Args: { _error: string; _id: string; _transient?: boolean }
         Returns: Database["public"]["Enums"]["scrape_queue_status"]
+      }
+      fail_web_scrape_task: {
+        Args: {
+          _error: string
+          _failure_reason?: string
+          _id: string
+          _transient?: boolean
+        }
+        Returns: string
       }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
@@ -4181,6 +4478,10 @@ export type Database = {
         Args: { _limit?: number; _organization_id?: string }
         Returns: number
       }
+      replay_web_dead_letter_batch: {
+        Args: { _limit?: number; _organization_id?: string }
+        Returns: number
+      }
       reset_circuit_breaker: {
         Args: { _service_name: string }
         Returns: {
@@ -4224,6 +4525,17 @@ export type Database = {
           user_id: string
         }[]
       }
+      web_dlq_health_metrics: {
+        Args: never
+        Returns: {
+          added_last_24h: number
+          oldest_pending_age_secs: number
+          pending_items: number
+          replayed_items: number
+          replayed_last_24h: number
+          total_items: number
+        }[]
+      }
       worker_report_batch: {
         Args: { _size: number; _worker: string }
         Returns: undefined
@@ -4248,6 +4560,12 @@ export type Database = {
         | "failed"
         | "cancelled"
       scrape_queue_status: "queued" | "processing" | "succeeded" | "dead"
+      web_scrape_status:
+        | "queued"
+        | "processing"
+        | "succeeded"
+        | "failed"
+        | "dead"
       workflow_status:
         | "draft"
         | "active"
@@ -4402,6 +4720,13 @@ export const Constants = {
         "cancelled",
       ],
       scrape_queue_status: ["queued", "processing", "succeeded", "dead"],
+      web_scrape_status: [
+        "queued",
+        "processing",
+        "succeeded",
+        "failed",
+        "dead",
+      ],
       workflow_status: [
         "draft",
         "active",
