@@ -152,9 +152,11 @@ export function useWebDlqHealth() {
   return useQuery({
     queryKey: ["web-dlq-health"],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("web_dlq_health_metrics").single();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase.rpc as any)("web_dlq_health_metrics");
       if (error) throw error;
-      return data;
+      const row = Array.isArray(data) ? data[0] : data;
+      return (row ?? null) as { total_items: number; pending_items: number; replayed_items: number } | null;
     },
     refetchInterval: 30_000,
   });
