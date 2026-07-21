@@ -325,7 +325,10 @@ serve(async (req) => {
           .maybeSingle();
         if (existing) {
           log.info("gmaps_create_dedup_hit", { existing_id: existing.id, trace_id: existing.trace_id });
-          return json(corsHeaders, { id: existing.id, external_id: existing.external_id, status: existing.status, deduplicated: true });
+          return new Response(
+            JSON.stringify({ id: existing.id, external_id: existing.external_id, status: existing.status, deduplicated: true }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
+          );
         }
       }
       if (dbError) throw dbError;
