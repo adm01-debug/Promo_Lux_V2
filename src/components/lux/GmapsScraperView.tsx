@@ -372,6 +372,28 @@ export const GmapsScraperView = () => {
                                   Importar & Qualificar IPC
                                 </Button>
                               )}
+                              {(job.status === "completed" || job.status === "ok") && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-1.5 text-xs"
+                                    disabled={exportMutation.isPending}
+                                    onClick={(e) => { e.stopPropagation(); exportMutation.mutate({ jobId: job.id, format: "csv" }); }}
+                                  >
+                                    <FileDown className="h-3.5 w-3.5" /> CSV
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-1.5 text-xs"
+                                    disabled={exportMutation.isPending}
+                                    onClick={(e) => { e.stopPropagation(); exportMutation.mutate({ jobId: job.id, format: "json" }); }}
+                                  >
+                                    <FileDown className="h-3.5 w-3.5" /> JSON
+                                  </Button>
+                                </>
+                              )}
                               {job.status === "running" || job.status === "working" || job.status === "pending" ? (
                                 <Button
                                   size="sm"
