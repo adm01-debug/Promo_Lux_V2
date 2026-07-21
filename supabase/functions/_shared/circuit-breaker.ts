@@ -105,6 +105,10 @@ export async function reportSuccess(supabase: SupabaseClient, serviceName: strin
 }
 
 export async function reportFailure(supabase: SupabaseClient, serviceName: string) {
+  // Invalidar cache imediatamente: qualquer falha deve forçar próxima
+  // checkCircuitBreaker() a reler o estado autoritativo do banco.
+  invalidateClosedCache(serviceName);
+
   const { data } = await supabase
     .from("circuit_breakers")
     .select("*")
