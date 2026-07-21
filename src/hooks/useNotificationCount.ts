@@ -11,12 +11,16 @@ export const useNotificationCount = () => {
     queryFn: isDemoMode
       ? () => DEMO_NOTIFICATIONS.filter((n) => !n.read).length
       : async () => {
-          const { count, error } = await db
+          // Evita count=exact (scan completo). Badge exibe "99+" acima do teto,
+          // então basta contar até MAX_UNREAD + 1 via limit — index-only scan.
+          const MAX_UNREAD = 99;
+          const { data, error } = await db
             .from("notifications")
-            .select("*", { count: "exact", head: true })
-            .eq("read", false);
+            .select("id")
+            .eq("read", false)
+            .limit(MAX_UNREAD + 1);
           if (error) throw error;
-          return count ?? 0;
+          return data?.length ?? 0;
         },
     refetchInterval: 30_000,
   });
