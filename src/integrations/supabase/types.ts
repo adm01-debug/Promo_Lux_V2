@@ -2840,6 +2840,7 @@ export type Database = {
           auto_sync: boolean | null
           completed_at: string | null
           config: Json
+          config_hash: string | null
           created_at: string
           error_message: string | null
           external_id: string | null
@@ -2850,6 +2851,7 @@ export type Database = {
           source: string
           started_at: string | null
           status: Database["public"]["Enums"]["scrape_job_status"]
+          trace_id: string | null
           updated_at: string
           user_id: string
         }
@@ -2857,6 +2859,7 @@ export type Database = {
           auto_sync?: boolean | null
           completed_at?: string | null
           config?: Json
+          config_hash?: string | null
           created_at?: string
           error_message?: string | null
           external_id?: string | null
@@ -2867,6 +2870,7 @@ export type Database = {
           source?: string
           started_at?: string | null
           status?: Database["public"]["Enums"]["scrape_job_status"]
+          trace_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -2874,6 +2878,7 @@ export type Database = {
           auto_sync?: boolean | null
           completed_at?: string | null
           config?: Json
+          config_hash?: string | null
           created_at?: string
           error_message?: string | null
           external_id?: string | null
@@ -2884,6 +2889,7 @@ export type Database = {
           source?: string
           started_at?: string | null
           status?: Database["public"]["Enums"]["scrape_job_status"]
+          trace_id?: string | null
           updated_at?: string
           user_id?: string
         }
