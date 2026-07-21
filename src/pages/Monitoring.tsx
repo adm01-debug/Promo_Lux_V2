@@ -51,6 +51,7 @@ import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView
 import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
 import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPolicyAdvisoriesPanel";
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
+import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
@@ -424,6 +425,10 @@ const AutomationMonitoring = () => {
             <Zap className="h-4 w-4" />
             Chaos
           </TabsTrigger>
+          <TabsTrigger value="monte-carlo" className="gap-2">
+            <LineChartIcon className="h-4 w-4" />
+            Monte Carlo
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
@@ -609,6 +614,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="chaos" className="space-y-4">
           <ChaosEngineeringPanel />
+        </TabsContent>
+
+        <TabsContent value="monte-carlo" className="space-y-4">
+          <MonteCarloReportPanel />
         </TabsContent>
 
       </Tabs>
