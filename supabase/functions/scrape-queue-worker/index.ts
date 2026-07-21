@@ -23,7 +23,10 @@ const DEFER_DELAY_SECS = 60;
  */
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
-const BATCH_SIZE = 5;
+// Melhoria #2: batch dobrado (5→10) com paralelismo controlado em chunks
+// de 3 para evitar thundering herd contra o provedor externo.
+const BATCH_SIZE = 10;
+const PARALLEL_CHUNK = 3;
 const WORKER_ID = `worker-${crypto.randomUUID().slice(0, 8)}`;
 
 const corsHeaders = {
