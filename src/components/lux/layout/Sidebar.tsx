@@ -42,12 +42,15 @@ export const Sidebar = memo(({
   const { data: intentCount = 0 } = useQuery({
     queryKey: ["intent-signals-unread-count"],
     queryFn: async () => {
-      const { count, error } = await db
+      // Badge exibe "9+" — basta contar até MAX+1 (index scan) em vez de count=exact.
+      const MAX_BADGE = 9;
+      const { data, error } = await db
         .from("intent_signals")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+        .select("id")
+        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+        .limit(MAX_BADGE + 1);
       if (error) throw error;
-      return count ?? 0;
+      return data?.length ?? 0;
     },
     staleTime: 30_000,
     refetchInterval: 60_000,
