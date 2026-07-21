@@ -99,15 +99,12 @@ export const OrgProxiesView = () => {
           </div>
         ) : proxies.length === 0 ? (
           <EmptyState
-            icon={<Globe className="h-8 w-8" />}
+            icon={Globe}
             title="Nenhum proxy cadastrado"
             description="Cadastre proxies para distribuir requisições de raspagem e evitar bloqueios do Google Maps."
-            action={
-              <Button size="sm" onClick={openNew} className="gap-1.5">
-                <Plus className="h-3.5 w-3.5" /> Cadastrar primeiro proxy
-              </Button>
-            }
+            actions={[{ label: "Cadastrar primeiro proxy", onClick: openNew, icon: Plus }]}
           />
+
         ) : (
           <div className="rounded-md border border-border/40 overflow-hidden">
             <Table>
