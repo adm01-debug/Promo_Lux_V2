@@ -1,146 +1,63 @@
 
+# Levantamento OSS + Plano de PoC — Descoberta de email/telefone a partir do LinkedIn
 
-## Documento: Gaps Enterprise vs LUX IA
+## Objetivo
+Documentar exaustivamente repositórios OSS ativos (últimos 24 meses) que descobrem email/telefone de contatos LinkedIn, ranquear os aplicáveis ao stack Deno/Supabase do LUX (hoje Lusha + LeadContact), e propor uma PoC de arquitetura em cascata que reduza dependência do LeadContact e o risco jurídico associado a scraping via `li_at`.
 
-Vou criar `docs/GAPS-ENTERPRISE.md` comparando o LUX IA com plataformas enterprise de classe mundial em Sales Intelligence B2B (ZoomInfo, Apollo.io, Outreach, Salesloft, Cognism, Clay, Clearbit/HubSpot Breeze).
+## Entregável 1 — Relatório em `docs/pesquisa-oss-linkedin-enrichment.md`
 
-### Estrutura do documento
+Conteúdo (já compilado pela pesquisa; será formatado como markdown final):
 
-**1. Resumo executivo**
-- Posicionamento atual do LUX IA: MVP avançado de Sales Intelligence single-tenant
-- Maturidade atual: ~40% das capacidades enterprise esperadas
-- Gaps agrupados em 10 categorias com priorização P0/P1/P2
+1. **Metodologia** — janela temporal (24 meses), fontes (GitHub search, awesome-lists, HN, Reddit r/OSINT), critérios de "ativo".
+2. **Categoria 1 — Scrapers via cookie/sessão LinkedIn (Voyager, `li_at`, JSESSIONID)** — 15 repos (tomquirk/linkedin-api forks, PipesNBottles/li_scrapi, eracle/linkedin-cli, vertexcover-io/linkedin-mcp-py, masa-finance/linkedin-scraper, joeyism/linkedin_scraper, drissbri/linkedin-scraper, zaidkx37/linkedinscrape com stealth, etc.) + 3 notáveis arquivados.
+3. **Categoria 2 — SDKs de APIs comerciais** — Hunter (PyHunter, node-hunterio), Apollo (apolloio/apollo-io-cli oficial, qodevai/apollo-api), RocketReach (oficial Python), PeopleDataLabs (JS/Python/Go oficiais), Clearbit (com aviso de deprecação parcial), Snov, Wiza, Findymail, ContactOut. Total 15 repos + 4 deprecados.
+4. **Categoria 3 — Permutação + verificação MX/SMTP** — AfterShip/email-verifier (Go, 1.5k+ stars), yolodex-ai/reachable (TS), phuaky/email-verifier, sonquer/mailprobe, EnrowAPI/catch-all-email-verifier-js, jacobgoh101/email-permutator. Total 11 repos.
+5. **Categoria 4 — OSINT / dorks / páginas públicas** — theHarvester, Sherlock, Maigret, holehe, ignorant (telefone), phoneintel, GHunt, PhoneInfoga (com nota de descontinuação). Total 15 repos.
+6. **Top 5 candidatos ranqueados** com justificativa técnica:
+   1. `peopledatalabs-js` (SDK TS oficial)
+   2. `AfterShip/email-verifier` + `yolodex-ai/reachable` (validação SMTP/MX)
+   3. `apolloio/apollo-io-cli` (Apollo)
+   4. `email-permutator` + `AfterShip/email-verifier` (permutação + validação)
+   5. `megadose/ignorant` + `phoneintel` (validação de telefone BR)
+7. **Riscos jurídicos** — seção resumida sobre ToS LinkedIn (histórico *hiQ v. LinkedIn*, banimento de conta, cease-and-desist a scrapers) e LGPD (art. 5º I, 7º §3º "manifestamente públicos", 7º IX legítimo interesse, DPAs de APIs comerciais).
+8. **Recomendação arquitetural** — cascata Lusha → Apollo/PDL → LeadContact (mantido como último recurso) + camada de validação SMTP/MX sempre no final; eliminar dependência estratégica em Categoria 1.
 
-**2. Gaps por categoria**
+## Entregável 2 — Plano de PoC (adicionado ao final do relatório)
 
-#### 2.1 Multi-tenancy & Organizações (P0)
-- Sem conceito de **Organization/Workspace** — cada usuário é uma ilha
-- Sem **convite de membros**, sem compartilhamento de empresas/campanhas entre time
-- Sem **roles & permissions** (Admin, Manager, SDR, Viewer) — tabela `user_roles` inexistente
-- Sem **billing por seat** nem limites por plano
-- Sem **audit log** de ações (quem editou/deletou o quê)
+### PoC A — Validação SMTP/MX de emails já enriquecidos (risco baixo, ROI alto)
+- **Escopo**: Nova Edge Function `email-validate` que recebe `{email}` e retorna `{status: 'valid'|'invalid'|'catch_all'|'unknown', mx_records, smtp_response}`.
+- **Base**: portar `yolodex-ai/reachable` (TypeScript puro, sem deps Node) para Deno; fallback a `AfterShip/email-verifier` rodando como microserviço Go se necessário.
+- **Integração**: chamar pós-enriquecimento em `oracle-enrich-contact/index.ts` antes de gravar `email_source`; adicionar coluna `email_validation_status` em `lusha_contacts`.
+- **Métrica de sucesso**: reduzir bounce em ≥ 70% em amostra de 500 contatos já enriquecidos.
 
-#### 2.2 CRM & Pipeline (P0)
-- Sem **deals/opportunities** com stages customizáveis (Kanban)
-- Sem **pipeline value** (forecast, weighted revenue)
-- Sem **activities timeline** unificada por empresa/contato (calls, emails, meetings, notes)
-- Sem **tasks & reminders** com due dates
-- Sem **lead/contact lifecycle stages** (MQL → SQL → Opportunity → Customer)
+### PoC B — Fallback via People Data Labs em cascata
+- **Escopo**: nova Edge Function `oracle-enrich-pdl` chamada quando LeadContact retorna `not_found` ou `error_auth`.
+- **Base**: `peopledatalabs-js` (SDK oficial TS) → adaptar chamadas fetch para Deno; usar endpoint `Person Enrichment` com `linkedin_url` como matcher.
+- **Secrets**: `add_secret PDL_API_KEY` (user precisa criar conta em peopledatalabs.com).
+- **Integração**: nova coluna `enrichment_source` na tabela; UI de contatos exibe badge da fonte.
+- **Métrica**: preencher email/telefone em ≥ 30% dos contatos hoje marcados `not_found`.
 
-#### 2.3 Outreach & Engagement (P0)
-- Campanhas têm `sequence` mas **sem motor de envio real** (email/LinkedIn/SMS)
-- Sem **integração SMTP/Gmail/Outlook** (OAuth com Google Workspace, Microsoft 365)
-- Sem **email tracking** (opens via pixel, click tracking)
-- Sem **reply detection** automática
-- Sem **A/B testing** de subject lines/templates
-- Sem **send time optimization** por timezone do prospect
-- Sem **deliverability score** nem warmup de inbox
-- Sem **multi-channel** (LinkedIn touches, cold call dialer, WhatsApp)
+### PoC C — Permutação + validação para catch-all corporativo BR
+- **Escopo**: função utilitária `_shared/email-permutator.ts` gera candidatos (`nome.sobrenome@dominio`, `n.sobrenome@`, `nome@`, `nome_sobrenome@`, etc.) e valida via PoC A.
+- **Uso**: acionada apenas quando: (i) temos `nome + sobrenome + dominio_empresa` e (ii) PoCs A/B falharam.
+- **Métrica**: cobrir ≥ 15% dos casos onde LeadContact/PDL falham, com precisão validada por SMTP ≥ 80%.
 
-#### 2.4 Data Enrichment (P1)
-- Hoje: scrape Google Maps + IPC scoring
-- Falta: integração com **Apollo, ZoomInfo, Clearbit, Hunter, Snov, Lusha** para emails verificados
-- Sem **email verification** (SMTP ping, catch-all detection)
-- Sem **technographics** (stack tecnológica detectada via BuiltWith/Wappalyzer)
-- Sem **firmographics** completos (funding, headcount growth, NAICS/CNAE)
-- Sem **news & triggers** (funding rounds, hiring, layoffs, exec changes)
-- Sem **social signals** (LinkedIn posts, tweets) além de URL
+### Sequenciamento sugerido (pós-aprovação, em nova rodada)
+1. PoC A (menor risco, base para as outras)
+2. PoC B (maior ROI de cobertura)
+3. PoC C (cobertura final)
+4. Descontinuar gradualmente LeadContact ou mantê-lo como oráculo secundário.
 
-#### 2.5 Workflows & Automação (P1)
-- `steps` é JSONB livre mas **sem editor visual** drag-and-drop tipo n8n/Zapier
-- Sem **agendamento** (cron, recurring)
-- Sem **triggers por evento** (novo lead, mudança de status, signal recebido)
-- Sem **branching condicional** (if/else baseado em score, setor, etc.)
-- Sem **delays** (esperar X dias entre etapas)
-- Sem **integração com webhooks externos** (HubSpot, Salesforce, Pipedrive, Slack, Zapier)
-- Sem **logs de execução** por step com retry manual
+## O que NÃO faz parte deste plano
+- **Nenhuma alteração de código** neste ciclo — só criação do arquivo `docs/pesquisa-oss-linkedin-enrichment.md`.
+- Implementação das PoCs A/B/C ficará para aprovação em rodadas seguintes, cada uma com seu próprio plano.
+- Não altero tabelas, RLS, ou Edge Functions existentes agora.
 
-#### 2.6 Analytics & Reporting (P1)
-- Sem **dashboards customizáveis** (drag widgets, salvar layouts por usuário)
-- Sem **relatórios agendados** por email (daily/weekly/monthly digest)
-- Sem **funil customizável** por estágio do pipeline
-- Sem **cohort analysis** (taxa de conversão por mês de origem)
-- Sem **attribution** (qual canal/campanha gerou o deal)
-- Sem **leaderboards** de SDRs/AEs
-- Sem **goals & quotas** com tracking
-- Export PDF existe — falta export Excel multi-aba e API de relatórios
+## Arquivos afetados
+- **Criar**: `docs/pesquisa-oss-linkedin-enrichment.md` (~15 KB, formatado com as tabelas acima).
 
-#### 2.7 Integrações & API (P0)
-- **Sem API pública REST/GraphQL** documentada (OpenAPI spec)
-- **Sem webhooks de saída** (notificar sistemas externos quando algo muda)
-- **Sem Zapier/Make/n8n app**
-- **Sem integração nativa** com: HubSpot, Salesforce, Pipedrive, Slack, Microsoft Teams, Notion, Calendly, Google Calendar, Outlook Calendar, WhatsApp Business
-- Sem **Chrome Extension** (capturar leads do LinkedIn → LUX)
-- Sem **mobile native app** (iOS/Android) — só PWA
-
-#### 2.8 Segurança & Compliance Enterprise (P0)
-- Sem **SSO/SAML** (Okta, Azure AD, Google Workspace SSO corporativo)
-- Sem **SCIM** para provisionamento automático de usuários
-- Sem **MFA/2FA** obrigatório
-- Sem **IP allowlist** por organização
-- Sem **session management** (revogar sessões ativas, ver dispositivos)
-- Sem **compliance certifications**: SOC 2 Type II, ISO 27001, GDPR DPA, LGPD compliance docs
-- Sem **data residency** opcional (escolher região do banco)
-- Sem **audit log exportável** (immutable, retention 1+ ano)
-- Sem **DSAR/Right to be Forgotten** automatizado (LGPD/GDPR)
-- Sem **encryption at rest** com chave gerenciada pelo cliente (BYOK)
-- Sem **DLP** (data loss prevention) e mascaramento de PII em logs
-
-#### 2.9 IA & Machine Learning (P1)
-- Hoje: chat com Gemini sem fine-tuning
-- Falta: **lead scoring por ML** treinado nos dados históricos do tenant
-- Sem **next best action** sugerida por contato
-- Sem **email writer** com personalização contextual em massa
-- Sem **conversation intelligence** (transcrever calls, summary, sentiment, talk ratio)
-- Sem **deal risk prediction** (likelihood to close)
-- Sem **buyer intent signals agregados** (Bombora, G2 Buyer Intent)
-- Sem **content recommendation** (qual case study enviar para qual prospect)
-
-#### 2.10 Operações & DevEx (P2)
-- Sem **status page** público (uptime, incidentes)
-- Sem **changelog/release notes** in-app
-- Sem **feature flags** para rollout gradual
-- Sem **in-app help center** (artigos, vídeos, chat de suporte)
-- Sem **NPS/CSAT** in-app
-- Sem **observabilidade** (Sentry, Datadog, New Relic) — só logs estruturados em edge functions
-- Sem **rate limiting server-side** por organização (apenas client-side em login)
-- Sem **backup point-in-time recovery** documentado nem **disaster recovery runbook**
-- Sem **sandbox/staging environment** separado para clientes
-- Sem **bulk import/export** (CSV de empresas, mapeamento de colunas, dedup)
-- Sem **soft delete + recycle bin** (hoje delete é permanente)
-- Sem **field-level history** (quem mudou qual campo quando)
-
-**3. Comparativo resumido (matriz)**
-
-Tabela com 30+ capacidades × Status (✅ Pronto / 🟡 Parcial / ❌ Ausente) × Prioridade.
-
-**4. Roadmap sugerido em 4 fases (12 meses)**
-
-| Fase | Meses | Foco | Entregas-chave |
-|---|---|---|---|
-| **1. Multi-tenant Foundation** | 1-3 | Tornar o produto colaborativo | Organizations, members, roles (`user_roles` table), audit log, MFA, soft delete |
-| **2. Engagement Engine** | 4-6 | Tornar campanhas funcionais | Gmail/Outlook OAuth, send engine, email tracking pixel, reply detection, sequence editor |
-| **3. CRM & Integrations** | 7-9 | Posicionar como hub de receita | Deals/Pipeline Kanban, activities timeline, API REST + webhooks, HubSpot/Salesforce sync, Chrome Extension |
-| **4. Enterprise & AI** | 10-12 | Vender para enterprise | SSO/SAML/SCIM, SOC 2 prep, ML lead scoring, conversation intelligence, dashboards customizáveis |
-
-**5. Quick wins (≤ 2 semanas cada)** — lista de 10 melhorias high-impact/low-effort que dão sensação enterprise rápido:
-- Soft delete + recycle bin (`deleted_at` em todas as tabelas)
-- Audit log table (genérico via trigger)
-- Field-level history (JSONB diff por update)
-- Bulk import CSV de empresas com mapeamento
-- API key pessoal + endpoint REST mínimo
-- Webhooks de saída (table `webhooks` + trigger)
-- 2FA via TOTP
-- Status page com Better Stack/Instatus
-- In-app changelog (Headway-like)
-- Rate limit server-side com Upstash/edge function
-
-**6. Ameaças competitivas**
-- Apollo.io: 275M+ contatos enriquecidos, $0-79/seat
-- ZoomInfo: data quality enterprise, $15K+/ano
-- Clay: workflows IA + 100+ data providers
-- HubSpot Breeze: AI agents nativos no CRM líder
-
-### Arquivo a criar
-- `docs/GAPS-ENTERPRISE.md` (~400 linhas com TOC, 10 seções, tabela comparativa, roadmap, quick wins, análise competitiva)
-
+## Detalhes técnicos (para o time)
+- O relatório será colocado em `docs/` seguindo o padrão dos demais documentos (`docs/LUSHA-INTEGRATION.md`, `docs/ORACLE_V2.md`).
+- Fontes citadas com URL completa (`github.com/owner/repo`) e status de manutenção.
+- Riscos ToS/LGPD calibrados por categoria (Baixo/Médio/Alto/Muito Alto).
+- Zero mudanças de comportamento em produção nesta rodada.
