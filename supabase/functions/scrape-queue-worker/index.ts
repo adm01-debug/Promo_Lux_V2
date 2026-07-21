@@ -203,7 +203,18 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceKey);
 
   const start = performance.now();
+  const WORKER_NAME = "scrape-queue-worker";
   try {
+    // Melhoria #1: Adaptive polling — evita trabalho quando a fila está
+    // vazia recorrentemente (backoff exponencial 20s→300s no banco).
+    const { data: shouldRun } = await supabase.rpc("worker_should_run", { _worker: WORKER_NAME });
+    if (shouldRun === false) {
+      return new Response(
+        JSON.stringify({ skipped: true, reason: "adaptive_backoff", duration_ms: Math.round(performance.now() - start) }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     const { data: tasks, error } = await supabase.rpc("claim_scrape_tasks", {
       _limit: BATCH_SIZE,
       _worker: WORKER_ID,
@@ -211,6 +222,8 @@ Deno.serve(async (req) => {
     if (error) throw error;
 
     const claimed = (tasks ?? []) as QueueTask[];
+    // Registra tamanho do lote — dispara backoff se vazio, reseta se houver trabalho.
+    await supabase.rpc("worker_report_batch", { _worker: WORKER_NAME, _size: claimed.length }).catch(() => {});
     log("info", "batch_claimed", { count: claimed.length });
 
     // Circuit breaker: se o provedor está em outage (circuito aberto), NÃO
