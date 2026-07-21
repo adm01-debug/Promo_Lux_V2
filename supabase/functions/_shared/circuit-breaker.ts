@@ -100,6 +100,8 @@ export async function reportSuccess(supabase: SupabaseClient, serviceName: strin
     .from("circuit_breakers")
     .update({ state: "closed", failure_count: 0, last_failure_at: null, opened_at: null, half_open_at: null })
     .eq("service_name", serviceName);
+  // Aquecer o cache: sucesso implica estado closed autoritativo.
+  closedCache.set(serviceName, Date.now() + CLOSED_CACHE_TTL_MS);
 }
 
 export async function reportFailure(supabase: SupabaseClient, serviceName: string) {
