@@ -3008,6 +3008,33 @@ export type Database = {
           },
         ]
       }
+      scrape_worker_state: {
+        Row: {
+          consecutive_empty_batches: number
+          last_batch_size: number
+          last_run_at: string | null
+          next_run_at: string
+          updated_at: string
+          worker_name: string
+        }
+        Insert: {
+          consecutive_empty_batches?: number
+          last_batch_size?: number
+          last_run_at?: string | null
+          next_run_at?: string
+          updated_at?: string
+          worker_name: string
+        }
+        Update: {
+          consecutive_empty_batches?: number
+          last_batch_size?: number
+          last_run_at?: string | null
+          next_run_at?: string
+          updated_at?: string
+          worker_name?: string
+        }
+        Relationships: []
+      }
       stakeholders: {
         Row: {
           avatar_url: string | null
@@ -3761,6 +3788,11 @@ export type Database = {
           user_id: string
         }[]
       }
+      worker_report_batch: {
+        Args: { _size: number; _worker: string }
+        Returns: undefined
+      }
+      worker_should_run: { Args: { _worker: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "sdr" | "viewer"
