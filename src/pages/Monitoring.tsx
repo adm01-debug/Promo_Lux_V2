@@ -425,6 +425,10 @@ const AutomationMonitoring = () => {
             <Zap className="h-4 w-4" />
             Chaos
           </TabsTrigger>
+          <TabsTrigger value="monte-carlo" className="gap-2">
+            <LineChartIcon className="h-4 w-4" />
+            Monte Carlo
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
