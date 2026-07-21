@@ -390,6 +390,12 @@ const AutomationMonitoring = () => {
             <Cookie className="h-4 w-4" />
             Cookies do Vault
           </TabsTrigger>
+          <TabsTrigger value="proxies" className="gap-2">
+            <Shield className="h-4 w-4" />
+            Proxies
+          </TabsTrigger>
+
+
 
         </TabsList>
 
