@@ -1,0 +1,26 @@
+# Canonical allowlist of SECURITY DEFINER functions in public schema
+# with EXECUTE granted to anon/authenticated. See docs/adr/009-security-baseline.md.
+# Format: one function name per line, comments start with '#'.
+
+# RLS helpers (needed to avoid recursive RLS)
+has_role
+has_org_role
+is_org_member
+default_org_for_current_user
+
+# Frontend-invoked RPCs
+accept_org_invite
+api_latency_stats
+api_latency_trend
+campaign_ab_stats
+create_default_deal_stages
+dlq_health_metrics
+dlq_health_trend
+evaluate_partition_policies
+get_dashboard_stats
+pg_catalog_rls_tables
+pg_columns_for_insert
+purge_dead_letter
+replay_dead_letter
+replay_dead_letter_batch
+reset_circuit_breaker
