@@ -281,6 +281,19 @@ serve(async (req) => {
       }
       const body = { name: parsed.data.name, ...parsed.data.config };
 
+      // G4: injeta proxies ativos da organização quando o usuário não passou explícitos.
+      let orgProxies: string[] = [];
+      if (!parsed.data.config.proxies?.length) {
+        const { data: proxyRows } = await supabase
+          .from("org_proxies")
+          .select("url")
+          .eq("is_active", true)
+          .order("last_used_at", { ascending: true, nullsFirst: true })
+          .limit(10);
+        orgProxies = (proxyRows ?? []).map((p: { url: string }) => p.url);
+        if (orgProxies.length) body.proxies = orgProxies;
+      }
+
       // Melhoria #8: trace_id correlacionado (gmaps-proxy → scrape_jobs → worker)
       const traceId = crypto.randomUUID();
       const configPayload = {
@@ -294,7 +307,8 @@ serve(async (req) => {
         depth: parsed.data.config.depth,
         email: parsed.data.config.email,
         max_time: parsed.data.config.max_time,
-        proxies: parsed.data.config.proxies,
+        proxies: body.proxies ?? [],
+        extra_reviews: parsed.data.config.extra_reviews,
       };
 
       const { data: dbJob, error: dbError } = await supabase
@@ -305,6 +319,7 @@ serve(async (req) => {
           status: "pending",
           source: "gmaps",
           auto_sync: parsed.data.auto_sync,
+          extra_reviews: parsed.data.config.extra_reviews,
           config: configPayload,
           trace_id: traceId,
         })
