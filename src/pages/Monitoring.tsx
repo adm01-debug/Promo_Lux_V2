@@ -603,6 +603,14 @@ const AutomationMonitoring = () => {
           <ResilienceReport />
         </TabsContent>
 
+        <TabsContent value="retry-tuner" className="space-y-4">
+          <RetryPolicyAdvisoriesPanel />
+        </TabsContent>
+
+        <TabsContent value="chaos" className="space-y-4">
+          <ChaosEngineeringPanel />
+        </TabsContent>
+
       </Tabs>
 
       <JobDetailsSheet 
