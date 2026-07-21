@@ -101,7 +101,7 @@ const SyncResultsSchema = z.object({
   job_id: z.string().uuid("Invalid job_id"),
 });
 
-const ActionSchema = z.enum(["list", "create", "delete", "sync-results"]);
+const ActionSchema = z.enum(["list", "create", "delete", "sync-results", "export"]);
 
 serve(async (req) => {
   const requestId = crypto.randomUUID();
