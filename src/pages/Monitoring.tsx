@@ -51,6 +51,7 @@ import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView
 import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
 import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPolicyAdvisoriesPanel";
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
+import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
