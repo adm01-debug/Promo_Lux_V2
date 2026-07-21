@@ -255,8 +255,14 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Processa em paralelo — cada tarefa isola seu próprio erro.
-    const results = await Promise.allSettled(claimed.map((t) => processTask(supabase, t)));
+    // Melhoria #2: processa em chunks paralelos (PARALLEL_CHUNK) — evita
+    // enviar 10 requests simultâneos ao provedor mas dobra o throughput vs. serial.
+    const results: PromiseSettledResult<void>[] = [];
+    for (let i = 0; i < claimed.length; i += PARALLEL_CHUNK) {
+      const chunk = claimed.slice(i, i + PARALLEL_CHUNK);
+      const settled = await Promise.allSettled(chunk.map((t) => processTask(supabase, t)));
+      results.push(...settled);
+    }
     const failed = results.filter((r) => r.status === "rejected").length;
 
     // Salvaguarda: se processTask lançar antes de reportar, marca como falha transitória.
