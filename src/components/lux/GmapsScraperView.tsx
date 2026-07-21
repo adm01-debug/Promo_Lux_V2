@@ -256,6 +256,9 @@ export const GmapsScraperView = () => {
         ))}
       </div>
 
+      <PlacesApiNewToggle />
+
+
       {/* Jobs list */}
       <div className="glass rounded-lg overflow-hidden">
         <div className="p-4 border-b border-border/50 flex items-center justify-between">
