@@ -52,7 +52,8 @@ import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
 import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPolicyAdvisoriesPanel";
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
 import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
-import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap } from "lucide-react";
+import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
@@ -429,6 +430,10 @@ const AutomationMonitoring = () => {
             <LineChartIcon className="h-4 w-4" />
             Monte Carlo
           </TabsTrigger>
+          <TabsTrigger value="web-scrape" className="gap-2">
+            <Globe className="h-4 w-4" />
+            Web Scrape
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
@@ -618,6 +623,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="monte-carlo" className="space-y-4">
           <MonteCarloReportPanel />
+        </TabsContent>
+
+        <TabsContent value="web-scrape" className="space-y-4">
+          <WebScrapeView />
         </TabsContent>
 
       </Tabs>
