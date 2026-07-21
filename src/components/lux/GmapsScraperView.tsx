@@ -107,6 +107,12 @@ export const GmapsScraperView = () => {
     },
   });
 
+  const exportMutation = useMutation({
+    mutationFn: ({ jobId, format }: { jobId: string; format: "csv" | "json" }) => gmapsApi.exportJob(jobId, format),
+    onSuccess: (_, vars) => toast({ title: "Exportação iniciada", description: `Arquivo ${vars.format.toUpperCase()} baixado.` }),
+    onError: (err) => toast({ title: "Erro", description: `Falha ao exportar: ${err.message}`, variant: "destructive" }),
+  });
+
   const handleCreate = () => {
     const result = validateScrapeJob({
       name: jobName,
@@ -131,6 +137,7 @@ export const GmapsScraperView = () => {
       depth,
       email: extractEmail,
       fast_mode: fastMode,
+      extra_reviews: extraReviews,
       auto_sync: autoSync,
     });
   };
