@@ -41,6 +41,11 @@ function log(level: "info" | "warn" | "error", msg: string, data?: Record<string
   );
 }
 
+// Melhoria #8: propaga trace_id do payload/job em todos os logs estruturados
+function traceOf(task: { payload?: Record<string, unknown>; scrape_job_id?: string | null }): string | null {
+  return (task.payload?.trace_id as string | undefined) ?? null;
+}
+
 /**
  * Grava um log de auditoria detalhado da execução (job, tenant, etapa, causa).
  * Nunca deixa uma falha de auditoria derrubar o processamento da tarefa.
