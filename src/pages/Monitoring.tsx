@@ -102,9 +102,11 @@ const AutomationMonitoring = () => {
       const activeOrgId = getActiveOrgId();
       if (!activeOrgId) return { data: [], count: 0 };
       
+      // 'estimated' usa pg_class.reltuples (O(1)) — evita scan completo em cada página.
+      // Preciso o suficiente para paginação; ANALYZE mantém a estimativa atualizada.
       let query = db
         .from("scrape_jobs")
-        .select("*", { count: "exact" })
+        .select("*", { count: "estimated" })
         .order("created_at", { ascending: false });
       
       if (searchTerm) {
