@@ -245,7 +245,11 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
             <TabsTrigger value="tech" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
               <Globe className="h-3 w-3" /> Tech Stack
             </TabsTrigger>
+            <TabsTrigger value="gmb" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-md gap-1.5">
+              <MapPin className="h-3 w-3" /> Google
+            </TabsTrigger>
           </TabsList>
+
 
           <div className="flex-1 overflow-y-auto">
             {/* Signals Tab */}
