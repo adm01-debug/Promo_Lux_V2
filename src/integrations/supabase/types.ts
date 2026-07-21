@@ -2090,6 +2090,7 @@ export type Database = {
           company_type: string | null
           confidence_score: number | null
           created_at: string
+          data_freshness_ttl: number
           dedup_hash: string | null
           department_en: string | null
           department_pt: string | null
@@ -2106,6 +2107,7 @@ export type Database = {
           job_title: string | null
           last_enriched_at: string | null
           last_error: string | null
+          last_recheck_at: string | null
           linkedin_awards: string[] | null
           linkedin_certifications: string[] | null
           linkedin_connections_count: number | null
@@ -2144,6 +2146,7 @@ export type Database = {
           company_type?: string | null
           confidence_score?: number | null
           created_at?: string
+          data_freshness_ttl?: number
           dedup_hash?: string | null
           department_en?: string | null
           department_pt?: string | null
@@ -2160,6 +2163,7 @@ export type Database = {
           job_title?: string | null
           last_enriched_at?: string | null
           last_error?: string | null
+          last_recheck_at?: string | null
           linkedin_awards?: string[] | null
           linkedin_certifications?: string[] | null
           linkedin_connections_count?: number | null
@@ -2198,6 +2202,7 @@ export type Database = {
           company_type?: string | null
           confidence_score?: number | null
           created_at?: string
+          data_freshness_ttl?: number
           dedup_hash?: string | null
           department_en?: string | null
           department_pt?: string | null
@@ -2214,6 +2219,7 @@ export type Database = {
           job_title?: string | null
           last_enriched_at?: string | null
           last_error?: string | null
+          last_recheck_at?: string | null
           linkedin_awards?: string[] | null
           linkedin_certifications?: string[] | null
           linkedin_connections_count?: number | null
@@ -4356,6 +4362,71 @@ export type Database = {
           _transient?: boolean
         }
         Returns: string
+      }
+      fn_lusha_contact_cache_lookup: {
+        Args: { p_linkedin_url: string }
+        Returns: {
+          bitrix_card_id: string | null
+          bitrix_contact_id: string | null
+          company_email_domain: string | null
+          company_id: string | null
+          company_linkedin_followers: number | null
+          company_linkedin_url: string | null
+          company_locations: Json | null
+          company_type: string | null
+          confidence_score: number | null
+          created_at: string
+          data_freshness_ttl: number
+          dedup_hash: string | null
+          department_en: string | null
+          department_pt: string | null
+          email: string | null
+          email_source: string | null
+          enrichment_attempts: number
+          enrichment_status: string
+          first_name: string | null
+          full_name: string
+          has_email: boolean | null
+          has_phone: boolean | null
+          id: string
+          is_duplicate: boolean
+          job_title: string | null
+          last_enriched_at: string | null
+          last_error: string | null
+          last_recheck_at: string | null
+          linkedin_awards: string[] | null
+          linkedin_certifications: string[] | null
+          linkedin_connections_count: number | null
+          linkedin_courses: string[] | null
+          linkedin_followers_count: number | null
+          linkedin_public_id: string | null
+          linkedin_skills: string[] | null
+          linkedin_url: string | null
+          lusha_company_lid: string | null
+          lusha_company_name: string
+          lusha_popularity_tier: string | null
+          n8n_execution_id: string | null
+          n8n_workflow_id: string | null
+          organization_id: string
+          phone_formatted: string | null
+          phone_raw: string | null
+          phone_source: string | null
+          raw_leadcontact_email: Json
+          raw_leadcontact_phone: Json
+          raw_lusha_payload: Json
+          seniority: string | null
+          session_id: string | null
+          stakeholder_id: string | null
+          updated_at: string
+          user_id: string
+          x_url: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "lusha_contacts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
