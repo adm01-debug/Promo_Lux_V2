@@ -49,7 +49,9 @@ import { DlqTriageView } from "@/components/lux/monitoring/DlqTriageView";
 import { ScrapeLatencyPanel } from "@/components/lux/monitoring/ScrapeLatencyPanel";
 import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView";
 import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
-import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon } from "lucide-react";
+import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPolicyAdvisoriesPanel";
+import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
@@ -413,6 +415,14 @@ const AutomationMonitoring = () => {
           <TabsTrigger value="resilience-report" className="gap-2">
             <LineChartIcon className="h-4 w-4" />
             Resiliência
+          </TabsTrigger>
+          <TabsTrigger value="retry-tuner" className="gap-2">
+            <Sparkles className="h-4 w-4" />
+            Auto-Tuner
+          </TabsTrigger>
+          <TabsTrigger value="chaos" className="gap-2">
+            <Zap className="h-4 w-4" />
+            Chaos
           </TabsTrigger>
         </TabsList>
 
