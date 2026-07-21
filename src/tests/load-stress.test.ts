@@ -1,22 +1,36 @@
-import { describe, it, expect } from 'vitest';
+/**
+ * Testes de carga: valida throughput do simulador Monte Carlo e propriedades
+ * da política de retry sob volume alto. Este é um smoke test in-process
+ * (não bate no banco real) para gate de CI.
+ */
+import { describe, it, expect } from "vitest";
+import { simulateScenario, DEFAULT_POLICY } from "@/lib/resilience/simulator";
+import { generateScenarios } from "@/lib/resilience/scenarios";
 
-describe('Load & Stress: Workflow Engine Performance', () => {
-  it('should handle multiple simultaneous job requests within latency limits', async () => {
-    const startTime = Date.now();
-    const concurrentRequests = 50;
-    
-    const requests = Array.from({ length: concurrentRequests }).map(async () => {
-      // Simulation of a quick status check or job trigger
-      return { status: 200, latency: Math.random() * 200 };
-    });
+describe("load-stress: motor de resiliência", () => {
+  it("processa 500 cenários em menos de 5s (throughput >= 100 cenários/s)", () => {
+    const scenarios = generateScenarios(500);
+    const t0 = performance.now();
+    for (const s of scenarios) simulateScenario(s, DEFAULT_POLICY, 100);
+    const elapsed = performance.now() - t0;
+    expect(elapsed).toBeLessThan(5000);
+  });
 
-    const results = await Promise.all(requests);
-    const endTime = Date.now();
-    const totalDuration = endTime - startTime;
+  it("mantém sucesso >= 70% no agregado com política default", () => {
+    const scenarios = generateScenarios(300);
+    let sum = 0;
+    for (const s of scenarios) sum += simulateScenario(s, DEFAULT_POLICY, 100).successRate;
+    expect(sum / scenarios.length).toBeGreaterThanOrEqual(0.7);
+  });
 
-    const successCount = results.filter(r => r.status === 200).length;
-    expect(successCount).toBe(concurrentRequests);
-    // Average latency should be under 500ms for these simulated requests
-    expect(totalDuration / concurrentRequests).toBeLessThan(500);
+  it("cenários client_4xx com failureRate 0.95 vão majoritariamente para DLQ (comportamento correto)", () => {
+    const scenarios = generateScenarios(500).filter(
+      (s) => s.fault === "client_4xx" && s.failureRate >= 0.9,
+    );
+    expect(scenarios.length).toBeGreaterThan(0);
+    for (const s of scenarios) {
+      const r = simulateScenario(s, DEFAULT_POLICY, 200);
+      expect(r.dlqRate).toBeGreaterThan(0.85);
+    }
   });
 });
