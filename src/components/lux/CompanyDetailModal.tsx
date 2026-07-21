@@ -398,8 +398,31 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
                 </div>
               </div>
             </TabsContent>
+
+            {/* Google (GMB) Tab */}
+            <TabsContent value="gmb" className="p-5 space-y-4 mt-0">
+              {gmbData?.rating != null && (
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                    <span className="font-mono text-foreground font-semibold">{gmbData.rating.toFixed(1)}</span>
+                  </div>
+                  {gmbData.review_count != null && (
+                    <span>· {gmbData.review_count} avaliações totais</span>
+                  )}
+                </div>
+              )}
+              <CompanyOpenHours data={gmbData?.open_hours} />
+              <div>
+                <div className="text-xs font-medium text-foreground mb-2 flex items-center gap-1.5">
+                  <Star className="h-3 w-3 text-primary" /> Avaliações recentes
+                </div>
+                <CompanyReviewsList companyId={company.id} />
+              </div>
+            </TabsContent>
           </div>
         </Tabs>
+
 
         <Separator className="bg-border/30 flex-shrink-0" />
 
