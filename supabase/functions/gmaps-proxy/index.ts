@@ -40,6 +40,7 @@ import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
 import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ipc/scoring.ts";
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
+import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
