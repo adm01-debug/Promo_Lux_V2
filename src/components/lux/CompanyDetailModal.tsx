@@ -116,6 +116,22 @@ const CopyButton = ({ text }: { text: string }) => {
 
 export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetailModalProps) => {
   const { data, isLoading } = useCompanyDetails(company?.id, open && !!company);
+  const [gmbData, setGmbData] = useState<{ open_hours: unknown; rating: number | null; review_count: number | null } | null>(null);
+
+  useEffect(() => {
+    if (!company?.id || !open) { setGmbData(null); return; }
+    let cancelled = false;
+    supabase
+      .from("companies")
+      .select("open_hours, rating, review_count")
+      .eq("id", company.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled && data) setGmbData(data as typeof gmbData);
+      });
+    return () => { cancelled = true; };
+  }, [company?.id, open]);
+
   if (!company) return null;
 
   const contacts = data?.contacts ?? [];
@@ -126,6 +142,7 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl bg-card border-border/50 p-0 gap-0 max-h-[90vh] flex flex-col">
+
         {/* Header */}
         <div className="p-6 pb-4 flex-shrink-0">
           <DialogHeader>
