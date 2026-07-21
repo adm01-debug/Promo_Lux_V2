@@ -13,6 +13,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { useCompanyDetails } from "@/hooks/useCompanyDetails";
+import { CompanyOpenHours } from "@/components/lux/CompanyOpenHours";
+import { CompanyReviewsList } from "@/components/lux/CompanyReviewsList";
+import { supabase } from "@/integrations/supabase/client";
+
 
 interface Company {
   id: string;
