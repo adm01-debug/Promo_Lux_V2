@@ -131,18 +131,19 @@ export function useWebScrapeExtract() {
 /** Reprocessa a DLQ do motor web. */
 export function useReplayWebDlq() {
   const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (limit = 100): Promise<number> => {
+  return useMutation<number, Error, number | undefined>({
+    mutationFn: async (limit) => {
+      const _limit = limit ?? 100;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase.rpc as any)("replay_web_dead_letter_batch", { _limit: limit });
+      const { data, error } = await (supabase.rpc as any)("replay_web_dead_letter_batch", { _limit });
       if (error) throw error;
       return (data as number) ?? 0;
     },
-    onSuccess: (count: number) => {
+    onSuccess: (count) => {
       qc.invalidateQueries({ queryKey: ["web-scrape-tasks"] });
       toast.success(`${count} tarefas reenviadas para a fila.`);
     },
-    onError: (e: Error) => toast.error(`Falha ao reprocessar DLQ: ${e.message}`),
+    onError: (e) => toast.error(`Falha ao reprocessar DLQ: ${e.message}`),
   });
 }
 
