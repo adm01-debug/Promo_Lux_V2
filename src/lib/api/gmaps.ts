@@ -44,6 +44,7 @@ export interface CreateJobRequest {
   email?: boolean;
   max_time?: number;
   proxies?: string[];
+  extra_reviews?: boolean;
 }
 
 async function callProxy(action: string, options: RequestInit = {}, params: Record<string, string> = {}) {
@@ -94,4 +95,29 @@ export const gmapsApi = {
       body: JSON.stringify({ job_id: jobId }),
     });
   },
+
+  async exportJob(jobId: string, format: "csv" | "json" = "csv"): Promise<void> {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) throw new Error("Not authenticated");
+    const params = new URLSearchParams({ action: "export", id: jobId, format });
+    const res = await fetch(`${FUNCTIONS_URL}?${params}`, {
+      headers: {
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    });
+    if (!res.ok) throw new Error(`Export failed: ${res.status}`);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const cd = res.headers.get("content-disposition") || "";
+    const match = cd.match(/filename="([^"]+)"/);
+    a.download = match?.[1] || `export.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  },
 };
+
