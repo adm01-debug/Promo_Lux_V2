@@ -616,6 +616,69 @@ serve(async (req) => {
       );
     }
 
+    // EXPORT — CSV/JSON das empresas de um job (G5)
+    if (action === "export" && req.method === "GET") {
+      const jobId = url.searchParams.get("id");
+      const format = (url.searchParams.get("format") || "csv").toLowerCase();
+      if (!jobId || !z.string().uuid().safeParse(jobId).success) {
+        return badRequest(corsHeaders, { id: "Valid UUID required" });
+      }
+      if (format !== "csv" && format !== "json") {
+        return badRequest(corsHeaders, { format: "Must be csv or json" });
+      }
+
+      // Confirma que o job pertence ao usuário (RLS backup).
+      const { data: job } = await supabase
+        .from("scrape_jobs")
+        .select("id, name, organization_id")
+        .eq("id", jobId)
+        .eq("user_id", userId)
+        .single();
+      if (!job) return badRequest(corsHeaders, { id: "Job not found" });
+
+      const { data: rows } = await supabase
+        .from("scrape_results")
+        .select("company_id, companies(name, sector, location, website, phone, email, latitude, longitude, place_id, cid, rating, review_count, price_range, business_status, thumbnail_url, google_maps_url, ipc_score)")
+        .eq("job_id", jobId);
+
+      const companies = (rows ?? [])
+        .map((r: { companies: unknown }) => r.companies)
+        .filter(Boolean) as Record<string, unknown>[];
+
+      const safeName = job.name.replace(/[^a-z0-9-_]+/gi, "_").slice(0, 60);
+
+      if (format === "json") {
+        return new Response(JSON.stringify(companies, null, 2), {
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Content-Disposition": `attachment; filename="${safeName}.json"`,
+          },
+        });
+      }
+
+      const cols = [
+        "name", "sector", "location", "website", "phone", "email",
+        "latitude", "longitude", "place_id", "cid", "rating", "review_count",
+        "price_range", "business_status", "thumbnail_url", "google_maps_url", "ipc_score",
+      ];
+      const escape = (v: unknown) => {
+        if (v === null || v === undefined) return "";
+        const s = String(v).replace(/"/g, '""');
+        return /[",\n\r]/.test(s) ? `"${s}"` : s;
+      };
+      const csv = [cols.join(","), ...companies.map((c) => cols.map((k) => escape(c[k])).join(","))].join("\n");
+
+      return new Response(csv, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": `attachment; filename="${safeName}.csv"`,
+        },
+      });
+    }
+
+
     return new Response(JSON.stringify({ error: "Unknown action" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
