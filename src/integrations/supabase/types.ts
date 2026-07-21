@@ -2962,6 +2962,53 @@ export type Database = {
         }
         Relationships: []
       }
+      places_api_usage: {
+        Row: {
+          calls_enterprise: number
+          calls_essentials: number
+          calls_pro: number
+          created_at: string
+          estimated_cost_usd: number
+          id: string
+          last_call_at: string | null
+          month: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          calls_enterprise?: number
+          calls_essentials?: number
+          calls_pro?: number
+          created_at?: string
+          estimated_cost_usd?: number
+          id?: string
+          last_call_at?: string | null
+          month: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          calls_enterprise?: number
+          calls_essentials?: number
+          calls_pro?: number
+          created_at?: string
+          estimated_cost_usd?: number
+          id?: string
+          last_call_at?: string | null
+          month?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "places_api_usage_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -3991,6 +4038,10 @@ export type Database = {
           _thread_id: string
         }
         Returns: string
+      }
+      record_places_api_call: {
+        Args: { _calls?: number; _organization_id: string; _tier: string }
+        Returns: undefined
       }
       record_vault_cookie_snapshots: {
         Args: { _payload: Json }
