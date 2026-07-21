@@ -1,4 +1,4 @@
-import { Building2, ExternalLink, MapPin, Tag, HelpCircle, Sparkles } from "lucide-react";
+import { Building2, ExternalLink, MapPin, Tag, Sparkles, Star } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { useVirtualCompanies } from "@/hooks/useVirtualCompanies";
