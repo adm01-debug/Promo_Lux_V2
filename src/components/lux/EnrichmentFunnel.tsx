@@ -2,7 +2,7 @@ import { ArrowDown, Database, Filter, CheckCircle2 } from "lucide-react";
 import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_FUNNEL } from "@/lib/demoData";
