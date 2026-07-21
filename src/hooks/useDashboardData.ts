@@ -150,9 +150,10 @@ export function useRecentActivity() {
     queryFn: isDemoMode
       ? () => DEMO_ACTIVITY as ActivityItem[]
       : async () => {
+          // Projeção explícita — evita puxar metadata JSONB pesado desnecessariamente.
           const { data, error } = await db
             .from("notifications")
-            .select("*")
+            .select("id, type, title, message, created_at, read, metadata")
             .order("created_at", { ascending: false })
             .limit(10);
           if (error) throw error;
