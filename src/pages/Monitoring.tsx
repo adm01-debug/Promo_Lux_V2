@@ -555,6 +555,11 @@ const AutomationMonitoring = () => {
         <TabsContent value="vault-cookies" className="space-y-4">
           <VaultCookiesPanel />
         </TabsContent>
+
+        <TabsContent value="proxies" className="space-y-4">
+          <OrgProxiesView />
+        </TabsContent>
+
       </Tabs>
 
       <JobDetailsSheet 
