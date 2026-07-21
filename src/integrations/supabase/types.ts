@@ -3042,6 +3042,57 @@ export type Database = {
         }
         Relationships: []
       }
+      retry_policy_advisories: {
+        Row: {
+          applied_at: string | null
+          applied_by: string | null
+          candidate_dlq_rate: number
+          candidate_policy: Json
+          candidate_success_rate: number
+          confidence: number
+          created_at: string
+          current_policy: Json
+          dismissed_at: string | null
+          id: string
+          improvement_pp: number
+          notes: string | null
+          observed_success_rate: number
+          sample_size: number
+        }
+        Insert: {
+          applied_at?: string | null
+          applied_by?: string | null
+          candidate_dlq_rate: number
+          candidate_policy: Json
+          candidate_success_rate: number
+          confidence: number
+          created_at?: string
+          current_policy: Json
+          dismissed_at?: string | null
+          id?: string
+          improvement_pp: number
+          notes?: string | null
+          observed_success_rate: number
+          sample_size: number
+        }
+        Update: {
+          applied_at?: string | null
+          applied_by?: string | null
+          candidate_dlq_rate?: number
+          candidate_policy?: Json
+          candidate_success_rate?: number
+          confidence?: number
+          created_at?: string
+          current_policy?: Json
+          dismissed_at?: string | null
+          id?: string
+          improvement_pp?: number
+          notes?: string | null
+          observed_success_rate?: number
+          sample_size?: number
+        }
+        Relationships: []
+      }
       scrape_dead_letter: {
         Row: {
           attempts: number
