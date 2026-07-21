@@ -572,6 +572,18 @@ const AutomationMonitoring = () => {
           <OrgProxiesView />
         </TabsContent>
 
+        <TabsContent value="dlq-triage" className="space-y-4">
+          <DlqTriageView />
+        </TabsContent>
+
+        <TabsContent value="scrape-latency" className="space-y-4">
+          <ScrapeLatencyPanel />
+        </TabsContent>
+
+        <TabsContent value="rate-limits" className="space-y-4">
+          <OrgRateLimitsView />
+        </TabsContent>
+
       </Tabs>
 
       <JobDetailsSheet 
