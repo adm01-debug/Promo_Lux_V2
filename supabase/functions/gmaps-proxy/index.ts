@@ -449,22 +449,30 @@ serve(async (req) => {
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
 
-      let results: Record<string, string>[] = [];
+      let results: RawGmapsRow[] = [];
       try {
-        const res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+        // Tenta JSON primeiro (endpoint mais rico), fallback para CSV.
+        let res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download?format=json`, {
           signal: AbortSignal.timeout(30000),
         });
+        let isJson = res.ok && (res.headers.get("content-type") || "").includes("json");
+        if (!res.ok) {
+          res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+            signal: AbortSignal.timeout(30000),
+          });
+          isJson = (res.headers.get("content-type") || "").includes("json");
+        }
         if (res.ok) {
           const text = await res.text();
-          const lines = text.split("\n").filter(Boolean);
-          if (lines.length > 1) {
-            const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
-            results = lines.slice(1).map((line: string) => {
-              const values = line.split(",").map((v: string) => v.trim().replace(/"/g, ""));
-              const obj: Record<string, string> = {};
-              headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
-              return obj;
-            });
+          if (isJson) {
+            try {
+              const parsed = JSON.parse(text);
+              results = Array.isArray(parsed) ? parsed as RawGmapsRow[] : [];
+            } catch {
+              results = parseCsv(text);
+            }
+          } else {
+            results = parseCsv(text);
           }
         }
       } catch (err) {
@@ -482,33 +490,74 @@ serve(async (req) => {
 
       let companiesCreated = 0;
 
-      for (const result of results) {
-        const ipcScore = calculateIPCScore(result, ipcConfig?.criteria as IPCHittingCriteria | undefined);
+      for (const rawRow of results) {
+        const mapped = mapGmapsRow(rawRow);
+        const ipcScore = calculateIPCScore(
+          {
+            category: mapped.sector,
+            address: mapped.location,
+            email: mapped.email,
+            phone: mapped.phone,
+            website: mapped.website,
+            rating: mapped.rating ?? undefined,
+          },
+          ipcConfig?.criteria as IPCHittingCriteria | undefined,
+        );
 
-        // organization_id vem do job (não do DEFAULT da coluna): este client
-        // usa a service_role key sem repassar o Authorization do usuário, então
-        // auth.uid() não resolve dentro do banco e default_org_for_current_user()
-        // gravaria NULL — violando o NOT NULL e, pior, colidindo silenciosamente
-        // com empresas de outra organização na chave única (organization_id,
-        // name, source) caso o DEFAULT resolvesse para outro valor incorreto.
-        const { data: company } = await supabase
+        // G9: deduplicação por place_id quando disponível (o Google garante
+        // unicidade global); senão cai no par legado (org, name, source).
+        const conflictTarget = mapped.place_id
+          ? "organization_id,place_id"
+          : "organization_id,name,source";
+
+        // organization_id vem do job (não do DEFAULT da coluna): o client
+        // service_role não repassa Authorization, então auth.uid() é NULL.
+        const payload = {
+          user_id: userId,
+          organization_id: job.organization_id,
+          name: mapped.name,
+          sector: mapped.sector,
+          location: mapped.location,
+          website: mapped.website,
+          phone: mapped.phone,
+          email: mapped.email,
+          source: "gmaps",
+          ipc_score: ipcScore,
+          enriched: !!(mapped.email || mapped.phone),
+          raw_data: rawRow,
+          latitude: mapped.latitude,
+          longitude: mapped.longitude,
+          place_id: mapped.place_id,
+          cid: mapped.cid,
+          plus_code: mapped.plus_code,
+          google_maps_url: mapped.google_maps_url,
+          street_view_url: mapped.street_view_url,
+          rating: mapped.rating,
+          review_count: mapped.review_count,
+          price_range: mapped.price_range,
+          business_status: mapped.business_status,
+          thumbnail_url: mapped.thumbnail_url,
+          images: mapped.images,
+          open_hours: mapped.open_hours,
+          popular_times: mapped.popular_times,
+          timezone: mapped.timezone,
+          descriptions: mapped.descriptions,
+          owner_claimed: mapped.owner_claimed,
+          reservations_url: mapped.reservations_url,
+          order_online_url: mapped.order_online_url,
+          menu_url: mapped.menu_url,
+        };
+
+        const { data: company, error: upsertError } = await supabase
           .from("companies")
-          .upsert({
-            user_id: userId,
-            organization_id: job.organization_id,
-            name: result.name || result.title || "Unknown",
-            sector: result.category || result.type || "Não classificado",
-            location: result.address || result.city || "",
-            website: result.website || result.web_site || "",
-            phone: result.phone || "",
-            email: result.email || "",
-            source: "gmaps",
-            ipc_score: ipcScore,
-            enriched: !!(result.email || result.phone),
-            raw_data: result,
-          }, { onConflict: "organization_id,name,source" })
+          .upsert(payload, { onConflict: conflictTarget })
           .select()
           .single();
+
+        if (upsertError) {
+          log.warn("company_upsert_failed", { error: upsertError.message, name: mapped.name });
+          continue;
+        }
 
         if (company) {
           companiesCreated++;
@@ -516,11 +565,12 @@ serve(async (req) => {
             user_id: userId,
             job_id: job_id,
             company_id: company.id,
-            raw_data: result,
+            raw_data: rawRow,
             processed: true,
           });
         }
       }
+
 
       await supabase
         .from("scrape_jobs")
