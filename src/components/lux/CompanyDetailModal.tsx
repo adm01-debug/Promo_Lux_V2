@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Building2, MapPin, Tag, Globe, Mail, Phone, TrendingUp, Radar, ExternalLink,
   Briefcase, DollarSign, Users, Star, Copy, Check, Send,
