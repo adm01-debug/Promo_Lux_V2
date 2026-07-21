@@ -397,9 +397,18 @@ const AutomationMonitoring = () => {
             <Shield className="h-4 w-4" />
             Proxies
           </TabsTrigger>
-
-
-
+          <TabsTrigger value="dlq-triage" className="gap-2">
+            <ShieldAlertIcon className="h-4 w-4" />
+            Triagem DLQ
+          </TabsTrigger>
+          <TabsTrigger value="scrape-latency" className="gap-2">
+            <Timer className="h-4 w-4" />
+            Latência Motor
+          </TabsTrigger>
+          <TabsTrigger value="rate-limits" className="gap-2">
+            <Gauge className="h-4 w-4" />
+            Rate Limits
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
