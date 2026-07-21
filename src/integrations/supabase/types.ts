@@ -2468,6 +2468,41 @@ export type Database = {
         }
         Relationships: []
       }
+      org_scrape_rate_limits: {
+        Row: {
+          created_at: string
+          max_concurrent: number
+          max_per_hour: number
+          notes: string | null
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          max_concurrent?: number
+          max_per_hour?: number
+          notes?: string | null
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          max_concurrent?: number
+          max_per_hour?: number
+          notes?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_scrape_rate_limits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_violation_alert_settings: {
         Row: {
           cooldown_minutes: number
@@ -3445,6 +3480,18 @@ export type Database = {
         }
         Returns: undefined
       }
+      api_latency_percentiles: {
+        Args: { _hours?: number; _path?: string }
+        Returns: {
+          avg_error_rate: number
+          bucket: string
+          p50_ms: number
+          p95_ms: number
+          p99_ms: number
+          path: string
+          samples: number
+        }[]
+      }
       api_latency_stats: {
         Args: { _hours?: number; _limit?: number }
         Returns: {
@@ -3592,6 +3639,20 @@ export type Database = {
           pending_items: number
           replayed_items: number
           total_items: number
+        }[]
+      }
+      dlq_purge_stale_network_errors: {
+        Args: { _days?: number }
+        Returns: number
+      }
+      dlq_top_reasons: {
+        Args: { _limit?: number }
+        Returns: {
+          failure_reason: string
+          first_seen: string
+          last_seen: string
+          occurrences: number
+          sample_error: string
         }[]
       }
       enqueue_scrape_task: {
