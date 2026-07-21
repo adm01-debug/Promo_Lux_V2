@@ -16,6 +16,8 @@ import { gmapsApi, type ScrapeJob } from "@/lib/api/gmaps";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { PlacesApiNewToggle } from "@/components/lux/PlacesApiNewToggle";
+
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   completed: { label: "Concluído", color: "bg-success/20 text-success border-success/30", icon: <CheckCircle2 className="h-3 w-3" /> },
