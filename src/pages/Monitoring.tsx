@@ -48,7 +48,8 @@ import { OrgProxiesView } from "@/components/lux/OrgProxiesView";
 import { DlqTriageView } from "@/components/lux/monitoring/DlqTriageView";
 import { ScrapeLatencyPanel } from "@/components/lux/monitoring/ScrapeLatencyPanel";
 import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView";
-import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer } from "lucide-react";
+import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
@@ -409,6 +410,10 @@ const AutomationMonitoring = () => {
             <Gauge className="h-4 w-4" />
             Rate Limits
           </TabsTrigger>
+          <TabsTrigger value="resilience-report" className="gap-2">
+            <LineChartIcon className="h-4 w-4" />
+            Resiliência
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
@@ -582,6 +587,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="rate-limits" className="space-y-4">
           <OrgRateLimitsView />
+        </TabsContent>
+
+        <TabsContent value="resilience-report" className="space-y-4">
+          <ResilienceReport />
         </TabsContent>
 
       </Tabs>
