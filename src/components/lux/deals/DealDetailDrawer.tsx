@@ -9,6 +9,7 @@ import { Trash2, Phone, Mail as MailIcon, Calendar as CalIcon, FileText, Activit
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDeals, useDealActivities, useDealStages, type Deal, type DealActivity } from "@/hooks/useDeals";
+import { useConfirm } from "@/hooks/useConfirm";
 import { DealTasksPanel } from "./DealTasksPanel";
 
 interface Props {
@@ -25,6 +26,7 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
   const { updateDeal, deleteDeal } = useDeals();
   const { data: stages = [] } = useDealStages();
   const { data: activities = [], addActivity } = useDealActivities(deal?.id ?? null);
+  const confirm = useConfirm();
   const [actType, setActType] = useState<DealActivity["type"]>("note");
   const [actText, setActText] = useState("");
 
@@ -42,7 +44,16 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
             />
             <Button
               size="icon" variant="ghost"
-              onClick={() => { if (confirm("Excluir este negócio?")) { deleteDeal.mutate(deal.id); onOpenChange(false); } }}
+              aria-label="Excluir negócio"
+              onClick={async () => {
+                const ok = await confirm({
+                  title: "Excluir este negócio?",
+                  description: "Esta ação não pode ser desfeita. O histórico de atividades e tarefas relacionadas será perdido.",
+                  confirmLabel: "Excluir",
+                  variant: "destructive",
+                });
+                if (ok) { deleteDeal.mutate(deal.id); onOpenChange(false); }
+              }}
             >
               <Trash2 className="h-4 w-4 text-destructive" />
             </Button>

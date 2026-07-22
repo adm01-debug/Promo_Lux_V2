@@ -12,6 +12,7 @@ import { ActiveOrgProvider } from "@/contexts/ActiveOrgContext";
 import { DemoProvider } from "@/contexts/DemoContext";
 import { useDemo } from "@/contexts/demo-context";
 import { UnsavedChangesProvider } from "@/hooks/useUnsavedChanges";
+import { ConfirmProvider } from "@/hooks/useConfirm";
 import { ErrorBoundary } from "@/components/lux/ErrorBoundary";
 import { PageTransition } from "@/components/lux/PageTransition";
 import { OrgErrorBanner } from "@/components/lux/OrgErrorBanner";
@@ -166,20 +167,22 @@ const App = () => (
           <AuthProvider>
             <ActiveOrgProvider>
               <DemoProvider>
-                <GlobalOrgErrorListener />
-                <AutoTopProgressBar />
-                <UnsavedChangesDialog />
-                <OrgErrorBanner />
-                <Toaster />
-                <Sonner />
-                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                  <DeepLinkBridge />
-                  <UnsavedChangesProvider>
-                    <Suspense fallback={<PageLoader />}>
-                      <AnimatedRoutes />
-                    </Suspense>
-                  </UnsavedChangesProvider>
-                </BrowserRouter>
+                <ConfirmProvider>
+                  <GlobalOrgErrorListener />
+                  <AutoTopProgressBar />
+                  <UnsavedChangesDialog />
+                  <OrgErrorBanner />
+                  <Toaster />
+                  <Sonner />
+                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                    <DeepLinkBridge />
+                    <UnsavedChangesProvider>
+                      <Suspense fallback={<PageLoader />}>
+                        <AnimatedRoutes />
+                      </Suspense>
+                    </UnsavedChangesProvider>
+                  </BrowserRouter>
+                </ConfirmProvider>
               </DemoProvider>
             </ActiveOrgProvider>
           </AuthProvider>

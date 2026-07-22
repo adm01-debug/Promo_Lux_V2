@@ -153,11 +153,23 @@ export function useDeals() {
   });
 
   const updateDeal = useMutation({
-    mutationFn: async ({ id, ...patch }: Partial<Deal> & { id: string; version?: number }) => {
-      const { error } = await db.from("deals").update(patch).eq("id", id);
+    mutationFn: async ({ id, version, ...patch }: Partial<Deal> & { id: string; version?: number }) => {
+      // Optimistic locking: quando `version` é fornecido, exigimos que a linha
+      // ainda esteja nessa geração e incrementamos. Se ninguém casa, 0 linhas
+      // voltam e disparamos StaleWriteError para o caller resolver via refetch.
+      let query = db.from("deals").update(
+        version !== undefined ? { ...patch, version: version + 1 } : patch,
+      ).eq("id", id);
+      if (version !== undefined) query = query.eq("version", version);
+      const { data, error } = await query.select("id").maybeSingle();
       if (error) throw error;
+      if (version !== undefined && !data) {
+        const stale = new Error("STALE_WRITE") as Error & { code: string };
+        stale.code = "STALE_WRITE";
+        throw stale;
+      }
     },
-    onMutate: async ({ id, ...patch }) => {
+    onMutate: async ({ id, version: _v, ...patch }) => {
       await qc.cancelQueries({ queryKey: ["deals", user?.id] });
       const prev = qc.getQueryData<Deal[]>(["deals", user?.id]);
       qc.setQueryData<Deal[]>(["deals", user?.id], (old) =>
@@ -165,9 +177,12 @@ export function useDeals() {
       );
       return { prev };
     },
-    onError: (_e, _v, ctx) => {
+    onError: (err, _v, ctx) => {
       if (ctx?.prev) qc.setQueryData(["deals", user?.id], ctx.prev);
-      toast.error("Erro ao atualizar negócio");
+      const isStale = (err as { code?: string })?.code === "STALE_WRITE";
+      toast.error(
+        isStale ? "Este negócio foi atualizado por outra pessoa. Recarregando…" : "Erro ao atualizar negócio",
+      );
     },
     onSettled: () => qc.invalidateQueries({ queryKey: ["deals", user?.id] }),
   });
