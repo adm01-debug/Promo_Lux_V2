@@ -1,7 +1,7 @@
 {
   "round": 19,
   "layer": "E — Monte Carlo",
-  "generated_at": "2026-07-22T11:26:02.807Z",
+  "generated_at": "2026-07-22T11:33:35.569Z",
   "scenarios_total": 500,
   "chaos_rate_distribution": [
     0,
