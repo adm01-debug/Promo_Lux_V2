@@ -1,1 +1,139 @@
-aW1wb3J0IHsgdXNlU3RhdGUsIHVzZUNhbGxiYWNrLCB1c2VFZmZlY3QgfSBmcm9tICJyZWFjdCI7CmltcG9ydCB7IHN1cGFiYXNlIH0gZnJvbSAiQC9pbnRlZ3JhdGlvbnMvc3VwYWJhc2UvY2xpZW50IjsKCi8vIOKUgOKUgCBUaXBvcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAKZXhwb3J0IGludGVyZmFjZSBNRkFGYWN0b3IgewogIGlkOiBzdHJpbmc7CiAgdHlwZTogInRvdHAiOwogIGZyaWVuZGx5X25hbWU/OiBzdHJpbmc7CiAgc3RhdHVzOiAidmVyaWZpZWQiIHwgInVudmVyaWZpZWQiOwogIGNyZWF0ZWRfYXQ6IHN0cmluZzsKICB1cGRhdGVkX2F0OiBzdHJpbmc7Cn0KCmV4cG9ydCBpbnRlcmZhY2UgTUZBRW5yb2xsRGF0YSB7CiAgaWQ6IHN0cmluZzsKICB0eXBlOiAidG90cCI7CiAgdG90cDogewogICAgcXJfY29kZTogc3RyaW5nOwogICAgc2VjcmV0OiBzdHJpbmc7CiAgICB1cmk6IHN0cmluZzsKICB9Owp9CgpleHBvcnQgaW50ZXJmYWNlIEFzc3VyYW5jZUxldmVsIHsKICBjdXJyZW50TGV2ZWw6ICJhYWwxIiB8ICJhYWwyIjsKICBuZXh0TGV2ZWw6ICJhYWwxIiB8ICJhYWwyIiB8IG51bGw7CiAgY3VycmVudEF1dGhlbnRpY2F0aW9uTWV0aG9kczogQXJyYXk8eyBtZXRob2Q6IHN0cmluZzsgdGltZXN0YW1wOiBzdHJpbmcgfT47Cn0KCmV4cG9ydCBmdW5jdGlvbiB1c2VNRkEoKSB7CiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUoZmFsc2UpOwogIGNvbnN0IFtlcnJvciwgc2V0RXJyb3JdID0gdXNlU3RhdGU8c3RyaW5nIHwgbnVsbD4obnVsbCk7CiAgY29uc3QgW2ZhY3RvcnMsIHNldEZhY3RvcnNdID0gdXNlU3RhdGU8TUZBRGF0b3JbXT4oW10pOwogIGNvbnN0IFthc3N1cmFuY2VMZXZlbCwgc2V0QXNzdXJhbmNlTGV2ZWxdID0gdXNlU3RhdGU8QXNzdXJhbmNlTGV2ZWwgfCBudWxsPihudWxsKTsKCiAgY29uc3QgbGlzdEZhY3RvcnMgPSB1c2VDYWxsYmFjayhhc3luYyAoKTogUHJvbWlzZTxNRkFGYWN0b3JbXT4gPT4gewogICAgc2V0TG9hZGluZyh0cnVlKTsKICAgIHNldEVycm9yKG51bGwpOwogICAgdHJ5IHsKICAgICAgY29uc3QgeyBkYXRhLCBlcnJvcjogZXJyIH0gPSBhd2FpdCBzdXBhYmFzZS5hdXRoLm1mYS5saXN0RmFjdG9ycygpOwogICAgICBpZiAoZXJyKSB0aHJvdyBlcnI7CiAgICAgIGNvbnN0IGxpc3QgPSAoZGF0YT8udG90cCA/PyBbXSkgYXMgdW5rbm93biBhcyBNRkFGYWN0b3JbXTsKICAgICAgc2V0RmFjdG9ycyhsaXN0KTsKICAgICAgcmV0dXJuIGxpc3Q7CiAgICB9IGNhdGNoIChlKSB7CiAgICAgIHNldEVycm9yKChlIGFzIEVycm9yKS5tZXNzYWdlKTsKICAgICAgcmV0dXJuIFtdOwogICAgfSBmaW5hbGx5IHsKICAgICAgc2V0TG9hZGluZyhmYWxzZSk7CiAgICB9CiAgfSwgW10pOwoKICBjb25zdCBlbnJvbGwgPSB1c2VDYWxsYmFjayhhc3luYyAoZnJpZW5kbHlOYW1lID0gIkF1dGVudGljYWRvciIpOiBQcm9taXNlPE1GQUVucm9sbERhdGEgfCBudWxsPiA9PiB7CiAgICBzZXRMb2FkaW5nKHRydWUpOwogICAgc2V0RXJyb3IobnVsbCk7CiAgICB0cnkgewogICAgICBjb25zdCB7IGRhdGEsIGVycm9yOiBlcnIgfSA9IGF3YWl0IHN1cGFiYXNlLmF1dGgubWZhLmVucm9sbCh7CiAgICAgICAgZmFjdG9yVHlwZTogInRvdHAiLAogICAgICAgIGZyaWVuZGx5TmFtZSwKICAgICAgfSk7CiAgICAgIGlmIChlcnIpIHRocm93IGVycjsKICAgICAgcmV0dXJuIGRhdGEgYXMgdW5rbm93biBhcyBNRkFFbnJvbGxEYXRhOwogICAgfSBjYXRjaCAoZSkgewogICAgICBzZXRFcnJvcigoZSBhcyBFcnJvcikubWVzc2FnZSk7CiAgICAgIHJldHVybiBudWxsOwogICAgfSBmaW5hbGx5IHsKICAgICAgc2V0TG9hZGluZyhmYWxzZSk7CiAgICB9CiAgfSwgW10pOwoKICBjb25zdCB2ZXJpZnkgPSB1c2VDYWxsYmFjayhhc3luYyAoZmFjdG9ySWQ6IHN0cmluZywgY29kZTogc3RyaW5nKTogUHJvbWlzZTxib29sZWFuPiA9PiB7CiAgICBzZXRMb2FkaW5nKHRydWUpOwogICAgc2V0RXJyb3IobnVsbCk7CiAgICB0cnkgewogICAgICBjb25zdCB7IGRhdGE6IGNoYWxsZW5nZURhdGEsIGVycm9yOiBjaGFsbGVuZ2VFcnIgfSA9IGF3YWl0IHN1cGFiYXNlLmF1dGgubWZhLmNoYWxsZW5nZSh7IGZhY3RvcklkIH0pOwogICAgICBpZiAoY2hhbGxlbmdlRXJyKSB0aHJvdyBjaGFsbGVuZ2VFcnI7CiAgICAgIGNvbnN0IHsgZXJyb3I6IHZlcmlmeUVyciB9ID0gYXdhaXQgc3VwYWJhc2UuYXV0aC5tZmEudmVyaWZ5KHsKICAgICAgICBmYWN0b3JJZCwKICAgICAgICBjaGFsbGVuZ2VJZDogY2hhbGxlbmdlRGF0YS5pZCwKICAgICAgICBjb2RlOiBjb2RlLnJlcGxhY2UoL1xzL2csICIiKSwKICAgICAgfSk7CiAgICAgIGlmICh2ZXJpZnlFcnIpIHRocm93IHZlcmlmeUVycjsKICAgICAgYXdhaXQgbGlzdEZhY3RvcnMoKTsKICAgICAgcmV0dXJuIHRydWU7CiAgICB9IGNhdGNoIChlKSB7CiAgICAgIGNvbnN0IG1zZyA9IChlIGFzIEVycm9yKS5tZXNzYWdlOwogICAgICBzZXRFcnJvcigKICAgICAgICBtc2cuaW5jbHVkZXMoImludmFsaWQiKSB8fCBtc2cuaW5jbHVkZXMoIkludmFsaWQiKQogICAgICAgICAgPyAiQ8OzZGlnbyBpbnbDoWxpZG8uIFZlcmlmaXF1ZSBzZSBvIGhvcsOhcmlvIGRvIGRpc3Bvc2l0aXZvIGVzdMOhIHNpbmNyb25pemFkby4iCiAgICAgICAgICA6IG1zZwogICAgICApOwogICAgICByZXR1cm4gZmFsc2U7CiAgICB9IGZpbmFsbHkgewogICAgICBzZXRMb2FkaW5nKGZhbHNlKTsKICAgIH0KICB9LCBbbGlzdEZhY3RvcnNdKTsKCiAgY29uc3QgdW5lbnJvbGwgPSB1c2VDYWxsYmFjayhhc3luYyAoZmFjdG9ySWQ6IHN0cmluZyk6IFByb21pc2U8Ym9vbGVhbj4gPT4gewogICAgc2V0TG9hZGluZyh0cnVlKTsKICAgIHNldEVycm9yKG51bGwpOwogICAgdHJ5IHsKICAgICAgY29uc3QgeyBlcnJvcjogZXJyIH0gPSBhd2FpdCBzdXBhYmFzZS5hdXRoLm1mYS51bmVucm9sbCh7IGZhY3RvcklkIH0pOwogICAgICBpZiAoZXJyKSB0aHJvdyBlcnI7CiAgICAgIGF3YWl0IGxpc3RGYWN0b3JzKCk7CiAgICAgIHJldHVybiB0cnVlOwogICAgfSBjYXRjaCAoZSkgewogICAgICBzZXRFcnJvcigoZSBhcyBFcnJvcikubWVzc2FnZSk7CiAgICAgIHJldHVybiBmYWxzZTsKICAgIH0gZmluYWxseSB7CiAgICAgIHNldExvYWRpbmcoZmFsc2UpOwogICAgfQogIH0sIFtsaXN0RmFjdG9yc10pOwoKICBjb25zdCBjaGVja0Fzc3VyYW5jZUxldmVsID0gdXNlQ2FsbGJhY2soYXN5bmMgKCk6IFByb21pc2U8QXNzdXJhbmNlTGV2ZWwgfCBudWxsPiA9PiB7CiAgICB0cnkgewogICAgICBjb25zdCB7IGRhdGEsIGVycm9yOiBlcnIgfSA9IGF3YWl0IHN1cGFiYXNlLmF1dGgubWZhLmdldEF1dGhlbnRpY2F0b3JBc3N1cmFuY2VMZXZlbCgpOwogICAgICBpZiAoZXJyKSB0aHJvdyBlcnI7CiAgICAgIGNvbnN0IGxldmVsID0gZGF0YSBhcyB1bmtub3duIGFzIEFzc3VyYW5jZUxldmVsOwogICAgICBzZXRBc3N1cmFuY2VMZXZlbChsZXZlbCk7CiAgICAgIHJldHVybiBsZXZlbDsKICAgIH0gY2F0Y2ggewogICAgICByZXR1cm4gbnVsbDsKICAgIH0KICB9LCBbXSk7CgogIHVzZUVmZmVjdCgoKSA9PiB7CiAgICBsaXN0RmFjdG9ycygpOwogICAgY2hlY2tBc3N1cmFuY2VMZXZlbCgpOwogIH0sIFtsaXN0RmFjdG9ycywgY2hlY2tBc3N1cmFuY2VMZXZlbF0pOwoKICBjb25zdCBoYXNNRkEgPSBmYWN0b3JzLnNvbWUoZiA9PiBmLnN0YXR1cyA9PT0gInZlcmlmaWVkIik7CiAgY29uc3QgaXNBQUwyID0gYXNzdXJhbmNlTGV2ZWw/LmN1cnJlbnRMZXZlbCA9PT0gImFhbDIiOwoKICByZXR1cm4gewogICAgbG9hZGluZywgZXJyb3IsIGZhY3RvcnMsIGFzc3VyYW5jZUxldmVsLAogICAgaGFzTUZBLCBpc0FBTDIsCiAgICBsaXN0RmFjdG9ycywgZW5yb2xsLCB2ZXJpZnksIHVuZW5yb2xsLCBjaGVja0Fzc3VyYW5jZUxldmVsLAogIH07Cn0K
+import { useState, useCallback, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+// ── Tipos ─────────────────────────────────────────────────────────────────────────────
+export interface MFAFactor {
+  id: string;
+  type: "totp";
+  friendly_name?: string;
+  status: "verified" | "unverified";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MFAEnrollData {
+  id: string;
+  type: "totp";
+  totp: {
+    qr_code: string;
+    secret: string;
+    uri: string;
+  };
+}
+
+export interface AssuranceLevel {
+  currentLevel: "aal1" | "aal2";
+  nextLevel: "aal1" | "aal2" | null;
+  currentAuthenticationMethods: Array<{ method: string; timestamp: string }>;
+}
+
+export function useMFA() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [factors, setFactors] = useState<MFAFactor[]>([]);
+  const [assuranceLevel, setAssuranceLevel] = useState<AssuranceLevel | null>(null);
+
+  const listFactors = useCallback(async (): Promise<MFAFactor[]> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: err } = await supabase.auth.mfa.listFactors();
+      if (err) throw err;
+      const list = (data?.totp ?? []) as unknown as MFAFactor[];
+      setFactors(list);
+      return list;
+    } catch (e) {
+      setError((e as Error).message);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const enroll = useCallback(async (friendlyName = "Autenticador"): Promise<MFAEnrollData | null> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: err } = await supabase.auth.mfa.enroll({
+        factorType: "totp",
+        friendlyName,
+      });
+      if (err) throw err;
+      return data as unknown as MFAEnrollData;
+    } catch (e) {
+      setError((e as Error).message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const verify = useCallback(async (factorId: string, code: string): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: challengeData, error: challengeErr } = await supabase.auth.mfa.challenge({ factorId });
+      if (challengeErr) throw challengeErr;
+      const { error: verifyErr } = await supabase.auth.mfa.verify({
+        factorId,
+        challengeId: challengeData.id,
+        code: code.replace(/\s/g, ""),
+      });
+      if (verifyErr) throw verifyErr;
+      await listFactors();
+      return true;
+    } catch (e) {
+      const msg = (e as Error).message;
+      setError(
+        msg.includes("invalid") || msg.includes("Invalid")
+          ? "Código inválido. Verifique se o horário do dispositivo está sincronizado."
+          : msg
+      );
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, [listFactors]);
+
+  const unenroll = useCallback(async (factorId: string): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { error: err } = await supabase.auth.mfa.unenroll({ factorId });
+      if (err) throw err;
+      await listFactors();
+      return true;
+    } catch (e) {
+      setError((e as Error).message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, [listFactors]);
+
+  const checkAssuranceLevel = useCallback(async (): Promise<AssuranceLevel | null> => {
+    try {
+      const { data, error: err } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (err) throw err;
+      const level = data as unknown as AssuranceLevel;
+      setAssuranceLevel(level);
+      return level;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  useEffect(() => {
+    listFactors();
+    checkAssuranceLevel();
+  }, [listFactors, checkAssuranceLevel]);
+
+  const hasMFA = factors.some(f => f.status === "verified");
+  const isAAL2 = assuranceLevel?.currentLevel === "aal2";
+
+  return {
+    loading, error, factors, assuranceLevel,
+    hasMFA, isAAL2,
+    listFactors, enroll, verify, unenroll, checkAssuranceLevel,
+  };
+}

@@ -1,1 +1,192 @@
-aW1wb3J0IHsgdXNlU3RhdGUsIHVzZUVmZmVjdCwgdXNlQ2FsbGJhY2ssIHVzZVJlZiB9IGZyb20gInJlYWN0IjsKaW1wb3J0IHsgc3VwYWJhc2UgfSBmcm9tICJAL2ludGVncmF0aW9ucy9zdXBhYmFzZS9jbGllbnQiOwoKLy8gVFRMIGRlIDYwcyBwYXJhIGNhY2hlIGVtIG1lbcOzcmlhICgtPiByw6FwaWRvIHNlbSBsaXZlLXJlZnJlc2ggY29uc3RhbnRlKQpjb25zdCBDQUNIRV9UVExfTVMgPSA2MCAqIDEwMDA7CgppbnRlcmZhY2UgRmxhZ0NhY2hlRW50cnkgewogIHZhbHVlOiBib29sZWFuOwogIGV4cGlyZXNBdDogbnVtYmVyOwp9CgpjbGFzcyBGZWF0dXJlRmxhZ0NhY2hlIHsKICBwcml2YXRlIHN0YXRpYyBjYWNoZSA9IG5ldyBNYXA8c3RyaW5nLCBGbGFnQ2FjaGVFbnRyeT4oKTsKCiAgc3RhdGljIGdldChrZXk6IHN0cmluZyk6IGJvb2xlYW4gfCBudWxsIHsKICAgIGNvbnN0IGVudHJ5ID0gdGhpcy5jYWNoZS5nZXQoa2V5KTsKICAgIGlmICghZW50cnkpIHJldHVybiBudWxsOwogICAgaWYgKERhdGUubm93KCkgPiBlbnRyeS5leHBpcmVzQXQpIHsKICAgICAgdGhpcy5jYWNoZS5kZWxldGUoa2V5KTsKICAgICAgcmV0dXJuIG51bGw7CiAgICB9CiAgICByZXR1cm4gZW50cnkudmFsdWU7CiAgfQoKICBzdGF0aWMgc2V0KGtleTogc3RyaW5nLCB2YWx1ZTogYm9vbGVhbik6IHZvaWQgewogICAgdGhpcy5jYWNoZS5zZXQoa2V5LCB7IHZhbHVlLCBleHBpcmVzQXQ6IERhdGUubm93KCkgKyBDQUNIRV9UVExfTVMgfSk7CiAgfQoKICBzdGF0aWMgaW52YWxpZGF0ZShrZXk/OiBzdHJpbmcpOiB2b2lkIHsKICAgIGlmIChrZXkpIHRoaXMuY2FjaGUuZGVsZXRlKGtleSk7CiAgICBlbHNlIHRoaXMuY2FjaGUuY2xlYXIoKTsKICB9Cn0KCi8vIFNjaGVtYSBkYSB0YWJlbGEgZmVhdHVyZV9mbGFnczoKLy8gICBmbGFnX2tleTogVEVYVCBQUklNQVJZIEtFWQovLyAgIGlzX2VuYWJsZWQ6IEJPT0xFQU4KLy8gICBvcmdhbml6YXRpb25faWQ6IFVVSUQgTlVMTEFCTEUgKE5VTEwgPSBnbG9iYWwpCi8vICAgdXBkYXRlZF9hdDogVElNRVNUQU1QVFoKCi8qKgogKiB1c2VGZWF0dXJlRmxhZyAtLSBjb25zdWx0YSBhIHRhYmVsYSBmZWF0dXJlX2ZsYWdzIGNvbSBjYWNoZSBkZSA2MHMuCiAqCiAqIFByaW9yaWRhZGU6IG9yZy1lc3BlY8OtZmljbyA+IGdsb2JhbCA+IGRlZmF1bHRWYWx1ZQogKiBAcGFyYW0gZmxhZ0tleSAtIGNoYXZlIGRvIGZsYWcgKGV4OiAnd2ViX3NjcmFwZV9lbmFibGVkJykKICogQHBhcmFtIG9yZ2FuaXphdGlvbklkIC0gVVVJRCBkYSBvcmdhbml6YcOnw6NvIGF0dWFsIChvcGNpb25hbCkKICogQHBhcmFtIGRlZmF1bHRWYWx1ZSAtIHZhbG9yIHNlIG7Do28gZW5jb250cmFkbyAocGFkcsOjbzogZmFsc2UpCiAqLwpleHBvcnQgZnVuY3Rpb24gdXNlRmVhdHVyZUZsYWcoCiAgZmxhZ0tleTogc3RyaW5nLAogIG9yZ2FuaXphdGlvbklkPzogc3RyaW5nIHwgbnVsbCwKICBkZWZhdWx0VmFsdWUgPSBmYWxzZSwKKSB7CiAgY29uc3QgY2FjaGVLZXkgPSBgJHtmbGFnS2V5fToke29yZ2FuaXphdGlvbklkID8/ICJnbG9iYWwifWA7CiAgY29uc3QgW2VuYWJsZWQsIHNldEVuYWJsZWRdID0gdXNlU3RhdGU8Ym9vbGVhbj4oKCkgPT4gewogICAgY29uc3QgY2FjaGVkID0gRmVhdHVyZUZsYWdDYWNoZS5nZXQoY2FjaGVLZXkpOwogICAgcmV0dXJuIGNhY2hlZCA/PyBkZWZhdWx0VmFsdWU7CiAgfSk7CiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUoKCkgPT4gRmVhdHVyZUZsYWdDYWNoZS5nZXQoY2FjaGVLZXkpID09PSBudWxsKTsKICBjb25zdCBhYm9ydFJlZiA9IHVzZVJlZjxBYm9ydENvbnRyb2xsZXIgfCBudWxsPihudWxsKTsKCiAgY29uc3QgZmV0Y2hGbGFnID0gdXNlQ2FsbGJhY2soYXN5bmMgKGZvcmNlUmVmcmVzaCA9IGZhbHNlKSA9PiB7CiAgICAvLyBDYWNoZSBoaXQ6IHNhacOtIHJhcGlkbwogICAgaWYgKCFmb3JjZVJlZnJlc2gpIHsKICAgICAgY29uc3QgY2FjaGVkID0gRmVhdHVyZUZsYWdDYWNoZS5nZXQoY2FjaGVLZXkpOwogICAgICBpZiAoY2FjaGVkICE9PSBudWxsKSB7CiAgICAgICAgc2V0RW5hYmxlZChjYWNoZWQpOwogICAgICAgIHNldExvYWRpbmcoZmFsc2UpOwogICAgICAgIHJldHVybjsKICAgICAgfQogICAgfQoKICAgIC8vIEFib3J0YXIgcmVxdWlzacOnw6NvIGFudGVyaW9yIHNlIGFpbmRhIHBlbmRlbnRlCiAgICBhYm9ydFJlZi5jdXJyZW50Py5hYm9ydCgpOwogICAgYWJvcnRSZWYuY3VycmVudCA9IG5ldyBBYm9ydENvbnRyb2xsZXIoKTsKCiAgICBzZXRMb2FkaW5nKHRydWUpOwogICAgdHJ5IHsKICAgICAgbGV0IHZhbHVlID0gZGVmYXVsdFZhbHVlOwoKICAgICAgaWYgKG9yZ2FuaXphdGlvbklkKSB7CiAgICAgICAgLy8gVGVudGFyIGZsYWcgZXNwZWPDrWZpY28gZGEgb3JnIHByaW1laXJvCiAgICAgICAgY29uc3QgeyBkYXRhOiBvcmdGbGFnIH0gPSBhd2FpdCBzdXBhYmFzZQogICAgICAgICAgLmZyb20oImZlYXR1cmVfZmxhZ3MiKQogICAgICAgICAgLnNlbGVjdCgiaXNfZW5hYmxlZCIpCiAgICAgICAgICAuZXEoImZsYWdfa2V5IiwgZmxhZ0tleSkKICAgICAgICAgIC5lcSgib3JnYW5pemF0aW9uX2lkIiwgb3JnYW5pemF0aW9uSWQpCiAgICAgICAgICAubWF5YmVTaW5nbGUoKTsKCiAgICAgICAgaWYgKG9yZ0ZsYWcgIT09IG51bGwpIHsKICAgICAgICAgIHZhbHVlID0gKG9yZ0ZsYWcgYXMgeyBpc19lbmFibGVkOiBib29sZWFuIH0pLmlzX2VuYWJsZWQ7CiAgICAgICAgfSBlbHNlIHsKICAgICAgICAgIC8vIEZhbGxiYWNrIHBhcmEgZmxhZyBnbG9iYWwgKG9yZ2FuaXphdGlvbl9pZCA9IE5VTEwpCiAgICAgICAgICBjb25zdCB7IGRhdGE6IGdsb2JhbEZsYWcgfSA9IGF3YWl0IHN1cGFiYXNlCiAgICAgICAgICAgIC5mcm9tKCJmZWF0dXJlX2ZsYWdzIikKICAgICAgICAgICAgLnNlbGVjdCgiaXNfZW5hYmxlZCIpCiAgICAgICAgICAgIC5lcSgiZmxhZ19rZXkiLCBmbGFnS2V5KQogICAgICAgICAgICAuaXNOdWxsKCJvcmdhbml6YXRpb25faWQiKQogICAgICAgICAgICAubWF5YmVTaW5nbGUoKTsKCiAgICAgICAgICBpZiAoZ2xvYmFsRmxhZyAhPT0gbnVsbCkgewogICAgICAgICAgICB2YWx1ZSA9IChnbG9iYWxGbGFnIGFzIHsgaXNfZW5hYmxlZDogYm9vbGVhbiB9KS5pc19lbmFibGVkOwogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfSBlbHNlIHsKICAgICAgICAvLyBBcGVuYXMgZmxhZyBnbG9iYWwKICAgICAgICBjb25zdCB7IGRhdGE6IGdsb2JhbEZsYWcgfSA9IGF3YWl0IHN1cGFiYXNlCiAgICAgICAgICAuZnJvbSgiZmVhdHVyZV9mbGFncyIpCiAgICAgICAgICAuc2VsZWN0KCJpc19lbmFibGVkIikKICAgICAgICAgIC5lcSgiZmxhZ19rZXkiLCBmbGFnS2V5KQogICAgICAgICAgLmlzTnVsbCgib3JnYW5pemF0aW9uX2lkIikKICAgICAgICAgIC5tYXliZVNpbmdsZSgpOwoKICAgICAgICBpZiAoZ2xvYmFsRmxhZyAhPT0gbnVsbCkgewogICAgICAgICAgdmFsdWUgPSAoZ2xvYmFsRmxhZyBhcyB7IGlzX2VuYWJsZWQ6IGJvb2xlYW4gfSkuaXNfZW5hYmxlZDsKICAgICAgICB9CiAgICAgIH0KCiAgICAgIEZlYXR1cmVGbGFnQ2FjaGUuc2V0KGNhY2hlS2V5LCB2YWx1ZSk7CiAgICAgIHNldEVuYWJsZWQodmFsdWUpOwogICAgfSBjYXRjaCAoZSkgewogICAgICBpZiAoKGUgYXMgeyBuYW1lPzogc3RyaW5nIH0pLm5hbWUgIT09ICJBYm9ydEVycm9yIikgewogICAgICAgIC8vIEVycm8gc2lsZW5jaW9zbzogdXNhciBkZWZhdWx0VmFsdWUgZW0gcHJvZHXDp8OjbwogICAgICAgIHNldEVuYWJsZWQoZGVmYXVsdFZhbHVlKTsKICAgICAgfQogICAgfSBmaW5hbGx5IHsKICAgICAgc2V0TG9hZGluZyhmYWxzZSk7CiAgICB9CiAgfSwgW2ZsYWdLZXksIG9yZ2FuaXphdGlvbklkLCBkZWZhdWx0VmFsdWUsIGNhY2hlS2V5XSk7CgogIHVzZUVmZmVjdCgoKSA9PiB7CiAgICBmZXRjaEZsYWcoKTsKICAgIHJldHVybiAoKSA9PiBhYm9ydFJlZi5jdXJyZW50Py5hYm9ydCgpOwogIH0sIFtmZXRjaEZsYWddKTsKCiAgcmV0dXJuIHsKICAgIGVuYWJsZWQsCiAgICBsb2FkaW5nLAogICAgcmVmcmVzaDogKCkgPT4gZmV0Y2hGbGFnKHRydWUpLAogICAgaW52YWxpZGF0ZUNhY2hlOiAoKSA9PiB7IEZlYXR1cmVGbGFnQ2FjaGUuaW52YWxpZGF0ZShjYWNoZUtleSk7IH0sCiAgfTsKfQoKLyoqCiAqIHVzZUZlYXR1cmVGbGFncyAtLSBidXNjYSBtw7psdGlwbG9zIGZsYWdzIGVtIDEgcXVlcnkgKGVmaWNpZW50ZSkuCiAqLwpleHBvcnQgZnVuY3Rpb24gdXNlRmVhdHVyZUZsYWdzKGtleXM6IHN0cmluZ1tdLCBvcmdhbml6YXRpb25JZD86IHN0cmluZyB8IG51bGwpIHsKICBjb25zdCBbZmxhZ3MsIHNldEZsYWdzXSA9IHVzZVN0YXRlPFJlY29yZDxzdHJpbmcsIGJvb2xlYW4+Pih7fSk7CiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUodHJ1ZSk7CgogIHVzZUVmZmVjdCgoKSA9PiB7CiAgICBsZXQgYWJvcnRlZCA9IGZhbHNlOwogICAgc2V0TG9hZGluZyh0cnVlKTsKCiAgICAoYXN5bmMgKCkgPT4gewogICAgICAvLyBidXNjYXIgZmxhZ3MgZ2xvYmFpcwogICAgICBjb25zdCB7IGRhdGE6IGdsb2JhbEZsYWdzIH0gPSBhd2FpdCBzdXBhYmFzZQogICAgICAgIC5mcm9tKCJmZWF0dXJlX2ZsYWdzIikKICAgICAgICAuc2VsZWN0KCJmbGFnX2tleSwgaXNfZW5hYmxlZCIpCiAgICAgICAgLmluKCJmbGFnX2tleSIsIGtleXMpCiAgICAgICAgLmlzTnVsbCgib3JnYW5pemF0aW9uX2lkIik7CgogICAgICBjb25zdCByZXN1bHQ6IFJlY29yZDxzdHJpbmcsIGJvb2xlYW4+ID0ge307CiAgICAgIGZvciAoY29uc3QgZiBvZiBnbG9iYWxGbGFncyA/PyBbXSkgewogICAgICAgIGNvbnN0IGZsYWcgPSBmIGFzIHsgZmxhZ19rZXk6IHN0cmluZzsgaXNfZW5hYmxlZDogYm9vbGVhbiB9OwogICAgICAgIHJlc3VsdFtmbGFnLmZsYWdfa2V5XSA9IGZsYWcuaXNfZW5hYmxlZDsKICAgICAgfQoKICAgICAgaWYgKG9yZ2FuaXphdGlvbklkKSB7CiAgICAgICAgY29uc3QgeyBkYXRhOiBvcmdGbGFncyB9ID0gYXdhaXQgc3VwYWJhc2UKICAgICAgICAgIC5mcm9tKCJmZWF0dXJlX2ZsYWdzIikKICAgICAgICAgIC5zZWxlY3QoImZsYWdfa2V5LCBpc19lbmFibGVkIikKICAgICAgICAgIC5pbignImZsYWdfa2V5IiwgJywga2V5cykKICAgICAgICAgIC5lcSgib3JnYW5pemF0aW9uX2lkIiwgb3JnYW5pemF0aW9uSWQpOwogICAgICAgIC8vIE9yZy1lc3BlY8OtZmljbyB0ZW0gcHJpb3JpZGFkZSBzb2JyZSBnbG9iYWwKICAgICAgICBmb3IgKGNvbnN0IGYgb2Ygb3JnRmxhZ3MgPz8gW10pIHsKICAgICAgICAgIGNvbnN0IGZsYWcgPSBmIGFzIHsgZmxhZ19rZXk6IHN0cmluZzsgaXNfZW5hYmxlZDogYm9vbGVhbiB9OwogICAgICAgICAgcmVzdWx0W2ZsYWcuZmxhZ19rZXldID0gZmxhZy5pc19lbmFibGVkOwogICAgICAgIH0KICAgICAgfQoKICAgICAgaWYgKCFhYm9ydGVkKSB7CiAgICAgICAgc2V0RmxhZ3MocmVzdWx0KTsKICAgICAgICBzZXRMb2FkaW5nKGZhbHNlKTsKICAgICAgfQogICAgfSkoKTsKCiAgICByZXR1cm4gKCkgPT4geyBhYm9ydGVkID0gdHJ1ZTsgfTsKICB9LCBbSlNPTi5zdHJpbmdpZnkoa2V5cyksIG9yZ2FuaXphdGlvbklkXSk7IC8vIGVzbGludC1kaXNhYmxlLWxpbmUgcmVhY3QtaG9va3MvZXhoYXVzdGl2ZS1kZXBzCgogIHJldHVybiB7IGZsYWdzLCBsb2FkaW5nIH07Cn0K
+import { useState, useEffect, useCallback, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+// TTL de 60s para cache em memória (-> rápido sem live-refresh constante)
+const CACHE_TTL_MS = 60 * 1000;
+
+interface FlagCacheEntry {
+  value: boolean;
+  expiresAt: number;
+}
+
+class FeatureFlagCache {
+  private static cache = new Map<string, FlagCacheEntry>();
+
+  static get(key: string): boolean | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    if (Date.now() > entry.expiresAt) {
+      this.cache.delete(key);
+      return null;
+    }
+    return entry.value;
+  }
+
+  static set(key: string, value: boolean): void {
+    this.cache.set(key, { value, expiresAt: Date.now() + CACHE_TTL_MS });
+  }
+
+  static invalidate(key?: string): void {
+    if (key) this.cache.delete(key);
+    else this.cache.clear();
+  }
+}
+
+// Schema da tabela feature_flags:
+//   flag_key: TEXT PRIMARY KEY
+//   is_enabled: BOOLEAN
+//   organization_id: UUID NULLABLE (NULL = global)
+//   updated_at: TIMESTAMPTZ
+
+/**
+ * useFeatureFlag -- consulta a tabela feature_flags com cache de 60s.
+ *
+ * Prioridade: org-específico > global > defaultValue
+ * @param flagKey - chave do flag (ex: 'web_scrape_enabled')
+ * @param organizationId - UUID da organização atual (opcional)
+ * @param defaultValue - valor se não encontrado (padrão: false)
+ */
+export function useFeatureFlag(
+  flagKey: string,
+  organizationId?: string | null,
+  defaultValue = false,
+) {
+  const cacheKey = `${flagKey}:${organizationId ?? "global"}`;
+  const [enabled, setEnabled] = useState<boolean>(() => {
+    const cached = FeatureFlagCache.get(cacheKey);
+    return cached ?? defaultValue;
+  });
+  const [loading, setLoading] = useState(() => FeatureFlagCache.get(cacheKey) === null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  const fetchFlag = useCallback(async (forceRefresh = false) => {
+    // Cache hit: saií rapido
+    if (!forceRefresh) {
+      const cached = FeatureFlagCache.get(cacheKey);
+      if (cached !== null) {
+        setEnabled(cached);
+        setLoading(false);
+        return;
+      }
+    }
+
+    // Abortar requisição anterior se ainda pendente
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+
+    setLoading(true);
+    try {
+      let value = defaultValue;
+
+      if (organizationId) {
+        // Tentar flag específico da org primeiro
+        const { data: orgFlag } = await supabase
+          .from("feature_flags")
+          .select("is_enabled")
+          .eq("flag_key", flagKey)
+          .eq("organization_id", organizationId)
+          .maybeSingle();
+
+        if (orgFlag !== null) {
+          value = (orgFlag as { is_enabled: boolean }).is_enabled;
+        } else {
+          // Fallback para flag global (organization_id = NULL)
+          const { data: globalFlag } = await supabase
+            .from("feature_flags")
+            .select("is_enabled")
+            .eq("flag_key", flagKey)
+            .isNull("organization_id")
+            .maybeSingle();
+
+          if (globalFlag !== null) {
+            value = (globalFlag as { is_enabled: boolean }).is_enabled;
+          }
+        }
+      } else {
+        // Apenas flag global
+        const { data: globalFlag } = await supabase
+          .from("feature_flags")
+          .select("is_enabled")
+          .eq("flag_key", flagKey)
+          .isNull("organization_id")
+          .maybeSingle();
+
+        if (globalFlag !== null) {
+          value = (globalFlag as { is_enabled: boolean }).is_enabled;
+        }
+      }
+
+      FeatureFlagCache.set(cacheKey, value);
+      setEnabled(value);
+    } catch (e) {
+      if ((e as { name?: string }).name !== "AbortError") {
+        // Erro silencioso: usar defaultValue em produção
+        setEnabled(defaultValue);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [flagKey, organizationId, defaultValue, cacheKey]);
+
+  useEffect(() => {
+    fetchFlag();
+    return () => abortRef.current?.abort();
+  }, [fetchFlag]);
+
+  return {
+    enabled,
+    loading,
+    refresh: () => fetchFlag(true),
+    invalidateCache: () => { FeatureFlagCache.invalidate(cacheKey); },
+  };
+}
+
+/**
+ * useFeatureFlags -- busca múltiplos flags em 1 query (eficiente).
+ */
+export function useFeatureFlags(keys: string[], organizationId?: string | null) {
+  const [flags, setFlags] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let aborted = false;
+    setLoading(true);
+
+    (async () => {
+      // buscar flags globais
+      const { data: globalFlags } = await supabase
+        .from("feature_flags")
+        .select("flag_key, is_enabled")
+        .in("flag_key", keys)
+        .isNull("organization_id");
+
+      const result: Record<string, boolean> = {};
+      for (const f of globalFlags ?? []) {
+        const flag = f as { flag_key: string; is_enabled: boolean };
+        result[flag.flag_key] = flag.is_enabled;
+      }
+
+      if (organizationId) {
+        const { data: orgFlags } = await supabase
+          .from("feature_flags")
+          .select("flag_key, is_enabled")
+          .in("flag_key", keys)
+          .eq("organization_id", organizationId);
+        // Org-específico tem prioridade sobre global
+        for (const f of orgFlags ?? []) {
+          const flag = f as { flag_key: string; is_enabled: boolean };
+          result[flag.flag_key] = flag.is_enabled;
+        }
+      }
+
+      if (!aborted) {
+        setFlags(result);
+        setLoading(false);
+      }
+    })();
+
+    return () => { aborted = true; };
+  }, [JSON.stringify(keys), organizationId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return { flags, loading };
+}

@@ -12,15 +12,13 @@ interface MFAVerifyProps {
 }
 
 /**
- * MFAVerify -- usado no fluxo de login quando o usu√°rio tem TOTP ativo.
- * Difere do MFAEnroll: aqui n√£o cadastramos -- apenas verificamos o c√≥digo.
- * Usar ap√≥s authenticationLevel.requiredLevel === 'aal2' detectar seÕ necess√°rio.
+ * MFAVerify ‚Äî usado no fluxo de login quando o usu√°rio tem TOTP ativo.
+ * Difere do MFAEnroll: aqui n√£o cadastramos, apenas verificamos o c√≥digo.
  */
 export function MFAVerify({ onSuccess, onCancel }: MFAVerifyProps) {
-  const { verify, factors, loading, error } = useMFA();
+  const { factors, verify, loading, error } = useMFA();
   const [code, setCode] = useState("");
 
-  // Usar o primeiro fator TOTP verificado
   const activeFactor = factors.find(f => f.status === "verified");
 
   const handleVerify = async () => {
@@ -29,19 +27,37 @@ export function MFAVerify({ onSuccess, onCancel }: MFAVerifyProps) {
     if (ok) onSuccess?.();
   };
 
-  // Disparar verifica√ß√£o ao completar 6 d√≠gitos
-  const handleCodeChange = (value: string) => {
-    setCode(value);
-    if (value.length === 6) {
-      // Auto-submit aos 6 d√≠gitos
-      if (activeFactor) {
-        verify(activeFactor.id, value).then(ok => { if (ok) onSuccess?.(); });
-      }
-    }
-  };
-
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-md">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <ShieldCheck className="h-õq‹¥‘Å—ï·–µâ±’î¥ÿ¿¿àÄº¯(ÄÄÄÄÄÄÄÄÄÄÒÖ…ëQ•—±î˘Yï…•ô•çáüçºÅï¥Ä»Åï—Ö¡ÖÃΩÖ…ëQ•—±î¯(ÄÄÄÄÄÄÄÄΩë•ÿ¯(ÄÄÄÄÄÄÄÄÒÖ…ëïÕç…•¡—•Ω∏¯(ÄÄÄÄÄÄÄÄÄÅÌÖç—•ŸïÖç—Ω»(ÄÄÄÄÄÄÄÄÄÄÄÄ¸ÅÅ%πÕ•…ÑÅºÅèÕë•ùºÅëºÅÖ’—ïπ—•çÖëΩ»ÄëÌÖç—•ŸïÖç—Ω»πô…•ïπë±Â}πÖµîÅÒÄâQ=Q@âÙπÄ(ÄÄÄÄÄÄÄÄÄÄÄÄËÄâ9ïπ°’¥ÅôÖ—Ω»Å5ÅYïπçΩπ—…Öëº∏ÅΩπô•ù’…îÅºÅ5ÅπÖÃÅçΩπô•ù’…áü’ïÃ∏âÙ(ÄÄÄÄÄÄÄÄΩÖ…ëïÕç…•¡—•Ω∏¯(ÄÄÄÄÄÄΩÖ…ë!ïÖëï»¯(ÄÄÄÄÄÄÒÖ…ëΩπ—ïπ–Åç±ÖÕÕ9ÖµîÙâÕ¡Öçîµ‰¥–à¯(ÄÄÄÄÄÄÄÅÌï……Ω»ÄòòÄ†(ÄÄÄÄÄÄÄÄÄÄÒ±ï…–ÅŸÖ…•Öπ–ÙâëïÕ—…’ç—•Ÿîà¯(ÄÄÄÄÄÄÄÄÄÄÄÄÒ±ï…—•…ç±îÅç±ÖÕÕ9ÖµîÙâ†¥–Å‹¥–àÄº¯(ÄÄÄÄÄÄÄÄÄÄÄÄÒ±ï…—ïÕç…•¡—•Ω∏˘Ìï……Ω…ÙΩ±ï…—ïÕç…•¡—•Ω∏¯(ÄÄÄÄÄÄÄÄÄÄΩ±ï…–¯(ÄÄÄÄÄÄÄÄ•Ù((ÄÄÄÄÄÄÄÅÌÖç—•ŸïÖç—Ω»ÄòòÄ†(ÄÄÄÄÄÄÄÄÄÄ¯(ÄÄÄÄÄÄÄÄÄÄÄÄÒë•ÿÅç±ÖÕÕ9ÖµîÙâô±ï‡Å©’Õ—•ô‰µçïπ—ï»à¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒ%π¡’—=Q@(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅµÖ·1ïπù—†ıÏŸÙ(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅŸÖ±’îıÌçΩëïÙ(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅΩπ°ÖπùîıÌ°Öπë±ïΩëï°ÖπùïÙ(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÖ’—ΩΩç’Ã(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅë•ÕÖâ±ïêıÌ±ΩÖë•πùÙ(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒ%π¡’—=QA…Ω’¿¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÌl¿∞Äƒ∞Ä»∞ÄÃ∞Ä–∞Ä’tπµÖ¿†°§§ÄÙ¯Ä†(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒ%π¡’—=QAM±Ω–Å≠ï‰ıÌ•ÙÅ•πëï‡ıÌ•ÙÄº¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ§•Ù(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄΩ%π¡’—=QA…Ω’¿¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄΩ%π¡’—=Q@¯(ÄÄÄÄÄÄÄÄÄÄÄÄΩë•ÿ¯((ÄÄÄÄÄÄÄÄÄÄÄÅÌ±ΩÖë•πúÄòòÄ†(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒë•ÿÅç±ÖÕÕ9ÖµîÙâô±ï‡Å©’Õ—•ô‰µçïπ—ï»à¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒIïô…ïÕ°‹Åç±ÖÕÕ9ÖµîÙâ†∂m«r”RÊñ÷FR◊7ñ‚FWáB÷◊WFVB÷f˜&Vw&˜VÊB"Û‡¢¬ˆFóc‡¢ó–†¢ƒ'WGFˆ‡¢ˆ‰6∆ñ6≥◊∂ÜÊF∆UfW&ñgó–¢Fó6&∆VC◊∂∆ˆFñÊr«¬6ˆFRÊ∆VÊwFÇ”“g–¢6∆74Ê÷S“'r÷gV∆¬ ¢‡¢fW&ñfñ6 ¢¬Ù'WGFˆ„‡¢¬Û‡¢ó–†¢∂ˆ‰6Ê6V¬bbÄ¢ƒ'WGFˆ‚f&ñÁC“&vÜ˜7B"6ó¶S“'6“"ˆ‰6∆ñ6≥◊∂ˆ‰6Ê6V«“6∆74Ê÷S“'r÷gV∆¬#‡¢6Ê6V∆ ¢¬Ù'WGFˆ„‡¢ó–¢¬Ù6&D6ˆÁFVÁC‡¢¬Ù6&C‡¢ì∞ß–base64: invalid input
+          <ShieldCheck className="h-5 w-5 text-primary" />
+          <CardTitle>Verifica√ß√£o em 2 Etapas</CardTitle>
+        </div>
+        <CardDescription>Digite o c√≥digo de 6 d√≠gitos do seu app autenticador.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <InputOTP maxLength={6} value={code} onChange={setCode}>
+          <InputOTPGroup>
+            {[0, 1, 2, 3, 4, 5].map(i => (
+              <InputOTPSlot key={i} index={i} />
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        <div className="flex gap-2">
+          <Button onClick={handleVerify} disabled={loading || code.length !== 6} className="flex-1">
+            {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+            Verificar
+          </Button>
+          {onCancel && <Button variant="outline" onClick={onCancel}>Cancelar</Button>}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
