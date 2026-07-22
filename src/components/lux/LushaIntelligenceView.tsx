@@ -37,6 +37,7 @@ import { ptBR } from "date-fns/locale";
 import { DEPT_GROUPS } from "@/components/lux/lusha/constants";
 import { StatusBadge } from "@/components/lux/lusha/StatusBadge";
 import { DecisionMakersGrid } from "@/components/lux/lusha/DecisionMakersGrid";
+import { SessionsPanel } from "@/components/lux/lusha/SessionsPanel";
 import type {
   LushaContact,
   LushaSession,
