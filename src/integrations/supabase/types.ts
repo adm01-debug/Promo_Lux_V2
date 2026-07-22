@@ -4664,6 +4664,11 @@ export type Database = {
           total_requests: number
         }[]
       }
+      pg_net_watchdog_should_notify: {
+        Args: { _admin_id: string; _cooldown_minutes?: number }
+        Returns: boolean
+      }
+      pg_net_watchdog_try_lock: { Args: never; Returns: boolean }
       prune_api_latency_snapshots: { Args: never; Returns: number }
       prune_api_request_logs: {
         Args: { retention_days?: number }
@@ -4681,6 +4686,10 @@ export type Database = {
       }
       prune_dlq_health_snapshots: { Args: never; Returns: number }
       prune_email_sync_log: {
+        Args: { retention_days?: number }
+        Returns: number
+      }
+      prune_pg_net_health_snapshots: {
         Args: { retention_days?: number }
         Returns: number
       }
