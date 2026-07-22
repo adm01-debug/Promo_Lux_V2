@@ -643,22 +643,24 @@ export const LushaIntelligenceView = () => {
   }, []);
 
 
-  // Histórico de sessões
-  const { data: sessions = [], refetch: refetchSessions } = useQuery({
-    queryKey: ["lusha-sessions"],
+  // Sessão mais recente — usada apenas como fallback para `activeSessionId`.
+  // O histórico completo (paginado + filtros) vive dentro de `<SessionsPanel />`.
+  const { data: latestSessions = [], refetch: refetchSessions } = useQuery({
+    queryKey: ["lusha-sessions", "latest"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("lusha_search_sessions")
         .select("id, company_name, departments_requested, departments_mapped, total_found, status, error_message, created_at")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(1);
       if (error) throw error;
       return (data ?? []) as LushaSession[];
     },
   });
 
   // Contatos da sessão mais recente (ou da última busca)
-  const activeSessionId = lastResult?.session_id ?? sessions[0]?.id ?? null;
+  const activeSessionId = lastResult?.session_id ?? latestSessions[0]?.id ?? null;
+
 
   const { data: contacts = [], isLoading: loadingContacts } = useQuery({
     queryKey: ["lusha-contacts", activeSessionId],
@@ -2088,7 +2090,7 @@ export const LushaIntelligenceView = () => {
         </TabsContent>
 
         <TabsContent value="history">
-          <SessionsPanel sessions={sessions} />
+          <SessionsPanel />
         </TabsContent>
       </Tabs>
 
