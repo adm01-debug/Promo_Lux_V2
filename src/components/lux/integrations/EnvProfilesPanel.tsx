@@ -31,6 +31,7 @@ import {
   Globe,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useConfirm } from "@/hooks/useConfirm";
 import { useEnvProfiles, type EnvProfile } from "@/hooks/useEnvProfiles";
 
 interface EnvProfilesPanelProps {
@@ -55,6 +56,7 @@ export function EnvProfilesPanel({ onApply, currentUri }: EnvProfilesPanelProps)
   const { profiles, activeId, setActiveId, upsert, remove, resetDefaults } = useEnvProfiles();
   const [editing, setEditing] = useState<EnvProfile | null>(null);
   const [open, setOpen] = useState(false);
+  const confirm = useConfirm();
 
   const apply = (p: EnvProfile) => {
     setActiveId(p.id);
@@ -75,8 +77,13 @@ export function EnvProfilesPanel({ onApply, currentUri }: EnvProfilesPanelProps)
             size="sm"
             variant="ghost"
             className="h-7 gap-1 text-[11px]"
-            onClick={() => {
-              if (confirm("Restaurar perfis padrão (Production / Staging / Local)?")) {
+            onClick={async () => {
+              const ok = await confirm({
+                title: "Restaurar perfis padrão?",
+                description: "Serão recriados Production, Staging e Local. Perfis personalizados NÃO serão afetados.",
+                confirmLabel: "Restaurar",
+              });
+              if (ok) {
                 resetDefaults();
                 toast({ title: "Perfis padrão restaurados" });
               }
