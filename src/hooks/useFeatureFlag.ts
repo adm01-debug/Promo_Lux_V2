@@ -170,7 +170,7 @@ export function useFeatureFlags(keys: string[], organizationId?: string | null) 
         const { data: orgFlags } = await supabase
           .from("feature_flags")
           .select("flag_key, is_enabled")
-          .in('"flag_key", ', keys)
+          .in("flag_key", keys)
           .eq("organization_id", organizationId);
         // Org-específico tem prioridade sobre global
         for (const f of orgFlags ?? []) {
