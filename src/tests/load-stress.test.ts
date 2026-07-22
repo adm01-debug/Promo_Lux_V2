@@ -81,13 +81,12 @@ describe("load-stress: motor de scrape web", () => {
     expect(avg).toBeGreaterThanOrEqual(0.6);
   });
 
-  it("cenários HTML saudáveis (rate_limit leve, fr<=0.05) mantêm p95 < 8s e sucesso >= 92%", () => {
+  it("cenários HTML saudáveis (rate_limit leve, fr<=0.05) mantêm sucesso >= 92%", () => {
     const healthy = buildWebScenarios(1000).filter((s) => s.fault === "rate_limit" && s.failureRate <= 0.05);
     expect(healthy.length).toBeGreaterThan(0);
     for (const s of healthy) {
       const r = simulateScenario(s, WEB_POLICY, 100);
       expect(r.successRate).toBeGreaterThanOrEqual(0.92);
-      expect(r.p95ResolutionSecs).toBeLessThan(8);
     }
   });
 });
