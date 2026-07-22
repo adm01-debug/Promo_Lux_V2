@@ -33,110 +33,17 @@ import { toast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-// ── Grupos de departamentos (PT-BR) ──
-interface DeptGroup {
-  label: string;
-  items: string[];
-}
-
-const DEPT_GROUPS: DeptGroup[] = [
-  { label: "Compras & Operações", items: ["Compras", "Suprimentos", "Logística", "Operações"] },
-  { label: "Comercial & Marketing", items: ["Vendas", "Marketing", "Desenvolvimento de Negócios"] },
-  { label: "Pessoas & Gestão", items: ["RH", "Diretoria", "Gerência"] },
-  { label: "Finanças & TI", items: ["Financeiro", "TI", "Controladoria"] },
-  { label: "Outros", items: ["Jurídico", "Engenharia", "Produto", "BI"] },
-];
-
-// ── Tipos ──
-interface LushaContact {
-  id: string;
-  full_name: string;
-  job_title: string | null;
-  department_pt: string | null;
-  linkedin_url: string | null;
-  enrichment_status: string | null;
-  created_at: string;
-  session_id: string | null;
-}
-
-interface LushaSession {
-  id: string;
-  company_name: string;
-  departments_requested: string[] | null;
-  departments_mapped: string[] | null;
-  total_found: number | null;
-  status: string | null;
-  error_message: string | null;
-  created_at: string;
-}
-
-interface SearchResponse {
-  session_id: string;
-  company_resolved: string;
-  total_found: number;
-  departments_searched: string[];
-  departments_skipped: string[];
-  contacts: LushaContact[];
-}
-
-interface DecisionMaker {
-  id: string;
-  fullName: string;
-  jobTitle: string;
-  departments: string[];
-  seniority: string;
-  company: string;
-  location: string;
-  linkedin: string;
-  hasEmail: boolean;
-  hasPhone: boolean;
-  emailCredits: number;
-  phoneCredits: number;
-  linkedinFollowersCount?: number | null;
-  linkedinConnectionsCount?: number | null;
-  linkedinSkills?: string[];
-  linkedinCertifications?: string[];
-  linkedinCourses?: string[];
-  linkedinAwards?: string[];
-  xUrl?: string | null;
-}
-
-
-interface DMCompanyResult {
-  domain: string;
-  companyId?: string;
-  total?: number;
-  error?: string;
-  decisionMakers: DecisionMaker[];
-}
-
-interface DMResponse {
-  requestId: string;
-  creditsCharged: number;
-  totalDecisionMakers: number;
-  results: DMCompanyResult[];
-}
-
-// ── Badge de status ──
-function StatusBadge({ status }: { status: string | null }) {
-  const map: Record<string, { label: string; className: string }> = {
-    pending: { label: "Pendente", className: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
-    pending_enrichment: { label: "Pendente", className: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
-    enriching: { label: "Enriquecendo…", className: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
-    enriched: { label: "Enriquecido", className: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" },
-    pushing_bitrix: { label: "Enviando ao Bitrix…", className: "bg-primary/15 text-primary border-primary/30" },
-    sent_to_bitrix: { label: "Enviado ao Bitrix", className: "bg-primary/15 text-primary border-primary/30" },
-    bitrix_duplicate: { label: "Já existia no Bitrix", className: "bg-muted text-muted-foreground border-border/50" },
-    not_found: { label: "Sem dados", className: "bg-muted text-muted-foreground border-border/50" },
-    error: { label: "Erro", className: "bg-destructive/15 text-destructive border-destructive/30" },
-    error_bitrix: { label: "Erro no Bitrix", className: "bg-destructive/15 text-destructive border-destructive/30" },
-    error_auth: { label: "Erro", className: "bg-destructive/15 text-destructive border-destructive/30" },
-    error_rate_limit: { label: "Erro", className: "bg-destructive/15 text-destructive border-destructive/30" },
-    error_other: { label: "Erro", className: "bg-destructive/15 text-destructive border-destructive/30" },
-  };
-  const cfg = map[status ?? ""] ?? { label: status ?? "—", className: "bg-muted text-muted-foreground border-border/50" };
-  return <Badge variant="outline" className={cfg.className}>{cfg.label}</Badge>;
-}
+// ── Tipos, constantes e componentes extraídos (R30 — refactor safety) ──
+import { DEPT_GROUPS } from "@/components/lux/lusha/constants";
+import { StatusBadge } from "@/components/lux/lusha/StatusBadge";
+import type {
+  LushaContact,
+  LushaSession,
+  SearchResponse,
+  DecisionMaker,
+  DMCompanyResult,
+  DMResponse,
+} from "@/components/lux/lusha/types";
 
 export const LushaIntelligenceView = () => {
   const queryClient = useQueryClient();
