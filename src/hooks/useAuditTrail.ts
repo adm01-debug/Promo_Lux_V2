@@ -156,6 +156,8 @@ export function useAuditTrail(filters: AuditTrailFilters) {
       filters.search,
       filters.page,
       filters.pageSize,
+      filters.dateFrom ?? "",
+      filters.dateTo ?? "",
     ],
     queryFn: () => fetchAuditTrail(filters),
     placeholderData: keepPreviousData,
