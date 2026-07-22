@@ -1,0 +1,84 @@
+{
+  "round": 27,
+  "layer": "Validation — QA Exaustivo & Hardening Funcional",
+  "generated_at": "2026-07-22T15:15:00.000Z",
+  "sources": {
+    "preflight": "public/reports/round27-qa-preflight.json",
+    "adr": "docs/adr/021-round27-qa-exhaustive.md",
+    "audits": [
+      "background/hooks (sub_sgavpmak)",
+      "background/edges (sub_8zzkmrxb)",
+      "background/ui (sub_45aftjx6)",
+      "background/contexts+withOrg (sub_z5z16j3j)"
+    ]
+  },
+  "audit_totals": {
+    "hooks": { "critical": 6, "important": 6, "info": 6 },
+    "edges": { "critical": 3, "important": 6, "info": 6 },
+    "ui": { "critical": 6, "important": 15, "info": 9 },
+    "contexts_withorg": { "critical": 4, "important": 6, "info": 8 }
+  },
+  "fixes_applied": {
+    "critical": [
+      {
+        "id": "R27-CRIT-01",
+        "area": "edge-functions",
+        "files": [
+          "supabase/functions/dlq-alerts/index.ts",
+          "supabase/functions/latency-alerts/index.ts",
+          "supabase/functions/pg-net-watchdog/index.ts",
+          "supabase/functions/retry-policy-tuner/index.ts",
+          "supabase/functions/circuit-breaker-alerts/index.ts",
+          "supabase/functions/api-latency-alerts/index.ts"
+        ],
+        "summary": "Adicionado gate `Authorization: Bearer <SERVICE_ROLE_KEY>` em 6 cron functions que aceitavam anon key. Fecha vetor de abuso: spam de notificações, poluição de *_alert_history, disparo indevido do watchdog.",
+        "impact": "🔴 alto — vetor de abuso remoto eliminado"
+      },
+      {
+        "id": "R27-CRIT-02",
+        "area": "edge-functions",
+        "files": ["supabase/functions/gmaps-proxy/index.ts"],
+        "summary": "Bug lógico no dedup 23505: `.eq(config_hash, null)` nunca casa em PostgREST (NULL != NULL). Substituído por extração do config_hash do details do erro + `.eq(config_hash, hash)`; fallback para `.maybeSingle()` sem filtro extra quando o hash não é extraível.",
+        "impact": "🔴 alto — restaura idempotência forte na criação de scrape_jobs GMaps"
+      },
+      {
+        "id": "R27-CRIT-03",
+        "area": "multi-tenant defense-in-depth",
+        "files": [
+          "src/integrations/supabase/withOrg.ts",
+          "src/lib/rlsRegistry.ts",
+          "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json"
+        ],
+        "summary": "8 tabelas org-scoped (company_reviews, lusha_contacts, lusha_credit_usage_log, lusha_dm_search_history, lusha_search_sessions, oracle_rate_limits, org_proxies, org_retry_policies, org_scrape_rate_limits) estavam ausentes do registry — gap silencioso na defesa em profundidade. Classificadas em ORG_UNSCOPED_TABLES (acesso legítimo via supabase.from cru + RLS) e adicionadas ao mirror do painel de RLS.",
+        "impact": "🔴 alto — teste withOrg.registry.test.ts agora exercita 100% das tabelas multi-tenant"
+      },
+      {
+        "id": "R27-CRIT-04",
+        "area": "realtime",
+        "files": ["src/hooks/useDashboardData.ts"],
+        "summary": "Dashboard ficava stale após DELETE porque `payload.new.organization_id` é undefined em eventos DELETE (REPLICA IDENTITY). Aplicado fallback `payload.new ?? payload.old`, incluído `activeOrgId` no nome do canal (evita cross-org na troca) e adicionado filtro server-side `organization_id=eq.<orgId>` nas 4 subscriptions.",
+        "impact": "🔴 alto — corrige stale UI após deleções + reduz banda"
+      },
+      {
+        "id": "R27-CRIT-05",
+        "area": "race-conditions",
+        "files": ["src/hooks/useTaskReminders.ts"],
+        "summary": "Flag `cancelled` no cleanup impede que `db.update(reminded=true)` execute com user.id obsoleto após signOut/troca de sessão. Rollback do set `fired` quando update falha (evita reminder permanentemente silenciado por erro transitório).",
+        "impact": "🔴 alto — fecha janela de escrita cross-tenant no logout"
+      }
+    ]
+  },
+  "test_results": {
+    "unit_tests": { "total": 679, "passed": 679, "failed": 0 },
+    "notes": [
+      "gmaps-mapper.test.ts (edge/Deno-native) segue como Failed Suite pré-existente — importa https://deno.land/... que o loader node do Vitest não resolve. Fora do escopo desta rodada."
+    ]
+  },
+  "metrics_before_after": {
+    "org_scoped_tables_classified": { "before": 47, "after": 55, "delta": "+8" },
+    "cron_functions_with_auth_gate": { "before": 2, "after": 8, "delta": "+6" },
+    "dashboard_realtime_channel_leak": { "before": "user-only", "after": "user+org" },
+    "gmaps_dedup_functional": { "before": false, "after": true }
+  },
+  "gate": { "overall_pass": true }
+}
