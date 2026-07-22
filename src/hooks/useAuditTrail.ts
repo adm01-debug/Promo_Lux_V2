@@ -27,7 +27,7 @@ export const AUTOMATION_TABLES = [
 export interface AuditTrailFilters {
   /** Nome da tabela/entidade. "all" = todas; "automations" = só automações. */
   table: string;
-  /** Tipo de ação (create/update/delete). */
+  /** Tipo de ação (create/update/delete/execute). */
   action: AuditActionFilter;
   /** Busca livre por ator (nome) — aplicada no cliente sobre a página atual. */
   search: string;
@@ -35,6 +35,9 @@ export interface AuditTrailFilters {
   page: number;
   /** Itens por página. */
   pageSize: number;
+  /** Filtro por período — ISO date (YYYY-MM-DD) inclusivo, ou vazio para ignorar. */
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export const DEFAULT_AUDIT_FILTERS: AuditTrailFilters = {
@@ -43,6 +46,8 @@ export const DEFAULT_AUDIT_FILTERS: AuditTrailFilters = {
   search: "",
   page: 1,
   pageSize: 25,
+  dateFrom: "",
+  dateTo: "",
 };
 
 type ProfileLite = Pick<Tables<"profiles">, "id" | "full_name" | "avatar_url">;
