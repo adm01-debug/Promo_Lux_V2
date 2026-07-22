@@ -90,21 +90,38 @@ async function processKind(supa: SupabaseClient, kind: QueueKind): Promise<numbe
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
-  const supa = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
 
-  // Garante snapshot fresco da DLQ web antes de avaliar.
+  // Rodada #27: gate de service_role — sem isso, qualquer portador da anon
+  // key pública podia invocar a cron sob demanda (spam de notificações,
+  // poluição de dlq_alert_history).
+  const authHeader = req.headers.get("Authorization");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+      status: 401,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+
   try {
-    await supa.rpc("capture_web_dlq_health_snapshots");
-  } catch (_e) { /* snapshot best-effort */ }
+    const supa = createClient(Deno.env.get("SUPABASE_URL")!, serviceKey);
 
-  const scrapeTriggered = await processKind(supa, "scrape");
-  const webTriggered = await processKind(supa, "web");
+    // Garante snapshot fresco da DLQ web antes de avaliar.
+    try {
+      await supa.rpc("capture_web_dlq_health_snapshots");
+    } catch (_e) { /* snapshot best-effort */ }
 
-  return new Response(
-    JSON.stringify({ ok: true, triggered: scrapeTriggered + webTriggered, by_kind: { scrape: scrapeTriggered, web: webTriggered } }),
-    { headers: { ...CORS, "Content-Type": "application/json" } },
-  );
+    const scrapeTriggered = await processKind(supa, "scrape");
+    const webTriggered = await processKind(supa, "web");
+
+    return new Response(
+      JSON.stringify({ ok: true, triggered: scrapeTriggered + webTriggered, by_kind: { scrape: scrapeTriggered, web: webTriggered } }),
+      { headers: { ...CORS, "Content-Type": "application/json" } },
+    );
+  } catch (e) {
+    return new Response(
+      JSON.stringify({ ok: false, error: (e as Error).message ?? "internal_error" }),
+      { status: 500, headers: { ...CORS, "Content-Type": "application/json" } },
+    );
+  }
 });

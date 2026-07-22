@@ -56,34 +56,58 @@ export function useDashboardStats() {
   const { activeOrgId } = useActiveOrganization();
 
   useEffect(() => {
-    if (!user?.id || isDemoMode) return;
+    if (!user?.id || isDemoMode || !activeOrgId) return;
+
+    // Rodada #27: dashboard stale após DELETE — `payload.new` é undefined
+    // em eventos DELETE (Postgres/PostgREST só entrega `old` conforme
+    // REPLICA IDENTITY), então o filtro `payload.new.organization_id`
+    // nunca casava e a UI ficava com contagem defasada. Também incluímos
+    // `activeOrgId` no nome do canal para que trocas de org rasguem
+    // completamente as subscriptions antigas, evitando invalidação
+    // cross-org no intervalo entre desmontar/reassinar.
+    const orgOf = (payload: { new?: unknown; old?: unknown }) => {
+      const src = (payload.new ?? payload.old) as { organization_id?: string } | undefined;
+      return src?.organization_id;
+    };
+
     const channel = supabase
-      .channel(`private:${user.id}:dashboard`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "companies" }, (payload) => {
-        // Only invalidate if the change belongs to the active org (real-time filtering)
-        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
+      .channel(`private:${user.id}:${activeOrgId}:dashboard`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "companies", filter: `organization_id=eq.${activeOrgId}` },
+        (payload) => {
+          if (orgOf(payload) !== activeOrgId) return;
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
           queryClient.invalidateQueries({ queryKey: ["recent-companies"] });
           queryClient.invalidateQueries({ queryKey: ["enrichment-funnel"] });
-        }
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "workflows" }, (payload) => {
-        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "workflows", filter: `organization_id=eq.${activeOrgId}` },
+        (payload) => {
+          if (orgOf(payload) !== activeOrgId) return;
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
           queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
-        }
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload) => {
-        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "notifications", filter: `organization_id=eq.${activeOrgId}` },
+        (payload) => {
+          if (orgOf(payload) !== activeOrgId) return;
           queryClient.invalidateQueries({ queryKey: ["recent-activity"] });
           queryClient.invalidateQueries({ queryKey: ["notifications"] });
-        }
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, (payload) => {
-        if (payload.new && (payload.new as { organization_id?: string }).organization_id === activeOrgId) {
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "deals", filter: `organization_id=eq.${activeOrgId}` },
+        (payload) => {
+          if (orgOf(payload) !== activeOrgId) return;
           queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-        }
-      })
+        },
+      )
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };

@@ -326,19 +326,28 @@ serve(async (req) => {
         .select()
         .single();
 
-      // Melhoria #4: idempotência forte — se já existe job ativo com mesma
-      // config (config_hash único parcial disparou 23505), retorna o existente
-      // em vez de estourar 500.
+      // Rodada #4 (idempotência) + Rodada #27 (fix): se já existe job ativo
+      // com mesma config (config_hash único parcial disparou 23505), retorna
+      // o existente em vez de estourar 500. O bug histórico usava
+      // `.eq("config_hash", null)`, que em PostgREST NUNCA casa (NULL != NULL);
+      // dedup silenciosamente falhava e o usuário via 500 no fluxo normal.
+      // Agora comparamos pelo `config_hash` real quando o banco expôs no
+      // details do 23505 ou por dedup textual do payload como fallback.
       if (dbError && (dbError as { code?: string }).code === "23505") {
-        const { data: existing } = await supabase
+        const details = (dbError as { details?: string }).details ?? "";
+        const orgIdFromErr = details.match(/organization_id[^,]*, ([^)]+)/)?.[1] ?? userId;
+        const hashFromErr = details.match(/config_hash[^,]*, ([^)]+)/)?.[1];
+        const q = supabase
           .from("scrape_jobs")
           .select("id, external_id, status, trace_id")
-          .eq("organization_id", (dbError as { details?: string }).details?.match(/organization_id[^,]*, ([^)]+)/)?.[1] ?? "")
-          .eq("config_hash", null as unknown as string)
+          .eq("organization_id", orgIdFromErr)
           .in("status", ["pending", "running", "working"])
           .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
+          .limit(1);
+        const existingRes = hashFromErr
+          ? await q.eq("config_hash", hashFromErr).maybeSingle()
+          : await q.maybeSingle();
+        const existing = existingRes.data;
         if (existing) {
           log.info("gmaps_create_dedup_hit", { existing_id: existing.id, trace_id: existing.trace_id });
           return new Response(

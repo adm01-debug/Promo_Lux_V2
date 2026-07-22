@@ -54,6 +54,15 @@ Deno.serve(async (req) => {
     });
   }
 
+  // Rodada #27: gate de service_role para cron-only.
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader !== `Bearer ${SERVICE_KEY}`) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   const admin = createClient(SUPABASE_URL, SERVICE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

@@ -14,6 +14,12 @@ export function useTaskReminders() {
   useEffect(() => {
     if (!user) return;
 
+    // Rodada #27: proteção contra race conditions —
+    // se o usuário deslogar ou trocar de sessão no meio de um fetch, a
+    // flag `cancelled` impede que `db.update` execute com `user.id`
+    // obsoleto (potencial escrita cross-tenant após signOut).
+    let cancelled = false;
+
     const check = async () => {
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
@@ -25,22 +31,32 @@ export function useTaskReminders() {
         .lte("remind_at", nowIso)
         .not("remind_at", "is", null);
 
-      if (error || !data) return;
+      if (cancelled || error || !data) return;
 
       for (const t of data) {
+        if (cancelled) return;
         if (fired.current.has(t.id)) continue;
         fired.current.add(t.id);
         toast.info("⏰ Lembrete de tarefa", {
           description: t.title,
           duration: 10000,
         });
-        await db.from("deal_tasks").update({ reminded: true }).eq("id", t.id);
+        const { error: updErr } = await db.from("deal_tasks").update({ reminded: true }).eq("id", t.id);
+        if (updErr) {
+          // Rollback do set para permitir nova tentativa; sem isso, uma falha
+          // transitória silenciava o lembrete permanentemente (memory leak leve
+          // + reminder perdido) até o refresh da página.
+          fired.current.delete(t.id);
+        }
       }
-      if (data.length) qc.invalidateQueries({ queryKey: ["deal_tasks"] });
+      if (data.length && !cancelled) qc.invalidateQueries({ queryKey: ["deal_tasks"] });
     };
 
     check();
     const i = window.setInterval(check, 60_000);
-    return () => window.clearInterval(i);
+    return () => {
+      cancelled = true;
+      window.clearInterval(i);
+    };
   }, [user, qc]);
 }

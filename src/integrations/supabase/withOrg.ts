@@ -154,12 +154,21 @@ export const ORG_UNSCOPED_TABLES = new Set<string>([
   "api_latency_snapshots",      // acesso via RPC api_latency_trend/stats (SECURITY DEFINER)
   "automation_execution_logs", // leitura via supabase.from + RLS (useAutomationLogs)
   "automation_steps",          // leitura via supabase.from + RLS (JobDetailsSheet)
+  "company_reviews",           // Rodada #27: leitura via supabase.from + RLS (useCompanyReviews)
   "dlq_alert_history",         // leitura via supabase.from + RLS (useDlqAlertSettings)
   "dlq_alert_settings",        // leitura via supabase.from + RLS (useDlqAlertSettings)
   "dlq_health_snapshots",      // acesso via RPC dlq_health_trend (SECURITY DEFINER)
   "email_sync_log",            // leitura via supabase.from + RLS (useEmailSyncLog)
   "feature_flags",             // leitura via supabase.from + RLS (useFeatureFlags)
   "job_exports",               // gerado/consumido por edge functions
+  "lusha_contacts",            // Rodada #27: escrita via edges Oracle (INSERT com onConflict); leitura direta via LushaIntelligenceView com RLS explícita
+  "lusha_credit_usage_log",    // Rodada #27: append-only por edge functions Lusha (service_role)
+  "lusha_dm_search_history",   // Rodada #27: gravado por edges Oracle; leitura direta via useLusha* hooks com RLS
+  "lusha_search_sessions",     // Rodada #27: escrita via oracle-search-decisors com trace/session id; leitura via LushaIntelligenceView
+  "oracle_rate_limits",        // Rodada #27: gerido por edges Oracle; leitura admin via supabase.from + RLS
+  "org_proxies",               // Rodada #27: leitura via useOrgProxies + RLS admin-only
+  "org_retry_policies",        // Rodada #27: leitura/escrita via useResilienceComparison com RLS admin-only
+  "org_scrape_rate_limits",    // Rodada #27: leitura via useOrgRateLimit + RLS admin-only
   "org_violation_alert_settings", // painel de segurança via supabase.from + RLS
   "org_violation_alerts",      // painel de segurança via supabase.from + RLS
   "scrape_dead_letter",        // DLQ: leitura via supabase.from + RPC de replay

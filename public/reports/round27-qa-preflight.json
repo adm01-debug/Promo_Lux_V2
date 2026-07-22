@@ -1,0 +1,50 @@
+{
+  "round": 27,
+  "layer": "Preflight — QA Exaustivo & Hardening Funcional",
+  "generated_at": "2026-07-22T15:03:39.817Z",
+  "seed": 2727,
+  "targets": {
+    "pass_pct_per_group": 99
+  },
+  "groups": {
+    "A_oracle_journey": {
+      "scenarios": 200,
+      "ok": 200,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "B_gmaps_scraping": {
+      "scenarios": 200,
+      "ok": 200,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "C_web_scrape_queue": {
+      "scenarios": 150,
+      "ok": 150,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "D_auth_org": {
+      "scenarios": 150,
+      "ok": 150,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "E_deals_pipeline": {
+      "scenarios": 100,
+      "ok": 100,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "F_campaigns_email": {
+      "scenarios": 100,
+      "ok": 100,
+      "sla_pct": 100,
+      "pass": true
+    }
+  },
+  "gate": {
+    "overall_pass": true
+  }
+}
