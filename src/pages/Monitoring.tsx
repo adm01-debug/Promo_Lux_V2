@@ -613,6 +613,7 @@ const AutomationMonitoring = () => {
         </TabsContent>
 
         <TabsContent value="resilience-report" className="space-y-4">
+          <MultiQueueResilienceCard />
           <ResilienceReport />
         </TabsContent>
 
