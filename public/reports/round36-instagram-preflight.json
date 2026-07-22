@@ -1,0 +1,105 @@
+{
+  "round": 36,
+  "motor": "instagram-apify",
+  "seed": 3636,
+  "generated_at": "2026-07-22T20:29:05.025Z",
+  "policy": {
+    "maxAttempts": 4,
+    "baseSecs": 15,
+    "capSecs": 600,
+    "jitter": 0.2
+  },
+  "scenarios_total": 360,
+  "trials_per_scenario": 100,
+  "aggregate": {
+    "successRate": 0.6667,
+    "dlqRate": 0.3333,
+    "meanAttempts": 1.77,
+    "slaBreachRate": 0.0436,
+    "p95_backoff_secs": 120
+  },
+  "gate": {
+    "successRate_ok": true,
+    "dlqRate_ok": true,
+    "p95Backoff_ok": true,
+    "transient_gaps": 49,
+    "overall_pass": true
+  },
+  "gaps_sample": [
+    {
+      "id": "actor_timeout|fr0.95|lat500|sla180",
+      "successRate": 0.16,
+      "dlqRate": 0.84
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat500|sla600",
+      "successRate": 0.13,
+      "dlqRate": 0.87
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat500|sla1200",
+      "successRate": 0.16,
+      "dlqRate": 0.84
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat5000|sla180",
+      "successRate": 0.12,
+      "dlqRate": 0.88
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat5000|sla600",
+      "successRate": 0.18,
+      "dlqRate": 0.82
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat5000|sla1200",
+      "successRate": 0.18,
+      "dlqRate": 0.82
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat30000|sla180",
+      "successRate": 0.18,
+      "dlqRate": 0.82
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat30000|sla600",
+      "successRate": 0.17,
+      "dlqRate": 0.83
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat30000|sla1200",
+      "successRate": 0.2,
+      "dlqRate": 0.8
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat90000|sla180",
+      "successRate": 0.14,
+      "dlqRate": 0.86
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat90000|sla600",
+      "successRate": 0.25,
+      "dlqRate": 0.75
+    },
+    {
+      "id": "actor_timeout|fr0.95|lat90000|sla1200",
+      "successRate": 0.18,
+      "dlqRate": 0.82
+    },
+    {
+      "id": "rate_limit_429|fr0.95|lat500|sla180",
+      "successRate": 0.21,
+      "dlqRate": 0.79
+    },
+    {
+      "id": "rate_limit_429|fr0.95|lat500|sla600",
+      "successRate": 0.18,
+      "dlqRate": 0.82
+    },
+    {
+      "id": "rate_limit_429|fr0.95|lat500|sla1200",
+      "successRate": 0.18,
+      "dlqRate": 0.82
+    }
+  ]
+}
