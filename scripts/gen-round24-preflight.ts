@@ -72,7 +72,7 @@ const report = {
   layer: "Preflight — Profundidade operacional",
   generated_at: new Date().toISOString(),
   groups: {
-    A_pg_net_failure: { scenarios: 200, delivered: aOk, sla_pct: +(aOk / 2).toFixed(2), pass: aOk / 200 >= 0.99 },
+    A_pg_net_failure: { scenarios: 200, ok: aOk, delivered: groupA.filter(x => x.delivered).length, captured_by_dlq: groupA.filter(x => x.captured).length, sla_pct: +(aOk / 2).toFixed(2), pass: aOk / 200 >= 0.99 },
     B_partition_race: { scenarios: 200, no_duplicates: bOk, sla_pct: +(bOk / 2).toFixed(2), pass: bOk / 200 >= 0.99 },
     C_service_role_rotation: { scenarios: 200, no_dup_tasks: cOk, sla_pct: +(cOk / 2).toFixed(2), pass: cOk / 200 >= 0.99 },
   },
