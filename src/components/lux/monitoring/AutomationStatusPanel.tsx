@@ -56,10 +56,11 @@ type FailureByStep = {
   lastReason: string | null;
 };
 
-async function countBy(
-  table: "scrape_queue" | "web_scrape_queue",
-  status?: string,
-): Promise<number> {
+type QueueStatus = "queued" | "processing" | "failed" | "succeeded" | "dead";
+type QueueTable = "scrape_queue" | "web_scrape_queue";
+type DlqTable = "scrape_dead_letter" | "web_scrape_dead_letter";
+
+async function countBy(table: QueueTable, status?: QueueStatus): Promise<number> {
   let q = supabase.from(table).select("id", { count: "exact", head: true });
   if (status) q = q.eq("status", status);
   const { count, error } = await q;
@@ -67,7 +68,7 @@ async function countBy(
   return count ?? 0;
 }
 
-async function countTable(table: "scrape_dead_letter" | "web_scrape_dead_letter"): Promise<number> {
+async function countTable(table: DlqTable): Promise<number> {
   const { count, error } = await supabase.from(table).select("id", { count: "exact", head: true });
   if (error) throw error;
   return count ?? 0;
@@ -82,8 +83,8 @@ async function fetchQueueSnapshots(): Promise<QueueSnapshot[]> {
   return Promise.all(
     specs.map(async (spec) => {
       const [pending, running, failed, dlq, total] = await Promise.all([
-        countBy(spec.table, "pending"),
-        countBy(spec.table, "running"),
+        countBy(spec.table, "queued"),
+        countBy(spec.table, "processing"),
         countBy(spec.table, "failed"),
         countTable(spec.dlqTable),
         countBy(spec.table),
