@@ -116,6 +116,7 @@ const report = {
   layer: "E — Monte Carlo agregado",
   generated_at: new Date().toISOString(),
   scenarios_total: total,
+  ambiguous_excluded: ambiguous,
   variables: {
     chaos_rates: chaosRates,
     drifts_pp: drifts,
