@@ -1,6 +1,6 @@
-// pg-net-watchdog — Rodada #24
-// Cron a cada 30 min: coleta métricas de saúde do pg_net, grava snapshot e
-// dispara notificações para admins quando taxa de erro > 5% ou backlog > 100.
+// pg-net-watchdog — Rodada #25
+// - Advisory lock impede execuções concorrentes (idempotência sob overlap de cron).
+// - Dedup por cooldown (60 min) evita tempestade de notificações.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const CORS = {
@@ -8,7 +8,7 @@ const CORS = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ERROR_RATE_THRESHOLD = 5.0; // %
+const ERROR_RATE_THRESHOLD = 5.0;
 const BACKLOG_THRESHOLD = 100;
 
 Deno.serve(async (req) => {
@@ -18,6 +18,14 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
+
+  // Advisory lock — tenta reservar execução única
+  const { data: lockData } = await supa.rpc("pg_net_watchdog_try_lock");
+  if (lockData === false) {
+    return new Response(JSON.stringify({ ok: true, skipped: "another_run_in_progress" }), {
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
 
   const { data, error } = await supa.rpc("pg_net_health", { _window_hours: 24 });
   if (error) {
@@ -45,6 +53,7 @@ Deno.serve(async (req) => {
 
   const breach = errorRate > ERROR_RATE_THRESHOLD || backlog > BACKLOG_THRESHOLD;
   let notified = 0;
+  let suppressed = 0;
 
   if (breach) {
     const { data: admins } = await supa
@@ -52,6 +61,14 @@ Deno.serve(async (req) => {
       .select("user_id")
       .eq("role", "admin");
     for (const a of (admins ?? []) as { user_id: string }[]) {
+      const { data: shouldNotify } = await supa.rpc("pg_net_watchdog_should_notify", {
+        _admin_id: a.user_id,
+        _cooldown_minutes: 60,
+      });
+      if (shouldNotify === false) {
+        suppressed++;
+        continue;
+      }
       await supa.from("notifications").insert({
         user_id: a.user_id,
         type: "system",
@@ -64,7 +81,7 @@ Deno.serve(async (req) => {
   }
 
   return new Response(
-    JSON.stringify({ ok: true, metrics: { total, errors, errorRate, backlog, p95 }, breach, notified }),
+    JSON.stringify({ ok: true, metrics: { total, errors, errorRate, backlog, p95 }, breach, notified, suppressed }),
     { headers: { ...CORS, "Content-Type": "application/json" } },
   );
 });

@@ -1,0 +1,28 @@
+{
+  "round": 25,
+  "layer": "Preflight — Alert dedup + retenção + idempotência",
+  "generated_at": "2026-07-22T12:39:40.822Z",
+  "groups": {
+    "A_alert_dedup": {
+      "scenarios": 250,
+      "ok": 250,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "B_snapshot_retention": {
+      "scenarios": 250,
+      "ok": 250,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "C_watchdog_overlap": {
+      "scenarios": 200,
+      "ok": 200,
+      "sla_pct": 100,
+      "pass": true
+    }
+  },
+  "gate": {
+    "overall_pass": true
+  }
+}
