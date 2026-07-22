@@ -115,7 +115,10 @@ export function RetryPolicyAdvisoriesPanel() {
       toast({ title: "Falha ao reverter", description: err.message, variant: "destructive" }),
   });
 
-  const list = data ?? [];
+  const rawList = data ?? [];
+  const list = kindFilter === "all"
+    ? rawList
+    : rawList.filter((a) => (a.queue_kind ?? "scrape") === kindFilter);
   const pending = list.filter((a) => !a.applied_at && !a.dismissed_at);
   const applied = list.filter((a) => a.applied_at && !a.rolled_back_at && a.applied_scope === "org");
   const history = list.filter((a) => a.dismissed_at || a.rolled_back_at || (a.applied_at && a.applied_scope !== "org"));
