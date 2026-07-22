@@ -1,12 +1,12 @@
-import { describe, it, expect } from "vitest";
-import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { ConfirmProvider, useConfirm } from "@/hooks/useConfirm";
 
 function Harness({ onResult }: { onResult: (r: boolean) => void }) {
   const confirm = useConfirm();
   return (
     <button
+      type="button"
       onClick={async () => {
         const ok = await confirm({
           title: "Excluir item?",
@@ -24,7 +24,6 @@ function Harness({ onResult }: { onResult: (r: boolean) => void }) {
 
 describe("useConfirm", () => {
   it("resolves true when the user confirms", async () => {
-    const user = userEvent.setup();
     let result: boolean | null = null;
     render(
       <ConfirmProvider>
@@ -32,16 +31,15 @@ describe("useConfirm", () => {
       </ConfirmProvider>,
     );
 
-    await user.click(screen.getByText("trigger"));
+    fireEvent.click(screen.getByText("trigger"));
     expect(await screen.findByText("Excluir item?")).toBeInTheDocument();
     expect(screen.getByText("Ação irreversível.")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Excluir" }));
+    fireEvent.click(screen.getByRole("button", { name: "Excluir" }));
     await act(async () => { await Promise.resolve(); });
-    expect(result).toBe(true);
+    await waitFor(() => expect(result).toBe(true));
   });
 
   it("resolves false when the user cancels", async () => {
-    const user = userEvent.setup();
     let result: boolean | null = null;
     render(
       <ConfirmProvider>
@@ -49,15 +47,14 @@ describe("useConfirm", () => {
       </ConfirmProvider>,
     );
 
-    await user.click(screen.getByText("trigger"));
+    fireEvent.click(screen.getByText("trigger"));
     await screen.findByText("Excluir item?");
-    await user.click(screen.getByRole("button", { name: "Cancelar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
     await act(async () => { await Promise.resolve(); });
-    expect(result).toBe(false);
+    await waitFor(() => expect(result).toBe(false));
   });
 
   it("throws when used outside the provider", () => {
-    // Silence expected error boundary console noise
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(() => render(<Harness onResult={() => {}} />)).toThrow(
       /useConfirm must be used within/,
