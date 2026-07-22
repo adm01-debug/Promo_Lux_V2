@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within, fireEvent, act, waitFor } from "@testing-library/react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionsPanel } from "./SessionsPanel";
+import { SessionsPanel, type RetryOutcome } from "./SessionsPanel";
 import type { LushaSession } from "./types";
+
 
 function makeSession(i: number, overrides: Partial<LushaSession> = {}): LushaSession {
   return {
@@ -212,3 +213,125 @@ describe("SessionsPanel (R36 server-side)", () => {
     expect(screen.getByText("Mostrando 10 de 23")).toBeInTheDocument();
   });
 });
+
+describe("SessionsPanel — retentativa (R37)", () => {
+  it("botão 'Retentar' só aparece em linhas com status 'failed'", async () => {
+    const sessions = [
+      makeSession(1, { company_name: "Alpha SA", status: "success" }),
+      makeSession(2, { company_name: "Beta Ltda", status: "failed" }),
+      makeSession(3, { company_name: "Gama Inc", status: "pending" }),
+    ];
+    renderWithProviders(<SessionsPanel fetcher={makeFetcher(sessions)} />);
+    await waitFor(() => expect(bodyRows()).toHaveLength(3));
+
+    expect(
+      screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Retentar sessão de Alpha SA" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Retentar sessão de Gama Inc" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("clicar em 'Retentar' invoca o handler com a sessão-alvo e invalida a lista", async () => {
+    const failed = makeSession(1, { company_name: "Beta Ltda", status: "failed" });
+    const fetcher = makeFetcher([failed]);
+    const retryHandler = vi.fn(async () => ({
+      status: "success" as const,
+      error_message: "Retentado — nova sessão xyz.",
+      total_found: 5,
+    }));
+
+    renderWithProviders(
+      <SessionsPanel fetcher={fetcher} retryHandler={retryHandler} />,
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+      ).toBeInTheDocument(),
+    );
+
+    const callsBefore = fetcher.mock.calls.length;
+    fireEvent.click(
+      screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+    );
+
+    await waitFor(() => expect(retryHandler).toHaveBeenCalledTimes(1));
+    expect(retryHandler).toHaveBeenCalledWith(
+      expect.objectContaining({ id: failed.id, company_name: "Beta Ltda" }),
+    );
+    // Invalida a lista → nova chamada ao fetcher.
+    await waitFor(() =>
+      expect(fetcher.mock.calls.length).toBeGreaterThan(callsBefore),
+    );
+  });
+
+  it("falha na retentativa mantém o botão visível e reconsulta a lista", async () => {
+    const failed = makeSession(1, { company_name: "Beta Ltda", status: "failed" });
+    const fetcher = makeFetcher([failed]);
+    const retryHandler = vi.fn(async () => {
+      throw new Error("cookie expirado");
+    });
+
+    renderWithProviders(
+      <SessionsPanel fetcher={fetcher} retryHandler={retryHandler} />,
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+      ).toBeInTheDocument(),
+    );
+
+    const callsBefore = fetcher.mock.calls.length;
+    fireEvent.click(
+      screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+    );
+
+    await waitFor(() => expect(retryHandler).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(fetcher.mock.calls.length).toBeGreaterThan(callsBefore),
+    );
+    // O botão continua acessível para nova tentativa.
+    expect(
+      screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+    ).toBeEnabled();
+  });
+
+  it("enquanto a retentativa está pendente, todos os botões ficam desabilitados", async () => {
+    const sessions = [
+      makeSession(1, { company_name: "Beta Ltda", status: "failed" }),
+      makeSession(2, { company_name: "Delta LLC", status: "failed" }),
+    ];
+    let resolveIt: (v: RetryOutcome) => void = () => {};
+    const retryHandler = vi.fn(
+      () =>
+        new Promise<RetryOutcome>((res) => {
+          resolveIt = res;
+        }),
+    );
+
+    renderWithProviders(
+      <SessionsPanel fetcher={makeFetcher(sessions)} retryHandler={retryHandler} />,
+    );
+    await waitFor(() => expect(bodyRows()).toHaveLength(2));
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Retentar sessão de Beta Ltda" }),
+      ).toBeDisabled();
+      expect(
+        screen.getByRole("button", { name: "Retentar sessão de Delta LLC" }),
+      ).toBeDisabled();
+    });
+
+    resolveIt({ status: "success", error_message: "ok", total_found: 1 });
+    await waitFor(() => expect(retryHandler).toHaveBeenCalledTimes(1));
+  });
+});
+
