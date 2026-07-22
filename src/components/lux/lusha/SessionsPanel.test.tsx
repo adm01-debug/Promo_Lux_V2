@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, within, fireEvent, act } from "@testing-library/react";
 import { SessionsPanel } from "./SessionsPanel";
 import type { LushaSession } from "./types";
 
@@ -21,6 +20,13 @@ const bodyRows = () => {
   const table = screen.queryByRole("table");
   if (!table) return [];
   return within(table).getAllByRole("row").slice(1); // drop header
+};
+
+// useDeferredValue precisa de um tick para reprocessar.
+const flush = async () => {
+  await act(async () => {
+    await Promise.resolve();
+  });
 };
 
 describe("SessionsPanel (R32 split)", () => {
@@ -63,7 +69,6 @@ describe("SessionsPanel (R32 split)", () => {
   });
 
   it("filtra por texto de empresa (case-insensitive)", async () => {
-    const user = userEvent.setup();
     render(
       <SessionsPanel
         sessions={[
@@ -73,14 +78,16 @@ describe("SessionsPanel (R32 split)", () => {
         ]}
       />,
     );
-    await user.type(screen.getByLabelText("Buscar sessão por empresa"), "beta");
-    expect(await screen.findByText("Beta Ltda")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Buscar sessão por empresa"), {
+      target: { value: "beta" },
+    });
+    await flush();
+    expect(screen.getByText("Beta Ltda")).toBeInTheDocument();
     expect(screen.queryByText("Alpha SA")).not.toBeInTheDocument();
     expect(screen.queryByText("Gamma Inc")).not.toBeInTheDocument();
   });
 
   it("mostra estado vazio filtrado quando nada corresponde", async () => {
-    const user = userEvent.setup();
     render(
       <SessionsPanel
         sessions={[
@@ -89,15 +96,15 @@ describe("SessionsPanel (R32 split)", () => {
         ]}
       />,
     );
-    await user.type(screen.getByLabelText("Buscar sessão por empresa"), "zzz");
-    expect(
-      await screen.findByText("Nenhuma sessão corresponde aos filtros."),
-    ).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Buscar sessão por empresa"), {
+      target: { value: "zzz" },
+    });
+    await flush();
+    expect(screen.getByText("Nenhuma sessão corresponde aos filtros.")).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
   it("paginação: 12 sessões com pageSize=5 → 5/5/2 e botões corretos", async () => {
-    const user = userEvent.setup();
     const sessions = Array.from({ length: 12 }, (_, i) =>
       makeSession({
         id: `s-${i}`,
@@ -110,27 +117,32 @@ describe("SessionsPanel (R32 split)", () => {
     expect(screen.getByText("Página 1 de 3")).toBeInTheDocument();
     expect(screen.getByLabelText("Página anterior")).toBeDisabled();
 
-    await user.click(screen.getByLabelText("Próxima página"));
+    fireEvent.click(screen.getByLabelText("Próxima página"));
+    await flush();
     expect(bodyRows()).toHaveLength(5);
     expect(screen.getByText("Página 2 de 3")).toBeInTheDocument();
 
-    await user.click(screen.getByLabelText("Próxima página"));
+    fireEvent.click(screen.getByLabelText("Próxima página"));
+    await flush();
     expect(bodyRows()).toHaveLength(2);
     expect(screen.getByText("Página 3 de 3")).toBeInTheDocument();
     expect(screen.getByLabelText("Próxima página")).toBeDisabled();
   });
 
   it("digitar no filtro reseta a página para 1", async () => {
-    const user = userEvent.setup();
     const sessions = Array.from({ length: 12 }, (_, i) =>
       makeSession({ id: `s-${i}`, company_name: `Empresa ${i}` }),
     );
     render(<SessionsPanel sessions={sessions} />);
-    await user.click(screen.getByLabelText("Próxima página"));
-    await user.click(screen.getByLabelText("Próxima página"));
+    fireEvent.click(screen.getByLabelText("Próxima página"));
+    fireEvent.click(screen.getByLabelText("Próxima página"));
+    await flush();
     expect(screen.getByText("Página 3 de 3")).toBeInTheDocument();
 
-    await user.type(screen.getByLabelText("Buscar sessão por empresa"), "Empresa");
-    expect(await screen.findByText(/Página 1 de/)).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Buscar sessão por empresa"), {
+      target: { value: "Empresa" },
+    });
+    await flush();
+    expect(screen.getByText(/Página 1 de/)).toBeInTheDocument();
   });
 });
