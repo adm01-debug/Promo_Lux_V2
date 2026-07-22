@@ -78,8 +78,8 @@ export function AuditTrailPanel() {
           </Button>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="relative">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="relative xl:col-span-2">
             <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={filters.search}
@@ -118,11 +118,28 @@ export function AuditTrailPanel() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as ações</SelectItem>
+              <SelectItem value="execute">Execução</SelectItem>
               <SelectItem value="create">Criação</SelectItem>
               <SelectItem value="update">Alteração</SelectItem>
               <SelectItem value="delete">Remoção</SelectItem>
             </SelectContent>
           </Select>
+
+          <Input
+            type="date"
+            value={filters.dateFrom ?? ""}
+            onChange={(e) => patch({ dateFrom: e.target.value })}
+            className="h-9 bg-background/60"
+            aria-label="Data inicial"
+          />
+
+          <Input
+            type="date"
+            value={filters.dateTo ?? ""}
+            onChange={(e) => patch({ dateTo: e.target.value })}
+            className="h-9 bg-background/60"
+            aria-label="Data final"
+          />
 
           <Select
             value={String(filters.pageSize)}
