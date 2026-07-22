@@ -337,7 +337,7 @@ serve(async (req) => {
       bitrix_user_id:        input.bitrix_user_id ?? null,
       status:               "running",
     })
-    .select("id")
+    .select("id, organization_id")
     .single();
 
   if (sessionError || !session) {
@@ -349,7 +349,41 @@ serve(async (req) => {
   }
 
   const sessionId = session.id;
+  const organizationId = (session as { organization_id: string | null }).organization_id ?? null;
   log.info("session_created", { session_id: sessionId });
+
+  // Helper: registra a execução na trilha de auditoria (best-effort, nunca quebra o fluxo).
+  const writeExecutionAudit = async (
+    outcome: "completed" | "error",
+    extra: Record<string, unknown>,
+  ) => {
+    try {
+      await supabase.from("audit_logs").insert({
+        actor_id: user.id,
+        organization_id: organizationId,
+        table_name: "lusha_search_sessions",
+        record_id: sessionId,
+        action: "execute",
+        metadata: {
+          function: "lusha-search",
+          request_id: requestId,
+          outcome,
+          params: {
+            company_name: input.company_name,
+            company_id: input.company_id ?? null,
+            departments_requested: input.departments,
+            departments_mapped: deptsMapped,
+            departments_not_found: deptsNotFound,
+            session_size: input.session_size,
+            bitrix_card_id: input.bitrix_card_id ?? null,
+          },
+          result: extra,
+        },
+      });
+    } catch (e) {
+      log.warn("audit_log_write_failed", { error: (e as Error).message });
+    }
+  };
 
   try {
     const cookieData = await fetchLushaCookie(log);
