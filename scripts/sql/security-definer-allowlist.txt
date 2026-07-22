@@ -1,39 +1,38 @@
 # Canonical allowlist of SECURITY DEFINER functions in public schema
-# with EXECUTE granted to anon/authenticated. See docs/adr/009-security-baseline.md.
+# with EXECUTE granted to anon/authenticated. See docs/adr/009-security-baseline.md
+# and docs/adr/017-round23-linter-diagnosis.md for the classification per group.
+#
+# CI enforcement: scripts/check-security-definer.sh fails the build when the
+# live database exposes a function outside this list, OR when this list
+# contains an entry no longer exposed (drift in either direction).
+#
 # Format: one function name per line, comments start with '#'.
 
-# RLS helpers (needed to avoid recursive RLS)
+# --- Group A: RLS helpers (would cause recursive RLS if INVOKER) ------------
 has_role
 has_org_role
 is_org_member
 default_org_for_current_user
 
-# Frontend-invoked RPCs
+# --- Group B: Frontend-invoked RPCs that must bypass RLS -------------------
 accept_org_invite
 api_latency_stats
 api_latency_trend
+apply_retry_advisory
 campaign_ab_stats
 create_default_deal_stages
 dlq_health_metrics
 dlq_health_trend
-evaluate_partition_policies
 get_dashboard_stats
-pg_catalog_rls_tables
-pg_columns_for_insert
-purge_dead_letter
 replay_dead_letter
 replay_dead_letter_batch
-reset_circuit_breaker
-
-# Scrape engine 10/10 (ADR-010)
-# Scrape engine 10/10 (ADR-010)
-dlq_top_reasons
-api_latency_percentiles
-
-# Retry policy approval/rollback flow
-apply_retry_advisory
-rollback_retry_advisory
-
-# Web scrape engine (Opção C) — user-facing RPCs
 replay_web_dead_letter_batch
+reset_circuit_breaker
+rollback_retry_advisory
 web_dlq_health_metrics
+
+# --- Group C: Lusha enrichment gate (frontend-invoked, org-scoped inside) --
+fn_lusha_contact_mark_cache_hit
+fn_lux_cache_stats
+fn_lux_enrichment_gate
+fn_lux_save_enriched_contact
