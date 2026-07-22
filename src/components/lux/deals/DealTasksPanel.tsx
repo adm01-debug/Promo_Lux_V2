@@ -6,12 +6,14 @@ import { Trash2, Plus, Bell, Calendar as CalIcon } from "lucide-react";
 import { format, isPast, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDealTasks } from "@/hooks/useDeals";
+import { useConfirm } from "@/hooks/useConfirm";
 import { cn } from "@/lib/utils";
 
 interface Props { dealId?: string | null; }
 
 export function DealTasksPanel({ dealId }: Props) {
   const { data: tasks = [], createTask, toggleTask, deleteTask } = useDealTasks(dealId);
+  const confirm = useConfirm();
   const [title, setTitle] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [remindAt, setRemindAt] = useState("");
