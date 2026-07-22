@@ -1866,7 +1866,7 @@ export const LushaIntelligenceView = () => {
               revealedData={revealedData}
               revealingIds={revealingIds}
               onReveal={handleReveal}
-              onClearReveal={(id) =>
+              onClearReveal={(id: string) =>
                 setRevealedData((prev) => {
                   const next = { ...prev };
                   delete next[id];
