@@ -81,7 +81,20 @@ export function DealTasksPanel({ dealId }: Props) {
                   )}
                 </div>
               </div>
-              <Button size="icon" variant="ghost" onClick={() => deleteTask.mutate(t.id)} className="h-6 w-6">
+              <Button
+                size="icon" variant="ghost"
+                aria-label={`Excluir tarefa: ${t.title}`}
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: "Excluir esta tarefa?",
+                    description: `"${t.title}" será removida permanentemente.`,
+                    confirmLabel: "Excluir",
+                    variant: "destructive",
+                  });
+                  if (ok) deleteTask.mutate(t.id);
+                }}
+                className="h-6 w-6"
+              >
                 <Trash2 className="h-3 w-3 text-destructive" />
               </Button>
             </div>
