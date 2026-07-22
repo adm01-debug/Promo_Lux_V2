@@ -144,7 +144,13 @@ async function defaultFetcher({
  * (load-more) e filtros preservados no URL (`?lsq=&lss=`).
  * Mantém compatibilidade visual com o split original (R32).
  */
-export function SessionsPanel({ fetcher = defaultFetcher }: SessionsPanelProps = {}) {
+export function SessionsPanel({
+  fetcher = defaultFetcher,
+  retryHandler = defaultRetryHandler,
+}: SessionsPanelProps = {}) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const urlQ = searchParams.get(Q_KEY) ?? "";
@@ -207,8 +213,36 @@ export function SessionsPanel({ fetcher = defaultFetcher }: SessionsPanelProps =
     [deferredQ, status],
   );
 
+  const retryMutation = useMutation({
+    mutationFn: (session: LushaSession) => retryHandler(session),
+    onSuccess: (outcome, session) => {
+      toast({
+        title: "Retentativa concluída",
+        description:
+          outcome.error_message ??
+          `A sessão de "${session.company_name}" foi processada novamente.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["lusha-sessions"] });
+    },
+    onError: (err: unknown, session) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({
+        title: "Falha na retentativa",
+        description: `${session.company_name}: ${msg}`,
+        variant: "destructive",
+      });
+      queryClient.invalidateQueries({ queryKey: ["lusha-sessions"] });
+    },
+  });
+
+  const retryingId =
+    retryMutation.isPending && retryMutation.variables
+      ? retryMutation.variables.id
+      : null;
+
   return (
     <Card className="border-border/60 bg-card/60 backdrop-blur-sm">
+
       <CardHeader>
         <CardTitle className="text-base">Últimas sessões de busca</CardTitle>
         <CardDescription>
