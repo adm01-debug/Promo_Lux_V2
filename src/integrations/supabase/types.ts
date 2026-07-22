@@ -1557,6 +1557,7 @@ export type Database = {
           organization_id: string
           pending_critical: number
           pending_items: number
+          queue_kind: string
           triggered_at: string
         }
         Insert: {
@@ -1566,6 +1567,7 @@ export type Database = {
           organization_id: string
           pending_critical: number
           pending_items: number
+          queue_kind?: string
           triggered_at?: string
         }
         Update: {
@@ -1575,6 +1577,7 @@ export type Database = {
           organization_id?: string
           pending_critical?: number
           pending_items?: number
+          queue_kind?: string
           triggered_at?: string
         }
         Relationships: [
@@ -1595,6 +1598,7 @@ export type Database = {
           enabled: boolean
           organization_id: string
           pending_critical: number
+          queue_kind: string
           updated_at: string
         }
         Insert: {
@@ -1604,6 +1608,7 @@ export type Database = {
           enabled?: boolean
           organization_id: string
           pending_critical?: number
+          queue_kind?: string
           updated_at?: string
         }
         Update: {
@@ -1613,13 +1618,14 @@ export type Database = {
           enabled?: boolean
           organization_id?: string
           pending_critical?: number
+          queue_kind?: string
           updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "dlq_alert_settings_organization_id_fkey"
             columns: ["organization_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
@@ -1632,6 +1638,7 @@ export type Database = {
           oldest_pending_age_secs: number
           organization_id: string
           pending_items: number
+          queue_kind: string
           replayed_items: number
           total_items: number
         }
@@ -1641,6 +1648,7 @@ export type Database = {
           oldest_pending_age_secs?: number
           organization_id: string
           pending_items?: number
+          queue_kind?: string
           replayed_items?: number
           total_items?: number
         }
@@ -1650,6 +1658,7 @@ export type Database = {
           oldest_pending_age_secs?: number
           organization_id?: string
           pending_items?: number
+          queue_kind?: string
           replayed_items?: number
           total_items?: number
         }
@@ -3105,6 +3114,7 @@ export type Database = {
           observed_success_rate: number
           organization_id: string | null
           previous_policy: Json | null
+          queue_kind: string
           rolled_back_at: string | null
           rolled_back_by: string | null
           sample_size: number
@@ -3126,6 +3136,7 @@ export type Database = {
           observed_success_rate: number
           organization_id?: string | null
           previous_policy?: Json | null
+          queue_kind?: string
           rolled_back_at?: string | null
           rolled_back_by?: string | null
           sample_size: number
@@ -3147,6 +3158,7 @@ export type Database = {
           observed_success_rate?: number
           organization_id?: string | null
           previous_policy?: Json | null
+          queue_kind?: string
           rolled_back_at?: string | null
           rolled_back_by?: string | null
           sample_size?: number
@@ -4208,6 +4220,7 @@ export type Database = {
         }
       }
       capture_dlq_health_snapshots: { Args: never; Returns: number }
+      capture_web_dlq_health_snapshots: { Args: never; Returns: number }
       check_oracle_rate_limit: {
         Args: { _action?: string; _limit?: number; _organization_id: string }
         Returns: {

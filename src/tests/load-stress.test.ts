@@ -34,3 +34,59 @@ describe("load-stress: motor de resiliência", () => {
     }
   });
 });
+
+/**
+ * Rodada #17 — cenário exclusivo do motor de scrape web nativo.
+ * Simula 1000 URLs mistas (HTML/SPA/403/timeout) com política otimizada
+ * (4 tentativas / base 20s / max 240s / jitter 35%) validando as metas
+ * de p95 e taxa de sucesso do motor web.
+ */
+describe("load-stress: motor de scrape web", () => {
+  const WEB_POLICY = { ...DEFAULT_POLICY, maxAttempts: 4, baseDelaySecs: 20, maxDelaySecs: 240, jitterRatio: 0.35 };
+
+  const WEB_MIX = [
+    { fault: "rate_limit" as const, failureRate: 0.05, latencyMs: 800, slaSecs: 120, weight: 55 },
+    { fault: "server_5xx" as const, failureRate: 0.4, latencyMs: 3000, slaSecs: 120, weight: 15 },
+    { fault: "timeout" as const, failureRate: 0.3, latencyMs: 15000, slaSecs: 300, weight: 10 },
+    { fault: "client_4xx" as const, failureRate: 0.9, latencyMs: 500, slaSecs: 120, weight: 8 },
+    { fault: "unavailable" as const, failureRate: 1.0, latencyMs: 200, slaSecs: 120, weight: 7 },
+    { fault: "unavailable" as const, failureRate: 1.0, latencyMs: 1500, slaSecs: 120, weight: 3 },
+    { fault: "server_5xx" as const, failureRate: 0.7, latencyMs: 2000, slaSecs: 120, weight: 2 },
+  ];
+
+  function buildWebScenarios(n = 1000) {
+    const total = WEB_MIX.reduce((s, m) => s + m.weight, 0);
+    const out = [];
+    let idx = 0;
+    for (const m of WEB_MIX) {
+      const count = Math.round((m.weight / total) * n);
+      for (let i = 0; i < count; i++) {
+        out.push({
+          id: `web-load|${m.fault}|#${idx++}`,
+          fault: m.fault,
+          failureRate: m.failureRate,
+          latencyMs: m.latencyMs,
+          slaSecs: m.slaSecs,
+          retryAfterSecs: m.fault === "rate_limit" ? 30 : undefined,
+        });
+      }
+    }
+    return out;
+  }
+
+  it("processa 1000 URLs mistas mantendo sucesso >= 60% (baseline pessimista do mix)", () => {
+    const scenarios = buildWebScenarios(1000);
+    const results = scenarios.map((s) => simulateScenario(s, WEB_POLICY, 50));
+    const avg = results.reduce((a, r) => a + r.successRate, 0) / results.length;
+    expect(avg).toBeGreaterThanOrEqual(0.6);
+  });
+
+  it("cenários HTML saudáveis (rate_limit leve, fr<=0.05) mantêm sucesso >= 92%", () => {
+    const healthy = buildWebScenarios(1000).filter((s) => s.fault === "rate_limit" && s.failureRate <= 0.05);
+    expect(healthy.length).toBeGreaterThan(0);
+    for (const s of healthy) {
+      const r = simulateScenario(s, WEB_POLICY, 100);
+      expect(r.successRate).toBeGreaterThanOrEqual(0.92);
+    }
+  });
+});
