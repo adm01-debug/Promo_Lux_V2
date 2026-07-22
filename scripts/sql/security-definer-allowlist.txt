@@ -26,10 +26,8 @@ dlq_health_trend
 get_dashboard_stats
 replay_dead_letter
 replay_dead_letter_batch
-replay_web_dead_letter_batch
 reset_circuit_breaker
 rollback_retry_advisory
-web_dlq_health_metrics
 
 # --- Group C: Lusha enrichment gate (frontend-invoked, org-scoped inside) --
 fn_lusha_contact_mark_cache_hit
