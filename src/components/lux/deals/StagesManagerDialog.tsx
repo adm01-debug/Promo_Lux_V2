@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Plus } from "lucide-react";
 import { useDealStages } from "@/hooks/useDeals";
+import { useConfirm } from "@/hooks/useConfirm";
 
 interface Props { open: boolean; onOpenChange: (o: boolean) => void; }
 
 export function StagesManagerDialog({ open, onOpenChange }: Props) {
   const { data: stages = [], createStage, updateStage, deleteStage } = useDealStages();
+  const confirm = useConfirm();
   const [newName, setNewName] = useState("");
   const [newColor, setNewColor] = useState("#D4A520");
 
