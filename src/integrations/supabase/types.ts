@@ -4537,6 +4537,16 @@ export type Database = {
         Args: { p_enrichment_status?: string; p_id: string }
         Returns: boolean
       }
+      fn_web_scrape_regression_check: {
+        Args: { _threshold?: number }
+        Returns: {
+          alerted: boolean
+          delta: number
+          organization_id: string
+          success_24h: number
+          success_7d: number
+        }[]
+      }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
         Args: { p_user_id: string }
