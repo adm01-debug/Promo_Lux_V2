@@ -117,7 +117,7 @@ export function DlqAlertSettingsCard() {
 
 
 
-  const state = form ?? (activeOrgId ? { organization_id: activeOrgId, ...DLQ_ALERT_DEFAULTS } : null);
+  const state = form ?? (activeOrgId ? { organization_id: activeOrgId, queue_kind: queueKind, ...DLQ_ALERT_DEFAULTS } : null);
 
   const handleSave = () => {
     if (!state) return;
