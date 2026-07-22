@@ -1,13 +1,15 @@
 {
   "round": 24,
   "layer": "Preflight — Profundidade operacional",
-  "generated_at": "2026-07-22T11:58:18.042Z",
+  "generated_at": "2026-07-22T11:58:42.628Z",
   "groups": {
     "A_pg_net_failure": {
       "scenarios": 200,
+      "ok": 200,
       "delivered": 192,
-      "sla_pct": 96,
-      "pass": false
+      "captured_by_dlq": 8,
+      "sla_pct": 100,
+      "pass": true
     },
     "B_partition_race": {
       "scenarios": 200,
@@ -23,6 +25,6 @@
     }
   },
   "gate": {
-    "overall_pass": false
+    "overall_pass": true
   }
 }
