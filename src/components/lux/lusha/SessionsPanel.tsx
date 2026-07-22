@@ -306,7 +306,9 @@ export function SessionsPanel({
                       <TableHead className="text-center">Encontrados</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Data</TableHead>
+                      <TableHead className="text-right w-[110px]">Ações</TableHead>
                     </TableRow>
+
                   </TableHeader>
                   <TableBody>
                     {rows.map((s) => (
@@ -345,8 +347,31 @@ export function SessionsPanel({
                             locale: ptBR,
                           })}
                         </TableCell>
+                        <TableCell className="text-right">
+                          {s.status === "failed" ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 gap-1.5 text-xs"
+                              disabled={retryMutation.isPending}
+                              onClick={() => retryMutation.mutate(s)}
+                              aria-label={`Retentar sessão de ${s.company_name}`}
+                              title={s.error_message ?? "Retentar esta sessão"}
+                            >
+                              {retryingId === s.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <RefreshCw className="h-3 w-3" />
+                              )}
+                              Retentar
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
+
                   </TableBody>
                 </Table>
               </div>
