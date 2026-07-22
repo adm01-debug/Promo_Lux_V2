@@ -3016,6 +3016,42 @@ export type Database = {
         }
         Relationships: []
       }
+      pg_net_health_snapshots: {
+        Row: {
+          backlog_pending: number
+          captured_at: string
+          created_at: string
+          error_count: number
+          error_rate_pct: number
+          id: string
+          p95_latency_ms: number | null
+          total_requests: number
+          window_hours: number
+        }
+        Insert: {
+          backlog_pending?: number
+          captured_at?: string
+          created_at?: string
+          error_count?: number
+          error_rate_pct?: number
+          id?: string
+          p95_latency_ms?: number | null
+          total_requests?: number
+          window_hours?: number
+        }
+        Update: {
+          backlog_pending?: number
+          captured_at?: string
+          created_at?: string
+          error_count?: number
+          error_rate_pct?: number
+          id?: string
+          p95_latency_ms?: number | null
+          total_requests?: number
+          window_hours?: number
+        }
+        Relationships: []
+      }
       places_api_usage: {
         Row: {
           calls_enterprise: number
@@ -4616,6 +4652,16 @@ export type Database = {
           has_default: boolean
           is_nullable: boolean
           udt_name: string
+        }[]
+      }
+      pg_net_health: {
+        Args: { _window_hours?: number }
+        Returns: {
+          backlog_pending: number
+          error_count: number
+          error_rate_pct: number
+          p95_latency_ms: number
+          total_requests: number
         }[]
       }
       prune_api_latency_snapshots: { Args: never; Returns: number }

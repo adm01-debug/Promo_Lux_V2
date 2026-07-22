@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # =============================================================================
-# CI Guard — SECURITY DEFINER anti-regression
+# CI Guard — SECURITY DEFINER anti-regression (Rodada #24 hardening)
 # =============================================================================
-# Verifica que nenhuma função SECURITY DEFINER em public tenha EXECUTE para
-# anon/authenticated fora da allowlist versionada em
-# scripts/sql/security-definer-allowlist.txt.
+# Bidirecional:
+#   1) Falha se o banco expõe a anon/authenticated uma função SECURITY DEFINER
+#      que NÃO está em scripts/sql/security-definer-allowlist.txt.
+#   2) Falha se a allowlist contém uma função que já não é mais exposta
+#      (evita "allowlist zumbi" que mascara futuras exposições acidentais).
 #
-# Ver: docs/adr/009-security-baseline.md
+# Ver: docs/adr/009-security-baseline.md e docs/adr/018-round24-operational-depth.md
 # =============================================================================
 set -euo pipefail
 
@@ -39,16 +41,28 @@ SQL
 )
 
 ALLOWED=$(grep -vE '^\s*(#|$)' "$ALLOWLIST" | sort -u)
+EXPOSED_SORTED=$(echo "$EXPOSED" | sort -u)
 
-DRIFT=$(comm -23 <(echo "$EXPOSED" | sort -u) <(echo "$ALLOWED"))
+DRIFT_NEW=$(comm -23 <(echo "$EXPOSED_SORTED") <(echo "$ALLOWED"))
+DRIFT_STALE=$(comm -13 <(echo "$EXPOSED_SORTED") <(echo "$ALLOWED"))
 
-if [[ -n "$DRIFT" ]]; then
-  echo "::error::SECURITY DEFINER fora da allowlist detectadas:"
-  echo "$DRIFT" | sed 's/^/  - /'
-  echo ""
-  echo "Ação: revogue EXECUTE ou adicione à scripts/sql/security-definer-allowlist.txt"
-  echo "com justificativa em docs/adr/009-security-baseline.md."
-  exit 1
+STATUS=0
+if [[ -n "$DRIFT_NEW" ]]; then
+  echo "::error::SECURITY DEFINER expostas fora da allowlist:"
+  echo "$DRIFT_NEW" | sed 's/^/  + /'
+  echo "  Ação: revogue EXECUTE ou adicione à allowlist com justificativa."
+  STATUS=1
 fi
 
-echo "✅ Todas as SECURITY DEFINER expostas estão na allowlist."
+if [[ -n "$DRIFT_STALE" ]]; then
+  echo "::error::Entradas zumbis na allowlist (não mais expostas no banco):"
+  echo "$DRIFT_STALE" | sed 's/^/  - /'
+  echo "  Ação: remova de scripts/sql/security-definer-allowlist.txt."
+  STATUS=1
+fi
+
+if [[ $STATUS -eq 0 ]]; then
+  echo "✅ Allowlist SECURITY DEFINER em sincronia com o banco."
+fi
+
+exit $STATUS
