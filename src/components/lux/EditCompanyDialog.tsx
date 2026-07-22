@@ -257,8 +257,29 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         updateData.lng = geoCoords.lng;
       }
 
-      const { error } = await db.from("companies").update({ ...updateData, version: company.version }).eq("id", company.id);
+      // Optimistic locking (R29): incrementa version e exige match no filtro.
+      // Se outra sessão gravou primeiro, o update retorna 0 linhas → STALE_WRITE.
+      const currentVersion = company.version;
+      let q = db.from("companies").update(
+        currentVersion !== undefined
+          ? { ...updateData, version: currentVersion + 1 }
+          : updateData,
+      ).eq("id", company.id);
+      if (currentVersion !== undefined) q = q.eq("version", currentVersion);
+      const { data: updated, error } = await q.select("id").maybeSingle();
       if (error) throw error;
+      if (currentVersion !== undefined && !updated) {
+        toast({
+          title: "Empresa foi atualizada por outra pessoa",
+          description: "Recarregando os dados mais recentes…",
+          variant: "destructive",
+        });
+        queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+        queryClient.invalidateQueries({ queryKey: ["company-details", company.id] });
+        setDirty(false);
+        onOpenChange(false);
+        return;
+      }
 
       toast({ title: "Empresa atualizada!", description: `"${name}" foi atualizada com sucesso.` });
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
