@@ -63,7 +63,7 @@ export interface AuditTrailResult {
 }
 
 export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<AuditTrailResult> {
-  const { table, action, search, page, pageSize } = filters;
+  const { table, action, search, page, pageSize, dateFrom, dateTo } = filters;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -82,6 +82,13 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
 
   if (action !== "all") {
     query = query.eq("action", action);
+  }
+
+  if (dateFrom) {
+    query = query.gte("created_at", `${dateFrom}T00:00:00.000Z`);
+  }
+  if (dateTo) {
+    query = query.lte("created_at", `${dateTo}T23:59:59.999Z`);
   }
 
   const { data: logs, count, error } = await query.range(from, to);
