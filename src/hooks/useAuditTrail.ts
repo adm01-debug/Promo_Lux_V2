@@ -27,7 +27,7 @@ export const AUTOMATION_TABLES = [
 export interface AuditTrailFilters {
   /** Nome da tabela/entidade. "all" = todas; "automations" = só automações. */
   table: string;
-  /** Tipo de ação (create/update/delete). */
+  /** Tipo de ação (create/update/delete/execute). */
   action: AuditActionFilter;
   /** Busca livre por ator (nome) — aplicada no cliente sobre a página atual. */
   search: string;
@@ -35,6 +35,9 @@ export interface AuditTrailFilters {
   page: number;
   /** Itens por página. */
   pageSize: number;
+  /** Filtro por período — ISO date (YYYY-MM-DD) inclusivo, ou vazio para ignorar. */
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export const DEFAULT_AUDIT_FILTERS: AuditTrailFilters = {
@@ -43,6 +46,8 @@ export const DEFAULT_AUDIT_FILTERS: AuditTrailFilters = {
   search: "",
   page: 1,
   pageSize: 25,
+  dateFrom: "",
+  dateTo: "",
 };
 
 type ProfileLite = Pick<Tables<"profiles">, "id" | "full_name" | "avatar_url">;
@@ -58,7 +63,7 @@ export interface AuditTrailResult {
 }
 
 export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<AuditTrailResult> {
-  const { table, action, search, page, pageSize } = filters;
+  const { table, action, search, page, pageSize, dateFrom, dateTo } = filters;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -77,6 +82,13 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
 
   if (action !== "all") {
     query = query.eq("action", action);
+  }
+
+  if (dateFrom) {
+    query = query.gte("created_at", `${dateFrom}T00:00:00.000Z`);
+  }
+  if (dateTo) {
+    query = query.lte("created_at", `${dateTo}T23:59:59.999Z`);
   }
 
   const { data: logs, count, error } = await query.range(from, to);
@@ -144,6 +156,8 @@ export function useAuditTrail(filters: AuditTrailFilters) {
       filters.search,
       filters.page,
       filters.pageSize,
+      filters.dateFrom ?? "",
+      filters.dateTo ?? "",
     ],
     queryFn: () => fetchAuditTrail(filters),
     placeholderData: keepPreviousData,
