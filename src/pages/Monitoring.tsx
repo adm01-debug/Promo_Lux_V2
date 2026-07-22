@@ -40,6 +40,7 @@ import { PartitionAdvisoryPanel } from "@/components/lux/monitoring/PartitionAdv
 import { ResilienceSimulatorPanel } from "@/components/lux/monitoring/ResilienceSimulatorPanel";
 import { CircuitBreakerPanel } from "@/components/lux/monitoring/CircuitBreakerPanel";
 import { AutomationLogsPanel } from "@/components/lux/monitoring/AutomationLogsPanel";
+import { AutomationStatusPanel } from "@/components/lux/monitoring/AutomationStatusPanel";
 import { AuditTrailPanel } from "@/components/lux/monitoring/AuditTrailPanel";
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
