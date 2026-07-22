@@ -1,0 +1,107 @@
+{
+  "generated_at": "2026-07-22T11:16:28.015Z",
+  "round": 19,
+  "phase": "preflight",
+  "regression_gate": {
+    "success_delta_pp": 0,
+    "dlq_delta_pp": 0,
+    "passed": true
+  },
+  "engines": {
+    "generic": {
+      "label": "generic-528",
+      "total_scenarios": 300,
+      "avg_success_rate": 0.75145,
+      "avg_dlq_rate": 0.24855000000000008,
+      "avg_sla_breach_rate": 0.019633333333333336,
+      "avg_attempts": 2.2818166666666664,
+      "worst5": [
+        {
+          "id": "client_4xx|fr0.95|lat1000|sla120",
+          "successRate": 0.02,
+          "dlqRate": 0.98,
+          "p95": 1
+        },
+        {
+          "id": "client_4xx|fr0.95|lat1000|sla300",
+          "successRate": 0.03,
+          "dlqRate": 0.97,
+          "p95": 1
+        },
+        {
+          "id": "client_4xx|fr0.95|lat1000|sla600",
+          "successRate": 0.03,
+          "dlqRate": 0.97,
+          "p95": 1
+        },
+        {
+          "id": "client_4xx|fr0.95|lat8000|sla600",
+          "successRate": 0.035,
+          "dlqRate": 0.965,
+          "p95": 8
+        },
+        {
+          "id": "client_4xx|fr0.95|lat3000|sla300",
+          "successRate": 0.045,
+          "dlqRate": 0.955,
+          "p95": 3
+        }
+      ]
+    },
+    "web_current": {
+      "total_scenarios": 500,
+      "avg_success_rate": 0.8191400000000016,
+      "avg_dlq_rate": 0.18086000000000005,
+      "avg_sla_breach_rate": 0.00795,
+      "avg_attempts": 1.4921900000000006,
+      "worst5": [
+        {
+          "id": "web|unavailable|fr1|lat200|sla120|#440",
+          "successRate": 0,
+          "dlqRate": 1,
+          "p95": 0,
+          "meanAttempts": 4,
+          "slaBreachRate": 0
+        },
+        {
+          "id": "web|unavailable|fr1|lat200|sla120|#441",
+          "successRate": 0,
+          "dlqRate": 1,
+          "p95": 0,
+          "meanAttempts": 4,
+          "slaBreachRate": 0
+        },
+        {
+          "id": "web|unavailable|fr1|lat200|sla120|#442",
+          "successRate": 0,
+          "dlqRate": 1,
+          "p95": 0,
+          "meanAttempts": 4,
+          "slaBreachRate": 0
+        },
+        {
+          "id": "web|unavailable|fr1|lat200|sla120|#443",
+          "successRate": 0,
+          "dlqRate": 1,
+          "p95": 0,
+          "meanAttempts": 4,
+          "slaBreachRate": 0
+        },
+        {
+          "id": "web|unavailable|fr1|lat200|sla120|#444",
+          "successRate": 0,
+          "dlqRate": 1,
+          "p95": 0,
+          "meanAttempts": 4,
+          "slaBreachRate": 0
+        }
+      ]
+    },
+    "web_round17": {
+      "avg_success_rate": 0.8191400000000016,
+      "avg_dlq_rate": 0.18086000000000005,
+      "avg_sla_breach_rate": 0.00795,
+      "avg_attempts": 1.4921900000000006
+    }
+  }
+}
