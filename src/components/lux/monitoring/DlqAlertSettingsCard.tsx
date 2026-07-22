@@ -17,6 +17,7 @@ import {
   useDlqAlertHistory,
   DLQ_ALERT_DEFAULTS,
   type DlqAlertSettings,
+  type DlqQueueKind,
 } from "@/hooks/useDlqAlertSettings";
 
 const clamp = (v: number, min: number, max: number) =>
