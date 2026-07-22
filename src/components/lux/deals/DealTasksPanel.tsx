@@ -6,12 +6,14 @@ import { Trash2, Plus, Bell, Calendar as CalIcon } from "lucide-react";
 import { format, isPast, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDealTasks } from "@/hooks/useDeals";
+import { useConfirm } from "@/hooks/useConfirm";
 import { cn } from "@/lib/utils";
 
 interface Props { dealId?: string | null; }
 
 export function DealTasksPanel({ dealId }: Props) {
   const { data: tasks = [], createTask, toggleTask, deleteTask } = useDealTasks(dealId);
+  const confirm = useConfirm();
   const [title, setTitle] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [remindAt, setRemindAt] = useState("");
@@ -79,7 +81,20 @@ export function DealTasksPanel({ dealId }: Props) {
                   )}
                 </div>
               </div>
-              <Button size="icon" variant="ghost" onClick={() => deleteTask.mutate(t.id)} className="h-6 w-6">
+              <Button
+                size="icon" variant="ghost"
+                aria-label={`Excluir tarefa: ${t.title}`}
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: "Excluir esta tarefa?",
+                    description: `"${t.title}" será removida permanentemente.`,
+                    confirmLabel: "Excluir",
+                    variant: "destructive",
+                  });
+                  if (ok) deleteTask.mutate(t.id);
+                }}
+                className="h-6 w-6"
+              >
                 <Trash2 className="h-3 w-3 text-destructive" />
               </Button>
             </div>
