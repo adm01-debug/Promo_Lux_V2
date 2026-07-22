@@ -182,6 +182,9 @@ export function RetryPolicyAdvisoriesPanel() {
                         <Globe className="h-3 w-3" /> escopo global
                       </span>
                     )}
+                    <span className="ml-2 inline-flex items-center gap-1 text-muted-foreground">
+                      <Cpu className="h-3 w-3" /> motor: {a.queue_kind ?? "scrape"}
+                    </span>
                   </p>
                 </div>
                 <Badge variant="outline" className="border-primary text-primary">
