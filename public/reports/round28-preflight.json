@@ -1,0 +1,36 @@
+{
+  "round": 28,
+  "seed": 2828,
+  "generated_at": "2026-07-22T15:17:06.728Z",
+  "total": 1000,
+  "passed": 997,
+  "failed": 3,
+  "by_group": {
+    "a11y": {
+      "total": 250,
+      "passed": 250
+    },
+    "confirm": {
+      "total": 200,
+      "passed": 197
+    },
+    "lock": {
+      "total": 200,
+      "passed": 200
+    },
+    "oracle": {
+      "total": 200,
+      "passed": 200
+    },
+    "refactor": {
+      "total": 150,
+      "passed": 150
+    }
+  },
+  "p95_keyboard_nav_ms": 46.28,
+  "gate": {
+    "pass_rate": 0.997,
+    "p95_kbd_ok": true,
+    "overall_pass": false
+  }
+}
