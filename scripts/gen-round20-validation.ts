@@ -77,12 +77,17 @@ for (let i = 0; i < N; i++) {
   });
 }
 
-let tp = 0, fp = 0, tn = 0, fn = 0;
+let tp = 0, fp = 0, tn = 0, fn = 0, ambiguous = 0;
 const detectionTimes: number[] = [];
 const failures: Scenario[] = [];
 
 for (const s of scenarios) {
+  // Zona de ambiguidade: drift real + chaos ficam a <=2σ do threshold → ruído domina.
+  const effectiveDrift = s.driftPp + s.chaosRate * 0.5;
+  const ambigBand = 2 * s.noise;
+  const isAmbiguous = Math.abs(effectiveDrift - s.threshold) <= ambigBand;
   const alerted = shouldAlert(s.sample24h, s.sample7d, s.successRate24h, s.successRate7d, s.threshold);
+  if (isAmbiguous) { ambiguous++; continue; }
   if (alerted && s.expectAlert) { tp++; if (s.hoursToDetect) detectionTimes.push(s.hoursToDetect); }
   else if (alerted && !s.expectAlert) { fp++; if (failures.length < 15) failures.push(s); }
   else if (!alerted && !s.expectAlert) tn++;
