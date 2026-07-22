@@ -4807,7 +4807,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "sdr" | "viewer"
-      audit_action: "create" | "update" | "delete"
+      audit_action: "create" | "update" | "delete" | "execute"
       automation_status:
         | "pending"
         | "running"
@@ -4965,7 +4965,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "sdr", "viewer"],
-      audit_action: ["create", "update", "delete"],
+      audit_action: ["create", "update", "delete", "execute"],
       automation_status: [
         "pending",
         "running",
