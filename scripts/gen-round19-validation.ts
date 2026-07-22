@@ -33,7 +33,7 @@ function rng(seed: number): () => number {
   };
 }
 
-const rand = rng(0xR19 || 424242);
+const rand = rng(424242);
 const scenarios: Scenario[] = [];
 const chaosRates = [0, 0.01, 0.05, 0.10];
 const orgs = ["org-A", "org-B", "org-C", "org-D", "org-E"];
