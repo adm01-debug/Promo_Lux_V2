@@ -158,6 +158,25 @@ export function DlqAlertSettingsCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Motor:</span>
+          <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+            {(["scrape", "web"] as const).map((k) => (
+              <button
+                key={k}
+                type="button"
+                onClick={() => { setQueueKind(k); setForm(null); }}
+                className={cn(
+                  "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                  queueKind === k ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground",
+                )}
+                aria-pressed={queueKind === k}
+              >
+                {k === "scrape" ? "Scrape" : "Web"}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="flex items-center justify-between rounded-lg border border-border/50 bg-secondary/30 p-3">
           <div>
             <p className="text-sm font-medium">Alertas ativos</p>
