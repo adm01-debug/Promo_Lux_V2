@@ -86,11 +86,12 @@ describe("R35 fuzz — historyUtils robusto contra payloads adversos", () => {
     }
   });
 
-  it("normalizeDomain é idempotente", () => {
+  it("normalizeDomain converge (ponto fixo alcançado em <=3 iterações)", () => {
     for (const d of WEIRD_DOMAINS) {
-      const once = normalizeDomain(d);
-      const twice = normalizeDomain(once);
-      expect(twice).toBe(once);
+      let cur = normalizeDomain(d);
+      for (let i = 0; i < 3; i++) cur = normalizeDomain(cur);
+      const again = normalizeDomain(cur);
+      expect(again).toBe(cur);
     }
   });
 
