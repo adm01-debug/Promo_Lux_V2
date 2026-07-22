@@ -26,6 +26,7 @@ interface Advisory {
   id: string;
   created_at: string;
   organization_id: string | null;
+  queue_kind: "scrape" | "web" | null;
   current_policy: PolicyShape;
   candidate_policy: PolicyShape;
   previous_policy: PolicyShape | null;
@@ -39,6 +40,8 @@ interface Advisory {
   dismissed_at: string | null;
   rolled_back_at: string | null;
 }
+
+type KindFilter = "all" | "scrape" | "web";
 
 function fmtPolicy(p: PolicyShape | null) {
   if (!p) return "—";
