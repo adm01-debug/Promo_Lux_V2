@@ -167,8 +167,14 @@ export function DryRunLogsPanel() {
                 size="sm"
                 variant="ghost"
                 className="h-7 gap-1 text-[11px] text-destructive hover:text-destructive"
-                onClick={() => {
-                  if (confirm("Limpar todos os logs locais?")) {
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: "Limpar todos os logs locais?",
+                    description: `Serão descartados ${logs.length} registros do console de dry-run. Exporte antes se precisar preservá-los.`,
+                    confirmLabel: "Limpar",
+                    variant: "destructive",
+                  });
+                  if (ok) {
                     clear();
                     toast({ title: "Logs limpos" });
                   }
