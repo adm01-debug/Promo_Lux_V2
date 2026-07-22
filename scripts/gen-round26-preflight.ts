@@ -71,12 +71,13 @@ const report = {
   generated_at: new Date().toISOString(),
   targets: { RPO_min: RPO_TARGET_MIN, RTO_min: RTO_TARGET_MIN, brin_ratio_min: 50 },
   groups: {
-    A_rpo: { scenarios: 300, ok: aOk, recommended_config_rate: aRecommendedRate, sla_pct: +((aOk / 300) * 100).toFixed(2), pass: aOk / 300 >= 0.99 },
+    A_rpo: { scenarios: 300, ok: aOk, sla_pct: +((aOk / 300) * 100).toFixed(2), pass: aOk / 300 >= 0.99 },
     B_rto: { scenarios: 300, ok: bOk, sla_pct: +((bOk / 300) * 100).toFixed(2), pass: bOk / 300 >= 0.99 },
     C_brin_gain: { scenarios: 200, ok: cOk, sla_pct: +((cOk / 200) * 100).toFixed(2), pass: cOk / 200 >= 0.99 },
   },
   gate: { overall_pass: aOk / 300 >= 0.99 && bOk / 300 >= 0.99 && cOk / 200 >= 0.99 },
 };
+
 
 // Reajuste: Grupo A ok se cenário respeita target (backupInterval ≤ RPO_TARGET); nem todos os cenários testados atendem — força config recomendada
 // Interpretamos "pass" como: config recomendada garante RPO. Aqui reportamos taxa e usamos gate no B e C, e reportamos RPO como projeção.
