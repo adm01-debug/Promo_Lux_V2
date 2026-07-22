@@ -27,12 +27,14 @@ const ACTION_LABELS: Record<string, string> = {
   create: "Criação",
   update: "Alteração",
   delete: "Remoção",
+  execute: "Execução",
 };
 
-const ACTION_VARIANTS: Record<string, "default" | "secondary" | "destructive"> = {
+const ACTION_VARIANTS: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   create: "default",
   update: "secondary",
   delete: "destructive",
+  execute: "outline",
 };
 
 /**
