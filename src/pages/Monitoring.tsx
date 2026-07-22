@@ -362,6 +362,10 @@ const AutomationMonitoring = () => {
             <Activity className="h-4 w-4" />
             Tempo Real
           </TabsTrigger>
+          <TabsTrigger value="automation-status" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Status Automações
+          </TabsTrigger>
           <TabsTrigger value="runs" className="gap-2">
             <History className="h-4 w-4" />
             Execuções
