@@ -9,7 +9,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, CheckCircle2, XCircle, ShieldCheck, Undo2, Globe } from "lucide-react";
+import { Sparkles, CheckCircle2, XCircle, ShieldCheck, Undo2, Globe, Cpu } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
@@ -25,6 +26,7 @@ interface Advisory {
   id: string;
   created_at: string;
   organization_id: string | null;
+  queue_kind: "scrape" | "web" | null;
   current_policy: PolicyShape;
   candidate_policy: PolicyShape;
   previous_policy: PolicyShape | null;
@@ -39,6 +41,8 @@ interface Advisory {
   rolled_back_at: string | null;
 }
 
+type KindFilter = "all" | "scrape" | "web";
+
 function fmtPolicy(p: PolicyShape | null) {
   if (!p) return "—";
   return `${p.maxAttempts}× · base ${p.baseDelaySecs}s · max ${p.maxDelaySecs}s · jitter ${(p.jitterPct * 100).toFixed(0)}%`;
@@ -48,6 +52,7 @@ export function RetryPolicyAdvisoriesPanel() {
   const qc = useQueryClient();
   const { toast } = useToast();
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [kindFilter, setKindFilter] = useState<KindFilter>("all");
 
   const { data, isLoading } = useQuery({
     queryKey: ["retry-policy-advisories"],
@@ -110,7 +115,10 @@ export function RetryPolicyAdvisoriesPanel() {
       toast({ title: "Falha ao reverter", description: err.message, variant: "destructive" }),
   });
 
-  const list = data ?? [];
+  const rawList = data ?? [];
+  const list = kindFilter === "all"
+    ? rawList
+    : rawList.filter((a) => (a.queue_kind ?? "scrape") === kindFilter);
   const pending = list.filter((a) => !a.applied_at && !a.dismissed_at);
   const applied = list.filter((a) => a.applied_at && !a.rolled_back_at && a.applied_scope === "org");
   const history = list.filter((a) => a.dismissed_at || a.rolled_back_at || (a.applied_at && a.applied_scope !== "org"));
@@ -131,6 +139,25 @@ export function RetryPolicyAdvisoriesPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-muted-foreground">Motor:</span>
+            <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+              {(["all", "scrape", "web"] as const).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => setKindFilter(k)}
+                  className={cn(
+                    "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                    kindFilter === k ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                  aria-pressed={kindFilter === k}
+                >
+                  {k === "all" ? "Todos" : k === "scrape" ? "Scrape" : "Web"}
+                </button>
+              ))}
+            </div>
+          </div>
           {isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
           {!isLoading && pending.length === 0 && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -155,6 +182,9 @@ export function RetryPolicyAdvisoriesPanel() {
                         <Globe className="h-3 w-3" /> escopo global
                       </span>
                     )}
+                    <span className="ml-2 inline-flex items-center gap-1 text-muted-foreground">
+                      <Cpu className="h-3 w-3" /> motor: {a.queue_kind ?? "scrape"}
+                    </span>
                   </p>
                 </div>
                 <Badge variant="outline" className="border-primary text-primary">
