@@ -139,6 +139,25 @@ export function RetryPolicyAdvisoriesPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-muted-foreground">Motor:</span>
+            <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
+              {(["all", "scrape", "web"] as const).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => setKindFilter(k)}
+                  className={cn(
+                    "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+                    kindFilter === k ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                  aria-pressed={kindFilter === k}
+                >
+                  {k === "all" ? "Todos" : k === "scrape" ? "Scrape" : "Web"}
+                </button>
+              ))}
+            </div>
+          </div>
           {isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
           {!isLoading && pending.length === 0 && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
