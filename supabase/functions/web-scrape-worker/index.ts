@@ -28,6 +28,7 @@ import {
 import { parseRobotsTxt, isAllowed, type RobotsPolicy } from "../_shared/web-scrape/robots.ts";
 import { extractContent } from "../_shared/web-scrape/html-to-markdown.ts";
 import { isEmptyShell, isTransientHttp, hostnameOf } from "../_shared/web-scrape/heuristics.ts";
+import { shouldInjectChaos } from "../_shared/web-scrape/chaos.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
