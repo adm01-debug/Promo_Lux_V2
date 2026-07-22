@@ -73,3 +73,11 @@ export interface DMResponse {
   totalDecisionMakers: number;
   results: DMCompanyResult[];
 }
+
+// Contrato do estado `revealedData` no LushaIntelligenceView.
+// Extraído inline na R31 para permitir tipagem forte no DecisionMakersGrid.
+export interface RevealedEntry {
+  emails: { email: string; type: string | null }[];
+  phones: { number: string; type: string | null }[];
+  error?: string;
+}
