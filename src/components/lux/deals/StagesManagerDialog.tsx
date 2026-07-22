@@ -37,7 +37,20 @@ export function StagesManagerDialog({ open, onOpenChange }: Props) {
                 className="w-20 h-8"
                 title="Probabilidade %"
               />
-              <Button size="icon" variant="ghost" onClick={() => deleteStage.mutate(s.id)} title="Remover">
+              <Button
+                size="icon" variant="ghost"
+                aria-label={`Remover estágio ${s.name}`}
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: `Remover estágio "${s.name}"?`,
+                    description: "Negócios neste estágio podem precisar ser movidos. Esta ação não pode ser desfeita.",
+                    confirmLabel: "Remover",
+                    variant: "destructive",
+                  });
+                  if (ok) deleteStage.mutate(s.id);
+                }}
+                title="Remover"
+              >
                 <Trash2 className="h-3.5 w-3.5 text-destructive" />
               </Button>
             </div>
