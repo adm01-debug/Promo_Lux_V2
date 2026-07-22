@@ -208,9 +208,24 @@ async function processTask(supabase: SupabaseClient, task: QueueTask, chaosEnabl
   const log2 = (level: "info" | "warn" | "error", msg: string, data: Record<string, unknown> = {}) =>
     log(level, msg, { task_id: task.id, trace_id: traceId, url: task.url, ...data });
 
-  // Chaos: 1% de falha sintética
-  if (chaosEnabled && Math.random() < 0.01) {
+  // Chaos: 1% de falha sintética (determinística por task_id, auditada).
+  if (chaosEnabled && shouldInjectChaos(task.id, 0.01)) {
     log2("warn", "chaos_injected");
+    await supabase.from("automation_execution_logs").insert({
+      organization_id: task.organization_id,
+      user_id: task.user_id,
+      queue_task_id: task.id,
+      source: "chaos",
+      phase: "fail",
+      status: "failed",
+      level: "warn",
+      message: "Chaos injection (deterministic)",
+      failure_reason: "chaos",
+      transient: true,
+      worker_id: WORKER_ID,
+      correlation_id: traceId,
+      metadata: { chaos: true, engine: "web", url: task.url },
+    });
     await supabase.rpc("fail_web_scrape_task", {
       _id: task.id,
       _error: "chaos_injection",
