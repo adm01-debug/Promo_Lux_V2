@@ -2,6 +2,10 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [Unreleased] - 2026-07-22
+### Adicionado
+- **Rodada #19 — Chaos determinístico + regressão automática (web)**: injetor de chaos determinístico por `task_id` (`_shared/web-scrape/chaos.ts`) com auditoria em `automation_execution_logs`; função `fn_web_scrape_regression_check` agendada a cada hora via `pg_cron` para notificar admins quando a taxa de sucesso 24h cair ≥ 5pp vs 7d; novo card `MultiQueueResilienceCard` unificando DLQ, advisories e sucesso 24h por motor. ADR-013.
+
 ## [Unreleased] - 2026-07-21
 ### Adicionado
 - **Relatório comparativo de resiliência**: aba "Resiliência" em Monitoring com cards de Δ successRate/p95/DLQ, gráficos (barras dos 20 piores cenários + linhas de p95) e tabela completa. Download JSON e CSV client-side. Snapshots servidos como assets estáticos em `public/reports/` (`baseline.json`, `current.json`). Módulo `src/lib/resilience/compareReport.ts` com testes unitários cobrindo cenários novos/removidos, empates e regressão.

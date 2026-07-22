@@ -49,6 +49,7 @@ import { DlqTriageView } from "@/components/lux/monitoring/DlqTriageView";
 import { ScrapeLatencyPanel } from "@/components/lux/monitoring/ScrapeLatencyPanel";
 import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView";
 import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
+import { MultiQueueResilienceCard } from "@/components/lux/monitoring/MultiQueueResilienceCard";
 import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPolicyAdvisoriesPanel";
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
 import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
@@ -612,6 +613,7 @@ const AutomationMonitoring = () => {
         </TabsContent>
 
         <TabsContent value="resilience-report" className="space-y-4">
+          <MultiQueueResilienceCard />
           <ResilienceReport />
         </TabsContent>
 
