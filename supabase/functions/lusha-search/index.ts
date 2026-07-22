@@ -525,6 +525,14 @@ serve(async (req) => {
       duration_ms:   duration,
     });
 
+    await writeExecutionAudit("completed", {
+      status: "completed",
+      total_found: totalFound,
+      company_resolved: companyInfo.name,
+      company_lid: companyInfo.company_lid,
+      duration_ms: duration,
+    });
+
     return new Response(
       JSON.stringify({
         session_id:           sessionId,
