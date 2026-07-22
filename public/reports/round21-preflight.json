@@ -1,0 +1,16 @@
+{
+  "round": 21,
+  "layer": "Preflight — Concorrência de workers",
+  "generated_at": "2026-07-22T11:37:10.226Z",
+  "scenarios": 500,
+  "invariants": {
+    "zero_duplicates": true,
+    "zero_lost": true,
+    "ok_scenarios": 500,
+    "avg_max_share": 0.243,
+    "fairness_pass": true
+  },
+  "gate": {
+    "overall_pass": true
+  }
+}
