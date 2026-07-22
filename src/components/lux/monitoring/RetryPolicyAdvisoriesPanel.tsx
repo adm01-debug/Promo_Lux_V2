@@ -52,6 +52,7 @@ export function RetryPolicyAdvisoriesPanel() {
   const qc = useQueryClient();
   const { toast } = useToast();
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [kindFilter, setKindFilter] = useState<KindFilter>("all");
 
   const { data, isLoading } = useQuery({
     queryKey: ["retry-policy-advisories"],
