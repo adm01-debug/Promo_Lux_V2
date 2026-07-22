@@ -114,8 +114,15 @@ describe("R35 fuzz — historyUtils robusto contra payloads adversos", () => {
     expect(sanitizeCsvCell("")).toBe("");
   });
 
-  it("buildHistoryCsvRows sempre produz N linhas com colunas estáveis", () => {
-    const rows = buildHistoryCsvRows(entries);
+  it("buildHistoryCsvRows sempre produz N linhas com colunas estáveis e sem formula injection", () => {
+    // CSV usa new Date(...).toISOString(), então garantimos datas válidas aqui;
+    // o teste de datas inválidas é responsabilidade de filterHistory.
+    const validEntries = entries.map((e) => ({
+      ...e,
+      startedAt: "2026-07-15T10:00:00.000Z",
+      finishedAt: "2026-07-15T10:00:05.000Z",
+    }));
+    const rows = buildHistoryCsvRows(validEntries);
     expect(rows).toHaveLength(N);
     const expectedKeys = [
       "Domínio", "LinkedIn", "Status", "Decisores",
@@ -123,7 +130,6 @@ describe("R35 fuzz — historyUtils robusto contra payloads adversos", () => {
     ];
     for (const r of rows) {
       expect(Object.keys(r).sort()).toEqual([...expectedKeys].sort());
-      // Nenhuma célula string começa com gatilho de fórmula bruto.
       for (const [, v] of Object.entries(r)) {
         if (typeof v === "string" && v.length > 0) {
           expect(/^[=+\-@\t\r]/.test(v)).toBe(false);
