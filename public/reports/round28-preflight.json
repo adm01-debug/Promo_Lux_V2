@@ -1,10 +1,10 @@
 {
   "round": 28,
   "seed": 2828,
-  "generated_at": "2026-07-22T15:17:06.728Z",
+  "generated_at": "2026-07-22T15:17:25.315Z",
   "total": 1000,
-  "passed": 997,
-  "failed": 3,
+  "passed": 1000,
+  "failed": 0,
   "by_group": {
     "a11y": {
       "total": 250,
@@ -12,7 +12,7 @@
     },
     "confirm": {
       "total": 200,
-      "passed": 197
+      "passed": 200
     },
     "lock": {
       "total": 200,
@@ -27,10 +27,10 @@
       "passed": 150
     }
   },
-  "p95_keyboard_nav_ms": 46.28,
+  "p95_keyboard_nav_ms": 45.87,
   "gate": {
-    "pass_rate": 0.997,
+    "pass_rate": 1,
     "p95_kbd_ok": true,
-    "overall_pass": false
+    "overall_pass": true
   }
 }
