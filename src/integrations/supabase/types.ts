@@ -4053,6 +4053,50 @@ export type Database = {
           },
         ]
       }
+      v_lusha_cache_stats: {
+        Row: {
+          avg_ttl_days: number | null
+          cache_eligible_hits: number | null
+          duplicates: number | null
+          errors: number | null
+          most_recent_enrichment: string | null
+          oldest_enrichment: string | null
+          organization_id: string | null
+          pending: number | null
+          pushed_to_bitrix: number | null
+          total_contacts: number | null
+          with_email: number | null
+          with_phone: number | null
+        }
+        Relationships: []
+      }
+      v_lux_enrichment_health: {
+        Row: {
+          avg_api_attempts: number | null
+          bitrix_sync_rate_pct: number | null
+          cache_eligible_90d: number | null
+          cache_hit_rate_pct: number | null
+          cache_hits_recorded: number | null
+          cnt_enriched: number | null
+          cnt_error_bitrix: number | null
+          cnt_other_status: number | null
+          cnt_pending: number | null
+          cnt_pushing_bitrix: number | null
+          duplicates: number | null
+          email_fill_rate_pct: number | null
+          enrichment_rate_pct: number | null
+          last_enrichment_at: string | null
+          newest_contact_at: string | null
+          organization_id: string | null
+          phone_fill_rate_pct: number | null
+          synced_to_bitrix: number | null
+          total_api_calls: number | null
+          total_contacts: number | null
+          with_email: number | null
+          with_phone: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
@@ -4373,7 +4417,7 @@ export type Database = {
         Returns: string
       }
       fn_lusha_contact_cache_lookup: {
-        Args: { p_linkedin_url: string }
+        Args: { p_linkedin_url: string; p_organization_id?: string }
         Returns: {
           bitrix_card_id: string | null
           bitrix_contact_id: string | null
@@ -4436,6 +4480,49 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      fn_lusha_contact_mark_cache_hit: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
+      fn_lux_cache_gate: {
+        Args: { p_linkedin_url: string; p_organization_id?: string }
+        Returns: Json
+      }
+      fn_lux_cache_stats: {
+        Args: { p_organization_id?: string }
+        Returns: {
+          metric: string
+          value: number
+        }[]
+      }
+      fn_lux_enrichment_gate: {
+        Args: { p_linkedin_url: string; p_organization_id: string }
+        Returns: Json
+      }
+      fn_lux_save_enriched_contact: {
+        Args: {
+          p_dedup_hash?: string
+          p_enrichment_status: string
+          p_full_name: string
+          p_has_email?: boolean
+          p_has_phone?: boolean
+          p_linkedin_url: string
+          p_lusha_company_name: string
+          p_organization_id: string
+          p_raw_payload?: Json
+          p_session_id?: string
+          p_user_id: string
+        }
+        Returns: {
+          contact_id: string
+          enrichment_status: string
+          was_created: boolean
+        }[]
+      }
+      fn_mark_contact_rechecked: {
+        Args: { p_enrichment_status?: string; p_id: string }
+        Returns: boolean
       }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
