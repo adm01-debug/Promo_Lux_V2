@@ -188,13 +188,19 @@ export function EnvProfilesPanel({ onApply, currentUri }: EnvProfilesPanelProps)
                   size="sm"
                   variant="ghost"
                   className="h-6 w-6 p-0 text-destructive hover:text-destructive"
-                  onClick={() => {
-                    if (confirm(`Remover perfil "${p.name}"?`)) {
+                  onClick={async () => {
+                    const ok = await confirm({
+                      title: `Remover perfil "${p.name}"?`,
+                      description: "Esta ação não pode ser desfeita.",
+                      confirmLabel: "Remover",
+                      variant: "destructive",
+                    });
+                    if (ok) {
                       remove(p.id);
                       toast({ title: "Perfil removido" });
                     }
                   }}
-                  aria-label="Remover"
+                  aria-label={`Remover perfil ${p.name}`}
                 >
                   <Trash2 className="h-3 w-3" />
                 </Button>
