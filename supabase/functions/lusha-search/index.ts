@@ -557,6 +557,12 @@ serve(async (req) => {
       completed_at:  new Date().toISOString(),
     }).eq("id", sessionId);
 
+    await writeExecutionAudit("error", {
+      status: "error",
+      error_message: (err as Error).message,
+      duration_ms: duration,
+    });
+
     return new Response(
       JSON.stringify({ error: (err as Error).message, session_id: sessionId }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
