@@ -448,6 +448,11 @@ const AutomationMonitoring = () => {
           <AutomationsRealtimeView />
         </TabsContent>
 
+        <TabsContent value="automation-status" className="space-y-4">
+          <AutomationStatusPanel />
+        </TabsContent>
+
+
         <TabsContent value="runs" className="space-y-4">
           {jobsLoading ? (
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
