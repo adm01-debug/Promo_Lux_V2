@@ -50,6 +50,15 @@ export const RLS_REGISTRY_TABLES: string[] = [
   "org_violation_alerts",
   "scrape_dead_letter",
   "scrape_queue",
+  // Rodada #27 — tabelas org-scoped que estavam ausentes do mirror
+  // frontend do registry (gap silencioso: painel de cobertura não as
+  // sinalizava). Todas com RLS ativa; incluídas para auditoria completa.
+  "company_reviews",
+  "lusha_credit_usage_log",
+  "lusha_search_sessions",
+  "org_proxies",
+  "org_retry_policies",
+  "org_scrape_rate_limits",
 ];
 
 export const RLS_REGISTRY_EXEMPT: string[] = [

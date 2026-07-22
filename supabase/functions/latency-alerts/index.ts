@@ -8,10 +8,19 @@ const CORS = {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
-  const supa = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
+
+  // Rodada #27: gate de service_role para cron-only.
+  const authHeader = req.headers.get("Authorization");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+      status: 401,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+
+  const supa = createClient(Deno.env.get("SUPABASE_URL")!, serviceKey);
+
 
   const { data: settings } = await supa
     .from("api_latency_alert_settings")

@@ -14,10 +14,17 @@ const BACKLOG_THRESHOLD = 100;
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
-  const supa = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
+  // Rodada #27: gate de service_role — evita invocação por anon.
+  const authHeader = req.headers.get("Authorization");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+      status: 401,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+
+  const supa = createClient(Deno.env.get("SUPABASE_URL")!, serviceKey);
 
   // Advisory lock — tenta reservar execução única
   const { data: lockData } = await supa.rpc("pg_net_watchdog_try_lock");
