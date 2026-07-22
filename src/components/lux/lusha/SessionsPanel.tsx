@@ -1,7 +1,9 @@
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,11 +30,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { supabase } from "@/integrations/supabase/client";
 
 import { StatusBadge } from "./StatusBadge";
 import type { LushaSession } from "./types";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
+const Q_KEY = "lsq";
+const S_KEY = "lss";
 
 const STATUS_FILTERS: { value: string; label: string }[] = [
   { value: "all", label: "Todos os status" },
@@ -42,178 +47,251 @@ const STATUS_FILTERS: { value: string; label: string }[] = [
   { value: "failed", label: "Falha" },
 ];
 
+// Escapa `,`, `.`, `%` para o operador `ilike` do PostgREST.
+function escapeIlike(v: string): string {
+  return v.replace(/([%,.])/g, "\\$1");
+}
+
 interface SessionsPanelProps {
-  sessions: LushaSession[];
+  /** Injeção opcional para testes; em produção o painel usa o cliente real. */
+  fetcher?: (args: {
+    q: string;
+    status: string;
+    limit: number;
+  }) => Promise<{ rows: LushaSession[]; total: number }>;
+}
+
+async function defaultFetcher({
+  q,
+  status,
+  limit,
+}: {
+  q: string;
+  status: string;
+  limit: number;
+}): Promise<{ rows: LushaSession[]; total: number }> {
+  let query = supabase
+    .from("lusha_search_sessions")
+    .select(
+      "id, company_name, departments_requested, departments_mapped, total_found, status, error_message, created_at",
+      { count: "exact" },
+    )
+    .order("created_at", { ascending: false })
+    .range(0, Math.max(0, limit - 1));
+
+  if (status !== "all") query = query.eq("status", status);
+  const needle = q.trim();
+  if (needle) query = query.ilike("company_name", `%${escapeIlike(needle)}%`);
+
+  const { data, error, count } = await query;
+  if (error) throw error;
+  return { rows: (data ?? []) as LushaSession[], total: count ?? 0 };
 }
 
 /**
- * R32 — Painel de sessões extraído de LushaIntelligenceView.
- * Componente puro/controlado: recebe a lista completa e encapsula
- * filtros (texto + status) e paginação client-side.
- * Preserva o visual da tabela original (5 colunas + StatusBadge).
+ * R36 — Painel de sessões com paginação server-side, carregamento incremental
+ * (load-more) e filtros preservados no URL (`?lsq=&lss=`).
+ * Mantém compatibilidade visual com o split original (R32).
  */
-export function SessionsPanel({ sessions }: SessionsPanelProps) {
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("all");
-  const [page, setPage] = useState(1);
+export function SessionsPanel({ fetcher = defaultFetcher }: SessionsPanelProps = {}) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const urlQ = searchParams.get(Q_KEY) ?? "";
+  const urlStatus = searchParams.get(S_KEY) ?? "all";
+
+  // Buffer local para digitação fluida; sincroniza no URL de forma debounced.
+  const [q, setQ] = useState(urlQ);
+  const [status, setStatus] = useState(urlStatus);
+  const [limit, setLimit] = useState(PAGE_SIZE);
 
   const deferredQ = useDeferredValue(q);
 
-  // Reset de página quando filtros mudam.
+  // Sincroniza filtros → URL (debounced 300ms para o texto).
   useEffect(() => {
-    setPage(1);
+    const t = window.setTimeout(() => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (deferredQ) next.set(Q_KEY, deferredQ);
+          else next.delete(Q_KEY);
+          if (status && status !== "all") next.set(S_KEY, status);
+          else next.delete(S_KEY);
+          return next;
+        },
+        { replace: true },
+      );
+    }, 250);
+    return () => window.clearTimeout(t);
+  }, [deferredQ, status, setSearchParams]);
+
+  // Sincroniza URL → estado quando o usuário navega (back/forward).
+  useEffect(() => {
+    setQ(urlQ);
+    setStatus(urlStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlQ, urlStatus]);
+
+  // Reset do carregamento incremental quando os filtros mudam.
+  useEffect(() => {
+    setLimit(PAGE_SIZE);
   }, [deferredQ, status]);
 
-  const filtered = useMemo(() => {
-    const needle = deferredQ.trim().toLowerCase();
-    return sessions.filter((s) => {
-      if (status !== "all" && s.status !== status) return false;
-      if (needle && !s.company_name.toLowerCase().includes(needle)) return false;
-      return true;
-    });
-  }, [sessions, deferredQ, status]);
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["lusha-sessions", "list", deferredQ, status, limit],
+    queryFn: () => fetcher({ q: deferredQ, status, limit }),
+    placeholderData: keepPreviousData,
+    staleTime: 15_000,
+  });
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage = Math.min(page, totalPages);
+  const rows = data?.rows ?? [];
+  const total = data?.total ?? 0;
+  const canLoadMore = rows.length < total;
 
-  const paged = useMemo(
-    () => filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
-    [filtered, safePage],
+  const loadMore = useCallback(() => {
+    setLimit((n) => n + PAGE_SIZE);
+  }, []);
+
+  const hasActiveFilters = useMemo(
+    () => !!deferredQ.trim() || status !== "all",
+    [deferredQ, status],
   );
-
-  const showPager = filtered.length > PAGE_SIZE;
 
   return (
     <Card className="border-border/60 bg-card/60 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-base">Últimas sessões de busca</CardTitle>
-        <CardDescription>Histórico das 10 buscas mais recentes.</CardDescription>
+        <CardDescription>
+          Paginação server-side · filtros preservados no URL
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        {sessions.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">
-            Nenhuma sessão registrada.
+        <div className="space-y-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Input
+              aria-label="Buscar sessão por empresa"
+              placeholder="Buscar por empresa…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              className="h-9 sm:max-w-xs"
+            />
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger aria-label="Filtrar por status" className="h-9 sm:w-56">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_FILTERS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        ) : (
-          <div className="space-y-3">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Input
-                aria-label="Buscar sessão por empresa"
-                placeholder="Buscar por empresa…"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                className="h-9 sm:max-w-xs"
-              />
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger
-                  aria-label="Filtrar por status"
-                  className="h-9 sm:w-56"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUS_FILTERS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+
+          {error ? (
+            <div
+              role="alert"
+              className="text-center py-12 text-destructive text-sm"
+            >
+              Falha ao carregar sessões.
             </div>
-
-            {filtered.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground text-sm">
-                Nenhuma sessão corresponde aos filtros.
-              </div>
-            ) : (
-              <>
-                <div className="rounded-lg border border-border/50 overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Empresa</TableHead>
-                        <TableHead>Departamentos</TableHead>
-                        <TableHead className="text-center">Encontrados</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Data</TableHead>
+          ) : isLoading ? (
+            <div
+              role="status"
+              aria-label="Carregando sessões"
+              className="flex items-center justify-center py-12 text-muted-foreground text-sm"
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Carregando…
+            </div>
+          ) : rows.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground text-sm">
+              {hasActiveFilters
+                ? "Nenhuma sessão corresponde aos filtros."
+                : "Nenhuma sessão registrada."}
+            </div>
+          ) : (
+            <>
+              <div className="rounded-lg border border-border/50 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Empresa</TableHead>
+                      <TableHead>Departamentos</TableHead>
+                      <TableHead className="text-center">Encontrados</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Data</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rows.map((s) => (
+                      <TableRow key={s.id}>
+                        <TableCell className="font-medium">{s.company_name}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {(s.departments_requested ?? []).slice(0, 3).map((d) => (
+                              <Badge
+                                key={d}
+                                variant="outline"
+                                className="border-border/50 text-xs"
+                              >
+                                {d}
+                              </Badge>
+                            ))}
+                            {(s.departments_requested?.length ?? 0) > 3 && (
+                              <Badge
+                                variant="outline"
+                                className="border-border/50 text-xs"
+                              >
+                                +{(s.departments_requested?.length ?? 0) - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center font-mono">
+                          {s.total_found ?? 0}
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={s.status} />
+                        </TableCell>
+                        <TableCell className="text-right text-sm text-muted-foreground">
+                          {formatDistanceToNow(new Date(s.created_at), {
+                            addSuffix: true,
+                            locale: ptBR,
+                          })}
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paged.map((s) => (
-                        <TableRow key={s.id}>
-                          <TableCell className="font-medium">{s.company_name}</TableCell>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1">
-                              {(s.departments_requested ?? []).slice(0, 3).map((d) => (
-                                <Badge
-                                  key={d}
-                                  variant="outline"
-                                  className="border-border/50 text-xs"
-                                >
-                                  {d}
-                                </Badge>
-                              ))}
-                              {(s.departments_requested?.length ?? 0) > 3 && (
-                                <Badge
-                                  variant="outline"
-                                  className="border-border/50 text-xs"
-                                >
-                                  +{(s.departments_requested?.length ?? 0) - 3}
-                                </Badge>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center font-mono">
-                            {s.total_found ?? 0}
-                          </TableCell>
-                          <TableCell>
-                            <StatusBadge status={s.status} />
-                          </TableCell>
-                          <TableCell className="text-right text-sm text-muted-foreground">
-                            {formatDistanceToNow(new Date(s.created_at), {
-                              addSuffix: true,
-                              locale: ptBR,
-                            })}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
 
-                {showPager && (
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs text-muted-foreground">
-                      Página {safePage} de {totalPages}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        disabled={safePage <= 1}
-                        onClick={() => setPage(safePage - 1)}
-                        aria-label="Página anterior"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        disabled={safePage >= totalPages}
-                        onClick={() => setPage(safePage + 1)}
-                        aria-label="Próxima página"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between pt-1">
+                <span className="text-xs text-muted-foreground">
+                  Mostrando {rows.length} de {total}
+                </span>
+                {canLoadMore && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={loadMore}
+                    disabled={isFetching}
+                    aria-label="Carregar mais sessões"
+                  >
+                    {isFetching ? (
+                      <>
+                        <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                        Carregando…
+                      </>
+                    ) : (
+                      "Carregar mais"
+                    )}
+                  </Button>
                 )}
-              </>
-            )}
-          </div>
-        )}
+              </div>
+            </>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
