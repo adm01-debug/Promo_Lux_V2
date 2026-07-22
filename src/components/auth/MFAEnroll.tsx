@@ -3,7 +3,6 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Shield, Copy, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
 import { useMFA, type MFAEnrollData } from "@/hooks/useMFA";
 import { useToast } from "@/hooks/use-toast";
@@ -53,16 +52,16 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-blue-600" />
+            <Shield className="h-5 w-5 text-primary" />
             <CardTitle>Ativar Autentica√ß√£o em 2 Fatores</CardTitle>
           </div>
           <CardDescription>Adicione uma camada extra de seguran√ßa com um aplicativo autenticador.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="text-sm text-muted-foreground space-y-1">
-            <p>‚úâ Protege sua conta mesmo se sua senha for comprometida</p>
-            <p>‚úâ Funciona sem internet no seu dispositivo</p>
-            <p>‚úâ Compat√≠vel com qualquer app TOTP (Google, Authy, 1Password)</p>
+            <p>‚Ä¢ Protege sua conta mesmo se a senha for comprometida</p>
+            <p>‚Ä¢ Funciona sem internet no dispositivo</p>
+            <p>‚Ä¢ Compat√≠vel com qualquer app TOTP (Google, Authy, 1Password)</p>
           </div>
           <div className="flex gap-2">
             <Button onClick={handleStartEnroll} disabled={loading} className="flex-1">
@@ -76,23 +75,70 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
     );
   }
 
-  if (step === "scan" && enrollData) {
+  if ((step === "scan" || step === "verify") && enrollData) {
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs font-bold">1</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
             Escanear QR Code
           </CardTitle>
-          <CardDescription>Abra o aplicativo autenticador e escaneie o QR code abaixo.</CardDescription>
+          <CardDescription>Abra o app autenticador e escaneie o QR code abaixo.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-center">
-            <div className="border rounded-lg p-3 bg-white" dangerouslySetInnerHTML={{ __html: enrollData.totp.qr_code }} style={{ width: 200, height: 200 }} />
+            <div
+              className="border rounded-lg p-3 bg-white"
+              dangerouslySetInnerHTML={{ __html: enrollData.totp.qr_code }}
+              style={{ width: 200, height: 200 }}
+            />
           </div>
           <div>
             <p className="text-xs text-muted-foreground mb-1">Ou insira a chave manualmente:</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-xs bg-muted px-3 py-2 rounded font-mono break-all">{enrollData.totp.secret}</code>
+              <code className="flex-1 text-xs bg-muted px-3 py-2 rounded font-mono break-all">
+                {enrollData.totp.secret}
+              </code>
               <Button variant="ghost" size="icon" onClick={copySecret}>
-                {secretCopied ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <Copy className="h-õq‹¥–àÄº˘Ù(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄΩ	’——Ω∏¯(ÄÄÄÄÄÄÄÄÄÄÄÄΩë•ÿ¯(ÄÄÄÄÄÄÄÄÄÄΩë•ÿ¯(ÄÄÄÄÄÄÄÄÄÄÒ	’——Ω∏ÅΩπ±•ç¨ıÏ†§ÄÙ¯ÅÕï—M—ï¿†âŸï…•ô‰à•ÙÅç±ÖÕÕ9ÖµîÙâ‹µô’±∞à¯(ÄÄÄÄÄÄÄÄÄÄÄÅ+ÑÅïÕçÖπï•ï§Äòå‡»ƒ–ÏÅYï…•ô•çÖ»ÅèÕë•ùº(ÄÄÄÄÄÄÄÄÄÄΩ	’——Ω∏¯(ÄÄÄÄÄÄÄÄΩÖ…ëΩπ—ïπ–¯(ÄÄÄÄÄÄΩÖ…ê¯(ÄÄÄÄ§Ï(ÄÅÙ((ÄÅ•òÄ°Õ—ï¿ÄÙÙÙÄâŸï…•ô‰à§ÅÏ(ÄÄÄÅ…ï—’…∏Ä†(ÄÄÄÄÄÄÒÖ…êÅç±ÖÕÕ9ÖµîÙâ‹µô’±∞ÅµÖ‡µ‹µµêà¯(ÄÄÄÄÄÄÄÄÒÖ…ë!ïÖëï»¯(ÄÄÄÄÄÄÄÄÄÄÒÖ…ëQ•—±îÅç±ÖÕÕ9ÖµîÙâô±ï‡Å•—ïµÃµçïπ—ï»ÅùÖ¿¥»à¯(ÄÄÄÄÄÄÄÄÄÄÄÄÒÕ¡Ö∏Åç±ÖÕÕ9ÖµîÙâô±ï‡Å†¥ÿÅ‹¥ÿÅ•—ïµÃµçïπ—ï»Å©’Õ—•ô‰µçïπ—ï»Å…Ω’πëïêµô’±∞Åâúµâ±’î¥ƒ¿¿Å—ï·–µâ±’î¥ÿ¿¿Å—ï·–µ·ÃÅôΩπ–µâΩ±êà¯»ΩÕ¡Ö∏¯(ÄÄÄÄÄÄÄÄÄÄÄÅYï…•ô•çÖ»ÅèÕë•ùº(ÄÄÄÄÄÄÄÄÄÄΩÖ…ëQ•—±î¯(ÄÄÄÄÄÄÄÄÄÄÒÖ…ëïÕç…•¡—•Ω∏˘%πÕ•…ÑÅºÅèÕë•ùºÅëîÄÿÅìµù•—ΩÃÅï·•â•ëºÅπºÅÖ¡±•çÖ—•ŸºÅÖ’—ïπ—•çÖëΩ»∏ΩÖ…ëïÕç…•¡—•Ω∏¯(ÄÄÄÄÄÄÄÄΩÖ…ë!ïÖëï»¯(ÄÄÄÄÄÄÄÄÒÖ…ëΩπ—ïπ–Åç±ÖÕÕ9ÖµîÙâÕ¡Öçîµ‰¥–à¯(ÄÄÄÄÄÄÄÄÄÅÌï……Ω»ÄòòÄ†(ÄÄÄÄÄÄÄÄÄÄÄÄÒ±ï…–ÅŸÖ…•Öπ–ÙâëïÕ—…’ç—•Ÿîà¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒ±ï…—•…ç±îÅç±ÖÕÕ9ÖµîÙâ†¥–Å‹¥–àÄº¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒ±ï…—ïÕç…•¡—•Ω∏˘Ìï……Ω…ÙΩ±ï…—ïÕç…•¡—•Ω∏¯(ÄÄÄÄÄÄÄÄÄÄÄÄΩ±ï…–¯(ÄÄÄÄÄÄÄÄÄÄ•Ù(ÄÄÄÄÄÄÄÄÄÄÒë•ÿÅç±ÖÕÕ9ÖµîÙâô±ï‡Å©’Õ—•ô‰µçïπ—ï»à¯(ÄÄÄÄÄÄÄÄÄÄÄÄÒ%π¡’—=Q@ÅµÖ·1ïπù—†ıÏŸÙÅŸÖ±’îıÌçΩëïÙÅΩπ°ÖπùîıÌÕï—ΩëïÙÅÖ’—ΩΩç’Ã¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÒ%π¡’—=QA…Ω’¿¯(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÌl¿∞Äƒ∞Ä»∞ÄÃ∞Ä–∞Ä’tπµÖ¿†°§§ÄÙ¯ÄÒ%π¡’—=QAM±Ω–Å≠ï‰ıÌ•ÙÅ•πëï‡ıÌ•ÙÄº¯•Ù(ÄÄÄÄÄÄÄÄÄÄÄÄÄÄΩ%π¡’—=QA…Ω’¿¯(ÄÄÄÄÄÄÄÄÄÄÄÄΩ%π¡’—=Q@¯(ÄÄÄÄÄÄÄÄÄÄΩë•ÿ¯(ÄÄÄÄÄÄÄÄÄÄÒ	’——Ω∏ÅΩπ±•ç¨ıÌ°Öπë±ïYï…•ôÂÙÅë•ÕÖâ±ïêıÌ±ΩÖë•πúÅÒÅçΩëîπ±ïπù—†ÄÑÙÙÄŸÙÅç±ÖÕÕ9ÖµîÙâ‹µô’±∞à¯(ÄÄÄÄÄÄÄÄÄÄÄÅÌ±ΩÖë•πúÄ¸ÄÒIïô…ïÕ°‹Åç±ÖÕÕ9ÖµîÙâ†¥–Å‹¥–ÅÖπ•µÖ—îµÕ¡•∏Åµ»¥»àÄº¯ÄËÅπ’±±Ù(ÄÄÄÄÄÄÄÄÄÄÄÅΩπô•…µÖ»ÅîÅÖ—•ŸÖ»Å5(ÄÄÄÄÄÄÄÄÄÄΩ	’——Ω∏¯(ÄÄÄÄÄÄÄÄÄÄÒ	’——Ω∏ÅŸÖ…•Öπ–Ùâù°ΩÕ–àÅÕ•ÈîÙâÕ¥àÅΩπ±•ç¨ıÏ†§ÄÙ¯ÅÕï—M—ï¿†âÕçÖ∏à•ÙÅç±ÖÕÕ9ÖµîÙâ‹µô’±∞à˚ä@ÅYΩ±—Ö»ÅÖºÅEHÅçΩëîΩ	’——Ω∏¯(ÄÄÄÄÄÄÄÄΩÖ…ëΩπ—ïπ–¯(ÄÄÄÄÄÄΩÖ…ê¯(ÄÄÄÄ§Ï(ÄÅÙ((ÄÅ…ï—’…∏Ä†(ÄÄÄÄÒÖ…êÅç±ÖÕÕ9ÖµîÙâ‹µô’±∞ÅµÖ‡µ‹µµêà¯(ÄÄÄÄÄÄÒÖ…ëΩπ—ïπ–Åç±ÖÕÕ9ÖµîÙâ¡–¥‡Å¡à¥ÿÅ—ï·–µçïπ—ï»ÅÕ¡Öçîµ‰¥Ãà¯(ÄÄÄÄÄÄÄÄÒ°ïç≠•…ç±î»Åç±ÖÕÕ9ÖµîÙâ†¥ƒ»Å‹¥ƒ»Å—ï·–µù…ïï∏¥‘¿¿Åµ‡µÖ’—ºàÄº¯(ÄÄÄÄÄÄÄÄÒ†ÃÅç±ÖÕÕ9ÖµîÙâ—ï·–µ±úÅôΩπ–µÕïµ•âΩ±êà˘5ÅÖ—•ŸÖëºÑΩ†Ã¯(ÄÄÄÄÄÄÄÄÒ¿Åç±ÖÕÕ9ÖµîÙâ—ï·–µÕ¥Å—ï·–µµ’—ïêµôΩ…ïù…Ω’πêà˘M’ÑÅçΩπ—ÑÅÖùΩ…ÑÅ…ï≈’ï»ÅŸï…•ô•çáüçºÅï¥Ä»Åï—Ö¡ÖÃÅÖºÅôÖÈï»Å±Ωù•∏∏Ω¿¯(ÄÄÄÄÄÄÄÄÒ	ÖëùîÅŸÖ…•Öπ–ÙâÕïçΩπëÖ…‰àÅç±ÖÕÕ9ÖµîÙâ—ï·–µù…ïï∏¥‹¿¿Åâúµù…ïï∏¥ƒ¿¿à˘;µŸï∞ÅëîÅÕïù’…ÖªùÑËÅ±—ºÄ°0»§Ω	Öëùî¯(ÄÄÄÄÄÄΩÖ…ëΩπ—ïπ–¯(ÄÄÄÄΩÖ…ê¯(ÄÄ§Ï)Ù(base64: invalid input
+                {secretCopied ? <CheckCircle2 className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Digite o c√≥digo de 6 d√≠gitos:</p>
+            <InputOTP maxLength={6} value={code} onChange={setCode}>
+              <InputOTPGroup>
+                {[0, 1, 2, 3, 4, 5].map(i => (
+                  <InputOTPSlot key={i} index={i} />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <div className="flex gap-2">
+            <Button onClick={handleVerify} disabled={loading || code.length !== 6} className="flex-1">
+              {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+              Confirmar
+            </Button>
+            {onCancel && <Button variant="outline" onClick={onCancel}>Cancelar</Button>}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="w-full max-w-md">
+      <CardContent className="flex flex-col items-center gap-3 py-8">
+        <CheckCircle2 className="h-12 w-12 text-success" />
+        <p className="text-lg font-semibold">MFA ativado!</p>
+        <p className="text-sm text-muted-foreground">Sua conta est√° protegida.</p>
+      </CardContent>
+    </Card>
+  );
+}
