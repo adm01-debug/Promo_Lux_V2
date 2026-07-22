@@ -27,7 +27,7 @@ function summarize(label: string, count: number) {
 const genericPreflight = summarize("generic-528", 528);
 
 const webCurrent = JSON.parse(readFileSync("public/reports/web-scrape-current.json", "utf8")).summary;
-const webRound17 = JSON.parse(readFileSync("public/reports/web-scrape-round17.json", "utf8")).summary;
+const webRound17 = JSON.parse(readFileSync("public/reports/web-scrape-round17.json", "utf8")).current;
 
 const successDelta = webCurrent.avg_success_rate - webRound17.avg_success_rate;
 const dlqDelta = webCurrent.avg_dlq_rate - webRound17.avg_dlq_rate;
