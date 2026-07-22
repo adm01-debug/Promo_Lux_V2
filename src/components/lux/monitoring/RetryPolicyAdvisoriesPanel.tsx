@@ -9,7 +9,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, CheckCircle2, XCircle, ShieldCheck, Undo2, Globe } from "lucide-react";
+import { Sparkles, CheckCircle2, XCircle, ShieldCheck, Undo2, Globe, Cpu } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
