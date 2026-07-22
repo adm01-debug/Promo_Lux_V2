@@ -1,0 +1,36 @@
+{
+  "round": 29,
+  "seed": 2929,
+  "generated_at": "2026-07-22T15:50:35.265Z",
+  "total": 1100,
+  "passed": 1100,
+  "failed": 0,
+  "by_group": {
+    "split": {
+      "total": 300,
+      "passed": 300
+    },
+    "companies-lock": {
+      "total": 250,
+      "passed": 250
+    },
+    "oracle-e2e": {
+      "total": 200,
+      "passed": 200
+    },
+    "confirm": {
+      "total": 200,
+      "passed": 200
+    },
+    "reveal-burst": {
+      "total": 150,
+      "passed": 150
+    }
+  },
+  "p95_state_restore_ms": 26.71,
+  "gate": {
+    "pass_rate": 1,
+    "p95_restore_ok": true,
+    "overall_pass": true
+  }
+}
