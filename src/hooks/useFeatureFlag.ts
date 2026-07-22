@@ -95,7 +95,7 @@ export function useFeatureFlag(
             .from("feature_flags")
             .select("is_enabled")
             .eq("flag_key", flagKey)
-            .isNull("organization_id")
+            .is("organization_id", null)
             .maybeSingle();
 
           if (globalFlag !== null) {
@@ -108,7 +108,7 @@ export function useFeatureFlag(
           .from("feature_flags")
           .select("is_enabled")
           .eq("flag_key", flagKey)
-          .isNull("organization_id")
+          .is("organization_id", null)
           .maybeSingle();
 
         if (globalFlag !== null) {
@@ -158,7 +158,7 @@ export function useFeatureFlags(keys: string[], organizationId?: string | null) 
         .from("feature_flags")
         .select("flag_key, is_enabled")
         .in("flag_key", keys)
-        .isNull("organization_id");
+        .is("organization_id", null);
 
       const result: Record<string, boolean> = {};
       for (const f of globalFlags ?? []) {
