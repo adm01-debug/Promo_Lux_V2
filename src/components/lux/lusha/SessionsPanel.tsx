@@ -1,9 +1,11 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Loader2 } from "lucide-react";
+import { Loader2, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,6 +54,12 @@ function escapeIlike(v: string): string {
   return v.replace(/([%,.])/g, "\\$1");
 }
 
+export interface RetryOutcome {
+  status: "success" | "failed";
+  error_message: string | null;
+  total_found?: number;
+}
+
 interface SessionsPanelProps {
   /** Injeção opcional para testes; em produção o painel usa o cliente real. */
   fetcher?: (args: {
@@ -59,7 +67,50 @@ interface SessionsPanelProps {
     status: string;
     limit: number;
   }) => Promise<{ rows: LushaSession[]; total: number }>;
+  /** Injeção opcional para testes; substitui a chamada real de retentativa. */
+  retryHandler?: (session: LushaSession) => Promise<RetryOutcome>;
 }
+
+/** Executa uma retentativa real via edge `lusha-search` e persiste o desfecho. */
+async function defaultRetryHandler(session: LushaSession): Promise<RetryOutcome> {
+  const departments = session.departments_requested ?? [];
+  const stamp = new Date().toISOString();
+
+  const invocation = await supabase.functions.invoke<{
+    session_id?: string;
+    total_found?: number;
+  }>("lusha-search", {
+    body: {
+      company_name: session.company_name,
+      departments,
+      session_size: 20,
+    },
+  });
+
+  if (invocation.error) {
+    const msg = invocation.error.message ?? "Falha desconhecida na retentativa.";
+    const errorMessage = `Retentado em ${stamp} — ${msg}`;
+    await supabase
+      .from("lusha_search_sessions")
+      .update({ status: "failed", error_message: errorMessage })
+      .eq("id", session.id);
+    throw new Error(msg);
+  }
+
+  const total = invocation.data?.total_found ?? 0;
+  const newId = invocation.data?.session_id ?? null;
+  const message = newId
+    ? `Retentado em ${stamp} — sucesso (nova sessão ${newId}).`
+    : `Retentado em ${stamp} — sucesso.`;
+
+  await supabase
+    .from("lusha_search_sessions")
+    .update({ status: "success", error_message: message, total_found: total })
+    .eq("id", session.id);
+
+  return { status: "success", error_message: message, total_found: total };
+}
+
 
 async function defaultFetcher({
   q,
