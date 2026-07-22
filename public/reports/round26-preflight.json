@@ -1,0 +1,33 @@
+{
+  "round": 26,
+  "layer": "Preflight — Recuperabilidade + BRIN",
+  "generated_at": "2026-07-22T12:48:50.989Z",
+  "targets": {
+    "RPO_min": 15,
+    "RTO_min": 30,
+    "brin_ratio_min": 50
+  },
+  "groups": {
+    "A_rpo": {
+      "scenarios": 300,
+      "ok": 300,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "B_rto": {
+      "scenarios": 300,
+      "ok": 300,
+      "sla_pct": 100,
+      "pass": true
+    },
+    "C_brin_gain": {
+      "scenarios": 200,
+      "ok": 200,
+      "sla_pct": 100,
+      "pass": true
+    }
+  },
+  "gate": {
+    "overall_pass": true
+  }
+}

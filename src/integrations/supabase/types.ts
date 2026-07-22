@@ -4778,6 +4778,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      system_recovery_health: { Args: never; Returns: Json }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
         Args: { _key_hash: string }
