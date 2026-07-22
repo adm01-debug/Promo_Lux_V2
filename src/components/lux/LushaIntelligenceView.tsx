@@ -37,6 +37,7 @@ import { ptBR } from "date-fns/locale";
 import { DEPT_GROUPS } from "@/components/lux/lusha/constants";
 import { StatusBadge } from "@/components/lux/lusha/StatusBadge";
 import { DecisionMakersGrid } from "@/components/lux/lusha/DecisionMakersGrid";
+import { SessionsPanel } from "@/components/lux/lusha/SessionsPanel";
 import type {
   LushaContact,
   LushaSession,
@@ -2087,63 +2088,7 @@ export const LushaIntelligenceView = () => {
         </TabsContent>
 
         <TabsContent value="history">
-          <Card className="border-border/60 bg-card/60 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-base">Últimas sessões de busca</CardTitle>
-              <CardDescription>Histórico das 10 buscas mais recentes.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {sessions.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground text-sm">
-                  Nenhuma sessão registrada.
-                </div>
-              ) : (
-                <div className="rounded-lg border border-border/50 overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Empresa</TableHead>
-                        <TableHead>Departamentos</TableHead>
-                        <TableHead className="text-center">Encontrados</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Data</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {sessions.map((s) => (
-                        <TableRow key={s.id}>
-                          <TableCell className="font-medium">{s.company_name}</TableCell>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1">
-                              {(s.departments_requested ?? []).slice(0, 3).map((d) => (
-                                <Badge key={d} variant="outline" className="border-border/50 text-xs">
-                                  {d}
-                                </Badge>
-                              ))}
-                              {(s.departments_requested?.length ?? 0) > 3 && (
-                                <Badge variant="outline" className="border-border/50 text-xs">
-                                  +{(s.departments_requested?.length ?? 0) - 3}
-                                </Badge>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center font-mono">
-                            {s.total_found ?? 0}
-                          </TableCell>
-                          <TableCell>
-                            <StatusBadge status={s.status} />
-                          </TableCell>
-                          <TableCell className="text-right text-sm text-muted-foreground">
-                            {formatDistanceToNow(new Date(s.created_at), { addSuffix: true, locale: ptBR })}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <SessionsPanel sessions={sessions} />
         </TabsContent>
       </Tabs>
 
