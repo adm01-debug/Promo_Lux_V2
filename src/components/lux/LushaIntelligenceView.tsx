@@ -36,6 +36,7 @@ import { ptBR } from "date-fns/locale";
 // ── Tipos, constantes e componentes extraídos (R30 — refactor safety) ──
 import { DEPT_GROUPS } from "@/components/lux/lusha/constants";
 import { StatusBadge } from "@/components/lux/lusha/StatusBadge";
+import { DecisionMakersGrid } from "@/components/lux/lusha/DecisionMakersGrid";
 import type {
   LushaContact,
   LushaSession,
