@@ -28,6 +28,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useConfirm } from "@/hooks/useConfirm";
 import { useDryRunLogs, type DryRunLogEntry } from "@/hooks/useDryRunLogs";
 
 /**
@@ -40,6 +41,7 @@ export function DryRunLogsPanel() {
   const [provider, setProvider] = useState<string>("all");
   const [outcome, setOutcome] = useState<string>("all");
   const [query, setQuery] = useState("");
+  const confirm = useConfirm();
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -165,8 +167,14 @@ export function DryRunLogsPanel() {
                 size="sm"
                 variant="ghost"
                 className="h-7 gap-1 text-[11px] text-destructive hover:text-destructive"
-                onClick={() => {
-                  if (confirm("Limpar todos os logs locais?")) {
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: "Limpar todos os logs locais?",
+                    description: `Serão descartados ${logs.length} registros do console de dry-run. Exporte antes se precisar preservá-los.`,
+                    confirmLabel: "Limpar",
+                    variant: "destructive",
+                  });
+                  if (ok) {
                     clear();
                     toast({ title: "Logs limpos" });
                   }
