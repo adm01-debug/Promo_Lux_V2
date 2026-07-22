@@ -1,1 +1,98 @@
-aW1wb3J0IHsgdXNlU3RhdGUgfSBmcm9tICJyZWFjdCI7CmltcG9ydCB7IElucHV0T1RQLCBJbnB1dE9UUEdyb3VwLCBJbnB1dE9UUFNsb3QgfSBmcm9tICJAL2NvbXBvbmVudHMvdWkvaW5wdXQtb3RwIjsKaW1wb3J0IHsgQnV0dG9uIH0gZnJvbSAiQC9jb21wb25lbnRzL3VpL2J1dHRvbiI7CmltcG9ydCB7IENhcmQsIENhcmRDb250ZW50LCBDYXJkRGVzY3JpcHRpb24sIENhcmRIZWFkZXIsIENhcmRUaXRsZSB9IGZyb20gIkAvY29tcG9uZW50cy91aS9jYXJkIjsKaW1wb3J0IHsgQWxlcnQsIEFsZXJ0RGVzY3JpcHRpb24gfSBmcm9tICJAL2NvbXBvbmVudHMvdWkvYWxlcnQiOwppbXBvcnQgeyBCYWRnZSB9IGZyb20gIkAvY29tcG9uZW50cy91aS9iYWRnZSI7CmltcG9ydCB7IFNoaWVsZCwgQ29weSwgQ2hlY2tDaXJjbGUyLCBBbGVydENpcmNsZSwgUmVmcmVzaEN3IH0gZnJvbSAibHVjaWRlLXJlYWN0IjsKaW1wb3J0IHsgdXNlTUZBLCB0eXBlIE1GQUVucm9sbERhdGEgfSBmcm9tICJAL2hvb2tzL3VzZU1GQSI7CmltcG9ydCB7IHVzZVRvYXN0IH0gZnJvbSAiQC9ob29rcy91c2UtdG9hc3QiOwoKaW50ZXJmYWNlIE1GQUVucm9sbFByb3BzIHsKICBvblN1Y2Nlc3M/OiAoKSA9PiB2b2lkOwogIG9uQ2FuY2VsPzogKCkgPT4gdm9pZDsKfQoKdHlwZSBTdGVwID0gInN0YXJ0IiB8ICJzY2FuIiB8ICJ2ZXJpZnkiIHwgImRvbmUiOwoKZXhwb3J0IGZ1bmN0aW9uIE1GQUVucm9sbCh7IG9uU3VjY2Vzcywgb25DYW5jZWwgfTogTUZBRW5yb2xsUHJvcHMpIHsKICBjb25zdCB7IGVucm9sbCwgdmVyaWZ5LCBsb2FkaW5nLCBlcnJvciB9ID0gdXNlTUZBKCk7CiAgY29uc3QgeyB0b2FzdCB9ID0gdXNlVG9hc3QoKTsKICBjb25zdCBbc3RlcCwgc2V0U3RlcF0gPSB1c2VTdGF0ZTxTdGVwPigic3RhcnQiKTsKICBjb25zdCBbZW5yb2xsRGF0YSwgc2V0RW5yb2xsRGF0YV0gPSB1c2VTdGF0ZTxNRkFFbnJvbGxEYXRhIHwgbnVsbD4obnVsbCk7CiAgY29uc3QgW2NvZGUsIHNldENvZGVdID0gdXNlU3RhdGUoIiIpOwogIGNvbnN0IFtzZWNyZXRDb3BpZWQsIHNldFNlY3JldENvcGllZF0gPSB1c2VTdGF0ZShmYWxzZSk7CgogIGNvbnN0IGhhbmRsZVN0YXJ0RW5yb2xsID0gYXN5bmMgKCkgPT4gewogICAgY29uc3QgZGF0YSA9IGF3YWl0IGVucm9sbCgiQXV0ZW50aWNhZG9yIExVWCBJQSIpOwogICAgaWYgKGRhdGEpIHsKICAgICAgc2V0RW5yb2xsRGF0YShkYXRhKTsKICAgICAgc2V0U3RlcCgic2NhbiIpOwogICAgfQogIH07CgogIGNvbnN0IGhhbmRsZVZlcmlmeSA9IGFzeW5jICgpID0+IHsKICAgIGlmICghZW5yb2xsRGF0YSB8fCBjb2RlLmxlbmd0aCAhPT0gNikgcmV0dXJuOwogICAgY29uc3Qgb2sgPSBhd2FpdCB2ZXJpZnkoZW5yb2xsRGF0YS5pZCwgY29kZSk7CiAgICBpZiAob2spIHsKICAgICAgc2V0U3RlcCgiZG9uZSIpOwogICAgICB0b2FzdCh7IHRpdGxlOiAiTUZBIGF0aXZhZG8gY29tIHN1Y2Vzc28hIiwgZGVzY3JpcHRpb246ICJTdWEgY29udGEgYWdvcmEgZXhpZ2UgdmVyaWZpY2HDp8OjbyBlbSAyIGV0YXBhcy4iIH0pOwogICAgICBzZXRUaW1lb3V0KCgpID0+IG9uU3VjY2Vzcz8uKCksIDE1MDApOwogICAgfQogIH07CgogIGNvbnN0IGNvcHlTZWNyZXQgPSBhc3luYyAoKSA9PiB7CiAgICBpZiAoIWVucm9sbERhdGE/LnRvdHAuc2VjcmV0KSByZXR1cm47CiAgICBhd2FpdCBuYXZpZ2F0b3IuY2xpcGJvYXJkLndyaXRlVGV4dChlbnJvbGxEYXRhLnRvdHAuc2VjcmV0KTsKICAgIHNldFNlY3JldENvcGllZCh0cnVlKTsKICAgIHNldFRpbWVvdXQoKCkgPT4gc2V0U2VjcmV0Q29waWVkKGZhbHNlKSwgMjAwMCk7CiAgfTsKCiAgaWYgKHN0ZXAgPT09ICJzdGFydCIpIHsKICAgIHJldHVybiAoCiAgICAgIDxDYXJkIGNsYXNzTmFtZT0idy1mdWxsIG1heC13LW1kIj4KICAgICAgICA8Q2FyZEhlYWRlcj4KICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiI+CiAgICAgICAgICAgIDxTaGllbGQgY2xhc3NOYW1lPSJoLTUgdy01IHRleHQtYmx1ZS02MDAiIC8+CiAgICAgICAgICAgIDxDYXJkVGl0bGU+QXRpdmFyIEF1dGVudGljYcOnw6NvIGVtIDIgRmF0b3JlczwvQ2FyZFRpdGxlPgogICAgICAgICAgPC9kaXY+CiAgICAgICAgICA8Q2FyZERlc2NyaXB0aW9uPkFkaWNpb25lIHVtYSBjYW1hZGEgZXh0cmEgZGUgc2VndXJhbsOnYSBjb20gdW0gYXBsaWNhdGl2byBhdXRlbnRpY2Fkb3IuPC9DYXJkRGVzY3JpcHRpb24+CiAgICAgICAgPC9DYXJkSGVhZGVyPgogICAgICAgIDxDYXJkQ29udGVudCBjbGFzc05hbWU9ImZsZXggZmxleC1jb2wgZ2FwLTQiPgogICAgICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQtc20gdGV4dC1tdXRlZC1mb3JlZ3JvdW5kIHNwYWNlLXktMSI+CiAgICAgICAgICAgIDxwPuKciSBQcm90ZWdlIHN1YSBjb250YSBtZXNtbyBzZSBzdWEgc2VuaGEgZm9yIGNvbXByb21ldGlkYTwvcD4KICAgICAgICAgICAgPHA+4pyJIEZ1bmNpb25hIHNlbSBpbnRlcm5ldCBubyBzZXUgZGlzcG9zaXRpdm88L3A+CiAgICAgICAgICAgIDxwPuKciSBDb21wYXTDrXZlbCBjb20gcXVhbHF1ZXIgYXBwIFRPVFAgKEdvb2dsZSwgQXV0aHksIDFQYXNzd29yZCk8L3A+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGdhcC0yIj4KICAgICAgICAgICAgPEJ1dHRvbiBvbkNsaWNrPXtoYW5kbGVTdGFydEVucm9sbH0gZGlzYWJsZWQ9e2xvYWRpbmd9IGNsYXNzTmFtZT0iZmxleC0xIj4KICAgICAgICAgICAgICB7bG9hZGluZyA/IDxSZWZyZXNoQ3cgY2xhc3NOYW1lPSJoLTQgdy00IGFuaW1hdGUtc3BpbiBtci0yIiAvPiA6IG51bGx9CiAgICAgICAgICAgICAgQ29uZmlndXJhciBhZ29yYQogICAgICAgICAgICA8L0J1dHRvbj4KICAgICAgICAgICAge29uQ2FuY2VsICYmIDxCdXR0b24gdmFyaWFudD0ib3V0bGluZSIgb25DbGljaz17b25DYW5jZWx9PkNhbmNlbGFyPC9CdXR0b24+fQogICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9DYXJkQ29udGVudD4KICAgICAgPC9DYXJkPgogICAgKTsKICB9CgogIGlmIChzdGVwID09PSAic2NhbiIgJiYgZW5yb2xsRGF0YSkgewogICAgcmV0dXJuICgKICAgICAgPENhcmQgY2xhc3NOYW1lPSJ3LWZ1bGwgbWF4LXctbWQiPgogICAgICAgIDxDYXJkSGVhZGVyPgogICAgICAgICAgPENhcmRUaXRsZSBjbGFzc05hbWU9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIj4KICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPSJmbGV4IGgtNiB3LTYgaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIHJvdW5kZWQtZnVsbCBiZy1ibHVlLTEwMCB0ZXh0LWJsdWUtNjAwIHRleHQteHMgZm9udC1ib2xkIj4xPC9zcGFuPgogICAgICAgICAgICBFc2NhbmVhciBRUiBDb2RlCiAgICAgICAgICA8L0NhcmRUaXRsZT4KICAgICAgICAgIDxDYXJkRGVzY3JpcHRpb24+QWJyYSBvIGFwbGljYXRpdm8gYXV0ZW50aWNhZG9yIGUgZXNjYW5laWUgbyBRUiBjb2RlIGFiYWl4by48L0NhcmREZXNjcmlwdGlvbj4KICAgICAgICA8L0NhcmRIZWFkZXI+CiAgICAgICAgPENhcmRDb250ZW50IGNsYXNzTmFtZT0ic3BhY2UteS00Ij4KICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGp1c3RpZnktY2VudGVyIj4KICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImJvcmRlciByb3VuZGVkLWxnIHAtMyBiZy13aGl0ZSIgZGFuZ2Vyb3VzbHlTZXRJbm5lckhUTUw9e3sgX19odG1sOiBlbnJvbGxEYXRhLnRvdHAucXJfY29kZSB9fSBzdHlsZT17eyB3aWR0aDogMjAwLCBoZWlnaHQ6IDIwMCB9fSAvPgogICAgICAgICAgPC9kaXY+CiAgICAgICAgICA8ZGl2PgogICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQteHMgdGV4dC1tdXRlZC1mb3JlZ3JvdW5kIG1iLTEiPk91IGluc2lyYSBhIGNoYXZlIG1hbnVhbG1lbnRlOjwvcD4KICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIj4KICAgICAgICAgICAgICA8Y29kZSBjbGFzc05hbWU9ImZsZXgtMSB0ZXh0LXhzIGJnLW11dGVkIHB4LTMgcHktMiByb3VuZGVkIGZvbnQtbW9ubyBicmVhay1hbGwiPntlbnJvbGxEYXRhLnRvdHAuc2VjcmV0fTwvY29kZT4KICAgICAgICAgICAgICA8QnV0dG9uIHZhcmlhbnQ9Imdob3N0IiBzaXplPSJpY29uIiBvbkNsaWNrPXtjb3B5U2VjcmV0fT4KICAgICAgICAgICAgICAgIHtzZWNyZXRDb3BpZWQgPyA8Q2hlY2tDaXJjbGUyIGNsYXNzTmFtZT0iaC00IHctNCB0ZXh0LWdyZWVuLTUwMCIgLz4gOiA8Q29weSBjbGFzc05hbWU9Imgtm3HctNCIgLz59CiAgICAgICAgICAgICAgPC9CdXR0b24+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgPC9kaXY+CiAgICAgICAgICA8QnV0dG9uIG9uQ2xpY2s9eygpID0+IHNldFN0ZXAoInZlcmlmeSIpfSBjbGFzc05hbWU9InctZnVsbCI+CiAgICAgICAgICAgIErDoSBlc2NhbmVpZWkgJiM4MjE0OyBWZXJpZmljYXIgY8OzZGlnbwogICAgICAgICAgPC9CdXR0b24+CiAgICAgICAgPC9DYXJkQ29udGVudD4KICAgICAgPC9DYXJkPgogICAgKTsKICB9CgogIGlmIChzdGVwID09PSAidmVyaWZ5IikgewogICAgcmV0dXJuICgKICAgICAgPENhcmQgY2xhc3NOYW1lPSJ3LWZ1bGwgbWF4LXctbWQiPgogICAgICAgIDxDYXJkSGVhZGVyPgogICAgICAgICAgPENhcmRUaXRsZSBjbGFzc05hbWU9ImZsZXggaXRlbXMtY2VudGVyIGdhcC0yIj4KICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPSJmbGV4IGgtNiB3LTYgaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIHJvdW5kZWQtZnVsbCBiZy1ibHVlLTEwMCB0ZXh0LWJsdWUtNjAwIHRleHQteHMgZm9udC1ib2xkIj4yPC9zcGFuPgogICAgICAgICAgICBWZXJpZmljYXIgY8OzZGlnbwogICAgICAgICAgPC9DYXJkVGl0bGU+CiAgICAgICAgICA8Q2FyZERlc2NyaXB0aW9uPkluc2lyYSBvIGPDs2RpZ28gZGUgNiBkw61naXRvcyBleGliaWRvIG5vIGFwbGljYXRpdm8gYXV0ZW50aWNhZG9yLjwvQ2FyZERlc2NyaXB0aW9uPgogICAgICAgIDwvQ2FyZEhlYWRlcj4KICAgICAgICA8Q2FyZENvbnRlbnQgY2xhc3NOYW1lPSJzcGFjZS15LTQiPgogICAgICAgICAge2Vycm9yICYmICgKICAgICAgICAgICAgPEFsZXJ0IHZhcmlhbnQ9ImRlc3RydWN0aXZlIj4KICAgICAgICAgICAgICA8QWxlcnRDaXJjbGUgY2xhc3NOYW1lPSJoLTQgdy00IiAvPgogICAgICAgICAgICAgIDxBbGVydERlc2NyaXB0aW9uPntlcnJvcn08L0FsZXJ0RGVzY3JpcHRpb24+CiAgICAgICAgICAgIDwvQWxlcnQ+CiAgICAgICAgICApfQogICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXgganVzdGlmeS1jZW50ZXIiPgogICAgICAgICAgICA8SW5wdXRPVFAgbWF4TGVuZ3RoPXs2fSB2YWx1ZT17Y29kZX0gb25DaGFuZ2U9e3NldENvZGV9IGF1dG9Gb2N1cz4KICAgICAgICAgICAgICA8SW5wdXRPVFBHcm91cD4KICAgICAgICAgICAgICAgIHtbMCwgMSwgMiwgMywgNCwgNV0ubWFwKChpKSA9PiA8SW5wdXRPVFBTbG90IGtleT17aX0gaW5kZXg9e2l9IC8+KX0KICAgICAgICAgICAgICA8L0lucHV0T1RQR3JvdXA+CiAgICAgICAgICAgIDwvSW5wdXRPVFA+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIDxCdXR0b24gb25DbGljaz17aGFuZGxlVmVyaWZ5fSBkaXNhYmxlZD17bG9hZGluZyB8fCBjb2RlLmxlbmd0aCAhPT0gNn0gY2xhc3NOYW1lPSJ3LWZ1bGwiPgogICAgICAgICAgICB7bG9hZGluZyA/IDxSZWZyZXNoQ3cgY2xhc3NOYW1lPSJoLTQgdy00IGFuaW1hdGUtc3BpbiBtci0yIiAvPiA6IG51bGx9CiAgICAgICAgICAgIENvbmZpcm1hciBlIGF0aXZhciBNRkEKICAgICAgICAgIDwvQnV0dG9uPgogICAgICAgICAgPEJ1dHRvbiB2YXJpYW50PSJnaG9zdCIgc2l6ZT0ic20iIG9uQ2xpY2s9eygpID0+IHNldFN0ZXAoInNjYW4iKX0gY2xhc3NOYW1lPSJ3LWZ1bGwiPuKGkCBWb2x0YXIgYW8gUVIgY29kZTwvQnV0dG9uPgogICAgICAgIDwvQ2FyZENvbnRlbnQ+CiAgICAgIDwvQ2FyZD4KICAgICk7CiAgfQoKICByZXR1cm4gKAogICAgPENhcmQgY2xhc3NOYW1lPSJ3LWZ1bGwgbWF4LXctbWQiPgogICAgICA8Q2FyZENvbnRlbnQgY2xhc3NOYW1lPSJwdC04IHBiLTYgdGV4dC1jZW50ZXIgc3BhY2UteS0zIj4KICAgICAgICA8Q2hlY2tDaXJjbGUyIGNsYXNzTmFtZT0iaC0xMiB3LTEyIHRleHQtZ3JlZW4tNTAwIG14LWF1dG8iIC8+CiAgICAgICAgPGgzIGNsYXNzTmFtZT0idGV4dC1sZyBmb250LXNlbWlib2xkIj5NRkEgYXRpdmFkbyE8L2gzPgogICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LW11dGVkLWZvcmVncm91bmQiPlN1YSBjb250YSBhZ29yYSByZXF1ZXIgdmVyaWZpY2HDp8OjbyBlbSAyIGV0YXBhcyBhbyBmYXplciBsb2dpbi48L3A+CiAgICAgICAgPEJhZGdlIHZhcmlhbnQ9InNlY29uZGFyeSIgY2xhc3NOYW1lPSJ0ZXh0LWdyZWVuLTcwMCBiZy1ncmVlbi0xMDAiPk7DrXZlbCBkZSBzZWd1cmFuw6dhOiBBbHRvIChBQUwyKTwvQmFkZ2U+CiAgICAgIDwvQ2FyZENvbnRlbnQ+CiAgICA8L0NhcmQ+CiAgKTsKfQo=
+import { useState } from "react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Copy, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
+import { useMFA, type MFAEnrollData } from "@/hooks/useMFA";
+import { useToast } from "@/hooks/use-toast";
+
+interface MFAEnrollProps {
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+type Step = "start" | "scan" | "verify" | "done";
+
+export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
+  const { enroll, verify, loading, error } = useMFA();
+  const { toast } = useToast();
+  const [step, setStep] = useState<Step>("start");
+  const [enrollData, setEnrollData] = useState<MFAEnrollData | null>(null);
+  const [code, setCode] = useState("");
+  const [secretCopied, setSecretCopied] = useState(false);
+
+  const handleStartEnroll = async () => {
+    const data = await enroll("Autenticador LUX IA");
+    if (data) {
+      setEnrollData(data);
+      setStep("scan");
+    }
+  };
+
+  const handleVerify = async () => {
+    if (!enrollData || code.length !== 6) return;
+    const ok = await verify(enrollData.id, code);
+    if (ok) {
+      setStep("done");
+      toast({ title: "MFA ativado com sucesso!", description: "Sua conta agora exige verificaÃ§Ã£o em 2 etapas." });
+      setTimeout(() => onSuccess?.(), 1500);
+    }
+  };
+
+  const copySecret = async () => {
+    if (!enrollData?.totp.secret) return;
+    await navigator.clipboard.writeText(enrollData.totp.secret);
+    setSecretCopied(true);
+    setTimeout(() => setSecretCopied(false), 2000);
+  };
+
+  if (step === "start") {
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-blue-600" />
+            <CardTitle>Ativar AutenticaÃ§Ã£o em 2 Fatores</CardTitle>
+          </div>
+          <CardDescription>Adicione uma camada extra de seguranÃ§a com um aplicativo autenticador.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p>âœ‰ Protege sua conta mesmo se sua senha for comprometida</p>
+            <p>âœ‰ Funciona sem internet no seu dispositivo</p>
+            <p>âœ‰ CompatÃ­vel com qualquer app TOTP (Google, Authy, 1Password)</p>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={handleStartEnroll} disabled={loading} className="flex-1">
+              {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+              Configurar agora
+            </Button>
+            {onCancel && <Button variant="outline" onClick={onCancel}>Cancelar</Button>}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (step === "scan" && enrollData) {
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xs font-bold">1</span>
+            Escanear QR Code
+          </CardTitle>
+          <CardDescription>Abra o aplicativo autenticador e escaneie o QR code abaixo.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex justify-center">
+            <div className="border rounded-lg p-3 bg-white" dangerouslySetInnerHTML={{ __html: enrollData.totp.qr_code }} style={{ width: 200, height: 200 }} />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground mb-1">Ou insira a chave manualmente:</p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 text-xs bg-muted px-3 py-2 rounded font-mono break-all">{enrollData.totp.secret}</code>
+              <Button variant="ghost" size="icon" onClick={copySecret}>
+                {secretCopied ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <Copy className="h-›qÜ´Ðˆ€¼ùô(€€€€€€€€€€€€€€ð½	ÕÑÑ½¸ø(€€€€€€€€€€€€ð½‘¥Øø(€€€€€€€€€€ð½‘¥Øø(€€€€€€€€€€ñ	ÕÑÑ½¸½¹±¥¬õì ¤€ôøÍ•ÑMÑ•À ‰Ù•É¥™äˆ¥ô±…ÍÍ9…µ”ô‰Üµ™Õ±°ˆø(€€€€€€€€€€€+„•Í…¹•¥•¤€˜ŒàÈÄÐìY•É¥™¥…ÈÍ‘¥¼(€€€€€€€€€€ð½	ÕÑÑ½¸ø(€€€€€€€€ð½…É‘½¹Ñ•¹Ðø(€€€€€€ð½…Éø(€€€€¤ì(€ô((€¥˜€¡ÍÑ•À€ôôô€‰Ù•É¥™äˆ¤ì(€€€É•ÑÕÉ¸€ (€€€€€€ñ…É±…ÍÍ9…µ”ô‰Üµ™Õ±°µ…àµÜµµˆø(€€€€€€€€ñ…É‘!•…‘•Èø(€€€€€€€€€€ñ…É‘Q¥Ñ±”±…ÍÍ9…µ”ô‰™±•à¥Ñ•µÌµ•¹Ñ•È…À´Èˆø(€€€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰™±•à ´ØÜ´Ø¥Ñ•µÌµ•¹Ñ•È©ÕÍÑ¥™äµ•¹Ñ•ÈÉ½Õ¹‘•µ™Õ±°‰œµ‰±Õ”´ÄÀÀÑ•áÐµ‰±Õ”´ØÀÀÑ•áÐµáÌ™½¹Ðµ‰½±ˆøÈð½ÍÁ…¸ø(€€€€€€€€€€€Y•É¥™¥…ÈÍ‘¥¼(€€€€€€€€€€ð½…É‘Q¥Ñ±”ø(€€€€€€€€€€ñ…É‘•ÍÉ¥ÁÑ¥½¸ù%¹Í¥É„¼Í‘¥¼‘”€Ø“µ¥Ñ½Ì•á¥‰¥‘¼¹¼…Á±¥…Ñ¥Ù¼…ÕÑ•¹Ñ¥…‘½È¸ð½…É‘•ÍÉ¥ÁÑ¥½¸ø(€€€€€€€€ð½…É‘!•…‘•Èø(€€€€€€€€ñ…É‘½¹Ñ•¹Ð±…ÍÍ9…µ”ô‰ÍÁ…”µä´Ðˆø(€€€€€€€€€í•ÉÉ½È€˜˜€ (€€€€€€€€€€€€ñ±•ÉÐÙ…É¥…¹Ðô‰‘•ÍÑÉÕÑ¥Ù”ˆø(€€€€€€€€€€€€€€ñ±•ÉÑ¥É±”±…ÍÍ9…µ”ô‰ ´ÐÜ´Ðˆ€¼ø(€€€€€€€€€€€€€€ñ±•ÉÑ•ÍÉ¥ÁÑ¥½¸ùí•ÉÉ½Éôð½±•ÉÑ•ÍÉ¥ÁÑ¥½¸ø(€€€€€€€€€€€€ð½±•ÉÐø(€€€€€€€€€€¥ô(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰™±•à©ÕÍÑ¥™äµ•¹Ñ•Èˆø(€€€€€€€€€€€€ñ%¹ÁÕÑ=Q@µ…á1•¹Ñ õìÙôÙ…±Õ”õí½‘•ô½¹¡…¹”õíÍ•Ñ½‘•ô…ÕÑ½½ÕÌø(€€€€€€€€€€€€€€ñ%¹ÁÕÑ=QAÉ½ÕÀø(€€€€€€€€€€€€€€€ílÀ°€Ä°€È°€Ì°€Ð°€Õt¹µ…À ¡¤¤€ôø€ñ%¹ÁÕÑ=QAM±½Ð­•äõí¥ô¥¹‘•àõí¥ô€¼ø¥ô(€€€€€€€€€€€€€€ð½%¹ÁÕÑ=QAÉ½ÕÀø(€€€€€€€€€€€€ð½%¹ÁÕÑ=Q@ø(€€€€€€€€€€ð½‘¥Øø(€€€€€€€€€€ñ	ÕÑÑ½¸½¹±¥¬õí¡…¹‘±•Y•É¥™åô‘¥Í…‰±•õí±½…‘¥¹œñð½‘”¹±•¹Ñ €„ôô€Ùô±…ÍÍ9…µ”ô‰Üµ™Õ±°ˆø(€€€€€€€€€€€í±½…‘¥¹œ€ü€ñI•™É•Í¡Ü±…ÍÍ9…µ”ô‰ ´ÐÜ´Ð…¹¥µ…Ñ”µÍÁ¥¸µÈ´Èˆ€¼ø€è¹Õ±±ô(€€€€€€€€€€€½¹™¥Éµ…È”…Ñ¥Ù…È5(€€€€€€€€€€ð½	ÕÑÑ½¸ø(€€€€€€€€€€ñ	ÕÑÑ½¸Ù…É¥…¹Ðô‰¡½ÍÐˆÍ¥é”ô‰Í´ˆ½¹±¥¬õì ¤€ôøÍ•ÑMÑ•À ‰Í…¸ˆ¥ô±…ÍÍ9…µ”ô‰Üµ™Õ±°ˆûŠ@Y½±Ñ…È…¼EH½‘”ð½	ÕÑÑ½¸ø(€€€€€€€€ð½…É‘½¹Ñ•¹Ðø(€€€€€€ð½…Éø(€€€€¤ì(€ô((€É•ÑÕÉ¸€ (€€€€ñ…É±…ÍÍ9…µ”ô‰Üµ™Õ±°µ…àµÜµµˆø(€€€€€€ñ…É‘½¹Ñ•¹Ð±…ÍÍ9…µ”ô‰ÁÐ´àÁˆ´ØÑ•áÐµ•¹Ñ•ÈÍÁ…”µä´Ìˆø(€€€€€€€€ñ¡•­¥É±”È±…ÍÍ9…µ”ô‰ ´ÄÈÜ´ÄÈÑ•áÐµÉ••¸´ÔÀÀµàµ…ÕÑ¼ˆ€¼ø(€€€€€€€€ñ Ì±…ÍÍ9…µ”ô‰Ñ•áÐµ±œ™½¹ÐµÍ•µ¥‰½±ˆù5…Ñ¥Ù…‘¼„ð½ Ìø(€€€€€€€€ñÀ±…ÍÍ9…µ”ô‰Ñ•áÐµÍ´Ñ•áÐµµÕÑ•µ™½É•É½Õ¹ˆùMÕ„½¹Ñ„…½É„É•ÅÕ•ÈÙ•É¥™¥‡Ÿ¼•´€È•Ñ…Á…Ì…¼™…é•È±½¥¸¸ð½Àø(€€€€€€€€ñ	…‘”Ù…É¥…¹Ðô‰Í•½¹‘…Éäˆ±…ÍÍ9…µ”ô‰Ñ•áÐµÉ••¸´ÜÀÀ‰œµÉ••¸´ÄÀÀˆù;µÙ•°‘”Í•ÕÉ…»„è±Ñ¼€¡0È¤ð½	…‘”ø(€€€€€€ð½…É‘½¹Ñ•¹Ðø(€€€€ð½…Éø(€€¤ì)ô(base64: invalid input
