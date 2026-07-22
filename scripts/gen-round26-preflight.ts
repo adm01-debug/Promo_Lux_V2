@@ -79,9 +79,7 @@ const report = {
 };
 
 
-// Reajuste: Grupo A ok se cenário respeita target (backupInterval ≤ RPO_TARGET); nem todos os cenários testados atendem — força config recomendada
-// Interpretamos "pass" como: config recomendada garante RPO. Aqui reportamos taxa e usamos gate no B e C, e reportamos RPO como projeção.
-report.gate.overall_pass = report.groups.B_rto.pass && report.groups.C_brin_gain.pass;
+
 
 const out = "public/reports/round26-preflight.json";
 mkdirSync(dirname(out), { recursive: true });
