@@ -16,16 +16,61 @@ import { useActiveOrganization } from "@/contexts/active-org-context";
 import {
   useDlqReplay,
   useDlqReplayList,
+  useDlqMetrics,
   type DlqMotor,
 } from "@/hooks/useDlqReplay";
+
 
 interface MotorViewProps {
   motor: DlqMotor;
 }
 
+function KpiCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number | undefined;
+  tone: "default" | "warn" | "critical";
+}) {
+  const toneCls =
+    tone === "critical"
+      ? "border-destructive/40 text-destructive"
+      : tone === "warn"
+        ? "border-amber-500/40 text-amber-500"
+        : "border-border text-foreground";
+  return (
+    <div className={`rounded-md border ${toneCls} bg-card/40 px-3 py-2`}>
+      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="font-mono text-xl font-semibold">
+        {value === undefined ? "—" : value}
+      </div>
+    </div>
+  );
+}
+
+function MotorTabBadge({ motor }: { motor: DlqMotor }) {
+  const { data } = useDlqMetrics(motor);
+  const total = data?.total ?? 0;
+  if (total === 0) return null;
+  const critical = (data?.last1h ?? 0) > 5;
+  return (
+    <Badge
+      variant={critical ? "destructive" : "secondary"}
+      className="ml-1 h-5 min-w-[1.5rem] justify-center px-1.5 text-[10px] font-mono"
+    >
+      {total > 999 ? "999+" : total}
+    </Badge>
+  );
+}
+
+
+
 function MotorView({ motor }: MotorViewProps) {
   const { activeOrgId } = useActiveOrganization();
   const list = useDlqReplayList(motor, 50);
+  const metrics = useDlqMetrics(motor);
   const replay = useDlqReplay(motor);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [limit, setLimit] = useState(50);
@@ -33,6 +78,8 @@ function MotorView({ motor }: MotorViewProps) {
 
   const items = list.data ?? [];
   const allSelected = items.length > 0 && items.every((i) => selected.has(i.id));
+  const m = metrics.data;
+
 
   const toggleAll = () => {
     if (allSelected) {
@@ -78,7 +125,21 @@ function MotorView({ motor }: MotorViewProps) {
 
   return (
     <div className="space-y-4">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <KpiCard label="Total pendente" value={m?.total} tone="default" />
+        <KpiCard
+          label="Últimas 24h"
+          value={m?.last24h}
+          tone={(m?.last24h ?? 0) > 10 ? "warn" : "default"}
+        />
+        <KpiCard
+          label="Última hora"
+          value={m?.last1h}
+          tone={(m?.last1h ?? 0) > 5 ? "critical" : "default"}
+        />
+      </div>
       <div className="grid gap-3 md:grid-cols-3">
+
         <div className="space-y-1.5">
           <Label htmlFor={`${motor}-limit`} className="text-xs">
             Reprocessar N mais antigos
@@ -248,11 +309,14 @@ export function DLQReplayPanel() {
             <TabsTrigger value="instagram" className="gap-2">
               <Camera className="h-4 w-4" />
               Instagram
+              <MotorTabBadge motor="instagram" />
             </TabsTrigger>
             <TabsTrigger value="web" className="gap-2">
               <Globe className="h-4 w-4" />
               Web
+              <MotorTabBadge motor="web" />
             </TabsTrigger>
+
           </TabsList>
           <TabsContent value="instagram">
             <MotorView motor="instagram" />
