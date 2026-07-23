@@ -55,7 +55,8 @@ import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPol
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
 import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
 import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
-import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe } from "lucide-react";
+import { InstagramConnectionPanel } from "@/components/lux/monitoring/InstagramConnectionPanel";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
