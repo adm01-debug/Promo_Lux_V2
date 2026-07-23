@@ -165,7 +165,7 @@ export async function startActorRun(
   if (opts.mockMode) {
     const fault = resolveFault(actorId, actorInput);
     const runId = mockId("run");
-    const datasetId = mockId("ds");
+    const datasetId = runId.replace(/^run_/, "ds_");
 
     if (fault) {
       if (fault.kind === "rate_limit_429") throw429("startActorRun");
