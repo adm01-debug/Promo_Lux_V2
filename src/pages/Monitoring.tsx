@@ -443,6 +443,10 @@ const AutomationMonitoring = () => {
             <Globe className="h-4 w-4" />
             Web Scrape
           </TabsTrigger>
+          <TabsTrigger value="instagram" className="gap-2">
+            <Camera className="h-4 w-4" />
+            Instagram
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
