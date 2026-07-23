@@ -336,20 +336,32 @@ export async function getDatasetItems(
   opts: ApifyClientOptions,
 ): Promise<unknown[]> {
   if (opts.mockMode) {
+    MOCK_STATS.datasetsServed += 1;
+    bumpActor(actorId, "datasets");
     // Recupera fault por datasetId (ds_<runIdSuffix>) tentando reverter para runId.
     const runId = datasetId.replace(/^ds_/, "run_");
     const registered = runFaultRegistry.get(runId);
     const fault = registered?.fault ?? resolveFault(actorId, undefined);
 
-    if (fault?.kind === "rate_limit_429") throw429("getDatasetItems");
+    if (fault?.kind === "rate_limit_429") {
+      recordError({ at: new Date().toISOString(), stage: "getDatasetItems", actorId, kind: fault.kind, message: "rate limit exceeded (mock fault)" });
+      throw429("getDatasetItems");
+    }
     if (fault?.kind === "timeout") {
       await sleep(fault.timeoutMs ?? 50);
+      recordError({ at: new Date().toISOString(), stage: "getDatasetItems", actorId, kind: fault.kind, message: `timeout ${fault.timeoutMs ?? 50}ms` });
       throw new Error(`[apify-gateway timeout] getDatasetItems: exceeded ${fault.timeoutMs ?? 50}ms (mock fault)`);
     }
-    if (fault?.kind === "empty_dataset") return [];
+    if (fault?.kind === "empty_dataset") {
+      recordError({ at: new Date().toISOString(), stage: "getDatasetItems", actorId, kind: fault.kind, message: "empty dataset (mock fault)" });
+      return [];
+    }
 
     const fixture = MOCK_DATASET_FIXTURES[actorId] ?? MOCK_DATASET_FIXTURES["apify/instagram-profile-scraper"];
-    return fixture.slice(0, Math.max(1, Math.min(limit, fixture.length)));
+    const items = fixture.slice(0, Math.max(1, Math.min(limit, fixture.length)));
+    MOCK_STATS.itemsServed += items.length;
+    bumpActor(actorId, "items", items.length);
+    return items;
   }
 
   const response = await fetch(
