@@ -2,6 +2,17 @@ import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { normalizeCnpj, isValidCnpj } from "@/lib/cnpj";
 
+export interface CnpjPartner {
+  name: string | null;
+  role: string | null;
+  since: string | null;
+}
+
+export interface CnpjActivity {
+  code: string | null;
+  text: string | null;
+}
+
 export interface CnpjEnrichData {
   cnpj: string;
   name: string | null;
@@ -11,7 +22,11 @@ export interface CnpjEnrichData {
   equity: number | null;
   size: string | null;
   sector: string | null;
+  cnae_code: string | null;
+  cnae_text: string | null;
   activities: string[];
+  activities_full: CnpjActivity[];
+  members: CnpjPartner[];
   location: string | null;
   address: string | null;
   zip: string | null;
