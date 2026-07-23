@@ -83,7 +83,21 @@ function MotorView({ motor }: MotorViewProps) {
 
   return (
     <div className="space-y-4">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <KpiCard label="Total pendente" value={m?.total} tone="default" />
+        <KpiCard
+          label="Últimas 24h"
+          value={m?.last24h}
+          tone={(m?.last24h ?? 0) > 10 ? "warn" : "default"}
+        />
+        <KpiCard
+          label="Última hora"
+          value={m?.last1h}
+          tone={(m?.last1h ?? 0) > 5 ? "critical" : "default"}
+        />
+      </div>
       <div className="grid gap-3 md:grid-cols-3">
+
         <div className="space-y-1.5">
           <Label htmlFor={`${motor}-limit`} className="text-xs">
             Reprocessar N mais antigos
