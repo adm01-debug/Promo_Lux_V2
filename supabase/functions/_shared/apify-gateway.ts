@@ -230,19 +230,28 @@ export async function startActorRun(
   opts: ApifyClientOptions,
 ): Promise<ApifyRun> {
   if (opts.mockMode) {
+    MOCK_STATS.runsStarted += 1;
+    bumpActor(actorId, "runs");
     const fault = resolveFault(actorId, actorInput);
     const runId = mockId("run");
     const datasetId = runId.replace(/^run_/, "ds_");
 
     if (fault) {
-      if (fault.kind === "rate_limit_429") throw429("startActorRun");
+      MOCK_STATS.faultsInjected += 1;
+      if (fault.kind === "rate_limit_429") {
+        recordError({ at: new Date().toISOString(), stage: "startActorRun", actorId, kind: fault.kind, message: "rate limit exceeded (mock fault)" });
+        throw429("startActorRun");
+      }
       if (fault.kind === "timeout") {
         await sleep(fault.timeoutMs ?? 50);
+        recordError({ at: new Date().toISOString(), stage: "startActorRun", actorId, kind: fault.kind, message: `timeout ${fault.timeoutMs ?? 50}ms` });
         throw new Error(`[apify-gateway timeout] startActorRun: exceeded ${fault.timeoutMs ?? 50}ms (mock fault)`);
       }
       // actor_run_failed / empty_dataset → propaga via registry para etapas seguintes
       runFaultRegistry.set(runId, { actorId, fault });
       if (fault.kind === "actor_run_failed") {
+        MOCK_STATS.runsFailed += 1;
+        recordError({ at: new Date().toISOString(), stage: "startActorRun", actorId, kind: fault.kind, message: "actor run failed (mock fault)" });
         return {
           id: runId,
           actId: actorId,
@@ -254,6 +263,7 @@ export async function startActorRun(
       }
     }
 
+    MOCK_STATS.runsSucceeded += 1;
     return {
       id: runId,
       actId: actorId,
