@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
-import { ConfirmProvider, useConfirm } from "@/hooks/useConfirm";
+import { ConfirmProvider, useConfirm } from "@/hooks/confirm-context";
 
 function Harness({ onResult }: { onResult: (r: boolean) => void }) {
   const confirm = useConfirm();

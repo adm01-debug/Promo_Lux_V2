@@ -6,7 +6,7 @@ import { Trash2, Plus, Bell, Calendar as CalIcon } from "lucide-react";
 import { format, isPast, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDealTasks } from "@/hooks/useDeals";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useConfirm } from "@/hooks/confirm-context";
 import { cn } from "@/lib/utils";
 
 interface Props { dealId?: string | null; }

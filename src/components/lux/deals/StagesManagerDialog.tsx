@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Plus } from "lucide-react";
 import { useDealStages } from "@/hooks/useDeals";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useConfirm } from "@/hooks/confirm-context";
 
 interface Props { open: boolean; onOpenChange: (o: boolean) => void; }
 

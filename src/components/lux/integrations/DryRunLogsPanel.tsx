@@ -28,7 +28,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useConfirm } from "@/hooks/confirm-context";
 import { useDryRunLogs, type DryRunLogEntry } from "@/hooks/useDryRunLogs";
 
 /**
