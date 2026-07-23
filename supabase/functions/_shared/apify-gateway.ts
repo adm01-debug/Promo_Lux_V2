@@ -20,6 +20,89 @@ import {
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/apify";
 
+// ============================================================
+// Fault Injection (mock mode)
+// ============================================================
+//
+// Permite simular falhas determinísticas ou probabilísticas nos motores mock
+// do Apify, por tipo de actor e por estágio do ciclo de vida da run.
+//
+// Fontes de configuração (precedência decrescente):
+//   1. `actorInput._faults` — override por chamada (objeto FaultSpec).
+//   2. Env var `APIFY_MOCK_FAULTS` — JSON no formato:
+//        {
+//          "apify/instagram-profile-scraper": { "kind": "rate_limit_429", "probability": 1 },
+//          "*": { "kind": "empty_dataset" }
+//        }
+//   3. Sem falha (fixture normal).
+//
+// Tipos suportados:
+//   - "rate_limit_429"    → lança erro `[apify-gateway 429] ...` no start/dataset
+//   - "timeout"           → aguarda `timeoutMs` e lança "timeout" (default 50ms em teste)
+//   - "actor_run_failed"  → startActorRun retorna run FAILED (worker deve reagir)
+//   - "empty_dataset"     → getDatasetItems retorna [] independente do fixture
+
+export type FaultKind =
+  | "rate_limit_429"
+  | "timeout"
+  | "actor_run_failed"
+  | "empty_dataset";
+
+export interface FaultSpec {
+  kind: FaultKind;
+  /** 0..1, default 1 (sempre injeta). */
+  probability?: number;
+  /** duração do timeout em ms (kind=timeout). Default 50. */
+  timeoutMs?: number;
+}
+
+export interface FaultConfig {
+  /** por actorId; use "*" para catch-all. */
+  [actorId: string]: FaultSpec;
+}
+
+function parseEnvFaults(): FaultConfig {
+  const raw = Deno.env.get("APIFY_MOCK_FAULTS");
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw);
+    return typeof parsed === "object" && parsed !== null ? parsed as FaultConfig : {};
+  } catch {
+    return {};
+  }
+}
+
+function resolveFault(
+  actorId: string,
+  actorInput: Record<string, unknown> | undefined,
+): FaultSpec | null {
+  const inline = actorInput?._faults as FaultSpec | undefined;
+  if (inline && typeof inline === "object" && "kind" in inline) return inline;
+  const env = parseEnvFaults();
+  const spec = env[actorId] ?? env["*"];
+  if (!spec) return null;
+  const p = spec.probability ?? 1;
+  if (p < 1 && Math.random() > p) return null;
+  return spec;
+}
+
+// Cache do último fault por runId, para propagar no polling / dataset fetch
+// quando o worker separa as chamadas (start → poll → dataset).
+const runFaultRegistry = new Map<string, { actorId: string; fault: FaultSpec }>();
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((r) => setTimeout(r, ms));
+}
+
+function throw429(stage: string): never {
+  throw new Error(`[apify-gateway 429] ${stage}: rate limit exceeded (mock fault)`);
+}
+
+/** Exposto para testes. */
+export function _resetFaultRegistry(): void {
+  runFaultRegistry.clear();
+}
+
 export type ApifyRunStatus =
   | "READY"
   | "RUNNING"
