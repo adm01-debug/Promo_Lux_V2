@@ -293,11 +293,14 @@ export function DLQReplayPanel() {
             <TabsTrigger value="instagram" className="gap-2">
               <Camera className="h-4 w-4" />
               Instagram
+              <MotorTabBadge motor="instagram" />
             </TabsTrigger>
             <TabsTrigger value="web" className="gap-2">
               <Globe className="h-4 w-4" />
               Web
+              <MotorTabBadge motor="web" />
             </TabsTrigger>
+
           </TabsList>
           <TabsContent value="instagram">
             <MotorView motor="instagram" />
