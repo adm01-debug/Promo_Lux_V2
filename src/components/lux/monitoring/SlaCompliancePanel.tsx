@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Timer, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SlaAlertSettingsCard } from "./SlaAlertSettingsCard";
 
 type Row = {
   queue_kind: "scrape" | "web" | "instagram";
