@@ -185,7 +185,6 @@ export function SessionsPanel({
   useEffect(() => {
     setQ(urlQ);
     setStatus(urlStatus);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlQ, urlStatus]);
 
   // Reset do carregamento incremental quando os filtros mudam.
