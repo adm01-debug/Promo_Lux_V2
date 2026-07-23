@@ -2024,6 +2024,7 @@ export type Database = {
           next_run_at: string
           organization_id: string
           params: Json
+          priority: number
           status: string
           target_type: string
           target_value: string
@@ -2044,6 +2045,7 @@ export type Database = {
           next_run_at?: string
           organization_id: string
           params?: Json
+          priority?: number
           status?: string
           target_type: string
           target_value: string
@@ -2064,6 +2066,7 @@ export type Database = {
           next_run_at?: string
           organization_id?: string
           params?: Json
+          priority?: number
           status?: string
           target_type?: string
           target_value?: string
@@ -3310,6 +3313,45 @@ export type Database = {
         }
         Relationships: []
       }
+      qa_reaper_runs: {
+        Row: {
+          duration_ms: number | null
+          id: string
+          instagram_dead: number
+          instagram_requeued: number
+          ran_at: string
+          scrape_dead: number
+          scrape_requeued: number
+          stale_after_seconds: number
+          web_dead: number
+          web_requeued: number
+        }
+        Insert: {
+          duration_ms?: number | null
+          id?: string
+          instagram_dead?: number
+          instagram_requeued?: number
+          ran_at?: string
+          scrape_dead?: number
+          scrape_requeued?: number
+          stale_after_seconds: number
+          web_dead?: number
+          web_requeued?: number
+        }
+        Update: {
+          duration_ms?: number | null
+          id?: string
+          instagram_dead?: number
+          instagram_requeued?: number
+          ran_at?: string
+          scrape_dead?: number
+          scrape_requeued?: number
+          stale_after_seconds?: number
+          web_dead?: number
+          web_requeued?: number
+        }
+        Relationships: []
+      }
       qa_test_runs: {
         Row: {
           branch: string | null
@@ -3584,6 +3626,7 @@ export type Database = {
           next_run_at: string
           organization_id: string
           payload: Json
+          payload_hash: string | null
           priority: number
           scrape_job_id: string | null
           source: string
@@ -3604,6 +3647,7 @@ export type Database = {
           next_run_at?: string
           organization_id: string
           payload?: Json
+          payload_hash?: string | null
           priority?: number
           scrape_job_id?: string | null
           source?: string
@@ -3624,6 +3668,7 @@ export type Database = {
           next_run_at?: string
           organization_id?: string
           payload?: Json
+          payload_hash?: string | null
           priority?: number
           scrape_job_id?: string | null
           source?: string
@@ -4510,6 +4555,7 @@ export type Database = {
           next_run_at: string
           organization_id: string
           params: Json
+          priority: number
           status: string
           target_type: string
           target_value: string
@@ -4539,6 +4585,7 @@ export type Database = {
           next_run_at: string
           organization_id: string
           params: Json
+          priority: number
           status: string
           target_type: string
           target_value: string
@@ -4567,6 +4614,7 @@ export type Database = {
           next_run_at: string
           organization_id: string
           payload: Json
+          payload_hash: string | null
           priority: number
           scrape_job_id: string | null
           source: string
@@ -4988,6 +5036,27 @@ export type Database = {
         Returns: number
       }
       purge_soft_deleted: { Args: never; Returns: undefined }
+      reap_stuck_queue_tasks: {
+        Args: { p_stale_after_seconds?: number }
+        Returns: {
+          duration_ms: number | null
+          id: string
+          instagram_dead: number
+          instagram_requeued: number
+          ran_at: string
+          scrape_dead: number
+          scrape_requeued: number
+          stale_after_seconds: number
+          web_dead: number
+          web_requeued: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "qa_reaper_runs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       record_campaign_event: {
         Args: {
           _event_type: string
