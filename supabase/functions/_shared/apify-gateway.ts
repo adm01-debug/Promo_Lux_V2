@@ -259,6 +259,18 @@ export async function getDatasetItems(
   opts: ApifyClientOptions,
 ): Promise<unknown[]> {
   if (opts.mockMode) {
+    // Recupera fault por datasetId (ds_<runIdSuffix>) tentando reverter para runId.
+    const runId = datasetId.replace(/^ds_/, "run_");
+    const registered = runFaultRegistry.get(runId);
+    const fault = registered?.fault ?? resolveFault(actorId, undefined);
+
+    if (fault?.kind === "rate_limit_429") throw429("getDatasetItems");
+    if (fault?.kind === "timeout") {
+      await sleep(fault.timeoutMs ?? 50);
+      throw new Error(`[apify-gateway timeout] getDatasetItems: exceeded ${fault.timeoutMs ?? 50}ms (mock fault)`);
+    }
+    if (fault?.kind === "empty_dataset") return [];
+
     const fixture = MOCK_DATASET_FIXTURES[actorId] ?? MOCK_DATASET_FIXTURES["apify/instagram-profile-scraper"];
     return fixture.slice(0, Math.max(1, Math.min(limit, fixture.length)));
   }
