@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
 import { validateCompany } from "@/lib/schemas/company";
+import { useCnpjEnrich } from "@/hooks/useCnpjEnrich";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
