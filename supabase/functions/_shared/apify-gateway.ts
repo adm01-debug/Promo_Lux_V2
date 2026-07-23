@@ -221,10 +221,13 @@ export async function getRunStatus(
   opts: ApifyClientOptions,
 ): Promise<ApifyRun> {
   if (opts.mockMode) {
+    const registered = runFaultRegistry.get(runId);
+    const status: ApifyRunStatus =
+      registered?.fault.kind === "actor_run_failed" ? "FAILED" : "SUCCEEDED";
     return {
       id: runId,
-      actId: "mock",
-      status: "SUCCEEDED",
+      actId: registered?.actorId ?? "mock",
+      status,
       defaultDatasetId: runId.replace(/^run_/, "ds_"),
       startedAt: new Date().toISOString(),
       finishedAt: new Date().toISOString(),
