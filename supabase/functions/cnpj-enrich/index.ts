@@ -165,10 +165,6 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (cached && new Date(cached.expires_at).getTime() > Date.now()) {
-      await admin.rpc("increment").catch(() => {}); // no-op guard
-      admin.from("cnpj_enrich_cache")
-        .update({ hit_count: undefined })
-        .eq("cnpj", cnpjClean); // best-effort; not awaited
       if (cached.status === "not_found") {
         return json(404, { error: "cnpj_not_found", cached: true, trace_id: traceId });
       }
