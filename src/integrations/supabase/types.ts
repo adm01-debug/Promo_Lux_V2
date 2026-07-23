@@ -1058,6 +1058,105 @@ export type Database = {
         }
         Relationships: []
       }
+      cnpj_enrich_cache: {
+        Row: {
+          cnpj: string
+          expires_at: string
+          fetched_at: string
+          hit_count: number
+          payload: Json | null
+          source: string
+          status: string
+        }
+        Insert: {
+          cnpj: string
+          expires_at: string
+          fetched_at?: string
+          hit_count?: number
+          payload?: Json | null
+          source: string
+          status: string
+        }
+        Update: {
+          cnpj?: string
+          expires_at?: string
+          fetched_at?: string
+          hit_count?: number
+          payload?: Json | null
+          source?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      cnpj_enrich_queue: {
+        Row: {
+          attempts: number
+          cnpj: string
+          created_at: string
+          id: string
+          last_error: string | null
+          max_attempts: number
+          next_retry_at: string
+          requested_by: string | null
+          result: Json | null
+          source: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          cnpj: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          max_attempts?: number
+          next_retry_at?: string
+          requested_by?: string | null
+          result?: Json | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          cnpj?: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          max_attempts?: number
+          next_retry_at?: string
+          requested_by?: string | null
+          result?: Json | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cnpj_enrich_rate_state: {
+        Row: {
+          limit_per_minute: number
+          request_count: number
+          source: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          limit_per_minute?: number
+          request_count?: number
+          source: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          limit_per_minute?: number
+          request_count?: number
+          source?: string
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           business_status: string | null
@@ -4864,6 +4963,33 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      cnpj_claim_enrich_jobs: {
+        Args: { _limit?: number }
+        Returns: {
+          attempts: number
+          cnpj: string
+          created_at: string
+          id: string
+          last_error: string | null
+          max_attempts: number
+          next_retry_at: string
+          requested_by: string | null
+          result: Json | null
+          source: string | null
+          status: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "cnpj_enrich_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      cnpj_reserve_rate_slot: {
+        Args: { _limit_per_minute: number; _source: string }
+        Returns: boolean
       }
       complete_scrape_task: { Args: { _id: string }; Returns: undefined }
       complete_web_scrape_task: {
