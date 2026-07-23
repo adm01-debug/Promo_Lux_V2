@@ -35,6 +35,10 @@ export const AddCompanyDialog = () => {
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
   const [description, setDescription] = useState("");
+  const [address, setAddress] = useState("");
+  const [cnaeCode, setCnaeCode] = useState<string | null>(null);
+  const [members, setMembers] = useState<CnpjPartner[]>([]);
+  const [sideActivities, setSideActivities] = useState<CnpjActivity[]>([]);
 
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
