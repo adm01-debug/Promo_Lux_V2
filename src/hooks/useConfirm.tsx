@@ -13,10 +13,6 @@ import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 import { ConfirmContext, type ConfirmOptions } from "./confirm-context";
 
-// Re-export para preservar compatibilidade com imports existentes
-// (`import { useConfirm, type ConfirmOptions } from "@/hooks/useConfirm"`).
-export { useConfirm } from "./confirm-context";
-export type { ConfirmOptions } from "./confirm-context";
 
 type Resolver = (value: boolean) => void;
 
