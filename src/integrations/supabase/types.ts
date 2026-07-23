@@ -3839,6 +3839,75 @@ export type Database = {
         }
         Relationships: []
       }
+      sla_alert_history: {
+        Row: {
+          breach_rate: number
+          details: Json
+          id: string
+          p95_seconds: number | null
+          queue_kind: string
+          sample_size: number
+          sla_p95: number | null
+          triggered_at: string
+          window_hours: number
+        }
+        Insert: {
+          breach_rate: number
+          details?: Json
+          id?: string
+          p95_seconds?: number | null
+          queue_kind: string
+          sample_size: number
+          sla_p95?: number | null
+          triggered_at?: string
+          window_hours: number
+        }
+        Update: {
+          breach_rate?: number
+          details?: Json
+          id?: string
+          p95_seconds?: number | null
+          queue_kind?: string
+          sample_size?: number
+          sla_p95?: number | null
+          triggered_at?: string
+          window_hours?: number
+        }
+        Relationships: []
+      }
+      sla_alert_settings: {
+        Row: {
+          breach_pct: number
+          cooldown_hours: number
+          created_at: string
+          enabled: boolean
+          id: string
+          min_sample: number
+          updated_at: string
+          window_hours: number
+        }
+        Insert: {
+          breach_pct?: number
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          min_sample?: number
+          updated_at?: string
+          window_hours?: number
+        }
+        Update: {
+          breach_pct?: number
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          min_sample?: number
+          updated_at?: string
+          window_hours?: number
+        }
+        Relationships: []
+      }
       stakeholders: {
         Row: {
           avatar_url: string | null
