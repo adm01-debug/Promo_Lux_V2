@@ -458,10 +458,18 @@ const AutomationMonitoring = () => {
             <FlaskConical className="h-4 w-4" />
             Histórico QA
           </TabsTrigger>
+          <TabsTrigger value="reaper" className="gap-2">
+            <RotateCcw className="h-4 w-4" />
+            Reaper
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="qa-history" className="space-y-4">
           <QaHistoryPanel />
+        </TabsContent>
+
+        <TabsContent value="reaper" className="space-y-4">
+          <ReaperHistoryPanel />
         </TabsContent>
 
         <TabsContent value="dlq-replay" className="space-y-4">
