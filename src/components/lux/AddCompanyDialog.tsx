@@ -97,14 +97,38 @@ export const AddCompanyDialog = () => {
       if (!enriched) return;
       // Auto-preencher apenas campos vazios (não sobrescreve edição do usuário).
       if (enriched.name && !name.trim()) setName(enriched.name);
-      if (enriched.sector && !sector.trim()) setSector(enriched.sector);
+      if (enriched.sector && !sector.trim()) {
+        setSector(enriched.cnae_code ? `${enriched.sector} (CNAE ${enriched.cnae_code})` : enriched.sector);
+      }
       if (enriched.location && !location.trim()) {
         handleLocationChange(enriched.location);
       }
       if (enriched.email && !email.trim()) setEmail(enriched.email);
       if (enriched.phone && !phone.trim()) setPhone(enriched.phone);
       if (enriched.size && !employees.trim()) setEmployees(enriched.size);
-      if (enriched.address && !description.trim()) setDescription(enriched.address);
+      if (enriched.address) setAddress(enriched.address);
+      setCnaeCode(enriched.cnae_code);
+      setMembers(enriched.members ?? []);
+      setSideActivities(enriched.activities_full ?? []);
+      // Compõe uma descrição estruturada apenas se o usuário ainda não digitou nada.
+      if (!description.trim()) {
+        const parts: string[] = [];
+        if (enriched.alias && enriched.alias !== enriched.name) parts.push(`Nome fantasia: ${enriched.alias}`);
+        if (enriched.status) parts.push(`Situação: ${enriched.status}`);
+        if (enriched.founded) parts.push(`Fundada em ${enriched.founded}`);
+        if (enriched.address) parts.push(`Endereço: ${enriched.address}`);
+        if (enriched.cnae_code || enriched.cnae_text) {
+          parts.push(`CNAE principal: ${[enriched.cnae_code, enriched.cnae_text].filter(Boolean).join(" - ")}`);
+        }
+        if ((enriched.members ?? []).length > 0) {
+          const socios = enriched.members
+            .slice(0, 5)
+            .map((m) => (m.role ? `${m.name} (${m.role})` : m.name))
+            .join("; ");
+          parts.push(`Sócios: ${socios}${enriched.members.length > 5 ? " …" : ""}`);
+        }
+        if (parts.length) setDescription(parts.join(" • "));
+      }
       toast({
         title: "Empresa encontrada!",
         description: `Dados de "${enriched.name ?? enriched.cnpj}" preenchidos automaticamente.`,
