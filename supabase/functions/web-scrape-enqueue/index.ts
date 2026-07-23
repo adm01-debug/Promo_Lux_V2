@@ -21,7 +21,19 @@ const BodySchema = z.object({
   wait_for_ms: z.number().int().min(0).max(15000).default(0),
   max_bytes: z.number().int().min(1024).max(10 * 1024 * 1024).default(2 * 1024 * 1024),
   priority: z.number().int().min(0).max(10).default(0),
+  // SLA opcional (segundos). Se omitido é derivado abaixo por heurística.
+  sla_seconds: z.number().int().min(10).max(3600).optional(),
 });
+
+/**
+ * Deriva SLA para uma tarefa de scrape web a partir do payload.
+ * Base 30s + wait_for + 10s por MB de teto — cobre timeout do worker
+ * mais o custo esperado de extração/renderização.
+ */
+function deriveWebSla(wait_for_ms: number, max_bytes: number): number {
+  const base = 30 + Math.ceil(wait_for_ms / 1000) + Math.ceil((max_bytes / 1_000_000) * 10);
+  return Math.max(30, Math.min(1200, base));
+}
 
 function json(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
