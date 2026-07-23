@@ -94,6 +94,7 @@ export const AddCompanyDialog = () => {
     if (cnpjDebounceRef.current) clearTimeout(cnpjDebounceRef.current);
     const digits = value.replace(/\D+/g, "");
     if (digits.length !== 14) { resetCnpjEnrich(); return; }
+    if (!autoEnrichEnabled) { resetCnpjEnrich(); return; }
     cnpjDebounceRef.current = setTimeout(async () => {
       const enriched = await enrichCnpj(digits);
       if (!enriched) return;
