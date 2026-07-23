@@ -19,9 +19,18 @@ console.log(`R40 · cenários=${report.totalScenarios} · passing=${report.passi
 console.log(`  crítico=${bySev.critical} · warning=${bySev.warning} · info=${bySev.info}`);
 console.log(`  elapsed=${(performance.now() - t0).toFixed(0)}ms`);
 
-console.log("\nTop 10 gaps por severidade:");
-for (const g of report.gaps.slice(0, 10)) {
+console.log("\nTop 15 gaps por severidade:");
+for (const g of report.gaps.slice(0, 15)) {
+  const m = g.metrics;
   console.log(
-    `  [${g.severity.padEnd(8)}] ${g.scenarioId} · dlq=${(g.dlqRate * 100).toFixed(1)}% · sla=${(g.slaBreachRate * 100).toFixed(1)}% · p95=${g.p95ResolutionSecs.toFixed(0)}s`,
+    `  [${g.severity.padEnd(8)}] ${g.category.padEnd(14)} dlq=${(m.dlqRate * 100).toFixed(1)}% sla=${(m.slaBreachRate * 100).toFixed(1)}% p95=${m.p95ResolutionSecs.toFixed(0)}s · ${g.scenarioId}`,
   );
+}
+
+// Agrupa por categoria para direcionar melhorias
+const byCat: Record<string, number> = {};
+for (const g of report.gaps) byCat[g.category] = (byCat[g.category] ?? 0) + 1;
+console.log("\nGaps por categoria:");
+for (const [c, n] of Object.entries(byCat).sort((a, b) => b[1] - a[1])) {
+  console.log(`  ${c.padEnd(20)} ${n}`);
 }
