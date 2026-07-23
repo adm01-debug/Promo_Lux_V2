@@ -99,7 +99,7 @@ export function InstagramConnectionPanel() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <Instagram className="h-5 w-5 text-primary" />
+            <Camera className="h-5 w-5 text-primary" />
             Conexão do Motor de Instagram
           </h2>
           <p className="text-sm text-muted-foreground">
