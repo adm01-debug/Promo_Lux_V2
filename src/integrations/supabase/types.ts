@@ -1956,6 +1956,184 @@ export type Database = {
         }
         Relationships: []
       }
+      instagram_scrape_dead_letter: {
+        Row: {
+          attempts: number
+          created_at: string
+          error_class: string | null
+          first_seen_at: string
+          id: string
+          last_error: string | null
+          last_seen_at: string
+          organization_id: string
+          params: Json
+          queue_id: string
+          target_type: string
+          target_value: string
+        }
+        Insert: {
+          attempts: number
+          created_at?: string
+          error_class?: string | null
+          first_seen_at?: string
+          id?: string
+          last_error?: string | null
+          last_seen_at?: string
+          organization_id: string
+          params?: Json
+          queue_id: string
+          target_type: string
+          target_value: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          error_class?: string | null
+          first_seen_at?: string
+          id?: string
+          last_error?: string | null
+          last_seen_at?: string
+          organization_id?: string
+          params?: Json
+          queue_id?: string
+          target_type?: string
+          target_value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instagram_scrape_dead_letter_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      instagram_scrape_queue: {
+        Row: {
+          attempt: number
+          config_hash: string
+          correlation_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          next_run_at: string
+          organization_id: string
+          params: Json
+          status: string
+          target_type: string
+          target_value: string
+          trace_id: string
+          updated_at: string
+        }
+        Insert: {
+          attempt?: number
+          config_hash: string
+          correlation_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          next_run_at?: string
+          organization_id: string
+          params?: Json
+          status?: string
+          target_type: string
+          target_value: string
+          trace_id?: string
+          updated_at?: string
+        }
+        Update: {
+          attempt?: number
+          config_hash?: string
+          correlation_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          next_run_at?: string
+          organization_id?: string
+          params?: Json
+          status?: string
+          target_type?: string
+          target_value?: string
+          trace_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instagram_scrape_queue_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      instagram_scrape_results: {
+        Row: {
+          created_at: string
+          fetched_at: string
+          id: string
+          item_type: string
+          normalized: Json
+          organization_id: string
+          queue_id: string
+          raw: Json | null
+          target_type: string
+          target_value: string
+        }
+        Insert: {
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          item_type: string
+          normalized: Json
+          organization_id: string
+          queue_id: string
+          raw?: Json | null
+          target_type: string
+          target_value: string
+        }
+        Update: {
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          item_type?: string
+          normalized?: Json
+          organization_id?: string
+          queue_id?: string
+          raw?: Json | null
+          target_type?: string
+          target_value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instagram_scrape_results_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "instagram_scrape_results_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "instagram_scrape_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intent_signals: {
         Row: {
           company_id: string | null
@@ -4264,6 +4442,35 @@ export type Database = {
           current_count: number
           reset_at: string
         }[]
+      }
+      claim_instagram_job: {
+        Args: { p_batch_size?: number; p_worker_id: string }
+        Returns: {
+          attempt: number
+          config_hash: string
+          correlation_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          next_run_at: string
+          organization_id: string
+          params: Json
+          status: string
+          target_type: string
+          target_value: string
+          trace_id: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "instagram_scrape_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       claim_scrape_tasks: {
         Args: { _limit?: number; _worker?: string }
