@@ -56,6 +56,8 @@ import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineer
 import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
 import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
 import { InstagramConnectionPanel } from "@/components/lux/monitoring/InstagramConnectionPanel";
+import { DLQReplayPanel } from "@/components/lux/monitoring/DLQReplayPanel";
+import { RotateCcw } from "lucide-react";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
