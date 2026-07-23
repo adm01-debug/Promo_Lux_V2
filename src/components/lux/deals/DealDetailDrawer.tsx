@@ -9,7 +9,7 @@ import { Trash2, Phone, Mail as MailIcon, Calendar as CalIcon, FileText, Activit
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDeals, useDealActivities, useDealStages, type Deal, type DealActivity } from "@/hooks/useDeals";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useConfirm } from "@/hooks/confirm-context";
 import { DealTasksPanel } from "./DealTasksPanel";
 
 interface Props {

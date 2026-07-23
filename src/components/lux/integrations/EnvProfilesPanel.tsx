@@ -31,7 +31,7 @@ import {
   Globe,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useConfirm } from "@/hooks/useConfirm";
+import { useConfirm } from "@/hooks/confirm-context";
 import { useEnvProfiles, type EnvProfile } from "@/hooks/useEnvProfiles";
 
 interface EnvProfilesPanelProps {
