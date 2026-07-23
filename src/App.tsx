@@ -32,6 +32,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Monitoring = lazy(() => import("./pages/Monitoring"));
+const CnpjSettingsPage = lazy(() => import("./pages/CnpjSettingsPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -134,6 +135,7 @@ function AnimatedRoutes() {
         <Route path="/invite/:token" element={<PageTransition><AcceptInvite /></PageTransition>} />
         <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
         <Route path="/monitoring" element={<ProtectedRoute><PageTransition><Monitoring /></PageTransition></ProtectedRoute>} />
+        <Route path="/settings/cnpj" element={<ProtectedRoute><PageTransition><CnpjSettingsPage /></PageTransition></ProtectedRoute>} />
         <Route path="/lusha" element={<Navigate to="/?view=lusha" replace />} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>

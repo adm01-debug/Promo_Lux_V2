@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
 import { validateCompany } from "@/lib/schemas/company";
 import { useCnpjEnrich } from "@/hooks/useCnpjEnrich";
+import { useCnpjAutoEnrichSetting } from "@/hooks/useCnpjAutoEnrichSetting";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -46,6 +47,7 @@ export const AddCompanyDialog = () => {
   const cnpjDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { status: cnpjStatus, enrich: enrichCnpj, reset: resetCnpjEnrich } = useCnpjEnrich();
+  const { enabled: autoEnrichEnabled } = useCnpjAutoEnrichSetting();
 
   const reset = () => {
     setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
@@ -92,6 +94,7 @@ export const AddCompanyDialog = () => {
     if (cnpjDebounceRef.current) clearTimeout(cnpjDebounceRef.current);
     const digits = value.replace(/\D+/g, "");
     if (digits.length !== 14) { resetCnpjEnrich(); return; }
+    if (!autoEnrichEnabled) { resetCnpjEnrich(); return; }
     cnpjDebounceRef.current = setTimeout(async () => {
       const enriched = await enrichCnpj(digits);
       if (!enriched) return;
@@ -134,7 +137,7 @@ export const AddCompanyDialog = () => {
         description: `Dados de "${enriched.name ?? enriched.cnpj}" preenchidos automaticamente.`,
       });
     }, 600);
-  }, [enrichCnpj, resetCnpjEnrich, name, sector, location, email, phone, employees, description, handleLocationChange, toast]);
+  }, [enrichCnpj, resetCnpjEnrich, autoEnrichEnabled, name, sector, location, email, phone, employees, description, handleLocationChange, toast]);
 
 
   const handleSave = async () => {
