@@ -101,6 +101,73 @@ function throw429(stage: string): never {
 /** Exposto para testes. */
 export function _resetFaultRegistry(): void {
   runFaultRegistry.clear();
+  _resetMockStats();
+}
+
+// ============================================================
+// Mock Stats (health endpoint)
+// ============================================================
+interface MockErrorEntry {
+  at: string;
+  stage: "startActorRun" | "getRunStatus" | "getDatasetItems";
+  actorId: string;
+  kind: FaultKind | "unknown";
+  message: string;
+}
+
+const MOCK_STATS = {
+  runsStarted: 0,
+  runsSucceeded: 0,
+  runsFailed: 0,
+  datasetsServed: 0,
+  itemsServed: 0,
+  faultsInjected: 0 as number,
+  byActor: {} as Record<string, { runs: number; datasets: number; items: number; errors: number }>,
+  byFault: {} as Record<string, number>,
+  lastErrors: [] as MockErrorEntry[],
+};
+
+function bumpActor(actorId: string, key: "runs" | "datasets" | "items" | "errors", n = 1) {
+  const cur = MOCK_STATS.byActor[actorId] ?? { runs: 0, datasets: 0, items: 0, errors: 0 };
+  cur[key] += n;
+  MOCK_STATS.byActor[actorId] = cur;
+}
+
+function recordError(entry: MockErrorEntry) {
+  MOCK_STATS.lastErrors.unshift(entry);
+  if (MOCK_STATS.lastErrors.length > 20) MOCK_STATS.lastErrors.length = 20;
+  bumpActor(entry.actorId, "errors");
+  MOCK_STATS.byFault[entry.kind] = (MOCK_STATS.byFault[entry.kind] ?? 0) + 1;
+}
+
+export function getMockStats() {
+  return {
+    mock_mode: (Deno.env.get("APIFY_MOCK_MODE") ?? "").toLowerCase() === "true",
+    fault_config: parseEnvFaults(),
+    counters: {
+      runs_started: MOCK_STATS.runsStarted,
+      runs_succeeded: MOCK_STATS.runsSucceeded,
+      runs_failed: MOCK_STATS.runsFailed,
+      datasets_served: MOCK_STATS.datasetsServed,
+      items_served: MOCK_STATS.itemsServed,
+      faults_injected: MOCK_STATS.faultsInjected,
+    },
+    by_actor: MOCK_STATS.byActor,
+    by_fault: MOCK_STATS.byFault,
+    last_errors: MOCK_STATS.lastErrors,
+  };
+}
+
+export function _resetMockStats() {
+  MOCK_STATS.runsStarted = 0;
+  MOCK_STATS.runsSucceeded = 0;
+  MOCK_STATS.runsFailed = 0;
+  MOCK_STATS.datasetsServed = 0;
+  MOCK_STATS.itemsServed = 0;
+  MOCK_STATS.faultsInjected = 0;
+  MOCK_STATS.byActor = {};
+  MOCK_STATS.byFault = {};
+  MOCK_STATS.lastErrors = [];
 }
 
 export type ApifyRunStatus =
