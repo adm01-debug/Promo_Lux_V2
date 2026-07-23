@@ -80,6 +80,33 @@ export const AddCompanyDialog = () => {
     }, 800);
   }, []);
 
+  const handleCnpjChange = useCallback((value: string) => {
+    setCnpj(value);
+    setFieldErrors((prev) => { const { cnpj: _, ...rest } = prev; return rest; });
+    if (cnpjDebounceRef.current) clearTimeout(cnpjDebounceRef.current);
+    const digits = value.replace(/\D+/g, "");
+    if (digits.length !== 14) { resetCnpjEnrich(); return; }
+    cnpjDebounceRef.current = setTimeout(async () => {
+      const enriched = await enrichCnpj(digits);
+      if (!enriched) return;
+      // Auto-preencher apenas campos vazios (não sobrescreve edição do usuário).
+      if (enriched.name && !name.trim()) setName(enriched.name);
+      if (enriched.sector && !sector.trim()) setSector(enriched.sector);
+      if (enriched.location && !location.trim()) {
+        handleLocationChange(enriched.location);
+      }
+      if (enriched.email && !email.trim()) setEmail(enriched.email);
+      if (enriched.phone && !phone.trim()) setPhone(enriched.phone);
+      if (enriched.size && !employees.trim()) setEmployees(enriched.size);
+      if (enriched.address && !description.trim()) setDescription(enriched.address);
+      toast({
+        title: "Empresa encontrada!",
+        description: `Dados de "${enriched.name ?? enriched.cnpj}" preenchidos automaticamente.`,
+      });
+    }, 600);
+  }, [enrichCnpj, resetCnpjEnrich, name, sector, location, email, phone, employees, description, handleLocationChange, toast]);
+
+
   const handleSave = async () => {
     const result = validateCompany({ name, cnpj, sector, location, email, phone, website, linkedin_url: linkedinUrl, instagram_url: instagramUrl, employees, revenue, description });
     if (!result.success) {
