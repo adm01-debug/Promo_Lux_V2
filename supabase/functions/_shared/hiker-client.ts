@@ -15,13 +15,7 @@
  * Cada método devolve `{ items: NormalizedInstagramItem[], raw: unknown }`.
  */
 
-import {
-  normalizeProfile,
-  normalizePost,
-  normalizeHashtag,
-  normalizeComment,
-  type NormalizedInstagramItem,
-} from "./apify-fixtures.ts";
+import { MOCK_DATASET_FIXTURES, type NormalizedInstagramItem } from "./apify-fixtures.ts";
 
 const BASE_URL = "https://hikerapi.com";
 
