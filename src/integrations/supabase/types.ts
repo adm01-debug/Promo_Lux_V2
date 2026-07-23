@@ -4986,10 +4986,21 @@ export type Database = {
         }
         Returns: Json
       }
-      replay_web_dead_letter_batch: {
-        Args: { _limit?: number; _organization_id?: string }
-        Returns: number
-      }
+      replay_web_dead_letter_batch:
+        | {
+            Args: { _limit?: number; _organization_id?: string }
+            Returns: number
+          }
+        | {
+            Args: {
+              p_actor?: string
+              p_dlq_ids?: string[]
+              p_limit?: number
+              p_organization_id?: string
+              p_reason?: string
+            }
+            Returns: Json
+          }
       reset_circuit_breaker: {
         Args: { _service_name: string }
         Returns: {
