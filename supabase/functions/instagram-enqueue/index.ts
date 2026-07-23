@@ -68,6 +68,24 @@ Deno.serve(async (req) => {
   const maxAttempts = Math.max(1, Math.min(10, Number(params.max_attempts ?? 4)));
   const correlation_id = params.correlation_id ?? null;
 
+  // SLA sensível ao tipo de alvo e ao volume solicitado.
+  //   profile    → 60 + 2.0s/item   (custo por post fetchado)
+  //   posts      → 60 + 1.5s/item
+  //   hashtag    → 60 + 1.2s/item
+  //   comments   → 60 + 0.8s/item
+  //   override:  params.sla_seconds (10..3600)
+  const perItem: Record<InstagramTargetType, number> = {
+    profile: 2.0, posts: 1.5, hashtag: 1.2, comments: 0.8,
+  };
+  const derivedSla = Math.max(
+    30,
+    Math.min(3600, Math.round(60 + perItem[target_type as InstagramTargetType] * limit)),
+  );
+  const slaSeconds =
+    Number.isFinite(Number(params.sla_seconds))
+      ? Math.max(10, Math.min(3600, Number(params.sla_seconds)))
+      : derivedSla;
+
   const service = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
     auth: { persistSession: false },
   });
@@ -111,6 +129,7 @@ Deno.serve(async (req) => {
       params: { limit, ...params },
       config_hash,
       max_attempts: maxAttempts,
+      sla_seconds: slaSeconds,
       correlation_id,
       created_by: userId,
     })
