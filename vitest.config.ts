@@ -52,6 +52,16 @@ export default defineConfig({
           environment: "node",
           globals: true,
           include: ["supabase/functions/**/__tests__/**/*.test.ts"],
+          // Testes Deno-nativos (Deno.test + imports https://deno.land/...)
+          // não são executáveis pelo vitest/Node — devem rodar via
+          // `supabase--test_edge_functions` (deno test). Excluir aqui evita
+          // suites em vermelho no CI de unidade sem esconder os testes.
+          exclude: [
+            "**/gmaps-mapper.test.ts",
+            "**/hiker-normalize.test.ts",
+            "**/hiker-normalize-extra.test.ts",
+            "**/instagram-config-hash.test.ts",
+          ],
         },
       },
     ],
