@@ -245,24 +245,6 @@ export class HikerClient {
     return { items, raw, attempts };
   }
 
-  private async mockResult(
-    kind: "profile" | "posts" | "hashtag" | "comments",
-    value: string,
-    _limit?: number,
-  ): Promise<FetchResult> {
-    // Import dinâmico só quando em mock — evita puxar fixtures em produção.
-    const mod = await import("./apify-fixtures.ts");
-    switch (kind) {
-      case "profile":
-        return { items: [mod.fixtureProfile(value)], raw: null, attempts: 0 };
-      case "posts":
-        return { items: mod.fixturePosts(value), raw: null, attempts: 0 };
-      case "hashtag":
-        return { items: mod.fixtureHashtag(value), raw: null, attempts: 0 };
-      case "comments":
-        return { items: mod.fixtureComments(value), raw: null, attempts: 0 };
-    }
-  }
 }
 
 // ---------- Payload extractors (defensivos p/ variações do provedor) ----------
@@ -283,4 +265,168 @@ function extractComments(raw: unknown): any[] {
   if (Array.isArray(r.items)) return r.items as any[];
   if (Array.isArray(raw)) return raw as any[];
   return [];
+}
+
+// ---------- Normalizers (self-contained, defensive) ----------
+const num = (v: unknown): number | null => {
+  const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
+  return Number.isFinite(n) ? n : null;
+};
+const str = (v: unknown): string | null =>
+  typeof v === "string" && v.length ? v : null;
+const bool = (v: unknown): boolean | null =>
+  typeof v === "boolean" ? v : null;
+const iso = (v: unknown): string => {
+  if (typeof v === "number") return new Date(v * (v < 1e12 ? 1000 : 1)).toISOString();
+  if (typeof v === "string") {
+    const d = new Date(v);
+    if (!Number.isNaN(d.getTime())) return d.toISOString();
+  }
+  return new Date().toISOString();
+};
+const extractHashtags = (text: string | null): string[] =>
+  text ? Array.from(text.matchAll(/#([\p{L}0-9_]+)/gu)).map((m) => m[1].toLowerCase()) : [];
+const extractMentions = (text: string | null): string[] =>
+  text ? Array.from(text.matchAll(/@([A-Za-z0-9._]+)/g)).map((m) => m[1].toLowerCase()) : [];
+
+function baseItem(source: NormalizedInstagramItem["source_type"]): NormalizedInstagramItem {
+  return {
+    source_type: source,
+    username: null, fullName: null, bio: null,
+    followers: null, following: null, posts: null,
+    verified: null, isPrivate: null, isBusinessAccount: null,
+    profilePicUrl: null,
+    email: null, phone: null, website: null,
+    businessCategory: null, city: null, country: null,
+    post: null, media: null, comment: null,
+  };
+}
+
+export function normalizeProfile(raw: unknown): NormalizedInstagramItem {
+  const r = (raw ?? {}) as Record<string, any>;
+  const u = (r.user ?? r) as Record<string, any>;
+  const bio = str(u.biography ?? u.bio);
+  const item = baseItem("profile");
+  item.username = str(u.username);
+  item.fullName = str(u.full_name ?? u.fullName);
+  item.bio = bio;
+  item.followers = num(u.follower_count ?? u.followers_count ?? u.followers);
+  item.following = num(u.following_count ?? u.following);
+  item.posts = num(u.media_count ?? u.posts);
+  item.verified = bool(u.is_verified ?? u.verified);
+  item.isPrivate = bool(u.is_private ?? u.isPrivate);
+  item.isBusinessAccount = bool(u.is_business ?? u.is_business_account ?? u.isBusinessAccount);
+  item.profilePicUrl = str(u.profile_pic_url_hd ?? u.profile_pic_url ?? u.profilePicUrl);
+  item.email = str(u.public_email ?? u.email) ?? extractEmailFromBio(bio);
+  item.phone = str(u.public_phone_number ?? u.contact_phone_number ?? u.phone);
+  item.website = str(u.external_url ?? u.website);
+  item.businessCategory = str(u.category ?? u.business_category_name);
+  item.city = str(u.city_name);
+  item.country = null;
+  return item;
+}
+
+function extractEmailFromBio(bio: string | null): string | null {
+  if (!bio) return null;
+  const m = bio.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return m ? m[0].toLowerCase() : null;
+}
+
+export function normalizePost(raw: any): NormalizedInstagramItem {
+  const r = raw ?? {};
+  const caption = str(r.caption?.text ?? r.caption ?? r.edge_media_to_caption?.edges?.[0]?.node?.text);
+  const mediaType = classifyMedia(r);
+  const shortcode = str(r.code ?? r.shortcode) ?? "";
+  const item = baseItem("posts");
+  item.username = str(r.user?.username ?? r.owner?.username);
+  item.post = {
+    id: str(r.id ?? r.pk) ?? "",
+    shortcode,
+    url: shortcode ? `https://www.instagram.com/p/${shortcode}/` : "",
+    caption,
+    likes: num(r.like_count ?? r.likes),
+    commentsCount: num(r.comment_count ?? r.comments_count),
+    views: num(r.play_count ?? r.video_play_count ?? r.video_view_count ?? r.views),
+    timestamp: iso(r.taken_at ?? r.timestamp ?? r.taken_at_timestamp),
+    isReel: mediaType === "video" && Boolean(r.product_type === "clips" || r.is_reel),
+    isSponsored: Boolean(r.is_paid_partnership ?? r.isSponsored),
+    hashtags: extractHashtags(caption),
+    mentions: extractMentions(caption),
+    ownerUsername: str(r.user?.username ?? r.owner?.username),
+  };
+  item.media = {
+    type: mediaType,
+    displayUrl: str(r.image_versions2?.candidates?.[0]?.url ?? r.display_url ?? r.thumbnail_url),
+    videoUrl: str(r.video_versions?.[0]?.url ?? r.video_url),
+    thumbnailUrl: str(r.thumbnail_url ?? r.image_versions2?.candidates?.[0]?.url),
+    childCount: Array.isArray(r.carousel_media) ? r.carousel_media.length : null,
+    dimensions:
+      r.original_width && r.original_height
+        ? { width: Number(r.original_width), height: Number(r.original_height) }
+        : null,
+  };
+  return item;
+}
+
+function classifyMedia(r: any): "image" | "video" | "carousel" {
+  if (Array.isArray(r.carousel_media) && r.carousel_media.length > 1) return "carousel";
+  if (r.media_type === 2 || r.is_video || r.video_url || r.video_versions) return "video";
+  return "image";
+}
+
+export function normalizeHashtag(raw: any, tag: string): NormalizedInstagramItem {
+  const item = normalizePost(raw);
+  item.source_type = "hashtag";
+  if (item.post) {
+    item.post.hashtags = Array.from(new Set([tag.replace(/^#/, "").toLowerCase(), ...item.post.hashtags]));
+  }
+  return item;
+}
+
+export function normalizeComment(raw: any, parentMediaId: string): NormalizedInstagramItem {
+  const r = raw ?? {};
+  const text = str(r.text) ?? "";
+  const item = baseItem("comments");
+  item.username = str(r.user?.username ?? r.owner?.username);
+  item.comment = {
+    id: str(r.pk ?? r.id) ?? "",
+    text,
+    author: str(r.user?.username ?? r.owner?.username) ?? "",
+    likes: num(r.comment_like_count ?? r.like_count),
+    timestamp: iso(r.created_at ?? r.created_at_utc ?? r.timestamp),
+    parentCommentId: str(r.parent_comment_id ?? r.replied_to_comment_id) ?? null,
+    hashtags: extractHashtags(text),
+    mentions: extractMentions(text),
+  };
+  item.post = item.post ?? {
+    id: parentMediaId, shortcode: "", url: "", caption: null,
+    likes: null, commentsCount: null, views: null,
+    timestamp: iso(null), isReel: false, isSponsored: false,
+    hashtags: [], mentions: [], ownerUsername: null,
+  };
+  return item;
+}
+
+// ---------- Mock result (usa fixtures Apify-shape, roda pelos mesmos normalizers) ----------
+async function mockResult(
+  kind: "profile" | "posts" | "hashtag" | "comments",
+  value: string,
+  limit = 200,
+): Promise<FetchResult> {
+  const key = {
+    profile: "apify/instagram-profile-scraper",
+    posts: "apify/instagram-post-scraper",
+    hashtag: "apify/instagram-hashtag-scraper",
+    comments: "apify/instagram-comment-scraper",
+  }[kind];
+  const rows = (MOCK_DATASET_FIXTURES[key] ?? []).slice(0, limit);
+  if (!rows.length) return { items: [], raw: null, attempts: 0 };
+  let items: NormalizedInstagramItem[];
+  switch (kind) {
+    case "profile": items = rows.map((r) => normalizeProfile(r)); break;
+    case "posts": items = rows.map((r) => normalizePost(r)); break;
+    case "hashtag": items = rows.map((r) => normalizeHashtag(r, value)); break;
+    case "comments": items = rows.map((r) => normalizeComment(r, value)); break;
+  }
+  return { items, raw: rows, attempts: 0 };
 }
