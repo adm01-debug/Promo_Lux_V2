@@ -8,6 +8,7 @@ import { AlertOctagon, RefreshCw, Skull, Timer } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useReaperHistory } from "@/hooks/useReaperHistory";
+import { useReaperAlerts } from "@/hooks/useReaperAlerts";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,6 +17,7 @@ import { cn } from "@/lib/utils";
  */
 export function ReaperHistoryPanel() {
   const { data: runs, isLoading } = useReaperHistory(50);
+  const { data: alerts } = useReaperAlerts(10);
 
   const kpis = useMemo(() => {
     if (!runs?.length) return { totalRequeued: 0, totalDead: 0, avgDuration: 0, runsCount: 0 };
@@ -69,6 +71,43 @@ export function ReaperHistoryPanel() {
           </div>
         </CardContent>
       </Card>
+
+      {alerts && alerts.length > 0 && (
+        <Card className="border-destructive/40 bg-destructive/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <AlertOctagon className="h-4 w-4 text-destructive" />
+              Alertas recentes do reaper
+            </CardTitle>
+            <CardDescription>
+              Disparos automáticos quando o reaper detecta tarefas mortas ou fica sem execução.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm">
+              {alerts.map((a) => (
+                <li
+                  key={a.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-destructive/30 bg-background/40 px-3 py-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive">
+                      {a.reason === "dead_detected" ? "DLQ detectada" : "Sem execução"}
+                    </Badge>
+                    <span className="text-muted-foreground">
+                      {format(new Date(a.triggered_at), "dd/MM HH:mm", { locale: ptBR })}
+                    </span>
+                  </div>
+                  <div className="font-mono text-xs text-muted-foreground">
+                    IG {a.instagram_dead} · Scrape {a.scrape_dead} · Web {a.web_dead}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
 
       {isLoading ? (
         <Skeleton className="h-64 w-full" />
