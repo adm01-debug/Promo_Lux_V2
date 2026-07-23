@@ -101,6 +101,73 @@ function throw429(stage: string): never {
 /** Exposto para testes. */
 export function _resetFaultRegistry(): void {
   runFaultRegistry.clear();
+  _resetMockStats();
+}
+
+// ============================================================
+// Mock Stats (health endpoint)
+// ============================================================
+interface MockErrorEntry {
+  at: string;
+  stage: "startActorRun" | "getRunStatus" | "getDatasetItems";
+  actorId: string;
+  kind: FaultKind | "unknown";
+  message: string;
+}
+
+const MOCK_STATS = {
+  runsStarted: 0,
+  runsSucceeded: 0,
+  runsFailed: 0,
+  datasetsServed: 0,
+  itemsServed: 0,
+  faultsInjected: 0 as number,
+  byActor: {} as Record<string, { runs: number; datasets: number; items: number; errors: number }>,
+  byFault: {} as Record<string, number>,
+  lastErrors: [] as MockErrorEntry[],
+};
+
+function bumpActor(actorId: string, key: "runs" | "datasets" | "items" | "errors", n = 1) {
+  const cur = MOCK_STATS.byActor[actorId] ?? { runs: 0, datasets: 0, items: 0, errors: 0 };
+  cur[key] += n;
+  MOCK_STATS.byActor[actorId] = cur;
+}
+
+function recordError(entry: MockErrorEntry) {
+  MOCK_STATS.lastErrors.unshift(entry);
+  if (MOCK_STATS.lastErrors.length > 20) MOCK_STATS.lastErrors.length = 20;
+  bumpActor(entry.actorId, "errors");
+  MOCK_STATS.byFault[entry.kind] = (MOCK_STATS.byFault[entry.kind] ?? 0) + 1;
+}
+
+export function getMockStats() {
+  return {
+    mock_mode: (Deno.env.get("APIFY_MOCK_MODE") ?? "").toLowerCase() === "true",
+    fault_config: parseEnvFaults(),
+    counters: {
+      runs_started: MOCK_STATS.runsStarted,
+      runs_succeeded: MOCK_STATS.runsSucceeded,
+      runs_failed: MOCK_STATS.runsFailed,
+      datasets_served: MOCK_STATS.datasetsServed,
+      items_served: MOCK_STATS.itemsServed,
+      faults_injected: MOCK_STATS.faultsInjected,
+    },
+    by_actor: MOCK_STATS.byActor,
+    by_fault: MOCK_STATS.byFault,
+    last_errors: MOCK_STATS.lastErrors,
+  };
+}
+
+export function _resetMockStats() {
+  MOCK_STATS.runsStarted = 0;
+  MOCK_STATS.runsSucceeded = 0;
+  MOCK_STATS.runsFailed = 0;
+  MOCK_STATS.datasetsServed = 0;
+  MOCK_STATS.itemsServed = 0;
+  MOCK_STATS.faultsInjected = 0;
+  MOCK_STATS.byActor = {};
+  MOCK_STATS.byFault = {};
+  MOCK_STATS.lastErrors = [];
 }
 
 export type ApifyRunStatus =
@@ -163,19 +230,28 @@ export async function startActorRun(
   opts: ApifyClientOptions,
 ): Promise<ApifyRun> {
   if (opts.mockMode) {
+    MOCK_STATS.runsStarted += 1;
+    bumpActor(actorId, "runs");
     const fault = resolveFault(actorId, actorInput);
     const runId = mockId("run");
     const datasetId = runId.replace(/^run_/, "ds_");
 
     if (fault) {
-      if (fault.kind === "rate_limit_429") throw429("startActorRun");
+      MOCK_STATS.faultsInjected += 1;
+      if (fault.kind === "rate_limit_429") {
+        recordError({ at: new Date().toISOString(), stage: "startActorRun", actorId, kind: fault.kind, message: "rate limit exceeded (mock fault)" });
+        throw429("startActorRun");
+      }
       if (fault.kind === "timeout") {
         await sleep(fault.timeoutMs ?? 50);
+        recordError({ at: new Date().toISOString(), stage: "startActorRun", actorId, kind: fault.kind, message: `timeout ${fault.timeoutMs ?? 50}ms` });
         throw new Error(`[apify-gateway timeout] startActorRun: exceeded ${fault.timeoutMs ?? 50}ms (mock fault)`);
       }
       // actor_run_failed / empty_dataset → propaga via registry para etapas seguintes
       runFaultRegistry.set(runId, { actorId, fault });
       if (fault.kind === "actor_run_failed") {
+        MOCK_STATS.runsFailed += 1;
+        recordError({ at: new Date().toISOString(), stage: "startActorRun", actorId, kind: fault.kind, message: "actor run failed (mock fault)" });
         return {
           id: runId,
           actId: actorId,
@@ -187,6 +263,7 @@ export async function startActorRun(
       }
     }
 
+    MOCK_STATS.runsSucceeded += 1;
     return {
       id: runId,
       actId: actorId,
@@ -259,20 +336,32 @@ export async function getDatasetItems(
   opts: ApifyClientOptions,
 ): Promise<unknown[]> {
   if (opts.mockMode) {
+    MOCK_STATS.datasetsServed += 1;
+    bumpActor(actorId, "datasets");
     // Recupera fault por datasetId (ds_<runIdSuffix>) tentando reverter para runId.
     const runId = datasetId.replace(/^ds_/, "run_");
     const registered = runFaultRegistry.get(runId);
     const fault = registered?.fault ?? resolveFault(actorId, undefined);
 
-    if (fault?.kind === "rate_limit_429") throw429("getDatasetItems");
+    if (fault?.kind === "rate_limit_429") {
+      recordError({ at: new Date().toISOString(), stage: "getDatasetItems", actorId, kind: fault.kind, message: "rate limit exceeded (mock fault)" });
+      throw429("getDatasetItems");
+    }
     if (fault?.kind === "timeout") {
       await sleep(fault.timeoutMs ?? 50);
+      recordError({ at: new Date().toISOString(), stage: "getDatasetItems", actorId, kind: fault.kind, message: `timeout ${fault.timeoutMs ?? 50}ms` });
       throw new Error(`[apify-gateway timeout] getDatasetItems: exceeded ${fault.timeoutMs ?? 50}ms (mock fault)`);
     }
-    if (fault?.kind === "empty_dataset") return [];
+    if (fault?.kind === "empty_dataset") {
+      recordError({ at: new Date().toISOString(), stage: "getDatasetItems", actorId, kind: fault.kind, message: "empty dataset (mock fault)" });
+      return [];
+    }
 
     const fixture = MOCK_DATASET_FIXTURES[actorId] ?? MOCK_DATASET_FIXTURES["apify/instagram-profile-scraper"];
-    return fixture.slice(0, Math.max(1, Math.min(limit, fixture.length)));
+    const items = fixture.slice(0, Math.max(1, Math.min(limit, fixture.length)));
+    MOCK_STATS.itemsServed += items.length;
+    bumpActor(actorId, "items", items.length);
+    return items;
   }
 
   const response = await fetch(
