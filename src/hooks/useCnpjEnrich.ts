@@ -45,10 +45,15 @@ export function useCnpjEnrich() {
   }, []);
 
   const enrich = useCallback(async (cnpj: string): Promise<CnpjEnrichData | null> => {
-    const digits = cnpj.replace(/\D+/g, "");
-    if (digits.length !== 14) {
+    const digits = normalizeCnpj(cnpj);
+    if (!isValidCnpj(digits)) {
       setStatus("invalid");
       setData(null);
+      setErrorMsg(
+        digits.length !== 14
+          ? "CNPJ deve conter 14 dígitos."
+          : "CNPJ inválido (dígitos verificadores não conferem).",
+      );
       return null;
     }
 
