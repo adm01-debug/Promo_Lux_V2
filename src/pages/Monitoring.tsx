@@ -449,7 +449,15 @@ const AutomationMonitoring = () => {
             <Camera className="h-4 w-4" />
             Instagram
           </TabsTrigger>
+          <TabsTrigger value="dlq-replay" className="gap-2">
+            <RotateCcw className="h-4 w-4" />
+            DLQ Replay
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="dlq-replay" className="space-y-4">
+          <DLQReplayPanel />
+        </TabsContent>
 
         <TabsContent value="realtime" className="space-y-4">
           <AutomationsRealtimeView />
