@@ -5244,6 +5244,21 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      sla_compliance_stats: {
+        Args: { p_hours?: number }
+        Returns: {
+          breach_rate: number
+          breaches: number
+          p50_seconds: number
+          p95_seconds: number
+          p99_seconds: number
+          queue_kind: string
+          sample_size: number
+          sla_p50: number
+          sla_p95: number
+          with_sla: number
+        }[]
+      }
       system_recovery_health: { Args: never; Returns: Json }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {

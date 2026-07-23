@@ -59,6 +59,7 @@ import { InstagramConnectionPanel } from "@/components/lux/monitoring/InstagramC
 import { DLQReplayPanel } from "@/components/lux/monitoring/DLQReplayPanel";
 import { QaHistoryPanel } from "@/components/lux/monitoring/QaHistoryPanel";
 import { ReaperHistoryPanel } from "@/components/lux/monitoring/ReaperHistoryPanel";
+import { SlaCompliancePanel } from "@/components/lux/monitoring/SlaCompliancePanel";
 import { RotateCcw } from "lucide-react";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera, FlaskConical } from "lucide-react";
 
@@ -463,6 +464,10 @@ const AutomationMonitoring = () => {
             <RotateCcw className="h-4 w-4" />
             Reaper
           </TabsTrigger>
+          <TabsTrigger value="sla" className="gap-2">
+            <Timer className="h-4 w-4" />
+            SLA
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="qa-history" className="space-y-4">
@@ -471,6 +476,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="reaper" className="space-y-4">
           <ReaperHistoryPanel />
+        </TabsContent>
+
+        <TabsContent value="sla" className="space-y-4">
+          <SlaCompliancePanel />
         </TabsContent>
 
         <TabsContent value="dlq-replay" className="space-y-4">
