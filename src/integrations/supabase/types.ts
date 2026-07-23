@@ -4976,6 +4976,16 @@ export type Database = {
         Args: { _limit?: number; _organization_id?: string }
         Returns: number
       }
+      replay_instagram_dead_letter_batch: {
+        Args: {
+          p_actor?: string
+          p_dlq_ids?: string[]
+          p_limit?: number
+          p_organization_id?: string
+          p_reason?: string
+        }
+        Returns: Json
+      }
       replay_web_dead_letter_batch: {
         Args: { _limit?: number; _organization_id?: string }
         Returns: number
