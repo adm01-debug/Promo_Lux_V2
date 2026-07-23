@@ -16,8 +16,10 @@ import { useActiveOrganization } from "@/contexts/active-org-context";
 import {
   useDlqReplay,
   useDlqReplayList,
+  useDlqMetrics,
   type DlqMotor,
 } from "@/hooks/useDlqReplay";
+
 
 interface MotorViewProps {
   motor: DlqMotor;
