@@ -32,6 +32,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Monitoring = lazy(() => import("./pages/Monitoring"));
+const CnpjSettingsPage = lazy(() => import("./pages/CnpjSettingsPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
