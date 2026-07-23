@@ -90,6 +90,7 @@ export function SlaCompliancePanel() {
               </button>
             ))}
           </div>
+          <SlaAlertSettingsCard />
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching} className="h-8 gap-2">
             <RefreshCw className={cn("h-3.5 w-3.5", isFetching && "animate-spin")} />
           </Button>
