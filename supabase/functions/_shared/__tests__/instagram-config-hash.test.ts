@@ -81,29 +81,16 @@ Deno.test("canonicalizeConfig: chaves ordenadas alfabeticamente", () => {
   }));
 });
 
-Deno.test("computeConfigHash: valor de referência não regride (snapshot)", async () => {
-  // Se este hash mudar, dedup existente em produção quebra. Mudanças
-  // intencionais requerem migration/backfill do config_hash.
-  const h = await computeConfigHash({
+Deno.test("computeConfigHash: hash é sha256 hex válido e estável cross-run", async () => {
+  const cfg = {
     organization_id: "00000000-0000-0000-0000-000000000000",
-    target_type: "profile",
+    target_type: "profile" as const,
     target_value: "lux.ia",
     limit: 200,
-  });
-  assertEquals(h.length, 64);
-  assert(/^[0-9a-f]{64}$/.test(h));
-  // valor computado a partir da forma canônica atual
-  assertEquals(
-    h,
-    "3e5e13b19bd08fac96baa6a1fbc164a1e4bbef1a3b9dd0aad9d0eb5f8f7b0f9e"
-      .length === 64 ? h : h, // placeholder-safe; real check is stability across runs below
-  );
-  // estabilidade cross-run
-  const h2 = await computeConfigHash({
-    organization_id: "00000000-0000-0000-0000-000000000000",
-    target_type: "profile",
-    target_value: "LUX.IA",
-    limit: 200,
-  });
-  assertEquals(h, h2);
+  };
+  const h1 = await computeConfigHash(cfg);
+  const h2 = await computeConfigHash({ ...cfg, target_value: "LUX.IA" });
+  assertEquals(h1.length, 64);
+  assert(/^[0-9a-f]{64}$/.test(h1));
+  assertEquals(h1, h2, "case-insensitive no target_value");
 });
