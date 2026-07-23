@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
-import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Sparkles } from "lucide-react";
+import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Sparkles, Users, Briefcase, Home } from "lucide-react";
+import type { CnpjPartner, CnpjActivity } from "@/hooks/useCnpjEnrich";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +35,10 @@ export const AddCompanyDialog = () => {
   const [employees, setEmployees] = useState("");
   const [revenue, setRevenue] = useState("");
   const [description, setDescription] = useState("");
+  const [address, setAddress] = useState("");
+  const [cnaeCode, setCnaeCode] = useState<string | null>(null);
+  const [members, setMembers] = useState<CnpjPartner[]>([]);
+  const [sideActivities, setSideActivities] = useState<CnpjActivity[]>([]);
 
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -46,6 +51,7 @@ export const AddCompanyDialog = () => {
     setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
     setPhone(""); setWebsite(""); setLinkedinUrl(""); setInstagramUrl("");
     setEmployees(""); setRevenue(""); setDescription("");
+    setAddress(""); setCnaeCode(null); setMembers([]); setSideActivities([]);
     setGeoStatus("idle"); setGeoCoords(null); setFieldErrors({});
     resetCnpjEnrich();
   };
@@ -91,14 +97,38 @@ export const AddCompanyDialog = () => {
       if (!enriched) return;
       // Auto-preencher apenas campos vazios (não sobrescreve edição do usuário).
       if (enriched.name && !name.trim()) setName(enriched.name);
-      if (enriched.sector && !sector.trim()) setSector(enriched.sector);
+      if (enriched.sector && !sector.trim()) {
+        setSector(enriched.cnae_code ? `${enriched.sector} (CNAE ${enriched.cnae_code})` : enriched.sector);
+      }
       if (enriched.location && !location.trim()) {
         handleLocationChange(enriched.location);
       }
       if (enriched.email && !email.trim()) setEmail(enriched.email);
       if (enriched.phone && !phone.trim()) setPhone(enriched.phone);
       if (enriched.size && !employees.trim()) setEmployees(enriched.size);
-      if (enriched.address && !description.trim()) setDescription(enriched.address);
+      if (enriched.address) setAddress(enriched.address);
+      setCnaeCode(enriched.cnae_code);
+      setMembers(enriched.members ?? []);
+      setSideActivities(enriched.activities_full ?? []);
+      // Compõe uma descrição estruturada apenas se o usuário ainda não digitou nada.
+      if (!description.trim()) {
+        const parts: string[] = [];
+        if (enriched.alias && enriched.alias !== enriched.name) parts.push(`Nome fantasia: ${enriched.alias}`);
+        if (enriched.status) parts.push(`Situação: ${enriched.status}`);
+        if (enriched.founded) parts.push(`Fundada em ${enriched.founded}`);
+        if (enriched.address) parts.push(`Endereço: ${enriched.address}`);
+        if (enriched.cnae_code || enriched.cnae_text) {
+          parts.push(`CNAE principal: ${[enriched.cnae_code, enriched.cnae_text].filter(Boolean).join(" - ")}`);
+        }
+        if ((enriched.members ?? []).length > 0) {
+          const socios = enriched.members
+            .slice(0, 5)
+            .map((m) => (m.role ? `${m.name} (${m.role})` : m.name))
+            .join("; ");
+          parts.push(`Sócios: ${socios}${enriched.members.length > 5 ? " …" : ""}`);
+        }
+        if (parts.length) setDescription(parts.join(" • "));
+      }
       toast({
         title: "Empresa encontrada!",
         description: `Dados de "${enriched.name ?? enriched.cnpj}" preenchidos automaticamente.`,
@@ -257,6 +287,71 @@ export const AddCompanyDialog = () => {
             <Input placeholder="Ex: R$ 1M - 5M" value={revenue} onChange={(e) => { setRevenue(e.target.value); clearError("revenue"); }} className={`mt-1 ${fieldErrors.revenue ? "border-destructive" : ""}`} />
             <FieldError field="revenue" />
           </div>
+          <div className="col-span-2">
+            <Label className="flex items-center gap-1.5">
+              <Home className="h-3 w-3 text-muted-foreground" />
+              Endereço
+            </Label>
+            <Input
+              placeholder="Rua, número, bairro, cidade - UF, CEP"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="mt-1"
+            />
+            {address && cnpjStatus === "success" && (
+              <p className="text-[10px] text-muted-foreground mt-0.5">Preenchido automaticamente a partir do CNPJ. Edite se necessário.</p>
+            )}
+          </div>
+
+          {(cnaeCode || sideActivities.length > 0 || members.length > 0) && (
+            <div className="col-span-2 rounded-md border border-border/60 bg-muted/30 p-3 space-y-3">
+              {(cnaeCode || sideActivities.length > 0) && (
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                    <Briefcase className="h-3 w-3 text-primary" />
+                    CNAE
+                  </div>
+                  {cnaeCode && (
+                    <p className="text-[11px] text-muted-foreground mt-1 font-mono">Principal: {cnaeCode}</p>
+                  )}
+                  {sideActivities.length > 0 && (
+                    <ul className="mt-1 space-y-0.5">
+                      {sideActivities.slice(0, 4).map((a, i) => (
+                        <li key={`${a.code ?? "cnae"}-${i}`} className="text-[11px] text-muted-foreground">
+                          <span className="font-mono">{a.code ?? "—"}</span>
+                          {a.text && <span> — {a.text}</span>}
+                        </li>
+                      ))}
+                      {sideActivities.length > 4 && (
+                        <li className="text-[10px] text-muted-foreground/70">+{sideActivities.length - 4} atividades secundárias</li>
+                      )}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {members.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                    <Users className="h-3 w-3 text-primary" />
+                    Sócios ({members.length})
+                  </div>
+                  <ul className="mt-1 space-y-0.5">
+                    {members.slice(0, 5).map((m, i) => (
+                      <li key={`${m.name ?? "socio"}-${i}`} className="text-[11px] text-muted-foreground flex items-baseline gap-1.5">
+                        <span className="text-foreground">{m.name}</span>
+                        {m.role && <span className="text-[10px]">— {m.role}</span>}
+                      </li>
+                    ))}
+                    {members.length > 5 && (
+                      <li className="text-[10px] text-muted-foreground/70">+{members.length - 5} outros sócios</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="col-span-2">
             <Label>Descrição</Label>
             <Input placeholder="Breve resumo sobre a empresa..." value={description} onChange={(e) => { setDescription(e.target.value); clearError("description"); }} className={`mt-1 ${fieldErrors.description ? "border-destructive" : ""}`} />

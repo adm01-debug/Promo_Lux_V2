@@ -58,7 +58,16 @@ interface CnpjaAddress {
 }
 interface CnpjaResponse {
   taxId?: string;
-  company?: { name?: string; equity?: number; size?: { text?: string } };
+  company?: {
+    name?: string;
+    equity?: number;
+    size?: { text?: string };
+    members?: Array<{
+      person?: { name?: string; taxId?: string };
+      role?: { text?: string };
+      since?: string;
+    }>;
+  };
   alias?: string;
   founded?: string;
   status?: { text?: string };
@@ -82,17 +91,33 @@ function formatCnpj(cnpj: string): string {
   return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
 }
 
+function formatCnaeCode(id?: number): string | null {
+  if (!id) return null;
+  const s = String(id).padStart(7, "0");
+  // 7 dígitos → 0000-0/00
+  return `${s.slice(0, 4)}-${s.slice(4, 5)}/${s.slice(5)}`;
+}
+
 function normalize(raw: CnpjaResponse, cnpjClean: string) {
   const addr = raw.address ?? {};
   const locationParts = [addr.city, addr.state].filter(Boolean);
   const fullAddress = [
     addr.street && `${addr.street}${addr.number ? `, ${addr.number}` : ""}`,
+    addr.details,
     addr.district,
     addr.city && addr.state ? `${addr.city} - ${addr.state}` : addr.city || addr.state,
     addr.zip,
   ]
     .filter(Boolean)
     .join(", ");
+
+  const members = (raw.company?.members ?? [])
+    .map((m) => ({
+      name: m.person?.name ?? null,
+      role: m.role?.text ?? null,
+      since: m.since ?? null,
+    }))
+    .filter((m) => m.name);
 
   return {
     cnpj: formatCnpj(cnpjClean),
@@ -103,9 +128,15 @@ function normalize(raw: CnpjaResponse, cnpjClean: string) {
     equity: raw.company?.equity ?? null,
     size: raw.company?.size?.text ?? null,
     sector: raw.mainActivity?.text ?? null,
+    cnae_code: formatCnaeCode(raw.mainActivity?.id),
+    cnae_text: raw.mainActivity?.text ?? null,
     activities: (raw.sideActivities ?? [])
       .map((a) => a.text)
       .filter((t): t is string => !!t),
+    activities_full: (raw.sideActivities ?? [])
+      .map((a) => ({ code: formatCnaeCode(a.id), text: a.text ?? null }))
+      .filter((a) => a.code || a.text),
+    members,
     location: locationParts.join(" - ") || null,
     address: fullAddress || null,
     zip: addr.zip ?? null,
@@ -113,6 +144,7 @@ function normalize(raw: CnpjaResponse, cnpjClean: string) {
     email: raw.emails?.[0]?.address ?? null,
   };
 }
+
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
