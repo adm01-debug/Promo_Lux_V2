@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
-import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Sparkles } from "lucide-react";
+import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Sparkles, Users, Briefcase, Home } from "lucide-react";
+import type { CnpjPartner, CnpjActivity } from "@/hooks/useCnpjEnrich";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
