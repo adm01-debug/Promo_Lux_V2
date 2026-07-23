@@ -25,6 +25,32 @@ interface MotorViewProps {
   motor: DlqMotor;
 }
 
+function KpiCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number | undefined;
+  tone: "default" | "warn" | "critical";
+}) {
+  const toneCls =
+    tone === "critical"
+      ? "border-destructive/40 text-destructive"
+      : tone === "warn"
+        ? "border-amber-500/40 text-amber-500"
+        : "border-border text-foreground";
+  return (
+    <div className={`rounded-md border ${toneCls} bg-card/40 px-3 py-2`}>
+      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="font-mono text-xl font-semibold">
+        {value === undefined ? "—" : value}
+      </div>
+    </div>
+  );
+}
+
+
 function MotorView({ motor }: MotorViewProps) {
   const { activeOrgId } = useActiveOrganization();
   const list = useDlqReplayList(motor, 50);
