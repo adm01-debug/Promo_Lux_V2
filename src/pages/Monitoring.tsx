@@ -464,6 +464,10 @@ const AutomationMonitoring = () => {
             <RotateCcw className="h-4 w-4" />
             Reaper
           </TabsTrigger>
+          <TabsTrigger value="sla" className="gap-2">
+            <Timer className="h-4 w-4" />
+            SLA
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="qa-history" className="space-y-4">
