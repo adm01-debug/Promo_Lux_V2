@@ -1,8 +1,18 @@
 import { z } from "zod";
+import { isValidCnpj, normalizeCnpj } from "@/lib/cnpj";
 
 export const companySchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(200, "Máximo 200 caracteres"),
-  cnpj: z.string().max(20, "Máximo 20 caracteres").optional().or(z.literal("")),
+  cnpj: z
+    .string()
+    .max(20, "Máximo 20 caracteres")
+    .optional()
+    .or(z.literal(""))
+    .refine(
+      (val) => !val || isValidCnpj(val),
+      "CNPJ inválido (14 dígitos e verificadores)",
+    )
+    .transform((val) => (val ? normalizeCnpj(val) : val)),
   sector: z.string().max(100, "Máximo 100 caracteres").optional().or(z.literal("")),
   location: z.string().max(200, "Máximo 200 caracteres").optional().or(z.literal("")),
   email: z.union([
