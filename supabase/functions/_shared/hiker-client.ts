@@ -276,18 +276,22 @@ const str = (v: unknown): string | null =>
   typeof v === "string" && v.length ? v : null;
 const bool = (v: unknown): boolean | null =>
   typeof v === "boolean" ? v : null;
+const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+const strArr = (v: unknown): string[] =>
+  arr(v).map((x) => (typeof x === "string" ? x : "")).filter(Boolean);
 const iso = (v: unknown): string => {
   if (typeof v === "number") return new Date(v * (v < 1e12 ? 1000 : 1)).toISOString();
   if (typeof v === "string") {
     const d = new Date(v);
     if (!Number.isNaN(d.getTime())) return d.toISOString();
   }
-  return new Date().toISOString();
+  return new Date(0).toISOString();
 };
 const extractHashtags = (text: string | null): string[] =>
   text ? Array.from(text.matchAll(/#([\p{L}0-9_]+)/gu)).map((m) => m[1].toLowerCase()) : [];
 const extractMentions = (text: string | null): string[] =>
   text ? Array.from(text.matchAll(/@([A-Za-z0-9._]+)/g)).map((m) => m[1].toLowerCase()) : [];
+const uniq = (xs: string[]): string[] => Array.from(new Set(xs.filter(Boolean)));
 
 function baseItem(source: NormalizedInstagramItem["source_type"]): NormalizedInstagramItem {
   return {
@@ -302,6 +306,38 @@ function baseItem(source: NormalizedInstagramItem["source_type"]): NormalizedIns
   };
 }
 
+function extractEmailFromBio(bio: string | null): string | null {
+  if (!bio) return null;
+  const m = bio.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return m ? m[0].toLowerCase() : null;
+}
+
+function extractPhoneFromBio(bio: string | null): string | null {
+  if (!bio) return null;
+  const m = bio.match(/\+?\d[\d\s().-]{7,}\d/);
+  return m ? m[0].replace(/[^\d+]/g, "") : null;
+}
+
+/** Dispatcher unificado — usado pelo worker e pelo modo mock. */
+export function normalize(
+  sourceType: NormalizedInstagramItem["source_type"],
+  rawItem: unknown,
+  ctx: { hashtag?: string; parentMediaId?: string } = {},
+): NormalizedInstagramItem {
+  switch (sourceType) {
+    case "profile":
+      return normalizeProfile(rawItem);
+    case "posts":
+      return normalizePost(rawItem);
+    case "hashtag":
+      return normalizeHashtag(rawItem, ctx.hashtag ?? "");
+    case "comments":
+      return normalizeComment(rawItem, ctx.parentMediaId ?? "");
+    default:
+      return baseItem("posts");
+  }
+}
+
 export function normalizeProfile(raw: unknown): NormalizedInstagramItem {
   const r = (raw ?? {}) as Record<string, any>;
   const u = (r.user ?? r) as Record<string, any>;
@@ -310,99 +346,154 @@ export function normalizeProfile(raw: unknown): NormalizedInstagramItem {
   item.username = str(u.username);
   item.fullName = str(u.full_name ?? u.fullName);
   item.bio = bio;
-  item.followers = num(u.follower_count ?? u.followers_count ?? u.followers);
-  item.following = num(u.following_count ?? u.following);
-  item.posts = num(u.media_count ?? u.posts);
+  item.followers = num(u.follower_count ?? u.followers_count ?? u.followersCount ?? u.followers);
+  item.following = num(u.following_count ?? u.followsCount ?? u.following);
+  item.posts = num(u.media_count ?? u.postsCount ?? u.posts);
   item.verified = bool(u.is_verified ?? u.verified);
-  item.isPrivate = bool(u.is_private ?? u.isPrivate);
+  item.isPrivate = bool(u.is_private ?? u.private ?? u.isPrivate);
   item.isBusinessAccount = bool(u.is_business ?? u.is_business_account ?? u.isBusinessAccount);
-  item.profilePicUrl = str(u.profile_pic_url_hd ?? u.profile_pic_url ?? u.profilePicUrl);
-  item.email = str(u.public_email ?? u.email) ?? extractEmailFromBio(bio);
-  item.phone = str(u.public_phone_number ?? u.contact_phone_number ?? u.phone);
-  item.website = str(u.external_url ?? u.website);
-  item.businessCategory = str(u.category ?? u.business_category_name);
-  item.city = str(u.city_name);
-  item.country = null;
-  return item;
-}
-
-function extractEmailFromBio(bio: string | null): string | null {
-  if (!bio) return null;
-  const m = bio.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-  return m ? m[0].toLowerCase() : null;
-}
-
-export function normalizePost(raw: any): NormalizedInstagramItem {
-  const r = raw ?? {};
-  const caption = str(r.caption?.text ?? r.caption ?? r.edge_media_to_caption?.edges?.[0]?.node?.text);
-  const mediaType = classifyMedia(r);
-  const shortcode = str(r.code ?? r.shortcode) ?? "";
-  const item = baseItem("posts");
-  item.username = str(r.user?.username ?? r.owner?.username);
-  item.post = {
-    id: str(r.id ?? r.pk) ?? "",
-    shortcode,
-    url: shortcode ? `https://www.instagram.com/p/${shortcode}/` : "",
-    caption,
-    likes: num(r.like_count ?? r.likes),
-    commentsCount: num(r.comment_count ?? r.comments_count),
-    views: num(r.play_count ?? r.video_play_count ?? r.video_view_count ?? r.views),
-    timestamp: iso(r.taken_at ?? r.timestamp ?? r.taken_at_timestamp),
-    isReel: mediaType === "video" && Boolean(r.product_type === "clips" || r.is_reel),
-    isSponsored: Boolean(r.is_paid_partnership ?? r.isSponsored),
-    hashtags: extractHashtags(caption),
-    mentions: extractMentions(caption),
-    ownerUsername: str(r.user?.username ?? r.owner?.username),
-  };
-  item.media = {
-    type: mediaType,
-    displayUrl: str(r.image_versions2?.candidates?.[0]?.url ?? r.display_url ?? r.thumbnail_url),
-    videoUrl: str(r.video_versions?.[0]?.url ?? r.video_url),
-    thumbnailUrl: str(r.thumbnail_url ?? r.image_versions2?.candidates?.[0]?.url),
-    childCount: Array.isArray(r.carousel_media) ? r.carousel_media.length : null,
-    dimensions:
-      r.original_width && r.original_height
-        ? { width: Number(r.original_width), height: Number(r.original_height) }
-        : null,
-  };
+  item.profilePicUrl = str(u.profile_pic_url_hd ?? u.profilePicUrlHD ?? u.profile_pic_url ?? u.profilePicUrl);
+  item.email = str(u.public_email ?? u.publicEmail ?? u.email) ?? extractEmailFromBio(bio);
+  item.phone =
+    str(u.public_phone_number ?? u.publicPhoneNumber ?? u.contact_phone_number ?? u.phone) ??
+    extractPhoneFromBio(bio);
+  item.website = str(u.external_url ?? u.externalUrl ?? u.website);
+  item.businessCategory = str(u.category ?? u.business_category_name ?? u.businessCategoryName);
+  item.city = str(u.city_name ?? u.city);
+  item.country = str(u.country ?? u.countryBlock);
   return item;
 }
 
 function classifyMedia(r: any): "image" | "video" | "carousel" {
-  if (Array.isArray(r.carousel_media) && r.carousel_media.length > 1) return "carousel";
-  if (r.media_type === 2 || r.is_video || r.video_url || r.video_versions) return "video";
+  const t = typeof r.type === "string" ? r.type.toLowerCase() : "";
+  const children = arr(r.carousel_media).length || arr(r.childPosts).length;
+  if (t === "sidecar" || t === "carousel" || children > 1) return "carousel";
+  if (
+    t === "video" ||
+    r.media_type === 2 ||
+    r.is_video ||
+    r.video_url ||
+    r.videoUrl ||
+    Array.isArray(r.video_versions)
+  ) return "video";
   return "image";
 }
 
-export function normalizeHashtag(raw: any, tag: string): NormalizedInstagramItem {
-  const item = normalizePost(raw);
+export function normalizePost(raw: unknown): NormalizedInstagramItem {
+  const r = (raw ?? {}) as Record<string, any>;
+  const caption = str(
+    r.caption?.text ?? r.caption ?? r.edge_media_to_caption?.edges?.[0]?.node?.text,
+  );
+  const mediaType = classifyMedia(r);
+  const shortcode = str(r.code ?? r.shortcode ?? r.shortCode) ?? "";
+  const owner = str(r.user?.username ?? r.owner?.username ?? r.ownerUsername);
+  const isReel = Boolean(
+    r.product_type === "clips" ||
+      r.productType === "clips" ||
+      r.is_reel ||
+      (typeof r.url === "string" && r.url.includes("/reel/")),
+  );
+  const rawHashtags = uniq([...strArr(r.hashtags).map((s) => s.toLowerCase()), ...extractHashtags(caption)]);
+  const rawMentions = uniq([...strArr(r.mentions).map((s) => s.toLowerCase()), ...extractMentions(caption)]);
+  const item = baseItem("posts");
+  item.username = owner;
+  item.post = {
+    id: str(r.id ?? r.pk) ?? "",
+    shortcode,
+    url:
+      str(r.url) ??
+      (shortcode
+        ? `https://www.instagram.com/${isReel ? "reel" : "p"}/${shortcode}/`
+        : ""),
+    caption: caption,
+    likes: num(r.like_count ?? r.likes ?? r.likesCount),
+    commentsCount: num(r.comment_count ?? r.comments_count ?? r.commentsCount),
+    views: num(
+      r.play_count ??
+        r.video_play_count ??
+        r.videoPlayCount ??
+        r.video_view_count ??
+        r.videoViewCount ??
+        r.views,
+    ),
+    timestamp: iso(r.taken_at ?? r.timestamp ?? r.taken_at_timestamp),
+    isReel,
+    isSponsored: Boolean(r.is_paid_partnership ?? r.isSponsored ?? false),
+    hashtags: rawHashtags,
+    mentions: rawMentions,
+    ownerUsername: owner,
+  };
+  const childCount =
+    arr(r.carousel_media).length || arr(r.childPosts).length || null;
+  const width = num(r.original_width ?? r.dimensionsWidth);
+  const height = num(r.original_height ?? r.dimensionsHeight);
+  item.media = {
+    type: mediaType,
+    displayUrl: str(
+      r.image_versions2?.candidates?.[0]?.url ??
+        r.display_url ??
+        r.displayUrl ??
+        r.thumbnail_url ??
+        r.thumbnailUrl,
+    ),
+    videoUrl: str(r.video_versions?.[0]?.url ?? r.video_url ?? r.videoUrl),
+    thumbnailUrl: str(
+      r.thumbnail_url ??
+        r.thumbnailUrl ??
+        r.image_versions2?.candidates?.[0]?.url ??
+        r.display_url ??
+        r.displayUrl,
+    ),
+    childCount: mediaType === "carousel" ? (childCount ?? 0) : (childCount ?? null),
+    dimensions:
+      width !== null && height !== null ? { width, height } : null,
+  };
+  return item;
+}
+
+export function normalizeHashtag(raw: unknown, tag: string): NormalizedInstagramItem {
+  const r = (raw ?? {}) as Record<string, any>;
+  const item = normalizePost(r);
   item.source_type = "hashtag";
+  const t = (str(r.hashtag) ?? tag ?? "").replace(/^#/, "").toLowerCase();
   if (item.post) {
-    item.post.hashtags = Array.from(new Set([tag.replace(/^#/, "").toLowerCase(), ...item.post.hashtags]));
+    item.post.hashtags = uniq(t ? [t, ...item.post.hashtags] : item.post.hashtags);
   }
   return item;
 }
 
-export function normalizeComment(raw: any, parentMediaId: string): NormalizedInstagramItem {
-  const r = raw ?? {};
+export function normalizeComment(raw: unknown, parentMediaId: string): NormalizedInstagramItem {
+  const r = (raw ?? {}) as Record<string, any>;
   const text = str(r.text) ?? "";
+  const author = str(r.user?.username ?? r.owner?.username ?? r.ownerUsername) ?? "";
   const item = baseItem("comments");
-  item.username = str(r.user?.username ?? r.owner?.username);
+  item.username = author || null;
   item.comment = {
     id: str(r.pk ?? r.id) ?? "",
     text,
-    author: str(r.user?.username ?? r.owner?.username) ?? "",
-    likes: num(r.comment_like_count ?? r.like_count),
+    author,
+    likes: num(r.comment_like_count ?? r.like_count ?? r.likesCount),
     timestamp: iso(r.created_at ?? r.created_at_utc ?? r.timestamp),
-    parentCommentId: str(r.parent_comment_id ?? r.replied_to_comment_id) ?? null,
-    hashtags: extractHashtags(text),
-    mentions: extractMentions(text),
+    parentCommentId: str(r.parent_comment_id ?? r.parentCommentId ?? r.replied_to_comment_id),
+    hashtags: uniq([...strArr(r.hashtags).map((s) => s.toLowerCase()), ...extractHashtags(text)]),
+    mentions: uniq([...strArr(r.mentions).map((s) => s.toLowerCase()), ...extractMentions(text)]),
   };
-  item.post = item.post ?? {
-    id: parentMediaId, shortcode: "", url: "", caption: null,
-    likes: null, commentsCount: null, views: null,
-    timestamp: iso(null), isReel: false, isSponsored: false,
-    hashtags: [], mentions: [], ownerUsername: null,
+  const postUrl = str(r.postUrl);
+  const shortFromUrl = postUrl ? postUrl.match(/\/(?:p|reel)\/([^/]+)/)?.[1] ?? "" : "";
+  item.post = {
+    id: parentMediaId || "",
+    shortcode: shortFromUrl,
+    url: postUrl ?? "",
+    caption: null,
+    likes: null,
+    commentsCount: null,
+    views: null,
+    timestamp: iso(null),
+    isReel: false,
+    isSponsored: false,
+    hashtags: [],
+    mentions: [],
+    ownerUsername: null,
   };
   return item;
 }
