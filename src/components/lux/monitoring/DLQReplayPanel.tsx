@@ -50,6 +50,22 @@ function KpiCard({
   );
 }
 
+function MotorTabBadge({ motor }: { motor: DlqMotor }) {
+  const { data } = useDlqMetrics(motor);
+  const total = data?.total ?? 0;
+  if (total === 0) return null;
+  const critical = (data?.last1h ?? 0) > 5;
+  return (
+    <Badge
+      variant={critical ? "destructive" : "secondary"}
+      className="ml-1 h-5 min-w-[1.5rem] justify-center px-1.5 text-[10px] font-mono"
+    >
+      {total > 999 ? "999+" : total}
+    </Badge>
+  );
+}
+
+
 
 function MotorView({ motor }: MotorViewProps) {
   const { activeOrgId } = useActiveOrganization();
