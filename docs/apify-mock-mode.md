@@ -17,10 +17,10 @@ Nesse modo, o wrapper `supabase/functions/_shared/apify-gateway.ts`:
 - mint sintético de `run_id` + `dataset_id`;
 - retorna `status=SUCCEEDED` no primeiro `getRunStatus` (poll converge no tick 1);
 - serve fixtures determinísticos de `apify-fixtures.ts` conforme o `actor_id`:
-  - `apify/instagram-profile-scraper` → 1 perfil (`lux.ia`);
-  - `apify/instagram-post-scraper` → 1 post + 1 reel;
-  - `apify/instagram-hashtag-scraper` → 1 post em `#marketing`;
-  - `apify/instagram-comment-scraper` → 2 comentários.
+  - `apify/instagram-profile-scraper` → 2 perfis (business com contato + creator verificado sem publicEmail, força extração via bio);
+  - `apify/instagram-post-scraper` → 4 posts cobrindo **imagem única, reel, carousel (4 slides mistos) e post patrocinado**;
+  - `apify/instagram-hashtag-scraper` → 3 top posts em `#marketing` (imagem, reel, carousel);
+  - `apify/instagram-comment-scraper` → 3 comentários (2 root + 1 reply via `parentCommentId`), com mentions e hashtags.
 
 Fixtures reproduzem o payload **bruto** que o Apify devolveria, então o
 normalizador do worker (`NormalizedInstagramItem`) roda no mesmo caminho do
