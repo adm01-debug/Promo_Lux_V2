@@ -76,9 +76,10 @@ function MotorView({ motor }: MotorViewProps) {
   const [limit, setLimit] = useState(50);
   const [reason, setReason] = useState("");
 
-  const items = list.data ?? [];
+  const items = useMemo(() => list.data ?? [], [list.data]);
   const allSelected = items.length > 0 && items.every((i) => selected.has(i.id));
   const m = metrics.data;
+
 
 
   const toggleAll = () => {
