@@ -3403,6 +3403,78 @@ export type Database = {
         }
         Relationships: []
       }
+      reaper_alert_history: {
+        Row: {
+          consecutive: number
+          details: Json
+          id: string
+          instagram_dead: number
+          last_run_at: string | null
+          reason: string
+          scrape_dead: number
+          triggered_at: string
+          web_dead: number
+        }
+        Insert: {
+          consecutive?: number
+          details?: Json
+          id?: string
+          instagram_dead?: number
+          last_run_at?: string | null
+          reason: string
+          scrape_dead?: number
+          triggered_at?: string
+          web_dead?: number
+        }
+        Update: {
+          consecutive?: number
+          details?: Json
+          id?: string
+          instagram_dead?: number
+          last_run_at?: string | null
+          reason?: string
+          scrape_dead?: number
+          triggered_at?: string
+          web_dead?: number
+        }
+        Relationships: []
+      }
+      reaper_alert_settings: {
+        Row: {
+          consecutive: number
+          cooldown_hours: number
+          created_at: string
+          enabled: boolean
+          id: string
+          min_dead_per_run: number
+          no_run_hours: number
+          singleton: boolean
+          updated_at: string
+        }
+        Insert: {
+          consecutive?: number
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          min_dead_per_run?: number
+          no_run_hours?: number
+          singleton?: boolean
+          updated_at?: string
+        }
+        Update: {
+          consecutive?: number
+          cooldown_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          min_dead_per_run?: number
+          no_run_hours?: number
+          singleton?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       retry_policy_advisories: {
         Row: {
           applied_at: string | null
