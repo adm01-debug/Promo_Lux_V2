@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
 import { validateCompany } from "@/lib/schemas/company";
 import { useCnpjEnrich } from "@/hooks/useCnpjEnrich";
+import { useCnpjAutoEnrichSetting } from "@/hooks/useCnpjAutoEnrichSetting";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
