@@ -28,6 +28,7 @@ interface MotorViewProps {
 function MotorView({ motor }: MotorViewProps) {
   const { activeOrgId } = useActiveOrganization();
   const list = useDlqReplayList(motor, 50);
+  const metrics = useDlqMetrics(motor);
   const replay = useDlqReplay(motor);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [limit, setLimit] = useState(50);
@@ -35,6 +36,8 @@ function MotorView({ motor }: MotorViewProps) {
 
   const items = list.data ?? [];
   const allSelected = items.length > 0 && items.every((i) => selected.has(i.id));
+  const m = metrics.data;
+
 
   const toggleAll = () => {
     if (allSelected) {
