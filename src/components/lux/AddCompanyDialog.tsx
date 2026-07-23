@@ -288,6 +288,71 @@ export const AddCompanyDialog = () => {
             <FieldError field="revenue" />
           </div>
           <div className="col-span-2">
+            <Label className="flex items-center gap-1.5">
+              <Home className="h-3 w-3 text-muted-foreground" />
+              Endereço
+            </Label>
+            <Input
+              placeholder="Rua, número, bairro, cidade - UF, CEP"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="mt-1"
+            />
+            {address && cnpjStatus === "success" && (
+              <p className="text-[10px] text-muted-foreground mt-0.5">Preenchido automaticamente a partir do CNPJ. Edite se necessário.</p>
+            )}
+          </div>
+
+          {(cnaeCode || sideActivities.length > 0 || members.length > 0) && (
+            <div className="col-span-2 rounded-md border border-border/60 bg-muted/30 p-3 space-y-3">
+              {(cnaeCode || sideActivities.length > 0) && (
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                    <Briefcase className="h-3 w-3 text-primary" />
+                    CNAE
+                  </div>
+                  {cnaeCode && (
+                    <p className="text-[11px] text-muted-foreground mt-1 font-mono">Principal: {cnaeCode}</p>
+                  )}
+                  {sideActivities.length > 0 && (
+                    <ul className="mt-1 space-y-0.5">
+                      {sideActivities.slice(0, 4).map((a, i) => (
+                        <li key={`${a.code ?? "cnae"}-${i}`} className="text-[11px] text-muted-foreground">
+                          <span className="font-mono">{a.code ?? "—"}</span>
+                          {a.text && <span> — {a.text}</span>}
+                        </li>
+                      ))}
+                      {sideActivities.length > 4 && (
+                        <li className="text-[10px] text-muted-foreground/70">+{sideActivities.length - 4} atividades secundárias</li>
+                      )}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {members.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                    <Users className="h-3 w-3 text-primary" />
+                    Sócios ({members.length})
+                  </div>
+                  <ul className="mt-1 space-y-0.5">
+                    {members.slice(0, 5).map((m, i) => (
+                      <li key={`${m.name ?? "socio"}-${i}`} className="text-[11px] text-muted-foreground flex items-baseline gap-1.5">
+                        <span className="text-foreground">{m.name}</span>
+                        {m.role && <span className="text-[10px]">— {m.role}</span>}
+                      </li>
+                    ))}
+                    {members.length > 5 && (
+                      <li className="text-[10px] text-muted-foreground/70">+{members.length - 5} outros sócios</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="col-span-2">
             <Label>Descrição</Label>
             <Input placeholder="Breve resumo sobre a empresa..." value={description} onChange={(e) => { setDescription(e.target.value); clearError("description"); }} className={`mt-1 ${fieldErrors.description ? "border-destructive" : ""}`} />
             <FieldError field="description" />
