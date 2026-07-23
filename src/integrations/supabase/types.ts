@@ -3310,6 +3310,57 @@ export type Database = {
         }
         Relationships: []
       }
+      qa_test_runs: {
+        Row: {
+          branch: string | null
+          commit_sha: string | null
+          coverage_pct: number | null
+          created_at: string
+          duration_ms: number
+          id: string
+          kind: string
+          metadata: Json
+          round: number | null
+          suite: string | null
+          tests_failed: number
+          tests_passed: number
+          tests_skipped: number
+          tests_total: number
+        }
+        Insert: {
+          branch?: string | null
+          commit_sha?: string | null
+          coverage_pct?: number | null
+          created_at?: string
+          duration_ms?: number
+          id?: string
+          kind: string
+          metadata?: Json
+          round?: number | null
+          suite?: string | null
+          tests_failed?: number
+          tests_passed?: number
+          tests_skipped?: number
+          tests_total?: number
+        }
+        Update: {
+          branch?: string | null
+          commit_sha?: string | null
+          coverage_pct?: number | null
+          created_at?: string
+          duration_ms?: number
+          id?: string
+          kind?: string
+          metadata?: Json
+          round?: number | null
+          suite?: string | null
+          tests_failed?: number
+          tests_passed?: number
+          tests_skipped?: number
+          tests_total?: number
+        }
+        Relationships: []
+      }
       retry_policy_advisories: {
         Row: {
           applied_at: string | null
