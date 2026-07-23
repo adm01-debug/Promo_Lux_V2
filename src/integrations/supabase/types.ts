@@ -4472,6 +4472,35 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      claim_instagram_tasks: {
+        Args: { _limit?: number; _organization_id?: string; _worker?: string }
+        Returns: {
+          attempt: number
+          config_hash: string
+          correlation_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          next_run_at: string
+          organization_id: string
+          params: Json
+          status: string
+          target_type: string
+          target_value: string
+          trace_id: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "instagram_scrape_queue"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       claim_scrape_tasks: {
         Args: { _limit?: number; _worker?: string }
         Returns: {
