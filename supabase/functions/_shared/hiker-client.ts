@@ -138,20 +138,20 @@ export class HikerClient {
 
   // ---------- Public API ----------
   async fetchProfile(username: string): Promise<FetchResult> {
-    if (this.mockMode) return this.mockResult("profile", username);
+    if (this.mockMode) return mockResult("profile", username);
     const raw = await this.request("/v1/user/by/username", { username });
     return this.wrap([normalizeProfile(raw)], raw, 1);
   }
 
   async fetchPosts(username: string, limit = 200): Promise<FetchResult> {
-    if (this.mockMode) return this.mockResult("posts", username, limit);
+    if (this.mockMode) return mockResult("posts", username, limit);
     const raw = await this.request("/v2/user/medias", { username, amount: limit });
-    const items = extractMedias(raw).map(normalizePost);
+    const items = extractMedias(raw).map((m) => normalizePost(m));
     return this.wrap(items, raw, 1);
   }
 
   async fetchHashtag(tag: string, limit = 200): Promise<FetchResult> {
-    if (this.mockMode) return this.mockResult("hashtag", tag, limit);
+    if (this.mockMode) return mockResult("hashtag", tag, limit);
     const raw = await this.request("/v1/hashtag/medias/top", {
       name: tag.replace(/^#/, ""),
       amount: limit,
@@ -161,7 +161,7 @@ export class HikerClient {
   }
 
   async fetchComments(mediaIdOrShortcode: string, limit = 200): Promise<FetchResult> {
-    if (this.mockMode) return this.mockResult("comments", mediaIdOrShortcode, limit);
+    if (this.mockMode) return mockResult("comments", mediaIdOrShortcode, limit);
     const raw = await this.request("/v2/media/comments", {
       id: mediaIdOrShortcode,
       amount: limit,
