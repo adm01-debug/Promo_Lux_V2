@@ -177,10 +177,30 @@ export const AddCompanyDialog = () => {
             <FieldError field="name" />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <Label>CNPJ</Label>
-            <Input placeholder="00.000.000/0000-00" value={cnpj} onChange={(e) => { setCnpj(e.target.value); clearError("cnpj"); }} className={`mt-1 ${fieldErrors.cnpj ? "border-destructive" : ""}`} />
+            <Label className="flex items-center gap-1.5">
+              CNPJ
+              {cnpjStatus === "loading" && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+              {cnpjStatus === "success" && <Sparkles className="h-3 w-3 text-primary" />}
+              {cnpjStatus === "not_found" && <XCircle className="h-3 w-3 text-destructive" />}
+            </Label>
+            <Input
+              placeholder="00.000.000/0000-00"
+              value={cnpj}
+              onChange={(e) => handleCnpjChange(e.target.value)}
+              className={`mt-1 ${fieldErrors.cnpj ? "border-destructive" : ""}`}
+            />
+            {cnpjStatus === "loading" && (
+              <p className="text-[10px] text-muted-foreground mt-1">Buscando dados no CNPJá…</p>
+            )}
+            {cnpjStatus === "success" && (
+              <p className="text-[10px] text-primary mt-1">Dados preenchidos automaticamente.</p>
+            )}
+            {cnpjStatus === "not_found" && (
+              <p className="text-[10px] text-destructive mt-1">CNPJ não encontrado na base pública.</p>
+            )}
             <FieldError field="cnpj" />
           </div>
+
           <div className="col-span-2 sm:col-span-1">
             <Label>Setor</Label>
             <Input placeholder="Ex: SaaS B2B" value={sector} onChange={(e) => { setSector(e.target.value); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
