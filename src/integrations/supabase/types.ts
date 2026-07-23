@@ -2025,6 +2025,7 @@ export type Database = {
           organization_id: string
           params: Json
           priority: number
+          sla_seconds: number | null
           status: string
           target_type: string
           target_value: string
@@ -2046,6 +2047,7 @@ export type Database = {
           organization_id: string
           params?: Json
           priority?: number
+          sla_seconds?: number | null
           status?: string
           target_type: string
           target_value: string
@@ -2067,6 +2069,7 @@ export type Database = {
           organization_id?: string
           params?: Json
           priority?: number
+          sla_seconds?: number | null
           status?: string
           target_type?: string
           target_value?: string
@@ -3701,6 +3704,7 @@ export type Database = {
           payload_hash: string | null
           priority: number
           scrape_job_id: string | null
+          sla_seconds: number | null
           source: string
           status: Database["public"]["Enums"]["scrape_queue_status"]
           updated_at: string
@@ -3722,6 +3726,7 @@ export type Database = {
           payload_hash?: string | null
           priority?: number
           scrape_job_id?: string | null
+          sla_seconds?: number | null
           source?: string
           status?: Database["public"]["Enums"]["scrape_queue_status"]
           updated_at?: string
@@ -3743,6 +3748,7 @@ export type Database = {
           payload_hash?: string | null
           priority?: number
           scrape_job_id?: string | null
+          sla_seconds?: number | null
           source?: string
           status?: Database["public"]["Enums"]["scrape_queue_status"]
           updated_at?: string
@@ -4065,6 +4071,7 @@ export type Database = {
           organization_id: string
           priority: number
           result_id: string | null
+          sla_seconds: number | null
           status: Database["public"]["Enums"]["web_scrape_status"]
           trace_id: string
           updated_at: string
@@ -4089,6 +4096,7 @@ export type Database = {
           organization_id: string
           priority?: number
           result_id?: string | null
+          sla_seconds?: number | null
           status?: Database["public"]["Enums"]["web_scrape_status"]
           trace_id?: string
           updated_at?: string
@@ -4113,6 +4121,7 @@ export type Database = {
           organization_id?: string
           priority?: number
           result_id?: string | null
+          sla_seconds?: number | null
           status?: Database["public"]["Enums"]["web_scrape_status"]
           trace_id?: string
           updated_at?: string
@@ -4628,6 +4637,7 @@ export type Database = {
           organization_id: string
           params: Json
           priority: number
+          sla_seconds: number | null
           status: string
           target_type: string
           target_value: string
@@ -4658,6 +4668,7 @@ export type Database = {
           organization_id: string
           params: Json
           priority: number
+          sla_seconds: number | null
           status: string
           target_type: string
           target_value: string
@@ -4689,6 +4700,7 @@ export type Database = {
           payload_hash: string | null
           priority: number
           scrape_job_id: string | null
+          sla_seconds: number | null
           source: string
           status: Database["public"]["Enums"]["scrape_queue_status"]
           updated_at: string
@@ -4720,6 +4732,7 @@ export type Database = {
           organization_id: string
           priority: number
           result_id: string | null
+          sla_seconds: number | null
           status: Database["public"]["Enums"]["web_scrape_status"]
           trace_id: string
           updated_at: string
@@ -4738,6 +4751,10 @@ export type Database = {
       complete_web_scrape_task: {
         Args: { _id: string; _result_id?: string }
         Returns: undefined
+      }
+      compute_sla_backoff: {
+        Args: { p_attempt: number; p_sla_seconds: number }
+        Returns: string
       }
       count_recent_org_violations: {
         Args: { _window_minutes?: number }
