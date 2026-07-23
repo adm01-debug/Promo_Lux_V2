@@ -104,6 +104,7 @@ Deno.serve(async (req) => {
       wait_for_ms: body.wait_for_ms,
       max_bytes: body.max_bytes,
       priority: body.priority,
+      sla_seconds: body.sla_seconds ?? deriveWebSla(body.wait_for_ms, body.max_bytes),
       config_hash: configHash,
       trace_id: traceId,
     })
