@@ -119,7 +119,7 @@ export const AddCompanyDialog = () => {
     try {
       const { error } = await db.from("companies").insert([{
         name: name.trim(),
-        cnpj: cnpj.trim() || null,
+        cnpj: result.data.cnpj || null,
         sector: sector || null,
         location: location || null,
         email: email || null,
