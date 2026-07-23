@@ -55,7 +55,8 @@ import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPol
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
 import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
 import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
-import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe } from "lucide-react";
+import { InstagramConnectionPanel } from "@/components/lux/monitoring/InstagramConnectionPanel";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
@@ -442,6 +443,10 @@ const AutomationMonitoring = () => {
             <Globe className="h-4 w-4" />
             Web Scrape
           </TabsTrigger>
+          <TabsTrigger value="instagram" className="gap-2">
+            <Camera className="h-4 w-4" />
+            Instagram
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="realtime" className="space-y-4">
@@ -641,6 +646,10 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="web-scrape" className="space-y-4">
           <WebScrapeView />
+        </TabsContent>
+
+        <TabsContent value="instagram" className="space-y-4">
+          <InstagramConnectionPanel />
         </TabsContent>
 
       </Tabs>
