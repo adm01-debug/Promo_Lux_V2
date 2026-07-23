@@ -3908,6 +3908,54 @@ export type Database = {
         }
         Relationships: []
       }
+      sla_snapshots: {
+        Row: {
+          breach_rate: number
+          breaches: number
+          captured_at: string
+          id: string
+          p50_seconds: number | null
+          p95_seconds: number | null
+          p99_seconds: number | null
+          queue_kind: string
+          sample_size: number
+          sla_p50: number | null
+          sla_p95: number | null
+          window_hours: number
+          with_sla: number
+        }
+        Insert: {
+          breach_rate?: number
+          breaches?: number
+          captured_at?: string
+          id?: string
+          p50_seconds?: number | null
+          p95_seconds?: number | null
+          p99_seconds?: number | null
+          queue_kind: string
+          sample_size?: number
+          sla_p50?: number | null
+          sla_p95?: number | null
+          window_hours: number
+          with_sla?: number
+        }
+        Update: {
+          breach_rate?: number
+          breaches?: number
+          captured_at?: string
+          id?: string
+          p50_seconds?: number | null
+          p95_seconds?: number | null
+          p99_seconds?: number | null
+          queue_kind?: string
+          sample_size?: number
+          sla_p50?: number | null
+          sla_p95?: number | null
+          window_hours?: number
+          with_sla?: number
+        }
+        Relationships: []
+      }
       stakeholders: {
         Row: {
           avatar_url: string | null
@@ -4680,6 +4728,7 @@ export type Database = {
         }
       }
       capture_dlq_health_snapshots: { Args: never; Returns: number }
+      capture_sla_snapshot: { Args: { p_hours?: number }; Returns: number }
       capture_web_dlq_health_snapshots: { Args: never; Returns: number }
       check_oracle_rate_limit: {
         Args: { _action?: string; _limit?: number; _organization_id: string }
