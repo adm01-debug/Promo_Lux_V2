@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Loader2, Building2, MapPin, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
 import { validateCompany } from "@/lib/schemas/company";
+import { useCnpjEnrich } from "@/hooks/useCnpjEnrich";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -37,12 +38,16 @@ export const AddCompanyDialog = () => {
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cnpjDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { status: cnpjStatus, enrich: enrichCnpj, reset: resetCnpjEnrich } = useCnpjEnrich();
 
   const reset = () => {
     setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
     setPhone(""); setWebsite(""); setLinkedinUrl(""); setInstagramUrl("");
     setEmployees(""); setRevenue(""); setDescription("");
     setGeoStatus("idle"); setGeoCoords(null); setFieldErrors({});
+    resetCnpjEnrich();
   };
 
   const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
@@ -74,6 +79,33 @@ export const AddCompanyDialog = () => {
       else setGeoStatus("not_found");
     }, 800);
   }, []);
+
+  const handleCnpjChange = useCallback((value: string) => {
+    setCnpj(value);
+    setFieldErrors((prev) => { const { cnpj: _, ...rest } = prev; return rest; });
+    if (cnpjDebounceRef.current) clearTimeout(cnpjDebounceRef.current);
+    const digits = value.replace(/\D+/g, "");
+    if (digits.length !== 14) { resetCnpjEnrich(); return; }
+    cnpjDebounceRef.current = setTimeout(async () => {
+      const enriched = await enrichCnpj(digits);
+      if (!enriched) return;
+      // Auto-preencher apenas campos vazios (não sobrescreve edição do usuário).
+      if (enriched.name && !name.trim()) setName(enriched.name);
+      if (enriched.sector && !sector.trim()) setSector(enriched.sector);
+      if (enriched.location && !location.trim()) {
+        handleLocationChange(enriched.location);
+      }
+      if (enriched.email && !email.trim()) setEmail(enriched.email);
+      if (enriched.phone && !phone.trim()) setPhone(enriched.phone);
+      if (enriched.size && !employees.trim()) setEmployees(enriched.size);
+      if (enriched.address && !description.trim()) setDescription(enriched.address);
+      toast({
+        title: "Empresa encontrada!",
+        description: `Dados de "${enriched.name ?? enriched.cnpj}" preenchidos automaticamente.`,
+      });
+    }, 600);
+  }, [enrichCnpj, resetCnpjEnrich, name, sector, location, email, phone, employees, description, handleLocationChange, toast]);
+
 
   const handleSave = async () => {
     const result = validateCompany({ name, cnpj, sector, location, email, phone, website, linkedin_url: linkedinUrl, instagram_url: instagramUrl, employees, revenue, description });
@@ -145,10 +177,30 @@ export const AddCompanyDialog = () => {
             <FieldError field="name" />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <Label>CNPJ</Label>
-            <Input placeholder="00.000.000/0000-00" value={cnpj} onChange={(e) => { setCnpj(e.target.value); clearError("cnpj"); }} className={`mt-1 ${fieldErrors.cnpj ? "border-destructive" : ""}`} />
+            <Label className="flex items-center gap-1.5">
+              CNPJ
+              {cnpjStatus === "loading" && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+              {cnpjStatus === "success" && <Sparkles className="h-3 w-3 text-primary" />}
+              {cnpjStatus === "not_found" && <XCircle className="h-3 w-3 text-destructive" />}
+            </Label>
+            <Input
+              placeholder="00.000.000/0000-00"
+              value={cnpj}
+              onChange={(e) => handleCnpjChange(e.target.value)}
+              className={`mt-1 ${fieldErrors.cnpj ? "border-destructive" : ""}`}
+            />
+            {cnpjStatus === "loading" && (
+              <p className="text-[10px] text-muted-foreground mt-1">Buscando dados no CNPJá…</p>
+            )}
+            {cnpjStatus === "success" && (
+              <p className="text-[10px] text-primary mt-1">Dados preenchidos automaticamente.</p>
+            )}
+            {cnpjStatus === "not_found" && (
+              <p className="text-[10px] text-destructive mt-1">CNPJ não encontrado na base pública.</p>
+            )}
             <FieldError field="cnpj" />
           </div>
+
           <div className="col-span-2 sm:col-span-1">
             <Label>Setor</Label>
             <Input placeholder="Ex: SaaS B2B" value={sector} onChange={(e) => { setSector(e.target.value); clearError("sector"); }} className={`mt-1 ${fieldErrors.sector ? "border-destructive" : ""}`} />
