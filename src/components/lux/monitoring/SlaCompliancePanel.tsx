@@ -46,6 +46,21 @@ export function SlaCompliancePanel() {
     refetchInterval: 60_000,
   });
 
+  const { data: alerts } = useQuery({
+    queryKey: ["sla-alert-history"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("sla_alert_history")
+        .select("id, queue_kind, breach_rate, sample_size, window_hours, triggered_at")
+        .order("triggered_at", { ascending: false })
+        .limit(8);
+      if (error) throw error;
+      return data ?? [];
+    },
+    refetchInterval: 60_000,
+  });
+
+
   return (
     <Card className="glass">
       <CardHeader className="flex flex-row items-start justify-between gap-4">
