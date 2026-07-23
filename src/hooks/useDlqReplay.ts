@@ -110,3 +110,62 @@ export function useDlqReplay(motor: DlqMotor) {
     },
   });
 }
+
+export interface DlqMetrics {
+  total: number;
+  last24h: number;
+  last1h: number;
+}
+
+/** Métricas agregadas de DLQ por motor (total pendente + crescimento 24h/1h). */
+export function useDlqMetrics(motor: DlqMotor) {
+  const { activeOrgId } = useActiveOrganization();
+  return useQuery({
+    queryKey: ["dlq-metrics", motor, activeOrgId],
+    enabled: !!activeOrgId,
+    refetchInterval: 30_000,
+    queryFn: async (): Promise<DlqMetrics> => {
+      const now = Date.now();
+      const h24 = new Date(now - 24 * 3600_000).toISOString();
+      const h1 = new Date(now - 3600_000).toISOString();
+
+      if (motor === "instagram") {
+        const base = () =>
+          supabase
+            .from("instagram_scrape_dead_letter")
+            .select("id", { count: "exact", head: true })
+            .eq("organization_id", activeOrgId!);
+        const [total, d24, d1] = await Promise.all([
+          base(),
+          base().gte("created_at", h24),
+          base().gte("created_at", h1),
+        ]);
+        if (total.error) throw total.error;
+        return {
+          total: total.count ?? 0,
+          last24h: d24.count ?? 0,
+          last1h: d1.count ?? 0,
+        };
+      }
+
+      const base = () =>
+        supabase
+          .from("web_scrape_dead_letter")
+          .select("id", { count: "exact", head: true })
+          .eq("organization_id", activeOrgId!)
+          .is("replayed_at", null);
+      const [total, d24, d1] = await Promise.all([
+        base(),
+        base().gte("failed_at", h24),
+        base().gte("failed_at", h1),
+      ]);
+      if (total.error) throw total.error;
+      return {
+        total: total.count ?? 0,
+        last24h: d24.count ?? 0,
+        last1h: d1.count ?? 0,
+      };
+    },
+  });
+}
+
