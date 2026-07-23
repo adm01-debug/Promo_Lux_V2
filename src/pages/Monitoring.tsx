@@ -57,8 +57,9 @@ import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloRep
 import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
 import { InstagramConnectionPanel } from "@/components/lux/monitoring/InstagramConnectionPanel";
 import { DLQReplayPanel } from "@/components/lux/monitoring/DLQReplayPanel";
+import { QaHistoryPanel } from "@/components/lux/monitoring/QaHistoryPanel";
 import { RotateCcw } from "lucide-react";
-import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera } from "lucide-react";
+import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera, FlaskConical } from "lucide-react";
 
 import { useRealtimeScrapeJobs } from "@/hooks/useRealtimeScrapeJobs";
 import { useAuth } from "@/contexts/auth-context";
@@ -453,7 +454,15 @@ const AutomationMonitoring = () => {
             <RotateCcw className="h-4 w-4" />
             DLQ Replay
           </TabsTrigger>
+          <TabsTrigger value="qa-history" className="gap-2">
+            <FlaskConical className="h-4 w-4" />
+            Histórico QA
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="qa-history" className="space-y-4">
+          <QaHistoryPanel />
+        </TabsContent>
 
         <TabsContent value="dlq-replay" className="space-y-4">
           <DLQReplayPanel />
