@@ -478,6 +478,10 @@ const AutomationMonitoring = () => {
           <ReaperHistoryPanel />
         </TabsContent>
 
+        <TabsContent value="sla" className="space-y-4">
+          <SlaCompliancePanel />
+        </TabsContent>
+
         <TabsContent value="dlq-replay" className="space-y-4">
           <DLQReplayPanel />
         </TabsContent>
