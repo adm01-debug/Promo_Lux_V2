@@ -137,7 +137,7 @@ export const AddCompanyDialog = () => {
         description: `Dados de "${enriched.name ?? enriched.cnpj}" preenchidos automaticamente.`,
       });
     }, 600);
-  }, [enrichCnpj, resetCnpjEnrich, name, sector, location, email, phone, employees, description, handleLocationChange, toast]);
+  }, [enrichCnpj, resetCnpjEnrich, autoEnrichEnabled, name, sector, location, email, phone, employees, description, handleLocationChange, toast]);
 
 
   const handleSave = async () => {
