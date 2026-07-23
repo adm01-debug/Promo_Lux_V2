@@ -512,12 +512,11 @@ async function mockResult(
   }[kind];
   const rows = (MOCK_DATASET_FIXTURES[key] ?? []).slice(0, limit);
   if (!rows.length) return { items: [], raw: null, attempts: 0 };
-  let items: NormalizedInstagramItem[];
-  switch (kind) {
-    case "profile": items = rows.map((r) => normalizeProfile(r)); break;
-    case "posts": items = rows.map((r) => normalizePost(r)); break;
-    case "hashtag": items = rows.map((r) => normalizeHashtag(r, value)); break;
-    case "comments": items = rows.map((r) => normalizeComment(r, value)); break;
-  }
+  const ctx = kind === "hashtag"
+    ? { hashtag: value }
+    : kind === "comments"
+      ? { parentMediaId: value }
+      : {};
+  const items = rows.map((r) => normalize(kind, r, ctx));
   return { items, raw: rows, attempts: 0 };
 }
