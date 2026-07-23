@@ -1,0 +1,96 @@
+name: Edge Functions Daily Tests (Deno)
+
+# Executa diariamente a bateria de testes Deno das Edge Functions para detectar
+# regressões cedo (equivalente CI ao supabase--test_edge_functions da Lovable).
+# Também é disparável manualmente e roda em PRs que tocam em supabase/functions/**.
+
+on:
+  schedule:
+    # 07:00 UTC = 04:00 America/Sao_Paulo (todos os dias)
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    inputs:
+      pattern:
+        description: "Filtro opcional (--filter) do deno test"
+        required: false
+        default: ""
+  pull_request:
+    paths:
+      - "supabase/functions/**"
+      - ".github/workflows/edge-tests-daily.yml"
+
+concurrency:
+  group: edge-tests-daily-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deno-edge-tests:
+    name: Deno test suite (supabase/functions)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Cache Deno deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/deno
+            ~/.deno
+          key: deno-${{ runner.os }}-${{ hashFiles('supabase/functions/**/*.ts') }}
+          restore-keys: |
+            deno-${{ runner.os }}-
+
+      - name: Discover Deno test files
+        id: discover
+        run: |
+          FILES=$(find supabase/functions \
+            \( -name "*_test.ts" -o -name "*.test.ts" \) \
+            -not -path "*/node_modules/*" | sort)
+          echo "Arquivos de teste Deno encontrados:"
+          echo "$FILES"
+          COUNT=$(echo "$FILES" | grep -c . || true)
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::warning::Nenhum teste Deno localizado em supabase/functions/**"
+          fi
+
+      - name: Run Deno tests
+        if: steps.discover.outputs.count != '0'
+        env:
+          DENO_TLS_CA_STORE: system
+          SUPABASE_URL: "http://localhost:54321"
+          SUPABASE_ANON_KEY: "test-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "test-service-role-key"
+          APIFY_MOCK_MODE: "true"
+          HIKER_MOCK_MODE: "true"
+          LOVABLE_API_KEY: "test-lovable-key"
+        run: |
+          FILTER_ARG=""
+          if [ -n "${{ github.event.inputs.pattern }}" ]; then
+            FILTER_ARG="--filter=${{ github.event.inputs.pattern }}"
+          fi
+          deno test \
+            --allow-net \
+            --allow-env \
+            --allow-read \
+            --no-check \
+            --reporter=pretty \
+            $FILTER_ARG \
+            supabase/functions/
+
+      - name: Report failure to Actions summary
+        if: failure()
+        run: |
+          {
+            echo "## ❌ Edge Functions Daily Tests falharam"
+            echo ""
+            echo "- Trigger: \`${{ github.event_name }}\`"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Rode localmente com: \`deno test --allow-net --allow-env --allow-read supabase/functions/\`"
+          } >> "$GITHUB_STEP_SUMMARY"
