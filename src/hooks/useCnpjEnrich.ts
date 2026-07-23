@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeCnpj, isValidCnpj } from "@/lib/cnpj";
 
 export interface CnpjEnrichData {
   cnpj: string;
