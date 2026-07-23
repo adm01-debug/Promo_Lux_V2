@@ -38,12 +38,16 @@ export const AddCompanyDialog = () => {
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cnpjDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { status: cnpjStatus, enrich: enrichCnpj, reset: resetCnpjEnrich } = useCnpjEnrich();
 
   const reset = () => {
     setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
     setPhone(""); setWebsite(""); setLinkedinUrl(""); setInstagramUrl("");
     setEmployees(""); setRevenue(""); setDescription("");
     setGeoStatus("idle"); setGeoCoords(null); setFieldErrors({});
+    resetCnpjEnrich();
   };
 
   const geocodeLocation = async (loc: string): Promise<{ lat: number; lng: number } | null> => {
