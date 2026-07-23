@@ -129,6 +129,7 @@ Deno.serve(async (req) => {
       params: { limit, ...params },
       config_hash,
       max_attempts: maxAttempts,
+      sla_seconds: slaSeconds,
       correlation_id,
       created_by: userId,
     })
