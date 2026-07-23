@@ -648,6 +648,10 @@ const AutomationMonitoring = () => {
           <WebScrapeView />
         </TabsContent>
 
+        <TabsContent value="instagram" className="space-y-4">
+          <InstagramConnectionPanel />
+        </TabsContent>
+
       </Tabs>
 
       <JobDetailsSheet 
