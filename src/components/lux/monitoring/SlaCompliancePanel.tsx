@@ -183,7 +183,37 @@ export function SlaCompliancePanel() {
             })}
           </div>
         )}
+
+        {alerts && alerts.length > 0 && (
+          <div className="mt-6 border-t border-border/30 pt-4">
+            <div className="flex items-center gap-2 mb-3 text-sm font-medium">
+              <AlertTriangle className="h-4 w-4 text-warning" />
+              Últimos alertas de SLA
+            </div>
+            <div className="space-y-1.5">
+              {alerts.map((a) => (
+                <div
+                  key={a.id}
+                  className="flex items-center justify-between text-xs px-3 py-2 rounded bg-secondary/20 border border-border/30"
+                >
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-[10px] uppercase">
+                      {a.queue_kind}
+                    </Badge>
+                    <span className="text-muted-foreground">
+                      {(Number(a.breach_rate) * 100).toFixed(1)}% breach • {a.sample_size} amostras • janela {a.window_hours}h
+                    </span>
+                  </div>
+                  <span className="font-mono text-muted-foreground">
+                    {new Date(a.triggered_at).toLocaleString("pt-BR")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
+
