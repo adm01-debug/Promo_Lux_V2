@@ -47,6 +47,7 @@ export const AddCompanyDialog = () => {
   const cnpjDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { status: cnpjStatus, enrich: enrichCnpj, reset: resetCnpjEnrich } = useCnpjEnrich();
+  const { enabled: autoEnrichEnabled } = useCnpjAutoEnrichSetting();
 
   const reset = () => {
     setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
