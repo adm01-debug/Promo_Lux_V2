@@ -51,6 +51,7 @@ export const AddCompanyDialog = () => {
     setName(""); setCnpj(""); setSector(""); setLocation(""); setEmail("");
     setPhone(""); setWebsite(""); setLinkedinUrl(""); setInstagramUrl("");
     setEmployees(""); setRevenue(""); setDescription("");
+    setAddress(""); setCnaeCode(null); setMembers([]); setSideActivities([]);
     setGeoStatus("idle"); setGeoCoords(null); setFieldErrors({});
     resetCnpjEnrich();
   };
