@@ -163,8 +163,30 @@ export async function startActorRun(
   opts: ApifyClientOptions,
 ): Promise<ApifyRun> {
   if (opts.mockMode) {
+    const fault = resolveFault(actorId, actorInput);
     const runId = mockId("run");
     const datasetId = mockId("ds");
+
+    if (fault) {
+      if (fault.kind === "rate_limit_429") throw429("startActorRun");
+      if (fault.kind === "timeout") {
+        await sleep(fault.timeoutMs ?? 50);
+        throw new Error(`[apify-gateway timeout] startActorRun: exceeded ${fault.timeoutMs ?? 50}ms (mock fault)`);
+      }
+      // actor_run_failed / empty_dataset → propaga via registry para etapas seguintes
+      runFaultRegistry.set(runId, { actorId, fault });
+      if (fault.kind === "actor_run_failed") {
+        return {
+          id: runId,
+          actId: actorId,
+          status: "FAILED",
+          defaultDatasetId: datasetId,
+          startedAt: new Date().toISOString(),
+          finishedAt: new Date().toISOString(),
+        };
+      }
+    }
+
     return {
       id: runId,
       actId: actorId,
