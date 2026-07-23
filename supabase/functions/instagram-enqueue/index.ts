@@ -14,19 +14,18 @@
  */
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import {
+  clampLimit,
+  computeConfigHash,
+  normalizeTarget,
+  type InstagramTargetType,
+} from "../_shared/instagram-config-hash.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const TARGET_TYPES = new Set(["profile", "posts", "hashtag", "comments"]);
-
-async function computeHash(input: string): Promise<string> {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
-  return Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
 
 function json(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
@@ -65,7 +64,7 @@ Deno.serve(async (req) => {
   if (!TARGET_TYPES.has(target_type)) return json(400, { error: "invalid_target_type" });
   if (!target_value) return json(400, { error: "missing_target_value" });
 
-  const limit = Math.max(1, Math.min(1000, Number(params.limit ?? 200)));
+  const limit = clampLimit(params.limit, 200);
   const maxAttempts = Math.max(1, Math.min(10, Number(params.max_attempts ?? 4)));
   const correlation_id = params.correlation_id ?? null;
 
@@ -83,10 +82,13 @@ Deno.serve(async (req) => {
   if (memErr || !membership) return json(403, { error: "no_organization" });
 
   const organization_id = membership.organization_id as string;
-  const normalizedTarget = target_value.toLowerCase().replace(/^@/, "").replace(/^#/, "");
-  const config_hash = await computeHash(
-    JSON.stringify({ organization_id, target_type, target: normalizedTarget, limit }),
-  );
+  const normalizedTarget = normalizeTarget(target_value);
+  const config_hash = await computeConfigHash({
+    organization_id,
+    target_type: target_type as InstagramTargetType,
+    target_value: normalizedTarget,
+    limit,
+  });
 
   // dedup
   const { data: existing } = await service

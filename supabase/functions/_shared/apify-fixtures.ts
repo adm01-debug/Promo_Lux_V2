@@ -319,7 +319,7 @@ export const MOCK_DATASET_FIXTURES: Record<string, unknown[]> = {
     // Reply (child) — parentCommentId aponta para o primeiro
     {
       id: "17900000000000003",
-      text: "@cliente.b2b obrigado! te chamamos já",
+      text: "@cliente.b2b obrigado! te chamamos já #atendimento",
       ownerUsername: "lux.ia",
       ownerFullName: "LUX IA",
       likesCount: 8,
@@ -328,6 +328,32 @@ export const MOCK_DATASET_FIXTURES: Record<string, unknown[]> = {
       parentCommentId: "17900000000000001",
       hashtags: [],
       mentions: ["cliente.b2b"],
+    },
+    // Reply nested — resposta ao reply anterior, mesmo root
+    {
+      id: "17900000000000004",
+      text: "@lux.ia perfeito, aguardo o direct 🙌 #b2b #vendas",
+      ownerUsername: "cliente.b2b",
+      ownerFullName: "Cliente B2B",
+      likesCount: 2,
+      timestamp: "2026-07-22T11:42:00.000Z",
+      postUrl: "https://www.instagram.com/p/C_mock_post_1/",
+      parentCommentId: "17900000000000003",
+      hashtags: ["b2b"],
+      mentions: ["lux.ia"],
+    },
+    // Comentário com acentuação/emoji + múltiplas mentions duplicadas (dedup)
+    {
+      id: "17900000000000005",
+      text: "@lux.ia @Lux.IA parabéns pela ação! #Growth #growth #inovação",
+      ownerUsername: "observador",
+      ownerFullName: "Observador",
+      likesCount: 0,
+      timestamp: "2026-07-22T11:50:00.000Z",
+      postUrl: "https://www.instagram.com/reel/C_mock_reel_1/",
+      parentCommentId: null,
+      hashtags: [],
+      mentions: [],
     },
   ],
 };
