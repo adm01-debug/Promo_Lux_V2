@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
-  Instagram,
+  Camera,
   CheckCircle2,
   XCircle,
   AlertTriangle,
