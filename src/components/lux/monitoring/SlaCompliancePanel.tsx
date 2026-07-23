@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Timer, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SlaAlertSettingsCard } from "./SlaAlertSettingsCard";
 
 type Row = {
   queue_kind: "scrape" | "web" | "instagram";
@@ -89,6 +90,7 @@ export function SlaCompliancePanel() {
               </button>
             ))}
           </div>
+          <SlaAlertSettingsCard />
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching} className="h-8 gap-2">
             <RefreshCw className={cn("h-3.5 w-3.5", isFetching && "animate-spin")} />
           </Button>
