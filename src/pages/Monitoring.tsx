@@ -60,6 +60,7 @@ import { DLQReplayPanel } from "@/components/lux/monitoring/DLQReplayPanel";
 import { QaHistoryPanel } from "@/components/lux/monitoring/QaHistoryPanel";
 import { ReaperHistoryPanel } from "@/components/lux/monitoring/ReaperHistoryPanel";
 import { SlaCompliancePanel } from "@/components/lux/monitoring/SlaCompliancePanel";
+import { SlaTrendChart } from "@/components/lux/monitoring/SlaTrendChart";
 import { RotateCcw } from "lucide-react";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera, FlaskConical } from "lucide-react";
 
@@ -480,6 +481,7 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="sla" className="space-y-4">
           <SlaCompliancePanel />
+          <SlaTrendChart />
         </TabsContent>
 
         <TabsContent value="dlq-replay" className="space-y-4">
