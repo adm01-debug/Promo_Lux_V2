@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
  */
 export function ReaperHistoryPanel() {
   const { data: runs, isLoading } = useReaperHistory(50);
+  const { data: alerts } = useReaperAlerts(10);
 
   const kpis = useMemo(() => {
     if (!runs?.length) return { totalRequeued: 0, totalDead: 0, avgDuration: 0, runsCount: 0 };
