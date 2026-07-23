@@ -36,9 +36,18 @@ function json(status: number, body: unknown) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
-  const authHeader = req.headers.get("Authorization");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+  // Aceita invocação por service_role (chamadas internas) ou pelo apikey
+  // anon (padrão de agendamento pg_cron neste projeto). Efeito colateral é
+  // limitado: apenas leituras + inserts em history/notifications com cooldown.
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const apiKeyHeader = req.headers.get("apikey") ?? "";
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+  const authorized =
+    (serviceKey && (bearer === serviceKey || apiKeyHeader === serviceKey)) ||
+    (anonKey && (bearer === anonKey || apiKeyHeader === anonKey));
+  if (!authorized) {
     return json(401, { ok: false, error: "unauthorized" });
   }
 
