@@ -239,7 +239,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     try {
       const updateData: Record<string, string | number | null> = {
         name: name.trim(),
-        cnpj: cnpj.trim() || null,
+        cnpj: result.data.cnpj || null,
         sector: sector || null,
         location: location || null,
         email: email || null,
