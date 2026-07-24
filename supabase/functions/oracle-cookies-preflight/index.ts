@@ -26,6 +26,9 @@ function corsFor(req: Request) {
 }
 
 const REQUIRED_SERVICES = ["lusha", "leadcontact", "linkedin"] as const;
+// LinkedIn é opcional para o Oracle v2 (fluxo usa apenas Lusha + LeadContact).
+// Mantemos o cookie no relatório para observabilidade, mas ele não bloqueia o preflight.
+const BLOCKING_SERVICES = new Set(["lusha", "leadcontact"]);
 type Servico = (typeof REQUIRED_SERVICES)[number];
 
 type VaultRow = {
@@ -163,6 +166,7 @@ serve(async (req) => {
   try {
     const rows = await fetchVault();
     const report = buildReport(rows);
+    const blockingReady = report.every((r) => !BLOCKING_SERVICES.has(r.servico) || r.ready);
     const allReady = report.every((r) => r.ready);
     const durationMs = Date.now() - startedAt;
 
@@ -171,25 +175,26 @@ serve(async (req) => {
       source: "oracle-cookies-preflight",
       step_name: "vault_check",
       phase: "preflight",
-      status: allReady ? "success" : "degraded",
-      level: allReady ? "info" : "warn",
+      status: allReady ? "success" : blockingReady ? "degraded" : "error",
+      level: allReady ? "info" : blockingReady ? "warn" : "error",
       message: allReady
         ? "Vault OK: 3 serviços prontos"
         : `Vault com problemas: ${report.filter((r) => !r.ready).map((r) => r.servico).join(", ")}`,
       duration_ms: durationMs,
       correlation_id: correlationId,
-      metadata: { report },
+      metadata: { report, blocking_ready: blockingReady },
     });
 
     return new Response(
       JSON.stringify({
-        ok: allReady,
+        ok: blockingReady,
+        all_ready: allReady,
         correlation_id: correlationId,
         duration_ms: durationMs,
         services: report,
       }),
       {
-        status: allReady ? 200 : 503,
+        status: blockingReady ? 200 : 503,
         headers: { ...cors, "Content-Type": "application/json" },
       },
     );
