@@ -26,6 +26,9 @@ function corsFor(req: Request) {
 }
 
 const REQUIRED_SERVICES = ["lusha", "leadcontact", "linkedin"] as const;
+// LinkedIn é opcional para o Oracle v2 (fluxo usa apenas Lusha + LeadContact).
+// Mantemos o cookie no relatório para observabilidade, mas ele não bloqueia o preflight.
+const BLOCKING_SERVICES = new Set(["lusha", "leadcontact"]);
 type Servico = (typeof REQUIRED_SERVICES)[number];
 
 type VaultRow = {
