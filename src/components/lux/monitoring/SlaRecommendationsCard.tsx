@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Gauge, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { SlaRecommendationRowItem } from "./SlaRecommendationRowItem";
 
 /** Linha retornada pelo RPC `sla_recommendations`. */
 export interface SlaRecommendationRow {
@@ -19,34 +20,30 @@ export interface SlaRecommendationRow {
   verdict: "insufficient_data" | "unset" | "too_tight" | "too_loose" | "ok";
 }
 
+interface QueueSlaDefault {
+  queue_kind: string;
+  sla_seconds: number;
+  source: string;
+  last_applied_at: string | null;
+}
+
 const HOURS_OPTIONS = [24, 72, 168, 720];
 
-const LABELS: Record<SlaRecommendationRow["queue_kind"], string> = {
-  scrape: "Scrape (legado)",
-  web: "Web Scrape",
-  instagram: "Instagram",
-};
-
-const VERDICTS: Record<
-  SlaRecommendationRow["verdict"],
-  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
-> = {
-  too_tight: { label: "Apertado demais", variant: "destructive" },
-  too_loose: { label: "Folgado demais", variant: "secondary" },
-  ok: { label: "Adequado", variant: "default" },
-  unset: { label: "Sem SLA definido", variant: "outline" },
-  insufficient_data: { label: "Amostra insuficiente", variant: "outline" },
-};
-
-function fmtSeconds(value: number | null | undefined): string {
-  if (value == null) return "—";
-  const n = Number(value);
-  if (!Number.isFinite(n)) return "—";
-  return n >= 60 ? `${(n / 60).toFixed(1)}m` : `${n.toFixed(1)}s`;
-}
+const HEADERS = [
+  "Fila",
+  "Amostra",
+  "p50 real",
+  "p95 real",
+  "SLA atual",
+  "Padrão enqueue",
+  "Sugerido",
+  "Veredito",
+] as const;
 
 export function SlaRecommendationsCard() {
   const [hours, setHours] = useState<number>(168);
+  const [applying, setApplying] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, refetch, error } = useQuery({
     queryKey: ["sla-recommendations", hours],
@@ -59,6 +56,43 @@ export function SlaRecommendationsCard() {
     refetchInterval: 300_000,
   });
 
+  const { data: defaults } = useQuery({
+    queryKey: ["queue-sla-defaults"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("queue_sla_defaults")
+        .select("queue_kind, sla_seconds, source, last_applied_at");
+      if (error) throw error;
+      return (data ?? []) as QueueSlaDefault[];
+    },
+    staleTime: 60_000,
+  });
+
+  const applyMutation = useMutation({
+    mutationFn: async (queueKind: SlaRecommendationRow["queue_kind"]) => {
+      const { data, error } = await supabase.rpc("apply_sla_recommendation", {
+        p_queue_kind: queueKind,
+        p_hours: hours,
+      });
+      if (error) throw error;
+      return data;
+    },
+    onMutate: (queueKind) => setApplying(queueKind),
+    onSuccess: () => {
+      toast.success("SLA padrão atualizado", {
+        description: "Novas tarefas enfileiradas já usarão o prazo recomendado.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+    },
+    onError: (err: Error) => {
+      toast.error("Não foi possível aplicar o SLA", { description: err.message });
+    },
+    onSettled: () => setApplying(null),
+  });
+
+  const defaultFor = (kind: string) =>
+    defaults?.find((d) => d.queue_kind === kind)?.sla_seconds ?? null;
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-4">
@@ -68,8 +102,8 @@ export function SlaRecommendationsCard() {
             Recomendação de SLA
           </CardTitle>
           <CardDescription>
-            Compara o tempo real (p95) de conclusão com o prazo configurado e sugere o valor ideal
-            (p95 × 1,3).
+            Compara o tempo real (p95) com o prazo configurado, sugere o ideal (p95 × 1,3) e permite
+            aplicá-lo como padrão de enfileiramento.
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
@@ -117,36 +151,26 @@ export function SlaRecommendationsCard() {
               <caption className="sr-only">Recomendações de SLA por fila</caption>
               <thead>
                 <tr className="border-b text-left text-muted-foreground">
-                  <th scope="col" className="py-2 pr-3 font-medium">Fila</th>
-                  <th scope="col" className="py-2 pr-3 font-medium">Amostra</th>
-                  <th scope="col" className="py-2 pr-3 font-medium">p50 real</th>
-                  <th scope="col" className="py-2 pr-3 font-medium">p95 real</th>
-                  <th scope="col" className="py-2 pr-3 font-medium">SLA atual</th>
-                  <th scope="col" className="py-2 pr-3 font-medium">Sugerido</th>
-                  <th scope="col" className="py-2 font-medium">Veredito</th>
+                  {HEADERS.map((h) => (
+                    <th key={h} scope="col" className="py-2 pr-3 font-medium">
+                      {h}
+                    </th>
+                  ))}
+                  <th scope="col" className="py-2 text-right font-medium">
+                    Ação
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((row) => {
-                  const verdict = VERDICTS[row.verdict] ?? VERDICTS.insufficient_data;
-                  return (
-                    <tr key={row.queue_kind} className="border-b last:border-0">
-                      <th scope="row" className="py-2 pr-3 text-left font-medium text-foreground">
-                        {LABELS[row.queue_kind] ?? row.queue_kind}
-                      </th>
-                      <td className="py-2 pr-3 text-muted-foreground">{row.sample_size}</td>
-                      <td className="py-2 pr-3">{fmtSeconds(row.p50_seconds)}</td>
-                      <td className="py-2 pr-3">{fmtSeconds(row.p95_seconds)}</td>
-                      <td className="py-2 pr-3">{fmtSeconds(row.current_sla_p50)}</td>
-                      <td className="py-2 pr-3 font-mono text-foreground">
-                        {fmtSeconds(row.recommended_sla_seconds)}
-                      </td>
-                      <td className="py-2">
-                        <Badge variant={verdict.variant}>{verdict.label}</Badge>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {data.map((row) => (
+                  <SlaRecommendationRowItem
+                    key={row.queue_kind}
+                    row={row}
+                    currentDefault={defaultFor(row.queue_kind)}
+                    onApply={(kind) => applyMutation.mutate(kind)}
+                    isApplying={applying === row.queue_kind}
+                  />
+                ))}
               </tbody>
             </table>
           </div>
