@@ -348,8 +348,15 @@ serve(async (req) => {
     attempted: false,
     departments: [] as string[],
     found: 0,
+    /** consultas servidas pelo cache (crédito Apollo economizado) */
+    cache_hits: 0,
+    /** chamadas realmente enviadas ao Apollo */
+    api_calls: 0,
+    /** consultas barradas pela cota / cooldown */
+    throttled: 0,
     ...(apolloSkippedReason ? { skipped_reason: apolloSkippedReason } : {}),
   };
+
 
   for (let i = 0; i < resolution.mapped.length; i++) {
     const dept = resolution.mapped[i];
