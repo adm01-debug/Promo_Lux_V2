@@ -260,6 +260,78 @@ export type Database = {
         }
         Relationships: []
       }
+      apollo_rate_state: {
+        Row: {
+          bucket: string
+          day_count: number
+          day_start: string
+          disabled_until: string | null
+          last_error: string | null
+          limit_per_day: number
+          limit_per_minute: number
+          request_count: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          bucket?: string
+          day_count?: number
+          day_start?: string
+          disabled_until?: string | null
+          last_error?: string | null
+          limit_per_day?: number
+          limit_per_minute?: number
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          bucket?: string
+          day_count?: number
+          day_start?: string
+          disabled_until?: string | null
+          last_error?: string | null
+          limit_per_day?: number
+          limit_per_minute?: number
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      apollo_search_cache: {
+        Row: {
+          cache_key: string
+          contact_count: number
+          domain: string
+          expires_at: string
+          fetched_at: string
+          hit_count: number
+          payload: Json
+          status: string
+        }
+        Insert: {
+          cache_key: string
+          contact_count?: number
+          domain: string
+          expires_at: string
+          fetched_at?: string
+          hit_count?: number
+          payload?: Json
+          status: string
+        }
+        Update: {
+          cache_key?: string
+          contact_count?: number
+          domain?: string
+          expires_at?: string
+          fetched_at?: string
+          hit_count?: number
+          payload?: Json
+          status?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: Database["public"]["Enums"]["audit_action"]
@@ -4858,6 +4930,23 @@ export type Database = {
           p95_ms: number
           requests: number
         }[]
+      }
+      apollo_cache_get: { Args: { p_key: string }; Returns: Json }
+      apollo_cache_put: {
+        Args: {
+          p_contact_count: number
+          p_domain: string
+          p_key: string
+          p_payload: Json
+          p_status: string
+          p_ttl_seconds: number
+        }
+        Returns: undefined
+      }
+      apollo_rate_consume: { Args: never; Returns: Json }
+      apollo_rate_disable: {
+        Args: { p_reason: string; p_seconds: number }
+        Returns: undefined
       }
       apply_retry_advisory: {
         Args: { _advisory_id: string }
