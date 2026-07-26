@@ -3535,6 +3535,36 @@ export type Database = {
         }
         Relationships: []
       }
+      queue_sla_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_sla_seconds: number
+          old_sla_seconds: number | null
+          queue_kind: string
+          source: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_sla_seconds: number
+          old_sla_seconds?: number | null
+          queue_kind: string
+          source: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_sla_seconds?: number
+          old_sla_seconds?: number | null
+          queue_kind?: string
+          source?: string
+        }
+        Relationships: []
+      }
       reaper_alert_history: {
         Row: {
           consecutive: number
@@ -4829,6 +4859,16 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      auto_tune_queue_slas: {
+        Args: { p_hours?: number; p_min_drift_pct?: number }
+        Returns: {
+          applied: boolean
+          new_sla_seconds: number
+          old_sla_seconds: number
+          queue_kind: string
+          reason: string
+        }[]
       }
       campaign_ab_stats: {
         Args: { _campaign_id: string }
