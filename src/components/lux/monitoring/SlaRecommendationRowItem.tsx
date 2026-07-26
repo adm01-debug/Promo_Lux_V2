@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Loader2, Check } from "lucide-react";
 import type { SlaRecommendationRow } from "./SlaRecommendationsCard";
 
