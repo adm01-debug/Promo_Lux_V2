@@ -16,7 +16,7 @@ import { downloadCSV } from "@/lib/exportCSV";
 import { SlaHistoryTrendChart } from "./SlaHistoryTrendChart";
 import { detectSlaRisk } from "./slaRiskAnalysis";
 import { toast } from "sonner";
-import { History, ArrowRight, Download, Loader2 } from "lucide-react";
+import { History, ArrowRight, Download, Loader2, AlertTriangle } from "lucide-react";
 
 
 interface SlaHistoryRow {
