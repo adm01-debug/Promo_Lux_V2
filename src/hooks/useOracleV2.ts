@@ -63,8 +63,15 @@ export interface ApolloFallbackReport {
   attempted: boolean;
   departments: string[];
   found: number;
+  /** consultas servidas pelo cache — crédito Apollo economizado */
+  cache_hits?: number;
+  /** chamadas efetivamente enviadas ao Apollo */
+  api_calls?: number;
+  /** consultas barradas por cota/cooldown */
+  throttled?: number;
   skipped_reason?: string;
 }
+
 
 export interface SearchDecisorsResponse {
   session_id: string;
