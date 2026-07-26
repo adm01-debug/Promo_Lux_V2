@@ -486,7 +486,9 @@ const AutomationMonitoring = () => {
           <SlaCompliancePanel />
           <SlaRecommendationsCard />
           <SlaHistoryCard />
+          <SlaAutoTuneBlockedCard />
           <SlaTrendChart />
+
 
         </TabsContent>
 
