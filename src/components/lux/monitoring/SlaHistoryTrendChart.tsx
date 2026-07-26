@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
   CartesianGrid,
+  ReferenceLine,
 } from "recharts";
 import { buildSlaChartData, type SlaHistoryPoint } from "./slaHistoryChartData";
 
@@ -34,7 +35,14 @@ const SOURCE_LABELS: Record<string, string> = {
 interface SlaHistoryTrendChartProps {
   /** Registros do histórico (ordem indiferente — o gráfico reordena). */
   rows: SlaHistoryPoint[];
+  /**
+   * p95 observado por fila (segundos), no mesmo recorte de período do histórico.
+   * Valores ausentes, não-finitos ou <= 0 são ignorados — a referência só é
+   * desenhada quando há amostra confiável.
+   */
+  p95ByQueue?: Record<string, number | null | undefined>;
 }
+
 
 interface DotPayload {
   changed: string;
@@ -81,10 +89,20 @@ function SourceDot(props: {
  * permanece constante até a próxima alteração — interpolar linearmente
  * sugeriria uma transição gradual que nunca ocorreu.
  */
-export function SlaHistoryTrendChart({ rows }: SlaHistoryTrendChartProps) {
+export function SlaHistoryTrendChart({ rows, p95ByQueue }: SlaHistoryTrendChartProps) {
   const { data, queues } = useMemo(() => buildSlaChartData(rows), [rows]);
 
+  /** Só referencia filas presentes no gráfico e com p95 numérico positivo. */
+  const references = useMemo(
+    () =>
+      queues
+        .map((q) => ({ queue: q, value: Number(p95ByQueue?.[q]) }))
+        .filter((r) => Number.isFinite(r.value) && r.value > 0),
+    [queues, p95ByQueue],
+  );
+
   if (data.length < 2) return null;
+
 
   return (
     <div className="mb-4 space-y-1" aria-label="Gráfico de evolução do SLA padrão">
@@ -135,6 +153,22 @@ export function SlaHistoryTrendChart({ rows }: SlaHistoryTrendChartProps) {
                 isAnimationActive={false}
               />
             ))}
+            {references.map((r) => (
+              <ReferenceLine
+                key={`p95-${r.queue}`}
+                y={r.value}
+                stroke={COLORS[r.queue] ?? "hsl(var(--muted-foreground))"}
+                strokeDasharray="4 4"
+                strokeOpacity={0.7}
+                ifOverflow="extendDomain"
+                label={{
+                  value: `p95 ${LABELS[r.queue] ?? r.queue}: ${Math.round(r.value)}s`,
+                  position: "insideTopRight",
+                  fill: "hsl(var(--muted-foreground))",
+                  fontSize: 10,
+                }}
+              />
+            ))}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -150,7 +184,17 @@ export function SlaHistoryTrendChart({ rows }: SlaHistoryTrendChartProps) {
           />
           Auto-ajuste
         </span>
+        {references.length > 0 && (
+          <span className="flex items-center gap-1">
+            <span
+              className="inline-block h-0 w-3 border-t border-dashed border-muted-foreground"
+              aria-hidden
+            />
+            p95 observado
+          </span>
+        )}
       </p>
+
     </div>
   );
 }
