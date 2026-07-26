@@ -127,7 +127,30 @@ export function SlaHistoryCard() {
     retry: 1,
   });
 
+  /** SLAs padrão vigentes — base da comparação com o p95 observado. */
+  const { data: currentSla } = useQuery({
+    queryKey: ["queue-sla-defaults-risk"],
+    queryFn: async () => {
+      const { data: rows, error: slaError } = await supabase
+        .from("queue_sla_defaults")
+        .select("queue_kind, sla_seconds");
+      if (slaError) throw slaError;
+      const out: Record<string, number> = {};
+      for (const r of rows ?? []) out[r.queue_kind] = r.sla_seconds;
+      return out;
+    },
+    staleTime: 300_000,
+    retry: 1,
+  });
 
+  /**
+   * Filas com meta inatingível: p95 acima do SLA configurado. Tolerância de 5%
+   * evita ruído por variação estatística normal entre coletas.
+   */
+  const risks = useMemo(
+    () => detectSlaRisk(currentSla ?? {}, p95ByQueue, 5),
+    [currentSla, p95ByQueue],
+  );
 
 
   const [exporting, setExporting] = useState(false);
