@@ -64,7 +64,7 @@ export function SlaRecommendationsCard() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("queue_sla_defaults")
-        .select("queue_kind, sla_seconds, source, last_applied_at");
+        .select("queue_kind, sla_seconds, auto_tune, source, last_applied_at");
       if (error) throw error;
       return (data ?? []) as QueueSlaDefault[];
     },
