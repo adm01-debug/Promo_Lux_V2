@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { downloadCSV } from "@/lib/exportCSV";
+import { SlaHistoryTrendChart } from "./SlaHistoryTrendChart";
 import { toast } from "sonner";
 import { History, ArrowRight, Download, Loader2 } from "lucide-react";
 
@@ -194,9 +195,12 @@ export function SlaHistoryCard() {
         ) : !data || data.length === 0 ? (
           <p className="text-sm text-muted-foreground">Nenhuma alteração registrada ainda.</p>
         ) : (
-          <ul className="divide-y">
+          <>
+            <SlaHistoryTrendChart rows={data} />
+            <ul className="divide-y">
             {data.map((row) => (
               <li key={row.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-foreground">
                     {LABELS[row.queue_kind] ?? row.queue_kind}
@@ -213,7 +217,9 @@ export function SlaHistoryCard() {
                 </time>
               </li>
             ))}
-          </ul>
+            </ul>
+          </>
+
         )}
       </CardContent>
     </Card>
