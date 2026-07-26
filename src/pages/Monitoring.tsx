@@ -64,6 +64,7 @@ import { SlaTrendChart } from "@/components/lux/monitoring/SlaTrendChart";
 import { SlaRecommendationsCard } from "@/components/lux/monitoring/SlaRecommendationsCard";
 import { SlaHistoryCard } from "@/components/lux/monitoring/SlaHistoryCard";
 import { SlaAutoTuneBlockedCard } from "@/components/lux/monitoring/SlaAutoTuneBlockedCard";
+import { SourceComparisonReport } from "@/components/lux/monitoring/SourceComparisonReport";
 
 
 import { RotateCcw } from "lucide-react";
