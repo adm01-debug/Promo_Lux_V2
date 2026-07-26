@@ -35,7 +35,14 @@ const SOURCE_LABELS: Record<string, string> = {
 interface SlaHistoryTrendChartProps {
   /** Registros do histórico (ordem indiferente — o gráfico reordena). */
   rows: SlaHistoryPoint[];
+  /**
+   * p95 observado por fila (segundos), no mesmo recorte de período do histórico.
+   * Valores ausentes, não-finitos ou <= 0 são ignorados — a referência só é
+   * desenhada quando há amostra confiável.
+   */
+  p95ByQueue?: Record<string, number | null | undefined>;
 }
+
 
 interface DotPayload {
   changed: string;
