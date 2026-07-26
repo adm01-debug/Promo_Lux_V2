@@ -542,28 +542,49 @@ serve(async (req) => {
     }
   }
 
-  // 4b) SEM linkedin: guard explícito, um a um (são raros — 0 de 100 na medição real).
-  for (const c of semLinkedin) {
-    const { data: existe } = await admin
+  // 4b) SEM linkedin: guard por identidade normalizada contra o que JÁ existe na
+  //     mesma empresa/organização. O eq(full_name) exato de antes deixava passar
+  //     variações de acento e caixa, então re-execuções duplicavam o mesmo humano.
+  if (semLinkedin.length > 0) {
+    let existentesQuery = admin
       .from("lusha_contacts")
-      .select("id")
+      .select("full_name, job_title, linkedin_url, linkedin_public_id")
       .eq("organization_id", input.organization_id)
-      .is("linkedin_public_id", null)
-      .eq("full_name", c.fullName)
-      .eq("job_title", c.jobTitle || "")
-      .maybeSingle();
-    if (existe) { dedupCount += 1; continue; }
+      .limit(2000);
+    existentesQuery = input.company_id
+      ? existentesQuery.eq("company_id", input.company_id)
+      : existentesQuery.eq("lusha_company_lid", String(companyMatch.companyLid));
 
-    const { error: insErr } = await admin.from("lusha_contacts").insert(mkRow(c));
-    if (insErr) {
-      // 23505 aqui = corrida (outra execução inseriu o mesmo entre o SELECT e o INSERT).
-      // Não é erro fatal: trata como duplicado.
-      if ((insErr as { code?: string }).code === "23505") { dedupCount += 1; }
-      else { await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha no insert (sem linkedin)", errorDetail: insErr.message }); }
-    } else {
-      insertedCount += 1;
+    const { data: existentesRows, error: exErr } = await existentesQuery;
+    if (exErr) {
+      await logger.log({
+        step: "dedup_leads", status: "degraded", level: "warn",
+        message: "não consegui carregar contatos existentes para o guard de identidade",
+        errorDetail: exErr.message,
+      });
+    }
+    const existingKeys = buildExistingKeyIndex(
+      (existentesRows ?? []) as Array<Record<string, string | null>>,
+      companyDomain,
+    );
+
+    for (const c of semLinkedin) {
+      const ident = identifyContact(c);
+      if (ident.keys.some((k) => existingKeys.has(k))) { dedupCount += 1; continue; }
+
+      const { error: insErr } = await admin.from("lusha_contacts").insert(mkRow(c));
+      if (insErr) {
+        // 23505 aqui = corrida (outra execução inseriu o mesmo entre o SELECT e o INSERT).
+        // Não é erro fatal: trata como duplicado.
+        if ((insErr as { code?: string }).code === "23505") { dedupCount += 1; }
+        else { await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha no insert (sem linkedin)", errorDetail: insErr.message }); }
+      } else {
+        insertedCount += 1;
+        for (const k of ident.keys) existingKeys.add(k); // evita duplicar dentro do próprio loop
+      }
     }
   }
+
 
   const totalUnicos = comLinkedin.length + semLinkedin.length;
 
