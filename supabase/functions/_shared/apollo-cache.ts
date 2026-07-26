@@ -107,7 +107,11 @@ export function parseRateDecision(raw: unknown): ApolloRateDecision {
 
 /** Cliente mínimo (structural typing) — evita import cruzado do supabase-js. */
 export interface RpcClient {
-  rpc(fn: string, args?: Record<string, unknown>): Promise<{ data: unknown; error: unknown }>;
+  // PromiseLike: o builder do supabase-js é thenable, não Promise.
+  rpc(
+    fn: string,
+    args?: Record<string, unknown>,
+  ): PromiseLike<{ data: unknown; error: unknown }>;
 }
 
 export interface ApolloCachedEntry<T = unknown> {
