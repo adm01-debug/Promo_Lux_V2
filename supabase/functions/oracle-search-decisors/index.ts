@@ -29,6 +29,8 @@ import { isUserOrgMember } from "../_shared/org-membership.ts";
 import { isApolloConfigured, searchPeopleByDomain } from "../_shared/apollo-client.ts";
 import { apolloFilterForLushaDepartments } from "../_shared/apollo-departments.ts";
 import { resolveCompanyDomain } from "../_shared/company-domain.ts";
+import { buildExistingKeyIndex, dedupeLeads, leadIdentity } from "../_shared/lead-identity.ts";
+
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -309,31 +311,30 @@ serve(async (req) => {
     apolloSkippedReason = "circuit_breaker_open";
   }
 
-  // Domínio normalizado — chave de casamento. Resolvido UMA vez por busca.
-  let apolloDomain = "";
-  if (apolloEnabled) {
-    let companyWebsite: string | null = null;
-    if (input.company_id) {
-      const { data: comp } = await admin
-        .from("companies")
-        .select("website")
-        .eq("id", input.company_id)
-        .maybeSingle();
-      companyWebsite = (comp as { website?: string | null } | null)?.website ?? null;
-    }
-    const rawMatch = (companyMatch.raw ?? {}) as Record<string, unknown>;
-    const pick = (k: string) => (typeof rawMatch[k] === "string" ? (rawMatch[k] as string) : null);
-    const resolved = resolveCompanyDomain({
-      companyWebsite,
-      lushaEmailDomain: pick("company_email_domain") ?? pick("email_domain"),
-      lushaCompanyDomain: pick("fqdn") ?? pick("domain") ?? pick("website"),
-    });
-    apolloDomain = resolved.domain;
-    if (!apolloDomain) {
-      apolloEnabled = false;
-      apolloSkippedReason = "no_reliable_domain";
-    }
+  // Domínio normalizado — chave de casamento (fallback Apollo E dedup de leads).
+  // Resolvido UMA vez por busca, independente do Apollo estar ligado.
+  let companyWebsite: string | null = null;
+  if (input.company_id) {
+    const { data: comp } = await admin
+      .from("companies")
+      .select("website")
+      .eq("id", input.company_id)
+      .maybeSingle();
+    companyWebsite = (comp as { website?: string | null } | null)?.website ?? null;
   }
+  const rawMatch = (companyMatch.raw ?? {}) as Record<string, unknown>;
+  const pick = (k: string) => (typeof rawMatch[k] === "string" ? (rawMatch[k] as string) : null);
+  const companyDomain = resolveCompanyDomain({
+    companyWebsite,
+    lushaEmailDomain: pick("company_email_domain") ?? pick("email_domain"),
+    lushaCompanyDomain: pick("fqdn") ?? pick("domain") ?? pick("website"),
+  }).domain;
+  const apolloDomain = companyDomain;
+  if (apolloEnabled && !apolloDomain) {
+    apolloEnabled = false;
+    apolloSkippedReason = "no_reliable_domain";
+  }
+
 
   const apolloFallback = {
     attempted: false,
@@ -431,43 +432,64 @@ serve(async (req) => {
   }
 
 
-  // 3) Dedup inicial por linkedin_public_id (mantido para reduzir trabalho a jusante)
-  const seen = new Set<string>();
-  const uniqueContacts = allContacts.filter((c) => {
-    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
-    const key = pid || `noid:${c.fullName}:${c.jobTitle}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
+  // 3) Deduplicação por IDENTIDADE canônica (LinkedIn > domínio+nome > nome+cargo).
+  //    Antes o casamento era feito com string crua, então "JOÃO DA SILVA" (Apollo)
+  //    e "Dr. João da Silva" (Lusha) viravam DOIS registros do mesmo humano.
+  //    Agora normaliza acento/pontuação/tratamento e casa entre as fontes.
+  //    No merge a Lusha vence a Apollo, mas herda o linkedinUrl que só a Apollo
+  //    tinha (e vice-versa) — nada de dado é perdido no processo.
+  const identifyContact = (c: ContatoComOrigem) =>
+    leadIdentity({
+      fullName: c.fullName,
+      jobTitle: c.jobTitle,
+      linkedinUrl: c.linkedinUrl,
+      companyDomain,
+      email: typeof (c.raw as Record<string, unknown> | undefined)?.email === "string"
+        ? ((c.raw as Record<string, string>).email)
+        : null,
+    });
+
+  const dedup = dedupeLeads<ContatoComOrigem>(allContacts, identifyContact, {
+    sourceOf: (c) => c.contactSource,
+    merge: (winner, loser) => ({
+      ...winner,
+      linkedinUrl: winner.linkedinUrl || loser.linkedinUrl,
+      jobTitle: winner.jobTitle || loser.jobTitle,
+      seniority: winner.seniority || loser.seniority,
+      department: winner.department || loser.department,
+    }),
+  });
+  const uniqueContacts = dedup.kept;
+  const intraDuplicates = dedup.duplicates;
+
+  await logger.log({
+    step: "dedup_leads",
+    status: "success",
+    message: `${allContacts.length} coletados → ${uniqueContacts.length} únicos (${intraDuplicates} duplicados entre fontes)`,
+    metadata: {
+      collected: allContacts.length,
+      unique: uniqueContacts.length,
+      intra_duplicates: intraDuplicates,
+      match_domain: companyDomain || null,
+    },
   });
 
-  // 3) Particiona: contatos COM linkedin_public_id vs SEM.
+  // 3b) Particiona: contatos COM linkedin_public_id vs SEM.
   //    publicIdFromLinkedInUrl espelha o SQL da coluna GENERATED linkedin_public_id.
   //    - COM pid  -> upsert por (organization_id, linkedin_public_id), o índice
   //      único deduplica no banco.
   //    - SEM pid  -> linkedin_public_id vira NULL, e no Postgres NULL não conflita
   //      com NULL (o ON CONFLICT NUNCA dispara). Sem tratamento, cada re-execução
   //      DUPLICA. Provado por sonda SQL em 17/07/2026. Então esses passam por um
-  //      guard explícito .maybeSingle() antes de inserir.
-  const dedupIntra = new Set<string>();
+  //      guard por identidade normalizada antes de inserir.
   const comLinkedin: typeof allContacts = [];
-  const semLinkedinSeen = new Set<string>();
   const semLinkedin: typeof allContacts = [];
 
   for (const c of uniqueContacts) {
-    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
-    if (pid) {
-      if (dedupIntra.has(pid)) continue; // já deduplicado no passo anterior, mas garante
-      dedupIntra.add(pid);
-      comLinkedin.push(c);
-    } else {
-      const k = `${(c.fullName || "").toLowerCase().trim()}|${(c.jobTitle || "").toLowerCase().trim()}`;
-      if (!k.replace("|", "")) continue; // sem nome E sem cargo -> descarta
-      if (semLinkedinSeen.has(k)) continue;
-      semLinkedinSeen.add(k);
-      semLinkedin.push(c);
-    }
+    if (publicIdFromLinkedInUrl(c.linkedinUrl)) comLinkedin.push(c);
+    else semLinkedin.push(c);
   }
+
 
   const mkRow = (c: ContatoComOrigem) => ({
     session_id: sessionId,
@@ -520,37 +542,62 @@ serve(async (req) => {
     }
   }
 
-  // 4b) SEM linkedin: guard explícito, um a um (são raros — 0 de 100 na medição real).
-  for (const c of semLinkedin) {
-    const { data: existe } = await admin
+  // 4b) SEM linkedin: guard por identidade normalizada contra o que JÁ existe na
+  //     mesma empresa/organização. O eq(full_name) exato de antes deixava passar
+  //     variações de acento e caixa, então re-execuções duplicavam o mesmo humano.
+  if (semLinkedin.length > 0) {
+    let existentesQuery = admin
       .from("lusha_contacts")
-      .select("id")
+      .select("full_name, job_title, linkedin_url, linkedin_public_id")
       .eq("organization_id", input.organization_id)
-      .is("linkedin_public_id", null)
-      .eq("full_name", c.fullName)
-      .eq("job_title", c.jobTitle || "")
-      .maybeSingle();
-    if (existe) { dedupCount += 1; continue; }
+      .limit(2000);
+    existentesQuery = input.company_id
+      ? existentesQuery.eq("company_id", input.company_id)
+      : existentesQuery.eq("lusha_company_lid", String(companyMatch.companyLid));
 
-    const { error: insErr } = await admin.from("lusha_contacts").insert(mkRow(c));
-    if (insErr) {
-      // 23505 aqui = corrida (outra execução inseriu o mesmo entre o SELECT e o INSERT).
-      // Não é erro fatal: trata como duplicado.
-      if ((insErr as { code?: string }).code === "23505") { dedupCount += 1; }
-      else { await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha no insert (sem linkedin)", errorDetail: insErr.message }); }
-    } else {
-      insertedCount += 1;
+    const { data: existentesRows, error: exErr } = await existentesQuery;
+    if (exErr) {
+      await logger.log({
+        step: "dedup_leads", status: "degraded", level: "warn",
+        message: "não consegui carregar contatos existentes para o guard de identidade",
+        errorDetail: exErr.message,
+      });
+    }
+    const existingKeys = buildExistingKeyIndex(
+      (existentesRows ?? []) as Array<Record<string, string | null>>,
+      companyDomain,
+    );
+
+    for (const c of semLinkedin) {
+      const ident = identifyContact(c);
+      if (ident.keys.some((k) => existingKeys.has(k))) { dedupCount += 1; continue; }
+
+      const { error: insErr } = await admin.from("lusha_contacts").insert(mkRow(c));
+      if (insErr) {
+        // 23505 aqui = corrida (outra execução inseriu o mesmo entre o SELECT e o INSERT).
+        // Não é erro fatal: trata como duplicado.
+        if ((insErr as { code?: string }).code === "23505") { dedupCount += 1; }
+        else { await logger.log({ step: "insert_contacts", status: "error", level: "error", message: "falha no insert (sem linkedin)", errorDetail: insErr.message }); }
+      } else {
+        insertedCount += 1;
+        for (const k of ident.keys) existingKeys.add(k); // evita duplicar dentro do próprio loop
+      }
     }
   }
 
+
   const totalUnicos = comLinkedin.length + semLinkedin.length;
+  // Duplicados reportados = os que já estavam no banco + os que colidiram entre
+  // Lusha e Apollo dentro desta mesma busca.
+  const totalDuplicados = dedupCount + intraDuplicates;
 
   const finalStatus = errors.length > 0 && insertedCount === 0 ? "error" : "completed";
   await admin.from("lusha_search_sessions").update({
     status: finalStatus,
     progress_pct: 100,
     total_found: totalUnicos,
-    total_duplicates: dedupCount,
+    total_duplicates: totalDuplicados,
+
     total_errors: errors.length,
     completed_at: new Date().toISOString(),
     error_message: errors.length > 0 ? errors.map((e) => `${e.department}: ${e.error}`).join("; ").slice(0, 500) : null,
@@ -559,9 +606,13 @@ serve(async (req) => {
   await logger.log({
     step: "search_done",
     status: finalStatus === "completed" ? "success" : "error",
-    message: `concluído: ${insertedCount} inseridos, ${dedupCount} duplicados, ${errors.length} erros`,
+    message: `concluído: ${insertedCount} inseridos, ${totalDuplicados} duplicados, ${errors.length} erros`,
     durationMs: Date.now() - startedAt,
-    metadata: { perDeptCount, errors, company_lid: companyMatch.companyLid },
+    metadata: {
+      perDeptCount, errors, company_lid: companyMatch.companyLid,
+      duplicates_existing: dedupCount, duplicates_cross_source: intraDuplicates,
+      match_domain: companyDomain || null,
+    },
   });
 
   return new Response(
@@ -570,7 +621,15 @@ serve(async (req) => {
       company: { lid: companyMatch.companyLid, name: companyMatch.name },
       total_found: totalUnicos,
       inserted: insertedCount,
-      duplicates: dedupCount,
+      duplicates: totalDuplicados,
+      dedup: {
+        collected: allContacts.length,
+        unique: totalUnicos,
+        cross_source_merged: intraDuplicates,
+        already_in_db: dedupCount,
+        match_domain: companyDomain || null,
+      },
+
       errors,
       departments_mapped: resolution.mapped,
       departments_not_found: resolution.notFound,
