@@ -153,6 +153,22 @@ export function SlaHistoryTrendChart({ rows, p95ByQueue }: SlaHistoryTrendChartP
                 isAnimationActive={false}
               />
             ))}
+            {references.map((r) => (
+              <ReferenceLine
+                key={`p95-${r.queue}`}
+                y={r.value}
+                stroke={COLORS[r.queue] ?? "hsl(var(--muted-foreground))"}
+                strokeDasharray="4 4"
+                strokeOpacity={0.7}
+                ifOverflow="extendDomain"
+                label={{
+                  value: `p95 ${LABELS[r.queue] ?? r.queue}: ${Math.round(r.value)}s`,
+                  position: "insideTopRight",
+                  fill: "hsl(var(--muted-foreground))",
+                  fontSize: 10,
+                }}
+              />
+            ))}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -168,7 +184,17 @@ export function SlaHistoryTrendChart({ rows, p95ByQueue }: SlaHistoryTrendChartP
           />
           Auto-ajuste
         </span>
+        {references.length > 0 && (
+          <span className="flex items-center gap-1">
+            <span
+              className="inline-block h-0 w-3 border-t border-dashed border-muted-foreground"
+              aria-hidden
+            />
+            p95 observado
+          </span>
+        )}
       </p>
+
     </div>
   );
 }
