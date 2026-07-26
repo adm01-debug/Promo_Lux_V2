@@ -256,6 +256,30 @@ export function SlaHistoryCard() {
 
 
       <CardContent>
+        {risks.length > 0 && (
+          <div
+            role="status"
+            className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm"
+          >
+            <p className="flex items-center gap-2 font-medium text-destructive">
+              <AlertTriangle className="h-4 w-4" aria-hidden />
+              SLA configurado abaixo do p95 observado
+            </p>
+            <ul className="mt-1.5 space-y-0.5 text-muted-foreground">
+              {risks.map((r) => (
+                <li key={r.queue_kind} className="font-mono text-xs">
+                  {LABELS[r.queue_kind] ?? r.queue_kind}: meta {r.sla_seconds}s · p95{" "}
+                  {Math.round(r.p95_seconds)}s (+{r.gap_pct}%)
+                </li>
+              ))}
+            </ul>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              Mais de 5% dos itens estouram o prazo por definição — considere aplicar a
+              recomendação de SLA.
+            </p>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="space-y-2" aria-busy="true">
             {[0, 1, 2].map((i) => (
