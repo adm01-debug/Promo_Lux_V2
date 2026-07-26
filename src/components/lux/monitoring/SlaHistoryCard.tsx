@@ -127,22 +127,50 @@ export function SlaHistoryCard() {
             Últimas alterações do prazo padrão de enfileiramento, manuais ou pelo auto-ajuste diário.
           </CardDescription>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleExport}
-          disabled={exporting}
-          aria-label="Exportar histórico de SLA em CSV"
-        >
-          {exporting ? (
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-          ) : (
-            <Download className="h-4 w-4" aria-hidden />
-          )}
-          <span className="ml-2 hidden sm:inline">Exportar CSV</span>
-        </Button>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Select value={queueFilter} onValueChange={setQueueFilter}>
+            <SelectTrigger className="h-9 w-[160px]" aria-label="Filtrar por fila">
+              <SelectValue placeholder="Fila" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as filas</SelectItem>
+              {Object.entries(LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={periodFilter} onValueChange={setPeriodFilter}>
+            <SelectTrigger className="h-9 w-[160px]" aria-label="Filtrar por período">
+              <SelectValue placeholder="Período" />
+            </SelectTrigger>
+            <SelectContent>
+              {PERIODS.map((p) => (
+                <SelectItem key={p.value} value={p.value}>
+                  {p.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={exporting}
+            aria-label="Exportar histórico de SLA em CSV"
+          >
+            {exporting ? (
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            ) : (
+              <Download className="h-4 w-4" aria-hidden />
+            )}
+            <span className="ml-2 hidden sm:inline">Exportar CSV</span>
+          </Button>
+        </div>
       </CardHeader>
+
 
       <CardContent>
         {isLoading ? (
