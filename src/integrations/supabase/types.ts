@@ -5507,6 +5507,19 @@ export type Database = {
         Args: { _created_at: string; _sla_seconds: number }
         Returns: string
       }
+      sla_recommendations: {
+        Args: { p_hours?: number }
+        Returns: {
+          current_sla_p50: number
+          delta_seconds: number
+          p50_seconds: number
+          p95_seconds: number
+          queue_kind: string
+          recommended_sla_seconds: number
+          sample_size: number
+          verdict: string
+        }[]
+      }
       system_recovery_health: { Args: never; Returns: Json }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
