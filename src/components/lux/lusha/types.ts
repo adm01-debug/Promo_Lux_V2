@@ -57,6 +57,8 @@ export interface DecisionMaker {
   linkedinCourses?: string[];
   linkedinAwards?: string[];
   xUrl?: string | null;
+  /** Origem do dado. 'apollo' = veio do fallback quando a Lusha retornou vazio. */
+  source?: "lusha" | "apollo";
 }
 
 export interface DMCompanyResult {

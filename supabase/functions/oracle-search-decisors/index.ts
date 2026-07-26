@@ -26,6 +26,9 @@ import { CookieVaultUnavailable, CookieNotReady, getCookie } from "../_shared/co
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { isUserOrgMember } from "../_shared/org-membership.ts";
+import { isApolloConfigured, searchPeopleByDomain } from "../_shared/apollo-client.ts";
+import { apolloFilterForLushaDepartments } from "../_shared/apollo-departments.ts";
+import { resolveCompanyDomain } from "../_shared/company-domain.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
@@ -292,10 +295,52 @@ serve(async (req) => {
   //    enums daquele departamento — a Lusha faz OR + dedup nativo numa requisição
   //    só. Provado 17/07/2026: Sales(1421) + BusinessDevelopment(27) juntos = 1444,
   //    não 1448 — ela tira os 4 repetidos sozinha. Por isso "vendas" é 1 request.
-  type ContatoComOrigem = LushaSearchContact & { requestedPt: string };
+  type ContatoComOrigem = LushaSearchContact & { requestedPt: string; contactSource: "lusha" | "apollo" };
   const allContacts: ContatoComOrigem[] = [];
   const perDeptCount: Record<string, number> = {};
   const errors: Array<{ department: string; error: string }> = [];
+
+  // ── Fallback Apollo: só entra quando a Lusha devolve ZERO num departamento.
+  //    Nunca derruba a busca; qualquer falha vira errors[] + log degradado.
+  let apolloEnabled = isApolloConfigured();
+  let apolloSkippedReason: string | undefined = apolloEnabled ? undefined : "apollo_not_configured";
+  if (apolloEnabled && !(await checkCircuitBreaker(admin, "apollo_search"))) {
+    apolloEnabled = false;
+    apolloSkippedReason = "circuit_breaker_open";
+  }
+
+  // Domínio normalizado — chave de casamento. Resolvido UMA vez por busca.
+  let apolloDomain = "";
+  if (apolloEnabled) {
+    let companyWebsite: string | null = null;
+    if (input.company_id) {
+      const { data: comp } = await admin
+        .from("companies")
+        .select("website")
+        .eq("id", input.company_id)
+        .maybeSingle();
+      companyWebsite = (comp as { website?: string | null } | null)?.website ?? null;
+    }
+    const rawMatch = (companyMatch.raw ?? {}) as Record<string, unknown>;
+    const pick = (k: string) => (typeof rawMatch[k] === "string" ? (rawMatch[k] as string) : null);
+    const resolved = resolveCompanyDomain({
+      companyWebsite,
+      lushaEmailDomain: pick("company_email_domain") ?? pick("email_domain"),
+      lushaCompanyDomain: pick("fqdn") ?? pick("domain") ?? pick("website"),
+    });
+    apolloDomain = resolved.domain;
+    if (!apolloDomain) {
+      apolloEnabled = false;
+      apolloSkippedReason = "no_reliable_domain";
+    }
+  }
+
+  const apolloFallback = {
+    attempted: false,
+    departments: [] as string[],
+    found: 0,
+    ...(apolloSkippedReason ? { skipped_reason: apolloSkippedReason } : {}),
+  };
 
   for (let i = 0; i < resolution.mapped.length; i++) {
     const dept = resolution.mapped[i];
@@ -310,7 +355,7 @@ serve(async (req) => {
       // O rótulo PT vem do que o usuário PEDIU nesta volta. Não usa lookup
       // reverso (findPtLabelForEn): era ambíguo quando 2 rótulos PT caem no
       // mesmo enum (ex.: "Compras" e "Logística" -> ambos Operations).
-      allContacts.push(...result.contacts.map((c) => ({ ...c, requestedPt: dept.pt })));
+      allContacts.push(...result.contacts.map((c) => ({ ...c, requestedPt: dept.pt, contactSource: "lusha" as const })));
       await reportSuccess(admin, "lusha_search");
       await logger.log({
         step: "dept_search", status: "success",
@@ -320,6 +365,57 @@ serve(async (req) => {
           count: result.contacts.length, total_disponivel: result.total,
         },
       });
+
+      // ── Fallback Apollo por departamento vazio
+      if (result.contacts.length === 0 && apolloEnabled) {
+        const filter = apolloFilterForLushaDepartments(dept.en);
+        if (!filter) {
+          await logger.log({
+            step: "dept_fallback_apollo", status: "degraded",
+            message: `${dept.pt}: sem mapeamento Apollo`, metadata: { departments_en: dept.en },
+          });
+        } else {
+          apolloFallback.attempted = true;
+          apolloFallback.departments.push(dept.pt);
+          try {
+            const ap = await searchPeopleByDomain({
+              domain: apolloDomain,
+              titles: filter.titles,
+              departments: filter.departments,
+              size: input.max_per_department,
+            });
+            allContacts.push(
+              ...ap.contacts.map((c) => ({ ...c, requestedPt: dept.pt, contactSource: "apollo" as const })),
+            );
+            apolloFallback.found += ap.contacts.length;
+            perDeptCount[dept.pt] = ap.contacts.length;
+            await reportSuccess(admin, "apollo_search");
+            await logger.log({
+              step: "dept_fallback_apollo", status: "success",
+              message: `${dept.pt}: ${ap.contacts.length} via Apollo (domínio ${apolloDomain})`,
+              metadata: { department_pt: dept.pt, domain: apolloDomain, count: ap.contacts.length, total: ap.total },
+            });
+          } catch (err) {
+            const e = err as { status?: number; disabled?: boolean; transient?: boolean };
+            if (e.transient !== false) await reportFailure(admin, "apollo_search");
+            if (e.disabled) {
+              // 401/403 = chave sem acesso ao people search (exige master key).
+              // Desliga o fallback para o resto da busca, em silêncio.
+              apolloEnabled = false;
+              apolloSkippedReason = "apollo_forbidden";
+              (apolloFallback as { skipped_reason?: string }).skipped_reason = "apollo_forbidden";
+            }
+            errors.push({ department: dept.pt, error: `apollo: ${(err as Error).message}` });
+            await logger.log({
+              step: "dept_fallback_apollo", status: "degraded", level: "warn",
+              message: `fallback Apollo falhou em ${dept.pt}`,
+              errorDetail: (err as Error).message,
+              httpStatus: e.status,
+              metadata: { department_pt: dept.pt, domain: apolloDomain },
+            });
+          }
+        }
+      }
     } catch (err) {
       await reportFailure(admin, "lusha_search");
       errors.push({ department: dept.pt, error: (err as Error).message });
@@ -333,6 +429,7 @@ serve(async (req) => {
     const pct = Math.round(((i + 1) / resolution.mapped.length) * 90);
     await admin.from("lusha_search_sessions").update({ progress_pct: pct }).eq("id", sessionId);
   }
+
 
   // 3) Dedup inicial por linkedin_public_id (mantido para reduzir trabalho a jusante)
   const seen = new Set<string>();
@@ -387,6 +484,7 @@ serve(async (req) => {
     linkedin_url: c.linkedinUrl ?? null,
     enrichment_status: "pending_enrichment",
     raw_lusha_payload: c.raw as Record<string, unknown>,
+    contact_source: c.contactSource ?? "lusha",
   });
 
   let insertedCount = 0;
@@ -477,6 +575,7 @@ serve(async (req) => {
       departments_mapped: resolution.mapped,
       departments_not_found: resolution.notFound,
       correlation_id: correlationId,
+      apollo_fallback: apolloFallback,
     }),
     { headers: { ...cors, "Content-Type": "application/json" } },
   );

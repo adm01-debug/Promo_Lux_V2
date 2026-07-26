@@ -2381,6 +2381,7 @@ export type Database = {
           company_locations: Json | null
           company_type: string | null
           confidence_score: number | null
+          contact_source: string
           created_at: string
           data_freshness_ttl: number
           dedup_hash: string | null
@@ -2437,6 +2438,7 @@ export type Database = {
           company_locations?: Json | null
           company_type?: string | null
           confidence_score?: number | null
+          contact_source?: string
           created_at?: string
           data_freshness_ttl?: number
           dedup_hash?: string | null
@@ -2493,6 +2495,7 @@ export type Database = {
           company_locations?: Json | null
           company_type?: string | null
           confidence_score?: number | null
+          contact_source?: string
           created_at?: string
           data_freshness_ttl?: number
           dedup_hash?: string | null
@@ -5264,6 +5267,7 @@ export type Database = {
           company_locations: Json | null
           company_type: string | null
           confidence_score: number | null
+          contact_source: string
           created_at: string
           data_freshness_ttl: number
           dedup_hash: string | null

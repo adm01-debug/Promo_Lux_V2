@@ -58,6 +58,14 @@ export interface SearchDecisorsInput {
 }
 
 
+/** Resultado do fallback Apollo (só roda quando a Lusha zera um departamento). */
+export interface ApolloFallbackReport {
+  attempted: boolean;
+  departments: string[];
+  found: number;
+  skipped_reason?: string;
+}
+
 export interface SearchDecisorsResponse {
   session_id: string;
   company: { id: string | number; name: string };
@@ -69,7 +77,9 @@ export interface SearchDecisorsResponse {
   departments_not_found: string[];
   correlation_id: string;
   warning?: string;
+  apollo_fallback?: ApolloFallbackReport;
 }
+
 
 export function useOracleSearchDecisors() {
   const qc = useQueryClient();
@@ -93,6 +103,13 @@ export function useOracleSearchDecisors() {
         toast.success(
           `${data.inserted} decisor(es) encontrado(s)${data.duplicates > 0 ? ` (+${data.duplicates} duplicados)` : ""}.`,
         );
+        const ap = data.apollo_fallback;
+        if (ap?.attempted && ap.found > 0) {
+          toast.info(
+            `${ap.found} decisor(es) vieram do Apollo (${ap.departments.join(", ")}) — a Lusha não retornou nada nesses departamentos.`,
+          );
+        }
+
       }
     },
     onError: (err: Error) => {

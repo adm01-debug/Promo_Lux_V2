@@ -67,12 +67,24 @@ const DecisionMakerRow = memo(function DecisionMakerRow({
       <TableCell>
         <div className="space-y-1">
           <div className="font-medium">{dm.fullName}</div>
-          {dm.seniority && (
-            <Badge variant="outline" className={seniorityBadgeClass(dm.seniority)}>
-              {dm.seniority}
-            </Badge>
-          )}
+          <div className="flex flex-wrap items-center gap-1">
+            {dm.seniority && (
+              <Badge variant="outline" className={seniorityBadgeClass(dm.seniority)}>
+                {dm.seniority}
+              </Badge>
+            )}
+            {dm.source === "apollo" && (
+              <Badge
+                variant="outline"
+                className="border-border/50 text-muted-foreground text-[10px] uppercase tracking-wide"
+                title="Identificado via Apollo.io (fallback quando a Lusha não retornou decisores)"
+              >
+                Apollo
+              </Badge>
+            )}
+          </div>
         </div>
+
       </TableCell>
       <TableCell>
         <div className="space-y-1">
