@@ -217,7 +217,9 @@ export function SlaHistoryCard() {
                 </time>
               </li>
             ))}
-          </ul>
+            </ul>
+          </>
+
         )}
       </CardContent>
     </Card>
