@@ -124,10 +124,9 @@ export function SlaRecommendationsCard() {
     onSettled: () => setTogglingAutoTune(null),
   });
 
-  const defaultFor = (kind: string) =>
-    defaults?.find((d) => d.queue_kind === kind)?.sla_seconds ?? null;
-  const autoTuneFor = (kind: string) =>
-    defaults?.find((d) => d.queue_kind === kind)?.auto_tune ?? false;
+  const rowDefault = (kind: string) => defaults?.find((d) => d.queue_kind === kind) ?? null;
+  const defaultFor = (kind: string) => rowDefault(kind)?.sla_seconds ?? null;
+  const autoTuneFor = (kind: string) => rowDefault(kind)?.auto_tune ?? false;
 
   return (
     <Card>
@@ -203,6 +202,8 @@ export function SlaRecommendationsCard() {
                     key={row.queue_kind}
                     row={row}
                     currentDefault={defaultFor(row.queue_kind)}
+                    source={rowDefault(row.queue_kind)?.source ?? null}
+                    lastAppliedAt={rowDefault(row.queue_kind)?.last_applied_at ?? null}
                     autoTune={autoTuneFor(row.queue_kind)}
                     onApply={(kind) => applyMutation.mutate(kind)}
                     onToggleAutoTune={(kind, enabled) =>
