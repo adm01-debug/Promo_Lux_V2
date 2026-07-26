@@ -23,6 +23,7 @@ export interface SlaRecommendationRow {
 interface QueueSlaDefault {
   queue_kind: string;
   sla_seconds: number;
+  auto_tune: boolean;
   source: string;
   last_applied_at: string | null;
 }
@@ -38,6 +39,7 @@ const HEADERS = [
   "Padrão enqueue",
   "Sugerido",
   "Veredito",
+  "Auto-ajuste",
 ] as const;
 
 export function SlaRecommendationsCard() {
