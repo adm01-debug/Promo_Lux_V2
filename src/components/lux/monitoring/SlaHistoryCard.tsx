@@ -160,7 +160,7 @@ export function SlaHistoryCard() {
           </CardDescription>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <Select value={queueFilter} onValueChange={setQueueFilter}>
+          <Select value={queueFilter} onValueChange={handleQueueChange}>
             <SelectTrigger className="h-9 w-[160px]" aria-label="Filtrar por fila">
               <SelectValue placeholder="Fila" />
             </SelectTrigger>
@@ -173,7 +173,7 @@ export function SlaHistoryCard() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={periodFilter} onValueChange={setPeriodFilter}>
+          <Select value={periodFilter} onValueChange={handlePeriodChange}>
             <SelectTrigger className="h-9 w-[160px]" aria-label="Filtrar por período">
               <SelectValue placeholder="Período" />
             </SelectTrigger>
@@ -241,7 +241,26 @@ export function SlaHistoryCard() {
               </li>
             ))}
             </ul>
+            {hasMore && (
+              <div className="pt-3 text-center">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setLimit((n) => Math.min(n + PAGE_SIZE, MAX_ROWS))}
+                  disabled={isFetching}
+                >
+                  {isFetching && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                  Carregar mais
+                </Button>
+              </div>
+            )}
+            <p className="pt-2 text-center text-xs text-muted-foreground">
+              {data.length} registro(s) exibido(s)
+              {!hasMore && limit >= MAX_ROWS ? " — use a exportação CSV para o histórico completo." : ""}
+            </p>
           </>
+
 
         )}
       </CardContent>
