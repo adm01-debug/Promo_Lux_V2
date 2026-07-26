@@ -30,14 +30,39 @@ const SOURCES: Record<string, string> = {
   seed: "Inicial",
 };
 
+const PERIODS: Array<{ value: string; label: string; days: number | null }> = [
+  { value: "7", label: "Últimos 7 dias", days: 7 },
+  { value: "30", label: "Últimos 30 dias", days: 30 },
+  { value: "90", label: "Últimos 90 dias", days: 90 },
+  { value: "all", label: "Todo o período", days: null },
+];
+
 /** Histórico auditável de alterações do SLA padrão por fila. */
 export function SlaHistoryCard() {
+  const [queueFilter, setQueueFilter] = useState<string>("all");
+  const [periodFilter, setPeriodFilter] = useState<string>("30");
+
+  const periodDays = PERIODS.find((p) => p.value === periodFilter)?.days ?? null;
+  const sinceIso = periodDays
+    ? new Date(Date.now() - periodDays * 86_400_000).toISOString()
+    : null;
+
+  /** Aplica os filtros ativos a uma query de `queue_sla_history`. */
+  function applyFilters<T extends { eq: (c: string, v: string) => T; gte: (c: string, v: string) => T }>(q: T): T {
+    let out = q;
+    if (queueFilter !== "all") out = out.eq("queue_kind", queueFilter);
+    if (sinceIso) out = out.gte("created_at", sinceIso);
+    return out;
+  }
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["queue-sla-history"],
+    queryKey: ["queue-sla-history", queueFilter, periodFilter],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("queue_sla_history")
-        .select("id, queue_kind, old_sla_seconds, new_sla_seconds, source, created_at")
+      const { data, error } = await applyFilters(
+        supabase
+          .from("queue_sla_history")
+          .select("id, queue_kind, old_sla_seconds, new_sla_seconds, source, created_at"),
+      )
         .order("created_at", { ascending: false })
         .limit(30);
       if (error) throw error;
@@ -47,6 +72,7 @@ export function SlaHistoryCard() {
   });
 
   const [exporting, setExporting] = useState(false);
+
 
   /** Exporta o histórico completo (até 1000 registros) em CSV. */
   async function handleExport() {
