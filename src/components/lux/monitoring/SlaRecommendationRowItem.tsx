@@ -32,16 +32,23 @@ export interface SlaRecommendationRowItemProps {
   row: SlaRecommendationRow;
   /** Padrão de enqueue atualmente persistido para esta fila (segundos). */
   currentDefault?: number | null;
+  /** Se o auto-ajuste diário está habilitado para esta fila. */
+  autoTune?: boolean;
   onApply: (queueKind: SlaRecommendationRow["queue_kind"]) => void;
+  onToggleAutoTune: (queueKind: SlaRecommendationRow["queue_kind"], enabled: boolean) => void;
   isApplying: boolean;
+  isTogglingAutoTune?: boolean;
 }
 
 /** Linha da tabela de recomendações de SLA, com ação de aplicar o valor sugerido. */
 export function SlaRecommendationRowItem({
   row,
   currentDefault,
+  autoTune,
   onApply,
+  onToggleAutoTune,
   isApplying,
+  isTogglingAutoTune = false,
 }: SlaRecommendationRowItemProps) {
   const verdict = VERDICTS[row.verdict] ?? VERDICTS.insufficient_data;
   const canApply =
@@ -50,6 +57,7 @@ export function SlaRecommendationRowItem({
     currentDefault != null &&
     row.recommended_sla_seconds != null &&
     Number(currentDefault) === Number(row.recommended_sla_seconds);
+  const label = LABELS[row.queue_kind] ?? row.queue_kind;
 
   return (
     <tr className="border-b last:border-0">
