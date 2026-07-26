@@ -61,6 +61,7 @@ import { QaHistoryPanel } from "@/components/lux/monitoring/QaHistoryPanel";
 import { ReaperHistoryPanel } from "@/components/lux/monitoring/ReaperHistoryPanel";
 import { SlaCompliancePanel } from "@/components/lux/monitoring/SlaCompliancePanel";
 import { SlaTrendChart } from "@/components/lux/monitoring/SlaTrendChart";
+import { SlaRecommendationsCard } from "@/components/lux/monitoring/SlaRecommendationsCard";
 import { RotateCcw } from "lucide-react";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera, FlaskConical } from "lucide-react";
 
