@@ -23,6 +23,7 @@ export interface SlaRecommendationRow {
 interface QueueSlaDefault {
   queue_kind: string;
   sla_seconds: number;
+  auto_tune: boolean;
   source: string;
   last_applied_at: string | null;
 }
@@ -38,11 +39,13 @@ const HEADERS = [
   "Padrão enqueue",
   "Sugerido",
   "Veredito",
+  "Auto-ajuste",
 ] as const;
 
 export function SlaRecommendationsCard() {
   const [hours, setHours] = useState<number>(168);
   const [applying, setApplying] = useState<string | null>(null);
+  const [togglingAutoTune, setTogglingAutoTune] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, refetch, error } = useQuery({
@@ -61,7 +64,7 @@ export function SlaRecommendationsCard() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("queue_sla_defaults")
-        .select("queue_kind, sla_seconds, source, last_applied_at");
+        .select("queue_kind, sla_seconds, auto_tune, source, last_applied_at");
       if (error) throw error;
       return (data ?? []) as QueueSlaDefault[];
     },
@@ -90,8 +93,41 @@ export function SlaRecommendationsCard() {
     onSettled: () => setApplying(null),
   });
 
+  const autoTuneMutation = useMutation({
+    mutationFn: async (vars: {
+      queueKind: SlaRecommendationRow["queue_kind"];
+      enabled: boolean;
+    }) => {
+      const { error } = await supabase
+        .from("queue_sla_defaults")
+        .update({ auto_tune: vars.enabled })
+        .eq("queue_kind", vars.queueKind);
+      if (error) throw error;
+      return vars;
+    },
+    onMutate: (vars) => setTogglingAutoTune(vars.queueKind),
+    onSuccess: (vars) => {
+      toast.success(
+        vars.enabled ? "Auto-ajuste ativado" : "Auto-ajuste desativado",
+        {
+          description: vars.enabled
+            ? "A rotina diária poderá reajustar o SLA desta fila automaticamente."
+            : "O SLA desta fila só mudará manualmente.",
+        },
+      );
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+    },
+    onError: (err: Error) => {
+      toast.error("Não foi possível alterar o auto-ajuste", { description: err.message });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+    },
+    onSettled: () => setTogglingAutoTune(null),
+  });
+
   const defaultFor = (kind: string) =>
     defaults?.find((d) => d.queue_kind === kind)?.sla_seconds ?? null;
+  const autoTuneFor = (kind: string) =>
+    defaults?.find((d) => d.queue_kind === kind)?.auto_tune ?? false;
 
   return (
     <Card>
@@ -167,8 +203,13 @@ export function SlaRecommendationsCard() {
                     key={row.queue_kind}
                     row={row}
                     currentDefault={defaultFor(row.queue_kind)}
+                    autoTune={autoTuneFor(row.queue_kind)}
                     onApply={(kind) => applyMutation.mutate(kind)}
+                    onToggleAutoTune={(kind, enabled) =>
+                      autoTuneMutation.mutate({ queueKind: kind, enabled })
+                    }
                     isApplying={applying === row.queue_kind}
+                    isTogglingAutoTune={togglingAutoTune === row.queue_kind}
                   />
                 ))}
               </tbody>
