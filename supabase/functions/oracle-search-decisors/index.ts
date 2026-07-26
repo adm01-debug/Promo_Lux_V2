@@ -587,13 +587,17 @@ serve(async (req) => {
 
 
   const totalUnicos = comLinkedin.length + semLinkedin.length;
+  // Duplicados reportados = os que já estavam no banco + os que colidiram entre
+  // Lusha e Apollo dentro desta mesma busca.
+  const totalDuplicados = dedupCount + intraDuplicates;
 
   const finalStatus = errors.length > 0 && insertedCount === 0 ? "error" : "completed";
   await admin.from("lusha_search_sessions").update({
     status: finalStatus,
     progress_pct: 100,
     total_found: totalUnicos,
-    total_duplicates: dedupCount,
+    total_duplicates: totalDuplicados,
+
     total_errors: errors.length,
     completed_at: new Date().toISOString(),
     error_message: errors.length > 0 ? errors.map((e) => `${e.department}: ${e.error}`).join("; ").slice(0, 500) : null,
