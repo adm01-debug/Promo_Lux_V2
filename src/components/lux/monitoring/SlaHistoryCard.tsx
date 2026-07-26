@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,7 @@ import { downloadCSV } from "@/lib/exportCSV";
 import { SlaHistoryTrendChart } from "./SlaHistoryTrendChart";
 import { detectSlaRisk } from "./slaRiskAnalysis";
 import { toast } from "sonner";
-import { History, ArrowRight, Download, Loader2, AlertTriangle } from "lucide-react";
+import { History, ArrowRight, Download, Loader2, AlertTriangle, Wand2 } from "lucide-react";
 
 
 interface SlaHistoryRow {
