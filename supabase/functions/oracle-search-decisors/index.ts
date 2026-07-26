@@ -26,8 +26,16 @@ import { CookieVaultUnavailable, CookieNotReady, getCookie } from "../_shared/co
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { isUserOrgMember } from "../_shared/org-membership.ts";
-import { isApolloConfigured, searchPeopleByDomain } from "../_shared/apollo-client.ts";
+import { isApolloConfigured, searchPeopleByDomain, normalizeApolloResponse } from "../_shared/apollo-client.ts";
 import { apolloFilterForLushaDepartments } from "../_shared/apollo-departments.ts";
+import {
+  buildApolloCacheKey,
+  readApolloCache,
+  writeApolloCache,
+  consumeApolloRate,
+  disableApolloFor,
+  cooldownForStatus,
+} from "../_shared/apollo-cache.ts";
 import { resolveCompanyDomain } from "../_shared/company-domain.ts";
 import { buildExistingKeyIndex, dedupeLeads, leadIdentity } from "../_shared/lead-identity.ts";
 
