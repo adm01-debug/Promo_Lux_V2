@@ -26,6 +26,9 @@ import { CookieVaultUnavailable, CookieNotReady, getCookie } from "../_shared/co
 import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { isUserOrgMember } from "../_shared/org-membership.ts";
+import { isApolloConfigured, searchPeopleByDomain } from "../_shared/apollo-client.ts";
+import { apolloFilterForLushaDepartments } from "../_shared/apollo-departments.ts";
+import { resolveCompanyDomain } from "../_shared/company-domain.ts";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
