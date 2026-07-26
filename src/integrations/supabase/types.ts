@@ -4067,6 +4067,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sla_autotune_runs: {
+        Row: {
+          applied: boolean
+          created_at: string
+          id: string
+          new_sla_seconds: number | null
+          old_sla_seconds: number | null
+          queue_kind: string
+          reason: string | null
+        }
+        Insert: {
+          applied?: boolean
+          created_at?: string
+          id?: string
+          new_sla_seconds?: number | null
+          old_sla_seconds?: number | null
+          queue_kind: string
+          reason?: string | null
+        }
+        Update: {
+          applied?: boolean
+          created_at?: string
+          id?: string
+          new_sla_seconds?: number | null
+          old_sla_seconds?: number | null
+          queue_kind?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
       sla_snapshots: {
         Row: {
           breach_rate: number
@@ -5576,6 +5606,16 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      sla_autotune_blocked_streaks: {
+        Args: never
+        Returns: {
+          blocked_days: number
+          blocked_runs: number
+          first_blocked_at: string
+          last_reason: string
+          queue_kind: string
+        }[]
       }
       sla_compliance_stats: {
         Args: { p_hours?: number }
