@@ -432,43 +432,64 @@ serve(async (req) => {
   }
 
 
-  // 3) Dedup inicial por linkedin_public_id (mantido para reduzir trabalho a jusante)
-  const seen = new Set<string>();
-  const uniqueContacts = allContacts.filter((c) => {
-    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
-    const key = pid || `noid:${c.fullName}:${c.jobTitle}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
+  // 3) Deduplicação por IDENTIDADE canônica (LinkedIn > domínio+nome > nome+cargo).
+  //    Antes o casamento era feito com string crua, então "JOÃO DA SILVA" (Apollo)
+  //    e "Dr. João da Silva" (Lusha) viravam DOIS registros do mesmo humano.
+  //    Agora normaliza acento/pontuação/tratamento e casa entre as fontes.
+  //    No merge a Lusha vence a Apollo, mas herda o linkedinUrl que só a Apollo
+  //    tinha (e vice-versa) — nada de dado é perdido no processo.
+  const identifyContact = (c: ContatoComOrigem) =>
+    leadIdentity({
+      fullName: c.fullName,
+      jobTitle: c.jobTitle,
+      linkedinUrl: c.linkedinUrl,
+      companyDomain,
+      email: typeof (c.raw as Record<string, unknown> | undefined)?.email === "string"
+        ? ((c.raw as Record<string, string>).email)
+        : null,
+    });
+
+  const dedup = dedupeLeads<ContatoComOrigem>(allContacts, identifyContact, {
+    sourceOf: (c) => c.contactSource,
+    merge: (winner, loser) => ({
+      ...winner,
+      linkedinUrl: winner.linkedinUrl || loser.linkedinUrl,
+      jobTitle: winner.jobTitle || loser.jobTitle,
+      seniority: winner.seniority || loser.seniority,
+      department: winner.department || loser.department,
+    }),
+  });
+  const uniqueContacts = dedup.kept;
+  const intraDuplicates = dedup.duplicates;
+
+  await logger.log({
+    step: "dedup_leads",
+    status: "success",
+    message: `${allContacts.length} coletados → ${uniqueContacts.length} únicos (${intraDuplicates} duplicados entre fontes)`,
+    metadata: {
+      collected: allContacts.length,
+      unique: uniqueContacts.length,
+      intra_duplicates: intraDuplicates,
+      match_domain: companyDomain || null,
+    },
   });
 
-  // 3) Particiona: contatos COM linkedin_public_id vs SEM.
+  // 3b) Particiona: contatos COM linkedin_public_id vs SEM.
   //    publicIdFromLinkedInUrl espelha o SQL da coluna GENERATED linkedin_public_id.
   //    - COM pid  -> upsert por (organization_id, linkedin_public_id), o índice
   //      único deduplica no banco.
   //    - SEM pid  -> linkedin_public_id vira NULL, e no Postgres NULL não conflita
   //      com NULL (o ON CONFLICT NUNCA dispara). Sem tratamento, cada re-execução
   //      DUPLICA. Provado por sonda SQL em 17/07/2026. Então esses passam por um
-  //      guard explícito .maybeSingle() antes de inserir.
-  const dedupIntra = new Set<string>();
+  //      guard por identidade normalizada antes de inserir.
   const comLinkedin: typeof allContacts = [];
-  const semLinkedinSeen = new Set<string>();
   const semLinkedin: typeof allContacts = [];
 
   for (const c of uniqueContacts) {
-    const pid = publicIdFromLinkedInUrl(c.linkedinUrl);
-    if (pid) {
-      if (dedupIntra.has(pid)) continue; // já deduplicado no passo anterior, mas garante
-      dedupIntra.add(pid);
-      comLinkedin.push(c);
-    } else {
-      const k = `${(c.fullName || "").toLowerCase().trim()}|${(c.jobTitle || "").toLowerCase().trim()}`;
-      if (!k.replace("|", "")) continue; // sem nome E sem cargo -> descarta
-      if (semLinkedinSeen.has(k)) continue;
-      semLinkedinSeen.add(k);
-      semLinkedin.push(c);
-    }
+    if (publicIdFromLinkedInUrl(c.linkedinUrl)) comLinkedin.push(c);
+    else semLinkedin.push(c);
   }
+
 
   const mkRow = (c: ContatoComOrigem) => ({
     session_id: sessionId,
