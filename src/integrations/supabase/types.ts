@@ -3505,6 +3505,36 @@ export type Database = {
         }
         Relationships: []
       }
+      queue_sla_defaults: {
+        Row: {
+          auto_tune: boolean
+          created_at: string
+          last_applied_at: string | null
+          queue_kind: string
+          sla_seconds: number
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          auto_tune?: boolean
+          created_at?: string
+          last_applied_at?: string | null
+          queue_kind: string
+          sla_seconds: number
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          auto_tune?: boolean
+          created_at?: string
+          last_applied_at?: string | null
+          queue_kind?: string
+          sla_seconds?: number
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reaper_alert_history: {
         Row: {
           consecutive: number
@@ -4782,6 +4812,24 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      apply_sla_recommendation: {
+        Args: { p_hours?: number; p_queue_kind: string }
+        Returns: {
+          auto_tune: boolean
+          created_at: string
+          last_applied_at: string | null
+          queue_kind: string
+          sla_seconds: number
+          source: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "queue_sla_defaults"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       campaign_ab_stats: {
         Args: { _campaign_id: string }
         Returns: {
@@ -5016,6 +5064,7 @@ export type Database = {
       }
       decide_ab_winner: { Args: { _campaign_id: string }; Returns: string }
       default_org_for_current_user: { Args: never; Returns: string }
+      default_sla_seconds: { Args: { _queue_kind: string }; Returns: number }
       defer_scrape_task: {
         Args: { _delay_secs?: number; _id: string; _reason?: string }
         Returns: Database["public"]["Enums"]["scrape_queue_status"]
