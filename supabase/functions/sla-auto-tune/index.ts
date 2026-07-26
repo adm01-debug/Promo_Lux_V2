@@ -68,16 +68,47 @@ Deno.serve(async (req) => {
     const rows = (data ?? []) as TuneRow[];
     const applied = rows.filter((r) => r.applied);
 
-    // Notifica administradores apenas quando houve reajuste efetivo.
+    // Log auditável de toda execução (aplicada ou bloqueada) por fila.
+    if (rows.length > 0) {
+      const { error: logError } = await supa.from("sla_autotune_runs").insert(
+        rows.map((r) => ({
+          queue_kind: r.queue_kind,
+          old_sla_seconds: r.old_sla_seconds ?? null,
+          new_sla_seconds: r.new_sla_seconds ?? null,
+          applied: Boolean(r.applied),
+          reason: r.reason ?? null,
+        })),
+      );
+      if (logError) console.error("[sla-auto-tune] log insert failed", correlationId, logError.message);
+    }
+
+    // Filas bloqueadas por amostra insuficiente há N execuções consecutivas.
+    const blockedThreshold = clampInt(body.blocked_threshold, 1, 30, 3);
+    const { data: streaks } = await supa.rpc("sla_autotune_blocked_streaks");
+    const blocked = ((streaks ?? []) as Array<{ queue_kind: string; blocked_runs: number; blocked_days: number }>)
+      .filter((s) => Number(s.blocked_runs) >= blockedThreshold);
+
+    const notices: string[] = [];
     if (applied.length > 0) {
+      notices.push(
+        "Reajuste: " +
+          applied.map((r) => `${r.queue_kind}: ${r.old_sla_seconds}s → ${r.new_sla_seconds}s`).join(" · "),
+      );
+    }
+    if (blocked.length > 0) {
+      notices.push(
+        "Auto-ajuste bloqueado por amostra insuficiente: " +
+          blocked.map((b) => `${b.queue_kind} (${b.blocked_runs} execuções / ${b.blocked_days} dias)`).join(" · "),
+      );
+    }
+
+    if (notices.length > 0) {
       const { data: admins } = await supa
         .from("user_roles")
         .select("user_id")
         .eq("role", "admin");
 
-      const summary = applied
-        .map((r) => `${r.queue_kind}: ${r.old_sla_seconds}s → ${r.new_sla_seconds}s`)
-        .join(" · ");
+      const summary = notices.join(" | ");
 
       const uniqueUsers = Array.from(
         new Set((admins ?? []).map((a: { user_id: string }) => a.user_id)),
@@ -100,14 +131,21 @@ Deno.serve(async (req) => {
           user_id: userId,
           organization_id: membership.organization_id,
           type: "system",
-          title: "SLA padrão reajustado automaticamente",
+          title:
+            applied.length > 0
+              ? "SLA padrão reajustado automaticamente"
+              : "Auto-ajuste de SLA bloqueado",
           message: summary,
-          metadata: { source: "sla-auto-tune", correlation_id: correlationId, changes: applied },
+          metadata: {
+            source: "sla-auto-tune",
+            correlation_id: correlationId,
+            changes: applied,
+            blocked,
+          },
         });
       }
     }
 
-    }
 
     return json(200, {
       ok: true,
