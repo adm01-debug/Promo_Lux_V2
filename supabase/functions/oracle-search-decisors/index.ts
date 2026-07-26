@@ -311,31 +311,30 @@ serve(async (req) => {
     apolloSkippedReason = "circuit_breaker_open";
   }
 
-  // Domínio normalizado — chave de casamento. Resolvido UMA vez por busca.
-  let apolloDomain = "";
-  if (apolloEnabled) {
-    let companyWebsite: string | null = null;
-    if (input.company_id) {
-      const { data: comp } = await admin
-        .from("companies")
-        .select("website")
-        .eq("id", input.company_id)
-        .maybeSingle();
-      companyWebsite = (comp as { website?: string | null } | null)?.website ?? null;
-    }
-    const rawMatch = (companyMatch.raw ?? {}) as Record<string, unknown>;
-    const pick = (k: string) => (typeof rawMatch[k] === "string" ? (rawMatch[k] as string) : null);
-    const resolved = resolveCompanyDomain({
-      companyWebsite,
-      lushaEmailDomain: pick("company_email_domain") ?? pick("email_domain"),
-      lushaCompanyDomain: pick("fqdn") ?? pick("domain") ?? pick("website"),
-    });
-    apolloDomain = resolved.domain;
-    if (!apolloDomain) {
-      apolloEnabled = false;
-      apolloSkippedReason = "no_reliable_domain";
-    }
+  // Domínio normalizado — chave de casamento (fallback Apollo E dedup de leads).
+  // Resolvido UMA vez por busca, independente do Apollo estar ligado.
+  let companyWebsite: string | null = null;
+  if (input.company_id) {
+    const { data: comp } = await admin
+      .from("companies")
+      .select("website")
+      .eq("id", input.company_id)
+      .maybeSingle();
+    companyWebsite = (comp as { website?: string | null } | null)?.website ?? null;
   }
+  const rawMatch = (companyMatch.raw ?? {}) as Record<string, unknown>;
+  const pick = (k: string) => (typeof rawMatch[k] === "string" ? (rawMatch[k] as string) : null);
+  const companyDomain = resolveCompanyDomain({
+    companyWebsite,
+    lushaEmailDomain: pick("company_email_domain") ?? pick("email_domain"),
+    lushaCompanyDomain: pick("fqdn") ?? pick("domain") ?? pick("website"),
+  }).domain;
+  const apolloDomain = companyDomain;
+  if (apolloEnabled && !apolloDomain) {
+    apolloEnabled = false;
+    apolloSkippedReason = "no_reliable_domain";
+  }
+
 
   const apolloFallback = {
     attempted: false,
