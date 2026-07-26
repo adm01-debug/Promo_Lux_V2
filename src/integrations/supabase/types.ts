@@ -5742,6 +5742,26 @@ export type Database = {
           verdict: string
         }[]
       }
+      source_quality_report: {
+        Args: {
+          p_bucket?: string
+          p_end: string
+          p_queue?: string
+          p_start: string
+        }
+        Returns: {
+          br_count: number
+          br_rate: number
+          bucket_start: string
+          email_rate: number
+          queue: string
+          source: string
+          suppressed: number
+          suppression_rate: number
+          total: number
+          with_email: number
+        }[]
+      }
       system_recovery_health: { Args: never; Returns: Json }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
