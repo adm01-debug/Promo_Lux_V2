@@ -474,11 +474,20 @@ const AutomationMonitoring = () => {
             <Timer className="h-4 w-4" />
             SLA
           </TabsTrigger>
+          <TabsTrigger value="source-report" className="gap-2">
+            <LineChartIcon className="h-4 w-4" />
+            Lusha × Apollo
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="source-report" className="space-y-4">
+          <SourceComparisonReport />
+        </TabsContent>
 
         <TabsContent value="qa-history" className="space-y-4">
           <QaHistoryPanel />
         </TabsContent>
+
 
         <TabsContent value="reaper" className="space-y-4">
           <ReaperHistoryPanel />
