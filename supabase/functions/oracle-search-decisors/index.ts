@@ -393,33 +393,104 @@ serve(async (req) => {
         } else {
           apolloFallback.attempted = true;
           apolloFallback.departments.push(dept.pt);
+
+          // Chave determinística: mesmo domínio + mesmos filtros (em qualquer
+          // ordem) + mesmo tamanho ⇒ mesma entrada de cache.
+          const cacheKey = buildApolloCacheKey({
+            domain: apolloDomain,
+            titles: filter.titles,
+            departments: filter.departments,
+            size: input.max_per_department,
+          });
+
           try {
-            const ap = await searchPeopleByDomain({
-              domain: apolloDomain,
-              titles: filter.titles,
-              departments: filter.departments,
-              size: input.max_per_department,
-            });
-            allContacts.push(
-              ...ap.contacts.map((c) => ({ ...c, requestedPt: dept.pt, contactSource: "apollo" as const })),
-            );
-            apolloFallback.found += ap.contacts.length;
-            perDeptCount[dept.pt] = ap.contacts.length;
-            await reportSuccess(admin, "apollo_search");
-            await logger.log({
-              step: "dept_fallback_apollo", status: "success",
-              message: `${dept.pt}: ${ap.contacts.length} via Apollo (domínio ${apolloDomain})`,
-              metadata: { department_pt: dept.pt, domain: apolloDomain, count: ap.contacts.length, total: ap.total },
-            });
+            // 1) Cache primeiro — inclusive resultado vazio (TTL menor), que é
+            //    justamente o caso que mais se repete e mais queima crédito.
+            const cached = await readApolloCache(admin, cacheKey);
+            let ap: { contacts: typeof result.contacts; total: number } | null = null;
+
+            if (cached) {
+              ap = normalizeApolloResponse(cached.payload) as typeof ap;
+              apolloFallback.cache_hits++;
+              await logger.log({
+                step: "dept_fallback_apollo", status: "success",
+                message: `${dept.pt}: ${ap!.contacts.length} via cache Apollo (sem consumo de crédito)`,
+                metadata: {
+                  department_pt: dept.pt, domain: apolloDomain, cached: true,
+                  cache_key: cacheKey, fetched_at: cached.fetchedAt, hit_count: cached.hitCount,
+                },
+              });
+            } else {
+              // 2) Cota global (por minuto + por dia + cooldown pós-403).
+              const rate = await consumeApolloRate(admin);
+              if (!rate.allowed) {
+                apolloFallback.throttled++;
+                apolloEnabled = false;
+                apolloSkippedReason = `apollo_${rate.reason}`;
+                (apolloFallback as { skipped_reason?: string }).skipped_reason = apolloSkippedReason;
+                await logger.log({
+                  step: "dept_fallback_apollo", status: "degraded", level: "warn",
+                  message: `fallback Apollo pausado (${rate.reason})`,
+                  metadata: {
+                    department_pt: dept.pt, reason: rate.reason,
+                    retry_after_seconds: rate.retryAfterSeconds ?? null,
+                  },
+                });
+              } else {
+                apolloFallback.api_calls++;
+                const fresh = await searchPeopleByDomain({
+                  domain: apolloDomain,
+                  titles: filter.titles,
+                  departments: filter.departments,
+                  size: input.max_per_department,
+                });
+                ap = fresh;
+                // Guarda a resposta crua normalizável para reuso.
+                await writeApolloCache(admin, {
+                  cacheKey,
+                  domain: apolloDomain,
+                  payload: {
+                    people: fresh.contacts.map((c) => c.raw),
+                    pagination: { total_entries: fresh.total },
+                  },
+                  contactCount: fresh.contacts.length,
+                });
+                await reportSuccess(admin, "apollo_search");
+                await logger.log({
+                  step: "dept_fallback_apollo", status: "success",
+                  message: `${dept.pt}: ${fresh.contacts.length} via Apollo (domínio ${apolloDomain})`,
+                  metadata: {
+                    department_pt: dept.pt, domain: apolloDomain, cached: false,
+                    count: fresh.contacts.length, total: fresh.total,
+                    minute_remaining: rate.minuteRemaining ?? null,
+                    daily_remaining: rate.dailyRemaining ?? null,
+                  },
+                });
+              }
+            }
+
+            if (ap) {
+              allContacts.push(
+                ...ap.contacts.map((c) => ({ ...c, requestedPt: dept.pt, contactSource: "apollo" as const })),
+              );
+              apolloFallback.found += ap.contacts.length;
+              perDeptCount[dept.pt] = ap.contacts.length;
+            }
           } catch (err) {
             const e = err as { status?: number; disabled?: boolean; transient?: boolean };
             if (e.transient !== false) await reportFailure(admin, "apollo_search");
-            if (e.disabled) {
-              // 401/403 = chave sem acesso ao people search (exige master key).
-              // Desliga o fallback para o resto da busca, em silêncio.
+
+            // 401/403 (chave sem acesso / API_INACCESSIBLE) e 429 entram em
+            // cooldown GLOBAL persistido: as próximas invocações da edge nem
+            // tentam, evitando repetir o erro e queimar cota.
+            const cooldown = cooldownForStatus(e.status);
+            if (cooldown > 0) {
+              await disableApolloFor(admin, cooldown, `apollo ${e.status}: ${(err as Error).message}`);
+            }
+            if (e.disabled || cooldown > 0) {
               apolloEnabled = false;
-              apolloSkippedReason = "apollo_forbidden";
-              (apolloFallback as { skipped_reason?: string }).skipped_reason = "apollo_forbidden";
+              apolloSkippedReason = e.disabled ? "apollo_forbidden" : "apollo_rate_limited";
+              (apolloFallback as { skipped_reason?: string }).skipped_reason = apolloSkippedReason;
             }
             errors.push({ department: dept.pt, error: `apollo: ${(err as Error).message}` });
             await logger.log({
@@ -427,11 +498,12 @@ serve(async (req) => {
               message: `fallback Apollo falhou em ${dept.pt}`,
               errorDetail: (err as Error).message,
               httpStatus: e.status,
-              metadata: { department_pt: dept.pt, domain: apolloDomain },
+              metadata: { department_pt: dept.pt, domain: apolloDomain, cooldown_seconds: cooldown },
             });
           }
         }
       }
+
     } catch (err) {
       await reportFailure(admin, "lusha_search");
       errors.push({ department: dept.pt, error: (err as Error).message });
