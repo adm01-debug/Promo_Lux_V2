@@ -481,6 +481,7 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="sla" className="space-y-4">
           <SlaCompliancePanel />
+          <SlaRecommendationsCard />
           <SlaTrendChart />
         </TabsContent>
 
