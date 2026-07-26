@@ -88,6 +88,7 @@ export function SlaHistoryCard() {
         supabase
           .from("queue_sla_history")
           .select("id, queue_kind, old_sla_seconds, new_sla_seconds, source, created_at"),
+
       )
         .order("created_at", { ascending: false })
         .limit(limit);
