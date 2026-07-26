@@ -195,8 +195,10 @@ export function SlaHistoryCard() {
         ) : !data || data.length === 0 ? (
           <p className="text-sm text-muted-foreground">Nenhuma alteração registrada ainda.</p>
         ) : (
-          <ul className="divide-y">
-            {data.map((row) => (
+          <>
+            <SlaHistoryTrendChart rows={data} />
+            <ul className="divide-y">
+
               <li key={row.id} className="flex items-center justify-between gap-3 py-2 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-foreground">
