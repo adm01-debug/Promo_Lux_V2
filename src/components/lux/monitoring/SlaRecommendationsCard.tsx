@@ -124,10 +124,9 @@ export function SlaRecommendationsCard() {
     onSettled: () => setTogglingAutoTune(null),
   });
 
-  const defaultFor = (kind: string) =>
-    defaults?.find((d) => d.queue_kind === kind)?.sla_seconds ?? null;
-  const autoTuneFor = (kind: string) =>
-    defaults?.find((d) => d.queue_kind === kind)?.auto_tune ?? false;
+  const rowDefault = (kind: string) => defaults?.find((d) => d.queue_kind === kind) ?? null;
+  const defaultFor = (kind: string) => rowDefault(kind)?.sla_seconds ?? null;
+  const autoTuneFor = (kind: string) => rowDefault(kind)?.auto_tune ?? false;
 
   return (
     <Card>
