@@ -27,6 +27,7 @@ import { OracleLogger } from "../_shared/oracle-logger.ts";
 import { checkCircuitBreaker, reportFailure, reportSuccess } from "../_shared/circuit-breaker.ts";
 import { isUserOrgMember } from "../_shared/org-membership.ts";
 import { isApolloConfigured, searchPeopleByDomain, normalizeApolloResponse } from "../_shared/apollo-client.ts";
+import type { ApolloSearchResult } from "../_shared/apollo-client.ts";
 import { apolloFilterForLushaDepartments } from "../_shared/apollo-departments.ts";
 import {
   buildApolloCacheKey,
@@ -407,10 +408,10 @@ serve(async (req) => {
             // 1) Cache primeiro — inclusive resultado vazio (TTL menor), que é
             //    justamente o caso que mais se repete e mais queima crédito.
             const cached = await readApolloCache(admin, cacheKey);
-            let ap: { contacts: typeof result.contacts; total: number } | null = null;
+            let ap: ApolloSearchResult | null = null;
 
             if (cached) {
-              ap = normalizeApolloResponse(cached.payload) as typeof ap;
+              ap = normalizeApolloResponse(cached.payload);
               apolloFallback.cache_hits++;
               await logger.log({
                 step: "dept_fallback_apollo", status: "success",
