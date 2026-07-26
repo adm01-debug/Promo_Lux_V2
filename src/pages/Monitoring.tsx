@@ -63,6 +63,8 @@ import { SlaCompliancePanel } from "@/components/lux/monitoring/SlaCompliancePan
 import { SlaTrendChart } from "@/components/lux/monitoring/SlaTrendChart";
 import { SlaRecommendationsCard } from "@/components/lux/monitoring/SlaRecommendationsCard";
 import { SlaHistoryCard } from "@/components/lux/monitoring/SlaHistoryCard";
+import { SlaAutoTuneBlockedCard } from "@/components/lux/monitoring/SlaAutoTuneBlockedCard";
+
 
 import { RotateCcw } from "lucide-react";
 import { Cookie, Shield, ShieldAlert as ShieldAlertIcon, Timer, LineChart as LineChartIcon, Sparkles, Zap, Globe, Camera, FlaskConical } from "lucide-react";
