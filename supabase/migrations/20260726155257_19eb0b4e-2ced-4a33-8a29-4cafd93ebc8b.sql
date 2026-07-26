@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.default_sla_seconds(text) FROM anon;
