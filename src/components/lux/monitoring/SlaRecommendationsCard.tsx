@@ -45,6 +45,7 @@ const HEADERS = [
 export function SlaRecommendationsCard() {
   const [hours, setHours] = useState<number>(168);
   const [applying, setApplying] = useState<string | null>(null);
+  const [togglingAutoTune, setTogglingAutoTune] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, refetch, error } = useQuery({
