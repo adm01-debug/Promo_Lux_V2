@@ -58,6 +58,14 @@ export interface SearchDecisorsInput {
 }
 
 
+/** Resultado do fallback Apollo (só roda quando a Lusha zera um departamento). */
+export interface ApolloFallbackReport {
+  attempted: boolean;
+  departments: string[];
+  found: number;
+  skipped_reason?: string;
+}
+
 export interface SearchDecisorsResponse {
   session_id: string;
   company: { id: string | number; name: string };
@@ -69,7 +77,9 @@ export interface SearchDecisorsResponse {
   departments_not_found: string[];
   correlation_id: string;
   warning?: string;
+  apollo_fallback?: ApolloFallbackReport;
 }
+
 
 export function useOracleSearchDecisors() {
   const qc = useQueryClient();
