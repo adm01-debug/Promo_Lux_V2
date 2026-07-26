@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { History, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { downloadCSV } from "@/lib/exportCSV";
+import { toast } from "sonner";
+import { History, ArrowRight, Download, Loader2 } from "lucide-react";
+
 
 interface SlaHistoryRow {
   id: string;
@@ -41,17 +46,73 @@ export function SlaHistoryCard() {
     staleTime: 60_000,
   });
 
+  const [exporting, setExporting] = useState(false);
+
+  /** Exporta o histórico completo (até 1000 registros) em CSV. */
+  async function handleExport() {
+    setExporting(true);
+    try {
+      const { data: rows, error: exportError } = await supabase
+        .from("queue_sla_history")
+        .select("queue_kind, old_sla_seconds, new_sla_seconds, source, created_at")
+        .order("created_at", { ascending: false })
+        .limit(1000);
+      if (exportError) throw exportError;
+      if (!rows || rows.length === 0) {
+        toast.info("Nada para exportar", { description: "Nenhuma alteração de SLA registrada." });
+        return;
+      }
+      downloadCSV(
+        rows.map((r) => ({
+          fila: LABELS[r.queue_kind] ?? r.queue_kind,
+          fila_id: r.queue_kind,
+          sla_anterior_s: r.old_sla_seconds ?? "",
+          sla_novo_s: r.new_sla_seconds,
+          origem: SOURCES[r.source] ?? r.source,
+          data: new Date(r.created_at).toLocaleString("pt-BR"),
+          data_iso: r.created_at,
+        })),
+        `historico-sla-${new Date().toISOString().slice(0, 10)}.csv`,
+      );
+      toast.success("Exportação concluída", { description: `${rows.length} registro(s) em CSV.` });
+    } catch (err) {
+      toast.error("Falha ao exportar", {
+        description: err instanceof Error ? err.message : "Erro desconhecido.",
+      });
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <History className="h-4 w-4 text-primary" aria-hidden />
-          Histórico de SLA
-        </CardTitle>
-        <CardDescription>
-          Últimas alterações do prazo padrão de enfileiramento, manuais ou pelo auto-ajuste diário.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
+        <div className="space-y-1.5">
+          <CardTitle className="flex items-center gap-2">
+            <History className="h-4 w-4 text-primary" aria-hidden />
+            Histórico de SLA
+          </CardTitle>
+          <CardDescription>
+            Últimas alterações do prazo padrão de enfileiramento, manuais ou pelo auto-ajuste diário.
+          </CardDescription>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleExport}
+          disabled={exporting}
+          aria-label="Exportar histórico de SLA em CSV"
+        >
+          {exporting ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+          ) : (
+            <Download className="h-4 w-4" aria-hidden />
+          )}
+          <span className="ml-2 hidden sm:inline">Exportar CSV</span>
+        </Button>
       </CardHeader>
+
       <CardContent>
         {isLoading ? (
           <div className="space-y-2" aria-busy="true">
