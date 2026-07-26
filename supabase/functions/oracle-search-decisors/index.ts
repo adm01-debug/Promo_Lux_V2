@@ -575,6 +575,7 @@ serve(async (req) => {
       departments_mapped: resolution.mapped,
       departments_not_found: resolution.notFound,
       correlation_id: correlationId,
+      apollo_fallback: apolloFallback,
     }),
     { headers: { ...cors, "Content-Type": "application/json" } },
   );
