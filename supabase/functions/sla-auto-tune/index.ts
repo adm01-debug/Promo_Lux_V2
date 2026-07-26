@@ -79,17 +79,34 @@ Deno.serve(async (req) => {
         .map((r) => `${r.queue_kind}: ${r.old_sla_seconds}s → ${r.new_sla_seconds}s`)
         .join(" · ");
 
-      if (admins?.length) {
-        await supa.from("notifications").insert(
-          admins.map((a: { user_id: string }) => ({
-            user_id: a.user_id,
-            type: "sla_auto_tune",
-            title: "SLA padrão reajustado automaticamente",
-            message: summary,
-            metadata: { correlation_id: correlationId, changes: applied },
-          })),
-        );
+      const uniqueUsers = Array.from(
+        new Set((admins ?? []).map((a: { user_id: string }) => a.user_id)),
+      );
+
+      for (const userId of uniqueUsers) {
+        // `organization_id` é NOT NULL e seu default depende de auth.uid(),
+        // que é nulo no contexto service_role — resolvemos explicitamente.
+        const { data: membership } = await supa
+          .from("organization_members")
+          .select("organization_id")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: true })
+          .limit(1)
+          .maybeSingle();
+
+        if (!membership?.organization_id) continue;
+
+        await supa.from("notifications").insert({
+          user_id: userId,
+          organization_id: membership.organization_id,
+          type: "system",
+          title: "SLA padrão reajustado automaticamente",
+          message: summary,
+          metadata: { source: "sla-auto-tune", correlation_id: correlationId, changes: applied },
+        });
       }
+    }
+
     }
 
     return json(200, {
