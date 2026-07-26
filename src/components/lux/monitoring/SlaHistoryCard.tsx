@@ -103,6 +103,32 @@ export function SlaHistoryCard() {
   /** Só há mais páginas se a última resposta veio cheia e ainda cabe no teto. */
   const hasMore = (data?.length ?? 0) >= limit && limit < MAX_ROWS;
 
+  /**
+   * p95 real de enfileiramento no mesmo recorte de período, usado como linha
+   * de referência sobre o gráfico. Falhas aqui não quebram o histórico —
+   * o gráfico simplesmente omite as referências.
+   */
+  const { data: p95ByQueue } = useQuery({
+    queryKey: ["sla-history-p95", periodFilter],
+    queryFn: async () => {
+      const hours = Math.min((periodDays ?? 90) * 24, 8760);
+      const { data: stats, error: statsError } = await supabase.rpc("sla_compliance_stats", {
+        p_hours: hours,
+      });
+      if (statsError) throw statsError;
+      const out: Record<string, number> = {};
+      for (const row of (stats ?? []) as Array<{ queue_kind: string; p95_seconds: number | null }>) {
+        const v = Number(row.p95_seconds);
+        if (Number.isFinite(v) && v > 0) out[row.queue_kind] = v;
+      }
+      return out;
+    },
+    staleTime: 300_000,
+    retry: 1,
+  });
+
+
+
 
   const [exporting, setExporting] = useState(false);
 
