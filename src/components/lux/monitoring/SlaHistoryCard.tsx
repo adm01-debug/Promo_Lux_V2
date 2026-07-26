@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,7 @@ import { downloadCSV } from "@/lib/exportCSV";
 import { SlaHistoryTrendChart } from "./SlaHistoryTrendChart";
 import { detectSlaRisk } from "./slaRiskAnalysis";
 import { toast } from "sonner";
-import { History, ArrowRight, Download, Loader2, AlertTriangle } from "lucide-react";
+import { History, ArrowRight, Download, Loader2, AlertTriangle, Wand2 } from "lucide-react";
 
 
 interface SlaHistoryRow {
@@ -153,8 +153,39 @@ export function SlaHistoryCard() {
     [currentSla, p95ByQueue],
   );
 
+  const queryClient = useQueryClient();
+
+  /**
+   * Aplica a recomendação de SLA da fila em risco (mesma RPC do card de
+   * recomendações). Usa a janela do filtro ativo para que a sugestão seja
+   * coerente com o p95 exibido no banner.
+   */
+  const applyMutation = useMutation({
+    mutationFn: async (queueKind: string) => {
+      const hours = Math.min((periodDays ?? 90) * 24, 8760);
+      const { error: rpcError } = await supabase.rpc("apply_sla_recommendation", {
+        p_queue_kind: queueKind,
+        p_hours: hours,
+      });
+      if (rpcError) throw rpcError;
+      return queueKind;
+    },
+    onSuccess: (queueKind) => {
+      toast.success("SLA padrão atualizado", {
+        description: `Novo prazo aplicado à fila ${LABELS[queueKind] ?? queueKind}.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults-risk"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-history"] });
+      queryClient.invalidateQueries({ queryKey: ["sla-recommendations"] });
+    },
+    onError: (err: Error) => {
+      toast.error("Não foi possível aplicar o SLA", { description: err.message });
+    },
+  });
 
   const [exporting, setExporting] = useState(false);
+
 
 
   /** Exporta o histórico filtrado (até 1000 registros) em CSV. */
@@ -265,18 +296,43 @@ export function SlaHistoryCard() {
               <AlertTriangle className="h-4 w-4" aria-hidden />
               SLA configurado abaixo do p95 observado
             </p>
-            <ul className="mt-1.5 space-y-0.5 text-muted-foreground">
-              {risks.map((r) => (
-                <li key={r.queue_kind} className="font-mono text-xs">
-                  {LABELS[r.queue_kind] ?? r.queue_kind}: meta {r.sla_seconds}s · p95{" "}
-                  {Math.round(r.p95_seconds)}s (+{r.gap_pct}%)
-                </li>
-              ))}
+            <ul className="mt-1.5 space-y-1 text-muted-foreground">
+              {risks.map((r) => {
+                const busy = applyMutation.isPending && applyMutation.variables === r.queue_kind;
+                return (
+                  <li
+                    key={r.queue_kind}
+                    className="flex flex-wrap items-center justify-between gap-2"
+                  >
+                    <span className="font-mono text-xs">
+                      {LABELS[r.queue_kind] ?? r.queue_kind}: meta {r.sla_seconds}s · p95{" "}
+                      {Math.round(r.p95_seconds)}s (+{r.gap_pct}%)
+                    </span>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="h-7"
+                      disabled={applyMutation.isPending}
+                      onClick={() => applyMutation.mutate(r.queue_kind)}
+                      aria-label={`Aplicar SLA recomendado para ${LABELS[r.queue_kind] ?? r.queue_kind}`}
+                    >
+                      {busy ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+                      ) : (
+                        <Wand2 className="h-3.5 w-3.5" aria-hidden />
+                      )}
+                      <span className="ml-1.5">Aplicar recomendação</span>
+                    </Button>
+                  </li>
+                );
+              })}
             </ul>
             <p className="mt-1.5 text-xs text-muted-foreground">
-              Mais de 5% dos itens estouram o prazo por definição — considere aplicar a
-              recomendação de SLA.
+              Mais de 5% dos itens estouram o prazo por definição — aplicar a recomendação
+              recalibra a meta com base no p95 do período filtrado.
             </p>
+
           </div>
         )}
 
