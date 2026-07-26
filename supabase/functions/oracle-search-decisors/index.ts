@@ -29,6 +29,8 @@ import { isUserOrgMember } from "../_shared/org-membership.ts";
 import { isApolloConfigured, searchPeopleByDomain } from "../_shared/apollo-client.ts";
 import { apolloFilterForLushaDepartments } from "../_shared/apollo-departments.ts";
 import { resolveCompanyDomain } from "../_shared/company-domain.ts";
+import { buildExistingKeyIndex, dedupeLeads, leadIdentity } from "../_shared/lead-identity.ts";
+
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
