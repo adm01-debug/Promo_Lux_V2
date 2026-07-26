@@ -46,15 +46,32 @@ const PERIODS: Array<{ value: string; label: string; days: number | null }> = [
   { value: "all", label: "Todo o período", days: null },
 ];
 
+/** Tamanho de cada página do histórico. */
+const PAGE_SIZE = 30;
+/** Teto defensivo: evita render de listas gigantes no cliente. */
+const MAX_ROWS = 300;
+
 /** Histórico auditável de alterações do SLA padrão por fila. */
 export function SlaHistoryCard() {
   const [queueFilter, setQueueFilter] = useState<string>("all");
   const [periodFilter, setPeriodFilter] = useState<string>("30");
+  const [limit, setLimit] = useState<number>(PAGE_SIZE);
 
   const periodDays = PERIODS.find((p) => p.value === periodFilter)?.days ?? null;
   const sinceIso = periodDays
     ? new Date(Date.now() - periodDays * 86_400_000).toISOString()
     : null;
+
+  /** Troca de filtro reinicia a paginação — evita exibir página N de outro recorte. */
+  function handleQueueChange(value: string) {
+    setQueueFilter(value);
+    setLimit(PAGE_SIZE);
+  }
+
+  function handlePeriodChange(value: string) {
+    setPeriodFilter(value);
+    setLimit(PAGE_SIZE);
+  }
 
   /** Aplica os filtros ativos a uma query de `queue_sla_history`. */
   function applyFilters<T extends { eq: (c: string, v: string) => T; gte: (c: string, v: string) => T }>(q: T): T {
@@ -64,8 +81,8 @@ export function SlaHistoryCard() {
     return out;
   }
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["queue-sla-history", queueFilter, periodFilter],
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ["queue-sla-history", queueFilter, periodFilter, limit],
     queryFn: async () => {
       const { data, error } = await applyFilters(
         supabase
@@ -73,12 +90,18 @@ export function SlaHistoryCard() {
           .select("id, queue_kind, old_sla_seconds, new_sla_seconds, source, created_at"),
       )
         .order("created_at", { ascending: false })
-        .limit(30);
+        .limit(limit);
       if (error) throw error;
       return (data ?? []) as SlaHistoryRow[];
     },
     staleTime: 60_000,
+    // Mantém a lista visível enquanto a próxima página carrega (sem flicker).
+    placeholderData: (prev) => prev,
   });
+
+  /** Só há mais páginas se a última resposta veio cheia e ainda cabe no teto. */
+  const hasMore = (data?.length ?? 0) >= limit && limit < MAX_ROWS;
+
 
   const [exporting, setExporting] = useState(false);
 
