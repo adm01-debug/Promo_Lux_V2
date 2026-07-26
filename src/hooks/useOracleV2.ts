@@ -78,7 +78,17 @@ export interface SearchDecisorsResponse {
   correlation_id: string;
   warning?: string;
   apollo_fallback?: ApolloFallbackReport;
+  /** Telemetria da deduplicação por identidade (domínio + nome normalizado). */
+  dedup?: {
+    collected: number;
+    unique: number;
+    /** mesma pessoa vinda de Lusha e Apollo, fundida antes de gravar */
+    cross_source_merged: number;
+    already_in_db: number;
+    match_domain: string | null;
+  };
 }
+
 
 
 export function useOracleSearchDecisors() {
