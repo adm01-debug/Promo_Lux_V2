@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { downloadCSV } from "@/lib/exportCSV";
+import { SlaHistoryTrendChart } from "./SlaHistoryTrendChart";
 import { toast } from "sonner";
 import { History, ArrowRight, Download, Loader2 } from "lucide-react";
 
