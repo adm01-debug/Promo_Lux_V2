@@ -103,6 +103,13 @@ export function useOracleSearchDecisors() {
         toast.success(
           `${data.inserted} decisor(es) encontrado(s)${data.duplicates > 0 ? ` (+${data.duplicates} duplicados)` : ""}.`,
         );
+        const ap = data.apollo_fallback;
+        if (ap?.attempted && ap.found > 0) {
+          toast.info(
+            `${ap.found} decisor(es) vieram do Apollo (${ap.departments.join(", ")}) — a Lusha não retornou nada nesses departamentos.`,
+          );
+        }
+
       }
     },
     onError: (err: Error) => {
