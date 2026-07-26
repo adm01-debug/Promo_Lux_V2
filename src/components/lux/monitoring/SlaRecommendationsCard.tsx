@@ -93,8 +93,41 @@ export function SlaRecommendationsCard() {
     onSettled: () => setApplying(null),
   });
 
+  const autoTuneMutation = useMutation({
+    mutationFn: async (vars: {
+      queueKind: SlaRecommendationRow["queue_kind"];
+      enabled: boolean;
+    }) => {
+      const { error } = await supabase
+        .from("queue_sla_defaults")
+        .update({ auto_tune: vars.enabled })
+        .eq("queue_kind", vars.queueKind);
+      if (error) throw error;
+      return vars;
+    },
+    onMutate: (vars) => setTogglingAutoTune(vars.queueKind),
+    onSuccess: (vars) => {
+      toast.success(
+        vars.enabled ? "Auto-ajuste ativado" : "Auto-ajuste desativado",
+        {
+          description: vars.enabled
+            ? "A rotina diária poderá reajustar o SLA desta fila automaticamente."
+            : "O SLA desta fila só mudará manualmente.",
+        },
+      );
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+    },
+    onError: (err: Error) => {
+      toast.error("Não foi possível alterar o auto-ajuste", { description: err.message });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+    },
+    onSettled: () => setTogglingAutoTune(null),
+  });
+
   const defaultFor = (kind: string) =>
     defaults?.find((d) => d.queue_kind === kind)?.sla_seconds ?? null;
+  const autoTuneFor = (kind: string) =>
+    defaults?.find((d) => d.queue_kind === kind)?.auto_tune ?? false;
 
   return (
     <Card>
