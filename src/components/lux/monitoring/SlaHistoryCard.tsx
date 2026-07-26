@@ -246,7 +246,7 @@ export function SlaHistoryCard() {
           <p className="text-sm text-muted-foreground">Nenhuma alteração registrada ainda.</p>
         ) : (
           <>
-            <SlaHistoryTrendChart rows={data} />
+            <SlaHistoryTrendChart rows={data} p95ByQueue={p95ByQueue} />
             <ul className="divide-y">
             {data.map((row) => (
               <li key={row.id} className="flex items-center justify-between gap-3 py-2 text-sm">
