@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
   CartesianGrid,
+  ReferenceLine,
 } from "recharts";
 import { buildSlaChartData, type SlaHistoryPoint } from "./slaHistoryChartData";
 
