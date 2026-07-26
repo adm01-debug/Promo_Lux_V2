@@ -74,20 +74,25 @@ export function SlaHistoryCard() {
   const [exporting, setExporting] = useState(false);
 
 
-  /** Exporta o histórico completo (até 1000 registros) em CSV. */
+  /** Exporta o histórico filtrado (até 1000 registros) em CSV. */
   async function handleExport() {
     setExporting(true);
     try {
-      const { data: rows, error: exportError } = await supabase
-        .from("queue_sla_history")
-        .select("queue_kind, old_sla_seconds, new_sla_seconds, source, created_at")
+      const { data: rows, error: exportError } = await applyFilters(
+        supabase
+          .from("queue_sla_history")
+          .select("queue_kind, old_sla_seconds, new_sla_seconds, source, created_at"),
+      )
         .order("created_at", { ascending: false })
         .limit(1000);
       if (exportError) throw exportError;
       if (!rows || rows.length === 0) {
-        toast.info("Nada para exportar", { description: "Nenhuma alteração de SLA registrada." });
+        toast.info("Nada para exportar", {
+          description: "Nenhuma alteração de SLA no filtro selecionado.",
+        });
         return;
       }
+
       downloadCSV(
         rows.map((r) => ({
           fila: LABELS[r.queue_kind] ?? r.queue_kind,
