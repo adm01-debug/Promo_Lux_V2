@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { History, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { downloadCSV } from "@/lib/exportCSV";
+import { toast } from "sonner";
+import { History, ArrowRight, Download, Loader2 } from "lucide-react";
+
 
 interface SlaHistoryRow {
   id: string;
