@@ -62,7 +62,7 @@ export function SlaRecommendationRowItem({
   return (
     <tr className="border-b last:border-0">
       <th scope="row" className="py-2 pr-3 text-left font-medium text-foreground">
-        {LABELS[row.queue_kind] ?? row.queue_kind}
+        {label}
       </th>
       <td className="py-2 pr-3 text-muted-foreground">{row.sample_size}</td>
       <td className="py-2 pr-3">{fmtSeconds(row.p50_seconds)}</td>
@@ -75,6 +75,23 @@ export function SlaRecommendationRowItem({
       <td className="py-2 pr-3">
         <Badge variant={verdict.variant}>{verdict.label}</Badge>
       </td>
+      <td className="py-2 pr-3">
+        <div className="flex items-center gap-2">
+          <Switch
+            checked={autoTune ?? false}
+            disabled={isTogglingAutoTune}
+            onCheckedChange={(checked) => onToggleAutoTune(row.queue_kind, checked)}
+            aria-label={`Auto-ajuste diário de SLA para ${label}`}
+          />
+          {isTogglingAutoTune ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" aria-hidden />
+          ) : (
+            <span className="text-xs text-muted-foreground">
+              {autoTune ? "Ativo" : "Manual"}
+            </span>
+          )}
+        </div>
+      </td>
       <td className="py-2 text-right">
         {alreadyApplied ? (
           <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
@@ -86,7 +103,7 @@ export function SlaRecommendationRowItem({
             variant="outline"
             disabled={!canApply}
             onClick={() => onApply(row.queue_kind)}
-            aria-label={`Aplicar SLA sugerido para ${LABELS[row.queue_kind] ?? row.queue_kind}`}
+            aria-label={`Aplicar SLA sugerido para ${label}`}
           >
             {isApplying ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
