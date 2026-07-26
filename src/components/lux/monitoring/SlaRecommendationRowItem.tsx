@@ -21,6 +21,12 @@ const VERDICTS: Record<
   insufficient_data: { label: "Amostra insuficiente", variant: "outline" },
 };
 
+const SOURCE_LABELS: Record<string, string> = {
+  manual: "manual",
+  recommendation: "recomendação",
+  seed: "inicial",
+};
+
 function fmtSeconds(value: number | null | undefined): string {
   if (value == null) return "—";
   const n = Number(value);
@@ -28,10 +34,25 @@ function fmtSeconds(value: number | null | undefined): string {
   return n >= 60 ? `${(n / 60).toFixed(1)}m` : `${n.toFixed(1)}s`;
 }
 
+/** Formata a procedência do padrão de enqueue de forma legível e tolerante a nulos. */
+function fmtProvenance(source?: string | null, lastAppliedAt?: string | null): string | null {
+  if (!source && !lastAppliedAt) return null;
+  const label = source ? (SOURCE_LABELS[source] ?? source) : null;
+  if (!lastAppliedAt) return label;
+  const date = new Date(lastAppliedAt);
+  if (Number.isNaN(date.getTime())) return label;
+  const when = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+  return label ? `${label} · ${when}` : when;
+}
+
 export interface SlaRecommendationRowItemProps {
   row: SlaRecommendationRow;
   /** Padrão de enqueue atualmente persistido para esta fila (segundos). */
   currentDefault?: number | null;
+  /** Origem do padrão persistido: manual, recommendation ou seed. */
+  source?: string | null;
+  /** Data ISO do último ajuste aplicado ao padrão. */
+  lastAppliedAt?: string | null;
   /** Se o auto-ajuste diário está habilitado para esta fila. */
   autoTune?: boolean;
   onApply: (queueKind: SlaRecommendationRow["queue_kind"]) => void;
