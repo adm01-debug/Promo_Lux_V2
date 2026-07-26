@@ -606,9 +606,13 @@ serve(async (req) => {
   await logger.log({
     step: "search_done",
     status: finalStatus === "completed" ? "success" : "error",
-    message: `concluído: ${insertedCount} inseridos, ${dedupCount} duplicados, ${errors.length} erros`,
+    message: `concluído: ${insertedCount} inseridos, ${totalDuplicados} duplicados, ${errors.length} erros`,
     durationMs: Date.now() - startedAt,
-    metadata: { perDeptCount, errors, company_lid: companyMatch.companyLid },
+    metadata: {
+      perDeptCount, errors, company_lid: companyMatch.companyLid,
+      duplicates_existing: dedupCount, duplicates_cross_source: intraDuplicates,
+      match_domain: companyDomain || null,
+    },
   });
 
   return new Response(
@@ -617,7 +621,15 @@ serve(async (req) => {
       company: { lid: companyMatch.companyLid, name: companyMatch.name },
       total_found: totalUnicos,
       inserted: insertedCount,
-      duplicates: dedupCount,
+      duplicates: totalDuplicados,
+      dedup: {
+        collected: allContacts.length,
+        unique: totalUnicos,
+        cross_source_merged: intraDuplicates,
+        already_in_db: dedupCount,
+        match_domain: companyDomain || null,
+      },
+
       errors,
       departments_mapped: resolution.mapped,
       departments_not_found: resolution.notFound,
