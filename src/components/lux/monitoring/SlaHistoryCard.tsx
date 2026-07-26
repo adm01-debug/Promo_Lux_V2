@@ -198,8 +198,9 @@ export function SlaHistoryCard() {
           <>
             <SlaHistoryTrendChart rows={data} />
             <ul className="divide-y">
-
+            {data.map((row) => (
               <li key={row.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-foreground">
                     {LABELS[row.queue_kind] ?? row.queue_kind}
