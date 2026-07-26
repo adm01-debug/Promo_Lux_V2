@@ -389,7 +389,11 @@ function VaultHealthBanner({
     );
   }
   if (!data) return null;
-  if (data.ok) {
+
+  const problems = data.services.filter((s) => !s.ready);
+  const allReady = data.all_ready ?? problems.length === 0;
+
+  if (data.ok && allReady) {
     return (
       <div
         role="status"
@@ -401,7 +405,34 @@ function VaultHealthBanner({
       </div>
     );
   }
-  const problems = data.services.filter((s) => !s.ready);
+
+  // Degradado: serviços bloqueantes prontos, apenas opcionais (LinkedIn) com falha.
+  if (data.ok) {
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex items-start gap-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-100"
+      >
+        <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
+        <div className="flex-1 space-y-1">
+          <p className="font-semibold">
+            Vault degradado — automação liberada, serviço opcional indisponível
+          </p>
+          <ul className="text-xs space-y-0.5">
+            {problems.map((p) => (
+              <li key={p.servico}>
+                <strong>{p.servico}</strong>: {p.error ?? p.health_status ?? "unhealthy"}
+                {p.expires_in_minutes !== null && ` (expira em ${p.expires_in_minutes} min)`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div
       role="alert"

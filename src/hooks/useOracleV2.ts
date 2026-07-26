@@ -20,11 +20,15 @@ export interface OracleServiceReport {
 }
 
 export interface OraclePreflightResponse {
+  /** true quando os serviços bloqueantes (lusha + leadcontact) estão prontos. */
   ok: boolean;
+  /** true somente quando TODOS os serviços, inclusive o opcional linkedin, estão prontos. */
+  all_ready?: boolean;
   services: OracleServiceReport[];
   correlation_id: string;
   duration_ms: number;
 }
+
 
 export function useOraclePreflight() {
   return useQuery<OraclePreflightResponse>({
