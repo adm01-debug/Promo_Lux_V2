@@ -89,10 +89,20 @@ function SourceDot(props: {
  * permanece constante até a próxima alteração — interpolar linearmente
  * sugeriria uma transição gradual que nunca ocorreu.
  */
-export function SlaHistoryTrendChart({ rows }: SlaHistoryTrendChartProps) {
+export function SlaHistoryTrendChart({ rows, p95ByQueue }: SlaHistoryTrendChartProps) {
   const { data, queues } = useMemo(() => buildSlaChartData(rows), [rows]);
 
+  /** Só referencia filas presentes no gráfico e com p95 numérico positivo. */
+  const references = useMemo(
+    () =>
+      queues
+        .map((q) => ({ queue: q, value: Number(p95ByQueue?.[q]) }))
+        .filter((r) => Number.isFinite(r.value) && r.value > 0),
+    [queues, p95ByQueue],
+  );
+
   if (data.length < 2) return null;
+
 
   return (
     <div className="mb-4 space-y-1" aria-label="Gráfico de evolução do SLA padrão">
