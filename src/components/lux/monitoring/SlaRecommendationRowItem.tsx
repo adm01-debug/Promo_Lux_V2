@@ -65,6 +65,8 @@ export interface SlaRecommendationRowItemProps {
 export function SlaRecommendationRowItem({
   row,
   currentDefault,
+  source,
+  lastAppliedAt,
   autoTune,
   onApply,
   onToggleAutoTune,
@@ -79,6 +81,7 @@ export function SlaRecommendationRowItem({
     row.recommended_sla_seconds != null &&
     Number(currentDefault) === Number(row.recommended_sla_seconds);
   const label = LABELS[row.queue_kind] ?? row.queue_kind;
+  const provenance = fmtProvenance(source, lastAppliedAt);
 
   return (
     <tr className="border-b last:border-0">
@@ -89,7 +92,12 @@ export function SlaRecommendationRowItem({
       <td className="py-2 pr-3">{fmtSeconds(row.p50_seconds)}</td>
       <td className="py-2 pr-3">{fmtSeconds(row.p95_seconds)}</td>
       <td className="py-2 pr-3">{fmtSeconds(row.current_sla_p50)}</td>
-      <td className="py-2 pr-3 text-muted-foreground">{fmtSeconds(currentDefault)}</td>
+      <td className="py-2 pr-3 text-muted-foreground">
+        <span className="block">{fmtSeconds(currentDefault)}</span>
+        {provenance && (
+          <span className="block text-xs text-muted-foreground/70">{provenance}</span>
+        )}
+      </td>
       <td className="py-2 pr-3 font-mono text-foreground">
         {fmtSeconds(row.recommended_sla_seconds)}
       </td>
