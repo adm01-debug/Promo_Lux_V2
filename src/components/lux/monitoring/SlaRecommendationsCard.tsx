@@ -202,6 +202,8 @@ export function SlaRecommendationsCard() {
                     key={row.queue_kind}
                     row={row}
                     currentDefault={defaultFor(row.queue_kind)}
+                    source={rowDefault(row.queue_kind)?.source ?? null}
+                    lastAppliedAt={rowDefault(row.queue_kind)?.last_applied_at ?? null}
                     autoTune={autoTuneFor(row.queue_kind)}
                     onApply={(kind) => applyMutation.mutate(kind)}
                     onToggleAutoTune={(kind, enabled) =>
