@@ -153,8 +153,39 @@ export function SlaHistoryCard() {
     [currentSla, p95ByQueue],
   );
 
+  const queryClient = useQueryClient();
+
+  /**
+   * Aplica a recomendação de SLA da fila em risco (mesma RPC do card de
+   * recomendações). Usa a janela do filtro ativo para que a sugestão seja
+   * coerente com o p95 exibido no banner.
+   */
+  const applyMutation = useMutation({
+    mutationFn: async (queueKind: string) => {
+      const hours = Math.min((periodDays ?? 90) * 24, 8760);
+      const { error: rpcError } = await supabase.rpc("apply_sla_recommendation", {
+        p_queue_kind: queueKind,
+        p_hours: hours,
+      });
+      if (rpcError) throw rpcError;
+      return queueKind;
+    },
+    onSuccess: (queueKind) => {
+      toast.success("SLA padrão atualizado", {
+        description: `Novo prazo aplicado à fila ${LABELS[queueKind] ?? queueKind}.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults-risk"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-defaults"] });
+      queryClient.invalidateQueries({ queryKey: ["queue-sla-history"] });
+      queryClient.invalidateQueries({ queryKey: ["sla-recommendations"] });
+    },
+    onError: (err: Error) => {
+      toast.error("Não foi possível aplicar o SLA", { description: err.message });
+    },
+  });
 
   const [exporting, setExporting] = useState(false);
+
 
 
   /** Exporta o histórico filtrado (até 1000 registros) em CSV. */
