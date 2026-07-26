@@ -5503,6 +5503,10 @@ export type Database = {
           with_sla: number
         }[]
       }
+      sla_deadline: {
+        Args: { _created_at: string; _sla_seconds: number }
+        Returns: string
+      }
       system_recovery_health: { Args: never; Returns: Json }
       touch_api_key: { Args: { _key_id: string }; Returns: undefined }
       verify_api_key: {
