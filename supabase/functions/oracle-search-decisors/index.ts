@@ -484,6 +484,7 @@ serve(async (req) => {
     linkedin_url: c.linkedinUrl ?? null,
     enrichment_status: "pending_enrichment",
     raw_lusha_payload: c.raw as Record<string, unknown>,
+    contact_source: c.contactSource ?? "lusha",
   });
 
   let insertedCount = 0;
