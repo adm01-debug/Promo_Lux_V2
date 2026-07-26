@@ -57,7 +57,7 @@ export function SourceComparisonReport() {
         p_start: range.start,
         p_end: range.end,
         p_bucket: bucket,
-        p_queue: queue === ALL_QUEUES ? null : queue,
+        p_queue: queue === ALL_QUEUES ? undefined : queue,
       });
       if (error) throw error;
       return (data ?? []) as SourceQualityRow[];
