@@ -1,7 +1,7 @@
 /**
  * useRateLimit — Testes exaustivos da lógica de estado
  *
- * Cobertura: 480+ assertions em 16 suites
+ * Cobertura: 540+ assertions em 18 suites
  * Metodologia: simulação pura da máquina de estados (sem React/DOM)
  * Gerado/atualizado por: auditoria PhD-level (2026-07-27)
  *
@@ -10,7 +10,9 @@
  *  M1    8bb5d6f — fix: GAP-1 JSON.parse try/catch + GAP-7 guard SSR
  *  M2    0a51f6f — fix: GAP-3 || → ?? + GAP-2 isLocked limpa storage
  *  M3    920c34a — feat: GAP-4 reset() + GAP-5 validação config dev mode
- *  M4    7567f1b — test: suite completa pós-melhorias (esta versão)
+ *  M4    7567f1b — test: suite completa pós-melhorias
+ *  SEC1  ea8785c — fix: ADV-7 parseInt→parseLockTs + GAP-NEW-A rejeita futuros
+ *  SEC2  bcfce63 — fix: parseLockTs robustez — adiciona ts > 0
  *
  * O que é testado:
  *  - Bug regression: else if (!locked) → else if (locked)
@@ -19,6 +21,8 @@
  *  - GAP-3: lockoutMs=0 respeitado com ?? (não cai para windowMs com ||)
  *  - GAP-4: reset() desbloqueio programático (idempotente)
  *  - GAP-7: guard SSR (localStorage ausente → unlocked gracioso)
+ *  - ADV-7: parseLockTs — Number() em vez de parseInt() (notação científica)
+ *  - GAP-NEW-A: rejeição de timestamps futuros nos attempts (t <= now)
  *  - State transitions completos
  *  - Math precision (Math.ceil, off-by-one, boundaries)
  *  - Sliding window
@@ -50,7 +54,14 @@ interface RateLimitConfig {
   lockoutMs?: number;
 }
 
-// ── Simulador completo pós-melhorias ─────────────────────────
+// ── Replica de parseLockTs do hook de produção ────────────────
+// FIX ADV-7: Number() + ts > 0 em vez de parseInt()
+const parseLockTs = (raw: string): number | null => {
+  const ts = Number(raw);
+  return (Number.isFinite(ts) && ts > 0) ? ts : null;
+};
+
+// ── Simulador completo pós-melhorias (inclui SEC1 + SEC2) ─────
 class RateLimitSim {
   key: string; config: Required<RateLimitConfig>; lockoutMs: number;
   storage: MockStorage | null;
@@ -74,28 +85,40 @@ class RateLimitSim {
     this.uiRemainingSec = v;
   }
 
-  // GAP-2 + GAP-7 FIX
+  // GAP-2 + GAP-7 + ADV-7 FIX
   isLocked(now = Date.now()) {
     if (!this.storage) return { locked: false, remainingSec: 0 }; // GAP-7
     const lockKey = `lux:lock:${this.key}`;
     const lu = this.storage.getItem(lockKey);
     if (!lu) return { locked: false, remainingSec: 0 };
-    const remaining = Math.ceil((parseInt(lu) - now) / 1000);
+    // ADV-7 FIX: parseLockTs usa Number() + ts > 0
+    const lockTs = parseLockTs(lu);
+    if (lockTs === null) {
+      this.storage.removeItem(lockKey);
+      return { locked: false, remainingSec: 0 };
+    }
+    const remaining = Math.ceil((lockTs - now) / 1000);
     if (remaining > 0) return { locked: true, remainingSec: remaining };
     this.storage.removeItem(lockKey); // GAP-2 FIX
     return { locked: false, remainingSec: 0 };
   }
 
-  // GAP-1 + GAP-7 FIX
+  // GAP-1 + GAP-7 + ADV-7 + GAP-NEW-A FIX
   checkAndRecord(now = Date.now()) {
     if (!this.storage) return { locked: false, remainingSec: 0 }; // GAP-7
     const attKey = `lux:attempts:${this.key}`;
     const lockKey = `lux:lock:${this.key}`;
     const lu = this.storage.getItem(lockKey);
     if (lu) {
-      const remaining = Math.ceil((parseInt(lu) - now) / 1000);
-      if (remaining > 0) return { locked: true, remainingSec: remaining };
-      this.storage.removeItem(lockKey);
+      // ADV-7 FIX: parseLockTs
+      const lockTs = parseLockTs(lu);
+      if (lockTs === null) {
+        this.storage.removeItem(lockKey);
+      } else {
+        const remaining = Math.ceil((lockTs - now) / 1000);
+        if (remaining > 0) return { locked: true, remainingSec: remaining };
+        this.storage.removeItem(lockKey);
+      }
     }
     // GAP-1 FIX: try/catch + validação de array
     let attempts: number[] = [];
@@ -110,7 +133,8 @@ class RateLimitSim {
     } catch {
       this.storage.removeItem(attKey);
     }
-    attempts = attempts.filter(t => now - t < this.config.windowMs);
+    // GAP-NEW-A FIX: t <= now rejeita timestamps futuros
+    attempts = attempts.filter(t => t <= now && now - t < this.config.windowMs);
     attempts.push(now);
     this.storage.setItem(attKey, JSON.stringify(attempts));
     if (attempts.length >= this.config.maxAttempts) {
@@ -193,6 +217,160 @@ describe('BUG REGRESSION — else if (locked) vs else if (!locked)', () => {
     expect(r.uiLocked).toBe(true);
     expect(r.uiRemaining).toBeGreaterThan(0);
     expect(r.uiRemaining).toBeLessThanOrEqual(16);
+  });
+});
+
+// ════════════════════════════════════════════════════════════
+describe('ADV-7: parseLockTs — Number() vs parseInt() (SEC1+SEC2)', () => {
+  const NOW = 1_750_000_000_000;
+
+  // Casos em que parseInt e Number diferem
+  it('parseLockTs("1.5e13") retorna 15000000000000 (Number correto)', () => {
+    expect(parseLockTs('1.5e13')).toBe(15_000_000_000_000);
+  });
+
+  it('parseInt("1.5e13") = 1 (demonstra a discrepância que criava bypass)', () => {
+    expect(parseInt('1.5e13')).toBe(1); // 1 << NOW → expirado = bypass!
+  });
+
+  it('lock em notação científica futura → locked (fix funcionando)', () => {
+    const storage = new MockStorage({ 'lux:lock:sci': '1.5e13' }); // 1.5e13 > NOW
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: 60_000 }, 'sci', storage);
+    expect(sim.isLocked(NOW).locked).toBe(true);
+  });
+
+  it('lock em notação científica passada → not locked + chave removida', () => {
+    const storage = new MockStorage({ 'lux:lock:sci2': '1.5e10' }); // 1.5e10 < NOW
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: 60_000 }, 'sci2', storage);
+    expect(sim.isLocked(NOW).locked).toBe(false);
+    expect(storage.getItem('lux:lock:sci2')).toBeNull();
+  });
+
+  // Valores que retornam null (tratados como expirados)
+  const nullCases: [string, string][] = [
+    ['NaN',       'NaN — não numérico'],
+    ['Infinity',  'Infinity — não finito'],
+    ['-Infinity', '-Infinity — negativo não finito'],
+    ['abc',       'string não numérica'],
+    ['',          'string vazia → Number=0 → ts>0=false'],
+    ['  ',        'whitespace → Number=0 → null'],
+    ['0',         'zero → ts>0=false'],
+    ['-1',        'negativo → ts>0=false'],
+    ['null',      '"null" string'],
+  ];
+
+  for (const [raw, desc] of nullCases) {
+    it(`parseLockTs("${raw}") = null (${desc})`, () => {
+      expect(parseLockTs(raw)).toBeNull();
+    });
+  }
+
+  // Valores legítimos parseados corretamente
+  const validCases: [string, number][] = [
+    [String(NOW),          NOW],
+    [String(NOW + 300_000), NOW + 300_000],
+    ['1.5e13',             15_000_000_000_000],
+    ['2e12',               2_000_000_000_000],
+    ['1e21',               1e21],
+  ];
+
+  for (const [raw, expected] of validCases) {
+    it(`parseLockTs("${raw}") = ${expected}`, () => {
+      expect(parseLockTs(raw)).toBe(expected);
+    });
+  }
+
+  it('"Infinity" injetado → not locked + chave removida (não cria lock eterno)', () => {
+    const storage = new MockStorage({ 'lux:lock:inf': 'Infinity' });
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: 60_000 }, 'inf', storage);
+    expect(sim.isLocked(NOW).locked).toBe(false);
+    expect(storage.getItem('lux:lock:inf')).toBeNull();
+  });
+
+  it('checkAndRecord respeita parseLockTs: lock sci futuro bloqueia nova tentativa', () => {
+    const storage = new MockStorage({ 'lux:lock:car': '1.5e13' }); // futuro
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: 60_000 }, 'car', storage);
+    expect(sim.checkAndRecord(NOW).locked).toBe(true); // lock ativo
+  });
+
+  it('lock legítimo continua funcionando após a correção', () => {
+    const storage = new MockStorage({ 'lux:lock:leg': String(NOW + 300_000) });
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: 60_000 }, 'leg', storage);
+    expect(sim.isLocked(NOW).locked).toBe(true);
+    expect(sim.isLocked(NOW).remainingSec).toBe(300);
+  });
+});
+
+// ════════════════════════════════════════════════════════════
+describe('GAP-NEW-A: timestamps futuros nos attempts rejeitados (SEC1)', () => {
+  const NOW = 1_750_000_000_000;
+  const WIN = 60_000;
+
+  it('demonstra o bug antigo: t>now passa no filtro (now-t negativo < winMs positivo)', () => {
+    const futureAtts = [NOW + 1_000_000, NOW + 2_000_000];
+    const buggyResult = futureAtts.filter(t => NOW - t < WIN); // filtro antigo
+    expect(buggyResult).toHaveLength(2); // ambos passam!
+  });
+
+  it('fix: t>now rejeitado pelo filtro (t <= now)', () => {
+    const futureAtts = [NOW + 1_000_000, NOW + 2_000_000];
+    const fixedResult = futureAtts.filter(t => t <= NOW && NOW - t < WIN); // filtro novo
+    expect(fixedResult).toHaveLength(0);
+  });
+
+  it('ataque DoS: 4 futuros injetados + 1 real NÃO dispara lock prematuro', () => {
+    const injected = JSON.stringify([NOW + 1e6, NOW + 2e6, NOW + 3e6, NOW + 4e6]);
+    const storage = new MockStorage({ 'lux:attempts:dos': injected });
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: WIN }, 'dos', storage);
+    const r = sim.checkAndRecord(NOW); // 5ª tentativa? Não — os 4 futuros são filtrados
+    expect(r.locked).toBe(false);
+    // Só 1 attempt no storage (o NOW pushado)
+    const stored = JSON.parse(storage.getItem('lux:attempts:dos') ?? '[]') as number[];
+    expect(stored).toHaveLength(1);
+    expect(stored[0]).toBe(NOW);
+  });
+
+  it('ataque com maxAttempts=3: 2 futuros + 1 real NÃO trava', () => {
+    const storage = new MockStorage({
+      'lux:attempts:ma3': JSON.stringify([NOW + 1e6, NOW + 2e6]),
+    });
+    const sim = new RateLimitSim({ maxAttempts: 3, windowMs: WIN }, 'ma3', storage);
+    expect(sim.checkAndRecord(NOW).locked).toBe(false);
+  });
+
+  // Casos borderline do filtro t <= now
+  const borderCases: [number, boolean, string][] = [
+    [NOW,       true,  'NOW exato é aceito'],
+    [NOW - 1,   true,  'NOW-1ms é aceito'],
+    [NOW + 1,   false, 'NOW+1ms é rejeitado (futuro)'],
+    [NOW - WIN + 1, true,  'windowMs-1 dentro da janela'],
+    [NOW - WIN,     false, 'windowMs exato fora da janela'],
+    [NOW - WIN - 1, false, 'windowMs+1 fora da janela'],
+  ];
+
+  for (const [t, shouldKeep, desc] of borderCases) {
+    it(`filtro border: ${desc}`, () => {
+      const kept = [t].filter(ts => ts <= NOW && NOW - ts < WIN).length === 1;
+      expect(kept).toBe(shouldKeep);
+    });
+  }
+
+  it('timestamps normais não são afetados (sem regressão)', () => {
+    const normalAtts = [NOW - 5000, NOW - 2000, NOW - 1000];
+    const buggy = normalAtts.filter(t => NOW - t < WIN);
+    const fixed = normalAtts.filter(t => t <= NOW && NOW - t < WIN);
+    expect(buggy).toEqual(fixed); // comportamento idêntico para timestamps passados
+  });
+
+  it('reset após ataque → sistema volta ao estado limpo', () => {
+    const storage = new MockStorage({
+      'lux:attempts:rst': JSON.stringify([NOW + 1e6, NOW + 2e6, NOW + 3e6, NOW + 4e6]),
+    });
+    const sim = new RateLimitSim({ maxAttempts: 5, windowMs: WIN }, 'rst', storage);
+    sim.checkAndRecord(NOW); // 1 real (futuros filtrados)
+    sim.reset();
+    expect(storage.getItem('lux:attempts:rst')).toBeNull();
+    expect(sim.checkAndRecord(NOW + 1).locked).toBe(false);
   });
 });
 
@@ -417,15 +595,16 @@ describe('STATE TRANSITIONS — ciclos lock/unlock', () => {
 
 // ════════════════════════════════════════════════════════════
 describe('MATH — precisão de remainingSec e Math.ceil', () => {
-  it('checkpoints ao longo de lock de 10s', () => {
+  it('checkpoints ao longo de lock de 10s (storage isolado por caso)', () => {
     const BASE = 3_000_000_000_000;
-    const sim = new RateLimitSim({ maxAttempts: 1, windowMs: 10_000, lockoutMs: 10_000 }, 'math');
-    sim.checkAndRecord(BASE);
     const cases: [number, boolean, number][] = [
       [0, true, 10], [1000, true, 9], [2000, true, 8], [9999, true, 1],
-      [10000, false, 0], [10001, false, 0],
+      [10000, false, 0], [10001, false, 0], [-1, true, 11],
     ];
     for (const [off, expLocked, expRem] of cases) {
+      // Storage isolado por caso para evitar que GAP-2 limpe a chave prematuramente
+      const storage = new MockStorage({ 'lux:lock:math': String(BASE + 10_000) });
+      const sim = new RateLimitSim({ maxAttempts: 1, windowMs: 10_000, lockoutMs: 10_000 }, 'math', storage);
       const { locked, remainingSec } = sim.isLocked(BASE + off);
       expect(locked).toBe(expLocked);
       expect(remainingSec).toBe(expRem);
