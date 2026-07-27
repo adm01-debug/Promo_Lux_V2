@@ -90,7 +90,7 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
       if (status.locked) {
         setLocked(true);
         setRemainingSec(status.remainingSec);
-      } else if (!locked) {
+      } else if (locked) {
         setLocked(false);
         setRemainingSec(0);
       }
