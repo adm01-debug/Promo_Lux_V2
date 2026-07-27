@@ -18,7 +18,16 @@
     "prepare": "husky",
     "analyze": "vite-bundle-visualizer",
     "test:grants": "bash scripts/check-function-grants.sh",
-    "test:audit-triggers": "bash scripts/check-audit-triggers.sh"
+    "test:audit-triggers": "bash scripts/check-audit-triggers.sh",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:new": "supabase migration new",
+    "db:diff": "supabase db diff --local --schema public",
+    "db:reset": "supabase db reset",
+    "db:lint": "bash scripts/check-migrations.sh",
+    "db:verify": "npm run db:lint && supabase db reset",
+    "db:status": "supabase migration list --linked",
+    "db:plan": "supabase db push --dry-run --linked"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
