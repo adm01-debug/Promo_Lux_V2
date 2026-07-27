@@ -10,6 +10,7 @@
  *  M1    8bb5d6f — fix: GAP-1 JSON.parse try/catch + GAP-7 guard SSR
  *  M2    0a51f6f — fix: GAP-3 || → ?? + GAP-2 isLocked limpa storage
  *  M3    920c34a — feat: GAP-4 reset() + GAP-5 validação config dev mode
+ *  M4    7567f1b — test: suite completa pós-melhorias (esta versão)
  *
  * O que é testado:
  *  - Bug regression: else if (!locked) → else if (locked)
@@ -24,7 +25,7 @@
  *  - Key isolation
  *  - Storage corruption (lock keys)
  *  - Config edge cases
- *  - useLoginForm contract (300 ticks + reset)
+ *  - useLoginForm contract (299 ticks + reset)
  *  - Concurrency (múltiplas abas + storage cleanup)
  *  - Monte Carlo 200 simulações (inclui storage cleanup check)
  *  - Interval stress (100 ticks, anti-flapping + storage cleanup)
@@ -522,10 +523,13 @@ describe('useLoginForm CONTRACT — 5 tentativas, 60s janela, 300s lock', () => 
     expect(sim.uiRemainingSec).toBe(300);
   });
 
-  it('300 ticks mantém locked', () => {
+  it('lock mantido durante 299 ticks (t=0..298, marginalmente antes da expiração)', () => {
+    // 5ª tentativa em NOW+4000 → lock expira NOW+304000
+    // Ticks: NOW+5000+t*1000. Tick t=298 → NOW+303000 (remaining=1s > 0 → locked ✓)
+    // Tick t=299 → NOW+304000 (remaining=0 → unlocked, coberto pelo teste de expiração)
     const sim = new RateLimitSim(LOGIN_CFG, 'login3');
     for (let i = 0; i < 5; i++) sim.checkAndRecord(NOW + i * 1000);
-    for (let t = 0; t < 300; t++) {
+    for (let t = 0; t < 299; t++) {
       sim.uiLocked = true;
       sim.tickFixed(NOW + 5000 + t * 1000);
       expect(sim.uiLocked).toBe(true);
@@ -536,7 +540,8 @@ describe('useLoginForm CONTRACT — 5 tentativas, 60s janela, 300s lock', () => 
     const sim = new RateLimitSim(LOGIN_CFG, 'login4');
     for (let i = 0; i < 5; i++) sim.checkAndRecord(NOW + i * 1000);
     sim.uiLocked = true;
-    sim.tickFixed(NOW + 5000 + 300_001);
+    // Tick após expiração (NOW+304001 > NOW+304000 = lock expiry)
+    sim.tickFixed(NOW + 5000 + 299_001);
     expect(sim.uiLocked).toBe(false);
     expect(sim.uiRemainingSec).toBe(0);
   });
