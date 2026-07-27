@@ -15,6 +15,23 @@ const getStorage = (): Storage | null =>
   typeof localStorage !== "undefined" ? localStorage : null;
 
 /**
+ * Parseia um timestamp de lock de forma robusta.
+ *
+ * FIX ADV-7: parseInt("1.5e13") = 1 (para nos dígitos antes do ponto).
+ * Um atacante com acesso ao localStorage poderia injetar um timestamp em
+ * notação científica para fazer parseInt retornar 1 (ano 1970), tornando
+ * o lock "expirado" e bypassando o rate limit.
+ *
+ * Solução: Number() parseia notação científica corretamente.
+ * Valores não-finitos (NaN, Infinity, strings inválidas) retornam null
+ * para que o caller limpe a chave e trate como lock expirado.
+ */
+const parseLockTs = (raw: string): number | null => {
+  const ts = Number(raw);
+  return Number.isFinite(ts) ? ts : null;
+};
+
+/**
  * Hook de Rate Limit Híbrido:
  * - LocalStorage para resposta instantânea na UI (com fallback gracioso em SSR).
  * - Edge Function para segurança server-side real (anti-burlagem).
@@ -28,7 +45,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   const lockoutMs = config.lockoutMs ?? config.windowMs;
 
   // GAP-5: validação de parâmetros em modo de desenvolvimento.
-  // Detecta configurações silenciosamente inválidas que levam a comportamentos inesperados.
   if (import.meta.env.DEV) {
     if (!(config.maxAttempts > 0)) {
       console.warn(`[useRateLimit:${key}] maxAttempts deve ser > 0 (recebido: ${config.maxAttempts})`);
@@ -83,11 +99,19 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
 
     const lockUntil = storage.getItem(lockKey);
     if (lockUntil) {
-      const remaining = Math.ceil((parseInt(lockUntil) - now) / 1000);
-      if (remaining > 0) {
-        return { locked: true, remainingSec: remaining };
+      // FIX ADV-7: usa parseLockTs (Number) em vez de parseInt para suportar
+      // notação científica e rejeitar valores inválidos (NaN, Infinity, etc.).
+      const lockTs = parseLockTs(lockUntil);
+      if (lockTs === null) {
+        // Valor inválido no storage → remove e continua como se não houvesse lock.
+        storage.removeItem(lockKey);
+      } else {
+        const remaining = Math.ceil((lockTs - now) / 1000);
+        if (remaining > 0) {
+          return { locked: true, remainingSec: remaining };
+        }
+        storage.removeItem(lockKey);
       }
-      storage.removeItem(lockKey);
     }
 
     // try/catch em torno do JSON.parse — corrupção de storage não trava o app.
@@ -104,7 +128,13 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
       storage.removeItem(attemptsKey);
     }
 
-    attempts = attempts.filter(t => now - t < config.windowMs);
+    // FIX GAP-NEW-A: rejeita timestamps futuros (t > now).
+    // Antes: (now - t < windowMs) aceitava futuros porque (now - t) seria
+    // negativo, e negativo < windowMs (positivo) é sempre verdadeiro.
+    // Um atacante com acesso ao localStorage poderia injetar timestamps futuros
+    // para "pré-consumir" tentativas e forçar um lock prematuro na próxima
+    // tentativa legítima. O filtro agora exige explicitamente t <= now.
+    attempts = attempts.filter(t => t <= now && now - t < config.windowMs);
     attempts.push(now);
     storage.setItem(attemptsKey, JSON.stringify(attempts));
 
@@ -120,6 +150,7 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     return { locked: false, remainingSec: 0 };
   }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
 
+  // FIX GAP-2 + ADV-7: isLocked agora usa parseLockTs e limpa chaves inválidas/expiradas.
   const isLocked = useCallback(() => {
     const storage = getStorage();
     if (!storage) return { locked: false, remainingSec: 0 };
@@ -128,11 +159,17 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     const lockUntil = storage.getItem(lockKey);
     if (!lockUntil) return { locked: false, remainingSec: 0 };
 
-    const remaining = Math.ceil((parseInt(lockUntil) - Date.now()) / 1000);
+    // FIX ADV-7: parseLockTs rejeita notação científica incorreta e não-finitos.
+    const lockTs = parseLockTs(lockUntil);
+    if (lockTs === null) {
+      storage.removeItem(lockKey); // valor inválido → remove
+      return { locked: false, remainingSec: 0 };
+    }
+
+    const remaining = Math.ceil((lockTs - Date.now()) / 1000);
     if (remaining > 0) return { locked: true, remainingSec: remaining };
 
-    // Remove a chave expirada para manter storage limpo.
-    storage.removeItem(lockKey);
+    storage.removeItem(lockKey); // GAP-2: remove chave expirada
     return { locked: false, remainingSec: 0 };
   }, [key]);
 
@@ -140,7 +177,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
    * GAP-4: Reseta o estado de rate limit para esta chave.
    * Útil para fluxos administrativos (suporte desbloqueia usuário após verificação)
    * ou em testes de integração que precisam limpar estado entre cenários.
-   * Remove tanto o lock quanto o histórico de tentativas do storage.
    */
   const reset = useCallback(() => {
     const storage = getStorage();
@@ -165,9 +201,9 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     return () => clearInterval(interval);
   }, [isLocked, locked]);
 
-  return { 
-    locked, 
-    remainingSec, 
+  return {
+    locked,
+    remainingSec,
     recordAttempt: () => checkAndRecord().locked,
     checkAndRecord,
     checkServerRateLimit,
