@@ -44,6 +44,13 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   const config = typeof configOrKey === "object" ? configOrKey : (maybeConfig || { maxAttempts: 5, windowMs: 60000 });
   const lockoutMs = config.lockoutMs ?? config.windowMs;
 
+  // FIX-3: sanitiza lockoutMs não-finito para garantir persistência entre recarregamentos.
+  // Infinity/NaN → lockTime="Infinity"/"NaN" → parseLockTs retorna null → lock perdido no reload.
+  // Clampa para Number.MAX_SAFE_INTEGER (~285 anos) preservando o intent de "lockout permanente".
+  const effectiveLockoutMs = Number.isFinite(lockoutMs) && lockoutMs >= 0
+    ? lockoutMs
+    : Number.MAX_SAFE_INTEGER;
+
   // GAP-5: validação de parâmetros em modo de desenvolvimento.
   // Detecta configurações silenciosamente inválidas que levam a comportamentos inesperados.
   if (import.meta.env.DEV) {
@@ -54,7 +61,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
       console.warn(`[useRateLimit:${key}] windowMs deve ser > 0 (recebido: ${config.windowMs})`);
     }
     // FIX-2: windowMs > 0 é true para Infinity, mas Infinity causa acumulação ilimitada.
-    // !Number.isFinite() captura Infinity e NaN que o check anterior deixava passar.
     if (!Number.isFinite(config.windowMs)) {
       console.warn(
         `[useRateLimit:${key}] windowMs (${config.windowMs}) não é um número finito. ` +
@@ -62,15 +68,12 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
         "Use um valor inteiro positivo em milissegundos (ex: 60000 para 1 minuto)."
       );
     }
-    // FIX-2: lockoutMs < windowMs é false para Infinity (Inf < n = false) e NaN (NaN < n = false).
-    // Detecta explicitamente: lockoutMs=Infinity/NaN → lockTime="Infinity"/"NaN" →
-    // parseLockTs retorna null → lock perdido entre recarregamentos de página.
+    // FIX-2: lockoutMs não-finito é detectado aqui. FIX-3 garante que o valor seja sanitizado.
     if (!Number.isFinite(lockoutMs)) {
       console.warn(
         `[useRateLimit:${key}] lockoutMs (${lockoutMs}) não é um número finito. ` +
-        "O timestamp de lock será gravado como \"Infinity\" ou \"NaN\" no localStorage, " +
-        "e não persistirá entre recarregamentos de página (parseLockTs retorna null para não-finitos). " +
-        "Use Number.MAX_SAFE_INTEGER (~285 anos) para um lockout praticamente permanente."
+        `Será substituído por Number.MAX_SAFE_INTEGER (≈285 anos) para garantir persistência. ` +
+        "Use Number.MAX_SAFE_INTEGER explicitamente para deixar a intenção clara."
       );
     }
     // Check original: apenas quando ambos são finitos (evita falso positivo com Infinity)
@@ -122,8 +125,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     const lockUntil = storage.getItem(lockKey);
     if (lockUntil) {
       // FIX ADV-7: parseLockTs usa Number() + validação > 0 em vez de parseInt().
-      // Valores inválidos (notação científica mal-parsada, NaN, Infinity, zero,
-      // strings vazias) são removidos do storage e tratados como lock expirado.
       const lockTs = parseLockTs(lockUntil);
       if (lockTs === null) {
         storage.removeItem(lockKey);
@@ -151,44 +152,36 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     }
 
     // FIX GAP-NEW-A: t <= now rejeita timestamps futuros injetados via XSS.
-    // Filtro anterior (now - t < windowMs) aceitava futuros: (now - t) negativo
-    // é sempre menor que windowMs positivo. Um atacante podia injetar N-1 futuros
-    // para forçar o lock na próxima tentativa legítima (DoS seletivo de conta).
-    // t ∈ (now - windowMs, now] é o intervalo correto para "dentro da janela".
     attempts = attempts.filter(t => t <= now && now - t < config.windowMs);
     attempts.push(now);
 
     // FIX-1: try/catch em storage.setItem — previne crash por QuotaExceededError.
-    // Se o localStorage estiver cheio, o app não crasha: as tentativas simplesmente
-    // não são persistidas entre recarregamentos, mas o estado React continua correto.
-    // A proteção real é server-side (checkServerRateLimit/Edge Function).
     try {
       storage.setItem(attemptsKey, JSON.stringify(attempts));
     } catch {
       // Quota excedida: tentativas desta sessão não serão persistidas no storage.
-      // O estado React (uiLocked/uiRem) ainda é atualizado corretamente abaixo.
     }
 
     if (attempts.length >= config.maxAttempts) {
-      const lockTime = now + lockoutMs;
+      // FIX-3: usa effectiveLockoutMs (sanitizado) para garantir lockTime finito.
+      // lockoutMs=Infinity/NaN → lockTime="Infinity"/"NaN" → parseLockTs rejeita → lock perdido.
+      const lockTime = now + effectiveLockoutMs;
+      const rem = Math.ceil(effectiveLockoutMs / 1000);
 
       // FIX-1: try/catch em storage.setItem para o lock key.
-      // Se falhar por quota, o lock não persistirá entre recarregamentos de página,
-      // mas o estado React ainda bloqueia a UI nesta sessão.
       try {
         storage.setItem(lockKey, lockTime.toString());
       } catch {
         // Quota excedida: lock desta sessão não será persistido no storage.
       }
 
-      const rem = Math.ceil(lockoutMs / 1000);
       setLocked(true);
       setRemainingSec(rem);
       return { locked: true, remainingSec: rem };
     }
 
     return { locked: false, remainingSec: 0 };
-  }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
+  }, [key, config.windowMs, config.maxAttempts, effectiveLockoutMs]);
 
   // FIX GAP-2 + ADV-7: isLocked usa parseLockTs e limpa chaves inválidas/expiradas.
   const isLocked = useCallback(() => {
@@ -215,8 +208,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
 
   /**
    * GAP-4: Reseta o estado de rate limit para esta chave.
-   * Útil para fluxos administrativos (suporte desbloqueia usuário após verificação)
-   * ou em testes de integração que precisam limpar estado entre cenários.
    */
   const reset = useCallback(() => {
     const storage = getStorage();
