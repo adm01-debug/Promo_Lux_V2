@@ -95,27 +95,30 @@ for f in "${FILES[@]}"; do
     fail "$base: alteração em schema gerenciado pelo Supabase (auth/storage/realtime/vault)."
   fi
 done
-
 # --- 5: CREATE TABLE public exige GRANT + RLS -------------------------------
 for f in "${FILES[@]}"; do
   base=$(basename "$f")
+  ts=$(echo "$base" | cut -c1-14)
   # Captura o nome de cada tabela criada no schema public nesta migration.
   TABLES=$(grep -ioE 'CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?(public\.)?"?[a-z0-9_]+"?' "$f" \
     | sed -E 's/.*[[:space:]]//; s/public\.//; s/"//g' | sort -u)
   for t in $TABLES; do
     [ -z "$t" ] && continue
     if ! grep -qiE "GRANT[[:space:]].*[[:space:]]ON[[:space:]]+(TABLE[[:space:]]+)?(public\.)?\"?${t}\"?" "$f"; then
-      fail "$base: tabela public.${t} criada sem GRANT na mesma migration (PostgREST retornará permission denied)."
+      fail_if_new "$ts" "$base: tabela public.${t} criada sem GRANT na mesma migration (PostgREST retornará permission denied)."
     fi
     if ! grep -qiE "ALTER[[:space:]]+TABLE[[:space:]]+(public\.)?\"?${t}\"?[[:space:]].*ENABLE[[:space:]]+ROW[[:space:]]+LEVEL[[:space:]]+SECURITY" "$f"; then
-      fail "$base: tabela public.${t} criada sem ENABLE ROW LEVEL SECURITY."
+      fail_if_new "$ts" "$base: tabela public.${t} criada sem ENABLE ROW LEVEL SECURITY."
     fi
   done
 done
 
+echo "▶ Baseline de grandfathering: $BASELINE (migrations anteriores geram apenas aviso)"
+
 if [ "$ERRORS" -gt 0 ]; then
-  echo "::error::$ERRORS problema(s) encontrado(s) nas migrations."
+  echo "::error::$ERRORS problema(s) bloqueante(s) nas migrations ($WARNINGS aviso(s) de legado)."
   exit 1
 fi
 
-echo "✅ Migrations válidas."
+echo "✅ Migrations válidas ($WARNINGS aviso(s) de legado, não bloqueantes)."
+
