@@ -8,8 +8,16 @@ interface RateLimitConfig {
 }
 
 /**
+ * Retorna o localStorage de forma segura.
+ * Em SSR (Next.js, Remix) localStorage não existe → retorna null.
+ * FIX GAP-7: guard SSR
+ */
+const getStorage = (): Storage | null =>
+  typeof localStorage !== "undefined" ? localStorage : null;
+
+/**
  * Hook de Rate Limit Híbrido:
- * - LocalStorage para resposta instantânea na UI.
+ * - LocalStorage para resposta instantânea na UI (com fallback gracioso em SSR).
  * - Edge Function para segurança server-side real (anti-burlagem).
  */
 export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?: RateLimitConfig) {
@@ -45,29 +53,50 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   }, []);
 
   const checkAndRecord = useCallback(() => {
+    // FIX GAP-7: guard SSR — retorna unlocked silenciosamente fora do browser
+    const storage = getStorage();
+    if (!storage) return { locked: false, remainingSec: 0 };
+
     const attemptsKey = `lux:attempts:${key}`;
     const lockKey = `lux:lock:${key}`;
     const now = Date.now();
 
-    const lockUntil = localStorage.getItem(lockKey);
+    const lockUntil = storage.getItem(lockKey);
     if (lockUntil) {
       const remaining = Math.ceil((parseInt(lockUntil) - now) / 1000);
       if (remaining > 0) {
         return { locked: true, remainingSec: remaining };
       }
-      localStorage.removeItem(lockKey);
+      storage.removeItem(lockKey);
     }
 
-    const attemptsRaw = localStorage.getItem(attemptsKey);
-    let attempts: number[] = attemptsRaw ? JSON.parse(attemptsRaw) : [];
-    
+    // FIX GAP-1: try/catch em torno do JSON.parse.
+    // localStorage corrompido (ex: extensão de browser ou teste manual) não deve
+    // propagar uma exceção não tratada e travar o fluxo de autenticação.
+    // Estratégia: ao detectar dado inválido, descarta silenciosamente e recomeça.
+    let attempts: number[] = [];
+    try {
+      const raw = storage.getItem(attemptsKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // Valida que é um array de números finitos (rejeita strings, objetos, etc.)
+        if (Array.isArray(parsed)) {
+          attempts = parsed.filter((t): t is number => typeof t === "number" && isFinite(t));
+        }
+      }
+    } catch {
+      // JSON malformado: limpa a chave corrompida e começa do zero.
+      // Não loga pois pode conter dados sensíveis; apenas descarta.
+      storage.removeItem(attemptsKey);
+    }
+
     attempts = attempts.filter(t => now - t < config.windowMs);
     attempts.push(now);
-    localStorage.setItem(attemptsKey, JSON.stringify(attempts));
+    storage.setItem(attemptsKey, JSON.stringify(attempts));
 
     if (attempts.length >= config.maxAttempts) {
       const lockTime = now + lockoutMs;
-      localStorage.setItem(lockKey, lockTime.toString());
+      storage.setItem(lockKey, lockTime.toString());
       const rem = Math.ceil(lockoutMs / 1000);
       setLocked(true);
       setRemainingSec(rem);
@@ -78,7 +107,9 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
 
   const isLocked = useCallback(() => {
-    const lockUntil = localStorage.getItem(`lux:lock:${key}`);
+    const storage = getStorage();
+    if (!storage) return { locked: false, remainingSec: 0 };
+    const lockUntil = storage.getItem(`lux:lock:${key}`);
     if (!lockUntil) return { locked: false, remainingSec: 0 };
     const remaining = Math.ceil((parseInt(lockUntil) - Date.now()) / 1000);
     return remaining > 0 ? { locked: true, remainingSec: remaining } : { locked: false, remainingSec: 0 };
@@ -107,4 +138,3 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     isLocked
   };
 }
-
