@@ -10,7 +10,6 @@ interface RateLimitConfig {
 /**
  * Retorna o localStorage de forma segura.
  * Em SSR (Next.js, Remix) localStorage não existe → retorna null.
- * FIX GAP-7: guard SSR
  */
 const getStorage = (): Storage | null =>
   typeof localStorage !== "undefined" ? localStorage : null;
@@ -23,7 +22,9 @@ const getStorage = (): Storage | null =>
 export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?: RateLimitConfig) {
   const key = typeof configOrKey === "string" ? configOrKey : "global";
   const config = typeof configOrKey === "object" ? configOrKey : (maybeConfig || { maxAttempts: 5, windowMs: 60000 });
-  const lockoutMs = config.lockoutMs || config.windowMs;
+  // FIX GAP-3: ?? em vez de || para que lockoutMs=0 (expiração imediata) seja respeitado.
+  // Com ||, zero era tratado como falsy e caía para windowMs silenciosamente.
+  const lockoutMs = config.lockoutMs ?? config.windowMs;
 
   const [locked, setLocked] = useState(false);
   const [remainingSec, setRemainingSec] = useState(0);
@@ -53,7 +54,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   }, []);
 
   const checkAndRecord = useCallback(() => {
-    // FIX GAP-7: guard SSR — retorna unlocked silenciosamente fora do browser
     const storage = getStorage();
     if (!storage) return { locked: false, remainingSec: 0 };
 
@@ -70,23 +70,17 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
       storage.removeItem(lockKey);
     }
 
-    // FIX GAP-1: try/catch em torno do JSON.parse.
-    // localStorage corrompido (ex: extensão de browser ou teste manual) não deve
-    // propagar uma exceção não tratada e travar o fluxo de autenticação.
-    // Estratégia: ao detectar dado inválido, descarta silenciosamente e recomeça.
+    // try/catch em torno do JSON.parse — corrupção de storage não trava o app.
     let attempts: number[] = [];
     try {
       const raw = storage.getItem(attemptsKey);
       if (raw) {
         const parsed = JSON.parse(raw);
-        // Valida que é um array de números finitos (rejeita strings, objetos, etc.)
         if (Array.isArray(parsed)) {
           attempts = parsed.filter((t): t is number => typeof t === "number" && isFinite(t));
         }
       }
     } catch {
-      // JSON malformado: limpa a chave corrompida e começa do zero.
-      // Não loga pois pode conter dados sensíveis; apenas descarta.
       storage.removeItem(attemptsKey);
     }
 
@@ -106,13 +100,23 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     return { locked: false, remainingSec: 0 };
   }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
 
+  // FIX GAP-2: isLocked agora limpa chaves de lock expiradas do storage.
+  // Antes, chaves com timestamp passado ficavam no localStorage indefinidamente,
+  // acumulando lixo proporcional ao número de sessões distintas de lockout.
   const isLocked = useCallback(() => {
     const storage = getStorage();
     if (!storage) return { locked: false, remainingSec: 0 };
-    const lockUntil = storage.getItem(`lux:lock:${key}`);
+
+    const lockKey = `lux:lock:${key}`;
+    const lockUntil = storage.getItem(lockKey);
     if (!lockUntil) return { locked: false, remainingSec: 0 };
+
     const remaining = Math.ceil((parseInt(lockUntil) - Date.now()) / 1000);
-    return remaining > 0 ? { locked: true, remainingSec: remaining } : { locked: false, remainingSec: 0 };
+    if (remaining > 0) return { locked: true, remainingSec: remaining };
+
+    // FIX GAP-2: remove a chave expirada para manter storage limpo.
+    storage.removeItem(lockKey);
+    return { locked: false, remainingSec: 0 };
   }, [key]);
 
   useEffect(() => {
