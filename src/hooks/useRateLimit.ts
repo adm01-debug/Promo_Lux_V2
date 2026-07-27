@@ -53,7 +53,28 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     if (!(config.windowMs > 0)) {
       console.warn(`[useRateLimit:${key}] windowMs deve ser > 0 (recebido: ${config.windowMs})`);
     }
-    if (lockoutMs < config.windowMs) {
+    // FIX-2: windowMs > 0 é true para Infinity, mas Infinity causa acumulação ilimitada.
+    // !Number.isFinite() captura Infinity e NaN que o check anterior deixava passar.
+    if (!Number.isFinite(config.windowMs)) {
+      console.warn(
+        `[useRateLimit:${key}] windowMs (${config.windowMs}) não é um número finito. ` +
+        "Timestamps de tentativas acumularão indefinidamente no localStorage, sem limite de expiração. " +
+        "Use um valor inteiro positivo em milissegundos (ex: 60000 para 1 minuto)."
+      );
+    }
+    // FIX-2: lockoutMs < windowMs é false para Infinity (Inf < n = false) e NaN (NaN < n = false).
+    // Detecta explicitamente: lockoutMs=Infinity/NaN → lockTime="Infinity"/"NaN" →
+    // parseLockTs retorna null → lock perdido entre recarregamentos de página.
+    if (!Number.isFinite(lockoutMs)) {
+      console.warn(
+        `[useRateLimit:${key}] lockoutMs (${lockoutMs}) não é um número finito. ` +
+        "O timestamp de lock será gravado como \"Infinity\" ou \"NaN\" no localStorage, " +
+        "e não persistirá entre recarregamentos de página (parseLockTs retorna null para não-finitos). " +
+        "Use Number.MAX_SAFE_INTEGER (~285 anos) para um lockout praticamente permanente."
+      );
+    }
+    // Check original: apenas quando ambos são finitos (evita falso positivo com Infinity)
+    if (Number.isFinite(lockoutMs) && Number.isFinite(config.windowMs) && lockoutMs < config.windowMs) {
       console.warn(
         `[useRateLimit:${key}] lockoutMs (${lockoutMs}ms) < windowMs (${config.windowMs}ms). ` +
         "Após o lockout expirar, as tentativas anteriores ainda estarão dentro da janela → " +
