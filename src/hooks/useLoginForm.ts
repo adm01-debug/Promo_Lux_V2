@@ -5,6 +5,21 @@ import { useRateLimit } from "@/hooks/useRateLimit";
 import { toast } from "@/hooks/use-toast";
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
 
+/**
+ * Destino pós-autenticação. Quando o usuário chega ao login vindo da tela de
+ * consentimento OAuth (`/login?next=/.lovable/oauth/consent?...`), TODOS os
+ * métodos precisam devolvê-lo àquela URL — inclusive o round-trip do Google.
+ * Sem isso o cliente MCP cai na home e a conexão falha silenciosamente.
+ * O valor é validado como caminho relativo same-origin (anti open redirect).
+ */
+function postAuthRedirect(): string {
+  const raw = new URLSearchParams(window.location.search).get("next");
+  if (raw && raw.startsWith("/") && !raw.startsWith("//")) {
+    return `${window.location.origin}${raw}`;
+  }
+  return window.location.origin;
+}
+
 export function useLoginForm() {
   const { checkAndRecord, isLocked, checkServerRateLimit } = useRateLimit("login", { maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
   const [lockMsg, setLockMsg] = useState<string | null>(null);
@@ -54,7 +69,7 @@ export function useLoginForm() {
     if (await guardRate()) return;
     setGoogleLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: postAuthRedirect(),
     });
     if (result.error) {
       setGoogleLoading(false);
@@ -104,7 +119,7 @@ export function useLoginForm() {
       const { error } = await supabase.auth.signUp({
         email: result.data.email,
         password: result.data.password,
-        options: { emailRedirectTo: window.location.origin },
+        options: { emailRedirectTo: postAuthRedirect() },
       });
       if (error) {
         triggerShake();
