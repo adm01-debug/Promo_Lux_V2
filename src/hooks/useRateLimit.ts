@@ -180,7 +180,19 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
 
     if (attempts.length >= config.maxAttempts) {
       // FIX-3: usa effectiveLockoutMs (sanitizado) para garantir lockTime finito.
-      const lockTime = now + effectiveLockoutMs;
+      // FIX-5: Math.min caps lockTime em Number.MAX_SAFE_INTEGER para precisão exata.
+      //
+      // Problema: now + MAX_SAFE_INTEGER excede 2^53 → float64 arredonda silenciosamente ±1ms.
+      // Exemplo: BigInt(now) + BigInt(MAX) = 9008949254740991 (impar, ODD)
+      //          Number: 9008949254740992 (par, rounded — diff invisível mas real)
+      //
+      // Math.min garante lockTime = exatamente MAX_SAFE_INTEGER quando effectiveLockoutMs = MAX:
+      //   - MAX_SAFE_INTEGER = 9007199254740991 é sempre representável exatamente em float64
+      //   - parseLockTs("9007199254740991") → round-trip perfeito, sem perda de precisão
+      //   - Semanticamente: "lock expira em 13/09/2285" (≈285 anos) — intent de "permanente"
+      //
+      // Casos normais (lockoutMs << MAX) são inalterados: Math.min(now+300000, MAX) = now+300000.
+      const lockTime = Math.min(now + effectiveLockoutMs, Number.MAX_SAFE_INTEGER);
       const rem = Math.ceil(effectiveLockoutMs / 1000);
 
       // FIX-1: try/catch em storage.setItem para o lock key.
