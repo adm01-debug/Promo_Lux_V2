@@ -34,12 +34,12 @@ export default defineTool({
       let query = supabaseForUser(ctx)
         .from("lusha_contacts")
         .select(
-          "id,full_name,job_title,company_name,linkedin_url,contact_source,created_at",
+          "id,full_name,job_title,lusha_company_name,department_pt,seniority,linkedin_url,contact_source,created_at",
         )
         .order("created_at", { ascending: false })
         .limit(limit ?? 20);
 
-      if (company_name) query = query.ilike("company_name", `%${company_name}%`);
+      if (company_name) query = query.ilike("lusha_company_name", `%${company_name}%`);
 
       const { data, error } = await query;
       if (error) return toolError(`Falha ao listar decisores: ${error.message}`);
