@@ -33,6 +33,7 @@ const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Monitoring = lazy(() => import("./pages/Monitoring"));
 const CnpjSettingsPage = lazy(() => import("./pages/CnpjSettingsPage"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,17 @@ const queryClient = new QueryClient({
 // usa para disparar toasts no momento exato em que a operação é bloqueada.
 registerQueryClient(queryClient);
 setOrgErrorListener((err) => { handleOrgError(err); });
+
+/**
+ * Lê o parâmetro `next` da URL e o valida como caminho relativo same-origin.
+ * Evita open redirect: só aceita caminhos que começam com "/" e não com "//".
+ */
+export function safeNextPath(search: string): string | null {
+  const raw = new URLSearchParams(search).get("next");
+  if (!raw) return null;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return null;
+  return raw;
+}
 
 function PageLoader() {
   return (
@@ -121,6 +133,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
       sessionStorage.removeItem("lux:pending-invite");
       return <Navigate to={`/invite/${pendingInvite}`} replace />;
     }
+    const next = safeNextPath(window.location.search);
+    if (next) return <Navigate to={next} replace />;
     return <Navigate to="/" replace />;
   }
   return <>{children}</>;
@@ -131,6 +145,7 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<PublicRoute><PageTransition><Login /></PageTransition></PublicRoute>} />
+        <Route path="/.lovable/oauth/consent" element={<PageTransition><OAuthConsent /></PageTransition>} />
         <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
         <Route path="/invite/:token" element={<PageTransition><AcceptInvite /></PageTransition>} />
         <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
