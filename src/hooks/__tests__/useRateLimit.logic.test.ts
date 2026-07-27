@@ -288,8 +288,8 @@ describe('KEY ISOLATION — múltiplas chaves não interferem', () => {
   it('"global" não conflita com "login"', () => {
     const NOW = 5_100_000_000_000;
     const storage = new MockStorage();
-    const simG = new RateLimitSim({ maxAttempts: 1 }, 'global', storage);
-    const simL = new RateLimitSim({ maxAttempts: 1 }, 'login', storage);
+    const simG = new RateLimitSim({ maxAttempts: 1, windowMs: 60_000 }, 'global', storage);
+    const simL = new RateLimitSim({ maxAttempts: 1, windowMs: 60_000 }, 'login', storage);
     simG.checkAndRecord(NOW);
     expect(simL.isLocked(NOW + 1).locked).toBe(false);
   });
@@ -307,7 +307,7 @@ describe('STORAGE CORRUPTION — localStorage corrompido', () => {
   for (const [desc, val] of corruptCases) {
     it(`isLocked() não trava com storage='${val}' (${desc})`, () => {
       const storage = new MockStorage({ 'lux:lock:c': val });
-      const sim = new RateLimitSim({ maxAttempts: 5 }, 'c', storage);
+      const sim = new RateLimitSim({ maxAttempts: 5, windowMs: 60_000 }, 'c', storage);
       expect(sim.isLocked(NOW).locked).toBe(false);
     });
   }
