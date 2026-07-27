@@ -19,11 +19,35 @@ set -uo pipefail
 
 DIR="supabase/migrations"
 ERRORS=0
+WARNINGS=0
+
+# Baseline de grandfathering. Migrations com timestamp ANTERIOR a este valor
+# foram escritas antes deste lint existir; suas tabelas já receberam GRANT/RLS
+# em migrations posteriores, e reescrever histórico já aplicado é pior que o
+# problema. Para elas, as regras de GRANT/RLS viram aviso, não erro.
+# Migrations NOVAS (timestamp >= baseline) são validadas de forma estrita.
+BASELINE="${MIGRATIONS_BASELINE:-20260727000000}"
 
 fail() {
   echo "::error::$1"
   ERRORS=$((ERRORS + 1))
 }
+
+warn() {
+  echo "::warning::$1"
+  WARNINGS=$((WARNINGS + 1))
+}
+
+# Erro para migrations novas, aviso para as anteriores ao baseline.
+fail_if_new() {
+  local ts="$1" msg="$2"
+  if [ "$ts" \> "$BASELINE" ] || [ "$ts" = "$BASELINE" ]; then
+    fail "$msg"
+  else
+    warn "[legado] $msg"
+  fi
+}
+
 
 if [ ! -d "$DIR" ]; then
   echo "Diretório $DIR não existe — nada a validar."
