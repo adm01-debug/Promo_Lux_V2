@@ -45,6 +45,7 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
   const lockoutMs = config.lockoutMs ?? config.windowMs;
 
   // GAP-5: validação de parâmetros em modo de desenvolvimento.
+  // Detecta configurações silenciosamente inválidas que levam a comportamentos inesperados.
   if (import.meta.env.DEV) {
     if (!(config.maxAttempts > 0)) {
       console.warn(`[useRateLimit:${key}] maxAttempts deve ser > 0 (recebido: ${config.maxAttempts})`);
@@ -135,11 +136,30 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     // t ∈ (now - windowMs, now] é o intervalo correto para "dentro da janela".
     attempts = attempts.filter(t => t <= now && now - t < config.windowMs);
     attempts.push(now);
-    storage.setItem(attemptsKey, JSON.stringify(attempts));
+
+    // FIX-1: try/catch em storage.setItem — previne crash por QuotaExceededError.
+    // Se o localStorage estiver cheio, o app não crasha: as tentativas simplesmente
+    // não são persistidas entre recarregamentos, mas o estado React continua correto.
+    // A proteção real é server-side (checkServerRateLimit/Edge Function).
+    try {
+      storage.setItem(attemptsKey, JSON.stringify(attempts));
+    } catch {
+      // Quota excedida: tentativas desta sessão não serão persistidas no storage.
+      // O estado React (uiLocked/uiRem) ainda é atualizado corretamente abaixo.
+    }
 
     if (attempts.length >= config.maxAttempts) {
       const lockTime = now + lockoutMs;
-      storage.setItem(lockKey, lockTime.toString());
+
+      // FIX-1: try/catch em storage.setItem para o lock key.
+      // Se falhar por quota, o lock não persistirá entre recarregamentos de página,
+      // mas o estado React ainda bloqueia a UI nesta sessão.
+      try {
+        storage.setItem(lockKey, lockTime.toString());
+      } catch {
+        // Quota excedida: lock desta sessão não será persistido no storage.
+      }
+
       const rem = Math.ceil(lockoutMs / 1000);
       setLocked(true);
       setRemainingSec(rem);
