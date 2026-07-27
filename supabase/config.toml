@@ -6,3 +6,6 @@ verify_jwt = true
 [functions.qa-ingest-run]
 verify_jwt = false
 
+
+[functions.migrate-helper]
+verify_jwt = false
