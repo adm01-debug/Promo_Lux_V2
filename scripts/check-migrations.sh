@@ -86,15 +86,36 @@ if [ -n "$DUPES" ]; then
 fi
 
 # --- 4: statements proibidos ------------------------------------------------
+# Atenção ao escopo: referenciar `auth.uid()` numa policy ou `REFERENCES
+# auth.users` é legítimo e comum. O que é proibido é criar/alterar/derrubar
+# OBJETOS dentro dos schemas gerenciados — por isso o schema precisa aparecer
+# na posição do alvo do statement, não em qualquer lugar da linha.
+MANAGED='auth|storage|realtime|supabase_functions|vault'
 for f in "${FILES[@]}"; do
   base=$(basename "$f")
-  if grep -qiE '^\s*ALTER\s+DATABASE\b' "$f"; then
+  ts=$(echo "$base" | cut -c1-14)
+
+  if grep -qiE '^[[:space:]]*ALTER[[:space:]]+DATABASE\b' "$f"; then
     fail "$base: ALTER DATABASE não é permitido (rejeitado pelo Supabase)."
   fi
-  if grep -qiE '\b(CREATE|ALTER|DROP)\s+(TRIGGER|TABLE|POLICY)\b[^;]*\b(auth|storage|realtime|supabase_functions|vault)\.' "$f"; then
-    fail "$base: alteração em schema gerenciado pelo Supabase (auth/storage/realtime/vault)."
+
+  # CREATE/ALTER/DROP TABLE <schema_gerenciado>.x
+  if grep -qiE "(CREATE|ALTER|DROP)[[:space:]]+TABLE[[:space:]]+(IF[[:space:]]+(NOT[[:space:]]+)?EXISTS[[:space:]]+)?(${MANAGED})\." "$f"; then
+    fail_if_new "$ts" "$base: CREATE/ALTER/DROP TABLE em schema gerenciado pelo Supabase."
+  fi
+
+  # CREATE TRIGGER ... ON <schema_gerenciado>.x
+  if grep -qiE "CREATE[[:space:]]+(OR[[:space:]]+REPLACE[[:space:]]+)?TRIGGER\b" "$f" \
+     && grep -qiE "^[[:space:]]*(BEFORE|AFTER|INSTEAD)[^;]*[[:space:]]ON[[:space:]]+(${MANAGED})\." "$f"; then
+    fail_if_new "$ts" "$base: trigger criado em tabela de schema gerenciado pelo Supabase."
+  fi
+
+  # CREATE/DROP POLICY ... ON <schema_gerenciado>.x
+  if grep -qiE "(CREATE|ALTER|DROP)[[:space:]]+POLICY[^;]*[[:space:]]ON[[:space:]]+(${MANAGED})\." "$f"; then
+    fail_if_new "$ts" "$base: policy criada/alterada em schema gerenciado pelo Supabase."
   fi
 done
+
 # --- 5: CREATE TABLE public exige GRANT + RLS -------------------------------
 for f in "${FILES[@]}"; do
   base=$(basename "$f")
