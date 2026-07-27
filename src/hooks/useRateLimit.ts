@@ -18,13 +18,33 @@ const getStorage = (): Storage | null =>
  * Hook de Rate Limit Híbrido:
  * - LocalStorage para resposta instantânea na UI (com fallback gracioso em SSR).
  * - Edge Function para segurança server-side real (anti-burlagem).
+ *
+ * @param configOrKey Chave de namespace (string) ou objeto de configuração
+ * @param maybeConfig Configuração quando o primeiro argumento é string
  */
 export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?: RateLimitConfig) {
   const key = typeof configOrKey === "string" ? configOrKey : "global";
   const config = typeof configOrKey === "object" ? configOrKey : (maybeConfig || { maxAttempts: 5, windowMs: 60000 });
-  // FIX GAP-3: ?? em vez de || para que lockoutMs=0 (expiração imediata) seja respeitado.
-  // Com ||, zero era tratado como falsy e caía para windowMs silenciosamente.
   const lockoutMs = config.lockoutMs ?? config.windowMs;
+
+  // GAP-5: validação de parâmetros em modo de desenvolvimento.
+  // Detecta configurações silenciosamente inválidas que levam a comportamentos inesperados.
+  if (import.meta.env.DEV) {
+    if (!(config.maxAttempts > 0)) {
+      console.warn(`[useRateLimit:${key}] maxAttempts deve ser > 0 (recebido: ${config.maxAttempts})`);
+    }
+    if (!(config.windowMs > 0)) {
+      console.warn(`[useRateLimit:${key}] windowMs deve ser > 0 (recebido: ${config.windowMs})`);
+    }
+    if (lockoutMs < config.windowMs) {
+      console.warn(
+        `[useRateLimit:${key}] lockoutMs (${lockoutMs}ms) < windowMs (${config.windowMs}ms). ` +
+        "Após o lockout expirar, as tentativas anteriores ainda estarão dentro da janela → " +
+        "o usuário será re-bloqueado imediatamente na próxima tentativa. " +
+        "Configure lockoutMs ≥ windowMs para evitar este efeito."
+      );
+    }
+  }
 
   const [locked, setLocked] = useState(false);
   const [remainingSec, setRemainingSec] = useState(0);
@@ -100,9 +120,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     return { locked: false, remainingSec: 0 };
   }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
 
-  // FIX GAP-2: isLocked agora limpa chaves de lock expiradas do storage.
-  // Antes, chaves com timestamp passado ficavam no localStorage indefinidamente,
-  // acumulando lixo proporcional ao número de sessões distintas de lockout.
   const isLocked = useCallback(() => {
     const storage = getStorage();
     if (!storage) return { locked: false, remainingSec: 0 };
@@ -114,9 +131,24 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     const remaining = Math.ceil((parseInt(lockUntil) - Date.now()) / 1000);
     if (remaining > 0) return { locked: true, remainingSec: remaining };
 
-    // FIX GAP-2: remove a chave expirada para manter storage limpo.
+    // Remove a chave expirada para manter storage limpo.
     storage.removeItem(lockKey);
     return { locked: false, remainingSec: 0 };
+  }, [key]);
+
+  /**
+   * GAP-4: Reseta o estado de rate limit para esta chave.
+   * Útil para fluxos administrativos (suporte desbloqueia usuário após verificação)
+   * ou em testes de integração que precisam limpar estado entre cenários.
+   * Remove tanto o lock quanto o histórico de tentativas do storage.
+   */
+  const reset = useCallback(() => {
+    const storage = getStorage();
+    if (!storage) return;
+    storage.removeItem(`lux:lock:${key}`);
+    storage.removeItem(`lux:attempts:${key}`);
+    setLocked(false);
+    setRemainingSec(0);
   }, [key]);
 
   useEffect(() => {
@@ -139,6 +171,7 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     recordAttempt: () => checkAndRecord().locked,
     checkAndRecord,
     checkServerRateLimit,
-    isLocked
+    isLocked,
+    reset,
   };
 }
