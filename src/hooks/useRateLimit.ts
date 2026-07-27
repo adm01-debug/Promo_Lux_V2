@@ -15,20 +15,20 @@ const getStorage = (): Storage | null =>
   typeof localStorage !== "undefined" ? localStorage : null;
 
 /**
- * Parseia um timestamp de lock de forma robusta.
+ * Parseia um timestamp de lock de forma robusta e segura.
  *
- * FIX ADV-7: parseInt("1.5e13") = 1 (para nos dígitos antes do ponto).
- * Um atacante com acesso ao localStorage poderia injetar um timestamp em
- * notação científica para fazer parseInt retornar 1 (ano 1970), tornando
- * o lock "expirado" e bypassando o rate limit.
+ * FIX ADV-7: parseInt("1.5e13") para nos dígitos antes do ponto, retornando 1
+ * (Jan 1970 → expirado → bypass). Number() parseia notação científica corretamente.
  *
- * Solução: Number() parseia notação científica corretamente.
- * Valores não-finitos (NaN, Infinity, strings inválidas) retornam null
- * para que o caller limpe a chave e trate como lock expirado.
+ * Retorna null para qualquer valor que não seja um número positivo finito:
+ *   - Strings inválidas ("abc", "NaN", "")  → Number = NaN  → null
+ *   - Não-finitos ("Infinity", "-Infinity")  → não finito    → null
+ *   - Zero ou negativos ("0", "-1", "  ")   → ts <= 0       → null
+ *   - Timestamps legítimos ("1750000000000") → número > 0    → valor correto
  */
 const parseLockTs = (raw: string): number | null => {
   const ts = Number(raw);
-  return Number.isFinite(ts) ? ts : null;
+  return Number.isFinite(ts) && ts > 0 ? ts : null;
 };
 
 /**
@@ -99,11 +99,11 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
 
     const lockUntil = storage.getItem(lockKey);
     if (lockUntil) {
-      // FIX ADV-7: usa parseLockTs (Number) em vez de parseInt para suportar
-      // notação científica e rejeitar valores inválidos (NaN, Infinity, etc.).
+      // FIX ADV-7: parseLockTs usa Number() + validação > 0 em vez de parseInt().
+      // Valores inválidos (notação científica mal-parsada, NaN, Infinity, zero,
+      // strings vazias) são removidos do storage e tratados como lock expirado.
       const lockTs = parseLockTs(lockUntil);
       if (lockTs === null) {
-        // Valor inválido no storage → remove e continua como se não houvesse lock.
         storage.removeItem(lockKey);
       } else {
         const remaining = Math.ceil((lockTs - now) / 1000);
@@ -128,12 +128,11 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
       storage.removeItem(attemptsKey);
     }
 
-    // FIX GAP-NEW-A: rejeita timestamps futuros (t > now).
-    // Antes: (now - t < windowMs) aceitava futuros porque (now - t) seria
-    // negativo, e negativo < windowMs (positivo) é sempre verdadeiro.
-    // Um atacante com acesso ao localStorage poderia injetar timestamps futuros
-    // para "pré-consumir" tentativas e forçar um lock prematuro na próxima
-    // tentativa legítima. O filtro agora exige explicitamente t <= now.
+    // FIX GAP-NEW-A: t <= now rejeita timestamps futuros injetados via XSS.
+    // Filtro anterior (now - t < windowMs) aceitava futuros: (now - t) negativo
+    // é sempre menor que windowMs positivo. Um atacante podia injetar N-1 futuros
+    // para forçar o lock na próxima tentativa legítima (DoS seletivo de conta).
+    // t ∈ (now - windowMs, now] é o intervalo correto para "dentro da janela".
     attempts = attempts.filter(t => t <= now && now - t < config.windowMs);
     attempts.push(now);
     storage.setItem(attemptsKey, JSON.stringify(attempts));
@@ -150,7 +149,7 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     return { locked: false, remainingSec: 0 };
   }, [key, config.windowMs, config.maxAttempts, lockoutMs]);
 
-  // FIX GAP-2 + ADV-7: isLocked agora usa parseLockTs e limpa chaves inválidas/expiradas.
+  // FIX GAP-2 + ADV-7: isLocked usa parseLockTs e limpa chaves inválidas/expiradas.
   const isLocked = useCallback(() => {
     const storage = getStorage();
     if (!storage) return { locked: false, remainingSec: 0 };
@@ -159,10 +158,10 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
     const lockUntil = storage.getItem(lockKey);
     if (!lockUntil) return { locked: false, remainingSec: 0 };
 
-    // FIX ADV-7: parseLockTs rejeita notação científica incorreta e não-finitos.
+    // FIX ADV-7: parseLockTs rejeita notação científica truncada e não-finitos.
     const lockTs = parseLockTs(lockUntil);
     if (lockTs === null) {
-      storage.removeItem(lockKey); // valor inválido → remove
+      storage.removeItem(lockKey);
       return { locked: false, remainingSec: 0 };
     }
 
