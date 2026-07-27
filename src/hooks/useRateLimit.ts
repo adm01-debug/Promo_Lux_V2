@@ -153,6 +153,22 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
 
     // FIX GAP-NEW-A: t <= now rejeita timestamps futuros injetados via XSS.
     attempts = attempts.filter(t => t <= now && now - t < config.windowMs);
+
+    // FIX-4: limita o array a maxAttempts entries para defender performance e storage.
+    // Em uso legítimo o array nunca excede maxAttempts (o lock dispara antes do push).
+    // Qualquer array maior que isso é evidência de injeção de timestamps passados.
+    //
+    // Benchmark: 1000 entries = 123x mais lento que 5 entries no JSON.stringify.
+    // Cap mantém as entradas mais recentes (mais relevantes para o rate limit).
+    //
+    // LIMITAÇÃO CONHECIDA: injeção de exatamente (maxAttempts-1) timestamps passados
+    // dentro da janela ainda pode forçar lock na próxima tentativa legítima do usuário.
+    // Isso requer acesso de escrita ao localStorage (exige XSS no mesmo origin).
+    // Defesa real: checkServerRateLimit (Edge Function) valida independente do localStorage.
+    if (attempts.length > config.maxAttempts) {
+      attempts = attempts.slice(-config.maxAttempts);
+    }
+
     attempts.push(now);
 
     // FIX-1: try/catch em storage.setItem — previne crash por QuotaExceededError.
@@ -164,7 +180,6 @@ export function useRateLimit(configOrKey: string | RateLimitConfig, maybeConfig?
 
     if (attempts.length >= config.maxAttempts) {
       // FIX-3: usa effectiveLockoutMs (sanitizado) para garantir lockTime finito.
-      // lockoutMs=Infinity/NaN → lockTime="Infinity"/"NaN" → parseLockTs rejeita → lock perdido.
       const lockTime = now + effectiveLockoutMs;
       const rem = Math.ceil(effectiveLockoutMs / 1000);
 
