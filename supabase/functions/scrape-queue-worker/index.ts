@@ -4,6 +4,12 @@ import {
   reportFailure,
   reportSuccess,
 } from "../_shared/circuit-breaker.ts";
+import {
+  buildOmkarCreateTaskBody,
+  OMKAR_ROUTES,
+  type LuxScrapeConfig,
+} from "../_shared/omkar-gmaps-config.ts";
+
 
 /** Serviço externo protegido pelo circuit breaker. */
 const CIRCUIT_SERVICE = "gmaps";
