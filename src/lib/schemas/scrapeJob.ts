@@ -9,6 +9,16 @@ export const scrapeJobSchema = z.object({
   email: z.boolean(),
   fast_mode: z.boolean(),
   auto_sync: z.boolean().default(false),
+  // Alinhamento com o contrato do omkarcloud/google-maps-scraper.
+  // Opcionais: ignorados pelo provedor padrão (gosom).
+  country: z.string().length(2, "Use o código ISO de 2 letras").optional(),
+  business_type: z.string().max(120, "Máximo 120 caracteres").optional(),
+  max_cities: z.number().int().positive().max(10000).optional(),
+  max_results: z.number().int().positive().max(100000).optional(),
+  max_reviews: z.number().int().positive().max(500).optional(),
+  reviews_sort: z
+    .enum(["newest", "most_relevant", "highest_rating", "lowest_rating"])
+    .optional(),
 });
 
 export type ScrapeJobFormData = z.infer<typeof scrapeJobSchema>;

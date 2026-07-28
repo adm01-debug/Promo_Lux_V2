@@ -4,6 +4,12 @@ import {
   reportFailure,
   reportSuccess,
 } from "../_shared/circuit-breaker.ts";
+import {
+  buildOmkarCreateTaskBody,
+  OMKAR_ROUTES,
+  type LuxScrapeConfig,
+} from "../_shared/omkar-gmaps-config.ts";
+
 
 /** Serviço externo protegido pelo circuit breaker. */
 const CIRCUIT_SERVICE = "gmaps";
@@ -23,6 +29,12 @@ const DEFER_DELAY_SECS = 60;
  */
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
+// Provedor de scraping: "gosom" (padrão, contrato histórico) ou "omkar"
+// (omkarcloud/google-maps-scraper via Botasaurus Desktop API).
+const GMAPS_PROVIDER = (Deno.env.get("GMAPS_PROVIDER") ?? "gosom").toLowerCase();
+const OMKAR_BASE_URL = (Deno.env.get("GMAPS_OMKAR_BASE_URL") ?? "").replace(/\/+$/, "");
+const OMKAR_API_KEY = Deno.env.get("GMAPS_OMKAR_API_KEY") ?? "";
+
 // Melhoria #2: batch dobrado (5→10) com paralelismo controlado em chunks
 // de 3 para evitar thundering herd contra o provedor externo.
 const BATCH_SIZE = 10;
@@ -139,27 +151,73 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
       .eq("id", task.scrape_job_id);
   }
 
+  // Seleção de provedor. O contrato histórico é o do gosom (payload plano);
+  // com GMAPS_PROVIDER=omkar traduzimos a mesma config para o contrato de task
+  // do omkarcloud/google-maps-scraper (Botasaurus Desktop API).
+  const useOmkar = GMAPS_PROVIDER === "omkar";
+  if (useOmkar && !OMKAR_BASE_URL) {
+    // Erro de configuração é permanente: retentar só encheria a DLQ.
+    await supabase.rpc("fail_scrape_task", {
+      _id: task.id,
+      _error: "config_error: GMAPS_OMKAR_BASE_URL ausente",
+      _transient: false,
+    });
+    await audit(supabase, task, {
+      _phase: "dead_letter",
+      _status: "dead",
+      _level: "error",
+      _message: "Provedor omkar selecionado sem GMAPS_OMKAR_BASE_URL configurada",
+      _failure_reason: "missing_provider_base_url",
+      _transient: false,
+      _attempt: attempt,
+    });
+    return;
+  }
+
+  const endpoint = useOmkar
+    ? `${OMKAR_BASE_URL}${OMKAR_ROUTES.createTaskAsync}`
+    : `${GMAPS_API_BASE}/jobs`;
+
+  let requestBody: unknown;
+  if (useOmkar) {
+    const mapped = buildOmkarCreateTaskBody(cfg as LuxScrapeConfig, {
+      apiKey: OMKAR_API_KEY,
+    });
+    requestBody = mapped.body;
+    if (mapped.unsupported.length || mapped.warnings.length) {
+      log("warn", "omkar_config_gap", {
+        task_id: task.id,
+        trace_id: traceOf(task),
+        unsupported: mapped.unsupported,
+        warnings: mapped.warnings,
+      });
+    }
+  } else {
+    requestBody = {
+      name: cfg.name,
+      keywords: cfg.keywords,
+      lang: cfg.lang,
+      zoom: cfg.zoom,
+      lat: cfg.lat,
+      lon: cfg.lon,
+      fast_mode: cfg.fast_mode,
+      radius: cfg.radius,
+      depth: cfg.depth,
+      email: cfg.email,
+      max_time: cfg.max_time,
+      proxies: cfg.proxies,
+    };
+  }
+
   let res: Response;
   try {
-    res = await fetch(`${GMAPS_API_BASE}/jobs`, {
+    res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: cfg.name,
-        keywords: cfg.keywords,
-        lang: cfg.lang,
-        zoom: cfg.zoom,
-        lat: cfg.lat,
-        lon: cfg.lon,
-        fast_mode: cfg.fast_mode,
-        radius: cfg.radius,
-        depth: cfg.depth,
-        email: cfg.email,
-        max_time: cfg.max_time,
-        proxies: cfg.proxies,
-      }),
+      body: JSON.stringify(requestBody),
       signal: AbortSignal.timeout(15000),
     });
+
   } catch (err) {
     // Rede/timeout => transitório. Sinaliza o circuit breaker (saúde do provedor).
     await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});

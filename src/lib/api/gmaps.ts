@@ -20,6 +20,13 @@ export interface ScrapeJob {
     lon?: string;
     max_time?: number;
     proxies?: string[];
+    // Contrato omkarcloud/google-maps-scraper (opcionais)
+    country?: string;
+    business_type?: string;
+    max_cities?: number;
+    max_results?: number;
+    max_reviews?: number;
+    reviews_sort?: "newest" | "most_relevant" | "highest_rating" | "lowest_rating";
   };
   auto_sync: boolean;
   results_count: number;
@@ -45,6 +52,13 @@ export interface CreateJobRequest {
   max_time?: number;
   proxies?: string[];
   extra_reviews?: boolean;
+  /** ISO-3166 alpha-2. Contrato omkar. */
+  country?: string;
+  business_type?: string;
+  max_cities?: number;
+  max_results?: number;
+  max_reviews?: number;
+  reviews_sort?: "newest" | "most_relevant" | "highest_rating" | "lowest_rating";
 }
 
 async function callProxy(action: string, options: RequestInit = {}, params: Record<string, string> = {}) {
