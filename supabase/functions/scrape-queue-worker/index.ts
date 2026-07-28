@@ -155,6 +155,25 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
   // com GMAPS_PROVIDER=omkar traduzimos a mesma config para o contrato de task
   // do omkarcloud/google-maps-scraper (Botasaurus Desktop API).
   const useOmkar = GMAPS_PROVIDER === "omkar";
+  if (useOmkar && !OMKAR_BASE_URL) {
+    // Erro de configuração é permanente: retentar só encheria a DLQ.
+    await supabase.rpc("fail_scrape_task", {
+      _id: task.id,
+      _error: "config_error: GMAPS_OMKAR_BASE_URL ausente",
+      _transient: false,
+    });
+    await audit(supabase, task, {
+      _phase: "dead_letter",
+      _status: "dead",
+      _level: "error",
+      _message: "Provedor omkar selecionado sem GMAPS_OMKAR_BASE_URL configurada",
+      _failure_reason: "missing_provider_base_url",
+      _transient: false,
+      _attempt: attempt,
+    });
+    return;
+  }
+
   const endpoint = useOmkar
     ? `${OMKAR_BASE_URL}${OMKAR_ROUTES.createTaskAsync}`
     : `${GMAPS_API_BASE}/jobs`;
