@@ -29,6 +29,12 @@ const DEFER_DELAY_SECS = 60;
  */
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
+// Provedor de scraping: "gosom" (padrão, contrato histórico) ou "omkar"
+// (omkarcloud/google-maps-scraper via Botasaurus Desktop API).
+const GMAPS_PROVIDER = (Deno.env.get("GMAPS_PROVIDER") ?? "gosom").toLowerCase();
+const OMKAR_BASE_URL = (Deno.env.get("GMAPS_OMKAR_BASE_URL") ?? "").replace(/\/+$/, "");
+const OMKAR_API_KEY = Deno.env.get("GMAPS_OMKAR_API_KEY") ?? "";
+
 // Melhoria #2: batch dobrado (5→10) com paralelismo controlado em chunks
 // de 3 para evitar thundering herd contra o provedor externo.
 const BATCH_SIZE = 10;
