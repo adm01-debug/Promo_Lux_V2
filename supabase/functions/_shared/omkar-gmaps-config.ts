@@ -128,8 +128,10 @@ function toQueries(raw: unknown): string[] {
   const out: string[] = [];
   for (const item of list) {
     const q = String(item ?? "").trim();
-    if (!q || seen.has(q.toLowerCase())) continue;
-    seen.add(q.toLowerCase());
+    // Chave de dedupe insensível a caixa E a acentos ("Clínicas" == "clinicas").
+    const key = q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (!q || seen.has(key)) continue;
+    seen.add(key);
     out.push(q);
   }
   return out;
