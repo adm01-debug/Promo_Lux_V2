@@ -34,6 +34,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Monitoring = lazy(() => import("./pages/Monitoring"));
 const CnpjSettingsPage = lazy(() => import("./pages/CnpjSettingsPage"));
 const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
+const AdminCompanies = lazy(() => import("./pages/AdminCompanies"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -151,6 +152,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
         <Route path="/monitoring" element={<ProtectedRoute><PageTransition><Monitoring /></PageTransition></ProtectedRoute>} />
         <Route path="/settings/cnpj" element={<ProtectedRoute><PageTransition><CnpjSettingsPage /></PageTransition></ProtectedRoute>} />
+        <Route path="/admin/companies" element={<ProtectedRoute><PageTransition><AdminCompanies /></PageTransition></ProtectedRoute>} />
         <Route path="/lusha" element={<Navigate to="/?view=lusha" replace />} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>

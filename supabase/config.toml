@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.migrate-helper]
 verify_jwt = false
+
+[functions.admin-list-companies]
+verify_jwt = false

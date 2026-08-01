@@ -23,6 +23,14 @@ const ALLOWED_ORIGINS = [
   "https://lux-ai-finder.lovable.app",
   "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
   "https://id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+  "http://localhost:8080",
+  "http://localhost:8081",
+  "http://localhost:8082",
+  "http://localhost:5173",
+  "http://127.0.0.1:8080",
+  "http://127.0.0.1:8081",
+  "http://127.0.0.1:8082",
+  "http://127.0.0.1:5173",
 ];
 function corsFor(req: Request) {
   const origin = req.headers.get("Origin") ?? "";

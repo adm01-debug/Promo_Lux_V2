@@ -4,6 +4,14 @@ import { RLS_TABLES, RLS_TABLES_EXEMPT, ENV_EXEMPT_TABLES, type AppEnv } from ".
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
   "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+  "http://localhost:8080",
+  "http://localhost:8081",
+  "http://localhost:8082",
+  "http://localhost:5173",
+  "http://127.0.0.1:8080",
+  "http://127.0.0.1:8081",
+  "http://127.0.0.1:8082",
+  "http://127.0.0.1:5173",
 ];
 
 function getCorsHeaders(req: Request) {
