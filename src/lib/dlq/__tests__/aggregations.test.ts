@@ -1,0 +1,296 @@
+import { describe, it, expect } from "vitest";
+import {
+  filterByPeriod,
+  computePeriodStats,
+  computeDailyFrequency,
+  computePeriodDelta,
+  sortHistory,
+  computeAlertDots,
+  detectSpikes,
+  correlateSpikesWithLogs,
+  type AlertHistoryPoint,
+  type TrendPoint,
+  type TrendChartPoint,
+  type AlertDotSource,
+  type CorrelatableLog,
+} from "../aggregations";
+
+const NOW = new Date("2026-07-12T12:00:00Z").getTime();
+
+function alert(triggered_at: string, pending_items: number, admins_notified = 1): AlertHistoryPoint {
+  return { triggered_at, pending_items, admins_notified };
+}
+
+describe("filterByPeriod", () => {
+  const rows = [
+    alert("2026-07-12T11:00:00Z", 10), // 1h atrás
+    alert("2026-07-10T12:00:00Z", 20), // 2d atrás
+    alert("2026-06-30T12:00:00Z", 30), // ~12d atrás
+  ];
+
+  it("retorna tudo quando period é null", () => {
+    expect(filterByPeriod(rows, null, NOW)).toHaveLength(3);
+  });
+
+  it("filtra por janela de 24h", () => {
+    const out = filterByPeriod(rows, 24, NOW);
+    expect(out).toHaveLength(1);
+    expect(out[0].pending_items).toBe(10);
+  });
+
+  it("filtra por janela de 7 dias", () => {
+    expect(filterByPeriod(rows, 168, NOW)).toHaveLength(2);
+  });
+
+  it("inclui o limite exato da janela", () => {
+    const exact = [alert(new Date(NOW - 24 * 3600_000).toISOString(), 5)];
+    expect(filterByPeriod(exact, 24, NOW)).toHaveLength(1);
+  });
+});
+
+describe("computePeriodStats", () => {
+  it("retorna null para lista vazia", () => {
+    expect(computePeriodStats([])).toBeNull();
+  });
+
+  it("calcula contagem, média, pico e notificações", () => {
+    const stats = computePeriodStats([
+      alert("2026-07-12T11:00:00Z", 10, 2),
+      alert("2026-07-12T10:00:00Z", 30, 3),
+      alert("2026-07-12T09:00:00Z", 20, 1),
+    ]);
+    expect(stats).toEqual({ count: 3, avg: 20, peak: 30, notified: 6 });
+  });
+
+  it("arredonda a média", () => {
+    const stats = computePeriodStats([alert("a", 10), alert("b", 11)]);
+    expect(stats?.avg).toBe(11); // 10.5 -> 11
+  });
+});
+
+describe("computeDailyFrequency", () => {
+  it("retorna vazio para lista vazia", () => {
+    expect(computeDailyFrequency([])).toEqual([]);
+  });
+
+  it("agrupa por dia em ordem crescente com rótulo dd/mm", () => {
+    // Usa meio-dia local para evitar ambiguidade de fuso na data.
+    const out = computeDailyFrequency([
+      alert("2026-07-12T12:00:00", 10),
+      alert("2026-07-12T15:00:00", 20),
+      alert("2026-07-10T12:00:00", 5),
+    ]);
+    expect(out).toEqual([
+      { day: "10/07", count: 1 },
+      { day: "12/07", count: 2 },
+    ]);
+  });
+});
+
+describe("computePeriodDelta", () => {
+  const mk = (captured_at: string, pending_items: number): TrendPoint => ({ captured_at, pending_items });
+
+  it("retorna null com menos de 2 pontos", () => {
+    expect(computePeriodDelta([mk("2026-07-12T11:00:00Z", 1)], 24, NOW)).toBeNull();
+  });
+
+  it("retorna null quando falta amostra em um dos lados", () => {
+    const rows = [mk("2026-07-12T11:00:00Z", 10), mk("2026-07-12T10:00:00Z", 20)];
+    // Janela de 48h engloba ambos → sem período anterior.
+    expect(computePeriodDelta(rows, 48, NOW)).toBeNull();
+  });
+
+  it("calcula diferença e percentual entre janelas", () => {
+    const rows = [
+      mk("2026-07-12T11:00:00Z", 20), // atual (janela 24h)
+      mk("2026-07-11T00:00:00Z", 10), // anterior
+    ];
+    const delta = computePeriodDelta(rows, 24, NOW);
+    expect(delta).not.toBeNull();
+    expect(delta!.curAvg).toBe(20);
+    expect(delta!.prevAvg).toBe(10);
+    expect(delta!.diff).toBe(10);
+    expect(delta!.pct).toBe(100);
+  });
+
+  it("retorna pct null quando a média anterior é zero", () => {
+    const rows = [
+      mk("2026-07-12T11:00:00Z", 20),
+      mk("2026-07-11T00:00:00Z", 0),
+    ];
+    const delta = computePeriodDelta(rows, 24, NOW);
+    expect(delta!.pct).toBeNull();
+  });
+
+  it("aceita pending_items como string", () => {
+    const rows = [
+      { captured_at: "2026-07-12T11:00:00Z", pending_items: "30" },
+      { captured_at: "2026-07-11T00:00:00Z", pending_items: "10" },
+    ];
+    const delta = computePeriodDelta(rows, 24, NOW);
+    expect(delta!.curAvg).toBe(30);
+    expect(delta!.prevAvg).toBe(10);
+  });
+});
+
+describe("sortHistory", () => {
+  const rows = [
+    { id: "a", triggered_at: "2026-07-10T00:00:00Z", pending_items: 50 },
+    { id: "b", triggered_at: "2026-07-12T00:00:00Z", pending_items: 10 },
+    { id: "c", triggered_at: "2026-07-11T00:00:00Z", pending_items: 50 },
+  ];
+
+  it("ordena por data decrescente (mais recente primeiro)", () => {
+    expect(sortHistory(rows, "date", "desc").map((r) => r.id)).toEqual(["b", "c", "a"]);
+  });
+
+  it("ordena por data crescente", () => {
+    expect(sortHistory(rows, "date", "asc").map((r) => r.id)).toEqual(["a", "c", "b"]);
+  });
+
+  it("ordena por volume decrescente, desempatando pela data mais recente", () => {
+    expect(sortHistory(rows, "volume", "desc").map((r) => r.id)).toEqual(["c", "a", "b"]);
+  });
+
+  it("ordena por volume crescente", () => {
+    expect(sortHistory(rows, "volume", "asc").map((r) => r.id)).toEqual(["b", "a", "c"]);
+  });
+
+  it("não muta o array de entrada", () => {
+    const copy = [...rows];
+    sortHistory(rows, "volume", "asc");
+    expect(rows).toEqual(copy);
+  });
+});
+
+describe("computeAlertDots", () => {
+  const trend: TrendChartPoint[] = [
+    { t: "10:00", ts: new Date("2026-07-12T10:00:00Z").getTime(), pending: 5 },
+    { t: "11:00", ts: new Date("2026-07-12T11:00:00Z").getTime(), pending: 20 },
+    { t: "12:00", ts: new Date("2026-07-12T12:00:00Z").getTime(), pending: 8 },
+  ];
+
+  function dotSrc(id: string, triggered_at: string, pending_items: number): AlertDotSource {
+    return {
+      id,
+      triggered_at,
+      pending_items,
+      pending_critical: 100,
+      consecutive: 1,
+      admins_notified: 1,
+    };
+  }
+
+  it("retorna vazio sem pontos de tendência", () => {
+    expect(computeAlertDots([dotSrc("a", "2026-07-12T11:05:00Z", 20)], [], 24, NOW)).toEqual([]);
+  });
+
+  it("ancora o alerta no ponto de tendência mais próximo", () => {
+    const dots = computeAlertDots([dotSrc("a", "2026-07-12T11:10:00Z", 22)], trend, 24, NOW);
+    expect(dots).toHaveLength(1);
+    expect(dots[0].x).toBe("11:00");
+    expect(dots[0].y).toBe(20);
+    expect(dots[0].id).toBe("a");
+    expect(dots[0].pending_items).toBe(22);
+  });
+
+  it("filtra alertas fora da janela de rangeHours", () => {
+    const dots = computeAlertDots(
+      [
+        dotSrc("old", "2026-07-11T00:00:00Z", 10), // >24h atrás
+        dotSrc("new", "2026-07-12T11:30:00Z", 15),
+      ],
+      trend,
+      6,
+      NOW,
+    );
+    expect(dots.map((d) => d.id)).toEqual(["new"]);
+  });
+
+  it("preserva todos os campos da fonte", () => {
+    const [dot] = computeAlertDots([dotSrc("z", "2026-07-12T12:00:00Z", 8)], trend, 24, NOW);
+    expect(dot.pending_critical).toBe(100);
+    expect(dot.consecutive).toBe(1);
+    expect(dot.admins_notified).toBe(1);
+  });
+});
+
+const trend = (pts: Array<[string, number, number]>): TrendChartPoint[] =>
+  pts.map(([t, ts, pending]) => ({ t, ts, pending }));
+
+describe("detectSpikes", () => {
+  it("retorna vazio com menos de 3 pontos", () => {
+    expect(detectSpikes(trend([["a", 1, 10], ["b", 2, 500]]))).toEqual([]);
+  });
+
+  it("retorna vazio quando a série é constante (std=0)", () => {
+    expect(detectSpikes(trend([["a", 1, 10], ["b", 2, 10], ["c", 3, 10]]))).toEqual([]);
+  });
+
+  it("identifica o ponto muito acima da média como pico", () => {
+    const data = trend([
+      ["a", 1, 10], ["b", 2, 12], ["c", 3, 11], ["d", 4, 200], ["e", 5, 9],
+    ]);
+    const spikes = detectSpikes(data, { minZ: 1.5 });
+    expect(spikes).toHaveLength(1);
+    expect(spikes[0].ts).toBe(4);
+    expect(spikes[0].pending).toBe(200);
+    expect(spikes[0].zScore).toBeGreaterThan(1.5);
+  });
+
+  it("respeita minPending para evitar ruído em séries baixas", () => {
+    const data = trend([["a", 1, 0], ["b", 2, 0], ["c", 3, 2]]);
+    expect(detectSpikes(data, { minZ: 1, minPending: 5 })).toEqual([]);
+  });
+});
+
+const log = (
+  id: string,
+  created_at: string,
+  level: CorrelatableLog["level"],
+): CorrelatableLog => ({ id, created_at, level, message: null, failure_reason: null });
+
+describe("correlateSpikesWithLogs", () => {
+  const base = new Date("2026-07-12T12:00:00Z").getTime();
+  const data = trend([
+    ["a", base - 3 * 60_000, 10],
+    ["b", base - 2 * 60_000, 12],
+    ["c", base - 60_000, 11],
+    ["d", base, 300],
+    ["e", base + 60_000, 9],
+  ]);
+
+  it("retorna vazio quando não há picos", () => {
+    const flat = trend([["a", 1, 10], ["b", 2, 10], ["c", 3, 10]]);
+    expect(correlateSpikesWithLogs(flat, [log("l1", "2026-07-12T12:00:00Z", "error")])).toEqual([]);
+  });
+
+  it("associa logs dentro da janela e conta níveis", () => {
+    const logs = [
+      log("l1", new Date(base + 5 * 60_000).toISOString(), "error"),
+      log("l2", new Date(base - 10 * 60_000).toISOString(), "warn"),
+      log("l3", new Date(base + 2 * 3600_000).toISOString(), "error"), // fora da janela
+    ];
+    const res = correlateSpikesWithLogs(data, logs, { windowMs: 30 * 60_000 });
+    expect(res).toHaveLength(1);
+    expect(res[0].logs.map((l) => l.id)).toEqual(["l1", "l2"]);
+    expect(res[0].errorCount).toBe(1);
+    expect(res[0].warnCount).toBe(1);
+  });
+
+  it("ordena logs por proximidade ao pico", () => {
+    const logs = [
+      log("far", new Date(base + 20 * 60_000).toISOString(), "info"),
+      log("near", new Date(base + 60_000).toISOString(), "info"),
+    ];
+    const res = correlateSpikesWithLogs(data, logs, { windowMs: 30 * 60_000 });
+    expect(res[0].logs[0].id).toBe("near");
+  });
+
+  it("omite picos sem nenhum log associado", () => {
+    const res = correlateSpikesWithLogs(data, [
+      log("l1", new Date(base + 5 * 3600_000).toISOString(), "error"),
+    ]);
+    expect(res).toEqual([]);
+  });
+});

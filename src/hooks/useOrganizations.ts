@@ -1,0 +1,203 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/auth-context";
+import type { Database } from "@/integrations/supabase/types";
+
+export type AppRole = Database["public"]["Enums"]["app_role"];
+export interface OrgMembership {
+  organization_id: string;
+  role: AppRole;
+  organizations: { id: string; name: string; slug: string; owner_id: string };
+}
+export interface Member {
+  id: string;
+  user_id: string;
+  role: AppRole;
+  created_at: string;
+  profile?: { full_name: string | null; avatar_url: string | null } | null;
+}
+export interface Invite {
+  id: string;
+  token: string;
+  role: AppRole;
+  created_by: string;
+  expires_at: string;
+  revoked: boolean;
+  accepted_at: string | null;
+  created_at: string;
+  accepted_by: string | null;
+  accepted_by_profile?: { full_name: string | null; avatar_url: string | null } | null;
+  created_by_profile?: { full_name: string | null; avatar_url: string | null } | null;
+}
+
+export function useMyOrganizations() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["my-organizations", user?.id],
+    enabled: !!user?.id,
+    queryFn: async (): Promise<OrgMembership[]> => {
+      const { data, error } = await supabase
+        .from("organization_members")
+        .select("organization_id, role, organizations!inner(id, name, slug, owner_id)")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as unknown as OrgMembership[];
+    },
+  });
+}
+
+// useActiveOrganization foi movido para src/contexts/active-org-context.ts —
+// era estado local por instância (cada componente com sua própria cópia de
+// activeId, dessincronizando entre eles); agora é um Context com fonte
+// única de verdade + sync entre abas via evento `storage` (Provider em
+// src/contexts/ActiveOrgContext.tsx).
+export { useActiveOrganization } from "@/contexts/active-org-context";
+
+export function useOrgMembers(orgId: string | null) {
+  return useQuery({
+    queryKey: ["org-members", orgId],
+    enabled: !!orgId,
+    queryFn: async (): Promise<Member[]> => {
+      const { data, error } = await supabase
+        .from("organization_members")
+        .select("id, user_id, role, created_at")
+        .eq("organization_id", orgId!)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      const rows = data ?? [];
+      // Best-effort enrich with profile names. RLS on profiles only exposes the current
+      // user's own row, so co-members will fall back to a truncated user_id label.
+      const ids = rows.map(r => r.user_id);
+      if (ids.length === 0) return rows;
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", ids);
+      const byId = new Map((profs ?? []).map(p => [p.id, p]));
+      return rows.map(r => ({
+        ...r,
+        profile: byId.get(r.user_id)
+          ? { full_name: byId.get(r.user_id)!.full_name, avatar_url: byId.get(r.user_id)!.avatar_url }
+          : null,
+      }));
+    },
+  });
+}
+
+export function useOrgInvites(orgId: string | null) {
+  return useQuery({
+    queryKey: ["org-invites", orgId],
+    enabled: !!orgId,
+    queryFn: async (): Promise<Invite[]> => {
+      const { data, error } = await supabase
+        .from("organization_invites")
+        .select("id, token, role, created_by, expires_at, revoked, accepted_at, accepted_by, created_at")
+        .eq("organization_id", orgId!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      const rows = (data ?? []) as Invite[];
+      const ids = Array.from(
+        new Set(
+          rows.flatMap(r => [r.created_by, r.accepted_by].filter((x): x is string => !!x))
+        )
+      );
+      if (ids.length === 0) return rows;
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", ids);
+      const byId = new Map((profs ?? []).map(p => [p.id, p]));
+      return rows.map(r => ({
+        ...r,
+        created_by_profile: byId.get(r.created_by)
+          ? { full_name: byId.get(r.created_by)!.full_name, avatar_url: byId.get(r.created_by)!.avatar_url }
+          : null,
+        accepted_by_profile: r.accepted_by && byId.get(r.accepted_by)
+          ? { full_name: byId.get(r.accepted_by)!.full_name, avatar_url: byId.get(r.accepted_by)!.avatar_url }
+          : null,
+      }));
+    },
+  });
+}
+
+export function useCreateOrganization() {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async ({ name }: { name: string }) => {
+      if (!user?.id) throw new Error("Não autenticado");
+      const slug = name.toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .slice(0, 40) + "-" + Math.random().toString(36).slice(2, 7);
+      const { data, error } = await supabase
+        .from("organizations")
+        .insert({ name: name.trim(), slug, owner_id: user.id })
+        .select("id, name, slug")
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["my-organizations"] }),
+  });
+}
+
+export function useCreateInvite(orgId: string | null) {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async ({ role }: { role: AppRole }) => {
+      if (!orgId || !user?.id) throw new Error("Org ou usuário ausente");
+      const { data, error } = await supabase
+        .from("organization_invites")
+        .insert({ organization_id: orgId, role, created_by: user.id })
+        .select("id, token")
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["org-invites", orgId] }),
+  });
+}
+
+export function useRevokeInvite(orgId: string | null) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("organization_invites")
+        .update({ revoked: true })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["org-invites", orgId] }),
+  });
+}
+
+export function useUpdateMemberRole(orgId: string | null) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, role }: { id: string; role: AppRole }) => {
+      const { error } = await supabase
+        .from("organization_members")
+        .update({ role })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["org-members", orgId] }),
+  });
+}
+
+export function useRemoveMember(orgId: string | null) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("organization_members")
+        .delete()
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["org-members", orgId] }),
+  });
+}

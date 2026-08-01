@@ -1,0 +1,36 @@
+# Canonical allowlist of SECURITY DEFINER functions in public schema
+# with EXECUTE granted to anon/authenticated. See docs/adr/009-security-baseline.md
+# and docs/adr/017-round23-linter-diagnosis.md for the classification per group.
+#
+# CI enforcement: scripts/check-security-definer.sh fails the build when the
+# live database exposes a function outside this list, OR when this list
+# contains an entry no longer exposed (drift in either direction).
+#
+# Format: one function name per line, comments start with '#'.
+
+# --- Group A: RLS helpers (would cause recursive RLS if INVOKER) ------------
+has_role
+has_org_role
+is_org_member
+default_org_for_current_user
+
+# --- Group B: Frontend-invoked RPCs that must bypass RLS -------------------
+accept_org_invite
+api_latency_stats
+api_latency_trend
+apply_retry_advisory
+campaign_ab_stats
+create_default_deal_stages
+dlq_health_metrics
+dlq_health_trend
+get_dashboard_stats
+replay_dead_letter
+replay_dead_letter_batch
+reset_circuit_breaker
+rollback_retry_advisory
+
+# --- Group C: Lusha enrichment gate (frontend-invoked, org-scoped inside) --
+fn_lusha_contact_mark_cache_hit
+fn_lux_cache_stats
+fn_lux_enrichment_gate
+fn_lux_save_enriched_contact

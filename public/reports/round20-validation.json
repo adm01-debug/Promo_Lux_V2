@@ -1,0 +1,202 @@
+{
+  "round": 20,
+  "layer": "E — Monte Carlo agregado",
+  "generated_at": "2026-07-22T11:33:59.879Z",
+  "scenarios_total": 1200,
+  "ambiguous_excluded": 300,
+  "variables": {
+    "chaos_rates": [
+      0,
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1
+    ],
+    "drifts_pp": [
+      0,
+      0,
+      0,
+      0.03,
+      0.06,
+      0.08,
+      0.1,
+      0.15
+    ],
+    "noise_sigmas": [
+      0.005,
+      0.01,
+      0.02,
+      0.03
+    ],
+    "orgs": 8
+  },
+  "org_isolation_breakdown": {
+    "org-A": {
+      "alerts": 0,
+      "total": 150
+    },
+    "org-B": {
+      "alerts": 28,
+      "total": 150
+    },
+    "org-C": {
+      "alerts": 4,
+      "total": 150
+    },
+    "org-D": {
+      "alerts": 65,
+      "total": 150
+    },
+    "org-E": {
+      "alerts": 149,
+      "total": 150
+    },
+    "org-F": {
+      "alerts": 149,
+      "total": 150
+    },
+    "org-G": {
+      "alerts": 148,
+      "total": 150
+    },
+    "org-H": {
+      "alerts": 146,
+      "total": 150
+    }
+  },
+  "chaos_rate_breakdown": {
+    "0": 99,
+    "0.005": 110,
+    "0.01": 99,
+    "0.02": 110,
+    "0.05": 103,
+    "0.1": 168
+  },
+  "metrics": {
+    "true_positive": 543,
+    "false_positive": 1,
+    "true_negative": 349,
+    "false_negative": 7,
+    "false_positive_rate": 0.0008,
+    "false_negative_rate": 0.0058,
+    "avg_hours_to_detect": 1.46,
+    "p95_hours_to_detect": 2
+  },
+  "gate": {
+    "fp_threshold": 0.01,
+    "fn_threshold": 0.01,
+    "detection_threshold_hours": 2,
+    "fp_pass": true,
+    "fn_pass": true,
+    "detection_pass": true,
+    "overall_pass": true
+  },
+  "failure_examples": [
+    {
+      "id": 30,
+      "orgId": "org-G",
+      "driftPp": 0.1,
+      "chaosRate": 0,
+      "noise": 0.02,
+      "sample24h": 371,
+      "sample7d": 1937,
+      "successRate24h": 0.8744866245175751,
+      "successRate7d": 0.9164122538241767,
+      "threshold": 0.05,
+      "expectAlert": true,
+      "hoursToDetect": 1
+    },
+    {
+      "id": 159,
+      "orgId": "org-H",
+      "driftPp": 0.15,
+      "chaosRate": 0.02,
+      "noise": 0.03,
+      "sample24h": 598,
+      "sample7d": 48,
+      "successRate24h": 0.6135448810877239,
+      "successRate7d": 0.8045889287929271,
+      "threshold": 0.05,
+      "expectAlert": true
+    },
+    {
+      "id": 199,
+      "orgId": "org-H",
+      "driftPp": 0.15,
+      "chaosRate": 0.005,
+      "noise": 0.03,
+      "sample24h": 186,
+      "sample7d": 47,
+      "successRate24h": 0.8006571367800802,
+      "successRate7d": 0.9965731031302406,
+      "threshold": 0.05,
+      "expectAlert": true
+    },
+    {
+      "id": 205,
+      "orgId": "org-F",
+      "driftPp": 0.08,
+      "chaosRate": 0.005,
+      "noise": 0.01,
+      "sample24h": 19,
+      "sample7d": 388,
+      "successRate24h": 0.8971512173081352,
+      "successRate7d": 0.9734235816982839,
+      "threshold": 0.05,
+      "expectAlert": true
+    },
+    {
+      "id": 599,
+      "orgId": "org-H",
+      "driftPp": 0.15,
+      "chaosRate": 0.1,
+      "noise": 0.03,
+      "sample24h": 19,
+      "sample7d": 1194,
+      "successRate24h": 0.7361215475207166,
+      "successRate7d": 0.8685195305658954,
+      "threshold": 0.05,
+      "expectAlert": true
+    },
+    {
+      "id": 639,
+      "orgId": "org-H",
+      "driftPp": 0.15,
+      "chaosRate": 0.02,
+      "noise": 0.03,
+      "sample24h": 775,
+      "sample7d": 40,
+      "successRate24h": 0.7659430803497744,
+      "successRate7d": 0.9233817343221039,
+      "threshold": 0.05,
+      "expectAlert": true
+    },
+    {
+      "id": 734,
+      "orgId": "org-G",
+      "driftPp": 0.1,
+      "chaosRate": 0.01,
+      "noise": 0.02,
+      "sample24h": 160,
+      "sample7d": 41,
+      "successRate24h": 0.7158340439753774,
+      "successRate7d": 0.8282983927710215,
+      "threshold": 0.05,
+      "expectAlert": true
+    },
+    {
+      "id": 1146,
+      "orgId": "org-C",
+      "driftPp": 0,
+      "chaosRate": 0,
+      "noise": 0.02,
+      "sample24h": 246,
+      "sample7d": 1572,
+      "successRate24h": 0.7470054475250469,
+      "successRate7d": 0.8000518745133272,
+      "threshold": 0.05,
+      "expectAlert": false
+    }
+  ]
+}

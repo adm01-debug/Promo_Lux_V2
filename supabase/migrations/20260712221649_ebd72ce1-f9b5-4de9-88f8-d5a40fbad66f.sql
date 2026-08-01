@@ -1,0 +1,2 @@
+CREATE INDEX IF NOT EXISTS idx_scrape_queue_scrape_job_id ON public.scrape_queue (scrape_job_id);
+CREATE INDEX IF NOT EXISTS idx_partition_advisories_policy_id ON public.partition_advisories (policy_id);

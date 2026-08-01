@@ -1,0 +1,50 @@
+{
+  "round": 19,
+  "layer": "E — Monte Carlo",
+  "generated_at": "2026-07-22T11:33:35.569Z",
+  "scenarios_total": 500,
+  "chaos_rate_distribution": [
+    0,
+    0.01,
+    0.05,
+    0.1
+  ],
+  "org_isolation_breakdown": {
+    "org-A": {
+      "alerts": 37,
+      "total": 100
+    },
+    "org-B": {
+      "alerts": 39,
+      "total": 100
+    },
+    "org-C": {
+      "alerts": 52,
+      "total": 100
+    },
+    "org-D": {
+      "alerts": 42,
+      "total": 100
+    },
+    "org-E": {
+      "alerts": 51,
+      "total": 100
+    }
+  },
+  "metrics": {
+    "true_positive": 221,
+    "false_positive": 0,
+    "true_negative": 279,
+    "false_negative": 0,
+    "false_positive_rate": 0,
+    "false_negative_rate": 0
+  },
+  "gate": {
+    "fp_threshold": 0.01,
+    "fn_threshold": 0.05,
+    "fp_pass": true,
+    "fn_pass": true,
+    "overall_pass": true
+  },
+  "failure_examples": []
+}
