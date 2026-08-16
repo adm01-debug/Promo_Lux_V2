@@ -18,7 +18,7 @@ O problema não é o produto. É que **o aparato de qualidade em volta dele é d
 2. **Nenhum dos 3 workflows do repositório está verde.** `edge-tests-daily`: 24/24 falhas. `db-migrations`: 1 execução, falha.
 3. **Os 111 arquivos de teste não protegem nada em CI.** Nenhum é executado por um pipeline que conclua.
 4. **O ambiente não nasce do repositório.** Não existe ledger de migrations (`supabase_migrations.schema_migrations` **não existe**), e 4 migrations estão corrompidas em base64 — nenhum dos objetos que elas declaram existe em produção.
-5. **61,1% das tabelas (58 de 95) nunca receberam um registro.** Não é acaso: concentra-se exatamente onde o prompt previa — SLA, filas, DLQ, alertas, automações e dashboards.
+5. **61,1% das tabelas (58 de 95) estão vazias.** Destas, **40 não receberam nenhum INSERT** desde o reset de estatísticas (15/07/2026). Não é acaso: concentra-se onde o prompt previa — SLA, filas, DLQ, alertas, automações e dashboards. *(Ver Errata E3 — a redação original dizia "nunca receberam um registro", o que era mais forte do que a evidência permite.)*
 
 **Tradução para decisão:** o que está em produção funciona porque foi construído direto no ambiente, não porque foi validado. Qualquer alteração hoje entra sem rede de proteção, e o ambiente não é reconstruível a partir do código.
 
@@ -98,6 +98,8 @@ Variável vazia → `exit 0` → **verde**. Consertar só o base64 produz um CI 
 
 O banco foi construído pela interface do Lovable, não pelo `supabase/migrations/`. Um `supabase db reset` hoje não reproduz produção — e ninguém sabe o delta.
 
+**Agravante não registrado na primeira versão:** `db-migrations.yml:27-30` aplica migrations **automaticamente em push para `main`** (Environment `production`, com *required reviewers*). Ou seja, o dia em que as 4 migrations em base64 forem decodificadas e chegarem à `main`, elas entram na fila de aplicação em produção. Isso **muda a natureza da correção**: decodificar os 5 arquivos não-migration é inócuo; decodificar as 4 migrations é uma mudança que toca produção e precisa de revisão do conteúdo antes. Ver Errata E5.
+
 ### 🟠 R4 — Alertas de DLQ silenciosamente mortos há 30 dias
 
 Dois cron jobs falham de forma sistemática, e ninguém foi avisado porque **falha de cron não gera chamado**:
@@ -127,7 +129,9 @@ Três pontas existem, a costura não:
 - `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` — **lê** `campaign_events`.
 - `supabase/functions/campaign-dispatch/index.ts` (655 linhas) — **zero ocorrências** de `track`, `pixel`, `open` ou `click` (`grep -in`). Envia `Content-Type: text/plain` (`index.ts:592`), sem pixel e sem reescrita de links.
 
-Ninguém gera URLs apontando para as functions de tracking. `campaign_events` = **0 linhas**. A UI de métricas de campanha exibirá zero para sempre.
+Ninguém gera URLs apontando para as functions de tracking. `campaign_events` = **0 linhas hoje**. Enquanto `campaign-dispatch` não injetar o pixel nem reescrever links, a UI de métricas continuará exibindo zero.
+
+*Correção (E4): a versão original afirmava que a funcionalidade "nunca funcionou uma vez". `pg_stat_user_tables` mostra **5 INSERTs** históricos em `campaign_events` (e 5 DELETEs) — provavelmente invocação manual das functions durante teste. A evidência de código permanece decisiva e o veredito não muda, mas a afirmação absoluta era forte demais.*
 
 ### 🟡 R6 — A documentação canônica está invertida
 
@@ -194,7 +198,7 @@ Declarado, não escondido.
 
 | # | Ação | Esforço | Por que primeiro |
 |---|---|---|---|
-| 1 | **Decodificar os 9 arquivos base64** (`base64 -d` in-place, commit) | ~15 min | Destrava tudo o mais. Reversível, verificável por diff |
+| 1 | **Decodificar os 5 arquivos base64 que NÃO são migration** (`ci.yml`, `check-anon-grants-view.sh`, `email-verify`, `deliverability-check`, `auth.md`) | ~10 min | Destrava tudo o mais. Reversível, verificável por diff. **As 4 migrations ficam de fora** — ver item 8 e Errata E5 |
 | 2 | Corrigir `secrets.SUPAAASE_DB_URL` → `SUPABASE_DB_URL` (2 ocorrências) | 2 min | Sem isso, 2 guards passam em falso mesmo com o CI vivo |
 | 3 | Trocar `exit 0` por `exit 1` quando `DB_URL` está vazia nos guards | 10 min | Elimina a asserção vacuamente verdadeira |
 | 4 | Apontar `edge-tests-daily.yml` para `vitest` em vez de `deno test` | ~20 min | Os 20 testes em `_shared/__tests__/` importam `vitest`, não Deno. Causa exata das 24 falhas: `Module not found ".../\_shared/bitrix-client"` em `bitrix-client.test.ts:2:91` |
@@ -206,7 +210,7 @@ Declarado, não escondido.
 | # | Ação | Risco | Observação |
 |---|---|---|---|
 | 7 | Corrigir os 13 registros órfãos em `scrape_dead_letter` (org `...099`) | Baixo | Ressuscita o alarme de DLQ. É `DELETE` ou criação da org — **sua escolha**, não minha |
-| 8 | Aplicar as 4 migrations corrompidas após decodificar | **Médio** | Criam tabelas e funções novas. Exige revisão do conteúdo antes |
+| 8 | Decodificar **e** aplicar as 4 migrations corrompidas | **Médio–Alto** | Criam tabelas e funções novas. **Atenção (E5):** `db-migrations.yml` aplica migrations automaticamente em push para `main`. Decodificar já as coloca na fila de produção — o Environment `production` exige revisor, mas a decisão de aplicar passa a ser um clique, não um passo separado. Revise o SQL antes de decodificar |
 | 9 | Estabelecer o ledger de migrations (`supabase migration repair`) | **Alto** | É o caminho para reconstrutibilidade, mas precisa de baseline manual do delta repo × produção |
 | 10 | Ligar `web_scrape_enabled` ou desmontar o módulo | Médio | Hoje um cron roda a cada 30s para não fazer nada. Decisão de produto |
 | 11 | Costurar o tracking de campanhas (pixel + rewrite em `campaign-dispatch`) | Médio | Ou remover a UI de métricas, que exibirá zero indefinidamente |
@@ -252,6 +256,26 @@ O único ausente é **justamente o que cito como evidência fabricada** da audit
 | "Resend" como integração de e-mail | É `handleResendInvite` — reenvio de convite | Removido do inventário |
 | Migrations corrompidas quebram produção | Nenhum código vivo referencia os 6 objetos ausentes | Rebaixado de "incidente" para **entrega perdida** |
 
+### Errata — segunda rodada de validação (2026-08-16, pós-publicação)
+
+Uma segunda passada adversarial contra a própria auditoria encontrou **6 defeitos**. Os agregados (156 itens, 42/78/29/7) sobreviveram à recontagem mecânica; quatro afirmações não. O original fica registrado ao lado da correção.
+
+| # | O que eu afirmei | O que é verdade | Como descobri |
+|---|---|---|---|
+| **E1** | *"O dano entrou junto com o arquivo no commit `f3400e4` (26/07). Não houve regressão posterior."* | **Falso.** A execução **#1** do `ci.yml`, em **2026-05-11**, já falhou — dez semanas antes daquele commit. O histórico git deste repo foi reimportado/esmagado, então `git log -- ci.yml` mostrando um único commit **não** indica quando a corrupção entrou. | Paginei até a página 13 da API de runs e li as 23 mais antigas |
+| **E2** | *"Os 30 cron jobs existem apenas em `cron.job`, nunca foram versionados."* | **Exagerado.** **6 dos 30 são versionados** via `cron.schedule` em migrations — `capture-db-health`, `daily-log-retention`, `daily-campaign-logs-retention`, `evaluate-partition-policies-daily`, `pg-net-snapshots-prune-weekly`, `reap-stuck-queue-tasks` (todos do tipo SQL). Os **24 restantes**, incluindo os 17 que chamam Edge Functions, de fato não são. | Meu critério era `grep "functions/v1/"` — estreito demais. `grep "cron.schedule"` acha 6 arquivos. **Foi exatamente a armadilha de falso-negativo que eu mesmo documentei** |
+| **E3** | *"58 tabelas nunca receberam um registro."* | **Exagerado.** 58 estão **vazias hoje**; **40** sem nenhum INSERT desde o reset de estatísticas (**15/07/2026**); **18** receberam tuplas e hoje estão vazias. E o próprio `n_tup_ins` é traiçoeiro: `dlq_health_snapshots` marca **2.920** inserts — número próximo das 2.901 falhas de cron, ou seja, quase certamente tuplas de transações **abortadas**, não dado real. | `pg_stat_user_tables.n_tup_ins` / `n_tup_del` |
+| **E4** | *"Métricas de campanha nunca funcionaram uma vez."* | **Forte demais.** `campaign_events` teve **5 INSERTs** e 5 DELETEs históricos. A evidência de código (zero tracking em `campaign-dispatch`) permanece decisiva e o veredito 🟦 não muda. | idem |
+| **E5** | Não registrei o gatilho do `db-migrations.yml` | **Gap.** O workflow **aplica migrations em push para `main`** (`db-migrations.yml:27-30`, Environment `production` com *required reviewers*). Decodificar as 4 migrations deixa de ser inócuo — vira mudança que toca produção. Reclassifiquei essa ação de "barato e seguro" para "toca produção" no §6. | Leitura do gatilho antes de propor a correção |
+| **E6** | Rótulos das seções do anexo 02: "(25)" e "(15)" | **Erro de contagem nos títulos.** As seções têm **28** e **12** itens. As 57 linhas numeradas e os totais por classificação estavam corretos — só os rótulos estavam errados. | Recontagem mecânica de linhas numeradas por arquivo |
+
+**O que sobreviveu intacto à segunda rodada**, agora com evidência mais forte que na primeira:
+
+- **"O CI nunca executou" está confirmado e reforçado.** Amostrei as runs mais novas *e* as mais antigas: **383 execuções, zero sucessos em toda a história do workflow**, de 2026-05-11 a hoje.
+- **Todos os denominadores conferem** por recontagem: 57 Edge Functions, 23 views, 111 arquivos de teste (69+22+20), 212 migrations, 95 tabelas.
+- **As 3 classificações ⬛ resistiram ao teste mais duro.** A dúvida era se aquelas functions seriam chamadas de dentro do banco via `net.http_post` — o que meu `grep` no repositório não veria. Consulta a `pg_proc.prosrc`: **nenhuma função PL/pgSQL do schema `public` contém `functions/v1/`**. Nenhum chamador oculto.
+- **A costura partida do tracking resistiu:** varredura em *todas* as 57 functions por geração de URL de tracking → única ocorrência é o arquivo de teste.
+
 ---
 
 ## 8. Critério de pronto — autoavaliação honesta
@@ -260,6 +284,9 @@ O único ausente é **justamente o que cito como evidência fabricada** da audit
 - [x] 100% de views (23), Edge Functions (57), cron jobs (30), tabelas (95), workflows (3) e arquivos de teste (111) enumerados
 - [x] Toda funcionalidade classificada com evidência `arquivo:linha`, objeto de banco ou `jobid`
 - [x] Achados graves R1–R5 verificados de forma independente (≥2 provas cada)
+- [x] **Segunda rodada adversarial contra a própria auditoria** — 6 defeitos encontrados e corrigidos em bloco de errata, com o texto original preservado (E1–E6)
+- [x] Denominadores reconferidos por recontagem mecânica: 57 Edge Functions, 23 views, 111 testes, 212 migrations, 95 tabelas, 156 itens classificados
+- [x] Hipótese de chamador oculto via `net.http_post` em PL/pgSQL testada e descartada — as 3 classificações ⬛ resistiram
 - [x] Runtime marcado `VERIFICADO` ou `NAO_VERIFICADO`, sem meio-termo
 - [x] Lacunas declaradas no próprio documento (§5)
 - [x] Nada alterado em produção

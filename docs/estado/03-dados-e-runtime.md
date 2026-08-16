@@ -107,7 +107,7 @@ As **13** linhas da dead-letter queue pertencem a uma organização de teste que
 
 ---
 
-## 4. Dormência: 58 de 95 tabelas (61,1%) nunca receberam um registro
+## 4. Dormência: 58 de 95 tabelas (61,1%) estão vazias
 
 ```sql
 select count(*) total, count(*) filter (where n=0) vazias,
@@ -115,6 +115,22 @@ select count(*) total, count(*) filter (where n=0) vazias,
 from (...) t;
 -- → 95 | 58 | 61.1
 ```
+
+> **🔧 CORREÇÃO (Errata E3).** O título original era *"…nunca receberam um registro"*. Isso é mais forte do que a evidência sustenta. Medição adicional em `pg_stat_user_tables`:
+>
+> ```sql
+> select count(*) filter (where n_live_tup=0)                  as vazias_hoje,            -- 58
+>        count(*) filter (where n_live_tup=0 and n_tup_ins=0)   as nunca_receberam_insert, -- 40
+>        count(*) filter (where n_live_tup=0 and n_tup_ins>0)   as tiveram_e_esvaziaram;   -- 18
+> ```
+>
+> **58 vazias hoje · 40 sem nenhum INSERT · 18 tiveram tuplas inseridas.** E os contadores têm ressalvas que importam:
+> - As estatísticas foram **resetadas em 2026-07-15**. "Sem INSERT" cobre ~1 mês, não a vida inteira da tabela.
+> - `n_tup_ins` conta tuplas de transações **abortadas**. `dlq_health_snapshots` marca **2.920** inserts — próximo das 2.901 falhas de cron documentadas em §3. São quase certamente os `INSERT` revertidos pelo erro de FK, **não** dado que existiu. Isso *reforça* o achado R4 em vez de enfraquecê-lo.
+>
+> As 18 tabelas com histórico de INSERT: `dlq_health_snapshots` (2.920, ver acima), `deal_activities` (28), `email_suppressions` (11), `automation_execution_logs` (10), `campaign_recipients` (10), `apollo_search_cache` (9), `cnpj_enrich_queue` (9), `web_scrape_queue` (6), `oracle_rate_limits` (6), `campaign_events` (5), `cnpj_enrich_rate_state` (4), `places_api_usage` (3), `dlq_alert_history` (3), `qa_test_runs` (2), `org_scrape_rate_limits` (1), `instagram_scrape_queue` (1), `cnpj_enrich_cache` (1), `web_scrape_dead_letter` (1).
+>
+> **Leitura honesta:** volumes de 1 a 28 tuplas, todas removidas, indicam **teste manual pontual** — não operação. O quadro de dormência se mantém; a redação absoluta é que estava errada.
 
 **Não é distribuição aleatória.** Agrupando as 58 vazias por domínio:
 
@@ -173,9 +189,28 @@ grep -rl "assert_service_or_admin\|workflow_run_events\|ab_assignments\|assign_a
 
 **Nenhum código vivo os referencia.** O risco é de **entrega perdida** (A/B testing, execução durável de workflow, guard centralizado de privilégio e auditoria de extensões nunca chegaram a existir), **não** de falha ativa em produção. Registro a distinção porque tratá-lo como incidente levaria a uma correção apressada em produção sem necessidade.
 
-### 5.4 Agendamentos não versionados
+### 5.4 Agendamentos parcialmente versionados
 
-Os 30 cron jobs existem **apenas** em `cron.job`. `grep "functions/v1/"` em `supabase/migrations/` → **0 resultados**. Se o banco for recriado do repositório, **nenhum job é agendado**.
+> **🔧 CORREÇÃO (2026-08-16, segunda rodada de validação — Errata E2 do documento executivo).**
+> **Redação original, incorreta:** *"Os 30 cron jobs existem **apenas** em `cron.job`. `grep "functions/v1/"` em `supabase/migrations/` → 0 resultados. Se o banco for recriado do repositório, nenhum job é agendado."*
+> **Por que estava errada:** meu critério de detecção era `grep "functions/v1/"`, que só encontra jobs cujo comando chama uma Edge Function por HTTP. Os jobs do tipo SQL não casam esse padrão. É precisamente a armadilha de falso-negativo que este próprio relatório documenta — apliquei-a a mim mesmo sem testar o critério.
+
+**Medição correta:** `grep -rl "cron.schedule" supabase/migrations/` → **6 arquivos**.
+
+**6 dos 30 jobs SÃO versionados** — todos do tipo SQL, com o padrão defensivo `cron.unschedule` seguido de `cron.schedule`:
+
+| Job versionado | Migration |
+|---|---|
+| `capture-db-health` | `20260712183806_*.sql` |
+| `daily-log-retention` | `20260712184705_*.sql` |
+| `daily-campaign-logs-retention` | `20260721225851_*.sql` |
+| `evaluate-partition-policies-daily` | `20260721225949_*.sql` |
+| `pg-net-snapshots-prune-weekly` | `20260722123959_*.sql` |
+| `reap-stuck-queue-tasks` | `20260723134028_*.sql:218-222` |
+
+**Os 24 restantes não são versionados** — incluindo **todos os 17 que invocam Edge Functions** por `net.http_post` (`grep -rl "net.http_post" supabase/migrations/` → **0 arquivos**).
+
+**O veredito muda de grau, não de direção:** se o banco for recriado a partir do repositório, **6 jobs são agendados e 24 não** — entre os ausentes, todo o processamento de filas (`process-scrape-queue`, `web-scrape-worker-30s`, `sync-gmaps-jobs`, `cnpj-enrich-worker`) e toda a camada de alertas. O ambiente continua não reconstruível; a lacuna é de 80%, não de 100%.
 
 ---
 

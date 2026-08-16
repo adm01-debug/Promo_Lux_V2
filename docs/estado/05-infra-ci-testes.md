@@ -131,7 +131,7 @@ Há 10 arquivos com o mesmo padrão em `supabase/functions/**/__tests__/`. Eles 
 
 | # | Item | Evidência | Classe |
 |---:|---|---|:---:|
-| 4 | `db-migrations.yml` | 158 linhas, YAML íntegro, usa `SUPABASE_ACCESS_TOKEN` / `SUPABASE_DB_PASSWORD` / `vars.SUPABASE_PROJECT_REF` corretos. **1 execução, `failure`** | 🟨 |
+| 4 | `db-migrations.yml` | 158 linhas, YAML íntegro, nomes de secret corretos. **1 execução, `failure`**. **⚠️ Ver nota abaixo — este workflow aplica migrations em produção** | 🟨 |
 | 5 | Migrations versionadas | 212 arquivos; **4 em base64**; ledger `supabase_migrations.schema_migrations` **inexistente** (ver [`03`](./03-dados-e-runtime.md) §5) | 🟨 |
 | 6 | Husky + lint-staged + commitlint | `.husky/`, `commitlint.config.cjs` **e** `commitlint.config.js` (duplicado), `lint-staged` em `package.json` | 🟨 `NAO_VERIFICADO` — hooks locais, não observáveis daqui |
 | 7 | Geração de PDF de auditoria no build | `package.json`: `"build": "vite build && (npm run generate-audit-pdf \|\| echo '...')"` | 🟨 O `\|\|` engole a falha por desenho; o PDF pode nunca ser gerado sem ninguém notar |
@@ -140,6 +140,31 @@ Há 10 arquivos com o mesmo padrão em `supabase/functions/**/__tests__/`. Eles 
 | 10 | Scan de `console.log` / secrets (ADR-006) | job `security-scan` no `ci.yml` decodificado | ⬛ Nunca executou |
 | 11 | Portão `quality-gate` (lint/tsc/test/build) | job `quality-gate` no `ci.yml` decodificado | ⬛ Nunca executou |
 | 12 | Workflow Copilot PR Reviewer | `dynamic/agents/copilot-pull-request-reviewer`, `state: active` | 🟨 `NAO_VERIFICADO` — gerenciado pela plataforma, fora do repo |
+
+---
+
+### 5.1 ⚠️ `db-migrations.yml` aplica migrations em produção — gap da primeira versão
+
+> **🔧 ADIÇÃO (Errata E5).** A primeira versão classificou este workflow como 🟨 sem registrar o que ele faz ao concluir. Isso é material para o plano de correção.
+
+`db-migrations.yml:22-31`:
+
+```yaml
+on:
+  pull_request:
+    paths: ['supabase/migrations/**', '.github/workflows/db-migrations.yml']
+  push:
+    branches: [main, master]
+    paths: ['supabase/migrations/**']
+```
+
+O próprio cabeçalho declara o desenho: *"pull_request → staging (somente validação), push em main → production (aplica)"*, com credenciais em GitHub Environments e *"o Environment `production` deve ter Required reviewers ativado"*.
+
+**Consequência prática para o item 1 do plano de correção:** decodificar `ci.yml`, os 2 scripts/functions e `docs/auth.md` é inócuo. **Decodificar as 4 migrations não é** — assim que o arquivo virar SQL legível e chegar à `main`, ele entra no fluxo de aplicação em produção. O `Required reviewers` é uma trava real, mas passa a ser um clique de aprovação em vez de um passo deliberado e separado.
+
+Por isso o plano executivo foi reescrito: **item 1 agora cobre apenas os 5 arquivos não-migration**, e as 4 migrations migraram para o item 8, na faixa "toca produção — é decisão sua".
+
+*Ressalva:* não consigo verificar daqui se `Required reviewers` está de fato ativado no Environment `production` — isso é configuração da organização no GitHub, fora do repositório. **`NAO_VERIFICADO`.** Se não estiver, o risco sobe de Médio para Alto.
 
 ---
 
@@ -161,7 +186,22 @@ Critério: arquivo versionado, não-binário, `> 500` bytes, **0 quebras de linh
 | `supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql` | 8.824 | `CREATE TABLE IF NOT EXISTS public.ab_assignments` |
 | `supabase/migrations/20260722000001_D18-durable-workflow-execution.sql` | 9.778 | `-- Migration D18: Durable Workflow Execution` |
 
-**Origem:** `git log -- .github/workflows/ci.yml` retorna **um único commit**, `f3400e4` (2026-07-26, *"Ativou toggle de auto-tune por fila"*), e o arquivo **já nasceu em base64** nesse commit. Não houve regressão posterior — o dano entrou junto com o arquivo, provavelmente em uma sincronização de plataforma que gravou o payload codificado.
+**Origem — corrigida na segunda rodada de validação:**
+
+> **🔧 CORREÇÃO (Errata E1).**
+> **Redação original, incorreta:** *"`git log -- .github/workflows/ci.yml` retorna um único commit, `f3400e4` (2026-07-26), e o arquivo já nasceu em base64 nesse commit. Não houve regressão posterior — o dano entrou junto com o arquivo."*
+> **Por que estava errada:** paginei a API de execuções até o fim. A run **#1**, de **2026-05-11T13:41:20Z** (*"Add integration configuration from remix"*), **já falhou** — e as 23 mais antigas também, todas `failure`. O CI já estava quebrado **dez semanas antes** do commit que o `git log` aponta.
+> **Conclusão:** o histórico git deste repositório foi **esmagado/reimportado** (o workflow existe no GitHub desde 2026-05-11, mas o `git log` local conhece um único commit de 26/07). **`git log` não é fonte confiável para datar a corrupção neste repo.** Não sei quando o dano entrou; sei que **nunca houve um estado bom** no período observável.
+
+**O que a correção reforça:** a amostragem ampliada tornou o achado **mais forte**, não mais fraco. Cobrindo as execuções mais recentes *e* as mais antigas:
+
+| Amostra | Janela | Resultado |
+|---|---|---|
+| Página 1 (runs 354–383) | 2026-07-27 → 2026-08-11 | 30/30 `failure` |
+| Página 4 (runs 264–293) | 2026-07-22 → 2026-07-23 | 30/30 `failure` |
+| Página 13 (runs 1–23) | **2026-05-11** → 2026-05-16 | **23/23 `failure`** |
+
+**383 execuções ao longo de 3 meses, e nenhum sucesso em nenhuma amostra — incluindo a primeira execução do workflow.**
 
 **Correção proposta (barata, reversível):** `base64 -di <arquivo> > tmp && mv tmp <arquivo>` para os 9, com `git diff` legível para revisão. Não toca produção.
 

@@ -14,7 +14,8 @@
 Três fontes, porque nenhuma sozinha é suficiente:
 
 1. **Frontend:** `grep` por nome da function em `src/` (aceitando `invoke("x")`, `invoke('x')` e URLs `/x`). O padrão estreito `functions.invoke(...)` sozinho encontrou apenas 13 de 57 — **descartei-o por falso-negativo**.
-2. **Cron:** `select substring(command from 'functions/v1/([a-z0-9-]+)') from cron.job`. **Importante:** `grep` nas migrations do repo encontrou **zero** agendamentos — os 30 jobs existem **apenas no banco**, nunca foram versionados. Isso é sintoma do risco R3 (ambiente não reconstruível).
+2. **Cron:** `select substring(command from 'functions/v1/([a-z0-9-]+)') from cron.job`.
+   > **🔧 CORREÇÃO (Errata E2).** A redação original dizia: *"`grep` nas migrations encontrou zero agendamentos — os 30 jobs existem apenas no banco, nunca foram versionados."* **Errado.** Eu havia buscado `functions/v1/`, padrão que só casa jobs HTTP. Buscando `cron.schedule`, aparecem **6 migrations**: **6 dos 30 jobs são versionados** (todos SQL). Os **24 restantes não são** — e isso inclui **todos os 17 que chamam Edge Function** (`grep "net.http_post" supabase/migrations/` → 0 arquivos). Para esta dimensão a conclusão não muda: nenhum dos 17 gatilhos de Edge Function nasce do repositório. Detalhe em [`03`](./03-dados-e-runtime.md) §5.4.
 3. **Evidência de execução:** tabela que a function escreve, com contagem de linhas real.
 
 ---
@@ -47,7 +48,7 @@ Sucessos/falhas de `cron.job_run_details`, janela até 2026-08-16 18:56 UTC.
 
 ---
 
-## 3. Functions chamadas pelo frontend (25)
+## 3. Functions chamadas pelo frontend (28)
 
 | # | Function | Linhas | Chamador | Evidência | Classe |
 |---:|---|---:|---|---|:---:|
@@ -82,7 +83,7 @@ Sucessos/falhas de `cron.job_run_details`, janela até 2026-08-16 18:56 UTC.
 
 ---
 
-## 4. Sem nenhum chamador — 🟦 e ⬛ (15)
+## 4. Sem nenhum chamador — 🟦 e ⬛ (12)
 
 Cada linha abaixo foi verificada individualmente contra falso-negativo, porque o prompt alerta que endossar lista de código morto sem testar o critério leva alguém a apagar código vivo.
 
