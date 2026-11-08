@@ -63,7 +63,7 @@ hook, bun.
   `bash scripts/check-security-definer.sh`, `bash scripts/check-queue-kind-coverage.sh` — **todos saem
   verdes sem `SUPABASE_DB_URL`** (ver `github-ci.md` §armadilhas);
 - integridade das instruções de agente: `node scripts/ci/check-claude-md-integrity.mjs`;
-- hook do husky: só `pre-commit` (`bun run lint && bunx tsc --noEmit && bun run test`). **Não há
+- hook do husky: só `pre-commit` (`bun run lint && bunx tsc --noEmit -p tsconfig.app.json && bun run test`). **Não há
   `commit-msg`** — o `commitlint` instalado não é executado por nada.
 
 ## Grafo de código (graphify) — detalhes
