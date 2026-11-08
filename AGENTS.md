@@ -90,7 +90,7 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
   up --local`). DDL só pelo fluxo de `banco.md` (arquivo → PR → **chame o dono** → merge → `db-migrations.yml`
   aplica com aprovação no Environment `production`). Destrutivo, segredos e rotação: só com o dono.
 - **Não existe ledger**: `supabase_migrations.schema_migrations` não existe no projeto vivo; 212 migrations no
-  repo, 4 corrompidas em base64. O ambiente não é reconstruível a partir do código — trate toda migration
+  repo, 6 corrompidas em base64. O ambiente não é reconstruível a partir do código — trate toda migration
   como de alto risco.
 
 ## Serviços

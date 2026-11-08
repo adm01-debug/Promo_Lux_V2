@@ -73,12 +73,14 @@ RLS está ligado em **95 de 95** tabelas. Mas: **58 das 95 tabelas estão vazias
    saber pelo banco o que já foi aplicado. Em consequência: o ambiente **não é reconstruível a partir do
    repositório**, e `db push` pode tentar reaplicar tudo. Trate qualquer migration como alto risco e confirme
    o estado real por catálogo (`pg_get_functiondef`, `pg_policies`, `pg_indexes`, `information_schema`).
-7. **4 migrations estão corrompidas em base64** e nenhum dos objetos que declaram existe em produção:
+7. **6 migrations estão corrompidas em base64** e nenhum dos objetos que declaram existe em produção:
    `20260721083823_A1-assert-service-or-admin-guard.sql` (`assert_service_or_admin()`),
    `20260721084800_A3A4-extensions-audit-partial-indexes.sql` (view `v_extensions_audit`),
+   `20260721235001_C13-campaign-warmup-throttling.sql` (tabelas `warmup_profiles`, `campaign_warmup_state` e RPC `get_warmup_slot()`),
    `20260721235500_C14-ab-testing-assignment-chisquare.sql` (tabela `ab_assignments`),
-   `20260722000001_D18-durable-workflow-execution.sql` (tabela `workflow_run_events`).
-   **Decodificar essas quatro é ação de produção** (entram no `db push` no merge seguinte) — só com o dono.
+   `20260722000001_D18-durable-workflow-execution.sql` (tabela `workflow_run_events`),
+   `20260722000500_H37-company-analytics-rpcs.sql` (RPCs `company_analytics_summary()`, `company_growth_trend()`, `company_ipc_distribution()`).
+   **Decodificar essas seis é ação de produção** (entram no `db push` no merge seguinte) — só com o dono.
    Nenhum código vivo referencia esses objetos (`grep` em `src/`, `supabase/`, `scripts/` → zero), então
    não há incidente ativo: é entrega perdida, não quebra.
 8. **Guards de banco só valem com `SUPABASE_DB_URL` exportada.** `scripts/check-function-grants.sh:14-19` e
