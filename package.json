@@ -29,7 +29,12 @@
     "db:lint": "bash scripts/check-migrations.sh",
     "db:verify": "npm run db:lint && supabase db reset",
     "db:status": "supabase migration list --linked",
-    "db:plan": "supabase db push --dry-run --linked"
+    "db:plan": "supabase db push --dry-run --linked",
+    "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
+    "contexto:ia:test": "node --test scripts/ai-context/gerar.unit.mjs",
+    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
+    "contexto:supabase": "python3 scripts/supabase_snapshot/snapshot.py",
+    "inventario:edges": "node scripts/inventario/gerar-repo.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
