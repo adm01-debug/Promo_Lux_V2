@@ -53,7 +53,7 @@ hook, bun.
 
 - testes unitários só do que você tocou: `npx vitest run <caminho>` — dois projetos em `vitest.config.ts`:
   `app` (jsdom, `src/**`) e `edge` (node, `supabase/functions/**/__tests__/**`);
-- typecheck: `npx tsc --noEmit`; lint dos arquivos tocados: `npx eslint <arquivos>`;
+- typecheck: `npx tsc --noEmit -p tsconfig.app.json`; lint dos arquivos tocados: `npx eslint <arquivos>`;
 - E2E: `npm run test:e2e` (Playwright; o `webServer` sobe `npm run dev` na **porta 8080** — `baseURL` e
   `vite.config.ts` precisam continuar batendo, senão todo `page.goto` falha);
 - cobertura: `npm run test:coverage` (limiar 70% em linhas/funções/branches/statements);
