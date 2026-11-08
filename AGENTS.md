@@ -119,7 +119,8 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
   `docs/agentes/github-ci.md`): `npm run test:grants`, `npm run test:audit-triggers`,
   `bash scripts/check-security-definer.sh`, `bash scripts/check-queue-kind-coverage.sh`.
 - Integridade das instruções de agente antes do PR: `node scripts/ci/check-claude-md-integrity.mjs`.
-- Antes de qualquer tarefa: `docs/ESTADO_ATUAL.md` (índice executivo) e o anexo da dimensão em
+- Antes de qualquer tarefa: `git show origin/contexto:docs/contexto/00-INDEX.md` (contexto gerado, ver
+  seção abaixo), `docs/ESTADO_ATUAL.md` (índice executivo) e o anexo da dimensão em
   `docs/estado/`. São a fonte de verdade sobre o que está vivo; o `README.md` está defasado (fala de 12
   tabelas; são 95).
 
@@ -129,3 +130,27 @@ Grafo em `graphify-out/` (`npm run graph:setup`; ver `scripts/graphify/README.md
 `graphify explain "<conceito>"` antes de buscar por texto; `GRAPH_REPORT.md` só para revisão ampla.
 Alterou código ou o report não é do HEAD atual → `graphify update .` (só AST). Em nuvem o grafo é gerado em
 segundo plano (`.claude/hooks/session-start.sh`) — siga sem ele até terminar.
+
+## Contexto gerado (branch `contexto`) — scripts autônomos
+Três produtores independentes mantêm o retrato do projeto sem ninguém escrever documentação à mão
+(`.github/workflows/contexto.yml`, a cada push em `main` e a cada 10 min; publica na branch gerada
+`contexto`, nunca em `main` — merge em `main` é deploy pela Lovable):
+- `docs/contexto/codigo/` ← `scripts/ai-context/gerar.mjs` (`npm run contexto:ia`): rotas, menu, módulos,
+  hooks, edges, tabelas citadas, testes, convenções, baseline. Não precisa de secret.
+- `docs/contexto/supabase/` ← `scripts/supabase_snapshot/snapshot.py` (`npm run contexto:supabase`): banco
+  OFICIAL ao vivo (tabelas, RLS, funções, triggers, cron, lints), só leitura. **Exige o secret
+  `SUPABASE_DB_URL`** (projeto `pttzwlbidamibjssqiqb`); sem ele o job sai verde com aviso e a pasta fica como estava.
+- `docs/contexto/regras/` ← `scripts/regras_negocio/generate.py` (`npm run contexto:regras`): RLS por
+  operação, estados, validações, fórmulas, lacunas. Regras humanas em `docs/contexto/regras/manual/` (na
+  `main`) nunca são sobrescritas.
+- `docs/contexto/00-INDEX.md` ← `scripts/regras_negocio/indice.py`: diz quem é dono de cada fato e a idade
+  de cada fonte. Schema real = `supabase/`; onde fica o código = `codigo/`; o que pode/não pode = `regras/`.
+
+Como ler: `git fetch origin contexto && git show origin/contexto:docs/contexto/00-INDEX.md` (ou MCP
+`github_get_file` com `ref=contexto`). Nunca abra PR da branch `contexto` nem edite a mão o que tem
+cabeçalho "Gerado automaticamente" — regere com os comandos acima.
+
+Inventário do código: `inventario/estado/edges.json` (`npm run inventario:edges`, exige `ripgrep`) —
+linhas, segredos lidos e quem invoca cada edge function; `sem_chamador_no_repo` é a lista de candidatas a
+código morto. Regerado por `.github/workflows/inventario-estado-semanal.yml` (segunda), que abre PR e
+**deixa aberto** para o dono. Detalhe em `inventario/estado/README.md`.

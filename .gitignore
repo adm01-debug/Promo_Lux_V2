@@ -31,3 +31,13 @@ playwright/.cache
 
 # Grafo de codigo (graphify) — gerado por clone, ver scripts/graphify/README.md
 graphify-out/
+
+# gerado pelo contexto.yml na branch contexto (nunca em main); manual/ e texto humano e fica em main
+docs/contexto/*
+!docs/contexto/regras/
+docs/contexto/regras/*
+!docs/contexto/regras/manual/
+
+# Python (scripts/supabase_snapshot, scripts/regras_negocio)
+__pycache__/
+*.pyc

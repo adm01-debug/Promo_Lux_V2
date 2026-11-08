@@ -1,0 +1,100 @@
+# docs:
+#   gatilho: agendado (seg 10:23 UTC) e dispatch
+#   prova: inventario/estado/edges.json regerado do código (linhas, segredos lidos e quem invoca cada edge function)
+#   falha: o job fica vermelho e o inventário não é atualizado
+#   avisa: PR automation/inventario-estado com o inventário novo (sem auto-merge: merge em main é deploy pela Lovable)
+name: Inventário do estado real (semanal)
+
+# Refaz inventario/estado/ a partir do CÓDIGO (não de documentação) e abre PR se algo mudou.
+# Script: scripts/inventario/gerar-repo.mjs (ripgrep). Nunca faz push direto em main — entrega
+# via PR na branch automation/inventario-estado, que fica aberta para o dono: merge em `main`
+# neste repo dispara deploy em produção pela Lovable (ver AGENTS.md § Serviços).
+#
+# O inventário do BANCO ao vivo não está aqui: quem coleta tabelas, RLS, funções, triggers e cron
+# do projeto oficial (pttzwlbidamibjssqiqb) é o contexto.yml (scripts/supabase_snapshot/snapshot.py),
+# que publica em docs/contexto/supabase/ na branch contexto.
+
+on:
+  schedule:
+    - cron: '23 10 * * 1' # segunda 10:23 UTC (07:23 BRT), fora do minuto 0 e dos outros crons do repo
+  workflow_dispatch:
+
+concurrency:
+  group: inventario-estado-semanal
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+jobs:
+  gerar:
+    name: Refazer inventario/estado
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:  # zizmor: ignore[excessive-permissions]
+      contents: write       # branch do PR
+      pull-requests: write  # abrir/atualizar o PR
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: Instalar ripgrep (usado pelo gerar-repo.mjs)
+        run: command -v rg || sudo apt-get install -y --no-install-recommends ripgrep
+
+      - name: Inventário do repositório (edge functions)
+        run: |
+          # < /dev/null: sem lista de tabelas no stdin o script só grava edges.json
+          node scripts/inventario/gerar-repo.mjs < /dev/null
+
+      - name: Decidir se vale PR
+        id: mudou
+        # Compara o JSON sem os carimbos de data (medido_em/gerado_em) contra o HEAD. Filtrar
+        # linhas do diff não serve: o edges.json é gravado numa linha só, com a data.
+        run: |
+          valor="$(node scripts/inventario/mudou-conteudo.mjs)"
+          echo "valor=$valor" >> "$GITHUB_OUTPUT"
+          if [ "$valor" != "true" ]; then
+            echo "Inventário sem mudança de conteúdo — nenhum PR a abrir."
+          fi
+
+      - name: Abrir ou atualizar PR do inventário
+        id: pull-request
+        if: steps.mudou.outputs.valor == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        env:
+          HUSKY: '0'  # evita que o hook pre-push do Husky bloqueie o push interno da action
+        with:
+          token: ${{ github.token }}
+          base: main
+          branch: automation/inventario-estado
+          delete-branch: true
+          commit-message: 'chore: inventario do estado real [auto]'
+          title: 'chore: inventário do estado real (semanal)'
+          body: |
+            Inventário refeito automaticamente por `.github/workflows/inventario-estado-semanal.yml`
+            a partir do código. Só arquivos em `inventario/estado/`.
+
+            - main de origem: `${{ github.sha }}`
+            - run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Sem auto-merge: merge em `main` dispara deploy em produção pela Lovable.
+
+      - name: Upload do inventário
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: inventario-estado-${{ github.run_id }}
+          path: inventario/estado/
+          retention-days: 14
