@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Garante que as instrucoes para agentes nao foram apagadas ou esvaziadas por outra sessao.
+ * Garante que as instrucoes para agentes nao foram apagadas, esvaziadas ou divergidas por outra sessao.
  * Alvo: AGENTS.md (regras) + docs/agentes/*.md (referencia). CLAUDE.md e so `@AGENTS.md`.
- * Verifica: AGENTS.md existe, cabecalhos obrigatorios presentes, o conjunto
+ * Verifica: AGENTS.md existe, cabecalhos obrigatorios presentes, CLAUDE.md (se existir) e exatamente
+ * "@AGENTS.md", o conjunto
  * AGENTS.md + CLAUDE.md + docs/agentes/*.md nao encolheu >30% em bytes vs a base, e cada arquivo
  * vigiado (AGENTS.md e cada docs/agentes/*.md que exista na base) continua existindo com >=50% do
  * tamanho que tem na base (o limiar do conjunto sozinho nao pega o esvaziamento de 1 arquivo).
@@ -46,6 +47,16 @@ if (missing.length > 0) {
   for (const s of missing) console.error(`::error::${AGENTS}: secao obrigatoria ausente: ${s}`);
   process.exitCode = 1;
   process.exit();
+}
+
+const CLAUDE_MD = 'CLAUDE.md';
+if (existsSync(CLAUDE_MD)) {
+  const claudeContent = readFileSync(CLAUDE_MD, 'utf8').trim();
+  if (claudeContent !== '@AGENTS.md') {
+    console.error(`::error::${CLAUDE_MD} deveria conter so "@AGENTS.md" e tem: ${JSON.stringify(claudeContent)}. Possivel sobrescrita por sessao paralela.`);
+    process.exitCode = 1;
+    process.exit();
+  }
 }
 
 function bytesAtuais() {
