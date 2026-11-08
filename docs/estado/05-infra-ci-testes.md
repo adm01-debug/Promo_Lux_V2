@@ -132,7 +132,7 @@ Há 10 arquivos com o mesmo padrão em `supabase/functions/**/__tests__/`. Eles 
 | # | Item | Evidência | Classe |
 |---:|---|---|:---:|
 | 4 | `db-migrations.yml` | 158 linhas, YAML íntegro, nomes de secret corretos. **1 execução, `failure`**. **⚠️ Ver nota abaixo — este workflow aplica migrations em produção** | 🟨 |
-| 5 | Migrations versionadas | 212 arquivos; **4 em base64**; ledger `supabase_migrations.schema_migrations` **inexistente** (ver [`03`](./03-dados-e-runtime.md) §5) | 🟨 |
+| 5 | Migrations versionadas | 212 arquivos; **6 em base64**; ledger `supabase_migrations.schema_migrations` **inexistente** (ver [`03`](./03-dados-e-runtime.md) §5) | 🟨 |
 | 6 | Husky + lint-staged + commitlint | `.husky/`, `commitlint.config.cjs` **e** `commitlint.config.js` (duplicado), `lint-staged` em `package.json` | 🟨 `NAO_VERIFICADO` — hooks locais, não observáveis daqui |
 | 7 | Geração de PDF de auditoria no build | `package.json`: `"build": "vite build && (npm run generate-audit-pdf \|\| echo '...')"` | 🟨 O `\|\|` engole a falha por desenho; o PDF pode nunca ser gerado sem ninguém notar |
 | 8 | Cobertura de código | `npm run test:coverage` + `@vitest/coverage-v8` existem; **nenhum gate de cobertura em nenhum workflow** | 🟦 |
@@ -160,9 +160,9 @@ on:
 
 O próprio cabeçalho declara o desenho: *"pull_request → staging (somente validação), push em main → production (aplica)"*, com credenciais em GitHub Environments e *"o Environment `production` deve ter Required reviewers ativado"*.
 
-**Consequência prática para o item 1 do plano de correção:** decodificar `ci.yml`, os 2 scripts/functions e `docs/auth.md` é inócuo. **Decodificar as 4 migrations não é** — assim que o arquivo virar SQL legível e chegar à `main`, ele entra no fluxo de aplicação em produção. O `Required reviewers` é uma trava real, mas passa a ser um clique de aprovação em vez de um passo deliberado e separado.
+**Consequência prática para o item 1 do plano de correção:** decodificar `ci.yml`, os 2 scripts/functions e `docs/auth.md` é inócuo. **Decodificar as 6 migrations não é** — assim que o arquivo virar SQL legível e chegar à `main`, ele entra no fluxo de aplicação em produção. O `Required reviewers` é uma trava real, mas passa a ser um clique de aprovação em vez de um passo deliberado e separado.
 
-Por isso o plano executivo foi reescrito: **item 1 agora cobre apenas os 5 arquivos não-migration**, e as 4 migrations migraram para o item 8, na faixa "toca produção — é decisão sua".
+Por isso o plano executivo foi reescrito: **item 1 agora cobre apenas os 5 arquivos não-migration**, e as 6 migrations migraram para o item 8, na faixa "toca produção — é decisão sua".
 
 *Ressalva:* não consigo verificar daqui se `Required reviewers` está de fato ativado no Environment `production` — isso é configuração da organização no GitHub, fora do repositório. **`NAO_VERIFICADO`.** Se não estiver, o risco sobe de Médio para Alto.
 
@@ -172,7 +172,7 @@ Por isso o plano executivo foi reescrito: **item 1 agora cobre apenas os 5 arqui
 
 Critério: arquivo versionado, não-binário, `> 500` bytes, **0 quebras de linha**, primeiros 32 bytes casando `^[A-Za-z0-9+/]+$`. Aplicado aos 952 arquivos de `git ls-files` (excluindo `png|jpg|jpeg|gif|svg|ico|webp|pdf|lockb|lock`).
 
-**9 achados. Todos confirmados por `base64 -di` produzindo código-fonte legível.**
+**11 achados. Todos confirmados por `base64 -di` produzindo código-fonte legível.**
 
 | Arquivo | Bytes | Primeira linha decodificada |
 |---|---:|---|
@@ -183,8 +183,10 @@ Critério: arquivo versionado, não-binário, `> 500` bytes, **0 quebras de linh
 | `supabase/functions/email-verify/index.ts` | 9.844 | idem |
 | `supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql` | 10.960 | `-- Migration A1: assert_service_or_admin() — Guard Centralizado` |
 | `supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql` | 8.968 | `CREATE OR REPLACE VIEW public.v_extensions_audit` |
+| `supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql` | 8.944 | `-- Migration C13: Campaign Warmup / Email Sending Throttling` |
 | `supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql` | 8.824 | `CREATE TABLE IF NOT EXISTS public.ab_assignments` |
 | `supabase/migrations/20260722000001_D18-durable-workflow-execution.sql` | 9.778 | `-- Migration D18: Durable Workflow Execution` |
+| `supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql` | 7.275 | `-- Migration H37: Company Analytics -- RPCs para dashboard e relatórios` |
 
 **Origem — corrigida na segunda rodada de validação:**
 
@@ -203,7 +205,7 @@ Critério: arquivo versionado, não-binário, `> 500` bytes, **0 quebras de linh
 
 **383 execuções ao longo de 3 meses, e nenhum sucesso em nenhuma amostra — incluindo a primeira execução do workflow.**
 
-**Correção proposta (barata, reversível):** `base64 -di <arquivo> > tmp && mv tmp <arquivo>` para os 9, com `git diff` legível para revisão. Não toca produção.
+**Correção proposta (barata, reversível):** `base64 -di <arquivo> > tmp && mv tmp <arquivo>` para os 11, com `git diff` legível para revisão. Não toca produção.
 
 ---
 

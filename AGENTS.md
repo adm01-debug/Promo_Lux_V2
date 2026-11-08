@@ -101,7 +101,7 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
   push de lead: GMaps Scraper (`gmaps.atomicabr.com.br`), Lusha, Apify/Hiker (Instagram), Bitrix (Oracle),
   Lovable AI Gateway. Chave de provedor só em secret da edge function, nunca no front.
 - **GitHub/CI** — ler `docs/agentes/github-ci.md` antes de tocar em `.github/workflows/`, settings ou
-  Environments. Os 3 workflows do repo nunca concluíram com sucesso; `ci.yml` e 8 outros arquivos estão em
+  Environments. Os 3 workflows do repo nunca concluíram com sucesso; `ci.yml` e 10 outros arquivos estão em
   base64. Consertar isso é item do dono.
 - **Regras de domínio** — ler `docs/agentes/regras-dominio.md` ao mexer em IPC/scoring, multi-tenant
   (`withOrg`), filas/DLQ, soft delete ou fixtures de E2E.
