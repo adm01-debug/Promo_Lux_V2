@@ -29,7 +29,7 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
 ## Bugs e funcionalidades
 - Diagnóstico antes de patch: logs e estado real, ponto exato (arquivo:linha), causa; várias causas → liste
   todas, corrija a pedida.
-- Antes da PR: `npm run lint`, `npx tsc --noEmit` e `npm run test` **do que tocou**. Só erro seu conta; erro
+- Antes da PR: `npm run lint`, `npx tsc --noEmit -p tsconfig.app.json` e `npm run test` **do que tocou**. Só erro seu conta; erro
   herdado da `main` → "Próximos passos". O CI **não** cobre você: `ci.yml` está em base64 e nunca executou
   (`docs/agentes/github-ci.md`) — rodar local é a única rede.
 - "Pronto" = PR mergeada + deploy confirmado + comportamento verificado (log, query ou request real); faltou
@@ -112,7 +112,7 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
 - **Dois gerenciadores convivendo**: há `package-lock.json`, `bun.lock` e `bun.lockb`. O CI usa
   `npm install --legacy-peer-deps` (a árvore tem peer ranges de React 17/18 e date-fns 2/3) e o `pre-commit`
   usa `bun`. Use `npm install --legacy-peer-deps` para reproduzir o CI; `bun install` para reproduzir o hook.
-- `npx vitest run <caminho>`; `npx tsc --noEmit`; `npx eslint <arquivos>`; `npm run test:e2e` (Playwright,
+- `npx vitest run <caminho>`; `npx tsc --noEmit -p tsconfig.app.json`; `npx eslint <arquivos>`; `npm run test:e2e` (Playwright,
   porta 8080); cobertura `npm run test:coverage` (limiar 70% em `vitest.config.ts`).
 - Banco: `npm run db:lint`, `npm run db:start`, `npm run db:reset`, `npm run db:plan` (dry-run), `npm run db:status`.
 - Guardas de banco (exigem `SUPABASE_DB_URL`; **sem a variável saem verdes sem consultar nada** —
