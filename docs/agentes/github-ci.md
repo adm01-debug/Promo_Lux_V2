@@ -59,7 +59,7 @@ São **3** arquivos em `.github/workflows/`: `ci.yml`, `db-migrations.yml`, `edg
 2. **Consertar o base64 não basta.** No arquivo decodificado, 2 steps leem `secrets.SUPAAASE_DB_URL`
    (três letras A) em vez de `SUPABASE_DB_URL`.
 3. **Os guards de banco passam em verde com a variável vazia.** `scripts/check-function-grants.sh:14-19` e
-   `scripts/check-audit-triggers.sh:13` fazem `exit 0` com um `::warning::` quando `SUPABASE_DB_URL` está
+   `scripts/check-audit-triggers.sh:13-18` fazem `exit 0` com um `::warning::` quando `SUPABASE_DB_URL` está
    vazia. Typo + `exit 0` = portão reportando "Grants/RLS conforme o esperado" **sem ter consultado o
    banco**. Ao rodar esses guards localmente, exporte `SUPABASE_DB_URL` ou a saída não vale nada.
 4. **`scripts/check-anon-grants-view.sh` também está em base64** (2.784 bytes, 0 linhas) — inexecutável.
@@ -68,16 +68,16 @@ São **3** arquivos em `.github/workflows/`: `ci.yml`, `db-migrations.yml`, `edg
    24 falhas com `Module not found ... _shared/bitrix-client`. Não é "falta a extensão `.ts`".
 6. **A suíte E2E não tem runner nenhum**: `grep -rl "playwright\|test:e2e" .github/workflows/` → zero.
    20 specs e ~2.221 linhas sem CI.
-7. **São 9 arquivos corrompidos em base64** no total (lista completa com bytes em
+7. **São 11 arquivos corrompidos em base64** no total (lista completa com bytes em
    `docs/estado/05-infra-ci-testes.md` §6): `ci.yml`, `docs/auth.md`, `scripts/check-anon-grants-view.sh`,
-   `supabase/functions/email-verify/index.ts`, `supabase/functions/deliverability-check/index.ts` e **4
+   `supabase/functions/email-verify/index.ts`, `supabase/functions/deliverability-check/index.ts` e **6
    migrations**.
 
 ### Por que você não conserta isso sozinho
 
 - `.github/workflows/`, segredos e Environments são **item do dono** (`AGENTS.md` › Fluxo Git). Deixe a PR
   aberta e chame.
-- **As 4 migrations em base64 são o caso mais perigoso**: `db-migrations.yml` aplica `supabase/migrations/**`
+- **As 6 migrations em base64 são o caso mais perigoso**: `db-migrations.yml` aplica `supabase/migrations/**`
   em **produção** no push da `main`. Decodificá-las transforma arquivo ilegível em DDL que entra em
   produção no merge seguinte. Os 5 arquivos não-migration podem ser decodificados com segurança
   (`base64 -di <arquivo> > tmp && mv tmp <arquivo>`, com `git diff` legível) — as migrations, nunca sem o
