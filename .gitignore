@@ -41,3 +41,8 @@ docs/contexto/regras/*
 # Python (scripts/supabase_snapshot, scripts/regras_negocio)
 __pycache__/
 *.pyc
+
+# saida do snapshot rodado a mao fora do workflow (o default do script e docs/supabase)
+docs/supabase/
+# inventario gerado sob demanda; edges.json fica versionado, este nao
+inventario/estado/tabelas-uso.json

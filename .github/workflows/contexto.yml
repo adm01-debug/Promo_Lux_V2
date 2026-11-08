@@ -91,10 +91,15 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           FORCE: ${{ inputs.force }}
+          GH_TOKEN: ${{ github.token }}
+          TEM_DB_URL: ${{ secrets.SUPABASE_DB_URL != '' }}
         run: |
           head="$(git rev-parse HEAD)"
           last_codigo=""; last_regras=""
-          if git fetch -q --depth=1 origin "$CONTEXTO_BRANCH" 2>/dev/null; then
+          # Repo privado + persist-credentials:false: `origin` nao tem credencial. Sem o token o
+          # fetch falha, o erro vai para /dev/null e o gate conclui "branch nao existe" todas as vezes.
+          REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q --depth=1 "$REMOTE" "$CONTEXTO_BRANCH" 2>/dev/null; then
             last_codigo="$(git show "FETCH_HEAD:$CONTEXTO_DIR/codigo/manifest.json" 2>/dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin).get("commit",""))' 2>/dev/null || echo "")"
             last_regras="$(git show "FETCH_HEAD:$CONTEXTO_DIR/regras/manifest.json" 2>/dev/null | python3 -c 'import json,sys; print(json.load(sys.stdin).get("commit",""))' 2>/dev/null || echo "")"
           fi
@@ -103,8 +108,11 @@ jobs:
             [ "$head" = "$last_codigo" ] && codigo=false
             [ "$head" = "$last_regras" ] && regras=false
           fi
-          # banco muda sem push: coleta no agendamento e no dispatch, nunca no push
-          banco=true; [ "$EVENT_NAME" = "push" ] && banco=false
+          # banco muda sem push: coleta no agendamento e no dispatch, nunca no push.
+          # Sem o secret nao ha o que coletar: pular o job em vez de gastar um minuto cobrado por run.
+          banco=true
+          [ "$EVENT_NAME" = "push" ] && banco=false
+          [ "$TEM_DB_URL" != "true" ] && banco=false
           echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
           echo "regras=$regras" >> "$GITHUB_OUTPUT"
           echo "banco=$banco" >> "$GITHUB_OUTPUT"
@@ -194,9 +202,11 @@ jobs:
       - name: Recuperar snapshot anterior da branch contexto (CHANGELOG precisa do estado anterior)
         env:
           FORCE: ${{ inputs.force }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p "$SNAPSHOT_DIR"
-          if git fetch --quiet --depth 1 origin "$CONTEXTO_BRANCH" 2>/dev/null; then
+          REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch --quiet --depth 1 "$REMOTE" "$CONTEXTO_BRANCH" 2>/dev/null; then
             git archive FETCH_HEAD -- "$SNAPSHOT_DIR" 2>/dev/null | tar -x || echo "::warning::branch existe mas sem $SNAPSHOT_DIR — recomeçando do zero"
           else
             echo "Branch $CONTEXTO_BRANCH ainda não existe: primeira coleta."
@@ -241,7 +251,9 @@ jobs:
       - name: Guard — nenhum segredo na saída
         if: env.SNAPSHOT_SKIPPED != '1'
         run: |
-          if grep -rIEl 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@' "$SNAPSHOT_DIR"; then
+          # `grep -v '\[REDACTED'` primeiro: o padrao de DSN casa a propria saida ja redigida
+          # (`postgresql://leitor:[REDACTED]@`), o que travaria a publicacao do banco para sempre.
+          if grep -rIEn 'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}|sb_secret_|sb_publishable_|postgres(ql)?://[^ ]*:[^ @]+@' "$SNAPSHOT_DIR" | grep -v '\[REDACTED'; then
             echo "::error::Possível segredo detectado no snapshot — publicação abortada"; exit 1
           fi
 
@@ -296,8 +308,9 @@ jobs:
   publicar:
     name: Índice único + branch contexto
     needs: [gate, codigo, banco, regras]
-    # roda mesmo com produtor pulado ou vermelho: publica o que saiu e mantém o resto como estava
-    if: ${{ !cancelled() && needs.gate.result == 'success' }}
+    # roda mesmo com produtor pulado ou vermelho: publica o que saiu e mantém o resto como estava.
+    # Sem nenhum artefato nao ha o que publicar: pular evita um minuto cobrado em cada run do cron.
+    if: ${{ !cancelled() && needs.gate.result == 'success' && (needs.codigo.outputs.artifact-id != '' || needs.banco.outputs.artifact-id != '' || needs.regras.outputs.artifact-id != '') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:  # zizmor: ignore[excessive-permissions]
@@ -343,7 +356,7 @@ jobs:
           git worktree remove --force "$PUB" 2>/dev/null || true
           rm -rf "${PUB:?}"; git worktree prune
           REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          if git fetch --quiet --depth 1 origin "$CONTEXTO_BRANCH" 2>/dev/null; then
+          if git fetch --quiet --depth 1 "$REMOTE" "$CONTEXTO_BRANCH" 2>/dev/null; then
             git worktree add --quiet --detach "$PUB" FETCH_HEAD
             ( cd "$PUB" && git checkout --quiet -B "$CONTEXTO_BRANCH" )
           else

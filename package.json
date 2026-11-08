@@ -33,8 +33,9 @@
     "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
     "contexto:ia:test": "node --test scripts/ai-context/gerar.unit.mjs",
     "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
-    "contexto:supabase": "python3 scripts/supabase_snapshot/snapshot.py",
-    "inventario:edges": "node scripts/inventario/gerar-repo.mjs"
+    "contexto:supabase": "SNAPSHOT_DIR=docs/contexto/supabase python3 scripts/supabase_snapshot/snapshot.py",
+    "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
+    "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
