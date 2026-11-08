@@ -17,6 +17,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "analyze": "vite-bundle-visualizer",
+    "graph:setup": "bash scripts/graphify/setup.sh",
+    "graph:update": "graphify update .",
     "test:grants": "bash scripts/check-function-grants.sh",
     "test:audit-triggers": "bash scripts/check-audit-triggers.sh",
     "db:start": "supabase start",

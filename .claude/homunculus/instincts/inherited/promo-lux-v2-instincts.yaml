@@ -1,0 +1,163 @@
+# Instincts do repositório https://github.com/adm01-debug/Promo_Lux_V2
+# Gerado: 2026-11-08 — por replicação do padrão do Zapp Web V2, com medição direta neste repo.
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+
+---
+id: promo-lux-v2-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Commit Conventional
+
+## Action
+
+Use Conventional Commits in PT-BR: `<tipo>(<escopo>): <assunto>` — tipos `feat fix docs style refactor perf test build ci chore revert`.
+
+## Evidence
+
+- `@commitlint/config-conventional` em `package.json` (devDependencies) e em `commitlint.config.cjs`/`commitlint.config.js`
+- `CONTRIBUTING.md` › "Commits Semânticos"
+- Nenhum hook `commit-msg` em `.husky/` — a convenção não é cobrada automaticamente
+
+---
+id: promo-lux-v2-import-alias
+trigger: "when importing modules in src/"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Import Alias
+
+## Action
+
+No front, importe pelo alias `@/` (`@/components/...`, `@/hooks/...`) em vez de caminho relativo.
+
+## Evidence
+
+- 1.338 ocorrências de `from "@/` em `src/` contra 57 de `from "../`
+- Alias definido em `vite.config.ts`, `vitest.config.ts` e `tsconfig.app.json`
+
+---
+id: promo-lux-v2-export-style
+trigger: "when exporting from a module"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Export Style
+
+## Action
+
+Prefira exports nomeados.
+
+## Evidence
+
+- Em `src/components/lux/`: 179 arquivos com `export function`/`export const` contra 6 com `export default`
+
+---
+id: promo-lux-v2-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Naming Files
+
+## Action
+
+Componente em `PascalCase.tsx`; hook em `useAlgumaCoisa.ts`; helper/contexto em `kebab-case.ts` ou `camelCase.ts`, seguindo o vizinho.
+
+## Evidence
+
+- `src/components/lux/`: `AIAgentView.tsx`, `AddCompanyDialog.tsx`, `CampaignsView.tsx`
+- `src/hooks/`: `useApiKeys.ts`, `use-toast.ts`, `confirm-context.ts`, `oracleV2Helpers.ts`
+
+---
+id: promo-lux-v2-test-location
+trigger: "when writing tests"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Test Location
+
+## Action
+
+Teste de front em `__tests__/` ao lado do módulo (projeto `app`, jsdom); teste de edge function em `supabase/functions/**/__tests__/` (projeto `edge`, node). Ambos Vitest. E2E em `e2e/` (Playwright).
+
+## Evidence
+
+- `vitest.config.ts`: projeto `app` com `include: ["src/**/*.{test,spec}.{ts,tsx}"]`; projeto `edge` com `include: ["supabase/functions/**/__tests__/**/*.test.ts"]`
+- 4 arquivos Deno-nativos excluídos de propósito no mesmo arquivo
+
+---
+id: promo-lux-v2-multitenant-withorg
+trigger: "when reading or writing an org-scoped table from the frontend"
+confidence: 0.95
+domain: security
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Multi-tenant withOrg
+
+## Action
+
+Use `import { db } from "@/integrations/supabase/withOrg"`, nunca o client cru. Tabela nova com `organization_id` entra em `ORG_SCOPED_TABLES` e no fixture `org-scoped-tables.fixture.json`.
+
+## Evidence
+
+- `src/integrations/supabase/withOrg.ts:87` (`ORG_SCOPED_TABLES`), `:151` (`ORG_UNSCOPED_TABLES`), `:292` (tabela sem classificação é bloqueada)
+- `src/integrations/supabase/__tests__/withOrg.registry.test.ts`
+
+---
+id: promo-lux-v2-no-console-log
+trigger: "when adding logging to production code"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 No Console Log
+
+## Action
+
+Nada de `console.log` em `src/` ou `supabase/functions/` — logging estruturado (nas edges, via `_shared/oracle-logger.ts`).
+
+## Evidence
+
+- `docs/adr/006-structured-logging.md`
+- Job `security-scan` do `ci.yml` faz esse scan (hoje inerte: o arquivo está em base64)
+
+---
+id: promo-lux-v2-migration-grant-rls
+trigger: "when creating a table in a migration"
+confidence: 0.95
+domain: database
+source: repo-analysis
+source_repo: https://github.com/adm01-debug/Promo_Lux_V2
+---
+
+# Promo Lux V2 Migration Grant RLS
+
+## Action
+
+Todo `CREATE TABLE` em `public` leva `GRANT` e `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` na MESMA migration. E migration é item do dono: PR aberta, sem merge.
+
+## Evidence
+
+- `scripts/check-migrations.sh` regra 5 (estrita para timestamp >= 20260727000000)
+- `.github/workflows/db-migrations.yml` aplica `supabase/migrations/**` em produção no push da `main`

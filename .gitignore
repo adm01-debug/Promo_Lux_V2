@@ -28,3 +28,6 @@ playwright/.cache
 *.njsproj
 *.sln
 *.sw?
+
+# Grafo de codigo (graphify) — gerado por clone, ver scripts/graphify/README.md
+graphify-out/
