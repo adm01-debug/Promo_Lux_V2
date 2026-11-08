@@ -101,8 +101,8 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
   push de lead: GMaps Scraper (`gmaps.atomicabr.com.br`), Lusha, Apify/Hiker (Instagram), Bitrix (Oracle),
   Lovable AI Gateway. Chave de provedor só em secret da edge function, nunca no front.
 - **GitHub/CI** — ler `docs/agentes/github-ci.md` antes de tocar em `.github/workflows/`, settings ou
-  Environments. Os 3 workflows do repo nunca concluíram com sucesso; `ci.yml` e 10 outros arquivos estão em
-  base64. Consertar isso é item do dono.
+  Environments. São **5** workflows (os 3 originais + `contexto.yml` e `inventario-estado-semanal.yml`);
+  dos 3 originais nenhum concluiu com sucesso, e `ci.yml` e 10 outros arquivos estão em base64. Consertar isso é item do dono.
 - **Regras de domínio** — ler `docs/agentes/regras-dominio.md` ao mexer em IPC/scoring, multi-tenant
   (`withOrg`), filas/DLQ, soft delete ou fixtures de E2E.
 
@@ -133,7 +133,8 @@ segundo plano (`.claude/hooks/session-start.sh`) — siga sem ele até terminar.
 
 ## Contexto gerado (branch `contexto`) — scripts autônomos
 Três produtores independentes mantêm o retrato do projeto sem ninguém escrever documentação à mão
-(`.github/workflows/contexto.yml`, a cada push em `main` e a cada 10 min; publica na branch gerada
+(`.github/workflows/contexto.yml`, a cada 10 min e a cada push em `main` que toque `src/`, `supabase/`,
+os scripts das automações ou `docs/contexto/regras/manual/` — push só em docs **não** regera; publica na branch gerada
 `contexto`, nunca em `main` — merge em `main` é deploy pela Lovable):
 - `docs/contexto/codigo/` ← `scripts/ai-context/gerar.mjs` (`npm run contexto:ia`): rotas, menu, módulos,
   hooks, edges, tabelas citadas, testes, convenções, baseline. Não precisa de secret.
@@ -151,6 +152,10 @@ Como ler: `git fetch origin contexto && git show origin/contexto:docs/contexto/0
 cabeçalho "Gerado automaticamente" — regere com os comandos acima.
 
 Inventário do código: `inventario/estado/edges.json` (`npm run inventario:edges`, exige `ripgrep`) —
-linhas, segredos lidos e quem invoca cada edge function; `sem_chamador_no_repo` é a lista de candidatas a
-código morto. Regerado por `.github/workflows/inventario-estado-semanal.yml` (segunda), que abre PR e
-**deixa aberto** para o dono. Detalhe em `inventario/estado/README.md`.
+linhas, segredos lidos e quem invoca cada edge function. **`sem_chamador_no_repo` NÃO é lista de código
+morto**: significa só "sem referência estática em `src/`, migrations, outra edge, `e2e/` ou `config.toml`".
+A maioria das 20 atuais são crons de `pg_cron` que vivem **no banco** (fora do repo, logo invisíveis para o
+script) ou endpoints públicos (`mcp`, `track-click`/`track-open`). Antes de propor deleção, cruze com
+`docs/estado/02-backend-edge-functions.md`. Regerado por
+`.github/workflows/inventario-estado-semanal.yml` (segunda), que abre PR e **deixa aberto** para o dono.
+Detalhe em `inventario/estado/README.md`.

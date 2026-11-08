@@ -308,8 +308,10 @@ SCRUB_RULES: list[tuple[re.Pattern, str]] = [
     (re.compile(r"sb_(?:secret|publishable)_[A-Za-z0-9_-]{8,}"), "[REDACTED_KEY]"),
     # Authorization: Bearer <token>  /  apikey: <token>
     (re.compile(r"(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{16,}"), r"\1[REDACTED]"),
-    # valor precisa parecer token: >= 16 chars, sem espaço, com pelo menos um dígito (evita redigir prosa)
-    (re.compile(r"""(?i)((?:apikey|api_key|x-api-key|authorization|token|secret|password|passwd|service_role_key|anon_key)\s*["']?\s*[:=]\s*["']?)(?=[^"'\s,;)}]*\d)[^"'\s,;)}]{16,}"""), r"\1[REDACTED]"),
+    # valor precisa parecer token: >= 16 chars sem espaço, e com um dígito OU >= 20 chars (evita redigir prosa).
+    # Separador aceita vírgula além de `:`/`=`: em jsonb_build_object('x-webhook-secret', 'wh_...') o par
+    # chave/valor é separado por vírgula, e sem isso o segredo saía em texto puro no corpo da função.
+    (re.compile(r"""(?i)((?:apikey|api_key|x-api-key|authorization|token|secret|password|passwd|service_role_key|anon_key)\s*["']?\s*(?:[:=]|,)\s*["']?)(?=[^"'\s,;)}]*\d|[^"'\s,;)}]{20,})[^"'\s,;)}]{16,}"""), r"\1[REDACTED]"),
     # PASSWORD 'x' em DDL de role
     (re.compile(r"(?i)(password\s+)'[^']*'"), r"\1'[REDACTED]'"),
     # DSN com senha
@@ -837,9 +839,13 @@ def get_db_stats(conn):
         SELECT n.nspname AS schema, sum(pg_total_relation_size(c.oid)) AS bytes
         FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
         WHERE c.relkind IN ('r','p','m') AND {excluded_sql()} GROUP BY 1 ORDER BY 2 DESC""")
-    out["storage"] = q(conn, """
-        SELECT bucket_id, count(*) AS objects, COALESCE(sum((metadata->>'size')::bigint), 0) AS bytes
-        FROM storage.objects GROUP BY 1 ORDER BY 1""")
+    try:
+        out["storage"] = q(conn, """
+            SELECT bucket_id, count(*) AS objects, COALESCE(sum((metadata->>'size')::bigint), 0) AS bytes
+            FROM storage.objects GROUP BY 1 ORDER BY 1""")
+    except Exception as e:  # noqa: BLE001
+        record_error("db_stats.storage", e)
+        out["storage"] = []
     # Role sem SELECT em auth.* (ex.: role de leitura do workflow) nao pode derrubar a secao inteira:
     # em producao isso apagava tamanho do banco, conexoes, storage e filas de stats.md.
     try:

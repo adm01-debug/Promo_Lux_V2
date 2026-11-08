@@ -11,10 +11,13 @@ arquivo em vez de corrigir à mão.
 
 ## Como ler `edges.json`
 
-- **`sem_chamador_no_repo`** (e o `sem_chamador` de cada função) é o que importa antes de mexer: edge function sem nenhuma referência em
-  `src/`, migrations ou outra edge. Candidata a código morto — **não é prova** de que pode apagar
-  (pode ser chamada por webhook externo, cron do banco ou serviço de fora). Cruze com
-  `docs/ESTADO_ATUAL.md` antes de decidir.
+- **`sem_chamador_no_repo`** (e o `sem_chamador` de cada função) significa "sem referência estática em
+  `src/`, migrations, outra edge, `e2e/` ou `supabase/config.toml`". **Não é lista de código morto.** A
+  maior parte das 20 atuais são **crons de `pg_cron` vivos**, agendados dentro do banco e portanto
+  invisíveis para um script que só lê o repositório (`docs/estado/02-backend-edge-functions.md:38-42`
+  registra execuções bem-sucedidas de várias), ou endpoints públicos por design (`mcp`, `track-click`,
+  `track-open`). Cruze com `docs/estado/02-backend-edge-functions.md` e `docs/ESTADO_ATUAL.md` antes de
+  propor deleção de qualquer uma.
 - **`segredos_lidos`** lista os nomes lidos via `Deno.env.get` — nunca os valores. Serve para saber quais
   secrets a função exige antes de fazer deploy dela.
 - As relações são extraídas estaticamente por `ripgrep`: referência encontrada não prova execução.

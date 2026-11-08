@@ -54,7 +54,8 @@ for (const f of edges) {
     linhas: code.split('\n').length,
     segredos_lidos: envs,
     chamada_em: { src: src.length, migrations: migrations.length, outras_edges: outrasEdges.length, e2e: e2e.length, ci_config: ci.length },
-    sem_chamador: src.length + migrations.length + outrasEdges.length === 0,
+    // e2e e ci_config contam: instagram-worker so e chamado por e2e/ e migrate-helper so por supabase/config.toml.
+    sem_chamador: src.length + migrations.length + outrasEdges.length + e2e.length + ci.length === 0,
   };
 }
 const semChamador = Object.entries(inventario).filter(([, v]) => v.sem_chamador).map(([k]) => k);

@@ -1,3 +1,4 @@
 {
+  "skipDirs": ["ai-context"],
   "publicacao": "Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`."
 }

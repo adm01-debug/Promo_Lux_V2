@@ -40,7 +40,9 @@ a saída na PR. E como `delete_branch_on_merge=false`, o squash-merge não limpa
 
 ## Workflows — estado real, não aparência
 
-São **3** arquivos em `.github/workflows/`: `ci.yml`, `db-migrations.yml`, `edge-tests-daily.yml`.
+São **5** arquivos em `.github/workflows/`: `ci.yml`, `db-migrations.yml`, `edge-tests-daily.yml` e,
+desde 08/11/2026, `contexto.yml` e `inventario-estado-semanal.yml` (ver `AGENTS.md` › Contexto gerado).
+A tabela abaixo cobre só os 3 originais.
 **Nenhum deles jamais concluiu com sucesso na janela observada** (`docs/estado/05-infra-ci-testes.md` §1):
 
 | Workflow | Execuções | Conclusão |

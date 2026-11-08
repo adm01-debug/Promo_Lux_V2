@@ -752,6 +752,18 @@ def parse_sql_schema(root: Path, files: list[Path]) -> dict:
         is_seed = "seed" in f.name.lower()
         txt = read_text(f, MAX_SQL_BYTES)
         txt_nc = strip_sql_comments(txt)
+        # As 6 migrations em base64 deste repo sao texto valido: nenhum regex casa, nada falha e o
+        # arquivo entra em `sources` como se tivesse sido lido. Registrar como ilegivel.
+        if txt.strip() and ";" not in txt and re.fullmatch(r"[A-Za-z0-9+/\s]+={0,2}", txt.strip()):
+            schema.setdefault("sources_ilegiveis", []).append(src)
+            log(f"aviso: {src} nao parece SQL (base64?) - 0 fatos extraidos deste arquivo")
+        # Politica dentro de bloco PL/pgSQL (`DO $$ ... CREATE POLICY ... $$`) nao chega ao loop de
+        # statements abaixo. Sem isso o relatorio afirma "nenhuma politica RLS permite X" para tabela
+        # que TEM politica (as 5 de lusha_contacts), e um agente "conserta" o que nao esta quebrado.
+        for _pm in SQL_POLICY_RE.finditer(txt_nc):
+            _pol = parse_policy(_pm.group(0))
+            if _pol and not any(p["name"] == _pol["name"] and p["table"] == _pol["table"] for p in schema["policies"]):
+                schema["policies"].append({**_pol, "src": src})
         if is_seed:
             for sch, name, cols, vals in SQL_INSERT_RE.findall(txt_nc):
                 schema["seed"].append({"table": tkey(sch, name), "columns": squash(cols), "values": trunc(squash(vals), 400), "src": src})
@@ -970,8 +982,10 @@ def parse_sql_schema(root: Path, files: list[Path]) -> dict:
                 end = balanced(txt, bm.end() - 1, "{", "}")
                 return txt[bm.end():end] if end > 0 else ""
             for name, vals in re.findall(r"(\w+):\s*((?:\s*\|?\s*\"[^\"]+\")+)", block("Enums")):
-                if name not in schema["enums"]:
-                    schema["enums"][name] = re.findall(r"\"([^\"]+)\"", vals)
+                _vals_ts = re.findall(r"\"([^\"]+)\"", vals)
+                # types.ts e gerado do banco real: une em vez de ignorar, senao um enum visto apenas
+                # em `ALTER TYPE ... ADD VALUE` fica publicado com um unico valor.
+                schema["enums"][name] = list(dict.fromkeys(schema["enums"].get(name, []) + _vals_ts))
             fb = block("Functions")
             if fb:
                 for name in re.findall(r"\n\s+(\w+):\s*\{", fb):
