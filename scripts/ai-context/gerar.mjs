@@ -154,7 +154,7 @@ const RE = {
   hook: /\b(use[A-Z]\w*)\s*\(/g,
   from: /\.from\(\s*['"`]([\w.]+)['"`]/g,
   rpc: /\.rpc\(\s*['"`](\w+)['"`]/g,
-  invoke: /functions\.invoke\(\s*['"`]([\w-]+)['"`]/g,
+  invoke: /functions\.invoke(?:<[^>(]*>)?\(\s*['"`]([\w-]+)['"`]/g,
   fnUrl: /\/functions\/v1\/([\w-]+)/g,
   envVite: /import\.meta\.env\.(\w+)/g,
   envNode: /process\.env\.(\w+)/g,
@@ -361,6 +361,9 @@ secao('vistas', () => {
     while ((m = re1.exec(src))) vistas.push({ id: m[1], componente: m[2], arquivo: componentFile(m[2], f), registrada_em: f });
     const re2 = /['"]?([\w-]+)['"]?\s*:\s*(?:<)?(?:[A-Z]\w*\.)?([A-Z]\w*)\s*(?:\/?>|,|\}|as\b)/g;
     while ((m = re2.exec(src))) if (lazyMap.has(m[2]) || d.imports.some((i) => FILE.get(i)?.exports.includes(m[2]))) vistas.push({ id: m[1], componente: m[2], arquivo: componentFile(m[2], f), registrada_em: f });
+    // `id: lazy(() => import('@/x').then(m => ({ default: m.X })))` — registro de vistas num objeto
+    const re4 = /['"]?([\w-]+)['"]?\s*:\s*(?:lazy\w*|React\.lazy)\s*\(\s*(?:async\s*)?\(\)\s*=>\s*(?:await\s+)?import\(\s*['"]([^'"]+)['"]/g;
+    while ((m = re4.exec(src))) { const fl = resolveImport(f, m[2]); if (fl) vistas.push({ id: m[1], componente: baseOf(fl), arquivo: fl, registrada_em: f }); }
     const re3 = /['"]?([\w-]+)['"]?\s*:\s*\([^)]*\)\s*=>\s*\(?\s*([\s\S]{0,400}?)(?:\)\s*,|,\s*\n|\n\s*\}|$)/g;
     while ((m = re3.exec(src))) { const tags = [...m[2].matchAll(/<(?:[A-Z]\w*\.)?([A-Z]\w*)/g)].map((x) => x[1]).filter((t) => !/Boundary|Provider|Suspense|Fragment/.test(t)); for (const t of tags) { const fl = lazyMap.has(t) ? lazyMap.get(t) : componentFile(t, f, true); if (fl) { vistas.push({ id: m[1], componente: t, arquivo: fl, registrada_em: f }); break; } } }
   }
