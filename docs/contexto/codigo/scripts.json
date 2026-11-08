@@ -1,0 +1,418 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "total": 40,
+ "scripts": [
+  {
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "descricao": "Simulação de cenários do gerador: monta centenas de repositórios sintéticos (variantes de SQL, rotas, menus, edges, workflows, monorepo, Python, arquivos corrompidos, fuzz) e confere:",
+   "linhas": 173,
+   "env": [
+    "A",
+    "K",
+    "NODE_ENV",
+    "SCRIPT_ONLY",
+    "SRK",
+    "SUPABASE_URL",
+    "VITE_A",
+    "VITE_C",
+    "VITE_FEATURE_X",
+    "X"
+   ],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "descricao": "Gera o contexto de projeto para agentes de IA (padrão: inventario/ia/*). Zero dependências. Node >= 18. Genérico: funciona em qualquer repositório.",
+   "linhas": 924,
+   "env": [
+    "AI_CONTEXT_DIR",
+    "AI_CONTEXT_PUBLICACAO",
+    "AI_CONTEXT_ROOT"
+   ],
+   "npm_scripts": [
+    "contexto:ia"
+   ],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-anon-grants-view.sh",
+   "descricao": null,
+   "linhas": 1,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-audit-triggers.sh",
+   "descricao": "============================================================================= CI Guard — Integridade dos gatilhos de auditoria",
+   "linhas": 26,
+   "env": [],
+   "npm_scripts": [
+    "test:audit-triggers"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-function-grants.sh",
+   "descricao": "============================================================================= CI Guard — Grants/RLS de funções",
+   "linhas": 26,
+   "env": [],
+   "npm_scripts": [
+    "test:grants"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-migration-target.sh",
+   "descricao": "--------------------------------------------------------------------------- check-migration-target.sh",
+   "linhas": 60,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "db-migrations.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-migrations.sh",
+   "descricao": "--------------------------------------------------------------------------- check-migrations.sh",
+   "linhas": 146,
+   "env": [],
+   "npm_scripts": [
+    "db:lint"
+   ],
+   "workflows": [
+    "db-migrations.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-queue-kind-coverage.sh",
+   "descricao": "============================================================================= CI Guard — Cobertura de queue_kind em DLQ/Advisories (Rodada #18)",
+   "linhas": 19,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-security-definer.sh",
+   "descricao": "============================================================================= CI Guard — SECURITY DEFINER anti-regression (Rodada #24 hardening)",
+   "linhas": 69,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
+   "descricao": "* Garante que as instrucoes para agentes nao foram apagadas ou esvaziadas por outra sessao.",
+   "linhas": 124,
+   "env": [
+    "CLAUDE_MD_BASE"
+   ],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-current-report.ts",
+   "descricao": null,
+   "linhas": 19,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/gen-legacy-baseline.ts",
+   "descricao": null,
+   "linhas": 20,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/gen-round18-preflight.ts",
+   "descricao": "Rodada #18 — Preflight: combina simulação web + genérica e compara com Round17.",
+   "linhas": 57,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round19-preflight.ts",
+   "descricao": "Rodada #19 — Preflight: mesmo cálculo do Round18, com gate mais rígido (0.5pp).",
+   "linhas": 50,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round19-validation.ts",
+   "descricao": "Camada E — Monte Carlo (500 cenários) validando a lógica de regressão Replica em TS puro a semântica de fn_web_scrape_regression_check.",
+   "linhas": 117,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/gen-round20-validation.ts",
+   "descricao": "Camada E — Monte Carlo agregado (1000+ cenários) — Rodada #20 Combina chaos rate × volume × noise × drift real e mede FP/FN + tempo até detecção.",
+   "linhas": 159,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round21-preflight.ts",
+   "descricao": "Rodada #21 — Preflight: simular claim concorrente em fila (FOR UPDATE SKIP LOCKED) Modela N workers competindo por M tasks; valida invariantes:",
+   "linhas": 67,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round24-preflight.ts",
+   "descricao": "Rodada #24 — Preflight Monte Carlo (600 cenários) Grupo A: pg_net falhando → retry pg_cron absorve sem perda",
+   "linhas": 92,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round25-preflight.ts",
+   "descricao": "Rodada #25 — Preflight Monte Carlo (700 cenários) Foco: prevenir alert fatigue, validar retenção de snapshots e cobertura",
+   "linhas": 87,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/gen-round26-preflight.ts",
+   "descricao": "Rodada #26 — Preflight Monte Carlo (800 cenários) A (300): RPO — perda máxima aceitável variando janela de backup (5–60 min)",
+   "linhas": 91,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/gen-round27-qa-preflight.ts",
+   "descricao": "Rodada #27 — Preflight QA Exaustivo (900 cenários) A (200): fluxos Oracle (busca → reveal → push Bitrix) sob variações de payload",
+   "linhas": 159,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round28-preflight.ts",
+   "descricao": "* Round 28 Preflight — Monte Carlo (1000 scenarios, seed=2828)",
+   "linhas": 109,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round29-preflight.ts",
+   "descricao": "* Round 29 Preflight — Monte Carlo (1100 scenarios, seed=2929)",
+   "linhas": 101,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/gen-round36-preflight.ts",
+   "descricao": "* Round 36 Preflight — Motor Instagram/Apify",
+   "linhas": 134,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/gen-web-scrape-reports.ts",
+   "descricao": "* Passo 0 — Simulação Monte Carlo do motor de scrape web nativo.",
+   "linhas": 101,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/generate-audit-pdf.ts",
+   "descricao": null,
+   "linhas": 36,
+   "env": [],
+   "npm_scripts": [
+    "generate-audit-pdf"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/graphify/setup.sh",
+   "descricao": "Instala o graphify (grafo de conhecimento do código) e o configura neste clone. Uso: npm run graph:setup   (Linux, macOS ou WSL; precisa de uv ou pipx)",
+   "linhas": 43,
+   "env": [],
+   "npm_scripts": [
+    "graph:setup"
+   ],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/inventario/gerar-repo.mjs",
+   "descricao": "Inventario gerado do lado do repositorio (sem acesso ao banco):  - edge functions: linhas, segredos lidos (Deno.env.get) e quem as invoca (src, migrations, outras edges, e2e, CI)",
+   "linhas": 81,
+   "env": [],
+   "npm_scripts": [
+    "inventario:edges"
+   ],
+   "workflows": [
+    "inventario-estado-semanal.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/inventario/mudou-conteudo.mjs",
+   "descricao": "* O inventario mudou de verdade? Compara cada arquivo de inventario/estado/ com a versao do",
+   "linhas": 46,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "inventario-estado-semanal.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/mc-r35-preflight.ts",
+   "descricao": null,
+   "linhas": 15,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/mc-r40-preflight.ts",
+   "descricao": "* Rodada #40 — Simulação Monte Carlo pós-hardening (600 cenários × 200 trials).",
+   "linhas": 37,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "descricao": null,
+   "linhas": 2138,
+   "env": [],
+   "npm_scripts": [
+    "contexto:regras"
+   ],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/regras_negocio/indice.py",
+   "descricao": null,
+   "linhas": 237,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/regras_negocio/publish.sh",
+   "descricao": "Publica docs/ai-context gerados: commit + push na branch padrão, ou PR quando a branch é protegida. Variáveis:",
+   "linhas": 195,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/seed_promo_brindes.sql",
+   "descricao": null,
+   "linhas": 92,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/sim-scrape.ts",
+   "descricao": null,
+   "linhas": 25,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
+  },
+  {
+   "arquivo": "scripts/sql/check-audit-triggers.sql",
+   "descricao": null,
+   "linhas": 94,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/sql/check-function-grants.sql",
+   "descricao": null,
+   "linhas": 103,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/sql/check-queue-kind-coverage.sql",
+   "descricao": null,
+   "linhas": 58,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "descricao": "Somente leitura no banco (sessão read-only, statement_timeout, lock_timeout). Nunca grava linhas de tabelas, valores de segredos, chaves, senhas ou DSN.",
+   "linhas": 1791,
+   "env": [],
+   "npm_scripts": [
+    "contexto:supabase"
+   ],
+   "workflows": [
+    "contexto.yml"
+   ],
+   "orfao": false
+  }
+ ]
+}

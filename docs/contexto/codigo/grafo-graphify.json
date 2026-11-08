@@ -1,0 +1,2921 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "presente": true,
+ "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
+ "relatorio": null,
+ "commit_do_grafo": "4d5d4ee3c46f8351d64c538be291d2acc7c57c76",
+ "grafo_atual": true,
+ "nos": 6133,
+ "arestas": 13093,
+ "comunidades_total": 550,
+ "relacoes": {
+  "calls": 1743,
+  "cites": 6,
+  "contains": 4505,
+  "defines": 10,
+  "dynamic_import": 48,
+  "imports": 2948,
+  "imports_from": 2729,
+  "indexes": 254,
+  "indirect_call": 92,
+  "inherits": 9,
+  "method": 115,
+  "rationale_for": 23,
+  "re_exports": 14,
+  "reads_from": 74,
+  "references": 441,
+  "triggers": 82
+ },
+ "origem": {
+  "EXTRACTED": 12767,
+  "INFERRED": 326
+ },
+ "comunidades": [
+  {
+   "id": 0,
+   "nome": "lucide-react",
+   "nos": 116,
+   "callables": 59,
+   "arquivos": 29,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/App.tsx",
+    "src/components/auth/MFAEnroll.tsx",
+    "src/components/auth/MFAVerify.tsx",
+    "src/components/lux/OrgViolationsView.tsx",
+    "src/components/lux/automations/AutomationKpiCards.tsx",
+    "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+    "src/components/lux/monitoring/DbHealthDashboard.tsx"
+   ]
+  },
+  {
+   "id": 1,
+   "nome": "button.tsx",
+   "nos": 112,
+   "callables": 48,
+   "arquivos": 41,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/AIAgentView.tsx",
+    "src/components/lux/AddCompanyDialog.tsx",
+    "src/components/lux/CompanyPagination.tsx",
+    "src/components/lux/EditCompanyDialog.tsx",
+    "src/components/lux/GmapsScraperView.tsx",
+    "src/components/lux/ICPConfigView.tsx",
+    "src/components/lux/KeyboardShortcutsDialog.tsx"
+   ]
+  },
+  {
+   "id": 2,
+   "nome": "CampaignsView.tsx",
+   "nos": 92,
+   "callables": 41,
+   "arquivos": 20,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/ActivityFeed.tsx",
+    "src/components/lux/AutomationsList.tsx",
+    "src/components/lux/CampaignsView.tsx",
+    "src/components/lux/DashboardView.tsx",
+    "src/components/lux/EmptyState.tsx",
+    "src/components/lux/EnrichmentFunnel.tsx",
+    "src/components/lux/IntentSignalsView.tsx"
+   ]
+  },
+  {
+   "id": 3,
+   "nome": "cn",
+   "nos": 91,
+   "callables": 23,
+   "arquivos": 25,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/AIAgentView.tsx",
+    "src/components/lux/LuxImage.tsx",
+    "src/components/lux/integrations/WebhooksPanel.tsx",
+    "src/components/lux/layout/Sidebar.tsx",
+    "src/components/lux/lusha/OracleV2Panel.tsx",
+    "src/components/lux/monitoring/AutomationLogsPanel.tsx",
+    "src/components/lux/monitoring/DlqHealthCard.tsx"
+   ]
+  },
+  {
+   "id": 4,
+   "nome": "OAuthSandboxPanel.tsx",
+   "nos": 87,
+   "callables": 49,
+   "arquivos": 21,
+   "exemplos_arquivos": [
+    "docs/adr/023-round29-refactor-safety-and-parity.md",
+    "src/components/lux/campaigns/CampaignFormFields.tsx",
+    "src/components/lux/deals/DealTasksPanel.tsx",
+    "src/components/lux/integrations/DryRunLogsPanel.tsx",
+    "src/components/lux/integrations/EnvProfilesPanel.tsx",
+    "src/components/lux/integrations/OAuthSandboxPanel.tsx",
+    "src/components/lux/map/MapFilters.tsx",
+    "src/components/lux/monitoring/AuditTrailPanel.tsx"
+   ]
+  },
+  {
+   "id": 5,
+   "nome": "badge.tsx",
+   "nos": 85,
+   "callables": 32,
+   "arquivos": 27,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/IntegrationsView.tsx",
+    "src/components/lux/LushaIntelligenceView.tsx",
+    "src/components/lux/PlacesApiUsageCard.tsx",
+    "src/components/lux/automations/AutomationEventsFeed.tsx",
+    "src/components/lux/automations/AutomationQueuePanel.tsx",
+    "src/components/lux/automations/AutomationsRealtimeView.tsx",
+    "src/components/lux/automations/CompanyAutomationTable.tsx"
+   ]
+  },
+  {
+   "id": 6,
+   "nome": "vitest",
+   "nos": 82,
+   "callables": 29,
+   "arquivos": 27,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/CompanyTable.tsx",
+    "src/components/lux/PlacesApiNewToggle.tsx",
+    "src/components/lux/SafeHTML.test.tsx",
+    "src/components/lux/__tests__/CampaignsView.test.tsx",
+    "src/components/lux/__tests__/CompaniesView.test.tsx",
+    "src/components/lux/__tests__/CompanyTable.integration.test.tsx",
+    "src/components/lux/__tests__/CompanyTable.test.tsx"
+   ]
+  },
+  {
+   "id": 7,
+   "nome": "simulator.ts",
+   "nos": 82,
+   "callables": 28,
+   "arquivos": 15,
+   "exemplos_arquivos": [
+    "scripts/gen-current-report.ts",
+    "scripts/gen-legacy-baseline.ts",
+    "scripts/gen-round18-preflight.ts",
+    "scripts/gen-round19-preflight.ts",
+    "scripts/gen-web-scrape-reports.ts",
+    "scripts/mc-r35-preflight.ts",
+    "scripts/mc-r40-preflight.ts",
+    "scripts/sim-scrape.ts"
+   ]
+  },
+  {
+   "id": 8,
+   "nome": "gerar.mjs",
+   "nos": 81,
+   "callables": 14,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/ai-context/gerar.mjs"
+   ]
+  },
+  {
+   "id": 9,
+   "nome": "react",
+   "nos": 78,
+   "callables": 40,
+   "arquivos": 33,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/companies/ImportCompaniesDialog.tsx",
+    "src/components/lux/monitoring/DLQReplayPanel.tsx",
+    "src/components/lux/monitoring/JobDetailsSheet.tsx",
+    "src/components/lux/organizations/WorkspaceSelector.tsx",
+    "src/contexts/AuthContext.tsx",
+    "src/contexts/active-org-context.ts",
+    "src/contexts/auth-context.ts"
+   ]
+  },
+  {
+   "id": 10,
+   "nome": "withOrg.ts",
+   "nos": 77,
+   "callables": 44,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "src/contexts/ActiveOrgContext.tsx",
+    "src/contexts/AuthContext.tsx",
+    "src/contexts/__tests__/AuthContext.test.tsx",
+    "src/contexts/active-org-context.ts",
+    "src/hooks/useAutomationsMonitor.ts",
+    "src/hooks/useEmailSuppressions.ts",
+    "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
+    "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts"
+   ]
+  },
+  {
+   "id": 11,
+   "nome": "generate.py",
+   "nos": 73,
+   "callables": 64,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/regras_negocio/generate.py"
+   ]
+  },
+  {
+   "id": 12,
+   "nome": "orgErrorHandler.ts",
+   "nos": 65,
+   "callables": 36,
+   "arquivos": 9,
+   "exemplos_arquivos": [
+    "docs/adr/007-org-isolation-proxy.md",
+    "src/App.tsx",
+    "src/components/lux/OrgErrorBanner.tsx",
+    "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
+    "src/integrations/supabase/withOrg.ts",
+    "src/lib/__tests__/orgErrorHandler.audit.test.ts",
+    "src/lib/__tests__/orgErrorHandler.e2e.test.ts",
+    "src/lib/__tests__/orgErrorHandler.test.ts"
+   ]
+  },
+  {
+   "id": 13,
+   "nome": "dependencies",
+   "nos": 65,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "package.json"
+   ]
+  },
+  {
+   "id": 14,
+   "nome": "hooks/use-toast.ts",
+   "nos": 60,
+   "callables": 39,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/ICPConfigView.tsx",
+    "src/components/lux/ScrapeResultsView.tsx",
+    "src/components/lux/StepProgress.tsx",
+    "src/components/lux/WorkflowsView.tsx",
+    "src/components/lux/__tests__/ICPConfigView.test.tsx",
+    "src/components/lux/workflows/WorkflowCard.tsx",
+    "src/components/ui/use-toast.ts"
+   ]
+  },
+  {
+   "id": 15,
+   "nome": "Index.tsx",
+   "nos": 59,
+   "callables": 32,
+   "arquivos": 22,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/EditCompanyDialog.tsx",
+    "src/components/lux/EmailSuppressionsView.tsx",
+    "src/components/lux/KeyboardShortcutsDialog.tsx",
+    "src/components/lux/OrgProxiesView.tsx",
+    "src/components/lux/ProxyFormDialog.tsx",
+    "src/components/lux/RecycleBinView.tsx",
+    "src/components/lux/UnsavedChangesDialog.tsx"
+   ]
+  },
+  {
+   "id": 16,
+   "nome": "lusha-client.ts",
+   "nos": 55,
+   "callables": 31,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+    "supabase/functions/_shared/lusha-client.ts",
+    "supabase/functions/_shared/lusha-departments.ts"
+   ]
+  },
+  {
+   "id": 17,
+   "nome": "package.json",
+   "nos": 52,
+   "callables": 0,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "eslint.config.js",
+    "package.json",
+    "src/components/ui/aspect-ratio.tsx",
+    "src/components/ui/collapsible.tsx",
+    "tailwind.config.ts"
+   ]
+  },
+  {
+   "id": 18,
+   "nome": "Monitoring.tsx",
+   "nos": 51,
+   "callables": 37,
+   "arquivos": 20,
+   "exemplos_arquivos": [
+    "docs/AUDITORIA_FIRECRAWL.md",
+    "src/App.tsx",
+    "src/components/lux/automations/AutomationsRealtimeView.tsx",
+    "src/components/lux/monitoring/ApiLatencyPanel.tsx",
+    "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+    "src/components/lux/monitoring/DLQReplayPanel.tsx",
+    "src/components/lux/monitoring/DlqTriageView.tsx",
+    "src/components/lux/monitoring/LatencySparkline.tsx"
+   ]
+  },
+  {
+   "id": 19,
+   "nome": "oracle-search-decisors/index.ts",
+   "nos": 51,
+   "callables": 35,
+   "arquivos": 7,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
+    "supabase/functions/_shared/__tests__/apollo-fallback.test.ts",
+    "supabase/functions/_shared/apollo-cache.ts",
+    "supabase/functions/_shared/apollo-client.ts",
+    "supabase/functions/_shared/apollo-departments.ts",
+    "supabase/functions/_shared/company-domain.ts",
+    "supabase/functions/oracle-search-decisors/index.ts"
+   ]
+  },
+  {
+   "id": 20,
+   "nome": "oracle-enrich-contact/index.ts",
+   "nos": 49,
+   "callables": 36,
+   "arquivos": 10,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/leadcontact-client.test.ts",
+    "supabase/functions/_shared/__tests__/linkedin-url.test.ts",
+    "supabase/functions/_shared/__tests__/phone-br.test.ts",
+    "supabase/functions/_shared/cookies.ts",
+    "supabase/functions/_shared/leadcontact-client.ts",
+    "supabase/functions/_shared/linkedin-url.ts",
+    "supabase/functions/_shared/oracle-logger.ts",
+    "supabase/functions/_shared/phone-br.ts"
+   ]
+  },
+  {
+   "id": 21,
+   "nome": "CompaniesView.tsx",
+   "nos": 46,
+   "callables": 23,
+   "arquivos": 19,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "docs/adr/004-private-realtime-channels.md",
+    "src/components/lux/AddCompanyDialog.tsx",
+    "src/components/lux/CompaniesView.tsx",
+    "src/components/lux/CompanyFilters.tsx",
+    "src/components/lux/ConnectionStatus.tsx",
+    "src/components/lux/__tests__/CompanyFilters.test.tsx",
+    "src/components/lux/company-filters-utils.ts"
+   ]
+  },
+  {
+   "id": 22,
+   "nome": "framer-motion",
+   "nos": 46,
+   "callables": 23,
+   "arquivos": 18,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "package.json",
+    "src/components/lux/AnalyticsView.tsx",
+    "src/components/lux/DataError.tsx",
+    "src/components/lux/PageTransition.tsx",
+    "src/components/lux/StakeholderFinderView.tsx",
+    "src/components/lux/ViewSkeleton.tsx",
+    "src/components/lux/__tests__/DataError.test.tsx"
+   ]
+  },
+  {
+   "id": 23,
+   "nome": "ref_npm_supabase",
+   "nos": 46,
+   "callables": 21,
+   "arquivos": 11,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/instagram-config-hash.test.ts",
+    "supabase/functions/_shared/instagram-config-hash.ts",
+    "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/instagram-dlq-replay/index.ts",
+    "supabase/functions/instagram-enqueue/index.ts",
+    "supabase/functions/mcp/index.ts",
+    "supabase/functions/purge-soft-deleted/index.ts",
+    "supabase/functions/qa-ingest-run/index.ts"
+   ]
+  },
+  {
+   "id": 24,
+   "nome": "useCnpjEnrich.ts",
+   "nos": 44,
+   "callables": 24,
+   "arquivos": 17,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "package.json",
+    "src/components/lux/GmapsScraperView.tsx",
+    "src/components/lux/lusha/OracleV2ErrorBoundary.tsx",
+    "src/hooks/useCnpjEnrich.ts",
+    "src/lib/cnpj.ts",
+    "src/lib/mcp/index.ts",
+    "src/lib/mcp/supabase.ts"
+   ]
+  },
+  {
+   "id": 25,
+   "nome": "DlqHealthCard.tsx",
+   "nos": 44,
+   "callables": 28,
+   "arquivos": 8,
+   "exemplos_arquivos": [
+    "docs/adr/012-round18-observability.md",
+    "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+    "src/components/lux/monitoring/DlqHealthCard.tsx",
+    "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
+    "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx",
+    "src/hooks/useDlqAlertSettings.ts",
+    "src/hooks/useDlqHealth.ts",
+    "src/lib/dlq/aggregations.ts"
+   ]
+  },
+  {
+   "id": 26,
+   "nome": "View",
+   "nos": 44,
+   "callables": 22,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/AppBreadcrumbs.tsx",
+    "src/components/lux/PageTransition.tsx",
+    "src/components/lux/QuickActions.tsx",
+    "src/components/lux/layout/Header.tsx",
+    "src/components/lux/layout/MobileBottomNav.tsx",
+    "src/components/lux/layout/Sidebar.tsx",
+    "src/hooks/__tests__/useRecentViews.test.ts"
+   ]
+  },
+  {
+   "id": 27,
+   "nome": "oracle-push-bitrix/index.ts",
+   "nos": 42,
+   "callables": 28,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
+    "supabase/functions/_shared/bitrix-client.ts",
+    "supabase/functions/_shared/oracle-logger.ts",
+    "supabase/functions/_shared/safe-update.ts",
+    "supabase/functions/oracle-push-bitrix/index.ts"
+   ]
+  },
+  {
+   "id": 28,
+   "nome": "campaign-dispatch/index.ts",
+   "nos": 41,
+   "callables": 31,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "docs/agentes/servicos-externos.md",
+    "docs/estado/04-integracoes.md",
+    "src/components/lux/AIAgentView.tsx",
+    "supabase/functions/campaign-dispatch/index.ts"
+   ]
+  },
+  {
+   "id": 29,
+   "nome": "Login.tsx",
+   "nos": 41,
+   "callables": 21,
+   "arquivos": 15,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "package.json",
+    "src/App.tsx",
+    "src/components/lux/auth/FloatingParticles.tsx",
+    "src/components/lux/auth/GoldConfetti.tsx",
+    "src/components/lux/auth/GoogleLoadingOverlay.tsx",
+    "src/components/lux/auth/GoogleLoginButton.tsx",
+    "src/components/lux/auth/LoginCard.tsx"
+   ]
+  },
+  {
+   "id": 30,
+   "nome": "App.tsx",
+   "nos": 39,
+   "callables": 22,
+   "arquivos": 12,
+   "exemplos_arquivos": [
+    "docs/estado/01-frontend.md",
+    "package.json",
+    "src/App.tsx",
+    "src/components/lux/AutoTopProgressBar.tsx",
+    "src/components/lux/ErrorBoundary.tsx",
+    "src/components/lux/TopProgressBar.tsx",
+    "src/components/lux/__tests__/ErrorBoundary.test.tsx",
+    "src/components/ui/sonner.tsx"
+   ]
+  },
+  {
+   "id": 31,
+   "nome": "ref_https",
+   "nos": 39,
+   "callables": 14,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "supabase/functions/admin-list-companies/index.ts",
+    "supabase/functions/audit-logs-prune/index.ts",
+    "supabase/functions/auth-rate-limit/index.ts",
+    "supabase/functions/dlq-alerts/index.ts",
+    "supabase/functions/email-oauth-callback/index.ts",
+    "supabase/functions/email-oauth-disconnect/index.ts",
+    "supabase/functions/health/index.ts",
+    "supabase/functions/latency-alerts/index.ts"
+   ]
+  },
+  {
+   "id": 32,
+   "nome": "RLSVerificationPanel.tsx",
+   "nos": 39,
+   "callables": 30,
+   "arquivos": 9,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/SlaHistoryCard.tsx",
+    "src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts",
+    "src/components/lux/monitoring/slaRiskAnalysis.ts",
+    "src/components/lux/settings/RLSVerificationPanel.tsx",
+    "src/lib/__tests__/csv.test.ts",
+    "src/lib/__tests__/exportCSV.test.ts",
+    "src/lib/csv.ts",
+    "src/lib/exportCSV.ts"
+   ]
+  },
+  {
+   "id": 33,
+   "nome": "gmaps-proxy/index.ts",
+   "nos": 38,
+   "callables": 22,
+   "arquivos": 7,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
+    "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
+    "supabase/functions/_shared/domain/ipc/scoring.ts",
+    "supabase/functions/_shared/gmaps-mapper.ts",
+    "supabase/functions/_shared/schemas.ts",
+    "supabase/functions/_shared/tracing.ts",
+    "supabase/functions/gmaps-proxy/index.ts"
+   ]
+  },
+  {
+   "id": 34,
+   "nome": "apify-gateway.ts",
+   "nos": 37,
+   "callables": 25,
+   "arquivos": 4,
+   "exemplos_arquivos": [
+    "docs/apify-mock-mode.md",
+    "supabase/functions/_shared/apify-gateway.test.ts",
+    "supabase/functions/_shared/apify-gateway.ts",
+    "supabase/functions/instagram-worker-health/index.ts"
+   ]
+  },
+  {
+   "id": 35,
+   "nome": "useAuth",
+   "nos": 36,
+   "callables": 27,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/OrganizationsView.tsx",
+    "src/components/lux/SettingsView.tsx",
+    "src/components/lux/ThemeToggle.tsx",
+    "src/components/lux/integrations/EmailAccountsPanel.tsx",
+    "src/contexts/auth-context.ts",
+    "src/hooks/useApiKeys.ts",
+    "src/hooks/useOrganizations.ts"
+   ]
+  },
+  {
+   "id": 36,
+   "nome": "DecisionMakersGrid.tsx",
+   "nos": 35,
+   "callables": 17,
+   "arquivos": 10,
+   "exemplos_arquivos": [
+    "CHANGELOG.md",
+    "docs/adr/024-round30-refactor-safety-split.md",
+    "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
+    "src/components/lux/lusha/DecisionMakersGrid.test.tsx",
+    "src/components/lux/lusha/DecisionMakersGrid.tsx",
+    "src/components/lux/lusha/SessionsPanel.tsx",
+    "src/components/lux/lusha/constants.test.ts",
+    "src/components/lux/lusha/constants.ts"
+   ]
+  },
+  {
+   "id": 37,
+   "nome": "q",
+   "nos": 34,
+   "callables": 31,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/supabase_snapshot/snapshot.py"
+   ]
+  },
+  {
+   "id": 38,
+   "nome": "useOracleV2.ts",
+   "nos": 34,
+   "callables": 20,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "docs/ORACLE_V2.md",
+    "src/components/lux/lusha/OracleV2Panel.tsx",
+    "src/hooks/__tests__/oracleV2Helpers.test.ts",
+    "src/hooks/oracleV2Helpers.ts",
+    "src/hooks/useOracleV2.ts"
+   ]
+  },
+  {
+   "id": 39,
+   "nome": "web-scrape-worker/index.ts",
+   "nos": 34,
+   "callables": 25,
+   "arquivos": 10,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
+    "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
+    "supabase/functions/_shared/__tests__/chaos.test.ts",
+    "supabase/functions/_shared/__tests__/web-scrape.test.ts",
+    "supabase/functions/_shared/circuit-breaker.ts",
+    "supabase/functions/_shared/web-scrape/chaos.ts",
+    "supabase/functions/_shared/web-scrape/heuristics.ts",
+    "supabase/functions/_shared/web-scrape/html-to-markdown.ts"
+   ]
+  },
+  {
+   "id": 40,
+   "nome": "test_snapshot.py",
+   "nos": 33,
+   "callables": 9,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    "scripts/regras_negocio/indice.py",
+    "scripts/regras_negocio/test_generate.py",
+    "scripts/supabase_snapshot/test_snapshot.py"
+   ]
+  },
+  {
+   "id": 41,
+   "nome": "scrape-queue-worker/index.ts",
+   "nos": 33,
+   "callables": 22,
+   "arquivos": 4,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
+    "supabase/functions/_shared/circuit-breaker.ts",
+    "supabase/functions/_shared/omkar-gmaps-config.ts",
+    "supabase/functions/scrape-queue-worker/index.ts"
+   ]
+  },
+  {
+   "id": 42,
+   "nome": "devDependencies",
+   "nos": 32,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "package.json"
+   ]
+  },
+  {
+   "id": 43,
+   "nome": "scripts",
+   "nos": 32,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "package.json"
+   ]
+  },
+  {
+   "id": 44,
+   "nome": "SourceComparisonReport.tsx",
+   "nos": 32,
+   "callables": 22,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/SourceComparisonReport.tsx",
+    "src/components/lux/monitoring/SourceComparisonSummary.tsx",
+    "src/components/lux/monitoring/SourceComparisonTable.tsx",
+    "src/lib/sourceQualityReport.test.ts",
+    "src/lib/sourceQualityReport.ts"
+   ]
+  },
+  {
+   "id": 45,
+   "nome": "Header.tsx",
+   "nos": 31,
+   "callables": 12,
+   "arquivos": 7,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/GradientAvatar.tsx",
+    "src/components/lux/__tests__/CompanyTableRow.test.tsx",
+    "src/components/lux/companies/CompanyTableRow.tsx",
+    "src/components/lux/layout/Header.tsx",
+    "src/components/lux/organizations/WorkspaceSwitcher.tsx",
+    "src/components/ui/dropdown-menu.tsx"
+   ]
+  },
+  {
+   "id": 46,
+   "nome": "20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql",
+   "nos": 31,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql"
+   ]
+  },
+  {
+   "id": 47,
+   "nome": "Observabilidade",
+   "nos": 30,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "docs/schema-tabelas-principais.md"
+   ]
+  },
+  {
+   "id": 48,
+   "nome": "main",
+   "nos": 30,
+   "callables": 26,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/supabase_snapshot/snapshot.py"
+   ]
+  },
+  {
+   "id": 49,
+   "nome": "20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql",
+   "nos": 29,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql"
+   ]
+  },
+  {
+   "id": 50,
+   "nome": "CompanyDetailModal.tsx",
+   "nos": 28,
+   "callables": 14,
+   "arquivos": 6,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/CompanyDetailModal.tsx",
+    "src/components/lux/CompanyOpenHours.tsx",
+    "src/components/lux/CompanyReviewsList.tsx",
+    "src/components/ui/avatar.tsx",
+    "src/hooks/useCompanyReviews.ts"
+   ]
+  },
+  {
+   "id": 51,
+   "nome": "20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql",
+   "nos": 28,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql"
+   ]
+  },
+  {
+   "id": 52,
+   "nome": "useDeals.ts",
+   "nos": 27,
+   "callables": 18,
+   "arquivos": 11,
+   "exemplos_arquivos": [
+    "docs/adr/021-round27-qa-exhaustive.md",
+    "docs/adr/023-round29-refactor-safety-and-parity.md",
+    "package.json",
+    "src/components/lux/DealsView.tsx",
+    "src/components/lux/deals/AddDealDialog.tsx",
+    "src/components/lux/deals/DealCard.tsx",
+    "src/components/lux/deals/DealColumn.tsx",
+    "src/components/lux/deals/DealDetailDrawer.tsx"
+   ]
+  },
+  {
+   "id": 53,
+   "nome": "auth",
+   "nos": 27,
+   "callables": 0,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    ".lovable/mcp/manifest.json",
+    "supabase/migrations/20260513140150_d44106d4-96e5-428a-912a-640f138f2e57.sql",
+    "supabase/migrations/20260513165326_4ad435d8-1535-46a2-84a3-f3113621bbe1.sql"
+   ]
+  },
+  {
+   "id": 54,
+   "nome": "ref_node_path",
+   "nos": 27,
+   "callables": 9,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    "scripts/gen-round19-validation.ts",
+    "scripts/gen-round21-preflight.ts",
+    "scripts/gen-round24-preflight.ts"
+   ]
+  },
+  {
+   "id": 55,
+   "nome": "cenarios.mjs",
+   "nos": 27,
+   "callables": 9,
+   "arquivos": 8,
+   "exemplos_arquivos": [
+    "scripts/ai-context/cenarios.mjs",
+    "scripts/ai-context/lib/y",
+    "scripts/ai-context/pages/C",
+    "src/components/a/A",
+    "src/components/b/B",
+    "src/pages/A",
+    "src/pages/B",
+    "src/views/Home.vue"
+   ]
+  },
+  {
+   "id": 56,
+   "nome": "retry-policy-tuner/index.ts",
+   "nos": 26,
+   "callables": 7,
+   "arquivos": 2,
+   "exemplos_arquivos": [
+    "docs/adr/011-round17-baseline.md",
+    "supabase/functions/retry-policy-tuner/index.ts"
+   ]
+  },
+  {
+   "id": 57,
+   "nome": "ref_node_fs",
+   "nos": 26,
+   "callables": 8,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/gen-round26-preflight.ts",
+    "scripts/inventario/mudou-conteudo.mjs"
+   ]
+  },
+  {
+   "id": 58,
+   "nome": ".collect",
+   "nos": 26,
+   "callables": 25,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/supabase_snapshot/test_snapshot.py"
+   ]
+  },
+  {
+   "id": 59,
+   "nome": "hiker-client.ts",
+   "nos": 26,
+   "callables": 24,
+   "arquivos": 2,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts",
+    "supabase/functions/_shared/hiker-client.ts"
+   ]
+  },
+  {
+   "id": 60,
+   "nome": "LUX IA — Análise Executiva de Funcionalidades",
+   "nos": 24,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md"
+   ]
+  },
+  {
+   "id": 61,
+   "nome": "2. Gaps por Categoria",
+   "nos": 24,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "docs/GAPS-ENTERPRISE.md"
+   ]
+  },
+  {
+   "id": 62,
+   "nome": "gen-round36-preflight.ts",
+   "nos": 24,
+   "callables": 6,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/gen-round36-preflight.ts"
+   ]
+  },
+  {
+   "id": 63,
+   "nome": "aggregations.ts",
+   "nos": 24,
+   "callables": 21,
+   "arquivos": 2,
+   "exemplos_arquivos": [
+    "src/lib/dlq/__tests__/aggregations.test.ts",
+    "src/lib/dlq/aggregations.ts"
+   ]
+  },
+  {
+   "id": 64,
+   "nome": "useAuditTrail.ts",
+   "nos": 23,
+   "callables": 10,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    "docs/schema-tabelas-principais.md",
+    "src/hooks/__tests__/useAuditTrail.test.ts",
+    "src/hooks/useAuditTrail.ts"
+   ]
+  },
+  {
+   "id": 65,
+   "nome": "CommandPalette.tsx",
+   "nos": 23,
+   "callables": 7,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/CommandPalette.tsx",
+    "src/components/lux/command-palette/commandPaletteData.ts",
+    "src/components/ui/command.tsx",
+    "src/hooks/useRecentViews.ts"
+   ]
+  },
+  {
+   "id": 66,
+   "nome": "gen-round27-qa-preflight.ts",
+   "nos": 23,
+   "callables": 8,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/gen-round27-qa-preflight.ts"
+   ]
+  },
+  {
+   "id": 67,
+   "nome": "view-skeleton-map.tsx",
+   "nos": 23,
+   "callables": 16,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/ViewSkeleton.tsx",
+    "src/components/lux/skeletons/DashboardSkeleton.tsx",
+    "src/components/lux/skeletons/SkeletonPrimitives.tsx",
+    "src/components/lux/skeletons/ViewSkeletons.tsx",
+    "src/components/lux/view-skeleton-map.tsx"
+   ]
+  },
+  {
+   "id": 68,
+   "nome": "snapshot.py",
+   "nos": 22,
+   "callables": 9,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/supabase_snapshot/snapshot.py"
+   ]
+  },
+  {
+   "id": 69,
+   "nome": "historyUtils.fuzz.test.ts",
+   "nos": 22,
+   "callables": 14,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "docs/adr/029-round35-historyutils-fuzz-and-grid-typed-contract.md",
+    "src/components/lux/LushaIntelligenceView.tsx",
+    "src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts",
+    "src/components/lux/lusha/__tests__/historyUtils.test.ts",
+    "src/components/lux/lusha/historyUtils.ts"
+   ]
+  },
+  {
+   "id": 70,
+   "nome": "OnboardingTour.tsx",
+   "nos": 22,
+   "callables": 11,
+   "arquivos": 8,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/OnboardingTour.tsx",
+    "src/components/lux/onboarding/ConfettiEffect.tsx",
+    "src/components/lux/onboarding/TourSpotlight.tsx",
+    "src/components/lux/onboarding/TourSteps.ts",
+    "src/components/lux/onboarding/TourTooltip.tsx",
+    "src/components/lux/onboarding/tour-position.ts",
+    "src/hooks/useOnboardingState.ts"
+   ]
+  },
+  {
+   "id": 71,
+   "nome": "20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql",
+   "nos": 22,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql"
+   ]
+  },
+  {
+   "id": 72,
+   "nome": "ApiLatencyAlertSettingsCard.tsx",
+   "nos": 22,
+   "callables": 13,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+    "src/components/lux/monitoring/SlaRecommendationRowItem.tsx",
+    "src/components/lux/monitoring/SlaRecommendationsCard.tsx",
+    "src/components/ui/switch.tsx",
+    "src/hooks/useApiLatencyAlertSettings.ts"
+   ]
+  },
+  {
+   "id": 73,
+   "nome": "AutomationStatusPanel.tsx",
+   "nos": 21,
+   "callables": 18,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/AutomationStatusPanel.tsx"
+   ]
+  },
+  {
+   "id": 74,
+   "nome": "20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql",
+   "nos": 21,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql"
+   ]
+  },
+  {
+   "id": 75,
+   "nome": "20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql",
+   "nos": 21,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql"
+   ]
+  },
+  {
+   "id": 76,
+   "nome": "compilerOptions",
+   "nos": 21,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "tsconfig.app.json"
+   ]
+  },
+  {
+   "id": 77,
+   "nome": "CompaniesMapView.tsx",
+   "nos": 19,
+   "callables": 7,
+   "arquivos": 6,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "package.json",
+    "src/components/lux/CompaniesMapView.tsx",
+    "src/components/lux/map/MapFilters.tsx",
+    "src/components/lux/map/MapMarkerIcons.tsx",
+    "src/components/lux/map/MarkerClusterLayer.tsx"
+   ]
+  },
+  {
+   "id": 78,
+   "nome": "modulos",
+   "nos": 19,
+   "callables": 12,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/ai-context/gerar.mjs"
+   ]
+  },
+  {
+   "id": 79,
+   "nome": "WebScrapeView.tsx",
+   "nos": 19,
+   "callables": 13,
+   "arquivos": 3,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/WebScrapeView.tsx",
+    "src/components/ui/textarea.tsx",
+    "src/hooks/useWebScrape.ts"
+   ]
+  }
+ ],
+ "hubs": [
+  {
+   "id": "src_lib_utils_cn",
+   "rotulo": "cn()",
+   "arquivo": "src/lib/utils.ts",
+   "grau": 360,
+   "comunidade": "cn"
+  },
+  {
+   "id": "ref_react",
+   "rotulo": "react",
+   "arquivo": "package.json",
+   "grau": 227,
+   "comunidade": "react"
+  },
+  {
+   "id": "ref_lucide_react",
+   "rotulo": "lucide-react",
+   "arquivo": "package.json",
+   "grau": 183,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "scripts_ai_context_gerar",
+   "rotulo": "gerar.mjs",
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "grau": 151,
+   "comunidade": "gerar.mjs"
+  },
+  {
+   "id": "src_components_ui_button",
+   "rotulo": "button.tsx",
+   "arquivo": "src/components/ui/button.tsx",
+   "grau": 122,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_pages_monitoring",
+   "rotulo": "Monitoring.tsx",
+   "arquivo": "src/pages/Monitoring.tsx",
+   "grau": 121,
+   "comunidade": "Monitoring.tsx"
+  },
+  {
+   "id": "src_components_ui_button_button",
+   "rotulo": "Button",
+   "arquivo": "src/components/ui/button.tsx",
+   "grau": 115,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "ref_tanstack_react_query",
+   "rotulo": "@tanstack/react-query",
+   "arquivo": "package.json",
+   "grau": 112,
+   "comunidade": "react"
+  },
+  {
+   "id": "src_integrations_supabase_client",
+   "rotulo": "client.ts",
+   "arquivo": "src/integrations/supabase/client.ts",
+   "grau": 111,
+   "comunidade": "react"
+  },
+  {
+   "id": "src_lib_utils",
+   "rotulo": "utils.ts",
+   "arquivo": "src/lib/utils.ts",
+   "grau": 111,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_integrations_supabase_client_supabase",
+   "rotulo": "supabase",
+   "arquivo": "src/integrations/supabase/client.ts",
+   "grau": 106,
+   "comunidade": "react"
+  },
+  {
+   "id": "package",
+   "rotulo": "package.json",
+   "arquivo": "package.json",
+   "grau": 103,
+   "comunidade": "package.json"
+  },
+  {
+   "id": "src_components_ui_badge",
+   "rotulo": "badge.tsx",
+   "arquivo": "src/components/ui/badge.tsx",
+   "grau": 102,
+   "comunidade": "badge.tsx"
+  },
+  {
+   "id": "src_components_lux_lushaintelligenceview",
+   "rotulo": "LushaIntelligenceView.tsx",
+   "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
+   "grau": 97,
+   "comunidade": "badge.tsx"
+  },
+  {
+   "id": "src_components_ui_badge_badge",
+   "rotulo": "Badge()",
+   "arquivo": "src/components/ui/badge.tsx",
+   "grau": 97,
+   "comunidade": "badge.tsx"
+  },
+  {
+   "id": "scripts_supabase_snapshot_snapshot",
+   "rotulo": "snapshot.py",
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "grau": 91,
+   "comunidade": "snapshot.py"
+  },
+  {
+   "id": "ref_vitest",
+   "rotulo": "vitest",
+   "arquivo": "package.json",
+   "grau": 88,
+   "comunidade": "vitest"
+  },
+  {
+   "id": "src_integrations_supabase_withorg",
+   "rotulo": "withOrg.ts",
+   "arquivo": "src/integrations/supabase/withOrg.ts",
+   "grau": 85,
+   "comunidade": "withOrg.ts"
+  },
+  {
+   "id": "src_components_lux_organizationsview",
+   "rotulo": "OrganizationsView.tsx",
+   "arquivo": "src/components/lux/OrganizationsView.tsx",
+   "grau": 84,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "ref_framer_motion",
+   "rotulo": "framer-motion",
+   "arquivo": "package.json",
+   "grau": 75,
+   "comunidade": "framer-motion"
+  },
+  {
+   "id": "scripts_regras_negocio_generate",
+   "rotulo": "generate.py",
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "grau": 71,
+   "comunidade": "generate.py"
+  },
+  {
+   "id": "src_components_lux_companiesview",
+   "rotulo": "CompaniesView.tsx",
+   "arquivo": "src/components/lux/CompaniesView.tsx",
+   "grau": 71,
+   "comunidade": "CompaniesView.tsx"
+  },
+  {
+   "id": "src_app",
+   "rotulo": "App.tsx",
+   "arquivo": "src/App.tsx",
+   "grau": 69,
+   "comunidade": "App.tsx"
+  },
+  {
+   "id": "src_contexts_auth_context_useauth",
+   "rotulo": "useAuth()",
+   "arquivo": "src/contexts/auth-context.ts",
+   "grau": 69,
+   "comunidade": "useAuth"
+  },
+  {
+   "id": "src_hooks_use_toast",
+   "rotulo": "hooks/use-toast.ts",
+   "arquivo": "src/hooks/use-toast.ts",
+   "grau": 66,
+   "comunidade": "hooks/use-toast.ts"
+  },
+  {
+   "id": "package_dependencies",
+   "rotulo": "dependencies",
+   "arquivo": "package.json",
+   "grau": 65,
+   "comunidade": "dependencies"
+  },
+  {
+   "id": "src_pages_index",
+   "rotulo": "Index.tsx",
+   "arquivo": "src/pages/Index.tsx",
+   "grau": 65,
+   "comunidade": "Index.tsx"
+  },
+  {
+   "id": "src_components_lux_lusha_oraclev2panel",
+   "rotulo": "OracleV2Panel.tsx",
+   "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
+   "grau": 63,
+   "comunidade": "Index.tsx"
+  },
+  {
+   "id": "src_components_ui_card",
+   "rotulo": "card.tsx",
+   "arquivo": "src/components/ui/card.tsx",
+   "grau": 62,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "ref_https",
+   "rotulo": "ref_https",
+   "arquivo": null,
+   "grau": 59,
+   "comunidade": "ref_https"
+  },
+  {
+   "id": "src_components_lux_orgviolationsview",
+   "rotulo": "OrgViolationsView.tsx",
+   "arquivo": "src/components/lux/OrgViolationsView.tsx",
+   "grau": 57,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "src_components_lux_campaignsview",
+   "rotulo": "CampaignsView.tsx",
+   "arquivo": "src/components/lux/CampaignsView.tsx",
+   "grau": 55,
+   "comunidade": "CampaignsView.tsx"
+  },
+  {
+   "id": "src_components_ui_card_card",
+   "rotulo": "Card",
+   "arquivo": "src/components/ui/card.tsx",
+   "grau": 55,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "src_components_lux_workflowsview",
+   "rotulo": "WorkflowsView.tsx",
+   "arquivo": "src/components/lux/WorkflowsView.tsx",
+   "grau": 53,
+   "comunidade": "hooks/use-toast.ts"
+  },
+  {
+   "id": "src_components_ui_input",
+   "rotulo": "input.tsx",
+   "arquivo": "src/components/ui/input.tsx",
+   "grau": 53,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_components_ui_sidebar",
+   "rotulo": "sidebar.tsx",
+   "arquivo": "src/components/ui/sidebar.tsx",
+   "grau": 52,
+   "comunidade": "cn"
+  },
+  {
+   "id": "src_components_ui_input_input",
+   "rotulo": "Input",
+   "arquivo": "src/components/ui/input.tsx",
+   "grau": 51,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_components_lux_intentsignalsview",
+   "rotulo": "IntentSignalsView.tsx",
+   "arquivo": "src/components/lux/IntentSignalsView.tsx",
+   "grau": 50,
+   "comunidade": "CampaignsView.tsx"
+  },
+  {
+   "id": "src_components_lux_gmapsscraperview",
+   "rotulo": "GmapsScraperView.tsx",
+   "arquivo": "src/components/lux/GmapsScraperView.tsx",
+   "grau": 49,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_components_lux_monitoring_jobdetailssheet",
+   "rotulo": "JobDetailsSheet.tsx",
+   "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
+   "grau": 49,
+   "comunidade": "badge.tsx"
+  },
+  {
+   "id": "src_components_lux_integrations_emailaccountspanel",
+   "rotulo": "EmailAccountsPanel.tsx",
+   "arquivo": "src/components/lux/integrations/EmailAccountsPanel.tsx",
+   "grau": 47,
+   "comunidade": "Index.tsx"
+  },
+  {
+   "id": "src_components_lux_lusha_sessionspanel",
+   "rotulo": "SessionsPanel.tsx",
+   "arquivo": "src/components/lux/lusha/SessionsPanel.tsx",
+   "grau": 47,
+   "comunidade": "badge.tsx"
+  },
+  {
+   "id": "src_components_lux_monitoring_dlqhealthcard",
+   "rotulo": "DlqHealthCard.tsx",
+   "arquivo": "src/components/lux/monitoring/DlqHealthCard.tsx",
+   "grau": 47,
+   "comunidade": "DlqHealthCard.tsx"
+  },
+  {
+   "id": "src_components_lux_monitoring_dlqreplaypanel",
+   "rotulo": "DLQReplayPanel.tsx",
+   "arquivo": "src/components/lux/monitoring/DLQReplayPanel.tsx",
+   "grau": 47,
+   "comunidade": "badge.tsx"
+  },
+  {
+   "id": "src_components_lux_notificationspanel",
+   "rotulo": "NotificationsPanel.tsx",
+   "arquivo": "src/components/lux/NotificationsPanel.tsx",
+   "grau": 47,
+   "comunidade": "CampaignsView.tsx"
+  },
+  {
+   "id": "src_components_ui_card_cardcontent",
+   "rotulo": "CardContent",
+   "arquivo": "src/components/ui/card.tsx",
+   "grau": 47,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "src_contexts_active_org_context_useactiveorganization",
+   "rotulo": "useActiveOrganization()",
+   "arquivo": "src/contexts/active-org-context.ts",
+   "grau": 47,
+   "comunidade": "react"
+  },
+  {
+   "id": "src_components_lux_monitoring_dlqalertsettingscard",
+   "rotulo": "DlqAlertSettingsCard.tsx",
+   "arquivo": "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+   "grau": 46,
+   "comunidade": "DlqHealthCard.tsx"
+  },
+  {
+   "id": "supabase_functions_oracle_search_decisors_index",
+   "rotulo": "oracle-search-decisors/index.ts",
+   "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
+   "grau": 46,
+   "comunidade": "oracle-search-decisors/index.ts"
+  },
+  {
+   "id": "src_components_ui_card_cardheader",
+   "rotulo": "CardHeader",
+   "arquivo": "src/components/ui/card.tsx",
+   "grau": 45,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "src_components_ui_card_cardtitle",
+   "rotulo": "CardTitle",
+   "arquivo": "src/components/ui/card.tsx",
+   "grau": 45,
+   "comunidade": "lucide-react"
+  },
+  {
+   "id": "src_integrations_supabase_withorg_db",
+   "rotulo": "db",
+   "arquivo": "src/integrations/supabase/withOrg.ts",
+   "grau": 45,
+   "comunidade": "withOrg.ts"
+  },
+  {
+   "id": "src_components_lux_companydetailmodal",
+   "rotulo": "CompanyDetailModal.tsx",
+   "arquivo": "src/components/lux/CompanyDetailModal.tsx",
+   "grau": 44,
+   "comunidade": "CompanyDetailModal.tsx"
+  },
+  {
+   "id": "src_components_lux_integrations_oauthsandboxpanel",
+   "rotulo": "OAuthSandboxPanel.tsx",
+   "arquivo": "src/components/lux/integrations/OAuthSandboxPanel.tsx",
+   "grau": 44,
+   "comunidade": "OAuthSandboxPanel.tsx"
+  },
+  {
+   "id": "src_components_lux_dashboardview",
+   "rotulo": "DashboardView.tsx",
+   "arquivo": "src/components/lux/DashboardView.tsx",
+   "grau": 43,
+   "comunidade": "CampaignsView.tsx"
+  },
+  {
+   "id": "src_components_lux_icpconfigview",
+   "rotulo": "ICPConfigView.tsx",
+   "arquivo": "src/components/lux/ICPConfigView.tsx",
+   "grau": 42,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_components_ui_label",
+   "rotulo": "label.tsx",
+   "arquivo": "src/components/ui/label.tsx",
+   "grau": 42,
+   "comunidade": "button.tsx"
+  },
+  {
+   "id": "src_components_lux_monitoring_automationstatuspanel",
+   "rotulo": "AutomationStatusPanel.tsx",
+   "arquivo": "src/components/lux/monitoring/AutomationStatusPanel.tsx",
+   "grau": 41,
+   "comunidade": "AutomationStatusPanel.tsx"
+  },
+  {
+   "id": "src_components_lux_monitoring_vaultcookiespanel",
+   "rotulo": "VaultCookiesPanel.tsx",
+   "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
+   "grau": 41,
+   "comunidade": "VaultCookiesPanel.tsx"
+  },
+  {
+   "id": "src_components_ui_card_carddescription",
+   "rotulo": "CardDescription",
+   "arquivo": "src/components/ui/card.tsx",
+   "grau": 41,
+   "comunidade": "lucide-react"
+  }
+ ],
+ "mais_chamados": [
+  {
+   "simbolo": "cn() (src/lib/utils.ts)",
+   "chamadas": 256
+  },
+  {
+   "simbolo": "useAuth() (src/contexts/auth-context.ts)",
+   "chamadas": 37
+  },
+  {
+   "simbolo": "q() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 30
+  },
+  {
+   "simbolo": "useActiveOrganization() (src/contexts/active-org-context.ts)",
+   "chamadas": 25
+  },
+  {
+   "simbolo": "useDemo() (src/contexts/demo-context.ts)",
+   "chamadas": 19
+  },
+  {
+   "simbolo": ".collect() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 17
+  },
+  {
+   "simbolo": "excluded_sql() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 17
+  },
+  {
+   "simbolo": "useToast() (src/hooks/use-toast.ts)",
+   "chamadas": 17
+  },
+  {
+   "simbolo": "getActiveOrgId() (src/integrations/supabase/withOrg.ts)",
+   "chamadas": 14
+  },
+  {
+   "simbolo": ".metadata() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 13
+  },
+  {
+   "simbolo": "header() (scripts/regras_negocio/generate.py)",
+   "chamadas": 13
+  },
+  {
+   "simbolo": "uniq() (scripts/ai-context/gerar.mjs)",
+   "chamadas": 13
+  },
+  {
+   "simbolo": "readText() (scripts/ai-context/gerar.mjs)",
+   "chamadas": 12
+  },
+  {
+   "simbolo": "md_table() (scripts/regras_negocio/generate.py)",
+   "chamadas": 11
+  },
+  {
+   "simbolo": "function() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 10
+  },
+  {
+   "simbolo": "read_text() (scripts/regras_negocio/generate.py)",
+   "chamadas": 10
+  },
+  {
+   "simbolo": ".callers() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 9
+  },
+  {
+   "simbolo": ".function_sql() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 9
+  },
+  {
+   "simbolo": "has() (scripts/ai-context/gerar.mjs)",
+   "chamadas": 9
+  },
+  {
+   "simbolo": "log() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 9
+  },
+  {
+   "simbolo": ".migration_sql() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 8
+  },
+  {
+   "simbolo": ".write() (scripts/regras_negocio/test_generate.py)",
+   "chamadas": 8
+  },
+  {
+   "simbolo": "mockFramerMotion() (src/test/mockFramerMotion.ts)",
+   "chamadas": 8
+  },
+  {
+   "simbolo": "simulateScenario() (src/lib/resilience/simulator.ts)",
+   "chamadas": 8
+  },
+  {
+   "simbolo": "trunc() (scripts/regras_negocio/generate.py)",
+   "chamadas": 8
+  },
+  {
+   "simbolo": "write() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 8
+  },
+  {
+   "simbolo": ".stats() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 7
+  },
+  {
+   "simbolo": "byCount() (scripts/ai-context/gerar.mjs)",
+   "chamadas": 7
+  },
+  {
+   "simbolo": "downloadCSV() (src/lib/exportCSV.ts)",
+   "chamadas": 7
+  },
+  {
+   "simbolo": "md_table() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 7
+  },
+  {
+   "simbolo": "record_error() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 7
+  },
+  {
+   "simbolo": "redact() (scripts/regras_negocio/generate.py)",
+   "chamadas": 7
+  },
+  {
+   "simbolo": ".assert_core_metrics() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": ".schema() (scripts/regras_negocio/test_generate.py)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "anyFile() (scripts/ai-context/gerar.mjs)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "buttonVariants (src/components/ui/button-variants.ts)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "emit() (src/lib/orgErrorHandler.ts)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "rel() (scripts/regras_negocio/generate.py)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "squash() (scripts/regras_negocio/generate.py)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "useConfirm() (src/hooks/confirm-context.ts)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": "useUnsavedChanges() (src/hooks/unsaved-changes-context.ts)",
+   "chamadas": 6
+  },
+  {
+   "simbolo": ".build() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": ".error_sections() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "balanced() (scripts/regras_negocio/generate.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "files_cell() (scripts/regras_negocio/generate.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "has_ext() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "migration() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "sha() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "slug() (scripts/supabase_snapshot/snapshot.py)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "useCan() (src/hooks/usePermissions.ts)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "usePermissions() (src/hooks/usePermissions.ts)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "usedBy() (scripts/ai-context/gerar.mjs)",
+   "chamadas": 5
+  },
+  {
+   "simbolo": "._setLocked() (src/hooks/__tests__/useRateLimit.logic.test.ts)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": "._setRemaining() (src/hooks/__tests__/useRateLimit.logic.test.ts)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": ".previous_database() (scripts/supabase_snapshot/test_snapshot.py)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": ".request() (supabase/functions/_shared/hiker-client.ts)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": ".rpc() (supabase/functions/_shared/apollo-cache.ts)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": ".wrap() (supabase/functions/_shared/hiker-client.ts)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": "BitrixError (supabase/functions/_shared/bitrix-client.ts)",
+   "chamadas": 4
+  },
+  {
+   "simbolo": "LeadContactError (supabase/functions/_shared/leadcontact-client.ts)",
+   "chamadas": 4
+  }
+ ],
+ "arquivos_com_mais_simbolos": [
+  {
+   "arquivo": "scripts/supabase_snapshot/test_snapshot.py",
+   "simbolos": 82
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "simbolos": 79
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "simbolos": 64
+  },
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "simbolos": 51
+  },
+  {
+   "arquivo": "supabase/functions/_shared/hiker-client.ts",
+   "simbolos": 39
+  },
+  {
+   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+   "simbolos": 29
+  },
+  {
+   "arquivo": "supabase/functions/_shared/lusha-client.ts",
+   "simbolos": 25
+  },
+  {
+   "arquivo": "src/integrations/supabase/withOrg.ts",
+   "simbolos": 24
+  },
+  {
+   "arquivo": "src/lib/dlq/aggregations.ts",
+   "simbolos": 23
+  },
+  {
+   "arquivo": "src/lib/orgErrorHandler.ts",
+   "simbolos": 23
+  },
+  {
+   "arquivo": "supabase/functions/_shared/apify-gateway.ts",
+   "simbolos": 22
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/AutomationStatusPanel.tsx",
+   "simbolos": 18
+  },
+  {
+   "arquivo": "src/hooks/__tests__/useRateLimit.logic.test.ts",
+   "simbolos": 18
+  },
+  {
+   "arquivo": "supabase/functions/_shared/bitrix-client.ts",
+   "simbolos": 17
+  },
+  {
+   "arquivo": "src/hooks/useOracleV2.ts",
+   "simbolos": 15
+  },
+  {
+   "arquivo": "supabase/functions/_shared/apollo-cache.ts",
+   "simbolos": 15
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
+   "simbolos": 14
+  },
+  {
+   "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
+   "simbolos": 14
+  },
+  {
+   "arquivo": "src/hooks/useAutomationsMonitor.ts",
+   "simbolos": 13
+  },
+  {
+   "arquivo": "supabase/functions/_shared/cookies.ts",
+   "simbolos": 13
+  },
+  {
+   "arquivo": "scripts/regras_negocio/test_generate.py",
+   "simbolos": 12
+  },
+  {
+   "arquivo": "src/hooks/useOrganizations.ts",
+   "simbolos": 12
+  },
+  {
+   "arquivo": "src/lib/sourceQualityReport.ts",
+   "simbolos": 12
+  },
+  {
+   "arquivo": "supabase/functions/_shared/omkar-gmaps-config.ts",
+   "simbolos": 12
+  },
+  {
+   "arquivo": "src/components/lux/skeletons/ViewSkeletons.tsx",
+   "simbolos": 11
+  },
+  {
+   "arquivo": "src/hooks/useWebScrape.ts",
+   "simbolos": 11
+  },
+  {
+   "arquivo": "src/lib/exportRLSReport.ts",
+   "simbolos": 11
+  },
+  {
+   "arquivo": "src/lib/redirectUriChecklist.ts",
+   "simbolos": 11
+  },
+  {
+   "arquivo": "src/lib/resilience/autotune.ts",
+   "simbolos": 11
+  },
+  {
+   "arquivo": "src/lib/resilience/simulator.ts",
+   "simbolos": 11
+  },
+  {
+   "arquivo": "scripts/ai-context/cenarios.mjs",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "src/hooks/use-toast.ts",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "src/hooks/useDlqReplay.ts",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "supabase/functions/_shared/apollo-client.ts",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "supabase/functions/_shared/leadcontact-client.ts",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "supabase/functions/cnpj-enrich/index.ts",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "supabase/functions/email-poll-replies/index.ts",
+   "simbolos": 10
+  },
+  {
+   "arquivo": "src/components/lux/CompanyDetailModal.tsx",
+   "simbolos": 9
+  },
+  {
+   "arquivo": "src/components/lux/lusha/historyUtils.ts",
+   "simbolos": 9
+  }
+ ],
+ "comunidade_por_arquivo": {
+  ".agents/skills/promo-lux-v2/SKILL.md": "Promo Lux V2 (LUX IA) — convenções",
+  ".claude/hooks/session-start.sh": "session-start.sh",
+  ".claude/skills/promo-lux-v2/SKILL.md": "Promo Lux V2 (LUX IA) — convenções",
+  ".codex/AGENTS.md": "ECC for Codex CLI",
+  ".hermes.md": "Promo_Lux_V2 — Regras da Casa (Hermes) — suplemento",
+  ".lovable/mcp/manifest.json": "auth",
+  ".lovable/memory/design/tokens.md": "tokens.md",
+  ".lovable/plan.md": "Levantamento OSS + Plano de PoC — Descoberta de email/telefone a partir do LinkedIn",
+  "@playwright/test": "lusha-flows.spec.ts",
+  "AGENTS.md": "AGENTS.md — Promo Lux V2 (LUX IA)",
+  "CHANGELOG.md": "Changelog",
+  "CLAUDE.md": "CLAUDE.md",
+  "CONTRIBUTING.md": "📐 Guia de Contribuição — LUX IA",
+  "README.md": "README.md",
+  "commitlint.config.cjs": "commitlint.config.cjs",
+  "commitlint.config.js": "commitlint.config.js",
+  "components.json": "components.json",
+  "docs/AUDITORIA_BACKEND_SENIOR.md": "Auditoria Back-End Sênior — LUX IA",
+  "docs/AUDITORIA_FINAL_LUX_IA.md": "README.md",
+  "docs/AUDITORIA_FIRECRAWL.md": "Auditoria de Paridade — LUX IA vs Firecrawl",
+  "docs/ESTADO_ATUAL.md": "Dimensão 1 — Frontend / Apresentação",
+  "docs/FUNCIONALIDADES.md": "hooks/use-toast.ts",
+  "docs/GAPS-ENTERPRISE.md": "2. Gaps por Categoria",
+  "docs/LGPD.md": "🛡️ Relatório de Conformidade LGPD — LUX IA",
+  "docs/LUSHA-INTEGRATION.md": "Lusha Intelligence — Integração LUX",
+  "docs/ORACLE_V2.md": "useOracleV2.ts",
+  "docs/adr/001-design-system.md": "README.md",
+  "docs/adr/002-rls-isolation.md": "ADR-002: RLS por user_id em Todas as Tabelas",
+  "docs/adr/003-edge-functions-proxy.md": "ADR-003: Edge Functions como Proxy Seguro",
+  "docs/adr/004-private-realtime-channels.md": "CompaniesView.tsx",
+  "docs/adr/005-ai-gateway.md": "ADR-005: Lovable AI Gateway para Chat",
+  "docs/adr/006-structured-logging.md": "ADR-006: Structured Logging em Edge Functions",
+  "docs/adr/007-multi-tenant-defense-in-depth.md": "withOrg",
+  "docs/adr/007-org-isolation-proxy.md": "orgErrorHandler.ts",
+  "docs/adr/008-soft-delete-policy.md": "ADR-008: Política de Soft Delete e Retenção de Dados",
+  "docs/adr/009-security-baseline.md": "ADR-009: Security Baseline (20-warnings)",
+  "docs/adr/011-round17-baseline.md": "retry-policy-tuner/index.ts",
+  "docs/adr/012-round18-observability.md": "DlqHealthCard.tsx",
+  "docs/adr/013-round19-chaos-and-regression.md": "ADR-013 — Rodada #19: Chaos determinístico e regressão automática do motor web",
+  "docs/adr/014-round20-validation.md": "ADR-014 — Rodada #20: Validação Exaustiva Multi-Camada",
+  "docs/adr/015-round21-concurrency-hardening.md": "ADR-015 — Rodada #21: Concorrência, Hardening final e Verificação de Produção",
+  "docs/adr/016-round22-attack-surface-reduction.md": "ADR-016 — Rodada #22: Redução final de superfície de ataque em SECURITY DEFINER",
+  "docs/adr/017-round23-linter-diagnosis.md": "ADR-017 — Rodada #23: Diagnóstico final dos WARNs residuais",
+  "docs/adr/018-round24-operational-depth.md": "ADR-018 — Rodada #24: Profundidade operacional além do teto do linter",
+  "docs/adr/019-round25-alert-dedup-and-retention.md": "ADR-019 — Rodada #25: Alert dedup, retenção de snapshots e idempotência do watchdog",
+  "docs/adr/020-round26-recoverability.md": "ADR-020 — Rodada #26: Recuperabilidade e compactação de longo prazo",
+  "docs/adr/021-round27-qa-exhaustive.md": "ADR-021 — Rodada #27: QA Exaustivo & Hardening Funcional",
+  "docs/adr/022-round28-functional-excellence.md": "CompanyDetailModal",
+  "docs/adr/023-round29-refactor-safety-and-parity.md": "ADR-023: Rodada #29 — Refactor Safety & Paridade de Optimistic Locking",
+  "docs/adr/024-round30-refactor-safety-split.md": "ADR-024 — Rodada #30: Refactor Safety & Split Inicial do LushaIntelligenceView",
+  "docs/adr/025-round31-decision-makers-grid-split.md": "ADR-025 — Rodada #31: Split do DecisionMakersGrid",
+  "docs/adr/026-round32-sessions-panel-split.md": "ADR-026 — Rodada #32: Split do SessionsPanel",
+  "docs/adr/027-round33-lusha-e2e-expansion.md": "ADR-027 — Rodada #33 · E2E ampliado do módulo Lusha",
+  "docs/adr/028-round34-regression-lusha-primitives.md": "ADR-028 — Rodada #34: Regressão para primitivas Lusha (StatusBadge, constants, types)",
+  "docs/adr/029-round35-historyutils-fuzz-and-grid-typed-contract.md": "ADR-029 — Rodada #35: Fuzz de historyUtils + contrato tipado do DecisionMakersGrid",
+  "docs/agentes/banco.md": "Banco de dados — referência para agentes",
+  "docs/agentes/github-ci.md": "GitHub (perímetro, CI, workflows) — referência para agentes",
+  "docs/agentes/lovable-deploy.md": "SnapshotCallerFreshnessTests",
+  "docs/agentes/mapa-repo.md": "Mapa do repositório — referência para agentes",
+  "docs/agentes/regras-dominio.md": "Regras de domínio que o código não deixa óbvio — referência para agentes",
+  "docs/agentes/servicos-externos.md": "campaign-dispatch/index.ts",
+  "docs/apify-mock-mode.md": "apify-gateway.ts",
+  "docs/auditoria-backend-2026-07-12.md": "2. Detalhamento por Categoria",
+  "docs/auth.md": "auth.md",
+  "docs/contexto/regras/manual/README.md": "manual/README.md",
+  "docs/edge-functions.md": "Ações",
+  "docs/erd.md": "🗺️ Diagrama Entidade-Relacionamento (ERD)",
+  "docs/estado/01-frontend.md": "Dimensão 1 — Frontend / Apresentação",
+  "docs/estado/02-backend-edge-functions.md": "Dimensão 2 — Backend / Edge Functions",
+  "docs/estado/03-dados-e-runtime.md": "Dimensão 3 — Dados e Runtime",
+  "docs/estado/04-integracoes.md": "Dimensão 4 — Integrações",
+  "docs/estado/05-infra-ci-testes.md": "Dimensão 5 — Infraestrutura, CI e Testes",
+  "docs/openapi.ts": "openapi.ts",
+  "docs/pesquisa-oss-linkedin-enrichment.md": "Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn",
+  "docs/runbooks/disaster-recovery.md": "Runbook — Disaster Recovery",
+  "docs/runbooks/migration-template.md": "Template de Migration (sem credenciais)",
+  "docs/runbooks/migrations.md": "Fluxo de Migrações — Supabase CLI / CI",
+  "docs/schema-tabelas-principais.md": "Campanhas & Email",
+  "docs/webhooks.md": "Webhooks — Guia de Integração",
+  "e2e/accessibility.spec.ts": "playwright-fixture.ts",
+  "e2e/auth.spec.ts": "playwright-fixture.ts",
+  "e2e/companies-crud.spec.ts": "helpers/auth.ts",
+  "e2e/dlq-web-smoke.spec.ts": "@playwright/test",
+  "e2e/helpers/auth.ts": "helpers/auth.ts",
+  "e2e/helpers/lushaMocks.ts": "lusha-flows.spec.ts",
+  "e2e/helpers/selectors.ts": "selectors.ts",
+  "e2e/helpers/supabase.ts": "rls-guarantees.spec.ts",
+  "e2e/instagram-dlq-replay.spec.ts": "@playwright/test",
+  "e2e/instagram-worker-smoke.spec.ts": "@playwright/test",
+  "e2e/invite-accept.spec.ts": "playwright-fixture.ts",
+  "e2e/lusha-flows.spec.ts": "lusha-flows.spec.ts",
+  "e2e/lusha-smoke.spec.ts": "@playwright/test",
+  "e2e/monitoring-navigation.spec.ts": "playwright-fixture.ts",
+  "e2e/navigation.spec.ts": "playwright-fixture.ts",
+  "e2e/oracle-decisor-flow.spec.ts": "helpers/auth.ts",
+  "e2e/oracle-v2.spec.ts": "helpers/auth.ts",
+  "e2e/protected-navigation.spec.ts": "playwright-fixture.ts",
+  "e2e/rls-guarantees.spec.ts": "rls-guarantees.spec.ts",
+  "eslint.config.js": "package.json",
+  "inventario/estado/README.md": "Estado real do projeto — inventário gerado",
+  "package.json": "lucide-react",
+  "playwright-fixture.ts": "playwright-fixture.ts",
+  "playwright.config.ts": "@playwright/test",
+  "postcss.config.js": "postcss.config.js",
+  "public/manifest.json": "public/manifest.json",
+  "public/sw.js": "sw.js",
+  "scripts/ai-context/README.md": "ai-context — contexto de código para agentes de IA",
+  "scripts/ai-context/cenarios.mjs": "regras_negocio — regras de negócio para agentes de IA",
+  "scripts/ai-context/gerar.mjs": "has",
+  "scripts/ai-context/gerar.unit.mjs": "gerar.unit.mjs",
+  "scripts/ai-context/lib/y": "cenarios.mjs",
+  "scripts/ai-context/pages/C": "cenarios.mjs",
+  "scripts/check-anon-grants-view.sh": "check-anon-grants-view.sh",
+  "scripts/check-audit-triggers.sh": "check-audit-triggers.sh",
+  "scripts/check-function-grants.sh": "check-function-grants.sh",
+  "scripts/check-migration-target.sh": "check-migration-target.sh",
+  "scripts/check-migrations.sh": "check-migrations.sh",
+  "scripts/check-queue-kind-coverage.sh": "check-queue-kind-coverage.sh",
+  "scripts/check-security-definer.sh": "check-security-definer.sh",
+  "scripts/ci/check-claude-md-integrity.mjs": "ref_node_fs",
+  "scripts/gen-current-report.ts": "simulator.ts",
+  "scripts/gen-legacy-baseline.ts": "simulator.ts",
+  "scripts/gen-round18-preflight.ts": "simulator.ts",
+  "scripts/gen-round19-preflight.ts": "simulator.ts",
+  "scripts/gen-round19-validation.ts": "ref_node_path",
+  "scripts/gen-round20-validation.ts": "gen-round20-validation.ts",
+  "scripts/gen-round21-preflight.ts": "ref_node_path",
+  "scripts/gen-round24-preflight.ts": "ref_node_path",
+  "scripts/gen-round25-preflight.ts": "gen-round25-preflight.ts",
+  "scripts/gen-round26-preflight.ts": "ref_node_fs",
+  "scripts/gen-round27-qa-preflight.ts": "gen-round27-qa-preflight.ts",
+  "scripts/gen-round28-preflight.ts": "gen-round28-preflight.ts",
+  "scripts/gen-round29-preflight.ts": "gen-round29-preflight.ts",
+  "scripts/gen-round36-preflight.ts": "gen-round36-preflight.ts",
+  "scripts/gen-web-scrape-reports.ts": "simulator.ts",
+  "scripts/generate-audit-pdf.ts": "vite.config.ts",
+  "scripts/graphify/README.md": "scripts/graphify — grafo de código (graphify)",
+  "scripts/graphify/setup.sh": "setup.sh",
+  "scripts/inventario/gerar-repo.mjs": "gerar-repo.mjs",
+  "scripts/inventario/mudou-conteudo.mjs": "ref_node_fs",
+  "scripts/mc-r35-preflight.ts": "simulator.ts",
+  "scripts/mc-r40-preflight.ts": "simulator.ts",
+  "scripts/regras_negocio/README.md": "regras_negocio — regras de negócio para agentes de IA",
+  "scripts/regras_negocio/generate.py": "generate.py",
+  "scripts/regras_negocio/indice.py": "test_snapshot.py",
+  "scripts/regras_negocio/publish.sh": "publish.sh",
+  "scripts/regras_negocio/test_generate.py": "CurrentSqlSourcesTests",
+  "scripts/seed_promo_brindes.sql": "seed_promo_brindes.sql",
+  "scripts/sim-scrape.ts": "simulator.ts",
+  "scripts/sql/check-audit-triggers.sql": "check-audit-triggers.sql",
+  "scripts/sql/check-function-grants.sql": "check-function-grants.sql",
+  "scripts/sql/check-queue-kind-coverage.sql": "check-queue-kind-coverage.sql",
+  "scripts/supabase_snapshot/README.md": "supabase-snapshot",
+  "scripts/supabase_snapshot/snapshot.py": "q",
+  "scripts/supabase_snapshot/test_snapshot.py": "SnapshotCallerFreshnessTests",
+  "src/App.tsx": "orgErrorHandler.ts",
+  "src/components/NavLink.tsx": "NavLink.tsx",
+  "src/components/a/A": "cenarios.mjs",
+  "src/components/achievements/Achievements": "gerar.unit.mjs",
+  "src/components/auth/MFAEnroll.tsx": "lucide-react",
+  "src/components/auth/MFAVerify.tsx": "lucide-react",
+  "src/components/automation/WorkflowEditor.tsx": "WorkflowEditor.tsx",
+  "src/components/b/B": "cenarios.mjs",
+  "src/components/home/Home": "gerar.unit.mjs",
+  "src/components/lux/AIAgentView.tsx": "button.tsx",
+  "src/components/lux/ActivityFeed.tsx": "CampaignsView.tsx",
+  "src/components/lux/AddCompanyDialog.tsx": "button.tsx",
+  "src/components/lux/AnalyticsView.tsx": "framer-motion",
+  "src/components/lux/AppBreadcrumbs.tsx": "View",
+  "src/components/lux/AutoTopProgressBar.tsx": "App.tsx",
+  "src/components/lux/AutomationsList.tsx": "CampaignsView.tsx",
+  "src/components/lux/CampaignsView.tsx": "CampaignsView.tsx",
+  "src/components/lux/CommandPalette.tsx": "CommandPalette.tsx",
+  "src/components/lux/CompaniesMapView.tsx": "CompaniesMapView.tsx",
+  "src/components/lux/CompaniesView.tsx": "CompaniesView.tsx",
+  "src/components/lux/CompanyDetailModal.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/CompanyFilters.tsx": "CompaniesView.tsx",
+  "src/components/lux/CompanyOpenHours.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/CompanyPagination.tsx": "button.tsx",
+  "src/components/lux/CompanyReviewsList.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/CompanyTable.tsx": "vitest",
+  "src/components/lux/ConnectionStatus.tsx": "CompaniesView.tsx",
+  "src/components/lux/DashboardView.tsx": "CampaignsView.tsx",
+  "src/components/lux/DataError.tsx": "framer-motion",
+  "src/components/lux/DealsView.tsx": "useDeals.ts",
+  "src/components/lux/EditCompanyDialog.tsx": "button.tsx",
+  "src/components/lux/EmailSuppressionsView.tsx": "Index.tsx",
+  "src/components/lux/EmptyState.tsx": "CampaignsView.tsx",
+  "src/components/lux/EnrichmentFunnel.tsx": "CampaignsView.tsx",
+  "src/components/lux/ErrorBoundary.tsx": "App.tsx",
+  "src/components/lux/GmapsScraperView.tsx": "useCnpjEnrich.ts",
+  "src/components/lux/GradientAvatar.tsx": "Header.tsx",
+  "src/components/lux/ICPConfigView.tsx": "hooks/use-toast.ts",
+  "src/components/lux/IntegrationsView.tsx": "badge.tsx",
+  "src/components/lux/IntentSignalsView.tsx": "CampaignsView.tsx",
+  "src/components/lux/KeyboardShortcutsDialog.tsx": "button.tsx",
+  "src/components/lux/LushaIntelligenceView.tsx": "ADR-025 — Rodada #31: Split do DecisionMakersGrid",
+  "src/components/lux/LuxImage.tsx": "cn",
+  "src/components/lux/NotificationsPanel.tsx": "CampaignsView.tsx",
+  "src/components/lux/OnboardingTour.tsx": "OnboardingTour.tsx",
+  "src/components/lux/OrgErrorBanner.tsx": "orgErrorHandler.ts",
+  "src/components/lux/OrgProxiesView.tsx": "Index.tsx",
+  "src/components/lux/OrgViolationsView.tsx": "lucide-react",
+  "src/components/lux/OrganizationsView.tsx": "useAuth",
+  "src/components/lux/PageTransition.tsx": "framer-motion",
+  "src/components/lux/PlacesApiNewToggle.tsx": "button.tsx",
+  "src/components/lux/PlacesApiUsageCard.tsx": "badge.tsx",
+  "src/components/lux/ProxyFormDialog.tsx": "button.tsx",
+  "src/components/lux/QuickActions.tsx": "View",
+  "src/components/lux/RecycleBinView.tsx": "Index.tsx",
+  "src/components/lux/SafeHTML.test.tsx": "vitest",
+  "src/components/lux/SafeHTML.tsx": "SafeHTML.tsx",
+  "src/components/lux/ScrapeResultsView.tsx": "hooks/use-toast.ts",
+  "src/components/lux/SettingsView.tsx": "useAuth",
+  "src/components/lux/StakeholderFinderView.tsx": "framer-motion",
+  "src/components/lux/StatsGrid.tsx": "StatsGrid.tsx",
+  "src/components/lux/StepProgress.tsx": "hooks/use-toast.ts",
+  "src/components/lux/StickySaveBar.tsx": "button.tsx",
+  "src/components/lux/ThemeToggle.tsx": "useAuth",
+  "src/components/lux/TopProgressBar.tsx": "App.tsx",
+  "src/components/lux/UnsavedChangesDialog.tsx": "Index.tsx",
+  "src/components/lux/ViewSkeleton.tsx": "framer-motion",
+  "src/components/lux/WorkflowsView.tsx": "hooks/use-toast.ts",
+  "src/components/lux/__tests__/CampaignsView.test.tsx": "vitest",
+  "src/components/lux/__tests__/CompaniesView.test.tsx": "vitest",
+  "src/components/lux/__tests__/CompanyFilters.test.tsx": "CompaniesView.tsx",
+  "src/components/lux/__tests__/CompanyTable.integration.test.tsx": "vitest",
+  "src/components/lux/__tests__/CompanyTable.test.tsx": "vitest",
+  "src/components/lux/__tests__/CompanyTableRow.test.tsx": "Header.tsx",
+  "src/components/lux/__tests__/DashboardView.test.tsx": "vitest",
+  "src/components/lux/__tests__/DataError.test.tsx": "framer-motion",
+  "src/components/lux/__tests__/EmptyState.test.tsx": "CampaignsView.tsx",
+  "src/components/lux/__tests__/ErrorBoundary.test.tsx": "App.tsx",
+  "src/components/lux/__tests__/ICPConfigView.test.tsx": "hooks/use-toast.ts",
+  "src/components/lux/__tests__/MapFilters.test.tsx": "vitest",
+  "src/components/lux/__tests__/SidebarFooter.test.tsx": "vitest",
+  "src/components/lux/__tests__/StakeholderCard.test.tsx": "StakeholderCard.tsx",
+  "src/components/lux/__tests__/StatsGrid.test.tsx": "vitest",
+  "src/components/lux/__tests__/WorkflowCard.test.tsx": "vitest",
+  "src/components/lux/__tests__/WorkflowsView.test.tsx": "vitest",
+  "src/components/lux/analytics/AnalyticsChartTooltip.tsx": "framer-motion",
+  "src/components/lux/analytics/AnimatedCounter.tsx": "framer-motion",
+  "src/components/lux/analytics/AnimatedDonut.tsx": "framer-motion",
+  "src/components/lux/analytics/ConversionTab.tsx": "framer-motion",
+  "src/components/lux/analytics/DataEnrichmentTab.tsx": "framer-motion",
+  "src/components/lux/analytics/analytics-constants.ts": "CampaignsView.tsx",
+  "src/components/lux/analytics/useAnalyticsData.ts": "CampaignsView.tsx",
+  "src/components/lux/auth/AuthLogo.tsx": "LoginCard.tsx",
+  "src/components/lux/auth/EmailInput.tsx": "LoginCard.tsx",
+  "src/components/lux/auth/FloatingParticles.tsx": "Login.tsx",
+  "src/components/lux/auth/ForgotPasswordOverlay.tsx": "LoginCard.tsx",
+  "src/components/lux/auth/GoldConfetti.tsx": "Login.tsx",
+  "src/components/lux/auth/GoogleLoadingOverlay.tsx": "Login.tsx",
+  "src/components/lux/auth/GoogleLoginButton.tsx": "button.tsx",
+  "src/components/lux/auth/LoginCard.tsx": "LoginCard.tsx",
+  "src/components/lux/auth/PasswordInput.tsx": "button.tsx",
+  "src/components/lux/auth/PasswordStrengthMeter.tsx": "PasswordStrengthMeter.tsx",
+  "src/components/lux/auth/RateLimitWarning.tsx": "Login.tsx",
+  "src/components/lux/automations/AutomationEventsFeed.tsx": "badge.tsx",
+  "src/components/lux/automations/AutomationKpiCards.tsx": "lucide-react",
+  "src/components/lux/automations/AutomationQueuePanel.tsx": "badge.tsx",
+  "src/components/lux/automations/AutomationStageBadge.tsx": "AutomationStageBadge.tsx",
+  "src/components/lux/automations/AutomationsRealtimeView.tsx": "Monitoring.tsx",
+  "src/components/lux/automations/CompanyAutomationTable.tsx": "badge.tsx",
+  "src/components/lux/campaigns/CampaignFormFields.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": "sheet.tsx",
+  "src/components/lux/command-palette/commandPaletteData.ts": "CommandPalette.tsx",
+  "src/components/lux/companies/CompanyTableRow.tsx": "Header.tsx",
+  "src/components/lux/companies/ImportCompaniesDialog.tsx": "react",
+  "src/components/lux/company-filters-utils.ts": "CompaniesView.tsx",
+  "src/components/lux/deals/AddDealDialog.tsx": "useDeals.ts",
+  "src/components/lux/deals/DealCard.tsx": "useDeals.ts",
+  "src/components/lux/deals/DealColumn.tsx": "useDeals.ts",
+  "src/components/lux/deals/DealDetailDrawer.tsx": "useDeals.ts",
+  "src/components/lux/deals/DealTasksPanel.tsx": "button.tsx",
+  "src/components/lux/deals/StagesManagerDialog.tsx": "button.tsx",
+  "src/components/lux/icons/LinkedinIcon.tsx": "StakeholderCard.tsx",
+  "src/components/lux/integrations/ApiDocsCard.tsx": "badge.tsx",
+  "src/components/lux/integrations/ApiKeysPanel.tsx": "badge.tsx",
+  "src/components/lux/integrations/AuthUrlConfirmDialog.tsx": "button.tsx",
+  "src/components/lux/integrations/DisconnectAccountDialog.tsx": "button.tsx",
+  "src/components/lux/integrations/DryRunLogsPanel.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/integrations/EmailAccountsAuditPanel.tsx": "EmailAccountsAuditPanel.tsx",
+  "src/components/lux/integrations/EmailAccountsPanel.tsx": "Index.tsx",
+  "src/components/lux/integrations/EmailSyncHistorySheet.tsx": "EmailSyncHistorySheet.tsx",
+  "src/components/lux/integrations/EnvProfilesPanel.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/integrations/OAuthSandboxPanel.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/integrations/OAuthSnapshotsPanel.tsx": "OAuthSnapshotsPanel.tsx",
+  "src/components/lux/integrations/RedirectUriChecklist.tsx": "RedirectUriChecklist.tsx",
+  "src/components/lux/integrations/WebhooksPanel.tsx": "3. Functions chamadas pelo frontend (28)",
+  "src/components/lux/layout/Header.tsx": "View",
+  "src/components/lux/layout/MobileBottomNav.tsx": "View",
+  "src/components/lux/layout/Sidebar.tsx": "View",
+  "src/components/lux/layout/__tests__/Header.test.tsx": "vitest",
+  "src/components/lux/layout/__tests__/Sidebar.test.tsx": "vitest",
+  "src/components/lux/layout/nav-items.ts": "vitest",
+  "src/components/lux/lusha/DecisionMakersGrid.test-d.ts": "DecisionMakersGrid.tsx",
+  "src/components/lux/lusha/DecisionMakersGrid.test.tsx": "DecisionMakersGrid.tsx",
+  "src/components/lux/lusha/DecisionMakersGrid.tsx": "DecisionMakersGrid.tsx",
+  "src/components/lux/lusha/LushaCookieHealthBanner.tsx": "LushaCookieHealthBanner.tsx",
+  "src/components/lux/lusha/OracleV2ErrorBoundary.tsx": "button.tsx",
+  "src/components/lux/lusha/OracleV2Panel.tsx": "Index.tsx",
+  "src/components/lux/lusha/SessionsPanel.test.tsx": "SessionsPanel.test.tsx",
+  "src/components/lux/lusha/SessionsPanel.tsx": "SessionsPanel.test.tsx",
+  "src/components/lux/lusha/StatusBadge.test.tsx": "vitest",
+  "src/components/lux/lusha/StatusBadge.tsx": "badge.tsx",
+  "src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts": "historyUtils.fuzz.test.ts",
+  "src/components/lux/lusha/__tests__/historyUtils.test.ts": "historyUtils.fuzz.test.ts",
+  "src/components/lux/lusha/constants.test.ts": "DecisionMakersGrid.tsx",
+  "src/components/lux/lusha/constants.ts": "DecisionMakersGrid.tsx",
+  "src/components/lux/lusha/historyUtils.ts": "historyUtils.fuzz.test.ts",
+  "src/components/lux/lusha/types.test.ts": "DecisionMakersGrid.tsx",
+  "src/components/lux/lusha/types.ts": "DecisionMakersGrid.tsx",
+  "src/components/lux/map/MapFilters.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/map/MapMarkerIcons.tsx": "CompaniesMapView.tsx",
+  "src/components/lux/map/MarkerClusterLayer.tsx": "CompaniesMapView.tsx",
+  "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": "ApiLatencyAlertSettingsCard.tsx",
+  "src/components/lux/monitoring/ApiLatencyPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/AuditTrailPanel.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/monitoring/AutomationLogsPanel.tsx": "cn",
+  "src/components/lux/monitoring/AutomationStatusPanel.tsx": "AutomationStatusPanel.tsx",
+  "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": "lucide-react",
+  "src/components/lux/monitoring/CircuitBreakerPanel.tsx": "CircuitBreakerPanel.tsx",
+  "src/components/lux/monitoring/DLQReplayPanel.tsx": "badge.tsx",
+  "src/components/lux/monitoring/DbHealthDashboard.tsx": "lucide-react",
+  "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": "DlqHealthCard.tsx",
+  "src/components/lux/monitoring/DlqHealthCard.tsx": "DlqHealthCard.tsx",
+  "src/components/lux/monitoring/DlqTriageView.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/InstagramConnectionPanel.tsx": "lucide-react",
+  "src/components/lux/monitoring/JobDetailsSheet.tsx": "badge.tsx",
+  "src/components/lux/monitoring/LatencySparkline.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/MonitoringView.tsx": "cn",
+  "src/components/lux/monitoring/MonteCarloReportPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/MultiQueueResilienceCard.tsx": "lucide-react",
+  "src/components/lux/monitoring/OrgRateLimitsView.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": "PartitionAdvisoryPanel.tsx",
+  "src/components/lux/monitoring/QaHistoryPanel.tsx": "badge.tsx",
+  "src/components/lux/monitoring/ReaperHistoryPanel.tsx": "lucide-react",
+  "src/components/lux/monitoring/ResilienceReport.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/RetryAutoTunerCard.tsx": "lucide-react",
+  "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": "lucide-react",
+  "src/components/lux/monitoring/ScrapeLatencyPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/ScrapeQueuePanel.tsx": "ScrapeQueuePanel.tsx",
+  "src/components/lux/monitoring/SlaAlertSettingsCard.tsx": "button.tsx",
+  "src/components/lux/monitoring/SlaAutoTuneBlockedCard.tsx": "lucide-react",
+  "src/components/lux/monitoring/SlaCompliancePanel.tsx": "lucide-react",
+  "src/components/lux/monitoring/SlaHistoryCard.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/monitoring/SlaHistoryTrendChart.tsx": "SlaHistoryTrendChart.tsx",
+  "src/components/lux/monitoring/SlaRecommendationRowItem.tsx": "ApiLatencyAlertSettingsCard.tsx",
+  "src/components/lux/monitoring/SlaRecommendationsCard.tsx": "lucide-react",
+  "src/components/lux/monitoring/SlaTrendChart.tsx": "lucide-react",
+  "src/components/lux/monitoring/SourceComparisonReport.tsx": "SourceComparisonReport.tsx",
+  "src/components/lux/monitoring/SourceComparisonSummary.tsx": "SourceComparisonReport.tsx",
+  "src/components/lux/monitoring/SourceComparisonTable.tsx": "SourceComparisonReport.tsx",
+  "src/components/lux/monitoring/VaultCookiesPanel.tsx": "VaultCookiesPanel.tsx",
+  "src/components/lux/monitoring/WebScrapeView.tsx": "WebScrapeView.tsx",
+  "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx": "DlqHealthCard.tsx",
+  "src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx": "DlqHealthCard.test.tsx",
+  "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": "SlaHistoryTrendChart.tsx",
+  "src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts": "RLSVerificationPanel.tsx",
+  "src/components/lux/monitoring/slaHistoryChartData.ts": "SlaHistoryTrendChart.tsx",
+  "src/components/lux/monitoring/slaRiskAnalysis.ts": "RLSVerificationPanel.tsx",
+  "src/components/lux/motion-variants.ts": "framer-motion",
+  "src/components/lux/onboarding/ConfettiEffect.tsx": "OnboardingTour.tsx",
+  "src/components/lux/onboarding/TourSpotlight.tsx": "OnboardingTour.tsx",
+  "src/components/lux/onboarding/TourSteps.ts": "OnboardingTour.tsx",
+  "src/components/lux/onboarding/TourTooltip.tsx": "OnboardingTour.tsx",
+  "src/components/lux/onboarding/tour-position.ts": "OnboardingTour.tsx",
+  "src/components/lux/organizations/ActivityHistory.tsx": "button.tsx",
+  "src/components/lux/organizations/InviteSection.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/organizations/MemberRow.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/organizations/MembershipAuditDetailSheet.tsx": "MembershipAuditDetailSheet.tsx",
+  "src/components/lux/organizations/MembershipAuditLog.tsx": "MembershipAuditLog.tsx",
+  "src/components/lux/organizations/WorkspaceSelector.tsx": "react",
+  "src/components/lux/organizations/WorkspaceSwitcher.tsx": "Header.tsx",
+  "src/components/lux/permissions/PermissionGate.tsx": "PermissionGate.tsx",
+  "src/components/lux/permissions/PermissionsMatrix.tsx": "permissions.ts",
+  "src/components/lux/security/OrgViolationAlertsPanel.tsx": "badge.tsx",
+  "src/components/lux/settings/MFASetup.tsx": "button.tsx",
+  "src/components/lux/settings/RLSDiscoveryView.tsx": "button.tsx",
+  "src/components/lux/settings/RLSRegistryCoverage.tsx": "RLSRegistryCoverage.tsx",
+  "src/components/lux/settings/RLSVerificationPanel.tsx": "RLSVerificationPanel.tsx",
+  "src/components/lux/skeletons/DashboardSkeleton.tsx": "view-skeleton-map.tsx",
+  "src/components/lux/skeletons/SkeletonPrimitives.tsx": "view-skeleton-map.tsx",
+  "src/components/lux/skeletons/ViewSkeletons.tsx": "view-skeleton-map.tsx",
+  "src/components/lux/stakeholders/StakeholderCard.tsx": "StakeholderCard.tsx",
+  "src/components/lux/stakeholders/StakeholderListRow.tsx": "StakeholderCard.tsx",
+  "src/components/lux/stakeholders/stakeholder-utils.ts": "StakeholderCard.tsx",
+  "src/components/lux/view-skeleton-map.tsx": "Index.tsx",
+  "src/components/lux/workflows/WorkflowCard.tsx": "WorkflowCard.tsx",
+  "src/components/ui/accordion.tsx": "accordion.tsx",
+  "src/components/ui/alert-dialog.tsx": "Index.tsx",
+  "src/components/ui/alert.tsx": "lucide-react",
+  "src/components/ui/aspect-ratio.tsx": "package.json",
+  "src/components/ui/avatar.tsx": "CompanyDetailModal.tsx",
+  "src/components/ui/badge-variants.ts": "badge.tsx",
+  "src/components/ui/badge.tsx": "badge.tsx",
+  "src/components/ui/breadcrumb.tsx": "AppBreadcrumbs.tsx",
+  "src/components/ui/button-variants.ts": "pagination.tsx",
+  "src/components/ui/button.tsx": "pagination.tsx",
+  "src/components/ui/calendar.tsx": "pagination.tsx",
+  "src/components/ui/card.tsx": "lucide-react",
+  "src/components/ui/carousel.tsx": "carousel.tsx",
+  "src/components/ui/chart.tsx": "chart.tsx",
+  "src/components/ui/checkbox.tsx": "button.tsx",
+  "src/components/ui/collapsible.tsx": "package.json",
+  "src/components/ui/command.tsx": "CommandPalette.tsx",
+  "src/components/ui/context-menu.tsx": "cn",
+  "src/components/ui/dialog.tsx": "button.tsx",
+  "src/components/ui/drawer.tsx": "cn",
+  "src/components/ui/dropdown-menu.tsx": "Header.tsx",
+  "src/components/ui/form.tsx": "form.tsx",
+  "src/components/ui/hover-card.tsx": "hover-card.tsx",
+  "src/components/ui/input-otp.tsx": "lucide-react",
+  "src/components/ui/input.tsx": "button.tsx",
+  "src/components/ui/label.tsx": "button.tsx",
+  "src/components/ui/menubar.tsx": "cn",
+  "src/components/ui/navigation-menu.tsx": "navigation-menu.tsx",
+  "src/components/ui/pagination.tsx": "pagination.tsx",
+  "src/components/ui/popover.tsx": "button.tsx",
+  "src/components/ui/progress.tsx": "badge.tsx",
+  "src/components/ui/radio-group.tsx": "radio-group.tsx",
+  "src/components/ui/resizable.tsx": "navigation-menu.tsx",
+  "src/components/ui/scroll-area.tsx": "cn",
+  "src/components/ui/select.tsx": "cn",
+  "src/components/ui/separator.tsx": "cn",
+  "src/components/ui/sheet.tsx": "sheet.tsx",
+  "src/components/ui/sidebar.tsx": "cn",
+  "src/components/ui/skeleton.tsx": "CampaignsView.tsx",
+  "src/components/ui/slider.tsx": "button.tsx",
+  "src/components/ui/sonner.tsx": "App.tsx",
+  "src/components/ui/switch.tsx": "ApiLatencyAlertSettingsCard.tsx",
+  "src/components/ui/table.tsx": "badge.tsx",
+  "src/components/ui/tabs.tsx": "badge.tsx",
+  "src/components/ui/textarea.tsx": "WebScrapeView.tsx",
+  "src/components/ui/toast.tsx": "toast.tsx",
+  "src/components/ui/toaster.tsx": "CompaniesView.tsx",
+  "src/components/ui/toggle-group.tsx": "class-variance-authority",
+  "src/components/ui/toggle-variants.ts": "class-variance-authority",
+  "src/components/ui/toggle.tsx": "class-variance-authority",
+  "src/components/ui/tooltip.tsx": "vitest",
+  "src/components/ui/use-form-field.ts": "form.tsx",
+  "src/components/ui/use-sidebar.ts": "cn",
+  "src/components/ui/use-toast.ts": "hooks/use-toast.ts",
+  "src/contexts/ActiveOrgContext.tsx": "withOrg.ts",
+  "src/contexts/AuthContext.tsx": "withOrg.ts",
+  "src/contexts/DemoContext.tsx": "CampaignsView.tsx",
+  "src/contexts/__tests__/AuthContext.test.tsx": "withOrg.ts",
+  "src/contexts/active-org-context.ts": "react",
+  "src/contexts/auth-context.ts": "react",
+  "src/contexts/demo-context.ts": "CampaignsView.tsx",
+  "src/hooks/__tests__/oracleV2Helpers.test.ts": "useOracleV2.ts",
+  "src/hooks/__tests__/useAuditTrail.test.ts": "useAuditTrail.ts",
+  "src/hooks/__tests__/useConfirm.test.tsx": "OAuthSandboxPanel.tsx",
+  "src/hooks/__tests__/useDlqReplay.test.ts": "react",
+  "src/hooks/__tests__/useOraclePushBitrix.test.ts": "react",
+  "src/hooks/__tests__/usePersistedFilters.test.ts": "CompaniesView.tsx",
+  "src/hooks/__tests__/useRateLimit.logic.test.ts": "useRateLimit.logic.test.ts",
+  "src/hooks/__tests__/useRateLimit.test.ts": "Login.tsx",
+  "src/hooks/__tests__/useRealtimeCompanies.test.ts": "CompaniesView.tsx",
+  "src/hooks/__tests__/useRealtimeScrapeJobs.test.ts": "CompaniesView.tsx",
+  "src/hooks/__tests__/useRecentViews.test.ts": "View",
+  "src/hooks/__tests__/useSidebarState.test.ts": "Index.tsx",
+  "src/hooks/confirm-context.ts": "OAuthSandboxPanel.tsx",
+  "src/hooks/oracleV2Helpers.ts": "useOracleV2.ts",
+  "src/hooks/unsaved-changes-context.ts": "App.tsx",
+  "src/hooks/use-mobile.tsx": "CompaniesView.tsx",
+  "src/hooks/use-toast.ts": "hooks/use-toast.ts",
+  "src/hooks/useApiKeys.ts": "useAuth",
+  "src/hooks/useApiLatency.ts": "Monitoring.tsx",
+  "src/hooks/useApiLatencyAlertSettings.ts": "ApiLatencyAlertSettingsCard.tsx",
+  "src/hooks/useAuditTrail.ts": "useAuditTrail.ts",
+  "src/hooks/useAutomationLogs.ts": "OAuthSandboxPanel.tsx",
+  "src/hooks/useAutomationsMonitor.ts": "withOrg.ts",
+  "src/hooks/useBottomNavSwipe.ts": "View",
+  "src/hooks/useCircuitBreakerAlerts.ts": "useCircuitBreakerAlerts.ts",
+  "src/hooks/useCircuitBreakers.ts": "CircuitBreakerPanel.tsx",
+  "src/hooks/useCnpjAutoEnrichSetting.ts": "3. Functions chamadas pelo frontend (28)",
+  "src/hooks/useCnpjEnrich.ts": "useCnpjEnrich.ts",
+  "src/hooks/useCompanyDetails.ts": "CompanyDetailModal",
+  "src/hooks/useCompanyReviews.ts": "react",
+  "src/hooks/useConfirm.tsx": "Index.tsx",
+  "src/hooks/useDashboardData.ts": "CampaignsView.tsx",
+  "src/hooks/useDbHealth.ts": "useDbHealth.ts",
+  "src/hooks/useDeals.ts": "useDeals.ts",
+  "src/hooks/useDlqAlertSettings.ts": "DlqHealthCard.tsx",
+  "src/hooks/useDlqHealth.ts": "DlqHealthCard.tsx",
+  "src/hooks/useDlqItems.ts": "classify.ts",
+  "src/hooks/useDlqReplay.ts": "badge.tsx",
+  "src/hooks/useDryRunLogs.ts": "OAuthSandboxPanel.tsx",
+  "src/hooks/useEmailAccountAuditLog.ts": "EmailAccountsAuditPanel.tsx",
+  "src/hooks/useEmailSuppressions.ts": "withOrg.ts",
+  "src/hooks/useEmailSyncLog.ts": "EmailSyncHistorySheet.tsx",
+  "src/hooks/useEnvProfiles.ts": "OAuthSandboxPanel.tsx",
+  "src/hooks/useFeatureFlag.ts": "FeatureFlagCache",
+  "src/hooks/useFeatureFlags.ts": "hooks/use-toast.ts",
+  "src/hooks/useFocusMode.ts": "Index.tsx",
+  "src/hooks/useICPConfig.ts": "button.tsx",
+  "src/hooks/useKeyboardShortcuts.ts": "View",
+  "src/hooks/useLoginForm.ts": "Login.tsx",
+  "src/hooks/useMFA.ts": "lucide-react",
+  "src/hooks/useMembershipAuditLog.ts": "MembershipAuditLog.tsx",
+  "src/hooks/useNavigationHistory.ts": "View",
+  "src/hooks/useNotificationCount.ts": "CampaignsView.tsx",
+  "src/hooks/useOAuthSandboxSnapshots.ts": "OAuthSnapshotsPanel.tsx",
+  "src/hooks/useOnboardingState.ts": "OnboardingTour.tsx",
+  "src/hooks/useOracleV2.ts": "useOracleV2.ts",
+  "src/hooks/useOrgProxies.ts": "button.tsx",
+  "src/hooks/useOrgRateLimit.ts": "react",
+  "src/hooks/useOrganizations.ts": "useAuth",
+  "src/hooks/usePartitionAdvisories.ts": "PartitionAdvisoryPanel.tsx",
+  "src/hooks/usePermissions.ts": "useAuth",
+  "src/hooks/usePersistedFilters.ts": "CompaniesView.tsx",
+  "src/hooks/usePlacesApiUsage.ts": "react",
+  "src/hooks/useRateLimit.ts": "Login.tsx",
+  "src/hooks/useRealtimeCompanies.ts": "CompaniesView.tsx",
+  "src/hooks/useRealtimeJobDetails.ts": "react",
+  "src/hooks/useRealtimeScrapeJobs.ts": "CompaniesView.tsx",
+  "src/hooks/useReaperAlerts.ts": "react",
+  "src/hooks/useReaperHistory.ts": "react",
+  "src/hooks/useRecentViews.ts": "CommandPalette.tsx",
+  "src/hooks/useResilienceComparison.ts": "compareReport.ts",
+  "src/hooks/useResilienceSimulator.ts": "simulator.ts",
+  "src/hooks/useScrapeQueue.ts": "ScrapeQueuePanel.tsx",
+  "src/hooks/useSidebarState.ts": "Index.tsx",
+  "src/hooks/useSkin.ts": "button.tsx",
+  "src/hooks/useSwipeGesture.ts": "View",
+  "src/hooks/useTaskReminders.ts": "useDeals.ts",
+  "src/hooks/useThemeColors.ts": "framer-motion",
+  "src/hooks/useUnsavedChanges.tsx": "App.tsx",
+  "src/hooks/useVirtualCompanies.ts": "vitest",
+  "src/hooks/useVirtualization.ts": "vitest",
+  "src/hooks/useWebScrape.ts": "WebScrapeView.tsx",
+  "src/hooks/useWebhooks.ts": "button.tsx",
+  "src/hooks/useWeeklyPerformance.ts": "CampaignsView.tsx",
+  "src/integrations/lovable/index.ts": "Login.tsx",
+  "src/integrations/supabase/__tests__/withOrg.batch.test.ts": "withOrg.ts",
+  "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts": "withOrg.ts",
+  "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts": "withOrg.ts",
+  "src/integrations/supabase/__tests__/withOrg.registry.test.ts": "withOrg.ts",
+  "src/integrations/supabase/__tests__/withOrg.switching.test.ts": "orgErrorHandler.ts",
+  "src/integrations/supabase/client.ts": "react",
+  "src/integrations/supabase/types.ts": "hooks/use-toast.ts",
+  "src/integrations/supabase/withOrg.test.ts": "withOrg.ts",
+  "src/integrations/supabase/withOrg.ts": "withOrg.ts",
+  "src/lib/__tests__/csv.test.ts": "RLSVerificationPanel.tsx",
+  "src/lib/__tests__/exportCSV.test.ts": "RLSVerificationPanel.tsx",
+  "src/lib/__tests__/orgErrorHandler.audit.test.ts": "orgErrorHandler.ts",
+  "src/lib/__tests__/orgErrorHandler.e2e.test.ts": "orgErrorHandler.ts",
+  "src/lib/__tests__/orgErrorHandler.test.ts": "orgErrorHandler.ts",
+  "src/lib/__tests__/sanitize.test.ts": "SafeHTML.tsx",
+  "src/lib/__tests__/utils.test.ts": "cn",
+  "src/lib/api/gmaps.ts": "gmaps.ts",
+  "src/lib/api/workflows.ts": "hooks/use-toast.ts",
+  "src/lib/cnpj.ts": "useCnpjEnrich.ts",
+  "src/lib/constants.ts": "lib/constants.ts",
+  "src/lib/csv.ts": "RLSVerificationPanel.tsx",
+  "src/lib/demoData.ts": "CampaignsView.tsx",
+  "src/lib/dlq/__tests__/aggregations.test.ts": "aggregations.ts",
+  "src/lib/dlq/__tests__/classify.test.ts": "classify.ts",
+  "src/lib/dlq/aggregations.ts": "aggregations.ts",
+  "src/lib/dlq/classify.ts": "classify.ts",
+  "src/lib/emailErrorMessages.ts": "EmailSyncHistorySheet.tsx",
+  "src/lib/exportAnalyticsPDF.ts": "exportAnalyticsPDF.ts",
+  "src/lib/exportCSV.ts": "RLSVerificationPanel.tsx",
+  "src/lib/exportRLSReport.ts": "RLSVerificationPanel.tsx",
+  "src/lib/lusha/__tests__/departmentMap.test.ts": "lusha/departmentMap.ts",
+  "src/lib/lusha/departmentMap.data.ts": "lusha/departmentMap.ts",
+  "src/lib/lusha/departmentMap.ts": "lusha/departmentMap.ts",
+  "src/lib/mcp/index.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/supabase.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/tools/get-company.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/tools/get-dashboard-stats.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/tools/list-companies.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/tools/list-decision-makers.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/tools/list-scrape-jobs.ts": "useCnpjEnrich.ts",
+  "src/lib/orgErrorHandler.ts": "orgErrorHandler.ts",
+  "src/lib/permissions.ts": "PermissionGate.tsx",
+  "src/lib/redirectUriChecklist.ts": "RedirectUriChecklist.tsx",
+  "src/lib/resilience/__tests__/compareReport.test.ts": "compareReport.ts",
+  "src/lib/resilience/autotune.test.ts": "autotune.ts",
+  "src/lib/resilience/autotune.ts": "autotune.ts",
+  "src/lib/resilience/compareReport.ts": "compareReport.ts",
+  "src/lib/resilience/report.ts": "simulator.ts",
+  "src/lib/resilience/scenarios.ts": "simulator.ts",
+  "src/lib/resilience/simulator.test.ts": "simulator.ts",
+  "src/lib/resilience/simulator.ts": "simulator.ts",
+  "src/lib/rlsRegistry.ts": "RLSRegistryCoverage.tsx",
+  "src/lib/sanitize.ts": "SafeHTML.tsx",
+  "src/lib/schemas/__tests__/validation.test.ts": "useCnpjEnrich.ts",
+  "src/lib/schemas/auth.ts": "Login.tsx",
+  "src/lib/schemas/campaign.ts": "useCnpjEnrich.ts",
+  "src/lib/schemas/company.ts": "useCnpjEnrich.ts",
+  "src/lib/schemas/scrapeJob.ts": "useCnpjEnrich.ts",
+  "src/lib/sourceQualityReport.test.ts": "SourceComparisonReport.tsx",
+  "src/lib/sourceQualityReport.ts": "SourceComparisonReport.tsx",
+  "src/lib/utils.ts": "button.tsx",
+  "src/lib/viewRegistry.ts": "vitest",
+  "src/main.tsx": "main.tsx",
+  "src/pages/A": "cenarios.mjs",
+  "src/pages/AcceptInvite.tsx": "useAuth",
+  "src/pages/AdminCompanies.tsx": "lucide-react",
+  "src/pages/B": "cenarios.mjs",
+  "src/pages/CnpjSettingsPage.tsx": "lucide-react",
+  "src/pages/Index.tsx": "Index.tsx",
+  "src/pages/Login.tsx": "Login.tsx",
+  "src/pages/Monitoring.tsx": "Monitoring.tsx",
+  "src/pages/NotFound.tsx": "App.tsx",
+  "src/pages/OAuthConsent.tsx": "lucide-react",
+  "src/pages/ResetPassword.tsx": "react",
+  "src/pages/admin/Admin": "gerar.unit.mjs",
+  "src/test/example.test.ts": "vitest",
+  "src/test/mockFramerMotion.ts": "vitest",
+  "src/test/setup.ts": "setup.ts",
+  "src/tests/fuzzing-validation.test.ts": "vitest",
+  "src/tests/load-stress.test.ts": "simulator.ts",
+  "src/tests/multi-tenant.test.ts": "withOrg.ts",
+  "src/views/Home.vue": "cenarios.mjs",
+  "src/vite-env.d.ts": "vite-env.d.ts",
+  "supabase/functions/_shared/__tests__/apollo-cache.test.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/_shared/__tests__/apollo-fallback.test.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/_shared/__tests__/bitrix-client.test.ts": "oracle-push-bitrix/index.ts",
+  "supabase/functions/_shared/__tests__/chaos.chi2.test.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/__tests__/chaos.stress.test.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/__tests__/chaos.test.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts": "NormalizedInstagramItem",
+  "supabase/functions/_shared/__tests__/hiker-normalize.test.ts": "NormalizedInstagramItem",
+  "supabase/functions/_shared/__tests__/instagram-config-hash.test.ts": "ref_npm_supabase",
+  "supabase/functions/_shared/__tests__/lead-identity.test.ts": "lead-identity.ts",
+  "supabase/functions/_shared/__tests__/leadcontact-client.test.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/__tests__/linkedin-url.test.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/__tests__/lusha-client.test.ts": "lusha-client.ts",
+  "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts": "scrape-queue-worker/index.ts",
+  "supabase/functions/_shared/__tests__/phone-br.test.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/__tests__/ssrf-guard.test.ts": "ssrf-guard.ts",
+  "supabase/functions/_shared/__tests__/tracking-signature.test.ts": "tracking-signature.ts",
+  "supabase/functions/_shared/__tests__/web-scrape.test.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/apify-fixtures.ts": "NormalizedInstagramItem",
+  "supabase/functions/_shared/apify-gateway.test.ts": "apify-gateway.ts",
+  "supabase/functions/_shared/apify-gateway.ts": "apify-gateway.ts",
+  "supabase/functions/_shared/apollo-cache.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/_shared/apollo-client.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/_shared/apollo-departments.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/_shared/bitrix-client.ts": "oracle-push-bitrix/index.ts",
+  "supabase/functions/_shared/circuit-breaker.ts": "scrape-queue-worker/index.ts",
+  "supabase/functions/_shared/company-domain.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/_shared/cookies.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/departmentMap.ts": "lusha-search/index.ts",
+  "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/domain/ipc/scoring.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/domain/scrape-job-machine.ts": "scrape-job-machine.ts",
+  "supabase/functions/_shared/gmaps-mapper.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/hiker-client.ts": "NormalizedInstagramItem",
+  "supabase/functions/_shared/instagram-config-hash.ts": "ref_npm_supabase",
+  "supabase/functions/_shared/lead-identity.ts": "lead-identity.ts",
+  "supabase/functions/_shared/leadcontact-client.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/linkedin-url.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/lusha-client.ts": "lusha-client.ts",
+  "supabase/functions/_shared/lusha-departments.ts": "lusha-client.ts",
+  "supabase/functions/_shared/omkar-gmaps-config.ts": "scrape-queue-worker/index.ts",
+  "supabase/functions/_shared/oracle-logger.ts": "oracle-push-bitrix/index.ts",
+  "supabase/functions/_shared/org-membership.ts": "Regras de domínio que o código não deixa óbvio — referência para agentes",
+  "supabase/functions/_shared/phone-br.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/rlsTableRegistry.ts": "rls-tests/index.ts",
+  "supabase/functions/_shared/safe-update.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/_shared/schemas.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/ssrf-guard.ts": "ssrf-guard.ts",
+  "supabase/functions/_shared/tracing.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/tracking-signature.ts": "tracking-signature.ts",
+  "supabase/functions/_shared/web-scrape/chaos.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/web-scrape/heuristics.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/web-scrape/html-to-markdown.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/_shared/web-scrape/robots.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/admin-list-companies/index.ts": "ref_https",
+  "supabase/functions/ai-agent/index.ts": "ai-agent/index.ts",
+  "supabase/functions/api-latency-alerts/index.ts": "api-latency-alerts/index.ts",
+  "supabase/functions/audit-logs-prune/index.ts": "ref_https",
+  "supabase/functions/auth-rate-limit/index.ts": "ref_https",
+  "supabase/functions/campaign-dispatch/index.ts": "campaign-dispatch/index.ts",
+  "supabase/functions/circuit-breaker-alerts/index.ts": "circuit-breaker-alerts/index.ts",
+  "supabase/functions/cnpj-enrich-worker/index.ts": "cnpj-enrich-worker/index.ts",
+  "supabase/functions/cnpj-enrich/index.ts": "cnpj-enrich/index.ts",
+  "supabase/functions/cnpj-settings-status/index.ts": "ref_npm_supabase",
+  "supabase/functions/deliverability-check/index.ts": "deliverability-check/index.ts",
+  "supabase/functions/dlq-alerts/index.ts": "ref_https",
+  "supabase/functions/email-oauth-callback/index.ts": "ref_https",
+  "supabase/functions/email-oauth-connect/index.ts": "email-oauth-connect/index.ts",
+  "supabase/functions/email-oauth-disconnect/index.ts": "ref_https",
+  "supabase/functions/email-poll-replies/index.ts": "email-poll-replies/index.ts",
+  "supabase/functions/email-verify/index.ts": "email-verify/index.ts",
+  "supabase/functions/gmaps-places-search/index.ts": "gmaps-places-search/index.ts",
+  "supabase/functions/gmaps-proxy/index.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/health/index.ts": "ref_https",
+  "supabase/functions/instagram-connection-status/index.ts": "instagram-connection-status/index.ts",
+  "supabase/functions/instagram-dlq-replay/index.ts": "ref_npm_supabase",
+  "supabase/functions/instagram-enqueue/index.ts": "ref_npm_supabase",
+  "supabase/functions/instagram-worker-health/index.ts": "apify-gateway.ts",
+  "supabase/functions/instagram-worker/index.ts": "instagram-worker/index.ts",
+  "supabase/functions/latency-alerts/index.ts": "ref_https",
+  "supabase/functions/lusha-cookie-health/index.ts": "ref_https",
+  "supabase/functions/lusha-decision-makers/index.ts": "lusha-decision-makers/index.ts",
+  "supabase/functions/lusha-reveal/index.ts": "lusha-reveal/index.ts",
+  "supabase/functions/lusha-search/index.ts": "lusha-search/index.ts",
+  "supabase/functions/mcp/index.ts": "ref_npm_supabase",
+  "supabase/functions/migrate-helper/index.ts": "migrate-helper/index.ts",
+  "supabase/functions/oracle-cookies-preflight/index.ts": "oracle-cookies-preflight/index.ts",
+  "supabase/functions/oracle-enrich-contact/index.ts": "oracle-enrich-contact/index.ts",
+  "supabase/functions/oracle-push-bitrix/index.ts": "oracle-push-bitrix/index.ts",
+  "supabase/functions/oracle-search-decisors/index.ts": "oracle-search-decisors/index.ts",
+  "supabase/functions/org-violation-alerts/index.ts": "org-violation-alerts/index.ts",
+  "supabase/functions/pg-net-watchdog/index.ts": "ref_https",
+  "supabase/functions/public-api/index.ts": "public-api/index.ts",
+  "supabase/functions/purge-soft-deleted/index.ts": "ref_npm_supabase",
+  "supabase/functions/qa-ingest-run/index.ts": "ref_npm_supabase",
+  "supabase/functions/reaper-alerts/index.ts": "reaper-alerts/index.ts",
+  "supabase/functions/retry-policy-tuner/index.ts": "retry-policy-tuner/index.ts",
+  "supabase/functions/rls-tests/_fixtures.ts": "index.test.ts",
+  "supabase/functions/rls-tests/index.test.ts": "index.test.ts",
+  "supabase/functions/rls-tests/index.ts": "rls-tests/index.ts",
+  "supabase/functions/scrape-queue-worker/index.ts": "scrape-queue-worker/index.ts",
+  "supabase/functions/sla-alerts/index.ts": "ref_https",
+  "supabase/functions/sla-auto-tune/index.ts": "sla-auto-tune/index.ts",
+  "supabase/functions/system-recovery-status/index.ts": "ref_https",
+  "supabase/functions/track-click/index.ts": "tracking-signature.ts",
+  "supabase/functions/track-open/index.ts": "tracking-signature.ts",
+  "supabase/functions/vault-cookie-health/index.ts": "vault-cookie-health/index.ts",
+  "supabase/functions/web-dlq-replay/index.ts": "ref_npm_supabase",
+  "supabase/functions/web-scrape-enqueue/index.ts": "ref_npm_supabase",
+  "supabase/functions/web-scrape-extract/index.ts": "ref_npm_supabase",
+  "supabase/functions/web-scrape-status/index.ts": "ref_https",
+  "supabase/functions/web-scrape-worker/index.ts": "web-scrape-worker/index.ts",
+  "supabase/functions/webhook-dispatcher/index.ts": "ssrf-guard.ts",
+  "supabase/functions/workflow-engine/index.ts": "workflow-engine/index.ts",
+  "supabase/migrations/20260329204544_d66f3a77-7ee1-4839-a095-939ec69f31c5.sql": "20260329204544_d66f3a77-7ee1-4839-a095-939ec69f31c5.sql",
+  "supabase/migrations/20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql": "20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql",
+  "supabase/migrations/20260329210127_fcc12cf8-75cd-4115-bc0c-044112253d94.sql": "20260329210127_fcc12cf8-75cd-4115-bc0c-044112253d94.sql",
+  "supabase/migrations/20260329230948_e4848145-36b1-4a64-bd22-24f09c5e6733.sql": "20260329230948_e4848145-36b1-4a64-bd22-24f09c5e6733.sql",
+  "supabase/migrations/20260330103933_75d0c0e8-bff6-4ebe-9593-0d6ee62a418a.sql": "20260330103933_75d0c0e8-bff6-4ebe-9593-0d6ee62a418a.sql",
+  "supabase/migrations/20260330124654_c44ea187-be01-4b43-9446-212e5fbe72b7.sql": "20260330124654_c44ea187-be01-4b43-9446-212e5fbe72b7.sql",
+  "supabase/migrations/20260330125739_f18008b7-e409-4c6c-901a-23067adeaca7.sql": "20260330125739_f18008b7-e409-4c6c-901a-23067adeaca7.sql",
+  "supabase/migrations/20260330132140_834844a2-175d-495f-94c8-b0a0a793426f.sql": "20260330132140_834844a2-175d-495f-94c8-b0a0a793426f.sql",
+  "supabase/migrations/20260331104943_bad1a93f-0ffb-4464-9289-e3fc1ccfe273.sql": "20260331104943_bad1a93f-0ffb-4464-9289-e3fc1ccfe273.sql",
+  "supabase/migrations/20260331113407_e60b6db5-9894-4230-8999-6f5365d420a3.sql": "20260331113407_e60b6db5-9894-4230-8999-6f5365d420a3.sql",
+  "supabase/migrations/20260331113456_de65eef0-aa9f-4757-a972-321770e4365c.sql": "20260331113456_de65eef0-aa9f-4757-a972-321770e4365c.sql",
+  "supabase/migrations/20260403110010_c9ab9a50-e66a-4a26-8d13-3e3ab3902f23.sql": "20260403110010_c9ab9a50-e66a-4a26-8d13-3e3ab3902f23.sql",
+  "supabase/migrations/20260403110200_9803f34c-4dce-4a8e-9a7d-1c2b644a30e2.sql": "20260403110200_9803f34c-4dce-4a8e-9a7d-1c2b644a30e2.sql",
+  "supabase/migrations/20260403110751_e7e083e1-46e4-440e-a46f-840d9e368c64.sql": "public.intent_signals",
+  "supabase/migrations/20260403110857_b35a6a5c-ab23-4bbe-9a31-cfb59de97723.sql": "20260403110857_b35a6a5c-ab23-4bbe-9a31-cfb59de97723.sql",
+  "supabase/migrations/20260403111010_d740d5b9-86ec-4ecd-b904-16c26862d921.sql": "20260403111010_d740d5b9-86ec-4ecd-b904-16c26862d921.sql",
+  "supabase/migrations/20260403111343_fcf04218-0c21-4519-8134-30c095dc484e.sql": "20260403111343_fcf04218-0c21-4519-8134-30c095dc484e.sql",
+  "supabase/migrations/20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql": "20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql",
+  "supabase/migrations/20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql": "20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql",
+  "supabase/migrations/20260404121341_c1d39760-f41e-4907-ae9c-2c85bf32c5c8.sql": "20260404121341_c1d39760-f41e-4907-ae9c-2c85bf32c5c8.sql",
+  "supabase/migrations/20260404121419_e1e0de78-f9e7-471c-8922-4c966024385a.sql": "20260404121419_e1e0de78-f9e7-471c-8922-4c966024385a.sql",
+  "supabase/migrations/20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql": "20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql",
+  "supabase/migrations/20260404121602_5006cc20-1017-4857-a2d7-22d5d8ff869a.sql": "20260404121602_5006cc20-1017-4857-a2d7-22d5d8ff869a.sql",
+  "supabase/migrations/20260404141126_5ea352ea-2ceb-435e-ba84-4aa79ef36d1e.sql": "20260404141126_5ea352ea-2ceb-435e-ba84-4aa79ef36d1e.sql",
+  "supabase/migrations/20260404152316_16dc3cfe-cf24-464a-92ac-eeb60220a5ee.sql": "20260404152316_16dc3cfe-cf24-464a-92ac-eeb60220a5ee.sql",
+  "supabase/migrations/20260404152446_c5e8b4f7-a2cd-4d33-bd8d-831605055517.sql": "20260404152446_c5e8b4f7-a2cd-4d33-bd8d-831605055517.sql",
+  "supabase/migrations/20260404152605_36571af1-2366-4aab-b018-438fca0d9aaa.sql": "20260404152605_36571af1-2366-4aab-b018-438fca0d9aaa.sql",
+  "supabase/migrations/20260404152651_8e606fe5-3288-426d-b935-23065a04d571.sql": "20260404152651_8e606fe5-3288-426d-b935-23065a04d571.sql",
+  "supabase/migrations/20260404152947_cf9e5f88-d3ec-4687-a728-5775a29da385.sql": "20260404152947_cf9e5f88-d3ec-4687-a728-5775a29da385.sql",
+  "supabase/migrations/20260404161958_3a4b9af0-c646-471a-aec4-f8538faeae01.sql": "20260404161958_3a4b9af0-c646-471a-aec4-f8538faeae01.sql",
+  "supabase/migrations/20260404163754_10399fc9-2e6c-48d9-b69a-80a3cab69139.sql": "20260404163754_10399fc9-2e6c-48d9-b69a-80a3cab69139.sql",
+  "supabase/migrations/20260404170340_25ebb312-a4d5-4b99-8fe2-a2d909983318.sql": "20260404170340_25ebb312-a4d5-4b99-8fe2-a2d909983318.sql",
+  "supabase/migrations/20260404172748_2299d1bd-90eb-4649-a208-e2badfc64dcb.sql": "20260404172748_2299d1bd-90eb-4649-a208-e2badfc64dcb.sql",
+  "supabase/migrations/20260404172812_162deed6-8fce-4297-b44d-9f65846bce7a.sql": "20260404172812_162deed6-8fce-4297-b44d-9f65846bce7a.sql",
+  "supabase/migrations/20260404184054_cb490bce-cb10-4708-8a28-890f5a1364f3.sql": "20260404184054_cb490bce-cb10-4708-8a28-890f5a1364f3.sql",
+  "supabase/migrations/20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql": "20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql",
+  "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql": "20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql",
+  "supabase/migrations/20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql": "20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql",
+  "supabase/migrations/20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql": "20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql",
+  "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql": "20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
+  "supabase/migrations/20260422204609_6b510523-45c1-4626-b18a-a3710fd205ab.sql": "public.default_org_for_current_user",
+  "supabase/migrations/20260422204954_b247c851-91f0-4dff-a45b-d9f3adc4937b.sql": "public.campaign_recipients",
+  "supabase/migrations/20260423104533_19b8cd82-90e8-416b-bb5e-9567539b58ef.sql": "20260423104533_19b8cd82-90e8-416b-bb5e-9567539b58ef.sql",
+  "supabase/migrations/20260423120024_1d1aada5-8bc8-4099-b508-8ccbd1154e69.sql": "20260423120024_1d1aada5-8bc8-4099-b508-8ccbd1154e69.sql",
+  "supabase/migrations/20260423120419_d02ef035-594f-4c5b-91c8-a1d7606f1e38.sql": "20260423120419_d02ef035-594f-4c5b-91c8-a1d7606f1e38.sql",
+  "supabase/migrations/20260423122410_ba639206-e46f-45d8-9ec1-fafe6c37954c.sql": "trg_audit_organization_members",
+  "supabase/migrations/20260423122818_177d2fb9-ab92-4aab-95c5-d80311308880.sql": "idx_email_accounts_org_scope",
+  "supabase/migrations/20260423125436_5dd91c24-c703-44bf-b049-32160029463e.sql": "public.pg_catalog_rls_tables",
+  "supabase/migrations/20260423131900_6c377a79-03ae-4330-ae2f-08ecb9cf7a74.sql": "trg_audit_email_accounts",
+  "supabase/migrations/20260423132453_085a9a2d-ac8b-4217-ab86-c846a418e14c.sql": "20260423132453_085a9a2d-ac8b-4217-ab86-c846a418e14c.sql",
+  "supabase/migrations/20260423133137_5b637dfd-6a96-4239-a9a4-3a3711f01978.sql": "public.email_sync_log",
+  "supabase/migrations/20260423133918_84d3ccb8-e713-4324-8670-2d2db1abbdd6.sql": "20260423133918_84d3ccb8-e713-4324-8670-2d2db1abbdd6.sql",
+  "supabase/migrations/20260423143453_ee5b0d4b-305d-4575-81d2-b038ba742828.sql": "20260423143453_ee5b0d4b-305d-4575-81d2-b038ba742828.sql",
+  "supabase/migrations/20260423150157_f57a14b6-3393-4672-abab-d38ffa1decb5.sql": "public.pg_columns_for_insert",
+  "supabase/migrations/20260512191102_aff07670-7c57-4490-ac63-037bca7ef086.sql": "20260512191102_aff07670-7c57-4490-ac63-037bca7ef086.sql",
+  "supabase/migrations/20260512191500_5691fe79-88f8-49df-83e9-6cf2c75b0927.sql": "20260512191500_5691fe79-88f8-49df-83e9-6cf2c75b0927.sql",
+  "supabase/migrations/20260513140150_d44106d4-96e5-428a-912a-640f138f2e57.sql": "auth",
+  "supabase/migrations/20260513140311_99494649-cb75-4b6d-bd9a-14cc962d3422.sql": "20260513140311_99494649-cb75-4b6d-bd9a-14cc962d3422.sql",
+  "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql": "20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql",
+  "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql": "20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql",
+  "supabase/migrations/20260513143216_1200e575-1c81-4255-9bb2-c14bd865f321.sql": "20260513143216_1200e575-1c81-4255-9bb2-c14bd865f321.sql",
+  "supabase/migrations/20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql": "20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql",
+  "supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql": "20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql",
+  "supabase/migrations/20260513165326_4ad435d8-1535-46a2-84a3-f3113621bbe1.sql": "auth",
+  "supabase/migrations/20260514211421_9d99a881-4a49-4c7b-94d9-11ff8b66f4c9.sql": "20260514211421_9d99a881-4a49-4c7b-94d9-11ff8b66f4c9.sql",
+  "supabase/migrations/20260514211452_c31dffa4-ed7a-43fb-9896-a20421da8146.sql": "20260514211452_c31dffa4-ed7a-43fb-9896-a20421da8146.sql",
+  "supabase/migrations/20260514211516_141f1243-ae7f-46cc-8b99-e333c0a23096.sql": "20260514211516_141f1243-ae7f-46cc-8b99-e333c0a23096.sql",
+  "supabase/migrations/20260514211542_982362c3-0081-4604-a462-df6dc5649999.sql": "20260514211542_982362c3-0081-4604-a462-df6dc5649999.sql",
+  "supabase/migrations/20260514211631_6b19ac15-65fa-4c53-a169-c42ed4aebda8.sql": "20260514211631_6b19ac15-65fa-4c53-a169-c42ed4aebda8.sql",
+  "supabase/migrations/20260514211919_096ed609-61bf-4adc-a549-2931a1b631a7.sql": "20260514211919_096ed609-61bf-4adc-a549-2931a1b631a7.sql",
+  "supabase/migrations/20260521103715_d2571b90-df4c-4609-9cf1-60e04325c097.sql": "20260521103715_d2571b90-df4c-4609-9cf1-60e04325c097.sql",
+  "supabase/migrations/20260521103730_7cf08e42-fb4b-4834-b09a-870cbbb23c6b.sql": "20260521103730_7cf08e42-fb4b-4834-b09a-870cbbb23c6b.sql",
+  "supabase/migrations/20260522142002_01f908df-71d7-469f-aa7a-fa389e561b44.sql": "public.get_dashboard_stats",
+  "supabase/migrations/20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql": "20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql",
+  "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql": "public.automation_steps",
+  "supabase/migrations/20260529192436_e9ae6a02-9480-457e-9348-b74fd77f7ac7.sql": "20260529192436_e9ae6a02-9480-457e-9348-b74fd77f7ac7.sql",
+  "supabase/migrations/20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql": "20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql",
+  "supabase/migrations/20260711153051_650d9a36-dbaf-4eb1-bef0-39d6d56d94d1.sql": "20260711153051_650d9a36-dbaf-4eb1-bef0-39d6d56d94d1.sql",
+  "supabase/migrations/20260711153418_e0bbe10e-6494-4862-87c8-48bf3b9e488d.sql": "20260711153418_e0bbe10e-6494-4862-87c8-48bf3b9e488d.sql",
+  "supabase/migrations/20260711164350_a039d6a7-9068-401a-b17e-eed3d3f33a10.sql": "20260711164350_a039d6a7-9068-401a-b17e-eed3d3f33a10.sql",
+  "supabase/migrations/20260711164411_5d966de7-799d-42df-932e-2d578b861a7e.sql": "20260711164411_5d966de7-799d-42df-932e-2d578b861a7e.sql",
+  "supabase/migrations/20260711174027_42346d35-19a8-464a-a5ee-16dfa967d334.sql": "public.campaign_ab_stats",
+  "supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql": "public.decide_ab_winner",
+  "supabase/migrations/20260711175945_67e29e04-fe5c-4289-b936-b748b112dae5.sql": "20260711175945_67e29e04-fe5c-4289-b936-b748b112dae5.sql",
+  "supabase/migrations/20260711182448_78ef4fa7-e466-45a0-a375-8906c868d031.sql": "20260711182448_78ef4fa7-e466-45a0-a375-8906c868d031.sql",
+  "supabase/migrations/20260711182519_19e18792-2bb1-4fa2-8db8-83d3e223d6c8.sql": "20260711182519_19e18792-2bb1-4fa2-8db8-83d3e223d6c8.sql",
+  "supabase/migrations/20260711182609_359679b5-9ff3-4263-abe3-752986dea8b8.sql": "20260711182609_359679b5-9ff3-4263-abe3-752986dea8b8.sql",
+  "supabase/migrations/20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql": "20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql",
+  "supabase/migrations/20260711183901_d5b3528d-dfa1-47f7-962c-d8a73d6e4385.sql": "update_automation_alerts_updated_at",
+  "supabase/migrations/20260711185013_f352702d-a680-4b7a-916a-0de5cfc603b7.sql": "20260711185013_f352702d-a680-4b7a-916a-0de5cfc603b7.sql",
+  "supabase/migrations/20260711185104_1630c8d9-739c-44fa-b597-c796ba7933d8.sql": "20260711185104_1630c8d9-739c-44fa-b597-c796ba7933d8.sql",
+  "supabase/migrations/20260711192400_26c50f96-8a74-4748-a7be-fcb765075af0.sql": "20260711192400_26c50f96-8a74-4748-a7be-fcb765075af0.sql",
+  "supabase/migrations/20260711192630_fcde3421-0316-4556-9d2a-472ae6ad44e2.sql": "20260711192630_fcde3421-0316-4556-9d2a-472ae6ad44e2.sql",
+  "supabase/migrations/20260711192934_2f27e9dc-bea7-4fed-8416-b35cfae827c1.sql": "idx_notifications_unread",
+  "supabase/migrations/20260711194630_f09ee03f-356a-438c-9f24-083d7880727c.sql": "20260711194630_f09ee03f-356a-438c-9f24-083d7880727c.sql",
+  "supabase/migrations/20260711194801_de8e001f-133b-410a-aef1-f581148ec428.sql": "idx_audit_org_violations",
+  "supabase/migrations/20260712110236_bf7b457e-ffb9-463a-bb6c-d29646bd8bc1.sql": "idx_email_sync_log_created",
+  "supabase/migrations/20260712112638_42e21fe1-53f4-4a40-98e2-d60931b3ab61.sql": "20260712112638_42e21fe1-53f4-4a40-98e2-d60931b3ab61.sql",
+  "supabase/migrations/20260712112725_a7208c18-129a-485e-850f-04d94000de8b.sql": "20260712112725_a7208c18-129a-485e-850f-04d94000de8b.sql",
+  "supabase/migrations/20260712112941_b8b623ce-a575-4757-98d5-1422d1ac9c66.sql": "20260712112941_b8b623ce-a575-4757-98d5-1422d1ac9c66.sql",
+  "supabase/migrations/20260712115310_a6b5f87c-88c5-4e41-addd-e5f35dff46ff.sql": "20260712115310_a6b5f87c-88c5-4e41-addd-e5f35dff46ff.sql",
+  "supabase/migrations/20260712115533_494285b7-bad1-4212-b80a-d3b0b7a212ac.sql": "20260712115533_494285b7-bad1-4212-b80a-d3b0b7a212ac.sql",
+  "supabase/migrations/20260712183806_e5a47f1b-5acb-4925-8862-6b201a553e15.sql": "public.capture_db_health_snapshot",
+  "supabase/migrations/20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql": "20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql",
+  "supabase/migrations/20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql": "20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql",
+  "supabase/migrations/20260712185444_c1c9c166-656a-49ca-8a1d-67dee4fddea0.sql": "20260712185444_c1c9c166-656a-49ca-8a1d-67dee4fddea0.sql",
+  "supabase/migrations/20260712192136_d1537905-fe42-44d1-895b-0575288af134.sql": "20260712192136_d1537905-fe42-44d1-895b-0575288af134.sql",
+  "supabase/migrations/20260712192158_582dac30-4c90-451a-88ff-99ea40438c03.sql": "20260712192158_582dac30-4c90-451a-88ff-99ea40438c03.sql",
+  "supabase/migrations/20260712192505_fabf24d3-3e91-43d9-8eb4-da7c7ba504e0.sql": "public.replay_dead_letter_batch",
+  "supabase/migrations/20260712193650_6a6d3b0a-39c4-4681-8273-82b2c2880329.sql": "20260712193650_6a6d3b0a-39c4-4681-8273-82b2c2880329.sql",
+  "supabase/migrations/20260712194532_9abe125d-6680-4fc4-a970-6b38016ca698.sql": "20260712194532_9abe125d-6680-4fc4-a970-6b38016ca698.sql",
+  "supabase/migrations/20260712195044_12db549b-7825-4961-a631-6d62b64c4e79.sql": "public.dlq_health_metrics",
+  "supabase/migrations/20260712195304_af0be010-9de3-4b89-a80b-ca8cd03fb754.sql": "20260712195304_af0be010-9de3-4b89-a80b-ca8cd03fb754.sql",
+  "supabase/migrations/20260712195509_f5608513-95f0-4f4d-8157-5e5da2e7326e.sql": "20260712195509_f5608513-95f0-4f4d-8157-5e5da2e7326e.sql",
+  "supabase/migrations/20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql": "20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql",
+  "supabase/migrations/20260712200213_b4344f28-90cf-4c1a-bdb9-2b6fdf0bc489.sql": "20260712200213_b4344f28-90cf-4c1a-bdb9-2b6fdf0bc489.sql",
+  "supabase/migrations/20260712215946_4665e0be-701c-41fa-b424-ee36ac565a53.sql": "20260712215946_4665e0be-701c-41fa-b424-ee36ac565a53.sql",
+  "supabase/migrations/20260712220335_611599d7-cb37-4d2a-b6b3-cf3e8d92954f.sql": "public.api_latency_stats",
+  "supabase/migrations/20260712220610_e12037cd-584f-4f4f-9904-cc6ee392c473.sql": "public.api_latency_trend",
+  "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql": "20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql",
+  "supabase/migrations/20260712221625_13d2f127-8db7-43a0-81e5-c877ce412a30.sql": "20260712221625_13d2f127-8db7-43a0-81e5-c877ce412a30.sql",
+  "supabase/migrations/20260712221649_ebd72ce1-f9b5-4de9-88f8-d5a40fbad66f.sql": "20260712221649_ebd72ce1-f9b5-4de9-88f8-d5a40fbad66f.sql",
+  "supabase/migrations/20260713105447_ce775607-1a01-4760-94c5-0981af8ba71f.sql": "20260713105447_ce775607-1a01-4760-94c5-0981af8ba71f.sql",
+  "supabase/migrations/20260713105603_d601c0b9-2f44-4c0e-9109-aba4a2fb6093.sql": "20260713105603_d601c0b9-2f44-4c0e-9109-aba4a2fb6093.sql",
+  "supabase/migrations/20260713122625_aed346ac-523d-4112-87cf-9202033ade20.sql": "20260713122625_aed346ac-523d-4112-87cf-9202033ade20.sql",
+  "supabase/migrations/20260713123502_4fc8df5b-c6d1-43ca-97e4-bf37d2882dcc.sql": "20260713123502_4fc8df5b-c6d1-43ca-97e4-bf37d2882dcc.sql",
+  "supabase/migrations/20260713123956_65226e2c-cbf5-4be1-885c-dd7d248c6e4c.sql": "20260713123956_65226e2c-cbf5-4be1-885c-dd7d248c6e4c.sql",
+  "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql": "lusha_contacts_company_linkedin_url_idx",
+  "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql": "20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql",
+  "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql": "20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
+  "supabase/migrations/20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql": "20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql",
+  "supabase/migrations/20260715170247_637d3fdc-8e6d-4d53-adc7-3921479e5413.sql": "20260715170247_637d3fdc-8e6d-4d53-adc7-3921479e5413.sql",
+  "supabase/migrations/20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql": "20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql",
+  "supabase/migrations/20260715170411_d78dbcae-7de5-419d-8e89-a88f64ad3211.sql": "20260715170411_d78dbcae-7de5-419d-8e89-a88f64ad3211.sql",
+  "supabase/migrations/20260715170429_60ef5195-eadf-4adc-843a-f23012c9aa3a.sql": "public.oracle_v2_health",
+  "supabase/migrations/20260715173951_fc973fc4-d422-460e-b82c-d3d126464d49.sql": "20260715173951_fc973fc4-d422-460e-b82c-d3d126464d49.sql",
+  "supabase/migrations/20260715182138_2a0b5d35-f32a-4c13-9ab6-a39dc35c42bc.sql": "20260715182138_2a0b5d35-f32a-4c13-9ab6-a39dc35c42bc.sql",
+  "supabase/migrations/20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql": "20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql",
+  "supabase/migrations/20260715203137_54228599-d263-451d-953e-efa5710f18d7.sql": "20260715203137_54228599-d263-451d-953e-efa5710f18d7.sql",
+  "supabase/migrations/20260716095432_d1d45275-5c29-4f8d-a36f-d7b581603a7d.sql": "20260716095432_d1d45275-5c29-4f8d-a36f-d7b581603a7d.sql",
+  "supabase/migrations/20260718130402_ef60043d-069a-449a-b9b5-d7d0ea630e4d.sql": "20260718130402_ef60043d-069a-449a-b9b5-d7d0ea630e4d.sql",
+  "supabase/migrations/20260718140000_a1f0c2b3-8d5e-4a6f-9c1d-7e2b4f8a3c9d.sql": "uq_companies_org_name_source",
+  "supabase/migrations/20260718140500_b2e1d3c4-9f6a-4b7c-8d2e-1a3f5c7b9e0f.sql": "20260718140500_b2e1d3c4-9f6a-4b7c-8d2e-1a3f5c7b9e0f.sql",
+  "supabase/migrations/20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql": "20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql",
+  "supabase/migrations/20260718141500_d4a3b5c6-1e8f-4a9b-8c2d-3f5a7b9c1d0e.sql": "20260718141500_d4a3b5c6-1e8f-4a9b-8c2d-3f5a7b9c1d0e.sql",
+  "supabase/migrations/20260718142849_bd7de427-fd00-4cf5-a9fb-5a85f8056fab.sql": "20260718142849_bd7de427-fd00-4cf5-a9fb-5a85f8056fab.sql",
+  "supabase/migrations/20260718143044_0ccbc1a5-0e7d-4602-81a6-267427d87a48.sql": "lusha_contacts_org_name_title_no_li_uk",
+  "supabase/migrations/20260720120000_e5b4c6d7-2f9a-4b1c-8d3e-4a6b8c0d2e1f.sql": "public.create_default_deal_stages",
+  "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql": "20260721083823_A1-assert-service-or-admin-guard.sql",
+  "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql": "20260721084800_A3A4-extensions-audit-partial-indexes.sql",
+  "supabase/migrations/20260721153915_e8a116a4-b2cd-4487-8ec1-a4c063177193.sql": "20260721153915_e8a116a4-b2cd-4487-8ec1-a4c063177193.sql",
+  "supabase/migrations/20260721154002_b5764fd0-5b2a-4bc4-97d1-7cf2a35dd170.sql": "20260721154002_b5764fd0-5b2a-4bc4-97d1-7cf2a35dd170.sql",
+  "supabase/migrations/20260721160013_fa8d923f-e212-499f-b404-5c6679ef0510.sql": "20260721160013_fa8d923f-e212-499f-b404-5c6679ef0510.sql",
+  "supabase/migrations/20260721160130_e5e286aa-5116-4c57-b798-8efc7f234642.sql": "20260721160130_e5e286aa-5116-4c57-b798-8efc7f234642.sql",
+  "supabase/migrations/20260721160317_0ec1e345-b66a-44eb-aca3-e7a8fc7a931e.sql": "20260721160317_0ec1e345-b66a-44eb-aca3-e7a8fc7a931e.sql",
+  "supabase/migrations/20260721160918_6cc0f3f2-57f2-4e9b-925f-69dbc13fdc40.sql": "20260721160918_6cc0f3f2-57f2-4e9b-925f-69dbc13fdc40.sql",
+  "supabase/migrations/20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql": "20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql",
+  "supabase/migrations/20260721165045_6f6a09bf-e24c-45b7-934e-ea11eccdbb0a.sql": "public.company_reviews",
+  "supabase/migrations/20260721173318_793c82ac-697e-441f-8ec6-774c564bcad5.sql": "20260721173318_793c82ac-697e-441f-8ec6-774c564bcad5.sql",
+  "supabase/migrations/20260721202447_89e985ca-54bf-4b99-820b-fd8f8622ee5c.sql": "20260721202447_89e985ca-54bf-4b99-820b-fd8f8622ee5c.sql",
+  "supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql": "20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql",
+  "supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql": "20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql",
+  "supabase/migrations/20260721224926_272e3afc-5f57-4804-89b2-f246c4a8f56b.sql": "20260721224926_272e3afc-5f57-4804-89b2-f246c4a8f56b.sql",
+  "supabase/migrations/20260721225123_bfbbec07-9762-44f1-8edc-9a0099b65a54.sql": "20260721225123_bfbbec07-9762-44f1-8edc-9a0099b65a54.sql",
+  "supabase/migrations/20260721225534_28c2ba63-b892-4c2a-bcbb-a4b31f0423de.sql": "public.enrichment_funnel_counts",
+  "supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql": "20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql",
+  "supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql": "20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql",
+  "supabase/migrations/20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql": "20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql",
+  "supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql": "20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql",
+  "supabase/migrations/20260721230311_59215542-a0b3-4468-b60a-b80b411a334f.sql": "20260721230311_59215542-a0b3-4468-b60a-b80b411a334f.sql",
+  "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql": "20260721235001_C13-campaign-warmup-throttling.sql",
+  "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql": "20260721235500_C14-ab-testing-assignment-chisquare.sql",
+  "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql": "20260722000001_D18-durable-workflow-execution.sql",
+  "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql": "20260722000500_H37-company-analytics-rpcs.sql",
+  "supabase/migrations/20260722100434_bdd6f199-0d46-4fa4-bb84-e5a2328002ff.sql": "20260722100434_bdd6f199-0d46-4fa4-bb84-e5a2328002ff.sql",
+  "supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql": "20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql",
+  "supabase/migrations/20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql": "20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql",
+  "supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql": "20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql",
+  "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql": "20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql",
+  "supabase/migrations/20260722114256_52e41091-6d26-4aac-b35a-9a38958ee119.sql": "20260722114256_52e41091-6d26-4aac-b35a-9a38958ee119.sql",
+  "supabase/migrations/20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql": "20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql",
+  "supabase/migrations/20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql": "20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql",
+  "supabase/migrations/20260722124907_fd724c3f-8336-49ef-94e6-e6169bfdff71.sql": "20260722124907_fd724c3f-8336-49ef-94e6-e6169bfdff71.sql",
+  "supabase/migrations/20260722175719_bc65f7c3-ebe4-42e1-8559-2c60f13f0825.sql": "20260722175719_bc65f7c3-ebe4-42e1-8559-2c60f13f0825.sql",
+  "supabase/migrations/20260723105701_8063c052-209d-42e5-a34b-bd3c0f8427a5.sql": "20260723105701_8063c052-209d-42e5-a34b-bd3c0f8427a5.sql",
+  "supabase/migrations/20260723111342_642b5cfb-820d-4c3c-b1dc-eac594948b66.sql": "20260723111342_642b5cfb-820d-4c3c-b1dc-eac594948b66.sql",
+  "supabase/migrations/20260723112022_e904c624-2f37-4bdd-9306-7cd30686d530.sql": "public.replay_instagram_dead_letter_batch",
+  "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql": "public.replay_web_dead_letter_batch",
+  "supabase/migrations/20260723132331_88c31cec-6b47-4273-8e02-34f93b65ae7c.sql": "20260723132331_88c31cec-6b47-4273-8e02-34f93b65ae7c.sql",
+  "supabase/migrations/20260723134028_4f3b5c29-1e04-4d63-95d1-2bb0f069e917.sql": "public.reap_stuck_queue_tasks",
+  "supabase/migrations/20260723134109_2acc68d5-41a1-4e6b-95da-fa78c5d5ecfe.sql": "uq_scrape_queue_idempotent",
+  "supabase/migrations/20260723134142_64b0c107-acb2-456a-92a7-b2663a345b9f.sql": "20260723134142_64b0c107-acb2-456a-92a7-b2663a345b9f.sql",
+  "supabase/migrations/20260723134206_c5ca49d6-3253-4b13-b140-8cdc45f1c540.sql": "20260723134206_c5ca49d6-3253-4b13-b140-8cdc45f1c540.sql",
+  "supabase/migrations/20260723134531_f77388b6-b216-4262-9ea4-6e3e39c80115.sql": "20260723134531_f77388b6-b216-4262-9ea4-6e3e39c80115.sql",
+  "supabase/migrations/20260723134607_c87d89db-1d71-4e34-a4a1-e25d9aab0e75.sql": "20260723134607_c87d89db-1d71-4e34-a4a1-e25d9aab0e75.sql",
+  "supabase/migrations/20260723141937_f8cf0e61-609b-49e1-a283-8fb8984bef9d.sql": "20260723141937_f8cf0e61-609b-49e1-a283-8fb8984bef9d.sql",
+  "supabase/migrations/20260723144010_2525cec3-3fcd-4cb8-8fef-2bd49b8eab07.sql": "20260723144010_2525cec3-3fcd-4cb8-8fef-2bd49b8eab07.sql",
+  "supabase/migrations/20260723150225_fb8193f0-094c-4ac8-ad38-3c019ce5e6fc.sql": "public.sla_compliance_stats",
+  "supabase/migrations/20260723150429_c3feaad4-fe1d-4e25-93c8-5b45c6e7f364.sql": "20260723150429_c3feaad4-fe1d-4e25-93c8-5b45c6e7f364.sql",
+  "supabase/migrations/20260723151608_e6d6bea6-4782-4c65-8e71-dc20990d36a2.sql": "20260723151608_e6d6bea6-4782-4c65-8e71-dc20990d36a2.sql",
+  "supabase/migrations/20260723163333_1a069315-7a41-4119-8840-208bbca5fe89.sql": "20260723163333_1a069315-7a41-4119-8840-208bbca5fe89.sql",
+  "supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql": "20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql",
+  "supabase/migrations/20260726155007_1bc2bc20-1099-479c-ae2f-427494728966.sql": "20260726155007_1bc2bc20-1099-479c-ae2f-427494728966.sql",
+  "supabase/migrations/20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql": "20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql",
+  "supabase/migrations/20260726155257_19eb0b4e-2ced-4a33-8a29-4cafd93ebc8b.sql": "20260726155257_19eb0b4e-2ced-4a33-8a29-4cafd93ebc8b.sql",
+  "supabase/migrations/20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql": "20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql",
+  "supabase/migrations/20260726155525_626a7b8e-d901-4f7c-a87d-189e95616df8.sql": "public.auto_tune_queue_slas",
+  "supabase/migrations/20260726160203_640f5eb2-d3a6-4330-b600-07d3704b3d1c.sql": "20260726160203_640f5eb2-d3a6-4330-b600-07d3704b3d1c.sql",
+  "supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql": "public.sla_autotune_blocked_streaks",
+  "supabase/migrations/20260726201409_b6d8aaf8-7bc5-45db-87ad-f2f1bc71a2ec.sql": "idx_lusha_contacts_source_apollo",
+  "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql": "20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql",
+  "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql": "public.source_quality_report",
+  "tailwind.config.ts": "package.json",
+  "tsconfig.app.json": "compilerOptions",
+  "tsconfig.json": "compilerOptions",
+  "tsconfig.node.json": "compilerOptions",
+  "vite.config.ts": "vite.config.ts",
+  "vitest.config.ts": "vite.config.ts"
+ }
+}

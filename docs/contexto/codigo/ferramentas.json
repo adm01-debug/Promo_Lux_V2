@@ -1,0 +1,1123 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "stack": {
+  "linguagens": [
+   "TypeScript (616)",
+   "SQL (216)",
+   "Markdown (72)",
+   "JSON (32)",
+   "JavaScript (11)",
+   "Shell (10)",
+   "YAML (6)",
+   "Python (5)"
+  ],
+  "linguagem_principal": "TypeScript",
+  "framework": "React",
+  "backend_http": [],
+  "bundler": "Vite",
+  "roteador": "react-router",
+  "banco": "Supabase",
+  "testes": [
+   "vitest",
+   "playwright"
+  ],
+  "ui": [
+   "tailwind",
+   "radix/shadcn"
+  ],
+  "estado": [
+   "react-query"
+  ],
+  "gerenciador_pacotes": "bun",
+  "node": null,
+  "python": null,
+  "deploy": [],
+  "monorepo": null,
+  "pastas_fonte": [
+   "src"
+  ]
+ },
+ "workspaces": [],
+ "package": {
+  "nome": "vite_react_shadcn_ts",
+  "versao": "1.0.0",
+  "scripts": {
+   "analyze": "vite-bundle-visualizer",
+   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
+   "build:dev": "vite build --mode development",
+   "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
+   "contexto:ia:test": "node --test scripts/ai-context/gerar.unit.mjs",
+   "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
+   "contexto:supabase": "python3 scripts/supabase_snapshot/snapshot.py",
+   "db:diff": "supabase db diff --local --schema public",
+   "db:lint": "bash scripts/check-migrations.sh",
+   "db:new": "supabase migration new",
+   "db:plan": "supabase db push --dry-run --linked",
+   "db:reset": "supabase db reset",
+   "db:start": "supabase start",
+   "db:status": "supabase migration list --linked",
+   "db:stop": "supabase stop",
+   "db:verify": "npm run db:lint && supabase db reset",
+   "dev": "vite",
+   "format": "prettier --write .",
+   "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
+   "graph:setup": "bash scripts/graphify/setup.sh",
+   "graph:update": "graphify update .",
+   "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
+   "lint": "eslint .",
+   "prepare": "husky",
+   "preview": "vite preview",
+   "test": "vitest run",
+   "test:audit-triggers": "bash scripts/check-audit-triggers.sh",
+   "test:coverage": "vitest run --coverage",
+   "test:e2e": "playwright test",
+   "test:grants": "bash scripts/check-function-grants.sh",
+   "test:watch": "vitest"
+  },
+  "dependencias": 64,
+  "dev_dependencias": 31,
+  "principais": {
+   "@supabase/supabase-js": "^2.101.1",
+   "@tanstack/react-query": "^5.96.2",
+   "date-fns": "^4.1.0",
+   "framer-motion": "^12.38.0",
+   "next-themes": "0.3",
+   "react": "19",
+   "react-day-picker": "8",
+   "react-dom": "19",
+   "react-hook-form": "7",
+   "react-leaflet": "5.0.0",
+   "react-resizable-panels": "2",
+   "react-router-dom": "6",
+   "recharts": "2",
+   "tailwindcss-animate": "^1.0.7",
+   "zod": "^3.25.76"
+  },
+  "engines": null,
+  "packageManager": null
+ },
+ "python": {
+  "dependencias": [
+   "psycopg"
+  ]
+ },
+ "configs": [
+  ".husky/pre-commit",
+  "ai-context.config.json",
+  "commitlint.config.cjs",
+  "commitlint.config.js",
+  "components.json",
+  "eslint.config.js",
+  "package.json",
+  "playwright.config.ts",
+  "postcss.config.js",
+  "supabase/config.toml",
+  "tailwind.config.ts",
+  "tsconfig.app.json",
+  "tsconfig.json",
+  "tsconfig.node.json",
+  "vite.config.ts",
+  "vitest.config.ts"
+ ],
+ "workflows": [
+  {
+   "arquivo": ".github/workflows/ci.yml",
+   "nome": "ci.yml",
+   "gatilhos": [],
+   "crons": [],
+   "branches": [],
+   "jobs": [],
+   "permissoes": [],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": []
+  },
+  {
+   "arquivo": ".github/workflows/contexto.yml",
+   "nome": "Contexto para agentes de IA (10 min)",
+   "gatilhos": [
+    "push",
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "3-59/10 * * * *"
+   ],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "gate",
+    "codigo",
+    "banco",
+    "regras",
+    "publicar"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/ai-context/gerar.mjs",
+    "scripts/regras_negocio/generate.py",
+    "scripts/regras_negocio/indice.py",
+    "scripts/supabase_snapshot/snapshot.py"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_DB_URL"
+   ],
+   "actions": [
+    "actions/cache",
+    "actions/checkout",
+    "actions/download-artifact",
+    "actions/setup-node",
+    "actions/upload-artifact"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/db-migrations.yml",
+   "nome": "Database Migrations",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main",
+    "master"
+   ],
+   "jobs": [
+    "lint",
+    "shadow",
+    "plan",
+    "apply"
+   ],
+   "permissoes": [],
+   "scripts_usados": [
+    "scripts/check-migration-target.sh",
+    "scripts/check-migrations.sh"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_ACCESS_TOKEN",
+    "SUPABASE_DB_PASSWORD"
+   ],
+   "actions": [
+    "actions/checkout",
+    "supabase/setup-cli"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/edge-tests-daily.yml",
+   "nome": "Edge Functions Daily Tests (Deno)",
+   "gatilhos": [
+    "pull_request",
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "0 7 * * *"
+   ],
+   "branches": [],
+   "jobs": [
+    "deno-edge-tests"
+   ],
+   "permissoes": [],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/cache",
+    "actions/checkout",
+    "denoland/setup-deno"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+   "nome": "Inventário do estado real (semanal)",
+   "gatilhos": [
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "23 10 * * 1"
+   ],
+   "branches": [],
+   "jobs": [
+    "gerar"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/inventario/gerar-repo.mjs",
+    "scripts/inventario/mudou-conteudo.mjs"
+   ],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/setup-node",
+    "actions/upload-artifact",
+    "peter-evans/create-pull-request"
+   ]
+  }
+ ],
+ "hooks_git": [
+  {
+   "arquivo": ".husky/pre-commit",
+   "comandos": [
+    "bun run lint && bunx tsc --noEmit && bun run test"
+   ]
+  }
+ ],
+ "docs_raiz": [
+  {
+   "arquivo": "AGENTS.md",
+   "titulo": "AGENTS.md — Promo Lux V2 (LUX IA)",
+   "linhas": 157
+  },
+  {
+   "arquivo": "CHANGELOG.md",
+   "titulo": "Changelog",
+   "linhas": 53
+  },
+  {
+   "arquivo": "CLAUDE.md",
+   "titulo": null,
+   "linhas": 2
+  },
+  {
+   "arquivo": "CONTRIBUTING.md",
+   "titulo": "📐 Guia de Contribuição — LUX IA",
+   "linhas": 29
+  },
+  {
+   "arquivo": "README.md",
+   "titulo": "LUX IA — Sistema de Prospecção B2B Inteligente",
+   "linhas": 280
+  },
+  {
+   "arquivo": "docs/AUDITORIA_BACKEND_SENIOR.md",
+   "titulo": "Auditoria Back-End Sênior — LUX IA",
+   "linhas": 136
+  },
+  {
+   "arquivo": "docs/AUDITORIA_FINAL_LUX_IA.md",
+   "titulo": "📝 Relatório de Auditoria Enterprise — LUX IA (v10.0)",
+   "linhas": 89
+  },
+  {
+   "arquivo": "docs/AUDITORIA_FIRECRAWL.md",
+   "titulo": "Auditoria de Paridade — LUX IA vs Firecrawl",
+   "linhas": 199
+  },
+  {
+   "arquivo": "docs/ESTADO_ATUAL.md",
+   "titulo": "ESTADO ATUAL DO SISTEMA — LUX IA",
+   "linhas": 297
+  },
+  {
+   "arquivo": "docs/FUNCIONALIDADES.md",
+   "titulo": "LUX IA — Análise Executiva de Funcionalidades",
+   "linhas": 455
+  },
+  {
+   "arquivo": "docs/GAPS-ENTERPRISE.md",
+   "titulo": "LUX IA — Gaps Enterprise",
+   "linhas": 408
+  },
+  {
+   "arquivo": "docs/LGPD.md",
+   "titulo": "🛡️ Relatório de Conformidade LGPD — LUX IA",
+   "linhas": 45
+  },
+  {
+   "arquivo": "docs/LUSHA-INTEGRATION.md",
+   "titulo": "Lusha Intelligence — Integração LUX",
+   "linhas": 181
+  },
+  {
+   "arquivo": "docs/ORACLE_V2.md",
+   "titulo": "Oracle v2 — Runbook",
+   "linhas": 123
+  },
+  {
+   "arquivo": "docs/apify-mock-mode.md",
+   "titulo": "Apify Mock Mode (Dev / E2E)",
+   "linhas": 51
+  },
+  {
+   "arquivo": "docs/auditoria-backend-2026-07-12.md",
+   "titulo": "Auditoria Profunda de Back-End — LUX IA",
+   "linhas": 106
+  },
+  {
+   "arquivo": "docs/auth.md",
+   "titulo": null,
+   "linhas": 1
+  },
+  {
+   "arquivo": "docs/edge-functions.md",
+   "titulo": "Edge Functions — Documentação",
+   "linhas": 202
+  },
+  {
+   "arquivo": "docs/erd.md",
+   "titulo": "🗺️ Diagrama Entidade-Relacionamento (ERD)",
+   "linhas": 78
+  },
+  {
+   "arquivo": "docs/pesquisa-oss-linkedin-enrichment.md",
+   "titulo": "Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn",
+   "linhas": 184
+  },
+  {
+   "arquivo": "docs/schema-tabelas-principais.md",
+   "titulo": "Schema das Tabelas Principais — LUX IA",
+   "linhas": 1189
+  },
+  {
+   "arquivo": "docs/webhooks.md",
+   "titulo": "Webhooks — Guia de Integração",
+   "linhas": 115
+  }
+ ],
+ "docs_em_subpastas": [
+  {
+   "pasta": "docs/adr",
+   "arquivos_md": 29
+  },
+  {
+   "pasta": "docs/agentes",
+   "arquivos_md": 6
+  },
+  {
+   "pasta": "docs/estado",
+   "arquivos_md": 5
+  },
+  {
+   "pasta": "docs/runbooks",
+   "arquivos_md": 3
+  },
+  {
+   "pasta": "docs/contexto",
+   "arquivos_md": 1
+  }
+ ],
+ "changelog_topo": "[Unreleased] - 2026-07-22",
+ "env": {
+  "declaradas_no_env_example": [],
+  "usadas_no_front": [
+   "DEV",
+   "PROD",
+   "SUPABASE_PUBLISHABLE_KEY",
+   "SUPABASE_URL",
+   "VITE_ADMIN_LIST_TOKEN",
+   "VITE_SUPABASE_PROJECT_ID",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "usadas_nas_edges": [
+   "ADMIN_LIST_TOKEN",
+   "APIFY_API_KEY",
+   "APIFY_MOCK_FAULTS",
+   "APIFY_MOCK_MODE",
+   "APIFY_TOKEN",
+   "APOLLO_API_KEY",
+   "APP_ENV",
+   "BITRIX_WEBHOOK_BASE",
+   "BRIGHTDATA_API_TOKEN",
+   "CNPJA_API_KEY",
+   "CNPJA_LIMIT_RPM",
+   "CNPJA_OPEN_LIMIT_RPM",
+   "CNPJ_WORKER_BATCH",
+   "EXTERNAL_VAULT_ANON_KEY",
+   "GMAPS_OMKAR_API_KEY",
+   "GMAPS_OMKAR_BASE_URL",
+   "GMAPS_PROVIDER",
+   "GOOGLE_MAPS_API_KEY",
+   "GOOGLE_OAUTH_CLIENT_ID",
+   "GOOGLE_OAUTH_CLIENT_SECRET",
+   "HIKER_API_KEY",
+   "HIKER_MOCK_MODE",
+   "INSTAGRAM_WORKER_BATCH",
+   "LOVABLE_API_KEY",
+   "LUSHA_API_KEY",
+   "LUSHA_DAILY_QUOTA",
+   "MS_OAUTH_CLIENT_ID",
+   "MS_OAUTH_CLIENT_SECRET",
+   "QA_INGEST_TOKEN",
+   "SUPABASE_ANON_KEY",
+   "SUPABASE_DB_URL",
+   "SUPABASE_EXTERNAL_ANON_KEY",
+   "SUPABASE_EXTERNAL_URL",
+   "SUPABASE_PUBLISHABLE_KEY",
+   "SUPABASE_SERVICE_ROLE_KEY",
+   "SUPABASE_URL",
+   "TRACKING_SIGNING_SECRET",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "usadas_no_python": [
+   "AI_CONTEXT_INDEX",
+   "AI_CONTEXT_MODEL",
+   "AI_CONTEXT_PROFILE",
+   "AI_CONTEXT_SCHEMA_SNAPSHOT",
+   "ANTHROPIC_API_KEY",
+   "CODE_SCAN_DIRS",
+   "GEN_TYPES",
+   "PGDUMP",
+   "PGDUMP_SCHEMAS",
+   "REPO_ROOT",
+   "SNAPSHOT_DIR",
+   "SNAPSHOT_EXCLUDE_SCHEMAS",
+   "SNAPSHOT_INCLUDE_SCHEMAS",
+   "SUPABASE_ACCESS_TOKEN",
+   "SUPABASE_DB_URL",
+   "SUPABASE_PROJECT_REF",
+   "SUPABASE_SNAPSHOT_PUBLICACAO"
+  ],
+  "usadas_mas_nao_declaradas": [
+   "DEV",
+   "PROD",
+   "SUPABASE_PUBLISHABLE_KEY",
+   "SUPABASE_URL",
+   "VITE_ADMIN_LIST_TOKEN",
+   "VITE_SUPABASE_PROJECT_ID",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "secrets_em_workflows": [
+   "SUPABASE_ACCESS_TOKEN",
+   "SUPABASE_DB_PASSWORD",
+   "SUPABASE_DB_URL"
+  ]
+ },
+ "deploy": {
+  "alvos": [],
+  "dockerfiles": [],
+  "compose": [],
+  "vercel": null
+ },
+ "integracoes": {
+  "sdks": [
+   {
+    "pacote": "@tanstack/react-query",
+    "servico": "react-query",
+    "versao": "^5.96.2"
+   },
+   {
+    "pacote": "@supabase/supabase-js",
+    "servico": "Supabase",
+    "versao": "^2.101.1"
+   },
+   {
+    "pacote": "zod",
+    "servico": "zod",
+    "versao": "^3.25.76"
+   }
+  ],
+  "hosts_externos": [
+   {
+    "host": "lux-ai-company-finder.lovable.app",
+    "arquivos": 16
+   },
+   {
+    "host": "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "arquivos": 12
+   },
+   {
+    "host": "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "arquivos": 10
+   },
+   {
+    "host": "lux-ai-finder.lovable.app",
+    "arquivos": 10
+   },
+   {
+    "host": "linkedin.com",
+    "arquivos": 8
+   },
+   {
+    "host": "supabase.atomicabr.com.br",
+    "arquivos": 5
+   },
+   {
+    "host": "br.linkedin.com",
+    "arquivos": 4
+   },
+   {
+    "host": "gmaps.atomicabr.com.br",
+    "arquivos": 4
+   },
+   {
+    "host": "graph.microsoft.com",
+    "arquivos": 4
+   },
+   {
+    "host": "login.microsoftonline.com",
+    "arquivos": 4
+   },
+   {
+    "host": "oauth2.googleapis.com",
+    "arquivos": 4
+   },
+   {
+    "host": "www.linkedin.com",
+    "arquivos": 4
+   },
+   {
+    "host": "ai.gateway.lovable.dev",
+    "arquivos": 3
+   },
+   {
+    "host": "connector-gateway.lovable.dev",
+    "arquivos": 3
+   },
+   {
+    "host": "nominatim.openstreetmap.org",
+    "arquivos": 3
+   },
+   {
+    "host": "api.cnpja.com",
+    "arquivos": 2
+   },
+   {
+    "host": "api.lusha.com",
+    "arquivos": 2
+   },
+   {
+    "host": "dashboard-services.lusha.com",
+    "arquivos": 2
+   },
+   {
+    "host": "empresa.com",
+    "arquivos": 2
+   },
+   {
+    "host": "gmail.googleapis.com",
+    "arquivos": 2
+   },
+   {
+    "host": "hikerapi.com",
+    "arquivos": 2
+   },
+   {
+    "host": "open.cnpja.com",
+    "arquivos": 2
+   },
+   {
+    "host": "pesfxhlbsjfmlysdkzhr.supabase.co",
+    "arquivos": 2
+   },
+   {
+    "host": "www.acme.com",
+    "arquivos": 2
+   },
+   {
+    "host": "www.googleapis.com",
+    "arquivos": 2
+   },
+   {
+    "host": "www.instagram.com",
+    "arquivos": 2
+   },
+   {
+    "host": "x.com",
+    "arquivos": 2
+   },
+   {
+    "host": "x.supabase.co",
+    "arquivos": 2
+   },
+   {
+    "host": "a.com",
+    "arquivos": 1
+   },
+   {
+    "host": "accounts.google.com",
+    "arquivos": 1
+   },
+   {
+    "host": "acme.com",
+    "arquivos": 1
+   },
+   {
+    "host": "agrodigital.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "agrotech.agr.br",
+    "arquivos": 1
+   },
+   {
+    "host": "api-docs.lux-ai.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "api.apify.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.brightdata.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.hikerapi.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.leadcontact.ai",
+    "arquivos": 1
+   },
+   {
+    "host": "api.resend.com",
+    "arquivos": 1
+   },
+   {
+    "host": "api.x.com",
+    "arquivos": 1
+   },
+   {
+    "host": "bella.example",
+    "arquivos": 1
+   },
+   {
+    "host": "beta.io",
+    "arquivos": 1
+   },
+   {
+    "host": "brightdata.com",
+    "arquivos": 1
+   },
+   {
+    "host": "carto.com",
+    "arquivos": 1
+   },
+   {
+    "host": "cdnjs.cloudflare.com",
+    "arquivos": 1
+   },
+   {
+    "host": "cloudbridge.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "console.apify.com",
+    "arquivos": 1
+   },
+   {
+    "host": "console.cloud.google.com",
+    "arquivos": 1
+   },
+   {
+    "host": "construplus.eng.br",
+    "arquivos": 1
+   },
+   {
+    "host": "cybershield.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "dashboard.lusha.com",
+    "arquivos": 1
+   },
+   {
+    "host": "datapulse.io",
+    "arquivos": 1
+   },
+   {
+    "host": "de.linkedin.com",
+    "arquivos": 1
+   },
+   {
+    "host": "docs.lux-ai.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "dronemap.agro",
+    "arquivos": 1
+   },
+   {
+    "host": "eduspark.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "entra.microsoft.com",
+    "arquivos": 1
+   },
+   {
+    "host": "evil.example",
+    "arquivos": 1
+   },
+   {
+    "host": "exemplo.com",
+    "arquivos": 1
+   },
+   {
+    "host": "facebook.com",
+    "arquivos": 1
+   },
+   {
+    "host": "finedge.com",
+    "arquivos": 1
+   },
+   {
+    "host": "finedge.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "fintechcapital.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "foodtech.delivery",
+    "arquivos": 1
+   },
+   {
+    "host": "greenenergy.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "horizonte.eng.br",
+    "arquivos": 1
+   },
+   {
+    "host": "id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+    "arquivos": 1
+   },
+   {
+    "host": "img1.jpg",
+    "arquivos": 1
+   },
+   {
+    "host": "img2.jpg",
+    "arquivos": 1
+   },
+   {
+    "host": "instagram.com",
+    "arquivos": 1
+   },
+   {
+    "host": "lh5.googleusercontent.com",
+    "arquivos": 1
+   },
+   {
+    "host": "linktr.ee",
+    "arquivos": 1
+   },
+   {
+    "host": "logitrack.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "logo.clearbit.com",
+    "arquivos": 1
+   },
+   {
+    "host": "lux.ia",
+    "arquivos": 1
+   },
+   {
+    "host": "maps.google.com",
+    "arquivos": 1
+   },
+   {
+    "host": "menu.example",
+    "arquivos": 1
+   },
+   {
+    "host": "mock.cdn",
+    "arquivos": 1
+   },
+   {
+    "host": "neobank.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "payflow.digital",
+    "arquivos": 1
+   },
+   {
+    "host": "pedidos.example",
+    "arquivos": 1
+   },
+   {
+    "host": "pixelforge.design",
+    "arquivos": 1
+   },
+   {
+    "host": "promobrindes.bitrix24.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "raw.githubusercontent.com",
+    "arquivos": 1
+   },
+   {
+    "host": "reservas.example",
+    "arquivos": 1
+   },
+   {
+    "host": "retailmax.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "saudetech.pro",
+    "arquivos": 1
+   },
+   {
+    "host": "smartfarm.agr.br",
+    "arquivos": 1
+   },
+   {
+    "host": "stacklabs.dev",
+    "arquivos": 1
+   },
+   {
+    "host": "technova.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "teste-e2e.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "vidaplena.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "www.acme.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "www.ambev.com.br",
+    "arquivos": 1
+   }
+  ],
+  "env_de_integracao": [
+   "ADMIN_LIST_TOKEN",
+   "APIFY_API_KEY",
+   "APIFY_TOKEN",
+   "APOLLO_API_KEY",
+   "BITRIX_WEBHOOK_BASE",
+   "BRIGHTDATA_API_TOKEN",
+   "CNPJA_API_KEY",
+   "GMAPS_OMKAR_API_KEY",
+   "GOOGLE_MAPS_API_KEY",
+   "GOOGLE_OAUTH_CLIENT_ID",
+   "GOOGLE_OAUTH_CLIENT_SECRET",
+   "HIKER_API_KEY",
+   "LOVABLE_API_KEY",
+   "LUSHA_API_KEY",
+   "MS_OAUTH_CLIENT_ID",
+   "MS_OAUTH_CLIENT_SECRET",
+   "QA_INGEST_TOKEN",
+   "TRACKING_SIGNING_SECRET",
+   "VITE_ADMIN_LIST_TOKEN"
+  ],
+  "webhooks_recebidos": [
+   "admin-list-companies",
+   "migrate-helper",
+   "qa-ingest-run"
+  ],
+  "realtime": [
+   "job-details:${jobId}",
+   "lusha-dm-history-sync",
+   "org:${activeOrgId}:automations",
+   "org:${activeOrgId}:companies",
+   "org:${activeOrgId}:scrape-jobs",
+   "private:${user.id}:${activeOrgId}:dashboard",
+   "private:${user.id}:gmaps-jobs",
+   "private:${user.id}:notifications",
+   "private:${user.id}:scrape-results"
+  ]
+ },
+ "permissoes": {
+  "papeis_no_codigo": [
+   {
+    "papel": "admin",
+    "ocorrencias": 11
+   },
+   {
+    "papel": "alert",
+    "ocorrencias": 11
+   },
+   {
+    "papel": "status",
+    "ocorrencias": 10
+   },
+   {
+    "papel": "button",
+    "ocorrencias": 4
+   },
+   {
+    "papel": "dialog",
+    "ocorrencias": 4
+   },
+   {
+    "papel": "user",
+    "ocorrencias": 4
+   },
+   {
+    "papel": "group",
+    "ocorrencias": 3
+   },
+   {
+    "papel": "main",
+    "ocorrencias": 3
+   },
+   {
+    "papel": "CTO",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "agent",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "navigation",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "presentation",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "region",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "system",
+    "ocorrencias": 2
+   },
+   {
+    "papel": "CEO",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "CFO",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "img",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "link",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "listitem",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "member",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "menu",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "progressbar",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "sdr",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "separator",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "sup",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "viewer",
+    "ocorrencias": 1
+   }
+  ],
+  "enums_de_papel": [
+   {
+    "enum": "app_role",
+    "valores": [
+     "admin",
+     "moderator",
+     "sdr",
+     "viewer"
+    ]
+   }
+  ],
+  "rpcs_de_autorizacao": [
+   "has_org_role",
+   "has_role"
+  ],
+  "guards": [],
+  "rotas_protegidas": 5,
+  "rotas_publicas": [
+   "/*",
+   "/invite/:token",
+   "/login",
+   "/reset-password"
+  ],
+  "menu_com_papeis": [],
+  "tabelas_sem_rls": []
+ },
+ "feature_flags": {
+  "total": 4,
+  "flags": [
+   {
+    "flag": "FEATURE_X",
+    "arquivos": 1
+   },
+   {
+    "flag": "nova-tela",
+    "arquivos": 1
+   },
+   {
+    "flag": "novo-inbox",
+    "arquivos": 1
+   },
+   {
+    "flag": "oracle_v2",
+    "arquivos": 1
+   }
+  ],
+  "tabelas_de_flag": [
+   "api_latency_alert_settings",
+   "circuit_breaker_alert_settings",
+   "dlq_alert_settings",
+   "feature_flags",
+   "org_violation_alert_settings",
+   "reaper_alert_settings",
+   "sla_alert_settings"
+  ]
+ },
+ "providers": {
+  "entrada": "src/main.tsx",
+  "providers": [
+   "ActiveOrgProvider",
+   "AuthProvider",
+   "BrowserRouter",
+   "ConfirmProvider",
+   "DemoProvider",
+   "ErrorBoundary",
+   "QueryClientProvider",
+   "ThemeProvider",
+   "TooltipProvider",
+   "UnsavedChangesProvider"
+  ]
+ },
+ "i18n": {
+  "arquivos": 0,
+  "idiomas": [],
+  "lib": []
+ }
+}

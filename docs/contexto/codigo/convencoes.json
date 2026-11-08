@@ -1,0 +1,83 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "onde_ficam": {
+  "telas": [
+   "src/pages (9)"
+  ],
+  "componentes": [
+   "src/components (226)",
+   "src/pages (9)",
+   "src/contexts (3)"
+  ],
+  "hooks": [
+   "src/hooks (71)",
+   "src/components (4)",
+   "src/contexts (3)"
+  ],
+  "servicos_logica": [
+   "src/lib (38)",
+   "src/integrations (4)",
+   "src/contexts (3)"
+  ],
+  "testes": [
+   "co-localizado (__tests__) (75)",
+   "e2e/ (19)",
+   "co-localizado (*.test) (16)"
+  ],
+  "edge_functions": "supabase/functions",
+  "migrations": "supabase/migrations",
+  "scripts": [
+   "scripts/regras_negocio (3)",
+   "scripts/sql (3)",
+   "scripts/ai-context (2)"
+  ],
+  "docs": [
+   "docs (17)",
+   "(raiz) (5)"
+  ]
+ },
+ "nomenclatura": {
+  "componentes": "PascalCase (80%)",
+  "hooks": "use + PascalCase",
+  "servicos": "camelCase (81%)",
+  "edge_functions": "kebab-case (97%)",
+  "tabelas": "snake_case (89%)"
+ },
+ "barrels_index": 0,
+ "extensao_componentes": [
+  ".tsx (241)"
+ ],
+ "alias_imports": {
+  "(raiz)": {
+   "@/": "src/",
+   "~/": "src/"
+  }
+ },
+ "commits": {
+  "convencao": "commitlint",
+  "exemplos": [
+   "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)",
+   "fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md",
+   "fix(banco): corrige contagem de migrations base64 de 4 para 6",
+   "docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)",
+   "Visual edit in Lovable"
+  ]
+ },
+ "pr_template": null,
+ "codeowners": null,
+ "contributing": "CONTRIBUTING.md",
+ "instrucoes_agentes": [
+  "AGENTS.md",
+  "CLAUDE.md"
+ ],
+ "typescript": {
+  "strict": false,
+  "noImplicitAny": false,
+  "tsconfigs": [
+   "tsconfig.app.json",
+   "tsconfig.json",
+   "tsconfig.node.json"
+  ]
+ }
+}

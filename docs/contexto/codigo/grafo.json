@@ -1,0 +1,349 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "nos": 516,
+ "arestas": 1525,
+ "hubs": [
+  {
+   "arquivo": "src/components/ui/button.tsx",
+   "importado_por": 113
+  },
+  {
+   "arquivo": "src/integrations/supabase/client.ts",
+   "importado_por": 106
+  },
+  {
+   "arquivo": "src/lib/utils.ts",
+   "importado_por": 104
+  },
+  {
+   "arquivo": "src/components/ui/badge.tsx",
+   "importado_por": 94
+  },
+  {
+   "arquivo": "src/components/ui/card.tsx",
+   "importado_por": 53
+  },
+  {
+   "arquivo": "src/integrations/supabase/withOrg.ts",
+   "importado_por": 52
+  },
+  {
+   "arquivo": "src/components/ui/input.tsx",
+   "importado_por": 49
+  },
+  {
+   "arquivo": "src/hooks/use-toast.ts",
+   "importado_por": 48
+  },
+  {
+   "arquivo": "src/components/ui/label.tsx",
+   "importado_por": 35
+  },
+  {
+   "arquivo": "src/contexts/auth-context.ts",
+   "importado_por": 31
+  },
+  {
+   "arquivo": "src/components/ui/tooltip.tsx",
+   "importado_por": 26
+  },
+  {
+   "arquivo": "src/components/ui/dialog.tsx",
+   "importado_por": 25
+  },
+  {
+   "arquivo": "src/components/ui/select.tsx",
+   "importado_por": 25
+  },
+  {
+   "arquivo": "src/components/ui/scroll-area.tsx",
+   "importado_por": 24
+  },
+  {
+   "arquivo": "src/components/ui/skeleton.tsx",
+   "importado_por": 24
+  },
+  {
+   "arquivo": "src/components/lux/EmptyState.tsx",
+   "importado_por": 18
+  },
+  {
+   "arquivo": "src/components/ui/switch.tsx",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/contexts/demo-context.ts",
+   "importado_por": 17
+  },
+  {
+   "arquivo": "src/hooks/useOrganizations.ts",
+   "importado_por": 16
+  },
+  {
+   "arquivo": "src/lib/resilience/simulator.ts",
+   "importado_por": 16
+  },
+  {
+   "arquivo": "src/components/ui/tabs.tsx",
+   "importado_por": 15
+  },
+  {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "importado_por": 15
+  },
+  {
+   "arquivo": "src/hooks/useNavigationHistory.ts",
+   "importado_por": 14
+  },
+  {
+   "arquivo": "src/components/ui/alert-dialog.tsx",
+   "importado_por": 12
+  },
+  {
+   "arquivo": "src/lib/demoData.ts",
+   "importado_por": 12
+  },
+  {
+   "arquivo": "src/lib/resilience/scenarios.ts",
+   "importado_por": 12
+  },
+  {
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 11
+  },
+  {
+   "arquivo": "src/components/lux/DataError.tsx",
+   "importado_por": 10
+  },
+  {
+   "arquivo": "src/components/ui/sheet.tsx",
+   "importado_por": 10
+  },
+  {
+   "arquivo": "src/components/lux/lusha/types.ts",
+   "importado_por": 9
+  },
+  {
+   "arquivo": "src/components/ui/table.tsx",
+   "importado_por": 9
+  },
+  {
+   "arquivo": "src/hooks/usePermissions.ts",
+   "importado_por": 9
+  },
+  {
+   "arquivo": "src/components/ui/checkbox.tsx",
+   "importado_por": 8
+  },
+  {
+   "arquivo": "src/lib/exportCSV.ts",
+   "importado_por": 8
+  },
+  {
+   "arquivo": "playwright-fixture.ts",
+   "importado_por": 7
+  },
+  {
+   "arquivo": "src/hooks/confirm-context.ts",
+   "importado_por": 7
+  },
+  {
+   "arquivo": "src/hooks/unsaved-changes-context.ts",
+   "importado_por": 7
+  },
+  {
+   "arquivo": "src/hooks/useDeals.ts",
+   "importado_por": 7
+  },
+  {
+   "arquivo": "src/components/ui/progress.tsx",
+   "importado_por": 6
+  },
+  {
+   "arquivo": "src/components/ui/textarea.tsx",
+   "importado_por": 6
+  }
+ ],
+ "ciclos": {
+  "total": 5,
+  "maiores": [
+   {
+    "tamanho": 4,
+    "arquivos": [
+     "src/components/lux/DashboardView.tsx",
+     "src/components/lux/QuickActions.tsx",
+     "src/hooks/useNavigationHistory.ts",
+     "src/lib/viewRegistry.ts"
+    ]
+   },
+   {
+    "tamanho": 2,
+    "arquivos": [
+     "src/components/lux/monitoring/SlaRecommendationRowItem.tsx",
+     "src/components/lux/monitoring/SlaRecommendationsCard.tsx"
+    ]
+   },
+   {
+    "tamanho": 2,
+    "arquivos": [
+     "src/contexts/active-org-context.ts",
+     "src/hooks/useOrganizations.ts"
+    ]
+   },
+   {
+    "tamanho": 2,
+    "arquivos": [
+     "src/hooks/oracleV2Helpers.ts",
+     "src/hooks/useOracleV2.ts"
+    ]
+   },
+   {
+    "tamanho": 2,
+    "arquivos": [
+     "src/hooks/useDashboardData.ts",
+     "src/lib/demoData.ts"
+    ]
+   }
+  ]
+ },
+ "orfaos": [
+  "docs/openapi.ts",
+  "playwright-fixture.ts",
+  "public/sw.js",
+  "src/components/NavLink.tsx",
+  "src/components/auth/MFAEnroll.tsx",
+  "src/components/auth/MFAVerify.tsx",
+  "src/components/automation/WorkflowEditor.tsx",
+  "src/components/lux/LuxImage.tsx",
+  "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
+  "src/components/lux/permissions/PermissionGate.tsx",
+  "src/components/ui/accordion.tsx",
+  "src/components/ui/aspect-ratio.tsx",
+  "src/components/ui/calendar.tsx",
+  "src/components/ui/carousel.tsx",
+  "src/components/ui/chart.tsx",
+  "src/components/ui/collapsible.tsx",
+  "src/components/ui/context-menu.tsx",
+  "src/components/ui/drawer.tsx",
+  "src/components/ui/form.tsx",
+  "src/components/ui/hover-card.tsx",
+  "src/components/ui/menubar.tsx",
+  "src/components/ui/navigation-menu.tsx",
+  "src/components/ui/pagination.tsx",
+  "src/components/ui/radio-group.tsx",
+  "src/components/ui/resizable.tsx",
+  "src/components/ui/sidebar.tsx",
+  "src/components/ui/toggle-group.tsx",
+  "src/components/ui/toggle.tsx",
+  "src/components/ui/use-toast.ts",
+  "src/hooks/useCircuitBreakerAlerts.ts",
+  "src/hooks/useFeatureFlag.ts",
+  "src/lib/constants.ts",
+  "src/lib/mcp/index.ts",
+  "supabase/functions/rls-tests/_fixtures.ts"
+ ],
+ "modulos_mais_acoplados": [
+  {
+   "modulo": "hooks",
+   "depende_de": 8,
+   "importado_por": 6
+  },
+  {
+   "modulo": "components/lux",
+   "depende_de": 10,
+   "importado_por": 2
+  },
+  {
+   "modulo": "lib",
+   "depende_de": 3,
+   "importado_por": 6
+  },
+  {
+   "modulo": "integrations/supabase",
+   "depende_de": 0,
+   "importado_por": 7
+  },
+  {
+   "modulo": "pages",
+   "depende_de": 7,
+   "importado_por": 0
+  },
+  {
+   "modulo": "components/ui",
+   "depende_de": 2,
+   "importado_por": 4
+  },
+  {
+   "modulo": "contexts",
+   "depende_de": 2,
+   "importado_por": 3
+  },
+  {
+   "modulo": "lib/schemas",
+   "depende_de": 1,
+   "importado_por": 3
+  },
+  {
+   "modulo": "components/auth",
+   "depende_de": 2,
+   "importado_por": 0
+  },
+  {
+   "modulo": "integrations/lovable",
+   "depende_de": 1,
+   "importado_por": 1
+  },
+  {
+   "modulo": "lib/api",
+   "depende_de": 1,
+   "importado_por": 1
+  },
+  {
+   "modulo": "lib/dlq",
+   "depende_de": 0,
+   "importado_por": 2
+  },
+  {
+   "modulo": "lib/resilience",
+   "depende_de": 0,
+   "importado_por": 2
+  },
+  {
+   "modulo": "components",
+   "depende_de": 1,
+   "importado_por": 0
+  },
+  {
+   "modulo": "lib/lusha",
+   "depende_de": 0,
+   "importado_por": 1
+  },
+  {
+   "modulo": "components/automation",
+   "depende_de": 0,
+   "importado_por": 0
+  },
+  {
+   "modulo": "contexts/__tests__",
+   "depende_de": 0,
+   "importado_por": 0
+  },
+  {
+   "modulo": "hooks/__tests__",
+   "depende_de": 0,
+   "importado_por": 0
+  },
+  {
+   "modulo": "lib/__tests__",
+   "depende_de": 0,
+   "importado_por": 0
+  },
+  {
+   "modulo": "lib/mcp",
+   "depende_de": 0,
+   "importado_por": 0
+  }
+ ],
+ "arestas_em": "docs/contexto/codigo/grafo-arestas.json"
+}

@@ -1,0 +1,2087 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "pasta": "supabase/functions",
+ "total": 58,
+ "verify_jwt_false": [
+  "admin-list-companies",
+  "migrate-helper",
+  "qa-ingest-run"
+ ],
+ "shared": [
+  "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
+  "supabase/functions/_shared/__tests__/apollo-fallback.test.ts",
+  "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
+  "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
+  "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
+  "supabase/functions/_shared/__tests__/chaos.test.ts",
+  "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
+  "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts",
+  "supabase/functions/_shared/__tests__/hiker-normalize.test.ts",
+  "supabase/functions/_shared/__tests__/instagram-config-hash.test.ts",
+  "supabase/functions/_shared/__tests__/lead-identity.test.ts",
+  "supabase/functions/_shared/__tests__/leadcontact-client.test.ts",
+  "supabase/functions/_shared/__tests__/linkedin-url.test.ts",
+  "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+  "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
+  "supabase/functions/_shared/__tests__/phone-br.test.ts",
+  "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+  "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
+  "supabase/functions/_shared/__tests__/web-scrape.test.ts",
+  "supabase/functions/_shared/apify-fixtures.ts",
+  "supabase/functions/_shared/apify-gateway.test.ts",
+  "supabase/functions/_shared/apify-gateway.ts",
+  "supabase/functions/_shared/apollo-cache.ts",
+  "supabase/functions/_shared/apollo-client.ts",
+  "supabase/functions/_shared/apollo-departments.ts",
+  "supabase/functions/_shared/bitrix-client.ts",
+  "supabase/functions/_shared/circuit-breaker.ts",
+  "supabase/functions/_shared/company-domain.ts",
+  "supabase/functions/_shared/cookies.ts",
+  "supabase/functions/_shared/departmentMap.ts",
+  "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
+  "supabase/functions/_shared/domain/ipc/scoring.ts",
+  "supabase/functions/_shared/domain/scrape-job-machine.ts",
+  "supabase/functions/_shared/gmaps-mapper.ts",
+  "supabase/functions/_shared/hiker-client.ts",
+  "supabase/functions/_shared/instagram-config-hash.ts",
+  "supabase/functions/_shared/lead-identity.ts",
+  "supabase/functions/_shared/leadcontact-client.ts",
+  "supabase/functions/_shared/linkedin-url.ts",
+  "supabase/functions/_shared/lusha-client.ts",
+  "supabase/functions/_shared/lusha-departments.ts",
+  "supabase/functions/_shared/omkar-gmaps-config.ts",
+  "supabase/functions/_shared/oracle-logger.ts",
+  "supabase/functions/_shared/org-membership.ts",
+  "supabase/functions/_shared/phone-br.ts",
+  "supabase/functions/_shared/rlsTableRegistry.ts",
+  "supabase/functions/_shared/safe-update.ts",
+  "supabase/functions/_shared/schemas.ts",
+  "supabase/functions/_shared/ssrf-guard.ts",
+  "supabase/functions/_shared/tracing.ts",
+  "supabase/functions/_shared/tracking-signature.ts",
+  "supabase/functions/_shared/web-scrape/chaos.ts",
+  "supabase/functions/_shared/web-scrape/heuristics.ts",
+  "supabase/functions/_shared/web-scrape/html-to-markdown.ts",
+  "supabase/functions/_shared/web-scrape/robots.ts"
+ ],
+ "edges": [
+  {
+   "nome": "admin-list-companies",
+   "entrada": "supabase/functions/admin-list-companies/index.ts",
+   "arquivos": 1,
+   "linhas": 88,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "companies"
+   ],
+   "rpcs": [],
+   "env": [
+    "ADMIN_LIST_TOKEN",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/pages/AdminCompanies.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "ai-agent",
+   "entrada": "supabase/functions/ai-agent/index.ts",
+   "arquivos": 1,
+   "linhas": 201,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "companies",
+    "ipc_config",
+    "scrape_jobs",
+    "workflows"
+   ],
+   "rpcs": [
+    "get_sector_summary"
+   ],
+   "env": [
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "ai.gateway.lovable.dev",
+    "lux-ai-company-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/AIAgentView.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "api-latency-alerts",
+   "entrada": "supabase/functions/api-latency-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 125,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "capture_api_latency_snapshots",
+    "evaluate_api_latency_alerts"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "audit-logs-prune",
+   "entrada": "supabase/functions/audit-logs-prune/index.ts",
+   "arquivos": 1,
+   "linhas": 78,
+   "verify_jwt": true,
+   "metodos": [],
+   "tabelas": [
+    "api_request_logs",
+    "audit_logs",
+    "email_sync_log",
+    "health_checks"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "auth-rate-limit",
+   "entrada": "supabase/functions/auth-rate-limit/index.ts",
+   "arquivos": 1,
+   "linhas": 125,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "auth_rate_limits"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/hooks/useRateLimit.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "campaign-dispatch",
+   "entrada": "supabase/functions/campaign-dispatch/index.ts",
+   "arquivos": 1,
+   "linhas": 656,
+   "verify_jwt": true,
+   "metodos": [
+    "GET",
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "campaign_messages",
+    "campaign_recipients",
+    "campaigns",
+    "email_accounts",
+    "email_suppressions"
+   ],
+   "rpcs": [
+    "advance_recipient_step",
+    "decide_ab_winner",
+    "record_campaign_event"
+   ],
+   "env": [
+    "GOOGLE_OAUTH_CLIENT_ID",
+    "GOOGLE_OAUTH_CLIENT_SECRET",
+    "MS_OAUTH_CLIENT_ID",
+    "MS_OAUTH_CLIENT_SECRET",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "gmail.googleapis.com",
+    "graph.microsoft.com",
+    "login.microsoftonline.com",
+    "oauth2.googleapis.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/CampaignsView.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "circuit-breaker-alerts",
+   "entrada": "supabase/functions/circuit-breaker-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 121,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "capture_circuit_breaker_snapshots",
+    "evaluate_circuit_breaker_alerts"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "cnpj-enrich",
+   "entrada": "supabase/functions/cnpj-enrich/index.ts",
+   "arquivos": 1,
+   "linhas": 244,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "cnpj_enrich_cache",
+    "cnpj_enrich_queue"
+   ],
+   "rpcs": [
+    "cnpj_reserve_rate_slot"
+   ],
+   "env": [
+    "CNPJA_API_KEY",
+    "CNPJA_LIMIT_RPM",
+    "CNPJA_OPEN_LIMIT_RPM",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "api.cnpja.com",
+    "open.cnpja.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "cnpj-enrich-worker",
+   "entrada": "supabase/functions/cnpj-enrich-worker/index.ts",
+   "arquivos": 1,
+   "linhas": 210,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "cnpj_enrich_cache",
+    "cnpj_enrich_queue"
+   ],
+   "rpcs": [
+    "cnpj_claim_enrich_jobs",
+    "cnpj_reserve_rate_slot"
+   ],
+   "env": [
+    "CNPJA_API_KEY",
+    "CNPJA_LIMIT_RPM",
+    "CNPJA_OPEN_LIMIT_RPM",
+    "CNPJ_WORKER_BATCH",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "api.cnpja.com",
+    "open.cnpja.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "cnpj-settings-status",
+   "entrada": "supabase/functions/cnpj-settings-status/index.ts",
+   "arquivos": 1,
+   "linhas": 75,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "cnpj_enrich_cache",
+    "cnpj_enrich_queue",
+    "cnpj_enrich_rate_state"
+   ],
+   "rpcs": [],
+   "env": [
+    "CNPJA_API_KEY",
+    "CNPJA_LIMIT_RPM",
+    "CNPJA_OPEN_LIMIT_RPM",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "deliverability-check",
+   "entrada": "supabase/functions/deliverability-check/index.ts",
+   "arquivos": 1,
+   "linhas": 1,
+   "verify_jwt": true,
+   "metodos": [],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "dlq-alerts",
+   "entrada": "supabase/functions/dlq-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 128,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "dlq_alert_history",
+    "dlq_alert_settings",
+    "dlq_health_snapshots",
+    "notifications",
+    "organization_members"
+   ],
+   "rpcs": [
+    "capture_web_dlq_health_snapshots"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "email-oauth-callback",
+   "entrada": "supabase/functions/email-oauth-callback/index.ts",
+   "arquivos": 1,
+   "linhas": 147,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "email_accounts"
+   ],
+   "rpcs": [
+    "default_org_for_current_user",
+    "has_org_role"
+   ],
+   "env": [
+    "GOOGLE_OAUTH_CLIENT_ID",
+    "GOOGLE_OAUTH_CLIENT_SECRET",
+    "MS_OAUTH_CLIENT_ID",
+    "MS_OAUTH_CLIENT_SECRET",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "graph.microsoft.com",
+    "login.microsoftonline.com",
+    "oauth2.googleapis.com",
+    "www.googleapis.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/integrations/EmailAccountsPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "email-oauth-connect",
+   "entrada": "supabase/functions/email-oauth-connect/index.ts",
+   "arquivos": 1,
+   "linhas": 155,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "default_org_for_current_user",
+    "has_org_role"
+   ],
+   "env": [
+    "GOOGLE_OAUTH_CLIENT_ID",
+    "GOOGLE_OAUTH_CLIENT_SECRET",
+    "MS_OAUTH_CLIENT_ID",
+    "MS_OAUTH_CLIENT_SECRET",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "accounts.google.com",
+    "graph.microsoft.com",
+    "login.microsoftonline.com",
+    "www.googleapis.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/integrations/EmailAccountsPanel.tsx",
+    "src/components/lux/integrations/OAuthSandboxPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "email-oauth-disconnect",
+   "entrada": "supabase/functions/email-oauth-disconnect/index.ts",
+   "arquivos": 1,
+   "linhas": 130,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "email_accounts"
+   ],
+   "rpcs": [
+    "has_org_role"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "oauth2.googleapis.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/integrations/DisconnectAccountDialog.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "email-poll-replies",
+   "entrada": "supabase/functions/email-poll-replies/index.ts",
+   "arquivos": 1,
+   "linhas": 370,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "email_accounts",
+    "email_sync_log"
+   ],
+   "rpcs": [
+    "record_campaign_reply"
+   ],
+   "env": [
+    "GOOGLE_OAUTH_CLIENT_ID",
+    "GOOGLE_OAUTH_CLIENT_SECRET",
+    "MS_OAUTH_CLIENT_ID",
+    "MS_OAUTH_CLIENT_SECRET",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "gmail.googleapis.com",
+    "graph.microsoft.com",
+    "login.microsoftonline.com",
+    "oauth2.googleapis.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/integrations/EmailAccountsPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "email-verify",
+   "entrada": "supabase/functions/email-verify/index.ts",
+   "arquivos": 1,
+   "linhas": 1,
+   "verify_jwt": true,
+   "metodos": [],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "gmaps-places-search",
+   "entrada": "supabase/functions/gmaps-places-search/index.ts",
+   "arquivos": 1,
+   "linhas": 122,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "default_org_for_current_user",
+    "record_places_api_call"
+   ],
+   "env": [
+    "GOOGLE_MAPS_API_KEY",
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "connector-gateway.lovable.dev"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "gmaps-proxy",
+   "entrada": "supabase/functions/gmaps-proxy/index.ts",
+   "arquivos": 1,
+   "linhas": 712,
+   "verify_jwt": true,
+   "metodos": [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "companies",
+    "idempotency_keys",
+    "ipc_config",
+    "notifications",
+    "org_proxies",
+    "scrape_jobs",
+    "scrape_results"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "gmaps.atomicabr.com.br",
+    "lux-ai-company-finder.lovable.app"
+   ],
+   "usa_shared": [
+    "circuit-breaker.ts",
+    "gmaps-mapper.ts",
+    "schemas.ts",
+    "scoring.ts",
+    "tracing.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/lib/api/gmaps.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "health",
+   "entrada": "supabase/functions/health/index.ts",
+   "arquivos": 1,
+   "linhas": 105,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "health_checks",
+    "organizations"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "ai.gateway.lovable.dev",
+    "gmaps.atomicabr.com.br",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "instagram-connection-status",
+   "entrada": "supabase/functions/instagram-connection-status/index.ts",
+   "arquivos": 1,
+   "linhas": 129,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "APIFY_API_KEY",
+    "APIFY_TOKEN",
+    "BRIGHTDATA_API_TOKEN",
+    "HIKER_API_KEY",
+    "HIKER_MOCK_MODE"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "api.apify.com",
+    "api.brightdata.com",
+    "api.hikerapi.com"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/monitoring/InstagramConnectionPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "instagram-dlq-replay",
+   "entrada": "supabase/functions/instagram-dlq-replay/index.ts",
+   "arquivos": 1,
+   "linhas": 90,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "organization_members"
+   ],
+   "rpcs": [
+    "replay_instagram_dead_letter_batch"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 1
+  },
+  {
+   "nome": "instagram-enqueue",
+   "entrada": "supabase/functions/instagram-enqueue/index.ts",
+   "arquivos": 1,
+   "linhas": 146,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "instagram_scrape_queue",
+    "organization_members"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "instagram-config-hash.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "instagram-worker",
+   "entrada": "supabase/functions/instagram-worker/index.ts",
+   "arquivos": 1,
+   "linhas": 198,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "instagram_scrape_dead_letter",
+    "instagram_scrape_queue",
+    "instagram_scrape_results"
+   ],
+   "rpcs": [
+    "claim_instagram_job"
+   ],
+   "env": [
+    "INSTAGRAM_WORKER_BATCH",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "apify-fixtures.ts",
+    "hiker-client.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "instagram-worker-health",
+   "entrada": "supabase/functions/instagram-worker-health/index.ts",
+   "arquivos": 1,
+   "linhas": 88,
+   "verify_jwt": true,
+   "metodos": [
+    "GET",
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "instagram_scrape_dead_letter",
+    "instagram_scrape_queue"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "apify-gateway.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "latency-alerts",
+   "entrada": "supabase/functions/latency-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 80,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "api_latency_alert_history",
+    "api_latency_alert_settings",
+    "api_latency_snapshots",
+    "notifications",
+    "organization_members"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "lusha-cookie-health",
+   "entrada": "supabase/functions/lusha-cookie-health/index.ts",
+   "arquivos": 1,
+   "linhas": 173,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "EXTERNAL_VAULT_ANON_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_EXTERNAL_ANON_KEY",
+    "SUPABASE_EXTERNAL_URL",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app",
+    "supabase.atomicabr.com.br"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "lusha-decision-makers",
+   "entrada": "supabase/functions/lusha-decision-makers/index.ts",
+   "arquivos": 1,
+   "linhas": 762,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "lusha_contacts",
+    "organization_members"
+   ],
+   "rpcs": [],
+   "env": [
+    "LUSHA_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "api.lusha.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/LushaIntelligenceView.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "lusha-reveal",
+   "entrada": "supabase/functions/lusha-reveal/index.ts",
+   "arquivos": 1,
+   "linhas": 316,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "check_oracle_rate_limit",
+    "default_org_for_current_user"
+   ],
+   "env": [
+    "LUSHA_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "api.lusha.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "lusha-search",
+   "entrada": "supabase/functions/lusha-search/index.ts",
+   "arquivos": 1,
+   "linhas": 580,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "lusha_contacts",
+    "lusha_search_sessions",
+    "notifications"
+   ],
+   "rpcs": [],
+   "env": [
+    "EXTERNAL_VAULT_ANON_KEY",
+    "LUSHA_DAILY_QUOTA",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_EXTERNAL_ANON_KEY",
+    "SUPABASE_EXTERNAL_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "dashboard-services.lusha.com",
+    "dashboard.lusha.com",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app",
+    "supabase.atomicabr.com.br"
+   ],
+   "usa_shared": [
+    "departmentMap.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "mcp",
+   "entrada": "supabase/functions/mcp/index.ts",
+   "arquivos": 1,
+   "linhas": 242,
+   "verify_jwt": true,
+   "metodos": [],
+   "tabelas": [
+    "companies",
+    "lusha_contacts",
+    "scrape_jobs"
+   ],
+   "rpcs": [
+    "default_org_for_current_user",
+    "get_dashboard_stats"
+   ],
+   "env": [
+    "SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "migrate-helper",
+   "entrada": "supabase/functions/migrate-helper/index.ts",
+   "arquivos": 1,
+   "linhas": 35,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_DB_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "oracle-cookies-preflight",
+   "entrada": "supabase/functions/oracle-cookies-preflight/index.ts",
+   "arquivos": 1,
+   "linhas": 230,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "automation_execution_logs"
+   ],
+   "rpcs": [],
+   "env": [
+    "EXTERNAL_VAULT_ANON_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_EXTERNAL_ANON_KEY",
+    "SUPABASE_EXTERNAL_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app",
+    "supabase.atomicabr.com.br"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "oracle-enrich-contact",
+   "entrada": "supabase/functions/oracle-enrich-contact/index.ts",
+   "arquivos": 1,
+   "linhas": 353,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "lusha_contacts"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [
+    "circuit-breaker.ts",
+    "cookies.ts",
+    "leadcontact-client.ts",
+    "oracle-logger.ts",
+    "org-membership.ts",
+    "phone-br.ts",
+    "safe-update.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "oracle-push-bitrix",
+   "entrada": "supabase/functions/oracle-push-bitrix/index.ts",
+   "arquivos": 1,
+   "linhas": 405,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "lusha_contacts",
+    "lusha_search_sessions"
+   ],
+   "rpcs": [
+    "check_oracle_rate_limit"
+   ],
+   "env": [
+    "BITRIX_WEBHOOK_BASE",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [
+    "bitrix-client.ts",
+    "circuit-breaker.ts",
+    "oracle-logger.ts",
+    "org-membership.ts",
+    "safe-update.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "oracle-search-decisors",
+   "entrada": "supabase/functions/oracle-search-decisors/index.ts",
+   "arquivos": 1,
+   "linhas": 738,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "companies",
+    "lusha_contacts",
+    "lusha_search_sessions"
+   ],
+   "rpcs": [
+    "check_oracle_rate_limit"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
+    "lux-ai-company-finder.lovable.app",
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [
+    "apollo-cache.ts",
+    "apollo-client.ts",
+    "apollo-departments.ts",
+    "circuit-breaker.ts",
+    "company-domain.ts",
+    "cookies.ts",
+    "lead-identity.ts",
+    "linkedin-url.ts",
+    "lusha-client.ts",
+    "lusha-departments.ts",
+    "oracle-logger.ts",
+    "org-membership.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "org-violation-alerts",
+   "entrada": "supabase/functions/org-violation-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 258,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "notifications",
+    "org_violation_alerts",
+    "organization_members",
+    "webhook_deliveries",
+    "webhooks"
+   ],
+   "rpcs": [
+    "evaluate_org_violation_alerts"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/security/OrgViolationAlertsPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "pg-net-watchdog",
+   "entrada": "supabase/functions/pg-net-watchdog/index.ts",
+   "arquivos": 1,
+   "linhas": 95,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "notifications",
+    "pg_net_health_snapshots",
+    "user_roles"
+   ],
+   "rpcs": [
+    "pg_net_health",
+    "pg_net_watchdog_should_notify",
+    "pg_net_watchdog_try_lock"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "public-api",
+   "entrada": "supabase/functions/public-api/index.ts",
+   "arquivos": 1,
+   "linhas": 252,
+   "verify_jwt": true,
+   "metodos": [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST"
+   ],
+   "tabelas": [
+    "api_keys",
+    "api_request_logs"
+   ],
+   "rpcs": [
+    "touch_api_key",
+    "verify_api_key"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/integrations/ApiDocsCard.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "purge-soft-deleted",
+   "entrada": "supabase/functions/purge-soft-deleted/index.ts",
+   "arquivos": 1,
+   "linhas": 43,
+   "verify_jwt": true,
+   "metodos": [],
+   "tabelas": [],
+   "rpcs": [
+    "purge_soft_deleted"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "qa-ingest-run",
+   "entrada": "supabase/functions/qa-ingest-run/index.ts",
+   "arquivos": 1,
+   "linhas": 110,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "qa_test_runs"
+   ],
+   "rpcs": [],
+   "env": [
+    "QA_INGEST_TOKEN",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/monitoring/QaHistoryPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "reaper-alerts",
+   "entrada": "supabase/functions/reaper-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 205,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "notifications",
+    "qa_reaper_runs",
+    "reaper_alert_history",
+    "reaper_alert_settings",
+    "user_roles"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "retry-policy-tuner",
+   "entrada": "supabase/functions/retry-policy-tuner/index.ts",
+   "arquivos": 1,
+   "linhas": 163,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "automation_execution_logs",
+    "retry_policy_advisories",
+    "web_scrape_queue"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "rls-tests",
+   "entrada": "supabase/functions/rls-tests/index.ts",
+   "arquivos": 2,
+   "linhas": 706,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "companies",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "workflows"
+   ],
+   "rpcs": [
+    "pg_catalog_rls_tables"
+   ],
+   "env": [
+    "APP_ENV",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
+    "lux-ai-company-finder.lovable.app"
+   ],
+   "usa_shared": [
+    "rlsTableRegistry.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 1
+  },
+  {
+   "nome": "scrape-queue-worker",
+   "entrada": "supabase/functions/scrape-queue-worker/index.ts",
+   "arquivos": 1,
+   "linhas": 407,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "feature_flags",
+    "scrape_jobs"
+   ],
+   "rpcs": [
+    "claim_scrape_tasks",
+    "complete_scrape_task",
+    "defer_scrape_task",
+    "fail_scrape_task",
+    "log_automation_event",
+    "worker_report_batch",
+    "worker_should_run"
+   ],
+   "env": [
+    "GMAPS_OMKAR_API_KEY",
+    "GMAPS_OMKAR_BASE_URL",
+    "GMAPS_PROVIDER",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "gmaps.atomicabr.com.br"
+   ],
+   "usa_shared": [
+    "circuit-breaker.ts",
+    "omkar-gmaps-config.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "sla-alerts",
+   "entrada": "supabase/functions/sla-alerts/index.ts",
+   "arquivos": 1,
+   "linhas": 155,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "notifications",
+    "sla_alert_history",
+    "sla_alert_settings",
+    "user_roles"
+   ],
+   "rpcs": [
+    "sla_compliance_stats"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "sla-auto-tune",
+   "entrada": "supabase/functions/sla-auto-tune/index.ts",
+   "arquivos": 1,
+   "linhas": 167,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "notifications",
+    "organization_members",
+    "sla_autotune_runs",
+    "user_roles"
+   ],
+   "rpcs": [
+    "auto_tune_queue_slas",
+    "sla_autotune_blocked_streaks"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "system-recovery-status",
+   "entrada": "supabase/functions/system-recovery-status/index.ts",
+   "arquivos": 1,
+   "linhas": 62,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "has_role",
+    "system_recovery_health"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "track-click",
+   "entrada": "supabase/functions/track-click/index.ts",
+   "arquivos": 1,
+   "linhas": 71,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "record_campaign_event"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "TRACKING_SIGNING_SECRET"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "tracking-signature.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "track-open",
+   "entrada": "supabase/functions/track-open/index.ts",
+   "arquivos": 1,
+   "linhas": 69,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "record_campaign_event"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "TRACKING_SIGNING_SECRET"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "tracking-signature.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "vault-cookie-health",
+   "entrada": "supabase/functions/vault-cookie-health/index.ts",
+   "arquivos": 1,
+   "linhas": 208,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "evaluate_vault_cookie_alerts",
+    "record_vault_cookie_snapshots"
+   ],
+   "env": [
+    "EXTERNAL_VAULT_ANON_KEY",
+    "SUPABASE_EXTERNAL_ANON_KEY",
+    "SUPABASE_EXTERNAL_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "supabase.atomicabr.com.br"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/monitoring/VaultCookiesPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "web-dlq-replay",
+   "entrada": "supabase/functions/web-dlq-replay/index.ts",
+   "arquivos": 1,
+   "linhas": 89,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "organization_members"
+   ],
+   "rpcs": [
+    "replay_web_dead_letter_batch"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "web-scrape-enqueue",
+   "entrada": "supabase/functions/web-scrape-enqueue/index.ts",
+   "arquivos": 1,
+   "linhas": 131,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "organization_members",
+    "web_scrape_queue"
+   ],
+   "rpcs": [
+    "default_org_for_current_user"
+   ],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "web-scrape-extract",
+   "entrada": "supabase/functions/web-scrape-extract/index.ts",
+   "arquivos": 1,
+   "linhas": 115,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "feature_flags",
+    "web_scrape_queue",
+    "web_scrape_results"
+   ],
+   "rpcs": [],
+   "env": [
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "ai.gateway.lovable.dev"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "web-scrape-status",
+   "entrada": "supabase/functions/web-scrape-status/index.ts",
+   "arquivos": 1,
+   "linhas": 51,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "web_scrape_queue",
+    "web_scrape_results"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "web-scrape-worker",
+   "entrada": "supabase/functions/web-scrape-worker/index.ts",
+   "arquivos": 1,
+   "linhas": 414,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "automation_execution_logs",
+    "feature_flags",
+    "robots_cache",
+    "web_scrape_results"
+   ],
+   "rpcs": [
+    "claim_web_scrape_tasks",
+    "complete_web_scrape_task",
+    "defer_web_scrape_task",
+    "fail_web_scrape_task"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "lux-ai-finder.lovable.app"
+   ],
+   "usa_shared": [
+    "chaos.ts",
+    "circuit-breaker.ts",
+    "heuristics.ts",
+    "html-to-markdown.ts",
+    "robots.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "webhook-dispatcher",
+   "entrada": "supabase/functions/webhook-dispatcher/index.ts",
+   "arquivos": 1,
+   "linhas": 185,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "webhook_deliveries",
+    "webhooks"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "ssrf-guard.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/hooks/useWebhooks.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "workflow-engine",
+   "entrada": "supabase/functions/workflow-engine/index.ts",
+   "arquivos": 1,
+   "linhas": 707,
+   "verify_jwt": true,
+   "metodos": [
+    "GET",
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "automation_alerts",
+    "automation_steps",
+    "companies",
+    "ipc_config",
+    "organization_members",
+    "scrape_jobs",
+    "scrape_results",
+    "workflow_runs",
+    "workflows"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
+    "gmaps.atomicabr.com.br",
+    "lux-ai-company-finder.lovable.app"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/lib/api/workflows.ts"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  }
+ ],
+ "chamadas_sem_pasta": []
+}

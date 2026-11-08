@@ -1,0 +1,871 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "git": {
+  "commit": "4d5d4ee3c46f8351d64c538be291d2acc7c57c76",
+  "branch": "main",
+  "data_commit": "2026-11-08T19:23:53-03:00",
+  "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
+  "ultimos_commits": [
+   {
+    "sha": "4d5d4ee",
+    "data": "2026-11-08",
+    "assunto": "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)"
+   },
+   {
+    "sha": "c8970a8",
+    "data": "2026-11-08",
+    "assunto": "fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md"
+   },
+   {
+    "sha": "4f78795",
+    "data": "2026-11-08",
+    "assunto": "fix(banco): corrige contagem de migrations base64 de 4 para 6"
+   },
+   {
+    "sha": "c9b89ab",
+    "data": "2026-11-08",
+    "assunto": "docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)"
+   },
+   {
+    "sha": "2b5a84f",
+    "data": "2026-08-28",
+    "assunto": "Visual edit in Lovable"
+   },
+   {
+    "sha": "20373df",
+    "data": "2026-08-28",
+    "assunto": "Visual edit in Lovable"
+   },
+   {
+    "sha": "c88dc8a",
+    "data": "2026-08-18",
+    "assunto": "chore(hermes): adiciona .hermes.md (regras da casa Hermes)"
+   },
+   {
+    "sha": "ee80ee4",
+    "data": "2026-08-18",
+    "assunto": "chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)"
+   },
+   {
+    "sha": "97bb6fb",
+    "data": "2026-08-16",
+    "assunto": "Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829"
+   },
+   {
+    "sha": "9f9f678",
+    "data": "2026-08-16",
+    "assunto": "docs: errata da auditoria apos segunda rodada de validacao adversarial"
+   },
+   {
+    "sha": "8e6172d",
+    "data": "2026-08-16",
+    "assunto": "docs: auditoria de estado do sistema (ESTADO_ATUAL + 5 anexos)"
+   },
+   {
+    "sha": "890c18d",
+    "data": "2026-08-11",
+    "assunto": "security: remove migrate-helper edge function (exposes service_role key)"
+   },
+   {
+    "sha": "bbe286c",
+    "data": "2026-08-01",
+    "assunto": "merge: master para main"
+   },
+   {
+    "sha": "4e21608",
+    "data": "2026-08-01",
+    "assunto": "feat: Migração Banco Lovable para Supabase Promo Lux - V2"
+   },
+   {
+    "sha": "7155047",
+    "data": "2026-07-30",
+    "assunto": "Visual edit in Lovable"
+   },
+   {
+    "sha": "d7d55d8",
+    "data": "2026-07-30",
+    "assunto": "Visual edit in Lovable"
+   },
+   {
+    "sha": "5e51961",
+    "data": "2026-07-29",
+    "assunto": "Removiu função migrate-helper"
+   },
+   {
+    "sha": "1bd50ab",
+    "data": "2026-07-29",
+    "assunto": "Changes"
+   },
+   {
+    "sha": "8f79294",
+    "data": "2026-07-29",
+    "assunto": "Changes"
+   },
+   {
+    "sha": "38c4794",
+    "data": "2026-07-29",
+    "assunto": "Visual edit in Lovable"
+   },
+   {
+    "sha": "abdfbe0",
+    "data": "2026-07-28",
+    "assunto": "Removeu migrate-helper do CDN"
+   },
+   {
+    "sha": "79aac61",
+    "data": "2026-07-28",
+    "assunto": "Changes"
+   },
+   {
+    "sha": "16d105e",
+    "data": "2026-07-28",
+    "assunto": "Alinhou schema de config do Omkar"
+   },
+   {
+    "sha": "cf4a8c2",
+    "data": "2026-07-28",
+    "assunto": "Changes"
+   },
+   {
+    "sha": "77bfd38",
+    "data": "2026-07-28",
+    "assunto": "Changes"
+   }
+  ],
+  "arquivos_mudados_7d": 49,
+  "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "AGENTS.md",
+    "mudancas": 4
+   },
+   {
+    "pasta": ".agents/skills/promo-lux-v2",
+    "mudancas": 2
+   },
+   {
+    "pasta": ".gitignore",
+    "mudancas": 2
+   },
+   {
+    "pasta": "docs/agentes/banco.md",
+    "mudancas": 2
+   },
+   {
+    "pasta": "docs/agentes/github-ci.md",
+    "mudancas": 2
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 2
+   },
+   {
+    "pasta": ".claude/ecc-tools.json",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/homunculus/instincts",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/hooks/session-start.sh",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/identity.json",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/settings.json",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".claude/skills/promo-lux-v2",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".codex/AGENTS.md",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".codex/agents/docs-researcher.toml",
+    "mudancas": 1
+   },
+   {
+    "pasta": ".codex/agents/explorer.toml",
+    "mudancas": 1
+   }
+  ],
+  "arquivos_mais_mudados_90d": [
+   {
+    "arquivo": "AGENTS.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "docs/estado/05-infra-ci-testes.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/agentes/banco.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/agentes/github-ci.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/estado/02-backend-edge-functions.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "docs/estado/03-dados-e-runtime.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "package.json",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "supabase/functions/migrate-helper/index.ts",
+    "mudancas": 2
+   },
+   {
+    "arquivo": ".claude/ecc-tools.json",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/homunculus/instincts/inherited/promo-lux-v2-instincts.yaml",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/hooks/session-start.sh",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/identity.json",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/settings.json",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 1
+   },
+   {
+    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "CLAUDE.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "ai-context.config.json",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "docs/agentes/lovable-deploy.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "docs/agentes/regras-dominio.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "docs/agentes/servicos-externos.md",
+    "mudancas": 1
+   },
+   {
+    "arquivo": "docs/contexto/regras/manual/README.md",
+    "mudancas": 1
+   }
+  ],
+  "autores_30d": [
+   {
+    "autor": "adm01-debug",
+    "commits": 4
+   }
+  ]
+ },
+ "contagens": {
+  "arquivos_total": 984,
+  "arquivos_codigo": 631,
+  "linhas_codigo": 102479,
+  "rotas": 10,
+  "rotas_http_backend": 12,
+  "vistas_por_id": 0,
+  "itens_menu": 26,
+  "modulos": 22,
+  "componentes": 241,
+  "hooks": 79,
+  "edge_functions": 58,
+  "tabelas": 97,
+  "migrations": 212,
+  "cron_jobs": 6,
+  "testes": 115,
+  "workflows": 5,
+  "scripts": 40,
+  "docs_md": 72
+ },
+ "por_pasta": {
+  "commitlint.config.cjs": {
+   "arquivos": 1,
+   "linhas": 2
+  },
+  "commitlint.config.js": {
+   "arquivos": 1,
+   "linhas": 2
+  },
+  "docs/openapi.ts": {
+   "arquivos": 1,
+   "linhas": 83
+  },
+  "e2e/accessibility.spec.ts": {
+   "arquivos": 1,
+   "linhas": 37
+  },
+  "e2e/auth.spec.ts": {
+   "arquivos": 1,
+   "linhas": 87
+  },
+  "e2e/companies-crud.spec.ts": {
+   "arquivos": 1,
+   "linhas": 110
+  },
+  "e2e/dlq-web-smoke.spec.ts": {
+   "arquivos": 1,
+   "linhas": 78
+  },
+  "e2e/helpers": {
+   "arquivos": 4,
+   "linhas": 401
+  },
+  "e2e/instagram-dlq-replay.spec.ts": {
+   "arquivos": 1,
+   "linhas": 235
+  },
+  "e2e/instagram-worker-smoke.spec.ts": {
+   "arquivos": 1,
+   "linhas": 158
+  },
+  "e2e/invite-accept.spec.ts": {
+   "arquivos": 1,
+   "linhas": 63
+  },
+  "e2e/lusha-flows.spec.ts": {
+   "arquivos": 1,
+   "linhas": 209
+  },
+  "e2e/lusha-smoke.spec.ts": {
+   "arquivos": 1,
+   "linhas": 28
+  },
+  "e2e/monitoring-navigation.spec.ts": {
+   "arquivos": 1,
+   "linhas": 37
+  },
+  "e2e/navigation.spec.ts": {
+   "arquivos": 1,
+   "linhas": 340
+  },
+  "e2e/oracle-decisor-flow.spec.ts": {
+   "arquivos": 1,
+   "linhas": 209
+  },
+  "e2e/oracle-v2.spec.ts": {
+   "arquivos": 1,
+   "linhas": 49
+  },
+  "e2e/protected-navigation.spec.ts": {
+   "arquivos": 1,
+   "linhas": 62
+  },
+  "e2e/rls-guarantees.spec.ts": {
+   "arquivos": 1,
+   "linhas": 119
+  },
+  "eslint.config.js": {
+   "arquivos": 1,
+   "linhas": 27
+  },
+  "playwright-fixture.ts": {
+   "arquivos": 1,
+   "linhas": 12
+  },
+  "playwright.config.ts": {
+   "arquivos": 1,
+   "linhas": 45
+  },
+  "postcss.config.js": {
+   "arquivos": 1,
+   "linhas": 7
+  },
+  "public/sw.js": {
+   "arquivos": 1,
+   "linhas": 87
+  },
+  "scripts/ai-context": {
+   "arquivos": 3,
+   "linhas": 1458
+  },
+  "scripts/ci": {
+   "arquivos": 1,
+   "linhas": 124
+  },
+  "scripts/gen-current-report.ts": {
+   "arquivos": 1,
+   "linhas": 19
+  },
+  "scripts/gen-legacy-baseline.ts": {
+   "arquivos": 1,
+   "linhas": 20
+  },
+  "scripts/gen-round18-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 57
+  },
+  "scripts/gen-round19-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 50
+  },
+  "scripts/gen-round19-validation.ts": {
+   "arquivos": 1,
+   "linhas": 117
+  },
+  "scripts/gen-round20-validation.ts": {
+   "arquivos": 1,
+   "linhas": 159
+  },
+  "scripts/gen-round21-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 67
+  },
+  "scripts/gen-round24-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 92
+  },
+  "scripts/gen-round25-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 87
+  },
+  "scripts/gen-round26-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 91
+  },
+  "scripts/gen-round27-qa-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 159
+  },
+  "scripts/gen-round28-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 109
+  },
+  "scripts/gen-round29-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 101
+  },
+  "scripts/gen-round36-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 134
+  },
+  "scripts/gen-web-scrape-reports.ts": {
+   "arquivos": 1,
+   "linhas": 101
+  },
+  "scripts/generate-audit-pdf.ts": {
+   "arquivos": 1,
+   "linhas": 36
+  },
+  "scripts/inventario": {
+   "arquivos": 2,
+   "linhas": 127
+  },
+  "scripts/mc-r35-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 15
+  },
+  "scripts/mc-r40-preflight.ts": {
+   "arquivos": 1,
+   "linhas": 37
+  },
+  "scripts/regras_negocio": {
+   "arquivos": 3,
+   "linhas": 2539
+  },
+  "scripts/sim-scrape.ts": {
+   "arquivos": 1,
+   "linhas": 25
+  },
+  "scripts/supabase_snapshot": {
+   "arquivos": 2,
+   "linhas": 2669
+  },
+  "src/App.tsx": {
+   "arquivos": 1,
+   "linhas": 221
+  },
+  "src/components": {
+   "arquivos": 285,
+   "linhas": 45241
+  },
+  "src/contexts": {
+   "arquivos": 7,
+   "linhas": 280
+  },
+  "src/hooks": {
+   "arquivos": 84,
+   "linhas": 9232
+  },
+  "src/integrations": {
+   "arquivos": 10,
+   "linhas": 7334
+  },
+  "src/lib": {
+   "arquivos": 53,
+   "linhas": 6298
+  },
+  "src/main.tsx": {
+   "arquivos": 1,
+   "linhas": 34
+  },
+  "src/pages": {
+   "arquivos": 9,
+   "linhas": 1901
+  },
+  "src/test": {
+   "arquivos": 3,
+   "linhas": 87
+  },
+  "src/tests": {
+   "arquivos": 3,
+   "linhas": 171
+  },
+  "supabase/functions": {
+   "arquivos": 115,
+   "linhas": 20555
+  },
+  "tailwind.config.ts": {
+   "arquivos": 1,
+   "linhas": 132
+  },
+  "vite.config.ts": {
+   "arquivos": 1,
+   "linhas": 43
+  },
+  "vitest.config.ts": {
+   "arquivos": 1,
+   "linhas": 70
+  }
+ },
+ "maiores_arquivos": [
+  {
+   "arquivo": "src/integrations/supabase/types.ts",
+   "linhas": 5989
+  },
+  {
+   "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
+   "linhas": 2328
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "linhas": 2138
+  },
+  {
+   "arquivo": "scripts/supabase_snapshot/snapshot.py",
+   "linhas": 1791
+  },
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "linhas": 924
+  },
+  {
+   "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
+   "linhas": 871
+  },
+  {
+   "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
+   "linhas": 762
+  },
+  {
+   "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
+   "linhas": 738
+  },
+  {
+   "arquivo": "src/pages/Monitoring.tsx",
+   "linhas": 726
+  },
+  {
+   "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+   "linhas": 712
+  },
+  {
+   "arquivo": "supabase/functions/workflow-engine/index.ts",
+   "linhas": 707
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
+   "linhas": 657
+  },
+  {
+   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+   "linhas": 656
+  },
+  {
+   "arquivo": "src/components/ui/sidebar.tsx",
+   "linhas": 619
+  },
+  {
+   "arquivo": "src/lib/orgErrorHandler.ts",
+   "linhas": 606
+  },
+  {
+   "arquivo": "src/components/lux/integrations/EmailAccountsPanel.tsx",
+   "linhas": 585
+  },
+  {
+   "arquivo": "supabase/functions/lusha-search/index.ts",
+   "linhas": 580
+  },
+  {
+   "arquivo": "src/components/lux/settings/RLSVerificationPanel.tsx",
+   "linhas": 541
+  },
+  {
+   "arquivo": "src/components/lux/OrganizationsView.tsx",
+   "linhas": 540
+  },
+  {
+   "arquivo": "supabase/functions/_shared/hiker-client.ts",
+   "linhas": 523
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/DlqHealthCard.tsx",
+   "linhas": 497
+  },
+  {
+   "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
+   "linhas": 493
+  },
+  {
+   "arquivo": "supabase/functions/rls-tests/index.ts",
+   "linhas": 479
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+   "linhas": 475
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
+   "linhas": 475
+  }
+ ],
+ "qualidade": {
+  "any": 28,
+  "console_log": 68,
+  "ts_ignore": 0,
+  "eslint_disable": 1,
+  "todos": 7,
+  "arquivos_acima_500_linhas": 20
+ },
+ "todos": [
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "linha": 188,
+   "tipo": "TODO",
+   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(line); if (m) todos.push({ linha: ln, tipo: m[1], text"
+  },
+  {
+   "arquivo": "scripts/ai-context/gerar.mjs",
+   "linha": 222,
+   "tipo": "TODO",
+   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(l); return m ? { linha: i + 1, tipo: m[1], texto: m[2]"
+  },
+  {
+   "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
+   "linha": 40,
+   "tipo": "TODO",
+   "texto": "id de tabela referenciada */`;"
+  },
+  {
+   "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
+   "linha": 97,
+   "tipo": "TODO",
+   "texto": "campos NOT NULL de ${t} */ organization_id: org, user_id: uid }) },`,"
+  },
+  {
+   "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
+   "linha": 429,
+   "tipo": "TODO",
+   "texto": "</code> por valores reais quando necessário."
+  },
+  {
+   "arquivo": "supabase/functions/_shared/apollo-departments.ts",
+   "linha": 10,
+   "tipo": "TODO",
+   "texto": "enum de LUSHA_DEPARTMENTS tem entrada aqui."
+  },
+  {
+   "arquivo": "scripts/regras_negocio/generate.py",
+   "linha": 570,
+   "tipo": "TODO",
+   "texto": "\", \"http\", \"import\")) and \"://\" not in c:"
+  }
+ ],
+ "alertas": {
+  "rotas_sem_arquivo": [],
+  "componentes_ambiguos": [],
+  "menu_sem_destino": [
+   "Agente IA -> ai-agent",
+   "Analytics -> analytics",
+   "API & Webhooks -> integrations",
+   "Automações (Tempo Real) -> automations",
+   "Campanhas -> campaigns",
+   "Configurações -> settings",
+   "Configurar IPC -> icp",
+   "Dashboard -> dashboard",
+   "Empresas -> companies",
+   "Google Maps -> gmaps",
+   "Home -> dashboard",
+   "IA -> ai-agent",
+   "Lista de Supressão -> suppressions",
+   "Lixeira -> recycle-bin",
+   "LUX IA -> dashboard",
+   "Mapa de Empresas -> map",
+   "Pipeline (Deals) -> deals",
+   "Resultados Raspagem -> scrape-results",
+   "RLS Discovery -> rls-discovery",
+   "Sinais de Intenção -> intent",
+   "Stakeholders -> stakeholders",
+   "Violações de Org -> org-violations",
+   "Workflows -> workflows",
+   "Workspaces -> organizations"
+  ],
+  "edges_orfas": [
+   "api-latency-alerts",
+   "audit-logs-prune",
+   "circuit-breaker-alerts",
+   "cnpj-enrich",
+   "cnpj-enrich-worker",
+   "cnpj-settings-status",
+   "deliverability-check",
+   "dlq-alerts",
+   "email-verify",
+   "gmaps-places-search",
+   "health",
+   "instagram-dlq-replay",
+   "instagram-enqueue",
+   "instagram-worker",
+   "instagram-worker-health",
+   "latency-alerts",
+   "lusha-cookie-health",
+   "lusha-reveal",
+   "lusha-search",
+   "mcp",
+   "oracle-cookies-preflight",
+   "oracle-enrich-contact",
+   "oracle-push-bitrix",
+   "oracle-search-decisors",
+   "pg-net-watchdog",
+   "purge-soft-deleted",
+   "reaper-alerts",
+   "retry-policy-tuner",
+   "rls-tests",
+   "scrape-queue-worker",
+   "sla-alerts",
+   "sla-auto-tune",
+   "system-recovery-status",
+   "track-click",
+   "track-open",
+   "web-dlq-replay",
+   "web-scrape-enqueue",
+   "web-scrape-extract",
+   "web-scrape-status",
+   "web-scrape-worker"
+  ],
+  "edges_chamadas_sem_pasta": [],
+  "tabelas_sem_rls": [],
+  "tabelas_usadas_sem_definicao": [],
+  "tabelas_com_drift_migration_vs_types": [
+   "audit_logs",
+   "circuit_breakers",
+   "feature_flags",
+   "idempotency_keys",
+   "lusha_contacts",
+   "lusha_search_sessions"
+  ],
+  "rpcs_sem_definicao": [],
+  "componentes_orfaos": [
+   "src/components/auth/MFAEnroll.tsx",
+   "src/components/auth/MFAVerify.tsx",
+   "src/components/lux/LuxImage.tsx",
+   "src/components/NavLink.tsx",
+   "src/components/ui/accordion.tsx",
+   "src/components/ui/calendar.tsx",
+   "src/components/ui/carousel.tsx",
+   "src/components/ui/chart.tsx",
+   "src/components/ui/context-menu.tsx",
+   "src/components/ui/drawer.tsx",
+   "src/components/ui/form.tsx",
+   "src/components/ui/hover-card.tsx",
+   "src/components/ui/menubar.tsx",
+   "src/components/ui/navigation-menu.tsx",
+   "src/components/ui/pagination.tsx",
+   "src/components/ui/radio-group.tsx",
+   "src/components/ui/resizable.tsx",
+   "src/components/ui/sidebar.tsx",
+   "src/components/ui/toggle-group.tsx",
+   "src/components/ui/toggle.tsx"
+  ],
+  "componentes_com_nome_duplicado": [
+   "Sidebar",
+   "Toaster"
+  ],
+  "scripts_orfaos": [
+   "scripts/gen-current-report.ts",
+   "scripts/gen-legacy-baseline.ts",
+   "scripts/gen-round19-validation.ts",
+   "scripts/gen-round25-preflight.ts",
+   "scripts/gen-round26-preflight.ts",
+   "scripts/gen-round36-preflight.ts",
+   "scripts/gen-web-scrape-reports.ts",
+   "scripts/mc-r40-preflight.ts",
+   "scripts/sim-scrape.ts"
+  ],
+  "env_usadas_nao_declaradas": [
+   "DEV",
+   "PROD",
+   "SUPABASE_PUBLISHABLE_KEY",
+   "SUPABASE_URL",
+   "VITE_ADMIN_LIST_TOKEN",
+   "VITE_SUPABASE_PROJECT_ID",
+   "VITE_SUPABASE_PUBLISHABLE_KEY",
+   "VITE_SUPABASE_URL"
+  ],
+  "ciclos_de_import": 5,
+  "possiveis_segredos_no_codigo": [
+   "e2e/helpers/supabase.ts:7",
+   "scripts/ai-context/cenarios.mjs:102",
+   "supabase/functions/_shared/__tests__/lusha-client.test.ts:31",
+   "supabase/functions/_shared/__tests__/lusha-client.test.ts:34"
+  ]
+ },
+ "erros_do_gerador": []
+}

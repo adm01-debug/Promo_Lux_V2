@@ -1,0 +1,2221 @@
+{
+ "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
+ "format_version": 2,
+ "arestas": {
+  "scripts/gen-current-report.ts": [
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/gen-legacy-baseline.ts": [
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/gen-round18-preflight.ts": [
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/gen-round19-preflight.ts": [
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/gen-web-scrape-reports.ts": [
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/mc-r35-preflight.ts": [
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/mc-r40-preflight.ts": [
+   "src/lib/resilience/report.ts",
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "scripts/sim-scrape.ts": [
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "src/App.tsx": [
+   "src/components/lux/AutoTopProgressBar.tsx",
+   "src/components/lux/ErrorBoundary.tsx",
+   "src/components/lux/OrgErrorBanner.tsx",
+   "src/components/lux/PageTransition.tsx",
+   "src/components/lux/UnsavedChangesDialog.tsx",
+   "src/components/ui/sonner.tsx",
+   "src/components/ui/toaster.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/contexts/ActiveOrgContext.tsx",
+   "src/contexts/AuthContext.tsx",
+   "src/contexts/DemoContext.tsx",
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/useConfirm.tsx",
+   "src/hooks/useUnsavedChanges.tsx",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/orgErrorHandler.ts",
+   "src/pages/AcceptInvite.tsx",
+   "src/pages/AdminCompanies.tsx",
+   "src/pages/CnpjSettingsPage.tsx",
+   "src/pages/Index.tsx",
+   "src/pages/Login.tsx",
+   "src/pages/Monitoring.tsx",
+   "src/pages/NotFound.tsx",
+   "src/pages/OAuthConsent.tsx",
+   "src/pages/ResetPassword.tsx"
+  ],
+  "src/components/NavLink.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/auth/MFAEnroll.tsx": [
+   "src/components/ui/alert.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input-otp.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useMFA.ts"
+  ],
+  "src/components/auth/MFAVerify.tsx": [
+   "src/components/ui/alert.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input-otp.tsx",
+   "src/hooks/useMFA.ts"
+  ],
+  "src/components/lux/AIAgentView.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/ActivityFeed.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/GradientAvatar.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useDashboardData.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/AddCompanyDialog.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useCnpjAutoEnrichSetting.ts",
+   "src/hooks/useCnpjEnrich.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/schemas/company.ts"
+  ],
+  "src/components/lux/AnalyticsView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/analytics/AnimatedCounter.tsx",
+   "src/components/lux/analytics/ConversionTab.tsx",
+   "src/components/lux/analytics/DataEnrichmentTab.tsx",
+   "src/components/lux/analytics/useAnalyticsData.ts",
+   "src/components/ui/button.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useThemeColors.ts",
+   "src/lib/exportAnalyticsPDF.ts"
+  ],
+  "src/components/lux/AppBreadcrumbs.tsx": [
+   "src/components/lux/layout/nav-items.ts",
+   "src/components/ui/breadcrumb.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/useNavigationHistory.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/AutoTopProgressBar.tsx": [
+   "src/components/lux/TopProgressBar.tsx"
+  ],
+  "src/components/lux/AutomationsList.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/contexts/demo-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/demoData.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/CampaignsView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/campaigns/CampaignFormFields.tsx",
+   "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/unsaved-changes-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/usePermissions.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts",
+   "src/lib/schemas/campaign.ts"
+  ],
+  "src/components/lux/CommandPalette.tsx": [
+   "src/components/lux/command-palette/commandPaletteData.ts",
+   "src/components/ui/command.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useNavigationHistory.ts",
+   "src/hooks/useRecentViews.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/components/lux/CompaniesMapView.tsx": [
+   "src/components/lux/map/MapFilters.tsx",
+   "src/components/lux/map/MapMarkerIcons.tsx",
+   "src/components/lux/map/MarkerClusterLayer.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/components/lux/CompaniesView.tsx": [
+   "src/components/lux/AddCompanyDialog.tsx",
+   "src/components/lux/CompanyDetailModal.tsx",
+   "src/components/lux/CompanyFilters.tsx",
+   "src/components/lux/CompanyPagination.tsx",
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/EditCompanyDialog.tsx",
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/ViewSkeleton.tsx",
+   "src/components/lux/companies/CompanyTableRow.tsx",
+   "src/components/lux/companies/ImportCompaniesDialog.tsx",
+   "src/components/lux/company-filters-utils.ts",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/contexts/demo-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/usePermissions.ts",
+   "src/hooks/usePersistedFilters.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts",
+   "src/lib/exportCSV.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/CompanyDetailModal.tsx": [
+   "src/components/lux/CompanyOpenHours.tsx",
+   "src/components/lux/CompanyReviewsList.tsx",
+   "src/components/lux/icons/LinkedinIcon.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/separator.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useCompanyDetails.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/CompanyFilters.tsx": [
+   "src/components/lux/company-filters-utils.ts",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/input.tsx",
+   "src/hooks/use-mobile.tsx"
+  ],
+  "src/components/lux/CompanyOpenHours.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx"
+  ],
+  "src/components/lux/CompanyPagination.tsx": [
+   "src/components/ui/button.tsx"
+  ],
+  "src/components/lux/CompanyReviewsList.tsx": [
+   "src/components/ui/avatar.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useCompanyReviews.ts"
+  ],
+  "src/components/lux/CompanyTable.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/useVirtualCompanies.ts",
+   "src/hooks/useVirtualization.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/DashboardView.tsx": [
+   "src/components/lux/ActivityFeed.tsx",
+   "src/components/lux/AutomationsList.tsx",
+   "src/components/lux/CompanyTable.tsx",
+   "src/components/lux/EnrichmentFunnel.tsx",
+   "src/components/lux/QuickActions.tsx",
+   "src/components/lux/StatsGrid.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/useThemeColors.ts",
+   "src/hooks/useWeeklyPerformance.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/DataError.tsx": [
+   "src/components/ui/button.tsx"
+  ],
+  "src/components/lux/DealsView.tsx": [
+   "src/components/lux/deals/AddDealDialog.tsx",
+   "src/components/lux/deals/DealCard.tsx",
+   "src/components/lux/deals/DealColumn.tsx",
+   "src/components/lux/deals/DealDetailDrawer.tsx",
+   "src/components/lux/deals/StagesManagerDialog.tsx",
+   "src/components/ui/button.tsx",
+   "src/hooks/useDeals.ts",
+   "src/hooks/useTaskReminders.ts"
+  ],
+  "src/components/lux/EditCompanyDialog.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/hooks/unsaved-changes-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/orgErrorHandler.ts",
+   "src/lib/schemas/company.ts"
+  ],
+  "src/components/lux/EmailSuppressionsView.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/hooks/useEmailSuppressions.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/EmptyState.tsx": [
+   "src/components/ui/button.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/EnrichmentFunnel.tsx": [
+   "src/components/ui/skeleton.tsx",
+   "src/contexts/demo-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/components/lux/ErrorBoundary.tsx": [
+   "src/components/ui/button.tsx"
+  ],
+  "src/components/lux/GmapsScraperView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/PlacesApiNewToggle.tsx",
+   "src/components/lux/PlacesApiUsageCard.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/slider.tsx",
+   "src/components/ui/switch.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/api/gmaps.ts",
+   "src/lib/schemas/scrapeJob.ts"
+  ],
+  "src/components/lux/GradientAvatar.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/ICPConfigView.tsx": [
+   "src/components/lux/StickySaveBar.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/dropdown-menu.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/slider.tsx",
+   "src/hooks/unsaved-changes-context.ts",
+   "src/hooks/useICPConfig.ts"
+  ],
+  "src/components/lux/IntegrationsView.tsx": [
+   "src/components/lux/integrations/ApiDocsCard.tsx",
+   "src/components/lux/integrations/ApiKeysPanel.tsx",
+   "src/components/lux/integrations/EmailAccountsPanel.tsx",
+   "src/components/lux/integrations/OAuthSandboxPanel.tsx",
+   "src/components/lux/integrations/WebhooksPanel.tsx",
+   "src/components/ui/tabs.tsx"
+  ],
+  "src/components/lux/IntentSignalsView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/components/lux/KeyboardShortcutsDialog.tsx": [
+   "src/components/ui/dialog.tsx"
+  ],
+  "src/components/lux/LushaIntelligenceView.tsx": [
+   "src/components/lux/lusha/DecisionMakersGrid.tsx",
+   "src/components/lux/lusha/LushaCookieHealthBanner.tsx",
+   "src/components/lux/lusha/OracleV2ErrorBoundary.tsx",
+   "src/components/lux/lusha/OracleV2Panel.tsx",
+   "src/components/lux/lusha/SessionsPanel.tsx",
+   "src/components/lux/lusha/StatusBadge.tsx",
+   "src/components/lux/lusha/constants.ts",
+   "src/components/lux/lusha/historyUtils.ts",
+   "src/components/lux/lusha/types.ts",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/table.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useFeatureFlags.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/exportCSV.ts"
+  ],
+  "src/components/lux/LuxImage.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/NotificationsPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/OnboardingTour.tsx": [
+   "src/components/lux/onboarding/ConfettiEffect.tsx",
+   "src/components/lux/onboarding/TourSpotlight.tsx",
+   "src/components/lux/onboarding/TourSteps.ts",
+   "src/components/lux/onboarding/TourTooltip.tsx",
+   "src/components/lux/onboarding/tour-position.ts",
+   "src/hooks/useOnboardingState.ts"
+  ],
+  "src/components/lux/OrgErrorBanner.tsx": [
+   "src/components/ui/button.tsx",
+   "src/lib/orgErrorHandler.ts"
+  ],
+  "src/components/lux/OrgProxiesView.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/ProxyFormDialog.tsx",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/useOrgProxies.ts"
+  ],
+  "src/components/lux/OrgViolationsView.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/ViewSkeleton.tsx",
+   "src/components/lux/security/OrgViolationAlertsPanel.tsx",
+   "src/components/ui/alert.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/useOrganizations.ts",
+   "src/hooks/usePermissions.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/OrganizationsView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/organizations/ActivityHistory.tsx",
+   "src/components/lux/organizations/InviteSection.tsx",
+   "src/components/lux/organizations/MemberRow.tsx",
+   "src/components/lux/organizations/MembershipAuditLog.tsx",
+   "src/components/lux/organizations/WorkspaceSelector.tsx",
+   "src/components/lux/permissions/PermissionsMatrix.tsx",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/avatar.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/lib/exportCSV.ts"
+  ],
+  "src/components/lux/PageTransition.tsx": [
+   "src/components/lux/motion-variants.ts"
+  ],
+  "src/components/lux/PlacesApiNewToggle.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/PlacesApiUsageCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/usePlacesApiUsage.ts"
+  ],
+  "src/components/lux/ProxyFormDialog.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useOrgProxies.ts"
+  ],
+  "src/components/lux/QuickActions.tsx": [
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/components/lux/RecycleBinView.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/components/lux/SafeHTML.tsx": [
+   "src/lib/sanitize.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/ScrapeResultsView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/select.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/components/lux/SettingsView.tsx": [
+   "src/components/lux/StickySaveBar.tsx",
+   "src/components/lux/settings/MFASetup.tsx",
+   "src/components/lux/settings/RLSRegistryCoverage.tsx",
+   "src/components/lux/settings/RLSVerificationPanel.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/separator.tsx",
+   "src/components/ui/switch.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/unsaved-changes-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/usePermissions.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/StakeholderFinderView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/ViewSkeleton.tsx",
+   "src/components/lux/icons/LinkedinIcon.tsx",
+   "src/components/lux/stakeholders/StakeholderCard.tsx",
+   "src/components/lux/stakeholders/StakeholderListRow.tsx",
+   "src/components/ui/input.tsx",
+   "src/contexts/demo-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/components/lux/StatsGrid.tsx": [
+   "src/hooks/useDashboardData.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/StickySaveBar.tsx": [
+   "src/components/ui/button.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/ThemeToggle.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/popover.tsx",
+   "src/hooks/useSkin.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/UnsavedChangesDialog.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/hooks/unsaved-changes-context.ts"
+  ],
+  "src/components/lux/ViewSkeleton.tsx": [
+   "src/components/lux/skeletons/DashboardSkeleton.tsx",
+   "src/components/lux/skeletons/SkeletonPrimitives.tsx"
+  ],
+  "src/components/lux/WorkflowsView.tsx": [
+   "src/components/lux/DataError.tsx",
+   "src/components/lux/StepProgress.tsx",
+   "src/components/lux/ViewSkeleton.tsx",
+   "src/components/lux/workflows/WorkflowCard.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/slider.tsx",
+   "src/components/ui/switch.tsx",
+   "src/contexts/demo-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/usePermissions.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/api/workflows.ts",
+   "src/lib/demoData.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/analytics/AnimatedDonut.tsx": [
+   "src/components/lux/analytics/AnimatedCounter.tsx"
+  ],
+  "src/components/lux/analytics/ConversionTab.tsx": [
+   "src/components/lux/analytics/AnalyticsChartTooltip.tsx",
+   "src/components/lux/analytics/AnimatedCounter.tsx",
+   "src/components/lux/analytics/AnimatedDonut.tsx",
+   "src/components/lux/analytics/useAnalyticsData.ts"
+  ],
+  "src/components/lux/analytics/DataEnrichmentTab.tsx": [
+   "src/components/lux/analytics/AnalyticsChartTooltip.tsx",
+   "src/components/lux/analytics/AnimatedCounter.tsx",
+   "src/components/lux/analytics/AnimatedDonut.tsx"
+  ],
+  "src/components/lux/analytics/useAnalyticsData.ts": [
+   "src/components/lux/analytics/analytics-constants.ts",
+   "src/contexts/demo-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/components/lux/auth/EmailInput.tsx": [
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx"
+  ],
+  "src/components/lux/auth/ForgotPasswordOverlay.tsx": [
+   "src/components/lux/auth/EmailInput.tsx",
+   "src/components/ui/button.tsx"
+  ],
+  "src/components/lux/auth/GoogleLoginButton.tsx": [
+   "src/components/ui/button.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/auth/LoginCard.tsx": [
+   "src/components/lux/auth/AuthLogo.tsx",
+   "src/components/lux/auth/EmailInput.tsx",
+   "src/components/lux/auth/ForgotPasswordOverlay.tsx",
+   "src/components/lux/auth/GoogleLoginButton.tsx",
+   "src/components/lux/auth/PasswordInput.tsx",
+   "src/components/lux/auth/PasswordStrengthMeter.tsx",
+   "src/components/lux/auth/RateLimitWarning.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/separator.tsx",
+   "src/components/ui/tabs.tsx"
+  ],
+  "src/components/lux/auth/PasswordInput.tsx": [
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/automations/AutomationEventsFeed.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/useAutomationsMonitor.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/automations/AutomationKpiCards.tsx": [
+   "src/components/ui/card.tsx",
+   "src/hooks/useAutomationsMonitor.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/automations/AutomationQueuePanel.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/useAutomationsMonitor.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/automations/AutomationStageBadge.tsx": [
+   "src/hooks/useAutomationsMonitor.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/automations/AutomationsRealtimeView.tsx": [
+   "src/components/lux/automations/AutomationEventsFeed.tsx",
+   "src/components/lux/automations/AutomationKpiCards.tsx",
+   "src/components/lux/automations/AutomationQueuePanel.tsx",
+   "src/components/lux/automations/CompanyAutomationTable.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/hooks/useAutomationsMonitor.ts"
+  ],
+  "src/components/lux/automations/CompanyAutomationTable.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/automations/AutomationStageBadge.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/useAutomationsMonitor.ts"
+  ],
+  "src/components/lux/campaigns/CampaignFormFields.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/textarea.tsx"
+  ],
+  "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/command-palette/commandPaletteData.ts": [
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/components/lux/companies/CompanyTableRow.tsx": [
+   "src/components/lux/SafeHTML.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/dropdown-menu.tsx"
+  ],
+  "src/components/lux/companies/ImportCompaniesDialog.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/schemas/company.ts"
+  ],
+  "src/components/lux/deals/AddDealDialog.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/hooks/useDeals.ts"
+  ],
+  "src/components/lux/deals/DealCard.tsx": [
+   "src/hooks/useDeals.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/deals/DealColumn.tsx": [
+   "src/components/lux/deals/DealCard.tsx",
+   "src/components/ui/button.tsx",
+   "src/hooks/useDeals.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/deals/DealDetailDrawer.tsx": [
+   "src/components/lux/deals/DealTasksPanel.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/hooks/confirm-context.ts",
+   "src/hooks/useDeals.ts"
+  ],
+  "src/components/lux/deals/DealTasksPanel.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/input.tsx",
+   "src/hooks/confirm-context.ts",
+   "src/hooks/useDeals.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/deals/StagesManagerDialog.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/hooks/confirm-context.ts",
+   "src/hooks/useDeals.ts"
+  ],
+  "src/components/lux/integrations/ApiKeysPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/hooks/useApiKeys.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/integrations/AuthUrlConfirmDialog.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/hooks/use-toast.ts"
+  ],
+  "src/components/lux/integrations/DisconnectAccountDialog.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/integrations/DryRunLogsPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/hooks/confirm-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useDryRunLogs.ts"
+  ],
+  "src/components/lux/integrations/EmailAccountsAuditPanel.tsx": [
+   "src/components/ui/avatar.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useEmailAccountAuditLog.ts",
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/components/lux/integrations/EmailAccountsPanel.tsx": [
+   "src/components/lux/integrations/DisconnectAccountDialog.tsx",
+   "src/components/lux/integrations/EmailAccountsAuditPanel.tsx",
+   "src/components/lux/integrations/EmailSyncHistorySheet.tsx",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/usePermissions.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/emailErrorMessages.ts"
+  ],
+  "src/components/lux/integrations/EmailSyncHistorySheet.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useEmailSyncLog.ts",
+   "src/lib/emailErrorMessages.ts"
+  ],
+  "src/components/lux/integrations/EnvProfilesPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/hooks/confirm-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useEnvProfiles.ts"
+  ],
+  "src/components/lux/integrations/OAuthSandboxPanel.tsx": [
+   "src/components/lux/integrations/AuthUrlConfirmDialog.tsx",
+   "src/components/lux/integrations/DryRunLogsPanel.tsx",
+   "src/components/lux/integrations/EnvProfilesPanel.tsx",
+   "src/components/lux/integrations/OAuthSnapshotsPanel.tsx",
+   "src/components/lux/integrations/RedirectUriChecklist.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useDryRunLogs.ts",
+   "src/hooks/useEnvProfiles.ts",
+   "src/hooks/useOAuthSandboxSnapshots.ts",
+   "src/hooks/usePermissions.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/integrations/OAuthSnapshotsPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useOAuthSandboxSnapshots.ts",
+   "src/hooks/usePermissions.ts"
+  ],
+  "src/components/lux/integrations/RedirectUriChecklist.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/hooks/use-toast.ts",
+   "src/lib/redirectUriChecklist.ts"
+  ],
+  "src/components/lux/integrations/WebhooksPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/hooks/useWebhooks.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/layout/Header.tsx": [
+   "src/components/lux/AppBreadcrumbs.tsx",
+   "src/components/lux/GradientAvatar.tsx",
+   "src/components/lux/NotificationsPanel.tsx",
+   "src/components/lux/ThemeToggle.tsx",
+   "src/components/lux/organizations/WorkspaceSwitcher.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dropdown-menu.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/useNavigationHistory.ts",
+   "src/hooks/useNotificationCount.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/layout/MobileBottomNav.tsx": [
+   "src/hooks/useNavigationHistory.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/layout/Sidebar.tsx": [
+   "src/components/lux/layout/nav-items.ts",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/useNavigationHistory.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/utils.ts",
+   "src/lib/viewRegistry.ts"
+  ],
+  "src/components/lux/layout/nav-items.ts": [
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/components/lux/lusha/DecisionMakersGrid.test-d.ts": [
+   "src/components/lux/lusha/DecisionMakersGrid.tsx",
+   "src/components/lux/lusha/types.ts"
+  ],
+  "src/components/lux/lusha/DecisionMakersGrid.tsx": [
+   "src/components/lux/lusha/types.ts",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/table.tsx",
+   "src/components/ui/tooltip.tsx"
+  ],
+  "src/components/lux/lusha/LushaCookieHealthBanner.tsx": [
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/lusha/OracleV2ErrorBoundary.tsx": [
+   "src/components/ui/button.tsx"
+  ],
+  "src/components/lux/lusha/OracleV2Panel.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/oracleV2Helpers.ts",
+   "src/hooks/useOracleV2.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/lusha/departmentMap.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/lusha/SessionsPanel.tsx": [
+   "src/components/lux/lusha/StatusBadge.tsx",
+   "src/components/lux/lusha/types.ts",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/lusha/StatusBadge.tsx": [
+   "src/components/ui/badge.tsx"
+  ],
+  "src/components/lux/lusha/constants.ts": [
+   "src/components/lux/lusha/types.ts"
+  ],
+  "src/components/lux/map/MapFilters.tsx": [
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/slider.tsx"
+  ],
+  "src/components/lux/map/MarkerClusterLayer.tsx": [
+   "src/components/lux/map/MapMarkerIcons.tsx"
+  ],
+  "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useApiLatencyAlertSettings.ts",
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/components/lux/monitoring/ApiLatencyPanel.tsx": [
+   "src/components/lux/monitoring/LatencySparkline.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useApiLatency.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/AuditTrailPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/select.tsx",
+   "src/hooks/useAuditTrail.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/AutomationLogsPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/select.tsx",
+   "src/hooks/useAutomationLogs.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/AutomationStatusPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/CircuitBreakerPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/useCircuitBreakers.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/DLQReplayPanel.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/checkbox.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/table.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/contexts/active-org-context.ts",
+   "src/hooks/useDlqReplay.ts"
+  ],
+  "src/components/lux/monitoring/DbHealthDashboard.tsx": [
+   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+   "src/components/lux/monitoring/DlqHealthCard.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useDbHealth.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useDlqAlertSettings.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/hooks/usePersistedFilters.ts",
+   "src/lib/csv.ts",
+   "src/lib/dlq/aggregations.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/DlqHealthCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useAutomationLogs.ts",
+   "src/hooks/useDlqAlertSettings.ts",
+   "src/hooks/useDlqHealth.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/hooks/usePersistedFilters.ts",
+   "src/lib/csv.ts",
+   "src/lib/dlq/aggregations.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/DlqTriageView.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/useDlqItems.ts",
+   "src/lib/dlq/classify.ts"
+  ],
+  "src/components/lux/monitoring/InstagramConnectionPanel.tsx": [
+   "src/components/ui/alert.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/JobDetailsSheet.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useRealtimeJobDetails.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/LatencySparkline.tsx": [
+   "src/hooks/useApiLatency.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/MonitoringView.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/MonteCarloReportPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useResilienceComparison.ts"
+  ],
+  "src/components/lux/monitoring/MultiQueueResilienceCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/OrgRateLimitsView.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/hooks/useOrgRateLimit.ts"
+  ],
+  "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/usePartitionAdvisories.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/QaHistoryPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/table.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/ReaperHistoryPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useReaperAlerts.ts",
+   "src/hooks/useReaperHistory.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/ResilienceReport.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/useResilienceComparison.ts",
+   "src/lib/csv.ts",
+   "src/lib/resilience/compareReport.ts"
+  ],
+  "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx": [
+   "src/components/lux/monitoring/RetryAutoTunerCard.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/progress.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useResilienceSimulator.ts",
+   "src/lib/resilience/report.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/RetryAutoTunerCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/lib/resilience/autotune.ts",
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/ScrapeLatencyPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useApiLatency.ts"
+  ],
+  "src/components/lux/monitoring/ScrapeQueuePanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/hooks/useScrapeQueue.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/SlaAlertSettingsCard.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/popover.tsx",
+   "src/components/ui/switch.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/SlaAutoTuneBlockedCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/SlaCompliancePanel.tsx": [
+   "src/components/lux/monitoring/SlaAlertSettingsCard.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/SlaHistoryCard.tsx": [
+   "src/components/lux/monitoring/SlaHistoryTrendChart.tsx",
+   "src/components/lux/monitoring/slaRiskAnalysis.ts",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/select.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/exportCSV.ts"
+  ],
+  "src/components/lux/monitoring/SlaHistoryTrendChart.tsx": [
+   "src/components/lux/monitoring/slaHistoryChartData.ts"
+  ],
+  "src/components/lux/monitoring/SlaRecommendationRowItem.tsx": [
+   "src/components/lux/monitoring/SlaRecommendationsCard.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/switch.tsx"
+  ],
+  "src/components/lux/monitoring/SlaRecommendationsCard.tsx": [
+   "src/components/lux/monitoring/SlaRecommendationRowItem.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/SlaTrendChart.tsx": [
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/monitoring/SourceComparisonReport.tsx": [
+   "src/components/lux/monitoring/SourceComparisonSummary.tsx",
+   "src/components/lux/monitoring/SourceComparisonTable.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/select.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/sourceQualityReport.ts"
+  ],
+  "src/components/lux/monitoring/SourceComparisonSummary.tsx": [
+   "src/components/ui/card.tsx",
+   "src/lib/sourceQualityReport.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/SourceComparisonTable.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/lib/sourceQualityReport.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/VaultCookiesPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/lux/monitoring/WebScrapeView.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/hooks/useWebScrape.ts"
+  ],
+  "src/components/lux/onboarding/TourTooltip.tsx": [
+   "src/components/lux/onboarding/TourSteps.ts",
+   "src/components/lux/onboarding/tour-position.ts",
+   "src/components/ui/button.tsx"
+  ],
+  "src/components/lux/onboarding/tour-position.ts": [
+   "src/components/lux/onboarding/TourSteps.ts"
+  ],
+  "src/components/lux/organizations/InviteSection.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/components/lux/organizations/MemberRow.tsx": [
+   "src/components/ui/avatar.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/select.tsx",
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/components/lux/organizations/MembershipAuditDetailSheet.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/separator.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useMembershipAuditLog.ts"
+  ],
+  "src/components/lux/organizations/MembershipAuditLog.tsx": [
+   "src/components/lux/EmptyState.tsx",
+   "src/components/lux/organizations/MembershipAuditDetailSheet.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useMembershipAuditLog.ts"
+  ],
+  "src/components/lux/organizations/WorkspaceSelector.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/components/lux/organizations/WorkspaceSwitcher.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/dropdown-menu.tsx",
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/components/lux/permissions/PermissionGate.tsx": [
+   "src/hooks/usePermissions.ts",
+   "src/lib/permissions.ts"
+  ],
+  "src/components/lux/permissions/PermissionsMatrix.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/lib/permissions.ts"
+  ],
+  "src/components/lux/security/OrgViolationAlertsPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/useOrganizations.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/settings/MFASetup.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/components/lux/settings/RLSDiscoveryView.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/exportCSV.ts",
+   "src/lib/rlsRegistry.ts"
+  ],
+  "src/components/lux/settings/RLSRegistryCoverage.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/rlsRegistry.ts"
+  ],
+  "src/components/lux/settings/RLSVerificationPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/exportRLSReport.ts"
+  ],
+  "src/components/lux/skeletons/DashboardSkeleton.tsx": [
+   "src/components/lux/skeletons/SkeletonPrimitives.tsx",
+   "src/components/ui/skeleton.tsx"
+  ],
+  "src/components/lux/skeletons/SkeletonPrimitives.tsx": [
+   "src/components/ui/skeleton.tsx"
+  ],
+  "src/components/lux/skeletons/ViewSkeletons.tsx": [
+   "src/components/lux/skeletons/SkeletonPrimitives.tsx",
+   "src/components/ui/skeleton.tsx"
+  ],
+  "src/components/lux/stakeholders/StakeholderCard.tsx": [
+   "src/components/lux/icons/LinkedinIcon.tsx",
+   "src/components/lux/stakeholders/stakeholder-utils.ts",
+   "src/components/ui/badge.tsx"
+  ],
+  "src/components/lux/stakeholders/StakeholderListRow.tsx": [
+   "src/components/lux/icons/LinkedinIcon.tsx",
+   "src/components/lux/stakeholders/stakeholder-utils.ts",
+   "src/components/ui/badge.tsx"
+  ],
+  "src/components/lux/view-skeleton-map.tsx": [
+   "src/components/lux/skeletons/DashboardSkeleton.tsx",
+   "src/components/lux/skeletons/SkeletonPrimitives.tsx",
+   "src/components/lux/skeletons/ViewSkeletons.tsx",
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/components/lux/workflows/WorkflowCard.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/lib/api/workflows.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/accordion.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/alert-dialog.tsx": [
+   "src/components/ui/button-variants.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/alert.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/avatar.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/badge.tsx": [
+   "src/components/ui/badge-variants.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/breadcrumb.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/button.tsx": [
+   "src/components/ui/button-variants.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/calendar.tsx": [
+   "src/components/ui/button-variants.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/card.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/carousel.tsx": [
+   "src/components/ui/button.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/chart.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/checkbox.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/command.tsx": [
+   "src/components/ui/dialog.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/context-menu.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/dialog.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/drawer.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/dropdown-menu.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/form.tsx": [
+   "src/components/ui/label.tsx",
+   "src/components/ui/use-form-field.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/hover-card.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/input-otp.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/input.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/label.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/menubar.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/navigation-menu.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/pagination.tsx": [
+   "src/components/ui/button-variants.ts",
+   "src/components/ui/button.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/popover.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/progress.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/radio-group.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/resizable.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/scroll-area.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/select.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/separator.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/sheet.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/sidebar.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/separator.tsx",
+   "src/components/ui/sheet.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/components/ui/use-sidebar.ts",
+   "src/hooks/use-mobile.tsx",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/skeleton.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/slider.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/switch.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/table.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/tabs.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/textarea.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/toast.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/toaster.tsx": [
+   "src/components/ui/toast.tsx",
+   "src/hooks/use-toast.ts"
+  ],
+  "src/components/ui/toggle-group.tsx": [
+   "src/components/ui/toggle-variants.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/toggle.tsx": [
+   "src/components/ui/toggle-variants.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/tooltip.tsx": [
+   "src/lib/utils.ts"
+  ],
+  "src/components/ui/use-toast.ts": [
+   "src/hooks/use-toast.ts"
+  ],
+  "src/contexts/ActiveOrgContext.tsx": [
+   "src/contexts/active-org-context.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/contexts/AuthContext.tsx": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/contexts/DemoContext.tsx": [
+   "src/contexts/demo-context.ts"
+  ],
+  "src/contexts/active-org-context.ts": [
+   "src/hooks/useOrganizations.ts"
+  ],
+  "src/hooks/oracleV2Helpers.ts": [
+   "src/hooks/useOracleV2.ts"
+  ],
+  "src/hooks/use-toast.ts": [
+   "src/components/ui/toast.tsx"
+  ],
+  "src/hooks/useApiKeys.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useApiLatency.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useApiLatencyAlertSettings.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useAuditTrail.ts": [
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useAutomationLogs.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useAutomationsMonitor.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useBottomNavSwipe.ts": [
+   "src/hooks/useNavigationHistory.ts",
+   "src/hooks/useSwipeGesture.ts"
+  ],
+  "src/hooks/useCircuitBreakerAlerts.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useCircuitBreakers.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useCnpjEnrich.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/lib/cnpj.ts"
+  ],
+  "src/hooks/useCompanyDetails.ts": [
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useCompanyReviews.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useConfirm.tsx": [
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/button-variants.ts",
+   "src/hooks/confirm-context.ts",
+   "src/lib/utils.ts"
+  ],
+  "src/hooks/useDashboardData.ts": [
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/hooks/useDbHealth.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useDeals.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useDlqAlertSettings.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useDlqHealth.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useDlqItems.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/dlq/classify.ts"
+  ],
+  "src/hooks/useDlqReplay.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useEmailAccountAuditLog.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useEmailSuppressions.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useEmailSyncLog.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useFeatureFlag.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useFeatureFlags.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
+  ],
+  "src/hooks/useICPConfig.ts": [
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useKeyboardShortcuts.ts": [
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/hooks/useLoginForm.ts": [
+   "src/hooks/use-toast.ts",
+   "src/hooks/useRateLimit.ts",
+   "src/integrations/lovable/index.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/schemas/auth.ts"
+  ],
+  "src/hooks/useMFA.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useMembershipAuditLog.ts": [
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useNavigationHistory.ts": [
+   "src/lib/viewRegistry.ts"
+  ],
+  "src/hooks/useNotificationCount.ts": [
+   "src/contexts/demo-context.ts",
+   "src/integrations/supabase/withOrg.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/hooks/useOAuthSandboxSnapshots.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useOnboardingState.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useOracleV2.ts": [
+   "src/hooks/oracleV2Helpers.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useOrgProxies.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useOrgRateLimit.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useOrganizations.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
+  ],
+  "src/hooks/usePartitionAdvisories.ts": [
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/usePermissions.ts": [
+   "src/contexts/auth-context.ts",
+   "src/hooks/useOrganizations.ts",
+   "src/lib/permissions.ts"
+  ],
+  "src/hooks/usePlacesApiUsage.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useRateLimit.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useRealtimeCompanies.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useRealtimeJobDetails.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useRealtimeScrapeJobs.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useReaperAlerts.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useReaperHistory.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useRecentViews.ts": [
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/hooks/useResilienceComparison.ts": [
+   "src/lib/resilience/compareReport.ts"
+  ],
+  "src/hooks/useResilienceSimulator.ts": [
+   "src/lib/resilience/report.ts",
+   "src/lib/resilience/scenarios.ts",
+   "src/lib/resilience/simulator.ts"
+  ],
+  "src/hooks/useScrapeQueue.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useSkin.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useTaskReminders.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useUnsavedChanges.tsx": [
+   "src/hooks/unsaved-changes-context.ts"
+  ],
+  "src/hooks/useVirtualCompanies.ts": [
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useWebScrape.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useWebhooks.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useWeeklyPerformance.ts": [
+   "src/contexts/demo-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/demoData.ts"
+  ],
+  "src/integrations/lovable/index.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/integrations/supabase/client.ts": [
+   "src/integrations/supabase/types.ts"
+  ],
+  "src/integrations/supabase/withOrg.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/types.ts"
+  ],
+  "src/lib/api/gmaps.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/lib/api/workflows.ts": [
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/lib/csv.ts": [
+   "src/lib/exportCSV.ts"
+  ],
+  "src/lib/demoData.ts": [
+   "src/hooks/useDashboardData.ts"
+  ],
+  "src/lib/exportAnalyticsPDF.ts": [
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/lib/exportRLSReport.ts": [
+   "src/lib/exportCSV.ts"
+  ],
+  "src/lib/lusha/departmentMap.ts": [
+   "src/lib/lusha/departmentMap.data.ts"
+  ],
+  "src/lib/mcp/index.ts": [
+   "src/lib/mcp/tools/get-company.ts",
+   "src/lib/mcp/tools/get-dashboard-stats.ts",
+   "src/lib/mcp/tools/list-companies.ts",
+   "src/lib/mcp/tools/list-decision-makers.ts",
+   "src/lib/mcp/tools/list-scrape-jobs.ts"
+  ],
+  "src/lib/mcp/tools/get-company.ts": [
+   "src/lib/mcp/supabase.ts"
+  ],
+  "src/lib/mcp/tools/get-dashboard-stats.ts": [
+   "src/lib/mcp/supabase.ts"
+  ],
+  "src/lib/mcp/tools/list-companies.ts": [
+   "src/lib/mcp/supabase.ts"
+  ],
+  "src/lib/mcp/tools/list-decision-makers.ts": [
+   "src/lib/mcp/supabase.ts"
+  ],
+  "src/lib/mcp/tools/list-scrape-jobs.ts": [
+   "src/lib/mcp/supabase.ts"
+  ],
+  "src/lib/orgErrorHandler.ts": [
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/lib/resilience/autotune.ts": [
+   "src/lib/resilience/simulator.ts"
+  ],
+  "src/lib/resilience/report.ts": [
+   "src/lib/resilience/simulator.ts"
+  ],
+  "src/lib/resilience/scenarios.ts": [
+   "src/lib/resilience/simulator.ts"
+  ],
+  "src/lib/schemas/company.ts": [
+   "src/lib/cnpj.ts"
+  ],
+  "src/lib/viewRegistry.ts": [
+   "src/components/lux/AIAgentView.tsx",
+   "src/components/lux/AnalyticsView.tsx",
+   "src/components/lux/CampaignsView.tsx",
+   "src/components/lux/CompaniesMapView.tsx",
+   "src/components/lux/CompaniesView.tsx",
+   "src/components/lux/DashboardView.tsx",
+   "src/components/lux/DealsView.tsx",
+   "src/components/lux/EmailSuppressionsView.tsx",
+   "src/components/lux/GmapsScraperView.tsx",
+   "src/components/lux/ICPConfigView.tsx",
+   "src/components/lux/IntegrationsView.tsx",
+   "src/components/lux/IntentSignalsView.tsx",
+   "src/components/lux/LushaIntelligenceView.tsx",
+   "src/components/lux/OrgViolationsView.tsx",
+   "src/components/lux/OrganizationsView.tsx",
+   "src/components/lux/RecycleBinView.tsx",
+   "src/components/lux/ScrapeResultsView.tsx",
+   "src/components/lux/SettingsView.tsx",
+   "src/components/lux/StakeholderFinderView.tsx",
+   "src/components/lux/WorkflowsView.tsx",
+   "src/components/lux/automations/AutomationsRealtimeView.tsx",
+   "src/components/lux/monitoring/MonitoringView.tsx",
+   "src/components/lux/settings/RLSDiscoveryView.tsx",
+   "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/main.tsx": [
+   "src/App.tsx",
+   "src/index.css"
+  ],
+  "src/pages/AcceptInvite.tsx": [
+   "src/components/ui/button.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/pages/AdminCompanies.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/skeleton.tsx"
+  ],
+  "src/pages/CnpjSettingsPage.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useCnpjAutoEnrichSetting.ts",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/pages/Index.tsx": [
+   "src/components/lux/CommandPalette.tsx",
+   "src/components/lux/ConnectionStatus.tsx",
+   "src/components/lux/KeyboardShortcutsDialog.tsx",
+   "src/components/lux/OnboardingTour.tsx",
+   "src/components/lux/TopProgressBar.tsx",
+   "src/components/lux/layout/Header.tsx",
+   "src/components/lux/layout/MobileBottomNav.tsx",
+   "src/components/lux/layout/Sidebar.tsx",
+   "src/components/lux/view-skeleton-map.tsx",
+   "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/contexts/auth-context.ts",
+   "src/contexts/demo-context.ts",
+   "src/hooks/unsaved-changes-context.ts",
+   "src/hooks/useBottomNavSwipe.ts",
+   "src/hooks/useFocusMode.ts",
+   "src/hooks/useKeyboardShortcuts.ts",
+   "src/hooks/useNavigationHistory.ts",
+   "src/hooks/useRealtimeCompanies.ts",
+   "src/hooks/useRealtimeScrapeJobs.ts",
+   "src/hooks/useRecentViews.ts",
+   "src/hooks/useSidebarState.ts",
+   "src/lib/utils.ts",
+   "src/lib/viewRegistry.ts"
+  ],
+  "src/pages/Login.tsx": [
+   "src/components/lux/auth/FloatingParticles.tsx",
+   "src/components/lux/auth/GoldConfetti.tsx",
+   "src/components/lux/auth/GoogleLoadingOverlay.tsx",
+   "src/components/lux/auth/LoginCard.tsx",
+   "src/components/ui/button.tsx",
+   "src/contexts/demo-context.ts",
+   "src/hooks/useLoginForm.ts"
+  ],
+  "src/pages/Monitoring.tsx": [
+   "src/components/lux/OrgProxiesView.tsx",
+   "src/components/lux/automations/AutomationsRealtimeView.tsx",
+   "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+   "src/components/lux/monitoring/ApiLatencyPanel.tsx",
+   "src/components/lux/monitoring/AuditTrailPanel.tsx",
+   "src/components/lux/monitoring/AutomationLogsPanel.tsx",
+   "src/components/lux/monitoring/AutomationStatusPanel.tsx",
+   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+   "src/components/lux/monitoring/CircuitBreakerPanel.tsx",
+   "src/components/lux/monitoring/DLQReplayPanel.tsx",
+   "src/components/lux/monitoring/DbHealthDashboard.tsx",
+   "src/components/lux/monitoring/DlqTriageView.tsx",
+   "src/components/lux/monitoring/InstagramConnectionPanel.tsx",
+   "src/components/lux/monitoring/JobDetailsSheet.tsx",
+   "src/components/lux/monitoring/MonteCarloReportPanel.tsx",
+   "src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
+   "src/components/lux/monitoring/OrgRateLimitsView.tsx",
+   "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
+   "src/components/lux/monitoring/QaHistoryPanel.tsx",
+   "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
+   "src/components/lux/monitoring/ResilienceReport.tsx",
+   "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx",
+   "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
+   "src/components/lux/monitoring/ScrapeLatencyPanel.tsx",
+   "src/components/lux/monitoring/ScrapeQueuePanel.tsx",
+   "src/components/lux/monitoring/SlaAutoTuneBlockedCard.tsx",
+   "src/components/lux/monitoring/SlaCompliancePanel.tsx",
+   "src/components/lux/monitoring/SlaHistoryCard.tsx",
+   "src/components/lux/monitoring/SlaRecommendationsCard.tsx",
+   "src/components/lux/monitoring/SlaTrendChart.tsx",
+   "src/components/lux/monitoring/SourceComparisonReport.tsx",
+   "src/components/lux/monitoring/VaultCookiesPanel.tsx",
+   "src/components/lux/monitoring/WebScrapeView.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/dropdown-menu.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/scroll-area.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/tabs.tsx",
+   "src/contexts/auth-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/useRealtimeScrapeJobs.ts",
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/pages/NotFound.tsx": [
+   "src/components/ui/button.tsx"
+  ],
+  "src/pages/OAuthConsent.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
+  "src/pages/ResetPassword.tsx": [
+   "src/components/lux/auth/PasswordInput.tsx",
+   "src/components/lux/auth/PasswordStrengthMeter.tsx",
+   "src/components/ui/button.tsx",
+   "src/hooks/use-toast.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/schemas/auth.ts"
+  ],
+  "supabase/functions/_shared/apify-gateway.ts": [
+   "supabase/functions/_shared/apify-fixtures.ts"
+  ],
+  "supabase/functions/_shared/apollo-departments.ts": [
+   "supabase/functions/_shared/lusha-departments.ts"
+  ],
+  "supabase/functions/_shared/hiker-client.ts": [
+   "supabase/functions/_shared/apify-fixtures.ts"
+  ],
+  "supabase/functions/_shared/lead-identity.ts": [
+   "supabase/functions/_shared/company-domain.ts",
+   "supabase/functions/_shared/linkedin-url.ts"
+  ],
+  "supabase/functions/_shared/leadcontact-client.ts": [
+   "supabase/functions/_shared/cookies.ts",
+   "supabase/functions/_shared/linkedin-url.ts",
+   "supabase/functions/_shared/phone-br.ts"
+  ],
+  "supabase/functions/_shared/lusha-client.ts": [
+   "supabase/functions/_shared/cookies.ts",
+   "supabase/functions/_shared/lusha-departments.ts"
+  ],
+  "supabase/functions/_shared/safe-update.ts": [
+   "supabase/functions/_shared/oracle-logger.ts"
+  ],
+  "supabase/functions/gmaps-proxy/index.ts": [
+   "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/domain/ipc/scoring.ts",
+   "supabase/functions/_shared/gmaps-mapper.ts",
+   "supabase/functions/_shared/schemas.ts",
+   "supabase/functions/_shared/tracing.ts"
+  ],
+  "supabase/functions/instagram-enqueue/index.ts": [
+   "supabase/functions/_shared/instagram-config-hash.ts"
+  ],
+  "supabase/functions/instagram-worker-health/index.ts": [
+   "supabase/functions/_shared/apify-gateway.ts"
+  ],
+  "supabase/functions/instagram-worker/index.ts": [
+   "supabase/functions/_shared/apify-fixtures.ts",
+   "supabase/functions/_shared/hiker-client.ts"
+  ],
+  "supabase/functions/lusha-search/index.ts": [
+   "supabase/functions/_shared/departmentMap.ts"
+  ],
+  "supabase/functions/oracle-enrich-contact/index.ts": [
+   "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/cookies.ts",
+   "supabase/functions/_shared/leadcontact-client.ts",
+   "supabase/functions/_shared/oracle-logger.ts",
+   "supabase/functions/_shared/org-membership.ts",
+   "supabase/functions/_shared/phone-br.ts",
+   "supabase/functions/_shared/safe-update.ts"
+  ],
+  "supabase/functions/oracle-push-bitrix/index.ts": [
+   "supabase/functions/_shared/bitrix-client.ts",
+   "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/oracle-logger.ts",
+   "supabase/functions/_shared/org-membership.ts",
+   "supabase/functions/_shared/safe-update.ts"
+  ],
+  "supabase/functions/oracle-search-decisors/index.ts": [
+   "supabase/functions/_shared/apollo-cache.ts",
+   "supabase/functions/_shared/apollo-client.ts",
+   "supabase/functions/_shared/apollo-departments.ts",
+   "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/company-domain.ts",
+   "supabase/functions/_shared/cookies.ts",
+   "supabase/functions/_shared/lead-identity.ts",
+   "supabase/functions/_shared/linkedin-url.ts",
+   "supabase/functions/_shared/lusha-client.ts",
+   "supabase/functions/_shared/lusha-departments.ts",
+   "supabase/functions/_shared/oracle-logger.ts",
+   "supabase/functions/_shared/org-membership.ts"
+  ],
+  "supabase/functions/rls-tests/index.ts": [
+   "supabase/functions/_shared/rlsTableRegistry.ts"
+  ],
+  "supabase/functions/scrape-queue-worker/index.ts": [
+   "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/omkar-gmaps-config.ts"
+  ],
+  "supabase/functions/track-click/index.ts": [
+   "supabase/functions/_shared/tracking-signature.ts"
+  ],
+  "supabase/functions/track-open/index.ts": [
+   "supabase/functions/_shared/tracking-signature.ts"
+  ],
+  "supabase/functions/web-scrape-worker/index.ts": [
+   "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/web-scrape/chaos.ts",
+   "supabase/functions/_shared/web-scrape/heuristics.ts",
+   "supabase/functions/_shared/web-scrape/html-to-markdown.ts",
+   "supabase/functions/_shared/web-scrape/robots.ts"
+  ],
+  "supabase/functions/webhook-dispatcher/index.ts": [
+   "supabase/functions/_shared/ssrf-guard.ts"
+  ]
+ }
+}
