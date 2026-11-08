@@ -1,0 +1,20 @@
+# .graphifyignore — Promo Lux V2 (LUX IA)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*-baseline.json
+*.baseline.json
+supabase/functions/node_modules/
+dist/
+dist-ssr/
+coverage/
+build/
+graphify-out/graph.json
+graphify-out/graph.html
+playwright-report/
+test-results/
+
+# Relatórios e PDFs de auditoria: texto volumoso que polui a busca do grafo
+docs/AUDITORIA_FINAL_LUX_IA.pdf
