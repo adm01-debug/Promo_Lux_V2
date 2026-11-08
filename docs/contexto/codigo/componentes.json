@@ -1384,7 +1384,9 @@
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
-   "edges": [],
+   "edges": [
+    "lusha-cookie-health"
+   ],
    "usado_por": 1,
    "orfao": false
   },
@@ -1440,7 +1442,9 @@
    "tabelas": [
     "lusha_search_sessions"
    ],
-   "edges": [],
+   "edges": [
+    "lusha-search"
+   ],
    "usado_por": 1,
    "orfao": false
   },
@@ -1476,7 +1480,8 @@
     "notifications"
    ],
    "edges": [
-    "lusha-decision-makers"
+    "lusha-decision-makers",
+    "lusha-search"
    ],
    "usado_por": 1,
    "orfao": false
@@ -2695,7 +2700,9 @@
    "tabelas": [
     "audit_logs"
    ],
-   "edges": [],
+   "edges": [
+    "rls-tests"
+   ],
    "usado_por": 1,
    "orfao": false
   },
@@ -3926,7 +3933,9 @@
     "useCnpjAutoEnrichSetting"
    ],
    "tabelas": [],
-   "edges": [],
+   "edges": [
+    "cnpj-settings-status"
+   ],
    "usado_por": 1,
    "orfao": false
   },

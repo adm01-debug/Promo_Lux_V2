@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4d5d4ee3c4` · branch `main` · 2026-11-08 22:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `aaaaf8ef25` · branch `main` · 2026-11-08 23:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -10,7 +10,7 @@
 - Tabelas de perfil/permissão: `organization_members`, `user_roles`
 - Colunas de perfil: `stakeholders.role` (text), `agent_chat_messages.role` (TEXT NOT NULL CHECK (role IN ('user', 'agent'))), `organization_members.role` (public.app_role NOT NULL DEFAULT 'viewer'), `organization_invites.role` (public.app_role NOT NULL DEFAULT 'viewer'), `user_roles.role` (public.app_role NOT NULL)
 - Claims do JWT usados em políticas/funções: nenhum
-- Funções usadas dentro de políticas RLS (a regra real está no corpo delas — veja `06`): `has_org_role`, `has_role`, `is_org_member`
+- Funções usadas dentro de políticas RLS (a regra real está no corpo delas — veja `06`): `default_org_for_current_user`, `has_org_role`, `has_role`, `is_org_member`
 
 ## Matriz tabela × operação → quem pode (derivada das políticas RLS)
 
@@ -28,7 +28,7 @@
 | `auth_rate_limits` | enabled | service_role: true | service_role: true | service_role: true | service_role: true |
 | `automation_alerts` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `automation_execution_logs` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | — | authenticated: public.has_role(auth.uid(), 'admin') |
-| `automation_steps` | enabled | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | — | — | — |
+| `automation_steps` | enabled | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | — |
 | `campaign_events` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
 | `campaign_messages` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | — | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `campaign_recipients` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
@@ -63,7 +63,7 @@
 | `intent_signals` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `ipc_config` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid())<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') |
 | `job_exports` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
-| `lusha_contacts` | enabled | — | authenticated: user_id = auth.uid() AND has_org_role(organization_id, auth.uid(), 'viewer'::app_role) | — | — |
+| `lusha_contacts` | enabled | public: organization_id = public.default_org_for_current_user()<br>service_role: true | service_role: true<br>authenticated: user_id = auth.uid() AND has_org_role(organization_id, auth.uid(), 'viewer'::app_role) | public: organization_id = public.default_org_for_current_user()<br>service_role: true | public: organization_id = public.default_org_for_current_user()<br>service_role: true |
 | `lusha_credit_usage_log` | não encontrado | authenticated: organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid())<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `lusha_dm_search_history` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `lusha_search_sessions` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
@@ -434,8 +434,6 @@ Middleware matcher (Next.js): nenhum
 | `audit_logs` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/lib/orgErrorHandler.ts` |
 | `feature_flags` | front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/components/lux/PlacesApiNewToggle.tsx` |
 | `feature_flags` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/PlacesApiNewToggle.tsx`<br>`src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
-| `lusha_contacts` | front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/OracleV2Panel.tsx`<br>`src/lib/mcp/tools/list-decision-makers.ts` |
-| `lusha_contacts` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/LushaIntelligenceView.tsx` |
 | `lusha_search_sessions` | acessada do front (2 arquivo(s)) sem RLS (não encontrado) | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx` |
 | `retry_policy_advisories` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 

@@ -180,13 +180,13 @@
    "casos": 7
   },
   {
-   "arquivo": "scripts/ai-context/gerar.unit.mjs",
+   "arquivo": "scripts/inventario/mudou-conteudo.unit.mjs",
    "tipo": "unit",
-   "linhas": 361,
+   "linhas": 54,
    "testa": [
-    "src/pages/Login.tsx"
+    "scripts/inventario/mudou-conteudo.mjs"
    ],
-   "casos": 18
+   "casos": 7
   },
   {
    "arquivo": "scripts/regras_negocio/test_generate.py",
@@ -1080,6 +1080,7 @@
  "sql": [],
  "cobertura_por_arquivo": {
   "playwright-fixture.ts": 7,
+  "scripts/inventario/mudou-conteudo.mjs": 1,
   "src/components/lux/CampaignsView.tsx": 1,
   "src/components/lux/CompaniesView.tsx": 1,
   "src/components/lux/CompanyFilters.tsx": 1,
@@ -1151,7 +1152,6 @@
   "src/lib/schemas/scrapeJob.ts": 1,
   "src/lib/sourceQualityReport.ts": 1,
   "src/lib/utils.ts": 1,
-  "src/pages/Login.tsx": 1,
   "supabase/functions/_shared/apify-fixtures.ts": 2,
   "supabase/functions/_shared/apify-gateway.ts": 1,
   "supabase/functions/_shared/apollo-cache.ts": 1,
@@ -1184,13 +1184,13 @@
    "src/pages/AdminCompanies.tsx",
    "src/pages/CnpjSettingsPage.tsx",
    "src/pages/Index.tsx",
+   "src/pages/Login.tsx",
    "src/pages/Monitoring.tsx",
    "src/pages/NotFound.tsx",
    "src/pages/OAuthConsent.tsx",
    "src/pages/ResetPassword.tsx"
   ],
   "hooks": [
-   "scripts/ai-context/cenarios.mjs",
    "src/components/lux/analytics/useAnalyticsData.ts",
    "src/components/ui/use-form-field.ts",
    "src/components/ui/use-sidebar.ts",

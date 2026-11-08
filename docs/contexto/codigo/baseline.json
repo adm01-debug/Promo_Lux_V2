@@ -2,11 +2,31 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4d5d4ee3c46f8351d64c538be291d2acc7c57c76",
+  "commit": "aaaaf8ef25138f6fc6386a8c24a8df4745430a09",
   "branch": "main",
-  "data_commit": "2026-11-08T19:23:53-03:00",
+  "data_commit": "2026-11-08T20:29:01-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "aaaaf8e",
+    "data": "2026-11-08",
+    "assunto": "fix(contexto): destrava a publicação e para de publicar fato falso (#12)"
+   },
+   {
+    "sha": "d90a598",
+    "data": "2026-11-08",
+    "assunto": "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json"
+   },
+   {
+    "sha": "1340f5b",
+    "data": "2026-11-08",
+    "assunto": "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md"
+   },
+   {
+    "sha": "1eb0ae9",
+    "data": "2026-11-08",
+    "assunto": "fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json"
+   },
    {
     "sha": "4d5d4ee",
     "data": "2026-11-08",
@@ -111,40 +131,44 @@
     "sha": "abdfbe0",
     "data": "2026-07-28",
     "assunto": "Removeu migrate-helper do CDN"
-   },
-   {
-    "sha": "79aac61",
-    "data": "2026-07-28",
-    "assunto": "Changes"
-   },
-   {
-    "sha": "16d105e",
-    "data": "2026-07-28",
-    "assunto": "Alinhou schema de config do Omkar"
-   },
-   {
-    "sha": "cf4a8c2",
-    "data": "2026-07-28",
-    "assunto": "Changes"
-   },
-   {
-    "sha": "77bfd38",
-    "data": "2026-07-28",
-    "assunto": "Changes"
    }
   ],
-  "arquivos_mudados_7d": 49,
+  "arquivos_mudados_7d": 51,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "AGENTS.md",
-    "mudancas": 4
+    "mudancas": 6
+   },
+   {
+    "pasta": ".gitignore",
+    "mudancas": 3
+   },
+   {
+    "pasta": "docs/agentes/github-ci.md",
+    "mudancas": 3
+   },
+   {
+    "pasta": "docs/agentes/mapa-repo.md",
+    "mudancas": 3
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 3
    },
    {
     "pasta": ".agents/skills/promo-lux-v2",
     "mudancas": 2
    },
    {
-    "pasta": ".gitignore",
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 2
+   },
+   {
+    "pasta": ".github/workflows/inventario-estado-semanal.yml",
+    "mudancas": 2
+   },
+   {
+    "pasta": "ai-context.config.json",
     "mudancas": 2
    },
    {
@@ -152,58 +176,58 @@
     "mudancas": 2
    },
    {
-    "pasta": "docs/agentes/github-ci.md",
+    "pasta": "inventario/estado/README.md",
     "mudancas": 2
    },
    {
-    "pasta": "package.json",
+    "pasta": "inventario/estado/edges.json",
     "mudancas": 2
    },
    {
-    "pasta": ".claude/ecc-tools.json",
-    "mudancas": 1
+    "pasta": "scripts/ai-context/gerar.mjs",
+    "mudancas": 2
    },
    {
-    "pasta": ".claude/homunculus/instincts",
-    "mudancas": 1
+    "pasta": "scripts/ci/check-claude-md-integrity.mjs",
+    "mudancas": 2
    },
    {
-    "pasta": ".claude/hooks/session-start.sh",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".claude/identity.json",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".claude/settings.json",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".claude/skills/promo-lux-v2",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".codex/AGENTS.md",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".codex/agents/docs-researcher.toml",
-    "mudancas": 1
-   },
-   {
-    "pasta": ".codex/agents/explorer.toml",
-    "mudancas": 1
+    "pasta": "scripts/inventario/gerar-repo.mjs",
+    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 5
+    "mudancas": 7
+   },
+   {
+    "arquivo": "docs/agentes/github-ci.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "docs/agentes/mapa-repo.md",
+    "mudancas": 3
    },
    {
     "arquivo": "docs/estado/05-infra-ci-testes.md",
     "mudancas": 3
+   },
+   {
+    "arquivo": "package.json",
+    "mudancas": 3
+   },
+   {
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 2
+   },
+   {
+    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "ai-context.config.json",
+    "mudancas": 2
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
@@ -211,10 +235,6 @@
    },
    {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 2
    },
    {
@@ -226,7 +246,27 @@
     "mudancas": 2
    },
    {
-    "arquivo": "package.json",
+    "arquivo": "inventario/estado/README.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "inventario/estado/edges.json",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/inventario/gerar-repo.mjs",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/regras_negocio/generate.py",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 2
    },
    {
@@ -256,74 +296,34 @@
    {
     "arquivo": ".claude/settings.json",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 1
-   },
-   {
-    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "CLAUDE.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "ai-context.config.json",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "docs/agentes/lovable-deploy.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "docs/agentes/regras-dominio.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "docs/agentes/servicos-externos.md",
-    "mudancas": 1
-   },
-   {
-    "arquivo": "docs/contexto/regras/manual/README.md",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 4
+    "commits": 8
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 984,
-  "arquivos_codigo": 631,
-  "linhas_codigo": 102479,
+  "arquivos_total": 981,
+  "arquivos_codigo": 629,
+  "linhas_codigo": 101107,
   "rotas": 10,
-  "rotas_http_backend": 12,
-  "vistas_por_id": 0,
+  "rotas_http_backend": 0,
+  "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
   "componentes": 241,
-  "hooks": 79,
+  "hooks": 78,
   "edge_functions": 58,
-  "tabelas": 97,
+  "tabelas": 96,
   "migrations": 212,
   "cron_jobs": 6,
   "testes": 115,
   "workflows": 5,
-  "scripts": 40,
-  "docs_md": 72
+  "scripts": 38,
+  "docs_md": 71
  },
  "por_pasta": {
   "commitlint.config.cjs": {
@@ -422,13 +422,9 @@
    "arquivos": 1,
    "linhas": 87
   },
-  "scripts/ai-context": {
-   "arquivos": 3,
-   "linhas": 1458
-  },
   "scripts/ci": {
    "arquivos": 1,
-   "linhas": 124
+   "linhas": 135
   },
   "scripts/gen-current-report.ts": {
    "arquivos": 1,
@@ -495,8 +491,8 @@
    "linhas": 36
   },
   "scripts/inventario": {
-   "arquivos": 2,
-   "linhas": 127
+   "arquivos": 3,
+   "linhas": 182
   },
   "scripts/mc-r35-preflight.ts": {
    "arquivos": 1,
@@ -508,7 +504,7 @@
   },
   "scripts/regras_negocio": {
    "arquivos": 3,
-   "linhas": 2539
+   "linhas": 2553
   },
   "scripts/sim-scrape.ts": {
    "arquivos": 1,
@@ -516,7 +512,7 @@
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
-   "linhas": 2669
+   "linhas": 2675
   },
   "src/App.tsx": {
    "arquivos": 1,
@@ -586,15 +582,11 @@
   },
   {
    "arquivo": "scripts/regras_negocio/generate.py",
-   "linhas": 2138
+   "linhas": 2152
   },
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-   "linhas": 1791
-  },
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "linhas": 924
+   "linhas": 1797
   },
   {
    "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
@@ -675,29 +667,21 @@
   {
    "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
    "linhas": 475
+  },
+  {
+   "arquivo": "src/components/lux/GmapsScraperView.tsx",
+   "linhas": 463
   }
  ],
  "qualidade": {
-  "any": 28,
-  "console_log": 68,
+  "any": 25,
+  "console_log": 65,
   "ts_ignore": 0,
-  "eslint_disable": 1,
-  "todos": 7,
-  "arquivos_acima_500_linhas": 20
+  "eslint_disable": 0,
+  "todos": 5,
+  "arquivos_acima_500_linhas": 19
  },
  "todos": [
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "linha": 188,
-   "tipo": "TODO",
-   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(line); if (m) todos.push({ linha: ln, tipo: m[1], text"
-  },
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "linha": 222,
-   "tipo": "TODO",
-   "texto": "|FIXME|HACK|XXX)\\b[:\\s-]*([^\\n]{0,100})/.exec(l); return m ? { linha: i + 1, tipo: m[1], texto: m[2]"
-  },
   {
    "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
    "linha": 40,
@@ -732,39 +716,12 @@
  "alertas": {
   "rotas_sem_arquivo": [],
   "componentes_ambiguos": [],
-  "menu_sem_destino": [
-   "Agente IA -> ai-agent",
-   "Analytics -> analytics",
-   "API & Webhooks -> integrations",
-   "Automações (Tempo Real) -> automations",
-   "Campanhas -> campaigns",
-   "Configurações -> settings",
-   "Configurar IPC -> icp",
-   "Dashboard -> dashboard",
-   "Empresas -> companies",
-   "Google Maps -> gmaps",
-   "Home -> dashboard",
-   "IA -> ai-agent",
-   "Lista de Supressão -> suppressions",
-   "Lixeira -> recycle-bin",
-   "LUX IA -> dashboard",
-   "Mapa de Empresas -> map",
-   "Pipeline (Deals) -> deals",
-   "Resultados Raspagem -> scrape-results",
-   "RLS Discovery -> rls-discovery",
-   "Sinais de Intenção -> intent",
-   "Stakeholders -> stakeholders",
-   "Violações de Org -> org-violations",
-   "Workflows -> workflows",
-   "Workspaces -> organizations"
-  ],
+  "menu_sem_destino": [],
   "edges_orfas": [
    "api-latency-alerts",
    "audit-logs-prune",
    "circuit-breaker-alerts",
-   "cnpj-enrich",
    "cnpj-enrich-worker",
-   "cnpj-settings-status",
    "deliverability-check",
    "dlq-alerts",
    "email-verify",
@@ -775,19 +732,12 @@
    "instagram-worker",
    "instagram-worker-health",
    "latency-alerts",
-   "lusha-cookie-health",
    "lusha-reveal",
-   "lusha-search",
    "mcp",
-   "oracle-cookies-preflight",
-   "oracle-enrich-contact",
-   "oracle-push-bitrix",
-   "oracle-search-decisors",
    "pg-net-watchdog",
    "purge-soft-deleted",
    "reaper-alerts",
    "retry-policy-tuner",
-   "rls-tests",
    "scrape-queue-worker",
    "sla-alerts",
    "sla-auto-tune",
@@ -862,7 +812,6 @@
   "ciclos_de_import": 5,
   "possiveis_segredos_no_codigo": [
    "e2e/helpers/supabase.ts:7",
-   "scripts/ai-context/cenarios.mjs:102",
    "supabase/functions/_shared/__tests__/lusha-client.test.ts:31",
    "supabase/functions/_shared/__tests__/lusha-client.test.ts:34"
   ]

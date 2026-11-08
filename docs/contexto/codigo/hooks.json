@@ -1,42 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 79,
+ "total": 78,
  "hooks": [
-  {
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "hooks_exportados": [
-    "useA",
-    "useB",
-    "useC",
-    "useX"
-   ],
-   "linhas": 173,
-   "dominio": null,
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
-   ],
-   "rpcs": [
-    "r1"
-   ],
-   "edges": [
-    "inexistente",
-    "other",
-    "tick"
-   ],
-   "hooks_internos": [
-    "useFeatureFlag"
-   ],
-   "canais_realtime": [],
-   "usado_por": 0,
-   "usado_por_arquivos": [],
-   "coberto_por_testes": 0
-  },
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
    "hooks_exportados": [
@@ -631,7 +597,9 @@
     "cnpj_enrich_queue"
    ],
    "rpcs": [],
-   "edges": [],
+   "edges": [
+    "cnpj-enrich"
+   ],
    "hooks_internos": [
     "useCallback"
    ],
@@ -1335,7 +1303,12 @@
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
-   "edges": [],
+   "edges": [
+    "oracle-cookies-preflight",
+    "oracle-enrich-contact",
+    "oracle-push-bitrix",
+    "oracle-search-decisors"
+   ],
    "hooks_internos": [
     "useMutation",
     "useQueryClient"

@@ -53,7 +53,7 @@
     "upsert_pointer",
     "walk_repo"
    ],
-   "linhas": 2138,
+   "linhas": 2152,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -196,7 +196,7 @@
     "valid_previous_snapshot",
     "write"
    ],
-   "linhas": 1791,
+   "linhas": 1797,
    "tabelas": [],
    "rpcs": [],
    "edges": [],

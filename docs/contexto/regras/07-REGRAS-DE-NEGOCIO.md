@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4d5d4ee3c4` · branch `main` · 2026-11-08 22:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `aaaaf8ef25` · branch `main` · 2026-11-08 23:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -163,6 +163,8 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | Users can manage org oauth_snapshots | ALL | public | permissive | `organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role = 'admin' )` | `organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role = 'admin' )` |
 | `automation_alerts` | Users can manage their own alerts | ALL | public | permissive | `auth.uid() = user_id` |  |
 | `job_exports` | Users can manage their own exports | ALL | public | permissive | `auth.uid() = user_id` |  |
+| `automation_steps` | Users can insert automation steps for their organization | INSERT | public | permissive |  | `organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )` |
+| `automation_steps` | Users can update automation steps for their organization | UPDATE | public | permissive | `organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )` |  |
 | `automation_steps` | Users can view their organization's automation steps | SELECT | public | permissive | `organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )` | `organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )` |
 | `email_suppressions` | Membros veem supressões da sua organização | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
 | `email_suppressions` | Membros podem adicionar supressões manualmente | INSERT | authenticated | permissive |  | `public.is_org_member(organization_id, auth.uid())` |
@@ -190,6 +192,10 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `api_latency_alert_settings` | Admins removem config de alerta de latência | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
 | `api_latency_alert_history` | Membros veem histórico de alerta de latência | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
 | `lusha_dm_search_history` | Users manage own dm history | ALL | public | permissive | `auth.uid() = user_id` | `auth.uid() = user_id` |
+| `lusha_contacts` | lc_select | SELECT | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
+| `lusha_contacts` | lc_update | UPDATE | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
+| `lusha_contacts` | lc_delete | DELETE | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
+| `lusha_contacts` | lc_service_role | ALL | service_role | permissive | `true` | `true` |
 | `lusha_credit_usage_log` | org_members_view_credit_usage | SELECT | authenticated | permissive | `organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid())` |  |
 | `lusha_credit_usage_log` | service_role_full_credit_usage | ALL | service_role | permissive | `true` | `true` |
 | `oracle_rate_limits` | org_members_view_rate_limits | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
@@ -991,7 +997,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | Nome | Valores | Onde |
 |---|---|---|
 | app_role | `admin`, `sdr`, `viewer` | banco |
-| audit_action | `execute` | banco |
+| audit_action | `execute`, `create`, `update`, `delete` | banco |
 | automation_status | `pending`, `running`, `completed`, `failed`, `cancelled` | banco |
 | campaign_status | `draft`, `active`, `paused`, `completed`, `archived` | banco |
 | scrape_job_status | `pending`, `running`, `working`, `completed`, `failed`, `cancelled` | banco |

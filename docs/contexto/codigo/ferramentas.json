@@ -5,10 +5,10 @@
   "linguagens": [
    "TypeScript (616)",
    "SQL (216)",
-   "Markdown (72)",
+   "Markdown (71)",
    "JSON (32)",
-   "JavaScript (11)",
    "Shell (10)",
+   "JavaScript (9)",
    "YAML (6)",
    "Python (5)"
   ],
@@ -49,7 +49,7 @@
    "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
    "contexto:ia:test": "node --test scripts/ai-context/gerar.unit.mjs",
    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
-   "contexto:supabase": "python3 scripts/supabase_snapshot/snapshot.py",
+   "contexto:supabase": "SNAPSHOT_DIR=docs/contexto/supabase python3 scripts/supabase_snapshot/snapshot.py",
    "db:diff": "supabase db diff --local --schema public",
    "db:lint": "bash scripts/check-migrations.sh",
    "db:new": "supabase migration new",
@@ -65,6 +65,7 @@
    "graph:setup": "bash scripts/graphify/setup.sh",
    "graph:update": "graphify update .",
    "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
+   "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs",
    "lint": "eslint .",
    "prepare": "husky",
    "preview": "vite preview",
@@ -270,7 +271,7 @@
   {
    "arquivo": ".husky/pre-commit",
    "comandos": [
-    "bun run lint && bunx tsc --noEmit && bun run test"
+    "bun run lint && bunx tsc --noEmit -p tsconfig.app.json && bun run test"
    ]
   }
  ],
@@ -278,7 +279,7 @@
   {
    "arquivo": "AGENTS.md",
    "titulo": "AGENTS.md — Promo Lux V2 (LUX IA)",
-   "linhas": 157
+   "linhas": 162
   },
   {
    "arquivo": "CHANGELOG.md",
@@ -631,10 +632,6 @@
     "arquivos": 2
    },
    {
-    "host": "x.supabase.co",
-    "arquivos": 2
-   },
-   {
     "host": "a.com",
     "arquivos": 1
    },
@@ -672,14 +669,6 @@
    },
    {
     "host": "api.leadcontact.ai",
-    "arquivos": 1
-   },
-   {
-    "host": "api.resend.com",
-    "arquivos": 1
-   },
-   {
-    "host": "api.x.com",
     "arquivos": 1
    },
    {
@@ -940,16 +929,16 @@
  "permissoes": {
   "papeis_no_codigo": [
    {
-    "papel": "admin",
-    "ocorrencias": 11
-   },
-   {
     "papel": "alert",
     "ocorrencias": 11
    },
    {
     "papel": "status",
     "ocorrencias": 10
+   },
+   {
+    "papel": "admin",
+    "ocorrencias": 9
    },
    {
     "papel": "button",
@@ -976,10 +965,6 @@
     "ocorrencias": 2
    },
    {
-    "papel": "agent",
-    "ocorrencias": 2
-   },
-   {
     "papel": "navigation",
     "ocorrencias": 2
    },
@@ -1001,6 +986,10 @@
    },
    {
     "papel": "CFO",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "agent",
     "ocorrencias": 1
    },
    {
@@ -1036,10 +1025,6 @@
     "ocorrencias": 1
    },
    {
-    "papel": "sup",
-    "ocorrencias": 1
-   },
-   {
     "papel": "viewer",
     "ocorrencias": 1
    }
@@ -1071,20 +1056,8 @@
   "tabelas_sem_rls": []
  },
  "feature_flags": {
-  "total": 4,
+  "total": 1,
   "flags": [
-   {
-    "flag": "FEATURE_X",
-    "arquivos": 1
-   },
-   {
-    "flag": "nova-tela",
-    "arquivos": 1
-   },
-   {
-    "flag": "novo-inbox",
-    "arquivos": 1
-   },
    {
     "flag": "oracle_v2",
     "arquivos": 1

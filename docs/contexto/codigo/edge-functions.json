@@ -336,10 +336,12 @@
     "open.cnpja.com"
    ],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useCnpjEnrich.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -407,10 +409,12 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/pages/CnpjSettingsPage.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -982,10 +986,12 @@
     "supabase.atomicabr.com.br"
    ],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/components/lux/lusha/LushaCookieHealthBanner.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1101,10 +1107,13 @@
    "usa_shared": [
     "departmentMap.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/components/lux/LushaIntelligenceView.tsx",
+    "src/components/lux/lusha/SessionsPanel.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1194,10 +1203,12 @@
     "supabase.atomicabr.com.br"
    ],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useOracleV2.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1236,10 +1247,12 @@
     "phone-br.ts",
     "safe-update.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useOracleV2.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1280,10 +1293,12 @@
     "org-membership.ts",
     "safe-update.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useOracleV2.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1331,10 +1346,12 @@
     "oracle-logger.ts",
     "org-membership.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/hooks/useOracleV2.ts"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1595,10 +1612,12 @@
    "usa_shared": [
     "rlsTableRegistry.ts"
    ],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/components/lux/settings/RLSVerificationPanel.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 1
   },
   {

@@ -1,45 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 40,
+ "total": 38,
  "scripts": [
-  {
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "descricao": "Simulação de cenários do gerador: monta centenas de repositórios sintéticos (variantes de SQL, rotas, menus, edges, workflows, monorepo, Python, arquivos corrompidos, fuzz) e confere:",
-   "linhas": 173,
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ],
-   "npm_scripts": [],
-   "workflows": [],
-   "orfao": false
-  },
-  {
-   "arquivo": "scripts/ai-context/gerar.mjs",
-   "descricao": "Gera o contexto de projeto para agentes de IA (padrão: inventario/ia/*). Zero dependências. Node >= 18. Genérico: funciona em qualquer repositório.",
-   "linhas": 924,
-   "env": [
-    "AI_CONTEXT_DIR",
-    "AI_CONTEXT_PUBLICACAO",
-    "AI_CONTEXT_ROOT"
-   ],
-   "npm_scripts": [
-    "contexto:ia"
-   ],
-   "workflows": [
-    "contexto.yml"
-   ],
-   "orfao": false
-  },
   {
    "arquivo": "scripts/check-anon-grants-view.sh",
    "descricao": null,
@@ -115,8 +78,8 @@
   },
   {
    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
-   "descricao": "* Garante que as instrucoes para agentes nao foram apagadas ou esvaziadas por outra sessao.",
-   "linhas": 124,
+   "descricao": "* Garante que as instrucoes para agentes nao foram apagadas, esvaziadas ou divergidas por outra sessao.",
+   "linhas": 135,
    "env": [
     "CLAUDE_MD_BASE"
    ],
@@ -284,7 +247,7 @@
   {
    "arquivo": "scripts/inventario/gerar-repo.mjs",
    "descricao": "Inventario gerado do lado do repositorio (sem acesso ao banco):  - edge functions: linhas, segredos lidos (Deno.env.get) e quem as invoca (src, migrations, outras edges, e2e, CI)",
-   "linhas": 81,
+   "linhas": 82,
    "env": [],
    "npm_scripts": [
     "inventario:edges"
@@ -326,7 +289,7 @@
   {
    "arquivo": "scripts/regras_negocio/generate.py",
    "descricao": null,
-   "linhas": 2138,
+   "linhas": 2152,
    "env": [],
    "npm_scripts": [
     "contexto:regras"
@@ -404,7 +367,7 @@
   {
    "arquivo": "scripts/supabase_snapshot/snapshot.py",
    "descricao": "Somente leitura no banco (sessão read-only, statement_timeout, lock_timeout). Nunca grava linhas de tabelas, valores de segredos, chaves, senhas ou DSN.",
-   "linhas": 1791,
+   "linhas": 1797,
    "env": [],
    "npm_scripts": [
     "contexto:supabase"

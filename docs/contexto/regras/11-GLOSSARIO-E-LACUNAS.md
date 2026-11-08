@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4d5d4ee3c4` · branch `main` · 2026-11-08 22:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `aaaaf8ef25` · branch `main` · 2026-11-08 23:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -106,7 +106,7 @@
 | `workflow_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `workflows` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `app_role` (enum) | admin, sdr, viewer |  | banco |
-| `audit_action` (enum) | execute |  | banco |
+| `audit_action` (enum) | execute, create, update, delete |  | banco |
 | `automation_status` (enum) | pending, running, completed, failed, cancelled |  | banco |
 | `campaign_status` (enum) | draft, active, paused, completed, archived |  | banco |
 | `scrape_job_status` (enum) | pending, running, working, completed, failed, cancelled |  | banco |
@@ -262,8 +262,6 @@ _nenhum item encontrado_
 | rls | `audit_logs`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/lib/orgErrorHandler.ts` |
 | rls | `feature_flags`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/components/lux/PlacesApiNewToggle.tsx` |
 | rls | `feature_flags`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/PlacesApiNewToggle.tsx`<br>`src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
-| rls | `lusha_contacts`: front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/OracleV2Panel.tsx`<br>`src/lib/mcp/tools/list-decision-makers.ts` |
-| rls | `lusha_contacts`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/LushaIntelligenceView.tsx` |
 | rls | `lusha_search_sessions`: acessada do front (2 arquivo(s)) sem RLS (não encontrado) | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx` |
 | rls | `retry_policy_advisories`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | tenant | `health_checks` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |

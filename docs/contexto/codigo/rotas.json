@@ -3,8 +3,8 @@
  "format_version": 2,
  "resumo": {
   "urls": 10,
-  "rotas_http_backend": 12,
-  "vistas_por_id": 0,
+  "rotas_http_backend": 0,
+  "vistas_por_id": 23,
   "itens_menu": 26,
   "lazy": 9
  },
@@ -243,14 +243,22 @@
    "edges": [
     "ai-agent",
     "campaign-dispatch",
+    "cnpj-enrich",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
     "email-poll-replies",
     "gmaps-proxy",
+    "lusha-cookie-health",
     "lusha-decision-makers",
+    "lusha-search",
+    "oracle-cookies-preflight",
+    "oracle-enrich-contact",
+    "oracle-push-bitrix",
+    "oracle-search-decisors",
     "org-violation-alerts",
     "public-api",
+    "rls-tests",
     "webhook-dispatcher",
     "workflow-engine"
    ],
@@ -782,312 +790,1489 @@
    ],
    "tabelas": [],
    "rpcs": [],
-   "edges": [],
+   "edges": [
+    "cnpj-settings-status"
+   ],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
    "arquivos_puxados": 11
   }
  ],
- "rotas_http_backend": [
+ "rotas_http_backend": [],
+ "vistas": [
   {
-   "metodo": "GET",
-   "caminho": "/{t}",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "ai-agent",
+   "componente": "AIAgentView",
+   "arquivo": "src/components/lux/AIAgentView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useCallback",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useQuery",
+    "useQueryClient",
+    "useState",
+    "useToast"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useToast"
+   ],
+   "tabelas": [
+    "agent_chat_messages"
+   ],
+   "rpcs": [],
+   "edges": [
+    "ai-agent"
+   ],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [
+    "agent",
+    "user"
+   ],
+   "arquivos_puxados": 12
   },
   {
-   "metodo": "GET",
-   "caminho": "/a",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "analytics",
+   "componente": "AnalyticsView",
+   "arquivo": "src/components/lux/AnalyticsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAnalyticsData",
+    "useAuth",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useEffect",
+    "useInView",
+    "useMotionValue",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useQuery",
+    "useQueryClient",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useTheme",
+    "useThemeColors",
+    "useToast",
+    "useUpdateMemberRole"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAnalyticsData",
+    "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useThemeColors",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "campaigns",
+    "companies",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "scrape_jobs",
+    "workflows"
+   ],
+   "rpcs": [
+    "get_dashboard_stats"
+   ],
+   "edges": [],
+   "canais_realtime": [
+    "private:${user.id}:${activeOrgId}:dashboard"
+   ],
+   "flags": [],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO"
+   ],
+   "arquivos_puxados": 26
   },
   {
-   "metodo": "GET",
-   "caminho": "/a",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "automations",
+   "componente": "AutomationsRealtimeView",
+   "arquivo": "src/components/lux/automations/AutomationsRealtimeView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useAuth",
+    "useAutomationsMonitor",
+    "useCompanies",
+    "useContext",
+    "useDeadLetter",
+    "useEffect",
+    "useEvents",
+    "useMemo",
+    "useQuery",
+    "useQueryClient",
+    "useQueue",
+    "useRealtimeInvalidation",
+    "useState"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useAuth",
+    "useAutomationsMonitor"
+   ],
+   "tabelas": [
+    "automation_execution_logs",
+    "companies",
+    "scrape_dead_letter",
+    "scrape_queue"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [
+    "org:${activeOrgId}:automations"
+   ],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 20
   },
   {
-   "metodo": "POST",
-   "caminho": "/b",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "campaigns",
+   "componente": "CampaignsView",
+   "arquivo": "src/components/lux/CampaignsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useQuery",
+    "useQueryClient",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "campaign_events",
+    "campaign_recipients",
+    "campaign_replies",
+    "campaigns",
+    "companies",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
+   ],
+   "rpcs": [
+    "campaign_ab_stats",
+    "get_dashboard_stats"
+   ],
+   "edges": [
+    "campaign-dispatch"
+   ],
+   "canais_realtime": [
+    "private:${user.id}:${activeOrgId}:dashboard"
+   ],
+   "flags": [],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO",
+    "admin",
+    "sdr",
+    "viewer"
+   ],
+   "arquivos_puxados": 33
   },
   {
-   "metodo": "POST",
-   "caminho": "/b",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "companies",
+   "componente": "CompaniesView",
+   "arquivo": "src/components/lux/CompaniesView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCallback",
+    "useCan",
+    "useCnpjAutoEnrichSetting",
+    "useCnpjEnrich",
+    "useCompanyDetails",
+    "useCompanyReviews",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useEffect",
+    "useIsMobile",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useQuery",
+    "useQueryClient",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useCnpjAutoEnrichSetting",
+    "useCnpjEnrich",
+    "useCompanyDetails",
+    "useCompanyReviews",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useIsMobile",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "cnpj_enrich_queue",
+    "companies",
+    "company_reviews",
+    "intent_signals",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "stakeholders"
+   ],
+   "rpcs": [
+    "get_dashboard_stats"
+   ],
+   "edges": [
+    "cnpj-enrich"
+   ],
+   "canais_realtime": [
+    "private:${user.id}:${activeOrgId}:dashboard"
+   ],
+   "flags": [],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO",
+    "admin",
+    "alert",
+    "sdr",
+    "status",
+    "viewer"
+   ],
+   "arquivos_puxados": 59
   },
   {
-   "metodo": "DELETE",
-   "caminho": "/c",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "dashboard",
+   "componente": "DashboardView",
+   "arquivo": "src/components/lux/DashboardView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAnalyticsData",
+    "useApiKeys",
+    "useAuth",
+    "useAutomationsMonitor",
+    "useCallback",
+    "useCan",
+    "useCnpjAutoEnrichSetting",
+    "useCnpjEnrich",
+    "useCompanies",
+    "useCompanyDetails",
+    "useCompanyReviews",
+    "useConfirm",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDeadLetter",
+    "useDealActivities",
+    "useDealStages",
+    "useDealTasks",
+    "useDeals",
+    "useDeferredValue",
+    "useDeleteOAuthSnapshot",
+    "useDemo",
+    "useDroppable",
+    "useDryRunLogs",
+    "useEffect",
+    "useEmailAccountAuditLog",
+    "useEmailSuppressions",
+    "useEmailSyncLog",
+    "useEnvProfiles",
+    "useEvents",
+    "useFeatureFlag",
+    "useFeatureFlags",
+    "useICPConfig",
+    "useInView",
+    "useIsMobile",
+    "useMap",
+    "useMembershipAuditLog",
+    "useMembershipAuditLogPaged",
+    "useMemo",
+    "useMotionValue",
+    "useMutation",
+    "useMyOrganizations",
+    "useNavigate",
+    "useNavigationHistory",
+    "useOAuthSandboxSnapshots",
+    "useOracleEnrichContact",
+    "useOraclePreflight",
+    "useOraclePushBitrix",
+    "useOracleSearchDecisors",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "usePlacesApiUsage",
+    "useQuery",
+    "useQueryClient",
+    "useQueue",
+    "useRealtimeInvalidation",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRef",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useSaveOAuthSnapshot",
+    "useSearchParams",
+    "useSensor",
+    "useSensors",
+    "useSortable",
+    "useState",
+    "useTaskReminders",
+    "useTheme",
+    "useThemeColors",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole",
+    "useVirtualCompanies",
+    "useVirtualization",
+    "useWebhookDeliveries",
+    "useWebhooks",
+    "useWeeklyPerformance"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAnalyticsData",
+    "useApiKeys",
+    "useAuth",
+    "useAutomationsMonitor",
+    "useCan",
+    "useCnpjAutoEnrichSetting",
+    "useCnpjEnrich",
+    "useCompanyDetails",
+    "useCompanyReviews",
+    "useConfirm",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDealActivities",
+    "useDealStages",
+    "useDealTasks",
+    "useDeals",
+    "useDeleteOAuthSnapshot",
+    "useDemo",
+    "useDryRunLogs",
+    "useEmailAccountAuditLog",
+    "useEmailSuppressions",
+    "useEmailSyncLog",
+    "useEnvProfiles",
+    "useFeatureFlag",
+    "useFeatureFlags",
+    "useICPConfig",
+    "useIsMobile",
+    "useMembershipAuditLog",
+    "useMembershipAuditLogPaged",
+    "useMyOrganizations",
+    "useNavigationHistory",
+    "useOAuthSandboxSnapshots",
+    "useOracleEnrichContact",
+    "useOraclePreflight",
+    "useOraclePushBitrix",
+    "useOracleSearchDecisors",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "usePlacesApiUsage",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useSaveOAuthSnapshot",
+    "useTaskReminders",
+    "useThemeColors",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole",
+    "useVirtualCompanies",
+    "useVirtualization",
+    "useWebhookDeliveries",
+    "useWebhooks",
+    "useWeeklyPerformance"
+   ],
+   "tabelas": [
+    "agent_chat_messages",
+    "api_keys",
+    "audit_logs",
+    "automation_execution_logs",
+    "campaign_events",
+    "campaign_recipients",
+    "campaign_replies",
+    "campaigns",
+    "cnpj_enrich_queue",
+    "companies",
+    "company_reviews",
+    "deal_activities",
+    "deal_stages",
+    "deal_tasks",
+    "deals",
+    "email_accounts",
+    "email_suppressions",
+    "email_sync_log",
+    "feature_flags",
+    "intent_signals",
+    "ipc_config",
+    "lusha_contacts",
+    "lusha_dm_search_history",
+    "lusha_search_sessions",
+    "notifications",
+    "oauth_sandbox_snapshots",
+    "org_violation_alert_settings",
+    "org_violation_alerts",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "places_api_usage",
+    "profiles",
+    "scrape_dead_letter",
+    "scrape_jobs",
+    "scrape_queue",
+    "scrape_results",
+    "stakeholders",
+    "webhook_deliveries",
+    "webhooks",
+    "workflows"
+   ],
+   "rpcs": [
+    "campaign_ab_stats",
+    "create_default_deal_stages",
+    "enrichment_funnel_counts",
+    "get_dashboard_stats",
+    "pg_catalog_rls_tables",
+    "pg_columns_for_insert"
+   ],
+   "edges": [
+    "ai-agent",
+    "campaign-dispatch",
+    "cnpj-enrich",
+    "email-oauth-callback",
+    "email-oauth-connect",
+    "email-oauth-disconnect",
+    "email-poll-replies",
+    "gmaps-proxy",
+    "lusha-cookie-health",
+    "lusha-decision-makers",
+    "lusha-search",
+    "oracle-cookies-preflight",
+    "oracle-enrich-contact",
+    "oracle-push-bitrix",
+    "oracle-search-decisors",
+    "org-violation-alerts",
+    "public-api",
+    "rls-tests",
+    "webhook-dispatcher",
+    "workflow-engine"
+   ],
+   "canais_realtime": [
+    "lusha-dm-history-sync",
+    "org:${activeOrgId}:automations",
+    "private:${user.id}:${activeOrgId}:dashboard",
+    "private:${user.id}:gmaps-jobs",
+    "private:${user.id}:scrape-results"
+   ],
+   "flags": [
+    "oracle_v2"
+   ],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO",
+    "admin",
+    "agent",
+    "alert",
+    "button",
+    "progressbar",
+    "sdr",
+    "status",
+    "user",
+    "viewer"
+   ],
+   "arquivos_puxados": 196
   },
   {
-   "metodo": "PUT",
-   "caminho": "/d",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "deals",
+   "componente": "DealsView",
+   "arquivo": "src/components/lux/DealsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useAuth",
+    "useConfirm",
+    "useContext",
+    "useDealActivities",
+    "useDealStages",
+    "useDealTasks",
+    "useDeals",
+    "useDroppable",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useQuery",
+    "useQueryClient",
+    "useSensor",
+    "useSensors",
+    "useSortable",
+    "useState",
+    "useTaskReminders"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useAuth",
+    "useConfirm",
+    "useDealActivities",
+    "useDealStages",
+    "useDealTasks",
+    "useDeals",
+    "useTaskReminders"
+   ],
+   "tabelas": [
+    "deal_activities",
+    "deal_stages",
+    "deal_tasks",
+    "deals"
+   ],
+   "rpcs": [
+    "create_default_deal_stages"
+   ],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 24
   },
   {
-   "metodo": "GET",
-   "caminho": "/items",
-   "arquivo": "scripts/ai-context/gerar.unit.mjs",
-   "tabelas": [
-    "contacts",
-    "dashboard_table",
-    "emails",
-    "fixture_table",
-    "ghost_table",
-    "payments",
-    "runtime_table",
-    "tools_runtime"
+   "id": "gmaps",
+   "componente": "GmapsScraperView",
+   "arquivo": "src/components/lux/GmapsScraperView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useEffect",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePlacesApiUsage",
+    "useQuery",
+    "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole"
    ],
-   "env": [
-    "DB_URL",
-    "RESEND_API_KEY",
-    "VITE_ANON",
-    "VITE_SUPABASE_URL"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePlacesApiUsage",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "feature_flags",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "places_api_usage",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [
+    "gmaps-proxy"
+   ],
+   "canais_realtime": [
+    "private:${user.id}:gmaps-jobs"
+   ],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 27
   },
   {
-   "metodo": "GET",
-   "caminho": "/u",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "icp",
+   "componente": "ICPConfigView",
+   "arquivo": "src/components/lux/ICPConfigView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useAuth",
+    "useContext",
+    "useEffect",
+    "useICPConfig",
+    "useMutation",
+    "useQuery",
+    "useQueryClient",
+    "useState",
+    "useToast",
+    "useUnsavedChanges"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useAuth",
+    "useICPConfig",
+    "useToast",
+    "useUnsavedChanges"
+   ],
+   "tabelas": [
+    "ipc_config"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 21
   },
   {
-   "metodo": "GET",
-   "caminho": "/users",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "integrations",
+   "componente": "IntegrationsView",
+   "arquivo": "src/components/lux/IntegrationsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useApiKeys",
+    "useAuth",
+    "useCallback",
+    "useCan",
+    "useConfirm",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDeleteOAuthSnapshot",
+    "useDryRunLogs",
+    "useEffect",
+    "useEmailAccountAuditLog",
+    "useEmailSyncLog",
+    "useEnvProfiles",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOAuthSandboxSnapshots",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useQuery",
+    "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useSaveOAuthSnapshot",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole",
+    "useWebhookDeliveries",
+    "useWebhooks"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useApiKeys",
+    "useAuth",
+    "useCan",
+    "useConfirm",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDeleteOAuthSnapshot",
+    "useDryRunLogs",
+    "useEmailAccountAuditLog",
+    "useEmailSyncLog",
+    "useEnvProfiles",
+    "useMyOrganizations",
+    "useOAuthSandboxSnapshots",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useSaveOAuthSnapshot",
+    "useToast",
+    "useUpdateMemberRole",
+    "useWebhookDeliveries",
+    "useWebhooks"
+   ],
+   "tabelas": [
+    "api_keys",
+    "audit_logs",
+    "email_accounts",
+    "email_sync_log",
+    "oauth_sandbox_snapshots",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "webhook_deliveries",
+    "webhooks"
+   ],
+   "rpcs": [],
+   "edges": [
+    "email-oauth-callback",
+    "email-oauth-connect",
+    "email-oauth-disconnect",
+    "email-poll-replies",
+    "public-api",
+    "webhook-dispatcher"
+   ],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [
+    "admin",
+    "sdr",
+    "viewer"
+   ],
+   "arquivos_puxados": 50
   },
   {
-   "metodo": "POST",
-   "caminho": "/users/:id",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "intent",
+   "componente": "IntentSignalsView",
+   "arquivo": "src/components/lux/IntentSignalsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useEffect",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useQuery",
+    "useQueryClient",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "companies",
+    "intent_signals",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
+   ],
+   "rpcs": [
+    "get_dashboard_stats"
+   ],
+   "edges": [],
+   "canais_realtime": [
+    "private:${user.id}:${activeOrgId}:dashboard"
+   ],
+   "flags": [],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO"
+   ],
+   "arquivos_puxados": 23
   },
   {
-   "metodo": "GET",
-   "caminho": "/x",
-   "arquivo": "scripts/ai-context/cenarios.mjs",
-   "tabelas": [
-    "a",
-    "fantasma",
-    "so_teste",
-    "t",
-    "t1",
-    "tx"
+   "id": "lusha",
+   "componente": "LushaIntelligenceView",
+   "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCallback",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDeferredValue",
+    "useEffect",
+    "useFeatureFlag",
+    "useFeatureFlags",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOracleEnrichContact",
+    "useOraclePreflight",
+    "useOraclePushBitrix",
+    "useOracleSearchDecisors",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useQuery",
+    "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useSearchParams",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole"
    ],
-   "env": [
-    "A",
-    "K",
-    "NODE_ENV",
-    "SCRIPT_ONLY",
-    "SRK",
-    "SUPABASE_URL",
-    "VITE_A",
-    "VITE_C",
-    "VITE_FEATURE_X",
-    "X"
-   ]
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useFeatureFlag",
+    "useFeatureFlags",
+    "useMyOrganizations",
+    "useOracleEnrichContact",
+    "useOraclePreflight",
+    "useOraclePushBitrix",
+    "useOracleSearchDecisors",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "feature_flags",
+    "lusha_contacts",
+    "lusha_dm_search_history",
+    "lusha_search_sessions",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [
+    "lusha-cookie-health",
+    "lusha-decision-makers",
+    "lusha-search",
+    "oracle-cookies-preflight",
+    "oracle-enrich-contact",
+    "oracle-push-bitrix",
+    "oracle-search-decisors"
+   ],
+   "canais_realtime": [
+    "lusha-dm-history-sync"
+   ],
+   "flags": [
+    "oracle_v2"
+   ],
+   "papeis": [
+    "alert",
+    "button",
+    "progressbar",
+    "status"
+   ],
+   "arquivos_puxados": 41
+  },
+  {
+   "id": "map",
+   "componente": "CompaniesMapView",
+   "arquivo": "src/components/lux/CompaniesMapView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useCallback",
+    "useEffect",
+    "useMap",
+    "useMemo",
+    "useQuery",
+    "useQueryClient",
+    "useState",
+    "useToast"
+   ],
+   "hooks_locais": [
+    "useToast"
+   ],
+   "tabelas": [
+    "companies"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 17
+  },
+  {
+   "id": "monitoring",
+   "componente": "MonitoringView",
+   "arquivo": "src/components/lux/monitoring/MonitoringView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useQuery"
+   ],
+   "hooks_locais": [],
+   "tabelas": [
+    "audit_logs"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 6
+  },
+  {
+   "id": "org-violations",
+   "componente": "OrgViolationsView",
+   "arquivo": "src/components/lux/OrgViolationsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useQuery",
+    "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useUpdateMemberRole"
+   ],
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "org_violation_alert_settings",
+    "org_violation_alerts",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [
+    "org-violation-alerts"
+   ],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [
+    "admin",
+    "alert",
+    "sdr",
+    "status",
+    "viewer"
+   ],
+   "arquivos_puxados": 25
+  },
+  {
+   "id": "organizations",
+   "componente": "OrganizationsView",
+   "arquivo": "src/components/lux/OrganizationsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useEffect",
+    "useMembershipAuditLog",
+    "useMembershipAuditLogPaged",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useQuery",
+    "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useMembershipAuditLog",
+    "useMembershipAuditLogPaged",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [
+    "admin",
+    "button"
+   ],
+   "arquivos_puxados": 37
+  },
+  {
+   "id": "recycle-bin",
+   "componente": "RecycleBinView",
+   "arquivo": "src/components/lux/RecycleBinView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useEffect",
+    "useMutation",
+    "useQueryClient",
+    "useToast"
+   ],
+   "hooks_locais": [
+    "useToast"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 10
+  },
+  {
+   "id": "rls-discovery",
+   "componente": "RLSDiscoveryView",
+   "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useEffect",
+    "useMemo",
+    "useState",
+    "useToast"
+   ],
+   "hooks_locais": [
+    "useToast"
+   ],
+   "tabelas": [],
+   "rpcs": [
+    "pg_catalog_rls_tables",
+    "pg_columns_for_insert"
+   ],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 14
+  },
+  {
+   "id": "scrape-results",
+   "componente": "ScrapeResultsView",
+   "arquivo": "src/components/lux/ScrapeResultsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useAuth",
+    "useContext",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useQuery",
+    "useQueryClient",
+    "useState",
+    "useToast"
+   ],
+   "hooks_locais": [
+    "useAuth",
+    "useToast"
+   ],
+   "tabelas": [
+    "companies",
+    "scrape_jobs",
+    "scrape_results"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [
+    "private:${user.id}:scrape-results"
+   ],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 16
+  },
+  {
+   "id": "settings",
+   "componente": "SettingsView",
+   "arquivo": "src/components/lux/SettingsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCallback",
+    "useCan",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useQuery",
+    "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
+   ],
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "audit_logs",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
+   ],
+   "rpcs": [
+    "pg_catalog_rls_tables"
+   ],
+   "edges": [
+    "rls-tests"
+   ],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [
+    "admin",
+    "sdr",
+    "viewer"
+   ],
+   "arquivos_puxados": 28
+  },
+  {
+   "id": "stakeholders",
+   "componente": "StakeholderFinderView",
+   "arquivo": "src/components/lux/StakeholderFinderView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useQuery",
+    "useQueryClient",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "companies",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "stakeholders"
+   ],
+   "rpcs": [
+    "get_dashboard_stats"
+   ],
+   "edges": [],
+   "canais_realtime": [
+    "private:${user.id}:${activeOrgId}:dashboard"
+   ],
+   "flags": [],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO",
+    "status"
+   ],
+   "arquivos_puxados": 26
+  },
+  {
+   "id": "suppressions",
+   "componente": "EmailSuppressionsView",
+   "arquivo": "src/components/lux/EmailSuppressionsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useAuth",
+    "useContext",
+    "useEmailSuppressions",
+    "useMemo",
+    "useMutation",
+    "useQuery",
+    "useQueryClient",
+    "useState"
+   ],
+   "hooks_locais": [
+    "useAuth",
+    "useEmailSuppressions"
+   ],
+   "tabelas": [
+    "email_suppressions"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "canais_realtime": [],
+   "flags": [],
+   "papeis": [],
+   "arquivos_puxados": 13
+  },
+  {
+   "id": "workflows",
+   "componente": "WorkflowsView",
+   "arquivo": "src/components/lux/WorkflowsView.tsx",
+   "registrada_em": "src/lib/viewRegistry.ts",
+   "hooks": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useEffect",
+    "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useQuery",
+    "useQueryClient",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useAuth",
+    "useCan",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useDashboardStats",
+    "useDemo",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRecentActivity",
+    "useRecentCompanies",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useToast",
+    "useUpdateMemberRole"
+   ],
+   "tabelas": [
+    "companies",
+    "notifications",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "workflows"
+   ],
+   "rpcs": [
+    "get_dashboard_stats"
+   ],
+   "edges": [
+    "workflow-engine"
+   ],
+   "canais_realtime": [
+    "private:${user.id}:${activeOrgId}:dashboard"
+   ],
+   "flags": [],
+   "papeis": [
+    "CEO",
+    "CFO",
+    "CTO",
+    "admin",
+    "sdr",
+    "status",
+    "viewer"
+   ],
+   "arquivos_puxados": 31
   }
  ],
- "vistas": [],
  "menu": [
   {
    "rotulo": "Agente IA",
@@ -1096,7 +2281,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/AIAgentView.tsx"
   },
   {
    "rotulo": "Analytics",
@@ -1105,7 +2290,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/AnalyticsView.tsx"
   },
   {
    "rotulo": "API & Webhooks",
@@ -1114,7 +2299,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/IntegrationsView.tsx"
   },
   {
    "rotulo": "Automações (Tempo Real)",
@@ -1123,7 +2308,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/automations/AutomationsRealtimeView.tsx"
   },
   {
    "rotulo": "Campanhas",
@@ -1132,7 +2317,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/CampaignsView.tsx"
   },
   {
    "rotulo": "Configurações",
@@ -1141,7 +2326,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/SettingsView.tsx"
   },
   {
    "rotulo": "Configurar IPC",
@@ -1150,7 +2335,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/ICPConfigView.tsx"
   },
   {
    "rotulo": "Dashboard",
@@ -1159,7 +2344,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/DashboardView.tsx"
   },
   {
    "rotulo": "Empresas",
@@ -1168,7 +2353,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/CompaniesView.tsx"
   },
   {
    "rotulo": "Google Maps",
@@ -1177,7 +2362,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/GmapsScraperView.tsx"
   },
   {
    "rotulo": "Home",
@@ -1186,7 +2371,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/MobileBottomNav.tsx",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/DashboardView.tsx"
   },
   {
    "rotulo": "IA",
@@ -1195,7 +2380,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/MobileBottomNav.tsx",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/AIAgentView.tsx"
   },
   {
    "rotulo": "Lista de Supressão",
@@ -1204,7 +2389,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/EmailSuppressionsView.tsx"
   },
   {
    "rotulo": "Lixeira",
@@ -1213,7 +2398,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/RecycleBinView.tsx"
   },
   {
    "rotulo": "LUX IA",
@@ -1222,7 +2407,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/hooks/useNavigationHistory.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/DashboardView.tsx"
   },
   {
    "rotulo": "Mapa de Empresas",
@@ -1231,7 +2416,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/CompaniesMapView.tsx"
   },
   {
    "rotulo": "Oráculo",
@@ -1240,7 +2425,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/LushaIntelligenceView.tsx"
   },
   {
    "rotulo": "Pipeline (Deals)",
@@ -1249,7 +2434,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/DealsView.tsx"
   },
   {
    "rotulo": "Resultados Raspagem",
@@ -1258,7 +2443,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/ScrapeResultsView.tsx"
   },
   {
    "rotulo": "RLS Discovery",
@@ -1267,7 +2452,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/settings/RLSDiscoveryView.tsx"
   },
   {
    "rotulo": "Sinais de Intenção",
@@ -1276,7 +2461,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/IntentSignalsView.tsx"
   },
   {
    "rotulo": "Stakeholders",
@@ -1285,7 +2470,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/StakeholderFinderView.tsx"
   },
   {
    "rotulo": "Status do Sistema",
@@ -1294,7 +2479,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": "src/pages/Monitoring.tsx"
+   "resolve_para": "src/components/lux/monitoring/MonitoringView.tsx"
   },
   {
    "rotulo": "Violações de Org",
@@ -1303,7 +2488,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/OrgViolationsView.tsx"
   },
   {
    "rotulo": "Workflows",
@@ -1312,7 +2497,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/WorkflowsView.tsx"
   },
   {
    "rotulo": "Workspaces",
@@ -1321,7 +2506,7 @@
    "papeis": [],
    "papeis_nao_resolvidos": null,
    "definido_em": "src/components/lux/layout/nav-items.ts",
-   "resolve_para": null
+   "resolve_para": "src/components/lux/OrganizationsView.tsx"
   }
  ],
  "lazy": {

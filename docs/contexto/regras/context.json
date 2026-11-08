@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "4d5d4ee3c46f8351d64c538be291d2acc7c57c76",
+  "sha": "aaaaf8ef25138f6fc6386a8c24a8df4745430a09",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-08 22:24 UTC",
-  "files_total": 998,
-  "code_files": 848,
-  "code_lines": 114627
+  "generated_at": "2026-11-08 23:30 UTC",
+  "files_total": 999,
+  "code_files": 849,
+  "code_lines": 114716
  },
  "version": "1.3.2",
- "facts_hash": "a654f4a013df93b8",
+ "facts_hash": "362024b562d1ec5e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -122,8 +122,9 @@
    "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
    "contexto:ia:test": "node --test scripts/ai-context/gerar.unit.mjs",
    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
-   "contexto:supabase": "python3 scripts/supabase_snapshot/snapshot.py",
-   "inventario:edges": "node scripts/inventario/gerar-repo.mjs"
+   "contexto:supabase": "SNAPSHOT_DIR=docs/contexto/supabase python3 scripts/supabase_snapshot/snapshot.py",
+   "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
+   "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs"
   },
   "infra": [
    {
@@ -178,7 +179,7 @@
    ".ts": 339,
    ".tsx": 277,
    ".sql": 216,
-   ".mjs": 6,
+   ".mjs": 7,
    ".py": 5,
    ".js": 4,
    ".cjs": 1
@@ -10931,6 +10932,26 @@
     "src": "supabase/migrations/20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql"
    },
    {
+    "name": "Users can insert automation steps for their organization",
+    "table": "automation_steps",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )",
+    "src": "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql"
+   },
+   {
+    "name": "Users can update automation steps for their organization",
+    "table": "automation_steps",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )",
+    "check": "",
+    "src": "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql"
+   },
+   {
     "name": "Users can view their organization's automation steps",
     "table": "automation_steps",
     "cmd": "SELECT",
@@ -11199,6 +11220,46 @@
     "using": "auth.uid() = user_id",
     "check": "auth.uid() = user_id",
     "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+   },
+   {
+    "name": "lc_select",
+    "table": "lusha_contacts",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lc_update",
+    "table": "lusha_contacts",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lc_delete",
+    "table": "lusha_contacts",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lc_service_role",
+    "table": "lusha_contacts",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
    },
    {
     "name": "org_members_view_credit_usage",
@@ -14688,7 +14749,10 @@
     "viewer"
    ],
    "audit_action": [
-    "execute"
+    "execute",
+    "create",
+    "update",
+    "delete"
    ],
    "automation_status": [
     "pending",
@@ -21706,7 +21770,15 @@
    "table:org_violation_alerts": "Histórico de alertas de taxa de OrgMismatchError. Evento webhook: security.org_violation_threshold",
    "table:circuit_breaker_snapshots": "Telemetria append-only. Índices secundários removidos em 2026-07-21 por 0 uso (idx_scan=0). Recriar quando dashboard de histórico for implementado."
   },
-  "types_file": "src/integrations/supabase/types.ts"
+  "types_file": "src/integrations/supabase/types.ts",
+  "sources_ilegiveis": [
+   "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+   "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
+   "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql",
+   "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql",
+   "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql",
+   "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql"
+  ]
  },
  "features": {
   "pages": [
@@ -24398,8 +24470,8 @@
   },
   {
    "module": "scripts",
-   "files": 34,
-   "lines": 8740,
+   "files": 35,
+   "lines": 8829,
    "tables": [
     "a",
     "contacts",
@@ -24496,6 +24568,7 @@
     "scripts/ci/check-claude-md-integrity.mjs",
     "scripts/inventario/gerar-repo.mjs",
     "scripts/inventario/mudou-conteudo.mjs",
+    "scripts/inventario/mudou-conteudo.unit.mjs",
     "scripts/regras_negocio/generate.py",
     "scripts/regras_negocio/indice.py",
     "scripts/regras_negocio/test_generate.py",
@@ -46748,6 +46821,26 @@
     "src": "supabase/migrations/20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql"
    },
    {
+    "name": "Users can insert automation steps for their organization",
+    "table": "automation_steps",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )",
+    "src": "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql"
+   },
+   {
+    "name": "Users can update automation steps for their organization",
+    "table": "automation_steps",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )",
+    "check": "",
+    "src": "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql"
+   },
+   {
     "name": "Users can view their organization's automation steps",
     "table": "automation_steps",
     "cmd": "SELECT",
@@ -47016,6 +47109,46 @@
     "using": "auth.uid() = user_id",
     "check": "auth.uid() = user_id",
     "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+   },
+   {
+    "name": "lc_select",
+    "table": "lusha_contacts",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lc_update",
+    "table": "lusha_contacts",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lc_delete",
+    "table": "lusha_contacts",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lc_service_role",
+    "table": "lusha_contacts",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
    },
    {
     "name": "org_members_view_credit_usage",
@@ -50505,7 +50638,10 @@
     "viewer"
    ],
    "audit_action": [
-    "execute"
+    "execute",
+    "create",
+    "update",
+    "delete"
    ],
    "automation_status": [
     "pending",
@@ -52487,6 +52623,7 @@
   ],
   "jwt_claims": [],
   "policy_fns": [
+   "default_org_for_current_user",
    "has_org_role",
    "has_role",
    "is_org_member"
@@ -52663,8 +52800,12 @@
     "SELECT": [
      "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )"
     ],
-    "INSERT": [],
-    "UPDATE": [],
+    "INSERT": [
+     "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )"
+    ],
+    "UPDATE": [
+     "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )"
+    ],
     "DELETE": []
    },
    "campaign_events": {
@@ -53135,12 +53276,22 @@
    },
    "lusha_contacts": {
     "rls": "enabled",
-    "SELECT": [],
+    "SELECT": [
+     "public: organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ],
     "INSERT": [
+     "service_role: true",
      "authenticated: user_id = auth.uid() AND has_org_role(organization_id, auth.uid(), 'viewer'::app_role)"
     ],
-    "UPDATE": [],
-    "DELETE": []
+    "UPDATE": [
+     "public: organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "public: organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ]
    },
    "lusha_credit_usage_log": {
     "rls": "não encontrado",
@@ -53808,22 +53959,6 @@
     "files": [
      "src/components/lux/PlacesApiNewToggle.tsx",
      "src/components/lux/monitoring/ChaosEngineeringPanel.tsx"
-    ]
-   },
-   {
-    "table": "lusha_contacts",
-    "issue": "front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/components/lux/LushaIntelligenceView.tsx",
-     "src/components/lux/lusha/OracleV2Panel.tsx",
-     "src/lib/mcp/tools/list-decision-makers.ts"
-    ]
-   },
-   {
-    "table": "lusha_contacts",
-    "issue": "front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/components/lux/LushaIntelligenceView.tsx"
     ]
    },
    {
@@ -59213,22 +59348,6 @@
    },
    {
     "kind": "rls",
-    "msg": "`lusha_contacts`: front faz SELECT mas nenhuma política RLS permite SELECT → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/components/lux/LushaIntelligenceView.tsx",
-     "src/components/lux/lusha/OracleV2Panel.tsx",
-     "src/lib/mcp/tools/list-decision-makers.ts"
-    ]
-   },
-   {
-    "kind": "rls",
-    "msg": "`lusha_contacts`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/components/lux/LushaIntelligenceView.tsx"
-    ]
-   },
-   {
-    "kind": "rls",
     "msg": "`lusha_search_sessions`: acessada do front (2 arquivo(s)) sem RLS (não encontrado)",
     "where": [
      "src/components/lux/LushaIntelligenceView.tsx",
@@ -60762,7 +60881,7 @@
   },
   "scripts/ai-context/gerar.mjs": {
    "path": "scripts/ai-context/gerar.mjs",
-   "lines": 924,
+   "lines": 927,
    "env": [
     "AI_CONTEXT_DIR",
     "AI_CONTEXT_PUBLICACAO",
@@ -60784,6 +60903,9 @@
      "params": "text, parent, depth",
      "body": "const re2 = /\\{\\s*(?:[^{}]*?\\b)?path:\\s*['\"]([^'\"]*)['\"]([^{}]*(?:\\{[^{}]*\\}[^{}]*)*)/g; let mm; while ((mm = re2.exec(text))) { const body = mm[2].replace(/children\\s*:\\s*\\[[\\s\\S]*$/, ''); const compM = /(?:element|Component|component|lazy)\\s*:\\s*(?:<)?(?:\\(\\)\\s*=>\\s*import\\(\\s*['\"]([^'\"]+)['\"]\\s*\\))?([A-Z]\\w*)?/.exec(body); const full = joinPath(parent, mm[1]); if (compM && (compM[1] || compM[2])) rotas.push(mk({ caminho: full, componente: compM[2] || null, arquivo: compM[1] ? resolveImport(rf …"
     }
+   ],
+   "side_effects": [
+    "invoke("
    ]
   },
   "scripts/ai-context/gerar.unit.mjs": {
@@ -60913,7 +61035,7 @@
   },
   "scripts/ci/check-claude-md-integrity.mjs": {
    "path": "scripts/ci/check-claude-md-integrity.mjs",
-   "lines": 124,
+   "lines": 135,
    "env": [
     "CLAUDE_MD_BASE"
    ],
@@ -60933,6 +61055,10 @@
     {
      "name": "FILE_SHRINK_THRESHOLD",
      "value": "0.50"
+    },
+    {
+     "name": "CLAUDE_MD",
+     "value": "'CLAUDE.md'"
     }
    ],
    "rule_comments": [
@@ -60947,7 +61073,7 @@
   },
   "scripts/inventario/gerar-repo.mjs": {
    "path": "scripts/inventario/gerar-repo.mjs",
-   "lines": 81,
+   "lines": 82,
    "tables": [
     {
      "table": "tabela",
@@ -60970,9 +61096,14 @@
    ],
    "doc": "!/usr/bin/env node"
   },
+  "scripts/inventario/mudou-conteudo.unit.mjs": {
+   "path": "scripts/inventario/mudou-conteudo.unit.mjs",
+   "lines": 54,
+   "doc": "!/usr/bin/env node"
+  },
   "scripts/regras_negocio/generate.py": {
    "path": "scripts/regras_negocio/generate.py",
-   "lines": 2138,
+   "lines": 2152,
    "exports": [
     "def is_app_code",
     "def log",
@@ -61043,6 +61174,7 @@
     "ANTHROPIC_API_KEY"
    ],
    "rule_comments": [
+    "types.ts e gerado do banco real: une em vez de ignorar, senao um enum visto apenas",
     "8. Regras de negócio + acesso + auditoria de consistência",
     "teste: só os nomes contam (especificação); constantes/prazos/erros de fixture não são regra",
     "Regras de negócio — preencha o que o código não diz",
@@ -61136,7 +61268,7 @@
   },
   "scripts/supabase_snapshot/snapshot.py": {
    "path": "scripts/supabase_snapshot/snapshot.py",
-   "lines": 1791,
+   "lines": 1797,
    "exports": [
     "def env_int",
     "def log",
@@ -79976,10 +80108,61 @@
   }
  },
  "git": {
-  "sha": "4d5d4ee3c46f8351d64c538be291d2acc7c57c76",
+  "sha": "aaaaf8ef25138f6fc6386a8c24a8df4745430a09",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "aaaaf8e",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(contexto): destrava a publicação e para de publicar fato falso (#12)",
+    "files": [
+     ".github/workflows/contexto.yml",
+     ".github/workflows/inventario-estado-semanal.yml",
+     ".gitignore",
+     "AGENTS.md",
+     "ai-context.config.json",
+     "docs/agentes/github-ci.md",
+     "inventario/estado/README.md",
+     "inventario/estado/edges.json",
+     "package.json",
+     "scripts/ai-context/gerar.mjs",
+     "scripts/inventario/gerar-repo.mjs",
+     "scripts/inventario/mudou-conteudo.unit.mjs",
+     "scripts/regras_negocio/generate.py",
+     "scripts/supabase_snapshot/snapshot.py"
+    ]
+   },
+   {
+    "sha": "d90a598",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json",
+    "files": [
+     ".husky/pre-commit",
+     "docs/agentes/mapa-repo.md"
+    ]
+   },
+   {
+    "sha": "1340f5b",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md",
+    "files": [
+     "scripts/ci/check-claude-md-integrity.mjs"
+    ]
+   },
+   {
+    "sha": "1eb0ae9",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json",
+    "files": [
+     "AGENTS.md",
+     "docs/agentes/mapa-repo.md"
+    ]
+   },
    {
     "sha": "4d5d4ee",
     "date": "2026-11-08",
@@ -81222,42 +81405,6 @@
     "files": [
      "supabase/functions/scrape-queue-worker/index.ts"
     ]
-   },
-   {
-    "sha": "b1added",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/functions/scrape-queue-worker/index.ts"
-    ]
-   },
-   {
-    "sha": "bcb9a04",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/functions/scrape-queue-worker/index.ts"
-    ]
-   },
-   {
-    "sha": "3f113bb",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/functions/scrape-queue-worker/index.ts"
-    ]
-   },
-   {
-    "sha": "98ac07d",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/functions/_shared/omkar-gmaps-config.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81266,23 +81413,27 @@
     8
    ],
    [
+    "AGENTS.md",
+    7
+   ],
+   [
     "supabase/config.toml",
     7
    ],
    [
-    "AGENTS.md",
-    5
-   ],
-   [
-    "supabase/functions/scrape-queue-worker/index.ts",
-    5
-   ],
-   [
     ".gitignore",
-    3
+    4
    ],
    [
     "package.json",
+    4
+   ],
+   [
+    "docs/agentes/github-ci.md",
+    3
+   ],
+   [
+    "docs/agentes/mapa-repo.md",
     3
    ],
    [
@@ -81290,56 +81441,52 @@
     3
    ],
    [
-    "docs/agentes/github-ci.md",
+    ".github/workflows/contexto.yml",
+    2
+   ],
+   [
+    ".github/workflows/inventario-estado-semanal.yml",
+    2
+   ],
+   [
+    "ai-context.config.json",
+    2
+   ],
+   [
+    "inventario/estado/README.md",
+    2
+   ],
+   [
+    "inventario/estado/edges.json",
+    2
+   ],
+   [
+    "scripts/ai-context/gerar.mjs",
+    2
+   ],
+   [
+    "scripts/inventario/gerar-repo.mjs",
+    2
+   ],
+   [
+    "scripts/regras_negocio/generate.py",
+    2
+   ],
+   [
+    "scripts/supabase_snapshot/snapshot.py",
+    2
+   ],
+   [
+    ".husky/pre-commit",
+    2
+   ],
+   [
+    "scripts/ci/check-claude-md-integrity.mjs",
     2
    ],
    [
     "docs/agentes/banco.md",
     2
-   ],
-   [
-    ".lovable/mcp/manifest.json",
-    2
-   ],
-   [
-    "supabase/functions/mcp/index.ts",
-    2
-   ],
-   [
-    "docs/ESTADO_ATUAL.md",
-    2
-   ],
-   [
-    "docs/estado/02-backend-edge-functions.md",
-    2
-   ],
-   [
-    "docs/estado/03-dados-e-runtime.md",
-    2
-   ],
-   [
-    "src/lib/api/gmaps.ts",
-    2
-   ],
-   [
-    "src/lib/schemas/scrapeJob.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/omkar-gmaps-config.ts",
-    2
-   ],
-   [
-    "supabase/functions/_shared/schemas.ts",
-    2
-   ],
-   [
-    ".github/workflows/contexto.yml",
-    1
-   ],
-   [
-    ".github/workflows/inventario-estado-semanal.yml",
-    1
    ]
   ]
  }

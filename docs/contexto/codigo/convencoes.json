@@ -3,6 +3,7 @@
  "format_version": 2,
  "onde_ficam": {
   "telas": [
+   "src/components (23)",
    "src/pages (9)"
   ],
   "componentes": [
@@ -30,7 +31,7 @@
   "scripts": [
    "scripts/regras_negocio (3)",
    "scripts/sql (3)",
-   "scripts/ai-context (2)"
+   "scripts/inventario (2)"
   ],
   "docs": [
    "docs (17)",
@@ -42,7 +43,7 @@
   "hooks": "use + PascalCase",
   "servicos": "camelCase (81%)",
   "edge_functions": "kebab-case (97%)",
-  "tabelas": "snake_case (89%)"
+  "tabelas": "snake_case (90%)"
  },
  "barrels_index": 0,
  "extensao_componentes": [
@@ -57,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
-   "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)",
-   "fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md",
-   "fix(banco): corrige contagem de migrations base64 de 4 para 6",
-   "docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)",
-   "Visual edit in Lovable"
+   "fix(contexto): destrava a publicação e para de publicar fato falso (#12)",
+   "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json",
+   "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md",
+   "fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json",
+   "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)"
   ]
  },
  "pr_template": null,
