@@ -35,7 +35,10 @@
     "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
     "contexto:supabase": "SNAPSHOT_DIR=docs/contexto/supabase python3 scripts/supabase_snapshot/snapshot.py",
     "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
-    "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs"
+    "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs",
+    "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
+    "lint:ratchet:update": "node scripts/ci/lint-ratchet.mjs --update-baseline",
+    "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
