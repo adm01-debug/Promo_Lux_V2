@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "81738766d2de858f3de383eff84a972b0a27e721",
+  "commit": "6f3b1ff492c8da537d5f8c09d126a7715c708a3b",
   "branch": "main",
-  "data_commit": "2026-11-08T21:35:12-03:00",
+  "data_commit": "2026-11-08T22:06:44-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "6f3b1ff",
+    "data": "2026-11-08",
+    "assunto": "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script"
+   },
    {
     "sha": "8173876",
     "data": "2026-11-08",
@@ -126,18 +131,17 @@
     "sha": "8f79294",
     "data": "2026-07-29",
     "assunto": "Changes"
-   },
-   {
-    "sha": "38c4794",
-    "data": "2026-07-29",
-    "assunto": "Visual edit in Lovable"
    }
   ],
-  "arquivos_mudados_7d": 52,
+  "arquivos_mudados_7d": 60,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "AGENTS.md",
     "mudancas": 6
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 4
    },
    {
     "pasta": ".agents/skills/promo-lux-v2",
@@ -153,10 +157,6 @@
    },
    {
     "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 3
-   },
-   {
-    "pasta": "package.json",
     "mudancas": 3
    },
    {
@@ -176,6 +176,10 @@
     "mudancas": 2
    },
    {
+    "pasta": ".husky/pre-commit",
+    "mudancas": 2
+   },
+   {
     "pasta": "ai-context.config.json",
     "mudancas": 2
    },
@@ -190,16 +194,16 @@
    {
     "pasta": "inventario/estado/edges.json",
     "mudancas": 2
-   },
-   {
-    "pasta": "scripts/ai-context/gerar.mjs",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "AGENTS.md",
     "mudancas": 7
+   },
+   {
+    "arquivo": "package.json",
+    "mudancas": 4
    },
    {
     "arquivo": "docs/agentes/github-ci.md",
@@ -214,10 +218,6 @@
     "mudancas": 3
    },
    {
-    "arquivo": "package.json",
-    "mudancas": 3
-   },
-   {
     "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
     "mudancas": 2
    },
@@ -227,6 +227,10 @@
    },
    {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+    "mudancas": 2
+   },
+   {
+    "arquivo": ".husky/pre-commit",
     "mudancas": 2
    },
    {
@@ -292,23 +296,19 @@
    {
     "arquivo": ".claude/hooks/session-start.sh",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/identity.json",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 9
+    "commits": 10
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 981,
-  "arquivos_codigo": 629,
-  "linhas_codigo": 101107,
+  "arquivos_total": 985,
+  "arquivos_codigo": 632,
+  "linhas_codigo": 102597,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,9 +320,9 @@
   "tabelas": 96,
   "migrations": 212,
   "cron_jobs": 6,
-  "testes": 115,
+  "testes": 116,
   "workflows": 5,
-  "scripts": 38,
+  "scripts": 40,
   "docs_md": 71
  },
  "por_pasta": {
@@ -423,8 +423,8 @@
    "linhas": 87
   },
   "scripts/ci": {
-   "arquivos": 1,
-   "linhas": 135
+   "arquivos": 3,
+   "linhas": 1522
   },
   "scripts/gen-current-report.ts": {
    "arquivos": 1,
@@ -494,6 +494,10 @@
    "arquivos": 3,
    "linhas": 182
   },
+  "scripts/lib": {
+   "arquivos": 1,
+   "linhas": 101
+  },
   "scripts/mc-r35-preflight.ts": {
    "arquivos": 1,
    "linhas": 15
@@ -556,7 +560,7 @@
   },
   "supabase/functions": {
    "arquivos": 115,
-   "linhas": 20555
+   "linhas": 20557
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -621,6 +625,10 @@
    "linhas": 656
   },
   {
+   "arquivo": "scripts/ci/lint-ratchet.mjs",
+   "linhas": 651
+  },
+  {
    "arquivo": "src/components/ui/sidebar.tsx",
    "linhas": 619
   },
@@ -667,19 +675,15 @@
   {
    "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
    "linhas": 475
-  },
-  {
-   "arquivo": "src/components/lux/GmapsScraperView.tsx",
-   "linhas": 463
   }
  ],
  "qualidade": {
   "any": 25,
-  "console_log": 65,
+  "console_log": 75,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
-  "arquivos_acima_500_linhas": 19
+  "arquivos_acima_500_linhas": 20
  },
  "todos": [
   {
@@ -812,8 +816,8 @@
   "ciclos_de_import": 5,
   "possiveis_segredos_no_codigo": [
    "e2e/helpers/supabase.ts:7",
-   "supabase/functions/_shared/__tests__/lusha-client.test.ts:31",
-   "supabase/functions/_shared/__tests__/lusha-client.test.ts:34"
+   "supabase/functions/_shared/__tests__/lusha-client.test.ts:33",
+   "supabase/functions/_shared/__tests__/lusha-client.test.ts:36"
   ]
  },
  "erros_do_gerador": []

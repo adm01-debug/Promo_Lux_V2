@@ -31,7 +31,7 @@
   "scripts": [
    "scripts/regras_negocio (3)",
    "scripts/sql (3)",
-   "scripts/inventario (2)"
+   "scripts/ci (2)"
   ],
   "docs": [
    "docs (17)",
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script",
    "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes",
    "fix(contexto): destrava a publicação e para de publicar fato falso (#12)",
    "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json",
-   "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md",
-   "fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json"
+   "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md"
   ]
  },
  "pr_template": null,

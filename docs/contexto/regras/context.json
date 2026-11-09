@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "81738766d2de858f3de383eff84a972b0a27e721",
+  "sha": "6f3b1ff492c8da537d5f8c09d126a7715c708a3b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-09 00:38 UTC",
-  "files_total": 999,
-  "code_files": 849,
-  "code_lines": 114716
+  "generated_at": "2026-11-09 01:10 UTC",
+  "files_total": 1003,
+  "code_files": 852,
+  "code_lines": 116206
  },
  "version": "1.3.2",
- "facts_hash": "362024b562d1ec5e",
+ "facts_hash": "1b869366889918d1",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -124,7 +124,10 @@
    "contexto:regras": "python3 scripts/regras_negocio/generate.py --repo . --out docs/contexto/regras --profile regras --schema-snapshot docs/contexto/supabase --index-path docs/contexto/00-INDEX.md --no-pointer",
    "contexto:supabase": "SNAPSHOT_DIR=docs/contexto/supabase python3 scripts/supabase_snapshot/snapshot.py",
    "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
-   "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs"
+   "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs",
+   "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
+   "lint:ratchet:update": "node scripts/ci/lint-ratchet.mjs --update-baseline",
+   "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs"
   },
   "infra": [
    {
@@ -135,8 +138,11 @@
   "ci": [
    {
     "file": ".github/workflows/ci.yml",
-    "name": "ci",
-    "triggers": []
+    "name": "CI Pipeline",
+    "triggers": [
+     "pull_request",
+     "push"
+    ]
    },
    {
     "file": ".github/workflows/contexto.yml",
@@ -179,7 +185,7 @@
    ".ts": 339,
    ".tsx": 277,
    ".sql": 216,
-   ".mjs": 7,
+   ".mjs": 10,
    ".py": 5,
    ".js": 4,
    ".cjs": 1
@@ -24470,8 +24476,8 @@
   },
   {
    "module": "scripts",
-   "files": 35,
-   "lines": 8829,
+   "files": 38,
+   "lines": 10317,
    "tables": [
     "a",
     "contacts",
@@ -24491,7 +24497,9 @@
    ],
    "exports": [
     "gerar.unit.mjs: AppRoutes, useContacts",
+    "lint-ratchet.mjs: createBaseline, stripVolatilePosition, compareBaseline, stagedLintableFiles, stagedRemovedFiles, changedLintableFiles",
     "mudou-conteudo.mjs: PADRAO, semCarimbos, mudou",
+    "seguranca-processo.mjs: RAIZ_REPO, RAIZES_PERMITIDAS, resolverExecutavel, estaDentro, resolverCaminhoPermitido",
     "generate.py: is_app_code, log, read_text, redact, rel, is_archived_sql",
     "indice.py: git, parse_dt, read_manifest, producer_health, entry_file, main",
     "test_generate.py: CurrentSqlSourcesTests",
@@ -24566,9 +24574,12 @@
     "scripts/ai-context/gerar.mjs",
     "scripts/ai-context/gerar.unit.mjs",
     "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/ci/lint-ratchet.mjs",
+    "scripts/ci/lint-ratchet.unit.mjs",
     "scripts/inventario/gerar-repo.mjs",
     "scripts/inventario/mudou-conteudo.mjs",
     "scripts/inventario/mudou-conteudo.unit.mjs",
+    "scripts/lib/seguranca-processo.mjs",
     "scripts/regras_negocio/generate.py",
     "scripts/regras_negocio/indice.py",
     "scripts/regras_negocio/test_generate.py",
@@ -25321,7 +25332,7 @@
   {
    "module": "supabase/functions",
    "files": 115,
-   "lines": 20555,
+   "lines": 20557,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -27682,6 +27693,9 @@
    "NODE_ENV": [
     "scripts/ai-context/cenarios.mjs"
    ],
+   "PATH": [
+    "scripts/lib/seguranca-processo.mjs"
+   ],
    "PGDUMP": [
     "scripts/supabase_snapshot/snapshot.py"
    ],
@@ -29144,12 +29158,76 @@
     "msg": "${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)}"
    },
    {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "${label} falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)}"
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "--base nao combina com --staged."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "--base nao combina com --update-baseline."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "--staged nao combina com --update-baseline."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "Argumento desconhecido: ${argument}"
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "Baseline ESLint invalido ou com schema diferente de ${SCHEMA_VERSION}."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "ESLint falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)}"
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "ESLint local nao encontrado. Execute a instalacao das dependencias primeiro."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "ESLint nao produziu JSON valido: ${error.message}"
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "Entrada invalida no relatorio JSON do ESLint."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "Nao foi possivel ler ${description} em ${filePath}: ${error.message}"
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "O ESLint ou eslint.config.js mudou desde a geracao do baseline. Revise a mudanca e regenere o baseline."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "O relatorio do ESLint deve ser um array JSON."
+   },
+   {
+    "file": "scripts/ci/lint-ratchet.mjs",
+    "msg": "Valor ausente para ${argument}."
+   },
+   {
     "file": "scripts/inventario/gerar-repo.mjs",
     "msg": "ripgrep (rg) falhou com exit ${status}; o inventário não foi gerado."
    },
    {
     "file": "scripts/inventario/gerar-repo.mjs",
     "msg": "ripgrep (rg) não encontrado; o inventário não pode ser gerado com segurança."
+   },
+   {
+    "file": "scripts/lib/seguranca-processo.mjs",
+    "msg": "caminho de "
+   },
+   {
+    "file": "scripts/lib/seguranca-processo.mjs",
+    "msg": "comando nao encontrado no PATH: "
    },
    {
     "file": "scripts/supabase_snapshot/test_snapshot.py",
@@ -61071,6 +61149,79 @@
     "// com >= 50% do tamanho de la. CLAUDE.md fica de fora: e so `@AGENTS.md` por design."
    ]
   },
+  "scripts/ci/lint-ratchet.mjs": {
+   "path": "scripts/ci/lint-ratchet.mjs",
+   "lines": 651,
+   "exports": [
+    "function createBaseline",
+    "function stripVolatilePosition",
+    "function compareBaseline",
+    "function stagedLintableFiles",
+    "function stagedRemovedFiles",
+    "function changedLintableFiles",
+    "function changedRemovedFiles",
+    "function scopeBaseline",
+    "function eslintCommandArguments",
+    "function main"
+   ],
+   "errors": [
+    "${label} falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)}",
+    "--base nao combina com --staged.",
+    "--base nao combina com --update-baseline.",
+    "--staged nao combina com --update-baseline.",
+    "Argumento desconhecido: ${argument}",
+    "Baseline ESLint invalido ou com schema diferente de ${SCHEMA_VERSION}.",
+    "ESLint falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)}",
+    "ESLint local nao encontrado. Execute a instalacao das dependencias primeiro.",
+    "ESLint nao produziu JSON valido: ${error.message}",
+    "Entrada invalida no relatorio JSON do ESLint.",
+    "Nao foi possivel ler ${description} em ${filePath}: ${error.message}",
+    "O ESLint ou eslint.config.js mudou desde a geracao do baseline. Revise a mudanca e regenere o baseline.",
+    "O relatorio do ESLint deve ser um array JSON.",
+    "Valor ausente para ${argument}."
+   ],
+   "params": [
+    {
+     "name": "SCHEMA_VERSION",
+     "value": "1"
+    },
+    {
+     "name": "DEFAULT_BASELINE",
+     "value": "\"scripts/ci/eslint-baseline.json\""
+    },
+    {
+     "name": "MAX_REPORTED_ISSUES",
+     "value": "50"
+    },
+    {
+     "name": "MAX_STAGED_FILES",
+     "value": "400"
+    }
+   ],
+   "rule_comments": [
+    "Modo --staged (pre-commit): so os arquivos do commit sao lintados. Acima do limite o custo da",
+    "localizacao e de ancora (line/column/spanHash/lineHash/contextHash); aqui sai apenas o ruido de"
+   ],
+   "doc": "!/usr/bin/env node",
+   "calc_fns": [
+    {
+     "name": "validateBaseline",
+     "params": "baseline",
+     "body": "if ( !baseline || baseline.schemaVersion !== SCHEMA_VERSION || baseline.command !== \"eslint . --format json\" || !(typeof baseline.eslintVersion === \"string\" || baseline.eslintVersion === null) || !(typeof baseline.eslintConfigSha256 === \"string\" || baseline.eslintConfigSha256 === null) || !Array.isArray(baseline.files) || !Array.isArray(baseline.issues) ) { throw new Error(`Baseline ESLint invalido ou com schema diferente de ${SCHEMA_VERSION}.`); }"
+    }
+   ]
+  },
+  "scripts/ci/lint-ratchet.unit.mjs": {
+   "path": "scripts/ci/lint-ratchet.unit.mjs",
+   "lines": 736,
+   "rule_comments": [
+    "legacy.ts tem divida no baseline mas nao esta no commit: nao pode contar como remocao nem como nova.",
+    "legacy.ts tem divida no baseline mas nao esta no diff: nao pode contar como nova nem como removida."
+   ],
+   "percents": [
+    "// acima do teto de 90.000 do fechar, porque as 79 do Inbox sao 75% do total). Esta parte tira do"
+   ]
+  },
   "scripts/inventario/gerar-repo.mjs": {
    "path": "scripts/inventario/gerar-repo.mjs",
    "lines": 82,
@@ -61100,6 +61251,29 @@
    "path": "scripts/inventario/mudou-conteudo.unit.mjs",
    "lines": 54,
    "doc": "!/usr/bin/env node"
+  },
+  "scripts/lib/seguranca-processo.mjs": {
+   "path": "scripts/lib/seguranca-processo.mjs",
+   "lines": 101,
+   "exports": [
+    "const RAIZ_REPO",
+    "const RAIZES_PERMITIDAS",
+    "function resolverExecutavel",
+    "function estaDentro",
+    "function resolverCaminhoPermitido"
+   ],
+   "env": [
+    "PATH"
+   ],
+   "errors": [
+    "caminho de ",
+    "comando nao encontrado no PATH: "
+   ],
+   "rule_comments": [
+    "processo filho. A regra `javascript:S4036` e puramente sintatica: dispara",
+    "fazendo `git init` passar onde ele deve ser bloqueado).",
+    "inexistentes. Assim `tmp/link-para-fora/novo.json` nao passa apenas porque"
+   ]
   },
   "scripts/regras_negocio/generate.py": {
    "path": "scripts/regras_negocio/generate.py",
@@ -74008,7 +74182,7 @@
   },
   "supabase/functions/_shared/__tests__/lusha-client.test.ts": {
    "path": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
-   "lines": 401,
+   "lines": 403,
    "is_test": true,
    "params": [
     {
@@ -74023,6 +74197,9 @@
      "name": "JWT_EXPIRADO",
      "value": "\"eyJhbGciOiJIUzI1NiJ9.[REDACTED]\""
     }
+   ],
+   "rule_comments": [
+    "inspectLushaToken não verifica assinatura — apenas decodifica o payload)"
    ],
    "tests": [
     "normalizeLushaCookie",
@@ -80108,10 +80285,28 @@
   }
  },
  "git": {
-  "sha": "81738766d2de858f3de383eff84a972b0a27e721",
+  "sha": "6f3b1ff492c8da537d5f8c09d126a7715c708a3b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6f3b1ff",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script",
+    "files": [
+     ".github/workflows/ci.yml",
+     ".husky/pre-commit",
+     "package-lock.json",
+     "package.json",
+     "scripts/check-anon-grants-view.sh",
+     "scripts/ci/eslint-baseline.json",
+     "scripts/ci/lint-ratchet.mjs",
+     "scripts/ci/lint-ratchet.unit.mjs",
+     "scripts/lib/seguranca-processo.mjs",
+     "supabase/functions/_shared/__tests__/lusha-client.test.ts"
+    ]
+   },
    {
     "sha": "8173876",
     "date": "2026-11-08",
@@ -81399,15 +81594,6 @@
      "src/lib/api/gmaps.ts",
      "src/lib/schemas/scrapeJob.ts"
     ]
-   },
-   {
-    "sha": "77bfd38",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/functions/_shared/schemas.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81424,12 +81610,16 @@
     7
    ],
    [
+    "package.json",
+    5
+   ],
+   [
     ".gitignore",
     4
    ],
    [
-    "package.json",
-    4
+    ".husky/pre-commit",
+    3
    ],
    [
     "docs/agentes/github-ci.md",
@@ -81442,6 +81632,22 @@
    [
     "docs/estado/05-infra-ci-testes.md",
     3
+   ],
+   [
+    ".github/workflows/ci.yml",
+    2
+   ],
+   [
+    "package-lock.json",
+    2
+   ],
+   [
+    "scripts/check-anon-grants-view.sh",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+    2
    ],
    [
     ".agents/skills/promo-lux-v2/SKILL.md",
@@ -81469,26 +81675,6 @@
    ],
    [
     "ai-context.config.json",
-    2
-   ],
-   [
-    "inventario/estado/README.md",
-    2
-   ],
-   [
-    "inventario/estado/edges.json",
-    2
-   ],
-   [
-    "scripts/ai-context/gerar.mjs",
-    2
-   ],
-   [
-    "scripts/inventario/gerar-repo.mjs",
-    2
-   ],
-   [
-    "scripts/regras_negocio/generate.py",
     2
    ]
   ]

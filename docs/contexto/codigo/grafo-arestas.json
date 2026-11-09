@@ -2,6 +2,9 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "arestas": {
+  "scripts/ci/lint-ratchet.mjs": [
+   "scripts/lib/seguranca-processo.mjs"
+  ],
   "scripts/gen-current-report.ts": [
    "src/lib/resilience/scenarios.ts",
    "src/lib/resilience/simulator.ts"

@@ -6,9 +6,9 @@
    "TypeScript (616)",
    "SQL (216)",
    "Markdown (71)",
-   "JSON (32)",
+   "JSON (33)",
+   "JavaScript (12)",
    "Shell (10)",
-   "JavaScript (9)",
    "YAML (6)",
    "Python (5)"
   ],
@@ -67,6 +67,9 @@
    "inventario:edges": "node scripts/inventario/gerar-repo.mjs",
    "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs",
    "lint": "eslint .",
+   "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
+   "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs",
+   "lint:ratchet:update": "node scripts/ci/lint-ratchet.mjs --update-baseline",
    "prepare": "husky",
    "preview": "vite preview",
    "test": "vitest run",
@@ -124,16 +127,41 @@
  "workflows": [
   {
    "arquivo": ".github/workflows/ci.yml",
-   "nome": "ci.yml",
-   "gatilhos": [],
+   "nome": "CI Pipeline",
+   "gatilhos": [
+    "pull_request",
+    "push"
+   ],
    "crons": [],
-   "branches": [],
-   "jobs": [],
+   "branches": [
+    "main",
+    "master"
+   ],
+   "jobs": [
+    "quality-gate",
+    "security-scan",
+    "db-guards"
+   ],
    "permissoes": [],
-   "scripts_usados": [],
-   "npm_scripts": [],
-   "secrets": [],
-   "actions": []
+   "scripts_usados": [
+    "scripts/check-anon-grants-view.sh",
+    "scripts/check-audit-triggers.sh",
+    "scripts/check-function-grants.sh",
+    "scripts/check-queue-kind-coverage.sh",
+    "scripts/check-security-definer.sh",
+    "scripts/ci/lint-ratchet.mjs"
+   ],
+   "npm_scripts": [
+    "build",
+    "test"
+   ],
+   "secrets": [
+    "SUPABASE_DB_URL"
+   ],
+   "actions": [
+    "actions/checkout",
+    "actions/setup-node"
+   ]
   },
   {
    "arquivo": ".github/workflows/contexto.yml",
@@ -271,7 +299,7 @@
   {
    "arquivo": ".husky/pre-commit",
    "comandos": [
-    "bun run lint && bunx tsc --noEmit -p tsconfig.app.json && bun run test"
+    "node scripts/ci/lint-ratchet.mjs --staged"
    ]
   }
  ],

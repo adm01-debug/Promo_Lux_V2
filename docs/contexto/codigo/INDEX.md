@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `81738766d2de858f3de383eff84a972b0a27e721` (2026-11-08T21:35:12-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6f3b1ff492c8da537d5f8c09d126a7715c708a3b` (2026-11-08T22:06:44-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (616), SQL (216), Markdown (71), JSON (32), Shell (10), JavaScript (9), YAML (6), Python (5)
+- linguagens: TypeScript (616), SQL (216), Markdown (71), JSON (33), JavaScript (12), Shell (10), YAML (6), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 981 |
-| arquivos_codigo | 629 |
-| linhas_codigo | 101107 |
+| arquivos_total | 985 |
+| arquivos_codigo | 632 |
+| linhas_codigo | 102597 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -48,9 +48,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 96 |
 | migrations | 212 |
 | cron_jobs | 6 |
-| testes | 115 |
+| testes | 116 |
 | workflows | 5 |
-| scripts | 38 |
+| scripts | 40 |
 | docs_md | 71 |
 
 ## Onde ficam as coisas
@@ -61,7 +61,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - testes: co-localizado (__tests__) (75), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
-- scripts: scripts/regras_negocio (3), scripts/sql (3), scripts/inventario (2)
+- scripts: scripts/regras_negocio (3), scripts/sql (3), scripts/ci (2)
 - docs: docs (17), (raiz) (5)
 - nomenclatura: {"componentes":"PascalCase (80%)","hooks":"use + PascalCase","servicos":"camelCase (81%)","edge_functions":"kebab-case (97%)","tabelas":"snake_case (90%)"}
 - instruções para agentes no repo: AGENTS.md, CLAUDE.md
@@ -213,33 +213,33 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - scripts_orfaos: 9 — ex.: scripts/gen-current-report.ts, scripts/gen-legacy-baseline.ts, scripts/gen-round19-validation.ts
 - env_usadas_nao_declaradas: 8 — ex.: DEV, PROD, SUPABASE_PUBLISHABLE_KEY
 - ciclos_de_import: 5
-- possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:31, supabase/functions/_shared/__tests__/lusha-client.test.ts:34
+- possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6136 nós · 13103 arestas · 567 comunidades · grafo do commit `81738766`
-- comunidades maiores: react (103), snapshot.py (102), badge.tsx (101), generate.py (96), @tanstack/react-query (82), gerar.mjs (81), card.tsx (78), cn (77), LushaIntelligenceView.tsx (73), DlqHealthCard.tsx (72), hooks/use-toast.ts (67), dependencies (65)
+- 6193 nós · 13252 arestas · 576 comunidades · grafo do commit `6f3b1ff4`
+- comunidades maiores: lucide-react (155), @tanstack/react-query (129), button.tsx (129), Monitoring.tsx (87), utils.ts (85), cn (80), gerar.mjs (80), generate.py (71), dependencies (65), framer-motion (63), hooks/use-toast.ts (63), package.json (58)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py), header() (scripts/regras_negocio/generate.py), uniq() (scripts/ai-context/gerar.mjs)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - AGENTS.md (7)
+- package.json (4)
 - docs/agentes/github-ci.md (3)
 - docs/agentes/mapa-repo.md (3)
 - docs/estado/05-infra-ci-testes.md (3)
-- package.json (3)
 - .claude/skills/promo-lux-v2/SKILL.md (2)
 - .github/workflows/contexto.yml (2)
 - .github/workflows/inventario-estado-semanal.yml (2)
+- .husky/pre-commit (2)
 - ai-context.config.json (2)
 - docs/ESTADO_ATUAL.md (2)
 - docs/agentes/banco.md (2)
 - docs/estado/02-backend-edge-functions.md (2)
 - docs/estado/03-dados-e-runtime.md (2)
 - inventario/estado/README.md (2)
-- inventario/estado/edges.json (2)
 
 ## Workflows
-- `ci.yml` — ci.yml ()
+- `ci.yml` — CI Pipeline (pull_request, push)
 - `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3-59/10 * * * *)
 - `db-migrations.yml` — Database Migrations (pull_request, push, workflow_dispatch)
 - `edge-tests-daily.yml` — Edge Functions Daily Tests (Deno) (pull_request, schedule, workflow_dispatch; cron 0 7 * * *)
@@ -278,6 +278,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `contexto:supabase`: `SNAPSHOT_DIR=docs/contexto/supabase python3 scripts/supabase_snapshot/snapshot.py`
 - `inventario:edges`: `node scripts/inventario/gerar-repo.mjs`
 - `inventario:edges:test`: `node --test scripts/inventario/mudou-conteudo.unit.mjs`
+- `lint:ratchet`: `node scripts/ci/lint-ratchet.mjs`
+- `lint:ratchet:update`: `node scripts/ci/lint-ratchet.mjs --update-baseline`
+- `lint:ratchet:test`: `node --test scripts/ci/lint-ratchet.unit.mjs`
 
 ## Documentos (raiz e docs/)
 - `AGENTS.md` — AGENTS.md — Promo Lux V2 (LUX IA) (162 linhas)
@@ -306,6 +309,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-08 `6f3b1ff` fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script
 - 2026-11-08 `8173876` fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes
 - 2026-11-08 `aaaaf8e` fix(contexto): destrava a publicação e para de publicar fato falso (#12)
 - 2026-11-08 `d90a598` fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json
@@ -320,7 +324,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-08-18 `c88dc8a` chore(hermes): adiciona .hermes.md (regras da casa Hermes)
 - 2026-08-18 `ee80ee4` chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)
 - 2026-08-16 `97bb6fb` Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829
-- 2026-08-16 `9f9f678` docs: errata da auditoria apos segunda rodada de validacao adversarial
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

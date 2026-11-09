@@ -1,15 +1,17 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 38,
+ "total": 40,
  "scripts": [
   {
    "arquivo": "scripts/check-anon-grants-view.sh",
-   "descricao": null,
-   "linhas": 1,
+   "descricao": "============================================================================== CI Guard — v_sec_definer_anon_grants view",
+   "linhas": 43,
    "env": [],
    "npm_scripts": [],
-   "workflows": [],
+   "workflows": [
+    "ci.yml"
+   ],
    "orfao": false
   },
   {
@@ -20,7 +22,9 @@
    "npm_scripts": [
     "test:audit-triggers"
    ],
-   "workflows": [],
+   "workflows": [
+    "ci.yml"
+   ],
    "orfao": false
   },
   {
@@ -31,7 +35,9 @@
    "npm_scripts": [
     "test:grants"
    ],
-   "workflows": [],
+   "workflows": [
+    "ci.yml"
+   ],
    "orfao": false
   },
   {
@@ -64,7 +70,9 @@
    "linhas": 19,
    "env": [],
    "npm_scripts": [],
-   "workflows": [],
+   "workflows": [
+    "ci.yml"
+   ],
    "orfao": false
   },
   {
@@ -73,7 +81,9 @@
    "linhas": 69,
    "env": [],
    "npm_scripts": [],
-   "workflows": [],
+   "workflows": [
+    "ci.yml"
+   ],
    "orfao": false
   },
   {
@@ -85,6 +95,20 @@
    ],
    "npm_scripts": [],
    "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/lint-ratchet.mjs",
+   "descricao": "Artefatos produzidos por testes nao sao fonte do projeto. O ESLint nao le o .gitignore por padrao em todas as versoes/configuracoes, entao o ratchet os",
+   "linhas": 651,
+   "env": [],
+   "npm_scripts": [
+    "lint:ratchet",
+    "lint:ratchet:update"
+   ],
+   "workflows": [
+    "ci.yml"
+   ],
    "orfao": false
   },
   {
@@ -266,6 +290,17 @@
    "workflows": [
     "inventario-estado-semanal.yml"
    ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/lib/seguranca-processo.mjs",
+   "descricao": "* Utilidades compartilhadas pelos scripts de auditoria/CI.",
+   "linhas": 101,
+   "env": [
+    "PATH"
+   ],
+   "npm_scripts": [],
+   "workflows": [],
    "orfao": false
   },
   {

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `81738766d2` · branch `main` · 2026-11-09 00:38 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6f3b1ff492` · branch `main` · 2026-11-09 01:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1691,8 +1691,24 @@ _nenhum item encontrado_
 | [lushaMocks] mock  | `e2e/helpers/lushaMocks.ts` |
 | Login E2E falhou para ${creds.email}: ${error.message} | `e2e/helpers/supabase.ts` |
 | ${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)} | `scripts/ai-context/cenarios.mjs` |
+| ${label} falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)} | `scripts/ci/lint-ratchet.mjs` |
+| --base nao combina com --staged. | `scripts/ci/lint-ratchet.mjs` |
+| --base nao combina com --update-baseline. | `scripts/ci/lint-ratchet.mjs` |
+| --staged nao combina com --update-baseline. | `scripts/ci/lint-ratchet.mjs` |
+| Argumento desconhecido: ${argument} | `scripts/ci/lint-ratchet.mjs` |
+| Baseline ESLint invalido ou com schema diferente de ${SCHEMA_VERSION}. | `scripts/ci/lint-ratchet.mjs` |
+| ESLint falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)} | `scripts/ci/lint-ratchet.mjs` |
+| ESLint local nao encontrado. Execute a instalacao das dependencias primeiro. | `scripts/ci/lint-ratchet.mjs` |
+| ESLint nao produziu JSON valido: ${error.message} | `scripts/ci/lint-ratchet.mjs` |
+| Entrada invalida no relatorio JSON do ESLint. | `scripts/ci/lint-ratchet.mjs` |
+| Nao foi possivel ler ${description} em ${filePath}: ${error.message} | `scripts/ci/lint-ratchet.mjs` |
+| O ESLint ou eslint.config.js mudou desde a geracao do baseline. Revise a mudanca e regenere o baseline. | `scripts/ci/lint-ratchet.mjs` |
+| O relatorio do ESLint deve ser um array JSON. | `scripts/ci/lint-ratchet.mjs` |
+| Valor ausente para ${argument}. | `scripts/ci/lint-ratchet.mjs` |
 | ripgrep (rg) falhou com exit ${status}; o inventário não foi gerado. | `scripts/inventario/gerar-repo.mjs` |
 | ripgrep (rg) não encontrado; o inventário não pode ser gerado com segurança. | `scripts/inventario/gerar-repo.mjs` |
+| caminho de  | `scripts/lib/seguranca-processo.mjs` |
+| comando nao encontrado no PATH:  | `scripts/lib/seguranca-processo.mjs` |
 | O teste offline não permite consultas ao banco | `scripts/supabase_snapshot/test_snapshot.py` |
 | banco indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
 | catálogo indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |

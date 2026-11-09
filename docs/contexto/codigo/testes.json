@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 115,
+ "total": 116,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 93
+  "unit": 94
  },
  "onde_ficam": [
   {
@@ -26,7 +26,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 5
+   "arquivos": 6
   }
  ],
  "arquivos": [
@@ -178,6 +178,16 @@
     "src/lib/rlsRegistry.ts"
    ],
    "casos": 7
+  },
+  {
+   "arquivo": "scripts/ci/lint-ratchet.unit.mjs",
+   "tipo": "unit",
+   "linhas": 736,
+   "testa": [
+    "scripts/ci/lint-ratchet.mjs",
+    "scripts/lib/seguranca-processo.mjs"
+   ],
+   "casos": 36
   },
   {
    "arquivo": "scripts/inventario/mudou-conteudo.unit.mjs",
@@ -995,7 +1005,7 @@
   {
    "arquivo": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
    "tipo": "unit",
-   "linhas": 401,
+   "linhas": 403,
    "testa": [
     "supabase/functions/_shared/lusha-client.ts",
     "supabase/functions/_shared/lusha-departments.ts"
@@ -1080,7 +1090,9 @@
  "sql": [],
  "cobertura_por_arquivo": {
   "playwright-fixture.ts": 7,
+  "scripts/ci/lint-ratchet.mjs": 1,
   "scripts/inventario/mudou-conteudo.mjs": 1,
+  "scripts/lib/seguranca-processo.mjs": 1,
   "src/components/lux/CampaignsView.tsx": 1,
   "src/components/lux/CompaniesView.tsx": 1,
   "src/components/lux/CompanyFilters.tsx": 1,
