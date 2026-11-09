@@ -1,1 +1,133 @@
-bmFtZTogQ0kgUGlwZWxpbmUKCm9uOgogIHB1c2g6CiAgICBicmFuY2hlczogWyBtYWluLCBtYXN0ZXIgXQogIHB1bGxfcmVxdWVzdDoKICAgIGJyYW5jaGVzOiBbIG1haW4sIG1hc3RlciBdCgpqb2JzOgogIHF1YWxpdHktZ2F0ZToKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKICAgIHN0ZXBzOgogICAgICAtIHVzZXM6IGFjdGlvbnMvY2hlY2tvdXRAdjQKICAgICAgCiAgICAgIC0gbmFtZTogU2V0dXAgTm9kZQogICAgICAgIHVzZXM6IGFjdGlvbnMvc2V0dXAtbm9kZUB2NAogICAgICAgIHdpdGg6CiAgICAgICAgICBub2RlLXZlcnNpb246IDIwCiAgICAgICAgICBjYWNoZTogJ25wbScKCiAgICAgIC0gbmFtZTogSW5zdGFsbCBkZXBlbmRlbmNpZXMKICAgICAgICAjIC0tbGVnYWN5LXBlZXItZGVwczogcGFydGUgZGEgw6Fydm9yZSAobmV4dC10aGVtZXNAMC4zLCByZWFjdC1kYXktcGlja2VyQDgKICAgICAgICAjICsgZGF0ZS1mbnNANCkgYWluZGEgZGVjbGFyYSBwZWVyIHJhbmdlcyBkZSBSZWFjdCAxNy8xOCBlIGRhdGUtZm5zIDIvMywKICAgICAgICAjIHNlbSB0ZXIgc2lkbyByZXB1YmxpY2FkYSBwYXJhIGFzIHZlcnPDtWVzIHVzYWRhcyBhcXVpIChSZWFjdCAxOSwKICAgICAgICAjIGRhdGUtZm5zIDQpLiBGdW5jaW9uYW0gbmEgcHLDoXRpY2EgKMOpIGFzc2ltIHF1ZSBvIHByb2pldG8gasOhIHJvZGEgdmlhCiAgICAgICAgIyBgYnVuIGluc3RhbGxgLCBtYWlzIHBlcm1pc3Npdm8gcG9yIHBhZHLDo28pIOKAlCBzZW0gZXNzYSBmbGFnLCB1bQogICAgICAgICMgYG5wbSBpbnN0YWxsYCBsaW1wbyBhYm9ydGEgY29tIEVSRVNPTFZFIGFudGVzIGRlIGluc3RhbGFyIHF1YWxxdWVyCiAgICAgICAgIyBjb2lzYS4KICAgICAgICBydW46IG5wbSBpbnN0YWxsIC0tbGVnYWN5LXBlZXItZGVwcwoKICAgICAgLSBuYW1lOiBMaW50CiAgICAgICAgcnVuOiBucG0gcnVuIGxpbnQKCiAgICAgIC0gbmFtZTogVHlwZVNjcmlwdCBjaGVjawogICAgICAgIHJ1bjogbnB4IHRzYyAtLW5vRW1pdAoKICAgICAgLSBuYW1lOiBVbml0ICYgSW50ZWdyYXRpb24gVGVzdHMKICAgICAgICBydW46IG5wbSBydW4gdGVzdAoKICAgICAgLSBuYW1lOiBCdWlsZAogICAgICAgIHJ1bjogbnBtIHJ1biBidWlsZAoKICBzZWN1cml0eS1zY2FuOgogICAgbmFtZTogU2VjdXJpdHkgU2NhbiAoY29uc29sZS5sb2cgKyBoYXJkY29kZWQgc2VjcmV0cykKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKICAgIHN0ZXBzOgogICAgICAtIHVzZXM6IGFjdGlvbnMvY2hlY2tvdXRAdjQKICAgICAgICB3aXRoOgogICAgICAgICAgZmV0Y2gtZGVwdGg6IDAKCiAgICAgIC0gbmFtZTogQ2hlY2sgZm9yIGNvbnNvbGUubG9nIGluIHByb2R1Y3Rpb24gY29kZQogICAgICAgIHJ1bjogfAogICAgICAgICAgZWNobyAi4pa2IFZlcmlmaWNhbmRvIGNvbnNvbGUubG9nIGVtIGPDs2RpZ28gZGUgcHJvZHXDp8OjbyIKICAgICAgICAgIFZJT0xBVElPTlM9JChncmVwIC1ybiAiY29uc29sZVwubG9nIiBzcmMvIHN1cGFiYXNlL2Z1bmN0aW9ucy8gXAogICAgICAgICAgICAtLWluY2x1ZGU9IioudHMiIC0taW5jbHVkZT0iKi50c3giIFwKICAgICAgICAgICAgLS1leGNsdWRlLWRpcj0iX190ZXN0c19fIiBcCiAgICAgICAgICAgIC0tZXhjbHVkZS1kaXI9InRlc3QiIFwKICAgICAgICAgICAgLS1leGNsdWRlLWRpcj0idGVzdHMiIFwKICAgICAgICAgICAgfCBncmVwIC12ICIvLyBjb25zb2xlLmxvZyIgXAogICAgICAgICAgICB8IGdyZXAgLXYgIi50ZXN0LiIgXAogICAgICAgICAgICB8IGdyZXAgLXYgIi5zcGVjLiIgXAogICAgICAgICAgICB8IGdyZXAgLXYgImRlbW9EYXRhIiBcCiAgICAgICAgICAgIHwgZ3JlcCAtdiAicmVzaWxpZW5jZS9zaW11bGF0b3IiIFwKICAgICAgICAgICAgfCBncmVwIC12ICJ2aXRlLWVudi5kLnRzIiBcCiAgICAgICAgICAgIHx8IHRydWUpCiAgICAgICAgICBpZiBbIC1uICIkVklPTEFUSU9OUyIgXTsgdGhlbgogICAgICAgICAgICBlY2hvICI6OmVycm9yOjpjb25zb2xlLmxvZyBlbmNvbnRyYWRvIGVtIHByb2R1w6fDo28gKHZpb2xhIEFEUi0wMDYpOiIKICAgICAgICAgICAgZWNobyAiJFZJT0xBVElPTlMiCiAgICAgICAgICAgIGV4aXQgMQogICAgICAgICAgZmkKICAgICAgICAgIGVjaG8gIuKchSBOZW5odW0gY29uc29sZS5sb2cgZW0gcHJvZHXDp8Ojby4iCgogICAgICAtIG5hbWU6IENoZWNrIGZvciBoYXJkY29kZWQgc2VjcmV0cyBwYXR0ZXJucwogICAgICAgIHJ1bjogfAogICAgICAgICAgZWNobyAi4pa2IFZlcmlmaWNhbmRvIHBhZHLDtWVzIGRlIHNlY3JldHMgaGFyZGNvZGVkLi4uIgogICAgICAgICAgRk9VTkQ9MAogICAgICAgICAgaWYgZ3JlcCAtcm5FICdBS0lBWzAtOUEtWl17MTZ9JyBzcmMvIHN1cGFiYXNlL2Z1bmN0aW9ucy8gLS1pbmNsdWRlPSIqLnRzIiAtLWluY2x1ZGU9IioudHN4IiAyPi9kZXYvbnVsbDsgdGhlbgogICAgICAgICAgICBlY2hvICI6Ondhcm5pbmc6OlBhZHLDo28gQVdTIEFjY2VzcyBLZXkgZW5jb250cmFkbyIKICAgICAgICAgICAgRk9VTkQ9JCgoRk9VTkQrMSkpCiAgICAgICAgICBmaQogICAgICAgICAgaWYgZ3JlcCAtcm5FICdza19saXZlX1tBLVphLXowLTldezIwLH0nIHNyYy8gc3VwYWJhc2UvZnVuY3Rpb25zLyAtLWluY2x1ZGU9IioudHMiIC0taW5jbHVkZT0iKi50c3giIDI+L2Rldi9udWxsOyB0aGVuCiAgICAgICAgICAgIGVjaG8gIjo6d2FybmluZzo6UGFkcsOjbyBTdHJpcGUgTGl2ZSBLZXkgZW5jb250cmFkbyIKICAgICAgICAgICAgRk9VTkQ9JCgoRk9VTkQrMSkpCiAgICAgICAgICBmaQogICAgICAgICAgaWYgWyAkRk9VTkQgLWd0IDAgXTsgdGhlbgogICAgICAgICAgICBlY2hvICI6OmVycm9yOjokRk9VTkQgc2VjcmV0KHMpIGhhcmRjb2RlZCBkZXRlY3RhZG8ocykuIgogICAgICAgICAgICBleGl0IDEKICAgICAgICAgIGZpCiAgICAgICAgICBlY2hvICLinIUgU2NhbiBkZSBzZWNyZXRzIGNvbmNsdcOtZG8uIgoKICBkYi1ndWFyZHM6CiAgICBuYW1lOiBEYXRhYmFzZSBHdWFyZHMgKEdyYW50cy9STFMgKyBBdWRpdCBUcmlnZ2VycykKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKICAgIGlmOiAkeyB7Z2l0aHViLmV2ZW50X25hbWUgPT0gJ3B1c2gnIHx8IGdpdGh1Yi5ldmVudC5wdWxsX3JlcXVlc3QuaGVhZC5yZXBvLmZ1bGxfbmFtZSA9PSBnaXRodWIucmVwb3NpdG9yeSB9fQogICAgc3RlcHM6CiAgICAgIC0gdXNlczogYWN0aW9ucy9jaGVja291dEB2NAoKICAgICAgLSBuYW1lOiBJbnN0YWxsIHBzcWwgY2xpZW50CiAgICAgICAgcnVuOiB8CiAgICAgICAgICBzdWRvIGFwdC1nZXQgdXBkYXRlCiAgICAgICAgICBzdWRvIGFwdC1nZXQgaW5zdGFsbCAteSBwb3N0Z3Jlc3FsLWNsaWVudAoKICAgICAgLSBuYW1lOiBWZXJpZnkgZnVuY3Rpb24gRVhFQ1VURSBncmFudHMgKGFub24vYXV0aGVudGljYXRlZC9zZXJ2aWNlX3JvbGUpCiAgICAgICAgZW52OgogICAgICAgICAgU1VQQUJBU0VfREJfVVJMOiAkeyB7c2VjcmV0cy5TVVBBQUFTRV9EQl9VUkwgfSB9CiAgICAgICAgICBHSVRIVUJfRVZFTlRfTkFNRTogJHsgeyBnaXRodWIuZXZlbnRfbmFtZSB9IH0KICAgICAgICBydW46IGJhc2ggc2NyaXB0cy9jaGVjay1mdW5jdGlvbi1ncmFudHMuc2gKCiAgICAgIC0gbmFtZTogVmVyaWZ5IGF1ZGl0IHRyaWdnZXIgaW50ZWdyaXR5ICgxIGxvZ19hdWRpdF9ldmVudCBwZXIgdGFibGUsIG5vIGR1cGxpY2F0ZXMpCiAgICAgICAgZW52OgogICAgICAgICAgU1VQQUJBU0VfREJfVVJMOiAkeyB7c2VjcmV0cy5TVVBBQUFTRV9EQl9VUkwgfSB9CiAgICAgICAgICBHSVRIVUJfRVZFTlRfTkFNRTogJHsgeyBnaXRodWIuZXZlbnRfbmFtZSB9IH0KICAgICAgICBydW46IGJhc2ggc2NyaXB0cy9jaGVjay1hdWRpdC10cmlnZ2Vycy5zaAoKICAgICAgLSBuYW1lOiBWZXJpZnkgdl9zZWNfZGVmaW5lcl9hbm9uX2dyYW50cyAoemVybyByb3dzID0gc2VjdXJlKQogICAgICAgIGVudjoKICAgICAgICAgIFNVUEFCQVNFX0RCX1VSTDogJHsgeyBzZWNyZXRzLlNVUEFCQVNFX0RCX1VSTCB9IH0KICAgICAgICAgIEdJVEhVQl9FVkVOVF9OQU1FOiAkeyB7IGdpdGh1Yi5ldmVudF9uYW1lIH0gfQogICAgICAgIHJ1bjogYmFzaCBzY3JpcHRzL2NoZWNrLWFub24tZ3JhbnRzLXZpZXcuc2gKCiAgICAgIC0gbmFtZTogVmVyaWZ5IFNFQ1VSSVRZIERFRklORVIgYWxsb3dsaXN0IChBRFItMDA5KQogICAgICAgIGVudjoKICAgICAgICAgIFNVUEFCQVNFX0RCX1VSTDogJHsgeyBzZWNyZXRzLlNVUEFCQVNFX0RCX1VSTCB9IH0KICAgICAgICAgIEdJVEhVQl9FVkVOVF9OQU1FOiAkeyB7IGdpdGh1Yi5ldmVudF9uYW1lIH0gfQogICAgICAgIHJ1bjogYmFzaCBzY3JpcHRzL2NoZWNrLXNlY3VyaXR5LWRlZmluZXIuc2gKCiAgICAgIC0gbmFtZTogVmVyaWZ5IHF1ZXVlX2tpbmQgY292ZXJhZ2UgKFJvdW5kMTgpCiAgICAgICAgZW52OgogICAgICAgICAgU1VQQUJBU0VfREJfVVJMOiAkeyB7IHNlY3JldHMuU1VQQUJBU0VfREJfVVJMIH0gfQogICAgICAgICAgR0lUSFVCX0VWRU5UX05BTUU6ICR7IHsgZ2l0aHViLmV2ZW50X25hbWUgfSB9CiAgICAgICAgcnVuOiBiYXNoIHNjcmlwdHMvY2hlY2stcXVldWUta2luZC1jb3ZlcmFnZS5zaAo=
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        # --legacy-peer-deps: parte da árvore (next-themes@0.3, react-day-picker@8
+        # + date-fns@4) ainda declara peer ranges de React 17/18 e date-fns 2/3,
+        # sem ter sido republicada para as versões usadas aqui (React 19,
+        # date-fns 4). Funcionam na prática (é assim que o projeto já roda via
+        # `bun install`, mais permissivo por padrão) — sem essa flag, um
+        # `npm install` limpo aborta com ERESOLVE antes de instalar qualquer
+        # coisa.
+        run: npm install --legacy-peer-deps
+
+      - name: Lint
+        run: npm run lint
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Unit & Integration Tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  security-scan:
+    name: Security Scan (console.log + hardcoded secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for console.log in production code
+        run: |
+          echo "▶ Verificando console.log em código de produção"
+          VIOLATIONS=$(grep -rn "console\.log" src/ supabase/functions/ \
+            --include="*.ts" --include="*.tsx" \
+            --exclude-dir="__tests__" \
+            --exclude-dir="test" \
+            --exclude-dir="tests" \
+            | grep -v "// console.log" \
+            | grep -v ".test." \
+            | grep -v ".spec." \
+            | grep -v "demoData" \
+            | grep -v "resilience/simulator" \
+            | grep -v "vite-env.d.ts" \
+            | grep -vE 'console\.log\(JSON\.stringify\(' \
+            | grep -vE 'console\.log\(line\);?$' \
+            || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "::error::console.log encontrado em produção (viola ADR-006):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✅ Nenhum console.log em produção."
+
+      - name: Check for hardcoded secrets patterns
+        run: |
+          echo "▶ Verificando padrões de secrets hardcoded..."
+          FOUND=0
+          if grep -rnE 'AKIA[0-9A-Z]{16}' src/ supabase/functions/ --include="*.ts" --include="*.tsx" 2>/dev/null; then
+            echo "::warning::Padrão AWS Access Key encontrado"
+            FOUND=$((FOUND+1))
+          fi
+          if grep -rnE 'sk_live_[A-Za-z0-9]{20,}' src/ supabase/functions/ --include="*.ts" --include="*.tsx" 2>/dev/null; then
+            echo "::warning::Padrão Stripe Live Key encontrado"
+            FOUND=$((FOUND+1))
+          fi
+          if [ $FOUND -gt 0 ]; then
+            echo "::error::$FOUND secret(s) hardcoded detectado(s)."
+            exit 1
+          fi
+          echo "✅ Scan de secrets concluído."
+
+  db-guards:
+    name: Database Guards (Grants/RLS + Audit Triggers)
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install psql client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Verify function EXECUTE grants (anon/authenticated/service_role)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: bash scripts/check-function-grants.sh
+
+      - name: Verify audit trigger integrity (1 log_audit_event per table, no duplicates)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: bash scripts/check-audit-triggers.sh
+
+      - name: Verify v_sec_definer_anon_grants (zero rows = secure)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: bash scripts/check-anon-grants-view.sh
+
+      - name: Verify SECURITY DEFINER allowlist (ADR-009)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: bash scripts/check-security-definer.sh
+
+      - name: Verify queue_kind coverage (Round18)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: bash scripts/check-queue-kind-coverage.sh
