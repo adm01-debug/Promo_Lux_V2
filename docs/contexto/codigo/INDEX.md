@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `aaaaf8ef25138f6fc6386a8c24a8df4745430a09` (2026-11-08T20:29:01-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `81738766d2de858f3de383eff84a972b0a27e721` (2026-11-08T21:35:12-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:31, supabase/functions/_shared/__tests__/lusha-client.test.ts:34
 
 ## Grafo de código (graphify)
-- 6136 nós · 13103 arestas · 567 comunidades · grafo do commit `aaaaf8ef`
+- 6136 nós · 13103 arestas · 567 comunidades · grafo do commit `81738766`
 - comunidades maiores: react (103), snapshot.py (102), badge.tsx (101), generate.py (96), @tanstack/react-query (82), gerar.mjs (81), card.tsx (78), cn (77), LushaIntelligenceView.tsx (73), DlqHealthCard.tsx (72), hooks/use-toast.ts (67), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py), header() (scripts/regras_negocio/generate.py), uniq() (scripts/ai-context/gerar.mjs)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -227,6 +227,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/mapa-repo.md (3)
 - docs/estado/05-infra-ci-testes.md (3)
 - package.json (3)
+- .claude/skills/promo-lux-v2/SKILL.md (2)
 - .github/workflows/contexto.yml (2)
 - .github/workflows/inventario-estado-semanal.yml (2)
 - ai-context.config.json (2)
@@ -236,7 +237,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/estado/03-dados-e-runtime.md (2)
 - inventario/estado/README.md (2)
 - inventario/estado/edges.json (2)
-- scripts/ci/check-claude-md-integrity.mjs (2)
 
 ## Workflows
 - `ci.yml` — ci.yml ()
@@ -306,6 +306,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-08 `8173876` fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes
 - 2026-11-08 `aaaaf8e` fix(contexto): destrava a publicação e para de publicar fato falso (#12)
 - 2026-11-08 `d90a598` fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json
 - 2026-11-08 `1340f5b` fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md
@@ -320,7 +321,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-08-18 `ee80ee4` chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)
 - 2026-08-16 `97bb6fb` Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829
 - 2026-08-16 `9f9f678` docs: errata da auditoria apos segunda rodada de validacao adversarial
-- 2026-08-16 `8e6172d` docs: auditoria de estado do sistema (ESTADO_ATUAL + 5 anexos)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

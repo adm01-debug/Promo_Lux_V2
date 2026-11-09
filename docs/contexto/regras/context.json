@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "aaaaf8ef25138f6fc6386a8c24a8df4745430a09",
+  "sha": "81738766d2de858f3de383eff84a972b0a27e721",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-08 23:30 UTC",
+  "generated_at": "2026-11-09 00:38 UTC",
   "files_total": 999,
   "code_files": 849,
   "code_lines": 114716
@@ -80108,10 +80108,22 @@
   }
  },
  "git": {
-  "sha": "aaaaf8ef25138f6fc6386a8c24a8df4745430a09",
+  "sha": "81738766d2de858f3de383eff84a972b0a27e721",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8173876",
+    "date": "2026-11-08",
+    "author": "adm01-debug",
+    "subject": "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes",
+    "files": [
+     ".agents/skills/promo-lux-v2/SKILL.md",
+     ".claude/skills/promo-lux-v2/SKILL.md",
+     ".codex/AGENTS.md",
+     "CONTRIBUTING.md"
+    ]
+   },
    {
     "sha": "aaaaf8e",
     "date": "2026-11-08",
@@ -81396,15 +81408,6 @@
     "files": [
      "supabase/functions/_shared/schemas.ts"
     ]
-   },
-   {
-    "sha": "4f796cf",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/functions/scrape-queue-worker/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81441,6 +81444,22 @@
     3
    ],
    [
+    ".agents/skills/promo-lux-v2/SKILL.md",
+    2
+   ],
+   [
+    ".claude/skills/promo-lux-v2/SKILL.md",
+    2
+   ],
+   [
+    ".codex/AGENTS.md",
+    2
+   ],
+   [
+    "CONTRIBUTING.md",
+    2
+   ],
+   [
     ".github/workflows/contexto.yml",
     2
    ],
@@ -81470,22 +81489,6 @@
    ],
    [
     "scripts/regras_negocio/generate.py",
-    2
-   ],
-   [
-    "scripts/supabase_snapshot/snapshot.py",
-    2
-   ],
-   [
-    ".husky/pre-commit",
-    2
-   ],
-   [
-    "scripts/ci/check-claude-md-integrity.mjs",
-    2
-   ],
-   [
-    "docs/agentes/banco.md",
     2
    ]
   ]

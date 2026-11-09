@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "aaaaf8ef25138f6fc6386a8c24a8df4745430a09",
+  "commit": "81738766d2de858f3de383eff84a972b0a27e721",
   "branch": "main",
-  "data_commit": "2026-11-08T20:29:01-03:00",
+  "data_commit": "2026-11-08T21:35:12-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8173876",
+    "data": "2026-11-08",
+    "assunto": "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes"
+   },
    {
     "sha": "aaaaf8e",
     "data": "2026-11-08",
@@ -126,18 +131,17 @@
     "sha": "38c4794",
     "data": "2026-07-29",
     "assunto": "Visual edit in Lovable"
-   },
-   {
-    "sha": "abdfbe0",
-    "data": "2026-07-28",
-    "assunto": "Removeu migrate-helper do CDN"
    }
   ],
-  "arquivos_mudados_7d": 51,
+  "arquivos_mudados_7d": 52,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "AGENTS.md",
     "mudancas": 6
+   },
+   {
+    "pasta": ".agents/skills/promo-lux-v2",
+    "mudancas": 3
    },
    {
     "pasta": ".gitignore",
@@ -156,7 +160,11 @@
     "mudancas": 3
    },
    {
-    "pasta": ".agents/skills/promo-lux-v2",
+    "pasta": ".claude/skills/promo-lux-v2",
+    "mudancas": 2
+   },
+   {
+    "pasta": ".codex/AGENTS.md",
     "mudancas": 2
    },
    {
@@ -186,14 +194,6 @@
    {
     "pasta": "scripts/ai-context/gerar.mjs",
     "mudancas": 2
-   },
-   {
-    "pasta": "scripts/ci/check-claude-md-integrity.mjs",
-    "mudancas": 2
-   },
-   {
-    "pasta": "scripts/inventario/gerar-repo.mjs",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -216,6 +216,10 @@
    {
     "arquivo": "package.json",
     "mudancas": 3
+   },
+   {
+    "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
+    "mudancas": 2
    },
    {
     "arquivo": ".github/workflows/contexto.yml",
@@ -292,16 +296,12 @@
    {
     "arquivo": ".claude/identity.json",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/settings.json",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 8
+    "commits": 9
    }
   ]
  },
