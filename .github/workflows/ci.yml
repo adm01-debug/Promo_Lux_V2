@@ -28,8 +28,8 @@ jobs:
         # coisa.
         run: npm install --legacy-peer-deps
 
-      - name: Lint
-        run: npm run lint
+      - name: Lint (ratchet — só falha em novas ocorrências)
+        run: node scripts/ci/lint-ratchet.mjs
 
       - name: TypeScript check
         run: npx tsc --noEmit

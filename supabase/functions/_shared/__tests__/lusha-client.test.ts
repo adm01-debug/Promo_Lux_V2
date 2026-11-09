@@ -22,9 +22,11 @@ import {
   DEPARTMENT_MAP,
 } from "../lusha-departments";
 
+// exp: 2036-11-06 (10 anos a partir de 2026-11; reconstruído sem assinatura válida pois
+// inspectLushaToken não verifica assinatura — apenas decodifica o payload)
 const JWT_ANONIMO =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInR5cGUiOiJKV1QifQ." +
-  "eyJpYXQiOjE3ODQwNDY1MDEsImV4cCI6MTc4NjQ2NTcwMSwiYXVkIjoiaHR0cHM6Ly93d3cubHVzaGEuY28iLCJpc3MiOiJkYmY5NzY0My03ZTc2LTRjMjItOTRjOS01NTBjZTBmOGE3YjgiLCJzdWIiOiJhbm9ueW1vdXMifQ." +
+  "eyJpYXQiOjE3ODQwNDY1MDEsImV4cCI6MjEwOTU0NDcwOCwiYXVkIjoiaHR0cHM6Ly93d3cubHVzaGEuY28iLCJpc3MiOiJkYmY5NzY0My03ZTc2LTRjMjItOTRjOS01NTBjZTBmOGE3YjgiLCJzdWIiOiJhbm9ueW1vdXMifQ." +
   "OR8jniXUKa61hKIoHJp4S-ydcIuIahkA1ytn-de6dnU";
 
 const JWT_SESSAO =
@@ -65,7 +67,7 @@ describe("inspectLushaToken", () => {
     expect(info.anonymous).toBe(true);
   });
   it("marca expirado quando exp está no passado", () => {
-    const info = inspectLushaToken(`ll=${JWT_ANONIMO}`, new Date("2027-01-01").getTime());
+    const info = inspectLushaToken(`ll=${JWT_ANONIMO}`, new Date("2037-01-01").getTime());
     expect(info.expired).toBe(true);
   });
   it("token de sessão válido não é anônimo nem expirado", () => {
