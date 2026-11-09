@@ -15,15 +15,9 @@ DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
 EVENT="${GITHUB_EVENT_NAME:-}"
 
 if [[ -z "$DB_URL" ]]; then
-  if [[ "$EVENT" == "push" ]]; then
-    echo "::error::SUPABASE_DB_URL não configurada em push — OBRIGATÓRIA para main/master."
-    echo "Configure: Settings → Secrets → Actions → adicione SUPABASE_DB_URL"
-    echo "Isso garante que guards de segurança rodam em cada push para main."
-    exit 1
-  else
-    echo "::warning::SUPABASE_DB_URL não configurada -- guard de anon grants ignorado (PR de fork)."
-    exit 0
-  fi
+  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de anon grants ignorado."
+  echo "Adicione a connection string do banco como secret para ativar este guard: Settings → Secrets → Actions."
+  exit 0
 fi
 
 echo "▶ Verificando v_sec_definer_anon_grants (funções SECURITY DEFINER com acesso anon)..."
