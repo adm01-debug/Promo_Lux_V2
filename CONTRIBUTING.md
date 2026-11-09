@@ -5,7 +5,7 @@
 1. **Trunk-Based Development**: Todo código novo entra via PR para `main`.
 2. **Qualidade de Código**:
    - Rodar `bun run lint` antes de subir.
-   - Rodar `bunx tsc --noEmit` para validar tipos.
+   - Rodar `bunx tsc --noEmit -p tsconfig.app.json` para validar tipos.
    - Rodar `bun run test` para validar lógica.
 3. **Commits Semânticos**: Use o padrão [Conventional Commits](https://www.conventionalcommits.org/):
    - `feat:` nova funcionalidade
