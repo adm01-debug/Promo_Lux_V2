@@ -1,1 +1,48 @@
-IyEvdXNyL2Jpbi9lbnYgYmFzaAojID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQojIENJIEd1YXJkIOKAlCB2X3NlY19kZWZpbmVyX2Fub25fZ3JhbnRzIHZpZXcKIyA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIyBDb25zdWx0YSBhIHZpZXcgY3JpYWRhIGVtIEExIChhc3NlcnRfc2VydmljZV9vcl9hZG1pbiBtaWdyYXRpb24pLgojIFplcm8gbGluaGFzID0gcG9zdHVyYSBzZWd1cmEuCiMgTGluaGFzIGNvbSDwn5S0IENSw41USUNPICsgYW5vbiA9IGZhbGhhIG8gYnVpbGQuCiMKIyBFbSBwdXNoIHNlbSBTVVBBQkFTRV9EQl9VUkw6IEZBTEhBIChvYnJpZ2F0w7NyaW8pCiMgRW0gUFIgZGUgZm9yayBzZW0gc2VjcmV0czogV0FSTklORyAobsOjbyBibG9xdWVpYSkKIyA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0Kc2V0IC1ldW8gcGlwZWZhaWwKCkRCX1VSTD0iJHtTVVBBQkFTRV9EQl9VUkw6LSR7REFUQUJBU0VfVVJMOi19fSIKRVZFTlQ9IiR7R0lUSFVCX0VWRU5UX05BTUU6LX0iCgppZiBbWyAteiAiJERCX1VSTCIgXV07IHRoZW4KICBpZiBbWyAiJEVWRU5UIiA9PSAicHVzaCIgXV07IHRoZW4KICAgIGVjaG8gIjo6ZXJyb3I6OlNVUEFCQVNFX0RCX1VSTCBOU8OjbyBjb25maWd1cmFkYSBlbSBwdXNoIOKAlCBPQlJJR0FUw5NSSUEgcGFyYSBtYWluL21hc3Rlci4iCiAgICBlY2hvICJDb25maWd1cmU6IFNldHRpbmdzIOKGkiBTZWNyZXRzIOKGkiBBY3Rpb25zIOKGkiBoYXZlYSBTVVBBQkFTRV9EQl9VUkwiCiAgICBlY2hvICJJc3NvIGdhcmFudGUgcXVlIGd1YXJkcyBkZSBzZWd1cmFuw6dhIHJvZGFtIGVtIGNhZGEgcHVzaCBwYXJhIG1haW4uIgogICAgZXhpdCAxCiAgZWxzZQogICAgZWNobyAiOjp3YXJuaW5nOjpTVVBBQkFTRV9EQl9VUkwgbsOjbyBjb25maWd1cmFkYSAtLSBndWFyZCBkZSBhbm9uIGdyYW50cyBpZ25vcmFkbyAoUFIgZGUgZm9yaykuIgogICAgZXhpdCAwCiAgZmkKZmkKCmVjaG8gIuKWtiBWZXJpZmljYW5kbyB2X3NlY19kZWZpbmVyX2Fub25fZ3JhbnRzIChmdW7Dp8O1ZXMgU0VDVVJJVFkgREVGSU5FUiBjb20gYWNlc3NvIGFub24pLi4uIgoKQ1JJVElDQUw9JChwc3FsICIkREJfVVJMIiAtdCAtQSAtYyBcCiAgIlNFTEVDVCBDT1VOVCgqKSBGUk9NIHB1YmxpYy52X3NlY19kZWZpbmVyX2Fub25fZ3JhbnRzIFdIRVJFIHJpc2tfbGV2ZWwgTElLRSAnJUNSJTdCw41USUNPJSVCIIB8fCBlY2hvICJFUlJPUiIpCgppZiBbWyAiJENSSVRJQ0FMIiA9PSAiRVJST1IiIF1dOyB0aGVuCiAgZWNobyAiOjp3YXJuaW5nOjpWaWV3IHZfc2VjX2RlZmluZXJfYW5vbl9ncmFudHMgbsOjbyBlbmNvbnRyYWRhIC0tIG1pZ3Jhw6fDo28gQTEgcGVuZGVudGUuIgogIGV4aXQgMAplbGlmIFtbICIkQ1JJVElDQUwiIC1ndCAwIF1dOyB0aGVuCiAgZWNobyAiOjplcnJvcjo6JENSSVBJQ0FMIGZ1bsOnw6NvKGVzKSBTRUNVUklUWSBERUZJTkVSIGNvbSBFWEVDVVRFIHBhcmEgYW5vbiBkZXRlY3RhZGEocyk6IgogIHBzcWwgIiREQl9VUkwiIC1jICJTRUxFQ1Qgc2NoZW1hX25hbWUsIGZ1bmN0aW9uX25hbWUsIGZ1bmN0aW9uX2FyZ3MsIHJpc2tfbGV2ZWwgRlJPTSBwdWJsaWMudl9zZWNfZGVmaW5lcl9hbm9uX2dyYW50cyBPUkRFUiBCWSByaXNrX2xldmVsIgogIGVjaG8gIiIKICBlY2hvICJSZXZvZ2FyIGNvbTogUkVWT0tFIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLjxub21lPigpIEZST00gYW5vbjs"CiAgZXhpdCAxCmVsc2UKICBTVE9UQUw9JChwc3FsICIkREJfVVJMIiAtdCAtQSAtYyAiU0VMRUNUIENPVU5UKCopIEZST00gcHVibGljLnZfc2VjX2RlZmluZXJfYW5vbl9ncmFudHMiKQogIGVjaG8gIuKchSBaZXJvIGZ1bsOnw7VlcyBTRUNVUklUWSBERUZJTkVSIGNvbSBhY2Vzc28gYW5vbi4gVG90YWwgbW9uaXRvcmFkYXM6ICRUT1RBTC4gUG9zdHVyYSBzZWd1cmEuIgpmaQo=
+#!/usr/bin/env bash
+# ==============================================================================
+# CI Guard — v_sec_definer_anon_grants view
+# ==============================================================================
+# Consulta a view criada pela migration assert_service_or_admin.
+# Zero linhas = postura segura.
+# Linhas com risco CRÍTICO + anon = falha o build.
+#
+# Em push sem SUPABASE_DB_URL: FALHA (obrigatório)
+# Em PR de fork sem secrets: WARNING (não bloqueia)
+# ==============================================================================
+set -euo pipefail
+
+DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
+EVENT="${GITHUB_EVENT_NAME:-}"
+
+if [[ -z "$DB_URL" ]]; then
+  if [[ "$EVENT" == "push" ]]; then
+    echo "::error::SUPABASE_DB_URL não configurada em push — OBRIGATÓRIA para main/master."
+    echo "Configure: Settings → Secrets → Actions → adicione SUPABASE_DB_URL"
+    echo "Isso garante que guards de segurança rodam em cada push para main."
+    exit 1
+  else
+    echo "::warning::SUPABASE_DB_URL não configurada -- guard de anon grants ignorado (PR de fork)."
+    exit 0
+  fi
+fi
+
+echo "▶ Verificando v_sec_definer_anon_grants (funções SECURITY DEFINER com acesso anon)..."
+
+CRITICAL=$(psql "$DB_URL" -t -A -c \
+  "SELECT COUNT(*) FROM public.v_sec_definer_anon_grants WHERE risk_level LIKE '%CRÍTICO%'" \
+  || echo "ERROR")
+
+if [[ "$CRITICAL" == "ERROR" ]]; then
+  echo "::warning::View v_sec_definer_anon_grants não encontrada -- migração pendente."
+  exit 0
+elif [[ "$CRITICAL" -gt 0 ]]; then
+  echo "::error::$CRITICAL função(ões) SECURITY DEFINER com EXECUTE para anon detectada(s):"
+  psql "$DB_URL" -c \
+    "SELECT schema_name, function_name, function_args, risk_level FROM public.v_sec_definer_anon_grants ORDER BY risk_level"
+  echo ""
+  echo "Revogar com: REVOKE EXECUTE ON FUNCTION public.<nome>() FROM anon;"
+  exit 1
+else
+  TOTAL=$(psql "$DB_URL" -t -A -c "SELECT COUNT(*) FROM public.v_sec_definer_anon_grants")
+  echo "✅ Zero funções SECURITY DEFINER com acesso anon. Total monitoradas: $TOTAL. Postura segura."
+fi
