@@ -22,7 +22,7 @@ The baseline enables GitHub, Context7, Exa, Memory, Playwright, and Sequential T
 ## Repo-specific warnings
 
 - The quality gate does not run: `.github/workflows/ci.yml` is stored as base64 and has never completed.
-  Run `npm run lint`, `npx tsc --noEmit` and `npx vitest run <path>` locally — see `docs/agentes/github-ci.md`.
+  Run `npm run lint`, `npx tsc --noEmit -p tsconfig.app.json` and `npx vitest run <path>` locally — see `docs/agentes/github-ci.md`.
 - Anything under `supabase/migrations/` is applied to production on push to `main`. Never touch it without
   the project owner.
 - `supabase/config.toml` points at a project ref that is **not** the live database. See `docs/agentes/banco.md`.

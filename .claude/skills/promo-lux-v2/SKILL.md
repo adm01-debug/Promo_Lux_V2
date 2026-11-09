@@ -14,7 +14,7 @@ Padrão Conventional Commits (`@commitlint/config-conventional`): `<tipo>(<escop
 opcional e minúsculo, assunto curto no imperativo e sem ponto final; tipos: `feat fix docs style refactor
 perf test build ci chore revert`. Mensagem em PT-BR.
 
-**Nada cobra isso localmente:** `.husky/` tem só `pre-commit` (`bun run lint && bunx tsc --noEmit &&
+**Nada cobra isso localmente:** `.husky/` tem só `pre-commit` (`bun run lint && bunx tsc --noEmit -p tsconfig.app.json &&
 bun run test`); não existe hook `commit-msg`, e as duas configs do commitlint
 (`commitlint.config.cjs` e `commitlint.config.js`) não são executadas por ninguém. Siga o padrão mesmo assim.
 
