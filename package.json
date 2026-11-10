@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "maintenance:doctor": "node scripts/maintenance/run.mjs doctor --root .",
+    "maintenance:check": "node scripts/maintenance/run.mjs check --root . --ref origin/main",
+    "maintenance:heal": "node scripts/maintenance/run.mjs heal --root . --ref origin/main",
+    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
     "dev": "vite",
     "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
     "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
@@ -41,9 +45,8 @@
     "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
+    "*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}": [
+      "node scripts/staged-autofix/run.mjs"
     ],
     "*.{json,css,md}": [
       "prettier --write"
