@@ -8,6 +8,8 @@ import {
   rm,
   symlink,
   utimes,
+  lstat,
+  rename,
 } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
@@ -21,6 +23,8 @@ import {
   validateConfig,
   exists,
   dependencyFingerprint,
+  inspect,
+  readRegularDependency,
 } from "./lib.mjs";
 
 async function fixture(
@@ -162,7 +166,7 @@ test("tsconfig vazio impede doctor saudável", async (t) => {
   const result = await main(f.args("doctor"));
   assert.equal(result.exitCode, 1);
   assert.equal(result.report.status, "failed");
-  assert.match(result.report.message, /nenhum arquivo src/);
+  assert.match(result.report.message, /Projeto TypeScript vazio/);
 });
 test("trava atômica impede segundo executor", async (t) => {
   const d = await mkdtemp(path.join(os.tmpdir(), "maintenance-lock-"));
@@ -1045,3 +1049,49 @@ test(
     assert.ok(result.report.change.lines <= 400);
   },
 );
+
+test("API TypeScript rejeita cada projeto vazio mesmo com outro projeto válido", async (t) => {
+  const f = await fixture(t);
+  await writeFile(
+    path.join(f.root, "tsconfig.json"),
+    JSON.stringify({
+      files: [],
+      references: [{ path: "./tsconfig.app.json" }],
+    }),
+  );
+  await assert.rejects(
+    inspect(f.root, {
+      ...f.config,
+      tsconfigs: ["tsconfig.app.json", "tsconfig.json"],
+    }),
+    /Projeto TypeScript vazio ou inválido: tsconfig.json/,
+  );
+});
+
+test("leitura vendor rejeita symlink trocado após inspeção sem seguir seu alvo", async (t) => {
+  const f = await fixture(t),
+    file = path.join(f.root, "src/value.ts");
+  const expected = await lstat(file),
+    outside = path.join(f.dir, "outside.ts");
+  await writeFile(outside, "outside fixture");
+  await rm(file);
+  await symlink(outside, file);
+  await assert.rejects(
+    readRegularDependency(file, expected),
+    (e) => e.code === "missing_dependencies",
+  );
+  assert.equal(await readFile(outside, "utf8"), "outside fixture");
+});
+
+test("leitura vendor vincula validação e bytes ao mesmo inode", async (t) => {
+  const f = await fixture(t),
+    file = path.join(f.root, "src/value.ts");
+  const expected = await lstat(file),
+    replacement = path.join(f.dir, "replacement.ts");
+  await writeFile(replacement, "replacement fixture");
+  await rename(replacement, file);
+  await assert.rejects(
+    readRegularDependency(file, expected),
+    /substituído durante a inspeção/,
+  );
+});
