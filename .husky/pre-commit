@@ -1,1 +1,1 @@
-node scripts/ci/lint-ratchet.mjs --staged
+node node_modules/lint-staged/bin/lint-staged.js --concurrent false
