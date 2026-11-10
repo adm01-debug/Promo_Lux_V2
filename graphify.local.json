@@ -7,9 +7,7 @@
   "state": ".tools/graphify/local-state",
   "output": "graphify-out",
   "adapter": "generic",
-  "scope": [
-    "."
-  ],
+  "scope": ["."],
   "partial": false,
   "timeoutMs": 1200000,
   "minAvailableMb": 6144,
