@@ -44,7 +44,7 @@ As suites usam fixtures descartáveis e não executam os scripts operacionais do
 
 ## Registro exato dos demais scripts
 
-Os registros `legacy` abaixo preservam ferramentas anteriores e seus chamadores; não são incluídos automaticamente no novo pipeline. Referência literal indica onde o arquivo é citado, sem garantir que esse caminho rode nem autorização para executar operações contra serviços. Sem referência, o arquivo é mantido manual porque função, parâmetros e ambiente precisam de revisão antes de ativar qualquer gatilho. Scripts novos não cobertos por registro fazem `doctor --static` falhar; não existe registro genérico `scripts/**` para ocultá-los.
+Os registros `legacy` abaixo preservam ferramentas anteriores e seus chamadores; não são incluídos automaticamente no novo pipeline. Para arquivos TypeScript de apoio sem runner comprovado, o comando listado só valida o inventário; os chamadores originais continuam sendo a referência de execução. Referência literal indica onde o arquivo é citado, sem garantir que esse caminho rode nem autorização para executar operações contra serviços. Sem referência, o arquivo é mantido manual porque função, parâmetros e ambiente precisam de revisão antes de ativar qualquer gatilho. Scripts novos não cobertos por registro fazem `doctor --static` falhar; não existe registro genérico `scripts/**` para ocultá-los.
 
 | Arquivo exato | Invocação manual de inventário | Chamadores literais / justificativa |
 |---|---|---|
@@ -60,34 +60,34 @@ Os registros `legacy` abaixo preservam ferramentas anteriores e seus chamadores;
 | `scripts/check-security-definer.sh` | `sh scripts/check-security-definer.sh` | .github/workflows/ci.yml |
 | `scripts/ci/check-claude-md-integrity.mjs` | `node scripts/ci/check-claude-md-integrity.mjs` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
 | `scripts/ci/lint-ratchet.mjs` | `node scripts/ci/lint-ratchet.mjs` | package.json:scripts, .github/workflows/ci.yml |
-| `scripts/gen-current-report.ts` | `bun scripts/gen-current-report.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-legacy-baseline.ts` | `bun scripts/gen-legacy-baseline.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round18-preflight.ts` | `bun scripts/gen-round18-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round19-preflight.ts` | `bun scripts/gen-round19-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round19-validation.ts` | `bun scripts/gen-round19-validation.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round20-validation.ts` | `bun scripts/gen-round20-validation.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round21-preflight.ts` | `bun scripts/gen-round21-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round24-preflight.ts` | `bun scripts/gen-round24-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round25-preflight.ts` | `bun scripts/gen-round25-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round26-preflight.ts` | `bun scripts/gen-round26-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round27-qa-preflight.ts` | `bun scripts/gen-round27-qa-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round28-preflight.ts` | `bun scripts/gen-round28-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round29-preflight.ts` | `bun scripts/gen-round29-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-round36-preflight.ts` | `bun scripts/gen-round36-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/gen-web-scrape-reports.ts` | `bun scripts/gen-web-scrape-reports.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/generate-audit-pdf.ts` | `bun scripts/generate-audit-pdf.ts` | package.json:scripts |
+| `scripts/gen-current-report.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-legacy-baseline.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round18-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round19-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round19-validation.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round20-validation.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round21-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round24-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round25-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round26-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round27-qa-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round28-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round29-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-round36-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/gen-web-scrape-reports.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/generate-audit-pdf.ts` | `node scripts/automation.mjs doctor --static` | package.json:scripts |
 | `scripts/graphify/setup.sh` | `sh scripts/graphify/setup.sh` | package.json:scripts |
 | `scripts/inventario/gerar-repo.mjs` | `node scripts/inventario/gerar-repo.mjs` | package.json:scripts, .github/workflows/inventario-estado-semanal.yml |
 | `scripts/inventario/mudou-conteudo.mjs` | `node scripts/inventario/mudou-conteudo.mjs` | .github/workflows/inventario-estado-semanal.yml |
 | `scripts/inventario/mudou-conteudo.unit.mjs` | `node --test scripts/inventario/mudou-conteudo.unit.mjs` | package.json:scripts, .github/workflows/inventario-estado-semanal.yml |
 | `scripts/lib/seguranca-processo.mjs` | `node scripts/lib/seguranca-processo.mjs` | scripts/staged-autofix/run.unit.mjs |
-| `scripts/mc-r35-preflight.ts` | `bun scripts/mc-r35-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
-| `scripts/mc-r40-preflight.ts` | `bun scripts/mc-r40-preflight.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/mc-r35-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/mc-r40-preflight.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
 | `scripts/regras_negocio/generate.py` | `python3 scripts/regras_negocio/generate.py` | package.json:scripts, .github/workflows/contexto.yml |
 | `scripts/regras_negocio/indice.py` | `python3 scripts/regras_negocio/indice.py` | .github/workflows/contexto.yml |
 | `scripts/regras_negocio/publish.sh` | `sh scripts/regras_negocio/publish.sh` | .github/workflows/contexto.yml |
 | `scripts/regras_negocio/test_generate.py` | `python3 scripts/regras_negocio/test_generate.py` | .github/workflows/contexto.yml |
-| `scripts/sim-scrape.ts` | `bun scripts/sim-scrape.ts` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
+| `scripts/sim-scrape.ts` | `node scripts/automation.mjs doctor --static` | Sem chamador literal; manter manual e revisar parâmetros/ambiente antes de executar. |
 | `scripts/supabase_snapshot/snapshot.py` | `python3 scripts/supabase_snapshot/snapshot.py` | package.json:scripts, .github/workflows/contexto.yml, .github/workflows/inventario-estado-semanal.yml |
 | `scripts/supabase_snapshot/test_snapshot.py` | `python3 scripts/supabase_snapshot/test_snapshot.py` | .github/workflows/contexto.yml |
 
