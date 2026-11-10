@@ -1,0 +1,823 @@
+{
+  "version": 1,
+  "name": "Promo_Lux_V2",
+  "entrypoint": "scripts/automation.mjs",
+  "testSuites": [
+    "scripts/automation.unit.mjs",
+    "scripts/maintenance/maintenance.unit.mjs",
+    "scripts/graphify-local.unit.mjs",
+    "scripts/staged-autofix/run.unit.mjs",
+    "scripts/ci/lint-ratchet.unit.mjs"
+  ],
+  "motor": [
+    "sh",
+    "scripts/maintenance/run.sh"
+  ],
+  "motorConfig": "scripts/maintenance/config.json",
+  "motorSource": "scripts/maintenance/run.sh",
+  "graph": [
+    "node",
+    "scripts/graphify-local.mjs"
+  ],
+  "graphConfig": "graphify.local.json",
+  "aliases": {
+    "automation:doctor": "node scripts/automation.mjs doctor",
+    "automation:test": "node scripts/automation.mjs test",
+    "automation:check": "node scripts/automation.mjs check --ref HEAD",
+    "automation:heal": "node scripts/automation.mjs heal --ref origin/main",
+    "automation:nightly": "node scripts/automation.mjs nightly --ref origin/main",
+    "automation:graph": "node scripts/automation.mjs graph",
+    "automation:status": "node scripts/automation.mjs graph status",
+    "automation:install-hooks": "node scripts/automation.mjs install-hooks",
+    "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks"
+  },
+  "registrations": [
+    {
+      "id": "core",
+      "kind": "tool",
+      "files": [
+        "scripts/automation.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/automation.mjs",
+        "doctor"
+      ],
+      "triggers": [
+        "manual",
+        "precommit",
+        "prepush",
+        "PR",
+        "pushmain",
+        "nightly"
+      ]
+    },
+    {
+      "id": "automation-suites",
+      "kind": "test",
+      "files": [
+        "scripts/automation.unit.mjs",
+        "scripts/maintenance/maintenance.unit.mjs",
+        "scripts/graphify-local.unit.mjs",
+        "scripts/staged-autofix/run.unit.mjs",
+        "scripts/ci/lint-ratchet.unit.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/automation.mjs",
+        "test"
+      ],
+      "triggers": [
+        "manual",
+        "precommit",
+        "prepush",
+        "PR",
+        "pushmain"
+      ]
+    },
+    {
+      "id": "motor-isolado",
+      "kind": "motor",
+      "files": [
+        "scripts/maintenance/run.sh",
+        "scripts/maintenance/run.mjs",
+        "scripts/maintenance/lib.mjs",
+        "scripts/maintenance/typecheck.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/automation.mjs",
+        "heal",
+        "--ref",
+        "origin/main"
+      ],
+      "triggers": [
+        "manual",
+        "nightly"
+      ]
+    },
+    {
+      "id": "graph-local",
+      "kind": "graph",
+      "files": [
+        "scripts/graphify-local.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/automation.mjs",
+        "graph",
+        "status"
+      ],
+      "triggers": [
+        "manual",
+        "precommit",
+        "postcommit",
+        "postmerge",
+        "postcheckout",
+        "nightly"
+      ]
+    },
+    {
+      "id": "helper-a66c7eed64d4",
+      "kind": "helper",
+      "files": [
+        "scripts/staged-autofix/run.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/staged-autofix/run.mjs"
+      ],
+      "triggers": [
+        "manual",
+        "PR",
+        "pushmain"
+      ],
+      "callers": [
+        "scripts/staged-autofix/run.unit.mjs"
+      ]
+    },
+    {
+      "id": "hook-original-d2bc4bbf14ea",
+      "kind": "legacy",
+      "files": [
+        ".husky/pre-commit"
+      ],
+      "manual": [
+        "sh",
+        ".husky/pre-commit"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Hook original preservado; acionado pelo Git conforme hooksPath local. Registro manual limita apenas o dispatcher novo, que encadeia o original pela ponte."
+    },
+    {
+      "id": "legacy-cac78e0a4578fcbb",
+      "kind": "legacy",
+      "files": [
+        "scripts/ai-context/cenarios.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/ai-context/cenarios.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-d7cb6b51ce58499f",
+      "kind": "legacy",
+      "files": [
+        "scripts/ai-context/gerar.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/ai-context/gerar.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-ac9e14a43aebfb27",
+      "kind": "legacy",
+      "files": [
+        "scripts/ai-context/gerar.unit.mjs"
+      ],
+      "manual": [
+        "node",
+        "--test",
+        "scripts/ai-context/gerar.unit.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-916b4966ccf831e0",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-anon-grants-view.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-anon-grants-view.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-3090e300ba85f482",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-audit-triggers.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-audit-triggers.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-3de9d0d114cfed12",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-function-grants.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-function-grants.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-e2e3f28bab9a8e4a",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-migration-target.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-migration-target.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/db-migrations.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-98513bf7a8d2048b",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-migrations.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-migrations.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/db-migrations.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-2d7c4232a46150c6",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-queue-kind-coverage.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-queue-kind-coverage.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-57c30fa982e3ca8a",
+      "kind": "legacy",
+      "files": [
+        "scripts/check-security-definer.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/check-security-definer.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-cfb6af160a6179d3",
+      "kind": "legacy",
+      "files": [
+        "scripts/ci/check-claude-md-integrity.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/ci/check-claude-md-integrity.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-d164a3856b0bc209",
+      "kind": "legacy",
+      "files": [
+        "scripts/ci/lint-ratchet.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/ci/lint-ratchet.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-d9614d949e38b1f0",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-current-report.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-current-report.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-0c49ff6128518471",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-legacy-baseline.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-legacy-baseline.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-7e26815429a47074",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round18-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round18-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-975b110424e519d2",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round19-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round19-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-93f9acb017c3778a",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round19-validation.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round19-validation.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-fd2dc6a24d3378b9",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round20-validation.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round20-validation.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-ef74b312191980fa",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round21-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round21-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-b4dfee7499c82676",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round24-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round24-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-7abbfb96305f5d7d",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round25-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round25-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-c9cea5aaf62ff542",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round26-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round26-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-d5efcbb0994d82ff",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round27-qa-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round27-qa-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-f46dcb50736d55e4",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round28-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round28-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-ebb2c049acd551c1",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round29-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round29-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-e0c2504d4c1ab6e1",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-round36-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-round36-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-247970b253a1d63e",
+      "kind": "legacy",
+      "files": [
+        "scripts/gen-web-scrape-reports.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/gen-web-scrape-reports.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-d2c92526dc47e54e",
+      "kind": "legacy",
+      "files": [
+        "scripts/generate-audit-pdf.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/generate-audit-pdf.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-166d2b1258cd82b5",
+      "kind": "legacy",
+      "files": [
+        "scripts/graphify/setup.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/graphify/setup.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-56b5f90d4f8afc35",
+      "kind": "legacy",
+      "files": [
+        "scripts/inventario/gerar-repo.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/inventario/gerar-repo.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/inventario-estado-semanal.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-fd1c962a8dd907cf",
+      "kind": "legacy",
+      "files": [
+        "scripts/inventario/mudou-conteudo.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/inventario/mudou-conteudo.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/inventario-estado-semanal.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-90917534123a7cef",
+      "kind": "legacy",
+      "files": [
+        "scripts/inventario/mudou-conteudo.unit.mjs"
+      ],
+      "manual": [
+        "node",
+        "--test",
+        "scripts/inventario/mudou-conteudo.unit.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/inventario-estado-semanal.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-7aee729849378d20",
+      "kind": "legacy",
+      "files": [
+        "scripts/lib/seguranca-processo.mjs"
+      ],
+      "manual": [
+        "node",
+        "scripts/lib/seguranca-processo.mjs"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: scripts/staged-autofix/run.unit.mjs. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-8c7b6ead01c1767c",
+      "kind": "legacy",
+      "files": [
+        "scripts/mc-r35-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/mc-r35-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-88395392a7cdf325",
+      "kind": "legacy",
+      "files": [
+        "scripts/mc-r40-preflight.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/mc-r40-preflight.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-6add96711eef222b",
+      "kind": "legacy",
+      "files": [
+        "scripts/regras_negocio/generate.py"
+      ],
+      "manual": [
+        "python3",
+        "scripts/regras_negocio/generate.py"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-cb7e8f79aa5ae356",
+      "kind": "legacy",
+      "files": [
+        "scripts/regras_negocio/indice.py"
+      ],
+      "manual": [
+        "python3",
+        "scripts/regras_negocio/indice.py"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-374636fa80eccbb2",
+      "kind": "legacy",
+      "files": [
+        "scripts/regras_negocio/publish.sh"
+      ],
+      "manual": [
+        "sh",
+        "scripts/regras_negocio/publish.sh"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-f24d5fbdddb2b362",
+      "kind": "legacy",
+      "files": [
+        "scripts/regras_negocio/test_generate.py"
+      ],
+      "manual": [
+        "python3",
+        "scripts/regras_negocio/test_generate.py"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-6c3ed3595cb212f5",
+      "kind": "legacy",
+      "files": [
+        "scripts/sim-scrape.ts"
+      ],
+      "manual": [
+        "bun",
+        "scripts/sim-scrape.ts"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado sem chamador literal no inventário; execução manual controlada após revisar parâmetros e ambiente. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-fe3157cf160e24f3",
+      "kind": "legacy",
+      "files": [
+        "scripts/supabase_snapshot/snapshot.py"
+      ],
+      "manual": [
+        "python3",
+        "scripts/supabase_snapshot/snapshot.py"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/contexto.yml, .github/workflows/inventario-estado-semanal.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-5b3736bc4f83232f",
+      "kind": "legacy",
+      "files": [
+        "scripts/supabase_snapshot/test_snapshot.py"
+      ],
+      "manual": [
+        "python3",
+        "scripts/supabase_snapshot/test_snapshot.py"
+      ],
+      "triggers": [
+        "manual"
+      ],
+      "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/contexto.yml. O dispatcher não executa esta operação."
+    }
+  ],
+  "ci": [
+    {
+      "file": ".github/workflows/automation-local.yml",
+      "events": [
+        "PR",
+        "pushmain"
+      ],
+      "command": "node scripts/automation.mjs test"
+    }
+  ],
+  "nightly": {
+    "command": [
+      "node",
+      "scripts/automation.mjs",
+      "nightly",
+      "--ref",
+      "origin/main"
+    ]
+  },
+  "timeoutMs": 900000,
+  "toolingPatterns": [
+    "scripts/**",
+    ".github/**",
+    ".husky/**",
+    "package.json",
+    "*lock*",
+    "graphify.local.json"
+  ],
+  "sourcePatterns": [
+    "src/**",
+    "tests/**",
+    "e2e/**",
+    "api/**",
+    "shared/**",
+    "supabase/functions/**"
+  ]
+}
