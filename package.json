@@ -41,9 +41,8 @@
     "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
+    "*.{ts,tsx,js,jsx,mts,cts,mjs,cjs}": [
+      "node scripts/staged-autofix/run.mjs"
     ],
     "*.{json,css,md}": [
       "prettier --write"
