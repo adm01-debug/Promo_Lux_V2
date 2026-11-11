@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `119de20fc0ee3e3e01312fa02d10d80aa36f610c` (2026-11-11T12:40:24-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe` (2026-11-11T19:14:52-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (616), SQL (216), Markdown (71), JSON (33), JavaScript (12), Shell (10), YAML (6), Python (5)
+- linguagens: TypeScript (616), SQL (216), Markdown (71), JSON (34), JavaScript (12), Shell (10), YAML (6), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -27,14 +27,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - gerenciador_pacotes: bun
 - node: n/d
 - python: n/d
-- deploy: n/d
+- deploy: vercel
 - monorepo: n/d
 - pastas_fonte: src
 
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 985 |
+| arquivos_total | 986 |
 | arquivos_codigo | 632 |
 | linhas_codigo | 102597 |
 | rotas | 10 |
@@ -216,8 +216,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6193 nós · 13252 arestas · 576 comunidades · grafo do commit `119de20f`
-- comunidades maiores: lucide-react (155), @tanstack/react-query (129), button.tsx (129), Monitoring.tsx (87), utils.ts (85), cn (80), gerar.mjs (80), generate.py (71), dependencies (65), framer-motion (63), hooks/use-toast.ts (63), package.json (58)
+- 6199 nós · 13257 arestas · 563 comunidades · grafo do commit `480dad0c`
+- comunidades maiores: Monitoring.tsx (158), react (140), hooks/use-toast.ts (100), @tanstack/react-query (96), utils.ts (92), gerar.mjs (81), cn (76), generate.py (73), lucide-react (71), dependencies (65), ref_https (60), oracle-enrich-contact/index.ts (59)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py), header() (scripts/regras_negocio/generate.py), uniq() (scripts/ai-context/gerar.mjs)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -228,6 +228,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/mapa-repo.md (3)
 - docs/estado/05-infra-ci-testes.md (3)
 - .claude/skills/promo-lux-v2/SKILL.md (2)
+- .github/workflows/ci.yml (2)
 - .github/workflows/contexto.yml (2)
 - .github/workflows/inventario-estado-semanal.yml (2)
 - .husky/pre-commit (2)
@@ -236,7 +237,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/banco.md (2)
 - docs/estado/02-backend-edge-functions.md (2)
 - docs/estado/03-dados-e-runtime.md (2)
-- inventario/estado/README.md (2)
 
 ## Workflows
 - `ci.yml` — CI Pipeline (pull_request, push)
@@ -309,6 +309,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-11 `480dad0` fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)
+- 2026-11-11 `c8175c4` fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)
+- 2026-11-11 `27893bd` infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)
 - 2026-11-11 `119de20` fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)
 - 2026-11-08 `6f3b1ff` fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script
 - 2026-11-08 `8173876` fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes
@@ -321,9 +324,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-08 `4f78795` fix(banco): corrige contagem de migrations base64 de 4 para 6
 - 2026-11-08 `c9b89ab` docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)
 - 2026-08-28 `2b5a84f` Visual edit in Lovable
-- 2026-08-28 `20373df` Visual edit in Lovable
-- 2026-08-18 `c88dc8a` chore(hermes): adiciona .hermes.md (regras da casa Hermes)
-- 2026-08-18 `ee80ee4` chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

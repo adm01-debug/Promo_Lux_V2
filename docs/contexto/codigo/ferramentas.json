@@ -6,7 +6,7 @@
    "TypeScript (616)",
    "SQL (216)",
    "Markdown (71)",
-   "JSON (33)",
+   "JSON (34)",
    "JavaScript (12)",
    "Shell (10)",
    "YAML (6)",
@@ -32,7 +32,9 @@
   "gerenciador_pacotes": "bun",
   "node": null,
   "python": null,
-  "deploy": [],
+  "deploy": [
+   "vercel"
+  ],
   "monorepo": null,
   "pastas_fonte": [
    "src"
@@ -121,6 +123,7 @@
   "tsconfig.app.json",
   "tsconfig.json",
   "tsconfig.node.json",
+  "vercel.json",
   "vite.config.ts",
   "vitest.config.ts"
  ],
@@ -527,10 +530,20 @@
   ]
  },
  "deploy": {
-  "alvos": [],
+  "alvos": [
+   "vercel"
+  ],
   "dockerfiles": [],
   "compose": [],
-  "vercel": null
+  "vercel": {
+   "framework": "vite",
+   "build": "npm run build",
+   "rewrites": 0,
+   "redirects": 0,
+   "headers": 0,
+   "ignore_command": null,
+   "crons": []
+  }
  },
  "integracoes": {
   "sdks": [

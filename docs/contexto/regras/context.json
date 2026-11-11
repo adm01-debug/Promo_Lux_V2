@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "119de20fc0ee3e3e01312fa02d10d80aa36f610c",
+  "sha": "480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-11 15:52 UTC",
-  "files_total": 1003,
+  "generated_at": "2026-11-11 22:26 UTC",
+  "files_total": 1004,
   "code_files": 852,
   "code_lines": 116206
  },
  "version": "1.3.2",
- "facts_hash": "1b869366889918d1",
+ "facts_hash": "93d7ed7461d574f5",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -130,6 +130,10 @@
    "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs"
   },
   "infra": [
+   {
+    "file": "vercel.json",
+    "role": "Vercel"
+   },
    {
     "file": "supabase/config.toml",
     "role": "Supabase CLI"
@@ -80285,10 +80289,45 @@
   }
  },
  "git": {
-  "sha": "119de20fc0ee3e3e01312fa02d10d80aa36f610c",
+  "sha": "480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "480dad0",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)",
+    "files": [
+     "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
+     "supabase/functions/_shared/__tests__/leadcontact-client.test.ts",
+     "supabase/functions/_shared/__tests__/linkedin-url.test.ts",
+     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+     "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
+     "supabase/functions/_shared/__tests__/phone-br.test.ts",
+     "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+     "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
+     "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts"
+    ]
+   },
+   {
+    "sha": "c8175c4",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)",
+    "files": [
+     ".github/workflows/ci.yml"
+    ]
+   },
+   {
+    "sha": "27893bd",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)",
+    "files": [
+     "vercel.json"
+    ]
+   },
    {
     "sha": "119de20",
     "date": "2026-11-11",
@@ -81570,44 +81609,20 @@
      "supabase/config.toml",
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "abdfbe0",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Removeu migrate-helper do CDN",
-    "files": []
-   },
-   {
-    "sha": "79aac61",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/migrate-helper/index.ts"
-    ]
-   },
-   {
-    "sha": "16d105e",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Alinhou schema de config do Omkar",
-    "files": []
    }
   ],
   "hot_files": [
-   [
-    "supabase/functions/migrate-helper/index.ts",
-    8
-   ],
    [
     "AGENTS.md",
     7
    ],
    [
-    "supabase/config.toml",
+    "supabase/functions/migrate-helper/index.ts",
     7
+   ],
+   [
+    "supabase/config.toml",
+    6
    ],
    [
     "package.json",
@@ -81616,6 +81631,14 @@
    [
     ".gitignore",
     4
+   ],
+   [
+    "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+    3
+   ],
+   [
+    ".github/workflows/ci.yml",
+    3
    ],
    [
     ".husky/pre-commit",
@@ -81634,47 +81657,39 @@
     3
    ],
    [
+    "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/leadcontact-client.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/linkedin-url.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/phone-br.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
+    2
+   ],
+   [
+    "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
+    2
+   ],
+   [
     "scripts/ci/eslint-baseline.json",
-    2
-   ],
-   [
-    "supabase/functions/audit-logs-prune/index.ts",
-    2
-   ],
-   [
-    ".github/workflows/ci.yml",
-    2
-   ],
-   [
-    "package-lock.json",
-    2
-   ],
-   [
-    "scripts/check-anon-grants-view.sh",
-    2
-   ],
-   [
-    "supabase/functions/_shared/__tests__/lusha-client.test.ts",
-    2
-   ],
-   [
-    ".agents/skills/promo-lux-v2/SKILL.md",
-    2
-   ],
-   [
-    ".claude/skills/promo-lux-v2/SKILL.md",
-    2
-   ],
-   [
-    ".codex/AGENTS.md",
-    2
-   ],
-   [
-    "CONTRIBUTING.md",
-    2
-   ],
-   [
-    ".github/workflows/contexto.yml",
     2
    ]
   ]

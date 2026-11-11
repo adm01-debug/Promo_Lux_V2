@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)",
+   "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)",
+   "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)",
    "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)",
-   "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script",
-   "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes",
-   "fix(contexto): destrava a publicação e para de publicar fato falso (#12)",
-   "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json"
+   "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script"
   ]
  },
  "pr_template": null,

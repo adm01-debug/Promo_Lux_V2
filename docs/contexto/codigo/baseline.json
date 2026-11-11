@@ -2,11 +2,26 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "119de20fc0ee3e3e01312fa02d10d80aa36f610c",
+  "commit": "480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe",
   "branch": "main",
-  "data_commit": "2026-11-11T12:40:24-03:00",
+  "data_commit": "2026-11-11T19:14:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "480dad0",
+    "data": "2026-11-11",
+    "assunto": "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)"
+   },
+   {
+    "sha": "c8175c4",
+    "data": "2026-11-11",
+    "assunto": "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)"
+   },
+   {
+    "sha": "27893bd",
+    "data": "2026-11-11",
+    "assunto": "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)"
+   },
    {
     "sha": "119de20",
     "data": "2026-11-11",
@@ -116,25 +131,14 @@
     "sha": "7155047",
     "data": "2026-07-30",
     "assunto": "Visual edit in Lovable"
-   },
-   {
-    "sha": "d7d55d8",
-    "data": "2026-07-30",
-    "assunto": "Visual edit in Lovable"
-   },
-   {
-    "sha": "5e51961",
-    "data": "2026-07-29",
-    "assunto": "Removiu função migrate-helper"
-   },
-   {
-    "sha": "1bd50ab",
-    "data": "2026-07-29",
-    "assunto": "Changes"
    }
   ],
-  "arquivos_mudados_7d": 61,
+  "arquivos_mudados_7d": 70,
   "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "supabase/functions/_shared",
+    "mudancas": 10
+   },
    {
     "pasta": "AGENTS.md",
     "mudancas": 6
@@ -168,6 +172,10 @@
     "mudancas": 2
    },
    {
+    "pasta": ".github/workflows/ci.yml",
+    "mudancas": 2
+   },
+   {
     "pasta": ".github/workflows/contexto.yml",
     "mudancas": 2
    },
@@ -185,14 +193,6 @@
    },
    {
     "pasta": "docs/agentes/banco.md",
-    "mudancas": 2
-   },
-   {
-    "pasta": "inventario/estado/README.md",
-    "mudancas": 2
-   },
-   {
-    "pasta": "inventario/estado/edges.json",
     "mudancas": 2
    }
   ],
@@ -219,6 +219,10 @@
    },
    {
     "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
+    "mudancas": 2
+   },
+   {
+    "arquivo": ".github/workflows/ci.yml",
     "mudancas": 2
    },
    {
@@ -282,31 +286,27 @@
     "mudancas": 2
    },
    {
+    "arquivo": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+    "mudancas": 2
+   },
+   {
     "arquivo": ".claude/ecc-tools.json",
     "mudancas": 1
    },
    {
     "arquivo": ".claude/homunculus/instincts/inherited/promo-lux-v2-instincts.yaml",
     "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/hooks/session-start.sh",
-    "mudancas": 1
-   },
-   {
-    "arquivo": ".claude/identity.json",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 11
+    "commits": 14
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 985,
+  "arquivos_total": 986,
   "arquivos_codigo": 632,
   "linhas_codigo": 102597,
   "rotas": 10,
