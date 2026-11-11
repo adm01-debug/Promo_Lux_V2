@@ -19,10 +19,17 @@ export const DataError = ({
     <div className="h-14 w-14 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">
       <AlertCircle className="h-7 w-7 text-destructive" />
     </div>
-    <h3 className="text-sm font-semibold text-foreground mb-1">Erro ao carregar</h3>
+    <h3 className="text-sm font-semibold text-foreground mb-1">
+      Erro ao carregar
+    </h3>
     <p className="text-xs text-muted-foreground max-w-xs">{message}</p>
     {onRetry && (
-      <Button onClick={onRetry} variant="outline" size="sm" className="mt-4 gap-2">
+      <Button
+        onClick={onRetry}
+        variant="outline"
+        size="sm"
+        className="mt-4 gap-2"
+      >
         <RefreshCw className="h-3.5 w-3.5" />
         Tentar novamente
       </Button>

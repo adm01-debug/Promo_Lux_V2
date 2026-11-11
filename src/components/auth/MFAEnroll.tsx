@@ -1,9 +1,25 @@
 import { useState } from "react";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, Copy, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  Shield,
+  Copy,
+  CheckCircle2,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
 import { useMFA, type MFAEnrollData } from "@/hooks/useMFA";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,7 +51,10 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
     const ok = await verify(enrollData.id, code);
     if (ok) {
       setStep("done");
-      toast({ title: "MFA ativado com sucesso!", description: "Sua conta agora exige verificação em 2 etapas." });
+      toast({
+        title: "MFA ativado com sucesso!",
+        description: "Sua conta agora exige verificação em 2 etapas.",
+      });
       setTimeout(() => onSuccess?.(), 1500);
     }
   };
@@ -55,7 +74,10 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
             <Shield className="h-5 w-5 text-primary" />
             <CardTitle>Ativar Autenticação em 2 Fatores</CardTitle>
           </div>
-          <CardDescription>Adicione uma camada extra de segurança com um aplicativo autenticador.</CardDescription>
+          <CardDescription>
+            Adicione uma camada extra de segurança com um aplicativo
+            autenticador.
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="text-sm text-muted-foreground space-y-1">
@@ -64,11 +86,21 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
             <p>• Compatível com qualquer app TOTP (Google, Authy, 1Password)</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleStartEnroll} disabled={loading} className="flex-1">
-              {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+            <Button
+              onClick={handleStartEnroll}
+              disabled={loading}
+              className="flex-1"
+            >
+              {loading ? (
+                <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
               Configurar agora
             </Button>
-            {onCancel && <Button variant="outline" onClick={onCancel}>Cancelar</Button>}
+            {onCancel && (
+              <Button variant="outline" onClick={onCancel}>
+                Cancelar
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -80,10 +112,14 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">
+              1
+            </span>
             Escanear QR Code
           </CardTitle>
-          <CardDescription>Abra o app autenticador e escaneie o QR code abaixo.</CardDescription>
+          <CardDescription>
+            Abra o app autenticador e escaneie o QR code abaixo.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-center">
@@ -94,13 +130,19 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
             />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground mb-1">Ou insira a chave manualmente:</p>
+            <p className="text-xs text-muted-foreground mb-1">
+              Ou insira a chave manualmente:
+            </p>
             <div className="flex items-center gap-2">
               <code className="flex-1 text-xs bg-muted px-3 py-2 rounded font-mono break-all">
                 {enrollData.totp.secret}
               </code>
               <Button variant="ghost" size="icon" onClick={copySecret}>
-                {secretCopied ? <CheckCircle2 className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+                {secretCopied ? (
+                  <CheckCircle2 className="h-4 w-4 text-success" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -108,7 +150,7 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
             <p className="text-sm font-medium">Digite o código de 6 dígitos:</p>
             <InputOTP maxLength={6} value={code} onChange={setCode}>
               <InputOTPGroup>
-                {[0, 1, 2, 3, 4, 5].map(i => (
+                {[0, 1, 2, 3, 4, 5].map((i) => (
                   <InputOTPSlot key={i} index={i} />
                 ))}
               </InputOTPGroup>
@@ -121,11 +163,21 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
             </Alert>
           )}
           <div className="flex gap-2">
-            <Button onClick={handleVerify} disabled={loading || code.length !== 6} className="flex-1">
-              {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+            <Button
+              onClick={handleVerify}
+              disabled={loading || code.length !== 6}
+              className="flex-1"
+            >
+              {loading ? (
+                <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
               Confirmar
             </Button>
-            {onCancel && <Button variant="outline" onClick={onCancel}>Cancelar</Button>}
+            {onCancel && (
+              <Button variant="outline" onClick={onCancel}>
+                Cancelar
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -137,7 +189,9 @@ export function MFAEnroll({ onSuccess, onCancel }: MFAEnrollProps) {
       <CardContent className="flex flex-col items-center gap-3 py-8">
         <CheckCircle2 className="h-12 w-12 text-success" />
         <p className="text-lg font-semibold">MFA ativado!</p>
-        <p className="text-sm text-muted-foreground">Sua conta está protegida.</p>
+        <p className="text-sm text-muted-foreground">
+          Sua conta está protegida.
+        </p>
       </CardContent>
     </Card>
   );

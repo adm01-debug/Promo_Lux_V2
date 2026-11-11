@@ -42,7 +42,7 @@ export const StickySaveBar = ({
                 Alterações pendentes
               </p>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
