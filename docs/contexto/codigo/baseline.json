@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe",
+  "commit": "5e3af794b5f8d841d82bec9c7a6254dd1030056d",
   "branch": "main",
-  "data_commit": "2026-11-11T19:14:52-03:00",
+  "data_commit": "2026-11-11T19:22:33-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5e3af79",
+    "data": "2026-11-11",
+    "assunto": "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)"
+   },
    {
     "sha": "480dad0",
     "data": "2026-11-11",
@@ -126,14 +131,9 @@
     "sha": "4e21608",
     "data": "2026-08-01",
     "assunto": "feat: Migração Banco Lovable para Supabase Promo Lux - V2"
-   },
-   {
-    "sha": "7155047",
-    "data": "2026-07-30",
-    "assunto": "Visual edit in Lovable"
    }
   ],
-  "arquivos_mudados_7d": 70,
+  "arquivos_mudados_7d": 71,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 14
+    "commits": 15
    }
   ]
  },

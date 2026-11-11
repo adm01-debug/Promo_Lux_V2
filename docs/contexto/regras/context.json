@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe",
+  "sha": "5e3af794b5f8d841d82bec9c7a6254dd1030056d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-11 22:26 UTC",
-  "files_total": 1004,
+  "generated_at": "2026-11-11 22:38 UTC",
+  "files_total": 1005,
   "code_files": 852,
   "code_lines": 116206
  },
@@ -80289,10 +80289,19 @@
   }
  },
  "git": {
-  "sha": "480dad0c18aa23d6ad64aa2c3d4d2bab023c2bfe",
+  "sha": "5e3af794b5f8d841d82bec9c7a6254dd1030056d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5e3af79",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)",
+    "files": [
+     ".npmrc"
+    ]
+   },
    {
     "sha": "480dad0",
     "date": "2026-11-11",
@@ -81599,16 +81608,6 @@
     "files": [
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "38c4794",
-    "date": "2026-07-29",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Visual edit in Lovable",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/migrate-helper/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81618,14 +81617,14 @@
    ],
    [
     "supabase/functions/migrate-helper/index.ts",
-    7
-   ],
-   [
-    "supabase/config.toml",
     6
    ],
    [
     "package.json",
+    5
+   ],
+   [
+    "supabase/config.toml",
     5
    ],
    [

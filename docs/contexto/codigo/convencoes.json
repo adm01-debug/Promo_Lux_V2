@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)",
    "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)",
    "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)",
    "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)",
-   "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)",
-   "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script"
+   "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)"
   ]
  },
  "pr_template": null,
