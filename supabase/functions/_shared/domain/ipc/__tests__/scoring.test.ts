@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateIPCScore } from "../scoring";
+import { calculateIPCScore } from "../scoring.ts";
 
 describe("calculateIPCScore", () => {
   it("returns baseline 50 with no criteria and no enrichment signals", () => {
