@@ -4,7 +4,7 @@ import {
   isPrivateOrReservedIPv6,
   isDisallowedHostLiteral,
   checkUrlSyncPart,
-} from "../ssrf-guard";
+} from "../ssrf-guard.ts";
 
 describe("isPrivateOrReservedIPv4", () => {
   const blocked: Array<[string, string]> = [

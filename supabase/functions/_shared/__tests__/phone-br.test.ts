@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizePhoneBR, formatPhoneBitrix } from "../phone-br";
+import { normalizePhoneBR, formatPhoneBitrix } from "../phone-br.ts";
 
 describe("normalizePhoneBR", () => {
   it("normaliza celular BR 11 dígitos", () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { publicIdFromLinkedInUrl } from "../linkedin-url";
+import { publicIdFromLinkedInUrl } from "../linkedin-url.ts";
 
 describe("publicIdFromLinkedInUrl", () => {
   const ok: Array<[string, string, string]> = [

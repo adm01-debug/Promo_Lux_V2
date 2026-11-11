@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { signTrackingParams, verifyTrackingParams } from "../tracking-signature";
+import { signTrackingParams, verifyTrackingParams } from "../tracking-signature.ts";
 
 const SECRET = "test-secret";
 const RECIPIENT = "11111111-1111-1111-1111-111111111111";

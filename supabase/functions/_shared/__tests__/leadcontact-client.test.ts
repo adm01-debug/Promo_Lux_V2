@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { assertLeadContactOk, publicIdFromLinkedInUrl } from "../leadcontact-client";
+import { assertLeadContactOk, publicIdFromLinkedInUrl } from "../leadcontact-client.ts";
 
 describe("assertLeadContactOk", () => {
   it("deixa passar resposta sem code", () => {

@@ -4,7 +4,7 @@ import {
   buildOmkarCreateTaskBody,
   normalizeLang,
   OMKAR_ROUTES,
-} from "../omkar-gmaps-config";
+} from "../omkar-gmaps-config.ts";
 
 describe("normalizeLang", () => {
   it("reduz a tag regional ao código base", () => {
