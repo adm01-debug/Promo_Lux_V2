@@ -22,7 +22,7 @@ serve(async (req) => {
   cutoffDate.setDate(cutoffDate.getDate() - RETENTION_DAYS);
   const cutoffStr = cutoffDate.toISOString();
 
-  console.log(`Pruning logs older than ${cutoffStr}...`);
+  console.log(JSON.stringify({ function: "audit-logs-prune", level: "info", msg: `Pruning logs older than ${cutoffStr}...`, ts: new Date().toISOString() }));
 
   try {
     // Prune audit_logs
