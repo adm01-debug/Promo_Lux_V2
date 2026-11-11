@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6f3b1ff492c8da537d5f8c09d126a7715c708a3b` (2026-11-08T22:06:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `119de20fc0ee3e3e01312fa02d10d80aa36f610c` (2026-11-11T12:40:24-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6193 nós · 13252 arestas · 576 comunidades · grafo do commit `6f3b1ff4`
+- 6193 nós · 13252 arestas · 576 comunidades · grafo do commit `119de20f`
 - comunidades maiores: lucide-react (155), @tanstack/react-query (129), button.tsx (129), Monitoring.tsx (87), utils.ts (85), cn (80), gerar.mjs (80), generate.py (71), dependencies (65), framer-motion (63), hooks/use-toast.ts (63), package.json (58)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py), header() (scripts/regras_negocio/generate.py), uniq() (scripts/ai-context/gerar.mjs)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -309,6 +309,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-11 `119de20` fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)
 - 2026-11-08 `6f3b1ff` fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script
 - 2026-11-08 `8173876` fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes
 - 2026-11-08 `aaaaf8e` fix(contexto): destrava a publicação e para de publicar fato falso (#12)
@@ -323,7 +324,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-08-28 `20373df` Visual edit in Lovable
 - 2026-08-18 `c88dc8a` chore(hermes): adiciona .hermes.md (regras da casa Hermes)
 - 2026-08-18 `ee80ee4` chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)
-- 2026-08-16 `97bb6fb` Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

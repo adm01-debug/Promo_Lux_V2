@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6f3b1ff492c8da537d5f8c09d126a7715c708a3b",
+  "commit": "119de20fc0ee3e3e01312fa02d10d80aa36f610c",
   "branch": "main",
-  "data_commit": "2026-11-08T22:06:44-03:00",
+  "data_commit": "2026-11-11T12:40:24-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "119de20",
+    "data": "2026-11-11",
+    "assunto": "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)"
+   },
    {
     "sha": "6f3b1ff",
     "data": "2026-11-08",
@@ -126,14 +131,9 @@
     "sha": "1bd50ab",
     "data": "2026-07-29",
     "assunto": "Changes"
-   },
-   {
-    "sha": "8f79294",
-    "data": "2026-07-29",
-    "assunto": "Changes"
    }
   ],
-  "arquivos_mudados_7d": 60,
+  "arquivos_mudados_7d": 61,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "AGENTS.md",
@@ -266,6 +266,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": "scripts/ci/eslint-baseline.json",
+    "mudancas": 2
+   },
+   {
     "arquivo": "scripts/inventario/gerar-repo.mjs",
     "mudancas": 2
    },
@@ -275,14 +279,6 @@
    },
    {
     "arquivo": "scripts/supabase_snapshot/snapshot.py",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "supabase/config.toml",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "supabase/functions/migrate-helper/index.ts",
     "mudancas": 2
    },
    {
@@ -296,12 +292,16 @@
    {
     "arquivo": ".claude/hooks/session-start.sh",
     "mudancas": 1
+   },
+   {
+    "arquivo": ".claude/identity.json",
+    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 10
+    "commits": 11
    }
   ]
  },

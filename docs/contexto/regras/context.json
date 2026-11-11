@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "6f3b1ff492c8da537d5f8c09d126a7715c708a3b",
+  "sha": "119de20fc0ee3e3e01312fa02d10d80aa36f610c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-09 01:10 UTC",
+  "generated_at": "2026-11-11 15:52 UTC",
   "files_total": 1003,
   "code_files": 852,
   "code_lines": 116206
@@ -80285,10 +80285,20 @@
   }
  },
  "git": {
-  "sha": "6f3b1ff492c8da537d5f8c09d126a7715c708a3b",
+  "sha": "119de20fc0ee3e3e01312fa02d10d80aa36f610c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "119de20",
+    "date": "2026-11-11",
+    "author": "adm01-debug",
+    "subject": "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)",
+    "files": [
+     "scripts/ci/eslint-baseline.json",
+     "supabase/functions/audit-logs-prune/index.ts"
+    ]
+   },
    {
     "sha": "6f3b1ff",
     "date": "2026-11-08",
@@ -81584,16 +81594,6 @@
     "author": "gpt-engineer-app[bot]",
     "subject": "Alinhou schema de config do Omkar",
     "files": []
-   },
-   {
-    "sha": "cf4a8c2",
-    "date": "2026-07-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "src/lib/api/gmaps.ts",
-     "src/lib/schemas/scrapeJob.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81634,6 +81634,14 @@
     3
    ],
    [
+    "scripts/ci/eslint-baseline.json",
+    2
+   ],
+   [
+    "supabase/functions/audit-logs-prune/index.ts",
+    2
+   ],
+   [
     ".github/workflows/ci.yml",
     2
    ],
@@ -81667,14 +81675,6 @@
    ],
    [
     ".github/workflows/contexto.yml",
-    2
-   ],
-   [
-    ".github/workflows/inventario-estado-semanal.yml",
-    2
-   ],
-   [
-    "ai-context.config.json",
     2
    ]
   ]
