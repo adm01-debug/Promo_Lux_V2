@@ -35,9 +35,18 @@ function hashString(str: string): number {
   return Math.abs(hash);
 }
 
-export const GradientAvatar = ({ email, name, src, size = "md", className }: GradientAvatarProps) => {
+export const GradientAvatar = ({
+  email,
+  name,
+  src,
+  size = "md",
+  className,
+}: GradientAvatarProps) => {
   const seed = email || name || "U";
-  const gradientIndex = useMemo(() => hashString(seed) % GRADIENTS.length, [seed]);
+  const gradientIndex = useMemo(
+    () => hashString(seed) % GRADIENTS.length,
+    [seed],
+  );
   const initials = useMemo(() => {
     if (name) {
       return name
@@ -58,7 +67,7 @@ export const GradientAvatar = ({ email, name, src, size = "md", className }: Gra
         className={cn(
           "rounded-full object-cover ring-2 ring-primary/20 ring-offset-1 ring-offset-background",
           SIZE_MAP[size],
-          className
+          className,
         )}
       />
     );
@@ -71,7 +80,7 @@ export const GradientAvatar = ({ email, name, src, size = "md", className }: Gra
         "ring-2 ring-primary/20 ring-offset-1 ring-offset-background",
         GRADIENTS[gradientIndex],
         SIZE_MAP[size],
-        className
+        className,
       )}
       aria-label={name || email || "Avatar"}
     >
