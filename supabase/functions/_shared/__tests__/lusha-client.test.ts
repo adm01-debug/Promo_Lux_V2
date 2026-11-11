@@ -12,7 +12,7 @@ import {
   findRevealedEmail,
   findPayloadPhone,
   newSessionId,
-} from "../lusha-client";
+} from "../lusha-client.ts";
 import {
   mapDepartment,
   resolveDepartments,
@@ -20,7 +20,7 @@ import {
   LUSHA_DEPARTMENTS,
   assertValidDepartments,
   DEPARTMENT_MAP,
-} from "../lusha-departments";
+} from "../lusha-departments.ts";
 
 // exp: 2036-11-06 (10 anos a partir de 2026-11; reconstruído sem assinatura válida pois
 // inspectLushaToken não verifica assinatura — apenas decodifica o payload)

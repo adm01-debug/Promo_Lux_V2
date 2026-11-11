@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resolveDeptEnum, BITRIX_STAGES, BITRIX_CATEGORY_ID, BITRIX_ENTITY_TYPE_ID } from "../bitrix-client";
+import { resolveDeptEnum, BITRIX_STAGES, BITRIX_CATEGORY_ID, BITRIX_ENTITY_TYPE_ID } from "../bitrix-client.ts";
 
 describe("resolveDeptEnum", () => {
   it("resolve Compras", () => expect(resolveDeptEnum("Compras")).toBe(36182));
