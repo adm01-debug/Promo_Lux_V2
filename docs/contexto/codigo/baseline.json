@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5e3af794b5f8d841d82bec9c7a6254dd1030056d",
+  "commit": "a16871836ead1232866dc39c37f58df5ed871cb1",
   "branch": "main",
-  "data_commit": "2026-11-11T19:22:33-03:00",
+  "data_commit": "2026-11-12T08:38:53-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a168718",
+    "data": "2026-11-12",
+    "assunto": "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)"
+   },
    {
     "sha": "5e3af79",
     "data": "2026-11-11",
@@ -126,14 +131,9 @@
     "sha": "bbe286c",
     "data": "2026-08-01",
     "assunto": "merge: master para main"
-   },
-   {
-    "sha": "4e21608",
-    "data": "2026-08-01",
-    "assunto": "feat: Migração Banco Lovable para Supabase Promo Lux - V2"
    }
   ],
-  "arquivos_mudados_7d": 71,
+  "arquivos_mudados_7d": 72,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 15
+    "commits": 16
    }
   ]
  },

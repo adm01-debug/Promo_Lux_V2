@@ -259,7 +259,9 @@
    ],
    "permissoes": [],
    "scripts_usados": [],
-   "npm_scripts": [],
+   "npm_scripts": [
+    "test"
+   ],
    "secrets": [],
    "actions": [
     "actions/cache",
