@@ -46,21 +46,31 @@ jobs:
           restore-keys: |
             deno-${{ runner.os }}-
 
-      - name: Discover Deno test files
+      - name: Discover Deno test files (*_test.ts)
         id: discover
         run: |
+          # Somente testes Deno puros (*_test.ts). Os arquivos *.test.ts sao
+          # vitest (rodados pelo `npm run test` no ci.yml); executa-los sob
+          # `deno test` sempre falha com "Vitest failed to access its internal
+          # state" e mantinha este workflow permanentemente vermelho,
+          # mascarando regressoes reais.
           FILES=$(find supabase/functions \
-            \( -name "*_test.ts" -o -name "*.test.ts" \) \
+            -name "*_test.ts" \
             -not -path "*/node_modules/*" | sort)
           echo "Arquivos de teste Deno encontrados:"
           echo "$FILES"
           COUNT=$(echo "$FILES" | grep -c . || true)
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          {
+            echo "files<<FILE_EOF"
+            echo "$FILES"
+            echo "FILE_EOF"
+          } >> "$GITHUB_OUTPUT"
           if [ "$COUNT" -eq 0 ]; then
-            echo "::warning::Nenhum teste Deno localizado em supabase/functions/**"
+            echo "::warning::Nenhum teste Deno (*_test.ts) localizado em supabase/functions/**"
           fi
 
-      - name: Run Deno tests
+      - name: Run Deno tests (*_test.ts)
         if: steps.discover.outputs.count != '0'
         env:
           DENO_TLS_CA_STORE: system
@@ -75,6 +85,9 @@ jobs:
           if [ -n "${{ github.event.inputs.pattern }}" ]; then
             FILTER_ARG="--filter=${{ github.event.inputs.pattern }}"
           fi
+          # `deno test` com a lista filtrada (*_test.ts) em vez do diretorio
+          # inteiro: evita re-descobrir os arquivos vitest (*.test.ts) e
+          # quebrar com "Vitest failed to access its internal state".
           deno test \
             --allow-net \
             --allow-env \
@@ -82,7 +95,7 @@ jobs:
             --no-check \
             --reporter=pretty \
             $FILTER_ARG \
-            supabase/functions/
+            ${{ steps.discover.outputs.files }}
 
       - name: Report failure to Actions summary
         if: failure()
