@@ -1,1 +1,174 @@
-LS0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KLS0gTWlncmF0aW9uIEExOiBhc3NlcnRfc2VydmljZV9vcl9hZG1pbigpIOKAlCBHdWFyZCBDZW50cmFsaXphZG8KLS0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KLS0gUFJPQkxFTUE6IFBhZHLDo28gZnLDoWdpbCAiYXV0aC51aWQoKSBJUyBOVUxMID0gd29ya2VyIGNvbmZpw6F2ZWwiIGVtIGZ1bsOnw7VlcwotLSBTRUNVUklUWSBERUZJTkVSIGRlcGVuZGlhIGRlIFJFVk9LRS9HUkFOVCBwYXJhIHNlZ3VyYW7Dp2EuIFNlIHVtIGdyYW50Ci0tIHJlZ3JlZGlyIChleDogZGVwbG95IGRlIExvdmFibGUpLCBhIHByb3Rlw6fDo28gw6kgc2lsZW5jaW9zYW1lbnRlIHBlcmRpZGEuCi0tCi0tIFNPTFXDh8ODTzogSGVscGVyIGV4cGzDrWNpdG8gcXVlIHZlcmlmaWNhIG8gY29udGV4dG8gcmVhbCBkZSBleGVjdcOnw6NvOgotLSDilIzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJAKLS0g4pSCICBDaGFtYWRvciAgICAgICAgICAgIOKUgiBjdXJyZW50X3VzZXIgICAgICAgICDilIIgand0LnJvbGUgICAgICAgICAgICAg4pSCCi0tIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUmAotLSDilIIgIHBnX2Nyb24gICAgICAgICAgICAg4pSCIHBvc3RncmVzICAgICAgICAgICAgIOKUgiAnJyAodmF6aW8pICAgICAgICAgICDilIIKLS0g4pSCICBNaWdyYXRpb25zICAgICAgICAgIOKUgiBwb3N0Z3Jlcy9zdXBhX2FkbWluICDilIIgJycgKHZhemlvKSAgICAgICAgICAg4pSCCi0tIOKUgiAgRWRnZSBGdW5jdGlvbiAoc3ZjKSDilIIgYXV0aGVudGljYXRvciAgICAgICAg4pSCICdzZXJ2aWNlX3JvbGUnICAgICAgIOKUggotLSDilIIgIFVzdcOhcmlvIGFkbWluICAgICAgIOKUgiBhdXRoZW50aWNhdG9yICAgICAgICDilIIgJ2F1dGhlbnRpY2F0ZWQnICAgICAg4pSCCi0tIOKUgiAgVXN1w6FyaW8gY29tdW0gICAgICAg4pSCIGF1dGhlbnRpY2F0b3IgICAgICAgIOKUgiAnYXV0aGVudGljYXRlZCcgICAgICDilIIKLS0g4pSCICBBbm9uIChzZW0gSldUKSAgICAgIOKUgiBhbm9uICAgICAgICAgICAgICAgICDilIIgJ2Fub24nICAgICAgICAgICAgICAg4pSCCi0tIOKUlOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUmAotLQotLSBSRUZFUsOKTkNJQVM6IE9XQVNQIEEwMSwgU3VwYWJhc2UgREIgTGludGVyIDAwMjgvMDAyOSwgcHJpbmPDrXBpbyBtZW5vciBwcml2aWzDqWdpbwotLSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQoKQkVHSU47CgotLSDilIDilIDilIAgMS4gQ3JpYXIgc2NoZW1hIGV4dGVuc2lvbnMgKHNlIG7Do28gZXhpc3Rpcikg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACi0tIFVzYWRvIHBvciBtZWxob3JpYXMgc3Vic2VxdWVudGVzIChBMykKQ1JFQVRFIFNDSEVNQSBJRiBOT1QgRVhJU1RTIGV4dGVuc2lvbnM7CkNPTU1FTlQgT04gU0NIRU1BIGV4dGVuc2lvbnMgSVMgJ05hbWVzcGFjZSBwYXJhIGV4dGVuc8O1ZXMgUG9zdGdyZVNRTCAoc2VwYXJhIGRvIHNjaGVtYSBwdWJsaWMpJzsKCi0tIEdhcmFudGlyIHF1ZSBhdXRoZW50aWNhdG9yIChQb3N0Z1JFU1QpIGUgc2VydmljZV9yb2xlIHTDqm0gYWNlc3NvCkdSQU5UIFVTQUdFIE9OIFNDSEVNQSBleHRlbnNpb25zIFRPIGF1dGhlbnRpY2F0b3I7CkdSQU5UIFVTQUdFIE9OIFNDSEVNQSBleHRlbnNpb25zIFRPIHNlcnZpY2Vfcm9sZTsKR1JBTlQgVVNBR0UgT04gU0NIRU1BIGV4dGVuc2lvbnMgVE8gYW5vbjsKR1JBTlQgVVNBR0UgT04gU0NIRU1BIGV4dGVuc2lvbnMgVE8gYXV0aGVudGljYXRlZDsKCi0tIOKUgOKUgOKUgCAyLiBGdW7Dp8OjbyBhc3NlcnRfc2VydmljZV9vcl9hZG1pbigpIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAotLSBTRUNVUklUWSBERUZJTkVSIG5lY2Vzc8OhcmlvIHBhcmEgYWNlc3NhciBhdXRoLnVpZCgpIG5vIGNvbnRleHRvIGNvcnJldG8uCi0tIFNFVCBzZWFyY2hfcGF0aCA9IHB1YmxpYyBwcmV2aW5lIHNlYXJjaF9wYXRoIGluamVjdGlvbi4KQ1JFQVRFIE9SIFJFUExBQ0UgRlVOQ1RJT04gcHVibGljLmFzc2VydF9zZXJ2aWNlX29yX2FkbWluKCkKUkVUVVJOUyB2b2lkCkxBTkdVQUdFIHBscGdzcWwKU0VDVVJJVFkgREVGSU5FUgpTRVQgc2VhcmNoX3BhdGggPSBwdWJsaWMKQVMgJCQKREVDTEFSRQogIF9qd3Rfcm9sZSAgdGV4dDsKICBfZGJfdXNlciAgIHRleHQ7CiAgX2NhbGxlcl9pZCB1dWlkOwpCRUdJTgogIC0tIExlciBjb250ZXh0byBkZSBleGVjdcOnw6NvCiAgX2p3dF9yb2xlICA6PSBjdXJyZW50X3NldHRpbmcoJ3JlcXVlc3Quand0LnJvbGUnLCB0cnVlKTsgICAtLSAnJyBxdWFuZG8gbsOjbyBow6EgSldUCiAgX2RiX3VzZXIgICA6PSBjdXJyZW50X3VzZXI7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tICdwb3N0Z3JlcycgZW0gY3JvbgogIF9jYWxsZXJfaWQgOj0gYXV0aC51aWQoKTsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBOVUxMIHNlbSBKV1QKCiAgLS0g4pSA4pSAIFBlcm1pdGlyOiBzdXBlcnVzZXJzIGRvIHNpc3RlbWEgKHBnX2Nyb24sIG1pZ3JhdGlvbnMsIHJlc3RvcmUpIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIElGIF9kYl91c2VyIElOICgncG9zdGdyZXMnLCAnc3VwYWJhc2VfYWRtaW4nLCAnc3VwYWJhc2VfYXV0aF9hZG1pbicsCiAgICAgICAgICAgICAgICAgICAnc3VwYWJhc2Vfc3RvcmFnZV9hZG1pbicsICdzdXBhYmFzZV9yZWFsdGltZV9hZG1pbicpIFRIRU4KICAgIFJFVFVSTjsKICBFTkQgSUY7CgogIC0tIOKUgOKUgCBQZXJtaXRpcjogRWRnZSBGdW5jdGlvbnMgY29tIHNlcnZpY2Vfcm9sZSBrZXkg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgSUYgX2p3dF9yb2xlID0gJ3NlcnZpY2Vfcm9sZScgVEhFTgogICAgUkVUVVJOOwogIEVORCBJRjsKCiAgLS0g4pSA4pSAIFBlcm1pdGlyOiB1c3XDoXJpb3MgYXV0ZW50aWNhZG9zIGNvbSBwYXBlbCBhZG1pbiBlbSBxdWFscXVlciBvcmcg4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgLS0gaGFzX29yZ19yb2xlKG9yZ19pZCwgdXNlcl9pZCwgbWluX3JvbGUpIHZlcmlmaWNhIGhpZXJhcnF1aWEgZGUgcGFwZWwuCiAgLS0gQXF1aSB1c2Ftb3MgYSBmdW7Dp8OjbyBleGlzdGVudGUgaGFzX3JvbGUoKSBxdWUgdmVyaWZpY2EgcGFwZWwgZ2xvYmFsIHNlIGV4aXN0aXIsCiAgLS0gb3UgZmFsbGJhY2sgcGFyYSB2ZXJpZmljYcOnw6NvIGRpcmV0YSBuYSB0YWJlbGEgb3JnYW5pemF0aW9uX21lbWJlcnMuCiAgSUYgX2NhbGxlcl9pZCBJUyBOT1QgTlVMTCBUSEVOCiAgICAtLSBWZXJpZmljYXIgc2UgbyB1c3XDoXJpbyDDqSBhZG1pbiBlbSBwZWxvIG1lbm9zIHVtYSBvcmdhbml6YcOnw6NvCiAgICBJRiBFWElTVFMgKAogICAgICBTRUxFQ1QgMSAKICAgICAgRlJPTSBwdWJsaWMub3JnYW5pemF0aW9uX21lbWJlcnMgb20KICAgICAgV0hFUkUgb20udXNlcl9pZCA9IF9jYWxsZXJfaWQKICAgICAgICBBTkQgb20ucm9sZTo6dGV4dCA9ICdhZG1pbicKICAgICAgICBBTkQgb20uZGVsZXRlZF9hdCBJUyBOVUxMCiAgICApIFRIRU4KICAgICAgUkVUVVJOOwogICAgRU5EIElGOwogIEVORCBJRjsKCiAgLS0g4pSA4pSAIE5lZ2FyIHR1ZG8gbyBtYWlzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIFJBSVNFIEVYQ0VQVElPTiAnUHJvaWJpZG86IHJlcXVlciBzZXJ2aWNlX3JvbGUgb3UgcGFwZWwgYWRtaW4gbmEgb3JnYW5pemHDp8OjbyAoand0LnJvbGU9JSwgZGJfdXNlcj0lLCB1aWQ9JSknLAogICAgQ09BTEVTQ0UoX2p3dF9yb2xlLCAnTlVMTCcpLAogICAgX2RiX3VzZXIsCiAgICBDT0FMRVNDRShfY2FsbGVyX2lkOjp0ZXh0LCAnTlVMTCcpCiAgICBVU0lORyBFUlJDT0RFID0gJzQyNTAxJzsgIC0tIGluc3VmZmljaWVudF9wcml2aWxlZ2UKRU5EOwokJDsKCkNPTU1FTlQgT04gRlVOQ1RJT04gcHVibGljLmFzc2VydF9zZXJ2aWNlX29yX2FkbWluKCkgSVMKICAnR3VhcmQgY2VudHJhbGl6YWRvIHBhcmEgZnVuw6fDtWVzIFNFQ1VSSVRZIERFRklORVIgZGUgbWFudXRlbsOnw6NvLiAnCiAgJ1Blcm1pdGU6IHBnX2Nyb24gKHBvc3RncmVzKSwgRWRnZSBGdW5jdGlvbnMgKHNlcnZpY2Vfcm9sZSksIGFkbWlucyBhdXRlbnRpY2Fkb3MuICcKICAnTGFuw6dhIDQyNTAxIHBhcmEgcXVhbHF1ZXIgb3V0cm8gY2hhbWFkb3IuICcKICAnU1VCU1RJVFVJIG8gcGFkcsOjbyBmcsOhZ2lsOiBJRiBhdXRoLnVpZCgpIElTIE5PVCBOVUxMIEFORCBOT1QgaGFzX3JvbGUoKSBUSEVOIFJBSVNFLiAnCiAgJ0FEUi0wMDk6IEVzdGUgaGVscGVyIG7Do28gZGVwZW5kZSBkZSBHUkFOVC9SRVZPS0UgcGFyYSBnYXJhbnRpciBzZWd1cmFuw6dhLic7CgotLSBSZXZvZ2FyIGFjZXNzbyBhbyBoZWxwZXIgZGUgcm9sZXMgbsOjbyBwcml2aWxlZ2lhZGFzClJFVk9LRSBFWEVDVVRFIE9OIEZVTkNUSU9OIHB1YmxpYy5hc3NlcnRfc2VydmljZV9vcl9hZG1pbigpIEZST00gYW5vbjsKUkVWT0tFIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLmFzc2VydF9zZXJ2aWNlX29yX2FkbWluKCkgRlJPTSBhdXRoZW50aWNhdGVkOwpHUkFOVCBFWEVDVVRFIE9OIEZVTkNUSU9OIHB1YmxpYy5hc3NlcnRfc2VydmljZV9vcl9hZG1pbigpIFRPIHNlcnZpY2Vfcm9sZTsKCkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIHB1YmxpYy5pc19zZXJ2aWNlX3JvbGUoKQpSRVRVUk5TIGJvb2xlYW4KTEFOR1VBR0UgcGxwZ3NxbApTRUNVUklUWSBERUZJTkVSClNFVCBzZWFyY2hfcGF0aCA9IHB1YmxpYwpBUyAkJApCRUdJTgogIFJFVFVSTiAoCiAgICBjdXJyZW50X3NldHRpbmcoJ3JlcXVlc3Quand0LnJvbGUnLCB0cnVlKSA9ICdzZXJ2aWNlX3JvbGUnCiAgICBPUiBjdXJyZW50X3VzZXIgSU4gKCdwb3N0Z3JlcycsICdzdXBhYmFzZV9hZG1pbicsICdzdXBhYmFzZV9hdXRoX2FkbWluJykKICApOwpFTkQ7CiQkOwoKQ09NTUVOVCBPTiBGVU5DVElPTiBwdWJsaWMuaXNfc2VydmljZV9yb2xlKCkgSVMKICAnUmV0b3JuYSB0cnVlIHNlIG8gY2hhbWFkb3IgYXR1YWwgw6kgc2VydmljZV9yb2xlIG91IHN1cGVydXNlciBkbyBzaXN0ZW1hLiAnCiAgJ8O6dGlsIGVtIHBvbMOtdGljYXMgUkxTIGUgY29uZGljaW9uYWlzIGRlIHNlZ3VyYW7Dp2EuICcKICAnUGFydGUgZG8gcGFkcsOjbyBBRFItMDA5IGRlIGd1YXJkcyBleHBsw61jaXRvcy4nOwoKUkVWT0tFIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLmlzX3NlcnZpY2Vfcm9sZSgpIEZST00gYW5vbjsKR1JBTlQgRVhFQ1VURSBPTiBGVU5DVElPTiBwdWJsaWMuaXNfc2VydmljZV9yb2xlKCkgVE8gYXV0aGVudGljYXRlZCwgc2VydmljZV9yb2xlOwoKQ1JFQVRFIE9SIFJFUExBQ0UgVklFVyBwdWJsaWMudl9zZWNfZGVmaW5lcl9hbm9uX2dyYW50cyBBUwpTRUxFQ1QgCiAgbi5uc3BuYW1lICAgICAgICAgICAgICAgICAgICAgICAgICBBUyBzY2hlbWFfbmFtZSwKICBwLnByb25hbWUgICAgICAgICAgICAgICAgICAgICAgICAgIEFTIGZ1bmN0aW9uX25hbWUsCiAgcGdfZ2V0X2Z1bmN0aW9uX2lkZW50aXR5X2FyZ3VtZW50cyhwLm9pZCkgQVMgZnVuY3Rpb25fYXJncywKICByLnJvbG5hbWUgICAgICAgICAgICAgICAgICAgICAgICAgIEFTIGdyYW50ZWVfcm9sZSwKICAnRVhFQ1VURScgICAgICAgICAgICAgICAgICAgICAgICAgIEFTIHByaXZpbGVnZV90eXBlLAogIENBU0UgCiAgICBXSEVOIHIucm9sbmFtZSA9ICdhbm9uJyBUSEVOICfwn5S0IENSw41USUNPJwogICAgV0hFTiByLnJvbG5hbWUgPSAnYXV0aGVudGljYXRlZCcgQU5EIHAucHJvc2VjZGVmIFRIRU4gJ/Cfn6EgUkVWSVNBUicKICAgIEVMU0UgJ/Cfn6IgT0snCiAgRU5EICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBUyByaXNrX2xldmVsLAogIE5PVygpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQVMgY2hlY2tlZF9hdApGUk9NIHBnX3Byb2MgcApKT0lOIHBnX25hbWVzcGFjZSBuIE9OIHAucHJvbmFtZXNwYWNlID0gbi5vaWQKSk9JTiBwZ19hdXRoX21lbWJlcnMgYW0gT04gYW0ucm9sZWlkID0gKAogIFNFTEVDVCBvaWQgRlJPTSBwZ19yb2xlcyBXSEVSRSByb2xuYW1lID0gJ2Fub24nCikKSk9JTiBwZ19yb2xlcyByIE9OIHIub2lkID0gYW0ucm9sZWlkCldIRVJFIHAucHJvc2VjZGVmID0gdHJ1ZQogIEFORCBuLm5zcG5hbWUgPSAncHVibGljJwogIEFORCBoYXNfZnVuY3Rpb25fcHJpdmlsZWdlKCdhbm9uJywgcC5vaWQsICdleGVjdXRlJykKT1JERVIgQlkgcmlza19sZXZlbCwgc2NoZW1hX25hbWUsIGZ1bmN0aW9uX25hbWU7CgpDT01NRU5UIE9OIFZJRVcgcHVibGljLnZfc2VjX2RlZmluZXJfYW5vbl9ncmFudHMgSVMKICAnRGV0ZWN0YSBmdW7Dp8O1ZXMgU0VDVVJJVFkgREVGSU5FUiBjb20gZ3JhbnQgRVhFQ1VURSBwYXJhIGFub24uICcKICAnWmVybyBsaW5oYXMgPSBwb3N0dXJhIHNlZ3VyYS4gVXNhZG8gcGVsbyBDSSAoY2hlY2stZnVuY3Rpb24tZ3JhbnRzLnNoKS4gQURSLTAwOSc7CgpSRVZPS0UgQUxMIE9OIHB1YmxpYy52X3NlY19kZWZpbmVyX2Fub25fZ3JhbnRzIEZST00gYW5vbjsKR1JBTlQgU0VMRUNUIE9OIHB1YmxpYy52X3NlY19kZWZpbmVyX2Fub25fZ3JhbnRzIFRPIGF1dGhlbnRpY2F0ZWQsIHNlcnZpY2Vfcm9sZTsKCkRPICQkCkJFR0lOCiAgSUYgTk9UIEVYSVNUUyAoCiAgICBTRUxFQ1QgMSBGUk9NIGluZm9ybWF0aW9uX3NjaGVtYS5jb2x1bW5zCiAgICBXSEVSRSB0YWJsZV9zY2hlbWEgPSAncHVibGljJwogICAgICBBTkQgdGFibGVfbmFtZSAgID0gJ29yZ2FuaXphdGlvbl9tZW1iZXJzJwogICAgICBBTkQgY29sdW1uX25hbWUgID0gJ2RlbGV0ZWRfYXQnCiAgKSBUSEVOCiAgICBBTFRFUiBUQUJMRSBwdWJsaWMub3JnYW5pemF0aW9uX21lbWJlcnMgQUREIENPTFVNTiBkZWxldGVkX2F0IHRpbWVzdGFtcHR6OwogICAgQ09NTUVOVCBPTiBDT0xVTU4gcHVibGljLm9yZ2FuaXphdGlvbl9tZW1iZXJzLmRlbGV0ZWRfYXQgSVMgCiAgICAgICdTb2Z0IGRlbGV0ZTogcHJlZW5jaGlkbyBhbyByZW1vdmVyIG1lbWJyby4gTlVMTCA9IGF0aXZvLic7CiAgICBDUkVBVEUgSU5ERVggSUYgTk9UIEVYSVNUUyBpZHhfb3JnX21lbWJlcnNfYWN0aXZlCiAgICAgIE9OIHB1YmxpYy5vcmdhbml6YXRpb25fbWVtYmVycyhvcmdhbml6YXRpb25faWQsIHVzZXJfaWQpCiAgICAgIFdIRVJFIGRlbGV0ZWRfYXQgSVMgTlVMTDsKICBFTkQgSUY7CkVORCAkJDsKCkNPTU1JVDsK
+-- =============================================================================
+-- Migration A1: assert_service_or_admin() — Guard Centralizado
+-- =============================================================================
+-- PROBLEMA: Padrão frágil "auth.uid() IS NULL = worker confiável" em funções
+-- SECURITY DEFINER dependia de REVOKE/GRANT para segurança. Se um grant
+-- regredir (ex: deploy de Lovable), a proteção é silenciosamente perdida.
+--
+-- SOLUÇÃO: Helper explícito que verifica o contexto real de execução:
+-- ┌─────────────────────────────────────────────────────────────────────┐
+-- │  Chamador            │ current_user         │ jwt.role             │
+-- ├─────────────────────────────────────────────────────────────────────┘
+-- │  pg_cron             │ postgres             │ '' (vazio)           │
+-- │  Migrations          │ postgres/supa_admin  │ '' (vazio)           │
+-- │  Edge Function (svc) │ authenticator        │ 'service_role'       │
+-- │  Usuário admin       │ authenticator        │ 'authenticated'      │
+-- │  Usuário comum       │ authenticator        │ 'authenticated'      │
+-- │  Anon (sem JWT)      │ anon                 │ 'anon'               │
+-- └─────────────────────────────────────────────────────────────────────┘
+--
+-- REFERÊNCIAS: OWASP A01, Supabase DB Linter 0028/0029, princípio menor privilégio
+-- =============================================================================
+
+BEGIN;
+
+-- ─── 1. Criar schema extensions (se não existir) ─────────────────────────────
+-- Usado por melhorias subsequentes (A3)
+CREATE SCHEMA IF NOT EXISTS extensions;
+COMMENT ON SCHEMA extensions IS 'Namespace para extensões PostgreSQL (separa do schema public)';
+
+-- Garantir que authenticator (PostgREST) e service_role têm acesso
+GRANT USAGE ON SCHEMA extensions TO authenticator;
+GRANT USAGE ON SCHEMA extensions TO service_role;
+GRANT USAGE ON SCHEMA extensions TO anon;
+GRANT USAGE ON SCHEMA extensions TO authenticated;
+
+-- ─── 2. Função assert_service_or_admin() ─────────────────────────────────────
+-- SECURITY DEFINER necessário para acessar auth.uid() no contexto correto.
+-- SET search_path = public previne search_path injection.
+CREATE OR REPLACE FUNCTION public.assert_service_or_admin()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  _jwt_role  text;
+  _db_user   text;
+  _caller_id uuid;
+BEGIN
+  -- Ler contexto de execução
+  _jwt_role  := current_setting('request.jwt.role', true);   -- '' quando não há JWT
+  _db_user   := current_user;                                  -- 'postgres' em cron
+  _caller_id := auth.uid();                                    -- NULL sem JWT
+
+  -- ── Permitir: superusers do sistema (pg_cron, migrations, restore) ────────
+  IF _db_user IN ('postgres', 'supabase_admin', 'supabase_auth_admin',
+                   'supabase_storage_admin', 'supabase_realtime_admin') THEN
+    RETURN;
+  END IF;
+
+  -- ── Permitir: Edge Functions com service_role key ─────────────────────────
+  IF _jwt_role = 'service_role' THEN
+    RETURN;
+  END IF;
+
+  -- ── Permitir: usuários autenticados com papel admin em qualquer org ───────
+  -- has_org_role(org_id, user_id, min_role) verifica hierarquia de papel.
+  -- Aqui usamos a função existente has_role() que verifica papel global se existir,
+  -- ou fallback para verificação direta na tabela organization_members.
+  IF _caller_id IS NOT NULL THEN
+    -- Verificar se o usuário é admin em pelo menos uma organização
+    IF EXISTS (
+      SELECT 1 
+      FROM public.organization_members om
+      WHERE om.user_id = _caller_id
+        AND om.role::text = 'admin'
+        AND om.deleted_at IS NULL
+    ) THEN
+      RETURN;
+    END IF;
+  END IF;
+
+  -- ── Negar tudo o mais ────────────────────────────────────────────────────
+  RAISE EXCEPTION 'Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)',
+    COALESCE(_jwt_role, 'NULL'),
+    _db_user,
+    COALESCE(_caller_id::text, 'NULL')
+    USING ERRCODE = '42501';  -- insufficient_privilege
+END;
+$$;
+
+COMMENT ON FUNCTION public.assert_service_or_admin() IS
+  'Guard centralizado para funções SECURITY DEFINER de manutenção. '
+  'Permite: pg_cron (postgres), Edge Functions (service_role), admins autenticados. '
+  'Lança 42501 para qualquer outro chamador. '
+  'SUBSTITUI o padrão frágil: IF auth.uid() IS NOT NULL AND NOT has_role() THEN RAISE. '
+  'ADR-009: Este helper não depende de GRANT/REVOKE para garantir segurança.';
+
+-- Revogar acesso ao helper de roles não privilegiadas
+REVOKE EXECUTE ON FUNCTION public.assert_service_or_admin() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.assert_service_or_admin() FROM authenticated;
+GRANT EXECUTE ON FUNCTION public.assert_service_or_admin() TO service_role;
+
+CREATE OR REPLACE FUNCTION public.is_service_role()
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  RETURN (
+    current_setting('request.jwt.role', true) = 'service_role'
+    OR current_user IN ('postgres', 'supabase_admin', 'supabase_auth_admin')
+  );
+END;
+$$;
+
+COMMENT ON FUNCTION public.is_service_role() IS
+  'Retorna true se o chamador atual é service_role ou superuser do sistema. '
+  'útil em políticas RLS e condicionais de segurança. '
+  'Parte do padrão ADR-009 de guards explícitos.';
+
+REVOKE EXECUTE ON FUNCTION public.is_service_role() FROM anon;
+GRANT EXECUTE ON FUNCTION public.is_service_role() TO authenticated, service_role;
+
+CREATE OR REPLACE VIEW public.v_sec_definer_anon_grants AS
+SELECT 
+  n.nspname                          AS schema_name,
+  p.proname                          AS function_name,
+  pg_get_function_identity_arguments(p.oid) AS function_args,
+  r.rolname                          AS grantee_role,
+  'EXECUTE'                          AS privilege_type,
+  CASE 
+    WHEN r.rolname = 'anon' THEN '🔴 CRÍTICO'
+    WHEN r.rolname = 'authenticated' AND p.prosecdef THEN '🟡 REVISAR'
+    ELSE '🟢 OK'
+  END                                AS risk_level,
+  NOW()                              AS checked_at
+FROM pg_proc p
+JOIN pg_namespace n ON p.pronamespace = n.oid
+JOIN pg_auth_members am ON am.roleid = (
+  SELECT oid FROM pg_roles WHERE rolname = 'anon'
+)
+JOIN pg_roles r ON r.oid = am.roleid
+WHERE p.prosecdef = true
+  AND n.nspname = 'public'
+  AND has_function_privilege('anon', p.oid, 'execute')
+ORDER BY risk_level, schema_name, function_name;
+
+COMMENT ON VIEW public.v_sec_definer_anon_grants IS
+  'Detecta funções SECURITY DEFINER com grant EXECUTE para anon. '
+  'Zero linhas = postura segura. Usado pelo CI (check-function-grants.sh). ADR-009';
+
+REVOKE ALL ON public.v_sec_definer_anon_grants FROM anon;
+GRANT SELECT ON public.v_sec_definer_anon_grants TO authenticated, service_role;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name   = 'organization_members'
+      AND column_name  = 'deleted_at'
+  ) THEN
+    ALTER TABLE public.organization_members ADD COLUMN deleted_at timestamptz;
+    COMMENT ON COLUMN public.organization_members.deleted_at IS 
+      'Soft delete: preenchido ao remover membro. NULL = ativo.';
+    CREATE INDEX IF NOT EXISTS idx_org_members_active
+      ON public.organization_members(organization_id, user_id)
+      WHERE deleted_at IS NULL;
+  END IF;
+END $$;
+
+COMMIT;

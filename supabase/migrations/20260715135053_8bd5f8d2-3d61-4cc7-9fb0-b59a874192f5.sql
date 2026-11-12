@@ -25,7 +25,15 @@ CREATE TABLE IF NOT EXISTS public.lusha_contacts (
   department_en               TEXT,
   seniority                   TEXT,
   linkedin_url                TEXT,
-  linkedin_public_id          TEXT,
+  -- Em produção, linkedin_public_id é GENERATED STORED (normalizado em
+  -- lowercase a partir de linkedin_url); a migration 20260718142849_bd7de427
+  -- aplica SET EXPRESSION com esta mesma fórmula. Declarar aqui como generated
+  -- faz o replay (shadow) reproduzir o mesmo estado sem efeito em produção
+  -- (IF NOT EXISTS).
+  linkedin_public_id          TEXT GENERATED ALWAYS AS (
+    lower(NULLIF(substring(split_part(split_part(linkedin_url, '?'::text, 1), '#'::text, 1),
+      '(?i)(?:^|//)(?:[a-z0-9-]+\.)*linkedin\.com/in/([^/?#]+)'::text), ''::text))
+  ) STORED,
   email                       TEXT,
   email_source                TEXT,
   phone_raw                   TEXT,

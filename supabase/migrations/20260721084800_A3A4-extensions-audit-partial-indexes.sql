@@ -83,8 +83,8 @@ BEGIN
     EXECUTE $idx$
       CREATE INDEX IF NOT EXISTS idx_scrape_queue_claim
         ON public.scrape_queue(scrape_job_id, id)
-        WHERE status = 'pending'
-        INCLUDE (payload, created_at);
+        INCLUDE (payload, created_at)
+        WHERE status = 'queued'::public.scrape_queue_status;
     $idx$;
     RAISE NOTICE 'idx_scrape_queue_claim criado';
   ELSE
