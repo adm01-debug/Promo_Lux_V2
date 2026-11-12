@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f7bec293e841fb37f1c6a94ce9d24aec50ecf98f` (2026-11-12T09:36:50-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9cd6dbce85caf5ce765ec348a89d855e43fba008` (2026-11-12T09:40:33-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1005 |
 | arquivos_codigo | 642 |
-| linhas_codigo | 109527 |
+| linhas_codigo | 109782 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6379 nós · 13817 arestas · 559 comunidades · grafo do commit `f7bec293`
+- 6379 nós · 13817 arestas · 559 comunidades · grafo do commit `9cd6dbce`
 - comunidades maiores: OrganizationsView.tsx (150), Monitoring.tsx (147), cn (122), react (108), Index.tsx (86), withOrg.ts (82), vitest (81), gerar.mjs (80), JobDetailsSheet.tsx (70), CommandPalette.tsx (68), dependencies (65), lib.mjs (56)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -324,6 +324,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-12 `9cd6dbc` style(manutencao): aplica correcoes locais verificadas (#22)
 - 2026-11-12 `f7bec29` chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)
 - 2026-11-12 `a168718` fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)
 - 2026-11-11 `5e3af79` fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)
@@ -338,7 +339,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-08 `1340f5b` fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md
 - 2026-11-08 `1eb0ae9` fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json
 - 2026-11-08 `4d5d4ee` feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)
-- 2026-11-08 `c8970a8` fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f7bec293e841fb37f1c6a94ce9d24aec50ecf98f",
+  "commit": "9cd6dbce85caf5ce765ec348a89d855e43fba008",
   "branch": "main",
-  "data_commit": "2026-11-12T09:36:50-03:00",
+  "data_commit": "2026-11-12T09:40:33-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9cd6dbc",
+    "data": "2026-11-12",
+    "assunto": "style(manutencao): aplica correcoes locais verificadas (#22)"
+   },
    {
     "sha": "f7bec29",
     "data": "2026-11-12",
@@ -126,14 +131,9 @@
     "sha": "8e6172d",
     "data": "2026-08-16",
     "assunto": "docs: auditoria de estado do sistema (ESTADO_ATUAL + 5 anexos)"
-   },
-   {
-    "sha": "890c18d",
-    "data": "2026-08-11",
-    "assunto": "security: remove migrate-helper edge function (exposes service_role key)"
    }
   ],
-  "arquivos_mudados_7d": 91,
+  "arquivos_mudados_7d": 100,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -149,6 +149,10 @@
    },
    {
     "pasta": ".gitignore",
+    "mudancas": 4
+   },
+   {
+    "pasta": "src/components/lux",
     "mudancas": 4
    },
    {
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "ai-context.config.json",
-    "mudancas": 2
-   },
-   {
-    "pasta": "docs/agentes/banco.md",
     "mudancas": 2
    }
   ],
@@ -301,14 +301,14 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 17
+    "commits": 18
    }
   ]
  },
  "contagens": {
   "arquivos_total": 1005,
   "arquivos_codigo": 642,
-  "linhas_codigo": 109527,
+  "linhas_codigo": 109782,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -544,11 +544,11 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 221
+   "linhas": 322
   },
   "src/components": {
    "arquivos": 285,
-   "linhas": 45241
+   "linhas": 45395
   },
   "src/contexts": {
    "arquivos": 7,

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f7bec293e8` · branch `main` · 2026-11-12 12:44 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9cd6dbce85` · branch `main` · 2026-11-12 13:01 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1726,7 +1726,7 @@ _nenhum item encontrado_
 | statement timeout simulado | `scripts/supabase_snapshot/test_snapshot.py` |
 | view removida depois da consulta ao catálogo | `scripts/supabase_snapshot/test_snapshot.py` |
 | view sem permissão na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
-| ; import { Shield, Copy, CheckCircle2, AlertCircle, RefreshCw } from  | `src/components/auth/MFAEnroll.tsx` |
+| ; import {   Shield,   Copy,   CheckCircle2,   AlertCircle,   RefreshCw, } from  | `src/components/auth/MFAEnroll.tsx` |
 | ; import { ShieldCheck, AlertCircle, RefreshCw } from  | `src/components/auth/MFAVerify.tsx` |
 | Erro ao limpar | `src/components/lux/AIAgentView.tsx` |
 | Not authenticated | `src/components/lux/AIAgentView.tsx` |

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f7bec293e841fb37f1c6a94ce9d24aec50ecf98f",
+  "sha": "9cd6dbce85caf5ce765ec348a89d855e43fba008",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-12 12:44 UTC",
+  "generated_at": "2026-11-12 13:01 UTC",
   "files_total": 1024,
   "code_files": 862,
-  "code_lines": 123136
+  "code_lines": 123391
  },
  "version": "1.3.2",
- "facts_hash": "9638aefcce9cd776",
+ "facts_hash": "4dad0cb68d4abfbc",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -24636,7 +24636,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 268,
+   "lines": 369,
    "tables": [],
    "exports": [
     "App.tsx: safeNextPath, App"
@@ -24670,7 +24670,7 @@
   {
    "module": "src/components",
    "files": 285,
-   "lines": 45241,
+   "lines": 45395,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -29374,7 +29374,7 @@
    },
    {
     "file": "src/components/auth/MFAEnroll.tsx",
-    "msg": ";\nimport { Shield, Copy, CheckCircle2, AlertCircle, RefreshCw } from "
+    "msg": ";\nimport {\n  Shield,\n  Copy,\n  CheckCircle2,\n  AlertCircle,\n  RefreshCw,\n} from "
    },
    {
     "file": "src/components/auth/MFAVerify.tsx",
@@ -61910,7 +61910,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 221,
+   "lines": 322,
    "exports": [
     "function safeNextPath",
     "default App"
@@ -62004,16 +62004,16 @@
   },
   "src/components/NavLink.tsx": {
    "path": "src/components/NavLink.tsx",
-   "lines": 29
+   "lines": 33
   },
   "src/components/auth/MFAEnroll.tsx": {
    "path": "src/components/auth/MFAEnroll.tsx",
-   "lines": 145,
+   "lines": 199,
    "exports": [
     "function MFAEnroll"
    ],
    "errors": [
-    ";\nimport { Shield, Copy, CheckCircle2, AlertCircle, RefreshCw } from "
+    ";\nimport {\n  Shield,\n  Copy,\n  CheckCircle2,\n  AlertCircle,\n  RefreshCw,\n} from "
    ],
    "status_values": [
     {
@@ -62039,7 +62039,7 @@
   },
   "src/components/auth/MFAVerify.tsx": {
    "path": "src/components/auth/MFAVerify.tsx",
-   "lines": 64,
+   "lines": 86,
    "exports": [
     "function MFAVerify"
    ],
@@ -62059,7 +62059,7 @@
   },
   "src/components/automation/WorkflowEditor.tsx": {
    "path": "src/components/automation/WorkflowEditor.tsx",
-   "lines": 22,
+   "lines": 28,
    "exports": [
     "type StepType",
     "interface WorkflowStep",
@@ -62079,7 +62079,7 @@
   },
   "src/components/lux/AIAgentView.tsx": {
    "path": "src/components/lux/AIAgentView.tsx",
-   "lines": 241,
+   "lines": 293,
    "exports": [
     "const AIAgentView"
    ],
@@ -62655,7 +62655,7 @@
   },
   "src/components/lux/DataError.tsx": {
    "path": "src/components/lux/DataError.tsx",
-   "lines": 32,
+   "lines": 39,
    "exports": [
     "const DataError"
    ]
@@ -62847,7 +62847,7 @@
   },
   "src/components/lux/GradientAvatar.tsx": {
    "path": "src/components/lux/GradientAvatar.tsx",
-   "lines": 82,
+   "lines": 91,
    "exports": [
     "const GradientAvatar"
    ]
@@ -80589,10 +80589,27 @@
   }
  },
  "git": {
-  "sha": "f7bec293e841fb37f1c6a94ce9d24aec50ecf98f",
+  "sha": "9cd6dbce85caf5ce765ec348a89d855e43fba008",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9cd6dbc",
+    "date": "2026-11-12",
+    "author": "adm01-debug",
+    "subject": "style(manutencao): aplica correcoes locais verificadas (#22)",
+    "files": [
+     "src/App.tsx",
+     "src/components/NavLink.tsx",
+     "src/components/auth/MFAEnroll.tsx",
+     "src/components/auth/MFAVerify.tsx",
+     "src/components/automation/WorkflowEditor.tsx",
+     "src/components/lux/AIAgentView.tsx",
+     "src/components/lux/DataError.tsx",
+     "src/components/lux/GradientAvatar.tsx",
+     "src/components/lux/StickySaveBar.tsx"
+    ]
+   },
    {
     "sha": "f7bec29",
     "date": "2026-11-12",
@@ -81922,13 +81939,6 @@
      "supabase/config.toml",
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "5e51961",
-    "date": "2026-07-29",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Removiu função migrate-helper",
-    "files": []
    }
   ],
   "hot_files": [
@@ -81977,39 +81987,39 @@
     3
    ],
    [
-    ".github/workflows/edge-tests-daily.yml",
+    "src/App.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
+    "src/components/NavLink.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/leadcontact-client.test.ts",
+    "src/components/auth/MFAEnroll.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/linkedin-url.test.ts",
+    "src/components/auth/MFAVerify.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
+    "src/components/automation/WorkflowEditor.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/phone-br.test.ts",
+    "src/components/lux/AIAgentView.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+    "src/components/lux/DataError.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
+    "src/components/lux/GradientAvatar.tsx",
     2
    ],
    [
-    "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
+    "src/components/lux/StickySaveBar.tsx",
     2
    ]
   ]

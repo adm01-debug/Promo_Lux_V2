@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "style(manutencao): aplica correcoes locais verificadas (#22)",
    "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)",
    "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)",
    "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)",
-   "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)",
-   "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)"
+   "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)"
   ]
  },
  "pr_template": null,

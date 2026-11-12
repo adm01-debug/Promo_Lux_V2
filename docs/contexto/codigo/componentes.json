@@ -20,7 +20,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 221,
+   "linhas": 322,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -37,7 +37,7 @@
     "MFAEnroll"
    ],
    "export_default": null,
-   "linhas": 145,
+   "linhas": 199,
    "dominio": "components/auth",
    "hooks_locais": [
     "useMFA",
@@ -54,7 +54,7 @@
     "MFAVerify"
    ],
    "export_default": null,
-   "linhas": 64,
+   "linhas": 86,
    "dominio": "components/auth",
    "hooks_locais": [
     "useMFA"
@@ -107,7 +107,7 @@
     "AIAgentView"
    ],
    "export_default": null,
-   "linhas": 241,
+   "linhas": 293,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -777,7 +777,7 @@
     "DataError"
    ],
    "export_default": null,
-   "linhas": 32,
+   "linhas": 39,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -1001,7 +1001,7 @@
     "GradientAvatar"
    ],
    "export_default": null,
-   "linhas": 82,
+   "linhas": 91,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -2957,7 +2957,7 @@
     "NavLink"
    ],
    "export_default": null,
-   "linhas": 29,
+   "linhas": 33,
    "dominio": "components",
    "hooks_locais": [],
    "tabelas": [],
