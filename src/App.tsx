@@ -1,6 +1,13 @@
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -54,7 +61,8 @@ const queryClient = new QueryClient({
           if ("code" in error) {
             const code = (error as { code: string }).code;
             // PGRST301/PGRST302: JWT ausente/expirado. 42501: RLS/permissão negada.
-            if (code === "PGRST301" || code === "PGRST302" || code === "42501") return false;
+            if (code === "PGRST301" || code === "PGRST302" || code === "42501")
+              return false;
           }
         }
         return failureCount < 3;
@@ -72,7 +80,9 @@ const queryClient = new QueryClient({
 // Registra o QueryClient e conecta o listener síncrono que `withOrg.ts`
 // usa para disparar toasts no momento exato em que a operação é bloqueada.
 registerQueryClient(queryClient);
-setOrgErrorListener((err) => { handleOrgError(err); });
+setOrgErrorListener((err) => {
+  handleOrgError(err);
+});
 
 /**
  * Lê o parâmetro `next` da URL e o valida como caminho relativo same-origin.
@@ -87,11 +97,24 @@ export function safeNextPath(search: string): string | null {
 
 function PageLoader() {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6" role="status" aria-label="Carregando LUX IA">
+    <div
+      className="min-h-screen bg-background flex flex-col items-center justify-center gap-6"
+      role="status"
+      aria-label="Carregando LUX IA"
+    >
       <div className="relative">
         <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse" />
         <div className="relative h-16 w-16 rounded-2xl bg-card border border-border/50 flex items-center justify-center shadow-2xl">
-          <svg className="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            className="h-8 w-8 text-primary"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="M12 3l1.912 5.813L20 10.125l-4.587 3.89L16.824 20 12 16.5 7.176 20l1.411-6.172L4 10.125l6.088-1.312z" />
           </svg>
         </div>
@@ -99,7 +122,7 @@ function PageLoader() {
       <div className="flex flex-col items-center gap-2">
         <div className="h-1 w-32 rounded-full bg-muted overflow-hidden relative">
           <div className="absolute inset-0 bg-primary/10" />
-          <motion.div 
+          <motion.div
             className="h-full bg-primary rounded-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
@@ -145,16 +168,89 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/login" element={<PublicRoute><PageTransition><Login /></PageTransition></PublicRoute>} />
-        <Route path="/.lovable/oauth/consent" element={<PageTransition><OAuthConsent /></PageTransition>} />
-        <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
-        <Route path="/invite/:token" element={<PageTransition><AcceptInvite /></PageTransition>} />
-        <Route path="/" element={<ProtectedRoute><PageTransition><Index /></PageTransition></ProtectedRoute>} />
-        <Route path="/monitoring" element={<ProtectedRoute><PageTransition><Monitoring /></PageTransition></ProtectedRoute>} />
-        <Route path="/settings/cnpj" element={<ProtectedRoute><PageTransition><CnpjSettingsPage /></PageTransition></ProtectedRoute>} />
-        <Route path="/admin/companies" element={<ProtectedRoute><PageTransition><AdminCompanies /></PageTransition></ProtectedRoute>} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <PageTransition>
+                <Login />
+              </PageTransition>
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/.lovable/oauth/consent"
+          element={
+            <PageTransition>
+              <OAuthConsent />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <PageTransition>
+              <ResetPassword />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/invite/:token"
+          element={
+            <PageTransition>
+              <AcceptInvite />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <PageTransition>
+                <Index />
+              </PageTransition>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/monitoring"
+          element={
+            <ProtectedRoute>
+              <PageTransition>
+                <Monitoring />
+              </PageTransition>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings/cnpj"
+          element={
+            <ProtectedRoute>
+              <PageTransition>
+                <CnpjSettingsPage />
+              </PageTransition>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/companies"
+          element={
+            <ProtectedRoute>
+              <PageTransition>
+                <AdminCompanies />
+              </PageTransition>
+            </ProtectedRoute>
+          }
+        />
         <Route path="/lusha" element={<Navigate to="/?view=lusha" replace />} />
-        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+        <Route
+          path="*"
+          element={
+            <PageTransition>
+              <NotFound />
+            </PageTransition>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
@@ -193,7 +289,12 @@ const App = () => (
                   <OrgErrorBanner />
                   <Toaster />
                   <Sonner />
-                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                  <BrowserRouter
+                    future={{
+                      v7_startTransition: true,
+                      v7_relativeSplatPath: true,
+                    }}
+                  >
                     <DeepLinkBridge />
                     <UnsavedChangesProvider>
                       <Suspense fallback={<PageLoader />}>

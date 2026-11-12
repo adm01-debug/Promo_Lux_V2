@@ -22,18 +22,30 @@ const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-agen
 const WELCOME_MSG: AgentMessage = {
   id: "welcome",
   role: "agent",
-  content: "👋 Olá! Sou o Agente IA do **LUX IA**.\n\nPosso ajudar com:\n- 📊 Analisar empresas do banco\n- 🎯 Consultar scores IPC\n- 🔍 Encontrar empresas por setor/localização\n- 💡 Sugerir ações de prospecção\n\nO que você precisa?",
-  timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+  content:
+    "👋 Olá! Sou o Agente IA do **LUX IA**.\n\nPosso ajudar com:\n- 📊 Analisar empresas do banco\n- 🎯 Consultar scores IPC\n- 🔍 Encontrar empresas por setor/localização\n- 💡 Sugerir ações de prospecção\n\nO que você precisa?",
+  timestamp: new Date().toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }),
 };
 
 function formatTime(dateStr?: string) {
   if (!dateStr) return "";
-  return new Date(dateStr).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  return new Date(dateStr).toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function MessageBubble({ msg }: { msg: AgentMessage }) {
   return (
-    <div className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
+    <div
+      className={cn(
+        "flex gap-3",
+        msg.role === "user" ? "justify-end" : "justify-start",
+      )}
+    >
       {msg.role === "agent" && (
         <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
           <Bot className="h-4 w-4 text-primary" />
@@ -44,7 +56,7 @@ function MessageBubble({ msg }: { msg: AgentMessage }) {
           "rounded-lg px-4 py-3 max-w-[80%]",
           msg.role === "user"
             ? "bg-primary text-primary-foreground"
-            : "bg-secondary/50 text-foreground"
+            : "bg-secondary/50 text-foreground",
         )}
       >
         <div className="text-sm whitespace-pre-wrap leading-relaxed prose-sm">
@@ -54,16 +66,20 @@ function MessageBubble({ msg }: { msg: AgentMessage }) {
               <p key={i} className={i > 0 ? "mt-1" : ""}>
                 {parts.map((part, j) =>
                   j % 2 === 1 ? (
-                    <strong key={j} className="font-semibold">{part}</strong>
+                    <strong key={j} className="font-semibold">
+                      {part}
+                    </strong>
                   ) : (
                     <span key={j}>{part}</span>
-                  )
+                  ),
                 )}
               </p>
             );
           })}
         </div>
-        <span className="text-[10px] opacity-50 mt-1.5 block">{msg.timestamp}</span>
+        <span className="text-[10px] opacity-50 mt-1.5 block">
+          {msg.timestamp}
+        </span>
       </div>
     </div>
   );
@@ -100,7 +116,7 @@ export const AIAgentView = () => {
       persistedMessages && persistedMessages.length > 0
         ? persistedMessages
         : [WELCOME_MSG],
-    [persistedMessages]
+    [persistedMessages],
   );
 
   useEffect(() => {
@@ -113,7 +129,7 @@ export const AIAgentView = () => {
     async (role: "user" | "agent", content: string) => {
       await db.from("agent_chat_messages").insert({ role, content });
     },
-    []
+    [],
   );
 
   const sendMessage = async () => {
@@ -128,7 +144,9 @@ export const AIAgentView = () => {
     queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session?.access_token) throw new Error("Not authenticated");
 
       const res = await fetch(FUNCTIONS_URL, {
@@ -142,7 +160,9 @@ export const AIAgentView = () => {
       });
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        const err = await res
+          .json()
+          .catch(() => ({ error: `HTTP ${res.status}` }));
         throw new Error(err.error || `Erro ${res.status}`);
       }
 
@@ -160,14 +180,24 @@ export const AIAgentView = () => {
 
   const clearMutation = useMutation({
     mutationFn: async () => {
-      await db.from("agent_chat_messages").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      await db
+        .from("agent_chat_messages")
+        .delete()
+        .neq("id", "00000000-0000-0000-0000-000000000000");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agent-chat-messages"] });
-      toast({ title: "Conversa limpa", description: "Histórico do chat foi apagado." });
+      toast({
+        title: "Conversa limpa",
+        description: "Histórico do chat foi apagado.",
+      });
     },
     onError: (err: Error) => {
-      toast({ title: "Erro ao limpar", description: err.message, variant: "destructive" });
+      toast({
+        title: "Erro ao limpar",
+        description: err.message,
+        variant: "destructive",
+      });
     },
   });
 
@@ -178,20 +208,32 @@ export const AIAgentView = () => {
           <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Bot className="h-6 w-6 text-primary" />
             Agente IA
-            <Badge variant="outline" className="text-xs bg-success/20 text-success border-success/30 gap-1">
+            <Badge
+              variant="outline"
+              className="text-xs bg-success/20 text-success border-success/30 gap-1"
+            >
               <Sparkles className="h-3 w-3" /> Online
             </Badge>
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Consulte seus dados, analise empresas e receba recomendações inteligentes
+            Consulte seus dados, analise empresas e receba recomendações
+            inteligentes
           </p>
         </div>
-        <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={() => clearMutation.mutate()}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1.5 text-xs"
+          onClick={() => clearMutation.mutate()}
+        >
           <Trash2 className="h-3.5 w-3.5" /> Limpar
         </Button>
       </div>
 
-      <div className="glass rounded-lg overflow-hidden flex flex-col" style={{ height: "calc(100vh - 240px)" }}>
+      <div
+        className="glass rounded-lg overflow-hidden flex flex-col"
+        style={{ height: "calc(100vh - 240px)" }}
+      >
         <ScrollArea className="flex-1 p-4" ref={scrollRef}>
           <div className="space-y-4 max-w-3xl mx-auto">
             {messages.map((msg) => (
@@ -205,7 +247,9 @@ export const AIAgentView = () => {
                 </div>
                 <div className="bg-secondary/50 rounded-lg px-4 py-3 flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">Analisando...</span>
+                  <span className="text-sm text-muted-foreground">
+                    Analisando...
+                  </span>
                 </div>
               </div>
             )}
@@ -228,8 +272,16 @@ export const AIAgentView = () => {
               className="flex-1"
               disabled={isLoading}
             />
-            <Button type="submit" disabled={isLoading || !input.trim()} className="gap-1.5">
-              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            <Button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="gap-1.5"
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
               Enviar
             </Button>
           </form>
