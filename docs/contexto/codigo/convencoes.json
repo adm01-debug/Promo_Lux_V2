@@ -29,12 +29,12 @@
   "edge_functions": "supabase/functions",
   "migrations": "supabase/migrations",
   "scripts": [
+   "scripts/maintenance (4)",
    "scripts/regras_negocio (3)",
-   "scripts/sql (3)",
-   "scripts/ci (2)"
+   "scripts/sql (3)"
   ],
   "docs": [
-   "docs (17)",
+   "docs (18)",
    "(raiz) (5)"
   ]
  },
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)",
    "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)",
    "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)",
    "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)",
-   "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)",
-   "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)"
+   "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)"
   ]
  },
  "pr_template": null,

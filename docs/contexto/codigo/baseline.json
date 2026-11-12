@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a16871836ead1232866dc39c37f58df5ed871cb1",
+  "commit": "f7bec293e841fb37f1c6a94ce9d24aec50ecf98f",
   "branch": "main",
-  "data_commit": "2026-11-12T08:38:53-03:00",
+  "data_commit": "2026-11-12T09:36:50-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f7bec29",
+    "data": "2026-11-12",
+    "assunto": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)"
+   },
    {
     "sha": "a168718",
     "data": "2026-11-12",
@@ -126,14 +131,9 @@
     "sha": "890c18d",
     "data": "2026-08-11",
     "assunto": "security: remove migrate-helper edge function (exposes service_role key)"
-   },
-   {
-    "sha": "bbe286c",
-    "data": "2026-08-01",
-    "assunto": "merge: master para main"
    }
   ],
-  "arquivos_mudados_7d": 72,
+  "arquivos_mudados_7d": 91,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -145,6 +145,10 @@
    },
    {
     "pasta": "package.json",
+    "mudancas": 5
+   },
+   {
+    "pasta": ".gitignore",
     "mudancas": 4
    },
    {
@@ -152,7 +156,7 @@
     "mudancas": 3
    },
    {
-    "pasta": ".gitignore",
+    "pasta": ".husky/pre-commit",
     "mudancas": 3
    },
    {
@@ -184,10 +188,6 @@
     "mudancas": 2
    },
    {
-    "pasta": ".husky/pre-commit",
-    "mudancas": 2
-   },
-   {
     "pasta": "ai-context.config.json",
     "mudancas": 2
    },
@@ -203,7 +203,11 @@
    },
    {
     "arquivo": "package.json",
-    "mudancas": 4
+    "mudancas": 5
+   },
+   {
+    "arquivo": ".husky/pre-commit",
+    "mudancas": 3
    },
    {
     "arquivo": "docs/agentes/github-ci.md",
@@ -231,10 +235,6 @@
    },
    {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
-    "mudancas": 2
-   },
-   {
-    "arquivo": ".husky/pre-commit",
     "mudancas": 2
    },
    {
@@ -301,14 +301,14 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 16
+    "commits": 17
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 986,
-  "arquivos_codigo": 632,
-  "linhas_codigo": 102597,
+  "arquivos_total": 1005,
+  "arquivos_codigo": 642,
+  "linhas_codigo": 109527,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,10 +320,10 @@
   "tabelas": 96,
   "migrations": 212,
   "cron_jobs": 6,
-  "testes": 116,
-  "workflows": 5,
-  "scripts": 40,
-  "docs_md": 71
+  "testes": 120,
+  "workflows": 6,
+  "scripts": 47,
+  "docs_md": 74
  },
  "por_pasta": {
   "commitlint.config.cjs": {
@@ -422,6 +422,14 @@
    "arquivos": 1,
    "linhas": 87
   },
+  "scripts/automation.mjs": {
+   "arquivos": 1,
+   "linhas": 1170
+  },
+  "scripts/automation.unit.mjs": {
+   "arquivos": 1,
+   "linhas": 689
+  },
   "scripts/ci": {
    "arquivos": 3,
    "linhas": 1522
@@ -490,6 +498,14 @@
    "arquivos": 1,
    "linhas": 36
   },
+  "scripts/graphify-local.mjs": {
+   "arquivos": 1,
+   "linhas": 1247
+  },
+  "scripts/graphify-local.unit.mjs": {
+   "arquivos": 1,
+   "linhas": 577
+  },
   "scripts/inventario": {
    "arquivos": 3,
    "linhas": 182
@@ -497,6 +513,10 @@
   "scripts/lib": {
    "arquivos": 1,
    "linhas": 101
+  },
+  "scripts/maintenance": {
+   "arquivos": 4,
+   "linhas": 3044
   },
   "scripts/mc-r35-preflight.ts": {
    "arquivos": 1,
@@ -513,6 +533,10 @@
   "scripts/sim-scrape.ts": {
    "arquivos": 1,
    "linhas": 25
+  },
+  "scripts/staged-autofix": {
+   "arquivos": 2,
+   "linhas": 203
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,
@@ -593,6 +617,22 @@
    "linhas": 1797
   },
   {
+   "arquivo": "scripts/graphify-local.mjs",
+   "linhas": 1247
+  },
+  {
+   "arquivo": "scripts/automation.mjs",
+   "linhas": 1170
+  },
+  {
+   "arquivo": "scripts/maintenance/lib.mjs",
+   "linhas": 937
+  },
+  {
+   "arquivo": "scripts/maintenance/run.mjs",
+   "linhas": 899
+  },
+  {
    "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
    "linhas": 871
   },
@@ -659,31 +699,15 @@
   {
    "arquivo": "src/components/lux/monitoring/DlqHealthCard.tsx",
    "linhas": 497
-  },
-  {
-   "arquivo": "src/components/lux/settings/RLSDiscoveryView.tsx",
-   "linhas": 493
-  },
-  {
-   "arquivo": "supabase/functions/rls-tests/index.ts",
-   "linhas": 479
-  },
-  {
-   "arquivo": "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
-   "linhas": 475
-  },
-  {
-   "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
-   "linhas": 475
   }
  ],
  "qualidade": {
   "any": 25,
-  "console_log": 75,
+  "console_log": 92,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
-  "arquivos_acima_500_linhas": 20
+  "arquivos_acima_500_linhas": 24
  },
  "todos": [
   {
@@ -792,17 +816,7 @@
    "Sidebar",
    "Toaster"
   ],
-  "scripts_orfaos": [
-   "scripts/gen-current-report.ts",
-   "scripts/gen-legacy-baseline.ts",
-   "scripts/gen-round19-validation.ts",
-   "scripts/gen-round25-preflight.ts",
-   "scripts/gen-round26-preflight.ts",
-   "scripts/gen-round36-preflight.ts",
-   "scripts/gen-web-scrape-reports.ts",
-   "scripts/mc-r40-preflight.ts",
-   "scripts/sim-scrape.ts"
-  ],
+  "scripts_orfaos": [],
   "env_usadas_nao_declaradas": [
    "DEV",
    "PROD",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a16871836ead1232866dc39c37f58df5ed871cb1",
+  "sha": "f7bec293e841fb37f1c6a94ce9d24aec50ecf98f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-12 12:00 UTC",
-  "files_total": 1005,
-  "code_files": 852,
-  "code_lines": 116206
+  "generated_at": "2026-11-12 12:44 UTC",
+  "files_total": 1024,
+  "code_files": 862,
+  "code_lines": 123136
  },
  "version": "1.3.2",
- "facts_hash": "93d7ed7461d574f5",
+ "facts_hash": "9638aefcce9cd776",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -93,6 +93,10 @@
    }
   },
   "scripts": {
+   "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
+   "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
+   "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
+   "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "dev": "vite",
    "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
    "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
@@ -127,7 +131,16 @@
    "inventario:edges:test": "node --test scripts/inventario/mudou-conteudo.unit.mjs",
    "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
    "lint:ratchet:update": "node scripts/ci/lint-ratchet.mjs --update-baseline",
-   "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs"
+   "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs",
+   "automation:doctor": "node scripts/automation.mjs doctor",
+   "automation:test": "node scripts/automation.mjs test",
+   "automation:check": "node scripts/automation.mjs check --ref HEAD",
+   "automation:heal": "node scripts/automation.mjs heal --ref origin/main",
+   "automation:nightly": "node scripts/automation.mjs nightly --ref origin/main",
+   "automation:graph": "node scripts/automation.mjs graph",
+   "automation:status": "node scripts/automation.mjs graph status",
+   "automation:install-hooks": "node scripts/automation.mjs install-hooks",
+   "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks"
   },
   "infra": [
    {
@@ -140,6 +153,15 @@
    }
   ],
   "ci": [
+   {
+    "file": ".github/workflows/automation-local.yml",
+    "name": "Automação local",
+    "triggers": [
+     "pull_request",
+     "push",
+     "workflow_dispatch"
+    ]
+   },
    {
     "file": ".github/workflows/ci.yml",
     "name": "CI Pipeline",
@@ -189,7 +211,7 @@
    ".ts": 339,
    ".tsx": 277,
    ".sql": 216,
-   ".mjs": 10,
+   ".mjs": 20,
    ".py": 5,
    ".js": 4,
    ".cjs": 1
@@ -24480,8 +24502,8 @@
   },
   {
    "module": "scripts",
-   "files": 38,
-   "lines": 10317,
+   "files": 48,
+   "lines": 17247,
    "tables": [
     "a",
     "contacts",
@@ -24500,10 +24522,14 @@
     "tx"
    ],
    "exports": [
+    "automation.mjs: parseArgs, validateConfig, execute, appendExclude, removeExclude, main",
+    "graphify-local.mjs: GraphError, run, acquire, validateConfig, fingerprint, validateGraph",
     "gerar.unit.mjs: AppRoutes, useContacts",
     "lint-ratchet.mjs: createBaseline, stripVolatilePosition, compareBaseline, stagedLintableFiles, stagedRemovedFiles, changedLintableFiles",
     "mudou-conteudo.mjs: PADRAO, semCarimbos, mudou",
     "seguranca-processo.mjs: RAIZ_REPO, RAIZES_PERMITIDAS, resolverExecutavel, estaDentro, resolverCaminhoPermitido",
+    "lib.mjs: MaintenanceError, fail, digest, exists, safeEnv, stopChildren",
+    "run.mjs: parseArgs, networkPrefix, allowedSourceFiles, prettierCandidates, main",
     "generate.py: is_app_code, log, read_text, redact, rel, is_archived_sql",
     "indice.py: git, parse_dt, read_manifest, producer_health, entry_file, main",
     "test_generate.py: CurrentSqlSourcesTests",
@@ -24511,12 +24537,12 @@
     "test_snapshot.py: OfflineConnection, function, migration, structural_records, SnapshotFixture, SnapshotSQLRecoveryTests"
    ],
    "docs": [
+    "automation.mjs: !/usr/bin/env node",
     "gen-round18-preflight.ts: Rodada #18 — Preflight: combina simulação web + genérica e compara com Round17.",
     "gen-round19-preflight.ts: Rodada #19 — Preflight: mesmo cálculo do Round18, com gate mais rígido (0.5pp).",
     "gen-round19-validation.ts: Camada E — Monte Carlo (500 cenários) validando a lógica de regressão Replica em TS puro a semântica de fn_web_scrape_regression_check.",
     "gen-round20-validation.ts: Camada E — Monte Carlo agregado (1000+ cenários) — Rodada #20 Combina chaos rate × volume × noise × drift real e mede FP/FN + tempo até detecção.",
-    "gen-round21-preflight.ts: Rodada #21 — Preflight: simular claim concorrente em fila (FOR UPDATE SKIP LOCKED) Modela N workers competindo por M tasks; valida invariantes: - cada task processada por no máximo 1 worker - nenhuma task perdida (throughput = min(N*capacity, M)) - fairness: nenhum worker fica com >70% quando N>=2",
-    "gen-round24-preflight.ts: Rodada #24 — Preflight Monte Carlo (600 cenários) Grupo A: pg_net falhando → retry pg_cron absorve sem perda Grupo B: corrida evaluate_partition_policies vs inserts massivos → sem advisory duplicada Grupo C: rotação service_role durante cron → sem duplicação de tarefas"
+    "gen-round21-preflight.ts: Rodada #21 — Preflight: simular claim concorrente em fila (FOR UPDATE SKIP LOCKED) Modela N workers competindo por M tasks; valida invariantes: - cada task processada por no máximo 1 worker - nenhuma task perdida (throughput = min(N*capacity, M)) - fairness: nenhum worker fica com >70% quando N>=2"
    ],
    "deps": [
     "#",
@@ -24524,6 +24550,7 @@
     "@supabase/supabase-js",
     "@tanstack/react-query",
     "drizzle-orm",
+    "eslint",
     "express",
     "fs",
     "lib",
@@ -24532,15 +24559,17 @@
     "node:assert",
     "node:child_process",
     "node:crypto",
+    "node:events",
     "node:fs",
+    "node:module",
     "node:os",
     "node:path",
+    "node:string_decoder",
     "node:test",
     "node:url",
     "path",
     "react",
-    "react-router-dom",
-    "vue-router"
+    "react-router-dom"
    ],
    "imports_modules": [
     "src/b",
@@ -24554,6 +24583,8 @@
     "src/views"
    ],
    "file_list": [
+    "scripts/automation.mjs",
+    "scripts/automation.unit.mjs",
     "scripts/gen-current-report.ts",
     "scripts/gen-legacy-baseline.ts",
     "scripts/gen-round18-preflight.ts",
@@ -24570,6 +24601,8 @@
     "scripts/gen-round36-preflight.ts",
     "scripts/gen-web-scrape-reports.ts",
     "scripts/generate-audit-pdf.ts",
+    "scripts/graphify-local.mjs",
+    "scripts/graphify-local.unit.mjs",
     "scripts/mc-r35-preflight.ts",
     "scripts/mc-r40-preflight.ts",
     "scripts/seed_promo_brindes.sql",
@@ -24584,12 +24617,18 @@
     "scripts/inventario/mudou-conteudo.mjs",
     "scripts/inventario/mudou-conteudo.unit.mjs",
     "scripts/lib/seguranca-processo.mjs",
+    "scripts/maintenance/lib.mjs",
+    "scripts/maintenance/maintenance.unit.mjs",
+    "scripts/maintenance/run.mjs",
+    "scripts/maintenance/typecheck.mjs",
     "scripts/regras_negocio/generate.py",
     "scripts/regras_negocio/indice.py",
     "scripts/regras_negocio/test_generate.py",
     "scripts/sql/check-audit-triggers.sql",
     "scripts/sql/check-function-grants.sql",
     "scripts/sql/check-queue-kind-coverage.sql",
+    "scripts/staged-autofix/run.mjs",
+    "scripts/staged-autofix/run.unit.mjs",
     "scripts/supabase_snapshot/snapshot.py",
     "scripts/supabase_snapshot/test_snapshot.py"
    ]
@@ -27630,6 +27669,9 @@
     "supabase/functions/oracle-cookies-preflight/index.ts",
     "supabase/functions/vault-cookie-health/index.ts"
    ],
+   "FIXTURE_GRAPH_EXIT": [
+    "scripts/automation.unit.mjs"
+   ],
    "GEN_TYPES": [
     "scripts/supabase_snapshot/snapshot.py"
    ],
@@ -27657,6 +27699,12 @@
     "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-poll-replies/index.ts"
    ],
+   "GRAPHIFY_FIXTURE_": [
+    "scripts/graphify-local.unit.mjs"
+   ],
+   "GRAPHIFY_FIXTURE_SECRET": [
+    "scripts/graphify-local.unit.mjs"
+   ],
    "HIKER_API_KEY": [
     "supabase/functions/_shared/hiker-client.ts",
     "supabase/functions/instagram-connection-status/index.ts"
@@ -27682,6 +27730,12 @@
    "LUSHA_DAILY_QUOTA": [
     "supabase/functions/lusha-search/index.ts"
    ],
+   "MAINTENANCE_TEST_": [
+    "scripts/maintenance/maintenance.unit.mjs"
+   ],
+   "MAINTENANCE_TEST_SECRET": [
+    "scripts/maintenance/maintenance.unit.mjs"
+   ],
    "MS_OAUTH_CLIENT_ID": [
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
@@ -27695,9 +27749,11 @@
     "supabase/functions/email-poll-replies/index.ts"
    ],
    "NODE_ENV": [
-    "scripts/ai-context/cenarios.mjs"
+    "scripts/ai-context/cenarios.mjs",
+    "scripts/maintenance/maintenance.unit.mjs"
    ],
    "PATH": [
+    "scripts/graphify-local.unit.mjs",
     "scripts/lib/seguranca-processo.mjs"
    ],
    "PGDUMP": [
@@ -27721,6 +27777,9 @@
    "QA_INGEST_TOKEN": [
     "supabase/functions/qa-ingest-run/index.ts"
    ],
+   "REPO_AUTOMATION_CHAINING": [
+    "scripts/automation.mjs"
+   ],
    "REPO_ROOT": [
     "scripts/supabase_snapshot/snapshot.py"
    ],
@@ -27729,6 +27788,9 @@
    ],
    "SCRIPT_ONLY": [
     "scripts/ai-context/cenarios.mjs"
+   ],
+   "SECRET_KEY": [
+    "scripts/maintenance/maintenance.unit.mjs"
    ],
    "SMOKE_TEST_ORG_ID": [
     "e2e/dlq-web-smoke.spec.ts",
@@ -27945,10 +28007,12 @@
     "scripts/ai-context/cenarios.mjs"
    ],
    "VITE_SUPABASE_PROJECT_ID": [
+    "scripts/maintenance/maintenance.unit.mjs",
     "src/lib/mcp/index.ts"
    ],
    "VITE_SUPABASE_PUBLISHABLE_KEY": [
     "e2e/helpers/supabase.ts",
+    "scripts/maintenance/maintenance.unit.mjs",
     "src/components/lux/AIAgentView.tsx",
     "src/components/lux/LushaIntelligenceView.tsx",
     "src/components/lux/SettingsView.tsx",
@@ -27964,6 +28028,7 @@
     "e2e/instagram-dlq-replay.spec.ts",
     "e2e/instagram-worker-smoke.spec.ts",
     "scripts/ai-context/gerar.unit.mjs",
+    "scripts/maintenance/maintenance.unit.mjs",
     "src/components/lux/AIAgentView.tsx",
     "src/components/lux/LushaIntelligenceView.tsx",
     "src/components/lux/SettingsView.tsx",
@@ -27973,6 +28038,9 @@
     "src/lib/api/workflows.ts",
     "src/pages/AdminCompanies.tsx",
     "supabase/functions/rls-tests/index.test.ts"
+   ],
+   "XDG_STATE_HOME": [
+    "scripts/maintenance/run.mjs"
    ]
   },
   "rpc": {
@@ -28332,6 +28400,9 @@
    ]
   },
   "external": {
+   "http://192.0.2.1:9": [
+    "scripts/maintenance/maintenance.unit.mjs"
+   ],
    "https://ai.gateway.lovable.dev": [
     "supabase/functions/ai-agent/index.ts",
     "supabase/functions/health/index.ts",
@@ -29158,6 +29229,10 @@
     "msg": "Login E2E falhou para ${creds.email}: ${error.message}"
    },
    {
+    "file": "scripts/automation.unit.mjs",
+    "msg": "falha fixture"
+   },
+   {
     "file": "scripts/ai-context/cenarios.mjs",
     "msg": "${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)}"
    },
@@ -29232,6 +29307,38 @@
    {
     "file": "scripts/lib/seguranca-processo.mjs",
     "msg": "comando nao encontrado no PATH: "
+   },
+   {
+    "file": "scripts/maintenance/lib.mjs",
+    "msg": "failed"
+   },
+   {
+    "file": "scripts/maintenance/lib.mjs",
+    "msg": "missing_dependencies"
+   },
+   {
+    "file": "scripts/maintenance/lib.mjs",
+    "msg": "skipped_busy"
+   },
+   {
+    "file": "scripts/maintenance/maintenance.unit.mjs",
+    "msg": "formatter fixture failed"
+   },
+   {
+    "file": "scripts/maintenance/run.mjs",
+    "msg": "blocked_network_sandbox"
+   },
+   {
+    "file": "scripts/maintenance/run.mjs",
+    "msg": "pending_patch"
+   },
+   {
+    "file": "scripts/staged-autofix/run.mjs",
+    "msg": "ESLint encontrou erro de analise; correcao interrompida."
+   },
+   {
+    "file": "scripts/staged-autofix/run.mjs",
+    "msg": "Nenhum arquivo staged recebido."
    },
    {
     "file": "scripts/supabase_snapshot/test_snapshot.py",
@@ -60475,6 +60582,51 @@
     }
    ]
   },
+  "scripts/automation.mjs": {
+   "path": "scripts/automation.mjs",
+   "lines": 1170,
+   "exports": [
+    "function parseArgs",
+    "function validateConfig",
+    "function execute",
+    "function appendExclude",
+    "function removeExclude",
+    "function main"
+   ],
+   "env": [
+    "REPO_AUTOMATION_CHAINING"
+   ],
+   "rule_comments": [
+    "Não trunque: um append concorrente deve sobreviver à reversão.",
+    "Remove somente os arquivos conhecidos criados por esta instalação."
+   ],
+   "doc": "!/usr/bin/env node",
+   "calc_fns": [
+    {
+     "name": "validateConfig",
+     "params": "c",
+     "body": "onlyKeys( c, [ \"version\", \"name\", \"entrypoint\", \"testSuites\", \"motor\", \"graph\", \"graphConfig\", \"aliases\", \"registrations\", \"ci\", \"nightly\", \"timeoutMs\", \"toolingPatterns\", \"sourcePatterns\", \"requirements\", \"snapshot\", \"motorConfig\", \"motorSource\", ], \"config\", ); if (c.version !== 1 || typeof c.name !== \"string\" || !c.name) throw fail(\"config: version 1 e name obrigatórios\"); if (typeof c.entrypoint !== \"string\" || !c.entrypoint) throw fail(\"entrypoint obrigatório\"); if ( !Array.isArray(c.testSu …"
+    }
+   ],
+   "temporal": [
+    "timeout: 15000,",
+    "{ cwd, timeout = 300000, capture = false, env = process.env } = {},"
+   ]
+  },
+  "scripts/automation.unit.mjs": {
+   "path": "scripts/automation.unit.mjs",
+   "lines": 689,
+   "env": [
+    "FIXTURE_GRAPH_EXIT"
+   ],
+   "errors": [
+    "falha fixture"
+   ],
+   "temporal": [
+    "timeout: 15000,",
+    "{ timeout: 100, capture: true },"
+   ]
+  },
   "scripts/gen-current-report.ts": {
    "path": "scripts/gen-current-report.ts",
    "lines": 19
@@ -60663,6 +60815,53 @@
      "params": "",
      "body": "const mdPath = path.join(process.cwd(), 'docs/AUDITORIA_FINAL_LUX_IA.md'); const pdfPath = path.join(process.cwd(), 'docs/AUDITORIA_FINAL_LUX_IA.pdf'); if (!fs.existsSync(mdPath)) { console.error('Arquivo Markdown não encontrado:', mdPath); process.exit(1); } try { console.log('Gerando PDF a partir do Markdown...'); const pdf = await mdToPdf({ path: mdPath }, { launch_options: { args: ['--no-sandbox'] }, pdf_options: { format: 'A4', margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20 …"
     }
+   ]
+  },
+  "scripts/graphify-local.mjs": {
+   "path": "scripts/graphify-local.mjs",
+   "lines": 1247,
+   "exports": [
+    "class GraphError",
+    "function run",
+    "function acquire",
+    "function validateConfig",
+    "function fingerprint",
+    "function validateGraph",
+    "function assertResources",
+    "function adoptInitial",
+    "function main",
+    "function acquireGlobal"
+   ],
+   "doc": "!/usr/bin/env node",
+   "calc_fns": [
+    {
+     "name": "validateConfig",
+     "params": "c",
+     "body": "const keys = [ \"version\", \"project\", \"environment\", \"pin\", \"pythonVersion\", \"state\", \"output\", \"adapter\", \"scope\", \"partial\", \"timeoutMs\", \"minAvailableMb\", \"metadata\", ]; if ( !c || c.version !== 1 || Object.keys(c).some((k) => !keys.includes(k)) || !/^[A-Za-z0-9_.-]+$/.test(c.project || \"\") || !/^\\d+\\.\\d+\\.\\d+$/.test(c.pin || \"\") ) fail(\"Configuração Graphify inválida\"); for (const key of [\"environment\", \"state\", \"output\"]) if (!safeRelative(c[key])) fail(\"Caminho da configuração deve ser rela …"
+    },
+    {
+     "name": "validateGraph",
+     "params": "file, partial = false",
+     "body": "const descriptor = await open( file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK, ); try { const info = await descriptor.stat({ bigint: true }); if (!info.isFile() || info.size > 512n * 1024n * 1024n) fail(\"Artefato do grafo não é arquivo regular ou excede512MB\"); const bytes = await descriptor.readFile(), after = await descriptor.stat({ bigint: true }); if ( BigInt(bytes.length) !== info.size || after.size !== info.size || after.mtimeNs !== info.mtimeNs || after.ctimeNs !== …"
+    },
+    {
+     "name": "generate",
+     "params": "ctx, fp, expectedGraph",
+     "body": "await resources(ctx); const prefix = await offline(ctx); const job = path.join(ctx.state, \"runs\", `${Date.now()}-${randomUUID()}`); await mkdir(job, { recursive: true, mode: 0o700 }); let step = 0; const execute = async (argv, env = ctx.env) => { if (ctx.interrupted()) fail(\"Execução interrompida\"); const result = await run( [...prefix, ...argv], ctx.root, env, ctx.config.timeoutMs, ); const log = path.join(job, `${step++}.log`); await writeFile(log, redact(result.output), { mode: 0o600 }); if ( …"
+    }
+   ],
+   "temporal": [
+    "const timeout = setTimeout(() => { kill(); done(); }, 1500);",
+    "hard ||= setTimeout(() => { kill(\"SIGKILL\"); finish(1); }, 1000);"
+   ]
+  },
+  "scripts/graphify-local.unit.mjs": {
+   "path": "scripts/graphify-local.unit.mjs",
+   "lines": 577,
+   "env": [
+    "GRAPHIFY_FIXTURE_",
+    "GRAPHIFY_FIXTURE_SECRET",
+    "PATH"
    ]
   },
   "scripts/mc-r35-preflight.ts": {
@@ -61279,6 +61478,92 @@
     "inexistentes. Assim `tmp/link-para-fora/novo.json` nao passa apenas porque"
    ]
   },
+  "scripts/maintenance/lib.mjs": {
+   "path": "scripts/maintenance/lib.mjs",
+   "lines": 937,
+   "exports": [
+    "class MaintenanceError",
+    "const fail",
+    "const digest",
+    "const exists",
+    "const safeEnv",
+    "function stopChildren",
+    "function run",
+    "function checked",
+    "const git",
+    "function commitWithHooks",
+    "function readRegularDependency",
+    "function dependencyFingerprint",
+    "function reuseDependencies",
+    "const localRequire",
+    "function tool",
+    "function validateConfig",
+    "function inspect",
+    "function acquire",
+    "function writeJson"
+   ],
+   "errors": [
+    "failed",
+    "missing_dependencies",
+    "skipped_busy"
+   ],
+   "calc_fns": [
+    {
+     "name": "validateConfig",
+     "params": "c",
+     "body": "const keys = [ \"version\", \"manager\", \"tsconfigs\", \"gates\", \"fix\", \"timeoutMs\", \"maxFiles\", \"maxChangedLines\", ]; if ( !c || typeof c !== \"object\" || Object.keys(c).some((k) => !keys.includes(k)) || c.version !== 1 ) fail(\"Configuração inválida ou versão desconhecida\"); if (![\"npm\", \"bun\"].includes(c.manager)) fail(\"Gerenciador deve ser npm ou bun\"); const relative = (x) => typeof x === \"string\" && x.length && !path.isAbsolute(x) && !x.split(/[\\\\/]/).includes(\"..\") && !x.startsWith(\"-\"); if ( !Ar …"
+    }
+   ],
+   "webhook_events": [
+    "string"
+   ]
+  },
+  "scripts/maintenance/maintenance.unit.mjs": {
+   "path": "scripts/maintenance/maintenance.unit.mjs",
+   "lines": 1098,
+   "external_urls": [
+    "http://192.0.2.1:9"
+   ],
+   "env": [
+    "MAINTENANCE_TEST_",
+    "MAINTENANCE_TEST_SECRET",
+    "NODE_ENV",
+    "SECRET_KEY",
+    "VITE_SUPABASE_PROJECT_ID",
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL"
+   ],
+   "errors": [
+    "formatter fixture failed"
+   ],
+   "temporal": [
+    "const gates = `import fs from 'node:fs';import {spawnSync} from 'node:child_process';\\nconst text=fs.readFileSync('src/value.ts','utf8'); const phase=process.ar …"
+   ]
+  },
+  "scripts/maintenance/run.mjs": {
+   "path": "scripts/maintenance/run.mjs",
+   "lines": 899,
+   "exports": [
+    "function parseArgs",
+    "function networkPrefix",
+    "function allowedSourceFiles",
+    "function prettierCandidates",
+    "function main"
+   ],
+   "env": [
+    "XDG_STATE_HOME"
+   ],
+   "errors": [
+    "blocked_network_sandbox",
+    "pending_patch"
+   ],
+   "doc": "!/usr/bin/env node"
+  },
+  "scripts/maintenance/typecheck.mjs": {
+   "path": "scripts/maintenance/typecheck.mjs",
+   "lines": 110,
+   "doc": "!/usr/bin/env node"
+  },
   "scripts/regras_negocio/generate.py": {
    "path": "scripts/regras_negocio/generate.py",
    "lines": 2152,
@@ -61442,6 +61727,21 @@
     "WHERE created_at >= now() - interval '24 hours' AND queue_kind IS NULL;",
     "WHERE triggered_at >= now() - interval '24 hours' AND queue_kind IS NULL;",
     "WHERE updated_at >= now() - interval '24 hours' AND queue_kind IS NULL;"
+   ]
+  },
+  "scripts/staged-autofix/run.mjs": {
+   "path": "scripts/staged-autofix/run.mjs",
+   "lines": 42,
+   "errors": [
+    "ESLint encontrou erro de analise; correcao interrompida.",
+    "Nenhum arquivo staged recebido."
+   ]
+  },
+  "scripts/staged-autofix/run.unit.mjs": {
+   "path": "scripts/staged-autofix/run.unit.mjs",
+   "lines": 161,
+   "temporal": [
+    "timeout: 30_000,"
    ]
   },
   "scripts/supabase_snapshot/snapshot.py": {
@@ -80289,10 +80589,40 @@
   }
  },
  "git": {
-  "sha": "a16871836ead1232866dc39c37f58df5ed871cb1",
+  "sha": "f7bec293e841fb37f1c6a94ce9d24aec50ecf98f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f7bec29",
+    "date": "2026-11-12",
+    "author": "adm01-debug",
+    "subject": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)",
+    "files": [
+     ".github/workflows/automation-local.yml",
+     ".gitignore",
+     ".husky/pre-commit",
+     "docs/AUTOMACAO_LOCAL.md",
+     "graphify.local.json",
+     "package.json",
+     "scripts/automation.config.json",
+     "scripts/automation.mjs",
+     "scripts/automation.unit.mjs",
+     "scripts/graphify-local.mjs",
+     "scripts/graphify-local.unit.mjs",
+     "scripts/maintenance/README.md",
+     "scripts/maintenance/config.example.json",
+     "scripts/maintenance/config.json",
+     "scripts/maintenance/lib.mjs",
+     "scripts/maintenance/maintenance.unit.mjs",
+     "scripts/maintenance/run.mjs",
+     "scripts/maintenance/run.sh",
+     "scripts/maintenance/typecheck.mjs",
+     "scripts/staged-autofix/README.md",
+     "scripts/staged-autofix/run.mjs",
+     "scripts/staged-autofix/run.unit.mjs"
+    ]
+   },
    {
     "sha": "a168718",
     "date": "2026-11-12",
@@ -81599,15 +81929,6 @@
     "author": "gpt-engineer-app[bot]",
     "subject": "Removiu função migrate-helper",
     "files": []
-   },
-   {
-    "sha": "1bd50ab",
-    "date": "2026-07-29",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Changes",
-    "files": [
-     "supabase/config.toml"
-    ]
    }
   ],
   "hot_files": [
@@ -81617,10 +81938,10 @@
    ],
    [
     "package.json",
-    5
+    6
    ],
    [
-    "supabase/config.toml",
+    ".gitignore",
     5
    ],
    [
@@ -81628,7 +81949,11 @@
     5
    ],
    [
-    ".gitignore",
+    ".husky/pre-commit",
+    4
+   ],
+   [
+    "supabase/config.toml",
     4
    ],
    [
@@ -81637,10 +81962,6 @@
    ],
    [
     ".github/workflows/ci.yml",
-    3
-   ],
-   [
-    ".husky/pre-commit",
     3
    ],
    [

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a16871836e` · branch `main` · 2026-11-12 12:00 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f7bec293e8` · branch `main` · 2026-11-12 12:44 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1690,6 +1690,7 @@ _nenhum item encontrado_
 |---|---|
 | [lushaMocks] mock  | `e2e/helpers/lushaMocks.ts` |
 | Login E2E falhou para ${creds.email}: ${error.message} | `e2e/helpers/supabase.ts` |
+| falha fixture | `scripts/automation.unit.mjs` |
 | ${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)} | `scripts/ai-context/cenarios.mjs` |
 | ${label} falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)} | `scripts/ci/lint-ratchet.mjs` |
 | --base nao combina com --staged. | `scripts/ci/lint-ratchet.mjs` |
@@ -1709,6 +1710,14 @@ _nenhum item encontrado_
 | ripgrep (rg) não encontrado; o inventário não pode ser gerado com segurança. | `scripts/inventario/gerar-repo.mjs` |
 | caminho de  | `scripts/lib/seguranca-processo.mjs` |
 | comando nao encontrado no PATH:  | `scripts/lib/seguranca-processo.mjs` |
+| failed | `scripts/maintenance/lib.mjs` |
+| missing_dependencies | `scripts/maintenance/lib.mjs` |
+| skipped_busy | `scripts/maintenance/lib.mjs` |
+| formatter fixture failed | `scripts/maintenance/maintenance.unit.mjs` |
+| blocked_network_sandbox | `scripts/maintenance/run.mjs` |
+| pending_patch | `scripts/maintenance/run.mjs` |
+| ESLint encontrou erro de analise; correcao interrompida. | `scripts/staged-autofix/run.mjs` |
+| Nenhum arquivo staged recebido. | `scripts/staged-autofix/run.mjs` |
 | O teste offline não permite consultas ao banco | `scripts/supabase_snapshot/test_snapshot.py` |
 | banco indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |
 | catálogo indisponível na fixture | `scripts/supabase_snapshot/test_snapshot.py` |

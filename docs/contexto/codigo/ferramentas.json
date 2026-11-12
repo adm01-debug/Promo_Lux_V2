@@ -5,11 +5,11 @@
   "linguagens": [
    "TypeScript (616)",
    "SQL (216)",
-   "Markdown (71)",
-   "JSON (34)",
-   "JavaScript (12)",
-   "Shell (10)",
-   "YAML (6)",
+   "Markdown (74)",
+   "JSON (38)",
+   "JavaScript (22)",
+   "Shell (11)",
+   "YAML (7)",
    "Python (5)"
   ],
   "linguagem_principal": "TypeScript",
@@ -46,6 +46,15 @@
   "versao": "1.0.0",
   "scripts": {
    "analyze": "vite-bundle-visualizer",
+   "automation:check": "node scripts/automation.mjs check --ref HEAD",
+   "automation:doctor": "node scripts/automation.mjs doctor",
+   "automation:graph": "node scripts/automation.mjs graph",
+   "automation:heal": "node scripts/automation.mjs heal --ref origin/main",
+   "automation:install-hooks": "node scripts/automation.mjs install-hooks",
+   "automation:nightly": "node scripts/automation.mjs nightly --ref origin/main",
+   "automation:status": "node scripts/automation.mjs graph status",
+   "automation:test": "node scripts/automation.mjs test",
+   "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks",
    "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
    "build:dev": "vite build --mode development",
    "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
@@ -72,6 +81,9 @@
    "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
    "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs",
    "lint:ratchet:update": "node scripts/ci/lint-ratchet.mjs --update-baseline",
+   "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
+   "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
+   "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "prepare": "husky",
    "preview": "vite preview",
    "test": "vitest run",
@@ -79,6 +91,7 @@
    "test:coverage": "vitest run --coverage",
    "test:e2e": "playwright test",
    "test:grants": "bash scripts/check-function-grants.sh",
+   "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "test:watch": "vitest"
   },
   "dependencias": 64,
@@ -128,6 +141,34 @@
   "vitest.config.ts"
  ],
  "workflows": [
+  {
+   "arquivo": ".github/workflows/automation-local.yml",
+   "nome": "Automação local",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "contracts"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/automation.mjs"
+   ],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/setup-node"
+   ]
+  },
   {
    "arquivo": ".github/workflows/ci.yml",
    "nome": "CI Pipeline",
@@ -304,7 +345,7 @@
   {
    "arquivo": ".husky/pre-commit",
    "comandos": [
-    "node scripts/ci/lint-ratchet.mjs --staged"
+    "node node_modules/lint-staged/bin/lint-staged.js --concurrent false"
    ]
   }
  ],
@@ -348,6 +389,11 @@
    "arquivo": "docs/AUDITORIA_FIRECRAWL.md",
    "titulo": "Auditoria de Paridade — LUX IA vs Firecrawl",
    "linhas": 199
+  },
+  {
+   "arquivo": "docs/AUTOMACAO_LOCAL.md",
+   "titulo": "Automação local — Promo_Lux_V2",
+   "linhas": 111
   },
   {
    "arquivo": "docs/ESTADO_ATUAL.md",
@@ -855,6 +901,10 @@
     "arquivos": 1
    },
    {
+    "host": "maintenance.invalid",
+    "arquivos": 1
+   },
+   {
     "host": "maps.google.com",
     "arquivos": 1
    },
@@ -880,6 +930,14 @@
    },
    {
     "host": "pixelforge.design",
+    "arquivos": 1
+   },
+   {
+    "host": "production.invalid",
+    "arquivos": 1
+   },
+   {
+    "host": "production.supabase.co",
     "arquivos": 1
    },
    {

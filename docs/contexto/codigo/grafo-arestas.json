@@ -24,6 +24,12 @@
   "scripts/gen-web-scrape-reports.ts": [
    "src/lib/resilience/simulator.ts"
   ],
+  "scripts/maintenance/run.mjs": [
+   "scripts/maintenance/lib.mjs"
+  ],
+  "scripts/maintenance/typecheck.mjs": [
+   "scripts/maintenance/lib.mjs"
+  ],
   "scripts/mc-r35-preflight.ts": [
    "src/lib/resilience/scenarios.ts",
    "src/lib/resilience/simulator.ts"

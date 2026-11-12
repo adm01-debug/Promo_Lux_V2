@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 116,
+ "total": 120,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 94
+  "unit": 98
  },
  "onde_ficam": [
   {
@@ -26,7 +26,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 6
+   "arquivos": 10
   }
  ],
  "arquivos": [
@@ -180,6 +180,15 @@
    "casos": 7
   },
   {
+   "arquivo": "scripts/automation.unit.mjs",
+   "tipo": "unit",
+   "linhas": 689,
+   "testa": [
+    "scripts/automation.mjs"
+   ],
+   "casos": 32
+  },
+  {
    "arquivo": "scripts/ci/lint-ratchet.unit.mjs",
    "tipo": "unit",
    "linhas": 736,
@@ -188,6 +197,15 @@
     "scripts/lib/seguranca-processo.mjs"
    ],
    "casos": 36
+  },
+  {
+   "arquivo": "scripts/graphify-local.unit.mjs",
+   "tipo": "unit",
+   "linhas": 577,
+   "testa": [
+    "scripts/graphify-local.mjs"
+   ],
+   "casos": 24
   },
   {
    "arquivo": "scripts/inventario/mudou-conteudo.unit.mjs",
@@ -199,11 +217,28 @@
    "casos": 7
   },
   {
+   "arquivo": "scripts/maintenance/maintenance.unit.mjs",
+   "tipo": "unit",
+   "linhas": 1098,
+   "testa": [
+    "scripts/maintenance/lib.mjs",
+    "scripts/maintenance/run.mjs"
+   ],
+   "casos": 44
+  },
+  {
    "arquivo": "scripts/regras_negocio/test_generate.py",
    "tipo": "pytest",
    "linhas": 164,
    "testa": [],
    "casos": 0
+  },
+  {
+   "arquivo": "scripts/staged-autofix/run.unit.mjs",
+   "tipo": "unit",
+   "linhas": 161,
+   "testa": [],
+   "casos": 5
   },
   {
    "arquivo": "scripts/supabase_snapshot/test_snapshot.py",
@@ -1090,9 +1125,13 @@
  "sql": [],
  "cobertura_por_arquivo": {
   "playwright-fixture.ts": 7,
+  "scripts/automation.mjs": 1,
   "scripts/ci/lint-ratchet.mjs": 1,
+  "scripts/graphify-local.mjs": 1,
   "scripts/inventario/mudou-conteudo.mjs": 1,
   "scripts/lib/seguranca-processo.mjs": 1,
+  "scripts/maintenance/lib.mjs": 1,
+  "scripts/maintenance/run.mjs": 1,
   "src/components/lux/CampaignsView.tsx": 1,
   "src/components/lux/CompaniesView.tsx": 1,
   "src/components/lux/CompanyFilters.tsx": 1,
