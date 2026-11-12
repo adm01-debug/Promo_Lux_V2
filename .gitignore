@@ -50,3 +50,8 @@ inventario/estado/tabelas-uso.json
 # Estado local privado dos novos adaptadores de automação
 /.tools/repo-automation/
 /.tools/graphify/local-state/
+
+# Supabase CLI local state (nunca versionar)
+supabase/.temp/
+supabase/.branches/
+supabase/cli-latest
