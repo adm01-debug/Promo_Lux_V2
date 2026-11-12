@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9cd6dbce85caf5ce765ec348a89d855e43fba008",
+  "commit": "ed7e49ef445ab6b4e3964a83860d31495129c64c",
   "branch": "main",
-  "data_commit": "2026-11-12T09:40:33-03:00",
+  "data_commit": "2026-11-12T11:58:17-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "ed7e49e",
+    "data": "2026-11-12",
+    "assunto": "fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)"
+   },
    {
     "sha": "9cd6dbc",
     "data": "2026-11-12",
@@ -126,14 +131,9 @@
     "sha": "9f9f678",
     "data": "2026-08-16",
     "assunto": "docs: errata da auditoria apos segunda rodada de validacao adversarial"
-   },
-   {
-    "sha": "8e6172d",
-    "data": "2026-08-16",
-    "assunto": "docs: auditoria de estado do sistema (ESTADO_ATUAL + 5 anexos)"
    }
   ],
-  "arquivos_mudados_7d": 100,
+  "arquivos_mudados_7d": 101,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 18
+    "commits": 19
    }
   ]
  },

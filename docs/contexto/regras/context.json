@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9cd6dbce85caf5ce765ec348a89d855e43fba008",
+  "sha": "ed7e49ef445ab6b4e3964a83860d31495129c64c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-12 13:01 UTC",
+  "generated_at": "2026-11-12 16:19 UTC",
   "files_total": 1024,
   "code_files": 862,
-  "code_lines": 123391
+  "code_lines": 123392
  },
  "version": "1.3.2",
- "facts_hash": "4dad0cb68d4abfbc",
+ "facts_hash": "49a16b506e544a26",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -25577,7 +25577,7 @@
   {
    "module": "supabase/migrations",
    "files": 212,
-   "lines": 11788,
+   "lines": 11789,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -80265,7 +80265,7 @@
   },
   "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql": {
    "path": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-   "lines": 1
+   "lines": 2
   },
   "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql": {
    "path": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
@@ -80589,10 +80589,19 @@
   }
  },
  "git": {
-  "sha": "9cd6dbce85caf5ce765ec348a89d855e43fba008",
+  "sha": "ed7e49ef445ab6b4e3964a83860d31495129c64c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "ed7e49e",
+    "date": "2026-11-12",
+    "author": "adm01-debug",
+    "subject": "fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)",
+    "files": [
+     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+    ]
+   },
    {
     "sha": "9cd6dbc",
     "date": "2026-11-12",
@@ -81929,16 +81938,6 @@
     "files": [
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "d7d55d8",
-    "date": "2026-07-30",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Visual edit in Lovable",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/migrate-helper/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81955,15 +81954,11 @@
     5
    ],
    [
-    "supabase/functions/migrate-helper/index.ts",
-    5
-   ],
-   [
     ".husky/pre-commit",
     4
    ],
    [
-    "supabase/config.toml",
+    "supabase/functions/migrate-helper/index.ts",
     4
    ],
    [
@@ -81985,6 +81980,14 @@
    [
     "docs/estado/05-infra-ci-testes.md",
     3
+   ],
+   [
+    "supabase/config.toml",
+    3
+   ],
+   [
+    "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    2
    ],
    [
     "src/App.tsx",
@@ -82016,10 +82019,6 @@
    ],
    [
     "src/components/lux/GradientAvatar.tsx",
-    2
-   ],
-   [
-    "src/components/lux/StickySaveBar.tsx",
     2
    ]
   ]
