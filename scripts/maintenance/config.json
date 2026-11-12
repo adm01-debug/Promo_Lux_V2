@@ -1,11 +1,26 @@
 {
   "version": 1,
   "manager": "npm",
+<<<<<<< HEAD
   "tsconfigs": ["tsconfig.app.json", "tsconfig.node.json"],
   "gates": [
     {
       "name": "lint",
       "command": ["npm", "run", "lint:ratchet"]
+=======
+  "tsconfigs": [
+    "tsconfig.app.json",
+    "tsconfig.node.json"
+  ],
+  "gates": [
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint:ratchet"
+      ]
+>>>>>>> 53636e65 (fix(manutencao): executa autofix staged e preserva trabalho parcial)
     },
     {
       "name": "types",
@@ -27,6 +42,7 @@
     },
     {
       "name": "build",
+<<<<<<< HEAD
       "command": ["npm", "run", "build"]
     }
   ],
@@ -35,6 +51,21 @@
     "eslintRules": [],
     "prettier": true,
     "exclude": ["src/integrations/supabase/types.ts"]
+=======
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ]
+    }
+  ],
+  "fix": {
+    "roots": [
+      "src"
+    ],
+    "eslintRules": [],
+    "prettier": true
+>>>>>>> 53636e65 (fix(manutencao): executa autofix staged e preserva trabalho parcial)
   },
   "timeoutMs": 300000,
   "maxFiles": 20,

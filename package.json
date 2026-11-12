@@ -4,9 +4,15 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
     "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
     "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
+=======
+    "maintenance:doctor": "node scripts/maintenance/run.mjs doctor --root .",
+    "maintenance:check": "node scripts/maintenance/run.mjs check --root . --ref origin/main",
+    "maintenance:heal": "node scripts/maintenance/run.mjs heal --root . --ref origin/main",
+>>>>>>> 53636e65 (fix(manutencao): executa autofix staged e preserva trabalho parcial)
     "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
     "dev": "vite",
     "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
