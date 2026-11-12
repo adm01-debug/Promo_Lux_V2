@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ed7e49ef445ab6b4e3964a83860d31495129c64c",
+  "commit": "8fb4f413efd6e07b138c4a985e2a28f9e5e25597",
   "branch": "main",
-  "data_commit": "2026-11-12T11:58:17-03:00",
+  "data_commit": "2026-11-12T16:09:03-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8fb4f41",
+    "data": "2026-11-12",
+    "assunto": "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)"
+   },
    {
     "sha": "ed7e49e",
     "data": "2026-11-12",
@@ -126,14 +131,9 @@
     "sha": "97bb6fb",
     "data": "2026-08-16",
     "assunto": "Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829"
-   },
-   {
-    "sha": "9f9f678",
-    "data": "2026-08-16",
-    "assunto": "docs: errata da auditoria apos segunda rodada de validacao adversarial"
    }
   ],
-  "arquivos_mudados_7d": 101,
+  "arquivos_mudados_7d": 116,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -144,12 +144,12 @@
     "mudancas": 6
    },
    {
-    "pasta": "package.json",
+    "pasta": ".gitignore",
     "mudancas": 5
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 4
+    "pasta": "package.json",
+    "mudancas": 5
    },
    {
     "pasta": "src/components/lux",
@@ -290,23 +290,23 @@
     "mudancas": 2
    },
    {
-    "arquivo": ".claude/ecc-tools.json",
-    "mudancas": 1
+    "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "mudancas": 2
    },
    {
-    "arquivo": ".claude/homunculus/instincts/inherited/promo-lux-v2-instincts.yaml",
+    "arquivo": ".claude/ecc-tools.json",
     "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 19
+    "commits": 20
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1005,
+  "arquivos_total": 1009,
   "arquivos_codigo": 642,
   "linhas_codigo": 109782,
   "rotas": 10,
@@ -318,7 +318,7 @@
   "hooks": 78,
   "edge_functions": 58,
   "tabelas": 96,
-  "migrations": 212,
+  "migrations": 216,
   "cron_jobs": 6,
   "testes": 120,
   "workflows": 6,
@@ -787,7 +787,7 @@
    "feature_flags",
    "idempotency_keys",
    "lusha_contacts",
-   "lusha_search_sessions"
+   "organization_members"
   ],
   "rpcs_sem_definicao": [],
   "componentes_orfaos": [

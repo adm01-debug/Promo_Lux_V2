@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "ed7e49ef445ab6b4e3964a83860d31495129c64c",
+  "sha": "8fb4f413efd6e07b138c4a985e2a28f9e5e25597",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-12 16:19 UTC",
-  "files_total": 1024,
-  "code_files": 862,
-  "code_lines": 123392
+  "generated_at": "2026-11-12 21:39 UTC",
+  "files_total": 1028,
+  "code_files": 866,
+  "code_lines": 124174
  },
  "version": "1.3.2",
- "facts_hash": "49a16b506e544a26",
+ "facts_hash": "ead98ec7b4e815eb",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -210,7 +210,7 @@
   "languages": {
    ".ts": 339,
    ".tsx": 277,
-   ".sql": 216,
+   ".sql": 220,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -1793,6 +1793,98 @@
     "comment": "",
     "origin": "migration"
    },
+   "audit_logs": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "UUID REFERENCES public.organizations(id)",
+      "fk": "organizations.id",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "UUID REFERENCES auth.users(id)",
+      "fk": "users.id",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "action",
+      "type": "TEXT NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "table_name",
+      "type": "TEXT NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "record_id",
+      "type": "UUID NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "old_data",
+      "type": "JSONB",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "new_data",
+      "type": "JSONB",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "metadata",
+      "type": "JSONB",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "TIMESTAMP WITH TIME ZONE DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+     },
+     {
+      "name": "trace_id",
+      "type": "UUID",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260513165326_4ad435d8-1535-46a2-84a3-f3113621bbe1.sql"
+     },
+     {
+      "name": "actor_id",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "deal_stages": {
     "columns": [
      {
@@ -2478,98 +2570,6 @@
      "constraint webhook_deliveries_status_check CHECK (status IN ('pending', 'sending', 'success', 'failed', 'retrying'))"
     ],
     "src": "supabase/migrations/20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql",
-    "comment": "",
-    "origin": "migration"
-   },
-   "audit_logs": {
-    "columns": [
-     {
-      "name": "id",
-      "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "organization_id",
-      "type": "UUID REFERENCES public.organizations(id)",
-      "fk": "organizations.id",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "user_id",
-      "type": "UUID REFERENCES auth.users(id)",
-      "fk": "users.id",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "action",
-      "type": "TEXT NOT NULL",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "table_name",
-      "type": "TEXT NOT NULL",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "record_id",
-      "type": "UUID NOT NULL",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "old_data",
-      "type": "JSONB",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "new_data",
-      "type": "JSONB",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "metadata",
-      "type": "JSONB",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "created_at",
-      "type": "TIMESTAMP WITH TIME ZONE DEFAULT now()",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
-     },
-     {
-      "name": "trace_id",
-      "type": "UUID",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513165326_4ad435d8-1535-46a2-84a3-f3113621bbe1.sql"
-     },
-     {
-      "name": "actor_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     }
-    ],
-    "constraints": [],
-    "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -3847,13 +3847,6 @@
       "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
      },
      {
-      "name": "name",
-      "type": "TEXT NOT NULL UNIQUE",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
-     },
-     {
       "name": "description",
       "type": "TEXT",
       "fk": "",
@@ -3889,15 +3882,15 @@
       "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
      },
      {
-      "name": "config",
-      "type": "Json | null",
+      "name": "flag_key",
+      "type": "TEXT",
       "fk": "",
       "generated": "",
-      "src": "src/integrations/supabase/types.ts"
+      "src": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql"
      },
      {
-      "name": "flag_key",
-      "type": "string | null",
+      "name": "config",
+      "type": "Json | null",
       "fk": "",
       "generated": "",
       "src": "src/integrations/supabase/types.ts"
@@ -5486,6 +5479,98 @@
     "comment": "",
     "origin": "migration"
    },
+   "lusha_dm_search_history": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE",
+      "fk": "users.id ON DELETE CASCADE",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "UUID",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "domain",
+      "type": "TEXT NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "linkedin_url",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "status",
+      "type": "TEXT NOT NULL CHECK (status IN ('done','failed','cancelled','processing','queued'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "decision_makers_count",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "error_message",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "duration_ms",
+      "type": "INTEGER",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "metadata",
+      "type": "JSONB NOT NULL DEFAULT '{}'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "lusha_contacts": {
     "columns": [
      {
@@ -5581,7 +5666,7 @@
      },
      {
       "name": "linkedin_public_id",
-      "type": "TEXT",
+      "type": "TEXT GENERATED ALWAYS AS ( lower(NULLIF(substring(split_part(split_part(linkedin_url, '?'::text, 1), '#'::text, 1), '(?i)(?:^|//)(?:[a-z0-9-]+\\.)*linkedin\\.com/in/([^/?#]+)'::text), ''::text)) ) STORE …",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
@@ -5881,306 +5966,334 @@
     "comment": "",
     "origin": "migration"
    },
-   "lusha_dm_search_history": {
+   "lusha_credit_usage_log": {
     "columns": [
      {
       "name": "id",
-      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
-     },
-     {
-      "name": "user_id",
-      "type": "UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE",
-      "fk": "users.id ON DELETE CASCADE",
-      "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
       "name": "organization_id",
+      "type": "UUID NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "user_id",
       "type": "UUID",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "session_id",
+      "type": "UUID",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "bitrix_card_id",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "company_name",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
       "name": "domain",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "endpoint",
       "type": "TEXT NOT NULL",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
-      "name": "linkedin_url",
+      "name": "operation",
+      "type": "TEXT NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "api_version",
       "type": "TEXT",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
-      "name": "status",
-      "type": "TEXT NOT NULL CHECK (status IN ('done','failed','cancelled','processing','queued'))",
+      "name": "success",
+      "type": "BOOLEAN NOT NULL DEFAULT false",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
-      "name": "decision_makers_count",
+      "name": "credits_charged",
       "type": "INTEGER NOT NULL DEFAULT 0",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
-      "name": "error_message",
+      "name": "records_returned",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+     },
+     {
+      "name": "request_id",
       "type": "TEXT",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
-      "name": "duration_ms",
-      "type": "INTEGER",
+      "name": "error_code",
+      "type": "TEXT",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
-     },
-     {
-      "name": "metadata",
-      "type": "JSONB NOT NULL DEFAULT '{}'::jsonb",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
       "name": "created_at",
       "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
       "fk": "",
       "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
-     },
-     {
-      "name": "updated_at",
-      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+      "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
     "comment": "",
     "origin": "migration"
    },
    "lusha_search_sessions": {
     "columns": [
      {
-      "name": "progress_pct",
-      "type": "integer NOT NULL DEFAULT 0",
-      "fk": "",
-      "generated": "",
-      "src": "supabase/migrations/20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql"
-     },
-     {
-      "name": "bitrix_card_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "bitrix_company_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "bitrix_user_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "company_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "company_name",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "completed_at",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "created_at",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "departments_mapped",
-      "type": "string[] not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "departments_not_found",
-      "type": "string[] not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "departments_requested",
-      "type": "string[] not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "domain_searched",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "enrichment_rate",
-      "type": "number | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "error_message",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
       "name": "id",
-      "type": "string not null",
+      "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()",
       "fk": "",
       "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "idempotency_key",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "lusha_company_lid",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "organization_id",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "search_type",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "started_at",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "status",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "total_duplicates",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "total_empty",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "total_enriched",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "total_errors",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "total_found",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "total_inserted_bitrix",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "updated_at",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
      },
      {
       "name": "user_id",
-      "type": "string not null",
+      "type": "UUID NOT NULL DEFAULT auth.uid()",
       "fk": "",
       "generated": "",
-      "src": "src/integrations/supabase/types.ts"
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "UUID NOT NULL DEFAULT public.default_org_for_current_user()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "company_id",
+      "type": "UUID REFERENCES public.companies(id) ON DELETE SET NULL",
+      "fk": "companies.id ON DELETE SET NULL",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "company_name",
+      "type": "TEXT NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "search_type",
+      "type": "TEXT NOT NULL DEFAULT 'company'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "domain_searched",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "lusha_company_lid",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "departments_requested",
+      "type": "TEXT[] NOT NULL DEFAULT '{}'::text[]",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "departments_mapped",
+      "type": "TEXT[] NOT NULL DEFAULT '{}'::text[]",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "departments_not_found",
+      "type": "TEXT[] NOT NULL DEFAULT '{}'::text[]",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "status",
+      "type": "TEXT NOT NULL DEFAULT 'running'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "started_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "completed_at",
+      "type": "TIMESTAMPTZ",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "progress_pct",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "idempotency_key",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "total_found",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "total_empty",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "total_errors",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "total_duplicates",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "total_enriched",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "total_inserted_bitrix",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "enrichment_rate",
+      "type": "NUMERIC",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "error_message",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "bitrix_card_id",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "bitrix_company_id",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "bitrix_user_id",
+      "type": "TEXT",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
      }
     ],
     "constraints": [],
-    "src": "supabase/migrations/20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
     "comment": "",
     "origin": "migration"
    },
@@ -9010,126 +9123,6 @@
     "comment": "",
     "origin": "migration"
    },
-   "lusha_credit_usage_log": {
-    "columns": [
-     {
-      "name": "api_version",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "bitrix_card_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "company_name",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "created_at",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "credits_charged",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "domain",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "endpoint",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "error_code",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "id",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "operation",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "organization_id",
-      "type": "string not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "records_returned",
-      "type": "number not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "request_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "session_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "success",
-      "type": "boolean not null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "user_id",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
-     }
-    ],
-    "constraints": [],
-    "src": "src/integrations/supabase/types.ts",
-    "comment": "",
-    "origin": "types.ts"
-   },
    "oracle_v2_health": {
     "columns": [
      {
@@ -9782,6 +9775,16 @@
     "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
     "check": "",
     "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
+   },
+   {
+    "name": "Service can manage audit logs",
+    "table": "audit_logs",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
    },
    {
     "name": "Service manage deals",
@@ -10824,16 +10827,6 @@
     "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
    },
    {
-    "name": "Feature flags are viewable by authenticated users",
-    "table": "feature_flags",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "auth.role() = 'authenticated'",
-    "check": "",
-    "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
-   },
-   {
     "name": "Health checks are viewable by authenticated users",
     "table": "health_checks",
     "cmd": "SELECT",
@@ -10842,6 +10835,26 @@
     "using": "auth.role() = 'authenticated'",
     "check": "",
     "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
+   },
+   {
+    "name": "Feature flags are viewable by org",
+    "table": "feature_flags",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id IS NULL OR organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql"
+   },
+   {
+    "name": "feature_flags_service_role",
+    "table": "feature_flags",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql"
    },
    {
     "name": "Circuit breakers are viewable by authenticated users",
@@ -11292,6 +11305,56 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lss_select",
+    "table": "lusha_search_sessions",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_insert",
+    "table": "lusha_search_sessions",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid() AND organization_id = public.default_org_for_current_user()",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_update",
+    "table": "lusha_search_sessions",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_delete",
+    "table": "lusha_search_sessions",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_service_role",
+    "table": "lusha_search_sessions",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
    },
    {
     "name": "org_members_view_credit_usage",
@@ -12407,6 +12470,33 @@
     "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
    },
    {
+    "name": "audit_companies",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "companies",
+    "function": "log_audit_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
+    "name": "audit_campaigns",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "campaigns",
+    "function": "log_audit_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
+    "name": "audit_workflows",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "workflows",
+    "function": "log_audit_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
     "name": "trg_deal_stages_updated",
     "when": "BEFORE UPDATE",
     "table": "deal_stages",
@@ -12980,6 +13070,19 @@
      "organization_members"
     ]
    },
+   "log_audit_event": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_actor uuid := auth.uid(); v_record_id uuid; v_action public.audit_action; v_old jsonb; v_new jsonb; v_org uuid; BEGIN IF TG_OP = 'INSERT' THEN v_action := 'create'; v_record_id := NEW.id; v_old := NULL; v_new := to_jsonb(NEW); BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'UPDATE' THEN v_action := 'update'; v_record_id := NEW.id; v_old := to_jsonb(OLD); v_new := to_jsonb(NEW); IF v_old = v_new THEN RETURN NEW; END IF; BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'DELETE' THEN v_action := 'delete'; v_record_id := OLD.id; v_old := to_j …",
+    "raises": [],
+    "tables": [
+     "audit_logs"
+    ]
+   },
    "log_deal_stage_change": {
     "args": "",
     "returns": "trigger",
@@ -13048,19 +13151,6 @@
     "tables": [
      "webhook_deliveries",
      "webhooks"
-    ]
-   },
-   "log_audit_event": {
-    "args": "",
-    "returns": "trigger",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE v_actor uuid := auth.uid(); v_record_id uuid; v_action public.audit_action; v_old jsonb; v_new jsonb; v_org uuid; BEGIN IF TG_OP = 'INSERT' THEN v_action := 'create'; v_record_id := NEW.id; v_old := NULL; v_new := to_jsonb(NEW); BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'UPDATE' THEN v_action := 'update'; v_record_id := NEW.id; v_old := to_jsonb(OLD); v_new := to_jsonb(NEW); IF v_old = v_new THEN RETURN NEW; END IF; BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'DELETE' THEN v_action := 'delete'; v_record_id := OLD.id; v_old := to_j …",
-    "raises": [],
-    "tables": [
-     "audit_logs"
     ]
    },
    "default_org_for_current_user": {
@@ -13878,6 +13968,32 @@
      "companies",
      "organization_members"
     ]
+   },
+   "assert_service_or_admin": {
+    "args": "",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _jwt_role text; _db_user text; _caller_id uuid; BEGIN _jwt_role := current_setting('request.jwt.role', true); _db_user := current_user; _caller_id := auth.uid(); IF _db_user IN ('postgres', 'supabase_admin', 'supabase_auth_admin', 'supabase_storage_admin', 'supabase_realtime_admin') THEN RETURN; END IF; IF _jwt_role = 'service_role' THEN RETURN; END IF; IF _caller_id IS NOT NULL THEN IF EXISTS ( SELECT 1 FROM public.organization_members om WHERE om.user_id = _caller_id AND om.role::text = 'admin' AND om.deleted_at IS NULL ) THEN RETURN; END IF; END IF; RAISE EXCEPTION 'Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)', COALESCE(_jwt_role, 'NU …",
+    "raises": [
+     "Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)"
+    ],
+    "tables": [
+     "organization_members"
+    ]
+   },
+   "is_service_role": {
+    "args": "",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "BEGIN RETURN ( current_setting('request.jwt.role', true) = 'service_role' OR current_user IN ('postgres', 'supabase_admin', 'supabase_auth_admin') ); END;",
+    "raises": [],
+    "tables": []
    },
    "worker_should_run": {
     "args": "_worker TEXT",
@@ -14781,10 +14897,10 @@
     "viewer"
    ],
    "audit_action": [
-    "execute",
     "create",
     "update",
-    "delete"
+    "delete",
+    "execute"
    ],
    "automation_status": [
     "pending",
@@ -15425,6 +15541,30 @@
     "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
    },
    {
+    "name": "idx_audit_actor",
+    "table": "audit_logs",
+    "columns": "actor_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
+    "name": "idx_audit_record",
+    "table": "audit_logs",
+    "columns": "table_name, record_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
+    "name": "idx_audit_created",
+    "table": "audit_logs",
+    "columns": "created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
     "name": "idx_deal_stages_user_pos",
     "table": "deal_stages",
     "columns": "user_id, position",
@@ -15911,6 +16051,14 @@
     "unique": false,
     "where": "",
     "src": "supabase/migrations/20260423143453_ee5b0d4b-305d-4575-81d2-b038ba742828.sql"
+   },
+   {
+    "name": "feature_flags_flag_key_uk",
+    "table": "feature_flags",
+    "columns": "flag_key",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql"
    },
    {
     "name": "idx_audit_logs_org_created",
@@ -16441,14 +16589,6 @@
     "src": "supabase/migrations/20260712221649_ebd72ce1-f9b5-4de9-88f8-d5a40fbad66f.sql"
    },
    {
-    "name": "lusha_contacts_company_linkedin_url_idx",
-    "table": "lusha_contacts",
-    "columns": "company_linkedin_url",
-    "unique": false,
-    "where": "WHERE company_linkedin_url IS NOT NULL",
-    "src": "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql"
-   },
-   {
     "name": "idx_lusha_dm_hist_user_created",
     "table": "lusha_dm_search_history",
     "columns": "user_id, created_at DESC",
@@ -16567,6 +16707,54 @@
     "unique": false,
     "where": "WHERE company_linkedin_url IS NOT NULL",
     "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "idx_lcul_org_created",
+    "table": "lusha_credit_usage_log",
+    "columns": "organization_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+   },
+   {
+    "name": "idx_lcul_operation",
+    "table": "lusha_credit_usage_log",
+    "columns": "operation",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+   },
+   {
+    "name": "idx_lss_org_status",
+    "table": "lusha_search_sessions",
+    "columns": "organization_id, status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "idx_lss_org_idem",
+    "table": "lusha_search_sessions",
+    "columns": "organization_id, idempotency_key",
+    "unique": false,
+    "where": "WHERE idempotency_key IS NOT NULL",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "idx_lss_org_company",
+    "table": "lusha_search_sessions",
+    "columns": "organization_id, company_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "idx_lss_user",
+    "table": "lusha_search_sessions",
+    "columns": "user_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
    },
    {
     "name": "lusha_contacts_org_linkedin_uk",
@@ -16727,6 +16915,30 @@
     "unique": true,
     "where": "",
     "src": "supabase/migrations/20260718143044_0ccbc1a5-0e7d-4602-81a6-267427d87a48.sql"
+   },
+   {
+    "name": "idx_scrape_jobs_pending_active",
+    "table": "scrape_jobs",
+    "columns": "created_at DESC, id",
+    "unique": false,
+    "where": "WHERE status IN ('pending', 'running', 'working')",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
+   },
+   {
+    "name": "idx_workflow_runs_running",
+    "table": "workflow_runs",
+    "columns": "workflow_id, started_at DESC",
+    "unique": false,
+    "where": "WHERE status = 'running'",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
+   },
+   {
+    "name": "idx_automation_steps_pending",
+    "table": "automation_steps",
+    "columns": "run_id, created_at ASC",
+    "unique": false,
+    "where": "WHERE status IN ('pending', 'running')",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
    },
    {
     "name": "scrape_jobs_org_config_active_uk",
@@ -17286,6 +17498,14 @@
    "oracle_v2_health": {
     "body": "SELECT organization_id, source, count(*) FILTER (WHERE created_at >= now() - interval '24 hours') AS events_24h, count(*) FILTER (WHERE status = 'error' AND created_at >= now() - interval '24 hours') AS errors_24h, count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hours') AS success_24h, ROUND( 100.0 * count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hours') / NULLIF(count(*) FILTER (WHERE created_at >= now() - interval '24 hours'), 0), 2 ) AS success_rate_pct, max(created_at) AS last_event_at FROM public.automation_execution_logs …",
     "src": "supabase/migrations/20260715170429_60ef5195-eadf-4adc-843a-f23012c9aa3a.sql"
+   },
+   "v_sec_definer_anon_grants": {
+    "body": "SELECT n.nspname AS schema_name, p.proname AS function_name, pg_get_function_identity_arguments(p.oid) AS function_args, r.rolname AS grantee_role, 'EXECUTE' AS privilege_type, CASE WHEN r.rolname = 'anon' THEN '🔴 CRÍTICO' WHEN r.rolname = 'authenticated' AND p.prosecdef THEN '🟡 REVISAR' ELSE '🟢 OK' END AS risk_level, NOW() AS checked_at FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_auth_members am ON am.roleid = ( SELECT oid FROM pg_roles WHERE rolname = 'anon' ) JOIN pg_roles r ON r.oid = am.roleid WHERE p.prosecdef = true AND n.nspname = 'public' AND has_function_priv …",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   "v_extensions_audit": {
+    "body": "SELECT e.extname AS extension_name, n.nspname AS current_schema, e.extversion AS version, CASE n.nspname WHEN 'public' THEN '⚠️ Em public — candidata à migração para extensions' WHEN 'extensions' THEN '✅ Já no schema correto' ELSE '🔵 Outro schema — OK' END AS status, CASE e.extname WHEN 'uuid-ossp' THEN '🔴 CRÍTICO: não mover sem atualizar SET search_path em todas as funções SECURITY DEFINER' WHEN 'pg_trgm' THEN '🟡 Movível: verificar índices GIN/GIST existentes antes' WHEN 'unaccent' THEN '🟢 Movível: sem efeitos colaterais esperados' WHEN 'pgcrypto' THEN '🟡 Movível: verificar chamadas a crypt() …",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
    }
   },
   "sources": [
@@ -17326,6 +17546,7 @@
    "supabase/migrations/20260404184054_cb490bce-cb10-4708-8a28-890f5a1364f3.sql",
    "supabase/migrations/20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql",
    "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql",
+   "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
    "supabase/migrations/20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql",
    "supabase/migrations/20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql",
    "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
@@ -17349,6 +17570,7 @@
    "supabase/migrations/20260513140311_99494649-cb75-4b6d-bd9a-14cc962d3422.sql",
    "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql",
    "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql",
+   "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql",
    "supabase/migrations/20260513143216_1200e575-1c81-4255-9bb2-c14bd865f321.sql",
    "supabase/migrations/20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql",
    "supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql",
@@ -17419,6 +17641,8 @@
    "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql",
    "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql",
    "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
+   "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
+   "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
    "supabase/migrations/20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql",
    "supabase/migrations/20260715170247_637d3fdc-8e6d-4d53-adc7-3921479e5413.sql",
    "supabase/migrations/20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql",
@@ -17519,6 +17743,7 @@
    "organizations": "enabled",
    "organization_members": "enabled",
    "organization_invites": "enabled",
+   "audit_logs": "enabled",
    "deal_stages": "enabled",
    "deals": "enabled",
    "deal_activities": "enabled",
@@ -17542,7 +17767,6 @@
    "ponto_banco_horas": "enabled",
    "idempotency_keys": "enabled",
    "user_roles": "enabled",
-   "audit_logs": "enabled",
    "feature_flags": "enabled",
    "health_checks": "enabled",
    "circuit_breakers": "enabled",
@@ -17565,6 +17789,8 @@
    "api_latency_alert_history": "enabled",
    "lusha_dm_search_history": "enabled",
    "lusha_contacts": "enabled",
+   "lusha_credit_usage_log": "enabled",
+   "lusha_search_sessions": "enabled",
    "oracle_rate_limits": "enabled",
    "circuit_breaker_snapshots": "enabled",
    "circuit_breaker_alert_settings": "enabled",
@@ -19657,6 +19883,38 @@
     "object": "lusha_credit_usage_log",
     "objkind": "table",
     "roles": "authenticated",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "lusha_credit_usage_log",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "lusha_search_sessions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "lusha_search_sessions",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "lusha_credit_usage_log",
+    "objkind": "table",
+    "roles": "authenticated",
     "src": "supabase/migrations/20260715170247_637d3fdc-8e6d-4d53-adc7-3921479e5413.sql"
    },
    {
@@ -19962,6 +20220,78 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "assert_service_or_admin",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "assert_service_or_admin",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "assert_service_or_admin",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "is_service_role",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_service_role",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "v_sec_definer_anon_grants",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "v_sec_definer_anon_grants",
+    "objkind": "table",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "v_extensions_audit",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "v_extensions_audit",
+    "objkind": "table",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
    },
    {
     "kind": "grant",
@@ -20506,70 +20836,6 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lusha_contact_mark_cache_hit",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lux_cache_stats",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lux_enrichment_gate",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lux_save_enriched_contact",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lusha_contact_mark_cache_hit",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lux_cache_stats",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lux_enrichment_gate",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lux_save_enriched_contact",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
    },
    {
     "kind": "revoke",
@@ -21612,6 +21878,11 @@
     "src": "supabase/migrations/20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql"
    },
    {
+    "function": "assert_service_or_admin",
+    "msg": "Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
     "function": "validate_company_rating",
     "msg": "rating must be between 0 and 5, got %",
     "src": "supabase/migrations/20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql"
@@ -21800,17 +22071,10 @@
    "column:email_sync_log.attempt": "Número da tentativa de reconexão no momento do registro (0 quando saudável)",
    "column:email_sync_log.skipped_reason": "Motivo quando status=skipped (ex: backoff, reconnect_required)",
    "table:org_violation_alerts": "Histórico de alertas de taxa de OrgMismatchError. Evento webhook: security.org_violation_threshold",
+   "column:organization_members.deleted_at": "Soft delete: preenchido ao remover membro. NULL = ativo.",
    "table:circuit_breaker_snapshots": "Telemetria append-only. Índices secundários removidos em 2026-07-21 por 0 uso (idx_scan=0). Recriar quando dashboard de histórico for implementado."
   },
-  "types_file": "src/integrations/supabase/types.ts",
-  "sources_ilegiveis": [
-   "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-   "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
-   "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql",
-   "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql",
-   "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql",
-   "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql"
-  ]
+  "types_file": "src/integrations/supabase/types.ts"
  },
  "features": {
   "pages": [
@@ -25576,8 +25840,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 212,
-   "lines": 11789,
+   "files": 216,
+   "lines": 12571,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -25621,6 +25885,7 @@
     "supabase/migrations/20260404184054_cb490bce-cb10-4708-8a28-890f5a1364f3.sql",
     "supabase/migrations/20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql",
     "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql",
+    "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
     "supabase/migrations/20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql",
     "supabase/migrations/20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql",
     "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
@@ -25644,6 +25909,7 @@
     "supabase/migrations/20260513140311_99494649-cb75-4b6d-bd9a-14cc962d3422.sql",
     "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql",
     "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql",
+    "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql",
     "supabase/migrations/20260513143216_1200e575-1c81-4255-9bb2-c14bd865f321.sql",
     "supabase/migrations/20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql",
     "supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql",
@@ -25661,9 +25927,7 @@
     "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql",
     "supabase/migrations/20260529192436_e9ae6a02-9480-457e-9348-b74fd77f7ac7.sql",
     "supabase/migrations/20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql",
-    "supabase/migrations/20260711153051_650d9a36-dbaf-4eb1-bef0-39d6d56d94d1.sql",
-    "supabase/migrations/20260711153418_e0bbe10e-6494-4862-87c8-48bf3b9e488d.sql",
-    "supabase/migrations/20260711164350_a039d6a7-9068-401a-b17e-eed3d3f33a10.sql"
+    "supabase/migrations/20260711153051_650d9a36-dbaf-4eb1-bef0-39d6d56d94d1.sql"
    ]
   }
  ],
@@ -31049,6 +31313,10 @@
     "text": "best-effort: falha ao disparar alerta não deve mascarar o erro original */ }"
    },
    {
+    "file": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql",
+    "text": "existem apenas no banco de"
+   },
+   {
     "file": "supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql",
     "text": "41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA"
    }
@@ -31775,6 +32043,41 @@
     "rule": "default now()"
    },
    {
+    "table": "audit_logs",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "audit_logs",
+    "column": "organization_id",
+    "rule": "FK → organizations.id"
+   },
+   {
+    "table": "audit_logs",
+    "column": "user_id",
+    "rule": "FK → users.id"
+   },
+   {
+    "table": "audit_logs",
+    "column": "action",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "audit_logs",
+    "column": "table_name",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "audit_logs",
+    "column": "record_id",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "audit_logs",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
     "table": "deal_stages",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
@@ -32143,41 +32446,6 @@
     "table": "webhook_deliveries",
     "column": "(tabela)",
     "rule": "constraint webhook_deliveries_status_check CHECK (status IN ('pending', 'sending', 'success', 'failed', 'retrying'))"
-   },
-   {
-    "table": "audit_logs",
-    "column": "id",
-    "rule": "PK; default gen_random_uuid()"
-   },
-   {
-    "table": "audit_logs",
-    "column": "organization_id",
-    "rule": "FK → organizations.id"
-   },
-   {
-    "table": "audit_logs",
-    "column": "user_id",
-    "rule": "FK → users.id"
-   },
-   {
-    "table": "audit_logs",
-    "column": "action",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "audit_logs",
-    "column": "table_name",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "audit_logs",
-    "column": "record_id",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "audit_logs",
-    "column": "created_at",
-    "rule": "default now()"
    },
    {
     "table": "campaign_recipients",
@@ -32728,11 +32996,6 @@
     "table": "feature_flags",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
-   },
-   {
-    "table": "feature_flags",
-    "column": "name",
-    "rule": "obrigatório; único"
    },
    {
     "table": "feature_flags",
@@ -33590,6 +33853,46 @@
     "rule": "default now()"
    },
    {
+    "table": "lusha_dm_search_history",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "user_id",
+    "rule": "obrigatório; FK → users.id ON DELETE CASCADE"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "domain",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "status",
+    "rule": "obrigatório; CHECK status IN ('done','failed','cancelled','processing','queued')"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "decision_makers_count",
+    "rule": "default 0"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "metadata",
+    "rule": "default '{}'::jsonb"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "lusha_dm_search_history",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
     "table": "lusha_contacts",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
@@ -33675,43 +33978,98 @@
     "rule": "constraint lusha_contacts_contact_source_check CHECK (contact_source IN ('lusha', 'apollo'))"
    },
    {
-    "table": "lusha_dm_search_history",
+    "table": "lusha_credit_usage_log",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
    },
    {
-    "table": "lusha_dm_search_history",
-    "column": "user_id",
-    "rule": "obrigatório; FK → users.id ON DELETE CASCADE"
-   },
-   {
-    "table": "lusha_dm_search_history",
-    "column": "domain",
+    "table": "lusha_credit_usage_log",
+    "column": "organization_id",
     "rule": "obrigatório"
    },
    {
-    "table": "lusha_dm_search_history",
-    "column": "status",
-    "rule": "obrigatório; CHECK status IN ('done','failed','cancelled','processing','queued')"
+    "table": "lusha_credit_usage_log",
+    "column": "endpoint",
+    "rule": "obrigatório"
    },
    {
-    "table": "lusha_dm_search_history",
-    "column": "decision_makers_count",
+    "table": "lusha_credit_usage_log",
+    "column": "operation",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "lusha_credit_usage_log",
+    "column": "success",
+    "rule": "default false"
+   },
+   {
+    "table": "lusha_credit_usage_log",
+    "column": "credits_charged",
     "rule": "default 0"
    },
    {
-    "table": "lusha_dm_search_history",
-    "column": "metadata",
-    "rule": "default '{}'::jsonb"
+    "table": "lusha_credit_usage_log",
+    "column": "records_returned",
+    "rule": "default 0"
    },
    {
-    "table": "lusha_dm_search_history",
+    "table": "lusha_credit_usage_log",
     "column": "created_at",
     "rule": "default now()"
    },
    {
-    "table": "lusha_dm_search_history",
-    "column": "updated_at",
+    "table": "lusha_search_sessions",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "user_id",
+    "rule": "default auth.uid()"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "organization_id",
+    "rule": "default public.default_org_for_current_user()"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "company_id",
+    "rule": "FK → companies.id ON DELETE SET NULL"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "company_name",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "search_type",
+    "rule": "default 'company'"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "departments_requested",
+    "rule": "default '{}'::text[]"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "departments_mapped",
+    "rule": "default '{}'::text[]"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "departments_not_found",
+    "rule": "default '{}'::text[]"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "status",
+    "rule": "default 'running'"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "started_at",
     "rule": "default now()"
    },
    {
@@ -33721,93 +34079,43 @@
    },
    {
     "table": "lusha_search_sessions",
-    "column": "company_name",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "created_at",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "departments_mapped",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "departments_not_found",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "departments_requested",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "id",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "organization_id",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "search_type",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "started_at",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "status",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "total_duplicates",
-    "rule": "obrigatório"
+    "column": "total_found",
+    "rule": "default 0"
    },
    {
     "table": "lusha_search_sessions",
     "column": "total_empty",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "total_enriched",
-    "rule": "obrigatório"
+    "rule": "default 0"
    },
    {
     "table": "lusha_search_sessions",
     "column": "total_errors",
-    "rule": "obrigatório"
+    "rule": "default 0"
    },
    {
     "table": "lusha_search_sessions",
-    "column": "total_found",
-    "rule": "obrigatório"
+    "column": "total_duplicates",
+    "rule": "default 0"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "total_enriched",
+    "rule": "default 0"
    },
    {
     "table": "lusha_search_sessions",
     "column": "total_inserted_bitrix",
-    "rule": "obrigatório"
+    "rule": "default 0"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "created_at",
+    "rule": "default now()"
    },
    {
     "table": "lusha_search_sessions",
     "column": "updated_at",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_search_sessions",
-    "column": "user_id",
-    "rule": "obrigatório"
+    "rule": "default now()"
    },
    {
     "table": "oracle_rate_limits",
@@ -35238,46 +35546,6 @@
     "table": "apollo_rate_state",
     "column": "updated_at",
     "rule": "default now()"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "created_at",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "credits_charged",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "endpoint",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "id",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "operation",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "organization_id",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "records_returned",
-    "rule": "obrigatório"
-   },
-   {
-    "table": "lusha_credit_usage_log",
-    "column": "success",
-    "rule": "obrigatório"
    }
   ],
   "params": [
@@ -45830,6 +46098,16 @@
     "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
    },
    {
+    "name": "Service can manage audit logs",
+    "table": "audit_logs",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
     "name": "Service manage deals",
     "table": "deals",
     "cmd": "ALL",
@@ -46870,16 +47148,6 @@
     "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
    },
    {
-    "name": "Feature flags are viewable by authenticated users",
-    "table": "feature_flags",
-    "cmd": "SELECT",
-    "roles": "public",
-    "mode": "permissive",
-    "using": "auth.role() = 'authenticated'",
-    "check": "",
-    "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
-   },
-   {
     "name": "Health checks are viewable by authenticated users",
     "table": "health_checks",
     "cmd": "SELECT",
@@ -46888,6 +47156,26 @@
     "using": "auth.role() = 'authenticated'",
     "check": "",
     "src": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
+   },
+   {
+    "name": "Feature flags are viewable by org",
+    "table": "feature_flags",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id IS NULL OR organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql"
+   },
+   {
+    "name": "feature_flags_service_role",
+    "table": "feature_flags",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql"
    },
    {
     "name": "Circuit breakers are viewable by authenticated users",
@@ -47338,6 +47626,56 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+   },
+   {
+    "name": "lss_select",
+    "table": "lusha_search_sessions",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_insert",
+    "table": "lusha_search_sessions",
+    "cmd": "INSERT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid() AND organization_id = public.default_org_for_current_user()",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_update",
+    "table": "lusha_search_sessions",
+    "cmd": "UPDATE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_delete",
+    "table": "lusha_search_sessions",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "organization_id = public.default_org_for_current_user()",
+    "check": "",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "name": "lss_service_role",
+    "table": "lusha_search_sessions",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
    },
    {
     "name": "org_members_view_credit_usage",
@@ -48453,6 +48791,33 @@
     "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
    },
    {
+    "name": "audit_companies",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "companies",
+    "function": "log_audit_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
+    "name": "audit_campaigns",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "campaigns",
+    "function": "log_audit_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
+    "name": "audit_workflows",
+    "when": "AFTER INSERT OR UPDATE OR DELETE",
+    "table": "workflows",
+    "function": "log_audit_event",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql"
+   },
+   {
     "name": "trg_deal_stages_updated",
     "when": "BEFORE UPDATE",
     "table": "deal_stages",
@@ -49026,6 +49391,19 @@
      "organization_members"
     ]
    },
+   "log_audit_event": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_actor uuid := auth.uid(); v_record_id uuid; v_action public.audit_action; v_old jsonb; v_new jsonb; v_org uuid; BEGIN IF TG_OP = 'INSERT' THEN v_action := 'create'; v_record_id := NEW.id; v_old := NULL; v_new := to_jsonb(NEW); BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'UPDATE' THEN v_action := 'update'; v_record_id := NEW.id; v_old := to_jsonb(OLD); v_new := to_jsonb(NEW); IF v_old = v_new THEN RETURN NEW; END IF; BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'DELETE' THEN v_action := 'delete'; v_record_id := OLD.id; v_old := to_j …",
+    "raises": [],
+    "tables": [
+     "audit_logs"
+    ]
+   },
    "log_deal_stage_change": {
     "args": "",
     "returns": "trigger",
@@ -49094,19 +49472,6 @@
     "tables": [
      "webhook_deliveries",
      "webhooks"
-    ]
-   },
-   "log_audit_event": {
-    "args": "",
-    "returns": "trigger",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE v_actor uuid := auth.uid(); v_record_id uuid; v_action public.audit_action; v_old jsonb; v_new jsonb; v_org uuid; BEGIN IF TG_OP = 'INSERT' THEN v_action := 'create'; v_record_id := NEW.id; v_old := NULL; v_new := to_jsonb(NEW); BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'UPDATE' THEN v_action := 'update'; v_record_id := NEW.id; v_old := to_jsonb(OLD); v_new := to_jsonb(NEW); IF v_old = v_new THEN RETURN NEW; END IF; BEGIN v_org := (to_jsonb(NEW) ->> 'organization_id')::uuid; EXCEPTION WHEN OTHERS THEN v_org := NULL; END; ELSIF TG_OP = 'DELETE' THEN v_action := 'delete'; v_record_id := OLD.id; v_old := to_j …",
-    "raises": [],
-    "tables": [
-     "audit_logs"
     ]
    },
    "default_org_for_current_user": {
@@ -49924,6 +50289,32 @@
      "companies",
      "organization_members"
     ]
+   },
+   "assert_service_or_admin": {
+    "args": "",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _jwt_role text; _db_user text; _caller_id uuid; BEGIN _jwt_role := current_setting('request.jwt.role', true); _db_user := current_user; _caller_id := auth.uid(); IF _db_user IN ('postgres', 'supabase_admin', 'supabase_auth_admin', 'supabase_storage_admin', 'supabase_realtime_admin') THEN RETURN; END IF; IF _jwt_role = 'service_role' THEN RETURN; END IF; IF _caller_id IS NOT NULL THEN IF EXISTS ( SELECT 1 FROM public.organization_members om WHERE om.user_id = _caller_id AND om.role::text = 'admin' AND om.deleted_at IS NULL ) THEN RETURN; END IF; END IF; RAISE EXCEPTION 'Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)', COALESCE(_jwt_role, 'NU …",
+    "raises": [
+     "Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)"
+    ],
+    "tables": [
+     "organization_members"
+    ]
+   },
+   "is_service_role": {
+    "args": "",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "BEGIN RETURN ( current_setting('request.jwt.role', true) = 'service_role' OR current_user IN ('postgres', 'supabase_admin', 'supabase_auth_admin') ); END;",
+    "raises": [],
+    "tables": []
    },
    "worker_should_run": {
     "args": "_worker TEXT",
@@ -50827,10 +51218,10 @@
     "viewer"
    ],
    "audit_action": [
-    "execute",
     "create",
     "update",
-    "delete"
+    "delete",
+    "execute"
    ],
    "automation_status": [
     "pending",
@@ -51109,6 +51500,11 @@
     "src": "supabase/migrations/20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql"
    },
    {
+    "function": "assert_service_or_admin",
+    "msg": "Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%)",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
     "function": "validate_company_rating",
     "msg": "rating must be between 0 and 5, got %",
     "src": "supabase/migrations/20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql"
@@ -51289,6 +51685,14 @@
    "oracle_v2_health": {
     "body": "SELECT organization_id, source, count(*) FILTER (WHERE created_at >= now() - interval '24 hours') AS events_24h, count(*) FILTER (WHERE status = 'error' AND created_at >= now() - interval '24 hours') AS errors_24h, count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hours') AS success_24h, ROUND( 100.0 * count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hours') / NULLIF(count(*) FILTER (WHERE created_at >= now() - interval '24 hours'), 0), 2 ) AS success_rate_pct, max(created_at) AS last_event_at FROM public.automation_execution_logs …",
     "src": "supabase/migrations/20260715170429_60ef5195-eadf-4adc-843a-f23012c9aa3a.sql"
+   },
+   "v_sec_definer_anon_grants": {
+    "body": "SELECT n.nspname AS schema_name, p.proname AS function_name, pg_get_function_identity_arguments(p.oid) AS function_args, r.rolname AS grantee_role, 'EXECUTE' AS privilege_type, CASE WHEN r.rolname = 'anon' THEN '🔴 CRÍTICO' WHEN r.rolname = 'authenticated' AND p.prosecdef THEN '🟡 REVISAR' ELSE '🟢 OK' END AS risk_level, NOW() AS checked_at FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid JOIN pg_auth_members am ON am.roleid = ( SELECT oid FROM pg_roles WHERE rolname = 'anon' ) JOIN pg_roles r ON r.oid = am.roleid WHERE p.prosecdef = true AND n.nspname = 'public' AND has_function_priv …",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   "v_extensions_audit": {
+    "body": "SELECT e.extname AS extension_name, n.nspname AS current_schema, e.extversion AS version, CASE n.nspname WHEN 'public' THEN '⚠️ Em public — candidata à migração para extensions' WHEN 'extensions' THEN '✅ Já no schema correto' ELSE '🔵 Outro schema — OK' END AS status, CASE e.extname WHEN 'uuid-ossp' THEN '🔴 CRÍTICO: não mover sem atualizar SET search_path em todas as funções SECURITY DEFINER' WHEN 'pg_trgm' THEN '🟡 Movível: verificar índices GIN/GIST existentes antes' WHEN 'unaccent' THEN '🟢 Movível: sem efeitos colaterais esperados' WHEN 'pgcrypto' THEN '🟡 Movível: verificar chamadas a crypt() …",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
    }
   },
   "pagination": [
@@ -51793,14 +52197,6 @@
      "type": "integer"
     },
     {
-     "table": "lusha_contacts",
-     "column": "enrichment_status",
-     "enum": "",
-     "allowed": [],
-     "default": "pending",
-     "type": "TEXT NOT NULL DEFAULT 'pending'"
-    },
-    {
      "table": "lusha_dm_search_history",
      "column": "status",
      "enum": "",
@@ -51815,12 +52211,20 @@
      "type": "TEXT NOT NULL CHECK (status IN ('done','failed','cancelled','processing','queued'))"
     },
     {
+     "table": "lusha_contacts",
+     "column": "enrichment_status",
+     "enum": "",
+     "allowed": [],
+     "default": "pending",
+     "type": "TEXT NOT NULL DEFAULT 'pending'"
+    },
+    {
      "table": "lusha_search_sessions",
      "column": "status",
      "enum": "",
      "allowed": [],
-     "default": "",
-     "type": "string not null"
+     "default": "running",
+     "type": "TEXT NOT NULL DEFAULT 'running'"
     },
     {
      "table": "circuit_breaker_snapshots",
@@ -52934,12 +53338,19 @@
    "audit_logs": {
     "rls": "enabled",
     "SELECT": [
+     "service_role: true",
      "authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')",
      "authenticated: public.has_role(auth.uid(), 'admin'::public.app_role)"
     ],
-    "INSERT": [],
-    "UPDATE": [],
-    "DELETE": []
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
    },
    "auth_rate_limits": {
     "rls": "enabled",
@@ -53345,11 +53756,18 @@
    "feature_flags": {
     "rls": "enabled",
     "SELECT": [
-     "public: auth.role() = 'authenticated'"
+     "public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()",
+     "service_role: true"
     ],
-    "INSERT": [],
-    "UPDATE": [],
-    "DELETE": []
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
    },
    "health_checks": {
     "rls": "enabled",
@@ -53483,7 +53901,7 @@
     ]
    },
    "lusha_credit_usage_log": {
-    "rls": "não encontrado",
+    "rls": "enabled",
     "SELECT": [
      "authenticated: organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid())",
      "service_role: true"
@@ -53514,11 +53932,23 @@
     ]
    },
    "lusha_search_sessions": {
-    "rls": "não encontrado",
-    "SELECT": [],
-    "INSERT": [],
-    "UPDATE": [],
-    "DELETE": []
+    "rls": "enabled",
+    "SELECT": [
+     "public: organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "public: user_id = auth.uid() AND organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "public: organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "public: organization_id = public.default_org_for_current_user()",
+     "service_role: true"
+    ]
    },
    "notifications": {
     "rls": "enabled",
@@ -54129,36 +54559,6 @@
   },
   "risky": [
    {
-    "table": "audit_logs",
-    "issue": "front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/lib/orgErrorHandler.ts"
-    ]
-   },
-   {
-    "table": "feature_flags",
-    "issue": "front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/components/lux/PlacesApiNewToggle.tsx"
-    ]
-   },
-   {
-    "table": "feature_flags",
-    "issue": "front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
-    "files": [
-     "src/components/lux/PlacesApiNewToggle.tsx",
-     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx"
-    ]
-   },
-   {
-    "table": "lusha_search_sessions",
-    "issue": "acessada do front (2 arquivo(s)) sem RLS (não encontrado)",
-    "files": [
-     "src/components/lux/LushaIntelligenceView.tsx",
-     "src/components/lux/lusha/SessionsPanel.tsx"
-    ]
-   },
-   {
     "table": "retry_policy_advisories",
     "issue": "front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
     "files": [
@@ -54235,6 +54635,7 @@
    "supabase/migrations/20260403110010_c9ab9a50-e66a-4a26-8d13-3e3ab3902f23.sql",
    "supabase/migrations/20260403110751_e7e083e1-46e4-440e-a46f-840d9e368c64.sql",
    "supabase/migrations/20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql",
+   "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
    "supabase/migrations/20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql",
    "supabase/migrations/20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql",
    "supabase/migrations/20260423120419_d02ef035-594f-4c5b-91c8-a1d7606f1e38.sql",
@@ -54242,6 +54643,7 @@
    "supabase/migrations/20260423125436_5dd91c24-c703-44bf-b049-32160029463e.sql",
    "supabase/migrations/20260423133137_5b637dfd-6a96-4239-a9a4-3a3711f01978.sql",
    "supabase/migrations/20260423150157_f57a14b6-3393-4672-abab-d38ffa1decb5.sql",
+   "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql",
    "supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql",
    "supabase/migrations/20260514211421_9d99a881-4a49-4c7b-94d9-11ff8b66f4c9.sql",
    "supabase/migrations/20260514211452_c31dffa4-ed7a-43fb-9896-a20421da8146.sql",
@@ -54280,6 +54682,8 @@
    "supabase/migrations/20260713105447_ce775607-1a01-4760-94c5-0981af8ba71f.sql",
    "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql",
    "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
+   "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
+   "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
    "supabase/migrations/20260715170247_637d3fdc-8e6d-4d53-adc7-3921479e5413.sql",
    "supabase/migrations/20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql",
    "supabase/migrations/20260715170411_d78dbcae-7de5-419d-8e89-a88f64ad3211.sql",
@@ -54288,6 +54692,8 @@
    "supabase/migrations/20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql",
    "supabase/migrations/20260715203137_54228599-d263-451d-953e-efa5710f18d7.sql",
    "supabase/migrations/20260718140500_b2e1d3c4-9f6a-4b7c-8d2e-1a3f5c7b9e0f.sql",
+   "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+   "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
    "supabase/migrations/20260721153915_e8a116a4-b2cd-4487-8ec1-a4c063177193.sql",
    "supabase/migrations/20260721154002_b5764fd0-5b2a-4bc4-97d1-7cf2a35dd170.sql",
    "supabase/migrations/20260721160013_fa8d923f-e212-499f-b404-5c6679ef0510.sql",
@@ -54344,6 +54750,7 @@
    "apollo_rate_disable",
    "apply_retry_advisory",
    "apply_sla_recommendation",
+   "assert_service_or_admin",
    "auto_tune_queue_slas",
    "campaign_ab_stats",
    "capture_api_latency_snapshots",
@@ -54390,6 +54797,7 @@
    "has_org_role",
    "has_role",
    "is_org_member",
+   "is_service_role",
    "log_audit_event",
    "log_automation_event",
    "log_deal_stage_change",
@@ -56496,6 +56904,38 @@
     "object": "lusha_credit_usage_log",
     "objkind": "table",
     "roles": "authenticated",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "lusha_credit_usage_log",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "lusha_search_sessions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "lusha_search_sessions",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "lusha_credit_usage_log",
+    "objkind": "table",
+    "roles": "authenticated",
     "src": "supabase/migrations/20260715170247_637d3fdc-8e6d-4d53-adc7-3921479e5413.sql"
    },
    {
@@ -56801,6 +57241,78 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "assert_service_or_admin",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "assert_service_or_admin",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "assert_service_or_admin",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "is_service_role",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "is_service_role",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "v_sec_definer_anon_grants",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "v_sec_definer_anon_grants",
+    "objkind": "table",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "v_extensions_audit",
+    "objkind": "table",
+    "roles": "anon",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "v_extensions_audit",
+    "objkind": "table",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql"
    },
    {
     "kind": "grant",
@@ -57345,70 +57857,6 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lusha_contact_mark_cache_hit",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lux_cache_stats",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lux_enrichment_gate",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "revoke",
-    "privs": "execute",
-    "object": "fn_lux_save_enriched_contact",
-    "objkind": "function",
-    "roles": "PUBLIC, anon",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lusha_contact_mark_cache_hit",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lux_cache_stats",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lux_enrichment_gate",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-   },
-   {
-    "kind": "grant",
-    "privs": "execute",
-    "object": "fn_lux_save_enriched_contact",
-    "objkind": "function",
-    "roles": "authenticated, service_role",
-    "src": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
    },
    {
     "kind": "revoke",
@@ -58309,6 +58757,7 @@
    "agent_chat_messages",
    "organization_members",
    "organization_invites",
+   "audit_logs",
    "deal_stages",
    "deals",
    "deal_activities",
@@ -58316,7 +58765,6 @@
    "api_keys",
    "webhooks",
    "webhook_deliveries",
-   "audit_logs",
    "campaign_recipients",
    "campaign_events",
    "email_accounts",
@@ -58342,8 +58790,9 @@
    "api_latency_snapshots",
    "api_latency_alert_settings",
    "api_latency_alert_history",
-   "lusha_contacts",
    "lusha_dm_search_history",
+   "lusha_contacts",
+   "lusha_credit_usage_log",
    "lusha_search_sessions",
    "oracle_rate_limits",
    "org_scrape_rate_limits",
@@ -58358,7 +58807,6 @@
    "instagram_scrape_queue",
    "instagram_scrape_results",
    "instagram_scrape_dead_letter",
-   "lusha_credit_usage_log",
    "oracle_v2_health",
    "v_lusha_cache_stats",
    "v_lux_enrichment_health"
@@ -58489,6 +58937,9 @@
     "created_at",
     "created_by"
    ],
+   "audit_logs": [
+    "created_at"
+   ],
    "deal_stages": [
     "created_at",
     "updated_at"
@@ -58512,9 +58963,6 @@
     "updated_at"
    ],
    "webhook_deliveries": [
-    "created_at"
-   ],
-   "audit_logs": [
     "created_at"
    ],
    "campaign_recipients": [
@@ -58606,13 +59054,16 @@
    "api_latency_alert_history": [
     "created_at"
    ],
+   "lusha_dm_search_history": [
+    "created_at",
+    "updated_at"
+   ],
    "lusha_contacts": [
     "created_at",
     "updated_at"
    ],
-   "lusha_dm_search_history": [
-    "created_at",
-    "updated_at"
+   "lusha_credit_usage_log": [
+    "created_at"
    ],
    "lusha_search_sessions": [
     "created_at",
@@ -58717,9 +59168,6 @@
    "apollo_rate_state": [
     "updated_at"
    ],
-   "lusha_credit_usage_log": [
-    "created_at"
-   ],
    "oracle_v2_health": [],
    "v_lusha_cache_stats": [],
    "v_lux_enrichment_health": []
@@ -58815,33 +59263,33 @@
    ],
    [
     "lusha_search_sessions",
-    "total_duplicates",
-    "number"
+    "total_found",
+    "INTEGER"
    ],
    [
     "lusha_search_sessions",
     "total_empty",
-    "number"
-   ],
-   [
-    "lusha_search_sessions",
-    "total_enriched",
-    "number"
+    "INTEGER"
    ],
    [
     "lusha_search_sessions",
     "total_errors",
-    "number"
+    "INTEGER"
    ],
    [
     "lusha_search_sessions",
-    "total_found",
-    "number"
+    "total_duplicates",
+    "INTEGER"
+   ],
+   [
+    "lusha_search_sessions",
+    "total_enriched",
+    "INTEGER"
    ],
    [
     "lusha_search_sessions",
     "total_inserted_bitrix",
-    "number"
+    "INTEGER"
    ],
    [
     "pg_net_health_snapshots",
@@ -59511,36 +59959,6 @@
     "msg": "tabela `tx` usada no código não existe nas migrations/types do repo",
     "where": [
      "scripts/ai-context/cenarios.mjs"
-    ]
-   },
-   {
-    "kind": "rls",
-    "msg": "`audit_logs`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/lib/orgErrorHandler.ts"
-    ]
-   },
-   {
-    "kind": "rls",
-    "msg": "`feature_flags`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/components/lux/PlacesApiNewToggle.tsx"
-    ]
-   },
-   {
-    "kind": "rls",
-    "msg": "`feature_flags`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
-    "where": [
-     "src/components/lux/PlacesApiNewToggle.tsx",
-     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx"
-    ]
-   },
-   {
-    "kind": "rls",
-    "msg": "`lusha_search_sessions`: acessada do front (2 arquivo(s)) sem RLS (não encontrado)",
-    "where": [
-     "src/components/lux/LushaIntelligenceView.tsx",
-     "src/components/lux/lusha/SessionsPanel.tsx"
     ]
    },
    {
@@ -79697,6 +80115,11 @@
     "expires_at timestamptz NOT NULL DEFAULT (now() + interval '7 days'),"
    ]
   },
+  "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql": {
+   "path": "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
+   "lines": 99,
+   "uses_service_role": true
+  },
   "supabase/migrations/20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql": {
    "path": "supabase/migrations/20260422202642_9410556c-61fb-4602-976b-7856c033c13d.sql",
    "lines": 131,
@@ -79798,6 +80221,11 @@
   "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql": {
    "path": "supabase/migrations/20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql",
    "lines": 44
+  },
+  "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql": {
+   "path": "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql",
+   "lines": 51,
+   "uses_service_role": true
   },
   "supabase/migrations/20260513143216_1200e575-1c81-4255-9bb2-c14bd865f321.sql": {
    "path": "supabase/migrations/20260513143216_1200e575-1c81-4255-9bb2-c14bd865f321.sql",
@@ -80147,7 +80575,7 @@
   },
   "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql": {
    "path": "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql",
-   "lines": 2
+   "lines": 16
   },
   "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql": {
    "path": "supabase/migrations/20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql",
@@ -80156,7 +80584,17 @@
   },
   "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql": {
    "path": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
-   "lines": 153,
+   "lines": 161,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql": {
+   "path": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
+   "lines": 40,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20260715164000_search_sessions_redeclara.sql": {
+   "path": "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
+   "lines": 88,
    "uses_service_role": true
   },
   "supabase/migrations/20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql": {
@@ -80265,11 +80703,13 @@
   },
   "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql": {
    "path": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-   "lines": 2
+   "lines": 175,
+   "uses_service_role": true
   },
   "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql": {
    "path": "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
-   "lines": 1
+   "lines": 145,
+   "uses_service_role": true
   },
   "supabase/migrations/20260721153915_e8a116a4-b2cd-4487-8ec1-a4c063177193.sql": {
    "path": "supabase/migrations/20260721153915_e8a116a4-b2cd-4487-8ec1-a4c063177193.sql",
@@ -80361,7 +80801,7 @@
   },
   "supabase/migrations/20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql": {
    "path": "supabase/migrations/20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql",
-   "lines": 3
+   "lines": 12
   },
   "supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql": {
    "path": "supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql",
@@ -80378,23 +80818,23 @@
   },
   "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql": {
    "path": "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql",
-   "lines": 2
+   "lines": 28
   },
   "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql": {
    "path": "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql",
-   "lines": 1
+   "lines": 23
   },
   "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql": {
    "path": "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql",
-   "lines": 1
+   "lines": 24
   },
   "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql": {
    "path": "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql",
-   "lines": 2
+   "lines": 22
   },
   "supabase/migrations/20260722100434_bdd6f199-0d46-4fa4-bb84-e5a2328002ff.sql": {
    "path": "supabase/migrations/20260722100434_bdd6f199-0d46-4fa4-bb84-e5a2328002ff.sql",
-   "lines": 2
+   "lines": 21
   },
   "supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql": {
    "path": "supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql",
@@ -80403,7 +80843,7 @@
   },
   "supabase/migrations/20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql": {
    "path": "supabase/migrations/20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql",
-   "lines": 9
+   "lines": 30
   },
   "supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql": {
    "path": "supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql",
@@ -80416,7 +80856,10 @@
   },
   "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql": {
    "path": "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql",
-   "lines": 9,
+   "lines": 34,
+   "rule_comments": [
+    "existem apenas no banco de"
+   ],
    "uses_service_role": true
   },
   "supabase/migrations/20260722114256_52e41091-6d26-4aac-b35a-9a38958ee119.sql": {
@@ -80589,10 +81032,35 @@
   }
  },
  "git": {
-  "sha": "ed7e49ef445ab6b4e3964a83860d31495129c64c",
+  "sha": "8fb4f413efd6e07b138c4a985e2a28f9e5e25597",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8fb4f41",
+    "date": "2026-11-12",
+    "author": "adm01-debug",
+    "subject": "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)",
+    "files": [
+     ".gitignore",
+     "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
+     "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql",
+     "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql",
+     "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
+     "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
+     "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
+     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+     "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
+     "supabase/migrations/20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql",
+     "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql",
+     "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql",
+     "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql",
+     "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql",
+     "supabase/migrations/20260722100434_bdd6f199-0d46-4fa4-bb84-e5a2328002ff.sql",
+     "supabase/migrations/20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql",
+     "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
+    ]
+   },
    {
     "sha": "ed7e49e",
     "date": "2026-11-12",
@@ -81929,15 +82397,6 @@
      "vite.config.ts",
      "vitest.config.ts"
     ]
-   },
-   {
-    "sha": "7155047",
-    "date": "2026-07-30",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Visual edit in Lovable",
-    "files": [
-     "supabase/functions/migrate-helper/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81946,20 +82405,20 @@
     7
    ],
    [
-    "package.json",
+    ".gitignore",
     6
    ],
    [
-    ".gitignore",
-    5
+    "package.json",
+    6
    ],
    [
     ".husky/pre-commit",
     4
    ],
    [
-    "supabase/functions/migrate-helper/index.ts",
-    4
+    "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    3
    ],
    [
     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
@@ -81986,39 +82445,39 @@
     3
    ],
    [
-    "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "supabase/functions/migrate-helper/index.ts",
+    3
+   ],
+   [
+    "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql",
     2
    ],
    [
-    "src/App.tsx",
+    "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
     2
    ],
    [
-    "src/components/NavLink.tsx",
+    "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
     2
    ],
    [
-    "src/components/auth/MFAEnroll.tsx",
+    "supabase/migrations/20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql",
     2
    ],
    [
-    "src/components/auth/MFAVerify.tsx",
+    "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql",
     2
    ],
    [
-    "src/components/automation/WorkflowEditor.tsx",
+    "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql",
     2
    ],
    [
-    "src/components/lux/AIAgentView.tsx",
+    "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql",
     2
    ],
    [
-    "src/components/lux/DataError.tsx",
-    2
-   ],
-   [
-    "src/components/lux/GradientAvatar.tsx",
+    "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql",
     2
    ]
   ]

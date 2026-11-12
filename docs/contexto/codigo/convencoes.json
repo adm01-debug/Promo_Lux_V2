@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)",
    "fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)",
    "style(manutencao): aplica correcoes locais verificadas (#22)",
    "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)",
-   "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)",
-   "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)"
+   "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)"
   ]
  },
  "pr_template": null,

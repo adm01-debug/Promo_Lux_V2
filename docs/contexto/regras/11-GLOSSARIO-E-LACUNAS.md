@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ed7e49ef44` · branch `main` · 2026-11-12 16:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8fb4f413ef` · branch `main` · 2026-11-12 21:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -45,7 +45,7 @@
 | `email_accounts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 24 colunas | migration |
 | `email_suppressions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `email_sync_log` | Histórico de tentativas de polling/sincronização por conta de e-mail | 17 colunas | migration |
-| `feature_flags` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `feature_flags` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `health_checks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `idempotency_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `instagram_scrape_dead_letter` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
@@ -55,7 +55,7 @@
 | `ipc_config` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `job_exports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `lusha_contacts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 55 colunas | migration |
-| `lusha_credit_usage_log` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | types.ts |
+| `lusha_credit_usage_log` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `lusha_dm_search_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `lusha_search_sessions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 29 colunas | migration |
 | `notifications` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
@@ -106,7 +106,7 @@
 | `workflow_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `workflows` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `app_role` (enum) | admin, sdr, viewer |  | banco |
-| `audit_action` (enum) | execute, create, update, delete |  | banco |
+| `audit_action` (enum) | create, update, delete, execute |  | banco |
 | `automation_status` (enum) | pending, running, completed, failed, cancelled |  | banco |
 | `campaign_status` (enum) | draft, active, paused, completed, archived |  | banco |
 | `scrape_job_status` (enum) | pending, running, working, completed, failed, cancelled |  | banco |
@@ -259,10 +259,6 @@ _nenhum item encontrado_
 | tabela | tabela `tabela` usada no código não existe nas migrations/types do repo | `scripts/inventario/gerar-repo.mjs` |
 | tabela | tabela `tools_runtime` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `tx` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
-| rls | `audit_logs`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/lib/orgErrorHandler.ts` |
-| rls | `feature_flags`: front faz INSERT mas nenhuma política RLS permite INSERT → vai falhar/retornar vazio para usuários | `src/components/lux/PlacesApiNewToggle.tsx` |
-| rls | `feature_flags`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/PlacesApiNewToggle.tsx`<br>`src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
-| rls | `lusha_search_sessions`: acessada do front (2 arquivo(s)) sem RLS (não encontrado) | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx` |
 | rls | `retry_policy_advisories`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | tenant | `health_checks` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `circuit_breakers` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ed7e49ef44` · branch `main` · 2026-11-12 16:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8fb4f413ef` · branch `main` · 2026-11-12 21:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -45,6 +45,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `organization_invites` | Admins can create invites | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'admin') AND created_by = auth.uid()` |
 | `organization_invites` | Admins can revoke invites | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` | `public.has_org_role(organization_id, auth.uid(), 'admin')` |
 | `organization_invites` | Admins can delete invites | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| `audit_logs` | Service can manage audit logs | ALL | service_role | permissive | `true` | `true` |
 | `deals` | Service manage deals | ALL | service_role | permissive | `true` | `true` |
 | `api_keys` | Service manage api_keys | ALL | service_role | permissive | `true` | `true` |
 | `webhooks` | Service manage webhooks | ALL | service_role | permissive | `true` | `true` |
@@ -149,8 +150,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `ponto_banco_horas` | Admins can view and update balance | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.organization_members WHERE organization_id = public.ponto_banco_horas.organization_id AND user_id = auth.uid() AND role = 'admin' )` |  |
 | `idempotency_keys` | Users can insert their own idempotency keys | INSERT | public | permissive |  | `auth.uid() = user_id` |
 | `audit_logs` | Admins view audit logs | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin'::public.app_role)` |  |
-| `feature_flags` | Feature flags are viewable by authenticated users | SELECT | public | permissive | `auth.role() = 'authenticated'` |  |
 | `health_checks` | Health checks are viewable by authenticated users | SELECT | public | permissive | `auth.role() = 'authenticated'` |  |
+| `feature_flags` | Feature flags are viewable by org | SELECT | public | permissive | `organization_id IS NULL OR organization_id = public.default_org_for_current_user()` |  |
+| `feature_flags` | feature_flags_service_role | ALL | service_role | permissive | `true` | `true` |
 | `circuit_breakers` | Circuit breakers are viewable by authenticated users | SELECT | public | permissive | `auth.role() = 'authenticated'` |  |
 | `idempotency_keys` | Users can view their own idempotency keys | SELECT | public | permissive | `auth.uid() = user_id` |  |
 | `idempotency_keys` | Users can create their own idempotency keys | INSERT | public | permissive |  | `auth.uid() = user_id` |
@@ -196,6 +198,11 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `lusha_contacts` | lc_update | UPDATE | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
 | `lusha_contacts` | lc_delete | DELETE | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
 | `lusha_contacts` | lc_service_role | ALL | service_role | permissive | `true` | `true` |
+| `lusha_search_sessions` | lss_select | SELECT | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
+| `lusha_search_sessions` | lss_insert | INSERT | public | permissive |  | `user_id = auth.uid() AND organization_id = public.default_org_for_current_user()` |
+| `lusha_search_sessions` | lss_update | UPDATE | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
+| `lusha_search_sessions` | lss_delete | DELETE | public | permissive | `organization_id = public.default_org_for_current_user()` |  |
+| `lusha_search_sessions` | lss_service_role | ALL | service_role | permissive | `true` | `true` |
 | `lusha_credit_usage_log` | org_members_view_credit_usage | SELECT | authenticated | permissive | `organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid())` |  |
 | `lusha_credit_usage_log` | service_role_full_credit_usage | ALL | service_role | permissive | `true` | `true` |
 | `oracle_rate_limits` | org_members_view_rate_limits | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
@@ -412,6 +419,13 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `organization_invites` | `expires_at` | default (now() |
 | `organization_invites` | `revoked` | default false |
 | `organization_invites` | `created_at` | default now() |
+| `audit_logs` | `id` | PK; default gen_random_uuid() |
+| `audit_logs` | `organization_id` | FK → organizations.id |
+| `audit_logs` | `user_id` | FK → users.id |
+| `audit_logs` | `action` | obrigatório |
+| `audit_logs` | `table_name` | obrigatório |
+| `audit_logs` | `record_id` | obrigatório |
+| `audit_logs` | `created_at` | default now() |
 | `deal_stages` | `id` | PK; default gen_random_uuid() |
 | `deal_stages` | `user_id` | default auth.uid() |
 | `deal_stages` | `name` | obrigatório |
@@ -486,13 +500,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `webhook_deliveries` | `created_at` | default now() |
 | `webhook_deliveries` | `organization_id` | default public.default_org_for_current_user() |
 | `webhook_deliveries` | `(tabela)` | constraint webhook_deliveries_status_check CHECK (status IN ('pending', 'sending', 'success', 'failed', 'retrying')) |
-| `audit_logs` | `id` | PK; default gen_random_uuid() |
-| `audit_logs` | `organization_id` | FK → organizations.id |
-| `audit_logs` | `user_id` | FK → users.id |
-| `audit_logs` | `action` | obrigatório |
-| `audit_logs` | `table_name` | obrigatório |
-| `audit_logs` | `record_id` | obrigatório |
-| `audit_logs` | `created_at` | default now() |
 | `campaign_recipients` | `id` | PK; default gen_random_uuid() |
 | `campaign_recipients` | `organization_id` | default public.default_org_for_current_user() |
 | `campaign_recipients` | `user_id` | default auth.uid() |
@@ -623,6 +630,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_workflow_runs_notify | AFTER UPDATE | `workflow_runs` | `notify_on_workflow_complete` |  |
 | on_organization_created | AFTER INSERT | `organizations` | `handle_new_organization` |  |
 | update_organizations_updated_at | BEFORE UPDATE | `organizations` | `update_updated_at_column` |  |
+| audit_companies | AFTER INSERT OR UPDATE OR DELETE | `companies` | `log_audit_event` |  |
+| audit_campaigns | AFTER INSERT OR UPDATE OR DELETE | `campaigns` | `log_audit_event` |  |
+| audit_workflows | AFTER INSERT OR UPDATE OR DELETE | `workflows` | `log_audit_event` |  |
 | trg_deal_stages_updated | BEFORE UPDATE | `deal_stages` | `update_updated_at_column` |  |
 | trg_deals_updated | BEFORE UPDATE | `deals` | `update_updated_at_column` |  |
 | trg_deal_tasks_updated | BEFORE UPDATE | `deal_tasks` | `update_updated_at_column` |  |
@@ -722,6 +732,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `capture_circuit_breaker_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql` |
 | `evaluate_circuit_breaker_alerts` | Acesso negado: requer papel de administrador | `supabase/migrations/20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql` |
 | `get_sector_summary` | Acesso negado à organização | `supabase/migrations/20260718141000_c3f2e4d5-0a7b-4c8d-9e3f-2b4a6c8d0e1f.sql` |
+| `assert_service_or_admin` | Proibido: requer service_role ou papel admin na organização (jwt.role=%, db_user=%, uid=%) | `supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql` |
 | `validate_company_rating` | rating must be between 0 and 5, got % | `supabase/migrations/20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql` |
 | `validate_company_rating` | review_count must be >= 0, got % | `supabase/migrations/20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql` |
 | `record_places_api_call` | params inválidos | `supabase/migrations/20260721173318_793c82ac-697e-441f-8ec6-774c564bcad5.sql` |
@@ -786,9 +797,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `automation_execution_logs` | `phase` | `cancel`, `claim`, `complete`, `dead_letter`, `execute`, `fail`, `retry` | `execute` |
 | `automation_execution_logs` | `status` | `cancelled`, `dead`, `failed`, `retrying`, `started`, `succeeded` | `started` |
 | `automation_execution_logs` | `http_status` | **livre (sem enum/CHECK)** |  |
-| `lusha_contacts` | `enrichment_status` | **livre (sem enum/CHECK)** | `pending` |
 | `lusha_dm_search_history` | `status` | `cancelled`, `done`, `failed`, `processing`, `queued` |  |
-| `lusha_search_sessions` | `status` | **livre (sem enum/CHECK)** |  |
+| `lusha_contacts` | `enrichment_status` | **livre (sem enum/CHECK)** | `pending` |
+| `lusha_search_sessions` | `status` | **livre (sem enum/CHECK)** | `running` |
 | `circuit_breaker_snapshots` | `state` | `closed`, `half-open`, `open` |  |
 | `circuit_breaker_alert_history` | `state` | **livre (sem enum/CHECK)** |  |
 | `vault_cookie_snapshots` | `health_status` | **livre (sem enum/CHECK)** |  |
@@ -997,7 +1008,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | Nome | Valores | Onde |
 |---|---|---|
 | app_role | `admin`, `sdr`, `viewer` | banco |
-| audit_action | `execute`, `create`, `update`, `delete` | banco |
+| audit_action | `create`, `update`, `delete`, `execute` | banco |
 | automation_status | `pending`, `running`, `completed`, `failed`, `cancelled` | banco |
 | campaign_status | `draft`, `active`, `paused`, `completed`, `archived` | banco |
 | scrape_job_status | `pending`, `running`, `working`, `completed`, `failed`, `cancelled` | banco |
@@ -1221,6 +1232,8 @@ _nenhum item encontrado_
 | View | SELECT |
 |---|---|
 | `oracle_v2_health` | `SELECT organization_id, source, count(*) FILTER (WHERE created_at >= now() - interval '24 hours') AS events_24h, count(*) FILTER (WHERE status = 'error' AND created_at >= now() - interval '24 hours') AS errors_24h, count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hour …` |
+| `v_sec_definer_anon_grants` | `SELECT n.nspname AS schema_name, p.proname AS function_name, pg_get_function_identity_arguments(p.oid) AS function_args, r.rolname AS grantee_role, 'EXECUTE' AS privilege_type, CASE WHEN r.rolname = 'anon' THEN '🔴 CRÍTICO' WHEN r.rolname = 'authenticated' AND p.prosecdef THEN '🟡 REVISAR' ELSE '🟢 OK' …` |
+| `v_extensions_audit` | `SELECT e.extname AS extension_name, n.nspname AS current_schema, e.extversion AS version, CASE n.nspname WHEN 'public' THEN '⚠️ Em public — candidata à migração para extensions' WHEN 'extensions' THEN '✅ Já no schema correto' ELSE '🔵 Outro schema — OK' END AS status, CASE e.extname WHEN 'uuid-ossp' …` |
 
 ### G.3 Funções de cálculo/decisão no código
 
@@ -2311,4 +2324,5 @@ _nenhum item encontrado_
 | ---------- SSRF (mínimo, sem DNS async pra evitar custo por task) ---------- | `supabase/functions/web-scrape-worker/index.ts` |
 | ainda assim precisa estar pending/retrying e dentro do limite de | `supabase/functions/webhook-dispatcher/index.ts` |
 | best-effort: falha ao disparar alerta não deve mascarar o erro original */ } | `supabase/functions/workflow-engine/index.ts` |
+| existem apenas no banco de | `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql` |
 | 41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |

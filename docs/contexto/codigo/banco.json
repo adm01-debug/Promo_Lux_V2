@@ -6,12 +6,12 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 212,
+ "migrations": 216,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
  "avisos": [
-  "14 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
+  "16 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
  ],
  "extensoes": [
   "pg_cron",
@@ -25,6 +25,9 @@
    "viewer"
   ],
   "audit_action": [
+   "create",
+   "update",
+   "delete",
    "execute"
   ],
   "automation_status": [
@@ -49,7 +52,9 @@
   ]
  },
  "views": [
-  "oracle_v2_health"
+  "oracle_v2_health",
+  "v_extensions_audit",
+  "v_sec_definer_anon_grants"
  ],
  "funcoes": [
   "accept_org_invite",
@@ -63,6 +68,7 @@
   "apollo_rate_disable",
   "apply_retry_advisory",
   "apply_sla_recommendation",
+  "assert_service_or_admin",
   "auto_tune_queue_slas",
   "campaign_ab_stats",
   "capture_api_latency_snapshots",
@@ -115,6 +121,7 @@
   "has_role",
   "increment_version",
   "is_org_member",
+  "is_service_role",
   "log_audit_event",
   "log_automation_event",
   "log_deal_stage_change",
@@ -228,6 +235,13 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "audit_campaigns",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "campaigns",
+   "funcao": "log_audit_event"
+  },
+  {
    "nome": "prevent_user_id_change_campaigns",
    "quando": "before",
    "evento": "update",
@@ -268,6 +282,13 @@
    "evento": "update",
    "tabela": "cnpj_enrich_queue",
    "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "audit_companies",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "companies",
+   "funcao": "log_audit_event"
   },
   {
    "nome": "increment_companies_version",
@@ -519,6 +540,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "lusha_dm_search_history",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "update_lusha_search_sessions_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "lusha_search_sessions",
    "funcao": "update_updated_at_column"
   },
   {
@@ -828,6 +856,13 @@
    "evento": "update",
    "tabela": "workflow_runs",
    "funcao": "notify_on_workflow_complete"
+  },
+  {
+   "nome": "audit_workflows",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "workflows",
+   "funcao": "log_audit_event"
   },
   {
    "nome": "prevent_user_id_change_workflows",
@@ -1885,6 +1920,13 @@
      "default": null,
      "ref": null
     },
+    "actor_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "created_at": {
      "tipo": "timestamp with time zone",
      "nn": false,
@@ -1969,9 +2011,25 @@
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"
+    },
+    {
+     "nome": "Service can manage audit logs",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
     }
    ],
    "indices": [
+    {
+     "nome": "idx_audit_actor",
+     "colunas": "actor_id, created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_audit_created",
+     "colunas": "created_at DESC",
+     "unico": false
+    },
     {
      "nome": "idx_audit_logs_created_brin",
      "colunas": "created_at",
@@ -1986,13 +2044,18 @@
      "nome": "idx_audit_org_violations",
      "colunas": "organization_id, created_at DESC",
      "unico": false
+    },
+    {
+     "nome": "idx_audit_record",
+     "colunas": "table_name, record_id, created_at DESC",
+     "unico": false
     }
    ],
    "fks": [
     "organization_id->organizations",
     "user_id->auth"
    ],
-   "criada_em": "20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql",
+   "criada_em": "20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
    "colunas_types": {
     "action": "Database[\"public\"][\"Enums\"][\"audit_action\"]",
     "actor_id": "string | null",
@@ -2010,9 +2073,7 @@
     "so_na_migration": [
      "user_id"
     ],
-    "so_no_types": [
-     "actor_id"
-    ]
+    "so_no_types": []
    },
    "usada_no_front": 7,
    "usada_em_edges": [
@@ -2659,6 +2720,11 @@
     {
      "nome": "idx_automation_steps_org_id",
      "colunas": "organization_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_automation_steps_pending",
+     "colunas": "run_id, created_at ASC",
      "unico": false
     },
     {
@@ -3787,6 +3853,7 @@
     "campaign-dispatch"
    ],
    "triggers": [
+    "audit_campaigns",
     "prevent_user_id_change_campaigns",
     "trg_campaigns_prevent_uid_change",
     "trg_campaigns_updated_at",
@@ -5024,6 +5091,7 @@
     "workflow-engine"
    ],
    "triggers": [
+    "audit_companies",
     "increment_companies_version",
     "prevent_user_id_change_companies",
     "tr_companies_version",
@@ -6960,6 +7028,13 @@
   },
   "feature_flags": {
    "colunas": {
+    "config": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
     "created_at": {
      "tipo": "timestamp with time zone",
      "nn": true,
@@ -6974,11 +7049,11 @@
      "default": null,
      "ref": null
     },
-    "enabled": {
-     "tipo": "boolean",
+    "flag_key": {
+     "tipo": "text",
      "nn": false,
      "pk": false,
-     "default": "false",
+     "default": null,
      "ref": null
     },
     "id": {
@@ -6988,18 +7063,18 @@
      "default": "gen_random_uuid()",
      "ref": null
     },
-    "name": {
-     "tipo": "text",
-     "nn": true,
-     "pk": false,
-     "default": null,
-     "ref": null
-    },
-    "rules": {
-     "tipo": "jsonb",
+    "is_enabled": {
+     "tipo": "boolean",
      "nn": false,
      "pk": false,
-     "default": "'{}'::jsonb",
+     "default": "false",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
      "ref": null
     },
     "updated_at": {
@@ -7013,9 +7088,15 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Feature flags are viewable by authenticated users",
+     "nome": "Feature flags are viewable by org",
      "comando": "select",
      "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "feature_flags_service_role",
+     "comando": "all",
+     "para": "service_role",
      "tipo": "permissive"
     }
    ],
@@ -7039,17 +7120,9 @@
    },
    "drift": {
     "so_na_migration": [
-     "name",
-     "description",
-     "enabled",
-     "rules"
+     "description"
     ],
-    "so_no_types": [
-     "config",
-     "flag_key",
-     "is_enabled",
-     "organization_id"
-    ]
+    "so_no_types": []
    },
    "usada_no_front": 4,
    "usada_em_edges": [
@@ -8753,8 +8826,121 @@
    "nao_usada": false
   },
   "lusha_credit_usage_log": {
-   "colunas": {},
-   "rls": false,
+   "colunas": {
+    "api_version": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "bitrix_card_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "company_name": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "credits_charged": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "domain": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "endpoint": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "error_code": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "operation": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "records_returned": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "request_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "session_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "success": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
    "policies": [
     {
      "nome": "org_members_view_credit_usage",
@@ -8769,9 +8955,20 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_lcul_operation",
+     "colunas": "operation",
+     "unico": false
+    },
+    {
+     "nome": "idx_lcul_org_created",
+     "colunas": "organization_id, created_at DESC",
+     "unico": false
+    }
+   ],
    "fks": [],
-   "criada_em": null,
+   "criada_em": "20260715150000_lusha_credit_usage_log_redeclara.sql",
    "colunas_types": {
     "api_version": "string | null",
     "bitrix_card_id": "string | null",
@@ -8789,6 +8986,10 @@
     "session_id": "string | null",
     "success": "boolean",
     "user_id": "string | null"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
    },
    "usada_no_front": 0,
    "usada_em_edges": [],
@@ -8941,11 +9142,123 @@
   },
   "lusha_search_sessions": {
    "colunas": {
+    "bitrix_card_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "bitrix_company_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "bitrix_user_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "company_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "companies"
+    },
+    "company_name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "completed_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "departments_mapped": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::text[]",
+     "ref": null
+    },
+    "departments_not_found": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::text[]",
+     "ref": null
+    },
+    "departments_requested": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::text[]",
+     "ref": null
+    },
+    "domain_searched": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "enrichment_rate": {
+     "tipo": "numeric",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "error_message": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
     "idempotency_key": {
      "tipo": "text",
      "nn": false,
      "pk": false,
      "default": null,
+     "ref": null
+    },
+    "lusha_company_lid": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "public.default_org_for_current_user()",
      "ref": null
     },
     "progress_pct": {
@@ -8954,11 +9267,139 @@
      "pk": false,
      "default": "0",
      "ref": null
+    },
+    "search_type": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'company'",
+     "ref": null
+    },
+    "started_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "status": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'running'",
+     "ref": null
+    },
+    "total_duplicates": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "total_empty": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "total_enriched": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "total_errors": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "total_found": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "total_inserted_bitrix": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
     }
    },
-   "rls": false,
-   "policies": [],
+   "rls": true,
+   "policies": [
+    {
+     "nome": "lss_delete",
+     "comando": "delete",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lss_insert",
+     "comando": "insert",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lss_select",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lss_service_role",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "lss_update",
+     "comando": "update",
+     "para": "public",
+     "tipo": "permissive"
+    }
+   ],
    "indices": [
+    {
+     "nome": "idx_lss_org_company",
+     "colunas": "organization_id, company_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_lss_org_idem",
+     "colunas": "organization_id, idempotency_key",
+     "unico": false
+    },
+    {
+     "nome": "idx_lss_org_status",
+     "colunas": "organization_id, status, created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_lss_user",
+     "colunas": "user_id, created_at DESC",
+     "unico": false
+    },
     {
      "nome": "idx_lusha_search_sessions_org_idem",
      "colunas": "organization_id, idempotency_key",
@@ -8970,8 +9411,10 @@
      "unico": true
     }
    ],
-   "fks": [],
-   "criada_em": null,
+   "fks": [
+    "company_id->companies"
+   ],
+   "criada_em": "20260715164000_search_sessions_redeclara.sql",
    "colunas_types": {
     "bitrix_card_id": "string | null",
     "bitrix_company_id": "string | null",
@@ -9005,35 +9448,7 @@
    },
    "drift": {
     "so_na_migration": [],
-    "so_no_types": [
-     "bitrix_card_id",
-     "bitrix_company_id",
-     "bitrix_user_id",
-     "company_id",
-     "company_name",
-     "completed_at",
-     "created_at",
-     "departments_mapped",
-     "departments_not_found",
-     "departments_requested",
-     "domain_searched",
-     "enrichment_rate",
-     "error_message",
-     "id",
-     "lusha_company_lid",
-     "organization_id",
-     "search_type",
-     "started_at",
-     "status",
-     "total_duplicates",
-     "total_empty",
-     "total_enriched",
-     "total_errors",
-     "total_found",
-     "total_inserted_bitrix",
-     "updated_at",
-     "user_id"
-    ]
+    "so_no_types": []
    },
    "usada_no_front": 2,
    "usada_em_edges": [
@@ -9041,7 +9456,9 @@
     "oracle-push-bitrix",
     "oracle-search-decisors"
    ],
-   "triggers": [],
+   "triggers": [
+    "update_lusha_search_sessions_updated_at"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -10149,6 +10566,13 @@
      "default": "now()",
      "ref": null
     },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "id": {
      "tipo": "uuid",
      "nn": false,
@@ -10207,6 +10631,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_org_members_active",
+     "colunas": "organization_id, user_id",
+     "unico": false
+    },
+    {
      "nome": "idx_org_members_org",
      "colunas": "organization_id",
      "unico": false
@@ -10229,7 +10658,9 @@
     "user_id": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "deleted_at"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 1,
@@ -12269,6 +12700,11 @@
     {
      "nome": "idx_scrape_jobs_org_status",
      "colunas": "organization_id, status",
+     "unico": false
+    },
+    {
+     "nome": "idx_scrape_jobs_pending_active",
+     "colunas": "created_at DESC, id",
      "unico": false
     },
     {
@@ -14845,6 +15281,11 @@
      "unico": false
     },
     {
+     "nome": "idx_workflow_runs_running",
+     "colunas": "workflow_id, started_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_workflow_runs_status",
      "colunas": "status",
      "unico": false
@@ -15101,6 +15542,7 @@
     "workflow-engine"
    ],
    "triggers": [
+    "audit_workflows",
     "prevent_user_id_change_workflows",
     "trg_prevent_user_id_change_workflows",
     "trg_workflows_prevent_uid_change",
