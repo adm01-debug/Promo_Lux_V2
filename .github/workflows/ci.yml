@@ -32,7 +32,9 @@ jobs:
         run: node scripts/ci/lint-ratchet.mjs
 
       - name: TypeScript check
-        run: npx tsc --noEmit
+        # tsconfig.json tem "files": [] e só referencia os projetos: `tsc --noEmit`
+        # na raiz não verificava NENHUM arquivo. Verifica cada projeto de verdade.
+        run: npx tsc --noEmit -p tsconfig.app.json && npx tsc --noEmit -p tsconfig.node.json
 
       - name: Unit & Integration Tests
         run: npm run test

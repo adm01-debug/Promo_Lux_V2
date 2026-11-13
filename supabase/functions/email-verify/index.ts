@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
+import { isBlockedLookupDomain, usableMx } from "../_shared/dns-guard.ts";
 
 // ── Domínios descartáveis mais usados (lista curada) ──────────────────────────
 const DISPOSABLE_DOMAINS = new Set([
@@ -121,21 +122,6 @@ const ROLE_ACCOUNTS = new Set([
   "spam",
 ]);
 
-// ── SSRF guard: não fazer DNS lookup de IPs privados -──────────────────
-const PRIVATE_DOMAIN_PATTERNS = [
-  /^localhost$/i,
-  /^127\./,
-  /^10\./,
-  /^172\.(1[6-9]|2\d|3[01])\./,
-  /^192\.168\./,
-  /^0\.0\.0\.0$/,
-  /^\.local$/,
-];
-
-function isSafeForDnsLookup(domain: string): boolean {
-  return !PRIVATE_DOMAIN_PATTERNS.some((p) => p.test(domain));
-}
-
 // ── Zod schema ------------------------------------------------------
 const EmailVerifySchema = z.object({
   email: z.string().email("Endereço de email inválido"),
@@ -207,7 +193,8 @@ async function verifyEmail(
     issues.push(`Domínio descartável: ${domain}`);
   }
 
-  if (!isSafeForDnsLookup(domain)) {
+  // Não consultar DNS de nomes internos nem de IP literal (_shared/dns-guard.ts).
+  if (isBlockedLookupDomain(domain)) {
     issues.push("Domínio interno ou reservado não permitido");
     return { email, valid: false, score: 0, issues, checks };
   }
@@ -215,37 +202,28 @@ async function verifyEmail(
   const domainInfo = { mx_records: [] as string[], has_a_record: false };
 
   if (checkMx) {
-    try {
-      const aRecords = await Deno.resolveDns(domain, "A").catch(() => []);
-      const aaaaRecords = await Deno.resolveDns(domain, "AAAA").catch(() => []);
-      domainInfo.has_a_record = aRecords.length > 0 || aaaaRecords.length > 0;
-      checks.domain_exists = domainInfo.has_a_record;
-      if (!checks.domain_exists) {
-        issues.push(`Domínio não encontrado no DNS: ${domain}`);
-      }
-      try {
-        const mxRecords = await Deno.resolveDns(domain, "MX");
-        checks.has_mx = mxRecords.length > 0;
-        domainInfo.mx_records = mxRecords
-          .sort((a, b) => a.preference - b.preference)
-          .map((r) => r.exchange)
-          .slice(0, 3);
-        if (!checks.has_mx && !domainInfo.has_a_record) {
-          issues.push(`Domínio sem MX nem registro A: ${domain}`);
-        } else if (!checks.has_mx) {
-          checks.has_mx = true; // RFC 5321 fallback
-        }
-      } catch {
-        if (domainInfo.has_a_record) {
-          checks.has_mx = true;
-        } else {
-          issues.push(`Sem MX nem A: ${domain}`);
-        }
-      }
-    } catch (err) {
-      issues.push(`DNS inconclusivo: ${(err as Error).message}`);
-      checks.domain_exists = true;
-      checks.has_mx = true;
+    const aRecords = await Deno.resolveDns(domain, "A").catch(() => []);
+    const aaaaRecords = await Deno.resolveDns(domain, "AAAA").catch(() => []);
+    domainInfo.has_a_record = aRecords.length > 0 || aaaaRecords.length > 0;
+    const mxRecords = await Deno.resolveDns(domain, "MX").catch(
+      () => [] as Deno.MxRecord[],
+    );
+    const utilizaveis = usableMx(mxRecords);
+    const mxNulo = mxRecords.length > 0 && utilizaveis.length === 0;
+    domainInfo.mx_records = utilizaveis.slice(0, 3);
+    // Domínio existe se tem A/AAAA OU qualquer MX (inclusive o nulo).
+    checks.domain_exists = domainInfo.has_a_record || mxRecords.length > 0;
+    if (!checks.domain_exists) {
+      issues.push(`Domínio não encontrado no DNS: ${domain}`);
+    }
+    if (mxNulo) {
+      // RFC 7505: MX "." declara que o domínio não recebe e-mail.
+      checks.has_mx = false;
+      issues.push(`MX nulo (RFC 7505): ${domain} não recebe e-mail`);
+    } else if (utilizaveis.length > 0 || domainInfo.has_a_record) {
+      checks.has_mx = true; // MX real, ou fallback para A (RFC 5321)
+    } else {
+      issues.push(`Domínio sem MX nem registro A: ${domain}`);
     }
   } else {
     checks.domain_exists = true;
@@ -261,7 +239,8 @@ async function verifyEmail(
 
   return {
     email,
-    valid: score >= 60 && checks.format,
+    // Sem destino de entrega (MX nulo, ou nem MX nem A) o e-mail não é válido.
+    valid: score >= 60 && checks.format && checks.has_mx,
     score,
     issues,
     checks,
@@ -306,6 +285,7 @@ serve(async (req) => {
   try {
     return jsonResponse(await verifyEmail(p.data.email, p.data.check_mx));
   } catch (err) {
+    console.error("email-verify", err);
     return jsonResponse({ error: "Erro interno" }, 500);
   }
 });
