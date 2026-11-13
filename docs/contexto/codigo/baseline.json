@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "28276ef4bef47ccbb6e568e698a72807de0f3e14",
+  "commit": "97741e0a4f6622fd5674c6a3d587a7371d01a158",
   "branch": "main",
-  "data_commit": "2026-11-13T10:41:29-03:00",
+  "data_commit": "2026-11-13T11:47:04-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "97741e0",
+    "data": "2026-11-13",
+    "assunto": "chore(runbooks): registra reconciliacao do drift de migrations em producao"
+   },
    {
     "sha": "28276ef",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "20373df",
     "data": "2026-08-28",
     "assunto": "Visual edit in Lovable"
-   },
-   {
-    "sha": "c88dc8a",
-    "data": "2026-08-18",
-    "assunto": "chore(hermes): adiciona .hermes.md (regras da casa Hermes)"
    }
   ],
-  "arquivos_mudados_7d": 117,
+  "arquivos_mudados_7d": 118,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,12 +301,12 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 22
+    "commits": 23
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1009,
+  "arquivos_total": 1010,
   "arquivos_codigo": 642,
   "linhas_codigo": 109782,
   "rotas": 10,
@@ -323,7 +323,7 @@
   "testes": 120,
   "workflows": 6,
   "scripts": 47,
-  "docs_md": 74
+  "docs_md": 75
  },
  "por_pasta": {
   "commitlint.config.cjs": {
