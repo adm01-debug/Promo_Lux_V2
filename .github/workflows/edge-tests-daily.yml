@@ -46,31 +46,28 @@ jobs:
           restore-keys: |
             deno-${{ runner.os }}-
 
-      - name: Discover Deno test files (*_test.ts)
+      - name: Discover Deno test files (nativos, exclui vitest e rls-tests)
         id: discover
         run: |
-          # Somente testes Deno puros (*_test.ts). Os arquivos *.test.ts sao
-          # vitest (rodados pelo `npm run test` no ci.yml); executa-los sob
-          # `deno test` sempre falha com "Vitest failed to access its internal
-          # state" e mantinha este workflow permanentemente vermelho,
-          # mascarando regressoes reais.
-          FILES=$(find supabase/functions \
-            -name "*_test.ts" \
-            -not -path "*/node_modules/*" | sort)
-          echo "Arquivos de teste Deno encontrados:"
-          echo "$FILES"
-          COUNT=$(echo "$FILES" | grep -c . || true)
+          # Este workflow roda `deno test` (suite Deno). Os arquivos *.test.ts que
+          # importam vitest sao suite do Node (npm run test/quality-gate) e NAO
+          # sao executaveis pelo Deno; inclui-los derruba a suite. A suite rls-tests/
+          # exige Supabase local (localhost:54321), inviavel sem ele; por isso ambos
+          # sao filtrados da rodada do deno test.
+          FILES=$(find supabase/functions \( -name "*_test.ts" -o -name "*.test.ts" \) -not -path "*/node_modules/*" -not -path "*/rls-tests/*" 2>/dev/null | sort)
+                    NATIVE=$(printf '%s\n' "$FILES" | while IFS= read -r f; do [ -z "$f" ] || grep -q "vitest" "$f" || printf '%s\n' "$f"; done)
+                    COUNT=$(printf '%s\n' "$NATIVE" | grep -c . || true)
+          echo "Arquivos de teste Deno nativos:"
+          echo "$NATIVE"
+                    # Saida em linha unica (espaco-separada): a lista multi-linha quebra a
+                    # interpolacao em `run: |` do passo seguinte (cada linha vira comando).
+                    FILES_SL=$(printf '%s\n' "$NATIVE" | tr '\n' ' ' | sed 's/ $//')
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
-          {
-            echo "files<<FILE_EOF"
-            echo "$FILES"
-            echo "FILE_EOF"
-          } >> "$GITHUB_OUTPUT"
-          if [ "$COUNT" -eq 0 ]; then
-            echo "::warning::Nenhum teste Deno (*_test.ts) localizado em supabase/functions/**"
+                    echo "files=$FILES_SL" >> "$GITHUB_OUTPUT"
+          if [ -z "$NATIVE" ]; then
+            echo "::warning::Nenhum teste Deno nativo em supabase/functions/** (fora de rls-tests/)"
           fi
-
-      - name: Run Deno tests (*_test.ts)
+      - name: Run Deno tests (nativos)
         if: steps.discover.outputs.count != '0'
         env:
           DENO_TLS_CA_STORE: system
@@ -85,9 +82,8 @@ jobs:
           if [ -n "${{ github.event.inputs.pattern }}" ]; then
             FILTER_ARG="--filter=${{ github.event.inputs.pattern }}"
           fi
-          # `deno test` com a lista filtrada (*_test.ts) em vez do diretorio
-          # inteiro: evita re-descobrir os arquivos vitest (*.test.ts) e
-          # quebrar com "Vitest failed to access its internal state".
+                # deno test com a lista filtrada (arquivos nativos) em vez do diretorio
+                          # inteiro: evita redescobrir os vitest e quebrar com erro interno do Deno.
           deno test \
             --allow-net \
             --allow-env \
