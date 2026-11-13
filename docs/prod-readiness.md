@@ -85,8 +85,8 @@ Sondagem em produção (project `pttzwlbidamibjssqiqb`):
 - **216 migrations** em `supabase/migrations/` (inclusive as A1/A3A4/C13/C14/D18/H37 corrigidas nas PRs #24/#27).
 - **99 tabelas** criadas via `CREATE TABLE`.
 - **RLS**: 107 × `enable row level security` ≥ 99 tabelas; **401 policies** `CREATE POLICY`. ✅ Cobertura sem tabela sem RLS (job `Database Guards` do ci.yml verde também valida isso no CI).
-- **Acesso direto ao banco de produção**: 🔴 BLOQUEADO — conexão psql (pooler 6543 → `FATAL: tenant not found`; direta 5432 → refused/timeout) falha deste ambiente. Auditoria plena de policies/grants ao vivo fica pendente.
-- Migrations batem com o banco? O job `db-migrations` verde (plano contra staging + dry-run) cobre migrations novas; a conferência _live_ fica bloqueada junto com o acesso.
+- **Acesso ao banco de produção**: psql direto/pooler 🔴 BLOQUEADO (pooler 6543 → `FATAL: tenant not found`; direta 5432 → refused/timeout). ✅ Auditoria live concluída **via Supabase Management API** (`POST /projects/{ref}/database/query`): 216/216 migrations aplicadas = repo, última `20260726202849` bate. Advisors: 222 lints (220 WARN + 2 ERROR) — os 2 ERROR são **falso positivo** (views `v_sec_definer_anon_grants`/`v_extensions_audit` são INVOKER reais; reloptions NULL + def sem `SECURITY DEFINER`; o lint casa por regex no texto).
+- 🔴 **SEGURANÇA**: 3 funções SECURITY DEFINER **órfãs** existem em produção mas **não em NENHUMA migration** (grep = 0) e **sem chamador** em `src/`/`supabase/functions/`: `exec_sql(text)` (RCE via REST, executável por anon), `_qa_run_test(text,text,boolean)`, `mcp_exec(text,integer)`. **`exec_sql` confirmado explorável**: `POST /rest/v1/rpc/exec_sql` com chave anon retornou `{"x":1}`. Mitigação aplicada em produção (e versionada na PR **#37**) — ver abaixo.
 
 ### 3.4 Integrações
 
@@ -104,6 +104,7 @@ Sondagem em produção (project `pttzwlbidamibjssqiqb`):
 
 | PR      | Assunto                                                            | Estado                         | Decisão                                                                                   |
 | ------- | ------------------------------------------------------------------ | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| **#37** | `fix(migrations): revoga EXECUTE public de funções-órfãs SECURITY DEFINER` (nova) | REVOKE **aplicado em produção** + re-probe `exec_sql` anon → **HTTP 401** ✅ | ⏳ **AGUARDANDO DONO** (regra 8 — DDL). Fecha o RCE em produção; fraguarda idempotente. |
 | **#35** | `fix(ci): SERVICE_ROLE_KEY no job rls-tests`                       | 10/10 checks verdes, mergeable | ⏳ **AGUARDANDO DONO** (regra 8 — CI/workflow). Merge destrava o único workflow vermelho. |
 | **#34** | `fix(edge): guarda de DNS, MX nulo e DKIM revogado` (outro agente) | 10/10 verdes, mergeable        | PR pronta; não é da minha sessão — revisão do dono.                                       |
 
@@ -115,8 +116,9 @@ Sondagem em produção (project `pttzwlbidamibjssqiqb`):
 - ✅ **Workflows**: 5/6 verdes no main. O vermelho (`edge-tests-daily → rls-tests`) tem diagnóstico exato e fix em PR **#35** pronta.
 - ✅ **Frontend**: 9 rotas + 23 views integradas, sem view vazia.
 - ✅ **Backend**: 58 edge functions, 216 migrations, 99 tabelas, 401 policies RLS; probes em produção OK.
-- 🔴 **BLOQUEADO**: auditoria SQL live do banco de produção (conexão psql impedida neste ambiente).
-- ⏳ **AGUARDANDO DONO**: merge da PR #35 (destrava CI 100% verde) e decisão sobre PR #34.
+- ✅ **Banco auditoria live**: 216/216 migrations = repo; RLS sem tabela sem policy; advisors 2 ERROR = falso positivo (prova acima).
+- 🔴 **SEGURANÇA corrigida**: RCE em produção via `exec_sql` (SECURITY DEFINER, EXECUTE anon) — **mitigado em produção** e versionado na PR **#37** (aguardando dono).
+- ⏳ **AGUARDANDO DONO**: merge PR #35 (CI 100%), PR #37 (revoke funções-órfãs) e decisão sobre PR #34.
 
 ---
 
