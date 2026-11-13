@@ -5,7 +5,7 @@
   "linguagens": [
    "TypeScript (616)",
    "SQL (220)",
-   "Markdown (75)",
+   "Markdown (76)",
    "JSON (38)",
    "JavaScript (22)",
    "Shell (11)",
@@ -456,6 +456,11 @@
    "arquivo": "docs/pesquisa-oss-linkedin-enrichment.md",
    "titulo": "Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn",
    "linhas": 184
+  },
+  {
+   "arquivo": "docs/prod-readiness.md",
+   "titulo": null,
+   "linhas": 126
   },
   {
    "arquivo": "docs/schema-tabelas-principais.md",

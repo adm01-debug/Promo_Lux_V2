@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "da897d6ec0185c9f289c1b12c982fbf4f9c95f4d",
+  "commit": "65df001cf04651dd67d1340866771ccf87351c20",
   "branch": "main",
-  "data_commit": "2026-11-13T15:53:10-03:00",
+  "data_commit": "2026-11-13T19:16:49-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "65df001",
+    "data": "2026-11-13",
+    "assunto": "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)"
+   },
    {
     "sha": "da897d6",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "4d5d4ee",
     "data": "2026-11-08",
     "assunto": "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)"
-   },
-   {
-    "sha": "c8970a8",
-    "data": "2026-11-08",
-    "assunto": "fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md"
    }
   ],
-  "arquivos_mudados_7d": 122,
+  "arquivos_mudados_7d": 123,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,12 +301,12 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 27
+    "commits": 28
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1010,
+  "arquivos_total": 1011,
   "arquivos_codigo": 642,
   "linhas_codigo": 110396,
   "rotas": 10,
@@ -323,7 +323,7 @@
   "testes": 120,
   "workflows": 6,
   "scripts": 47,
-  "docs_md": 75
+  "docs_md": 76
  },
  "por_pasta": {
   "commitlint.config.cjs": {

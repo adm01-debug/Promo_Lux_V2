@@ -34,7 +34,7 @@
    "scripts/sql (3)"
   ],
   "docs": [
-   "docs (18)",
+   "docs (19)",
    "(raiz) (5)"
   ]
  },
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)",
    "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)",
    "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)",
    "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)",
-   "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)",
-   "chore(runbooks): registra reconciliacao do drift de migrations em producao"
+   "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)"
   ]
  },
  "pr_template": null,

@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "da897d6ec0185c9f289c1b12c982fbf4f9c95f4d",
+  "sha": "65df001cf04651dd67d1340866771ccf87351c20",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 20:26 UTC",
-  "files_total": 1029,
+  "generated_at": "2026-11-13 22:56 UTC",
+  "files_total": 1030,
   "code_files": 866,
   "code_lines": 124790
  },
@@ -81125,10 +81125,19 @@
   }
  },
  "git": {
-  "sha": "da897d6ec0185c9f289c1b12c982fbf4f9c95f4d",
+  "sha": "65df001cf04651dd67d1340866771ccf87351c20",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "65df001",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "da897d6",
     "date": "2026-11-13",
@@ -81527,15 +81536,6 @@
     "files": [
      "supabase/config.toml",
      "supabase/functions/migrate-helper/index.ts"
-    ]
-   },
-   {
-    "sha": "c88dc8a",
-    "date": "2026-08-18",
-    "author": "adm01-debug",
-    "subject": "chore(hermes): adiciona .hermes.md (regras da casa Hermes)",
-    "files": [
-     ".hermes.md"
     ]
    }
   ],
