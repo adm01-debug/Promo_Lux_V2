@@ -97,6 +97,7 @@ COMMENT ON FUNCTION public.assert_service_or_admin() IS
   'ADR-009: Este helper não depende de GRANT/REVOKE para garantir segurança.';
 
 -- Revogar acesso ao helper de roles não privilegiadas
+REVOKE EXECUTE ON FUNCTION public.assert_service_or_admin() FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION public.assert_service_or_admin() FROM anon;
 REVOKE EXECUTE ON FUNCTION public.assert_service_or_admin() FROM authenticated;
 GRANT EXECUTE ON FUNCTION public.assert_service_or_admin() TO service_role;
@@ -120,6 +121,7 @@ COMMENT ON FUNCTION public.is_service_role() IS
   'útil em políticas RLS e condicionais de segurança. '
   'Parte do padrão ADR-009 de guards explícitos.';
 
+REVOKE EXECUTE ON FUNCTION public.is_service_role() FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION public.is_service_role() FROM anon;
 GRANT EXECUTE ON FUNCTION public.is_service_role() TO authenticated, service_role;
 
