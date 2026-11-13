@@ -1,1 +1,281 @@
-aW1wb3J0IHsgc2VydmUgfSBmcm9tICJodHRwczovL2Rlbm8ubGFuZC9zdGRAMC4xNjguMC9odHRwL3NlcnZlci50cyI7CmltcG9ydCB7IGNyZWF0ZUNsaWVudCB9IGZyb20gImh0dHBzOi8vZXNtLnNoL0BzdXBhYmFzZS9zdXBhYmFzZS1qc0AyIjsKaW1wb3J0IHsgeiB9IGZyb20gImh0dHBzOi8vZXNtLnNoL3pvZEAzLjIzLjgiOwoKLy8gVmVyaWZpY2EgYSBlbnRyZWdhYmlsaWRhZGUgZGUgZW1haWwgcGFyYSB1bSBkb23DrW5pbyByZW1ldGVudGUuCi8vIENoZWNhIFNQRiwgREtJTSAoc2VsZXRvciBwYWRyw6NvKSwgRE1BUkMgdmlhIEROUyBUWFQgcmVjb3JkcyAtIERlbm8gbmF0aXZvLgovLyBSZXN1bHRhZG86IHsgc2NvcmUsIGdyYWRlIChBLUYpLCBjaGVja3MsIHJlY29tbWVuZGF0aW9ucyB9Cgpjb25zdCBEZWxpdmVyYWJpbGl0eVNjaGVtYSA9IHoub2JqZWN0KHsKICBkb21haW46IHouc3RyaW5nKCkubWluKDMpLm1heCgyNTUpLnJlZ2V4KC9eW2EtekEtWjAtOV1bYS16QS1aMC05Li1dK1thLXpBLVowLTldJC8sICJEb23DrW5pbyBpbnbDoWxpZG8iKSwKICBka2ltX3NlbGVjdG9yOiB6LnN0cmluZygpLm1heCg2NCkub3B0aW9uYWwoKS5kZWZhdWx0KCJkZWZhdWx0IiksCn0pOwoKY29uc3QgQ09SU19IRUFERVJTID0gewogICJBY2Nlc3MtQ29udHJvbC1BbGxvdy1PcmlnaW4iOiAiKiIsCiAgIkFjY2Vzcy1Db250cm9sLUFsbG93LUhlYWRlcnMiOiAiYXV0aG9yaXphdGlvbiwgeC1jbGllbnQtaW5mbywgYXBpa2V5LCBjb250ZW50LXR5cGUiLAogICJBY2Nlc3MtQ29udHJvbC1BbGxvdy1NZXRob2RzIjogIlBPU1QsIE9QVElPTlMiLAp9OwoKZnVuY3Rpb24ganNvbihib2R5OiB1bmtub3duLCBzdGF0dXMgPSAyMDApIHsKICByZXR1cm4gbmV3IFJlc3BvbnNlKEpTT04uc3RyaW5naWZ5KGJvZHkpLCB7CiAgICBzdGF0dXMsIGhlYWRlcnM6IHsgLi4uQ09SU19IRUFERVJTLCAiQ29udGVudC1UeXBlIjogImFwcGxpY2F0aW9uL2pzb24iIH0sCiAgfSk7Cn0KCmZ1bmN0aW9uIGlzU2FmZURvbWFpbihkb21haW46IHN0cmluZyk6IGJvb2xlYW4gewogIHJldHVybiAhL14obG9jYWxob3N0fDEyN1x8MTBcLnwxNzJcLigxWzYtOV18MlxkfDNbMDFdKVx8MTkyXC4xNjhcLnwwXC4wXC4wXC4wfFwubG9jYWwpLy50ZXN0KGRvbWFpbik7Cn0KCmludGVyZmFjZSBEZWxpdmVyYWJpbGl0eVJlc3VsdCB7CiAgZG9tYWluOiBzdHJpbmc7CiAgc2NvcmU6IG51bWJlcjsKICBncmFkZTogIkErIiB8ICJBIiB8ICJCIiB8ICJDIiB8ICJEIiB8ICJGIjsKICBjaGVja3M6IHsKICAgIHNwZjogeyBmb3VuZDogYm9vbGVhbjsgcmVjb3JkPzogc3RyaW5nOyBwb2xpY3k/OiBzdHJpbmc7IGlzc3Vlczogc3RyaW5nW10gfTsKICAgIGRraW06IHsgZm91bmQ6IGJvb2xlYW47IHNlbGVjdG9yPzogc3RyaW5nOyByZWNvcmQ/OiBzdHJpbmc7IGlzc3Vlczogc3RyaW5nW10gfTsKICAgIGRtYXJjOiB7IGZvdW5kOiBib29sZWFuOyByZWNvcmQ/OiBzdHJpbmc7IHBvbGljeT86IHN0cmluZzsgcGN0PzogbnVtYmVyOyBpc3N1ZXM6IHN0cmluZ1tdIH07CiAgICBteDogeyBmb3VuZDogYm9vbGVhbjsgcmVjb3Jkczogc3RyaW5nW10gfTsKICB9OwogIHJlY29tbWVuZGF0aW9uczogc3RyaW5nW107CiAgY2hlY2tlZF9hdDogc3RyaW5nOwp9Cgphc3luYyBmdW5jdGlvbiBjaGVja0RlbGl2ZXJhYmlsaXR5KGRvbWFpbjogc3RyaW5nLCBka2ltU2VsZWN0b3I6IHN0cmluZyk6IFByb21pc2U8RGVsaXZlcmFiaWxpdHlSZXN1bHQ+IHsKICBjb25zdCByZWNvbW1lbmRhdGlvbnM6IHN0cmluZ1tdID0gW107CiAgY29uc3QgZCA9IGRvbWFpbi50b0xvd2VyQ2FzZSgpLnRyaW0oKTsKCiAgaWYgKCFpc1NhZmVEb21haW4oZCkpIHRocm93IG5ldyBFcnJvcigiRG9tw61uaW8gaW50ZXJubyBuw6NvIHBlcm1pdGlkbyIpOwoKICBjb25zdCBzcGZSZXN1bHQ6IERlbGl2ZXJhYmlsaXR5UmVzdWx0WyJjaGVja3MiXVsic3BmIl0gPSB7IGZvdW5kOiBmYWxzZSwgaXNzdWVzOiBbXSB9OwoKICB0cnkgewogICAgY29uc3QgdHh0UmVjb3JkcyA9IGF3YWl0IERlbm8ucmVzb2x2ZURucyhkLCAiVFhUIik7CiAgICBjb25zdCBzcGZSZWNvcmRzID0gdHh0UmVjb3Jkcy5tYXAociA9PiByLmpvaW4oIiIpKS5maWx0ZXIociA9PiByLnN0YXJ0c1dpdGgoInY9c3BmMSIpKTsKCiAgICBpZiAoc3BmUmVjb3Jkcy5sZW5ndGggPT09IDApIHsKICAgICAgc3BmUmVzdWx0Lmlzc3Vlcy5wdXNoKCJOZW5odW0gcmVnaXN0cm8gU1BGIGVuY29udHJhZG8iKTsKICAgICAgcmVjb21tZW5kYXRpb25zLnB1c2goIkFkaWNpb25hciBTUEY6IHY9c3BmMSBpbmNsdWRlOl9zcGYuZ29vZ2xlLmNvbSB+YWxsIik7CiAgICB9IGVsc2UgaWYgKHNwZlJlY29yZHMubGVuZ3RoID4gMSkgewogICAgICBzcGZSZXN1bHQuZm91bmQgPSB0cnVlOyBzcGZSZXN1bHQucmVjb3JkID0gc3BmUmVjb3Jkc1swXTsKICAgICAgc3BmUmVzdWx0Lmlzc3Vlcy5wdXNoKCJNw7psdGlwbG9zIFNQRiAtIGludsOhbGlkbyBSRkMgNzIwOCIpOwogICAgICByZWNvbW1lbmRhdGlvbnMucHVzaCgiTWFudGVyIGFwZW5hcyAxIHJlZ2lzdHJvIFNQRiIpOwogICAgfSBlbHNlIHsKICAgICAgc3BmUmVzdWx0LmZvdW5kID0gdHJ1ZTsgc3BmUmVzdWx0LnJlY29yZCA9IHNwZlJlY29yZHNbMF07CiAgICAgIGlmIChzcGZSZWNvcmRzWzBdLmluY2x1ZGVzKCItYWxsIikpIHNwZlJlc3VsdC5wb2xpY3kgPSAicmVqZWN0ICgtYWxsKSI7CiAgICAgIGVsc2UgaWYgKHNwZlJlY29yZHNbMF0uaW5jbHVkZXMoIn5hbGwiKSkgc3BmUmVzdWx0LnBvbGljeSA9ICJzb2Z0ZmFpbCAofmFsbCkiOwogICAgICBlbHNlIGlmIChzcGZSZWNvcmRzWzBdLmluY2x1ZGVzKCIrYWxsIikpIHsKICAgICAgICBzcGZSZXN1bHQucG9saWN5ID0gImFsbG93IGFsbCAoK2FsbCkgLSBQRVJJR08iOwogICAgICAgIHNwZlJlc3VsdC5pc3N1ZXMucHVzaCgiU1BFICthbGwgcGVybWl0ZSBxdWFscXVlciBzZXJ2aWRvciBzZW5kZXIhIik7CiAgICAgICAgcmVjb21tZW5kYXRpb25zLnB1c2goIlVSR0VOVEU6IE11ZGFyIFNQRiBwYXJhIC1hbGwgb3Ugfm1hbGwgaW1lZGlhdGFtZW50ZSIpOwogICAgICB9CiAgICAgIGNvbnN0IGxvb2t1cENvdW50ID0gKHNwZlJlY29yZHNbMF0ubWF0Y2goL1xiKGluY2x1ZGU6fHJlZGlyZWN0PXxhOnxteDovcHRyOnxleGlzdHM6KS9nKSB8fCBbXSkubGVuZ3RoOwogICAgICBpZiAobG9va3VwQ291bnQgPiAxMCkgewogICAgICAgIHNwZlJlc3VsdC5pc3N1ZXMucHVzaChgU1BGIGV4Y2VkZSAxMCBsb29rdXBzIEROUyAoJHtsb29rdXBDb3VudH0gZW5jb250cmFkb3MgLSBSRkMgNzIwOClgKTsKICAgICAgICByZWNvbW1lbmRhdGlvbnMucHVzaCgiUmVkdXppciBodyBtZWNhbmlzbW9zIFNQRiAtIHVzYXIgZmxhdHRlbmluZyIpOwogICAgICB9CiAgICB9CiAgfSBjYXRjaCB7IHNwZlJlc3VsdC5pc3N1ZXMucHVzaCgiRXJybyBhbyBjb25zdWx0YXIgVFhUIik7IH0KCiAgY29uc3QgZGtpbVJlc3VsdDogRGVsaXZlcmFiaWxpdHlSZXN1bHRbImNoZWNrcyJdWyJka2ltIl0gPSB7IGZvdW5kOiBmYWxzZSwgc2VsZWN0b3I6IGRraW1TZWxlY3RvciwgaXNzdWVzOiBbXSB9OwogIGZvciAoY29uc3Qgc2VsIG9mIFtka2ltU2VsZWN0b3IsICJnb29nbGUiLCAiczEiLCAiczIiLCAibWFpbCIsICJzbXRwIiwgImsxIl0pIHsKICAgIHRyeSB7CiAgICAgIGNvbnN0IHJlY3MgPSBhd2FpdCBEZW5vLnJlc29sdmVEbnMoYCR7c2VsfS5fZG9tYWlua2V5LiR7ZH1gLCAiVFhUIik7CiAgICAgIGNvbnN0IHJlYyA9IHJlY3MubWFwKHIgPT4gci5qb2luKCIiKSkuZmluZChyID0+IHIuaW5jbHVkZXMoInY9REtJTTEiKSB8fCByLmluY2x1ZGVzKCJrPXJzYSIpIHx8IHIuaW5jbHVkZXMoInA9IikpOwogICAgICBpZiAocmVjKSB7CiAgICAgICAgZGtpbVJlc3VsdC5mb3VuZCA9IHRydWU7IGRraW1SZXN1bHQuc2VsZWN0b3IgPSBzZWw7CiAgICAgICAgZGtpbVJlc3VsdC5yZWNvcmQgPSByZWMuc2xpY2UoMCwgMjAwKTsgYnJlYWs7CiAgICAgIH0KICAgIH0gY2F0Y2ggeyAvKiBjb250aW51YXIgY29tIG91dHJvcyBzZWxldG9yZXMgKi8gfQogIH0KICBpZiAoIWRraW1SZXN1bHQuZm91bmQpIHsKICAgIGRraW1SZXN1bHQuaXNzdWVzLnB1c2goIkRLSU0gbsOjbyBlbmNvbnRyYWRvIChuZW5odW0gc2VsZXRvciBwYWRyw6NvKSIpOwogICAgcmVjb21tZW5kYXRpb25zLnB1c2goIkNvbmZpZ3VyYXIgREtJTSBubyBwcm92ZWRvciBkZSBlbWFpbCIpOwogIH0KCiAgY29uc3QgZG1hcmNSZXN1bHQ6IERlbGl2ZXJhYmlsaXR5UmVzdWx0WyJjaGVja3MiXVsiZG1hcmMiXSA9IHsgZm91bmQ6IGZhbHNlLCBpc3N1ZXM6IFtdIH07CiAgdHJ5IHsKICAgIGNvbnN0IHJlY3MgPSBhd2FpdCBEZW5vLnJlc29sdmVEbnMoYF9kbWFyYy4ke2R9YCwgIlRYVCIpOwogICAgY29uc3QgcmVjID0gcmVjcy5tYXAociA9PiByLmpvaW4oIiIpKS5maW5kKHIgPT4gci5zdGFydHNXaXRoKCJ2PURNQVJDMSIpKTsKICAgIGlmICghcmVjKSB7CiAgICAgIGRtYXJjUmVzdWx0Lmlzc3Vlcy5wdXNoKCJOZW5odW0gcmVnaXN0cm8gRE1BUkMiKTsKICAgICAgcmVjb21tZW5kYXRpb25zLnB1c2goYEFkaWNpb25hciBETUFSQzogdj1ETUFSQzE7IHA9bm9uZTsgcnVhPW1haWx0bzpkbWFyY0Ake2R9YCk7CiAgICB9IGVsc2UgewogICAgICBkbWFyY1Jlc3VsdC5mb3VuZCA9IHRydWU7IGRtYXJjUmVzdWx0LnJlY29yZCA9IHJlYzsKICAgICAgY29uc3QgcCA9IHJlYy5tYXRjaCgvXGJwPShcdyspLyk7CiAgICAgIGlmIChwKSB7CiAgICAgICAgZG1hcmNSZXN1bHQucG9saWN5ID0gcFsxXTsKICAgICAgICBpZiAocFsxXSA9PT0gIm5vbmUiKSB7IGRtYXJjUmVzdWx0Lmlzc3Vlcy5wdXNoKCJETUFSQyBwPW5vbmUgLSBhcGVuYXMgbW9uaXRvcmEiKTsgcmVjb21tZW5kYXRpb25zLnB1c2goIkVsZXZhciBETUFSQyBwYXJhIHF1YXJhbnRpbmUiKTsgfQogICAgICAgIGVsc2UgaWYgKHBbMV0gPT09ICJxdWFyYW50aW5lIikgcmVjb21tZW5kYXRpb25zLnB1c2goIkNvbnNpZGVyYXIgRE1BUkMgcD1yZWplY3QiKTsKICAgICAgfQogICAgICBjb25zdCBwY3QgPSByZWMubWF0Y2goL1xicGN0PShcZCspLyk7CiAgICAgIGRtYXJjUmVzdWx0LnBjdCA9IHBjdCA/IHBhcnNlSW50KHBjdFsxXSkgOiAxMDA7CiAgICAgIGlmIChkbWFyY1Jlc3VsdC5wY3QgPCAxMDApIHsgZG1hcmNSZXN1bHQuaXNzdWVzLnB1c2goYERNQVJDIGVtICR7ZG1hcmNSZXN1bHQucGN0fSUgYXBlbmFzYCk7IHJlY29tbWVuZGF0aW9ucy5wdXNoKCJBdW1lbnRhciBETUFSQyBwY3Q9MTAwIik7IH0KICAgIH0KICB9IGNhdGNoIHsgZG1hcmNSZXN1bHQuaXNzdWVzLnB1c2goIkVycm8gYW8gY29uc3VsdGFyIERNQVJDIik7IH0KCiAgY29uc3QgbXhSZXN1bHQ6IERlbGl2ZXJhYmlsaXR5UmVzdWx0WyJjaGVja3MiXVsibXgiXSA9IHsgZm91bmQ6IGZhbHNlLCByZWNvcmRzOiBbXSB9OwogIHRyeSB7CiAgICBjb25zdCBteCA9IGF3YWl0IERlbm8ucmVzb2x2ZURucyhkLCAiTVgiKTsKICAgIGlmIChteCAmJiBteC5sZW5ndGggPiAwKSB7IG14UmVzdWx0LmZvdW5kID0gdHJ1ZTsgbXhSZXN1bHQucmVjb3JkcyA9IG14LnNvcnQoKGEsIGIpID0+IGEucHJlZmVyZW5jZSAtIGIucHJlZmVyZW5jZSkubWFwKHIgPT4gci5leGNoYW5nZSkuc2xpY2UoMCwgMyk7IH0KICB9IGNhdGNoIHsgLyogaWdub3JhciAqLyB9CgogIGxldCBzY29yZSA9IDA7CiAgaWYgKHNwZlJlc3VsdC5mb3VuZCAmJiBzcGZSZXN1bHQuaXNzdWVzLmxlbmd0aCA9PT0gMCkgc2NvcmUgKz0gMzU7CiAgZWxzZSBpZiAoc3BmUmVzdWx0LmZvdW5kKSBzY29yZSArPSAxNTsKICBpZiAoZGtpbVJlc3VsdC5mb3VuZCkgc2NvcmUgKz0gMzU7CiAgaWYgKGRtYXJjUmVzdWx0LmZvdW5kICYmIGRtYXJjUmVzdWx0LnBvbGljeSAhPT0gIm5vbmUiKSBzY29yZSArPSAyNTsKICBlbHNlIGlmIChkbWFyY1Jlc3VsdC5mb3VuZCkgc2NvcmUgKz0gMTA7CiAgaWYgKG14UmVzdWx0LmZvdW5kKSBzY29yZSArPSA1OwoKICBjb25zdCBncmFkZTogRGVsaXZlcmFiaWxpdHlSZXN1bHRbImdyYWRlIl0gPSBzY29yZSA+PSA5NSA/ICJBKyIgOiBzY29yZSA+PSA4MCA/ICJBIiA6IHNjb3JlID49IDY1ID8gIkIiIDogc2NvcmUgPj0gNTAgPyAiQyIgOiBzY29yZSA+PSAzMCA/ICJEIiA6ICJGIjsKCiAgcmV0dXJuIHsgZG9tYWluOiBkLCBzY29yZSwgZ3JhZGUsIGNoZWNrczogeyBzcGY6IHNwZlJlc3VsdCwgZGtpbTogZGtpbVJlc3VsdCwgZG1hcmM6IGRtYXJjUmVzdWx0LCBteDogbXhSZXN1bHQgfSwgcmVjb21tZW5kYXRpb25zLCBjaGVja2VkX2F0OiBuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKCkgfTsKfQoKc2VydmUoYXN5bmMgKHJlcSkgPT4gewogIGlmIChyZXEubWV0aG9kID09PSAiT1BUSU9OUyIpIHJldHVybiBuZXcgUmVzcG9uc2UobnVsbCwgeyBoZWFkZXJzOiBDT1JTX0hFQURFUlMgfSk7CiAgaWYgKHJlcS5tZXRob2QgIT09ICJQT1NUIikgcmV0dXJuIGpzb24oeyBlcnJvcjogIlVzZSBQT1NULiIgfSwgNDA1KTsKICBjb25zdCBhdXRoSGVhZGVyID0gcmVxLmhlYWRlcnMuZ2V0KCJBdXRob3JpemF0aW9uIik7CiAgaWYgKCFhdXRoSGVhZGVyPy5zdGFydHNXaXRoKCJCZWFyZXIgIikpIHJldHVybiBqc29uKHsgZXJyb3I6ICJVbmF1dGhvcml6ZWQiIH0sIDQwMSk7CiAgY29uc3QgYW5vbkNsaWVudCA9IGNyZWF0ZUNsaWVudChEZW5vLmVudi5nZXQoIlNVUEFCQVNFX1VSTCIpISwgRGVuby5lbnYuZ2V0KCJTVVBBQkFTRV9BTk9OX0tFWSIpISwgeyBnbG9iYWw6IHsgaGVhZGVyczogeyBBdXRob3JpemF0aW9uOiBhdXRoSGVhZGVyIH0gfSB9KTsKICBjb25zdCB7IGRhdGE6IHsgdXNlciB9LCBlcnJvciB9ID0gYXdhaXQgYW5vbkNsaWVudC5hdXRoLmdldFVzZXIoKTsKICBpZiAoZXJyb3IgfHwgIXVzZXIpIHJldHVybiBqc29uKHsgZXJyb3I6ICJVbmF1dGhvcml6ZWQiIH0sIDQwMSk7CiAgbGV0IGJvZHk6IHVua25vd247CiAgdHJ5IHsgYm9keSA9IGF3YWl0IHJlcS5qc29uKCk7IH0gY2F0Y2ggeyByZXR1cm4ganNvbih7IGVycm9yOiAiQm9keSBKU09OIGludsOhbGlkbyIgfSwgNDAwKTsgfQogIGNvbnN0IHAgPSBEZWxpdmVyYWJpbGl0eVNjaGVtYS5zYWZlUGFyc2UoYm9keSk7CiAgaWYgKCFwLnN1Y2Nlc3MpIHJldHVybiBqc29uKHsgZXJyb3I6ICJJbnB1dCBpbnbDoWxpZG8iLCBkZXRhaWxzOiBwLmVycm9yLmZsYXR0ZW4oKS5maWVsZEVycm9ycyB9LCA0MDApOwogIHRyeSB7IHJldHVybiBqc29uKGF3YWl0IGNoZWNrRGVsaXZlcmFiaWxpdHkocC5kYXRhLmRvbWFpbiwgcC5kYXRhLmRraW1fc2VsZWN0b3IpKTsgfQogIGNhdGNoIChlcnIpIHsgcmV0dXJuIGpzb24oeyBlcnJvcjogKGVyciBhcyBFcnJvcikubWVzc2FnZSB9LCA1MDApOyB9Cn0pOwo=
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://esm.sh/zod@3.23.8";
+
+// Verifica a entregabilidade de email para um domínio remetente.
+// Checa SPF, DKIM (seletor padrão), DMARC via DNS TXT records - Deno nativo.
+// Resultado: { score, grade (A-F), checks, recommendations }
+
+const DeliverabilitySchema = z.object({
+  domain: z
+    .string()
+    .min(3)
+    .max(255)
+    .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, "Domínio inválido"),
+  dkim_selector: z.string().max(64).optional().default("default"),
+});
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+  });
+}
+
+function isSafeDomain(domain: string): boolean {
+  return !/^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|0\.0\.0\.0|\.local)/.test(
+    domain,
+  );
+}
+
+interface DeliverabilityResult {
+  domain: string;
+  score: number;
+  grade: "A+" | "A" | "B" | "C" | "D" | "F";
+  checks: {
+    spf: { found: boolean; record?: string; policy?: string; issues: string[] };
+    dkim: {
+      found: boolean;
+      selector?: string;
+      record?: string;
+      issues: string[];
+    };
+    dmarc: {
+      found: boolean;
+      record?: string;
+      policy?: string;
+      pct?: number;
+      issues: string[];
+    };
+    mx: { found: boolean; records: string[] };
+  };
+  recommendations: string[];
+  checked_at: string;
+}
+
+async function checkDeliverability(
+  domain: string,
+  dkimSelector: string,
+): Promise<DeliverabilityResult> {
+  const recommendations: string[] = [];
+  const d = domain.toLowerCase().trim();
+
+  if (!isSafeDomain(d)) throw new Error("Domínio interno não permitido");
+
+  const spfResult: DeliverabilityResult["checks"]["spf"] = {
+    found: false,
+    issues: [],
+  };
+
+  try {
+    const txtRecords = await Deno.resolveDns(d, "TXT");
+    const spfRecords = txtRecords
+      .map((r) => r.join(""))
+      .filter((r) => r.startsWith("v=spf1"));
+
+    if (spfRecords.length === 0) {
+      spfResult.issues.push("Nenhum registro SPF encontrado");
+      recommendations.push(
+        "Adicionar SPF: v=spf1 include:_spf.google.com ~all",
+      );
+    } else if (spfRecords.length > 1) {
+      spfResult.found = true;
+      spfResult.record = spfRecords[0];
+      spfResult.issues.push("Múltiplos SPF - inválido RFC 7208");
+      recommendations.push("Manter apenas 1 registro SPF");
+    } else {
+      spfResult.found = true;
+      spfResult.record = spfRecords[0];
+      if (spfRecords[0].includes("-all")) spfResult.policy = "reject (-all)";
+      else if (spfRecords[0].includes("~all"))
+        spfResult.policy = "softfail (~all)";
+      else if (spfRecords[0].includes("+all")) {
+        spfResult.policy = "allow all (+all) - PERIGO";
+        spfResult.issues.push("SPF +all permite qualquer servidor sender!");
+        recommendations.push(
+          "URGENTE: Mudar SPF para -all ou ~all imediatamente",
+        );
+      }
+      const lookupCount = (
+        spfRecords[0].match(/\b(include:|redirect=|a:|mx:|ptr:|exists:)/g) || []
+      ).length;
+      if (lookupCount > 10) {
+        spfResult.issues.push(
+          `SPF excede 10 lookups DNS (${lookupCount} encontrados - RFC 7208)`,
+        );
+        recommendations.push("Reduzir os mecanismos SPF - usar flattening");
+      }
+    }
+  } catch {
+    spfResult.issues.push("Erro ao consultar TXT");
+  }
+
+  const dkimResult: DeliverabilityResult["checks"]["dkim"] = {
+    found: false,
+    selector: dkimSelector,
+    issues: [],
+  };
+  for (const sel of [
+    dkimSelector,
+    "google",
+    "s1",
+    "s2",
+    "mail",
+    "smtp",
+    "k1",
+  ]) {
+    try {
+      const recs = await Deno.resolveDns(`${sel}._domainkey.${d}`, "TXT");
+      const rec = recs
+        .map((r) => r.join(""))
+        .find(
+          (r) =>
+            r.includes("v=DKIM1") || r.includes("k=rsa") || r.includes("p="),
+        );
+      if (rec) {
+        dkimResult.found = true;
+        dkimResult.selector = sel;
+        dkimResult.record = rec.slice(0, 200);
+        break;
+      }
+    } catch {
+      /* continuar com outros seletores */
+    }
+  }
+  if (!dkimResult.found) {
+    dkimResult.issues.push("DKIM não encontrado (nenhum seletor padrão)");
+    recommendations.push("Configurar DKIM no provedor de email");
+  }
+
+  const dmarcResult: DeliverabilityResult["checks"]["dmarc"] = {
+    found: false,
+    issues: [],
+  };
+  try {
+    const recs = await Deno.resolveDns(`_dmarc.${d}`, "TXT");
+    const rec = recs
+      .map((r) => r.join(""))
+      .find((r) => r.startsWith("v=DMARC1"));
+    if (!rec) {
+      dmarcResult.issues.push("Nenhum registro DMARC");
+      recommendations.push(
+        `Adicionar DMARC: v=DMARC1; p=none; rua=mailto:dmarc@${d}`,
+      );
+    } else {
+      dmarcResult.found = true;
+      dmarcResult.record = rec;
+      const p = rec.match(/\bp=(\w+)/);
+      if (p) {
+        dmarcResult.policy = p[1];
+        if (p[1] === "none") {
+          dmarcResult.issues.push("DMARC p=none - apenas monitora");
+          recommendations.push("Elevar DMARC para quarantine");
+        } else if (p[1] === "quarantine")
+          recommendations.push("Considerar DMARC p=reject");
+      }
+      const pct = rec.match(/\bpct=(\d+)/);
+      dmarcResult.pct = pct ? parseInt(pct[1]) : 100;
+      if (dmarcResult.pct < 100) {
+        dmarcResult.issues.push(`DMARC em ${dmarcResult.pct}% apenas`);
+        recommendations.push("Aumentar DMARC pct=100");
+      }
+    }
+  } catch {
+    dmarcResult.issues.push("Erro ao consultar DMARC");
+  }
+
+  const mxResult: DeliverabilityResult["checks"]["mx"] = {
+    found: false,
+    records: [],
+  };
+  try {
+    const mx = await Deno.resolveDns(d, "MX");
+    if (mx && mx.length > 0) {
+      mxResult.found = true;
+      mxResult.records = mx
+        .sort((a, b) => a.preference - b.preference)
+        .map((r) => r.exchange)
+        .slice(0, 3);
+    }
+  } catch {
+    /* ignorar */
+  }
+
+  let score = 0;
+  if (spfResult.found && spfResult.issues.length === 0) score += 35;
+  else if (spfResult.found) score += 15;
+  if (dkimResult.found) score += 35;
+  if (dmarcResult.found && dmarcResult.policy !== "none") score += 25;
+  else if (dmarcResult.found) score += 10;
+  if (mxResult.found) score += 5;
+
+  const grade: DeliverabilityResult["grade"] =
+    score >= 95
+      ? "A+"
+      : score >= 80
+        ? "A"
+        : score >= 65
+          ? "B"
+          : score >= 50
+            ? "C"
+            : score >= 30
+              ? "D"
+              : "F";
+
+  return {
+    domain: d,
+    score,
+    grade,
+    checks: {
+      spf: spfResult,
+      dkim: dkimResult,
+      dmarc: dmarcResult,
+      mx: mxResult,
+    },
+    recommendations,
+    checked_at: new Date().toISOString(),
+  };
+}
+
+serve(async (req) => {
+  if (req.method === "OPTIONS")
+    return new Response(null, { headers: CORS_HEADERS });
+  if (req.method !== "POST") return json({ error: "Use POST." }, 405);
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer "))
+    return json({ error: "Unauthorized" }, 401);
+  const anonClient = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    { global: { headers: { Authorization: authHeader } } },
+  );
+  const {
+    data: { user },
+    error,
+  } = await anonClient.auth.getUser();
+  if (error || !user) return json({ error: "Unauthorized" }, 401);
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return json({ error: "Body JSON inválido" }, 400);
+  }
+  const p = DeliverabilitySchema.safeParse(body);
+  if (!p.success)
+    return json(
+      { error: "Input inválido", details: p.error.flatten().fieldErrors },
+      400,
+    );
+  try {
+    return json(await checkDeliverability(p.data.domain, p.data.dkim_selector));
+  } catch (err) {
+    return json({ error: (err as Error).message }, 500);
+  }
+});
