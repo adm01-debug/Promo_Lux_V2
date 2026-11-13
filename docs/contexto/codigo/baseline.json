@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "65df001cf04651dd67d1340866771ccf87351c20",
+  "commit": "50fd2410a0f771f5285a168809b0957a93ff3d95",
   "branch": "main",
-  "data_commit": "2026-11-13T19:16:49-03:00",
+  "data_commit": "2026-11-13T20:31:18-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "50fd241",
+    "data": "2026-11-13",
+    "assunto": "fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)"
+   },
    {
     "sha": "65df001",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "1eb0ae9",
     "data": "2026-11-08",
     "assunto": "fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json"
-   },
-   {
-    "sha": "4d5d4ee",
-    "data": "2026-11-08",
-    "assunto": "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)"
    }
   ],
-  "arquivos_mudados_7d": 123,
+  "arquivos_mudados_7d": 124,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,12 +301,12 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 28
+    "commits": 29
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1011,
+  "arquivos_total": 1012,
   "arquivos_codigo": 642,
   "linhas_codigo": 110396,
   "rotas": 10,
@@ -318,7 +318,7 @@
   "hooks": 78,
   "edge_functions": 58,
   "tabelas": 96,
-  "migrations": 216,
+  "migrations": 217,
   "cron_jobs": 6,
   "testes": 120,
   "workflows": 6,

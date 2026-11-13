@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `65df001cf04651dd67d1340866771ccf87351c20` (2026-11-13T19:16:49-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `50fd2410a0f771f5285a168809b0957a93ff3d95` (2026-11-13T20:31:18-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (616), SQL (220), Markdown (76), JSON (38), JavaScript (22), Shell (11), YAML (7), Python (5)
+- linguagens: TypeScript (616), SQL (221), Markdown (76), JSON (38), JavaScript (22), Shell (11), YAML (7), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1011 |
+| arquivos_total | 1012 |
 | arquivos_codigo | 642 |
 | linhas_codigo | 110396 |
 | rotas | 10 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 78 |
 | edge_functions | 58 |
 | tabelas | 96 |
-| migrations | 216 |
+| migrations | 217 |
 | cron_jobs | 6 |
 | testes | 120 |
 | workflows | 6 |
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6468 nós · 13952 arestas · 569 comunidades · grafo do commit `65df001c`
+- 6469 nós · 13952 arestas · 570 comunidades · grafo do commit `50fd2410`
 - comunidades maiores: lucide-react (205), button.tsx (174), cn (120), LushaIntelligenceView.tsx (117), snapshot.py (102), gerar.mjs (80), withOrg.ts (76), CompaniesView.tsx (75), ref_node_fs (72), react (68), dependencies (65), vitest (63)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -325,6 +325,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-13 `50fd241` fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)
 - 2026-11-13 `65df001` docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)
 - 2026-11-13 `da897d6` feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)
 - 2026-11-13 `ff716ae` docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)
@@ -339,7 +340,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-12 `f7bec29` chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)
 - 2026-11-12 `a168718` fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)
 - 2026-11-11 `5e3af79` fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)
-- 2026-11-11 `480dad0` fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
