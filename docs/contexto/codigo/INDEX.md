@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `97741e0a4f6622fd5674c6a3d587a7371d01a158` (2026-11-13T11:47:04-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b50e001b5e25d52425e043f36232f8ce016595ff` (2026-11-13T12:48:40-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1010 |
 | arquivos_codigo | 642 |
-| linhas_codigo | 109782 |
+| linhas_codigo | 110396 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -216,8 +216,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6434 nós · 13890 arestas · 561 comunidades · grafo do commit `97741e0a`
-- comunidades maiores: react (152), lucide-react (150), cn (130), OrganizationsView.tsx (95), gerar.mjs (80), CompaniesView.tsx (74), LushaIntelligenceView.tsx (74), generate.py (73), ref_node_fs (68), JobDetailsSheet.tsx (68), dependencies (65), lint-ratchet.mjs (59)
+- 6455 nós · 13938 arestas · 562 comunidades · grafo do commit `b50e001b`
+- comunidades maiores: lucide-react (206), Monitoring.tsx (166), @tanstack/react-query (157), snapshot.py (108), OrganizationsView.tsx (94), react (85), cn (83), gerar.mjs (80), hooks/use-toast.ts (72), generate.py (71), ref_node_fs (67), utils.ts (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -228,6 +228,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/github-ci.md (3)
 - docs/agentes/mapa-repo.md (3)
 - docs/estado/05-infra-ci-testes.md (3)
+- scripts/ci/eslint-baseline.json (3)
 - supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql (3)
 - .claude/skills/promo-lux-v2/SKILL.md (2)
 - .github/workflows/ci.yml (2)
@@ -236,7 +237,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - ai-context.config.json (2)
 - docs/ESTADO_ATUAL.md (2)
 - docs/agentes/banco.md (2)
-- docs/estado/02-backend-edge-functions.md (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -324,6 +324,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-13 `b50e001` fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)
 - 2026-11-13 `97741e0` chore(runbooks): registra reconciliacao do drift de migrations em producao
 - 2026-11-13 `28276ef` infra: pina supabase CLI v3.1.0 no workflow de migrations (#28)
 - 2026-11-13 `5016c64` fix(migrations): revoga EXECUTE de PUBLIC nas funcoes guard da A1 (#27)
@@ -338,7 +339,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-11 `27893bd` infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)
 - 2026-11-11 `119de20` fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)
 - 2026-11-08 `6f3b1ff` fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script
-- 2026-11-08 `8173876` fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

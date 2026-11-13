@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "97741e0a4f6622fd5674c6a3d587a7371d01a158",
+  "sha": "b50e001b5e25d52425e043f36232f8ce016595ff",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 15:41 UTC",
+  "generated_at": "2026-11-13 16:30 UTC",
   "files_total": 1029,
   "code_files": 866,
-  "code_lines": 124176
+  "code_lines": 124790
  },
  "version": "1.3.2",
- "facts_hash": "242ee631f32c3391",
+ "facts_hash": "b108a26a992bb816",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -22524,15 +22524,20 @@
     "name": "deliverability-check",
     "file": "supabase/functions/deliverability-check/index.ts",
     "methods": [
-     "POST?"
+     "OPTIONS"
     ],
-    "auth": "n/d",
+    "auth": "JWT do usuário",
     "tables": [],
-    "env": [],
+    "env": [
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_URL"
+    ],
     "external": [],
     "invokes": [],
     "doc": "",
-    "errors": [],
+    "errors": [
+     "Domínio interno não permitido"
+    ],
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
@@ -22686,11 +22691,14 @@
     "name": "email-verify",
     "file": "supabase/functions/email-verify/index.ts",
     "methods": [
-     "POST?"
+     "OPTIONS"
     ],
-    "auth": "n/d",
+    "auth": "JWT do usuário",
     "tables": [],
-    "env": [],
+    "env": [
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_URL"
+    ],
     "external": [],
     "invokes": [],
     "doc": "",
@@ -24656,7 +24664,7 @@
   {
    "module": "(raiz)",
    "files": 9,
-   "lines": 340,
+   "lines": 344,
    "tables": [],
    "exports": [
     "eslint.config.js: tseslint",
@@ -24716,7 +24724,7 @@
   {
    "module": "e2e",
    "files": 19,
-   "lines": 2222,
+   "lines": 2240,
    "tables": [
     "companies",
     "dlq_health_snapshots",
@@ -25655,7 +25663,7 @@
   {
    "module": "supabase/functions",
    "files": 115,
-   "lines": 20557,
+   "lines": 21149,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -28096,9 +28104,11 @@
     "supabase/functions/ai-agent/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/deliverability-check/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
+    "supabase/functions/email-verify/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
@@ -28220,11 +28230,13 @@
     "supabase/functions/cnpj-enrich-worker/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/deliverability-check/index.ts",
     "supabase/functions/dlq-alerts/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
     "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/email-verify/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
@@ -29025,6 +29037,22 @@
     "name": "BodySchema",
     "kind": "object",
     "body": "{ cnpj: z.string().min(11).max(20) }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/deliverability-check/index.ts",
+    "name": "DeliverabilitySchema",
+    "kind": "object",
+    "body": "{ domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, \"Domínio inválido\"), dkim_selector: z.string().max(64).optional().default(\"default\"), }",
+    "refines": [],
+    "chain": []
+   },
+   {
+    "file": "supabase/functions/email-verify/index.ts",
+    "name": "EmailVerifySchema",
+    "kind": "object",
+    "body": "{ email: z.string().email(\"Endereço de email inválido\"), check_mx: z.boolean().optional().default(true), organization_id: z.string().uuid().optional(), }",
     "refines": [],
     "chain": []
    },
@@ -30435,6 +30463,10 @@
    {
     "file": "supabase/functions/campaign-dispatch/index.ts",
     "msg": "token refresh: ${e instanceof Error ? e.message : String(e)}"
+   },
+   {
+    "file": "supabase/functions/deliverability-check/index.ts",
+    "msg": "Domínio interno não permitido"
    },
    {
     "file": "supabase/functions/email-poll-replies/index.ts",
@@ -60371,7 +60403,7 @@
   },
   "eslint.config.js": {
    "path": "eslint.config.js",
-   "lines": 27,
+   "lines": 31,
    "exports": [
     "default tseslint"
    ]
@@ -60959,7 +60991,7 @@
   },
   "e2e/helpers/lushaMocks.ts": {
    "path": "e2e/helpers/lushaMocks.ts",
-   "lines": 257,
+   "lines": 275,
    "exports": [
     "function mockLushaCookieHealth",
     "function mockLushaSearchOk",
@@ -76029,7 +76061,23 @@
   },
   "supabase/functions/deliverability-check/index.ts": {
    "path": "supabase/functions/deliverability-check/index.ts",
-   "lines": 1
+   "lines": 282,
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "errors": [
+    "Domínio interno não permitido"
+   ],
+   "zod": [
+    {
+     "name": "DeliverabilitySchema",
+     "kind": "object",
+     "body": "{ domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, \"Domínio inválido\"), dkim_selector: z.string().max(64).optional().default(\"default\"), }",
+     "refines": [],
+     "chain": []
+    }
+   ]
   },
   "supabase/functions/dlq-alerts/index.ts": {
    "path": "supabase/functions/dlq-alerts/index.ts",
@@ -76332,7 +76380,20 @@
   },
   "supabase/functions/email-verify/index.ts": {
    "path": "supabase/functions/email-verify/index.ts",
-   "lines": 1
+   "lines": 312,
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "zod": [
+    {
+     "name": "EmailVerifySchema",
+     "kind": "object",
+     "body": "{ email: z.string().email(\"Endereço de email inválido\"), check_mx: z.boolean().optional().default(true), organization_id: z.string().uuid().optional(), }",
+     "refines": [],
+     "chain": []
+    }
+   ]
   },
   "supabase/functions/gmaps-places-search/index.ts": {
    "path": "supabase/functions/gmaps-places-search/index.ts",
@@ -81064,10 +81125,23 @@
   }
  },
  "git": {
-  "sha": "97741e0a4f6622fd5674c6a3d587a7371d01a158",
+  "sha": "b50e001b5e25d52425e043f36232f8ce016595ff",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b50e001",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)",
+    "files": [
+     "e2e/helpers/lushaMocks.ts",
+     "eslint.config.js",
+     "scripts/ci/eslint-baseline.json",
+     "supabase/functions/deliverability-check/index.ts",
+     "supabase/functions/email-verify/index.ts"
+    ]
+   },
    {
     "sha": "97741e0",
     "date": "2026-11-13",
@@ -81464,20 +81538,6 @@
      "docs/estado/03-dados-e-runtime.md",
      "docs/estado/05-infra-ci-testes.md"
     ]
-   },
-   {
-    "sha": "8e6172d",
-    "date": "2026-08-16",
-    "author": "Claude",
-    "subject": "docs: auditoria de estado do sistema (ESTADO_ATUAL + 5 anexos)",
-    "files": [
-     "docs/ESTADO_ATUAL.md",
-     "docs/estado/01-frontend.md",
-     "docs/estado/02-backend-edge-functions.md",
-     "docs/estado/03-dados-e-runtime.md",
-     "docs/estado/04-integracoes.md",
-     "docs/estado/05-infra-ci-testes.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81492,6 +81552,10 @@
    [
     "package.json",
     5
+   ],
+   [
+    "scripts/ci/eslint-baseline.json",
+    3
    ],
    [
     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
@@ -81510,19 +81574,11 @@
     3
    ],
    [
-    "docs/estado/05-infra-ci-testes.md",
-    3
-   ],
-   [
     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
     2
    ],
    [
     ".github/workflows/ci.yml",
-    2
-   ],
-   [
-    "scripts/ci/eslint-baseline.json",
     2
    ],
    [
@@ -81559,6 +81615,10 @@
    ],
    [
     "scripts/ai-context/gerar.mjs",
+    2
+   ],
+   [
+    "scripts/inventario/gerar-repo.mjs",
     2
    ]
   ]

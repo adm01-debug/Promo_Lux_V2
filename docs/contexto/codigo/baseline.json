@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "97741e0a4f6622fd5674c6a3d587a7371d01a158",
+  "commit": "b50e001b5e25d52425e043f36232f8ce016595ff",
   "branch": "main",
-  "data_commit": "2026-11-13T11:47:04-03:00",
+  "data_commit": "2026-11-13T12:48:40-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b50e001",
+    "data": "2026-11-13",
+    "assunto": "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)"
+   },
    {
     "sha": "97741e0",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "2b5a84f",
     "data": "2026-08-28",
     "assunto": "Visual edit in Lovable"
-   },
-   {
-    "sha": "20373df",
-    "data": "2026-08-28",
-    "assunto": "Visual edit in Lovable"
    }
   ],
-  "arquivos_mudados_7d": 118,
+  "arquivos_mudados_7d": 122,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -172,6 +172,10 @@
     "mudancas": 3
    },
    {
+    "pasta": "scripts/ci/eslint-baseline.json",
+    "mudancas": 3
+   },
+   {
     "pasta": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".github/workflows/contexto.yml",
-    "mudancas": 2
-   },
-   {
-    "pasta": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 2
    }
   ],
@@ -219,6 +219,10 @@
    },
    {
     "arquivo": "docs/estado/05-infra-ci-testes.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "scripts/ci/eslint-baseline.json",
     "mudancas": 3
    },
    {
@@ -274,10 +278,6 @@
     "mudancas": 2
    },
    {
-    "arquivo": "scripts/ci/eslint-baseline.json",
-    "mudancas": 2
-   },
-   {
     "arquivo": "scripts/inventario/gerar-repo.mjs",
     "mudancas": 2
    },
@@ -301,14 +301,14 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 23
+    "commits": 24
    }
   ]
  },
  "contagens": {
   "arquivos_total": 1010,
   "arquivos_codigo": 642,
-  "linhas_codigo": 109782,
+  "linhas_codigo": 110396,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -356,7 +356,7 @@
   },
   "e2e/helpers": {
    "arquivos": 4,
-   "linhas": 401
+   "linhas": 419
   },
   "e2e/instagram-dlq-replay.spec.ts": {
    "arquivos": 1,
@@ -404,7 +404,7 @@
   },
   "eslint.config.js": {
    "arquivos": 1,
-   "linhas": 27
+   "linhas": 31
   },
   "playwright-fixture.ts": {
    "arquivos": 1,
@@ -584,7 +584,7 @@
   },
   "supabase/functions": {
    "arquivos": 115,
-   "linhas": 20557
+   "linhas": 21149
   },
   "tailwind.config.ts": {
    "arquivos": 1,

@@ -421,12 +421,18 @@
    "nome": "deliverability-check",
    "entrada": "supabase/functions/deliverability-check/index.ts",
    "arquivos": 1,
-   "linhas": 1,
+   "linhas": 282,
    "verify_jwt": true,
-   "metodos": [],
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
    "tabelas": [],
    "rpcs": [],
-   "env": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
@@ -633,12 +639,18 @@
    "nome": "email-verify",
    "entrada": "supabase/functions/email-verify/index.ts",
    "arquivos": 1,
-   "linhas": 1,
+   "linhas": 312,
    "verify_jwt": true,
-   "metodos": [],
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
    "tabelas": [],
    "rpcs": [],
-   "env": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],

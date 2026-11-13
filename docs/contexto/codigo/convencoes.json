@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)",
    "chore(runbooks): registra reconciliacao do drift de migrations em producao",
    "infra: pina supabase CLI v3.1.0 no workflow de migrations (#28)",
    "fix(migrations): revoga EXECUTE de PUBLIC nas funcoes guard da A1 (#27)",
-   "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)",
-   "fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)"
+   "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)"
   ]
  },
  "pr_template": null,

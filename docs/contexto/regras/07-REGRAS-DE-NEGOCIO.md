@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `97741e0a4f` · branch `main` · 2026-11-13 15:41 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b50e001b5e` · branch `main` · 2026-11-13 16:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1125,6 +1125,14 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```ts
   { cnpj: z.string().min(11).max(20) }
   ```
+- **DeliverabilitySchema** (`supabase/functions/deliverability-check/index.ts`, z.object):
+  ```ts
+  { domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, "Domínio inválido"), dkim_selector: z.string().max(64).optional().default("default"), }
+  ```
+- **EmailVerifySchema** (`supabase/functions/email-verify/index.ts`, z.object):
+  ```ts
+  { email: z.string().email("Endereço de email inválido"), check_mx: z.boolean().optional().default(true), organization_id: z.string().uuid().optional(), }
+  ```
 - **BodySchema** (`supabase/functions/gmaps-places-search/index.ts`, z.object):
   ```ts
   { query: z.string().min(2).max(500), max_results: z.number().int().min(1).max(20).optional(), language: z.string().min(2).max(5).default("pt-BR"), }
@@ -1935,6 +1943,7 @@ _nenhum item encontrado_
 | load recipients: ${recErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
 | load suppressions: ${supErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
 | token refresh: ${e instanceof Error ? e.message : String(e)} | `supabase/functions/campaign-dispatch/index.ts` |
+| Domínio interno não permitido | `supabase/functions/deliverability-check/index.ts` |
 | Gmail list: ${JSON.stringify(list)} | `supabase/functions/email-poll-replies/index.ts` |
 | No refresh token; reconnect required | `supabase/functions/email-poll-replies/index.ts` |
 | OAuth credentials not configured for ${acc.provider} | `supabase/functions/email-poll-replies/index.ts` |

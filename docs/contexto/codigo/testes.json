@@ -74,7 +74,7 @@
   {
    "arquivo": "e2e/helpers/lushaMocks.ts",
    "tipo": "e2e",
-   "linhas": 257,
+   "linhas": 275,
    "testa": [],
    "casos": 0
   },
