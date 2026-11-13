@@ -103,3 +103,51 @@ jobs:
             echo "- Commit: \`${{ github.sha }}\`"
             echo "- Rode localmente com: \`deno test --allow-net --allow-env --allow-read supabase/functions/\`"
           } >> "$GITHUB_STEP_SUMMARY"
+
+  rls-tests:
+    name: RLS tests (supabase local)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local (migrations limpas)
+        run: supabase start
+
+      - name: Coleta URL e chaves do stack local
+        id: supa-env
+        run: |
+          supabase status --output env > .supa.env
+          . ./.supa.env
+          {
+            echo "url=$API_URL"
+                      echo "anon_key=$PUBLISHABLE_KEY"
+                      echo "service_key=$SECRET_KEY"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run RLS tests (Deno)
+        env:
+          DENO_TLS_CA_STORE: system
+          APP_ENV: dev
+          SUPABASE_URL: ${{ steps.supa-env.outputs.url }}
+          SUPABASE_ANON_KEY: ${{ steps.supa-env.outputs.anon_key }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ steps.supa-env.outputs.service_key }}
+        run: |
+          deno test \
+            --allow-net \
+            --allow-env \
+            --allow-read \
+            --no-check \
+            --reporter=pretty \
+            supabase/functions/rls-tests/
