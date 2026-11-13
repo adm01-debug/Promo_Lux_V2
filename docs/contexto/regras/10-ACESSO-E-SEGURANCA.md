@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8fb4f413ef` · branch `main` · 2026-11-12 21:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5016c64f16` · branch `main` · 2026-11-13 13:33 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -414,7 +414,7 @@ Middleware matcher (Next.js): nenhum
 | grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +82 |
 | grant | service_role | select | `oracle_v2_health` |
 | revoke | PUBLIC | all | `capture_db_health_snapshot`, `enqueue_scrape_task`, `claim_scrape_tasks`, `complete_scrape_task`, `fail_scrape_task`, `replay_dead_letter`, `evaluate_partition_policies`, `log_automation_event`, `reset_circuit_breaker`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts`, `record_vault_cookie_snapshots`, `evaluate_vault_cookie_alerts`, `claim_instagram_tasks`, `replay_instagram_dead_letter_batch` … +8 |
-| revoke | PUBLIC | execute | `get_sector_summary`, `get_dashboard_stats`, `enqueue_webhook_event`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages` … +18 |
+| revoke | PUBLIC | execute | `get_sector_summary`, `get_dashboard_stats`, `enqueue_webhook_event`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages` … +20 |
 | revoke | PUBLIC, anon | all | `replay_dead_letter_batch`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_trend`, `capture_api_latency_snapshots`, `evaluate_api_latency_alerts`, `prune_api_latency_snapshots`, `worker_should_run`, `worker_report_batch`, `dlq_top_reasons`, `api_latency_percentiles`, `apply_retry_advisory`, `rollback_retry_advisory`, `enrichment_funnel_counts`, `sla_deadline` … +1 |
 | revoke | PUBLIC, anon | execute | `get_sector_summary` |
 | revoke | PUBLIC, anon, authenticated | all | `pg_catalog_rls_tables`, `defer_scrape_task`, `dlq_purge_stale_network_errors`, `record_places_api_call`, `claim_web_scrape_tasks`, `complete_web_scrape_task`, `fail_web_scrape_task`, `defer_web_scrape_task`, `prune_api_request_logs`, `prune_audit_logs`, `prune_automation_execution_logs`, `prune_campaign_events`, `prune_email_sync_log`, `worker_report_batch`, `worker_should_run` … +7 |

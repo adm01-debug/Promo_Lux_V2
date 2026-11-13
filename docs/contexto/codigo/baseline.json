@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8fb4f413efd6e07b138c4a985e2a28f9e5e25597",
+  "commit": "5016c64f16d14bfe3ace7e1e14c9483db57ce271",
   "branch": "main",
-  "data_commit": "2026-11-12T16:09:03-03:00",
+  "data_commit": "2026-11-13T09:56:03-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5016c64",
+    "data": "2026-11-13",
+    "assunto": "fix(migrations): revoga EXECUTE de PUBLIC nas funcoes guard da A1 (#27)"
+   },
    {
     "sha": "8fb4f41",
     "data": "2026-11-12",
@@ -126,11 +131,6 @@
     "sha": "ee80ee4",
     "data": "2026-08-18",
     "assunto": "chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)"
-   },
-   {
-    "sha": "97bb6fb",
-    "data": "2026-08-16",
-    "assunto": "Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829"
    }
   ],
   "arquivos_mudados_7d": 116,
@@ -172,6 +172,10 @@
     "mudancas": 3
    },
    {
+    "pasta": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    "mudancas": 3
+   },
+   {
     "pasta": ".claude/skills/promo-lux-v2",
     "mudancas": 2
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".github/workflows/inventario-estado-semanal.yml",
-    "mudancas": 2
-   },
-   {
-    "pasta": "ai-context.config.json",
     "mudancas": 2
    }
   ],
@@ -219,6 +219,10 @@
    },
    {
     "arquivo": "docs/estado/05-infra-ci-testes.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
    {
@@ -290,10 +294,6 @@
     "mudancas": 2
    },
    {
-    "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-    "mudancas": 2
-   },
-   {
     "arquivo": ".claude/ecc-tools.json",
     "mudancas": 1
    }
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 20
+    "commits": 21
    }
   ]
  },
