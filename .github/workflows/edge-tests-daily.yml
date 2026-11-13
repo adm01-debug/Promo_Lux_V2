@@ -59,12 +59,11 @@ jobs:
                     COUNT=$(printf '%s\n' "$NATIVE" | grep -c . || true)
           echo "Arquivos de teste Deno nativos:"
           echo "$NATIVE"
+                    # Saida em linha unica (espaco-separada): a lista multi-linha quebra a
+                    # interpolacao em `run: |` do passo seguinte (cada linha vira comando).
+                    FILES_SL=$(printf '%s\n' "$NATIVE" | tr '\n' ' ' | sed 's/ $//')
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
-          {
-            echo "files<<FILE_EOF"
-            echo "$NATIVE"
-            echo "FILE_EOF"
-          } >> "$GITHUB_OUTPUT"
+                    echo "files=$FILES_SL" >> "$GITHUB_OUTPUT"
           if [ -z "$NATIVE" ]; then
             echo "::warning::Nenhum teste Deno nativo em supabase/functions/** (fora de rls-tests/)"
           fi
