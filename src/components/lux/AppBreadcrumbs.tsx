@@ -45,7 +45,10 @@ function getViewIcon(view?: View) {
 export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
   ({ breadcrumbs, canGoBack, onGoBack, onNavigate }, ref) => {
     return (
-      <div ref={ref} className="flex items-center gap-2 lg:gap-3 overflow-hidden select-none">
+      <div
+        ref={ref}
+        className="flex items-center gap-2 lg:gap-3 overflow-hidden select-none"
+      >
         <AnimatePresence mode="popLayout">
           {canGoBack && (
             <motion.div
@@ -69,7 +72,12 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-[10px] font-medium">Voltar (Esc)</TooltipContent>
+                  <TooltipContent
+                    side="bottom"
+                    className="text-[10px] font-medium"
+                  >
+                    Voltar (Esc)
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </motion.div>
@@ -85,11 +93,13 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
                 <React.Fragment key={`${i}-${crumb.label}`}>
                   {i > 0 && (
                     <BreadcrumbSeparator className="flex-shrink-0">
-                      <motion.span 
-                        initial={{ opacity: 0 }} 
+                      <motion.span
+                        initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="text-muted-foreground/30"
-                      >/</motion.span>
+                      >
+                        /
+                      </motion.span>
                     </BreadcrumbSeparator>
                   )}
                   <BreadcrumbItem className="flex-shrink-0">
@@ -101,7 +111,11 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
                           initial={{ opacity: 0, y: 5 }}
                           animate={{ opacity: 1, y: 0 }}
                         >
-                          {icon && <span className="text-primary flex-shrink-0">{icon}</span>}
+                          {icon && (
+                            <span className="text-primary flex-shrink-0">
+                              {icon}
+                            </span>
+                          )}
                           <span className="truncate">{crumb.label}</span>
                         </motion.div>
                       </BreadcrumbPage>
@@ -109,12 +123,18 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
                       <BreadcrumbLink
                         className={cn(
                           "cursor-pointer text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-all truncate max-w-[100px] group",
-                          i === 0 && "font-medium"
+                          i === 0 && "font-medium",
                         )}
                         onClick={() => onNavigate(crumb.view!)}
                       >
-                        {icon && <span className="text-muted-foreground/60 group-hover:text-primary transition-colors flex-shrink-0">{icon}</span>}
-                        <span className="truncate group-hover:translate-x-0.5 transition-transform">{crumb.label}</span>
+                        {icon && (
+                          <span className="text-muted-foreground/60 group-hover:text-primary transition-colors flex-shrink-0">
+                            {icon}
+                          </span>
+                        )}
+                        <span className="truncate group-hover:translate-x-0.5 transition-transform">
+                          {crumb.label}
+                        </span>
                       </BreadcrumbLink>
                     ) : (
                       <span className="text-xs text-muted-foreground/80 flex items-center gap-1.5 truncate max-w-[100px] italic">
@@ -132,19 +152,25 @@ export const AppBreadcrumbs = forwardRef<HTMLDivElement, AppBreadcrumbsProps>(
         <div className="sm:hidden flex items-center gap-2 font-semibold text-sm truncate text-foreground">
           <AnimatePresence mode="wait">
             <motion.span
-              key={breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 1].label : "LUX IA"}
+              key={
+                breadcrumbs.length > 1
+                  ? breadcrumbs[breadcrumbs.length - 1].label
+                  : "LUX IA"
+              }
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
               className="truncate"
             >
-              {breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 1].label : "LUX IA"}
+              {breadcrumbs.length > 1
+                ? breadcrumbs[breadcrumbs.length - 1].label
+                : "LUX IA"}
             </motion.span>
           </AnimatePresence>
         </div>
       </div>
     );
-  }
+  },
 );
 
 AppBreadcrumbs.displayName = "AppBreadcrumbs";

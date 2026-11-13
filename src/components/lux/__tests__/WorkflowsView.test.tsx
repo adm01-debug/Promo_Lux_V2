@@ -67,7 +67,7 @@ function renderWithProviders(ui: React.ReactElement) {
   return render(
     <QueryClientProvider client={qc}>
       <TooltipProvider>{ui}</TooltipProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 

@@ -27,7 +27,7 @@ vi.mock("@/integrations/supabase/client", () => ({
               },
             ],
             error: null,
-          })
+          }),
         ),
       })),
       insert: vi.fn(() => ({
@@ -68,7 +68,7 @@ function renderWithProviders(ui: React.ReactElement) {
   return render(
     <QueryClientProvider client={qc}>
       <TooltipProvider>{ui}</TooltipProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 

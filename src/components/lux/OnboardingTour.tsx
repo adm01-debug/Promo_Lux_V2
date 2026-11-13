@@ -79,7 +79,9 @@ export const OnboardingTour = () => {
     const current = tourSteps[step];
     if (current.target === "[data-tour='search']") {
       // Trigger command palette
-      document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "k", metaKey: true }),
+      );
     }
     // For other action steps, just go next
     handleNext();
