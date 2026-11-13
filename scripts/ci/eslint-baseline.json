@@ -2,19 +2,15 @@
   "schemaVersion": 1,
   "command": "eslint . --format json",
   "eslintVersion": "9.32.0",
-  "eslintConfigSha256": "c55264234fef783629810643d995cd522c3adaeb60e7157906310607292015a3",
+  "eslintConfigSha256": "48e0d683c9ab9e20ccba021f18bc5b97b26c97dcfb156d7f75c36936b2991838",
   "files": [
-    {
-      "path": "e2e/helpers/lushaMocks.ts",
-      "sha256": "84512c4807d7d552900d2441291f8d1810f635ef7f057f1547f4d96c679c41d4"
-    },
     {
       "path": "scripts/gen-round18-preflight.ts",
       "sha256": "84c4001a3902db284ebf2aeee0f6be7c4bb0e2cbd02bfafe1acea4f3c3f62514"
     },
     {
       "path": "src/App.tsx",
-      "sha256": "24c4f7d0b8b061de3fee482eefff8b2ba5a55cd2e9f6b07cd5f75192f6c1ef6a"
+      "sha256": "856c796edc47e374db6cca314e14c41299e083591f1af0ce373a867eb1d9fa80"
     },
     {
       "path": "src/components/lux/monitoring/SourceComparisonReport.tsx",
@@ -23,14 +19,6 @@
     {
       "path": "supabase/functions/_shared/hiker-client.ts",
       "sha256": "1d3714c5617be31b8ce0789e387c2a506fadf3d7e81603754e65e76de0318bc8"
-    },
-    {
-      "path": "supabase/functions/deliverability-check/index.ts",
-      "sha256": "fd9460f521f408f9dddb034486e0e961d892aa0da1be950d4da6ac1b8a061476"
-    },
-    {
-      "path": "supabase/functions/email-verify/index.ts",
-      "sha256": "886ecddefe3719f389ea1c73690976840281758a8a1ab2dce20eea09c925114d"
     },
     {
       "path": "supabase/functions/instagram-enqueue/index.ts",
@@ -43,27 +31,9 @@
     {
       "path": "supabase/functions/latency-alerts/index.ts",
       "sha256": "5b616f1b679968f81484affd715ed0916479f6fb43597d8998e2611b4d7a8b9b"
-    },
-    {
-      "path": "supabase/functions/mcp/index.ts",
-      "sha256": "ad4c814d0a1e675fc3de82c2417c8315f7841890649d66c07e2fa391d490fffe"
     }
   ],
   "issues": [
-    {
-      "file": "e2e/helpers/lushaMocks.ts",
-      "line": 13,
-      "column": 36,
-      "endLine": 0,
-      "endColumn": 0,
-      "severity": 2,
-      "ruleId": null,
-      "messageId": null,
-      "message": "Parsing error: Expression expected.",
-      "spanHash": null,
-      "lineHash": "e84dad6433b27bb6651efceecdfba0c51f4beda4bd11e6dd912cd393fb42c550",
-      "contextHash": "71d2c3fb161bcc0a88daf4d769d03397dc66f8d8b4ebec4aa4a3a0cc00af213c"
-    },
     {
       "file": "scripts/gen-round18-preflight.ts",
       "line": 43,
@@ -94,9 +64,9 @@
     },
     {
       "file": "src/App.tsx",
-      "line": 81,
+      "line": 91,
       "column": 17,
-      "endLine": 81,
+      "endLine": 91,
       "endColumn": 29,
       "severity": 1,
       "ruleId": "react-refresh/only-export-components",
@@ -359,34 +329,6 @@
       "contextHash": "3225bbf673804e3a262f9015a216296d6f8eedc93a35f0ac3505879001865001"
     },
     {
-      "file": "supabase/functions/deliverability-check/index.ts",
-      "line": 1,
-      "column": 9875,
-      "endLine": 0,
-      "endColumn": 0,
-      "severity": 2,
-      "ruleId": null,
-      "messageId": null,
-      "message": "Parsing error: ';' expected.",
-      "spanHash": null,
-      "lineHash": "fd9460f521f408f9dddb034486e0e961d892aa0da1be950d4da6ac1b8a061476",
-      "contextHash": null
-    },
-    {
-      "file": "supabase/functions/email-verify/index.ts",
-      "line": 1,
-      "column": 1,
-      "endLine": 1,
-      "endColumn": 9845,
-      "severity": 2,
-      "ruleId": "@typescript-eslint/no-unused-expressions",
-      "messageId": "unusedExpression",
-      "message": "Expected an assignment or function call and instead saw an expression.",
-      "spanHash": "886ecddefe3719f389ea1c73690976840281758a8a1ab2dce20eea09c925114d",
-      "lineHash": "886ecddefe3719f389ea1c73690976840281758a8a1ab2dce20eea09c925114d",
-      "contextHash": null
-    },
-    {
       "file": "supabase/functions/instagram-enqueue/index.ts",
       "line": 53,
       "column": 13,
@@ -455,104 +397,6 @@
       "spanHash": "d6a7cd2a7371b1a15d543196979ff74fdb027023ebf187d5d329be11055c77fd",
       "lineHash": "c3e361585e66bbb84970c09b9b2324ec33c2d0679995786dcb59a2ac5658cb9c",
       "contextHash": "89a4ca435f47a654b04e0be66eefa0b38ca20f903b9cf9196992f5c508ff1efa"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 104,
-      "column": 1,
-      "endLine": 136,
-      "endColumn": 4,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "cfe364d8d6dfc81553cd80c4320b8d2d36e396fc32c617f52b384d9f5c0a9394",
-      "lineHash": "4803520af5db725e1dc3f184d2249b42a224393f16755df1130a2ab7b9f27176",
-      "contextHash": "8728fae66f8b406432115e2bee80e19380766d3b2507bd9c2287f5fc3d15bf96"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 141,
-      "column": 1,
-      "endLine": 180,
-      "endColumn": 4,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "e6db37965dac9c473caeae420548c18dab03c6ef5638008c11c78839107db988",
-      "lineHash": "8b8d1fdb4062aea53ee219f2473aca4d0a063def20d8c4dfbf10f605c8d5a22e",
-      "contextHash": "8855207e152021657e6a8981ceaf7ce062199e0640b25ed4e9fe94fe6bbbc71b"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 185,
-      "column": 1,
-      "endLine": 217,
-      "endColumn": 4,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "cafb61e5445ea9f22b63022a777f427927bfa211e44e7652ea90e3af99eceb1d",
-      "lineHash": "0ae36d40fbcca5cce28fba2668eb959bd330ca0cf8b24bce84f2a6a0bd203a9b",
-      "contextHash": "65bc2032e5cbb90187c4cdf53338e2f593ca6c2de336ad2f593f06464437c4bc"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 220,
-      "column": 1,
-      "endLine": 220,
-      "endColumn": 41,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "7304c666629e3bb4a4e3236b29c05d14937f93e6a7b890f0fe3fd2743584a9d5",
-      "lineHash": "7304c666629e3bb4a4e3236b29c05d14937f93e6a7b890f0fe3fd2743584a9d5",
-      "contextHash": "c1a3a8ddf463f470e9adfaa977e702675e702c5d81cc4e53b1c8efdc07be573b"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 221,
-      "column": 1,
-      "endLine": 237,
-      "endColumn": 4,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "0cd7e6e071729c40f50d79bd418365ed096b9225afb9aaf6de92942d3cd734ec",
-      "lineHash": "8847034c353c1c73711c27e825e12617bb1ba1807cc58bf105548b5aaf8ffd20",
-      "contextHash": "b0fc42222a81d199836a163c77375a9d5f8a1336f2b78e000f8cb5bd44c15f5e"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 30,
-      "column": 1,
-      "endLine": 68,
-      "endColumn": 4,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "188e3eb38b10b9f491c7865523cac106f2a95203232c83a3f332f41f231f5f80",
-      "lineHash": "866d3e14bb0b5450398284d8765b2a0c471b1c0bbd30a37753cc359611169c95",
-      "contextHash": "5e0ca8b4222f2e3f1e9327adafa5bb03255643ab16b36b2caf9fd562753ec8f0"
-    },
-    {
-      "file": "supabase/functions/mcp/index.ts",
-      "line": 73,
-      "column": 1,
-      "endLine": 99,
-      "endColumn": 4,
-      "severity": 2,
-      "ruleId": "no-var",
-      "messageId": "unexpectedVar",
-      "message": "Unexpected var, use let or const instead.",
-      "spanHash": "5b0397be34f796a6fe6e8f9b682a27ed2727d6a058b794a07c071b25cc91595a",
-      "lineHash": "2bcc88c103a2c5ad0e62630547edac16c433c53fbde394891fa66a1803ef6082",
-      "contextHash": "1cc4f0047ee41f20178102daed473358dbd2c9b4b7edc5ca86a5b608e218cbde"
     }
   ]
 }

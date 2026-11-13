@@ -10,7 +10,7 @@ import type { Page, Route } from "@playwright/test";
  * Convenções:
  * - Todos os helpers recebem `page` e devolvem um objeto com `count()` que
  *   expõe quantas vezes o mock foi atingido (útil para asserts de retry).
- * - Padrões glob (`**/functions/v1/...`) cobrem qualquer origem que o cliente
+ * - Padrões glob (`**\/functions/v1/...`, sem a barra invertida) cobrem qualquer origem que o cliente
  *   Supabase compile a partir de `VITE_SUPABASE_URL`.
  */
 
@@ -57,13 +57,19 @@ interface SearchOkOptions {
   delayMs?: number;
 }
 
-export function mockLushaSearchOk(page: Page, overrides: SearchOkOptions = {}): MockHandle {
+export function mockLushaSearchOk(
+  page: Page,
+  overrides: SearchOkOptions = {},
+): MockHandle {
   let hits = 0;
   const body = {
     session_id: overrides.session_id ?? "sess-mock-0001",
     company_resolved: overrides.company_resolved ?? "ACME S.A.",
     total_found: overrides.total_found ?? 2,
-    departments_searched: overrides.departments_searched ?? ["Vendas", "Marketing"],
+    departments_searched: overrides.departments_searched ?? [
+      "Vendas",
+      "Marketing",
+    ],
     departments_skipped: overrides.departments_skipped ?? [],
     contacts: overrides.contacts ?? [
       {
@@ -192,7 +198,10 @@ interface RevealOptions {
   contactId?: string;
 }
 
-export function mockLushaReveal(page: Page, opts: RevealOptions = {}): MockHandle {
+export function mockLushaReveal(
+  page: Page,
+  opts: RevealOptions = {},
+): MockHandle {
   let hits = 0;
   const okBody = (contactId: string) => ({
     requestId: "req-mock-1",
@@ -213,7 +222,9 @@ export function mockLushaReveal(page: Page, opts: RevealOptions = {}): MockHandl
     hits++;
     await delay(opts.delayMs ?? 0);
 
-    const status = opts.sequence ? opts.sequence[Math.min(idx, opts.sequence.length - 1)] : (opts.status ?? 200);
+    const status = opts.sequence
+      ? opts.sequence[Math.min(idx, opts.sequence.length - 1)]
+      : (opts.status ?? 200);
 
     // extrai o primeiro contactId do payload para bater a resposta
     let contactId = opts.contactId ?? "dm-1";
@@ -234,14 +245,19 @@ export function mockLushaReveal(page: Page, opts: RevealOptions = {}): MockHandl
 }
 
 // ─── REST direto: lusha_search_sessions ──────────────────────────────────
-export function mockLushaSessions(page: Page, sessions: Array<Record<string, unknown>>): MockHandle {
+export function mockLushaSessions(
+  page: Page,
+  sessions: Array<Record<string, unknown>>,
+): MockHandle {
   let hits = 0;
   page.route("**/rest/v1/lusha_search_sessions*", async (route: Route) => {
     hits++;
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      headers: { "content-range": `0-${Math.max(sessions.length - 1, 0)}/${sessions.length}` },
+      headers: {
+        "content-range": `0-${Math.max(sessions.length - 1, 0)}/${sessions.length}`,
+      },
       body: JSON.stringify(sessions),
     });
   });
@@ -251,6 +267,8 @@ export function mockLushaSessions(page: Page, sessions: Array<Record<string, unk
 /** Helper de asserção — falha explícita se um mock nunca foi atingido. */
 export function assertMockHit(handle: MockHandle, label: string) {
   if (handle.count() === 0) {
-    throw new Error(`[lushaMocks] mock '${label}' não foi atingido durante o teste`);
+    throw new Error(
+      `[lushaMocks] mock '${label}' não foi atingido durante o teste`,
+    );
   }
 }
