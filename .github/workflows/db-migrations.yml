@@ -71,7 +71,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: v3.1.0
 
       - name: Subir Supabase local e aplicar migrations do zero
         run: |
@@ -108,7 +108,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: v3.1.0
 
       - name: Guarda de ambiente (o ref precisa bater com o esperado)
         run: bash scripts/check-migration-target.sh
@@ -143,7 +143,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: v3.1.0
 
       - name: Guarda de ambiente
         run: bash scripts/check-migration-target.sh
