@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "3c038d5f017f206e66249f86dfb6a732c349a95d",
+  "commit": "da897d6ec0185c9f289c1b12c982fbf4f9c95f4d",
   "branch": "main",
-  "data_commit": "2026-11-13T14:59:52-03:00",
+  "data_commit": "2026-11-13T15:53:10-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "da897d6",
+    "data": "2026-11-13",
+    "assunto": "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)"
+   },
+   {
+    "sha": "ff716ae",
+    "data": "2026-11-13",
+    "assunto": "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)"
+   },
    {
     "sha": "3c038d5",
     "data": "2026-11-13",
@@ -121,16 +131,6 @@
     "sha": "c8970a8",
     "data": "2026-11-08",
     "assunto": "fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md"
-   },
-   {
-    "sha": "4f78795",
-    "data": "2026-11-08",
-    "assunto": "fix(banco): corrige contagem de migrations base64 de 4 para 6"
-   },
-   {
-    "sha": "c9b89ab",
-    "data": "2026-11-08",
-    "assunto": "docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)"
    }
   ],
   "arquivos_mudados_7d": 122,
@@ -157,6 +157,10 @@
    },
    {
     "pasta": ".agents/skills/promo-lux-v2",
+    "mudancas": 3
+   },
+   {
+    "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 3
    },
    {
@@ -190,10 +194,6 @@
    {
     "pasta": ".github/workflows/ci.yml",
     "mudancas": 2
-   },
-   {
-    "pasta": ".github/workflows/contexto.yml",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -204,6 +204,10 @@
    {
     "arquivo": "package.json",
     "mudancas": 5
+   },
+   {
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 3
    },
    {
     "arquivo": ".husky/pre-commit",
@@ -242,11 +246,11 @@
     "mudancas": 2
    },
    {
-    "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 2
    },
    {
-    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+    "arquivo": "CONTRIBUTING.md",
     "mudancas": 2
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 2
-   },
-   {
-    "arquivo": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 25
+    "commits": 27
    }
   ]
  },

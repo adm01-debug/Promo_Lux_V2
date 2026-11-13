@@ -296,7 +296,8 @@
    ],
    "branches": [],
    "jobs": [
-    "deno-edge-tests"
+    "deno-edge-tests",
+    "rls-tests"
    ],
    "permissoes": [],
    "scripts_usados": [],
@@ -307,7 +308,8 @@
    "actions": [
     "actions/cache",
     "actions/checkout",
-    "denoland/setup-deno"
+    "denoland/setup-deno",
+    "supabase/setup-cli"
    ]
   },
   {
@@ -368,7 +370,7 @@
   {
    "arquivo": "CONTRIBUTING.md",
    "titulo": "📐 Guia de Contribuição — LUX IA",
-   "linhas": 29
+   "linhas": 47
   },
   {
    "arquivo": "README.md",

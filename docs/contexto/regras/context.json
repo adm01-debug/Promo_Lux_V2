@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "3c038d5f017f206e66249f86dfb6a732c349a95d",
+  "sha": "da897d6ec0185c9f289c1b12c982fbf4f9c95f4d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 18:59 UTC",
+  "generated_at": "2026-11-13 20:26 UTC",
   "files_total": 1029,
   "code_files": 866,
   "code_lines": 124790
@@ -81125,10 +81125,28 @@
   }
  },
  "git": {
-  "sha": "3c038d5f017f206e66249f86dfb6a732c349a95d",
+  "sha": "da897d6ec0185c9f289c1b12c982fbf4f9c95f4d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "da897d6",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)",
+    "files": [
+     ".github/workflows/edge-tests-daily.yml"
+    ]
+   },
+   {
+    "sha": "ff716ae",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)",
+    "files": [
+     "CONTRIBUTING.md"
+    ]
+   },
    {
     "sha": "3c038d5",
     "date": "2026-11-13",
@@ -81519,28 +81537,12 @@
     "files": [
      ".hermes.md"
     ]
-   },
-   {
-    "sha": "ee80ee4",
-    "date": "2026-08-18",
-    "author": "adm01-debug",
-    "subject": "chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)",
-    "files": [
-     "AGENTS.md"
-    ]
-   },
-   {
-    "sha": "97bb6fb",
-    "date": "2026-08-16",
-    "author": "adm01-debug",
-    "subject": "Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829",
-    "files": []
    }
   ],
   "hot_files": [
    [
     "AGENTS.md",
-    7
+    6
    ],
    [
     ".gitignore",
@@ -81549,6 +81551,10 @@
    [
     "package.json",
     5
+   ],
+   [
+    ".github/workflows/edge-tests-daily.yml",
+    3
    ],
    [
     "scripts/ci/eslint-baseline.json",
@@ -81571,7 +81577,7 @@
     3
    ],
    [
-    ".github/workflows/edge-tests-daily.yml",
+    "CONTRIBUTING.md",
     2
    ],
    [
@@ -81612,10 +81618,6 @@
    ],
    [
     "inventario/estado/edges.json",
-    2
-   ],
-   [
-    "scripts/ai-context/gerar.mjs",
     2
    ]
   ]
