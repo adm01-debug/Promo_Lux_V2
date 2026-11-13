@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "b50e001b5e25d52425e043f36232f8ce016595ff",
+  "sha": "3c038d5f017f206e66249f86dfb6a732c349a95d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 16:30 UTC",
+  "generated_at": "2026-11-13 18:59 UTC",
   "files_total": 1029,
   "code_files": 866,
   "code_lines": 124790
@@ -81125,10 +81125,19 @@
   }
  },
  "git": {
-  "sha": "b50e001b5e25d52425e043f36232f8ce016595ff",
+  "sha": "3c038d5f017f206e66249f86dfb6a732c349a95d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "3c038d5",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)",
+    "files": [
+     ".github/workflows/edge-tests-daily.yml"
+    ]
+   },
    {
     "sha": "b50e001",
     "date": "2026-11-13",
@@ -81526,18 +81535,6 @@
     "author": "adm01-debug",
     "subject": "Merge pull request #4 from adm01-debug/claude/system-status-roadmap-gzt829",
     "files": []
-   },
-   {
-    "sha": "9f9f678",
-    "date": "2026-08-16",
-    "author": "Claude",
-    "subject": "docs: errata da auditoria apos segunda rodada de validacao adversarial",
-    "files": [
-     "docs/ESTADO_ATUAL.md",
-     "docs/estado/02-backend-edge-functions.md",
-     "docs/estado/03-dados-e-runtime.md",
-     "docs/estado/05-infra-ci-testes.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81572,6 +81569,10 @@
    [
     "docs/agentes/mapa-repo.md",
     3
+   ],
+   [
+    ".github/workflows/edge-tests-daily.yml",
+    2
    ],
    [
     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
@@ -81615,10 +81616,6 @@
    ],
    [
     "scripts/ai-context/gerar.mjs",
-    2
-   ],
-   [
-    "scripts/inventario/gerar-repo.mjs",
     2
    ]
   ]

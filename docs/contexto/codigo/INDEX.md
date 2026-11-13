@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b50e001b5e25d52425e043f36232f8ce016595ff` (2026-11-13T12:48:40-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `3c038d5f017f206e66249f86dfb6a732c349a95d` (2026-11-13T14:59:52-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6455 nós · 13938 arestas · 562 comunidades · grafo do commit `b50e001b`
+- 6455 nós · 13938 arestas · 562 comunidades · grafo do commit `3c038d5f`
 - comunidades maiores: lucide-react (206), Monitoring.tsx (166), @tanstack/react-query (157), snapshot.py (108), OrganizationsView.tsx (94), react (85), cn (83), gerar.mjs (80), hooks/use-toast.ts (72), generate.py (71), ref_node_fs (67), utils.ts (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -233,10 +233,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .claude/skills/promo-lux-v2/SKILL.md (2)
 - .github/workflows/ci.yml (2)
 - .github/workflows/contexto.yml (2)
+- .github/workflows/edge-tests-daily.yml (2)
 - .github/workflows/inventario-estado-semanal.yml (2)
 - ai-context.config.json (2)
 - docs/ESTADO_ATUAL.md (2)
-- docs/agentes/banco.md (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -324,6 +324,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-13 `3c038d5` fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)
 - 2026-11-13 `b50e001` fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)
 - 2026-11-13 `97741e0` chore(runbooks): registra reconciliacao do drift de migrations em producao
 - 2026-11-13 `28276ef` infra: pina supabase CLI v3.1.0 no workflow de migrations (#28)
@@ -338,7 +339,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-11 `c8175c4` fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)
 - 2026-11-11 `27893bd` infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)
 - 2026-11-11 `119de20` fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)
-- 2026-11-08 `6f3b1ff` fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

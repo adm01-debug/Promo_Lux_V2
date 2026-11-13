@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b50e001b5e25d52425e043f36232f8ce016595ff",
+  "commit": "3c038d5f017f206e66249f86dfb6a732c349a95d",
   "branch": "main",
-  "data_commit": "2026-11-13T12:48:40-03:00",
+  "data_commit": "2026-11-13T14:59:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "3c038d5",
+    "data": "2026-11-13",
+    "assunto": "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)"
+   },
    {
     "sha": "b50e001",
     "data": "2026-11-13",
@@ -126,11 +131,6 @@
     "sha": "c9b89ab",
     "data": "2026-11-08",
     "assunto": "docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)"
-   },
-   {
-    "sha": "2b5a84f",
-    "data": "2026-08-28",
-    "assunto": "Visual edit in Lovable"
    }
   ],
   "arquivos_mudados_7d": 122,
@@ -242,6 +242,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
     "mudancas": 2
-   },
-   {
-    "arquivo": ".claude/ecc-tools.json",
-    "mudancas": 1
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 24
+    "commits": 25
    }
   ]
  },
