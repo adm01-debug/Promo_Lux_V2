@@ -133,7 +133,7 @@ jobs:
           {
             echo "url=$API_URL"
                       echo "anon_key=$PUBLISHABLE_KEY"
-                      echo "service_key=$SECRET_KEY"
+                      echo "service_key=$SERVICE_ROLE_KEY"
           } >> "$GITHUB_OUTPUT"
 
       - name: Run RLS tests (Deno)
