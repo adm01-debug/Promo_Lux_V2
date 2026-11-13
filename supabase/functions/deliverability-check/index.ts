@@ -1,6 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
+import {
+  isBlockedLookupDomain,
+  isRevokedDkim,
+  usableMx,
+} from "../_shared/dns-guard.ts";
 
 // Verifica a entregabilidade de email para um domínio remetente.
 // Checa SPF, DKIM (seletor padrão), DMARC via DNS TXT records - Deno nativo.
@@ -12,7 +17,11 @@ const DeliverabilitySchema = z.object({
     .min(3)
     .max(255)
     .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, "Domínio inválido"),
-  dkim_selector: z.string().max(64).optional().default("default"),
+  dkim_selector: z
+    .string()
+    .regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/, "Seletor DKIM inválido")
+    .optional()
+    .default("default"),
 });
 
 const CORS_HEADERS = {
@@ -27,12 +36,6 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
   });
-}
-
-function isSafeDomain(domain: string): boolean {
-  return !/^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|0\.0\.0\.0|\.local)/.test(
-    domain,
-  );
 }
 
 interface DeliverabilityResult {
@@ -67,7 +70,8 @@ async function checkDeliverability(
   const recommendations: string[] = [];
   const d = domain.toLowerCase().trim();
 
-  if (!isSafeDomain(d)) throw new Error("Domínio interno não permitido");
+  if (isBlockedLookupDomain(d))
+    throw new Error("Domínio interno não permitido");
 
   const spfResult: DeliverabilityResult["checks"]["spf"] = {
     found: false,
@@ -139,6 +143,13 @@ async function checkDeliverability(
           (r) =>
             r.includes("v=DKIM1") || r.includes("k=rsa") || r.includes("p="),
         );
+      if (rec && isRevokedDkim(rec)) {
+        // RFC 6376: p= vazio = chave revogada; não conta como DKIM ativo.
+        dkimResult.issues.push(
+          `Seletor ${sel}: chave DKIM revogada (p= vazio)`,
+        );
+        continue;
+      }
       if (rec) {
         dkimResult.found = true;
         dkimResult.selector = sel;
@@ -197,12 +208,15 @@ async function checkDeliverability(
   };
   try {
     const mx = await Deno.resolveDns(d, "MX");
-    if (mx && mx.length > 0) {
+    const utilizaveis = usableMx(mx ?? []);
+    if (utilizaveis.length > 0) {
       mxResult.found = true;
-      mxResult.records = mx
-        .sort((a, b) => a.preference - b.preference)
-        .map((r) => r.exchange)
-        .slice(0, 3);
+      mxResult.records = utilizaveis.slice(0, 3);
+    } else if (mx && mx.length > 0) {
+      // RFC 7505: MX nulo ("."): o domínio declara que não recebe e-mail.
+      recommendations.push(
+        "MX nulo (RFC 7505): o domínio declara que não recebe e-mail; respostas e bounces não chegam",
+      );
     }
   } catch {
     /* ignorar */
@@ -273,9 +287,12 @@ serve(async (req) => {
       { error: "Input inválido", details: p.error.flatten().fieldErrors },
       400,
     );
+  if (isBlockedLookupDomain(p.data.domain))
+    return json({ error: "Domínio interno ou reservado não permitido" }, 400);
   try {
     return json(await checkDeliverability(p.data.domain, p.data.dkim_selector));
   } catch (err) {
-    return json({ error: (err as Error).message }, 500);
+    console.error("deliverability-check", err);
+    return json({ error: "Erro interno" }, 500);
   }
 });
