@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5016c64f16d14bfe3ace7e1e14c9483db57ce271",
+  "commit": "28276ef4bef47ccbb6e568e698a72807de0f3e14",
   "branch": "main",
-  "data_commit": "2026-11-13T09:56:03-03:00",
+  "data_commit": "2026-11-13T10:41:29-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "28276ef",
+    "data": "2026-11-13",
+    "assunto": "infra: pina supabase CLI v3.1.0 no workflow de migrations (#28)"
+   },
    {
     "sha": "5016c64",
     "data": "2026-11-13",
@@ -126,14 +131,9 @@
     "sha": "c88dc8a",
     "data": "2026-08-18",
     "assunto": "chore(hermes): adiciona .hermes.md (regras da casa Hermes)"
-   },
-   {
-    "sha": "ee80ee4",
-    "data": "2026-08-18",
-    "assunto": "chore(agents): adiciona AGENTS.md padrao (contexto multi-agente)"
    }
   ],
-  "arquivos_mudados_7d": 116,
+  "arquivos_mudados_7d": 117,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 21
+    "commits": 22
    }
   ]
  },

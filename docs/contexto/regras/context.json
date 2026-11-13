@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "5016c64f16d14bfe3ace7e1e14c9483db57ce271",
+  "sha": "28276ef4bef47ccbb6e568e698a72807de0f3e14",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 13:33 UTC",
+  "generated_at": "2026-11-13 14:11 UTC",
   "files_total": 1028,
   "code_files": 866,
   "code_lines": 124176
@@ -81064,10 +81064,19 @@
   }
  },
  "git": {
-  "sha": "5016c64f16d14bfe3ace7e1e14c9483db57ce271",
+  "sha": "28276ef4bef47ccbb6e568e698a72807de0f3e14",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "28276ef",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "infra: pina supabase CLI v3.1.0 no workflow de migrations (#28)",
+    "files": [
+     ".github/workflows/db-migrations.yml"
+    ]
+   },
    {
     "sha": "5016c64",
     "date": "2026-11-13",
@@ -81470,13 +81479,6 @@
      "supabase/config.toml",
      "supabase/functions/migrate-helper/index.ts"
     ]
-   },
-   {
-    "sha": "bbe286c",
-    "date": "2026-08-01",
-    "author": "adm01-debug",
-    "subject": "merge: master para main",
-    "files": []
    }
   ],
   "hot_files": [
