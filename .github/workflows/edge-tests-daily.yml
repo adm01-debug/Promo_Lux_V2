@@ -117,6 +117,11 @@ jobs:
         with:
           deno-version: v1.x
 
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 3.1.0
+
       # O CLI 3.1.0 sobe por padrao o gotrue v2.194.0, que rejeita as chaves no
       # formato anotado (sb_publishable_*/sb_secret_*) que o supabase start novo
       # emite -> createUser falha com Invalid API key no job rls-tests.
