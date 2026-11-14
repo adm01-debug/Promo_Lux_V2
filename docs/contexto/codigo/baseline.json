@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "3e8633a791fc2c0d2972e49483baa9397492e74c",
+  "commit": "8ebad715d3087e8aae3f054e6a2cfb804cba0795",
   "branch": "main",
-  "data_commit": "2026-11-13T20:37:54-03:00",
+  "data_commit": "2026-11-14T08:13:15-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8ebad71",
+    "data": "2026-11-14",
+    "assunto": "docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)"
+   },
    {
     "sha": "3e8633a",
     "data": "2026-11-13",
@@ -126,11 +131,6 @@
     "sha": "aaaaf8e",
     "data": "2026-11-08",
     "assunto": "fix(contexto): destrava a publicação e para de publicar fato falso (#12)"
-   },
-   {
-    "sha": "d90a598",
-    "data": "2026-11-08",
-    "assunto": "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json"
    }
   ],
   "arquivos_mudados_7d": 126,
@@ -274,6 +274,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 2
+   },
+   {
     "arquivo": "inventario/estado/README.md",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/regras_negocio/generate.py",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 31
+    "commits": 32
    }
   ]
  },

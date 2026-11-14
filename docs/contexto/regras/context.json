@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "3e8633a791fc2c0d2972e49483baa9397492e74c",
+  "sha": "8ebad715d3087e8aae3f054e6a2cfb804cba0795",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 23:57 UTC",
+  "generated_at": "2026-11-14 11:19 UTC",
   "files_total": 1033,
   "code_files": 869,
   "code_lines": 124964
@@ -81201,10 +81201,19 @@
   }
  },
  "git": {
-  "sha": "3e8633a791fc2c0d2972e49483baa9397492e74c",
+  "sha": "8ebad715d3087e8aae3f054e6a2cfb804cba0795",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8ebad71",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)",
+    "files": [
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "3e8633a",
     "date": "2026-11-13",
@@ -81579,23 +81588,9 @@
      "docs/agentes/github-ci.md",
      "docs/estado/05-infra-ci-testes.md"
     ]
-   },
-   {
-    "sha": "4f78795",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(banco): corrige contagem de migrations base64 de 4 para 6",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/banco.md"
-    ]
    }
   ],
   "hot_files": [
-   [
-    "AGENTS.md",
-    5
-   ],
    [
     ".github/workflows/edge-tests-daily.yml",
     4
@@ -81606,6 +81601,10 @@
    ],
    [
     "package.json",
+    4
+   ],
+   [
+    "AGENTS.md",
     4
    ],
    [
@@ -81623,6 +81622,10 @@
    [
     ".husky/pre-commit",
     3
+   ],
+   [
+    "docs/prod-readiness.md",
+    2
    ],
    [
     "supabase/functions/deliverability-check/index.ts",
@@ -81666,10 +81669,6 @@
    ],
    [
     "scripts/ai-context/gerar.mjs",
-    2
-   ],
-   [
-    "scripts/inventario/gerar-repo.mjs",
     2
    ]
   ]
