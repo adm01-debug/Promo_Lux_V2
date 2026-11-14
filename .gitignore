@@ -55,3 +55,8 @@ inventario/estado/tabelas-uso.json
 supabase/.temp/
 supabase/.branches/
 supabase/cli-latest
+
+# Segredos locais — nao versionar (VITE_ADMIN_LIST_TOKEN e chaves de producao vazaram no .env tracked)
+.env
+.env.local
+.env.*.local
