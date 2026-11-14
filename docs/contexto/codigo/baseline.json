@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "50fd2410a0f771f5285a168809b0957a93ff3d95",
+  "commit": "3e8633a791fc2c0d2972e49483baa9397492e74c",
   "branch": "main",
-  "data_commit": "2026-11-13T20:31:18-03:00",
+  "data_commit": "2026-11-13T20:37:54-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "3e8633a",
+    "data": "2026-11-13",
+    "assunto": "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)"
+   },
+   {
+    "sha": "545a15b",
+    "data": "2026-11-13",
+    "assunto": "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)"
+   },
    {
     "sha": "50fd241",
     "data": "2026-11-13",
@@ -121,23 +131,13 @@
     "sha": "d90a598",
     "data": "2026-11-08",
     "assunto": "fix(husky): corrige tsc --noEmit no hook pre-commit para incluir -p tsconfig.app.json"
-   },
-   {
-    "sha": "1340f5b",
-    "data": "2026-11-08",
-    "assunto": "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md"
-   },
-   {
-    "sha": "1eb0ae9",
-    "data": "2026-11-08",
-    "assunto": "fix(docs): corrige comando de typecheck para incluir -p tsconfig.app.json"
    }
   ],
-  "arquivos_mudados_7d": 124,
+  "arquivos_mudados_7d": 126,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 10
+    "mudancas": 12
    },
    {
     "pasta": "AGENTS.md",
@@ -152,6 +152,10 @@
     "mudancas": 5
    },
    {
+    "pasta": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 4
+   },
+   {
     "pasta": "src/components/lux",
     "mudancas": 4
    },
@@ -160,7 +164,7 @@
     "mudancas": 3
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
+    "pasta": ".github/workflows/ci.yml",
     "mudancas": 3
    },
    {
@@ -190,10 +194,6 @@
    {
     "pasta": ".codex/AGENTS.md",
     "mudancas": 2
-   },
-   {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -207,6 +207,10 @@
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 4
+   },
+   {
+    "arquivo": ".github/workflows/ci.yml",
     "mudancas": 3
    },
    {
@@ -235,10 +239,6 @@
    },
    {
     "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/ci.yml",
     "mudancas": 2
    },
    {
@@ -301,14 +301,14 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 29
+    "commits": 31
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1012,
-  "arquivos_codigo": 642,
-  "linhas_codigo": 110396,
+  "arquivos_total": 1014,
+  "arquivos_codigo": 644,
+  "linhas_codigo": 110543,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,7 +320,7 @@
   "tabelas": 96,
   "migrations": 217,
   "cron_jobs": 6,
-  "testes": 120,
+  "testes": 121,
   "workflows": 6,
   "scripts": 47,
   "docs_md": 76
@@ -583,8 +583,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 115,
-   "linhas": 21149
+   "arquivos": 117,
+   "linhas": 21296
   },
   "tailwind.config.ts": {
    "arquivos": 1,

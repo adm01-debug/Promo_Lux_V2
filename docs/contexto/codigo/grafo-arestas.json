@@ -2134,6 +2134,9 @@
   "supabase/functions/_shared/apollo-departments.ts": [
    "supabase/functions/_shared/lusha-departments.ts"
   ],
+  "supabase/functions/_shared/dns-guard.ts": [
+   "supabase/functions/_shared/ssrf-guard.ts"
+  ],
   "supabase/functions/_shared/hiker-client.ts": [
    "supabase/functions/_shared/apify-fixtures.ts"
   ],
@@ -2152,6 +2155,12 @@
   ],
   "supabase/functions/_shared/safe-update.ts": [
    "supabase/functions/_shared/oracle-logger.ts"
+  ],
+  "supabase/functions/deliverability-check/index.ts": [
+   "supabase/functions/_shared/dns-guard.ts"
+  ],
+  "supabase/functions/email-verify/index.ts": [
+   "supabase/functions/_shared/dns-guard.ts"
   ],
   "supabase/functions/gmaps-proxy/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",

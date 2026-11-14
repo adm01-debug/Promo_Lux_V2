@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "50fd2410a0f771f5285a168809b0957a93ff3d95",
+  "sha": "3e8633a791fc2c0d2972e49483baa9397492e74c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-13 23:37 UTC",
-  "files_total": 1031,
-  "code_files": 867,
-  "code_lines": 124817
+  "generated_at": "2026-11-13 23:57 UTC",
+  "files_total": 1033,
+  "code_files": 869,
+  "code_lines": 124964
  },
  "version": "1.3.2",
- "facts_hash": "21c7a3d500329e10",
+ "facts_hash": "b6d03c9d253b5595",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -208,7 +208,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 339,
+   ".ts": 341,
    ".tsx": 277,
    ".sql": 221,
    ".mjs": 20,
@@ -25663,8 +25663,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 115,
-   "lines": 21149,
+   "files": 117,
+   "lines": 21296,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -25736,6 +25736,7 @@
     "company-domain.ts: normalizeDomain, DomainCandidates, ResolvedDomain, resolveCompanyDomain",
     "cookies.ts: ServicoCookie, VaultCookie, CookieVaultUnavailable, CookieNotReady, fetchAllCookies, getCookie",
     "departmentMap.ts: DEPT_MAP, SUGGESTED_DEPARTMENTS_PT, DepartmentResolution, resolveDepartments, findPtLabelForEn",
+    "dns-guard.ts: isBlockedLookupDomain, isNullMx, usableMx, isRevokedDkim",
     "gmaps-mapper.ts: RawGmapsRow, MappedCompany, mapGmapsRow, parseCsv",
     "hiker-client.ts: HikerErrorClass, HikerError, HikerClientOptions, FetchResult, computeBackoff, HikerClient",
     "instagram-config-hash.ts: InstagramTargetType, ConfigHashInput, normalizeTarget, clampLimit, canonicalizeConfig, computeConfigHash",
@@ -25792,6 +25793,7 @@
     "supabase/functions/_shared/company-domain.ts",
     "supabase/functions/_shared/cookies.ts",
     "supabase/functions/_shared/departmentMap.ts",
+    "supabase/functions/_shared/dns-guard.ts",
     "supabase/functions/_shared/gmaps-mapper.ts",
     "supabase/functions/_shared/hiker-client.ts",
     "supabase/functions/_shared/instagram-config-hash.ts",
@@ -25816,6 +25818,7 @@
     "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
     "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
     "supabase/functions/_shared/__tests__/chaos.test.ts",
+    "supabase/functions/_shared/__tests__/dns-guard.test.ts",
     "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
     "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts",
     "supabase/functions/_shared/__tests__/hiker-normalize.test.ts",
@@ -25858,9 +25861,7 @@
     "supabase/functions/health/index.ts",
     "supabase/functions/instagram-connection-status/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
-    "supabase/functions/instagram-enqueue/index.ts",
-    "supabase/functions/instagram-worker/index.ts",
-    "supabase/functions/instagram-worker-health/index.ts"
+    "supabase/functions/instagram-enqueue/index.ts"
    ]
   },
   {
@@ -29045,7 +29046,7 @@
     "file": "supabase/functions/deliverability-check/index.ts",
     "name": "DeliverabilitySchema",
     "kind": "object",
-    "body": "{ domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, \"Domínio inválido\"), dkim_selector: z.string().max(64).optional().default(\"default\"), }",
+    "body": "{ domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, \"Domínio inválido\"), dkim_selector: z .string() .regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/, \"Seletor DKIM inválido\") .optional() .default(\"default\"), }",
     "refines": [],
     "chain": []
    },
@@ -31080,6 +31081,10 @@
    {
     "file": "supabase/functions/_shared/departmentMap.ts",
     "text": "Business Development"
+   },
+   {
+    "file": "supabase/functions/_shared/dns-guard.ts",
+    "text": "* true quando o domínio NÃO pode ser consultado (interno, reservado ou IP literal). */"
    },
    {
     "file": "supabase/functions/_shared/gmaps-mapper.ts",
@@ -44664,6 +44669,42 @@
    {
     "file": "supabase/functions/_shared/__tests__/chaos.test.ts",
     "name": "rejeita task_id vazio"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "isBlockedLookupDomain"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "permite %s"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "MX nulo (RFC 7505)"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "reconhece "
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "usableMx descarta o MX nulo e ordena por preferência"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "isRevokedDkim"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "p= vazio é chave revogada"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "p= com chave não é revogada"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "name": "sem p= não é tratada como revogada"
    },
    {
     "file": "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
@@ -74233,6 +74274,20 @@
    ],
    "doc": "============================================================================ Departamentos PT → Lusha enum EN (single source of truth) ---------------------------------------------------------------------------- Importável tanto por Edge Functions (Deno) quanto pelo front (Vite) via caminho relativo …"
   },
+  "supabase/functions/_shared/dns-guard.ts": {
+   "path": "supabase/functions/_shared/dns-guard.ts",
+   "lines": 65,
+   "exports": [
+    "function isBlockedLookupDomain",
+    "function isNullMx",
+    "function usableMx",
+    "function isRevokedDkim"
+   ],
+   "rule_comments": [
+    "* true quando o domínio NÃO pode ser consultado (interno, reservado ou IP literal). */"
+   ],
+   "doc": "============================================================================ _shared/dns-guard.ts Regras PURAS (sem rede) para funções que só consultam DNS de um domínio informado pelo usuário (deliverability-check, email-verify). Essas funções nunca abrem conexão com o alvo, então o risco é virar o …"
+  },
   "supabase/functions/_shared/gmaps-mapper.ts": {
    "path": "supabase/functions/_shared/gmaps-mapper.ts",
    "lines": 157,
@@ -74837,6 +74892,22 @@
     "respeita rate=1 (sempre injeta)",
     "distribui aproximadamente próximo do rate esperado em N=5000",
     "rejeita task_id vazio"
+   ]
+  },
+  "supabase/functions/_shared/__tests__/dns-guard.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+   "lines": 85,
+   "is_test": true,
+   "tests": [
+    "isBlockedLookupDomain",
+    "permite %s",
+    "MX nulo (RFC 7505)",
+    "reconhece ",
+    "usableMx descarta o MX nulo e ordena por preferência",
+    "isRevokedDkim",
+    "p= vazio é chave revogada",
+    "p= com chave não é revogada",
+    "sem p= não é tratada como revogada"
    ]
   },
   "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts": {
@@ -76062,7 +76133,7 @@
   },
   "supabase/functions/deliverability-check/index.ts": {
    "path": "supabase/functions/deliverability-check/index.ts",
-   "lines": 282,
+   "lines": 299,
    "env": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_URL"
@@ -76074,7 +76145,7 @@
     {
      "name": "DeliverabilitySchema",
      "kind": "object",
-     "body": "{ domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, \"Domínio inválido\"), dkim_selector: z.string().max(64).optional().default(\"default\"), }",
+     "body": "{ domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, \"Domínio inválido\"), dkim_selector: z .string() .regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/, \"Seletor DKIM inválido\") .optional() .default(\"default\"), }",
      "refines": [],
      "chain": []
     }
@@ -76381,7 +76452,7 @@
   },
   "supabase/functions/email-verify/index.ts": {
    "path": "supabase/functions/email-verify/index.ts",
-   "lines": 312,
+   "lines": 292,
    "env": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_URL"
@@ -81130,10 +81201,32 @@
   }
  },
  "git": {
-  "sha": "50fd2410a0f771f5285a168809b0957a93ff3d95",
+  "sha": "3e8633a791fc2c0d2972e49483baa9397492e74c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "3e8633a",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)",
+    "files": [
+     ".github/workflows/ci.yml",
+     "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+     "supabase/functions/_shared/dns-guard.ts",
+     "supabase/functions/deliverability-check/index.ts",
+     "supabase/functions/email-verify/index.ts"
+    ]
+   },
+   {
+    "sha": "545a15b",
+    "date": "2026-11-13",
+    "author": "adm01-debug",
+    "subject": "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)",
+    "files": [
+     ".github/workflows/edge-tests-daily.yml"
+    ]
+   },
    {
     "sha": "50fd241",
     "date": "2026-11-13",
@@ -81496,68 +81589,27 @@
      "AGENTS.md",
      "docs/agentes/banco.md"
     ]
-   },
-   {
-    "sha": "c9b89ab",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "docs(agentes): replica padrao de instrucoes de agentes do Zapp Web V2 (#5)",
-    "files": [
-     ".agents/skills/promo-lux-v2/SKILL.md",
-     ".agents/skills/promo-lux-v2/agents/openai.yaml",
-     ".claude/ecc-tools.json",
-     ".claude/homunculus/instincts/inherited/promo-lux-v2-instincts.yaml",
-     ".claude/hooks/session-start.sh",
-     ".claude/identity.json",
-     ".claude/settings.json",
-     ".claude/skills/promo-lux-v2/SKILL.md",
-     ".codex/AGENTS.md",
-     ".codex/agents/docs-researcher.toml",
-     ".codex/agents/explorer.toml",
-     ".codex/agents/reviewer.toml",
-     ".codex/config.toml",
-     ".gitignore",
-     ".graphifyignore",
-     "AGENTS.md",
-     "CLAUDE.md",
-     "docs/agentes/banco.md",
-     "docs/agentes/github-ci.md",
-     "docs/agentes/lovable-deploy.md",
-     "docs/agentes/mapa-repo.md",
-     "docs/agentes/regras-dominio.md",
-     "docs/agentes/servicos-externos.md",
-     "package.json",
-     "scripts/ci/check-claude-md-integrity.mjs",
-     "scripts/graphify/README.md",
-     "scripts/graphify/setup.sh"
-    ]
-   },
-   {
-    "sha": "2b5a84f",
-    "date": "2026-08-28",
-    "author": "gpt-engineer-app[bot]",
-    "subject": "Visual edit in Lovable",
-    "files": [
-     ".lovable/mcp/manifest.json",
-     "supabase/functions/mcp/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "AGENTS.md",
-    6
-   ],
-   [
-    ".gitignore",
-    5
-   ],
-   [
-    "package.json",
     5
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
+    4
+   ],
+   [
+    ".gitignore",
+    4
+   ],
+   [
+    "package.json",
+    4
+   ],
+   [
+    ".github/workflows/ci.yml",
     3
    ],
    [
@@ -81573,12 +81625,12 @@
     3
    ],
    [
-    "docs/agentes/github-ci.md",
-    3
+    "supabase/functions/deliverability-check/index.ts",
+    2
    ],
    [
-    "docs/agentes/mapa-repo.md",
-    3
+    "supabase/functions/email-verify/index.ts",
+    2
    ],
    [
     "CONTRIBUTING.md",
@@ -81586,22 +81638,6 @@
    ],
    [
     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
-    2
-   ],
-   [
-    ".github/workflows/ci.yml",
-    2
-   ],
-   [
-    ".agents/skills/promo-lux-v2/SKILL.md",
-    2
-   ],
-   [
-    ".claude/skills/promo-lux-v2/SKILL.md",
-    2
-   ],
-   [
-    ".codex/AGENTS.md",
     2
    ],
    [
@@ -81617,11 +81653,23 @@
     2
    ],
    [
+    "docs/agentes/github-ci.md",
+    2
+   ],
+   [
     "inventario/estado/README.md",
     2
    ],
    [
     "inventario/estado/edges.json",
+    2
+   ],
+   [
+    "scripts/ai-context/gerar.mjs",
+    2
+   ],
+   [
+    "scripts/inventario/gerar-repo.mjs",
     2
    ]
   ]

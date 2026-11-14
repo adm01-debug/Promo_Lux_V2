@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (75)",
+   "co-localizado (__tests__) (76)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)",
+   "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)",
    "fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)",
    "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)",
-   "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)",
-   "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)",
-   "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)"
+   "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)"
   ]
  },
  "pr_template": null,

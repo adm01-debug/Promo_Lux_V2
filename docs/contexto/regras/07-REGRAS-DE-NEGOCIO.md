@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `50fd2410a0` · branch `main` · 2026-11-13 23:37 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3e8633a791` · branch `main` · 2026-11-13 23:57 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1127,7 +1127,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **DeliverabilitySchema** (`supabase/functions/deliverability-check/index.ts`, z.object):
   ```ts
-  { domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, "Domínio inválido"), dkim_selector: z.string().max(64).optional().default("default"), }
+  { domain: z .string() .min(3) .max(255) .regex(/^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$/, "Domínio inválido"), dkim_selector: z .string() .regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/, "Seletor DKIM inválido") .optional() .default("default"), }
   ```
 - **EmailVerifySchema** (`supabase/functions/email-verify/index.ts`, z.object):
   ```ts
@@ -2000,7 +2000,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1136 testes em 106 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1145 testes em 107 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2047,6 +2047,7 @@ _nenhum item encontrado_
 | `src/integrations/supabase/__tests__/withOrg.switching.test.ts` | 9 | withOrg — E2E switching de organização ativa · fluxo completo: opera em Org A, troca para Org B, e o filtro de leitura acompanha · bloqueia leitura cross-org: estando em Org A, cliente NÃO consegue forçar SELECT em Org B · bloqueia escrita cross-org após switch: tentar inserir com org antiga é interceptado … |
 | `src/lib/dlq/__tests__/classify.test.ts` | 9 | classifyDlqReason · classifica rede · classifica rate limit · classifica auth … |
 | `src/lib/resilience/simulator.test.ts` | 9 | simulator - backoff · cresce exponencialmente e respeita o cap · simulator - cenários · erro permanente (4xx) sempre vai para DLQ quando falha … |
+| `supabase/functions/_shared/__tests__/dns-guard.test.ts` | 9 | isBlockedLookupDomain · permite %s · MX nulo (RFC 7505) · reconhece  … |
 | `supabase/functions/_shared/__tests__/tracking-signature.test.ts` | 9 | tracking-signature · round-trips a click URL · round-trips an open pixel (null url) · rejects a tampered url … |
 | `src/components/lux/__tests__/CompanyTable.test.tsx` | 8 | CompanyTable — Virtualized list · renders Score IPC header · renders company names · applies correct score color classes … |
 | `src/components/lux/layout/__tests__/Sidebar.test.tsx` | 8 | Sidebar · renders all nav items when expanded · hides labels when collapsed · calls onNavigate when a nav item is clicked … |
@@ -2263,6 +2264,7 @@ _nenhum item encontrado_
 | Aceita tanto o header completo quanto apenas o valor bruto. | `supabase/functions/_shared/cookies.ts` |
 | caminho relativo. NÃO adicionar deps externas aqui — deve permanecer puro. | `supabase/functions/_shared/departmentMap.ts` |
 | Business Development | `supabase/functions/_shared/departmentMap.ts` |
+| * true quando o domínio NÃO pode ser consultado (interno, reservado ou IP literal). */ | `supabase/functions/_shared/dns-guard.ts` |
 | * Parser CSV mínimo RFC 4180 — trata aspas e vírgulas dentro de campos. | `supabase/functions/_shared/gmaps-mapper.ts` |
 | - Mesma tupla (organization_id, target_type, target_value normalizado, limit) | `supabase/functions/_shared/instagram-config-hash.ts` |
 | - `limit` é coagido a inteiro (default 200, clamp 1..1000) e faz parte do payload. | `supabase/functions/_shared/instagram-config-hash.ts` |

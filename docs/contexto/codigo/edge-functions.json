@@ -15,6 +15,7 @@
   "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
   "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
   "supabase/functions/_shared/__tests__/chaos.test.ts",
+  "supabase/functions/_shared/__tests__/dns-guard.test.ts",
   "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
   "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts",
   "supabase/functions/_shared/__tests__/hiker-normalize.test.ts",
@@ -39,6 +40,7 @@
   "supabase/functions/_shared/company-domain.ts",
   "supabase/functions/_shared/cookies.ts",
   "supabase/functions/_shared/departmentMap.ts",
+  "supabase/functions/_shared/dns-guard.ts",
   "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
   "supabase/functions/_shared/domain/ipc/scoring.ts",
   "supabase/functions/_shared/domain/scrape-job-machine.ts",
@@ -421,7 +423,7 @@
    "nome": "deliverability-check",
    "entrada": "supabase/functions/deliverability-check/index.ts",
    "arquivos": 1,
-   "linhas": 282,
+   "linhas": 299,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -436,7 +438,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "dns-guard.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -639,7 +643,7 @@
    "nome": "email-verify",
    "entrada": "supabase/functions/email-verify/index.ts",
    "arquivos": 1,
-   "linhas": 312,
+   "linhas": 292,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -654,7 +658,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "dns-guard.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,

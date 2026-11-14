@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 120,
+ "total": 121,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 98
+  "unit": 99
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 75
+   "arquivos": 76
   },
   {
    "padrao": "e2e/",
@@ -973,6 +973,15 @@
    "casos": 5
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+   "tipo": "unit",
+   "linhas": 85,
+   "testa": [
+    "supabase/functions/_shared/dns-guard.ts"
+   ],
+   "casos": 7
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
    "tipo": "unit",
    "linhas": 70,
@@ -1210,6 +1219,7 @@
   "supabase/functions/_shared/apollo-departments.ts": 1,
   "supabase/functions/_shared/bitrix-client.ts": 1,
   "supabase/functions/_shared/company-domain.ts": 1,
+  "supabase/functions/_shared/dns-guard.ts": 1,
   "supabase/functions/_shared/domain/ipc/scoring.ts": 1,
   "supabase/functions/_shared/gmaps-mapper.ts": 1,
   "supabase/functions/_shared/hiker-client.ts": 2,
