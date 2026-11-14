@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8fc5df711853b74081c9da69afb623f4547f2476",
+  "commit": "2f44e2d4e0a2b74dcf109fd97331fb396d01f123",
   "branch": "main",
-  "data_commit": "2026-11-14T10:15:24-03:00",
+  "data_commit": "2026-11-14T13:31:35-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "2f44e2d",
+    "data": "2026-11-14",
+    "assunto": "fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)"
+   },
    {
     "sha": "8fc5df7",
     "data": "2026-11-14",
@@ -126,18 +131,17 @@
     "sha": "c8175c4",
     "data": "2026-11-11",
     "assunto": "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)"
-   },
-   {
-    "sha": "27893bd",
-    "data": "2026-11-11",
-    "assunto": "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)"
    }
   ],
-  "arquivos_mudados_7d": 129,
+  "arquivos_mudados_7d": 132,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 12
+   },
+   {
+    "pasta": ".gitignore",
+    "mudancas": 6
    },
    {
     "pasta": "AGENTS.md",
@@ -148,12 +152,8 @@
     "mudancas": 6
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 5
-   },
-   {
     "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 4
+    "mudancas": 5
    },
    {
     "pasta": "src/components/lux",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 4
+    "mudancas": 5
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 35
+    "commits": 36
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1017,
   "arquivos_codigo": 644,
-  "linhas_codigo": 110543,
+  "linhas_codigo": 110548,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 117,
-   "linhas": 21296
+   "linhas": 21301
   },
   "tailwind.config.ts": {
    "arquivos": 1,

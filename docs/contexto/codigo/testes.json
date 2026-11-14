@@ -1124,7 +1124,7 @@
   {
    "arquivo": "supabase/functions/rls-tests/index.test.ts",
    "tipo": "unit",
-   "linhas": 203,
+   "linhas": 208,
    "testa": [
     "supabase/functions/rls-tests/_fixtures.ts"
    ],

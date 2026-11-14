@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)",
    "chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)",
    "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)",
    "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)",
-   "fix(ci): aplica migrations com --yes no db push (#39)",
-   "docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)"
+   "fix(ci): aplica migrations com --yes no db push (#39)"
   ]
  },
  "pr_template": null,
