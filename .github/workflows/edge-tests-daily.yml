@@ -117,14 +117,17 @@ jobs:
         with:
           deno-version: v1.x
 
-      # CLI fixado na v3.1.0: o latest passou a emitir as chaves no formato
-      # anotado (sb_publishable_*/sb_secret_*), que o gotrue v2.194.0 rejeita
-      # como Bearer (createUser -> Invalid API key). A v3.1.0 emite o JWT
-      # legado (eyJhbG...) e o job rls-tests roda verde com gotrue local 2.197.
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: 3.1.0
+      # O CLI 3.1.0 sobe por padrao o gotrue v2.194.0, que rejeita as chaves no
+      # formato anotado (sb_publishable_*/sb_secret_*) que o supabase start novo
+      # emite -> createUser falha com Invalid API key no job rls-tests.
+      # O mecanismo nativo de override da imagem e o pin em supabase/.temp/gotrue-version
+      # (leitura do CLI antes do start; a pasta .temp/ e gitignored), entao o job o
+      # re-cria para subir o gotrue v2.197.0, que aceita a chave anotada (prova local:
+      # createUser HTTP 200 com sb_secret_* em gotrue 2.197).
+      - name: Pina gotrue v2.197.0 (aceita chave anotada)
+        run: |
+          mkdir -p supabase/.temp
+          printf 'v2.197.0' > supabase/.temp/gotrue-version
 
       - name: Start Supabase local (migrations limpas)
         run: supabase start
