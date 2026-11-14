@@ -152,7 +152,10 @@ jobs:
         run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Aplicar migrations
-        run: supabase db push --linked
+        # --yes: sem isso o CLI aborta quando stdout não é TTY (runner GH),
+        #         como visto no run 43527722866 ("cannot ask... Nothing was changed").
+        #         O dry-run da etapa anterior já imprimiu o plano; -y só confirma.
+        run: supabase db push --yes --linked
 
       - name: Estado final do histórico
         run: supabase migration list --linked
