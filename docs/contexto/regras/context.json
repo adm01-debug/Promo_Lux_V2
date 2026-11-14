@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "8ebad715d3087e8aae3f054e6a2cfb804cba0795",
+  "sha": "f036f310fd51a01cc6598b965766feaeb18cb9f1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-14 11:19 UTC",
+  "generated_at": "2026-11-14 11:54 UTC",
   "files_total": 1033,
   "code_files": 869,
   "code_lines": 124964
@@ -81201,10 +81201,19 @@
   }
  },
  "git": {
-  "sha": "8ebad715d3087e8aae3f054e6a2cfb804cba0795",
+  "sha": "f036f310fd51a01cc6598b965766feaeb18cb9f1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f036f31",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "fix(ci): aplica migrations com --yes no db push (#39)",
+    "files": [
+     ".github/workflows/db-migrations.yml"
+    ]
+   },
    {
     "sha": "8ebad71",
     "date": "2026-11-14",
@@ -81577,17 +81586,6 @@
      "scripts/supabase_snapshot/snapshot.py",
      "scripts/supabase_snapshot/test_snapshot.py"
     ]
-   },
-   {
-    "sha": "c8970a8",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(docs): propaga contagem correta de migrations base64 (6) para github-ci.md e 05-infra-ci-testes.md",
-    "files": [
-     "AGENTS.md",
-     "docs/agentes/github-ci.md",
-     "docs/estado/05-infra-ci-testes.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81601,10 +81599,6 @@
    ],
    [
     "package.json",
-    4
-   ],
-   [
-    "AGENTS.md",
     4
    ],
    [
@@ -81622,6 +81616,14 @@
    [
     ".husky/pre-commit",
     3
+   ],
+   [
+    "AGENTS.md",
+    3
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    2
    ],
    [
     "docs/prod-readiness.md",
@@ -81653,10 +81655,6 @@
    ],
    [
     "ai-context.config.json",
-    2
-   ],
-   [
-    "docs/agentes/github-ci.md",
     2
    ],
    [

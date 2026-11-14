@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8ebad715d3087e8aae3f054e6a2cfb804cba0795",
+  "commit": "f036f310fd51a01cc6598b965766feaeb18cb9f1",
   "branch": "main",
-  "data_commit": "2026-11-14T08:13:15-03:00",
+  "data_commit": "2026-11-14T08:52:17-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f036f31",
+    "data": "2026-11-14",
+    "assunto": "fix(ci): aplica migrations com --yes no db push (#39)"
+   },
    {
     "sha": "8ebad71",
     "data": "2026-11-14",
@@ -126,11 +131,6 @@
     "sha": "8173876",
     "data": "2026-11-08",
     "assunto": "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes"
-   },
-   {
-    "sha": "aaaaf8e",
-    "data": "2026-11-08",
-    "assunto": "fix(contexto): destrava a publicação e para de publicar fato falso (#12)"
    }
   ],
   "arquivos_mudados_7d": 126,
@@ -246,6 +246,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": ".github/workflows/db-migrations.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/inventario/gerar-repo.mjs",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/regras_negocio/generate.py",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 32
+    "commits": 33
    }
   ]
  },

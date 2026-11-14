@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8ebad715d3087e8aae3f054e6a2cfb804cba0795` (2026-11-14T08:13:15-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f036f310fd51a01cc6598b965766feaeb18cb9f1` (2026-11-14T08:52:17-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6479 nós · 13980 arestas · 558 comunidades · grafo do commit `8ebad715`
+- 6479 nós · 13980 arestas · 558 comunidades · grafo do commit `f036f310`
 - comunidades maiores: cn (131), Monitoring.tsx (117), react (115), @tanstack/react-query (100), framer-motion (91), DashboardView.tsx (82), OrgProxiesView.tsx (80), gerar.mjs (80), Index.tsx (78), badge.tsx (73), generate.py (71), JobDetailsSheet.tsx (70)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -234,9 +234,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql (3)
 - .claude/skills/promo-lux-v2/SKILL.md (2)
 - .github/workflows/contexto.yml (2)
+- .github/workflows/db-migrations.yml (2)
 - .github/workflows/inventario-estado-semanal.yml (2)
 - CONTRIBUTING.md (2)
-- ai-context.config.json (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -325,6 +325,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-14 `f036f31` fix(ci): aplica migrations com --yes no db push (#39)
 - 2026-11-14 `8ebad71` docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)
 - 2026-11-13 `3e8633a` fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)
 - 2026-11-13 `545a15b` fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)
@@ -339,7 +340,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-13 `5016c64` fix(migrations): revoga EXECUTE de PUBLIC nas funcoes guard da A1 (#27)
 - 2026-11-12 `8fb4f41` fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)
 - 2026-11-12 `ed7e49e` fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)
-- 2026-11-12 `9cd6dbc` style(manutencao): aplica correcoes locais verificadas (#22)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
