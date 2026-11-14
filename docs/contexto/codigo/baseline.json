@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "fd9a59c6e48d812a646900919507485bc6c0234c",
+  "commit": "f1a6552703bb9b8cc0f9b477f47e9d68be3d4d3f",
   "branch": "main",
-  "data_commit": "2026-11-14T08:55:45-03:00",
+  "data_commit": "2026-11-14T09:20:18-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f1a6552",
+    "data": "2026-11-14",
+    "assunto": "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)"
+   },
    {
     "sha": "fd9a59c",
     "data": "2026-11-14",
@@ -126,14 +131,9 @@
     "sha": "119de20",
     "data": "2026-11-11",
     "assunto": "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)"
-   },
-   {
-    "sha": "6f3b1ff",
-    "data": "2026-11-08",
-    "assunto": "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script"
    }
   ],
-  "arquivos_mudados_7d": 127,
+  "arquivos_mudados_7d": 129,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,12 +301,12 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 34
+    "commits": 35
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1015,
+  "arquivos_total": 1017,
   "arquivos_codigo": 644,
   "linhas_codigo": 110543,
   "rotas": 10,
@@ -321,7 +321,7 @@
   "migrations": 217,
   "cron_jobs": 6,
   "testes": 121,
-  "workflows": 6,
+  "workflows": 7,
   "scripts": 47,
   "docs_md": 77
  },

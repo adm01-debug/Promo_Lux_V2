@@ -9,7 +9,7 @@
    "JSON (38)",
    "JavaScript (22)",
    "Shell (11)",
-   "YAML (7)",
+   "YAML (9)",
    "Python (5)"
   ],
   "linguagem_principal": "TypeScript",
@@ -122,6 +122,7 @@
   ]
  },
  "configs": [
+  ".github/dependabot.yml",
   ".husky/pre-commit",
   "ai-context.config.json",
   "commitlint.config.cjs",
@@ -281,6 +282,30 @@
    "actions": [
     "actions/checkout",
     "supabase/setup-cli"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/dependency-review.yml",
+   "nome": "Dependency Review",
+   "gatilhos": [
+    "pull_request"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "dependency-review"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout",
+    "actions/dependency-review-action"
    ]
   },
   {
