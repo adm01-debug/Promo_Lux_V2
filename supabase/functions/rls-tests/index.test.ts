@@ -19,9 +19,14 @@ import {
   type FixtureContext,
 } from "./_fixtures.ts";
 
-const SUPABASE_URL = Deno.env.get("VITE_SUPABASE_URL") ?? Deno.env.get("SUPABASE_URL")!;
+// Precedencia: SUPABASE_* (declaradas explicitamente pelo workflow / ambiente)
+// vence VITE_* (que o `.env` tracked da raiz pode fornecer apontando para
+// producao). Sem essa ordem, um `.env` local/tracked com VITE_SUPABASE_URL de
+// producao faz o createUser das fixtures bater no gotrue de producao e falhar
+// com "Invalid API key" (causa raiz do job rls-tests 2/4 no CI).
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("VITE_SUPABASE_URL")!;
 const ANON_KEY =
-  Deno.env.get("VITE_SUPABASE_PUBLISHABLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY")!;
+  Deno.env.get("SUPABASE_ANON_KEY") ?? Deno.env.get("VITE_SUPABASE_PUBLISHABLE_KEY")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/rls-tests`;
