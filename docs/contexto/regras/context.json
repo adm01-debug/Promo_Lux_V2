@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "f1a6552703bb9b8cc0f9b477f47e9d68be3d4d3f",
+  "sha": "8fc5df711853b74081c9da69afb623f4547f2476",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-14 12:39 UTC",
+  "generated_at": "2026-11-14 13:40 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124964
@@ -81208,10 +81208,20 @@
   }
  },
  "git": {
-  "sha": "f1a6552703bb9b8cc0f9b477f47e9d68be3d4d3f",
+  "sha": "8fc5df711853b74081c9da69afb623f4547f2476",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8fc5df7",
+    "date": "2026-11-14",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)",
+    "files": [
+     "package-lock.json",
+     "package.json"
+    ]
+   },
    {
     "sha": "f1a6552",
     "date": "2026-11-14",
@@ -81561,18 +81571,13 @@
      ".husky/pre-commit",
      "docs/agentes/mapa-repo.md"
     ]
-   },
-   {
-    "sha": "1340f5b",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(ci): guard de integridade passa a validar o conteúdo de CLAUDE.md",
-    "files": [
-     "scripts/ci/check-claude-md-integrity.mjs"
-    ]
    }
   ],
   "hot_files": [
+   [
+    "package.json",
+    4
+   ],
    [
     ".github/workflows/edge-tests-daily.yml",
     4
@@ -81598,8 +81603,8 @@
     3
    ],
    [
-    "package.json",
-    3
+    "package-lock.json",
+    2
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -81647,10 +81652,6 @@
    ],
    [
     "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
-    1
-   ],
-   [
-    "e2e/helpers/lushaMocks.ts",
     1
    ]
   ]

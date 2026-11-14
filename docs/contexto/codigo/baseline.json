@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f1a6552703bb9b8cc0f9b477f47e9d68be3d4d3f",
+  "commit": "8fc5df711853b74081c9da69afb623f4547f2476",
   "branch": "main",
-  "data_commit": "2026-11-14T09:20:18-03:00",
+  "data_commit": "2026-11-14T10:15:24-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8fc5df7",
+    "data": "2026-11-14",
+    "assunto": "chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)"
+   },
    {
     "sha": "f1a6552",
     "data": "2026-11-14",
@@ -126,11 +131,6 @@
     "sha": "27893bd",
     "data": "2026-11-11",
     "assunto": "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)"
-   },
-   {
-    "sha": "119de20",
-    "data": "2026-11-11",
-    "assunto": "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)"
    }
   ],
   "arquivos_mudados_7d": 129,
@@ -144,11 +144,11 @@
     "mudancas": 6
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 5
+    "pasta": "package.json",
+    "mudancas": 6
    },
    {
-    "pasta": "package.json",
+    "pasta": ".gitignore",
     "mudancas": 5
    },
    {
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "package.json",
-    "mudancas": 5
+    "mudancas": 6
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
@@ -290,11 +290,11 @@
     "mudancas": 2
    },
    {
-    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
+    "arquivo": "package-lock.json",
     "mudancas": 2
    },
    {
-    "arquivo": "scripts/inventario/gerar-repo.mjs",
+    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
     "mudancas": 2
    }
   ],
@@ -302,6 +302,10 @@
    {
     "autor": "adm01-debug",
     "commits": 35
+   },
+   {
+    "autor": "dependabot[bot]",
+    "commits": 1
    }
   ]
  },
