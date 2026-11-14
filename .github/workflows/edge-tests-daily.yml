@@ -29,15 +29,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
           deno-version: v1.x
 
       - name: Cache Deno deps
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cache/deno
@@ -110,15 +110,15 @@ jobs:
     timeout-minutes: 30
     if: github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
           deno-version: v1.x
 
       - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v3
         with:
           version: latest
 
