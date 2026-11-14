@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "f036f310fd51a01cc6598b965766feaeb18cb9f1",
+  "sha": "fd9a59c6e48d812a646900919507485bc6c0234c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-14 11:54 UTC",
-  "files_total": 1033,
+  "generated_at": "2026-11-14 12:01 UTC",
+  "files_total": 1034,
   "code_files": 869,
   "code_lines": 124964
  },
@@ -81201,10 +81201,19 @@
   }
  },
  "git": {
-  "sha": "f036f310fd51a01cc6598b965766feaeb18cb9f1",
+  "sha": "fd9a59c6e48d812a646900919507485bc6c0234c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "fd9a59c",
+    "date": "2026-11-14",
+    "author": "adm01-debug",
+    "subject": "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)",
+    "files": [
+     "docs/AUDITORIA_TECNICA_SCORECARD.md"
+    ]
+   },
    {
     "sha": "f036f31",
     "date": "2026-11-14",
@@ -81554,51 +81563,11 @@
      "AGENTS.md",
      "docs/agentes/mapa-repo.md"
     ]
-   },
-   {
-    "sha": "4d5d4ee",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "feat(contexto): scripts autônomos de estado real portados do Zapp Web V2 (#8)",
-    "files": [
-     ".github/workflows/contexto.yml",
-     ".github/workflows/inventario-estado-semanal.yml",
-     ".gitignore",
-     "AGENTS.md",
-     "ai-context.config.json",
-     "docs/contexto/regras/manual/README.md",
-     "inventario/estado/README.md",
-     "inventario/estado/edges.json",
-     "package.json",
-     "scripts/ai-context/README.md",
-     "scripts/ai-context/cenarios.mjs",
-     "scripts/ai-context/gerar.mjs",
-     "scripts/ai-context/gerar.unit.mjs",
-     "scripts/inventario/gerar-repo.mjs",
-     "scripts/inventario/mudou-conteudo.mjs",
-     "scripts/regras_negocio/README.md",
-     "scripts/regras_negocio/generate.py",
-     "scripts/regras_negocio/indice.py",
-     "scripts/regras_negocio/publish.sh",
-     "scripts/regras_negocio/test_generate.py",
-     "scripts/supabase_snapshot/README.md",
-     "scripts/supabase_snapshot/requirements.txt",
-     "scripts/supabase_snapshot/snapshot.py",
-     "scripts/supabase_snapshot/test_snapshot.py"
-    ]
    }
   ],
   "hot_files": [
    [
     ".github/workflows/edge-tests-daily.yml",
-    4
-   ],
-   [
-    ".gitignore",
-    4
-   ],
-   [
-    "package.json",
     4
    ],
    [
@@ -81614,11 +81583,15 @@
     3
    ],
    [
+    ".gitignore",
+    3
+   ],
+   [
     ".husky/pre-commit",
     3
    ],
    [
-    "AGENTS.md",
+    "package.json",
     3
    ],
    [
@@ -81646,28 +81619,32 @@
     2
    ],
    [
-    ".github/workflows/contexto.yml",
+    "AGENTS.md",
     2
    ],
    [
-    ".github/workflows/inventario-estado-semanal.yml",
+    "docs/agentes/mapa-repo.md",
     2
    ],
    [
-    "ai-context.config.json",
-    2
+    "docs/AUDITORIA_TECNICA_SCORECARD.md",
+    1
    ],
    [
-    "inventario/estado/README.md",
-    2
+    "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    1
    ],
    [
-    "inventario/estado/edges.json",
-    2
+    "supabase/functions/_shared/dns-guard.ts",
+    1
    ],
    [
-    "scripts/ai-context/gerar.mjs",
-    2
+    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
+    1
+   ],
+   [
+    "e2e/helpers/lushaMocks.ts",
+    1
    ]
   ]
  }

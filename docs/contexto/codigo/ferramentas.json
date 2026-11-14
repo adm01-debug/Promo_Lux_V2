@@ -5,7 +5,7 @@
   "linguagens": [
    "TypeScript (618)",
    "SQL (221)",
-   "Markdown (76)",
+   "Markdown (77)",
    "JSON (38)",
    "JavaScript (22)",
    "Shell (11)",
@@ -391,6 +391,11 @@
    "arquivo": "docs/AUDITORIA_FIRECRAWL.md",
    "titulo": "Auditoria de Paridade — LUX IA vs Firecrawl",
    "linhas": 199
+  },
+  {
+   "arquivo": "docs/AUDITORIA_TECNICA_SCORECARD.md",
+   "titulo": null,
+   "linhas": 223
   },
   {
    "arquivo": "docs/AUTOMACAO_LOCAL.md",

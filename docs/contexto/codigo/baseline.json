@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f036f310fd51a01cc6598b965766feaeb18cb9f1",
+  "commit": "fd9a59c6e48d812a646900919507485bc6c0234c",
   "branch": "main",
-  "data_commit": "2026-11-14T08:52:17-03:00",
+  "data_commit": "2026-11-14T08:55:45-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "fd9a59c",
+    "data": "2026-11-14",
+    "assunto": "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)"
+   },
    {
     "sha": "f036f31",
     "data": "2026-11-14",
@@ -126,14 +131,9 @@
     "sha": "6f3b1ff",
     "data": "2026-11-08",
     "assunto": "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script"
-   },
-   {
-    "sha": "8173876",
-    "data": "2026-11-08",
-    "assunto": "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes"
    }
   ],
-  "arquivos_mudados_7d": 126,
+  "arquivos_mudados_7d": 127,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,12 +301,12 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 33
+    "commits": 34
    }
   ]
  },
  "contagens": {
-  "arquivos_total": 1014,
+  "arquivos_total": 1015,
   "arquivos_codigo": 644,
   "linhas_codigo": 110543,
   "rotas": 10,
@@ -323,7 +323,7 @@
   "testes": 121,
   "workflows": 6,
   "scripts": 47,
-  "docs_md": 76
+  "docs_md": 77
  },
  "por_pasta": {
   "commitlint.config.cjs": {

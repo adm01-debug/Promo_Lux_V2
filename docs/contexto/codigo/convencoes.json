@@ -34,7 +34,7 @@
    "scripts/sql (3)"
   ],
   "docs": [
-   "docs (19)",
+   "docs (20)",
    "(raiz) (5)"
   ]
  },
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)",
    "fix(ci): aplica migrations com --yes no db push (#39)",
    "docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)",
    "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)",
-   "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)",
-   "fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)"
+   "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)"
   ]
  },
  "pr_template": null,
