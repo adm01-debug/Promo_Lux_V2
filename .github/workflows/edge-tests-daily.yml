@@ -117,10 +117,14 @@ jobs:
         with:
           deno-version: v1.x
 
+      # CLI fixado na v3.1.0: o latest passou a emitir as chaves no formato
+      # anotado (sb_publishable_*/sb_secret_*), que o gotrue v2.194.0 rejeita
+      # como Bearer (createUser -> Invalid API key). A v3.1.0 emite o JWT
+      # legado (eyJhbG...) e o job rls-tests roda verde com gotrue local 2.197.
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 3.1.0
 
       - name: Start Supabase local (migrations limpas)
         run: supabase start
