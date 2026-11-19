@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f",
+  "sha": "b1746086a9729eed33b580fc9182d3073af905cb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-19 23:10 UTC",
+  "generated_at": "2026-11-19 23:19 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124969
@@ -81208,10 +81208,19 @@
   }
  },
  "git": {
-  "sha": "d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f",
+  "sha": "b1746086a9729eed33b580fc9182d3073af905cb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b174608",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps): bump source-map-js from 1.2.1 to 1.2.4 (#58)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
    {
     "sha": "d2d1ad0",
     "date": "2026-11-19",
@@ -81540,24 +81549,6 @@
      "scripts/ci/eslint-baseline.json",
      "supabase/functions/audit-logs-prune/index.ts"
     ]
-   },
-   {
-    "sha": "6f3b1ff",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(ci): desbloqueio total do CI — ratchet de lint + package-lock público + fixture JWT + guard script",
-    "files": [
-     ".github/workflows/ci.yml",
-     ".husky/pre-commit",
-     "package-lock.json",
-     "package.json",
-     "scripts/check-anon-grants-view.sh",
-     "scripts/ci/eslint-baseline.json",
-     "scripts/ci/lint-ratchet.mjs",
-     "scripts/ci/lint-ratchet.unit.mjs",
-     "scripts/lib/seguranca-processo.mjs",
-     "supabase/functions/_shared/__tests__/lusha-client.test.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81574,20 +81565,12 @@
     3
    ],
    [
-    "package.json",
-    3
-   ],
-   [
-    ".github/workflows/ci.yml",
-    3
-   ],
-   [
-    "scripts/ci/eslint-baseline.json",
-    3
-   ],
-   [
     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     3
+   ],
+   [
+    "package.json",
+    2
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -81595,6 +81578,10 @@
    ],
    [
     "docs/prod-readiness.md",
+    2
+   ],
+   [
+    ".github/workflows/ci.yml",
     2
    ],
    [
@@ -81606,11 +81593,7 @@
     2
    ],
    [
-    ".husky/pre-commit",
-    2
-   ],
-   [
-    "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+    "scripts/ci/eslint-baseline.json",
     2
    ],
    [
@@ -81639,6 +81622,14 @@
    ],
    [
     "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/dns-guard.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
     1
    ]
   ]

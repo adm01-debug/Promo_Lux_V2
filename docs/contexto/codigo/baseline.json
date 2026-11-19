@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f",
+  "commit": "b1746086a9729eed33b580fc9182d3073af905cb",
   "branch": "main",
-  "data_commit": "2026-11-19T20:04:59-03:00",
+  "data_commit": "2026-11-19T20:13:36-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b174608",
+    "data": "2026-11-19",
+    "assunto": "chore(deps)(deps): bump source-map-js from 1.2.1 to 1.2.4 (#58)"
+   },
    {
     "sha": "d2d1ad0",
     "data": "2026-11-19",
@@ -126,11 +131,6 @@
     "sha": "a168718",
     "data": "2026-11-12",
     "assunto": "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)"
-   },
-   {
-    "sha": "5e3af79",
-    "data": "2026-11-11",
-    "assunto": "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)"
    }
   ],
   "arquivos_mudados_7d": 24,
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "package-lock.json",
-    "mudancas": 4
+    "mudancas": 5
    },
    {
     "pasta": "src/components/lux",
@@ -211,7 +211,7 @@
    },
    {
     "arquivo": "package-lock.json",
-    "mudancas": 4
+    "mudancas": 5
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -305,7 +305,7 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 2
+    "commits": 3
    }
   ]
  },
