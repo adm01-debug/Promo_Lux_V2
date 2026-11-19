@@ -9,7 +9,7 @@
     "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
     "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
     "dev": "vite",
-    "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
+    "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nÃ£o gerado (requer bun) â€” build principal (dist/) jÃ¡ concluiu com sucesso')",
     "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
@@ -138,7 +138,7 @@
     "@types/react": "19",
     "@types/react-dom": "19",
     "@vitejs/plugin-react-swc": "3",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/coverage-v8": "^5.1.1",
     "autoprefixer": "^10.4.27",
     "axe-playwright": "^2.2.2",
     "commitlint": "^21.0.1",
@@ -156,8 +156,8 @@
     "tailwindcss": "^3.4.17",
     "typescript": "5",
     "typescript-eslint": "8",
-    "vite": "5",
+    "vite": "^6.4.4",
     "vite-bundle-visualizer": "^1.2.1",
-    "vitest": "3"
+    "vitest": "^5.1.1"
   }
 }

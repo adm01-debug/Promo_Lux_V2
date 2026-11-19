@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 
 // Suppress known harmless warnings in test output
 const originalError = console.error;
