@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `2f44e2d4e0a2b74dcf109fd97331fb396d01f123` (2026-11-14T13:31:35-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f` (2026-11-19T20:04:59-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,20 +216,20 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6507 nós · 14007 arestas · 560 comunidades · grafo do commit `2f44e2d4`
+- 6507 nós · 14007 arestas · 560 comunidades · grafo do commit `d2d1ad0f`
 - comunidades maiores: Monitoring.tsx (180), lucide-react (145), react (138), @tanstack/react-query (126), cn (125), snapshot.py (102), utils.ts (101), generate.py (96), OAuthSandboxPanel.tsx (82), gerar.mjs (80), ref_node_fs (72), vitest (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- AGENTS.md (7)
+- AGENTS.md (6)
 - package.json (6)
 - .github/workflows/edge-tests-daily.yml (5)
+- package-lock.json (4)
 - .github/workflows/ci.yml (3)
 - .husky/pre-commit (3)
 - docs/agentes/github-ci.md (3)
 - docs/agentes/mapa-repo.md (3)
-- docs/estado/05-infra-ci-testes.md (3)
 - scripts/ci/eslint-baseline.json (3)
 - supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql (3)
 - .claude/skills/promo-lux-v2/SKILL.md (2)
@@ -327,6 +327,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-19 `d2d1ad0` chore(deps): bump dompurify from 3.4.12 to 3.4.17 (sucessora da #50) (#55)
+- 2026-11-19 `706d6f8` chore(deps)(deps): bump fast-uri from 3.1.3 to 3.1.9 (#51)
 - 2026-11-14 `2f44e2d` fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)
 - 2026-11-14 `8fc5df7` chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)
 - 2026-11-14 `f1a6552` ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)
@@ -340,8 +342,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-13 `da897d6` feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)
 - 2026-11-13 `ff716ae` docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)
 - 2026-11-13 `3c038d5` fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)
-- 2026-11-13 `b50e001` fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)
-- 2026-11-13 `97741e0` chore(runbooks): registra reconciliacao do drift de migrations em producao
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

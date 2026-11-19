@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(deps): bump dompurify from 3.4.12 to 3.4.17 (sucessora da #50) (#55)",
+   "chore(deps)(deps): bump fast-uri from 3.1.3 to 3.1.9 (#51)",
    "fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)",
    "chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)",
-   "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)",
-   "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)",
-   "fix(ci): aplica migrations com --yes no db push (#39)"
+   "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)"
   ]
  },
  "pr_template": null,

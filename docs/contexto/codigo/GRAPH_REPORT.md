@@ -1,4 +1,4 @@
-# Graph Report - Promo_Lux_V2  (2026-11-14)
+# Graph Report - Promo_Lux_V2  (2026-11-19)
 
 ## Corpus Check
 - 1000 files · ~600,447 words
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2f44e2d4`
+- Built from commit: `d2d1ad0f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

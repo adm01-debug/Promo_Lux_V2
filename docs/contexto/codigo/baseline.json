@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "2f44e2d4e0a2b74dcf109fd97331fb396d01f123",
+  "commit": "d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f",
   "branch": "main",
-  "data_commit": "2026-11-14T13:31:35-03:00",
+  "data_commit": "2026-11-19T20:04:59-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "d2d1ad0",
+    "data": "2026-11-19",
+    "assunto": "chore(deps): bump dompurify from 3.4.12 to 3.4.17 (sucessora da #50) (#55)"
+   },
+   {
+    "sha": "706d6f8",
+    "data": "2026-11-19",
+    "assunto": "chore(deps)(deps): bump fast-uri from 3.1.3 to 3.1.9 (#51)"
+   },
    {
     "sha": "2f44e2d",
     "data": "2026-11-14",
@@ -121,19 +131,9 @@
     "sha": "5e3af79",
     "data": "2026-11-11",
     "assunto": "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)"
-   },
-   {
-    "sha": "480dad0",
-    "data": "2026-11-11",
-    "assunto": "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)"
-   },
-   {
-    "sha": "c8175c4",
-    "data": "2026-11-11",
-    "assunto": "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)"
    }
   ],
-  "arquivos_mudados_7d": 132,
+  "arquivos_mudados_7d": 24,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -154,6 +154,10 @@
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 5
+   },
+   {
+    "pasta": "package-lock.json",
+    "mudancas": 4
    },
    {
     "pasta": "src/components/lux",
@@ -190,16 +194,12 @@
    {
     "pasta": ".claude/skills/promo-lux-v2",
     "mudancas": 2
-   },
-   {
-    "pasta": ".codex/AGENTS.md",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 7
+    "mudancas": 6
    },
    {
     "arquivo": "package.json",
@@ -208,6 +208,10 @@
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 5
+   },
+   {
+    "arquivo": "package-lock.json",
+    "mudancas": 4
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -223,10 +227,6 @@
    },
    {
     "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "docs/estado/05-infra-ci-testes.md",
     "mudancas": 3
    },
    {
@@ -262,19 +262,7 @@
     "mudancas": 2
    },
    {
-    "arquivo": "docs/ESTADO_ATUAL.md",
-    "mudancas": 2
-   },
-   {
     "arquivo": "docs/agentes/banco.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "docs/estado/02-backend-edge-functions.md",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "docs/estado/03-dados-e-runtime.md",
     "mudancas": 2
    },
    {
@@ -290,22 +278,34 @@
     "mudancas": 2
    },
    {
-    "arquivo": "package-lock.json",
+    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
     "mudancas": 2
    },
    {
-    "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
+    "arquivo": "scripts/inventario/gerar-repo.mjs",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/regras_negocio/generate.py",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "scripts/supabase_snapshot/snapshot.py",
+    "mudancas": 2
+   },
+   {
+    "arquivo": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
     "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 36
+    "commits": 37
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 1
+    "commits": 2
    }
   ]
  },

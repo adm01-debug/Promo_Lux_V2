@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "2f44e2d4e0a2b74dcf109fd97331fb396d01f123",
+  "sha": "d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-14 17:15 UTC",
+  "generated_at": "2026-11-19 23:10 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124969
@@ -81208,10 +81208,28 @@
   }
  },
  "git": {
-  "sha": "2f44e2d4e0a2b74dcf109fd97331fb396d01f123",
+  "sha": "d2d1ad0f9723e483de3a41bd5e35d9e8be0e769f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "d2d1ad0",
+    "date": "2026-11-19",
+    "author": "adm01-debug",
+    "subject": "chore(deps): bump dompurify from 3.4.12 to 3.4.17 (sucessora da #50) (#55)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
+   {
+    "sha": "706d6f8",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps): bump fast-uri from 3.1.3 to 3.1.9 (#51)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
    {
     "sha": "2f44e2d",
     "date": "2026-11-14",
@@ -81540,40 +81558,6 @@
      "scripts/lib/seguranca-processo.mjs",
      "supabase/functions/_shared/__tests__/lusha-client.test.ts"
     ]
-   },
-   {
-    "sha": "8173876",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(docs): propaga -p tsconfig.app.json nos 4 locais restantes",
-    "files": [
-     ".agents/skills/promo-lux-v2/SKILL.md",
-     ".claude/skills/promo-lux-v2/SKILL.md",
-     ".codex/AGENTS.md",
-     "CONTRIBUTING.md"
-    ]
-   },
-   {
-    "sha": "aaaaf8e",
-    "date": "2026-11-08",
-    "author": "adm01-debug",
-    "subject": "fix(contexto): destrava a publicação e para de publicar fato falso (#12)",
-    "files": [
-     ".github/workflows/contexto.yml",
-     ".github/workflows/inventario-estado-semanal.yml",
-     ".gitignore",
-     "AGENTS.md",
-     "ai-context.config.json",
-     "docs/agentes/github-ci.md",
-     "inventario/estado/README.md",
-     "inventario/estado/edges.json",
-     "package.json",
-     "scripts/ai-context/gerar.mjs",
-     "scripts/inventario/gerar-repo.mjs",
-     "scripts/inventario/mudou-conteudo.unit.mjs",
-     "scripts/regras_negocio/generate.py",
-     "scripts/supabase_snapshot/snapshot.py"
-    ]
    }
   ],
   "hot_files": [
@@ -81582,12 +81566,16 @@
     5
    ],
    [
-    ".gitignore",
+    "package-lock.json",
     4
    ],
    [
+    ".gitignore",
+    3
+   ],
+   [
     "package.json",
-    4
+    3
    ],
    [
     ".github/workflows/ci.yml",
@@ -81600,10 +81588,6 @@
    [
     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     3
-   ],
-   [
-    "package-lock.json",
-    2
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -81619,10 +81603,6 @@
    ],
    [
     "supabase/functions/email-verify/index.ts",
-    2
-   ],
-   [
-    "CONTRIBUTING.md",
     2
    ],
    [
@@ -81655,6 +81635,10 @@
    ],
    [
     "docs/AUDITORIA_TECNICA_SCORECARD.md",
+    1
+   ],
+   [
+    "supabase/functions/_shared/__tests__/dns-guard.test.ts",
     1
    ]
   ]
