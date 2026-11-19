@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b1746086a9729eed33b580fc9182d3073af905cb",
+  "sha": "99fb844b7dd5e4e24de5f53ae42b2fdf98edb822",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-19 23:19 UTC",
+  "generated_at": "2026-11-19 23:55 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124969
  },
  "version": "1.3.2",
- "facts_hash": "23297ddb3c35f1e7",
+ "facts_hash": "61305d8c41b94df8",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -82,12 +82,12 @@
     "in": "package.json"
    },
    "vite": {
-    "version": "5",
+    "version": "^6.4.4",
     "role": "Bundler Vite",
     "in": "package.json"
    },
    "vitest": {
-    "version": "3",
+    "version": "^5.1.1",
     "role": "Testes Vitest",
     "in": "package.json"
    }
@@ -98,7 +98,7 @@
    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "dev": "vite",
-   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria não gerado (requer bun) — build principal (dist/) já concluiu com sucesso')",
+   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nÃ£o gerado (requer bun) â€” build principal (dist/) jÃ¡ concluiu com sucesso')",
    "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
    "build:dev": "vite build --mode development",
    "lint": "eslint .",
@@ -81208,10 +81208,22 @@
   }
  },
  "git": {
-  "sha": "b1746086a9729eed33b580fc9182d3073af905cb",
+  "sha": "99fb844b7dd5e4e24de5f53ae42b2fdf98edb822",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "99fb844",
+    "date": "2026-11-19",
+    "author": "adm01-debug",
+    "subject": "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)",
+    "files": [
+     "package-lock.json",
+     "package.json",
+     "src/test/setup.ts",
+     "tsconfig.app.json"
+    ]
+   },
    {
     "sha": "b174608",
     "date": "2026-11-19",
@@ -81539,26 +81551,20 @@
     "files": [
      "vercel.json"
     ]
-   },
-   {
-    "sha": "119de20",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(ci): alinha baseline do ESLint ao lockfile e adere a ADR-006 no prune (#17)",
-    "files": [
-     "scripts/ci/eslint-baseline.json",
-     "supabase/functions/audit-logs-prune/index.ts"
-    ]
    }
   ],
   "hot_files": [
+   [
+    "package-lock.json",
+    5
+   ],
    [
     ".github/workflows/edge-tests-daily.yml",
     5
    ],
    [
-    "package-lock.json",
-    4
+    "package.json",
+    3
    ],
    [
     ".gitignore",
@@ -81567,10 +81573,6 @@
    [
     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     3
-   ],
-   [
-    "package.json",
-    2
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -81593,8 +81595,12 @@
     2
    ],
    [
-    "scripts/ci/eslint-baseline.json",
-    2
+    "src/test/setup.ts",
+    1
+   ],
+   [
+    "tsconfig.app.json",
+    1
    ],
    [
     ".env",
@@ -81626,10 +81632,6 @@
    ],
    [
     "supabase/functions/_shared/dns-guard.ts",
-    1
-   ],
-   [
-    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
     1
    ]
   ]

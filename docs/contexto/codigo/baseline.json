@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b1746086a9729eed33b580fc9182d3073af905cb",
+  "commit": "99fb844b7dd5e4e24de5f53ae42b2fdf98edb822",
   "branch": "main",
-  "data_commit": "2026-11-19T20:13:36-03:00",
+  "data_commit": "2026-11-19T20:54:23-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "99fb844",
+    "data": "2026-11-19",
+    "assunto": "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)"
+   },
    {
     "sha": "b174608",
     "data": "2026-11-19",
@@ -126,18 +131,17 @@
     "sha": "f7bec29",
     "data": "2026-11-12",
     "assunto": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)"
-   },
-   {
-    "sha": "a168718",
-    "data": "2026-11-12",
-    "assunto": "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)"
    }
   ],
-  "arquivos_mudados_7d": 24,
+  "arquivos_mudados_7d": 26,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 12
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 7
    },
    {
     "pasta": ".gitignore",
@@ -148,15 +152,11 @@
     "mudancas": 6
    },
    {
-    "pasta": "package.json",
+    "pasta": "package-lock.json",
     "mudancas": 6
    },
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 5
-   },
-   {
-    "pasta": "package-lock.json",
     "mudancas": 5
    },
    {
@@ -198,19 +198,19 @@
   ],
   "arquivos_mais_mudados_90d": [
    {
+    "arquivo": "package.json",
+    "mudancas": 7
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 6
    },
    {
-    "arquivo": "package.json",
+    "arquivo": "package-lock.json",
     "mudancas": 6
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "package-lock.json",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 37
+    "commits": 38
    },
    {
     "autor": "dependabot[bot]",
