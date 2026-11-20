@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c4ed84b2dc65ebf60c8dbad6f3473d3051014c54",
+  "commit": "cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71",
   "branch": "main",
-  "data_commit": "2026-11-20T15:00:05-03:00",
+  "data_commit": "2026-11-20T15:14:53-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "cfce9da",
+    "data": "2026-11-20",
+    "assunto": "infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)"
+   },
    {
     "sha": "c4ed84b",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "fd9a59c",
     "data": "2026-11-14",
     "assunto": "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)"
-   },
-   {
-    "sha": "f036f31",
-    "data": "2026-11-14",
-    "assunto": "fix(ci): aplica migrations com --yes no db push (#39)"
    }
   ],
-  "arquivos_mudados_7d": 36,
+  "arquivos_mudados_7d": 37,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 46
+    "commits": 47
    },
    {
     "autor": "dependabot[bot]",

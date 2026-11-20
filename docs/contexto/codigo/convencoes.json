@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)",
    "infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)",
    "chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)",
    "chore(deps): resolve 6 vulnerabilidades dev (zod high, glob moderate) via dedupe do lockfile (#74)",
-   "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)",
-   "infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)"
+   "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)"
   ]
  },
  "pr_template": null,

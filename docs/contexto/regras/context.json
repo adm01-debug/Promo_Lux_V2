@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "c4ed84b2dc65ebf60c8dbad6f3473d3051014c54",
+  "sha": "cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 18:00 UTC",
+  "generated_at": "2026-11-20 18:15 UTC",
   "files_total": 1040,
   "code_files": 869,
   "code_lines": 124964
@@ -81230,10 +81230,19 @@
   }
  },
  "git": {
-  "sha": "c4ed84b2dc65ebf60c8dbad6f3473d3051014c54",
+  "sha": "cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "cfce9da",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)",
+    "files": [
+     "supabase/config.toml"
+    ]
+   },
    {
     "sha": "c4ed84b",
     "date": "2026-11-20",
@@ -81527,15 +81536,6 @@
     "files": [
      "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql"
     ]
-   },
-   {
-    "sha": "65df001",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)",
-    "files": [
-     "docs/prod-readiness.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81548,15 +81548,15 @@
     7
    ],
    [
-    "docs/prod-readiness.md",
-    3
-   ],
-   [
     ".github/workflows/edge-tests-daily.yml",
     3
    ],
    [
     "docs/AUDITORIA_TECNICA_SCORECARD.md",
+    2
+   ],
+   [
+    "docs/prod-readiness.md",
     2
    ],
    [
@@ -81570,6 +81570,10 @@
    [
     ".github/workflows/db-migrations.yml",
     2
+   ],
+   [
+    "supabase/config.toml",
+    1
    ],
    [
     ".github/workflows/edge-functions-deploy.yml",
@@ -81613,10 +81617,6 @@
    ],
    [
     ".github/workflows/contexto.yml",
-    1
-   ],
-   [
-    ".github/workflows/inventario-estado-semanal.yml",
     1
    ]
   ]
