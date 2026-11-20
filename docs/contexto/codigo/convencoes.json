@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)",
    "chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)",
    "chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)",
    "chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)",
-   "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)",
-   "chore(deps)(deps): bump source-map-js from 1.2.1 to 1.2.4 (#58)"
+   "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)"
   ]
  },
  "pr_template": null,

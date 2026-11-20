@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "736d3d69f46a8db73543e956bd1872ba259ef872",
+  "commit": "70c5f032d461756714bd1b1bc0cb96f3546d217c",
   "branch": "main",
-  "data_commit": "2026-11-19T21:27:04-03:00",
+  "data_commit": "2026-11-19T21:55:39-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "70c5f03",
+    "data": "2026-11-19",
+    "assunto": "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)"
+   },
    {
     "sha": "736d3d6",
     "data": "2026-11-19",
@@ -126,11 +131,6 @@
     "sha": "5016c64",
     "data": "2026-11-13",
     "assunto": "fix(migrations): revoga EXECUTE de PUBLIC nas funcoes guard da A1 (#27)"
-   },
-   {
-    "sha": "8fb4f41",
-    "data": "2026-11-12",
-    "assunto": "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)"
    }
   ],
   "arquivos_mudados_7d": 26,
@@ -141,11 +141,11 @@
    },
    {
     "pasta": "package-lock.json",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": "package.json",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "pasta": ".gitignore",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "package.json",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "arquivo": "AGENTS.md",
@@ -305,7 +305,7 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 6
+    "commits": 7
    }
   ]
  },

@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "736d3d69f46a8db73543e956bd1872ba259ef872",
+  "sha": "70c5f032d461756714bd1b1bc0cb96f3546d217c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 00:37 UTC",
+  "generated_at": "2026-11-20 00:59 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124969
@@ -81208,10 +81208,20 @@
   }
  },
  "git": {
-  "sha": "736d3d69f46a8db73543e956bd1872ba259ef872",
+  "sha": "70c5f032d461756714bd1b1bc0cb96f3546d217c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "70c5f03",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)",
+    "files": [
+     "package-lock.json",
+     "package.json"
+    ]
+   },
    {
     "sha": "736d3d6",
     "date": "2026-11-19",
@@ -81534,21 +81544,12 @@
     "files": [
      ".github/workflows/edge-tests-daily.yml"
     ]
-   },
-   {
-    "sha": "5e3af79",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(vercel): alinha a instalação do Vercel ao CI com legacy-peer-deps (#20)",
-    "files": [
-     ".npmrc"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    8
+    9
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
@@ -81556,7 +81557,7 @@
    ],
    [
     "package.json",
-    3
+    4
    ],
    [
     ".gitignore",
