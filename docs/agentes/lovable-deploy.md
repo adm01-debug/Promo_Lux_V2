@@ -15,8 +15,11 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
 
 ## Deploy e edge functions
 
-- **Front:** publicado pela Lovable. Merge em `main` = deploy em produção. Confirme o resultado abrindo a
-  URL de produção e reporte; não diga "deployado" sem isso.
+- **Front:** publicado pela Lovable. Merge em `main` **não garante** deploy imediato: o bundle servido em
+  `lux-ai-company-finder.lovable.app` já ficou defasado vs `main` (snapshot de 01-ago com 11 views lazy, sem
+  Admin/Monitoring/CNPJ, enquanto `src/lib/viewRegistry.ts` da main mapeia 23 views + 9 pages). Confirme o
+  resultado abrindo a URL de produção e reporte; não diga "deployado" sem isso. O smoke test
+  `.github/workflows/production-smoke.yml` detecta essa divergência automaticamente.
 - **Edge functions:** sobem pela própria Lovable ao salvar (`README.md` › Deploy). `verify_jwt` por função
   fica em `supabase/config.toml` — hoje com `verify_jwt = false` em `qa-ingest-run`, `admin-list-companies`
   e `migrate-helper`. Mexer nesses três é mexer em superfície pública: trate como mudança de segurança.
@@ -40,9 +43,10 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
 - Vars usadas pelo front (`src/integrations/supabase/client.ts`): `VITE_SUPABASE_URL` e
   `VITE_SUPABASE_PUBLISHABLE_KEY`. `VITE_SUPABASE_PROJECT_ID` e `VITE_ADMIN_LIST_TOKEN` também existem no
   `.env`.
-- **`.env` está versionado** (`git ls-files .env` retorna o arquivo; o `.gitignore` não cobre `.env*`), e
-  carrega `VITE_ADMIN_LIST_TOKEN`. Não adicione nada novo ali e nunca imprima o conteúdo. Remover do
-  versionamento e rotacionar o token é decisão do dono.
+- **`.env` não é mais versionado** (removido do tracking em `fix(ci): pina Supabase CLI v3.1.0 no job
+  rls-tests` — PR #48; o `.gitignore` cobre `.env`, `.env.local` e `.env.*.local`). O `.env` local carrega
+  `VITE_ADMIN_LIST_TOKEN`. Nunca adicione nada novo ali e nunca imprima o conteúdo; rotacionar o token é
+  decisão do dono.
 - Env vars de E2E, todas opcionais com fallback público: `E2E_BASE_URL`, `E2E_SUPABASE_URL`,
   `E2E_SUPABASE_ANON_KEY`, `E2E_USER_A_EMAIL`/`_PASSWORD`, `E2E_USER_B_EMAIL`/`_PASSWORD`
   (`e2e/helpers/supabase.ts`). Sem elas, os testes de RLS caem no ref divergente — ver `banco.md`.
