@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "8b16f55751a234a088fdb3ecabe3f4344245d52c",
+  "sha": "8e0be69842bee05af01c0a763fabb1e20dd2d61c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 19:05 UTC",
+  "generated_at": "2026-11-20 19:25 UTC",
   "files_total": 1040,
   "code_files": 869,
-  "code_lines": 124964
+  "code_lines": 124979
  },
  "version": "1.3.2",
- "facts_hash": "22793f5ce61eceaf",
+ "facts_hash": "22f3460fed3f350f",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -25693,7 +25693,7 @@
   {
    "module": "supabase/functions",
    "files": 117,
-   "lines": 21301,
+   "lines": 21316,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -75431,7 +75431,7 @@
   },
   "supabase/functions/admin-list-companies/index.ts": {
    "path": "supabase/functions/admin-list-companies/index.ts",
-   "lines": 88,
+   "lines": 89,
    "tables": [
     {
      "table": "companies",
@@ -75460,7 +75460,7 @@
   },
   "supabase/functions/ai-agent/index.ts": {
    "path": "supabase/functions/ai-agent/index.ts",
-   "lines": 201,
+   "lines": 202,
    "tables": [
     {
      "table": "companies",
@@ -75632,7 +75632,7 @@
   },
   "supabase/functions/auth-rate-limit/index.ts": {
    "path": "supabase/functions/auth-rate-limit/index.ts",
-   "lines": 125,
+   "lines": 126,
    "tables": [
     {
      "table": "auth_rate_limits",
@@ -76533,7 +76533,7 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 712,
+   "lines": 713,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -76752,7 +76752,7 @@
   },
   "supabase/functions/health/index.ts": {
    "path": "supabase/functions/health/index.ts",
-   "lines": 105,
+   "lines": 106,
    "tables": [
     {
      "table": "organizations",
@@ -77104,7 +77104,7 @@
   },
   "supabase/functions/lusha-cookie-health/index.ts": {
    "path": "supabase/functions/lusha-cookie-health/index.ts",
-   "lines": 173,
+   "lines": 174,
    "env": [
     "EXTERNAL_VAULT_ANON_KEY",
     "SUPABASE_ANON_KEY",
@@ -77162,7 +77162,7 @@
   },
   "supabase/functions/lusha-decision-makers/index.ts": {
    "path": "supabase/functions/lusha-decision-makers/index.ts",
-   "lines": 762,
+   "lines": 763,
    "tables": [
     {
      "table": "organization_members",
@@ -77225,7 +77225,7 @@
   },
   "supabase/functions/lusha-reveal/index.ts": {
    "path": "supabase/functions/lusha-reveal/index.ts",
-   "lines": 316,
+   "lines": 317,
    "rpc": [
     "check_oracle_rate_limit",
     "default_org_for_current_user"
@@ -77250,7 +77250,7 @@
   },
   "supabase/functions/lusha-search/index.ts": {
    "path": "supabase/functions/lusha-search/index.ts",
-   "lines": 580,
+   "lines": 581,
    "tables": [
     {
      "table": "lusha_search_sessions",
@@ -77522,7 +77522,7 @@
   },
   "supabase/functions/oracle-cookies-preflight/index.ts": {
    "path": "supabase/functions/oracle-cookies-preflight/index.ts",
-   "lines": 230,
+   "lines": 231,
    "tables": [
     {
      "table": "automation_execution_logs",
@@ -77582,7 +77582,7 @@
   },
   "supabase/functions/oracle-enrich-contact/index.ts": {
    "path": "supabase/functions/oracle-enrich-contact/index.ts",
-   "lines": 353,
+   "lines": 354,
    "tables": [
     {
      "table": "lusha_contacts",
@@ -77761,7 +77761,7 @@
   },
   "supabase/functions/oracle-push-bitrix/index.ts": {
    "path": "supabase/functions/oracle-push-bitrix/index.ts",
-   "lines": 405,
+   "lines": 406,
    "tables": [
     {
      "table": "lusha_contacts",
@@ -78034,7 +78034,7 @@
   },
   "supabase/functions/oracle-search-decisors/index.ts": {
    "path": "supabase/functions/oracle-search-decisors/index.ts",
-   "lines": 738,
+   "lines": 739,
    "tables": [
     {
      "table": "lusha_search_sessions",
@@ -78877,7 +78877,7 @@
   },
   "supabase/functions/rls-tests/index.ts": {
    "path": "supabase/functions/rls-tests/index.ts",
-   "lines": 479,
+   "lines": 480,
    "tables": [
     {
      "table": "audit_logs",
@@ -79794,7 +79794,7 @@
   },
   "supabase/functions/workflow-engine/index.ts": {
    "path": "supabase/functions/workflow-engine/index.ts",
-   "lines": 707,
+   "lines": 708,
    "tables": [
     {
      "table": "workflows",
@@ -81230,10 +81230,33 @@
   }
  },
  "git": {
-  "sha": "8b16f55751a234a088fdb3ecabe3f4344245d52c",
+  "sha": "8e0be69842bee05af01c0a763fabb1e20dd2d61c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8e0be69",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)",
+    "files": [
+     "supabase/functions/admin-list-companies/index.ts",
+     "supabase/functions/ai-agent/index.ts",
+     "supabase/functions/auth-rate-limit/index.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/health/index.ts",
+     "supabase/functions/lusha-cookie-health/index.ts",
+     "supabase/functions/lusha-decision-makers/index.ts",
+     "supabase/functions/lusha-reveal/index.ts",
+     "supabase/functions/lusha-search/index.ts",
+     "supabase/functions/oracle-cookies-preflight/index.ts",
+     "supabase/functions/oracle-enrich-contact/index.ts",
+     "supabase/functions/oracle-push-bitrix/index.ts",
+     "supabase/functions/oracle-search-decisors/index.ts",
+     "supabase/functions/rls-tests/index.ts",
+     "supabase/functions/workflow-engine/index.ts"
+    ]
+   },
    {
     "sha": "8b16f55",
     "date": "2026-11-20",
@@ -81527,15 +81550,6 @@
      "supabase/functions/deliverability-check/index.ts",
      "supabase/functions/email-verify/index.ts"
     ]
-   },
-   {
-    "sha": "545a15b",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)",
-    "files": [
-     ".github/workflows/edge-tests-daily.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -81546,10 +81560,6 @@
    [
     "package.json",
     8
-   ],
-   [
-    ".github/workflows/edge-tests-daily.yml",
-    3
    ],
    [
     "docs/AUDITORIA_TECNICA_SCORECARD.md",
@@ -81572,51 +81582,55 @@
     2
    ],
    [
-    "supabase/config.toml",
+    ".github/workflows/edge-tests-daily.yml",
+    2
+   ],
+   [
+    "supabase/functions/admin-list-companies/index.ts",
     1
    ],
    [
-    ".github/workflows/edge-functions-deploy.yml",
+    "supabase/functions/ai-agent/index.ts",
     1
    ],
    [
-    "scripts/automation.config.json",
+    "supabase/functions/auth-rate-limit/index.ts",
     1
    ],
    [
-    "scripts/check-edge-fn-target.sh",
+    "supabase/functions/gmaps-proxy/index.ts",
     1
    ],
    [
-    "scripts/check-functions-lint.sh",
+    "supabase/functions/health/index.ts",
     1
    ],
    [
-    ".github/workflows/production-smoke.yml",
+    "supabase/functions/lusha-cookie-health/index.ts",
     1
    ],
    [
-    "README.md",
+    "supabase/functions/lusha-decision-makers/index.ts",
     1
    ],
    [
-    "docs/FUNCIONALIDADES.md",
+    "supabase/functions/lusha-reveal/index.ts",
     1
    ],
    [
-    "docs/LUSHA-INTEGRATION.md",
+    "supabase/functions/lusha-search/index.ts",
     1
    ],
    [
-    "docs/agentes/lovable-deploy.md",
+    "supabase/functions/oracle-cookies-preflight/index.ts",
     1
    ],
    [
-    ".github/workflows/automation-local.yml",
+    "supabase/functions/oracle-enrich-contact/index.ts",
     1
    ],
    [
-    ".github/workflows/contexto.yml",
+    "supabase/functions/oracle-push-bitrix/index.ts",
     1
    ]
   ]

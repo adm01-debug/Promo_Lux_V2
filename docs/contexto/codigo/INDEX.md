@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8b16f55751a234a088fdb3ecabe3f4344245d52c` (2026-11-20T16:04:47-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8e0be69842bee05af01c0a763fabb1e20dd2d61c` (2026-11-20T16:24:08-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1021 |
 | arquivos_codigo | 644 |
-| linhas_codigo | 110543 |
+| linhas_codigo | 110558 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -188,7 +188,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
-- hosts mais citados: lux-ai-company-finder.lovable.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, www.linkedin.com, ai.gateway.lovable.dev, connector-gateway.lovable.dev, nominatim.openstreetmap.org
+- hosts mais citados: lux-ai-company-finder.lovable.app, promo-lux-v2.vercel.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, www.linkedin.com, ai.gateway.lovable.dev, connector-gateway.lovable.dev
 - webhooks recebidos: admin-list-companies, migrate-helper, qa-ingest-run
 - env de integração (só nomes): ADMIN_LIST_TOKEN, APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET, VITE_ADMIN_LIST_TOKEN
 
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6523 nós · 14023 arestas · 580 comunidades · grafo do commit `8b16f557`
+- 6523 nós · 14023 arestas · 580 comunidades · grafo do commit `8e0be698`
 - comunidades maiores: lucide-react (181), react (172), EmailAccountsPanel.tsx (136), snapshot.py (100), OrganizationsView.tsx (95), cn (88), gerar.mjs (80), @tanstack/react-query (78), generate.py (75), ref_node_fs (73), withOrg.ts (72), ref_https (70)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -329,6 +329,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-20 `8e0be69` fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)
 - 2026-11-20 `8b16f55` fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)
 - 2026-11-20 `cfce9da` infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)
 - 2026-11-20 `c4ed84b` infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-19 `8d8ccbf` chore(deps)(deps-dev): bump baseline-browser-mapping (#64)
 - 2026-11-19 `0767e3a` chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)
 - 2026-11-19 `906b862` chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)
-- 2026-11-19 `70c5f03` chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

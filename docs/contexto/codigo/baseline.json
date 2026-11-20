@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8b16f55751a234a088fdb3ecabe3f4344245d52c",
+  "commit": "8e0be69842bee05af01c0a763fabb1e20dd2d61c",
   "branch": "main",
-  "data_commit": "2026-11-20T16:04:47-03:00",
+  "data_commit": "2026-11-20T16:24:08-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8e0be69",
+    "data": "2026-11-20",
+    "assunto": "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)"
+   },
    {
     "sha": "8b16f55",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "8fc5df7",
     "data": "2026-11-14",
     "assunto": "chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)"
-   },
-   {
-    "sha": "f1a6552",
-    "data": "2026-11-14",
-    "assunto": "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)"
    }
   ],
-  "arquivos_mudados_7d": 36,
+  "arquivos_mudados_7d": 51,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 48
+    "commits": 49
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1021,
   "arquivos_codigo": 644,
-  "linhas_codigo": 110543,
+  "linhas_codigo": 110558,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 117,
-   "linhas": 21301
+   "linhas": 21316
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -642,11 +642,11 @@
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
-   "linhas": 762
+   "linhas": 763
   },
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
-   "linhas": 738
+   "linhas": 739
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
@@ -654,11 +654,11 @@
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 712
+   "linhas": 713
   },
   {
    "arquivo": "supabase/functions/workflow-engine/index.ts",
-   "linhas": 707
+   "linhas": 708
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
@@ -686,7 +686,7 @@
   },
   {
    "arquivo": "supabase/functions/lusha-search/index.ts",
-   "linhas": 580
+   "linhas": 581
   },
   {
    "arquivo": "src/components/lux/settings/RLSVerificationPanel.tsx",
