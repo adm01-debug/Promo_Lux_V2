@@ -6,6 +6,7 @@ const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
 const ALLOWED_ORIGINS = [
   "https://lux-ai-company-finder.lovable.app",
+  "https://promo-lux-v2.vercel.app",
   "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
   "http://localhost:8080",
   "http://localhost:8081",
