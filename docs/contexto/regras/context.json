@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "70c5f032d461756714bd1b1bc0cb96f3546d217c",
+  "sha": "8d8ccbf093cb471f98b4b5cee34a5b0813934046",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 00:59 UTC",
+  "generated_at": "2026-11-20 01:14 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124969
@@ -81208,10 +81208,35 @@
   }
  },
  "git": {
-  "sha": "70c5f032d461756714bd1b1bc0cb96f3546d217c",
+  "sha": "8d8ccbf093cb471f98b4b5cee34a5b0813934046",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8d8ccbf",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps-dev): bump baseline-browser-mapping (#64)",
+    "files": []
+   },
+   {
+    "sha": "0767e3a",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
+   {
+    "sha": "906b862",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
    {
     "sha": "70c5f03",
     "date": "2026-11-19",
@@ -81488,84 +81513,28 @@
     "files": [
      "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
     ]
-   },
-   {
-    "sha": "9cd6dbc",
-    "date": "2026-11-12",
-    "author": "adm01-debug",
-    "subject": "style(manutencao): aplica correcoes locais verificadas (#22)",
-    "files": [
-     "src/App.tsx",
-     "src/components/NavLink.tsx",
-     "src/components/auth/MFAEnroll.tsx",
-     "src/components/auth/MFAVerify.tsx",
-     "src/components/automation/WorkflowEditor.tsx",
-     "src/components/lux/AIAgentView.tsx",
-     "src/components/lux/DataError.tsx",
-     "src/components/lux/GradientAvatar.tsx",
-     "src/components/lux/StickySaveBar.tsx"
-    ]
-   },
-   {
-    "sha": "f7bec29",
-    "date": "2026-11-12",
-    "author": "adm01-debug",
-    "subject": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)",
-    "files": [
-     ".github/workflows/automation-local.yml",
-     ".gitignore",
-     ".husky/pre-commit",
-     "docs/AUTOMACAO_LOCAL.md",
-     "graphify.local.json",
-     "package.json",
-     "scripts/automation.config.json",
-     "scripts/automation.mjs",
-     "scripts/automation.unit.mjs",
-     "scripts/graphify-local.mjs",
-     "scripts/graphify-local.unit.mjs",
-     "scripts/maintenance/README.md",
-     "scripts/maintenance/config.example.json",
-     "scripts/maintenance/config.json",
-     "scripts/maintenance/lib.mjs",
-     "scripts/maintenance/maintenance.unit.mjs",
-     "scripts/maintenance/run.mjs",
-     "scripts/maintenance/run.sh",
-     "scripts/maintenance/typecheck.mjs",
-     "scripts/staged-autofix/README.md",
-     "scripts/staged-autofix/run.mjs",
-     "scripts/staged-autofix/run.unit.mjs"
-    ]
-   },
-   {
-    "sha": "a168718",
-    "date": "2026-11-12",
-    "author": "adm01-debug",
-    "subject": "fix(ci): edge-tests-daily roda apenas testes Deno puros (*_test.ts) (#23)",
-    "files": [
-     ".github/workflows/edge-tests-daily.yml"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    9
+    11
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
-    5
-   ],
-   [
-    "package.json",
     4
    ],
    [
-    ".gitignore",
+    "package.json",
     3
    ],
    [
     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     3
+   ],
+   [
+    ".gitignore",
+    2
    ],
    [
     ".github/workflows/db-migrations.yml",
