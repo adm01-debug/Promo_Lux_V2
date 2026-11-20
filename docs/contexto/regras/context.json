@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71",
+  "sha": "8b16f55751a234a088fdb3ecabe3f4344245d52c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 18:15 UTC",
+  "generated_at": "2026-11-20 19:05 UTC",
   "files_total": 1040,
   "code_files": 869,
   "code_lines": 124964
  },
  "version": "1.3.2",
- "facts_hash": "acfff2f5ee9cefa7",
+ "facts_hash": "22793f5ce61eceaf",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -98,7 +98,7 @@
    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "dev": "vite",
-   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nÃ£o gerado (requer bun) â€” build principal (dist/) jÃ¡ concluiu com sucesso')",
+   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nao gerado, requer bun, build principal ja concluiu')",
    "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
    "build:dev": "vite build --mode development",
    "lint": "eslint .",
@@ -81230,10 +81230,19 @@
   }
  },
  "git": {
-  "sha": "cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71",
+  "sha": "8b16f55751a234a088fdb3ecabe3f4344245d52c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8b16f55",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)",
+    "files": [
+     "package.json"
+    ]
+   },
    {
     "sha": "cfce9da",
     "date": "2026-11-20",
@@ -81527,15 +81536,6 @@
     "files": [
      ".github/workflows/edge-tests-daily.yml"
     ]
-   },
-   {
-    "sha": "50fd241",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)",
-    "files": [
-     "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -81545,7 +81545,7 @@
    ],
    [
     "package.json",
-    7
+    8
    ],
    [
     ".github/workflows/edge-tests-daily.yml",

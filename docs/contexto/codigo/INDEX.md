@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71` (2026-11-20T15:14:53-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8b16f55751a234a088fdb3ecabe3f4344245d52c` (2026-11-20T16:04:47-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,14 +216,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6523 nós · 14023 arestas · 580 comunidades · grafo do commit `cfce9dac`
+- 6523 nós · 14023 arestas · 580 comunidades · grafo do commit `8b16f557`
 - comunidades maiores: lucide-react (181), react (172), EmailAccountsPanel.tsx (136), snapshot.py (100), OrganizationsView.tsx (95), cn (88), gerar.mjs (80), @tanstack/react-query (78), generate.py (75), ref_node_fs (73), withOrg.ts (72), ref_https (70)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (17)
-- package.json (12)
+- package.json (13)
 - .github/workflows/edge-tests-daily.yml (6)
 - AGENTS.md (6)
 - .github/workflows/ci.yml (4)
@@ -255,7 +255,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `maintenance:heal`: `sh scripts/maintenance/run.sh heal --root . --ref origin/main`
 - `test:maintenance`: `node --test scripts/maintenance/maintenance.unit.mjs`
 - `dev`: `vite`
-- `build`: `vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nÃ£o gerado (requer bun) â€” build principal (dist/) jÃ¡ concluiu com sucesso')`
+- `build`: `vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nao gerado, requer bun, build principal ja concluiu')`
 - `generate-audit-pdf`: `bun scripts/generate-audit-pdf.ts`
 - `build:dev`: `vite build --mode development`
 - `lint`: `eslint .`
@@ -329,6 +329,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-20 `8b16f55` fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)
 - 2026-11-20 `cfce9da` infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)
 - 2026-11-20 `c4ed84b` infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)
 - 2026-11-20 `5481263` chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-19 `0767e3a` chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)
 - 2026-11-19 `906b862` chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)
 - 2026-11-19 `70c5f03` chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)
-- 2026-11-19 `736d3d6` chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

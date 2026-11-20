@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "cfce9dac056c9cb6bc2b488482a6ad2aeffaaf71",
+  "commit": "8b16f55751a234a088fdb3ecabe3f4344245d52c",
   "branch": "main",
-  "data_commit": "2026-11-20T15:14:53-03:00",
+  "data_commit": "2026-11-20T16:04:47-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8b16f55",
+    "data": "2026-11-20",
+    "assunto": "fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)"
+   },
    {
     "sha": "cfce9da",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "f1a6552",
     "data": "2026-11-14",
     "assunto": "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)"
-   },
-   {
-    "sha": "fd9a59c",
-    "data": "2026-11-14",
-    "assunto": "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)"
    }
   ],
-  "arquivos_mudados_7d": 37,
+  "arquivos_mudados_7d": 36,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "package.json",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 47
+    "commits": 48
    },
    {
     "autor": "dependabot[bot]",
