@@ -27,14 +27,14 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-ui": ["@radix-ui/react-dialog", "@radix-ui/react-popover", "@radix-ui/react-tooltip", "@radix-ui/react-tabs", "@radix-ui/react-select", "@radix-ui/react-dropdown-menu"],
-          "vendor-query": ["@tanstack/react-query"],
-          "vendor-motion": ["framer-motion"],
-          "vendor-supabase": ["@supabase/supabase-js"],
-          "vendor-charts": ["recharts"],
-          "vendor-map": ["leaflet", "react-leaflet"],
+        manualChunks(id) {
+          if (/node_modules\/(react|react-dom|react-router-dom)/.test(id)) return "vendor-react";
+          if (/node_modules\/(@radix-ui\/react-dialog|@radix-ui\/react-popover|@radix-ui\/react-tooltip|@radix-ui\/react-tabs|@radix-ui\/react-select|@radix-ui\/react-dropdown-menu)/.test(id)) return "vendor-ui";
+          if (/node_modules\/@tanstack\/react-query/.test(id)) return "vendor-query";
+          if (/node_modules\/framer-motion/.test(id)) return "vendor-motion";
+          if (/node_modules\/@supabase\/supabase-js/.test(id)) return "vendor-supabase";
+          if (/node_modules\/recharts/.test(id)) return "vendor-charts";
+          if (/node_modules\/(leaflet|react-leaflet)/.test(id)) return "vendor-map";
         },
       },
     },
