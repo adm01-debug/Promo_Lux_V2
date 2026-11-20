@@ -289,12 +289,7 @@ const App = () => (
                   <OrgErrorBanner />
                   <Toaster />
                   <Sonner />
-                  <BrowserRouter
-                    future={{
-                      v7_startTransition: true,
-                      v7_relativeSplatPath: true,
-                    }}
-                  >
+                  <BrowserRouter>
                     <DeepLinkBridge />
                     <UnsavedChangesProvider>
                       <Suspense fallback={<PageLoader />}>
