@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "b9cce50883bd50c513f18c99f99454cb8157c0fe",
+  "sha": "675f86d248606916b898c7bb679809f8404dcb52",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 14:06 UTC",
+  "generated_at": "2026-11-20 14:46 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124964
@@ -81208,10 +81208,19 @@
   }
  },
  "git": {
-  "sha": "b9cce50883bd50c513f18c99f99454cb8157c0fe",
+  "sha": "675f86d248606916b898c7bb679809f8404dcb52",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "675f86d",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)",
+    "files": [
+     ".github/workflows/dependency-review.yml"
+    ]
+   },
    {
     "sha": "b9cce50",
     "date": "2026-11-20",
@@ -81496,19 +81505,6 @@
     "files": [
      ".github/workflows/edge-tests-daily.yml"
     ]
-   },
-   {
-    "sha": "b50e001",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)",
-    "files": [
-     "e2e/helpers/lushaMocks.ts",
-     "eslint.config.js",
-     "scripts/ci/eslint-baseline.json",
-     "supabase/functions/deliverability-check/index.ts",
-     "supabase/functions/email-verify/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81525,6 +81521,10 @@
     5
    ],
    [
+    ".github/workflows/dependency-review.yml",
+    2
+   ],
+   [
     ".github/workflows/ci.yml",
     2
    ],
@@ -81534,14 +81534,6 @@
    ],
    [
     "docs/prod-readiness.md",
-    2
-   ],
-   [
-    "supabase/functions/deliverability-check/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/email-verify/index.ts",
     2
    ],
    [
@@ -81590,6 +81582,10 @@
    ],
    [
     "supabase/functions/rls-tests/index.test.ts",
+    1
+   ],
+   [
+    ".github/dependabot.yml",
     1
    ]
   ]

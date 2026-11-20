@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b9cce50883bd50c513f18c99f99454cb8157c0fe",
+  "commit": "675f86d248606916b898c7bb679809f8404dcb52",
   "branch": "main",
-  "data_commit": "2026-11-20T11:06:14-03:00",
+  "data_commit": "2026-11-20T11:45:55-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "675f86d",
+    "data": "2026-11-20",
+    "assunto": "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)"
+   },
    {
     "sha": "b9cce50",
     "data": "2026-11-20",
@@ -126,11 +131,6 @@
     "sha": "545a15b",
     "data": "2026-11-13",
     "assunto": "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)"
-   },
-   {
-    "sha": "50fd241",
-    "data": "2026-11-13",
-    "assunto": "fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)"
    }
   ],
   "arquivos_mudados_7d": 31,
@@ -258,6 +258,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": ".github/workflows/dependency-review.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": "CONTRIBUTING.md",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/regras_negocio/generate.py",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/supabase_snapshot/snapshot.py",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 42
+    "commits": 43
    },
    {
     "autor": "dependabot[bot]",
