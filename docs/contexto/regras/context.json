@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "5392988d705cf2362a7e94504f0731411885036e",
+  "sha": "b9cce50883bd50c513f18c99f99454cb8157c0fe",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 13:36 UTC",
+  "generated_at": "2026-11-20 14:06 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124964
@@ -81208,10 +81208,24 @@
   }
  },
  "git": {
-  "sha": "5392988d705cf2362a7e94504f0731411885036e",
+  "sha": "b9cce50883bd50c513f18c99f99454cb8157c0fe",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b9cce50",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)",
+    "files": [
+     ".github/workflows/automation-local.yml",
+     ".github/workflows/ci.yml",
+     ".github/workflows/contexto.yml",
+     ".github/workflows/db-migrations.yml",
+     ".github/workflows/edge-tests-daily.yml",
+     ".github/workflows/inventario-estado-semanal.yml"
+    ]
+   },
    {
     "sha": "5392988",
     "date": "2026-11-20",
@@ -81495,15 +81509,6 @@
      "supabase/functions/deliverability-check/index.ts",
      "supabase/functions/email-verify/index.ts"
     ]
-   },
-   {
-    "sha": "97741e0",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "chore(runbooks): registra reconciliacao do drift de migrations em producao",
-    "files": [
-     "docs/runbooks/drift-reconciliacao-2026-11-13.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81517,7 +81522,15 @@
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
-    4
+    5
+   ],
+   [
+    ".github/workflows/ci.yml",
+    2
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    2
    ],
    [
     "docs/prod-readiness.md",
@@ -81530,6 +81543,18 @@
    [
     "supabase/functions/email-verify/index.ts",
     2
+   ],
+   [
+    ".github/workflows/automation-local.yml",
+    1
+   ],
+   [
+    ".github/workflows/contexto.yml",
+    1
+   ],
+   [
+    ".github/workflows/inventario-estado-semanal.yml",
+    1
    ],
    [
     "vite.config.ts",
@@ -81565,26 +81590,6 @@
    ],
    [
     "supabase/functions/rls-tests/index.test.ts",
-    1
-   ],
-   [
-    ".github/dependabot.yml",
-    1
-   ],
-   [
-    ".github/workflows/dependency-review.yml",
-    1
-   ],
-   [
-    "docs/AUDITORIA_TECNICA_SCORECARD.md",
-    1
-   ],
-   [
-    ".github/workflows/db-migrations.yml",
-    1
-   ],
-   [
-    ".github/workflows/ci.yml",
     1
    ]
   ]

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5392988d705cf2362a7e94504f0731411885036e",
+  "commit": "b9cce50883bd50c513f18c99f99454cb8157c0fe",
   "branch": "main",
-  "data_commit": "2026-11-20T10:35:26-03:00",
+  "data_commit": "2026-11-20T11:06:14-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b9cce50",
+    "data": "2026-11-20",
+    "assunto": "infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)"
+   },
    {
     "sha": "5392988",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "50fd241",
     "data": "2026-11-13",
     "assunto": "fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)"
-   },
-   {
-    "sha": "65df001",
-    "data": "2026-11-13",
-    "assunto": "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)"
    }
   ],
-  "arquivos_mudados_7d": 28,
+  "arquivos_mudados_7d": 31,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -148,6 +148,10 @@
     "mudancas": 12
    },
    {
+    "pasta": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 6
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 6
    },
@@ -156,8 +160,8 @@
     "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 5
+    "pasta": ".github/workflows/ci.yml",
+    "mudancas": 4
    },
    {
     "pasta": "src/components/lux",
@@ -168,7 +172,15 @@
     "mudancas": 3
    },
    {
-    "pasta": ".github/workflows/ci.yml",
+    "pasta": ".github/workflows/contexto.yml",
+    "mudancas": 3
+   },
+   {
+    "pasta": ".github/workflows/db-migrations.yml",
+    "mudancas": 3
+   },
+   {
+    "pasta": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 3
    },
    {
@@ -182,18 +194,6 @@
    {
     "pasta": "docs/agentes/mapa-repo.md",
     "mudancas": 3
-   },
-   {
-    "pasta": "scripts/ci/eslint-baseline.json",
-    "mudancas": 3
-   },
-   {
-    "pasta": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-    "mudancas": 3
-   },
-   {
-    "pasta": ".claude/skills/promo-lux-v2",
-    "mudancas": 2
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -206,15 +206,27 @@
     "mudancas": 12
    },
    {
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 6
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 6
    },
    {
-    "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 5
+    "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 4
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
+    "arquivo": ".github/workflows/contexto.yml",
+    "mudancas": 3
+   },
+   {
+    "arquivo": ".github/workflows/db-migrations.yml",
+    "mudancas": 3
+   },
+   {
+    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 3
    },
    {
@@ -242,15 +254,7 @@
     "mudancas": 2
    },
    {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+    "arquivo": ".github/workflows/automation-local.yml",
     "mudancas": 2
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": "scripts/supabase_snapshot/snapshot.py",
     "mudancas": 2
-   },
-   {
-    "arquivo": "src/App.tsx",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 41
+    "commits": 42
    },
    {
     "autor": "dependabot[bot]",

@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)",
    "feat(deps): bump vite 6 para 8.3.8 (major) e corrige manualChunks para API do vite 8 (#71)",
    "fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)",
    "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)",
-   "chore(deps)(deps): bump react-router and react-router-dom (#68)",
-   "chore(deps)(deps-dev): bump baseline-browser-mapping (#64)"
+   "chore(deps)(deps): bump react-router and react-router-dom (#68)"
   ]
  },
  "pr_template": null,
