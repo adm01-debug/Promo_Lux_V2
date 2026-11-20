@@ -159,5 +159,12 @@
     "vite": "^6.4.4",
     "vite-bundle-visualizer": "^1.2.1",
     "vitest": "^5.1.1"
+  },
+  "overrides": {
+    "minimatch": "11.0.1",
+    "postcss-selector-parser": "6.1.5",
+    "@lovable.dev/mcp-js": {
+      "esbuild": "0.28.1"
+    }
   }
 }
