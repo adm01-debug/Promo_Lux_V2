@@ -261,9 +261,11 @@ Todas as tabelas possuem RLS habilitado com isolamento por `user_id`:
 
 ## Deploy
 
-Deployado automaticamente via Lovable. Edge functions deployam ao salvar.
+Deploy automático via **Vercel** (projeto `juca1/promo-lux-v2`) a cada merge em `main` (`vercel.json` na raiz: build `npm run build`, output `dist`).
 
-- **Produção**: `https://lux-ai-company-finder.lovable.app`
+- **Produção**: `https://promo-lux-v2.vercel.app`
+
+**Lovable** foi a plataforma original de deploy e segue **abandonada** — o bundle que ela ainda serve (`lux-ai-company-finder.lovable.app`) está defasado (sem Admin/Monitoring/CNPJ). Não use como referência; o smoke diário (`production-smoke.yml`) monitora a paridade Vercel ↔ main.
 
 ---
 

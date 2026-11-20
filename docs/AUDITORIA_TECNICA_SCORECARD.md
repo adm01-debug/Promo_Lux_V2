@@ -83,7 +83,7 @@
 - **Ações**: criar `docs/DATA_DICTIONARY.md` ligando entidades de negócio → tabelas.
 
 ### 8. INFRAESTRUTURA / DevOps — 6/10
-- **Evidências**: deploy gerenciado por Lovable (Vercel preview + Lovable prod `lux-ai-company-finder.lovable.app`). Secrets em env vars/Cloudflare.
+- **Evidências**: deploy via **Vercel** (projeto `juca1/promo-lux-v2`, `promo-lux-v2.vercel.app`) — Lovable **abandonado** (legado: `lux-ai-company-finder.lovable.app`, defasado). Secrets em env vars/Cloudflare.
 - **Gaps p/ 10**: **sem IaC no repo** (Terraform/Dockerfile → find vazio); sem DR testado (backups Supabase gerenciados); sem health check como endpoint do app (probe root 200 OK comprovado).
 - **Ações**: versionar topologia (docs/infra) — esforço baixo, não exige IaC p/ stack gerenciada (calibre startup).
 
