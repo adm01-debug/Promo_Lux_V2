@@ -6,20 +6,20 @@ export const companySchema = z.object({
   cnpj: z
     .string()
     .max(20, "Máximo 20 caracteres")
-    .optional()
     .or(z.literal(""))
     .refine(
       (val) => !val || isValidCnpj(val),
       "CNPJ inválido (14 dígitos e verificadores)",
     )
-    .transform((val) => (val ? normalizeCnpj(val) : val)),
-  sector: z.string().max(100, "Máximo 100 caracteres").optional().or(z.literal("")),
-  location: z.string().max(200, "Máximo 200 caracteres").optional().or(z.literal("")),
+    .transform((val) => (val ? normalizeCnpj(val) : val))
+    .optional(),
+  sector: z.string().max(100, "Máximo 100 caracteres").or(z.literal("")).optional(),
+  location: z.string().max(200, "Máximo 200 caracteres").or(z.literal("")).optional(),
   email: z.union([
     z.string().email("Email inválido"),
     z.literal(""),
   ]).optional(),
-  phone: z.string().max(30, "Máximo 30 caracteres").optional().or(z.literal("")),
+  phone: z.string().max(30, "Máximo 30 caracteres").or(z.literal("")).optional(),
   website: z.union([
     z.string().url("URL inválida"),
     z.literal(""),
@@ -32,9 +32,9 @@ export const companySchema = z.object({
     z.string().url("URL do Instagram inválida"),
     z.literal(""),
   ]).optional(),
-  employees: z.string().max(50, "Máximo 50 caracteres").optional().or(z.literal("")),
-  revenue: z.string().max(50, "Máximo 50 caracteres").optional().or(z.literal("")),
-  description: z.string().max(1000, "Máximo 1000 caracteres").optional().or(z.literal("")),
+  employees: z.string().max(50, "Máximo 50 caracteres").or(z.literal("")).optional(),
+  revenue: z.string().max(50, "Máximo 50 caracteres").or(z.literal("")).optional(),
+  description: z.string().max(1000, "Máximo 1000 caracteres").or(z.literal("")).optional(),
 });
 
 export type CompanyFormData = z.infer<typeof companySchema>;
