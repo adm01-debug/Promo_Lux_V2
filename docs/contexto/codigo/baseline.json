@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5095441c3d96cae7ee5b608e0b9c33ca5f41883f",
+  "commit": "c97523ab288e2a63375c6a5fd04062d463b3d0a6",
   "branch": "main",
-  "data_commit": "2026-11-20T08:17:05-03:00",
+  "data_commit": "2026-11-20T08:51:12-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c97523a",
+    "data": "2026-11-20",
+    "assunto": "fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)"
+   },
    {
     "sha": "5095441",
     "data": "2026-11-20",
@@ -126,18 +131,13 @@
     "sha": "da897d6",
     "data": "2026-11-13",
     "assunto": "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)"
-   },
-   {
-    "sha": "ff716ae",
-    "data": "2026-11-13",
-    "assunto": "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)"
    }
   ],
   "arquivos_mudados_7d": 28,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
-    "mudancas": 14
+    "mudancas": 15
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": ".gitignore",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 14
+    "mudancas": 15
    },
    {
     "arquivo": "package.json",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 39
+    "commits": 40
    },
    {
     "autor": "dependabot[bot]",

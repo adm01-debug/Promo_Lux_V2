@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "5095441c3d96cae7ee5b608e0b9c33ca5f41883f",
+  "sha": "c97523ab288e2a63375c6a5fd04062d463b3d0a6",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 11:17 UTC",
+  "generated_at": "2026-11-20 11:52 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124964
@@ -81208,10 +81208,20 @@
   }
  },
  "git": {
-  "sha": "5095441c3d96cae7ee5b608e0b9c33ca5f41883f",
+  "sha": "c97523ab288e2a63375c6a5fd04062d463b3d0a6",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c97523a",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)",
+    "files": [
+     "package-lock.json",
+     "package.json"
+    ]
+   },
    {
     "sha": "5095441",
     "date": "2026-11-20",
@@ -81492,25 +81502,16 @@
     "files": [
      ".github/workflows/db-migrations.yml"
     ]
-   },
-   {
-    "sha": "5016c64",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(migrations): revoga EXECUTE de PUBLIC nas funcoes guard da A1 (#27)",
-    "files": [
-     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    13
+    14
    ],
    [
     "package.json",
-    5
+    6
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
