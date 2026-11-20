@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "99fb844b7dd5e4e24de5f53ae42b2fdf98edb822",
+  "sha": "736d3d69f46a8db73543e956bd1872ba259ef872",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-19 23:55 UTC",
+  "generated_at": "2026-11-20 00:37 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124969
@@ -81208,10 +81208,37 @@
   }
  },
  "git": {
-  "sha": "99fb844b7dd5e4e24de5f53ae42b2fdf98edb822",
+  "sha": "736d3d69f46a8db73543e956bd1872ba259ef872",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "736d3d6",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
+   {
+    "sha": "b2ce2ea",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
+   {
+    "sha": "11f8576",
+    "date": "2026-11-19",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
    {
     "sha": "99fb844",
     "date": "2026-11-19",
@@ -81516,47 +81543,12 @@
     "files": [
      ".npmrc"
     ]
-   },
-   {
-    "sha": "480dad0",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(functions): adiciona extensão .ts aos imports relativos dos testes Deno (#19)",
-    "files": [
-     "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
-     "supabase/functions/_shared/__tests__/leadcontact-client.test.ts",
-     "supabase/functions/_shared/__tests__/linkedin-url.test.ts",
-     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
-     "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
-     "supabase/functions/_shared/__tests__/phone-br.test.ts",
-     "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
-     "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
-     "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts"
-    ]
-   },
-   {
-    "sha": "c8175c4",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "fix(ci): instala psql via PGDG no db-guards para contornar mirror azure (#18)",
-    "files": [
-     ".github/workflows/ci.yml"
-    ]
-   },
-   {
-    "sha": "27893bd",
-    "date": "2026-11-11",
-    "author": "adm01-debug",
-    "subject": "infra(vercel): configura deploy com legacy-peer-deps via vercel.json (#21)",
-    "files": [
-     "vercel.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    5
+    8
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
@@ -81580,10 +81572,6 @@
    ],
    [
     "docs/prod-readiness.md",
-    2
-   ],
-   [
-    ".github/workflows/ci.yml",
     2
    ],
    [
@@ -81624,6 +81612,10 @@
    ],
    [
     "docs/AUDITORIA_TECNICA_SCORECARD.md",
+    1
+   ],
+   [
+    ".github/workflows/ci.yml",
     1
    ],
    [

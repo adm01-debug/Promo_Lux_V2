@@ -2,11 +2,26 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "99fb844b7dd5e4e24de5f53ae42b2fdf98edb822",
+  "commit": "736d3d69f46a8db73543e956bd1872ba259ef872",
   "branch": "main",
-  "data_commit": "2026-11-19T20:54:23-03:00",
+  "data_commit": "2026-11-19T21:27:04-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "736d3d6",
+    "data": "2026-11-19",
+    "assunto": "chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)"
+   },
+   {
+    "sha": "b2ce2ea",
+    "data": "2026-11-19",
+    "assunto": "chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)"
+   },
+   {
+    "sha": "11f8576",
+    "data": "2026-11-19",
+    "assunto": "chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)"
+   },
    {
     "sha": "99fb844",
     "data": "2026-11-19",
@@ -116,21 +131,6 @@
     "sha": "8fb4f41",
     "data": "2026-11-12",
     "assunto": "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)"
-   },
-   {
-    "sha": "ed7e49e",
-    "data": "2026-11-12",
-    "assunto": "fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)"
-   },
-   {
-    "sha": "9cd6dbc",
-    "data": "2026-11-12",
-    "assunto": "style(manutencao): aplica correcoes locais verificadas (#22)"
-   },
-   {
-    "sha": "f7bec29",
-    "data": "2026-11-12",
-    "assunto": "chore(automacao): conecta testes, grafo e manutenção aos gatilhos (#16)"
    }
   ],
   "arquivos_mudados_7d": 26,
@@ -138,6 +138,10 @@
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 12
+   },
+   {
+    "pasta": "package-lock.json",
+    "mudancas": 9
    },
    {
     "pasta": "package.json",
@@ -149,10 +153,6 @@
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 6
-   },
-   {
-    "pasta": "package-lock.json",
     "mudancas": 6
    },
    {
@@ -198,15 +198,15 @@
   ],
   "arquivos_mais_mudados_90d": [
    {
+    "arquivo": "package-lock.json",
+    "mudancas": 9
+   },
+   {
     "arquivo": "package.json",
     "mudancas": 7
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 6
-   },
-   {
-    "arquivo": "package-lock.json",
     "mudancas": 6
    },
    {
@@ -305,7 +305,7 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 3
+    "commits": 6
    }
   ]
  },

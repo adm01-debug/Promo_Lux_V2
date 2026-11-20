@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `99fb844b7dd5e4e24de5f53ae42b2fdf98edb822` (2026-11-19T20:54:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `736d3d69f46a8db73543e956bd1872ba259ef872` (2026-11-19T21:27:04-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,15 +216,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6507 nós · 14007 arestas · 560 comunidades · grafo do commit `99fb844b`
+- 6507 nós · 14007 arestas · 560 comunidades · grafo do commit `736d3d69`
 - comunidades maiores: Monitoring.tsx (180), lucide-react (145), react (138), @tanstack/react-query (126), cn (125), snapshot.py (102), utils.ts (101), generate.py (96), OAuthSandboxPanel.tsx (82), gerar.mjs (80), ref_node_fs (72), vitest (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
+- package-lock.json (9)
 - package.json (7)
 - AGENTS.md (6)
-- package-lock.json (6)
 - .github/workflows/edge-tests-daily.yml (5)
 - .github/workflows/ci.yml (3)
 - .husky/pre-commit (3)
@@ -327,6 +327,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-19 `736d3d6` chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)
+- 2026-11-19 `b2ce2ea` chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)
+- 2026-11-19 `11f8576` chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)
 - 2026-11-19 `99fb844` fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)
 - 2026-11-19 `b174608` chore(deps)(deps): bump source-map-js from 1.2.1 to 1.2.4 (#58)
 - 2026-11-19 `d2d1ad0` chore(deps): bump dompurify from 3.4.12 to 3.4.17 (sucessora da #50) (#55)
@@ -339,9 +342,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-14 `8ebad71` docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)
 - 2026-11-13 `3e8633a` fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)
 - 2026-11-13 `545a15b` fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)
-- 2026-11-13 `50fd241` fix(migrations): revoga EXECUTE public de funcoes-orfas SECURITY DEFINER (RCE) (#37)
-- 2026-11-13 `65df001` docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)
-- 2026-11-13 `da897d6` feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
