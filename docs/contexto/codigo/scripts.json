@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 47,
+ "total": 49,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -51,6 +51,17 @@
    "orfao": false
   },
   {
+   "arquivo": "scripts/check-edge-fn-target.sh",
+   "descricao": "--------------------------------------------------------------------------- check-edge-fn-target.sh",
+   "linhas": 58,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "edge-functions-deploy.yml"
+   ],
+   "orfao": false
+  },
+  {
    "arquivo": "scripts/check-function-grants.sh",
    "descricao": "============================================================================= CI Guard — Grants/RLS de funções",
    "linhas": 26,
@@ -60,6 +71,17 @@
    ],
    "workflows": [
     "ci.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-functions-lint.sh",
+   "descricao": "--------------------------------------------------------------------------- check-functions-lint.sh",
+   "linhas": 53,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "edge-functions-deploy.yml"
    ],
    "orfao": false
   },

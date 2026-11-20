@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "548126345ff34703c1dd32d2a3d410e0fad8f241",
+  "sha": "c4ed84b2dc65ebf60c8dbad6f3473d3051014c54",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 17:35 UTC",
-  "files_total": 1037,
+  "generated_at": "2026-11-20 18:00 UTC",
+  "files_total": 1040,
   "code_files": 869,
   "code_lines": 124964
  },
  "version": "1.3.2",
- "facts_hash": "066a1fc99a8fc523",
+ "facts_hash": "acfff2f5ee9cefa7",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -193,6 +193,15 @@
     "name": "Dependency Review",
     "triggers": [
      "pull_request"
+    ]
+   },
+   {
+    "file": ".github/workflows/edge-functions-deploy.yml",
+    "name": "Edge Functions Deploy",
+    "triggers": [
+     "pull_request",
+     "push",
+     "workflow_dispatch"
     ]
    },
    {
@@ -81221,10 +81230,22 @@
   }
  },
  "git": {
-  "sha": "548126345ff34703c1dd32d2a3d410e0fad8f241",
+  "sha": "c4ed84b2dc65ebf60c8dbad6f3473d3051014c54",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c4ed84b",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)",
+    "files": [
+     ".github/workflows/edge-functions-deploy.yml",
+     "scripts/automation.config.json",
+     "scripts/check-edge-fn-target.sh",
+     "scripts/check-functions-lint.sh"
+    ]
+   },
    {
     "sha": "5481263",
     "date": "2026-11-20",
@@ -81515,15 +81536,6 @@
     "files": [
      "docs/prod-readiness.md"
     ]
-   },
-   {
-    "sha": "da897d6",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)",
-    "files": [
-     ".github/workflows/edge-tests-daily.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -81536,11 +81548,11 @@
     7
    ],
    [
-    ".github/workflows/edge-tests-daily.yml",
-    4
+    "docs/prod-readiness.md",
+    3
    ],
    [
-    "docs/prod-readiness.md",
+    ".github/workflows/edge-tests-daily.yml",
     3
    ],
    [
@@ -81558,6 +81570,22 @@
    [
     ".github/workflows/db-migrations.yml",
     2
+   ],
+   [
+    ".github/workflows/edge-functions-deploy.yml",
+    1
+   ],
+   [
+    "scripts/automation.config.json",
+    1
+   ],
+   [
+    "scripts/check-edge-fn-target.sh",
+    1
+   ],
+   [
+    "scripts/check-functions-lint.sh",
+    1
    ],
    [
     ".github/workflows/production-smoke.yml",
@@ -81589,22 +81617,6 @@
    ],
    [
     ".github/workflows/inventario-estado-semanal.yml",
-    1
-   ],
-   [
-    "vite.config.ts",
-    1
-   ],
-   [
-    "src/lib/schemas/company.ts",
-    1
-   ],
-   [
-    "src/App.tsx",
-    1
-   ],
-   [
-    "src/test/setup.ts",
     1
    ]
   ]

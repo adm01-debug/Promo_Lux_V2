@@ -8,8 +8,8 @@
    "Markdown (77)",
    "JSON (38)",
    "JavaScript (22)",
-   "Shell (11)",
-   "YAML (10)",
+   "Shell (13)",
+   "YAML (11)",
    "Python (5)"
   ],
   "linguagem_principal": "TypeScript",
@@ -306,6 +306,38 @@
    "actions": [
     "actions/checkout",
     "actions/dependency-review-action"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/edge-functions-deploy.yml",
+   "nome": "Edge Functions Deploy",
+   "gatilhos": [
+    "pull_request",
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main",
+    "master"
+   ],
+   "jobs": [
+    "lint",
+    "plan",
+    "apply"
+   ],
+   "permissoes": [],
+   "scripts_usados": [
+    "scripts/check-edge-fn-target.sh",
+    "scripts/check-functions-lint.sh"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_ACCESS_TOKEN"
+   ],
+   "actions": [
+    "actions/checkout",
+    "supabase/setup-cli"
    ]
   },
   {
