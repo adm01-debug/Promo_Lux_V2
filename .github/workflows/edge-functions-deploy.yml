@@ -1,0 +1,132 @@
+name: Edge Functions Deploy
+
+# ---------------------------------------------------------------------------
+# Fluxo oficial de deploy das Edge Functions do LUX IA (Supabase).
+#
+# Princípios de desenho (por que este workflow é assim):
+#
+#  1. O ambiente NUNCA é escolhido por um input livre. Ele é derivado do
+#     gatilho: pull_request -> staging (somente validação), push em main ->
+#     production (aplica). Isso elimina a classe de erro "fiz deploy no
+#     projeto errado".
+#  2. Credenciais vivem em GitHub Environments (`staging` / `production`),
+#     não em secrets de repositório. O Environment `production` deve ter
+#     "Required reviewers" ativado, então nenhum deploy chega em prod sem
+#     aprovação humana explícita.
+#  3. Em PR nada é publicado: o job `plan` lista o que existe no projeto
+#     alvo (staging) e mostra o diff local vs remoto. O deploy só acontece
+#     em push na main ou dispatch manual.
+#  4. Deploy usa `--use-api` (bundle server-side, sem Docker no runner) e
+#     `--yes` (sem isso o CLI aborta quando stdout não é TTY, como já visto
+#     no db-migrations). Nada de `--prune`: apagar functions que existem no
+#     projeto mas não na main destruiria trabalho em produção de forma
+#     irreversível.
+#  5. Os testes das functions rodam em `edge-tests-daily.yml` (daily + PR).
+#     Este workflow não duplica testes: lint estático + plano + deploy.
+# ---------------------------------------------------------------------------
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/**'
+      - '.github/workflows/edge-functions-deploy.yml'
+  push:
+    branches: [main, master]
+    paths:
+      - 'supabase/functions/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente alvo (execução manual)'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  # Serializa deploys por ambiente. Duas publicações simultâneas no mesmo
+  # projeto podem deixar versões intercaladas de functions que compartilham
+  # código em _shared.
+  group: edge-fn-deploy-${{ github.event_name == 'pull_request' && 'staging' || (inputs.environment || 'production') }}
+  cancel-in-progress: false
+
+jobs:
+  # -------------------------------------------------------------------------
+  # 1. Lint estático — roda sem tocar em projeto nenhum, sem secrets.
+  # -------------------------------------------------------------------------
+  lint:
+    name: Lint das functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validar estrutura das functions
+        run: bash scripts/check-functions-lint.sh
+
+  # -------------------------------------------------------------------------
+  # 2. Plano (read-only) contra o projeto alvo. Em PR o alvo é SEMPRE staging.
+  #    Lista o que está publicado e o que existe localmente, sem escrever nada.
+  # -------------------------------------------------------------------------
+  plan:
+    name: Plano contra ${{ github.event_name == 'pull_request' && 'staging' || (inputs.environment || 'production') }}
+    runs-on: ubuntu-latest
+    needs: lint
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'staging' || (inputs.environment || 'production') }}
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: v3.1.0
+
+      - name: Guarda de ambiente (o ref precisa bater com o esperado)
+        run: bash scripts/check-edge-fn-target.sh
+
+      - name: Link no projeto alvo
+        run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Estado atual published vs local (read-only)
+        run: |
+          echo "► Functions publicadas em $SUPABASE_PROJECT_REF:"
+          supabase functions list --linked
+          echo "► Functions locais:"
+          find supabase/functions -mindepth 1 -maxdepth 1 -type d ! -name _shared -printf '%f\n' | sort
+
+  # -------------------------------------------------------------------------
+  # 3. Apply — só em push na main ou dispatch manual. Nunca em PR.
+  #    O Environment `production` exige aprovação de reviewer.
+  # -------------------------------------------------------------------------
+  apply:
+    name: Deploy em ${{ inputs.environment || 'production' }}
+    runs-on: ubuntu-latest
+    needs: plan
+    if: github.event_name != 'pull_request'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+      url: https://supabase.com/dashboard/project/${{ vars.SUPABASE_PROJECT_REF }}/functions
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: v3.1.0
+
+      - name: Guarda de ambiente
+        run: bash scripts/check-edge-fn-target.sh
+
+      - name: Link no projeto alvo
+        run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Deploy de todas as functions
+        # --use-api: bundle server-side, sem Docker no runner (ubuntu-latest).
+        # --yes: sem isso o CLI aborta quando stdout não é TTY (runner GH).
+        # Sem --prune: functions publicadas mas ausentes da main ficam intactas.
+        run: supabase functions deploy --use-api --yes --linked
