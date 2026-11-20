@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "675f86d248606916b898c7bb679809f8404dcb52",
+  "sha": "4848e17507a281daab2a04ea342e100278c5b6f2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 14:46 UTC",
+  "generated_at": "2026-11-20 15:13 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124964
@@ -81208,10 +81208,19 @@
   }
  },
  "git": {
-  "sha": "675f86d248606916b898c7bb679809f8404dcb52",
+  "sha": "4848e17507a281daab2a04ea342e100278c5b6f2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "4848e17",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "chore(deps): resolve 6 vulnerabilidades dev (zod high, glob moderate) via dedupe do lockfile (#74)",
+    "files": [
+     "package-lock.json"
+    ]
+   },
    {
     "sha": "675f86d",
     "date": "2026-11-20",
@@ -81496,21 +81505,12 @@
     "files": [
      "CONTRIBUTING.md"
     ]
-   },
-   {
-    "sha": "3c038d5",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)",
-    "files": [
-     ".github/workflows/edge-tests-daily.yml"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    15
+    16
    ],
    [
     "package.json",
@@ -81518,7 +81518,7 @@
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
-    5
+    4
    ],
    [
     ".github/workflows/dependency-review.yml",

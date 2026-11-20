@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "675f86d248606916b898c7bb679809f8404dcb52",
+  "commit": "4848e17507a281daab2a04ea342e100278c5b6f2",
   "branch": "main",
-  "data_commit": "2026-11-20T11:45:55-03:00",
+  "data_commit": "2026-11-20T12:04:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "4848e17",
+    "data": "2026-11-20",
+    "assunto": "chore(deps): resolve 6 vulnerabilidades dev (zod high, glob moderate) via dedupe do lockfile (#74)"
+   },
    {
     "sha": "675f86d",
     "data": "2026-11-20",
@@ -126,18 +131,13 @@
     "sha": "3e8633a",
     "data": "2026-11-13",
     "assunto": "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)"
-   },
-   {
-    "sha": "545a15b",
-    "data": "2026-11-13",
-    "assunto": "fix(ci): usa SERVICE_ROLE_KEY (JWT legado) no job rls-tests (#35)"
    }
   ],
-  "arquivos_mudados_7d": 31,
+  "arquivos_mudados_7d": 30,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "pasta": "package.json",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "arquivo": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 43
+    "commits": 44
    },
    {
     "autor": "dependabot[bot]",
