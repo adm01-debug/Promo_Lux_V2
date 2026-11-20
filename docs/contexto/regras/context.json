@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "4848e17507a281daab2a04ea342e100278c5b6f2",
+  "sha": "548126345ff34703c1dd32d2a3d410e0fad8f241",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 15:13 UTC",
-  "files_total": 1036,
+  "generated_at": "2026-11-20 17:35 UTC",
+  "files_total": 1037,
   "code_files": 869,
   "code_lines": 124964
  },
  "version": "1.3.2",
- "facts_hash": "95d7d325a58ffcc0",
+ "facts_hash": "066a1fc99a8fc523",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -207,6 +207,14 @@
    {
     "file": ".github/workflows/inventario-estado-semanal.yml",
     "name": "Inventário do estado real (semanal)",
+    "triggers": [
+     "schedule",
+     "workflow_dispatch"
+    ]
+   },
+   {
+    "file": ".github/workflows/production-smoke.yml",
+    "name": "Production Smoke Test",
     "triggers": [
      "schedule",
      "workflow_dispatch"
@@ -24119,6 +24127,11 @@
     "kind": "GitHub Actions cron",
     "detail": "23 10 * * 1",
     "file": ".github/workflows/inventario-estado-semanal.yml"
+   },
+   {
+    "kind": "GitHub Actions cron",
+    "detail": "0 9 * * *",
+    "file": ".github/workflows/production-smoke.yml"
    }
   ],
   "components_count": 285,
@@ -81208,10 +81221,25 @@
   }
  },
  "git": {
-  "sha": "4848e17507a281daab2a04ea342e100278c5b6f2",
+  "sha": "548126345ff34703c1dd32d2a3d410e0fad8f241",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5481263",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)",
+    "files": [
+     ".github/workflows/production-smoke.yml",
+     "README.md",
+     "docs/AUDITORIA_TECNICA_SCORECARD.md",
+     "docs/FUNCIONALIDADES.md",
+     "docs/LUSHA-INTEGRATION.md",
+     "docs/agentes/lovable-deploy.md",
+     "docs/prod-readiness.md"
+    ]
+   },
    {
     "sha": "4848e17",
     "date": "2026-11-20",
@@ -81496,15 +81524,6 @@
     "files": [
      ".github/workflows/edge-tests-daily.yml"
     ]
-   },
-   {
-    "sha": "ff716ae",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)",
-    "files": [
-     "CONTRIBUTING.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81521,6 +81540,14 @@
     4
    ],
    [
+    "docs/prod-readiness.md",
+    3
+   ],
+   [
+    "docs/AUDITORIA_TECNICA_SCORECARD.md",
+    2
+   ],
+   [
     ".github/workflows/dependency-review.yml",
     2
    ],
@@ -81533,8 +81560,24 @@
     2
    ],
    [
-    "docs/prod-readiness.md",
-    2
+    ".github/workflows/production-smoke.yml",
+    1
+   ],
+   [
+    "README.md",
+    1
+   ],
+   [
+    "docs/FUNCIONALIDADES.md",
+    1
+   ],
+   [
+    "docs/LUSHA-INTEGRATION.md",
+    1
+   ],
+   [
+    "docs/agentes/lovable-deploy.md",
+    1
    ],
    [
     ".github/workflows/automation-local.yml",
@@ -81562,30 +81605,6 @@
    ],
    [
     "src/test/setup.ts",
-    1
-   ],
-   [
-    "tsconfig.app.json",
-    1
-   ],
-   [
-    ".env",
-    1
-   ],
-   [
-    ".env.test",
-    1
-   ],
-   [
-    ".gitignore",
-    1
-   ],
-   [
-    "supabase/functions/rls-tests/index.test.ts",
-    1
-   ],
-   [
-    ".github/dependabot.yml",
     1
    ]
   ]

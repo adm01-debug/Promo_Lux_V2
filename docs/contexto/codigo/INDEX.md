@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `4848e17507a281daab2a04ea342e100278c5b6f2` (2026-11-20T12:04:06-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `548126345ff34703c1dd32d2a3d410e0fad8f241` (2026-11-20T14:35:18-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (618), SQL (221), Markdown (77), JSON (38), JavaScript (22), Shell (11), YAML (9), Python (5)
+- linguagens: TypeScript (618), SQL (221), Markdown (77), JSON (38), JavaScript (22), Shell (11), YAML (10), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1017 |
+| arquivos_total | 1018 |
 | arquivos_codigo | 644 |
 | linhas_codigo | 110543 |
 | rotas | 10 |
@@ -49,7 +49,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | migrations | 217 |
 | cron_jobs | 6 |
 | testes | 121 |
-| workflows | 7 |
+| workflows | 8 |
 | scripts | 47 |
 | docs_md | 77 |
 
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6517 nós · 14017 arestas · 567 comunidades · grafo do commit `4848e175`
+- 6517 nós · 14017 arestas · 567 comunidades · grafo do commit `54812634`
 - comunidades maiores: lucide-react (174), button.tsx (119), @tanstack/react-query (109), react (101), cn (96), LushaIntelligenceView.tsx (94), gerar.mjs (80), NotificationsPanel.tsx (79), framer-motion (76), generate.py (71), useLoginForm.ts (68), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -233,10 +233,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .husky/pre-commit (3)
 - docs/agentes/github-ci.md (3)
 - docs/agentes/mapa-repo.md (3)
+- docs/prod-readiness.md (3)
 - scripts/ci/eslint-baseline.json (3)
 - supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql (3)
 - .claude/skills/promo-lux-v2/SKILL.md (2)
-- .github/workflows/automation-local.yml (2)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -246,6 +246,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `dependency-review.yml` — Dependency Review (pull_request)
 - `edge-tests-daily.yml` — Edge Functions Daily Tests (Deno) (pull_request, schedule, workflow_dispatch; cron 0 7 * * *)
 - `inventario-estado-semanal.yml` — Inventário do estado real (semanal) (schedule, workflow_dispatch; cron 23 10 * * 1)
+- `production-smoke.yml` — Production Smoke Test (schedule, workflow_dispatch; cron 0 9 * * *)
 
 ## Scripts npm
 - `maintenance:doctor`: `sh scripts/maintenance/run.sh doctor --root .`
@@ -302,7 +303,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `CHANGELOG.md` — Changelog (53 linhas)
 - `CLAUDE.md` (2 linhas)
 - `CONTRIBUTING.md` — 📐 Guia de Contribuição — LUX IA (47 linhas)
-- `README.md` — LUX IA — Sistema de Prospecção B2B Inteligente (280 linhas)
+- `README.md` — LUX IA — Sistema de Prospecção B2B Inteligente (282 linhas)
 - `docs/AUDITORIA_BACKEND_SENIOR.md` — Auditoria Back-End Sênior — LUX IA (136 linhas)
 - `docs/AUDITORIA_FINAL_LUX_IA.md` — 📝 Relatório de Auditoria Enterprise — LUX IA (v10.0) (89 linhas)
 - `docs/AUDITORIA_FIRECRAWL.md` — Auditoria de Paridade — LUX IA vs Firecrawl (199 linhas)
@@ -327,6 +328,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-20 `5481263` chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)
 - 2026-11-20 `4848e17` chore(deps): resolve 6 vulnerabilidades dev (zod high, glob moderate) via dedupe do lockfile (#74)
 - 2026-11-20 `675f86d` chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)
 - 2026-11-20 `b9cce50` infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)
@@ -341,7 +343,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-19 `736d3d6` chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)
 - 2026-11-19 `b2ce2ea` chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)
 - 2026-11-19 `11f8576` chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)
-- 2026-11-19 `99fb844` fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

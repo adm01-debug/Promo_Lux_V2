@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4848e17507a281daab2a04ea342e100278c5b6f2",
+  "commit": "548126345ff34703c1dd32d2a3d410e0fad8f241",
   "branch": "main",
-  "data_commit": "2026-11-20T12:04:06-03:00",
+  "data_commit": "2026-11-20T14:35:18-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5481263",
+    "data": "2026-11-20",
+    "assunto": "chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)"
+   },
    {
     "sha": "4848e17",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "8ebad71",
     "data": "2026-11-14",
     "assunto": "docs: paridade pós-merges #34/#35/#36/#37 + drift de migrations (#38)"
-   },
-   {
-    "sha": "3e8633a",
-    "data": "2026-11-13",
-    "assunto": "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)"
    }
   ],
-  "arquivos_mudados_7d": 30,
+  "arquivos_mudados_7d": 32,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -242,6 +242,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "docs/prod-readiness.md",
+    "mudancas": 3
+   },
+   {
     "arquivo": "scripts/ci/eslint-baseline.json",
     "mudancas": 3
    },
@@ -270,11 +274,15 @@
     "mudancas": 2
    },
    {
+    "arquivo": "docs/AUDITORIA_TECNICA_SCORECARD.md",
+    "mudancas": 2
+   },
+   {
     "arquivo": "docs/agentes/banco.md",
     "mudancas": 2
    },
    {
-    "arquivo": "docs/prod-readiness.md",
+    "arquivo": "docs/agentes/lovable-deploy.md",
     "mudancas": 2
    },
    {
@@ -288,20 +296,12 @@
    {
     "arquivo": "scripts/ci/check-claude-md-integrity.mjs",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/inventario/gerar-repo.mjs",
-    "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/regras_negocio/generate.py",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 44
+    "commits": 45
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1017,
+  "arquivos_total": 1018,
   "arquivos_codigo": 644,
   "linhas_codigo": 110543,
   "rotas": 10,
@@ -325,7 +325,7 @@
   "migrations": 217,
   "cron_jobs": 6,
   "testes": 121,
-  "workflows": 7,
+  "workflows": 8,
   "scripts": 47,
   "docs_md": 77
  },

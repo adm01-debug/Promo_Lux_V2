@@ -9,7 +9,7 @@
    "JSON (38)",
    "JavaScript (22)",
    "Shell (11)",
-   "YAML (9)",
+   "YAML (10)",
    "Python (5)"
   ],
   "linguagem_principal": "TypeScript",
@@ -366,6 +366,28 @@
     "actions/upload-artifact",
     "peter-evans/create-pull-request"
    ]
+  },
+  {
+   "arquivo": ".github/workflows/production-smoke.yml",
+   "nome": "Production Smoke Test",
+   "gatilhos": [
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "0 9 * * *"
+   ],
+   "branches": [],
+   "jobs": [
+    "smoke"
+   ],
+   "permissoes": [],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": [
+    "actions/checkout"
+   ]
   }
  ],
  "hooks_git": [
@@ -400,7 +422,7 @@
   {
    "arquivo": "README.md",
    "titulo": "LUX IA — Sistema de Prospecção B2B Inteligente",
-   "linhas": 280
+   "linhas": 282
   },
   {
    "arquivo": "docs/AUDITORIA_BACKEND_SENIOR.md",
