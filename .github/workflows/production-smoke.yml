@@ -1,9 +1,9 @@
 name: Production Smoke Test
 
 # Verifica que o bundle servido em produção contém as páginas principais
-# (Admin/CNPJ/Monitoring). Um simples "HTTP 200" engana porque o SPA responde
-# 200 em qualquer rota — o que já deixou produção defasada vs main (bundle
-# snapshot de 01-ago sem essas views). Detecção via marcadores estáveis do
+# (Admin/CNPJ/Monitoring). Produção = Vercel (projeto juca1/promo-lux-v2),
+# deploy automático por merge em main. Um simples "HTTP 200" engana porque o
+# SPA responde 200 em qualquer rota — detecção via marcadores estáveis do
 # entry JS (strings persistidas no código, presentes no dist da main).
 
 on:
@@ -28,7 +28,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE="https://lux-ai-company-finder.lovable.app"
+          BASE="https://promo-lux-v2.vercel.app"
           HTML=$(curl -fsSL "$BASE/")
           # entry JS: <script ... src="/assets/index-<hash>.js">
           ENTRY=$(printf '%s' "$HTML" | grep -oE '"/assets/index-[^"]+\.js"' | head -1 | tr -d '"')
