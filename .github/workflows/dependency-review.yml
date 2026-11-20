@@ -5,9 +5,9 @@ name: Dependency Review
 # Licenças não bloqueiam aqui (evita barrar dependência legítima com licença fora de uma lista fixa).
 # Mesmo padrão do gate 0.6 do Promo_Gifts_V4 (ações fixadas por SHA).
 # A org não comprou Advanced Security: em repo privado o Dependency graph fica indisponível
-# e o action sempre falha (Dependency review is not supported). continue-on-error mantém o
-# check informativo (o log ainda mostra o diff de deps) sem barrar PRs; quando a licença for
-# ativada, remova o continue-on-error para voltar a travar PR com CVE alta/crítica.
+# e a action sempre falha (Dependency review is not supported). continue-on-error no step mantém o
+# log informativo (diff de deps) sem barrar PRs; quando a licença for ativada, remova o
+# continue-on-error para voltar a travar PR com CVE alta/crítica.
 
 on:
   pull_request:
@@ -25,7 +25,6 @@ jobs:
     name: Dependency Review
     runs-on: ubuntu-24.04
     timeout-minutes: 5
-    continue-on-error: true
     # Dependabot e forks: o token restrito não chama a API de comparação de dependências.
     if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork
     steps:
@@ -34,5 +33,6 @@ jobs:
           persist-credentials: false
       - name: Falha em dependência nova com CVE de severidade alta ou crítica
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        continue-on-error: true
         with:
           fail-on-severity: high
