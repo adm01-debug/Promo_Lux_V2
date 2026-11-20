@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8e0be69842bee05af01c0a763fabb1e20dd2d61c",
+  "commit": "a37f3197197fd4734245d779ea02658d56884662",
   "branch": "main",
-  "data_commit": "2026-11-20T16:24:08-03:00",
+  "data_commit": "2026-11-20T16:41:33-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a37f319",
+    "data": "2026-11-20",
+    "assunto": "chore: adiciona backlog verificado e linha de base (#80)"
+   },
    {
     "sha": "8e0be69",
     "data": "2026-11-20",
@@ -126,14 +131,9 @@
     "sha": "2f44e2d",
     "data": "2026-11-14",
     "assunto": "fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)"
-   },
-   {
-    "sha": "8fc5df7",
-    "data": "2026-11-14",
-    "assunto": "chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)"
    }
   ],
-  "arquivos_mudados_7d": 51,
+  "arquivos_mudados_7d": 53,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 49
+    "commits": 50
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1021,
+  "arquivos_total": 1023,
   "arquivos_codigo": 644,
   "linhas_codigo": 110558,
   "rotas": 10,
@@ -327,7 +327,7 @@
   "testes": 121,
   "workflows": 9,
   "scripts": 49,
-  "docs_md": 77
+  "docs_md": 79
  },
  "por_pasta": {
   "commitlint.config.cjs": {

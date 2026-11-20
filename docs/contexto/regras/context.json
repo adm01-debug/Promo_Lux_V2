@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "8e0be69842bee05af01c0a763fabb1e20dd2d61c",
+  "sha": "a37f3197197fd4734245d779ea02658d56884662",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 19:25 UTC",
-  "files_total": 1040,
+  "generated_at": "2026-11-20 19:46 UTC",
+  "files_total": 1042,
   "code_files": 869,
   "code_lines": 124979
  },
@@ -81230,10 +81230,20 @@
   }
  },
  "git": {
-  "sha": "8e0be69842bee05af01c0a763fabb1e20dd2d61c",
+  "sha": "a37f3197197fd4734245d779ea02658d56884662",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "a37f319",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "chore: adiciona backlog verificado e linha de base (#80)",
+    "files": [
+     "docs/pendencias/_backlog-verificado.md",
+     "docs/pendencias/_linha-de-base.md"
+    ]
+   },
    {
     "sha": "8e0be69",
     "date": "2026-11-20",
@@ -81537,19 +81547,6 @@
     "files": [
      "docs/prod-readiness.md"
     ]
-   },
-   {
-    "sha": "3e8633a",
-    "date": "2026-11-13",
-    "author": "adm01-debug",
-    "subject": "fix(edge): guarda de DNS, MX nulo e DKIM revogado em deliverability-check/email-verify (#34)",
-    "files": [
-     ".github/workflows/ci.yml",
-     "supabase/functions/_shared/__tests__/dns-guard.test.ts",
-     "supabase/functions/_shared/dns-guard.ts",
-     "supabase/functions/deliverability-check/index.ts",
-     "supabase/functions/email-verify/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81574,16 +81571,20 @@
     2
    ],
    [
-    ".github/workflows/ci.yml",
-    2
-   ],
-   [
     ".github/workflows/db-migrations.yml",
     2
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
     2
+   ],
+   [
+    "docs/pendencias/_backlog-verificado.md",
+    1
+   ],
+   [
+    "docs/pendencias/_linha-de-base.md",
+    1
    ],
    [
     "supabase/functions/admin-list-companies/index.ts",
@@ -81627,10 +81628,6 @@
    ],
    [
     "supabase/functions/oracle-enrich-contact/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/oracle-push-bitrix/index.ts",
     1
    ]
   ]

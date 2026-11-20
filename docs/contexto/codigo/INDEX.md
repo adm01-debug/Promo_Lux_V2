@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8e0be69842bee05af01c0a763fabb1e20dd2d61c` (2026-11-20T16:24:08-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a37f3197197fd4734245d779ea02658d56884662` (2026-11-20T16:41:33-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (618), SQL (221), Markdown (77), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
+- linguagens: TypeScript (618), SQL (221), Markdown (79), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1021 |
+| arquivos_total | 1023 |
 | arquivos_codigo | 644 |
 | linhas_codigo | 110558 |
 | rotas | 10 |
@@ -51,7 +51,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | testes | 121 |
 | workflows | 9 |
 | scripts | 49 |
-| docs_md | 77 |
+| docs_md | 79 |
 
 ## Onde ficam as coisas
 - telas: src/components (23), src/pages (9)
@@ -216,8 +216,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6523 nós · 14023 arestas · 580 comunidades · grafo do commit `8e0be698`
-- comunidades maiores: lucide-react (181), react (172), EmailAccountsPanel.tsx (136), snapshot.py (100), OrganizationsView.tsx (95), cn (88), gerar.mjs (80), @tanstack/react-query (78), generate.py (75), ref_node_fs (73), withOrg.ts (72), ref_https (70)
+- 6536 nós · 14034 arestas · 569 comunidades · grafo do commit `a37f3197`
+- comunidades maiores: Monitoring.tsx (150), cn (146), react (128), button.tsx (123), LushaIntelligenceView.tsx (117), vitest (105), snapshot.py (102), lucide-react (101), gerar.mjs (80), generate.py (73), DashboardView.tsx (71), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -325,10 +325,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/prod-readiness.md` (137 linhas)
 - `docs/schema-tabelas-principais.md` — Schema das Tabelas Principais — LUX IA (1189 linhas)
 - `docs/webhooks.md` — Webhooks — Guia de Integração (115 linhas)
-- subpastas de docs/: docs/adr (29), docs/agentes (6), docs/estado (5), docs/runbooks (4), docs/contexto (1)
+- subpastas de docs/: docs/adr (29), docs/agentes (6), docs/estado (5), docs/runbooks (4), docs/pendencias (2), docs/contexto (1)
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-20 `a37f319` chore: adiciona backlog verificado e linha de base (#80)
 - 2026-11-20 `8e0be69` fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)
 - 2026-11-20 `8b16f55` fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)
 - 2026-11-20 `cfce9da` infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `f9ab8eb` chore(deps)(deps): bump react-router and react-router-dom (#68)
 - 2026-11-19 `8d8ccbf` chore(deps)(deps-dev): bump baseline-browser-mapping (#64)
 - 2026-11-19 `0767e3a` chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)
-- 2026-11-19 `906b862` chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
