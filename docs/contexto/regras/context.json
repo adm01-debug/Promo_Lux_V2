@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "8d8ccbf093cb471f98b4b5cee34a5b0813934046",
+  "sha": "f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 01:14 UTC",
+  "generated_at": "2026-11-20 11:04 UTC",
   "files_total": 1036,
   "code_files": 869,
-  "code_lines": 124969
+  "code_lines": 124964
  },
  "version": "1.3.2",
- "facts_hash": "61305d8c41b94df8",
+ "facts_hash": "21da56c72015850a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -57,7 +57,7 @@
     "in": "package.json"
    },
    "react-router-dom": {
-    "version": "6",
+    "version": "7",
     "role": "Roteamento (React Router)",
     "in": "package.json"
    },
@@ -24932,7 +24932,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 369,
+   "lines": 364,
    "tables": [],
    "exports": [
     "App.tsx: safeNextPath, App"
@@ -62441,7 +62441,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 322,
+   "lines": 317,
    "exports": [
     "function safeNextPath",
     "default App"
@@ -81208,10 +81208,21 @@
   }
  },
  "git": {
-  "sha": "8d8ccbf093cb471f98b4b5cee34a5b0813934046",
+  "sha": "f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f9ab8eb",
+    "date": "2026-11-20",
+    "author": "dependabot[bot]",
+    "subject": "chore(deps)(deps): bump react-router and react-router-dom (#68)",
+    "files": [
+     "package-lock.json",
+     "package.json",
+     "src/App.tsx"
+    ]
+   },
    {
     "sha": "8d8ccbf",
     "date": "2026-11-19",
@@ -81504,33 +81515,20 @@
      "supabase/migrations/20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql",
      "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
     ]
-   },
-   {
-    "sha": "ed7e49e",
-    "date": "2026-11-12",
-    "author": "adm01-debug",
-    "subject": "fix(migrations): corrige 5 bugs SQL na migration A1 (FUDNCTION + GRANT EXECUTE;) (#15)",
-    "files": [
-     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    11
+    12
+   ],
+   [
+    "package.json",
+    4
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
     4
-   ],
-   [
-    "package.json",
-    3
-   ],
-   [
-    "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-    3
    ],
    [
     ".gitignore",
@@ -81551,6 +81549,14 @@
    [
     "supabase/functions/email-verify/index.ts",
     2
+   ],
+   [
+    "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
+    2
+   ],
+   [
+    "src/App.tsx",
+    1
    ],
    [
     "src/test/setup.ts",
@@ -81590,10 +81596,6 @@
    ],
    [
     "supabase/functions/_shared/__tests__/dns-guard.test.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/dns-guard.ts",
     1
    ]
   ]

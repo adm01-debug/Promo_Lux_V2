@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8d8ccbf093cb471f98b4b5cee34a5b0813934046",
+  "commit": "f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8",
   "branch": "main",
-  "data_commit": "2026-11-19T22:13:09-03:00",
+  "data_commit": "2026-11-20T08:04:23-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f9ab8eb",
+    "data": "2026-11-20",
+    "assunto": "chore(deps)(deps): bump react-router and react-router-dom (#68)"
+   },
    {
     "sha": "8d8ccbf",
     "data": "2026-11-19",
@@ -126,18 +131,13 @@
     "sha": "3c038d5",
     "data": "2026-11-13",
     "assunto": "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)"
-   },
-   {
-    "sha": "b50e001",
-    "data": "2026-11-13",
-    "assunto": "fix(edge): decodifica deliverability-check e email-verify salvos em base64 (#30)"
    }
   ],
-  "arquivos_mudados_7d": 26,
+  "arquivos_mudados_7d": 27,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "pasta": ".gitignore",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "arquivo": "package.json",
-    "mudancas": 8
+    "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
@@ -294,7 +294,7 @@
     "mudancas": 2
    },
    {
-    "arquivo": "supabase/functions/_shared/__tests__/lusha-client.test.ts",
+    "arquivo": "src/App.tsx",
     "mudancas": 2
    }
   ],
@@ -305,14 +305,14 @@
    },
    {
     "autor": "dependabot[bot]",
-    "commits": 10
+    "commits": 11
    }
   ]
  },
  "contagens": {
   "arquivos_total": 1017,
   "arquivos_codigo": 644,
-  "linhas_codigo": 110548,
+  "linhas_codigo": 110543,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -548,7 +548,7 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 322
+   "linhas": 317
   },
   "src/components": {
    "arquivos": 285,

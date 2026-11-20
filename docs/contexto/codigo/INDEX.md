@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8d8ccbf093cb471f98b4b5cee34a5b0813934046` (2026-11-19T22:13:09-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8` (2026-11-20T08:04:23-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1017 |
 | arquivos_codigo | 644 |
-| linhas_codigo | 110548 |
+| linhas_codigo | 110543 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -216,14 +216,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6507 nós · 14007 arestas · 560 comunidades · grafo do commit `8d8ccbf0`
+- 6507 nós · 14007 arestas · 560 comunidades · grafo do commit `f9ab8eb9`
 - comunidades maiores: Monitoring.tsx (180), lucide-react (145), react (138), @tanstack/react-query (126), cn (125), snapshot.py (102), utils.ts (101), generate.py (96), OAuthSandboxPanel.tsx (82), gerar.mjs (80), ref_node_fs (72), vitest (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- package-lock.json (12)
-- package.json (8)
+- package-lock.json (13)
+- package.json (9)
 - AGENTS.md (6)
 - .github/workflows/edge-tests-daily.yml (5)
 - .github/workflows/ci.yml (3)
@@ -327,6 +327,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-20 `f9ab8eb` chore(deps)(deps): bump react-router and react-router-dom (#68)
 - 2026-11-19 `8d8ccbf` chore(deps)(deps-dev): bump baseline-browser-mapping (#64)
 - 2026-11-19 `0767e3a` chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)
 - 2026-11-19 `906b862` chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)
@@ -341,7 +342,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-14 `2f44e2d` fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)
 - 2026-11-14 `8fc5df7` chore(deps)(deps): bump @modelcontextprotocol/sdk and @lovable.dev/mcp-js (#43)
 - 2026-11-14 `f1a6552` ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)
-- 2026-11-14 `fd9a59c` docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

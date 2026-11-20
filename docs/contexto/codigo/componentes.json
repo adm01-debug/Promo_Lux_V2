@@ -20,7 +20,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 322,
+   "linhas": 317,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
