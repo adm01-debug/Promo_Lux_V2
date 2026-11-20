@@ -93,7 +93,7 @@ jobs:
       - name: Estado atual published vs local (read-only)
         run: |
           echo "► Functions publicadas em $SUPABASE_PROJECT_REF:"
-          supabase functions list --linked
+          supabase functions list
           echo "► Functions locais:"
           find supabase/functions -mindepth 1 -maxdepth 1 -type d ! -name _shared -printf '%f\n' | sort
 
@@ -129,4 +129,4 @@ jobs:
         # --use-api: bundle server-side, sem Docker no runner (ubuntu-latest).
         # --yes: sem isso o CLI aborta quando stdout não é TTY (runner GH).
         # Sem --prune: functions publicadas mas ausentes da main ficam intactas.
-        run: supabase functions deploy --use-api --yes --linked
+        run: supabase functions deploy --use-api --yes
