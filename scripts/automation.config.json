@@ -166,6 +166,22 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/db-migrations.yml. O dispatcher não executa esta operação."
     },
     {
+      "id": "fn-lint",
+      "kind": "legacy",
+      "files": ["scripts/check-functions-lint.sh"],
+      "manual": ["sh", "scripts/check-functions-lint.sh"],
+      "triggers": ["manual"],
+      "reason": "Lint estático das edge functions (novo workflow edge-functions-deploy.yml). O dispatcher não executa esta operação."
+    },
+    {
+      "id": "fn-target",
+      "kind": "legacy",
+      "files": ["scripts/check-edge-fn-target.sh"],
+      "manual": ["sh", "scripts/check-edge-fn-target.sh"],
+      "triggers": ["manual"],
+      "reason": "Guarda de ambiente para deploy de edge functions (novo workflow edge-functions-deploy.yml). O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-2d7c4232a46150c6",
       "kind": "legacy",
       "files": ["scripts/check-queue-kind-coverage.sh"],
