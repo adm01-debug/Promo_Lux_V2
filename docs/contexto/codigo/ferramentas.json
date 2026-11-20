@@ -111,7 +111,7 @@
    "react-router-dom": "7",
    "recharts": "2",
    "tailwindcss-animate": "^1.0.7",
-   "zod": "^3.25.76"
+   "zod": "^4.6.7"
   },
   "engines": null,
   "packageManager": null
@@ -645,7 +645,7 @@
    {
     "pacote": "zod",
     "servico": "zod",
-    "versao": "^3.25.76"
+    "versao": "^4.6.7"
    }
   ],
   "hosts_externos": [

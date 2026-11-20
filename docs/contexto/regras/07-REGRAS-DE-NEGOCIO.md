@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f9ab8eb92e` · branch `main` · 2026-11-20 11:04 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5095441c3d` · branch `main` · 2026-11-20 11:17 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1094,7 +1094,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **companySchema** (`src/lib/schemas/company.ts`, z.object):
   ```ts
-  { name: z.string().min(1, "Nome é obrigatório").max(200, "Máximo 200 caracteres"), cnpj: z .string() .max(20, "Máximo 20 caracteres") .optional() .or(z.literal("")) .refine( (val) => !val || isValidCnpj(val), "CNPJ inválido (14 dígitos e verificadores)", ) .transform((val) => (val ? normalizeCnpj(val) : val)), sector: z.string().max(100, "Máximo 100 caracteres").optional().or(z.literal("")), location: z.string().max(200, "Máximo 200 caracteres").optional().or(z.literal("")), email: z.union([ z.string().email("Email inválido"), z.literal(""), ]).optional(), phone: z.string().max(30, "Máximo 30 caracteres").optional().or(z.literal("")), website: z.union([ z.string().url("URL inválida"), z.literal(""), ]).optional(), linkedin_url: z.union([ z.string().url("URL do LinkedIn inválida"), z.litera …
+  { name: z.string().min(1, "Nome é obrigatório").max(200, "Máximo 200 caracteres"), cnpj: z .string() .max(20, "Máximo 20 caracteres") .or(z.literal("")) .refine( (val) => !val || isValidCnpj(val), "CNPJ inválido (14 dígitos e verificadores)", ) .transform((val) => (val ? normalizeCnpj(val) : val)) .optional(), sector: z.string().max(100, "Máximo 100 caracteres").or(z.literal("")).optional(), location: z.string().max(200, "Máximo 200 caracteres").or(z.literal("")).optional(), email: z.union([ z.string().email("Email inválido"), z.literal(""), ]).optional(), phone: z.string().max(30, "Máximo 30 caracteres").or(z.literal("")).optional(), website: z.union([ z.string().url("URL inválida"), z.literal(""), ]).optional(), linkedin_url: z.union([ z.string().url("URL do LinkedIn inválida"), z.litera …
   ```
   - Regras cruzadas (refine): “CNPJ inválido (14 dígitos e verificadores)”
 - **scrapeJobSchema** (`src/lib/schemas/scrapeJob.ts`, z.object):

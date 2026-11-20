@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)",
    "chore(deps)(deps): bump react-router and react-router-dom (#68)",
    "chore(deps)(deps-dev): bump baseline-browser-mapping (#64)",
    "chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)",
-   "chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)",
-   "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)"
+   "chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)"
   ]
  },
  "pr_template": null,

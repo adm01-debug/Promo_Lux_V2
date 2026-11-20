@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8",
+  "commit": "5095441c3d96cae7ee5b608e0b9c33ca5f41883f",
   "branch": "main",
-  "data_commit": "2026-11-20T08:04:23-03:00",
+  "data_commit": "2026-11-20T08:17:05-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5095441",
+    "data": "2026-11-20",
+    "assunto": "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)"
+   },
    {
     "sha": "f9ab8eb",
     "data": "2026-11-20",
@@ -126,18 +131,13 @@
     "sha": "ff716ae",
     "data": "2026-11-13",
     "assunto": "docs: documenta divisao vitest/deno/rls-tests no CONTRIBUTING (#32)"
-   },
-   {
-    "sha": "3c038d5",
-    "data": "2026-11-13",
-    "assunto": "fix(ci): roda so testes Deno nativos no edge-tests-daily (exclui vitest e rls-tests) (#31)"
    }
   ],
-  "arquivos_mudados_7d": 27,
+  "arquivos_mudados_7d": 28,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": ".gitignore",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": "package.json",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 38
+    "commits": 39
    },
    {
     "autor": "dependabot[bot]",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8",
+  "sha": "5095441c3d96cae7ee5b608e0b9c33ca5f41883f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-20 11:04 UTC",
+  "generated_at": "2026-11-20 11:17 UTC",
   "files_total": 1036,
   "code_files": 869,
   "code_lines": 124964
  },
  "version": "1.3.2",
- "facts_hash": "21da56c72015850a",
+ "facts_hash": "609a304aa54134de",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -67,7 +67,7 @@
     "in": "package.json"
    },
    "zod": {
-    "version": "^3.25.76",
+    "version": "^4.6.7",
     "role": "Validação de schemas (Zod)",
     "in": "package.json"
    },
@@ -28987,7 +28987,7 @@
     "file": "src/lib/schemas/company.ts",
     "name": "companySchema",
     "kind": "object",
-    "body": "{ name: z.string().min(1, \"Nome é obrigatório\").max(200, \"Máximo 200 caracteres\"), cnpj: z .string() .max(20, \"Máximo 20 caracteres\") .optional() .or(z.literal(\"\")) .refine( (val) => !val || isValidCnpj(val), \"CNPJ inválido (14 dígitos e verificadores)\", ) .transform((val) => (val ? normalizeCnpj(val) : val)), sector: z.string().max(100, \"Máximo 100 caracteres\").optional().or(z.literal(\"\")), location: z.string().max(200, \"Máximo 200 caracteres\").optional().or(z.literal(\"\")), email: z.union([ z.string().email(\"Email inválido\"), z.literal(\"\"), ]).optional(), phone: z.string().max(30, \"Máximo 30 caracteres\").optional().or(z.literal(\"\")), website: z.union([ z.string().url(\"URL inválida\"), z.literal(\"\"), ]).optional(), linkedin_url: z.union([ z.string().url(\"URL do LinkedIn inválida\"), z.litera …",
+    "body": "{ name: z.string().min(1, \"Nome é obrigatório\").max(200, \"Máximo 200 caracteres\"), cnpj: z .string() .max(20, \"Máximo 20 caracteres\") .or(z.literal(\"\")) .refine( (val) => !val || isValidCnpj(val), \"CNPJ inválido (14 dígitos e verificadores)\", ) .transform((val) => (val ? normalizeCnpj(val) : val)) .optional(), sector: z.string().max(100, \"Máximo 100 caracteres\").or(z.literal(\"\")).optional(), location: z.string().max(200, \"Máximo 200 caracteres\").or(z.literal(\"\")).optional(), email: z.union([ z.string().email(\"Email inválido\"), z.literal(\"\"), ]).optional(), phone: z.string().max(30, \"Máximo 30 caracteres\").or(z.literal(\"\")).optional(), website: z.union([ z.string().url(\"URL inválida\"), z.literal(\"\"), ]).optional(), linkedin_url: z.union([ z.string().url(\"URL do LinkedIn inválida\"), z.litera …",
     "refines": [
      "CNPJ inválido (14 dígitos e verificadores)"
     ],
@@ -73356,7 +73356,7 @@
     {
      "name": "companySchema",
      "kind": "object",
-     "body": "{ name: z.string().min(1, \"Nome é obrigatório\").max(200, \"Máximo 200 caracteres\"), cnpj: z .string() .max(20, \"Máximo 20 caracteres\") .optional() .or(z.literal(\"\")) .refine( (val) => !val || isValidCnpj(val), \"CNPJ inválido (14 dígitos e verificadores)\", ) .transform((val) => (val ? normalizeCnpj(val) : val)), sector: z.string().max(100, \"Máximo 100 caracteres\").optional().or(z.literal(\"\")), location: z.string().max(200, \"Máximo 200 caracteres\").optional().or(z.literal(\"\")), email: z.union([ z.string().email(\"Email inválido\"), z.literal(\"\"), ]).optional(), phone: z.string().max(30, \"Máximo 30 caracteres\").optional().or(z.literal(\"\")), website: z.union([ z.string().url(\"URL inválida\"), z.literal(\"\"), ]).optional(), linkedin_url: z.union([ z.string().url(\"URL do LinkedIn inválida\"), z.litera …",
+     "body": "{ name: z.string().min(1, \"Nome é obrigatório\").max(200, \"Máximo 200 caracteres\"), cnpj: z .string() .max(20, \"Máximo 20 caracteres\") .or(z.literal(\"\")) .refine( (val) => !val || isValidCnpj(val), \"CNPJ inválido (14 dígitos e verificadores)\", ) .transform((val) => (val ? normalizeCnpj(val) : val)) .optional(), sector: z.string().max(100, \"Máximo 100 caracteres\").or(z.literal(\"\")).optional(), location: z.string().max(200, \"Máximo 200 caracteres\").or(z.literal(\"\")).optional(), email: z.union([ z.string().email(\"Email inválido\"), z.literal(\"\"), ]).optional(), phone: z.string().max(30, \"Máximo 30 caracteres\").or(z.literal(\"\")).optional(), website: z.union([ z.string().url(\"URL inválida\"), z.literal(\"\"), ]).optional(), linkedin_url: z.union([ z.string().url(\"URL do LinkedIn inválida\"), z.litera …",
      "refines": [
       "CNPJ inválido (14 dígitos e verificadores)"
      ],
@@ -81208,10 +81208,21 @@
   }
  },
  "git": {
-  "sha": "f9ab8eb92e3fcd9db45ce05a75318ae8b7c083d8",
+  "sha": "5095441c3d96cae7ee5b608e0b9c33ca5f41883f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5095441",
+    "date": "2026-11-20",
+    "author": "adm01-debug",
+    "subject": "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)",
+    "files": [
+     "package-lock.json",
+     "package.json",
+     "src/lib/schemas/company.ts"
+    ]
+   },
    {
     "sha": "f9ab8eb",
     "date": "2026-11-20",
@@ -81490,49 +81501,20 @@
     "files": [
      "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql"
     ]
-   },
-   {
-    "sha": "8fb4f41",
-    "date": "2026-11-12",
-    "author": "adm01-debug",
-    "subject": "fix(migrations): decodifica migration A3A4 (base64 -> SQL legível) (#24)",
-    "files": [
-     ".gitignore",
-     "supabase/migrations/20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql",
-     "supabase/migrations/20260513143000_feature_flags_reconcile_para_flag_key.sql",
-     "supabase/migrations/20260715105150_d930747b-10d7-4ab1-8d9c-2294a8df8d04.sql",
-     "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
-     "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
-     "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
-     "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-     "supabase/migrations/20260721084800_A3A4-extensions-audit-partial-indexes.sql",
-     "supabase/migrations/20260721230036_013cb8e7-e901-4cfe-8752-1cba43599fda.sql",
-     "supabase/migrations/20260721235001_C13-campaign-warmup-throttling.sql",
-     "supabase/migrations/20260721235500_C14-ab-testing-assignment-chisquare.sql",
-     "supabase/migrations/20260722000001_D18-durable-workflow-execution.sql",
-     "supabase/migrations/20260722000500_H37-company-analytics-rpcs.sql",
-     "supabase/migrations/20260722100434_bdd6f199-0d46-4fa4-bb84-e5a2328002ff.sql",
-     "supabase/migrations/20260722104356_ffe6e4b5-3d05-4275-879d-533d39f82045.sql",
-     "supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    12
+    13
    ],
    [
     "package.json",
-    4
+    5
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
     4
-   ],
-   [
-    ".gitignore",
-    2
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -81551,8 +81533,8 @@
     2
    ],
    [
-    "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-    2
+    "src/lib/schemas/company.ts",
+    1
    ],
    [
     "src/App.tsx",
@@ -81572,6 +81554,10 @@
    ],
    [
     ".env.test",
+    1
+   ],
+   [
+    ".gitignore",
     1
    ],
    [
