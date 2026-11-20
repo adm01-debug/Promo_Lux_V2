@@ -365,9 +365,9 @@ Pipeline automatizado em GitHub Actions:
 ### 6.3 Build e Deploy
 
 - **Build:** Vite 5 com code splitting e lazy loading por view
-- **Deploy:** Automático via Lovable
-- **Edge functions:** Deploy automático ao salvar
-- **Produção:** https://lux-ai-company-finder.lovable.app
+- **Deploy:** Automático via Vercel (projeto `juca1/promo-lux-v2`) — Lovable abandonado
+- **Edge functions:** sem workflow próprio no repo — mecanismo em produção: `NÃO VERIFICADO` (ver `docs/agentes/lovable-deploy.md`)
+- **Produção:** https://promo-lux-v2.vercel.app
 
 ### 6.4 Observabilidade
 

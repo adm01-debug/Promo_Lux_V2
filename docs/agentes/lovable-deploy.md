@@ -4,20 +4,19 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
 
 | O que | Valor |
 |---|---|
-| Plataforma de deploy | **Lovable** (`lovable.dev`) — o projeto nasceu e é publicado por lá (`README.md` › Deploy; badge "Built with Lovable") |
-| Produção (front) | `https://lux-ai-company-finder.lovable.app` |
-| Backend | Lovable Cloud = Supabase `pttzwlbidamibjssqiqb` (ver `docs/agentes/banco.md`) |
-| Vercel | **não há `vercel.json` neste repo**. A string `vercel_icfg_…` em `supabase/.temp/linked-project.json` é o id da organização que provisionou o Supabase, não um projeto de front. Deploy em Vercel: `NÃO VERIFICADO` |
-| Framework / build / output | Vite 5 + React 19 · `npm run build` · `dist/` · Node 20 no CI |
+| Plataforma de deploy | **Vercel** (projeto `juca1/promo-lux-v2`) — deploy automático a cada merge em `main` (`vercel.json` presente na raiz; `installCommand: npm install --legacy-peer-deps`, `buildCommand: npm run build`, `framework: vite`). Lovable foi **abandonado** como plataforma de deploy (ver `README.md` para histórico) |
+| Produção (front) | `https://promo-lux-v2.vercel.app` |
+| Backend | Supabase `pttzwlbidamibjssqiqb` (ver `docs/agentes/banco.md`) |
+| Lovable (legado) | `https://lux-ai-company-finder.lovable.app` — **defasado e não mais usado**; bundle servido lá é snapshot de 01-ago (sem Admin/Monitoring/CNPJ). Não use como referência do que está em produção |
+| Framework / build / output | Vite 5 + React 19 · `npm run build` · `dist/` · Node 20 no CI · `outputDirectory: dist` no Vercel |
 | Artefatos da plataforma | `.lovable/plan.md`, `.lovable/memory/design/tokens.md`, `.lovable/mcp/manifest.json` |
 | Plugin de build | `lovable-tagger` (só em `mode === "development"`) e `@lovable.dev/mcp-js/stacks/supabase/vite` (`mcpPlugin()`), ambos em `vite.config.ts` |
 | Dev server | porta **8080** (`vite.config.ts`, `host: true`) — o `playwright.config.ts` depende dessa porta |
 
 ## Deploy e edge functions
 
-- **Front:** publicado pela Lovable. Merge em `main` = deploy em produção. Confirme o resultado abrindo a
-  URL de produção e reporte; não diga "deployado" sem isso.
-- **Edge functions:** sobem pela própria Lovable ao salvar (`README.md` › Deploy). `verify_jwt` por função
+- **Front:** publicado pela **Vercel**. Merge em `main` = build + deploy em `promo-lux-v2.vercel.app` (via `vercel.json`). Em 20-nov-2026, o bundle servido em produção (`index-D_pE71Dk.js`) continha os marcadores `admin/companies`, `settings/cnpj` e `Monitoring` — **alinhado com a main** (23 views + 9 pages em `src/lib/viewRegistry.ts`). Confirme o resultado abrindo a URL de produção e reporte; não diga "deployado" sem isso. O smoke test `.github/workflows/production-smoke.yml` monitora essa paridade diariamente.
+- **Edge functions:** o repo **não tem workflow próprio de deploy** (nem `db-migrations.yml` — esse só faz `supabase db push` de migrations) — deploy de funções em produção: `NÃO VERIFICADO` (reverificar com quem opera o Supabase). `verify_jwt` por função
   fica em `supabase/config.toml` — hoje com `verify_jwt = false` em `qa-ingest-run`, `admin-list-companies`
   e `migrate-helper`. Mexer nesses três é mexer em superfície pública: trate como mudança de segurança.
 - **MCP do produto:** `supabase/functions/mcp/` serve `/functions/v1/mcp` com OAuth
@@ -40,9 +39,10 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
 - Vars usadas pelo front (`src/integrations/supabase/client.ts`): `VITE_SUPABASE_URL` e
   `VITE_SUPABASE_PUBLISHABLE_KEY`. `VITE_SUPABASE_PROJECT_ID` e `VITE_ADMIN_LIST_TOKEN` também existem no
   `.env`.
-- **`.env` está versionado** (`git ls-files .env` retorna o arquivo; o `.gitignore` não cobre `.env*`), e
-  carrega `VITE_ADMIN_LIST_TOKEN`. Não adicione nada novo ali e nunca imprima o conteúdo. Remover do
-  versionamento e rotacionar o token é decisão do dono.
+- **`.env` não é mais versionado** (removido do tracking em `fix(ci): pina Supabase CLI v3.1.0 no job
+  rls-tests` — PR #48; o `.gitignore` cobre `.env`, `.env.local` e `.env.*.local`). O `.env` local carrega
+  `VITE_ADMIN_LIST_TOKEN`. Nunca adicione nada novo ali e nunca imprima o conteúdo; rotacionar o token é
+  decisão do dono.
 - Env vars de E2E, todas opcionais com fallback público: `E2E_BASE_URL`, `E2E_SUPABASE_URL`,
   `E2E_SUPABASE_ANON_KEY`, `E2E_USER_A_EMAIL`/`_PASSWORD`, `E2E_USER_B_EMAIL`/`_PASSWORD`
   (`e2e/helpers/supabase.ts`). Sem elas, os testes de RLS caem no ref divergente — ver `banco.md`.

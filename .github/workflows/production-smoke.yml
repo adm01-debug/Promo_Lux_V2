@@ -1,0 +1,51 @@
+name: Production Smoke Test
+
+# Verifica que o bundle servido em produção contém as páginas principais
+# (Admin/CNPJ/Monitoring). Produção = Vercel (projeto juca1/promo-lux-v2),
+# deploy automático por merge em main. Um simples "HTTP 200" engana porque o
+# SPA responde 200 em qualquer rota — detecção via marcadores estáveis do
+# entry JS (strings persistidas no código, presentes no dist da main).
+
+on:
+  schedule:
+    # 09:00 UTC = 06:00 America/Sao_Paulo (todos os dias)
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: production-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Verify production bundle markers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch production entry and check markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://promo-lux-v2.vercel.app"
+          HTML=$(curl -fsSL "$BASE/")
+          # entry JS: <script ... src="/assets/index-<hash>.js">
+          ENTRY=$(printf '%s' "$HTML" | grep -oE '"/assets/index-[^"]+\.js"' | head -1 | tr -d '"')
+          if [ -z "$ENTRY" ]; then
+            echo "::error::entry JS não encontrado no HTML de produção"
+            exit 1
+          fi
+          echo "entry: $ENTRY"
+          BUNDLE=$(curl -fsSL "$BASE$ENTRY")
+          printf '%s' "$BUNDLE" > /tmp/bundle.js
+          FAILED=0
+          for MARKER in "admin/companies" "settings/cnpj" "Monitoring"; do
+            if grep -qF "$MARKER" /tmp/bundle.js; then
+              echo "OK: $MARKER presente"
+            else
+              echo "::error::marcador '$MARKER' AUSENTE — produção provavelmente defasada vs main"
+              FAILED=1
+            fi
+          done
+          exit "$FAILED"

@@ -17,7 +17,7 @@ O módulo **Lusha Intelligence** permite que o time comercial da Promo Brindes b
 
 ```
 ┌─────────────────────────────────────────────────┐
-│ LUX Frontend (lux-ai-finder.lovable.app)        │
+│ LUX Frontend (promo-lux-v2.vercel.app)          │
 │  └─ LushaIntelligenceView.tsx                   │
 │     empresa + departamentos → "Buscar Decisores"│
 │     → supabase.functions.invoke('lusha-search') │
