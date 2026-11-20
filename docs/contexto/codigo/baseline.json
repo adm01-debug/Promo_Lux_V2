@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c97523ab288e2a63375c6a5fd04062d463b3d0a6",
+  "commit": "5392988d705cf2362a7e94504f0731411885036e",
   "branch": "main",
-  "data_commit": "2026-11-20T08:51:12-03:00",
+  "data_commit": "2026-11-20T10:35:26-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5392988",
+    "data": "2026-11-20",
+    "assunto": "feat(deps): bump vite 6 para 8.3.8 (major) e corrige manualChunks para API do vite 8 (#71)"
+   },
    {
     "sha": "c97523a",
     "data": "2026-11-20",
@@ -126,26 +131,21 @@
     "sha": "65df001",
     "data": "2026-11-13",
     "assunto": "docs: inventário prod-readiness do main (rotas, edge functions, banco, CI, produção) (#36)"
-   },
-   {
-    "sha": "da897d6",
-    "data": "2026-11-13",
-    "assunto": "feat(ci): job manual rls-tests com Supabase local (workflow_dispatch) (#33)"
    }
   ],
   "arquivos_mudados_7d": 28,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
-    "mudancas": 15
+    "mudancas": 16
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 12
    },
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 12
-   },
-   {
-    "pasta": "package.json",
-    "mudancas": 11
    },
    {
     "pasta": ".gitignore",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "arquivo": "package.json",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 40
+    "commits": 41
    },
    {
     "autor": "dependabot[bot]",
