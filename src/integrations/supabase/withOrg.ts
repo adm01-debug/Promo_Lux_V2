@@ -363,7 +363,30 @@ export function fromOrg<T extends TableName>(table: T) {
 }
 
 /** Nomes de tabelas com soft delete (para a UI de lixeira). */
-export type SoftDeleteTable = "companies" | "deals" | "campaigns" | "workflows";
+export type SoftDeleteTable =
+  | "companies"
+  | "deals"
+  | "campaigns"
+  | "workflows"
+  | "email_suppressions"
+  | "email_accounts"
+  | "api_keys"
+  | "webhooks";
+
+/**
+ * Coluna usada como rotulo de cada tabela na lixeira. As tabelas que nao
+ * tem coluna `name` (email_accounts/email_suppressions) usam `email`.
+ */
+export const TRASH_LABEL_COLUMN: Record<SoftDeleteTable, string> = {
+  companies: "name",
+  deals: "name",
+  campaigns: "name",
+  workflows: "name",
+  email_suppressions: "email",
+  email_accounts: "email",
+  api_keys: "name",
+  webhooks: "name",
+};
 
 /**
  * Builder de SELECT para a LIXEIRA: registros com `deleted_at IS NOT NULL`,
