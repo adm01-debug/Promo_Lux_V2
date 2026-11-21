@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b983c3d6da88eb5fdae38bcc4ba7004dbca40509",
+  "commit": "ba9db20a2f74c028f5af79d5e2b1009a368d21c9",
   "branch": "main",
-  "data_commit": "2026-11-21T11:39:00-03:00",
+  "data_commit": "2026-11-21T12:12:07-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "ba9db20",
+    "data": "2026-11-21",
+    "assunto": "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)"
+   },
    {
     "sha": "b983c3d",
     "data": "2026-11-21",
@@ -126,11 +131,6 @@
     "sha": "70c5f03",
     "data": "2026-11-19",
     "assunto": "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)"
-   },
-   {
-    "sha": "736d3d6",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)"
    }
   ],
   "arquivos_mudados_7d": 62,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 57
+    "commits": 58
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1030,
   "arquivos_codigo": 648,
-  "linhas_codigo": 110955,
+  "linhas_codigo": 110977,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 121,
-   "linhas": 21617
+   "linhas": 21639
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -649,12 +649,12 @@
    "linhas": 739
   },
   {
-   "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 726
+   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+   "linhas": 738
   },
   {
-   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-   "linhas": 716
+   "arquivo": "src/pages/Monitoring.tsx",
+   "linhas": 726
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",

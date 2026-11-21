@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b983c3d6da88eb5fdae38bcc4ba7004dbca40509",
+  "sha": "ba9db20a2f74c028f5af79d5e2b1009a368d21c9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 14:39 UTC",
+  "generated_at": "2026-11-21 15:12 UTC",
   "files_total": 1049,
   "code_files": 875,
-  "code_lines": 125483
+  "code_lines": 125505
  },
  "version": "1.3.2",
- "facts_hash": "22772bfe1884f150",
+ "facts_hash": "a643d27da7aff82f",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -22677,6 +22677,7 @@
      "MS_OAUTH_CLIENT_ID",
      "MS_OAUTH_CLIENT_SECRET",
      "PUBLIC_SUPABASE_URL",
+     "SUPABASE_ANON_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL",
      "TRACKING_SIGNING_SECRET"
@@ -25953,7 +25954,7 @@
   {
    "module": "supabase/functions",
    "files": 121,
-   "lines": 21617,
+   "lines": 21639,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -28398,6 +28399,7 @@
    ],
    "SUPABASE_ANON_KEY": [
     "supabase/functions/ai-agent/index.ts",
+    "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
     "supabase/functions/deliverability-check/index.ts",
@@ -31515,6 +31517,10 @@
    {
     "file": "supabase/functions/campaign-dispatch/index.ts",
     "text": "limite defensivo por ciclo para respeitar rate limits do provedor"
+   },
+   {
+    "file": "supabase/functions/campaign-dispatch/index.ts",
+    "text": "Gate de auth (gap R27-CRIT-01): aceita apenas"
    },
    {
     "file": "supabase/functions/campaign-dispatch/index.ts",
@@ -76368,7 +76374,7 @@
   },
   "supabase/functions/campaign-dispatch/index.ts": {
    "path": "supabase/functions/campaign-dispatch/index.ts",
-   "lines": 716,
+   "lines": 738,
    "tables": [
     {
      "table": "campaigns",
@@ -76469,6 +76475,7 @@
     "MS_OAUTH_CLIENT_ID",
     "MS_OAUTH_CLIENT_SECRET",
     "PUBLIC_SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL",
     "TRACKING_SIGNING_SECRET"
@@ -76510,6 +76517,7 @@
    "rule_comments": [
     "{ campaign_id } processa apenas aquela campanha (trigger manual).",
     "limite defensivo por ciclo para respeitar rate limits do provedor",
+    "Gate de auth (gap R27-CRIT-01): aceita apenas",
     "podem mais ser contatados. Consulta apenas os e-mails do batch corrente.",
     "Etapas de espera (wait/delay): apenas agenda a próxima ação e avança.",
     "Etapa de e-mail: validação defensiva do endereço.",
@@ -81957,10 +81965,19 @@
   }
  },
  "git": {
-  "sha": "b983c3d6da88eb5fdae38bcc4ba7004dbca40509",
+  "sha": "ba9db20a2f74c028f5af79d5e2b1009a368d21c9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "ba9db20",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)",
+    "files": [
+     "supabase/functions/campaign-dispatch/index.ts"
+    ]
+   },
    {
     "sha": "b983c3d",
     "date": "2026-11-21",
@@ -82270,25 +82287,20 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "d2d1ad0",
-    "date": "2026-11-19",
-    "author": "adm01-debug",
-    "subject": "chore(deps): bump dompurify from 3.4.12 to 3.4.17 (sucessora da #50) (#55)",
-    "files": [
-     "package-lock.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    14
+    13
    ],
    [
     "package.json",
     7
+   ],
+   [
+    "supabase/functions/campaign-dispatch/index.ts",
+    2
    ],
    [
     ".github/workflows/production-smoke.yml",
@@ -82348,10 +82360,6 @@
    ],
    [
     "supabase/functions/_shared/tracking-links.ts",
-    1
-   ],
-   [
-    "supabase/functions/campaign-dispatch/index.ts",
     1
    ],
    [

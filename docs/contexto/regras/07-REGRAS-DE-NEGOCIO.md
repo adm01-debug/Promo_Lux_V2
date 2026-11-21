@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b983c3d6da` · branch `main` · 2026-11-21 14:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ba9db20a2f` · branch `main` · 2026-11-21 15:12 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2323,6 +2323,7 @@ _nenhum item encontrado_
 | limite de email por RFC 5321 | `supabase/functions/auth-rate-limit/index.ts` |
 | { campaign_id } processa apenas aquela campanha (trigger manual). | `supabase/functions/campaign-dispatch/index.ts` |
 | limite defensivo por ciclo para respeitar rate limits do provedor | `supabase/functions/campaign-dispatch/index.ts` |
+| Gate de auth (gap R27-CRIT-01): aceita apenas | `supabase/functions/campaign-dispatch/index.ts` |
 | podem mais ser contatados. Consulta apenas os e-mails do batch corrente. | `supabase/functions/campaign-dispatch/index.ts` |
 | Etapas de espera (wait/delay): apenas agenda a próxima ação e avança. | `supabase/functions/campaign-dispatch/index.ts` |
 | Etapa de e-mail: validação defensiva do endereço. | `supabase/functions/campaign-dispatch/index.ts` |
