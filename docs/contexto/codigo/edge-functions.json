@@ -2,11 +2,12 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 58,
+ "total": 59,
  "verify_jwt_false": [
   "admin-list-companies",
   "email-oauth-callback",
   "mcp",
+  "mcp-query",
   "migrate-helper",
   "public-api",
   "qa-ingest-run",
@@ -1189,6 +1190,33 @@
    ],
    "env": [
     "SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "mcp-query",
+   "entrada": "supabase/functions/mcp-query/index.ts",
+   "arquivos": 1,
+   "linhas": 97,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [
+    "MCP_SECRET",
+    "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
    "buckets": [],

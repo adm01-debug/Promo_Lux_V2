@@ -1375,6 +1375,7 @@
    "lusha-reveal",
    "lusha-search",
    "mcp",
+   "mcp-query",
    "migrate-helper",
    "oracle-cookies-preflight",
    "oracle-enrich-contact",

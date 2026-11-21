@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7e2e6d28ebd1252e6ff45cb0752d9b8ac4d31fc4",
+  "commit": "e5ef06d989730f6aecf113d47a8bac9f36acd291",
   "branch": "main",
-  "data_commit": "2026-11-21T16:19:02-03:00",
+  "data_commit": "2026-11-21T17:04:10-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e5ef06d",
+    "data": "2026-11-21",
+    "assunto": "fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)"
+   },
+   {
+    "sha": "9f6188b",
+    "data": "2026-11-21",
+    "assunto": "docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)"
+   },
    {
     "sha": "7e2e6d2",
     "data": "2026-11-21",
@@ -121,19 +131,9 @@
     "sha": "675f86d",
     "data": "2026-11-20",
     "assunto": "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)"
-   },
-   {
-    "sha": "b9cce50",
-    "data": "2026-11-20",
-    "assunto": "infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)"
-   },
-   {
-    "sha": "5392988",
-    "data": "2026-11-20",
-    "assunto": "feat(deps): bump vite 6 para 8.3.8 (major) e corrige manualChunks para API do vite 8 (#71)"
    }
   ],
-  "arquivos_mudados_7d": 78,
+  "arquivos_mudados_7d": 80,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -168,6 +168,10 @@
     "mudancas": 4
    },
    {
+    "pasta": "supabase/config.toml",
+    "mudancas": 4
+   },
+   {
     "pasta": ".agents/skills/promo-lux-v2",
     "mudancas": 3
    },
@@ -190,10 +194,6 @@
    {
     "pasta": "docs/agentes/github-ci.md",
     "mudancas": 3
-   },
-   {
-    "pasta": "docs/agentes/mapa-repo.md",
-    "mudancas": 3
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -214,11 +214,11 @@
     "mudancas": 6
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
-    "mudancas": 4
+    "arquivo": "supabase/config.toml",
+    "mudancas": 5
    },
    {
-    "arquivo": "supabase/config.toml",
+    "arquivo": ".github/workflows/ci.yml",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 65
+    "commits": 67
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1033,
-  "arquivos_codigo": 650,
-  "linhas_codigo": 111200,
+  "arquivos_total": 1034,
+  "arquivos_codigo": 651,
+  "linhas_codigo": 111297,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,7 +320,7 @@
   "modulos": 22,
   "componentes": 241,
   "hooks": 78,
-  "edge_functions": 58,
+  "edge_functions": 59,
   "tabelas": 97,
   "migrations": 220,
   "cron_jobs": 24,
@@ -587,8 +587,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 123,
-   "linhas": 21862
+   "arquivos": 124,
+   "linhas": 21959
   },
   "tailwind.config.ts": {
    "arquivos": 1,

@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (624)",
+   "TypeScript (625)",
    "SQL (224)",
    "Markdown (80)",
    "JSON (38)",
@@ -484,7 +484,7 @@
   {
    "arquivo": "docs/ESTADO_ATUAL.md",
    "titulo": "ESTADO ATUAL DO SISTEMA — LUX IA",
-   "linhas": 297
+   "linhas": 176
   },
   {
    "arquivo": "docs/FUNCIONALIDADES.md",
@@ -625,6 +625,7 @@
    "LOVABLE_API_KEY",
    "LUSHA_API_KEY",
    "LUSHA_DAILY_QUOTA",
+   "MCP_SECRET",
    "MS_OAUTH_CLIENT_ID",
    "MS_OAUTH_CLIENT_SECRET",
    "PUBLIC_SUPABASE_URL",
@@ -1118,6 +1119,7 @@
    "HIKER_API_KEY",
    "LOVABLE_API_KEY",
    "LUSHA_API_KEY",
+   "MCP_SECRET",
    "MS_OAUTH_CLIENT_ID",
    "MS_OAUTH_CLIENT_SECRET",
    "QA_INGEST_TOKEN",
@@ -1128,6 +1130,7 @@
    "admin-list-companies",
    "email-oauth-callback",
    "mcp",
+   "mcp-query",
    "migrate-helper",
    "public-api",
    "qa-ingest-run",
