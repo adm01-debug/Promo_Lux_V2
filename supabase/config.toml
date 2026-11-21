@@ -13,3 +13,26 @@ verify_jwt = false
 
 [functions.migrate-helper]
 verify_jwt = false
+
+# Functions publicas por design: autenticam por conta propria (assinatura HMAC
+# ou X-API-Key) e sao chamadas de fora do Supabase, sem header Authorization.
+# Sem esta secao, o deploy aplica o default verify_jwt = true e o gateway
+# responde 401 antes do codigo rodar.
+#   track-open / track-click - pixel e redirect de email (verifyTrackingParams)
+#   public-api               - API de clientes, header X-API-Key
+#   email-oauth-callback     - retorno do provedor OAuth
+#   mcp                      - OAuth proprio do @lovable.dev/mcp-js
+[functions.track-open]
+verify_jwt = false
+
+[functions.track-click]
+verify_jwt = false
+
+[functions.public-api]
+verify_jwt = false
+
+[functions.email-oauth-callback]
+verify_jwt = false
+
+[functions.mcp]
+verify_jwt = false

@@ -91,6 +91,20 @@ function backoffSeconds(attempts: number): number {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  // Gate por bearer do service role (mesmo padrao de dlq-alerts/purge-soft-deleted).
+  // verify_jwt no config.toml NAO protege esta funcao: a publishable key do
+  // projeto e publica (vai no bundle do site) e satisfaz o gateway, entao
+  // qualquer visitante disparava a fila de enriquecimento sob demanda.
+  const authHeader = req.headers.get("Authorization");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+    return new Response(
+      JSON.stringify({ ok: false, error: "unauthorized" }),
+      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
+
   const traceId = crypto.randomUUID();
   const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
   const useAuth = !!CNPJA_API_KEY;
