@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e5ef06d989730f6aecf113d47a8bac9f36acd291",
+  "commit": "6cea0205a5063b3f948783a58750e7c7f35f2335",
   "branch": "main",
-  "data_commit": "2026-11-21T17:04:10-03:00",
+  "data_commit": "2026-11-21T17:10:10-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "6cea020",
+    "data": "2026-11-21",
+    "assunto": "fix(docs): decodifica auth.md que estava gravado em base64 (#100)"
+   },
    {
     "sha": "e5ef06d",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "4848e17",
     "data": "2026-11-20",
     "assunto": "chore(deps): resolve 6 vulnerabilidades dev (zod high, glob moderate) via dedupe do lockfile (#74)"
-   },
-   {
-    "sha": "675f86d",
-    "data": "2026-11-20",
-    "assunto": "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)"
    }
   ],
-  "arquivos_mudados_7d": 80,
+  "arquivos_mudados_7d": 81,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 67
+    "commits": 68
    },
    {
     "autor": "dependabot[bot]",

@@ -523,8 +523,8 @@
   },
   {
    "arquivo": "docs/auth.md",
-   "titulo": null,
-   "linhas": 1
+   "titulo": "Estratégia de Autenticação — LUX IA",
+   "linhas": 71
   },
   {
    "arquivo": "docs/edge-functions.md",

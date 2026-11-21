@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(docs): decodifica auth.md que estava gravado em base64 (#100)",
    "fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)",
    "docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)",
    "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)",
-   "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)",
-   "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)"
+   "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)"
   ]
  },
  "pr_template": null,

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e5ef06d989730f6aecf113d47a8bac9f36acd291` (2026-11-21T17:04:10-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6cea0205a5063b3f948783a58750e7c7f35f2335` (2026-11-21T17:10:10-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -235,8 +235,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6587 nós · 14178 arestas · 554 comunidades · grafo do commit `e5ef06d9`
-- comunidades maiores: lucide-react (154), react (146), cn (133), LushaIntelligenceView.tsx (106), snapshot.py (102), badge.tsx (94), Index.tsx (92), gerar.mjs (80), DashboardView.tsx (71), useAuth (70), withOrg.ts (66), dependencies (65)
+- 6596 nós · 14188 arestas · 578 comunidades · grafo do commit `6cea0205`
+- comunidades maiores: react (168), lucide-react (162), cn (85), utils.ts (84), @tanstack/react-query (81), gerar.mjs (80), generate.py (75), JobDetailsSheet.tsx (72), LushaIntelligenceView.tsx (66), dependencies (65), campaign-dispatch/index.ts (64), ref_node_fs (62)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -337,7 +337,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/ORACLE_V2.md` — Oracle v2 — Runbook (123 linhas)
 - `docs/apify-mock-mode.md` — Apify Mock Mode (Dev / E2E) (51 linhas)
 - `docs/auditoria-backend-2026-07-12.md` — Auditoria Profunda de Back-End — LUX IA (106 linhas)
-- `docs/auth.md` (1 linhas)
+- `docs/auth.md` — Estratégia de Autenticação — LUX IA (71 linhas)
 - `docs/edge-functions.md` — Edge Functions — Documentação (202 linhas)
 - `docs/erd.md` — 🗺️ Diagrama Entidade-Relacionamento (ERD) (78 linhas)
 - `docs/pesquisa-oss-linkedin-enrichment.md` — Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn (184 linhas)
@@ -348,6 +348,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `6cea020` fix(docs): decodifica auth.md que estava gravado em base64 (#100)
 - 2026-11-21 `e5ef06d` fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)
 - 2026-11-21 `9f6188b` docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)
 - 2026-11-21 `7e2e6d2` feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)
@@ -362,7 +363,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `d1ae10a` merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webh
 - 2026-11-21 `568555d` merge: feat(ci): smoke de CORS das edge functions no production-smoke
 - 2026-11-21 `50782f3` merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo
-- 2026-11-21 `fe41396` merge: feat(email): tracking de open/click assinado no envio de campanhas
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

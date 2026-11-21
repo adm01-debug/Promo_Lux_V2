@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "e5ef06d989730f6aecf113d47a8bac9f36acd291",
+  "sha": "6cea0205a5063b3f948783a58750e7c7f35f2335",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 20:07 UTC",
+  "generated_at": "2026-11-21 20:12 UTC",
   "files_total": 1053,
   "code_files": 879,
   "code_lines": 125945
@@ -82163,10 +82163,19 @@
   }
  },
  "git": {
-  "sha": "e5ef06d989730f6aecf113d47a8bac9f36acd291",
+  "sha": "6cea0205a5063b3f948783a58750e7c7f35f2335",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6cea020",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(docs): decodifica auth.md que estava gravado em base64 (#100)",
+    "files": [
+     "docs/auth.md"
+    ]
+   },
    {
     "sha": "e5ef06d",
     "date": "2026-11-21",
@@ -82493,30 +82502,19 @@
      "package.json",
      "src/lib/schemas/company.ts"
     ]
-   },
-   {
-    "sha": "f9ab8eb",
-    "date": "2026-11-20",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps): bump react-router and react-router-dom (#68)",
-    "files": [
-     "package-lock.json",
-     "package.json",
-     "src/App.tsx"
-    ]
    }
   ],
   "hot_files": [
    [
     "package.json",
-    6
-   ],
-   [
-    "package-lock.json",
     5
    ],
    [
     "supabase/config.toml",
+    4
+   ],
+   [
+    "package-lock.json",
     4
    ],
    [
@@ -82544,8 +82542,8 @@
     2
    ],
    [
-    "src/App.tsx",
-    2
+    "docs/auth.md",
+    1
    ],
    [
     "supabase/functions/mcp-query/index.ts",
