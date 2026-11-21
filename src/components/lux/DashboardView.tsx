@@ -13,12 +13,11 @@ import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, Eye, LogIn
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useWeeklyPerformance } from "@/hooks/useWeeklyPerformance";
+import { useDashboardLayout } from "@/hooks/useDashboardLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-
-const LAYOUT_KEY = "lux-dashboard-widget-order";
 
 interface TooltipPayloadItem {
   dataKey: string;
@@ -58,14 +57,6 @@ type WidgetId = "chart" | "funnel-automations" | "companies-activity";
 
 const DEFAULT_ORDER: WidgetId[] = ["chart", "funnel-automations", "companies-activity"];
 
-function loadOrder(): WidgetId[] {
-  try {
-    const stored = localStorage.getItem(LAYOUT_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch { /* layout persistido inválido: usa ordem padrão */ }
-  return DEFAULT_ORDER;
-}
-
 interface DashboardViewProps {
   onNavigate?: (view: string) => void;
 }
@@ -77,7 +68,10 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const colors = useThemeColors();
   const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
-  const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(loadOrder);
+  // Layout agora vive no banco por usuário (public.dashboard_layouts); o hook
+  // mantém o localStorage como cache síncrono para não piscar no primeiro paint.
+  const { order: widgetOrder, saveOrder, resetOrder } =
+    useDashboardLayout<WidgetId>(DEFAULT_ORDER);
   const [dragOver, setDragOver] = useState<number | null>(null);
   const [dragging, setDragging] = useState<number | null>(null);
 
@@ -101,21 +95,13 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
       setDragging(null);
       return;
     }
-    setWidgetOrder((prev) => {
-      const next = [...prev];
-      const [moved] = next.splice(dragging, 1);
-      next.splice(targetIdx, 0, moved);
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify(next));
-      return next;
-    });
+    const next = [...widgetOrder];
+    const [moved] = next.splice(dragging, 1);
+    next.splice(targetIdx, 0, moved);
+    saveOrder(next);
     setDragOver(null);
     setDragging(null);
-  }, [dragging]);
-
-  const resetOrder = useCallback(() => {
-    setWidgetOrder(DEFAULT_ORDER);
-    localStorage.setItem(LAYOUT_KEY, JSON.stringify(DEFAULT_ORDER));
-  }, []);
+  }, [dragging, widgetOrder, saveOrder]);
 
   const widgets: Record<WidgetId, { title: string; content: React.ReactNode }> = {
     chart: {

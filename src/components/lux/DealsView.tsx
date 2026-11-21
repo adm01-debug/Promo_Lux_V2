@@ -3,12 +3,15 @@ import {
   DndContext, DragOverlay, PointerSensor, useSensor, useSensors,
   closestCorners, type DragStartEvent, type DragEndEvent, type DragOverEvent,
 } from "@dnd-kit/core";
-import { Plus, Settings as SettingsIcon, TrendingUp } from "lucide-react";
+import { Plus, Settings as SettingsIcon, TrendingUp, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useDeals, useDealStages, type Deal } from "@/hooks/useDeals";
 import { useTaskReminders } from "@/hooks/useTaskReminders";
 import { DealColumn } from "./deals/DealColumn";
 import { DealCard } from "./deals/DealCard";
+import { useDealPredictions } from "@/hooks/useDealPredictions";
+import { useLeadScores } from "@/hooks/useLeadScores";
 import { AddDealDialog } from "./deals/AddDealDialog";
 import { StagesManagerDialog } from "./deals/StagesManagerDialog";
 import { DealDetailDrawer } from "./deals/DealDetailDrawer";
@@ -18,6 +21,8 @@ export function DealsView() {
 
   const { data: stages = [], isLoading: stagesLoading } = useDealStages();
   const { data: deals = [], updateDeal } = useDeals();
+  const { byDealId: predictions, totalWeighted } = useDealPredictions();
+  const { refresh: refreshScores } = useLeadScores();
 
   const [addOpen, setAddOpen] = useState(false);
   const [stagesOpen, setStagesOpen] = useState(false);
@@ -78,9 +83,27 @@ export function DealsView() {
             <span className="text-primary font-mono">
               {totalValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
             </span>
+            {totalWeighted > 0 && (
+              <span className="text-muted-foreground" title="Receita esperada = valor × probabilidade de fechamento">
+                · Ponderado <span className="text-success font-mono">
+                  {totalWeighted.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
+                </span>
+              </span>
+            )}
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1.5 text-xs"
+            onClick={() => refreshScores.mutate()}
+            disabled={refreshScores.isPending}
+            title="Recalcular probabilidade dos deals e scores dos stakeholders"
+          >
+            <RefreshCw className={cn("h-3.5 w-3.5", refreshScores.isPending && "animate-spin")} />
+            Recalcular previsões
+          </Button>
           <Button variant="outline" onClick={() => setStagesOpen(true)}>
             <SettingsIcon className="h-4 w-4 mr-1.5" /> Estágios
           </Button>
@@ -111,11 +134,14 @@ export function DealsView() {
                 deals={dealsByStage[s.id] ?? []}
                 onAddDeal={(sid) => { setDefaultStage(sid); setAddOpen(true); }}
                 onSelectDeal={(d) => { setActiveDeal(d); setDetailOpen(true); }}
+                predictions={predictions}
               />
             ))}
           </div>
           <DragOverlay>
-            {draggingDeal && <DealCard deal={draggingDeal} onClick={() => {}} />}
+            {draggingDeal && (
+              <DealCard deal={draggingDeal} onClick={() => {}} prediction={predictions.get(draggingDeal.id)} />
+            )}
           </DragOverlay>
         </DndContext>
       )}

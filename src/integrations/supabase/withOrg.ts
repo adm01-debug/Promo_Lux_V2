@@ -155,6 +155,8 @@ export const ORG_UNSCOPED_TABLES = new Set<string>([
   "automation_execution_logs", // leitura via supabase.from + RLS (useAutomationLogs)
   "automation_steps",          // leitura via supabase.from + RLS (JobDetailsSheet)
   "company_reviews",           // Rodada #27: leitura via supabase.from + RLS (useCompanyReviews)
+  "dashboard_layouts",         // layout de widgets por usuario: leitura/escrita via supabase.from + RLS (useDashboardLayout)
+  "deal_predictions",          // previsao de fechamento: leitura via supabase.from + RLS (useDealPredictions); escrita via RPC SECURITY DEFINER
   "dlq_alert_history",         // leitura via supabase.from + RLS (useDlqAlertSettings)
   "dlq_alert_settings",        // leitura via supabase.from + RLS (useDlqAlertSettings)
   "dlq_health_snapshots",      // acesso via RPC dlq_health_trend (SECURITY DEFINER)
@@ -165,6 +167,7 @@ export const ORG_UNSCOPED_TABLES = new Set<string>([
   "lusha_credit_usage_log",    // Rodada #27: append-only por edge functions Lusha (service_role)
   "lusha_dm_search_history",   // Rodada #27: gravado por edges Oracle; leitura direta via useLusha* hooks com RLS
   "lusha_search_sessions",     // Rodada #27: escrita via oracle-search-decisors com trace/session id; leitura via LushaIntelligenceView
+  "lead_scores",               // score de lead: leitura via supabase.from + RLS (useLeadScores); escrita via RPC SECURITY DEFINER
   "oracle_rate_limits",        // Rodada #27: gerido por edges Oracle; leitura admin via supabase.from + RLS
   "org_proxies",               // Rodada #27: leitura via useOrgProxies + RLS admin-only
   "org_retry_policies",        // Rodada #27: leitura/escrita via useResilienceComparison com RLS admin-only
