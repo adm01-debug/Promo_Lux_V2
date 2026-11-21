@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `03dd603f39` · branch `main` · 2026-11-21 14:21 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fe4139664b` · branch `main` · 2026-11-21 14:22 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1381,6 +1381,10 @@ _nenhum item encontrado_
   ```
   return Array.from(crypto.getRandomValues(new Uint8Array(8))) .map(b => b.toString(16).padStart(2, '0')) .join('');
   ```
+- **applyEmailTracking(basePublicUrl: string, recipientId: string, bodyPlain: string, secret: string,)** — `supabase/functions/_shared/tracking-links.ts`
+  ```
+  html: string; trackedCount: number
+  ```
 - **canTransitionScrapeJob(current: ScrapeJobStatus, event: string)** — `supabase/functions/_shared/domain/scrape-job-machine.ts`
   ```
   const state = ScrapeJobStateMachine.states[current]; if (!state) return false; return !!state.on[event];
@@ -1461,6 +1465,7 @@ _nenhum item encontrado_
 | `* - Base 15s, cap 600s, max 4 tentativas, jitter ±20%.` | `supabase/functions/_shared/hiker-client.ts` |
 | `const jitter = 1 + (rand() * 0.2 - 0.1);` | `supabase/functions/_shared/hiker-client.ts` |
 | `const jitter = 1 + (rand() * 0.4 - 0.2); // ±20%` | `supabase/functions/_shared/hiker-client.ts` |
+| `// As funções são 100% puras (recebem a base pública e o secret como` | `supabase/functions/_shared/tracking-links.ts` |
 | `// esm.sh em runtime Deno). Cobre 90% dos casos de scraping: title, headings,` | `supabase/functions/_shared/web-scrape/html-to-markdown.ts` |
 | `// eslint-disable-next-line no-control-regex -- intencional: detecta se o assunto é 100% ASCII (0-127)` | `supabase/functions/campaign-dispatch/index.ts` |
 | `// 30s, 60s, 2m, 4m, 8m (cap 15m) + jitter até 20%` | `supabase/functions/cnpj-enrich-worker/index.ts` |
@@ -1521,6 +1526,7 @@ _nenhum item encontrado_
 | `CLOSED_CACHE_TTL_MS` | `3000` | `supabase/functions/_shared/circuit-breaker.ts` |
 | `BASE` | `"https://api.leadcontact.ai/api/contact"` | `supabase/functions/_shared/leadcontact-client.ts` |
 | `EXT_ORIGIN` | `"chrome-extension://imhlnhlbiencamnbpigopiibddajimep"` | `supabase/functions/_shared/leadcontact-client.ts` |
+| `MAX_TRACKED_LINKS` | `50` | `supabase/functions/_shared/tracking-links.ts` |
 | `RETENTION_DAYS` | `90` | `supabase/functions/audit-logs-prune/index.ts` |
 | `MAX_ATTEMPTS` | `5` | `supabase/functions/auth-rate-limit/index.ts` |
 | `WINDOW_MINUTES` | `15` | `supabase/functions/auth-rate-limit/index.ts` |
@@ -2000,7 +2006,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1145 testes em 107 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1151 testes em 108 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2081,6 +2087,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/chaos.chi2.test.ts` | 6 | Chaos — χ² & colisões (Rodada #20) · χ² para rate=${rate} em ${N} tasks (erro relativo < 5%) · rate=0 absoluto (0 hits em 5.000) · rate=1 absoluto (5.000/5.000) … |
 | `supabase/functions/_shared/__tests__/chaos.test.ts` | 6 | shouldInjectChaos · é determinístico para o mesmo task_id · respeita rate=0 (nunca injeta) · respeita rate=1 (sempre injeta) … |
 | `supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts` | 6 | hashtags/mentions: unicode preservado, case lowercased, dedup · hashtags: extraídos do caption combinam com o campo  · hashtag(): tag do contexto entra como primeira hashtag sem duplicar · reply threads: parentCommentId resolvido em N níveis … |
+| `supabase/functions/_shared/__tests__/tracking-links.test.ts` | 6 | tracking-links · abre pixel com parâmetros assinados que o track-open aceita · gera link de click assinado para a URL destino · aplica pixel e reescreve links no corpo, preservando o texto original … |
 | `src/components/lux/__tests__/CompanyTable.integration.test.tsx` | 5 | CompanyTable — integração de virtualização com scroll · renderiza apenas uma janela de linhas, não a lista inteira · mostra os primeiros itens no topo e esconde os itens distantes · revela itens mais abaixo após rolar e recicla os do topo … |
 | `src/components/lux/__tests__/DataError.test.tsx` | 5 | DataError · renders default error message · renders custom error message · renders retry button when onRetry provided … |
 | `src/components/lux/__tests__/MapFilters.test.tsx` | 5 | MapFilters · renders search input and filter count · displays IPC score label with current value · calls onSearchChange when typing … |
@@ -2279,6 +2286,8 @@ _nenhum item encontrado_
 | somente service_role como webhook_deliveries). | `supabase/functions/_shared/rlsTableRegistry.ts` |
 | * Ambientes nos quais esta tabela ainda não existe ou deve ser ignorada no teste de isolamento. | `supabase/functions/_shared/rlsTableRegistry.ts` |
 | * Parte pura/síncrona da validação: protocolo, host literalmente proibido, e | `supabase/functions/_shared/ssrf-guard.ts` |
+| Limite defensivo do número de links reescritos por email (evita abuso/overhead). | `supabase/functions/_shared/tracking-links.ts` |
+| Se estourar o limite, mantém os links restantes originais (nunca quebra o email). | `supabase/functions/_shared/tracking-links.ts` |
 | tracking (ex.: campaign-dispatch, quando enviar emails reais) deve seguir: | `supabase/functions/_shared/tracking-signature.ts` |
 | * Simple State Machine for Business Workflows | `supabase/functions/_shared/domain/scrape-job-machine.ts` |
 | * Retorna true se a task deve receber injeção sintética de falha. | `supabase/functions/_shared/web-scrape/chaos.ts` |
@@ -2298,8 +2307,10 @@ _nenhum item encontrado_
 | Etapas de espera (wait/delay): apenas agenda a próxima ação e avança. | `supabase/functions/campaign-dispatch/index.ts` |
 | Etapa de e-mail: validação defensiva do endereço. | `supabase/functions/campaign-dispatch/index.ts` |
 | Seleção de variante A/B: apenas a etapa 0 decide (etapas seguintes | `supabase/functions/campaign-dispatch/index.ts` |
+| segredo está configurado. Senão, envia apenas texto simples (sem | `supabase/functions/campaign-dispatch/index.ts` |
 | Evento "sent" apenas na primeira mensagem da sequência (métrica de envio). | `supabase/functions/campaign-dispatch/index.ts` |
 | * Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */ | `supabase/functions/campaign-dispatch/index.ts` |
+| Fallback: continua enviando apenas texto simples (sem HTML/tracking). | `supabase/functions/campaign-dispatch/index.ts` |
 | apenas orquestra e retorna contadores agregados (sem PII). | `supabase/functions/circuit-breaker-alerts/index.ts` |
 | 3. Reserva slot no rate-limit atômico (`cnpj_reserve_rate_slot`). | `supabase/functions/cnpj-enrich/index.ts` |
 | 2. Rate-limit reserve | `supabase/functions/cnpj-enrich/index.ts` |

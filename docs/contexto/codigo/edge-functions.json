@@ -27,6 +27,7 @@
   "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
   "supabase/functions/_shared/__tests__/phone-br.test.ts",
   "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+  "supabase/functions/_shared/__tests__/tracking-links.test.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
   "supabase/functions/_shared/__tests__/web-scrape.test.ts",
   "supabase/functions/_shared/apify-fixtures.ts",
@@ -61,6 +62,7 @@
   "supabase/functions/_shared/schemas.ts",
   "supabase/functions/_shared/ssrf-guard.ts",
   "supabase/functions/_shared/tracing.ts",
+  "supabase/functions/_shared/tracking-links.ts",
   "supabase/functions/_shared/tracking-signature.ts",
   "supabase/functions/_shared/web-scrape/chaos.ts",
   "supabase/functions/_shared/web-scrape/heuristics.ts",
@@ -238,7 +240,7 @@
    "nome": "campaign-dispatch",
    "entrada": "supabase/functions/campaign-dispatch/index.ts",
    "arquivos": 1,
-   "linhas": 656,
+   "linhas": 716,
    "verify_jwt": true,
    "metodos": [
     "GET",
@@ -262,8 +264,10 @@
     "GOOGLE_OAUTH_CLIENT_SECRET",
     "MS_OAUTH_CLIENT_ID",
     "MS_OAUTH_CLIENT_SECRET",
+    "PUBLIC_SUPABASE_URL",
     "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
+    "SUPABASE_URL",
+    "TRACKING_SIGNING_SECRET"
    ],
    "buckets": [],
    "chama_edges": [],
@@ -273,7 +277,9 @@
     "login.microsoftonline.com",
     "oauth2.googleapis.com"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "tracking-links.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/CampaignsView.tsx"
    ],

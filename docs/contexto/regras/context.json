@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "03dd603f3929a71f9f67a3685a33c803755c2f2f",
+  "sha": "fe4139664b2da364cd48692a765ef56a0a05041b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 14:21 UTC",
-  "files_total": 1043,
-  "code_files": 869,
-  "code_lines": 124979
+  "generated_at": "2026-11-21 14:22 UTC",
+  "files_total": 1045,
+  "code_files": 871,
+  "code_lines": 125189
  },
  "version": "1.3.2",
- "facts_hash": "22f3460fed3f350f",
+ "facts_hash": "299fe7474eea92a0",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,7 +232,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 341,
+   ".ts": 343,
    ".tsx": 277,
    ".sql": 221,
    ".mjs": 20,
@@ -22418,8 +22418,10 @@
      "GOOGLE_OAUTH_CLIENT_SECRET",
      "MS_OAUTH_CLIENT_ID",
      "MS_OAUTH_CLIENT_SECRET",
+     "PUBLIC_SUPABASE_URL",
      "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
+     "SUPABASE_URL",
+     "TRACKING_SIGNING_SECRET"
     ],
     "external": [
      "https://gmail.googleapis.com/gmail/v1/users/me/messages/…",
@@ -25692,8 +25694,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 117,
-   "lines": 21316,
+   "files": 119,
+   "lines": 21526,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -25783,6 +25785,7 @@
     "schemas.ts: ScrapeJobConfigSchema, CreateScrapeJobSchema, ScoringCriteriaSchema, IPCConfigSchema",
     "ssrf-guard.ts: isPrivateOrReservedIPv4, isPrivateOrReservedIPv6, isDisallowedHostLiteral, UrlSafetyVerdict, checkUrlSyncPart, assertSafeOutboundUrl",
     "tracing.ts: generateTraceId, generateSpanId, getTraceparent, createTraceparent, parseTraceparent",
+    "tracking-links.ts: openTrackingUrl, clickTrackingUrl, applyEmailTracking",
     "tracking-signature.ts: signTrackingParams, verifyTrackingParams",
     "scrape-job-machine.ts: ScrapeJobStatus, ScrapeJobStateMachine, canTransitionScrapeJob, getNextScrapeJobStatus",
     "scoring.ts: CompanyData, IPCHittingCriteria, calculateIPCScore",
@@ -25840,6 +25843,7 @@
     "supabase/functions/_shared/schemas.ts",
     "supabase/functions/_shared/ssrf-guard.ts",
     "supabase/functions/_shared/tracing.ts",
+    "supabase/functions/_shared/tracking-links.ts",
     "supabase/functions/_shared/tracking-signature.ts",
     "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
     "supabase/functions/_shared/__tests__/apollo-fallback.test.ts",
@@ -25859,6 +25863,7 @@
     "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
     "supabase/functions/_shared/__tests__/phone-br.test.ts",
     "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+    "supabase/functions/_shared/__tests__/tracking-links.test.ts",
     "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
     "supabase/functions/_shared/__tests__/web-scrape.test.ts",
     "supabase/functions/_shared/domain/scrape-job-machine.ts",
@@ -25888,9 +25893,7 @@
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
-    "supabase/functions/instagram-connection-status/index.ts",
-    "supabase/functions/instagram-dlq-replay/index.ts",
-    "supabase/functions/instagram-enqueue/index.ts"
+    "supabase/functions/instagram-connection-status/index.ts"
    ]
   },
   {
@@ -28087,6 +28090,9 @@
    "PROD": [
     "src/main.tsx"
    ],
+   "PUBLIC_SUPABASE_URL": [
+    "supabase/functions/campaign-dispatch/index.ts"
+   ],
    "PY": [
     "scripts/ai-context/cenarios.mjs"
    ],
@@ -28311,6 +28317,7 @@
     "supabase/functions/workflow-engine/index.ts"
    ],
    "TRACKING_SIGNING_SECRET": [
+    "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/track-click/index.ts",
     "supabase/functions/track-open/index.ts"
    ],
@@ -31172,6 +31179,14 @@
     "text": "* Parte pura/síncrona da validação: protocolo, host literalmente proibido, e"
    },
    {
+    "file": "supabase/functions/_shared/tracking-links.ts",
+    "text": "Limite defensivo do número de links reescritos por email (evita abuso/overhead)."
+   },
+   {
+    "file": "supabase/functions/_shared/tracking-links.ts",
+    "text": "Se estourar o limite, mantém os links restantes originais (nunca quebra o email)."
+   },
+   {
     "file": "supabase/functions/_shared/tracking-signature.ts",
     "text": "tracking (ex.: campaign-dispatch, quando enviar emails reais) deve seguir:"
    },
@@ -31249,11 +31264,19 @@
    },
    {
     "file": "supabase/functions/campaign-dispatch/index.ts",
+    "text": "segredo está configurado. Senão, envia apenas texto simples (sem"
+   },
+   {
+    "file": "supabase/functions/campaign-dispatch/index.ts",
     "text": "Evento \"sent\" apenas na primeira mensagem da sequência (métrica de envio)."
    },
    {
     "file": "supabase/functions/campaign-dispatch/index.ts",
     "text": "* Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */"
+   },
+   {
+    "file": "supabase/functions/campaign-dispatch/index.ts",
+    "text": "Fallback: continua enviando apenas texto simples (sem HTML/tracking)."
    },
    {
     "file": "supabase/functions/circuit-breaker-alerts/index.ts",
@@ -35866,6 +35889,11 @@
     "file": "supabase/functions/_shared/leadcontact-client.ts",
     "name": "EXT_ORIGIN",
     "value": "\"chrome-extension://imhlnhlbiencamnbpigopiibddajimep\""
+   },
+   {
+    "file": "supabase/functions/_shared/tracking-links.ts",
+    "name": "MAX_TRACKED_LINKS",
+    "value": "50"
    },
    {
     "file": "supabase/functions/audit-logs-prune/index.ts",
@@ -40552,6 +40580,12 @@
     "body": "return Array.from(crypto.getRandomValues(new Uint8Array(8))) .map(b => b.toString(16).padStart(2, '0')) .join('');"
    },
    {
+    "file": "supabase/functions/_shared/tracking-links.ts",
+    "name": "applyEmailTracking",
+    "params": "basePublicUrl: string, recipientId: string, bodyPlain: string, secret: string,",
+    "body": "html: string; trackedCount: number"
+   },
+   {
     "file": "supabase/functions/_shared/domain/scrape-job-machine.ts",
     "name": "canTransitionScrapeJob",
     "params": "current: ScrapeJobStatus, event: string",
@@ -41116,6 +41150,10 @@
    {
     "file": "supabase/functions/_shared/hiker-client.ts",
     "line": "const jitter = 1 + (rand() * 0.4 - 0.2); // ±20%"
+   },
+   {
+    "file": "supabase/functions/_shared/tracking-links.ts",
+    "line": "// As funções são 100% puras (recebem a base pública e o secret como"
    },
    {
     "file": "supabase/functions/_shared/web-scrape/html-to-markdown.ts",
@@ -45562,6 +45600,30 @@
    {
     "file": "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
     "name": "retorna null para hostname com path/query"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    "name": "tracking-links"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    "name": "abre pixel com parâmetros assinados que o track-open aceita"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    "name": "gera link de click assinado para a URL destino"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    "name": "aplica pixel e reescreve links no corpo, preservando o texto original"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    "name": "não faz wrap de links que já são do domínio público (evita redirect recursivo)"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    "name": "respeita o limite de links reescritos"
    },
    {
     "file": "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
@@ -74800,6 +74862,36 @@
     }
    ]
   },
+  "supabase/functions/_shared/tracking-links.ts": {
+   "path": "supabase/functions/_shared/tracking-links.ts",
+   "lines": 93,
+   "exports": [
+    "function openTrackingUrl",
+    "function clickTrackingUrl",
+    "function applyEmailTracking"
+   ],
+   "params": [
+    {
+     "name": "MAX_TRACKED_LINKS",
+     "value": "50"
+    }
+   ],
+   "rule_comments": [
+    "Limite defensivo do número de links reescritos por email (evita abuso/overhead).",
+    "Se estourar o limite, mantém os links restantes originais (nunca quebra o email)."
+   ],
+   "doc": "Geração de links de tracking (pixel de open + links de click) para emails. O dispatch de campanhas (campaign-dispatch) envia os emails; para cada destinatário ele precisa: 1. Assinar o par (recipientId, url) com TRACKING_SIGNING_SECRET usando o contrato de _shared/tracking-signature.ts; 2. Montar a …",
+   "calc_fns": [
+    {
+     "name": "applyEmailTracking",
+     "params": "basePublicUrl: string, recipientId: string, bodyPlain: string, secret: string,",
+     "body": "html: string; trackedCount: number"
+    }
+   ],
+   "percents": [
+    "// As funções são 100% puras (recebem a base pública e o secret como"
+   ]
+  },
   "supabase/functions/_shared/tracking-signature.ts": {
    "path": "supabase/functions/_shared/tracking-signature.ts",
    "lines": 56,
@@ -75257,6 +75349,29 @@
     "retorna null para hostname com path/query"
    ]
   },
+  "supabase/functions/_shared/__tests__/tracking-links.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+   "lines": 57,
+   "is_test": true,
+   "params": [
+    {
+     "name": "BASE",
+     "value": "\"https://pttzwlbidamibjssqiqb.supabase.co\""
+    },
+    {
+     "name": "RECIPIENT",
+     "value": "\"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa\""
+    }
+   ],
+   "tests": [
+    "tracking-links",
+    "abre pixel com parâmetros assinados que o track-open aceita",
+    "gera link de click assinado para a URL destino",
+    "aplica pixel e reescreve links no corpo, preservando o texto original",
+    "não faz wrap de links que já são do domínio público (evita redirect recursivo)",
+    "respeita o limite de links reescritos"
+   ]
+  },
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts": {
    "path": "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
    "lines": 49,
@@ -75677,7 +75792,7 @@
   },
   "supabase/functions/campaign-dispatch/index.ts": {
    "path": "supabase/functions/campaign-dispatch/index.ts",
-   "lines": 656,
+   "lines": 716,
    "tables": [
     {
      "table": "campaigns",
@@ -75777,8 +75892,10 @@
     "GOOGLE_OAUTH_CLIENT_SECRET",
     "MS_OAUTH_CLIENT_ID",
     "MS_OAUTH_CLIENT_SECRET",
+    "PUBLIC_SUPABASE_URL",
     "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
+    "SUPABASE_URL",
+    "TRACKING_SIGNING_SECRET"
    ],
    "errors": [
     "Gmail send [${res.status}]: ${JSON.stringify(data)}",
@@ -75821,8 +75938,10 @@
     "Etapas de espera (wait/delay): apenas agenda a próxima ação e avança.",
     "Etapa de e-mail: validação defensiva do endereço.",
     "Seleção de variante A/B: apenas a etapa 0 decide (etapas seguintes",
+    "segredo está configurado. Senão, envia apenas texto simples (sem",
     "Evento \"sent\" apenas na primeira mensagem da sequência (métrica de envio).",
-    "* Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */"
+    "* Duração de uma etapa de espera em milissegundos (mínimo 1 minuto). */",
+    "Fallback: continua enviando apenas texto simples (sem HTML/tracking)."
    ],
    "doc": "Motor de envio de campanhas (Engagement Engine) Processa campaign_recipients pendentes/enfileirados de campanhas ativas, envia o e-mail da etapa atual usando a conta OAuth conectada da organização (Gmail/Outlook) e registra eventos via record_campaign_event. Isolamento multi-tenant: cada destinatári …",
    "temporal": [
@@ -81230,10 +81349,21 @@
   }
  },
  "git": {
-  "sha": "03dd603f3929a71f9f67a3685a33c803755c2f2f",
+  "sha": "fe4139664b2da364cd48692a765ef56a0a05041b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "fe41396",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "merge: feat(email): tracking de open/click assinado no envio de campanhas",
+    "files": [
+     "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+     "supabase/functions/_shared/tracking-links.ts",
+     "supabase/functions/campaign-dispatch/index.ts"
+    ]
+   },
    {
     "sha": "03dd603",
     "date": "2026-11-21",
@@ -81538,15 +81668,6 @@
      ".github/dependabot.yml",
      ".github/workflows/dependency-review.yml"
     ]
-   },
-   {
-    "sha": "fd9a59c",
-    "date": "2026-11-14",
-    "author": "adm01-debug",
-    "subject": "docs: auditoria técnica scorecard 22 dimensões (nota 8.1/10) (#40)",
-    "files": [
-     "docs/AUDITORIA_TECNICA_SCORECARD.md"
-    ]
    }
   ],
   "hot_files": [
@@ -81563,16 +81684,24 @@
     2
    ],
    [
-    "docs/AUDITORIA_TECNICA_SCORECARD.md",
-    2
-   ],
-   [
     ".github/workflows/dependency-review.yml",
     2
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
     2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/tracking-links.ts",
+    1
+   ],
+   [
+    "supabase/functions/campaign-dispatch/index.ts",
+    1
    ],
    [
     "docs/pendencias/_estado-itens-1-3.md",
@@ -81620,14 +81749,6 @@
    ],
    [
     "supabase/functions/lusha-search/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/oracle-cookies-preflight/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/oracle-enrich-contact/index.ts",
     1
    ]
   ]

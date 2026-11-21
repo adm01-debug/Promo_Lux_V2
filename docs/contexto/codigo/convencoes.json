@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (76)",
+   "co-localizado (__tests__) (77)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "merge: feat(email): tracking de open/click assinado no envio de campanhas",
    "merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico",
    "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)",
    "chore: adiciona backlog verificado e linha de base (#80)",
-   "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)",
-   "fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)"
+   "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)"
   ]
  },
  "pr_template": null,

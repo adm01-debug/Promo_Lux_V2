@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 121,
+ "total": 122,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 99
+  "unit": 100
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 76
+   "arquivos": 77
   },
   {
    "padrao": "e2e/",
@@ -1084,6 +1084,15 @@
    "casos": 21
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/tracking-links.test.ts",
+   "tipo": "unit",
+   "linhas": 57,
+   "testa": [
+    "supabase/functions/_shared/tracking-links.ts"
+   ],
+   "casos": 5
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
    "tipo": "unit",
    "linhas": 49,
@@ -1232,6 +1241,7 @@
   "supabase/functions/_shared/omkar-gmaps-config.ts": 1,
   "supabase/functions/_shared/phone-br.ts": 1,
   "supabase/functions/_shared/ssrf-guard.ts": 1,
+  "supabase/functions/_shared/tracking-links.ts": 1,
   "supabase/functions/_shared/tracking-signature.ts": 1,
   "supabase/functions/_shared/web-scrape/chaos.ts": 3,
   "supabase/functions/_shared/web-scrape/heuristics.ts": 1,

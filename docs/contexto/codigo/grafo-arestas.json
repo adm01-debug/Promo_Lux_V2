@@ -2156,6 +2156,12 @@
   "supabase/functions/_shared/safe-update.ts": [
    "supabase/functions/_shared/oracle-logger.ts"
   ],
+  "supabase/functions/_shared/tracking-links.ts": [
+   "supabase/functions/_shared/tracking-signature.ts"
+  ],
+  "supabase/functions/campaign-dispatch/index.ts": [
+   "supabase/functions/_shared/tracking-links.ts"
+  ],
   "supabase/functions/deliverability-check/index.ts": [
    "supabase/functions/_shared/dns-guard.ts"
   ],

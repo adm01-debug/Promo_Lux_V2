@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (618)",
+   "TypeScript (620)",
    "SQL (221)",
    "Markdown (80)",
    "JSON (38)",
@@ -625,6 +625,7 @@
    "LUSHA_DAILY_QUOTA",
    "MS_OAUTH_CLIENT_ID",
    "MS_OAUTH_CLIENT_SECRET",
+   "PUBLIC_SUPABASE_URL",
    "QA_INGEST_TOKEN",
    "SUPABASE_ANON_KEY",
    "SUPABASE_DB_URL",
@@ -768,6 +769,10 @@
     "arquivos": 3
    },
    {
+    "host": "empresa.com",
+    "arquivos": 3
+   },
+   {
     "host": "nominatim.openstreetmap.org",
     "arquivos": 3
    },
@@ -781,10 +786,6 @@
    },
    {
     "host": "dashboard-services.lusha.com",
-    "arquivos": 2
-   },
-   {
-    "host": "empresa.com",
     "arquivos": 2
    },
    {
@@ -865,6 +866,10 @@
    },
    {
     "host": "beta.io",
+    "arquivos": 1
+   },
+   {
+    "host": "blog.empresa.com",
     "arquivos": 1
    },
    {
@@ -1041,6 +1046,10 @@
    },
    {
     "host": "promobrindes.bitrix24.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "pttzwlbidamibjssqiqb.supabase.co",
     "arquivos": 1
    },
    {
