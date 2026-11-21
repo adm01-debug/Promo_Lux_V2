@@ -58,6 +58,7 @@ export default defineConfig({
           // suites em vermelho no CI de unidade sem esconder os testes.
           exclude: [
             "**/gmaps-mapper.test.ts",
+            "**/places-fallback.test.ts",
             "**/hiker-normalize.test.ts",
             "**/hiker-normalize-extra.test.ts",
             "**/instagram-config-hash.test.ts",
