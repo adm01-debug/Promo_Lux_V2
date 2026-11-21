@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ab467daf98faad40fb46dd18384bacca78314b91",
+  "commit": "99a180a5fe1719c0692dcc0ec8c570485cbac5f7",
   "branch": "main",
-  "data_commit": "2026-11-21T19:44:12-03:00",
+  "data_commit": "2026-11-21T20:02:02-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "99a180a",
+    "data": "2026-11-21",
+    "assunto": "fix(extracao): grava organization_id nos jobs criados via service_role (#107)"
+   },
    {
     "sha": "ab467da",
     "data": "2026-11-21",
@@ -126,11 +131,6 @@
     "sha": "03dd603",
     "data": "2026-11-21",
     "assunto": "merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico"
-   },
-   {
-    "sha": "b7178cd",
-    "data": "2026-11-21",
-    "assunto": "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)"
    }
   ],
   "arquivos_mudados_7d": 113,
@@ -176,6 +176,10 @@
     "mudancas": 4
    },
    {
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 4
+   },
+   {
     "pasta": ".agents/skills/promo-lux-v2",
     "mudancas": 3
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".github/workflows/inventario-estado-semanal.yml",
-    "mudancas": 3
-   },
-   {
-    "pasta": ".husky/pre-commit",
     "mudancas": 3
    }
   ],
@@ -219,6 +219,10 @@
    },
    {
     "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 4
    },
    {
@@ -262,10 +266,6 @@
     "mudancas": 3
    },
    {
-    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-    "mudancas": 3
-   },
-   {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 75
+    "commits": 76
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1051,
   "arquivos_codigo": 662,
-  "linhas_codigo": 113956,
+  "linhas_codigo": 113973,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 127,
-   "linhas": 22845
+   "linhas": 22862
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -642,7 +642,7 @@
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 824
+   "linhas": 841
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",

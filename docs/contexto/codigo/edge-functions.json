@@ -736,7 +736,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 824,
+   "linhas": 841,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -772,6 +772,7 @@
     "circuit-breaker.ts",
     "cron-auth.ts",
     "gmaps-mapper.ts",
+    "org-membership.ts",
     "places-fallback.ts",
     "schemas.ts",
     "scoring.ts",

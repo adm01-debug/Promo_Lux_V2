@@ -2249,6 +2249,7 @@
    "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/domain/ipc/scoring.ts",
    "supabase/functions/_shared/gmaps-mapper.ts",
+   "supabase/functions/_shared/org-membership.ts",
    "supabase/functions/_shared/places-fallback.ts",
    "supabase/functions/_shared/schemas.ts",
    "supabase/functions/_shared/tracing.ts"

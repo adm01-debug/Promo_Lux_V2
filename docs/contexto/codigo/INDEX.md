@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ab467daf98faad40fb46dd18384bacca78314b91` (2026-11-21T19:44:12-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `99a180a5fe1719c0692dcc0ec8c570485cbac5f7` (2026-11-21T20:02:02-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1051 |
 | arquivos_codigo | 662 |
-| linhas_codigo | 113956 |
+| linhas_codigo | 113973 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -241,7 +241,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6737 nós · 14539 arestas · 568 comunidades · grafo do commit `ab467daf`
+- 6737 nós · 14541 arestas · 568 comunidades · grafo do commit `99a180a5`
 - comunidades maiores: @tanstack/react-query (111), cn (108), react (105), snapshot.py (102), badge.tsx (99), ref_https (96), JobDetailsSheet.tsx (86), CompaniesView.tsx (81), Index.tsx (80), gerar.mjs (80), DlqHealthCard.tsx (77), ref_node_fs (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -253,6 +253,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - AGENTS.md (6)
 - supabase/config.toml (6)
 - .github/workflows/ci.yml (4)
+- supabase/functions/gmaps-proxy/index.ts (4)
 - .github/workflows/contexto.yml (3)
 - .github/workflows/db-migrations.yml (3)
 - .github/workflows/inventario-estado-semanal.yml (3)
@@ -261,7 +262,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/agentes/mapa-repo.md (3)
 - docs/prod-readiness.md (3)
 - scripts/ci/eslint-baseline.json (3)
-- src/App.tsx (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -355,6 +355,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `99a180a` fix(extracao): grava organization_id nos jobs criados via service_role (#107)
 - 2026-11-21 `ab467da` fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)
 - 2026-11-21 `ef039bf` fix: fecha RLS cross-tenant em dashboard_layouts (#105)
 - 2026-11-21 `8723328` fix: grant execute de refresh_org_scores para authenticated (#104)
@@ -369,7 +370,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `c229e3f` fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)
 - 2026-11-21 `5f0ccec` fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)
 - 2026-11-21 `cdb0c8b` fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)
-- 2026-11-21 `be2d500` fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
