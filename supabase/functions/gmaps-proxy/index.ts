@@ -42,6 +42,7 @@ import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/ci
 import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ipc/scoring.ts";
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
 import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
+import { fetchPlacesResults } from "../_shared/places-fallback.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -248,13 +249,19 @@ serve(async (req) => {
     if (action === "list" && req.method === "GET") {
       let externalJobs: Record<string, unknown>[] = [];
       let apiOnline = false;
+      // O fallback (Places API) mantem a extracao funcional sem o scraper
+      // externo. A UI precisa refletir isso: antes so o host morto contava e o
+      // painel mostrava "Offline" mesmo com a extracao funcionando.
+      const placesAvailable = Boolean(Deno.env.get("GOOGLE_MAPS_API_KEY"));
+      const CIRCUIT_OPEN = Symbol("gmaps-circuit-open");
       try {
         const isHealthy = await checkCircuitBreaker(supabase, "gmaps-api");
         if (!isHealthy) {
-          log.warn("circuit_breaker_open", { service: "gmaps-api" });
-          return new Response(JSON.stringify({ jobs: [], api_online: false, circuit_breaker: "open" }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+          // Circuito aberto so afeta a sincronizacao com o scraper externo.
+          // Retornar `jobs: []` aqui escondia os jobs do proprio usuario.
+          log.warn("circuit_breaker_open", { service: "gmaps-api", fallback: placesAvailable });
+          apiOnline = placesAvailable;
+          throw CIRCUIT_OPEN;
         }
 
         const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
@@ -306,8 +313,12 @@ serve(async (req) => {
           }
         }
       } catch (err) {
-        log.error("gmaps_api_list_error", { error: (err as Error).message });
-        await reportFailure(supabase, "gmaps-api");
+        if (err !== CIRCUIT_OPEN) {
+          log.error("gmaps_api_list_error", { error: (err as Error).message });
+          await reportFailure(supabase, "gmaps-api");
+        }
+        // Scraper externo indisponivel: a extracao continua via Places API.
+        if (placesAvailable) apiOnline = true;
       }
 
       const { data: dbJobs, error } = await supabase
@@ -476,6 +487,29 @@ serve(async (req) => {
         await reportFailure(supabase, "gmaps-api");
       }
 
+      // Fallback: o scraper externo nao devolveu external_id. Em vez de deixar
+      // o job pendurado para sempre (o sintoma historico: `api_online: false`
+      // e nenhum resultado), marca o job como concluido e o `sync-results`
+      // busca direto na Places API usando as keywords gravadas no `config`.
+      if (!externalId) {
+        const keywords = parsed.data.config.keywords ?? [];
+        if (Deno.env.get("GOOGLE_MAPS_API_KEY") && keywords.length) {
+          externalId = `places:${dbJob.id}`;
+          const fallbackResults = await fetchPlacesResults(
+            keywords,
+            20,
+            parsed.data.config.lang ?? "pt-BR",
+          );
+          const found = fallbackResults?.length ?? 0;
+          responseBody = { id: dbJob.id, external_id: externalId, status: "completed", fallback: "places_api", results_count: found };
+          await supabase
+            .from("scrape_jobs")
+            .update({ external_id: externalId, status: "completed", completed_at: new Date().toISOString() })
+            .eq("id", dbJob.id);
+          log.info("places_fallback_create", { job_id: dbJob.id, keywords, results: found });
+        }
+      }
+
       if (idempotencyKey) {
         await supabase.from("idempotency_keys").insert({
           user_id: userId,
@@ -547,29 +581,42 @@ serve(async (req) => {
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
 
       let results: RawGmapsRow[] = [];
+      const jobConfig = (job.config ?? {}) as { keywords?: string[]; lang?: string; max_results?: number };
+      const isPlacesJob = String(job.external_id).startsWith("places:");
       try {
-        // Tenta JSON primeiro (endpoint mais rico), fallback para CSV.
-        let res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download?format=json`, {
-          signal: AbortSignal.timeout(30000),
-        });
-        let isJson = res.ok && (res.headers.get("content-type") || "").includes("json");
-        if (!res.ok) {
-          res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+        if (isPlacesJob) {
+          // Job criado pelo fallback: o scraper externo nunca viu este job,
+          // entao os resultados tem que vir da Places API.
+          results = (await fetchPlacesResults(
+            jobConfig.keywords ?? [],
+            jobConfig.max_results ?? 20,
+            jobConfig.lang ?? "pt-BR",
+          )) ?? [];
+          if (!results.length) throw new Error("Places API returned no results");
+        } else {
+          // Tenta JSON primeiro (endpoint mais rico), fallback para CSV.
+          let res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download?format=json`, {
             signal: AbortSignal.timeout(30000),
           });
-          isJson = (res.headers.get("content-type") || "").includes("json");
-        }
-        if (res.ok) {
-          const text = await res.text();
-          if (isJson) {
-            try {
-              const parsed = JSON.parse(text);
-              results = Array.isArray(parsed) ? parsed as RawGmapsRow[] : [];
-            } catch {
+          let isJson = res.ok && (res.headers.get("content-type") || "").includes("json");
+          if (!res.ok) {
+            res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+              signal: AbortSignal.timeout(30000),
+            });
+            isJson = (res.headers.get("content-type") || "").includes("json");
+          }
+          if (res.ok) {
+            const text = await res.text();
+            if (isJson) {
+              try {
+                const parsed = JSON.parse(text);
+                results = Array.isArray(parsed) ? parsed as RawGmapsRow[] : [];
+              } catch {
+                results = parseCsv(text);
+              }
+            } else {
               results = parseCsv(text);
             }
-          } else {
-            results = parseCsv(text);
           }
         }
       } catch (err) {
