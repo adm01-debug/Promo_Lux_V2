@@ -4,6 +4,7 @@
 // e a recomendação (p95 × 1,3) ultrapassa a tolerância. Filas com `auto_tune=false`
 // são ignoradas. Toda alteração é registrada em `queue_sla_history` pelo trigger.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -34,14 +35,8 @@ function clampInt(value: unknown, min: number, max: number, fallback: number): n
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const apiKeyHeader = req.headers.get("apikey") ?? "";
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-  const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-  const authorized =
-    (serviceKey && (bearer === serviceKey || apiKeyHeader === serviceKey)) ||
-    (anonKey && (bearer === anonKey || apiKeyHeader === anonKey));
+  const authorized = isCronAuthorized(req, { allowAnon: true });
   if (!authorized) return json(401, { ok: false, error: "unauthorized" });
 
   const correlationId = crypto.randomUUID();

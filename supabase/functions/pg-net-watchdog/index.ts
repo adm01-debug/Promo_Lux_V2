@@ -2,6 +2,7 @@
 // - Advisory lock impede execuções concorrentes (idempotência sob overlap de cron).
 // - Dedup por cooldown (60 min) evita tempestade de notificações.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -15,9 +16,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   // Rodada #27: gate de service_role — evita invocação por anon.
-  const authHeader = req.headers.get("Authorization");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  if (!isCronAuthorized(req)) {
     return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
       status: 401,
       headers: { ...CORS, "Content-Type": "application/json" },

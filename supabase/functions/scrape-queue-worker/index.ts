@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 import {
   checkCircuitBreaker,
   reportFailure,
@@ -292,6 +293,13 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  if (!isCronAuthorized(req, { allowAnon: true })) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceKey);
@@ -317,7 +325,11 @@ Deno.serve(async (req) => {
 
     const claimed = (tasks ?? []) as QueueTask[];
     // Registra tamanho do lote — dispara backoff se vazio, reseta se houver trabalho.
-    await supabase.rpc("worker_report_batch", { _worker: WORKER_NAME, _size: claimed.length }).catch(() => {});
+    try {
+      await supabase.rpc("worker_report_batch", { _worker: WORKER_NAME, _size: claimed.length });
+    } catch (_e) {
+      log("warn", "worker_report_batch_failed");
+    }
     log("info", "batch_claimed", { count: claimed.length });
 
     // Circuit breaker: se o provedor está em outage (circuito aberto), NÃO
@@ -325,11 +337,15 @@ Deno.serve(async (req) => {
     const circuitClosed = await checkCircuitBreaker(supabase, CIRCUIT_SERVICE).catch(() => true);
     if (!circuitClosed && claimed.length > 0) {
       for (const t of claimed) {
-        await supabase.rpc("defer_scrape_task", {
-          _id: t.id,
-          _delay_secs: DEFER_DELAY_SECS,
-          _reason: "circuit_open",
-        }).catch(() => {});
+        try {
+          await supabase.rpc("defer_scrape_task", {
+            _id: t.id,
+            _delay_secs: DEFER_DELAY_SECS,
+            _reason: "circuit_open",
+          });
+        } catch (_e) {
+          log("warn", "defer_scrape_task_failed", { task_id: t.id });
+        }
         await audit(supabase, t, {
           _phase: "deferred",
           _status: "deferred",

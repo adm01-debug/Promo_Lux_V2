@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 /**
  * Expurga permanentemente registros na lixeira há mais de 30 dias (ADR-008).
@@ -14,8 +15,7 @@ Deno.serve(async (req) => {
   // isso, qualquer requisição não-autenticada na URL pública desta função
   // dispara uma exclusão permanente e irreversível de dados de todos os
   // usuários — a função não tinha NENHUMA checagem de autenticação.
-  const authHeader = req.headers.get("Authorization");
-  if (authHeader !== `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`) {
+  if (!isCronAuthorized(req)) {
     return new Response("Unauthorized", { status: 401 });
   }
 

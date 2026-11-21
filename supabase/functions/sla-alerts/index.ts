@@ -4,6 +4,7 @@
 // tamanho de amostra atinja min_sample, dispara alerta respeitando cooldown
 // por fila. Notificação vai para todos os admins.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -38,14 +39,8 @@ function json(status: number, body: unknown) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const apiKeyHeader = req.headers.get("apikey") ?? "";
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-  const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-  const authorized =
-    (serviceKey && (bearer === serviceKey || apiKeyHeader === serviceKey)) ||
-    (anonKey && (bearer === anonKey || apiKeyHeader === anonKey));
+  const authorized = isCronAuthorized(req, { allowAnon: true });
   if (!authorized) return json(401, { ok: false, error: "unauthorized" });
 
   try {
