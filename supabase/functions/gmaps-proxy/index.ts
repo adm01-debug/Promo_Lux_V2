@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 /**
  * Circuit Breaker State
@@ -112,6 +113,61 @@ const SyncResultsSchema = z.object({
 
 const ActionSchema = z.enum(["list", "create", "delete", "sync-results", "export"]);
 
+/**
+ * Sincronizacao agendada (cron 28 `sync-gmaps-jobs`): mesma acao `list` do
+ * fluxo autenticado, porem sem usuario. Escopo estrito -- apenas atualiza o
+ * status de jobs que JA existem no banco (casados por external_id). Nunca
+ * insere linha orfa sem user_id e nunca apaga nada.
+ */
+async function runAutoSync(corsHeaders: Record<string, string>): Promise<Response> {
+  const admin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+
+  let externalJobs: Record<string, unknown>[] = [];
+  let apiOnline = false;
+
+  try {
+    const res = await fetch(`${GMAPS_API_BASE}/jobs`, { signal: AbortSignal.timeout(8000) });
+    if (res.ok) {
+      externalJobs = await res.json();
+      apiOnline = true;
+      await reportSuccess(admin, "gmaps-api");
+    }
+  } catch (_err) {
+    await reportFailure(admin, "gmaps-api");
+  }
+
+  const VALID = ["pending", "running", "working", "completed", "failed", "cancelled"];
+  let updated = 0;
+
+  for (const job of externalJobs) {
+    const status = (job.Status as string) === "ok" ? "completed" : (job.Status as string);
+    if (!VALID.includes(status)) continue;
+
+    const { data: rows } = await admin
+      .from("scrape_jobs")
+      .select("id, status")
+      .eq("external_id", job.ID as string)
+      .eq("source", "gmaps");
+
+    for (const row of rows ?? []) {
+      if (row.status === status) continue;
+      await admin
+        .from("scrape_jobs")
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq("id", row.id);
+      updated++;
+    }
+  }
+
+  return new Response(
+    JSON.stringify({ ok: true, api_online: apiOnline, external: externalJobs.length, updated }),
+    { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  );
+}
+
 serve(async (req) => {
   const requestId = crypto.randomUUID();
   const traceparent = getTraceparent(req.headers);
@@ -144,8 +200,16 @@ serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-  // Validate JWT
+  // Invocacao por cron (cron 28 `sync-gmaps-jobs`, 1x/min): o cron nao tem
+  // usuario dono. Caminho dedicado, restrito a atualizar status de jobs ja
+  // existentes. Basta a credencial de cron valida — o front sempre manda JWT
+  // de usuario, entao nao ha ambiguidade.
   const authHeader = req.headers.get("Authorization");
+  if (isCronAuthorized(req, { allowAnon: true })) {
+    return await runAutoSync(corsHeaders);
+  }
+
+  // Validate JWT
   if (!authHeader?.startsWith("Bearer ")) {
     log.warn("auth_missing");
     return new Response(JSON.stringify({ error: "Unauthorized" }), {

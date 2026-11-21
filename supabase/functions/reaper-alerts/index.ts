@@ -3,8 +3,9 @@
 //   (a) as últimas `consecutive` execuções tiveram total_dead >= min_dead_per_run; OU
 //   (b) não houve execução do reaper nas últimas `no_run_hours` horas.
 // Respeita cooldown_hours entre alertas do mesmo motivo.
-// Requer service_role no header Authorization (padrão das crons deste projeto).
+// Autorizada por CRON_SERVICE_KEY/CRON_ANON_KEY (ver _shared/cron-auth.ts).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -36,17 +37,11 @@ function json(status: number, body: unknown) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
-  // Aceita invocação por service_role (chamadas internas) ou pelo apikey
-  // anon (padrão de agendamento pg_cron neste projeto). Efeito colateral é
+  // Aceita invocação por service_role (chamadas internas) ou pela anon key do
+  // cron (padrão de agendamento pg_cron neste projeto). Efeito colateral é
   // limitado: apenas leituras + inserts em history/notifications com cooldown.
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const apiKeyHeader = req.headers.get("apikey") ?? "";
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-  const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-  const authorized =
-    (serviceKey && (bearer === serviceKey || apiKeyHeader === serviceKey)) ||
-    (anonKey && (bearer === anonKey || apiKeyHeader === anonKey));
+  const authorized = isCronAuthorized(req, { allowAnon: true });
   if (!authorized) {
     return json(401, { ok: false, error: "unauthorized" });
   }

@@ -4,6 +4,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -96,9 +97,7 @@ Deno.serve(async (req) => {
   // verify_jwt no config.toml NAO protege esta funcao: a publishable key do
   // projeto e publica (vai no bundle do site) e satisfaz o gateway, entao
   // qualquer visitante disparava a fila de enriquecimento sob demanda.
-  const authHeader = req.headers.get("Authorization");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!serviceKey || authHeader !== `Bearer ${serviceKey}`) {
+  if (!isCronAuthorized(req)) {
     return new Response(
       JSON.stringify({ ok: false, error: "unauthorized" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },

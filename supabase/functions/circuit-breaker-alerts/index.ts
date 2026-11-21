@@ -13,6 +13,7 @@
  * apenas orquestra e retorna contadores agregados (sem PII).
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -55,8 +56,7 @@ Deno.serve(async (req) => {
   }
 
   // Rodada #27: gate de service_role para cron-only.
-  const authHeader = req.headers.get("Authorization");
-  if (authHeader !== `Bearer ${SERVICE_KEY}`) {
+  if (!isCronAuthorized(req)) {
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

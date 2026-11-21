@@ -15,6 +15,7 @@
 // { campaign_id } processa apenas aquela campanha (trigger manual).
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { applyEmailTracking } from "../_shared/tracking-links.ts";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -115,13 +116,12 @@ Deno.serve(async (req) => {
   }
 
   // Gate de auth (gap R27-CRIT-01): aceita apenas
-  //  - Bearer service_role (cron agendado `campaign-dispatch-10min` e
-  //    automação interna — mesmo padrão das outras cron functions), ou
+  //  - Credencial de cron (CRON_SERVICE_KEY) — cron `campaign-dispatch-10min`
+  //    e automação interna, ou
   //  - JWT de usuário autenticado (POST manual "Enviar agora" do front).
   // Sem header válido → 401. Bloqueia disparo anônimo de campanhas ativas.
   const authHeader = req.headers.get("Authorization");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const isServiceRole = !!serviceKey && authHeader === `Bearer ${serviceKey}`;
+  const isServiceRole = isCronAuthorized(req);
   let authedUserId: string | null = null;
   if (!isServiceRole && authHeader && req.method === "POST") {
     const userClient = createClient(
