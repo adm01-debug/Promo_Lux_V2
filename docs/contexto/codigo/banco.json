@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 219,
+ "migrations": 220,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -910,9 +910,33 @@
  ],
  "cron_jobs": [
   {
+   "nome": "campaign-dispatch-10min",
+   "agenda": "*/10 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "campaign-dispatch"
+  },
+  {
+   "nome": "campaign-dispatch-every-10min",
+   "agenda": "*/10 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "campaign-dispatch"
+  },
+  {
    "nome": "capture-db-health",
    "agenda": "*/5 * * * *",
    "migration": "20260712183806_e5a47f1b-5acb-4925-8862-6b201a553e15.sql"
+  },
+  {
+   "nome": "circuit-breaker-alerts-every-5min",
+   "agenda": "*/5 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "circuit-breaker-alerts"
+  },
+  {
+   "nome": "cnpj-enrich-worker-every-2min",
+   "agenda": "*/2 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "cnpj-enrich-worker"
   },
   {
    "nome": "daily-campaign-logs-retention",
@@ -925,9 +949,27 @@
    "migration": "20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql"
   },
   {
+   "nome": "dlq-alerts-15min",
+   "agenda": "*/15 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "dlq-alerts"
+  },
+  {
+   "nome": "email-poll-replies-5min",
+   "agenda": "*/5 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "email-poll-replies"
+  },
+  {
    "nome": "evaluate-partition-policies-daily",
    "agenda": "17 3 * * *",
    "migration": "20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql"
+  },
+  {
+   "nome": "latency-alerts-15min",
+   "agenda": "*/15 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "latency-alerts"
   },
   {
    "nome": "pg-net-snapshots-prune-weekly",
@@ -935,9 +977,75 @@
    "migration": "20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql"
   },
   {
+   "nome": "pg-net-watchdog-30m",
+   "agenda": "*/30 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "pg-net-watchdog"
+  },
+  {
+   "nome": "process-scrape-queue",
+   "agenda": "* * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "scrape-queue-worker"
+  },
+  {
+   "nome": "purge-soft-deleted-daily",
+   "agenda": "0 3 * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "purge-soft-deleted"
+  },
+  {
    "nome": "reap-stuck-queue-tasks",
    "agenda": "* * * * *",
    "migration": "20260723134028_4f3b5c29-1e04-4d63-95d1-2bb0f069e917.sql"
+  },
+  {
+   "nome": "reaper-alerts-30min",
+   "agenda": "*/30 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "reaper-alerts"
+  },
+  {
+   "nome": "retry-policy-tuner-daily",
+   "agenda": "0 3 * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "retry-policy-tuner"
+  },
+  {
+   "nome": "round18-dlq-alerts-15m",
+   "agenda": "*/15 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "dlq-alerts"
+  },
+  {
+   "nome": "sla-alerts-hourly",
+   "agenda": "7 * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "sla-alerts"
+  },
+  {
+   "nome": "sla-auto-tune-daily",
+   "agenda": "20 4 * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "sla-auto-tune"
+  },
+  {
+   "nome": "sync-gmaps-jobs",
+   "agenda": "* * * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "gmaps-proxy"
+  },
+  {
+   "nome": "vault-cookie-health-daily",
+   "agenda": "0 9 * * *",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "vault-cookie-health"
+  },
+  {
+   "nome": "web-scrape-worker-30s",
+   "agenda": "30 seconds",
+   "migration": "20261121190000_version_crons_with_vault_key.sql",
+   "chama_edge": "web-scrape-worker"
   }
  ],
  "buckets": [],

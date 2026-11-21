@@ -295,7 +295,7 @@
     "src/components/lux/CampaignsView.tsx"
    ],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },
@@ -325,8 +325,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -364,7 +364,7 @@
     "src/hooks/useCnpjEnrich.ts"
    ],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },
@@ -404,8 +404,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -502,8 +502,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -663,7 +663,7 @@
     "src/components/lux/integrations/EmailAccountsPanel.tsx"
    ],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },
@@ -775,7 +775,7 @@
     "src/lib/api/gmaps.ts"
    ],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },
@@ -1005,8 +1005,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1480,8 +1480,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1547,8 +1547,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1611,8 +1611,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1642,8 +1642,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1731,8 +1731,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1765,8 +1765,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1800,8 +1800,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1926,7 +1926,7 @@
     "src/components/lux/monitoring/VaultCookiesPanel.tsx"
    ],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },
@@ -2095,8 +2095,8 @@
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
    "testes": 0
   },
   {

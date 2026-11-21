@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
+  "sha": "7e2e6d28ebd1252e6ff45cb0752d9b8ac4d31fc4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 19:14 UTC",
-  "files_total": 1051,
-  "code_files": 877,
-  "code_lines": 125728
+  "generated_at": "2026-11-21 19:19 UTC",
+  "files_total": 1052,
+  "code_files": 878,
+  "code_lines": 125848
  },
  "version": "1.3.2",
- "facts_hash": "7ecb41acdea002b8",
+ "facts_hash": "48bfe0299f9cca1b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   "languages": {
    ".ts": 347,
    ".tsx": 277,
-   ".sql": 223,
+   ".sql": 224,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -17959,6 +17959,7 @@
    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+   "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -26161,8 +26162,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 219,
-   "lines": 12707,
+   "files": 220,
+   "lines": 12827,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -55467,7 +55468,8 @@
    "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql",
    "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql",
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
-   "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+   "supabase/migrations/20261121190000_version_crons_with_vault_key.sql"
   ],
   "security_definer_fns": [
    "accept_org_invite",
@@ -82113,13 +82115,27 @@
     "RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');"
    ],
    "uses_service_role": true
+  },
+  "supabase/migrations/20261121190000_version_crons_with_vault_key.sql": {
+   "path": "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
+   "lines": 120,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
+  "sha": "7e2e6d28ebd1252e6ff45cb0752d9b8ac4d31fc4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "7e2e6d2",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)",
+    "files": [
+     "supabase/migrations/20261121190000_version_crons_with_vault_key.sql"
+    ]
+   },
    {
     "sha": "c229e3f",
     "date": "2026-11-21",
@@ -82445,24 +82461,15 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "906b862",
-    "date": "2026-11-19",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)",
-    "files": [
-     "package-lock.json"
-    ]
    }
   ],
   "hot_files": [
    [
-    "package-lock.json",
-    7
+    "package.json",
+    6
    ],
    [
-    "package.json",
+    "package-lock.json",
     6
    ],
    [
@@ -82498,6 +82505,10 @@
     2
    ],
    [
+    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
+    1
+   ],
+   [
     "supabase/functions/email-poll-replies/index.ts",
     1
    ],
@@ -82531,10 +82542,6 @@
    ],
    [
     "supabase/functions/pg-net-watchdog/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/purge-soft-deleted/index.ts",
     1
    ]
   ]

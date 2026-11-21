@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)",
    "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)",
    "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)",
    "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)",
-   "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)",
-   "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)"
+   "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)"
   ]
  },
  "pr_template": null,

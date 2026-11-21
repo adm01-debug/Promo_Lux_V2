@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
+  "commit": "7e2e6d28ebd1252e6ff45cb0752d9b8ac4d31fc4",
   "branch": "main",
-  "data_commit": "2026-11-21T16:14:05-03:00",
+  "data_commit": "2026-11-21T16:19:02-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7e2e6d2",
+    "data": "2026-11-21",
+    "assunto": "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)"
+   },
    {
     "sha": "c229e3f",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "5392988",
     "data": "2026-11-20",
     "assunto": "feat(deps): bump vite 6 para 8.3.8 (major) e corrige manualChunks para API do vite 8 (#71)"
-   },
-   {
-    "sha": "c97523a",
-    "data": "2026-11-20",
-    "assunto": "fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)"
    }
   ],
-  "arquivos_mudados_7d": 77,
+  "arquivos_mudados_7d": 78,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 64
+    "commits": 65
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1032,
+  "arquivos_total": 1033,
   "arquivos_codigo": 650,
   "linhas_codigo": 111200,
   "rotas": 10,
@@ -322,8 +322,8 @@
   "hooks": 78,
   "edge_functions": 58,
   "tabelas": 97,
-  "migrations": 219,
-  "cron_jobs": 6,
+  "migrations": 220,
+  "cron_jobs": 24,
   "testes": 124,
   "workflows": 9,
   "scripts": 49,
@@ -752,10 +752,7 @@
   "edges_orfas": [
    "api-latency-alerts",
    "audit-logs-prune",
-   "circuit-breaker-alerts",
-   "cnpj-enrich-worker",
    "deliverability-check",
-   "dlq-alerts",
    "email-verify",
    "gmaps-places-search",
    "health",
@@ -763,21 +760,12 @@
    "instagram-enqueue",
    "instagram-worker",
    "instagram-worker-health",
-   "latency-alerts",
    "lusha-reveal",
-   "pg-net-watchdog",
-   "purge-soft-deleted",
-   "reaper-alerts",
-   "retry-policy-tuner",
-   "scrape-queue-worker",
-   "sla-alerts",
-   "sla-auto-tune",
    "system-recovery-status",
    "web-dlq-replay",
    "web-scrape-enqueue",
    "web-scrape-extract",
-   "web-scrape-status",
-   "web-scrape-worker"
+   "web-scrape-status"
   ],
   "edges_chamadas_sem_pasta": [],
   "tabelas_sem_rls": [],

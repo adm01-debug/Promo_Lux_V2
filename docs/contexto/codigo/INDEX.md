@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c229e3f35f4c302fb524e4993a0a59c38d501b7f` (2026-11-21T16:14:05-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7e2e6d28ebd1252e6ff45cb0752d9b8ac4d31fc4` (2026-11-21T16:19:02-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (624), SQL (223), Markdown (80), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
+- linguagens: TypeScript (624), SQL (224), Markdown (80), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1032 |
+| arquivos_total | 1033 |
 | arquivos_codigo | 650 |
 | linhas_codigo | 111200 |
 | rotas | 10 |
@@ -46,8 +46,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 78 |
 | edge_functions | 58 |
 | tabelas | 97 |
-| migrations | 219 |
-| cron_jobs | 6 |
+| migrations | 220 |
+| cron_jobs | 24 |
 | testes | 124 |
 | workflows | 9 |
 | scripts | 49 |
@@ -124,27 +124,27 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `api-latency-alerts` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `audit-logs-prune` — tabelas: api_request_logs, audit_logs, email_sync_log, health_checks; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `auth-rate-limit` — tabelas: auth_rate_limits; chamada por 1 arquivo(s) do front
-- `campaign-dispatch` — tabelas: campaign_messages, campaign_recipients, campaigns, email_accounts, email_suppressions; chamada por 1 arquivo(s) do front
-- `circuit-breaker-alerts` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `cnpj-enrich` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue; chamada por 1 arquivo(s) do front
-- `cnpj-enrich-worker` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `campaign-dispatch` — tabelas: campaign_messages, campaign_recipients, campaigns, email_accounts, email_suppressions; chamada por 1 arquivo(s) do front, por SQL/cron
+- `circuit-breaker-alerts` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
+- `cnpj-enrich` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue; chamada por 1 arquivo(s) do front, por SQL/cron
+- `cnpj-enrich-worker` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue; chamada por 0 arquivo(s) do front, por SQL/cron
 - `cnpj-settings-status` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue, cnpj_enrich_rate_state; chamada por 1 arquivo(s) do front
 - `deliverability-check` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `dlq-alerts` — tabelas: dlq_alert_history, dlq_alert_settings, dlq_health_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `dlq-alerts` — tabelas: dlq_alert_history, dlq_alert_settings, dlq_health_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front, por SQL/cron
 - `email-oauth-callback` (verify_jwt=false) — tabelas: email_accounts; chamada por 1 arquivo(s) do front
 - `email-oauth-connect` — tabelas: -; chamada por 2 arquivo(s) do front
 - `email-oauth-disconnect` — tabelas: audit_logs, email_accounts; chamada por 1 arquivo(s) do front
-- `email-poll-replies` — tabelas: email_accounts, email_sync_log; chamada por 1 arquivo(s) do front
+- `email-poll-replies` — tabelas: email_accounts, email_sync_log; chamada por 1 arquivo(s) do front, por SQL/cron
 - `email-verify` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `gmaps-places-search` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `gmaps-proxy` — tabelas: companies, idempotency_keys, ipc_config, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front
+- `gmaps-proxy` — tabelas: companies, idempotency_keys, ipc_config, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front, por SQL/cron
 - `health` — tabelas: health_checks, organizations; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-connection-status` — tabelas: -; chamada por 1 arquivo(s) do front
 - `instagram-dlq-replay` — tabelas: organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-enqueue` — tabelas: instagram_scrape_queue, organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-worker` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue, instagram_scrape_results; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-worker-health` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `latency-alerts` — tabelas: api_latency_alert_history, api_latency_alert_settings, api_latency_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `latency-alerts` — tabelas: api_latency_alert_history, api_latency_alert_settings, api_latency_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front, por SQL/cron
 - `lusha-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front
 - `lusha-decision-makers` — tabelas: lusha_contacts, organization_members; chamada por 1 arquivo(s) do front
 - `lusha-reveal` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -156,35 +156,53 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `oracle-push-bitrix` — tabelas: lusha_contacts, lusha_search_sessions; chamada por 1 arquivo(s) do front
 - `oracle-search-decisors` — tabelas: companies, lusha_contacts, lusha_search_sessions; chamada por 1 arquivo(s) do front
 - `org-violation-alerts` — tabelas: notifications, org_violation_alerts, organization_members, webhook_deliveries, webhooks; chamada por 1 arquivo(s) do front
-- `pg-net-watchdog` — tabelas: notifications, pg_net_health_snapshots, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `pg-net-watchdog` — tabelas: notifications, pg_net_health_snapshots, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `public-api` (verify_jwt=false) — tabelas: api_keys, api_request_logs; chamada por 1 arquivo(s) do front
-- `purge-soft-deleted` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `purge-soft-deleted` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
 - `qa-ingest-run` (verify_jwt=false) — tabelas: qa_test_runs; chamada por 1 arquivo(s) do front
-- `reaper-alerts` — tabelas: notifications, qa_reaper_runs, reaper_alert_history, reaper_alert_settings, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `retry-policy-tuner` — tabelas: automation_execution_logs, retry_policy_advisories, web_scrape_queue; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `reaper-alerts` — tabelas: notifications, qa_reaper_runs, reaper_alert_history, reaper_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
+- `retry-policy-tuner` — tabelas: automation_execution_logs, retry_policy_advisories, web_scrape_queue; chamada por 0 arquivo(s) do front, por SQL/cron
 - `rls-tests` — tabelas: audit_logs, companies, organization_members, organizations, profiles, workflows; chamada por 1 arquivo(s) do front
-- `scrape-queue-worker` — tabelas: feature_flags, scrape_jobs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `sla-alerts` — tabelas: notifications, sla_alert_history, sla_alert_settings, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `sla-auto-tune` — tabelas: notifications, organization_members, sla_autotune_runs, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `scrape-queue-worker` — tabelas: feature_flags, scrape_jobs; chamada por 0 arquivo(s) do front, por SQL/cron
+- `sla-alerts` — tabelas: notifications, sla_alert_history, sla_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
+- `sla-auto-tune` — tabelas: notifications, organization_members, sla_autotune_runs, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `system-recovery-status` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `track-click` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `track-open` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
-- `vault-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front
+- `vault-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front, por SQL/cron
 - `web-dlq-replay` — tabelas: organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `web-scrape-enqueue` — tabelas: organization_members, web_scrape_queue; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `web-scrape-extract` — tabelas: feature_flags, web_scrape_queue, web_scrape_results; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `web-scrape-status` — tabelas: web_scrape_queue, web_scrape_results; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `web-scrape-worker` — tabelas: automation_execution_logs, feature_flags, robots_cache, web_scrape_results; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `web-scrape-worker` — tabelas: automation_execution_logs, feature_flags, robots_cache, web_scrape_results; chamada por 0 arquivo(s) do front, por SQL/cron
 - `webhook-dispatcher` — tabelas: webhook_deliveries, webhooks; chamada por 1 arquivo(s) do front
 - `workflow-engine` — tabelas: audit_logs, automation_alerts, automation_steps, companies, ipc_config, organization_members, scrape_jobs, scrape_results, workflow_runs, workflows; chamada por 1 arquivo(s) do front
 
 ## Cron jobs (pg_cron / vercel)
+- `campaign-dispatch-10min` */10 * * * * → edge campaign-dispatch (20261121190000_version_crons_with_vault_key.sql)
+- `campaign-dispatch-every-10min` */10 * * * * → edge campaign-dispatch (20261121190000_version_crons_with_vault_key.sql)
 - `capture-db-health` */5 * * * * (20260712183806_e5a47f1b-5acb-4925-8862-6b201a553e15.sql)
+- `circuit-breaker-alerts-every-5min` */5 * * * * → edge circuit-breaker-alerts (20261121190000_version_crons_with_vault_key.sql)
+- `cnpj-enrich-worker-every-2min` */2 * * * * → edge cnpj-enrich-worker (20261121190000_version_crons_with_vault_key.sql)
 - `daily-campaign-logs-retention` 30 3 * * * (20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql)
 - `daily-log-retention` 15 3 * * * (20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql)
+- `dlq-alerts-15min` */15 * * * * → edge dlq-alerts (20261121190000_version_crons_with_vault_key.sql)
+- `email-poll-replies-5min` */5 * * * * → edge email-poll-replies (20261121190000_version_crons_with_vault_key.sql)
 - `evaluate-partition-policies-daily` 17 3 * * * (20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql)
+- `latency-alerts-15min` */15 * * * * → edge latency-alerts (20261121190000_version_crons_with_vault_key.sql)
 - `pg-net-snapshots-prune-weekly` 0 3 * * 0 (20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql)
+- `pg-net-watchdog-30m` */30 * * * * → edge pg-net-watchdog (20261121190000_version_crons_with_vault_key.sql)
+- `process-scrape-queue` * * * * * → edge scrape-queue-worker (20261121190000_version_crons_with_vault_key.sql)
+- `purge-soft-deleted-daily` 0 3 * * * → edge purge-soft-deleted (20261121190000_version_crons_with_vault_key.sql)
 - `reap-stuck-queue-tasks` * * * * * (20260723134028_4f3b5c29-1e04-4d63-95d1-2bb0f069e917.sql)
+- `reaper-alerts-30min` */30 * * * * → edge reaper-alerts (20261121190000_version_crons_with_vault_key.sql)
+- `retry-policy-tuner-daily` 0 3 * * * → edge retry-policy-tuner (20261121190000_version_crons_with_vault_key.sql)
+- `round18-dlq-alerts-15m` */15 * * * * → edge dlq-alerts (20261121190000_version_crons_with_vault_key.sql)
+- `sla-alerts-hourly` 7 * * * * → edge sla-alerts (20261121190000_version_crons_with_vault_key.sql)
+- `sla-auto-tune-daily` 20 4 * * * → edge sla-auto-tune (20261121190000_version_crons_with_vault_key.sql)
+- `sync-gmaps-jobs` * * * * * → edge gmaps-proxy (20261121190000_version_crons_with_vault_key.sql)
+- `vault-cookie-health-daily` 0 9 * * * → edge vault-cookie-health (20261121190000_version_crons_with_vault_key.sql)
+- `web-scrape-worker-30s` 30 seconds → edge web-scrape-worker (20261121190000_version_crons_with_vault_key.sql)
 
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
@@ -202,7 +220,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 0
-- edges_orfas: 28 — ex.: api-latency-alerts, audit-logs-prune, circuit-breaker-alerts
+- edges_orfas: 16 — ex.: api-latency-alerts, audit-logs-prune, deliverability-check
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 0
 - tabelas_usadas_sem_definicao: 0
@@ -216,7 +234,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6583 nós · 14179 arestas · 578 comunidades · grafo do commit `c229e3f3`
+- 6584 nós · 14179 arestas · 579 comunidades · grafo do commit `7e2e6d28`
 - comunidades maiores: Monitoring.tsx (158), react (139), @tanstack/react-query (135), snapshot.py (102), cn (99), OAuthSandboxPanel.tsx (90), gerar.mjs (80), generate.py (71), EmailAccountsPanel.tsx (69), dependencies (65), campaign-dispatch/index.ts (64), CommandPalette.tsx (61)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -329,6 +347,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `7e2e6d2` feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)
 - 2026-11-21 `c229e3f` fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)
 - 2026-11-21 `5f0ccec` fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)
 - 2026-11-21 `cdb0c8b` fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)
@@ -343,7 +362,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `fe41396` merge: feat(email): tracking de open/click assinado no envio de campanhas
 - 2026-11-21 `03dd603` merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico
 - 2026-11-21 `b7178cd` merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)
-- 2026-11-20 `a37f319` chore: adiciona backlog verificado e linha de base (#80)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
