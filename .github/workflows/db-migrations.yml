@@ -23,11 +23,14 @@ on:
   pull_request:
     paths:
       - 'supabase/migrations/**'
+      - 'scripts/check-migration-drift.sh'
+      - 'scripts/check-migration-target.sh'
       - '.github/workflows/db-migrations.yml'
   push:
     branches: [main, master]
     paths:
       - 'supabase/migrations/**'
+      - 'scripts/check-migration-drift.sh'
   workflow_dispatch:
     inputs:
       environment:
@@ -116,6 +119,14 @@ jobs:
       - name: Link no projeto alvo
         run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
 
+      - name: Guarda de drift (migration no repo que nao chegou ao banco)
+        # Informativo aqui: em PR o alvo e staging, que so recebe migration via
+        # dispatch manual. Bloquear tornaria todo PR vermelho por um estado
+        # legitimo. A assercao estrita roda no job `apply`, depois do push.
+        env:
+          STRICT: '0'
+        run: bash scripts/check-migration-drift.sh
+
       - name: Dry-run (nada é aplicado aqui)
         run: |
           echo "▶ Migrations pendentes em $SUPABASE_PROJECT_REF:"
@@ -159,3 +170,8 @@ jobs:
 
       - name: Estado final do histórico
         run: supabase migration list --linked
+
+      - name: Confere que o push realmente aplicou tudo
+        # Guarda que faltava: o job apply ja reportou success deixando migrations
+        # sem aplicar. Falha se qualquer .sql do repo ficar de fora do historico.
+        run: bash scripts/check-migration-drift.sh
