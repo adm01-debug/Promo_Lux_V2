@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "04bf64700ed01b00c46deffc2d56c58333d3f5d2",
+  "sha": "be2d500158ec3c96c2dbf465c1ea9d3537a29a90",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 17:13 UTC",
+  "generated_at": "2026-11-21 17:48 UTC",
   "files_total": 1049,
   "code_files": 875,
   "code_lines": 125505
@@ -81969,10 +81969,19 @@
   }
  },
  "git": {
-  "sha": "04bf64700ed01b00c46deffc2d56c58333d3f5d2",
+  "sha": "be2d500158ec3c96c2dbf465c1ea9d3537a29a90",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "be2d500",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)",
+    "files": [
+     ".github/workflows/edge-functions-deploy.yml"
+    ]
+   },
    {
     "sha": "04bf647",
     "date": "2026-11-21",
@@ -82282,25 +82291,20 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "11f8576",
-    "date": "2026-11-19",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)",
-    "files": [
-     "package-lock.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    11
+    10
    ],
    [
     "package.json",
     7
+   ],
+   [
+    ".github/workflows/edge-functions-deploy.yml",
+    2
    ],
    [
     "supabase/config.toml",
@@ -82368,10 +82372,6 @@
    ],
    [
     "src/hooks/useLoginForm.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/__tests__/tracking-links.test.ts",
     1
    ]
   ]
