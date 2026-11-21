@@ -122,7 +122,7 @@
    "hooks_exportados": [
     "useAuth"
    ],
-   "linhas": 19,
+   "linhas": 27,
    "dominio": "contexts",
    "tabelas": [],
    "rpcs": [],
@@ -131,7 +131,7 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 30,
+   "usado_por": 31,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
@@ -143,6 +143,7 @@
     "src/components/lux/OrganizationsView.tsx",
     "src/components/lux/ScrapeResultsView.tsx",
     "src/components/lux/SettingsView.tsx",
+    "src/components/lux/auth/LoginCard.tsx",
     "src/components/lux/integrations/EmailAccountsPanel.tsx",
     "src/components/lux/lusha/OracleV2Panel.tsx",
     "src/contexts/AuthContext.tsx",
@@ -161,8 +162,7 @@
     "src/hooks/useTaskReminders.ts",
     "src/hooks/useWebhooks.ts",
     "src/pages/AcceptInvite.tsx",
-    "src/pages/Index.tsx",
-    "src/pages/Monitoring.tsx"
+    "src/pages/Index.tsx"
    ],
    "coberto_por_testes": 1
   },
@@ -1114,7 +1114,7 @@
    "hooks_exportados": [
     "useLoginForm"
    ],
-   "linhas": 186,
+   "linhas": 185,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],

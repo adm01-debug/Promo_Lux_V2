@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "fe4139664b2da364cd48692a765ef56a0a05041b",
+  "commit": "50782f3fae63015fa7162e9a7ee627c24aa881f2",
   "branch": "main",
-  "data_commit": "2026-11-21T11:21:30-03:00",
+  "data_commit": "2026-11-21T11:24:16-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "50782f3",
+    "data": "2026-11-21",
+    "assunto": "merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo"
+   },
    {
     "sha": "fe41396",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "99fb844",
     "data": "2026-11-19",
     "assunto": "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)"
-   },
-   {
-    "sha": "b174608",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps): bump source-map-js from 1.2.1 to 1.2.4 (#58)"
    }
   ],
-  "arquivos_mudados_7d": 51,
+  "arquivos_mudados_7d": 55,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -160,11 +160,11 @@
     "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 4
+    "pasta": "src/components/lux",
+    "mudancas": 5
    },
    {
-    "pasta": "src/components/lux",
+    "pasta": ".github/workflows/ci.yml",
     "mudancas": 4
    },
    {
@@ -250,6 +250,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "src/App.tsx",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "inventario/estado/edges.json",
     "mudancas": 2
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 53
+    "commits": 54
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1026,
   "arquivos_codigo": 646,
-  "linhas_codigo": 110768,
+  "linhas_codigo": 110832,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -548,19 +548,19 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 317
+   "linhas": 321
   },
   "src/components": {
    "arquivos": 285,
-   "linhas": 45395
+   "linhas": 45413
   },
   "src/contexts": {
    "arquivos": 7,
-   "linhas": 280
+   "linhas": 323
   },
   "src/hooks": {
    "arquivos": 84,
-   "linhas": 9232
+   "linhas": 9231
   },
   "src/integrations": {
    "arquivos": 10,
@@ -796,7 +796,6 @@
   "rpcs_sem_definicao": [],
   "componentes_orfaos": [
    "src/components/auth/MFAEnroll.tsx",
-   "src/components/auth/MFAVerify.tsx",
    "src/components/lux/LuxImage.tsx",
    "src/components/NavLink.tsx",
    "src/components/ui/accordion.tsx",

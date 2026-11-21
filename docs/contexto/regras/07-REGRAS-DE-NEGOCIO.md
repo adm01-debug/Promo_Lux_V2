@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fe4139664b` · branch `main` · 2026-11-21 14:22 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `50782f3fae` · branch `main` · 2026-11-21 14:24 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1280,6 +1280,10 @@ _nenhum item encontrado_
 - **copyGenerated()** — `src/components/lux/settings/RLSDiscoveryView.tsx`
   ```
   try { await navigator.clipboard.writeText(generatedSnippet); toast({ title: "Payload copiado", description: `Cole em RLS_TABLES para ${genTable}` }); } catch { toast({ variant: "destructive", title: "Falha ao copiar" }); }
+  ```
+- **computeMfaRequired()** — `src/contexts/AuthContext.tsx`
+  ```
+  try { const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel(); if (error || !data) return false; const { currentLevel, nextLevel } = data; return nextLevel === "aal2" && currentLevel !== "aal2"; } catch { return false; }
   ```
 - **computeBitrixReadiness(bitrixCompanyId: string, bitrixUserId: string,)** — `src/hooks/oracleV2Helpers.ts`
   ```

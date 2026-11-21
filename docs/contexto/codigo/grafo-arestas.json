@@ -660,6 +660,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/auth/LoginCard.tsx": [
+   "src/components/auth/MFAVerify.tsx",
    "src/components/lux/auth/AuthLogo.tsx",
    "src/components/lux/auth/EmailInput.tsx",
    "src/components/lux/auth/ForgotPasswordOverlay.tsx",
@@ -669,7 +670,8 @@
    "src/components/lux/auth/RateLimitWarning.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/separator.tsx",
-   "src/components/ui/tabs.tsx"
+   "src/components/ui/tabs.tsx",
+   "src/contexts/auth-context.ts"
   ],
   "src/components/lux/auth/PasswordInput.tsx": [
    "src/components/ui/input.tsx",

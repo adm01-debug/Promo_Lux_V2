@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 524,
- "arestas": 1533,
+ "arestas": 1535,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -42,7 +42,7 @@
   },
   {
    "arquivo": "src/contexts/auth-context.ts",
-   "importado_por": 31
+   "importado_por": 32
   },
   {
    "arquivo": "src/components/ui/tooltip.tsx",
@@ -213,7 +213,6 @@
   "public/sw.js",
   "src/components/NavLink.tsx",
   "src/components/auth/MFAEnroll.tsx",
-  "src/components/auth/MFAVerify.tsx",
   "src/components/automation/WorkflowEditor.tsx",
   "src/components/lux/LuxImage.tsx",
   "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
@@ -251,7 +250,7 @@
   },
   {
    "modulo": "components/lux",
-   "depende_de": 10,
+   "depende_de": 11,
    "importado_por": 2
   },
   {
@@ -287,7 +286,7 @@
   {
    "modulo": "components/auth",
    "depende_de": 2,
-   "importado_por": 0
+   "importado_por": 1
   },
   {
    "modulo": "integrations/lovable",

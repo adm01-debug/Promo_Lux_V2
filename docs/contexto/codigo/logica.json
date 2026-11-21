@@ -274,7 +274,7 @@
     "useAuth"
    ],
    "export_default": null,
-   "linhas": 19,
+   "linhas": 27,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -286,7 +286,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 30,
+   "usado_por": 31,
    "usado_por_modulos": [
     "components/lux",
     "contexts",

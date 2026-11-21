@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "total": 241,
- "orfaos": 20,
+ "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
    "src/components/lux/layout/Sidebar.tsx",
@@ -20,7 +20,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 317,
+   "linhas": 321,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -61,8 +61,8 @@
    ],
    "tabelas": [],
    "edges": [],
-   "usado_por": 0,
-   "orfao": true
+   "usado_por": 1,
+   "orfao": false
   },
   {
    "arquivo": "src/components/lux/ActivityFeed.tsx",
@@ -326,9 +326,11 @@
     "LoginCard"
    ],
    "export_default": null,
-   "linhas": 185,
+   "linhas": 203,
    "dominio": "components/lux",
-   "hooks_locais": [],
+   "hooks_locais": [
+    "useAuth"
+   ],
    "tabelas": [],
    "edges": [],
    "usado_por": 1,
@@ -3839,7 +3841,7 @@
     "AuthProvider"
    ],
    "export_default": null,
-   "linhas": 48,
+   "linhas": 83,
    "dominio": "contexts",
    "hooks_locais": [],
    "tabelas": [],

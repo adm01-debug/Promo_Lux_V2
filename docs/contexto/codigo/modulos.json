@@ -68,7 +68,9 @@
     "tabelas": [],
     "rpcs": []
    },
-   "importado_por_outros_modulos": [],
+   "importado_por_outros_modulos": [
+    "components/lux"
+   ],
    "depende_de_modulos": [
     "components/ui",
     "hooks"
@@ -109,7 +111,7 @@
    "modulo": "components/lux",
    "arquivos": 196,
    "testes": 31,
-   "linhas": 37807,
+   "linhas": 37825,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -218,6 +220,7 @@
     "useFeatureFlags",
     "useICPConfig",
     "useIsMobile",
+    "useMFA",
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged",
     "useMyOrganizations",
@@ -432,6 +435,7 @@
     "progressbar",
     "region",
     "sdr",
+    "separator",
     "status",
     "user",
     "viewer"
@@ -509,6 +513,7 @@
     "pages"
    ],
    "depende_de_modulos": [
+    "components/auth",
     "components/ui",
     "contexts",
     "hooks",
@@ -638,7 +643,7 @@
    "modulo": "contexts",
    "arquivos": 6,
    "testes": 0,
-   "linhas": 223,
+   "linhas": 266,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -727,7 +732,7 @@
    "modulo": "hooks",
    "arquivos": 72,
    "testes": 0,
-   "linhas": 7352,
+   "linhas": 7351,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -1843,6 +1848,7 @@
     "useIsMobile",
     "useKeyboardShortcuts",
     "useLoginForm",
+    "useMFA",
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged",
     "useMyOrganizations",
@@ -2069,6 +2075,7 @@
     "presentation",
     "progressbar",
     "sdr",
+    "separator",
     "status",
     "user",
     "viewer"

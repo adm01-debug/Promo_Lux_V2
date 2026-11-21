@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo",
    "merge: feat(email): tracking de open/click assinado no envio de campanhas",
    "merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico",
    "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)",
-   "chore: adiciona backlog verificado e linha de base (#80)",
-   "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)"
+   "chore: adiciona backlog verificado e linha de base (#80)"
   ]
  },
  "pr_template": null,

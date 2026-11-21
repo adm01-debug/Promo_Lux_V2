@@ -434,11 +434,13 @@
    "definida_em": "src/App.tsx",
    "redireciona": null,
    "hooks": [
+    "useAuth",
     "useCallback",
     "useContext",
     "useDemo",
     "useEffect",
     "useLoginForm",
+    "useMFA",
     "useMemo",
     "useNavigate",
     "useRateLimit",
@@ -447,8 +449,10 @@
     "useToast"
    ],
    "hooks_locais": [
+    "useAuth",
     "useDemo",
     "useLoginForm",
+    "useMFA",
     "useRateLimit",
     "useToast"
    ],
@@ -462,9 +466,10 @@
    "papeis": [
     "alert",
     "dialog",
-    "main"
+    "main",
+    "separator"
    ],
-   "arquivos_puxados": 27
+   "arquivos_puxados": 33
   },
   {
    "protegida": false,

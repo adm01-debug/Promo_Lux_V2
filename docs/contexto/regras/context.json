@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "fe4139664b2da364cd48692a765ef56a0a05041b",
+  "sha": "50782f3fae63015fa7162e9a7ee627c24aa881f2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 14:22 UTC",
+  "generated_at": "2026-11-21 14:24 UTC",
   "files_total": 1045,
   "code_files": 871,
-  "code_lines": 125189
+  "code_lines": 125253
  },
  "version": "1.3.2",
- "facts_hash": "299fe7474eea92a0",
+ "facts_hash": "c4f52b855c0ec473",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -22271,7 +22271,7 @@
      "auth-rate-limit"
     ],
     "rpc_transitive": [],
-    "deps_count": 27
+    "deps_count": 33
    }
   ],
   "edge_functions": [
@@ -24956,7 +24956,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 364,
+   "lines": 368,
    "tables": [],
    "exports": [
     "App.tsx: safeNextPath, App"
@@ -24990,7 +24990,7 @@
   {
    "module": "src/components",
    "files": 285,
-   "lines": 45395,
+   "lines": 45413,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -25197,7 +25197,7 @@
   {
    "module": "src/contexts",
    "files": 7,
-   "lines": 280,
+   "lines": 323,
    "tables": [],
    "exports": [
     "ActiveOrgContext.tsx: ActiveOrgProvider",
@@ -25232,7 +25232,7 @@
   {
    "module": "src/hooks",
    "files": 84,
-   "lines": 9232,
+   "lines": 9231,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -40428,6 +40428,12 @@
     "name": "copyGenerated",
     "params": "",
     "body": "try { await navigator.clipboard.writeText(generatedSnippet); toast({ title: \"Payload copiado\", description: `Cole em RLS_TABLES para ${genTable}` }); } catch { toast({ variant: \"destructive\", title: \"Falha ao copiar\" }); }"
+   },
+   {
+    "file": "src/contexts/AuthContext.tsx",
+    "name": "computeMfaRequired",
+    "params": "",
+    "body": "try { const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel(); if (error || !data) return false; const { currentLevel, nextLevel } = data; return nextLevel === \"aal2\" && currentLevel !== \"aal2\"; } catch { return false; }"
    },
    {
     "file": "src/hooks/oracleV2Helpers.ts",
@@ -62525,7 +62531,7 @@
   },
   "src/App.tsx": {
    "path": "src/App.tsx",
-   "lines": 317,
+   "lines": 321,
    "exports": [
     "function safeNextPath",
     "default App"
@@ -64964,7 +64970,7 @@
   },
   "src/components/lux/auth/LoginCard.tsx": {
    "path": "src/components/lux/auth/LoginCard.tsx",
-   "lines": 185,
+   "lines": 203,
    "exports": [
     "function LoginCard"
    ]
@@ -68231,9 +68237,16 @@
   },
   "src/contexts/AuthContext.tsx": {
    "path": "src/contexts/AuthContext.tsx",
-   "lines": 48,
+   "lines": 83,
    "exports": [
     "function AuthProvider"
+   ],
+   "calc_fns": [
+    {
+     "name": "computeMfaRequired",
+     "params": "",
+     "body": "try { const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel(); if (error || !data) return false; const { currentLevel, nextLevel } = data; return nextLevel === \"aal2\" && currentLevel !== \"aal2\"; } catch { return false; }"
+    }
    ]
   },
   "src/contexts/DemoContext.tsx": {
@@ -68257,7 +68270,7 @@
   },
   "src/contexts/auth-context.ts": {
    "path": "src/contexts/auth-context.ts",
-   "lines": 19,
+   "lines": 27,
    "exports": [
     "type AuthContextType",
     "const AuthContext",
@@ -69785,7 +69798,7 @@
   },
   "src/hooks/useLoginForm.ts": {
    "path": "src/hooks/useLoginForm.ts",
-   "lines": 186,
+   "lines": 185,
    "exports": [
     "function useLoginForm"
    ],
@@ -81349,10 +81362,23 @@
   }
  },
  "git": {
-  "sha": "fe4139664b2da364cd48692a765ef56a0a05041b",
+  "sha": "50782f3fae63015fa7162e9a7ee627c24aa881f2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "50782f3",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo",
+    "files": [
+     "src/App.tsx",
+     "src/components/lux/auth/LoginCard.tsx",
+     "src/contexts/AuthContext.tsx",
+     "src/contexts/auth-context.ts",
+     "src/hooks/useLoginForm.ts"
+    ]
+   },
    {
     "sha": "fe41396",
     "date": "2026-11-21",
@@ -81658,16 +81684,6 @@
      "package-lock.json",
      "package.json"
     ]
-   },
-   {
-    "sha": "f1a6552",
-    "date": "2026-11-14",
-    "author": "adm01-debug",
-    "subject": "ci(seguranca): dependency review nos PRs e dependabot agrupado (#41)",
-    "files": [
-     ".github/dependabot.yml",
-     ".github/workflows/dependency-review.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -81680,16 +81696,32 @@
     8
    ],
    [
-    ".gitignore",
+    "src/App.tsx",
     2
    ],
    [
-    ".github/workflows/dependency-review.yml",
+    ".gitignore",
     2
    ],
    [
     ".github/workflows/edge-tests-daily.yml",
     2
+   ],
+   [
+    "src/components/lux/auth/LoginCard.tsx",
+    1
+   ],
+   [
+    "src/contexts/AuthContext.tsx",
+    1
+   ],
+   [
+    "src/contexts/auth-context.ts",
+    1
+   ],
+   [
+    "src/hooks/useLoginForm.ts",
+    1
    ],
    [
     "supabase/functions/_shared/__tests__/tracking-links.test.ts",
@@ -81733,22 +81765,6 @@
    ],
    [
     "supabase/functions/health/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/lusha-cookie-health/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/lusha-decision-makers/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/lusha-reveal/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/lusha-search/index.ts",
     1
    ]
   ]
