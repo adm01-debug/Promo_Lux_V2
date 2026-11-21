@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)",
    "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)",
    "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)",
    "fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)",
-   "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)",
-   "merge: feat(api): rate-limit server-side por API key na public-api"
+   "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)"
   ]
  },
  "pr_template": null,

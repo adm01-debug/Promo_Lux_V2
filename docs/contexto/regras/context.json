@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "be2d500158ec3c96c2dbf465c1ea9d3537a29a90",
+  "sha": "cdb0c8be820757030b8c2a1316fc31f86f3096a3",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 17:48 UTC",
+  "generated_at": "2026-11-21 17:51 UTC",
   "files_total": 1049,
   "code_files": 875,
-  "code_lines": 125505
+  "code_lines": 125519
  },
  "version": "1.3.2",
- "facts_hash": "6057370566073961",
+ "facts_hash": "aa1af641acd1696d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -245,7 +245,12 @@
    "functions_no_jwt": [
     "qa-ingest-run",
     "admin-list-companies",
-    "migrate-helper"
+    "migrate-helper",
+    "track-open",
+    "track-click",
+    "public-api",
+    "email-oauth-callback",
+    "mcp"
    ],
    "auth": {}
   },
@@ -22860,7 +22865,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
      "email_accounts"
     ],
@@ -23336,7 +23341,7 @@
     "methods": [
      "POST?"
     ],
-    "auth": "JWT do usuário",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
      "companies",
      "lusha_contacts",
@@ -23555,7 +23560,7 @@
      "PATCH",
      "POST"
     ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
      "api_keys",
      "api_request_logs"
@@ -23812,7 +23817,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [],
     "env": [
      "SUPABASE_SERVICE_ROLE_KEY",
@@ -23837,7 +23842,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [],
     "env": [
      "SUPABASE_SERVICE_ROLE_KEY",
@@ -25954,7 +25959,7 @@
   {
    "module": "supabase/functions",
    "files": 121,
-   "lines": 21639,
+   "lines": 21653,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -55500,7 +55505,12 @@
   "public_functions": [
    "qa-ingest-run",
    "admin-list-companies",
-   "migrate-helper"
+   "migrate-helper",
+   "track-open",
+   "track-click",
+   "public-api",
+   "email-oauth-callback",
+   "mcp"
   ],
   "auth_config": {},
   "grants": [
@@ -76673,7 +76683,7 @@
   },
   "supabase/functions/cnpj-enrich-worker/index.ts": {
    "path": "supabase/functions/cnpj-enrich-worker/index.ts",
-   "lines": 210,
+   "lines": 224,
    "tables": [
     {
      "table": "cnpj_enrich_queue",
@@ -81969,10 +81979,20 @@
   }
  },
  "git": {
-  "sha": "be2d500158ec3c96c2dbf465c1ea9d3537a29a90",
+  "sha": "cdb0c8be820757030b8c2a1316fc31f86f3096a3",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "cdb0c8b",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)",
+    "files": [
+     "supabase/config.toml",
+     "supabase/functions/cnpj-enrich-worker/index.ts"
+    ]
+   },
    {
     "sha": "be2d500",
     "date": "2026-11-21",
@@ -82282,32 +82302,23 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "b2ce2ea",
-    "date": "2026-11-19",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)",
-    "files": [
-     "package-lock.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    10
+    9
    ],
    [
     "package.json",
     7
    ],
    [
-    ".github/workflows/edge-functions-deploy.yml",
-    2
+    "supabase/config.toml",
+    3
    ],
    [
-    "supabase/config.toml",
+    ".github/workflows/edge-functions-deploy.yml",
     2
    ],
    [
@@ -82325,6 +82336,10 @@
    [
     "src/App.tsx",
     2
+   ],
+   [
+    "supabase/functions/cnpj-enrich-worker/index.ts",
+    1
    ],
    [
     "src/hooks/useWebScrape.ts",
@@ -82368,10 +82383,6 @@
    ],
    [
     "src/contexts/auth-context.ts",
-    1
-   ],
-   [
-    "src/hooks/useLoginForm.ts",
     1
    ]
   ]

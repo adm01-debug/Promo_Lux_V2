@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "be2d500158ec3c96c2dbf465c1ea9d3537a29a90",
+  "commit": "cdb0c8be820757030b8c2a1316fc31f86f3096a3",
   "branch": "main",
-  "data_commit": "2026-11-21T14:48:23-03:00",
+  "data_commit": "2026-11-21T14:51:18-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "cdb0c8b",
+    "data": "2026-11-21",
+    "assunto": "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)"
+   },
    {
     "sha": "be2d500",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "f9ab8eb",
     "data": "2026-11-20",
     "assunto": "chore(deps)(deps): bump react-router and react-router-dom (#68)"
-   },
-   {
-    "sha": "8d8ccbf",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps-dev): bump baseline-browser-mapping (#64)"
    }
   ],
-  "arquivos_mudados_7d": 61,
+  "arquivos_mudados_7d": 62,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -218,6 +218,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 4
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 3
    },
@@ -251,10 +255,6 @@
    },
    {
     "arquivo": "src/App.tsx",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/config.toml",
     "mudancas": 3
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 61
+    "commits": 62
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1030,
   "arquivos_codigo": 648,
-  "linhas_codigo": 110977,
+  "linhas_codigo": 110991,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 121,
-   "linhas": 21639
+   "linhas": 21653
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -765,7 +765,6 @@
    "instagram-worker-health",
    "latency-alerts",
    "lusha-reveal",
-   "mcp",
    "pg-net-watchdog",
    "purge-soft-deleted",
    "reaper-alerts",
@@ -774,8 +773,6 @@
    "sla-alerts",
    "sla-auto-tune",
    "system-recovery-status",
-   "track-click",
-   "track-open",
    "web-dlq-replay",
    "web-scrape-enqueue",
    "web-scrape-extract",

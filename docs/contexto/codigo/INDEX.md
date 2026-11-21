@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `be2d500158ec3c96c2dbf465c1ea9d3537a29a90` (2026-11-21T14:48:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cdb0c8be820757030b8c2a1316fc31f86f3096a3` (2026-11-21T14:51:18-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1030 |
 | arquivos_codigo | 648 |
-| linhas_codigo | 110977 |
+| linhas_codigo | 110991 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -131,7 +131,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `cnpj-settings-status` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue, cnpj_enrich_rate_state; chamada por 1 arquivo(s) do front
 - `deliverability-check` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `dlq-alerts` — tabelas: dlq_alert_history, dlq_alert_settings, dlq_health_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `email-oauth-callback` — tabelas: email_accounts; chamada por 1 arquivo(s) do front
+- `email-oauth-callback` (verify_jwt=false) — tabelas: email_accounts; chamada por 1 arquivo(s) do front
 - `email-oauth-connect` — tabelas: -; chamada por 2 arquivo(s) do front
 - `email-oauth-disconnect` — tabelas: audit_logs, email_accounts; chamada por 1 arquivo(s) do front
 - `email-poll-replies` — tabelas: email_accounts, email_sync_log; chamada por 1 arquivo(s) do front
@@ -149,7 +149,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `lusha-decision-makers` — tabelas: lusha_contacts, organization_members; chamada por 1 arquivo(s) do front
 - `lusha-reveal` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `lusha-search` — tabelas: audit_logs, lusha_contacts, lusha_search_sessions, notifications; chamada por 2 arquivo(s) do front
-- `mcp` — tabelas: companies, lusha_contacts, scrape_jobs; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `mcp` (verify_jwt=false) — tabelas: companies, lusha_contacts, scrape_jobs; chamada por 0 arquivo(s) do front
 - `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `oracle-cookies-preflight` — tabelas: automation_execution_logs; chamada por 1 arquivo(s) do front
 - `oracle-enrich-contact` — tabelas: lusha_contacts; chamada por 1 arquivo(s) do front
@@ -157,7 +157,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `oracle-search-decisors` — tabelas: companies, lusha_contacts, lusha_search_sessions; chamada por 1 arquivo(s) do front
 - `org-violation-alerts` — tabelas: notifications, org_violation_alerts, organization_members, webhook_deliveries, webhooks; chamada por 1 arquivo(s) do front
 - `pg-net-watchdog` — tabelas: notifications, pg_net_health_snapshots, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `public-api` — tabelas: api_keys, api_request_logs; chamada por 1 arquivo(s) do front
+- `public-api` (verify_jwt=false) — tabelas: api_keys, api_request_logs; chamada por 1 arquivo(s) do front
 - `purge-soft-deleted` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `qa-ingest-run` (verify_jwt=false) — tabelas: qa_test_runs; chamada por 1 arquivo(s) do front
 - `reaper-alerts` — tabelas: notifications, qa_reaper_runs, reaper_alert_history, reaper_alert_settings, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -167,8 +167,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `sla-alerts` — tabelas: notifications, sla_alert_history, sla_alert_settings, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `sla-auto-tune` — tabelas: notifications, organization_members, sla_autotune_runs, user_roles; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `system-recovery-status` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `track-click` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `track-open` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `track-click` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
+- `track-open` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `vault-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front
 - `web-dlq-replay` — tabelas: organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `web-scrape-enqueue` — tabelas: organization_members, web_scrape_queue; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -189,7 +189,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
 - hosts mais citados: lux-ai-company-finder.lovable.app, promo-lux-v2.vercel.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, www.linkedin.com, ai.gateway.lovable.dev, connector-gateway.lovable.dev
-- webhooks recebidos: admin-list-companies, migrate-helper, qa-ingest-run
+- webhooks recebidos: admin-list-companies, email-oauth-callback, mcp, migrate-helper, public-api, qa-ingest-run, track-click, track-open
 - env de integração (só nomes): ADMIN_LIST_TOKEN, APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET, VITE_ADMIN_LIST_TOKEN
 
 ## Permissões / papéis
@@ -202,7 +202,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 0
-- edges_orfas: 31 — ex.: api-latency-alerts, audit-logs-prune, circuit-breaker-alerts
+- edges_orfas: 28 — ex.: api-latency-alerts, audit-logs-prune, circuit-breaker-alerts
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 0
 - tabelas_usadas_sem_definicao: 0
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6575 nós · 14102 arestas · 575 comunidades · grafo do commit `be2d5001`
+- 6575 nós · 14102 arestas · 575 comunidades · grafo do commit `cdb0c8be`
 - comunidades maiores: Monitoring.tsx (175), cn (113), input.tsx (109), react (108), lucide-react (108), gerar.mjs (80), package.json (77), generate.py (73), dependencies (65), campaign-dispatch/index.ts (64), AppBreadcrumbs.tsx (63), ref_node_fs (58)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -227,6 +227,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/edge-tests-daily.yml (6)
 - AGENTS.md (6)
 - .github/workflows/ci.yml (4)
+- supabase/config.toml (4)
 - .github/workflows/contexto.yml (3)
 - .github/workflows/db-migrations.yml (3)
 - .github/workflows/inventario-estado-semanal.yml (3)
@@ -236,7 +237,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/prod-readiness.md (3)
 - scripts/ci/eslint-baseline.json (3)
 - src/App.tsx (3)
-- supabase/config.toml (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -329,6 +329,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `cdb0c8b` fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)
 - 2026-11-21 `be2d500` fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)
 - 2026-11-21 `04bf647` fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)
 - 2026-11-21 `9e7af30` fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `a37f319` chore: adiciona backlog verificado e linha de base (#80)
 - 2026-11-20 `8e0be69` fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)
 - 2026-11-20 `8b16f55` fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)
-- 2026-11-20 `cfce9da` infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `be2d500158` · branch `main` · 2026-11-21 17:48 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cdb0c8be82` · branch `main` · 2026-11-21 17:51 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -384,6 +384,11 @@
 - `qa-ingest-run`
 - `admin-list-companies`
 - `migrate-helper`
+- `track-open`
+- `track-click`
+- `public-api`
+- `email-oauth-callback`
+- `mcp`
 
 ## Rotas protegidas no front
 
