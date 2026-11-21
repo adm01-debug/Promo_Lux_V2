@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8723328629c3a72a41f117be24d0a35f93a82ca9",
+  "commit": "ef039bf804dc74df64555be28b57f7ee1c810cc1",
   "branch": "main",
-  "data_commit": "2026-11-21T18:36:19-03:00",
+  "data_commit": "2026-11-21T18:39:23-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "ef039bf",
+    "data": "2026-11-21",
+    "assunto": "fix: fecha RLS cross-tenant em dashboard_layouts (#105)"
+   },
    {
     "sha": "8723328",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "a37f319",
     "data": "2026-11-20",
     "assunto": "chore: adiciona backlog verificado e linha de base (#80)"
-   },
-   {
-    "sha": "8e0be69",
-    "data": "2026-11-20",
-    "assunto": "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)"
    }
   ],
-  "arquivos_mudados_7d": 109,
+  "arquivos_mudados_7d": 110,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 73
+    "commits": 74
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1048,
+  "arquivos_total": 1049,
   "arquivos_codigo": 660,
   "linhas_codigo": 113535,
   "rotas": 10,
@@ -322,7 +322,7 @@
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
-  "migrations": 224,
+  "migrations": 225,
   "cron_jobs": 29,
   "testes": 124,
   "workflows": 9,

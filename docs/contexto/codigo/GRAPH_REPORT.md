@@ -1,17 +1,17 @@
 # Graph Report - Promo_Lux_V2  (2026-11-21)
 
 ## Corpus Check
-- 1029 files · ~620,075 words
+- 1030 files · ~620,253 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 20 file(s) not represented in the graph (top: (none) 10, .toml 5, .css 2)
 
 ## Summary
-- 6727 nodes · 14514 edges · 590 communities (364 shown, 226 thin omitted)
+- 6728 nodes · 14514 edges · 591 communities (364 shown, 227 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 408 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `87233286`
+- Built from commit: `ef039bf8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -533,7 +533,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (590 total, 226 thin omitted)
+## Communities (591 total, 227 thin omitted)
 
 ### Community 0 - "Monitoring.tsx"
 Cohesion: 0.04
@@ -1993,18 +1993,18 @@ Nodes (3): oauthClient(), OAuthConsent(), decide()
 
 ## Knowledge Gaps
 - **1993 isolated node(s):** `session-start.sh script`, `PATH`, `version`, `sdk_version`, `path` (+1988 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2940 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **226 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2941 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **227 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `vitest` connect `vitest` to `SessionsPanel.test.tsx`, `SlaHistoryTrendChart.tsx`, `lusha/departmentMap.ts`, `downloadCSV`, `orgErrorHandler.audit.test.ts`, `campaign-dispatch/index.ts`, `package.json`, `simulator.ts`, `req`, `ErrorBoundary`, `gmaps-proxy/index.ts`, `useOracleV2.ts`, `deliverability-check/index.ts`, `public-api/index.ts`, `withOrg.switching.test.ts`, `orgErrorHandler.e2e.test.ts`, `withOrg.ts`, `DecisionMakersGrid.tsx`, `scrape-queue-worker/index.ts`, `oracle-push-bitrix/index.ts`, `web-scrape-worker/index.ts`, `orgErrorHandler.ts`, `oracle-enrich-contact/index.ts`, `SafeHTML.tsx`, `lusha-client.ts`, `oracle-search-decisors/index.ts`, `leadcontact-client.ts`, `DlqAlertSettingsCard.tsx`, `useRateLimit.ts`, `SourceComparisonSummary.tsx`, `vite.config.ts`, `scenarios.ts`, `historyUtils.fuzz.test.ts`, `ResilienceReport.tsx`, `aggregations.ts`, `tooltip.tsx`, `withOrg.maliciousFilters.test.ts`, `StakeholderCard.tsx`, `apollo-cache.ts`, `useICPConfig.ts`, `useAuditTrail.ts`, `useRateLimit.logic.test.ts`, `Sidebar.tsx`, `DlqHealthCard`, `SlaHistoryCard`, `AuthContext.tsx`, `classify.ts`, `useDlqReplay.ts`, `autotune.ts`, `validation.test.ts`, `lead-identity.ts`?**
-  _High betweenness centrality (0.151) - this node is a cross-community bridge._
+  _High betweenness centrality (0.152) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `Monitoring.tsx`, `lucide-react`, `@tanstack/react-query`, `button.tsx`, `cn`, `carousel.tsx`, `utils.ts`, `SlaHistoryTrendChart.tsx`, `useCnpjEnrich.ts`, `vitest`, `package.json`, `Login.tsx`, `DealsView.tsx`, `OrganizationsView.tsx`, `hooks/use-toast.ts`, `toast.tsx`, `Index.tsx`, `CompanyFilters.tsx`, `useOracleV2.ts`, `useEnvProfiles.ts`, `PageTransition.tsx`, `PermissionsMatrix.tsx`, `useActiveOrganization`, `DecisionMakersGrid.tsx`, `App.tsx`, `useAuth`, `orgErrorHandler.ts`, `sidebar.tsx`, `useResilienceSimulator.ts`, `ScrapeQueuePanel.tsx`, `Header.tsx`, `SafeHTML.tsx`, `StatsGrid.tsx`, `EmailAccountsAuditPanel.tsx`, `AppBreadcrumbs.tsx`, `DlqAlertSettingsCard.tsx`, `useRateLimit.ts`, `chart.tsx`, `ResilienceReport.tsx`, `DashboardView.tsx`, `CommandPalette.tsx`, `tooltip.tsx`, `MFAEnroll.tsx`, `StakeholderCard.tsx`, `OnboardingTour.tsx`, `demo-context.ts`, `class-variance-authority`, `useAutomationsMonitor.ts`, `ApiLatencyPanel.tsx`, `demoData.ts`, `ConversionTab.tsx`, `AutomationStatusPanel.tsx`, `useThemeColors.ts`, `MapMarkerIcons.tsx`, `ThemeToggle.tsx`, `useLoginForm.ts`, `Sidebar.tsx`, `DlqHealthCard`, `AuthContext.tsx`, `useDlqReplay.ts`, `WebScrapeView.tsx`, `form.tsx`, `pagination.tsx`, `ScheduledReportsTab.tsx`, `PasswordStrengthMeter.tsx`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `Decisão` connect `ADR-026 — Rodada #32: Split do SessionsPanel` to `graphify-local.mjs`, `snapshot.py`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `lucide-react` connect `lucide-react` to `Monitoring.tsx`, `react`, `@tanstack/react-query`, `button.tsx`, `cn`, `carousel.tsx`, `utils.ts`, `vitest`, `package.json`, `LoginCard.tsx`, `Login.tsx`, `DealsView.tsx`, `OrganizationsView.tsx`, `hooks/use-toast.ts`, `toast.tsx`, `Index.tsx`, `CompanyFilters.tsx`, `WorkflowCard.tsx`, `PermissionsMatrix.tsx`, `useActiveOrganization`, `DecisionMakersGrid.tsx`, `orgErrorHandler.ts`, `sidebar.tsx`, `ScrapeQueuePanel.tsx`, `Header.tsx`, `StatsGrid.tsx`, `EmailAccountsAuditPanel.tsx`, `AppBreadcrumbs.tsx`, `DlqAlertSettingsCard.tsx`, `ResilienceReport.tsx`, `DashboardView.tsx`, `CommandPalette.tsx`, `tooltip.tsx`, `MFAEnroll.tsx`, `StakeholderCard.tsx`, `OnboardingTour.tsx`, `class-variance-authority`, `useAutomationsMonitor.ts`, `ApiLatencyPanel.tsx`, `ConversionTab.tsx`, `AutomationStatusPanel.tsx`, `ThemeToggle.tsx`, `Sidebar.tsx`, `CompanyOpenHours.tsx`, `WebScrapeView.tsx`, `pagination.tsx`, `ScheduledReportsTab.tsx`, `PasswordStrengthMeter.tsx`?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **What connects `session-start.sh script`, `PATH`, `version` to the rest of the system?**
   _1993 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Monitoring.tsx` be split into smaller, more focused modules?**

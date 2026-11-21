@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8723328629c3a72a41f117be24d0a35f93a82ca9` (2026-11-21T18:36:19-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ef039bf804dc74df64555be28b57f7ee1c810cc1` (2026-11-21T18:39:23-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (634), SQL (228), Markdown (81), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
+- linguagens: TypeScript (634), SQL (229), Markdown (81), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1048 |
+| arquivos_total | 1049 |
 | arquivos_codigo | 660 |
 | linhas_codigo | 113535 |
 | rotas | 10 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 84 |
 | edge_functions | 60 |
 | tabelas | 105 |
-| migrations | 224 |
+| migrations | 225 |
 | cron_jobs | 29 |
 | testes | 124 |
 | workflows | 9 |
@@ -241,7 +241,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6727 nós · 14514 arestas · 590 comunidades · grafo do commit `87233286`
+- 6728 nós · 14514 arestas · 591 comunidades · grafo do commit `ef039bf8`
 - comunidades maiores: Monitoring.tsx (138), lucide-react (112), react (106), @tanstack/react-query (99), button.tsx (86), cn (84), gerar.mjs (80), utils.ts (79), ref_node_fs (75), generate.py (71), dependencies (65), campaign-dispatch/index.ts (64)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -355,6 +355,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `ef039bf` fix: fecha RLS cross-tenant em dashboard_layouts (#105)
 - 2026-11-21 `8723328` fix: grant execute de refresh_org_scores para authenticated (#104)
 - 2026-11-21 `4931d9e` feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)
 - 2026-11-21 `7432455` feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)
@@ -369,7 +370,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `cdb0c8b` fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)
 - 2026-11-21 `be2d500` fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)
 - 2026-11-21 `04bf647` fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)
-- 2026-11-21 `9e7af30` fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

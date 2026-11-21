@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8723328629` · branch `main` · 2026-11-21 21:36 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ef039bf804` · branch `main` · 2026-11-21 21:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -46,7 +46,7 @@
 | `cnpj_enrich_rate_state` | enabled | authenticated: true | — | — | — |
 | `companies` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `company_reviews` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) |
-| `dashboard_layouts` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true |
+| `dashboard_layouts` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true<br>authenticated: user_id = auth.uid() and (organization_id is null or public.is_org_member(organization_id, auth.uid())) | service_role: true<br>authenticated: user_id = auth.uid() | authenticated: user_id = auth.uid()<br>service_role: true |
 | `db_health_snapshots` | enabled | authenticated: public.has_role(auth.uid(), 'admin') | — | — | — |
 | `deal_activities` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `deal_predictions` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |

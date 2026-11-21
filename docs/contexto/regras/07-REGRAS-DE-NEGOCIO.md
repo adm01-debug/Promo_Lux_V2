@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8723328629` · branch `main` · 2026-11-21 21:36 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ef039bf804` · branch `main` · 2026-11-21 21:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -278,8 +278,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `lead_scores` | Admins delete lead_scores | DELETE | authenticated | permissive | `organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
 | `lead_scores` | Service manage lead_scores | ALL | service_role | permissive | `true` | `true` |
 | `dashboard_layouts` | Users view own dashboard_layouts | SELECT | authenticated | permissive | `user_id = auth.uid()` |  |
-| `dashboard_layouts` | Users insert own dashboard_layouts | INSERT | authenticated | permissive |  | `user_id = auth.uid()` |
-| `dashboard_layouts` | Users update own dashboard_layouts | UPDATE | authenticated | permissive | `user_id = auth.uid()` | `user_id = auth.uid()` |
 | `dashboard_layouts` | Users delete own dashboard_layouts | DELETE | authenticated | permissive | `user_id = auth.uid()` |  |
 | `dashboard_layouts` | Service manage dashboard_layouts | ALL | service_role | permissive | `true` | `true` |
 | `deal_predictions` | Members view deal_predictions | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
@@ -303,6 +301,8 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `role_permissions` | Admins update role_permissions | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` | `public.has_org_role(organization_id, auth.uid(), 'admin')` |
 | `role_permissions` | Admins delete role_permissions | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
 | `role_permissions` | Service manage role_permissions | ALL | service_role | permissive | `true` | `true` |
+| `dashboard_layouts` | Users insert own dashboard_layouts | INSERT | authenticated | permissive |  | `user_id = auth.uid() and (organization_id is null or public.is_org_member(organization_id, auth.uid()))` |
+| `dashboard_layouts` | Users update own dashboard_layouts | UPDATE | authenticated | permissive | `user_id = auth.uid()` | `user_id = auth.uid() and (organization_id is null or public.is_org_member(organization_id, auth.uid()))` |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 

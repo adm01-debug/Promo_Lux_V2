@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix: fecha RLS cross-tenant em dashboard_layouts (#105)",
    "fix: grant execute de refresh_org_scores para authenticated (#104)",
    "feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)",
    "feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)",
-   "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)",
-   "docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)"
+   "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)"
   ]
  },
  "pr_template": null,
