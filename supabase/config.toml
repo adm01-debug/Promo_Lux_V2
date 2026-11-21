@@ -3,6 +3,9 @@ project_id = "pttzwlbidamibjssqiqb"
 [functions.oracle-push-bitrix]
 verify_jwt = true
 
+[functions.cnpj-enrich-worker]
+verify_jwt = true
+
 [functions.qa-ingest-run]
 verify_jwt = false
 [functions.admin-list-companies]

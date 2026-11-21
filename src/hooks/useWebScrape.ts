@@ -42,7 +42,7 @@ export interface EnqueueOptions {
 }
 
 async function invoke<T>(fn: string, body?: unknown, query?: Record<string, string>): Promise<T> {
-  const url = new URL(`https://pesfxhlbsjfmlysdkzhr.supabase.co/functions/v1/${fn}`);
+  const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${fn}`);
   if (query) Object.entries(query).forEach(([k, v]) => url.searchParams.set(k, v));
   const { data: session } = await supabase.auth.getSession();
   const token = session.session?.access_token;
