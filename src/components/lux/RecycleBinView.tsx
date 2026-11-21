@@ -45,10 +45,10 @@ function TrashList({ table }: { table: SoftDeleteTable }) {
         .select(`id, ${label}, deleted_at`)
         .order("deleted_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []).map((row) => ({
-        id: row.id as string,
-        label: String(row[label as keyof typeof row] ?? "") || "Sem nome",
-        deleted_at: row.deleted_at as string,
+      return ((data ?? []) as Record<string, unknown>[]).map((row) => ({
+        id: String(row.id ?? ""),
+        label: String(row[label] ?? "") || "Sem nome",
+        deleted_at: String(row.deleted_at ?? ""),
       }));
     },
   });
