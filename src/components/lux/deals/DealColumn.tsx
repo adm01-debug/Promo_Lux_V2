@@ -11,9 +11,11 @@ interface Props {
   deals: Deal[];
   onAddDeal: (stageId: string) => void;
   onSelectDeal: (deal: Deal) => void;
+  /** Previsões por deal_id, resolvidas em O(1) pelo board. */
+  predictions?: Map<string, { win_probability: number; weighted_value: number }>;
 }
 
-export function DealColumn({ stage, deals, onAddDeal, onSelectDeal }: Props) {
+export function DealColumn({ stage, deals, onAddDeal, onSelectDeal, predictions }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: stage.id, data: { type: "column", stage } });
   const total = deals.reduce((s, d) => s + (Number(d.value) || 0), 0);
 
@@ -39,7 +41,7 @@ export function DealColumn({ stage, deals, onAddDeal, onSelectDeal }: Props) {
       >
         <SortableContext items={deals.map((d) => d.id)} strategy={verticalListSortingStrategy}>
           {deals.map((d) => (
-            <DealCard key={d.id} deal={d} onClick={() => onSelectDeal(d)} />
+            <DealCard key={d.id} deal={d} onClick={() => onSelectDeal(d)} prediction={predictions?.get(d.id)} />
           ))}
         </SortableContext>
         {deals.length === 0 && (

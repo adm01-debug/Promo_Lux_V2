@@ -5,6 +5,7 @@ import { AppBreadcrumbs } from "@/components/lux/AppBreadcrumbs";
 import { ThemeToggle } from "@/components/lux/ThemeToggle";
 import { GradientAvatar } from "@/components/lux/GradientAvatar";
 import { NotificationsPanel } from "@/components/lux/NotificationsPanel";
+import { ChangelogButton } from "@/components/lux/ChangelogDialog";
 import { useNotificationCount } from "@/hooks/useNotificationCount";
 import { WorkspaceSwitcher } from "@/components/lux/organizations/WorkspaceSwitcher";
 import { View } from "@/hooks/useNavigationHistory";
@@ -211,6 +212,7 @@ export const Header = memo(({
             </Tooltip>
           )}
           <ThemeToggle />
+          <ChangelogButton />
 
           {/* Notification bell with animated badge */}
           <div className="relative">

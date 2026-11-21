@@ -7,9 +7,16 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { Deal } from "@/hooks/useDeals";
 
+interface Prediction {
+  win_probability: number;
+  weighted_value: number;
+}
+
 interface Props {
   deal: Deal;
   onClick: () => void;
+  /** Previsão calculada no banco (probabilidade + receita ponderada). */
+  prediction?: Prediction;
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -18,7 +25,14 @@ const PRIORITY_COLORS: Record<string, string> = {
   high: "text-destructive",
 };
 
-export function DealCard({ deal, onClick }: Props) {
+const formatCurrency = (value: number, currency: string) =>
+  value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: currency || "BRL",
+    maximumFractionDigits: 0,
+  });
+
+export function DealCard({ deal, onClick, prediction }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: deal.id,
     data: { type: "deal", deal },
@@ -53,6 +67,34 @@ export function DealCard({ deal, onClick }: Props) {
         <Flag className={cn("h-3.5 w-3.5 shrink-0", PRIORITY_COLORS[deal.priority])} />
       </div>
       <p className="text-base font-semibold text-primary glow-text">{formattedValue}</p>
+      {prediction && (
+        <div className="mt-2 space-y-1" title={`Receita ponderada ${formatCurrency(prediction.weighted_value, deal.currency)}`}>
+          <div className="flex items-center justify-between text-[10px]">
+            <span className="text-muted-foreground">Probabilidade</span>
+            <span
+              className={cn(
+                "font-mono font-semibold",
+                prediction.win_probability >= 70 ? "text-success" :
+                prediction.win_probability >= 40 ? "text-primary" :
+                "text-muted-foreground",
+              )}
+            >
+              {prediction.win_probability}%
+            </span>
+          </div>
+          <div className="h-1 w-full overflow-hidden rounded-full bg-secondary/60">
+            <div
+              className={cn(
+                "h-full rounded-full transition-all",
+                prediction.win_probability >= 70 ? "bg-success" :
+                prediction.win_probability >= 40 ? "bg-primary" :
+                "bg-muted-foreground/60",
+              )}
+              style={{ width: `${prediction.win_probability}%` }}
+            />
+          </div>
+        </div>
+      )}
       {deal.expected_close_date && (
         <div className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground">
           <Calendar className="h-3 w-3" />

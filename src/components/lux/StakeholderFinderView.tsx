@@ -16,6 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { AnimatePresence } from "framer-motion";
 import { StakeholderCard } from "./stakeholders/StakeholderCard";
 import { StakeholderListRow } from "./stakeholders/StakeholderListRow";
+import { useLeadScores } from "@/hooks/useLeadScores";
 
 interface Stakeholder {
   id: string;
@@ -55,6 +56,9 @@ export const StakeholderFinderView = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  // Scores de lead (cargo + canais + engajamento) vêm materializados do banco.
+  const { byId: leadScoreById } = useLeadScores();
 
   const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
     queryKey: ["stakeholders"],
@@ -207,6 +211,7 @@ export const StakeholderFinderView = () => {
                     copiedEmail={copiedEmail}
                     onToggleExpand={() => setExpandedId(expandedId === s.id ? null : s.id)}
                     onCopyEmail={copyEmail}
+                    leadScore={leadScoreById.get(s.id)}
                   />
                 ))}
               </AnimatePresence>

@@ -3,6 +3,7 @@ import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { getSeniority, getScoreGradient, getInitials } from "./stakeholder-utils";
+import { Flame, Snowflake, ThermometerSun } from "lucide-react";
 
 interface Stakeholder {
   id: string;
@@ -17,6 +18,11 @@ interface Stakeholder {
 }
 
 
+interface LeadScore {
+  score: number;
+  tier: "hot" | "warm" | "cold";
+}
+
 interface StakeholderCardProps {
   stakeholder: Stakeholder;
   index: number;
@@ -24,11 +30,21 @@ interface StakeholderCardProps {
   copiedEmail: string | null;
   onToggleExpand: () => void;
   onCopyEmail: (email: string) => void;
+  /** Score calculado (cargo + canais + engajamento) — distinto do confidence_score de origem. */
+  leadScore?: LeadScore;
 }
 
-export const StakeholderCard = ({ stakeholder: s, index, isExpanded, copiedEmail, onToggleExpand, onCopyEmail }: StakeholderCardProps) => {
+const TIER_BADGE: Record<LeadScore["tier"], { icon: React.ElementType; label: string; className: string }> = {
+  hot: { icon: Flame, label: "Quente", className: "bg-destructive/10 text-destructive border-destructive/30" },
+  warm: { icon: ThermometerSun, label: "Morno", className: "bg-warning/10 text-warning border-warning/30" },
+  cold: { icon: Snowflake, label: "Frio", className: "bg-secondary/60 text-muted-foreground border-border/50" },
+};
+
+export const StakeholderCard = ({ stakeholder: s, index, isExpanded, copiedEmail, onToggleExpand, onCopyEmail, leadScore }: StakeholderCardProps) => {
   const sen = getSeniority(s.seniority);
   const score = s.confidence_score || 0;
+  const tier = leadScore ? TIER_BADGE[leadScore.tier] : null;
+  const TierIcon = tier?.icon;
 
   return (
     <motion.div
@@ -66,6 +82,16 @@ export const StakeholderCard = ({ stakeholder: s, index, isExpanded, copiedEmail
             </Badge>
             {s.department && (
               <Badge variant="outline" className="text-[9px] bg-secondary/50 py-0">{s.department}</Badge>
+            )}
+            {tier && TierIcon && (
+              <Badge
+                variant="outline"
+                className={`text-[9px] gap-0.5 py-0 ${tier.className}`}
+                title={`Lead score ${leadScore!.score}/100`}
+              >
+                <TierIcon className="h-2.5 w-2.5" />
+                {tier.label} {leadScore!.score}
+              </Badge>
             )}
           </div>
         </div>

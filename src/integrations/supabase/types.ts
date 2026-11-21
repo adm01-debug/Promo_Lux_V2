@@ -1271,6 +1271,39 @@ export type Database = {
         }
         Relationships: []
       }
+      changelog_entries: {
+        Row: {
+          body: string
+          category: string
+          created_at: string
+          id: string
+          published_at: string
+          slug: string
+          title: string
+          version: string | null
+        }
+        Insert: {
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          published_at?: string
+          slug: string
+          title: string
+          version?: string | null
+        }
+        Update: {
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          published_at?: string
+          slug?: string
+          title?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           business_status: string | null
@@ -1532,6 +1565,44 @@ export type Database = {
         }
         Relationships: []
       }
+      dashboard_layouts: {
+        Row: {
+          created_at: string
+          dashboard_key: string
+          id: string
+          organization_id: string | null
+          updated_at: string
+          user_id: string
+          widgets: Json
+        }
+        Insert: {
+          created_at?: string
+          dashboard_key?: string
+          id?: string
+          organization_id?: string | null
+          updated_at?: string
+          user_id?: string
+          widgets?: Json
+        }
+        Update: {
+          created_at?: string
+          dashboard_key?: string
+          id?: string
+          organization_id?: string | null
+          updated_at?: string
+          user_id?: string
+          widgets?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dashboard_layouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_activities: {
         Row: {
           content: string | null
@@ -1572,6 +1643,66 @@ export type Database = {
             columns: ["deal_id"]
             isOneToOne: false
             referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_predictions: {
+        Row: {
+          computed_at: string
+          created_at: string
+          deal_id: string
+          drivers: Json
+          id: string
+          model_version: string
+          organization_id: string | null
+          predicted_close_date: string | null
+          updated_at: string
+          user_id: string
+          weighted_value: number
+          win_probability: number
+        }
+        Insert: {
+          computed_at?: string
+          created_at?: string
+          deal_id: string
+          drivers?: Json
+          id?: string
+          model_version?: string
+          organization_id?: string | null
+          predicted_close_date?: string | null
+          updated_at?: string
+          user_id?: string
+          weighted_value?: number
+          win_probability?: number
+        }
+        Update: {
+          computed_at?: string
+          created_at?: string
+          deal_id?: string
+          drivers?: Json
+          id?: string
+          model_version?: string
+          organization_id?: string | null
+          predicted_close_date?: string | null
+          updated_at?: string
+          user_id?: string
+          weighted_value?: number
+          win_probability?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_predictions_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: true
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_predictions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -2480,6 +2611,63 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_scores: {
+        Row: {
+          computed_at: string
+          created_at: string
+          id: string
+          model_version: string
+          organization_id: string | null
+          score: number
+          signals: Json
+          stakeholder_id: string
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          computed_at?: string
+          created_at?: string
+          id?: string
+          model_version?: string
+          organization_id?: string | null
+          score?: number
+          signals?: Json
+          stakeholder_id: string
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          computed_at?: string
+          created_at?: string
+          id?: string
+          model_version?: string
+          organization_id?: string | null
+          score?: number
+          signals?: Json
+          stakeholder_id?: string
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_scores_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_scores_stakeholder_id_fkey"
+            columns: ["stakeholder_id"]
+            isOneToOne: true
+            referencedRelation: "stakeholders"
             referencedColumns: ["id"]
           },
         ]
@@ -5395,6 +5583,23 @@ export type Database = {
         Args: { _id: string; _result_id?: string }
         Returns: undefined
       }
+      compute_deal_prediction: {
+        Args: { _deal_id: string }
+        Returns: {
+          win_probability: number
+          predicted_close_date: string
+          weighted_value: number
+          drivers: Json
+        }[]
+      }
+      compute_lead_score: {
+        Args: { _stakeholder_id: string }
+        Returns: {
+          score: number
+          tier: string
+          signals: Json
+        }[]
+      }
       compute_sla_backoff: {
         Args: { p_attempt: number; p_sla_seconds: number }
         Returns: string
@@ -5840,6 +6045,21 @@ export type Database = {
       record_vault_cookie_snapshots: {
         Args: { _payload: Json }
         Returns: number
+      }
+      refresh_deal_prediction: {
+        Args: { _deal_id: string }
+        Returns: Database["public"]["Tables"]["deal_predictions"]["Row"]
+      }
+      refresh_lead_score: {
+        Args: { _stakeholder_id: string }
+        Returns: Database["public"]["Tables"]["lead_scores"]["Row"]
+      }
+      refresh_org_scores: {
+        Args: { _org_id: string }
+        Returns: {
+          leads_atualizados: number
+          deals_atualizados: number
+        }[]
       }
       replay_dead_letter: { Args: { _dlq_id: string }; Returns: string }
       replay_dead_letter_batch: {
