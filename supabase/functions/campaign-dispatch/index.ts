@@ -114,6 +114,28 @@ Deno.serve(async (req) => {
     return json({ error: "Method not allowed" }, 405);
   }
 
+  // Gate de auth (gap R27-CRIT-01): aceita apenas
+  //  - Bearer service_role (cron agendado `campaign-dispatch-10min` e
+  //    automação interna — mesmo padrão das outras cron functions), ou
+  //  - JWT de usuário autenticado (POST manual "Enviar agora" do front).
+  // Sem header válido → 401. Bloqueia disparo anônimo de campanhas ativas.
+  const authHeader = req.headers.get("Authorization");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const isServiceRole = !!serviceKey && authHeader === `Bearer ${serviceKey}`;
+  let authedUserId: string | null = null;
+  if (!isServiceRole && authHeader && req.method === "POST") {
+    const userClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: userData, error: userErr } = await userClient.auth.getUser();
+    if (!userErr && userData?.user) authedUserId = userData.user.id;
+  }
+  if (!isServiceRole && !authedUserId) {
+    return json({ ok: false, error: "unauthorized" }, 401);
+  }
+
   const admin = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
