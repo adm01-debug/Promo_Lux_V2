@@ -16,7 +16,7 @@ const ERRO_42P10 = {
 
 type Behavior = Record<string, { code?: string; message?: string } | "ok">;
 
-function mockClient(behavior: Behavior) {
+function mockClient(behavior: Behavior, existing?: { id: string }) {
   const calls: string[] = [];
   const client = {
     from() {
@@ -32,6 +32,20 @@ function mockClient(behavior: Behavior) {
                 error: r ?? ERRO_42P10,
               });
             },
+          };
+        },
+        select() {
+          return {
+            eq() { return this; },
+            limit() { return this; },
+            maybeSingle: () => Promise.resolve({ data: existing ?? null, error: null }),
+          };
+        },
+        update() {
+          calls.push("update");
+          return {
+            eq() { return this; },
+            select: () => Promise.resolve({ data: [{ id: existing?.id ?? "u1" }], error: null }),
           };
         },
         insert() {
@@ -62,18 +76,41 @@ Deno.test("upsertCompanies: cai para name_source quando place_id da 42P10", asyn
   assertEquals(calls, ["upsert:organization_id,place_id", "upsert:organization_id,name,source"]);
 });
 
-Deno.test("upsertCompanies: cai para insert puro quando nao ha constraint unica", async () => {
+Deno.test("upsertCompanies: sem constraint, insere quando a empresa ainda nao existe", async () => {
   const { client, calls } = mockClient({
     "organization_id,place_id": ERRO_42P10,
     "organization_id,name,source": ERRO_42P10,
   });
   const res = await upsertCompanies(client, [{ place_id: "p1", name: "A" }], { hasPlaceId: true });
-  assertEquals(res.strategy, "insert");
+  assertEquals(res.strategy, "manual");
   assertEquals(res.data.length, 1);
+  // Regressao: o fallback funcionou, entao NAO pode reportar erro. Reportar o
+  // 42P10 original fazia o caller descartar o resultado e voltar a dizer
+  // "0 empresas criadas" mesmo com a linha gravada.
+  assertEquals(res.error, null);
   assertEquals(calls, [
     "upsert:organization_id,place_id",
     "upsert:organization_id,name,source",
     "insert",
+  ]);
+});
+
+Deno.test("upsertCompanies: sem constraint, atualiza quando a empresa ja existe", async () => {
+  const { client, calls } = mockClient(
+    { "organization_id,place_id": ERRO_42P10, "organization_id,name,source": ERRO_42P10 },
+    { id: "existente-1" },
+  );
+  const res = await upsertCompanies(
+    client,
+    [{ place_id: "p1", name: "A", organization_id: "o1" }],
+    { hasPlaceId: true },
+  );
+  assertEquals(res.strategy, "manual");
+  assertEquals(res.error, null);
+  assertEquals(calls, [
+    "upsert:organization_id,place_id",
+    "upsert:organization_id,name,source",
+    "update",
   ]);
 });
 
