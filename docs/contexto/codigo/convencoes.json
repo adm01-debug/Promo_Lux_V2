@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "merge: feat(ci): smoke de CORS das edge functions no production-smoke",
    "merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo",
    "merge: feat(email): tracking de open/click assinado no envio de campanhas",
    "merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico",
-   "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)",
-   "chore: adiciona backlog verificado e linha de base (#80)"
+   "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)"
   ]
  },
  "pr_template": null,

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "50782f3fae63015fa7162e9a7ee627c24aa881f2",
+  "commit": "568555da3775de7128ef5ffa66fc4d16711a83d4",
   "branch": "main",
-  "data_commit": "2026-11-21T11:24:16-03:00",
+  "data_commit": "2026-11-21T11:32:29-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "568555d",
+    "data": "2026-11-21",
+    "assunto": "merge: feat(ci): smoke de CORS das edge functions no production-smoke"
+   },
    {
     "sha": "50782f3",
     "data": "2026-11-21",
@@ -126,11 +131,6 @@
     "sha": "11f8576",
     "data": "2026-11-19",
     "assunto": "chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)"
-   },
-   {
-    "sha": "99fb844",
-    "data": "2026-11-19",
-    "assunto": "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)"
    }
   ],
   "arquivos_mudados_7d": 55,
@@ -270,6 +270,10 @@
     "mudancas": 2
    },
    {
+    "arquivo": ".github/workflows/production-smoke.yml",
+    "mudancas": 2
+   },
+   {
     "arquivo": "CONTRIBUTING.md",
     "mudancas": 2
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "inventario/estado/README.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "inventario/estado/edges.json",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 54
+    "commits": 55
    },
    {
     "autor": "dependabot[bot]",

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `50782f3fae63015fa7162e9a7ee627c24aa881f2` (2026-11-21T11:24:16-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `568555da3775de7128ef5ffa66fc4d16711a83d4` (2026-11-21T11:32:29-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,7 +216,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6548 nós · 14066 arestas · 577 comunidades · grafo do commit `50782f3f`
+- 6548 nós · 14066 arestas · 577 comunidades · grafo do commit `568555da`
 - comunidades maiores: Monitoring.tsx (107), cn (95), lucide-react (84), gerar.mjs (80), input.tsx (80), OrganizationsView.tsx (75), @tanstack/react-query (74), generate.py (73), badge.tsx (73), react (65), dependencies (65), campaign-dispatch/index.ts (64)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -329,6 +329,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `568555d` merge: feat(ci): smoke de CORS das edge functions no production-smoke
 - 2026-11-21 `50782f3` merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo
 - 2026-11-21 `fe41396` merge: feat(email): tracking de open/click assinado no envio de campanhas
 - 2026-11-21 `03dd603` merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `675f86d` chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)
 - 2026-11-20 `b9cce50` infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)
 - 2026-11-20 `5392988` feat(deps): bump vite 6 para 8.3.8 (major) e corrige manualChunks para API do vite 8 (#71)
-- 2026-11-20 `c97523a` fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
