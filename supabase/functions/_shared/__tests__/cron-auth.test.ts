@@ -4,7 +4,7 @@ import { isCronAuthorized, requestToken, timingSafeEqual } from "../cron-auth.ts
 // `cron-auth.ts` le Deno.env dentro das funcoes (lazy), entao o shim precisa
 // existir apenas no momento da chamada - nao no import.
 const env: Record<string, string> = {};
-(globalThis as any).Deno = { env: { get: (k: string) => env[k] } };
+Object.assign(globalThis, { Deno: { env: { get: (k: string) => env[k] } } });
 
 const SERVICE = "service-role-key-de-teste";
 const ANON = "anon-key-de-teste";
