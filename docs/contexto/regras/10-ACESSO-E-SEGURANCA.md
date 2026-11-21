@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4931d9eb98` · branch `main` · 2026-11-21 21:18 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8723328629` · branch `main` · 2026-11-21 21:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -126,7 +126,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 180 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 181 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -278,7 +278,7 @@
 - `supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql`
 - `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql`
 - `supabase/migrations/20260722114256_52e41091-6d26-4aac-b35a-9a38958ee119.sql`
-- … +30 (lista completa em `context.json`)
+- … +31 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -429,7 +429,7 @@ Middleware matcher (Next.js): nenhum
 
 | Ação | Para/De | Privilégios | Objetos |
 |---|---|---|---|
-| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +31 |
+| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +32 |
 | grant | authenticated | insert, update, delete | `role_permissions` |
 | grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +26 |
 | grant | authenticated | select, insert | `automation_execution_logs`, `instagram_scrape_results`, `cnpj_enrich_queue` |

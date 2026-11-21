@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "4931d9eb98709e8abeb33e1f96a4060e307f0812",
+  "sha": "8723328629c3a72a41f117be24d0a35f93a82ca9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 21:18 UTC",
-  "files_total": 1066,
-  "code_files": 891,
-  "code_lines": 129132
+  "generated_at": "2026-11-21 21:36 UTC",
+  "files_total": 1067,
+  "code_files": 892,
+  "code_lines": 129144
  },
  "version": "1.3.2",
- "facts_hash": "8f0039a71ac14576",
+ "facts_hash": "1152016d14a51398",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   "languages": {
    ".ts": 355,
    ".tsx": 279,
-   ".sql": 227,
+   ".sql": 228,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -19316,6 +19316,7 @@
    "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -23588,6 +23589,14 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_org_scores",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql"
    }
   ],
   "raises": [
@@ -27954,8 +27963,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 223,
-   "lines": 13776,
+   "files": 224,
+   "lines": 13788,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -58872,7 +58881,8 @@
    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
    "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
-   "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql"
   ],
   "security_definer_fns": [
    "accept_org_invite",
@@ -63163,6 +63173,14 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_org_scores",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql"
    }
   ],
   "guards": [
@@ -86440,13 +86458,27 @@
    "path": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
    "lines": 369,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql": {
+   "path": "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql",
+   "lines": 12,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "4931d9eb98709e8abeb33e1f96a4060e307f0812",
+  "sha": "8723328629c3a72a41f117be24d0a35f93a82ca9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8723328",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix: grant execute de refresh_org_scores para authenticated (#104)",
+    "files": [
+     "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql"
+    ]
+   },
    {
     "sha": "4931d9e",
     "date": "2026-11-21",
@@ -86789,15 +86821,6 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "675f86d",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "chore(ci): torna Dependency Review informativo (org sem licença Advanced Security) (#73)",
-    "files": [
-     ".github/workflows/dependency-review.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -86842,6 +86865,10 @@
     2
    ],
    [
+    "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql",
+    1
+   ],
+   [
     "src/components/lux/ChangelogDialog.tsx",
     1
    ],
@@ -86875,10 +86902,6 @@
    ],
    [
     "src/hooks/useChangelog.ts",
-    1
-   ],
-   [
-    "src/hooks/useDashboardLayout.ts",
     1
    ]
   ]

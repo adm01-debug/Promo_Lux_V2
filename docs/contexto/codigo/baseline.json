@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4931d9eb98709e8abeb33e1f96a4060e307f0812",
+  "commit": "8723328629c3a72a41f117be24d0a35f93a82ca9",
   "branch": "main",
-  "data_commit": "2026-11-21T18:17:31-03:00",
+  "data_commit": "2026-11-21T18:36:19-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8723328",
+    "data": "2026-11-21",
+    "assunto": "fix: grant execute de refresh_org_scores para authenticated (#104)"
+   },
    {
     "sha": "4931d9e",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "8e0be69",
     "data": "2026-11-20",
     "assunto": "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)"
-   },
-   {
-    "sha": "8b16f55",
-    "data": "2026-11-20",
-    "assunto": "fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)"
    }
   ],
-  "arquivos_mudados_7d": 108,
+  "arquivos_mudados_7d": 109,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 72
+    "commits": 73
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1047,
+  "arquivos_total": 1048,
   "arquivos_codigo": 660,
   "linhas_codigo": 113535,
   "rotas": 10,
@@ -322,7 +322,7 @@
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
-  "migrations": 223,
+  "migrations": 224,
   "cron_jobs": 29,
   "testes": 124,
   "workflows": 9,
