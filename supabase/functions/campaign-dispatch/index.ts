@@ -14,6 +14,7 @@
 // Acionamento: cron (sem body) processa todas as campanhas ativas; POST com
 // { campaign_id } processa apenas aquela campanha (trigger manual).
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { applyEmailTracking } from "../_shared/tracking-links.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -319,13 +320,27 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     const subject = personalize(chosen.subject?.trim() || cur.subject?.trim() || campaign.name, r);
     const body = personalize(chosen.body?.trim() || cur.body?.trim() || defaultBody(campaign.name), r);
 
+    // Tracking de open/click: monta o HTML (pixel + links assinados) quando o
+    // segredo está configurado. Senão, envia apenas texto simples (sem
+    // telemetria) — nunca quebra o envio.
+    let htmlBody: string | null = null;
+    const trackingSecret = Deno.env.get("TRACKING_SIGNING_SECRET");
+    const publicBase = Deno.env.get("PUBLIC_SUPABASE_URL") || Deno.env.get("SUPABASE_URL") || "";
+    if (trackingSecret && publicBase) {
+      try {
+        htmlBody = (await applyEmailTracking(publicBase, r.id, body, trackingSecret)).html;
+      } catch {
+        htmlBody = null; // tracking é best-effort; envio nunca falha por isso
+      }
+    }
+
     // Reutiliza thread da primeira mensagem para manter o encadeamento (follow-ups).
     const thread = await firstThreadFor(admin, r.id);
 
     try {
       const meta = fresh.provider === "gmail"
-        ? await sendGmail(fresh, r.email, subject, body, thread)
-        : await sendOutlook(fresh, r.email, subject, body);
+        ? await sendGmail(fresh, r.email, subject, body, thread, htmlBody)
+        : await sendOutlook(fresh, r.email, subject, body, htmlBody);
 
       // Registra a mensagem enviada (threading para reply-detection).
       // Idempotência garantida pelo índice único (recipient_id, step_index).
@@ -579,6 +594,7 @@ async function sendGmail(
   subject: string,
   body: string,
   thread?: { threadId: string | null; rfc822: string | null } | null,
+  htmlBody?: string | null,
 ): Promise<SendMeta> {
   const fromDomain = acc.email.split("@")[1] || "lux.ai";
   const rfc822Id = buildRfc822Id(fromDomain);
@@ -589,9 +605,51 @@ async function sendGmail(
     `Subject: ${encodeMimeSubject(subject)}`,
     `Message-ID: ${rfc822Id}`,
     `MIME-Version: 1.0`,
-    `Content-Type: text/plain; charset="UTF-8"`,
-    `Content-Transfer-Encoding: 8bit`,
   ];
+  if (htmlBody) {
+    // Multipart alternativo: HTML com tracking + fallback text/plain puro.
+    headers.push("Content-Type: multipart/alternative; boundary=\"lux-boundary\"");
+    headers.push(`Content-Transfer-Encoding: 8bit`);
+    // Encadeamento de follow-ups: referencia a mensagem original.
+    if (thread?.rfc822) {
+      headers.push(`In-Reply-To: ${thread.rfc822}`);
+      headers.push(`References: ${thread.rfc822}`);
+    }
+    const mime = [
+      ...headers,
+      ``,
+      `--lux-boundary`,
+      `Content-Type: text/plain; charset="UTF-8"`,
+      `Content-Transfer-Encoding: 8bit`,
+      ``,
+      body,
+      `--lux-boundary`,
+      `Content-Type: text/html; charset="UTF-8"`,
+      `Content-Transfer-Encoding: 8bit`,
+      ``,
+      htmlBody,
+      `--lux-boundary--`,
+      ``,
+    ].join("\r\n");
+
+    const payload: Record<string, unknown> = { raw: encodeBase64Url(mime) };
+    if (thread?.threadId) payload.threadId = thread.threadId;
+
+    const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${acc.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(`Gmail send [${res.status}]: ${JSON.stringify(data)}`);
+    return { providerMessageId: data.id ?? null, rfc822MessageId: rfc822Id, threadId: data.threadId ?? null };
+  }
+  // Fallback: continua enviando apenas texto simples (sem HTML/tracking).
+  headers.push(`Content-Type: text/plain; charset="UTF-8"`);
+  headers.push(`Content-Transfer-Encoding: 8bit`);
   // Encadeamento de follow-ups: referencia a mensagem original.
   if (thread?.rfc822) {
     headers.push(`In-Reply-To: ${thread.rfc822}`);
@@ -616,7 +674,7 @@ async function sendGmail(
 }
 
 
-async function sendOutlook(acc: EmailAccount, to: string, subject: string, body: string): Promise<SendMeta> {
+async function sendOutlook(acc: EmailAccount, to: string, subject: string, body: string, htmlBody?: string | null): Promise<SendMeta> {
   const res = await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
     method: "POST",
     headers: {
@@ -626,7 +684,9 @@ async function sendOutlook(acc: EmailAccount, to: string, subject: string, body:
     body: JSON.stringify({
       message: {
         subject,
-        body: { contentType: "Text", content: body },
+        body: htmlBody
+          ? { contentType: "HTML", content: htmlBody }
+          : { contentType: "Text", content: body },
         toRecipients: [{ emailAddress: { address: to } }],
       },
       saveToSentItems: true,
