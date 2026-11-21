@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRateLimit } from "@/hooks/useRateLimit";
 import { toast } from "@/hooks/use-toast";
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
-
 /**
  * Destino pós-autenticação. Quando o usuário chega ao login vindo da tela de
  * consentimento OAuth (`/login?next=/.lovable/oauth/consent?...`), TODOS os
@@ -94,10 +93,10 @@ export function useLoginForm() {
       if (error) {
         triggerShake();
         toast({ title: "Erro no login", description: error.message, variant: "destructive" });
-      } else {
-        setShowConfetti(true);
-        toast({ title: "Bem-vindo de volta! 🎉", description: "Login realizado com sucesso." });
+        return;
       }
+      setShowConfetti(true);
+      toast({ title: "Bem-vindo de volta! 🎉", description: "Login realizado com sucesso." });
     } finally {
       setIsSubmitting(false);
     }

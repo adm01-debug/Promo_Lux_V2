@@ -11,6 +11,8 @@ import { GoogleLoginButton } from "@/components/lux/auth/GoogleLoginButton";
 import { ForgotPasswordOverlay } from "@/components/lux/auth/ForgotPasswordOverlay";
 import { RateLimitWarning } from "@/components/lux/auth/RateLimitWarning";
 import { PasswordStrengthMeter } from "@/components/lux/auth/PasswordStrengthMeter";
+import { MFAVerify } from "@/components/auth/MFAVerify";
+import { useAuth } from "@/contexts/auth-context";
 
 interface LoginCardProps {
   email: string;
@@ -62,6 +64,22 @@ export function LoginCard(props: LoginCardProps) {
     locked, rateLimitMsg, shakeError,
     handleGoogleLogin, handleEmailLogin, handleEmailSignup, handleForgotPassword,
   } = props;
+  const { mfaRequired, setMfaRequired } = useAuth();
+
+  // Etapa 2: sessÃ£o em AAL1 com fator ativo — exige o cÃ³digo do autenticador
+  // antes de liberar o dashboard. MFAVerify (challenge+verify) eleva a AAL2.
+  if (mfaRequired) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full flex flex-col items-center"
+        aria-label="VerificaÃ§Ã£o em duas etapas"
+      >
+        <MFAVerify onSuccess={() => setMfaRequired(false)} onCancel={() => setMfaRequired(false)} />
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
