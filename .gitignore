@@ -60,3 +60,5 @@ supabase/cli-latest
 .env
 .env.local
 .env.*.local
+.vercel
+.env*
