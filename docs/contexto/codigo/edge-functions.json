@@ -627,7 +627,7 @@
    "nome": "email-poll-replies",
    "entrada": "supabase/functions/email-poll-replies/index.ts",
    "arquivos": 1,
-   "linhas": 370,
+   "linhas": 376,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -656,7 +656,9 @@
     "login.microsoftonline.com",
     "oauth2.googleapis.com"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/integrations/EmailAccountsPanel.tsx"
    ],
@@ -1895,7 +1897,7 @@
    "nome": "vault-cookie-health",
    "entrada": "supabase/functions/vault-cookie-health/index.ts",
    "arquivos": 1,
-   "linhas": 208,
+   "linhas": 214,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1917,7 +1919,9 @@
    "hosts_externos": [
     "supabase.atomicabr.com.br"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/monitoring/VaultCookiesPanel.tsx"
    ],
@@ -2055,7 +2059,7 @@
    "nome": "web-scrape-worker",
    "entrada": "supabase/functions/web-scrape-worker/index.ts",
    "arquivos": 1,
-   "linhas": 414,
+   "linhas": 420,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -2084,6 +2088,7 @@
    "usa_shared": [
     "chaos.ts",
     "circuit-breaker.ts",
+    "cron-auth.ts",
     "heuristics.ts",
     "html-to-markdown.ts",
     "robots.ts"

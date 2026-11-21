@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
+  "commit": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
   "branch": "main",
-  "data_commit": "2026-11-21T15:37:20-03:00",
+  "data_commit": "2026-11-21T16:14:05-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c229e3f",
+    "data": "2026-11-21",
+    "assunto": "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)"
+   },
    {
     "sha": "5f0ccec",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "c97523a",
     "data": "2026-11-20",
     "assunto": "fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)"
-   },
-   {
-    "sha": "5095441",
-    "data": "2026-11-20",
-    "assunto": "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)"
    }
   ],
-  "arquivos_mudados_7d": 74,
+  "arquivos_mudados_7d": 77,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 63
+    "commits": 64
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1032,
   "arquivos_codigo": 650,
-  "linhas_codigo": 111182,
+  "linhas_codigo": 111200,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 123,
-   "linhas": 21844
+   "linhas": 21862
   },
   "tailwind.config.ts": {
    "arquivos": 1,

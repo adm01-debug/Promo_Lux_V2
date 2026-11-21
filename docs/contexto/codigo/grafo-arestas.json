@@ -2177,6 +2177,9 @@
   "supabase/functions/dlq-alerts/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],
+  "supabase/functions/email-poll-replies/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/email-verify/index.ts": [
    "supabase/functions/_shared/dns-guard.ts"
   ],
@@ -2269,8 +2272,12 @@
   "supabase/functions/track-open/index.ts": [
    "supabase/functions/_shared/tracking-signature.ts"
   ],
+  "supabase/functions/vault-cookie-health/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/web-scrape-worker/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/web-scrape/chaos.ts",
    "supabase/functions/_shared/web-scrape/heuristics.ts",
    "supabase/functions/_shared/web-scrape/html-to-markdown.ts",

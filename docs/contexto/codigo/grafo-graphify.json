@@ -4,21 +4,21 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
+ "commit_do_grafo": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
  "grafo_atual": true,
  "nos": 6583,
- "arestas": 14170,
- "comunidades_total": 571,
+ "arestas": 14179,
+ "comunidades_total": 578,
  "relacoes": {
   "calls": 2099,
   "cites": 11,
   "contains": 4891,
   "defines": 12,
   "dynamic_import": 50,
-  "imports": 3044,
-  "imports_from": 2847,
+  "imports": 3047,
+  "imports_from": 2850,
   "indexes": 288,
-  "indirect_call": 122,
+  "indirect_call": 125,
   "inherits": 9,
   "method": 117,
   "rationale_for": 23,
@@ -28,97 +28,63 @@
   "triggers": 86
  },
  "origem": {
-  "EXTRACTED": 13778,
-  "INFERRED": 392
+  "EXTRACTED": 13784,
+  "INFERRED": 395
  },
  "comunidades": [
   {
    "id": 0,
    "nome": "Monitoring.tsx",
-   "nos": 148,
-   "callables": 78,
-   "arquivos": 41,
+   "nos": 158,
+   "callables": 74,
+   "arquivos": 43,
    "exemplos_arquivos": [
     "package.json",
+    "src/components/lux/LushaIntelligenceView.tsx",
+    "src/components/lux/OrgProxiesView.tsx",
+    "src/components/lux/OrgViolationsView.tsx",
     "src/components/lux/PlacesApiNewToggle.tsx",
-    "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
-    "src/components/lux/monitoring/ApiLatencyPanel.tsx",
-    "src/components/lux/monitoring/AuditTrailPanel.tsx",
-    "src/components/lux/monitoring/AutomationLogsPanel.tsx",
-    "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
-    "src/components/lux/monitoring/CircuitBreakerPanel.tsx"
+    "src/components/lux/PlacesApiUsageCard.tsx",
+    "src/components/lux/lusha/DecisionMakersGrid.tsx",
+    "src/components/lux/lusha/OracleV2Panel.tsx"
    ]
   },
   {
    "id": 1,
-   "nome": "cn",
-   "nos": 141,
-   "callables": 37,
-   "arquivos": 34,
+   "nome": "react",
+   "nos": 139,
+   "callables": 61,
+   "arquivos": 49,
    "exemplos_arquivos": [
     "package.json",
-    "src/components/NavLink.tsx",
-    "src/components/lux/ThemeToggle.tsx",
-    "src/components/lux/automations/AutomationKpiCards.tsx",
-    "src/components/lux/layout/Sidebar.tsx",
-    "src/components/lux/lusha/LushaCookieHealthBanner.tsx",
-    "src/components/lux/lusha/OracleV2Panel.tsx",
-    "src/components/lux/monitoring/AutomationLogsPanel.tsx"
-   ]
-  },
-  {
-   "id": 2,
-   "nome": "OrgViolationsView.tsx",
-   "nos": 141,
-   "callables": 72,
-   "arquivos": 36,
-   "exemplos_arquivos": [
-    "package.json",
-    "src/components/lux/DataError.tsx",
-    "src/components/lux/GmapsScraperView.tsx",
-    "src/components/lux/ICPConfigView.tsx",
-    "src/components/lux/IntentSignalsView.tsx",
-    "src/components/lux/OrgViolationsView.tsx",
-    "src/components/lux/PlacesApiNewToggle.tsx",
-    "src/components/lux/ScrapeResultsView.tsx"
-   ]
-  },
-  {
-   "id": 3,
-   "nome": "button.tsx",
-   "nos": 123,
-   "callables": 60,
-   "arquivos": 32,
-   "exemplos_arquivos": [
+    "src/components/lux/AIAgentView.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
     "src/components/lux/CampaignsView.tsx",
-    "src/components/lux/CompanyDetailModal.tsx",
-    "src/components/lux/EditCompanyDialog.tsx",
-    "src/components/lux/KeyboardShortcutsDialog.tsx",
-    "src/components/lux/SettingsView.tsx",
-    "src/components/lux/StickySaveBar.tsx",
-    "src/components/lux/WorkflowsView.tsx"
-   ]
-  },
-  {
-   "id": 4,
-   "nome": "lucide-react",
-   "nos": 121,
-   "callables": 57,
-   "arquivos": 35,
-   "exemplos_arquivos": [
-    "package.json",
-    "src/components/lux/ActivityFeed.tsx",
-    "src/components/lux/AnalyticsView.tsx",
-    "src/components/lux/AutomationsList.tsx",
     "src/components/lux/ConnectionStatus.tsx",
-    "src/components/lux/EmptyState.tsx",
-    "src/components/lux/EnrichmentFunnel.tsx",
+    "src/components/lux/DataError.tsx",
+    "src/components/lux/EditCompanyDialog.tsx",
     "src/components/lux/ErrorBoundary.tsx"
    ]
   },
   {
-   "id": 5,
+   "id": 2,
+   "nome": "@tanstack/react-query",
+   "nos": 135,
+   "callables": 79,
+   "arquivos": 45,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/CompaniesMapView.tsx",
+    "src/components/lux/CompanyReviewsList.tsx",
+    "src/components/lux/OrgViolationsView.tsx",
+    "src/components/lux/OrganizationsView.tsx",
+    "src/components/lux/PlacesApiUsageCard.tsx",
+    "src/components/lux/integrations/ApiKeysPanel.tsx",
+    "src/components/lux/integrations/WebhooksPanel.tsx"
+   ]
+  },
+  {
+   "id": 3,
    "nome": "snapshot.py",
    "nos": 102,
    "callables": 79,
@@ -128,41 +94,41 @@
    ]
   },
   {
-   "id": 6,
-   "nome": "LushaIntelligenceView.tsx",
-   "nos": 87,
-   "callables": 41,
+   "id": 4,
+   "nome": "cn",
+   "nos": 99,
+   "callables": 32,
    "arquivos": 28,
    "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "src/components/lux/CompaniesView.tsx",
-    "src/components/lux/CompanyPagination.tsx",
-    "src/components/lux/EmailSuppressionsView.tsx",
-    "src/components/lux/ICPConfigView.tsx",
-    "src/components/lux/LushaIntelligenceView.tsx",
-    "src/components/lux/PlacesApiUsageCard.tsx",
-    "src/components/lux/RecycleBinView.tsx"
-   ]
-  },
-  {
-   "id": 7,
-   "nome": "react",
-   "nos": 83,
-   "callables": 44,
-   "arquivos": 32,
-   "exemplos_arquivos": [
     "package.json",
+    "src/components/NavLink.tsx",
     "src/components/lux/AIAgentView.tsx",
-    "src/components/lux/CompaniesMapView.tsx",
-    "src/components/lux/__tests__/ICPConfigView.test.tsx",
-    "src/components/lux/integrations/ApiKeysPanel.tsx",
-    "src/components/lux/integrations/WebhooksPanel.tsx",
-    "src/components/lux/layout/MobileBottomNav.tsx",
-    "src/components/lux/monitoring/SlaAlertSettingsCard.tsx"
+    "src/components/lux/layout/Sidebar.tsx",
+    "src/components/lux/lusha/OracleV2Panel.tsx",
+    "src/components/lux/monitoring/AutomationLogsPanel.tsx",
+    "src/components/lux/monitoring/AutomationStatusPanel.tsx",
+    "src/components/lux/monitoring/MonitoringView.tsx"
    ]
   },
   {
-   "id": 8,
+   "id": 5,
+   "nome": "OAuthSandboxPanel.tsx",
+   "nos": 90,
+   "callables": 51,
+   "arquivos": 18,
+   "exemplos_arquivos": [
+    "src/components/lux/ScrapeResultsView.tsx",
+    "src/components/lux/campaigns/CampaignFormFields.tsx",
+    "src/components/lux/integrations/DryRunLogsPanel.tsx",
+    "src/components/lux/integrations/OAuthSandboxPanel.tsx",
+    "src/components/lux/map/MapFilters.tsx",
+    "src/components/lux/monitoring/AuditTrailPanel.tsx",
+    "src/components/lux/monitoring/AutomationLogsPanel.tsx",
+    "src/components/lux/monitoring/SlaHistoryCard.tsx"
+   ]
+  },
+  {
+   "id": 6,
    "nome": "gerar.mjs",
    "nos": 80,
    "callables": 14,
@@ -172,24 +138,7 @@
    ]
   },
   {
-   "id": 9,
-   "nome": "ref_node_fs",
-   "nos": 73,
-   "callables": 24,
-   "arquivos": 15,
-   "exemplos_arquivos": [
-    "package.json",
-    "scripts/ai-context/gerar.unit.mjs",
-    "scripts/automation.unit.mjs",
-    "scripts/ci/check-claude-md-integrity.mjs",
-    "scripts/gen-round24-preflight.ts",
-    "scripts/gen-round25-preflight.ts",
-    "scripts/inventario/mudou-conteudo.mjs",
-    "scripts/inventario/mudou-conteudo.unit.mjs"
-   ]
-  },
-  {
-   "id": 10,
+   "id": 7,
    "nome": "generate.py",
    "nos": 71,
    "callables": 62,
@@ -199,7 +148,24 @@
    ]
   },
   {
-   "id": 11,
+   "id": 8,
+   "nome": "EmailAccountsPanel.tsx",
+   "nos": 69,
+   "callables": 43,
+   "arquivos": 12,
+   "exemplos_arquivos": [
+    "src/components/lux/NotificationsPanel.tsx",
+    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+    "src/components/lux/integrations/DisconnectAccountDialog.tsx",
+    "src/components/lux/integrations/EmailAccountsPanel.tsx",
+    "src/components/lux/integrations/EmailSyncHistorySheet.tsx",
+    "src/components/lux/integrations/OAuthSnapshotsPanel.tsx",
+    "src/components/lux/organizations/MembershipAuditDetailSheet.tsx",
+    "src/components/ui/sheet.tsx"
+   ]
+  },
+  {
+   "id": 9,
    "nome": "dependencies",
    "nos": 65,
    "callables": 0,
@@ -209,7 +175,7 @@
    ]
   },
   {
-   "id": 12,
+   "id": 10,
    "nome": "campaign-dispatch/index.ts",
    "nos": 64,
    "callables": 42,
@@ -226,7 +192,71 @@
    ]
   },
   {
+   "id": 11,
+   "nome": "CommandPalette.tsx",
+   "nos": 61,
+   "callables": 28,
+   "arquivos": 17,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "package.json",
+    "src/components/lux/AppBreadcrumbs.tsx",
+    "src/components/lux/AutoTopProgressBar.tsx",
+    "src/components/lux/CommandPalette.tsx",
+    "src/components/lux/QuickActions.tsx",
+    "src/components/lux/TopProgressBar.tsx",
+    "src/components/lux/command-palette/commandPaletteData.ts"
+   ]
+  },
+  {
+   "id": 12,
+   "nome": "Index.tsx",
+   "nos": 58,
+   "callables": 26,
+   "arquivos": 23,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "package.json",
+    "src/components/lux/EditCompanyDialog.tsx",
+    "src/components/lux/EmailSuppressionsView.tsx",
+    "src/components/lux/KeyboardShortcutsDialog.tsx",
+    "src/components/lux/RecycleBinView.tsx",
+    "src/components/lux/UnsavedChangesDialog.tsx",
+    "src/components/lux/view-skeleton-map.tsx"
+   ]
+  },
+  {
    "id": 13,
+   "nome": "RLSDiscoveryView.tsx",
+   "nos": 58,
+   "callables": 28,
+   "arquivos": 15,
+   "exemplos_arquivos": [
+    "src/components/lux/ActivityFeed.tsx",
+    "src/components/lux/AutomationsList.tsx",
+    "src/components/lux/EmptyState.tsx",
+    "src/components/lux/EnrichmentFunnel.tsx",
+    "src/components/lux/__tests__/EmptyState.test.tsx",
+    "src/components/lux/automations/AutomationEventsFeed.tsx",
+    "src/components/lux/automations/AutomationQueuePanel.tsx",
+    "src/components/lux/automations/CompanyAutomationTable.tsx"
+   ]
+  },
+  {
+   "id": 14,
+   "nome": "lint-ratchet.mjs",
+   "nos": 55,
+   "callables": 42,
+   "arquivos": 4,
+   "exemplos_arquivos": [
+    "docs/schema-tabelas-principais.md",
+    "scripts/ci/lint-ratchet.mjs",
+    "scripts/ci/lint-ratchet.unit.mjs",
+    "scripts/lib/seguranca-processo.mjs"
+   ]
+  },
+  {
+   "id": 15,
    "nome": "lib.mjs",
    "nos": 55,
    "callables": 45,
@@ -238,7 +268,7 @@
    ]
   },
   {
-   "id": 14,
+   "id": 16,
    "nome": "package.json",
    "nos": 54,
    "callables": 1,
@@ -253,24 +283,22 @@
    ]
   },
   {
-   "id": 15,
-   "nome": "OrganizationsView.tsx",
+   "id": 17,
+   "nome": "ref_node_fs",
    "nos": 51,
-   "callables": 30,
-   "arquivos": 10,
+   "callables": 16,
+   "arquivos": 6,
    "exemplos_arquivos": [
-    "package.json",
-    "src/components/lux/CompanyReviewsList.tsx",
-    "src/components/lux/OrganizationsView.tsx",
-    "src/components/lux/organizations/ActivityHistory.tsx",
-    "src/components/lux/organizations/InviteSection.tsx",
-    "src/components/lux/organizations/MemberRow.tsx",
-    "src/components/lux/organizations/WorkspaceSelector.tsx",
-    "src/components/ui/avatar.tsx"
+    "scripts/ci/check-claude-md-integrity.mjs",
+    "scripts/gen-round21-preflight.ts",
+    "scripts/gen-round24-preflight.ts",
+    "scripts/gen-round25-preflight.ts",
+    "scripts/gen-round26-preflight.ts",
+    "scripts/maintenance/typecheck.mjs"
    ]
   },
   {
-   "id": 16,
+   "id": 18,
    "nome": "scripts",
    "nos": 49,
    "callables": 0,
@@ -280,7 +308,7 @@
    ]
   },
   {
-   "id": 17,
+   "id": 19,
    "nome": "StakeholderFinderView.tsx",
    "nos": 47,
    "callables": 29,
@@ -297,7 +325,7 @@
    ]
   },
   {
-   "id": 18,
+   "id": 20,
    "nome": "ref_https",
    "nos": 47,
    "callables": 21,
@@ -314,7 +342,7 @@
    ]
   },
   {
-   "id": 19,
+   "id": 21,
    "nome": "oracle-enrich-contact/index.ts",
    "nos": 47,
    "callables": 34,
@@ -331,24 +359,7 @@
    ]
   },
   {
-   "id": 20,
-   "nome": "CommandPalette.tsx",
-   "nos": 46,
-   "callables": 20,
-   "arquivos": 12,
-   "exemplos_arquivos": [
-    "package.json",
-    "src/components/lux/AppBreadcrumbs.tsx",
-    "src/components/lux/CommandPalette.tsx",
-    "src/components/lux/QuickActions.tsx",
-    "src/components/lux/command-palette/commandPaletteData.ts",
-    "src/components/lux/layout/Header.tsx",
-    "src/components/lux/layout/Sidebar.tsx",
-    "src/components/ui/command.tsx"
-   ]
-  },
-  {
-   "id": 21,
+   "id": 22,
    "nome": "ref_npm_supabase",
    "nos": 46,
    "callables": 19,
@@ -365,48 +376,37 @@
    ]
   },
   {
-   "id": 22,
-   "nome": "lint-ratchet.mjs",
-   "nos": 46,
-   "callables": 42,
-   "arquivos": 3,
-   "exemplos_arquivos": [
-    "scripts/ci/lint-ratchet.mjs",
-    "scripts/ci/lint-ratchet.unit.mjs",
-    "scripts/lib/seguranca-processo.mjs"
-   ]
-  },
-  {
    "id": 23,
-   "nome": "vitest",
-   "nos": 44,
-   "callables": 14,
-   "arquivos": 19,
+   "nome": "CompanyDetailModal.tsx",
+   "nos": 46,
+   "callables": 16,
+   "arquivos": 15,
    "exemplos_arquivos": [
-    "package.json",
-    "src/components/lux/__tests__/CampaignsView.test.tsx",
-    "src/components/lux/__tests__/CompaniesView.test.tsx",
-    "src/components/lux/__tests__/CompanyTableRow.test.tsx",
-    "src/components/lux/__tests__/DashboardView.test.tsx",
-    "src/components/lux/__tests__/DataError.test.tsx",
-    "src/components/lux/__tests__/MapFilters.test.tsx",
-    "src/components/lux/__tests__/StatsGrid.test.tsx"
+    "src/components/lux/AnalyticsView.tsx",
+    "src/components/lux/CompanyDetailModal.tsx",
+    "src/components/lux/IntegrationsView.tsx",
+    "src/components/lux/auth/AuthLogo.tsx",
+    "src/components/lux/auth/ForgotPasswordOverlay.tsx",
+    "src/components/lux/auth/LoginCard.tsx",
+    "src/components/lux/auth/PasswordStrengthMeter.tsx",
+    "src/components/lux/auth/RateLimitWarning.tsx"
    ]
   },
   {
    "id": 24,
-   "nome": "supabase/types.ts",
-   "nos": 43,
-   "callables": 30,
-   "arquivos": 7,
+   "nome": "req",
+   "nos": 46,
+   "callables": 24,
+   "arquivos": 11,
    "exemplos_arquivos": [
-    "docs/schema-tabelas-principais.md",
-    "src/components/lux/organizations/MembershipAuditLog.tsx",
-    "src/hooks/__tests__/useAuditTrail.test.ts",
-    "src/hooks/useAuditTrail.ts",
-    "src/hooks/useFeatureFlags.ts",
-    "src/hooks/useMembershipAuditLog.ts",
-    "src/integrations/supabase/types.ts"
+    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "supabase/functions/_shared/cron-auth.ts",
+    "supabase/functions/circuit-breaker-alerts/index.ts",
+    "supabase/functions/dlq-alerts/index.ts",
+    "supabase/functions/latency-alerts/index.ts",
+    "supabase/functions/pg-net-watchdog/index.ts",
+    "supabase/functions/purge-soft-deleted/index.ts",
+    "supabase/functions/reaper-alerts/index.ts"
    ]
   },
   {
@@ -423,6 +423,20 @@
   },
   {
    "id": 26,
+   "nome": "hooks/use-toast.ts",
+   "nos": 43,
+   "callables": 29,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
+    "src/components/lux/monitoring/VaultCookiesPanel.tsx",
+    "src/components/ui/use-toast.ts",
+    "src/hooks/use-toast.ts",
+    "src/hooks/usePartitionAdvisories.ts"
+   ]
+  },
+  {
+   "id": 27,
    "nome": "automation.mjs",
    "nos": 42,
    "callables": 33,
@@ -430,23 +444,6 @@
    "exemplos_arquivos": [
     "scripts/automation.mjs",
     "scripts/maintenance/README.md"
-   ]
-  },
-  {
-   "id": 27,
-   "nome": "withOrg.ts",
-   "nos": 42,
-   "callables": 17,
-   "arquivos": 10,
-   "exemplos_arquivos": [
-    "src/contexts/ActiveOrgContext.tsx",
-    "src/contexts/AuthContext.tsx",
-    "src/contexts/__tests__/AuthContext.test.tsx",
-    "src/contexts/active-org-context.ts",
-    "src/contexts/auth-context.ts",
-    "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
-    "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
-    "src/integrations/supabase/withOrg.test.ts"
    ]
   },
   {
@@ -463,72 +460,23 @@
   },
   {
    "id": 29,
-   "nome": "useCnpjEnrich.ts",
+   "nome": "ref_node_child_process",
    "nos": 40,
-   "callables": 20,
-   "arquivos": 16,
+   "callables": 14,
+   "arquivos": 11,
    "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
     "package.json",
-    "src/components/lux/GmapsScraperView.tsx",
-    "src/hooks/useCnpjEnrich.ts",
-    "src/lib/cnpj.ts",
-    "src/lib/mcp/index.ts",
-    "src/lib/mcp/supabase.ts",
-    "src/lib/mcp/tools/get-company.ts"
+    "scripts/ai-context/gerar.unit.mjs",
+    "scripts/automation.unit.mjs",
+    "scripts/inventario/mudou-conteudo.mjs",
+    "scripts/inventario/mudou-conteudo.unit.mjs",
+    "scripts/lib/seguranca-processo.mjs",
+    "scripts/staged-autofix/run.mjs",
+    "scripts/staged-autofix/run.unit.mjs"
    ]
   },
   {
    "id": 30,
-   "nome": "useOracleV2.ts",
-   "nos": 38,
-   "callables": 22,
-   "arquivos": 6,
-   "exemplos_arquivos": [
-    "docs/ORACLE_V2.md",
-    "src/components/lux/lusha/OracleV2Panel.tsx",
-    "src/hooks/__tests__/oracleV2Helpers.test.ts",
-    "src/hooks/__tests__/useOraclePushBitrix.test.ts",
-    "src/hooks/oracleV2Helpers.ts",
-    "src/hooks/useOracleV2.ts"
-   ]
-  },
-  {
-   "id": 31,
-   "nome": "useActiveOrganization",
-   "nos": 38,
-   "callables": 26,
-   "arquivos": 11,
-   "exemplos_arquivos": [
-    "src/components/lux/OrgProxiesView.tsx",
-    "src/components/lux/ProxyFormDialog.tsx",
-    "src/components/lux/monitoring/DLQReplayPanel.tsx",
-    "src/components/lux/monitoring/DlqTriageView.tsx",
-    "src/components/lux/monitoring/OrgRateLimitsView.tsx",
-    "src/contexts/active-org-context.ts",
-    "src/hooks/useDlqItems.ts",
-    "src/hooks/useOrgProxies.ts"
-   ]
-  },
-  {
-   "id": 32,
-   "nome": "req",
-   "nos": 38,
-   "callables": 19,
-   "arquivos": 10,
-   "exemplos_arquivos": [
-    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
-    "supabase/functions/_shared/cron-auth.ts",
-    "supabase/functions/circuit-breaker-alerts/index.ts",
-    "supabase/functions/dlq-alerts/index.ts",
-    "supabase/functions/latency-alerts/index.ts",
-    "supabase/functions/pg-net-watchdog/index.ts",
-    "supabase/functions/purge-soft-deleted/index.ts",
-    "supabase/functions/reaper-alerts/index.ts"
-   ]
-  },
-  {
-   "id": 33,
    "nome": "deliverability-check/index.ts",
    "nos": 38,
    "callables": 18,
@@ -544,7 +492,7 @@
    ]
   },
   {
-   "id": 34,
+   "id": 31,
    "nome": "apify-gateway.ts",
    "nos": 37,
    "callables": 25,
@@ -557,7 +505,7 @@
    ]
   },
   {
-   "id": 35,
+   "id": 32,
    "nome": ".collect",
    "nos": 37,
    "callables": 36,
@@ -567,55 +515,41 @@
    ]
   },
   {
-   "id": 36,
+   "id": 33,
+   "nome": "withOrg.ts",
+   "nos": 36,
+   "callables": 14,
+   "arquivos": 9,
+   "exemplos_arquivos": [
+    "src/contexts/ActiveOrgContext.tsx",
+    "src/contexts/AuthContext.tsx",
+    "src/contexts/__tests__/AuthContext.test.tsx",
+    "src/contexts/active-org-context.ts",
+    "src/contexts/auth-context.ts",
+    "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
+    "src/integrations/supabase/withOrg.test.ts",
+    "src/integrations/supabase/withOrg.ts"
+   ]
+  },
+  {
+   "id": 34,
    "nome": "App.tsx",
-   "nos": 35,
-   "callables": 15,
-   "arquivos": 10,
+   "nos": 34,
+   "callables": 12,
+   "arquivos": 8,
    "exemplos_arquivos": [
     "docs/estado/01-frontend.md",
     "docs/prod-readiness.md",
     "package.json",
     "src/App.tsx",
-    "src/components/lux/AutoTopProgressBar.tsx",
-    "src/components/lux/TopProgressBar.tsx",
     "src/components/ui/sonner.tsx",
-    "src/integrations/supabase/withOrg.ts"
+    "src/integrations/supabase/withOrg.ts",
+    "src/lib/orgErrorHandler.ts",
+    "src/main.tsx"
    ]
   },
   {
-   "id": 37,
-   "nome": "cenarios.mjs",
-   "nos": 35,
-   "callables": 10,
-   "arquivos": 9,
-   "exemplos_arquivos": [
-    "scripts/ai-context/cenarios.mjs",
-    "scripts/ai-context/lib/y",
-    "scripts/ai-context/pages/C",
-    "scripts/regras_negocio/README.md",
-    "src/components/a/A",
-    "src/components/b/B",
-    "src/pages/A",
-    "src/pages/B"
-   ]
-  },
-  {
-   "id": 38,
-   "nome": "VaultCookiesPanel.tsx",
-   "nos": 34,
-   "callables": 26,
-   "arquivos": 5,
-   "exemplos_arquivos": [
-    "src/components/lux/lusha/SessionsPanel.tsx",
-    "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
-    "src/components/lux/monitoring/VaultCookiesPanel.tsx",
-    "src/hooks/use-toast.ts",
-    "src/hooks/usePartitionAdvisories.ts"
-   ]
-  },
-  {
-   "id": 39,
+   "id": 35,
    "nome": "oracle-push-bitrix/index.ts",
    "nos": 34,
    "callables": 23,
@@ -627,7 +561,7 @@
    ]
   },
   {
-   "id": 40,
+   "id": 36,
    "nome": "web-scrape-worker/index.ts",
    "nos": 34,
    "callables": 25,
@@ -644,7 +578,7 @@
    ]
   },
   {
-   "id": 41,
+   "id": 37,
    "nome": "orgErrorHandler.ts",
    "nos": 33,
    "callables": 22,
@@ -656,7 +590,7 @@
    ]
   },
   {
-   "id": 42,
+   "id": 38,
    "nome": "gmaps-proxy/index.ts",
    "nos": 33,
    "callables": 18,
@@ -671,7 +605,7 @@
    ]
   },
   {
-   "id": 43,
+   "id": 39,
    "nome": "devDependencies",
    "nos": 32,
    "callables": 0,
@@ -681,7 +615,24 @@
    ]
   },
   {
-   "id": 44,
+   "id": 40,
+   "nome": "DealsView.tsx",
+   "nos": 31,
+   "callables": 18,
+   "arquivos": 13,
+   "exemplos_arquivos": [
+    "docs/adr/021-round27-qa-exhaustive.md",
+    "docs/adr/022-round28-functional-excellence.md",
+    "docs/adr/023-round29-refactor-safety-and-parity.md",
+    "package.json",
+    "src/components/lux/DealsView.tsx",
+    "src/components/lux/deals/AddDealDialog.tsx",
+    "src/components/lux/deals/DealCard.tsx",
+    "src/components/lux/deals/DealColumn.tsx"
+   ]
+  },
+  {
+   "id": 41,
    "nome": "oracle-search-decisors/index.ts",
    "nos": 31,
    "callables": 20,
@@ -696,7 +647,7 @@
    ]
   },
   {
-   "id": 45,
+   "id": 42,
    "nome": "lusha-client.ts",
    "nos": 31,
    "callables": 26,
@@ -708,7 +659,7 @@
    ]
   },
   {
-   "id": 46,
+   "id": 43,
    "nome": "20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql",
    "nos": 31,
    "callables": 0,
@@ -718,7 +669,24 @@
    ]
   },
   {
-   "id": 47,
+   "id": 44,
+   "nome": "Analisado",
+   "nos": 30,
+   "callables": 15,
+   "arquivos": 10,
+   "exemplos_arquivos": [
+    "CHANGELOG.md",
+    "docs/adr/024-round30-refactor-safety-split.md",
+    "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
+    "src/components/lux/lusha/DecisionMakersGrid.test.tsx",
+    "src/components/lux/lusha/DecisionMakersGrid.tsx",
+    "src/components/lux/lusha/SessionsPanel.tsx",
+    "src/components/lux/lusha/constants.test.ts",
+    "src/components/lux/lusha/constants.ts"
+   ]
+  },
+  {
+   "id": 45,
    "nome": "Header.tsx",
    "nos": 30,
    "callables": 11,
@@ -734,7 +702,7 @@
    ]
   },
   {
-   "id": 48,
+   "id": 46,
    "nome": "DlqHealthCard.tsx",
    "nos": 30,
    "callables": 17,
@@ -749,41 +717,7 @@
    ]
   },
   {
-   "id": 49,
-   "nome": "DealsView.tsx",
-   "nos": 29,
-   "callables": 18,
-   "arquivos": 13,
-   "exemplos_arquivos": [
-    "docs/adr/021-round27-qa-exhaustive.md",
-    "docs/adr/022-round28-functional-excellence.md",
-    "docs/adr/023-round29-refactor-safety-and-parity.md",
-    "package.json",
-    "src/components/lux/DealsView.tsx",
-    "src/components/lux/deals/AddDealDialog.tsx",
-    "src/components/lux/deals/DealCard.tsx",
-    "src/components/lux/deals/DealColumn.tsx"
-   ]
-  },
-  {
-   "id": 50,
-   "nome": "DashboardView.tsx",
-   "nos": 29,
-   "callables": 17,
-   "arquivos": 12,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "src/components/lux/ActivityFeed.tsx",
-    "src/components/lux/AutomationsList.tsx",
-    "src/components/lux/DashboardView.tsx",
-    "src/components/lux/EnrichmentFunnel.tsx",
-    "src/components/lux/QuickActions.tsx",
-    "src/contexts/DemoContext.tsx",
-    "src/contexts/demo-context.ts"
-   ]
-  },
-  {
-   "id": 51,
+   "id": 47,
    "nome": "20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql",
    "nos": 29,
    "callables": 0,
@@ -793,7 +727,7 @@
    ]
   },
   {
-   "id": 52,
+   "id": 48,
    "nome": "scrape-queue-worker/index.ts",
    "nos": 28,
    "callables": 18,
@@ -806,7 +740,7 @@
    ]
   },
   {
-   "id": 53,
+   "id": 49,
    "nome": "Fase 1 — 22 Dimensões (nota + evidências + gaps + ações)",
    "nos": 28,
    "callables": 0,
@@ -816,7 +750,39 @@
    ]
   },
   {
-   "id": 54,
+   "id": 50,
+   "nome": "useOracleV2.ts",
+   "nos": 28,
+   "callables": 22,
+   "arquivos": 6,
+   "exemplos_arquivos": [
+    "docs/ORACLE_V2.md",
+    "src/components/lux/lusha/OracleV2Panel.tsx",
+    "src/hooks/__tests__/oracleV2Helpers.test.ts",
+    "src/hooks/__tests__/useOraclePushBitrix.test.ts",
+    "src/hooks/oracleV2Helpers.ts",
+    "src/hooks/useOracleV2.ts"
+   ]
+  },
+  {
+   "id": 51,
+   "nome": "@testing-library/react",
+   "nos": 28,
+   "callables": 11,
+   "arquivos": 12,
+   "exemplos_arquivos": [
+    "package.json",
+    "src/components/lux/__tests__/CampaignsView.test.tsx",
+    "src/components/lux/__tests__/CompaniesView.test.tsx",
+    "src/components/lux/__tests__/CompanyTableRow.test.tsx",
+    "src/components/lux/__tests__/DashboardView.test.tsx",
+    "src/components/lux/__tests__/DataError.test.tsx",
+    "src/components/lux/__tests__/MapFilters.test.tsx",
+    "src/components/lux/__tests__/StatsGrid.test.tsx"
+   ]
+  },
+  {
+   "id": 52,
    "nome": "SourceComparisonSummary.tsx",
    "nos": 28,
    "callables": 21,
@@ -830,7 +796,18 @@
    ]
   },
   {
-   "id": 55,
+   "id": 53,
+   "nome": "sidebar.tsx",
+   "nos": 28,
+   "callables": 2,
+   "arquivos": 2,
+   "exemplos_arquivos": [
+    "src/components/ui/sidebar.tsx",
+    "src/components/ui/use-sidebar.ts"
+   ]
+  },
+  {
+   "id": 54,
    "nome": "20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql",
    "nos": 28,
    "callables": 0,
@@ -840,7 +817,7 @@
    ]
   },
   {
-   "id": 56,
+   "id": 55,
    "nome": "auth",
    "nos": 27,
    "callables": 0,
@@ -852,23 +829,66 @@
    ]
   },
   {
-   "id": 57,
-   "nome": "scenarios.ts",
-   "nos": 26,
-   "callables": 5,
-   "arquivos": 7,
+   "id": 56,
+   "nome": "cenarios.mjs",
+   "nos": 27,
+   "callables": 9,
+   "arquivos": 8,
    "exemplos_arquivos": [
-    "scripts/gen-round18-preflight.ts",
-    "scripts/gen-round19-preflight.ts",
-    "scripts/mc-r35-preflight.ts",
-    "scripts/sim-scrape.ts",
-    "src/lib/resilience/scenarios.ts",
-    "src/lib/resilience/simulator.ts",
-    "src/tests/load-stress.test.ts"
+    "scripts/ai-context/cenarios.mjs",
+    "scripts/ai-context/lib/y",
+    "scripts/ai-context/pages/C",
+    "src/components/a/A",
+    "src/components/b/B",
+    "src/pages/A",
+    "src/pages/B",
+    "src/views/Home.vue"
+   ]
+  },
+  {
+   "id": 57,
+   "nome": "useAutomationsMonitor.ts",
+   "nos": 27,
+   "callables": 22,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/automations/AutomationKpiCards.tsx",
+    "src/components/lux/automations/AutomationStageBadge.tsx",
+    "src/components/lux/companies/ImportCompaniesDialog.tsx",
+    "src/hooks/useAutomationsMonitor.ts",
+    "src/integrations/supabase/withOrg.ts"
    ]
   },
   {
    "id": 58,
+   "nome": "status",
+   "nos": 26,
+   "callables": 1,
+   "arquivos": 2,
+   "exemplos_arquivos": [
+    "docs/schema-tabelas-principais.md",
+    "scripts/graphify-local.mjs"
+   ]
+  },
+  {
+   "id": 59,
+   "nome": "CompaniesView.tsx",
+   "nos": 26,
+   "callables": 15,
+   "arquivos": 8,
+   "exemplos_arquivos": [
+    "src/components/lux/CompaniesView.tsx",
+    "src/components/lux/CompanyFilters.tsx",
+    "src/components/lux/CompanyPagination.tsx",
+    "src/components/lux/__tests__/CompanyFilters.test.tsx",
+    "src/components/lux/company-filters-utils.ts",
+    "src/components/ui/sidebar.tsx",
+    "src/hooks/use-mobile.tsx",
+    "src/lib/utils.ts"
+   ]
+  },
+  {
+   "id": 60,
    "nome": "hiker-client.ts",
    "nos": 26,
    "callables": 24,
@@ -879,7 +899,7 @@
    ]
   },
   {
-   "id": 59,
+   "id": 61,
    "nome": "withOrg.maliciousFilters.test.ts",
    "nos": 24,
    "callables": 10,
@@ -892,7 +912,7 @@
    ]
   },
   {
-   "id": 60,
+   "id": 62,
    "nome": "2. Gaps por Categoria",
    "nos": 24,
    "callables": 0,
@@ -902,19 +922,23 @@
    ]
   },
   {
-   "id": 61,
-   "nome": "status",
+   "id": 63,
+   "nome": "useLoginForm.ts",
    "nos": 24,
-   "callables": 3,
-   "arquivos": 3,
+   "callables": 12,
+   "arquivos": 7,
    "exemplos_arquivos": [
-    "docs/schema-tabelas-principais.md",
-    "scripts/ci/lint-ratchet.unit.mjs",
-    "scripts/graphify-local.mjs"
+    "package.json",
+    "src/hooks/__tests__/useRateLimit.test.ts",
+    "src/hooks/useLoginForm.ts",
+    "src/hooks/useRateLimit.ts",
+    "src/integrations/lovable/index.ts",
+    "src/lib/schemas/auth.ts",
+    "src/pages/Login.tsx"
    ]
   },
   {
-   "id": 62,
+   "id": 64,
    "nome": "gen-round36-preflight.ts",
    "nos": 24,
    "callables": 6,
@@ -924,7 +948,7 @@
    ]
   },
   {
-   "id": 63,
+   "id": 65,
    "nome": "aggregations.ts",
    "nos": 24,
    "callables": 21,
@@ -935,24 +959,7 @@
    ]
   },
   {
-   "id": 64,
-   "nome": "Analisado",
-   "nos": 23,
-   "callables": 12,
-   "arquivos": 9,
-   "exemplos_arquivos": [
-    "CHANGELOG.md",
-    "docs/adr/024-round30-refactor-safety-split.md",
-    "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
-    "src/components/lux/lusha/DecisionMakersGrid.tsx",
-    "src/components/lux/lusha/SessionsPanel.tsx",
-    "src/components/lux/lusha/constants.test.ts",
-    "src/components/lux/lusha/constants.ts",
-    "src/components/lux/lusha/types.test.ts"
-   ]
-  },
-  {
-   "id": 65,
+   "id": 66,
    "nome": "gen-round27-qa-preflight.ts",
    "nos": 23,
    "callables": 8,
@@ -962,7 +969,7 @@
    ]
   },
   {
-   "id": 66,
+   "id": 67,
    "nome": "demoData.ts",
    "nos": 23,
    "callables": 8,
@@ -975,7 +982,7 @@
    ]
   },
   {
-   "id": 67,
+   "id": 68,
    "nome": "lusha-departments.ts",
    "nos": 23,
    "callables": 5,
@@ -985,7 +992,7 @@
    ]
   },
   {
-   "id": 68,
+   "id": 69,
    "nome": "historyUtils.fuzz.test.ts",
    "nos": 22,
    "callables": 14,
@@ -999,40 +1006,7 @@
    ]
   },
   {
-   "id": 69,
-   "nome": "3. Recursos Transversais",
-   "nos": 22,
-   "callables": 11,
-   "arquivos": 7,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "src/components/lux/ErrorBoundary.tsx",
-    "src/components/lux/KeyboardShortcutsDialog.tsx",
-    "src/components/lux/NotificationsPanel.tsx",
-    "src/components/lux/__tests__/ErrorBoundary.test.tsx",
-    "src/hooks/useBottomNavSwipe.ts",
-    "src/hooks/useSwipeGesture.ts"
-   ]
-  },
-  {
    "id": 70,
-   "nome": "OnboardingTour.tsx",
-   "nos": 22,
-   "callables": 11,
-   "arquivos": 8,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "src/components/lux/OnboardingTour.tsx",
-    "src/components/lux/onboarding/ConfettiEffect.tsx",
-    "src/components/lux/onboarding/TourSpotlight.tsx",
-    "src/components/lux/onboarding/TourSteps.ts",
-    "src/components/lux/onboarding/TourTooltip.tsx",
-    "src/components/lux/onboarding/tour-position.ts",
-    "src/hooks/useOnboardingState.ts"
-   ]
-  },
-  {
-   "id": 71,
    "nome": "20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql",
    "nos": 22,
    "callables": 0,
@@ -1042,12 +1016,13 @@
    ]
   },
   {
-   "id": 72,
+   "id": 71,
    "nome": "MFAEnroll.tsx",
    "nos": 22,
    "callables": 9,
-   "arquivos": 5,
+   "arquivos": 6,
    "exemplos_arquivos": [
+    "package.json",
     "src/components/auth/MFAEnroll.tsx",
     "src/components/auth/MFAVerify.tsx",
     "src/components/ui/alert.tsx",
@@ -1056,21 +1031,7 @@
    ]
   },
   {
-   "id": 73,
-   "nome": "AppBreadcrumbs.tsx",
-   "nos": 22,
-   "callables": 6,
-   "arquivos": 5,
-   "exemplos_arquivos": [
-    "src/components/lux/AppBreadcrumbs.tsx",
-    "src/components/lux/__tests__/SidebarFooter.test.tsx",
-    "src/components/lux/layout/__tests__/Sidebar.test.tsx",
-    "src/components/lux/layout/nav-items.ts",
-    "src/components/ui/breadcrumb.tsx"
-   ]
-  },
-  {
-   "id": 74,
+   "id": 72,
    "nome": "CompanyTable.tsx",
    "nos": 22,
    "callables": 12,
@@ -1084,44 +1045,38 @@
    ]
   },
   {
-   "id": 75,
-   "nome": "RLSRegistryCoverage.tsx",
-   "nos": 21,
-   "callables": 8,
-   "arquivos": 4,
-   "exemplos_arquivos": [
-    "e2e/helpers/supabase.ts",
-    "e2e/rls-guarantees.spec.ts",
-    "src/components/lux/settings/RLSRegistryCoverage.tsx",
-    "src/lib/rlsRegistry.ts"
-   ]
-  },
-  {
-   "id": 76,
-   "nome": "AutomationStatusPanel.tsx",
-   "nos": 21,
-   "callables": 18,
-   "arquivos": 1,
-   "exemplos_arquivos": [
-    "src/components/lux/monitoring/AutomationStatusPanel.tsx"
-   ]
-  },
-  {
-   "id": 77,
+   "id": 73,
    "nome": "useResilienceSimulator.ts",
-   "nos": 21,
-   "callables": 14,
+   "nos": 22,
+   "callables": 15,
    "arquivos": 5,
    "exemplos_arquivos": [
+    "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx",
     "src/hooks/useResilienceSimulator.ts",
     "src/lib/resilience/report.ts",
-    "src/lib/resilience/scenarios.ts",
     "src/lib/resilience/simulator.test.ts",
     "src/lib/resilience/simulator.ts"
    ]
   },
   {
-   "id": 78,
+   "id": 74,
+   "nome": "DashboardView.tsx",
+   "nos": 21,
+   "callables": 15,
+   "arquivos": 9,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/ActivityFeed.tsx",
+    "src/components/lux/AutomationsList.tsx",
+    "src/components/lux/DashboardView.tsx",
+    "src/components/lux/EnrichmentFunnel.tsx",
+    "src/components/lux/QuickActions.tsx",
+    "src/contexts/demo-context.ts",
+    "src/hooks/useDashboardData.ts"
+   ]
+  },
+  {
+   "id": 75,
    "nome": "apollo-cache.ts",
    "nos": 21,
    "callables": 15,
@@ -1132,13 +1087,46 @@
    ]
   },
   {
-   "id": 79,
+   "id": 76,
    "nome": "20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql",
    "nos": 21,
    "callables": 0,
    "arquivos": 1,
    "exemplos_arquivos": [
     "supabase/migrations/20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql"
+   ]
+  },
+  {
+   "id": 77,
+   "nome": "20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql",
+   "nos": 21,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql"
+   ]
+  },
+  {
+   "id": 78,
+   "nome": "compilerOptions",
+   "nos": 21,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "tsconfig.app.json"
+   ]
+  },
+  {
+   "id": 79,
+   "nome": "lushaMocks.ts",
+   "nos": 20,
+   "callables": 16,
+   "arquivos": 4,
+   "exemplos_arquivos": [
+    "@playwright/test",
+    "docs/adr/027-round33-lusha-e2e-expansion.md",
+    "e2e/helpers/lushaMocks.ts",
+    "e2e/lusha-flows.spec.ts"
    ]
   }
  ],
@@ -1162,7 +1150,7 @@
    "rotulo": "lucide-react",
    "arquivo": "package.json",
    "grau": 183,
-   "comunidade": "lucide-react"
+   "comunidade": "react"
   },
   {
    "id": "scripts_ai_context_gerar",
@@ -1176,7 +1164,7 @@
    "rotulo": "button.tsx",
    "arquivo": "src/components/ui/button.tsx",
    "grau": 122,
-   "comunidade": "button.tsx"
+   "comunidade": "react"
   },
   {
    "id": "src_pages_monitoring",
@@ -1190,35 +1178,35 @@
    "rotulo": "Button",
    "arquivo": "src/components/ui/button.tsx",
    "grau": 115,
-   "comunidade": "button.tsx"
+   "comunidade": "react"
   },
   {
    "id": "ref_tanstack_react_query",
    "rotulo": "@tanstack/react-query",
    "arquivo": "package.json",
    "grau": 112,
-   "comunidade": "react"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "src_integrations_supabase_client",
    "rotulo": "client.ts",
    "arquivo": "src/integrations/supabase/client.ts",
    "grau": 111,
-   "comunidade": "react"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "src_lib_utils",
    "rotulo": "utils.ts",
    "arquivo": "src/lib/utils.ts",
    "grau": 111,
-   "comunidade": "cn"
+   "comunidade": "react"
   },
   {
    "id": "src_integrations_supabase_client_supabase",
    "rotulo": "supabase",
    "arquivo": "src/integrations/supabase/client.ts",
    "grau": 106,
-   "comunidade": "react"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "package",
@@ -1239,7 +1227,7 @@
    "rotulo": "LushaIntelligenceView.tsx",
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
    "grau": 97,
-   "comunidade": "LushaIntelligenceView.tsx"
+   "comunidade": "Monitoring.tsx"
   },
   {
    "id": "src_components_ui_badge_badge",
@@ -1274,14 +1262,14 @@
    "rotulo": "OrganizationsView.tsx",
    "arquivo": "src/components/lux/OrganizationsView.tsx",
    "grau": 84,
-   "comunidade": "OrganizationsView.tsx"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "ref_framer_motion",
    "rotulo": "framer-motion",
    "arquivo": "package.json",
    "grau": 75,
-   "comunidade": "lucide-react"
+   "comunidade": "react"
   },
   {
    "id": "scripts_regras_negocio_generate",
@@ -1295,14 +1283,14 @@
    "rotulo": "CompaniesView.tsx",
    "arquivo": "src/components/lux/CompaniesView.tsx",
    "grau": 71,
-   "comunidade": "LushaIntelligenceView.tsx"
+   "comunidade": "CompaniesView.tsx"
   },
   {
    "id": "src_contexts_auth_context_useauth",
    "rotulo": "useAuth()",
    "arquivo": "src/contexts/auth-context.ts",
    "grau": 71,
-   "comunidade": "react"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "src_app",
@@ -1316,7 +1304,7 @@
    "rotulo": "hooks/use-toast.ts",
    "arquivo": "src/hooks/use-toast.ts",
    "grau": 66,
-   "comunidade": "button.tsx"
+   "comunidade": "hooks/use-toast.ts"
   },
   {
    "id": "package_dependencies",
@@ -1330,14 +1318,14 @@
    "rotulo": "Index.tsx",
    "arquivo": "src/pages/Index.tsx",
    "grau": 65,
-   "comunidade": "LushaIntelligenceView.tsx"
+   "comunidade": "Index.tsx"
   },
   {
    "id": "src_components_lux_lusha_oraclev2panel",
    "rotulo": "OracleV2Panel.tsx",
    "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
    "grau": 63,
-   "comunidade": "LushaIntelligenceView.tsx"
+   "comunidade": "Monitoring.tsx"
   },
   {
    "id": "src_components_ui_card",
@@ -1358,14 +1346,14 @@
    "rotulo": "OrgViolationsView.tsx",
    "arquivo": "src/components/lux/OrgViolationsView.tsx",
    "grau": 57,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "Monitoring.tsx"
   },
   {
    "id": "src_components_lux_campaignsview",
    "rotulo": "CampaignsView.tsx",
    "arquivo": "src/components/lux/CampaignsView.tsx",
    "grau": 55,
-   "comunidade": "button.tsx"
+   "comunidade": "react"
   },
   {
    "id": "src_components_ui_card_card",
@@ -1379,35 +1367,35 @@
    "rotulo": "WorkflowsView.tsx",
    "arquivo": "src/components/lux/WorkflowsView.tsx",
    "grau": 53,
-   "comunidade": "button.tsx"
+   "comunidade": "react"
   },
   {
    "id": "src_components_ui_input",
    "rotulo": "input.tsx",
    "arquivo": "src/components/ui/input.tsx",
    "grau": 53,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "react"
   },
   {
    "id": "src_components_ui_sidebar",
    "rotulo": "sidebar.tsx",
    "arquivo": "src/components/ui/sidebar.tsx",
    "grau": 52,
-   "comunidade": "cn"
+   "comunidade": "sidebar.tsx"
   },
   {
    "id": "src_components_ui_input_input",
    "rotulo": "Input",
    "arquivo": "src/components/ui/input.tsx",
    "grau": 51,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "react"
   },
   {
    "id": "src_components_lux_intentsignalsview",
    "rotulo": "IntentSignalsView.tsx",
    "arquivo": "src/components/lux/IntentSignalsView.tsx",
    "grau": 50,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "react"
   },
   {
    "id": "package_scripts",
@@ -1421,28 +1409,28 @@
    "rotulo": "GmapsScraperView.tsx",
    "arquivo": "src/components/lux/GmapsScraperView.tsx",
    "grau": 49,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "react"
   },
   {
    "id": "src_components_lux_monitoring_jobdetailssheet",
    "rotulo": "JobDetailsSheet.tsx",
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
    "grau": 49,
-   "comunidade": "lucide-react"
+   "comunidade": "react"
   },
   {
    "id": "src_components_lux_integrations_emailaccountspanel",
    "rotulo": "EmailAccountsPanel.tsx",
    "arquivo": "src/components/lux/integrations/EmailAccountsPanel.tsx",
    "grau": 47,
-   "comunidade": "LushaIntelligenceView.tsx"
+   "comunidade": "EmailAccountsPanel.tsx"
   },
   {
    "id": "src_components_lux_lusha_sessionspanel",
    "rotulo": "SessionsPanel.tsx",
    "arquivo": "src/components/lux/lusha/SessionsPanel.tsx",
    "grau": 47,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "Monitoring.tsx"
   },
   {
    "id": "src_components_lux_monitoring_dlqhealthcard",
@@ -1456,14 +1444,14 @@
    "rotulo": "DLQReplayPanel.tsx",
    "arquivo": "src/components/lux/monitoring/DLQReplayPanel.tsx",
    "grau": 47,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "Monitoring.tsx"
   },
   {
    "id": "src_components_lux_notificationspanel",
    "rotulo": "NotificationsPanel.tsx",
    "arquivo": "src/components/lux/NotificationsPanel.tsx",
    "grau": 47,
-   "comunidade": "lucide-react"
+   "comunidade": "EmailAccountsPanel.tsx"
   },
   {
    "id": "src_components_ui_card_cardcontent",
@@ -1477,7 +1465,7 @@
    "rotulo": "useActiveOrganization()",
    "arquivo": "src/contexts/active-org-context.ts",
    "grau": 47,
-   "comunidade": "useActiveOrganization"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "supabase_functions_oracle_search_decisors_index",
@@ -1519,7 +1507,7 @@
    "rotulo": "db",
    "arquivo": "src/integrations/supabase/withOrg.ts",
    "grau": 45,
-   "comunidade": "react"
+   "comunidade": "@tanstack/react-query"
   },
   {
    "id": "scripts_ci_lint_ratchet",
@@ -1533,14 +1521,14 @@
    "rotulo": "CompanyDetailModal.tsx",
    "arquivo": "src/components/lux/CompanyDetailModal.tsx",
    "grau": 44,
-   "comunidade": "button.tsx"
+   "comunidade": "CompanyDetailModal.tsx"
   },
   {
    "id": "src_components_lux_integrations_oauthsandboxpanel",
    "rotulo": "OAuthSandboxPanel.tsx",
    "arquivo": "src/components/lux/integrations/OAuthSandboxPanel.tsx",
    "grau": 44,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "OAuthSandboxPanel.tsx"
   },
   {
    "id": "scripts_automation",
@@ -1561,7 +1549,7 @@
    "rotulo": "ICPConfigView.tsx",
    "arquivo": "src/components/lux/ICPConfigView.tsx",
    "grau": 42,
-   "comunidade": "OrgViolationsView.tsx"
+   "comunidade": "react"
   }
  ],
  "mais_chamados": [
@@ -1981,28 +1969,28 @@
   "AGENTS.md": "AGENTS.md — Promo Lux V2 (LUX IA)",
   "CHANGELOG.md": "Changelog",
   "CLAUDE.md": "CLAUDE.md",
-  "CONTRIBUTING.md": "📐 Guia de Contribuição — LUX IA",
+  "CONTRIBUTING.md": "withOrg",
   "README.md": "README.md",
   "commitlint.config.cjs": "commitlint.config.cjs",
   "commitlint.config.js": "commitlint.config.js",
   "components.json": "components.json",
   "docs/AUDITORIA_BACKEND_SENIOR.md": "2. Detalhamento por Categoria",
-  "docs/AUDITORIA_FINAL_LUX_IA.md": "README.md",
+  "docs/AUDITORIA_FINAL_LUX_IA.md": "AUDITORIA_FINAL_LUX_IA.md",
   "docs/AUDITORIA_FIRECRAWL.md": "Auditoria de Paridade — LUX IA vs Firecrawl",
   "docs/AUDITORIA_TECNICA_SCORECARD.md": "Fase 1 — 22 Dimensões (nota + evidências + gaps + ações)",
   "docs/AUTOMACAO_LOCAL.md": "Automação local — Promo_Lux_V2",
   "docs/ESTADO_ATUAL.md": "ESTADO ATUAL DO SISTEMA — LUX IA",
-  "docs/FUNCIONALIDADES.md": "useRealtimeScrapeJobs",
+  "docs/FUNCIONALIDADES.md": "campaign-dispatch/index.ts",
   "docs/GAPS-ENTERPRISE.md": "2. Gaps por Categoria",
   "docs/LGPD.md": "🛡️ Relatório de Conformidade LGPD — LUX IA",
   "docs/LUSHA-INTEGRATION.md": "Lusha Intelligence — Integração LUX",
-  "docs/ORACLE_V2.md": "useOracleV2.ts",
-  "docs/adr/001-design-system.md": "README.md",
+  "docs/ORACLE_V2.md": "Oracle v2 — Runbook",
+  "docs/adr/001-design-system.md": "ADR-001: Dark Gold Theme com Glass Morphism",
   "docs/adr/002-rls-isolation.md": "ADR-002: RLS por user_id em Todas as Tabelas",
-  "docs/adr/003-edge-functions-proxy.md": "ADR-003: Edge Functions como Proxy Seguro",
-  "docs/adr/004-private-realtime-channels.md": "ADR-004: Realtime com Canais Privados",
+  "docs/adr/003-edge-functions-proxy.md": "README.md",
+  "docs/adr/004-private-realtime-channels.md": "README.md",
   "docs/adr/005-ai-gateway.md": "ADR-005: Lovable AI Gateway para Chat",
-  "docs/adr/006-structured-logging.md": "ADR-006: Structured Logging em Edge Functions",
+  "docs/adr/006-structured-logging.md": "README.md",
   "docs/adr/007-multi-tenant-defense-in-depth.md": "withOrg",
   "docs/adr/007-org-isolation-proxy.md": "withOrg.maliciousFilters.test.ts",
   "docs/adr/008-soft-delete-policy.md": "ADR-008: Política de Soft Delete e Retenção de Dados",
@@ -2030,7 +2018,7 @@
   "docs/agentes/github-ci.md": "GitHub (perímetro, CI, workflows) — referência para agentes",
   "docs/agentes/lovable-deploy.md": "SnapshotCallerFreshnessTests",
   "docs/agentes/mapa-repo.md": "Mapa do repositório — referência para agentes",
-  "docs/agentes/regras-dominio.md": "Regras de domínio que o código não deixa óbvio — referência para agentes",
+  "docs/agentes/regras-dominio.md": "withOrg",
   "docs/agentes/servicos-externos.md": "campaign-dispatch/index.ts",
   "docs/apify-mock-mode.md": "apify-gateway.ts",
   "docs/auditoria-backend-2026-07-12.md": "2. Detalhamento por Categoria",
@@ -2053,7 +2041,7 @@
   "docs/runbooks/drift-reconciliacao-2026-11-13.md": "Incidente: drift de migrations em produção — reconciliação (2026-11-13)",
   "docs/runbooks/migration-template.md": "Template de Migration (sem credenciais)",
   "docs/runbooks/migrations.md": "Fluxo de Migrações — Supabase CLI / CI",
-  "docs/schema-tabelas-principais.md": "Schema das Tabelas Principais — LUX IA",
+  "docs/schema-tabelas-principais.md": "lint-ratchet.mjs",
   "docs/webhooks.md": "Webhooks — Guia de Integração",
   "e2e/accessibility.spec.ts": "helpers/auth.ts",
   "e2e/auth.spec.ts": "helpers/auth.ts",
@@ -2062,7 +2050,7 @@
   "e2e/helpers/auth.ts": "helpers/auth.ts",
   "e2e/helpers/lushaMocks.ts": "lushaMocks.ts",
   "e2e/helpers/selectors.ts": "selectors.ts",
-  "e2e/helpers/supabase.ts": "RLSRegistryCoverage.tsx",
+  "e2e/helpers/supabase.ts": "rls-guarantees.spec.ts",
   "e2e/instagram-dlq-replay.spec.ts": "@playwright/test",
   "e2e/instagram-worker-smoke.spec.ts": "@playwright/test",
   "e2e/invite-accept.spec.ts": "helpers/auth.ts",
@@ -2073,7 +2061,7 @@
   "e2e/oracle-decisor-flow.spec.ts": "helpers/auth.ts",
   "e2e/oracle-v2.spec.ts": "helpers/auth.ts",
   "e2e/protected-navigation.spec.ts": "helpers/auth.ts",
-  "e2e/rls-guarantees.spec.ts": "RLSRegistryCoverage.tsx",
+  "e2e/rls-guarantees.spec.ts": "rls-guarantees.spec.ts",
   "eslint.config.js": "package.json",
   "inventario/estado/README.md": "Estado real do projeto — inventário gerado",
   "node:fs/promises": "graphify-local.mjs",
@@ -2084,13 +2072,13 @@
   "public/manifest.json": "public/manifest.json",
   "public/sw.js": "sw.js",
   "scripts/ai-context/README.md": "ai-context — contexto de código para agentes de IA",
-  "scripts/ai-context/cenarios.mjs": "cenarios.mjs",
-  "scripts/ai-context/gerar.mjs": "uniq",
-  "scripts/ai-context/gerar.unit.mjs": "ref_node_fs",
+  "scripts/ai-context/cenarios.mjs": "regras_negocio — regras de negócio para agentes de IA",
+  "scripts/ai-context/gerar.mjs": "has",
+  "scripts/ai-context/gerar.unit.mjs": "ref_node_child_process",
   "scripts/ai-context/lib/y": "cenarios.mjs",
   "scripts/ai-context/pages/C": "cenarios.mjs",
   "scripts/automation.mjs": "automation.mjs",
-  "scripts/automation.unit.mjs": "ref_node_fs",
+  "scripts/automation.unit.mjs": "ref_node_child_process",
   "scripts/check-anon-grants-view.sh": "check-anon-grants-view.sh",
   "scripts/check-audit-triggers.sh": "check-audit-triggers.sh",
   "scripts/check-edge-fn-target.sh": "check-edge-fn-target.sh",
@@ -2105,14 +2093,14 @@
   "scripts/ci/lint-ratchet.unit.mjs": "lint-ratchet.mjs",
   "scripts/gen-current-report.ts": "simulator.ts",
   "scripts/gen-legacy-baseline.ts": "simulator.ts",
-  "scripts/gen-round18-preflight.ts": "scenarios.ts",
-  "scripts/gen-round19-preflight.ts": "scenarios.ts",
+  "scripts/gen-round18-preflight.ts": "generateScenarios",
+  "scripts/gen-round19-preflight.ts": "generateScenarios",
   "scripts/gen-round19-validation.ts": "gen-round19-validation.ts",
   "scripts/gen-round20-validation.ts": "gen-round20-validation.ts",
-  "scripts/gen-round21-preflight.ts": "gen-round21-preflight.ts",
+  "scripts/gen-round21-preflight.ts": "ref_node_fs",
   "scripts/gen-round24-preflight.ts": "ref_node_fs",
   "scripts/gen-round25-preflight.ts": "ref_node_fs",
-  "scripts/gen-round26-preflight.ts": "gen-round26-preflight.ts",
+  "scripts/gen-round26-preflight.ts": "ref_node_fs",
   "scripts/gen-round27-qa-preflight.ts": "gen-round27-qa-preflight.ts",
   "scripts/gen-round28-preflight.ts": "gen-round28-preflight.ts",
   "scripts/gen-round29-preflight.ts": "gen-round29-preflight.ts",
@@ -2124,8 +2112,8 @@
   "scripts/graphify/README.md": "scripts/graphify — grafo de código (graphify)",
   "scripts/graphify/setup.sh": "setup.sh",
   "scripts/inventario/gerar-repo.mjs": "gerar-repo.mjs",
-  "scripts/inventario/mudou-conteudo.mjs": "ref_node_fs",
-  "scripts/inventario/mudou-conteudo.unit.mjs": "ref_node_fs",
+  "scripts/inventario/mudou-conteudo.mjs": "ref_node_child_process",
+  "scripts/inventario/mudou-conteudo.unit.mjs": "ref_node_child_process",
   "scripts/lib/seguranca-processo.mjs": "lint-ratchet.mjs",
   "scripts/maintenance/README.md": "automation.mjs",
   "scripts/maintenance/lib.mjs": "lib.mjs",
@@ -2135,8 +2123,8 @@
   "scripts/maintenance/typecheck.mjs": "ref_node_fs",
   "scripts/mc-r35-preflight.ts": "scenarios.ts",
   "scripts/mc-r40-preflight.ts": "mc-r40-preflight.ts",
-  "scripts/regras_negocio/README.md": "cenarios.mjs",
-  "scripts/regras_negocio/generate.py": "generate.py",
+  "scripts/regras_negocio/README.md": "regras_negocio — regras de negócio para agentes de IA",
+  "scripts/regras_negocio/generate.py": "build_dataflow",
   "scripts/regras_negocio/indice.py": "test_snapshot.py",
   "scripts/regras_negocio/publish.sh": "publish.sh",
   "scripts/regras_negocio/test_generate.py": "CurrentSqlSourcesTests",
@@ -2146,96 +2134,96 @@
   "scripts/sql/check-function-grants.sql": "check-function-grants.sql",
   "scripts/sql/check-queue-kind-coverage.sql": "check-queue-kind-coverage.sql",
   "scripts/staged-autofix/README.md": "staged-autofix/README.md",
-  "scripts/staged-autofix/run.mjs": "ref_node_fs",
-  "scripts/staged-autofix/run.unit.mjs": "ref_node_fs",
+  "scripts/staged-autofix/run.mjs": "ref_node_child_process",
+  "scripts/staged-autofix/run.unit.mjs": "ref_node_child_process",
   "scripts/supabase_snapshot/README.md": "supabase-snapshot",
   "scripts/supabase_snapshot/snapshot.py": "snapshot.py",
   "scripts/supabase_snapshot/test_snapshot.py": "SnapshotDBStatsTests",
   "src/App.tsx": "App.tsx",
   "src/components/NavLink.tsx": "cn",
   "src/components/a/A": "cenarios.mjs",
-  "src/components/achievements/Achievements": "ref_node_fs",
+  "src/components/achievements/Achievements": "ref_node_child_process",
   "src/components/auth/MFAEnroll.tsx": "MFAEnroll.tsx",
   "src/components/auth/MFAVerify.tsx": "MFAEnroll.tsx",
   "src/components/automation/WorkflowEditor.tsx": "WorkflowEditor.tsx",
   "src/components/b/B": "cenarios.mjs",
-  "src/components/home/Home": "ref_node_fs",
+  "src/components/home/Home": "ref_node_child_process",
   "src/components/lux/AIAgentView.tsx": "react",
-  "src/components/lux/ActivityFeed.tsx": "lucide-react",
-  "src/components/lux/AddCompanyDialog.tsx": "button.tsx",
-  "src/components/lux/AnalyticsView.tsx": "2. Módulos Principais (12 Views)",
+  "src/components/lux/ActivityFeed.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/AddCompanyDialog.tsx": "react",
+  "src/components/lux/AnalyticsView.tsx": "useThemeColors.ts",
   "src/components/lux/AppBreadcrumbs.tsx": "CommandPalette.tsx",
-  "src/components/lux/AutoTopProgressBar.tsx": "App.tsx",
-  "src/components/lux/AutomationsList.tsx": "lucide-react",
-  "src/components/lux/CampaignsView.tsx": "button.tsx",
+  "src/components/lux/AutoTopProgressBar.tsx": "CommandPalette.tsx",
+  "src/components/lux/AutomationsList.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/CampaignsView.tsx": "react",
   "src/components/lux/CommandPalette.tsx": "CommandPalette.tsx",
   "src/components/lux/CompaniesMapView.tsx": "MapMarkerIcons.tsx",
-  "src/components/lux/CompaniesView.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/CompanyDetailModal.tsx": "button.tsx",
-  "src/components/lux/CompanyFilters.tsx": "CompanyFilters.tsx",
+  "src/components/lux/CompaniesView.tsx": "CompaniesView.tsx",
+  "src/components/lux/CompanyDetailModal.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/CompanyFilters.tsx": "CompaniesView.tsx",
   "src/components/lux/CompanyOpenHours.tsx": "CompanyOpenHours.tsx",
-  "src/components/lux/CompanyPagination.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/CompanyReviewsList.tsx": "OrganizationsView.tsx",
+  "src/components/lux/CompanyPagination.tsx": "CompaniesView.tsx",
+  "src/components/lux/CompanyReviewsList.tsx": "@tanstack/react-query",
   "src/components/lux/CompanyTable.tsx": "CompanyTable.tsx",
   "src/components/lux/ConnectionStatus.tsx": "useRealtimeScrapeJobs",
   "src/components/lux/DashboardView.tsx": "DashboardView.tsx",
-  "src/components/lux/DataError.tsx": "OrgViolationsView.tsx",
+  "src/components/lux/DataError.tsx": "react",
   "src/components/lux/DealsView.tsx": "DealsView.tsx",
-  "src/components/lux/EditCompanyDialog.tsx": "button.tsx",
-  "src/components/lux/EmailSuppressionsView.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/EmptyState.tsx": "lucide-react",
-  "src/components/lux/EnrichmentFunnel.tsx": "lucide-react",
-  "src/components/lux/ErrorBoundary.tsx": "lucide-react",
-  "src/components/lux/GmapsScraperView.tsx": "useCnpjEnrich.ts",
+  "src/components/lux/EditCompanyDialog.tsx": "react",
+  "src/components/lux/EmailSuppressionsView.tsx": "Index.tsx",
+  "src/components/lux/EmptyState.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/EnrichmentFunnel.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/ErrorBoundary.tsx": "react",
+  "src/components/lux/GmapsScraperView.tsx": "2. Módulos Principais (12 Views)",
   "src/components/lux/GradientAvatar.tsx": "Header.tsx",
-  "src/components/lux/ICPConfigView.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/IntegrationsView.tsx": "lucide-react",
-  "src/components/lux/IntentSignalsView.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/KeyboardShortcutsDialog.tsx": "button.tsx",
+  "src/components/lux/ICPConfigView.tsx": "2. Módulos Principais (12 Views)",
+  "src/components/lux/IntegrationsView.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/IntentSignalsView.tsx": "react",
+  "src/components/lux/KeyboardShortcutsDialog.tsx": "react",
   "src/components/lux/LushaIntelligenceView.tsx": "ADR-025 — Rodada #31: Split do DecisionMakersGrid",
   "src/components/lux/LuxImage.tsx": "LuxImage.tsx",
-  "src/components/lux/NotificationsPanel.tsx": "lucide-react",
+  "src/components/lux/NotificationsPanel.tsx": "EmailAccountsPanel.tsx",
   "src/components/lux/OnboardingTour.tsx": "OnboardingTour.tsx",
   "src/components/lux/OrgErrorBanner.tsx": "orgErrorHandler.ts",
-  "src/components/lux/OrgProxiesView.tsx": "useActiveOrganization",
-  "src/components/lux/OrgViolationsView.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/OrganizationsView.tsx": "OrganizationsView.tsx",
+  "src/components/lux/OrgProxiesView.tsx": "ProxyFormDialog.tsx",
+  "src/components/lux/OrgViolationsView.tsx": "Monitoring.tsx",
+  "src/components/lux/OrganizationsView.tsx": "@tanstack/react-query",
   "src/components/lux/PageTransition.tsx": "PageTransition.tsx",
-  "src/components/lux/PlacesApiNewToggle.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/PlacesApiUsageCard.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/ProxyFormDialog.tsx": "useActiveOrganization",
+  "src/components/lux/PlacesApiNewToggle.tsx": "Monitoring.tsx",
+  "src/components/lux/PlacesApiUsageCard.tsx": "@tanstack/react-query",
+  "src/components/lux/ProxyFormDialog.tsx": "ProxyFormDialog.tsx",
   "src/components/lux/QuickActions.tsx": "CommandPalette.tsx",
-  "src/components/lux/RecycleBinView.tsx": "LushaIntelligenceView.tsx",
+  "src/components/lux/RecycleBinView.tsx": "Index.tsx",
   "src/components/lux/SafeHTML.test.tsx": "SafeHTML.tsx",
   "src/components/lux/SafeHTML.tsx": "SafeHTML.tsx",
-  "src/components/lux/ScrapeResultsView.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/SettingsView.tsx": "button.tsx",
+  "src/components/lux/ScrapeResultsView.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/SettingsView.tsx": "react",
   "src/components/lux/StakeholderFinderView.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/StatsGrid.tsx": "StatsGrid.tsx",
-  "src/components/lux/StepProgress.tsx": "lucide-react",
-  "src/components/lux/StickySaveBar.tsx": "button.tsx",
-  "src/components/lux/ThemeToggle.tsx": "useThemeColors.ts",
-  "src/components/lux/TopProgressBar.tsx": "App.tsx",
-  "src/components/lux/UnsavedChangesDialog.tsx": "LushaIntelligenceView.tsx",
+  "src/components/lux/StepProgress.tsx": "react",
+  "src/components/lux/StickySaveBar.tsx": "react",
+  "src/components/lux/ThemeToggle.tsx": "ThemeToggle.tsx",
+  "src/components/lux/TopProgressBar.tsx": "CommandPalette.tsx",
+  "src/components/lux/UnsavedChangesDialog.tsx": "Index.tsx",
   "src/components/lux/ViewSkeleton.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/WorkflowsView.tsx": "2. Módulos Principais (12 Views)",
-  "src/components/lux/__tests__/CampaignsView.test.tsx": "vitest",
-  "src/components/lux/__tests__/CompaniesView.test.tsx": "vitest",
-  "src/components/lux/__tests__/CompanyFilters.test.tsx": "CompanyFilters.tsx",
+  "src/components/lux/__tests__/CampaignsView.test.tsx": "@testing-library/react",
+  "src/components/lux/__tests__/CompaniesView.test.tsx": "@testing-library/react",
+  "src/components/lux/__tests__/CompanyFilters.test.tsx": "CompaniesView.tsx",
   "src/components/lux/__tests__/CompanyTable.integration.test.tsx": "CompanyTable.tsx",
   "src/components/lux/__tests__/CompanyTable.test.tsx": "CompanyTable.tsx",
-  "src/components/lux/__tests__/CompanyTableRow.test.tsx": "vitest",
-  "src/components/lux/__tests__/DashboardView.test.tsx": "vitest",
-  "src/components/lux/__tests__/DataError.test.tsx": "vitest",
-  "src/components/lux/__tests__/EmptyState.test.tsx": "lucide-react",
-  "src/components/lux/__tests__/ErrorBoundary.test.tsx": "3. Recursos Transversais",
-  "src/components/lux/__tests__/ICPConfigView.test.tsx": "react",
-  "src/components/lux/__tests__/MapFilters.test.tsx": "vitest",
-  "src/components/lux/__tests__/SidebarFooter.test.tsx": "AppBreadcrumbs.tsx",
+  "src/components/lux/__tests__/CompanyTableRow.test.tsx": "@testing-library/react",
+  "src/components/lux/__tests__/DashboardView.test.tsx": "@testing-library/react",
+  "src/components/lux/__tests__/DataError.test.tsx": "@testing-library/react",
+  "src/components/lux/__tests__/EmptyState.test.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/__tests__/ErrorBoundary.test.tsx": "ErrorBoundary",
+  "src/components/lux/__tests__/ICPConfigView.test.tsx": "2. Módulos Principais (12 Views)",
+  "src/components/lux/__tests__/MapFilters.test.tsx": "@testing-library/react",
+  "src/components/lux/__tests__/SidebarFooter.test.tsx": "SidebarFooter.test.tsx",
   "src/components/lux/__tests__/StakeholderCard.test.tsx": "StakeholderFinderView.tsx",
-  "src/components/lux/__tests__/StatsGrid.test.tsx": "vitest",
+  "src/components/lux/__tests__/StatsGrid.test.tsx": "@testing-library/react",
   "src/components/lux/__tests__/WorkflowCard.test.tsx": "WorkflowCard.tsx",
-  "src/components/lux/__tests__/WorkflowsView.test.tsx": "vitest",
+  "src/components/lux/__tests__/WorkflowsView.test.tsx": "@testing-library/react",
   "src/components/lux/analytics/AnalyticsChartTooltip.tsx": "ConversionTab.tsx",
   "src/components/lux/analytics/AnimatedCounter.tsx": "ConversionTab.tsx",
   "src/components/lux/analytics/AnimatedDonut.tsx": "ConversionTab.tsx",
@@ -2243,65 +2231,65 @@
   "src/components/lux/analytics/DataEnrichmentTab.tsx": "ConversionTab.tsx",
   "src/components/lux/analytics/analytics-constants.ts": "demoData.ts",
   "src/components/lux/analytics/useAnalyticsData.ts": "ConversionTab.tsx",
-  "src/components/lux/auth/AuthLogo.tsx": "lucide-react",
-  "src/components/lux/auth/EmailInput.tsx": "OrgViolationsView.tsx",
+  "src/components/lux/auth/AuthLogo.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/auth/EmailInput.tsx": "react",
   "src/components/lux/auth/FloatingParticles.tsx": "Login.tsx",
-  "src/components/lux/auth/ForgotPasswordOverlay.tsx": "lucide-react",
+  "src/components/lux/auth/ForgotPasswordOverlay.tsx": "react",
   "src/components/lux/auth/GoldConfetti.tsx": "Login.tsx",
   "src/components/lux/auth/GoogleLoadingOverlay.tsx": "Login.tsx",
-  "src/components/lux/auth/GoogleLoginButton.tsx": "button.tsx",
-  "src/components/lux/auth/LoginCard.tsx": "lucide-react",
-  "src/components/lux/auth/PasswordInput.tsx": "lucide-react",
-  "src/components/lux/auth/PasswordStrengthMeter.tsx": "PasswordStrengthMeter.tsx",
-  "src/components/lux/auth/RateLimitWarning.tsx": "Login.tsx",
-  "src/components/lux/automations/AutomationEventsFeed.tsx": "lucide-react",
-  "src/components/lux/automations/AutomationKpiCards.tsx": "cn",
-  "src/components/lux/automations/AutomationQueuePanel.tsx": "lucide-react",
+  "src/components/lux/auth/GoogleLoginButton.tsx": "react",
+  "src/components/lux/auth/LoginCard.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/auth/PasswordInput.tsx": "react",
+  "src/components/lux/auth/PasswordStrengthMeter.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/auth/RateLimitWarning.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/automations/AutomationEventsFeed.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/automations/AutomationKpiCards.tsx": "useAutomationsMonitor.ts",
+  "src/components/lux/automations/AutomationQueuePanel.tsx": "RLSDiscoveryView.tsx",
   "src/components/lux/automations/AutomationStageBadge.tsx": "useAutomationsMonitor.ts",
   "src/components/lux/automations/AutomationsRealtimeView.tsx": "3. Riscos estruturais, por gravidade",
-  "src/components/lux/automations/CompanyAutomationTable.tsx": "lucide-react",
-  "src/components/lux/campaigns/CampaignFormFields.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": "lucide-react",
+  "src/components/lux/automations/CompanyAutomationTable.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/campaigns/CampaignFormFields.tsx": "react",
+  "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": "EmailAccountsPanel.tsx",
   "src/components/lux/command-palette/commandPaletteData.ts": "CommandPalette.tsx",
   "src/components/lux/companies/CompanyTableRow.tsx": "Header.tsx",
-  "src/components/lux/companies/ImportCompaniesDialog.tsx": "button.tsx",
-  "src/components/lux/company-filters-utils.ts": "CompanyFilters.tsx",
+  "src/components/lux/companies/ImportCompaniesDialog.tsx": "react",
+  "src/components/lux/company-filters-utils.ts": "CompaniesView.tsx",
   "src/components/lux/deals/AddDealDialog.tsx": "DealsView.tsx",
   "src/components/lux/deals/DealCard.tsx": "DealsView.tsx",
   "src/components/lux/deals/DealColumn.tsx": "DealsView.tsx",
   "src/components/lux/deals/DealDetailDrawer.tsx": "DealsView.tsx",
-  "src/components/lux/deals/DealTasksPanel.tsx": "button.tsx",
-  "src/components/lux/deals/StagesManagerDialog.tsx": "button.tsx",
+  "src/components/lux/deals/DealTasksPanel.tsx": "react",
+  "src/components/lux/deals/StagesManagerDialog.tsx": "react",
   "src/components/lux/icons/LinkedinIcon.tsx": "StakeholderFinderView.tsx",
-  "src/components/lux/integrations/ApiDocsCard.tsx": "3. Functions chamadas pelo frontend (28)",
-  "src/components/lux/integrations/ApiKeysPanel.tsx": "react",
-  "src/components/lux/integrations/AuthUrlConfirmDialog.tsx": "button.tsx",
-  "src/components/lux/integrations/DisconnectAccountDialog.tsx": "button.tsx",
-  "src/components/lux/integrations/DryRunLogsPanel.tsx": "OrgViolationsView.tsx",
+  "src/components/lux/integrations/ApiDocsCard.tsx": "CompanyDetailModal.tsx",
+  "src/components/lux/integrations/ApiKeysPanel.tsx": "@tanstack/react-query",
+  "src/components/lux/integrations/AuthUrlConfirmDialog.tsx": "react",
+  "src/components/lux/integrations/DisconnectAccountDialog.tsx": "react",
+  "src/components/lux/integrations/DryRunLogsPanel.tsx": "OAuthSandboxPanel.tsx",
   "src/components/lux/integrations/EmailAccountsAuditPanel.tsx": "EmailAccountsAuditPanel.tsx",
-  "src/components/lux/integrations/EmailAccountsPanel.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/integrations/EmailSyncHistorySheet.tsx": "lucide-react",
-  "src/components/lux/integrations/EnvProfilesPanel.tsx": "useEnvProfiles.ts",
-  "src/components/lux/integrations/OAuthSandboxPanel.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/integrations/OAuthSnapshotsPanel.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/integrations/RedirectUriChecklist.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/integrations/WebhooksPanel.tsx": "react",
+  "src/components/lux/integrations/EmailAccountsPanel.tsx": "EmailAccountsPanel.tsx",
+  "src/components/lux/integrations/EmailSyncHistorySheet.tsx": "EmailAccountsPanel.tsx",
+  "src/components/lux/integrations/EnvProfilesPanel.tsx": "react",
+  "src/components/lux/integrations/OAuthSandboxPanel.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/integrations/OAuthSnapshotsPanel.tsx": "EmailAccountsPanel.tsx",
+  "src/components/lux/integrations/RedirectUriChecklist.tsx": "RedirectUriChecklist.tsx",
+  "src/components/lux/integrations/WebhooksPanel.tsx": "@tanstack/react-query",
   "src/components/lux/layout/Header.tsx": "CommandPalette.tsx",
-  "src/components/lux/layout/MobileBottomNav.tsx": "react",
+  "src/components/lux/layout/MobileBottomNav.tsx": "CommandPalette.tsx",
   "src/components/lux/layout/Sidebar.tsx": "CommandPalette.tsx",
   "src/components/lux/layout/__tests__/Header.test.tsx": "vitest",
-  "src/components/lux/layout/__tests__/Sidebar.test.tsx": "AppBreadcrumbs.tsx",
-  "src/components/lux/layout/nav-items.ts": "AppBreadcrumbs.tsx",
+  "src/components/lux/layout/__tests__/Sidebar.test.tsx": "SidebarFooter.test.tsx",
+  "src/components/lux/layout/nav-items.ts": "SidebarFooter.test.tsx",
   "src/components/lux/lusha/DecisionMakersGrid.test-d.ts": "Analisado",
-  "src/components/lux/lusha/DecisionMakersGrid.test.tsx": "DecisionMakersGrid.test.tsx",
-  "src/components/lux/lusha/DecisionMakersGrid.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/lusha/LushaCookieHealthBanner.tsx": "cn",
-  "src/components/lux/lusha/OracleV2ErrorBoundary.tsx": "button.tsx",
-  "src/components/lux/lusha/OracleV2Panel.tsx": "LushaIntelligenceView.tsx",
+  "src/components/lux/lusha/DecisionMakersGrid.test.tsx": "Analisado",
+  "src/components/lux/lusha/DecisionMakersGrid.tsx": "Monitoring.tsx",
+  "src/components/lux/lusha/LushaCookieHealthBanner.tsx": "@tanstack/react-query",
+  "src/components/lux/lusha/OracleV2ErrorBoundary.tsx": "react",
+  "src/components/lux/lusha/OracleV2Panel.tsx": "Monitoring.tsx",
   "src/components/lux/lusha/SessionsPanel.test.tsx": "SessionsPanel.test.tsx",
   "src/components/lux/lusha/SessionsPanel.tsx": "SessionsPanel.test.tsx",
   "src/components/lux/lusha/StatusBadge.test.tsx": "vitest",
-  "src/components/lux/lusha/StatusBadge.tsx": "LushaIntelligenceView.tsx",
+  "src/components/lux/lusha/StatusBadge.tsx": "Monitoring.tsx",
   "src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts": "historyUtils.fuzz.test.ts",
   "src/components/lux/lusha/__tests__/historyUtils.test.ts": "historyUtils.fuzz.test.ts",
   "src/components/lux/lusha/constants.test.ts": "Analisado",
@@ -2309,49 +2297,49 @@
   "src/components/lux/lusha/historyUtils.ts": "historyUtils.fuzz.test.ts",
   "src/components/lux/lusha/types.test.ts": "Analisado",
   "src/components/lux/lusha/types.ts": "Analisado",
-  "src/components/lux/map/MapFilters.tsx": "OrgViolationsView.tsx",
+  "src/components/lux/map/MapFilters.tsx": "OAuthSandboxPanel.tsx",
   "src/components/lux/map/MapMarkerIcons.tsx": "MapMarkerIcons.tsx",
   "src/components/lux/map/MarkerClusterLayer.tsx": "MapMarkerIcons.tsx",
-  "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/ApiLatencyPanel.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/AuditTrailPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": "ApiLatencyAlertSettingsCard.tsx",
+  "src/components/lux/monitoring/ApiLatencyPanel.tsx": "ApiLatencyPanel.tsx",
+  "src/components/lux/monitoring/AuditTrailPanel.tsx": "OAuthSandboxPanel.tsx",
   "src/components/lux/monitoring/AutomationLogsPanel.tsx": "cn",
   "src/components/lux/monitoring/AutomationStatusPanel.tsx": "AutomationStatusPanel.tsx",
   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/CircuitBreakerPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/CircuitBreakerPanel.tsx": "RLSDiscoveryView.tsx",
   "src/components/lux/monitoring/DLQReplayPanel.tsx": "useDlqReplay.ts",
   "src/components/lux/monitoring/DbHealthDashboard.tsx": "Monitoring.tsx",
   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": "DlqAlertSettingsCard.tsx",
   "src/components/lux/monitoring/DlqHealthCard.tsx": "DlqHealthCard.tsx",
-  "src/components/lux/monitoring/DlqTriageView.tsx": "useActiveOrganization",
+  "src/components/lux/monitoring/DlqTriageView.tsx": "@tanstack/react-query",
   "src/components/lux/monitoring/InstagramConnectionPanel.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/JobDetailsSheet.tsx": "lucide-react",
-  "src/components/lux/monitoring/LatencySparkline.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/JobDetailsSheet.tsx": "react",
+  "src/components/lux/monitoring/LatencySparkline.tsx": "ApiLatencyPanel.tsx",
   "src/components/lux/monitoring/MonitoringView.tsx": "cn",
   "src/components/lux/monitoring/MonteCarloReportPanel.tsx": "Monitoring.tsx",
   "src/components/lux/monitoring/MultiQueueResilienceCard.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/OrgRateLimitsView.tsx": "useActiveOrganization",
-  "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": "VaultCookiesPanel.tsx",
-  "src/components/lux/monitoring/QaHistoryPanel.tsx": "OrgViolationsView.tsx",
+  "src/components/lux/monitoring/OrgRateLimitsView.tsx": "@tanstack/react-query",
+  "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": "hooks/use-toast.ts",
+  "src/components/lux/monitoring/QaHistoryPanel.tsx": "Monitoring.tsx",
   "src/components/lux/monitoring/ReaperHistoryPanel.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/ResilienceReport.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/RetryAutoTunerCard.tsx": "autotune.ts",
-  "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": "LushaIntelligenceView.tsx",
-  "src/components/lux/monitoring/ScrapeLatencyPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/ResilienceReport.tsx": "ResilienceReport.tsx",
+  "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx": "cn",
+  "src/components/lux/monitoring/RetryAutoTunerCard.tsx": "generateScenarios",
+  "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/ScrapeLatencyPanel.tsx": "ApiLatencyPanel.tsx",
   "src/components/lux/monitoring/ScrapeQueuePanel.tsx": "ScrapeQueuePanel.tsx",
   "src/components/lux/monitoring/SlaAlertSettingsCard.tsx": "react",
   "src/components/lux/monitoring/SlaAutoTuneBlockedCard.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/SlaCompliancePanel.tsx": "react",
-  "src/components/lux/monitoring/SlaHistoryCard.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/SlaCompliancePanel.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/SlaHistoryCard.tsx": "OAuthSandboxPanel.tsx",
   "src/components/lux/monitoring/SlaHistoryTrendChart.tsx": "SlaHistoryTrendChart.tsx",
-  "src/components/lux/monitoring/SlaRecommendationRowItem.tsx": "SlaRecommendationRowItem.tsx",
-  "src/components/lux/monitoring/SlaRecommendationsCard.tsx": "Monitoring.tsx",
+  "src/components/lux/monitoring/SlaRecommendationRowItem.tsx": "SlaRecommendationsCard.tsx",
+  "src/components/lux/monitoring/SlaRecommendationsCard.tsx": "SlaRecommendationsCard.tsx",
   "src/components/lux/monitoring/SlaTrendChart.tsx": "Monitoring.tsx",
-  "src/components/lux/monitoring/SourceComparisonReport.tsx": "OrgViolationsView.tsx",
+  "src/components/lux/monitoring/SourceComparisonReport.tsx": "OAuthSandboxPanel.tsx",
   "src/components/lux/monitoring/SourceComparisonSummary.tsx": "SourceComparisonSummary.tsx",
   "src/components/lux/monitoring/SourceComparisonTable.tsx": "SourceComparisonSummary.tsx",
-  "src/components/lux/monitoring/VaultCookiesPanel.tsx": "VaultCookiesPanel.tsx",
+  "src/components/lux/monitoring/VaultCookiesPanel.tsx": "hooks/use-toast.ts",
   "src/components/lux/monitoring/WebScrapeView.tsx": "useWebScrape.ts",
   "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx": "DlqAlertSettingsCard.test.tsx",
   "src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx": "DlqHealthCard.tsx",
@@ -2360,186 +2348,186 @@
   "src/components/lux/monitoring/slaHistoryChartData.ts": "SlaHistoryTrendChart.tsx",
   "src/components/lux/monitoring/slaRiskAnalysis.ts": "SlaHistoryCard",
   "src/components/lux/motion-variants.ts": "PageTransition.tsx",
-  "src/components/lux/onboarding/ConfettiEffect.tsx": "OnboardingTour.tsx",
+  "src/components/lux/onboarding/ConfettiEffect.tsx": "ConfettiEffect.tsx",
   "src/components/lux/onboarding/TourSpotlight.tsx": "OnboardingTour.tsx",
   "src/components/lux/onboarding/TourSteps.ts": "OnboardingTour.tsx",
   "src/components/lux/onboarding/TourTooltip.tsx": "OnboardingTour.tsx",
   "src/components/lux/onboarding/tour-position.ts": "OnboardingTour.tsx",
-  "src/components/lux/organizations/ActivityHistory.tsx": "OrganizationsView.tsx",
-  "src/components/lux/organizations/InviteSection.tsx": "OrganizationsView.tsx",
-  "src/components/lux/organizations/MemberRow.tsx": "OrganizationsView.tsx",
-  "src/components/lux/organizations/MembershipAuditDetailSheet.tsx": "lucide-react",
-  "src/components/lux/organizations/MembershipAuditLog.tsx": "lucide-react",
-  "src/components/lux/organizations/WorkspaceSelector.tsx": "OrganizationsView.tsx",
+  "src/components/lux/organizations/ActivityHistory.tsx": "@tanstack/react-query",
+  "src/components/lux/organizations/InviteSection.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/organizations/MemberRow.tsx": "@tanstack/react-query",
+  "src/components/lux/organizations/MembershipAuditDetailSheet.tsx": "EmailAccountsPanel.tsx",
+  "src/components/lux/organizations/MembershipAuditLog.tsx": "OAuthSandboxPanel.tsx",
+  "src/components/lux/organizations/WorkspaceSelector.tsx": "@tanstack/react-query",
   "src/components/lux/organizations/WorkspaceSwitcher.tsx": "Header.tsx",
-  "src/components/lux/permissions/PermissionGate.tsx": "2. Módulos Principais (12 Views)",
+  "src/components/lux/permissions/PermissionGate.tsx": "useCan",
   "src/components/lux/permissions/PermissionsMatrix.tsx": "permissions.ts",
-  "src/components/lux/security/OrgViolationAlertsPanel.tsx": "OrgViolationsView.tsx",
-  "src/components/lux/settings/MFASetup.tsx": "button.tsx",
-  "src/components/lux/settings/RLSDiscoveryView.tsx": "button.tsx",
-  "src/components/lux/settings/RLSRegistryCoverage.tsx": "RLSRegistryCoverage.tsx",
-  "src/components/lux/settings/RLSVerificationPanel.tsx": "button.tsx",
+  "src/components/lux/security/OrgViolationAlertsPanel.tsx": "Monitoring.tsx",
+  "src/components/lux/settings/MFASetup.tsx": "react",
+  "src/components/lux/settings/RLSDiscoveryView.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/settings/RLSRegistryCoverage.tsx": "RLSDiscoveryView.tsx",
+  "src/components/lux/settings/RLSVerificationPanel.tsx": "react",
   "src/components/lux/skeletons/DashboardSkeleton.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/skeletons/SkeletonPrimitives.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/skeletons/ViewSkeletons.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/stakeholders/StakeholderCard.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/stakeholders/StakeholderListRow.tsx": "StakeholderFinderView.tsx",
   "src/components/lux/stakeholders/stakeholder-utils.ts": "StakeholderFinderView.tsx",
-  "src/components/lux/view-skeleton-map.tsx": "react",
+  "src/components/lux/view-skeleton-map.tsx": "Index.tsx",
   "src/components/lux/workflows/WorkflowCard.tsx": "WorkflowCard.tsx",
   "src/components/ui/accordion.tsx": "cn",
-  "src/components/ui/alert-dialog.tsx": "LushaIntelligenceView.tsx",
-  "src/components/ui/alert.tsx": "MFAEnroll.tsx",
+  "src/components/ui/alert-dialog.tsx": "Index.tsx",
+  "src/components/ui/alert.tsx": "Monitoring.tsx",
   "src/components/ui/aspect-ratio.tsx": "package.json",
-  "src/components/ui/avatar.tsx": "OrganizationsView.tsx",
+  "src/components/ui/avatar.tsx": "@tanstack/react-query",
   "src/components/ui/badge-variants.ts": "Monitoring.tsx",
   "src/components/ui/badge.tsx": "Monitoring.tsx",
   "src/components/ui/breadcrumb.tsx": "AppBreadcrumbs.tsx",
-  "src/components/ui/button-variants.ts": "LushaIntelligenceView.tsx",
+  "src/components/ui/button-variants.ts": "Index.tsx",
   "src/components/ui/button.tsx": "cn",
-  "src/components/ui/calendar.tsx": "cn",
+  "src/components/ui/calendar.tsx": "Index.tsx",
   "src/components/ui/card.tsx": "Monitoring.tsx",
   "src/components/ui/carousel.tsx": "carousel.tsx",
   "src/components/ui/chart.tsx": "chart.tsx",
-  "src/components/ui/checkbox.tsx": "button.tsx",
+  "src/components/ui/checkbox.tsx": "react",
   "src/components/ui/collapsible.tsx": "package.json",
   "src/components/ui/command.tsx": "CommandPalette.tsx",
   "src/components/ui/context-menu.tsx": "cn",
-  "src/components/ui/dialog.tsx": "cn",
-  "src/components/ui/drawer.tsx": "drawer.tsx",
+  "src/components/ui/dialog.tsx": "react",
+  "src/components/ui/drawer.tsx": "cn",
   "src/components/ui/dropdown-menu.tsx": "Header.tsx",
   "src/components/ui/form.tsx": "form.tsx",
   "src/components/ui/hover-card.tsx": "cn",
   "src/components/ui/input-otp.tsx": "MFAEnroll.tsx",
-  "src/components/ui/input.tsx": "OrgViolationsView.tsx",
-  "src/components/ui/label.tsx": "OrgViolationsView.tsx",
+  "src/components/ui/input.tsx": "react",
+  "src/components/ui/label.tsx": "react",
   "src/components/ui/menubar.tsx": "cn",
   "src/components/ui/navigation-menu.tsx": "cn",
   "src/components/ui/pagination.tsx": "cn",
-  "src/components/ui/popover.tsx": "cn",
-  "src/components/ui/progress.tsx": "LushaIntelligenceView.tsx",
+  "src/components/ui/popover.tsx": "ThemeToggle.tsx",
+  "src/components/ui/progress.tsx": "Monitoring.tsx",
   "src/components/ui/radio-group.tsx": "cn",
   "src/components/ui/resizable.tsx": "cn",
-  "src/components/ui/scroll-area.tsx": "Monitoring.tsx",
+  "src/components/ui/scroll-area.tsx": "RLSDiscoveryView.tsx",
   "src/components/ui/select.tsx": "cn",
-  "src/components/ui/separator.tsx": "cn",
-  "src/components/ui/sheet.tsx": "lucide-react",
-  "src/components/ui/sidebar.tsx": "cn",
-  "src/components/ui/skeleton.tsx": "lucide-react",
-  "src/components/ui/slider.tsx": "OrgViolationsView.tsx",
+  "src/components/ui/separator.tsx": "CompanyDetailModal.tsx",
+  "src/components/ui/sheet.tsx": "EmailAccountsPanel.tsx",
+  "src/components/ui/sidebar.tsx": "sidebar.tsx",
+  "src/components/ui/skeleton.tsx": "RLSDiscoveryView.tsx",
+  "src/components/ui/slider.tsx": "react",
   "src/components/ui/sonner.tsx": "App.tsx",
   "src/components/ui/switch.tsx": "Monitoring.tsx",
-  "src/components/ui/table.tsx": "cn",
-  "src/components/ui/tabs.tsx": "lucide-react",
-  "src/components/ui/textarea.tsx": "OrgViolationsView.tsx",
+  "src/components/ui/table.tsx": "Monitoring.tsx",
+  "src/components/ui/tabs.tsx": "CompanyDetailModal.tsx",
+  "src/components/ui/textarea.tsx": "RedirectUriChecklist.tsx",
   "src/components/ui/toast.tsx": "toast.tsx",
   "src/components/ui/toaster.tsx": "toast.tsx",
   "src/components/ui/toggle-group.tsx": "toggle-group.tsx",
   "src/components/ui/toggle-variants.ts": "toggle-group.tsx",
   "src/components/ui/toggle.tsx": "toggle-group.tsx",
-  "src/components/ui/tooltip.tsx": "LushaIntelligenceView.tsx",
+  "src/components/ui/tooltip.tsx": "Monitoring.tsx",
   "src/components/ui/use-form-field.ts": "form.tsx",
-  "src/components/ui/use-sidebar.ts": "cn",
-  "src/components/ui/use-toast.ts": "button.tsx",
+  "src/components/ui/use-sidebar.ts": "sidebar.tsx",
+  "src/components/ui/use-toast.ts": "hooks/use-toast.ts",
   "src/contexts/ActiveOrgContext.tsx": "withOrg.ts",
   "src/contexts/AuthContext.tsx": "withOrg.ts",
   "src/contexts/DemoContext.tsx": "ADR-022 — Rodada #28: Excelência Funcional & Acessibilidade",
   "src/contexts/__tests__/AuthContext.test.tsx": "withOrg.ts",
-  "src/contexts/active-org-context.ts": "useActiveOrganization",
-  "src/contexts/auth-context.ts": "react",
-  "src/contexts/demo-context.ts": "DashboardView.tsx",
+  "src/contexts/active-org-context.ts": "@tanstack/react-query",
+  "src/contexts/auth-context.ts": "@tanstack/react-query",
+  "src/contexts/demo-context.ts": "demo-context.ts",
   "src/hooks/__tests__/oracleV2Helpers.test.ts": "useOracleV2.ts",
-  "src/hooks/__tests__/useAuditTrail.test.ts": "supabase/types.ts",
-  "src/hooks/__tests__/useConfirm.test.tsx": "button.tsx",
+  "src/hooks/__tests__/useAuditTrail.test.ts": "useAuditTrail.ts",
+  "src/hooks/__tests__/useConfirm.test.tsx": "Index.tsx",
   "src/hooks/__tests__/useDlqReplay.test.ts": "useDlqReplay.ts",
   "src/hooks/__tests__/useOraclePushBitrix.test.ts": "useOracleV2.ts",
   "src/hooks/__tests__/usePersistedFilters.test.ts": "usePersistedFilters",
   "src/hooks/__tests__/useRateLimit.logic.test.ts": "useRateLimit.logic.test.ts",
-  "src/hooks/__tests__/useRateLimit.test.ts": "useRateLimit.ts",
+  "src/hooks/__tests__/useRateLimit.test.ts": "useLoginForm.ts",
   "src/hooks/__tests__/useRealtimeCompanies.test.ts": "vitest",
   "src/hooks/__tests__/useRealtimeScrapeJobs.test.ts": "useRealtimeScrapeJobs",
   "src/hooks/__tests__/useRecentViews.test.ts": "CommandPalette.tsx",
-  "src/hooks/__tests__/useSidebarState.test.ts": "useRealtimeScrapeJobs",
-  "src/hooks/confirm-context.ts": "button.tsx",
+  "src/hooks/__tests__/useSidebarState.test.ts": "Index.tsx",
+  "src/hooks/confirm-context.ts": "react",
   "src/hooks/oracleV2Helpers.ts": "useOracleV2.ts",
-  "src/hooks/unsaved-changes-context.ts": "LushaIntelligenceView.tsx",
-  "src/hooks/use-mobile.tsx": "CompanyFilters.tsx",
-  "src/hooks/use-toast.ts": "button.tsx",
-  "src/hooks/useApiKeys.ts": "react",
-  "src/hooks/useApiLatency.ts": "Monitoring.tsx",
-  "src/hooks/useApiLatencyAlertSettings.ts": "react",
-  "src/hooks/useAuditTrail.ts": "supabase/types.ts",
+  "src/hooks/unsaved-changes-context.ts": "Index.tsx",
+  "src/hooks/use-mobile.tsx": "CompaniesView.tsx",
+  "src/hooks/use-toast.ts": "react",
+  "src/hooks/useApiKeys.ts": "@tanstack/react-query",
+  "src/hooks/useApiLatency.ts": "ApiLatencyPanel.tsx",
+  "src/hooks/useApiLatencyAlertSettings.ts": "ApiLatencyAlertSettingsCard.tsx",
+  "src/hooks/useAuditTrail.ts": "useAuditTrail.ts",
   "src/hooks/useAutomationLogs.ts": "DlqHealthCard.tsx",
-  "src/hooks/useAutomationsMonitor.ts": "cn",
+  "src/hooks/useAutomationsMonitor.ts": "useAutomationsMonitor.ts",
   "src/hooks/useBottomNavSwipe.ts": "3. Recursos Transversais",
   "src/hooks/useCircuitBreakerAlerts.ts": "useCircuitBreakerAlerts.ts",
-  "src/hooks/useCircuitBreakers.ts": "react",
-  "src/hooks/useCnpjAutoEnrichSetting.ts": "button.tsx",
+  "src/hooks/useCircuitBreakers.ts": "RLSDiscoveryView.tsx",
+  "src/hooks/useCnpjAutoEnrichSetting.ts": "3. Functions chamadas pelo frontend (28)",
   "src/hooks/useCnpjEnrich.ts": "useCnpjEnrich.ts",
   "src/hooks/useCompanyDetails.ts": "CompanyDetailModal",
-  "src/hooks/useCompanyReviews.ts": "OrganizationsView.tsx",
-  "src/hooks/useConfirm.tsx": "LushaIntelligenceView.tsx",
+  "src/hooks/useCompanyReviews.ts": "@tanstack/react-query",
+  "src/hooks/useConfirm.tsx": "Index.tsx",
   "src/hooks/useDashboardData.ts": "demoData.ts",
   "src/hooks/useDbHealth.ts": "useDbHealth.ts",
-  "src/hooks/useDeals.ts": "DealsView.tsx",
+  "src/hooks/useDeals.ts": "@tanstack/react-query",
   "src/hooks/useDlqAlertSettings.ts": "DlqAlertSettingsCard.tsx",
   "src/hooks/useDlqHealth.ts": "DlqHealthCard.tsx",
-  "src/hooks/useDlqItems.ts": "classify.ts",
+  "src/hooks/useDlqItems.ts": "@tanstack/react-query",
   "src/hooks/useDlqReplay.ts": "useDlqReplay.ts",
-  "src/hooks/useDryRunLogs.ts": "OrgViolationsView.tsx",
+  "src/hooks/useDryRunLogs.ts": "OAuthSandboxPanel.tsx",
   "src/hooks/useEmailAccountAuditLog.ts": "EmailAccountsAuditPanel.tsx",
-  "src/hooks/useEmailSuppressions.ts": "react",
-  "src/hooks/useEmailSyncLog.ts": "lucide-react",
-  "src/hooks/useEnvProfiles.ts": "useEnvProfiles.ts",
+  "src/hooks/useEmailSuppressions.ts": "Index.tsx",
+  "src/hooks/useEmailSyncLog.ts": "@tanstack/react-query",
+  "src/hooks/useEnvProfiles.ts": "react",
   "src/hooks/useFeatureFlag.ts": "useFeatureFlag.ts",
-  "src/hooks/useFeatureFlags.ts": "supabase/types.ts",
-  "src/hooks/useFocusMode.ts": "react",
-  "src/hooks/useICPConfig.ts": "react",
+  "src/hooks/useFeatureFlags.ts": "@tanstack/react-query",
+  "src/hooks/useFocusMode.ts": "Index.tsx",
+  "src/hooks/useICPConfig.ts": "@tanstack/react-query",
   "src/hooks/useKeyboardShortcuts.ts": "CommandPalette.tsx",
-  "src/hooks/useLoginForm.ts": "3. Functions chamadas pelo frontend (28)",
+  "src/hooks/useLoginForm.ts": "useLoginForm.ts",
   "src/hooks/useMFA.ts": "MFAEnroll.tsx",
-  "src/hooks/useMembershipAuditLog.ts": "supabase/types.ts",
+  "src/hooks/useMembershipAuditLog.ts": "OAuthSandboxPanel.tsx",
   "src/hooks/useNavigationHistory.ts": "CommandPalette.tsx",
-  "src/hooks/useNotificationCount.ts": "DashboardView.tsx",
-  "src/hooks/useOAuthSandboxSnapshots.ts": "OrgViolationsView.tsx",
+  "src/hooks/useNotificationCount.ts": "demo-context.ts",
+  "src/hooks/useOAuthSandboxSnapshots.ts": "EmailAccountsPanel.tsx",
   "src/hooks/useOnboardingState.ts": "OnboardingTour.tsx",
   "src/hooks/useOracleV2.ts": "useOracleV2.ts",
-  "src/hooks/useOrgProxies.ts": "useActiveOrganization",
-  "src/hooks/useOrgRateLimit.ts": "useActiveOrganization",
-  "src/hooks/useOrganizations.ts": "OrganizationsView.tsx",
-  "src/hooks/usePartitionAdvisories.ts": "VaultCookiesPanel.tsx",
-  "src/hooks/usePermissions.ts": "OrgViolationsView.tsx",
+  "src/hooks/useOrgProxies.ts": "ProxyFormDialog.tsx",
+  "src/hooks/useOrgRateLimit.ts": "@tanstack/react-query",
+  "src/hooks/useOrganizations.ts": "@tanstack/react-query",
+  "src/hooks/usePartitionAdvisories.ts": "hooks/use-toast.ts",
+  "src/hooks/usePermissions.ts": "@tanstack/react-query",
   "src/hooks/usePersistedFilters.ts": "usePersistedFilters",
-  "src/hooks/usePlacesApiUsage.ts": "useActiveOrganization",
-  "src/hooks/useRateLimit.ts": "useRateLimit.ts",
-  "src/hooks/useRealtimeCompanies.ts": "react",
-  "src/hooks/useRealtimeJobDetails.ts": "lucide-react",
+  "src/hooks/usePlacesApiUsage.ts": "@tanstack/react-query",
+  "src/hooks/useRateLimit.ts": "useLoginForm.ts",
+  "src/hooks/useRealtimeCompanies.ts": "useRealtimeScrapeJobs",
+  "src/hooks/useRealtimeJobDetails.ts": "@tanstack/react-query",
   "src/hooks/useRealtimeScrapeJobs.ts": "useRealtimeScrapeJobs",
-  "src/hooks/useReaperAlerts.ts": "react",
-  "src/hooks/useReaperHistory.ts": "react",
+  "src/hooks/useReaperAlerts.ts": "@tanstack/react-query",
+  "src/hooks/useReaperHistory.ts": "@tanstack/react-query",
   "src/hooks/useRecentViews.ts": "CommandPalette.tsx",
-  "src/hooks/useResilienceComparison.ts": "Monitoring.tsx",
+  "src/hooks/useResilienceComparison.ts": "ResilienceReport.tsx",
   "src/hooks/useResilienceSimulator.ts": "useResilienceSimulator.ts",
   "src/hooks/useScrapeQueue.ts": "ScrapeQueuePanel.tsx",
-  "src/hooks/useSidebarState.ts": "useRealtimeScrapeJobs",
-  "src/hooks/useSkin.ts": "cn",
+  "src/hooks/useSidebarState.ts": "Index.tsx",
+  "src/hooks/useSkin.ts": "ThemeToggle.tsx",
   "src/hooks/useSwipeGesture.ts": "3. Recursos Transversais",
   "src/hooks/useTaskReminders.ts": "DealsView.tsx",
   "src/hooks/useThemeColors.ts": "useThemeColors.ts",
-  "src/hooks/useUnsavedChanges.tsx": "LushaIntelligenceView.tsx",
+  "src/hooks/useUnsavedChanges.tsx": "Index.tsx",
   "src/hooks/useVirtualCompanies.ts": "CompanyTable.tsx",
   "src/hooks/useVirtualization.ts": "CompanyTable.tsx",
   "src/hooks/useWebScrape.ts": "useWebScrape.ts",
-  "src/hooks/useWebhooks.ts": "react",
+  "src/hooks/useWebhooks.ts": "@tanstack/react-query",
   "src/hooks/useWeeklyPerformance.ts": "DashboardView.tsx",
   "src/integrations/lovable/index.ts": "useLoginForm.ts",
-  "src/integrations/supabase/__tests__/withOrg.batch.test.ts": "withOrg.ts",
+  "src/integrations/supabase/__tests__/withOrg.batch.test.ts": "withOrg.batch.test.ts",
   "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts": "MissingOrgContextError",
   "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts": "withOrg.maliciousFilters.test.ts",
   "src/integrations/supabase/__tests__/withOrg.registry.test.ts": "withOrg.ts",
   "src/integrations/supabase/__tests__/withOrg.switching.test.ts": "withOrg.maliciousFilters.test.ts",
-  "src/integrations/supabase/client.ts": "react",
-  "src/integrations/supabase/types.ts": "supabase/types.ts",
+  "src/integrations/supabase/client.ts": "@tanstack/react-query",
+  "src/integrations/supabase/types.ts": "react",
   "src/integrations/supabase/withOrg.test.ts": "withOrg.ts",
   "src/integrations/supabase/withOrg.ts": "MissingOrgContextError",
   "src/lib/__tests__/csv.test.ts": "downloadCSV",
@@ -2549,7 +2537,7 @@
   "src/lib/__tests__/orgErrorHandler.test.ts": "orgErrorHandler.ts",
   "src/lib/__tests__/sanitize.test.ts": "SafeHTML.tsx",
   "src/lib/__tests__/utils.test.ts": "vitest",
-  "src/lib/api/gmaps.ts": "OrgViolationsView.tsx",
+  "src/lib/api/gmaps.ts": "@tanstack/react-query",
   "src/lib/api/workflows.ts": "WorkflowCard.tsx",
   "src/lib/cnpj.ts": "useCnpjEnrich.ts",
   "src/lib/constants.ts": "lib/constants.ts",
@@ -2558,58 +2546,58 @@
   "src/lib/dlq/__tests__/aggregations.test.ts": "aggregations.ts",
   "src/lib/dlq/__tests__/classify.test.ts": "classify.ts",
   "src/lib/dlq/aggregations.ts": "aggregations.ts",
-  "src/lib/dlq/classify.ts": "classify.ts",
-  "src/lib/emailErrorMessages.ts": "emailErrorMessages.ts",
+  "src/lib/dlq/classify.ts": "@tanstack/react-query",
+  "src/lib/emailErrorMessages.ts": "EmailAccountsPanel.tsx",
   "src/lib/exportAnalyticsPDF.ts": "package.json",
   "src/lib/exportCSV.ts": "downloadCSV",
   "src/lib/exportRLSReport.ts": "exportRLSReport.ts",
   "src/lib/lusha/__tests__/departmentMap.test.ts": "lusha/departmentMap.ts",
   "src/lib/lusha/departmentMap.data.ts": "lusha/departmentMap.ts",
   "src/lib/lusha/departmentMap.ts": "lusha/departmentMap.ts",
-  "src/lib/mcp/index.ts": "useCnpjEnrich.ts",
-  "src/lib/mcp/supabase.ts": "useCnpjEnrich.ts",
-  "src/lib/mcp/tools/get-company.ts": "useCnpjEnrich.ts",
-  "src/lib/mcp/tools/get-dashboard-stats.ts": "useCnpjEnrich.ts",
-  "src/lib/mcp/tools/list-companies.ts": "useCnpjEnrich.ts",
-  "src/lib/mcp/tools/list-decision-makers.ts": "useCnpjEnrich.ts",
-  "src/lib/mcp/tools/list-scrape-jobs.ts": "useCnpjEnrich.ts",
+  "src/lib/mcp/index.ts": "zod",
+  "src/lib/mcp/supabase.ts": "zod",
+  "src/lib/mcp/tools/get-company.ts": "zod",
+  "src/lib/mcp/tools/get-dashboard-stats.ts": "zod",
+  "src/lib/mcp/tools/list-companies.ts": "zod",
+  "src/lib/mcp/tools/list-decision-makers.ts": "zod",
+  "src/lib/mcp/tools/list-scrape-jobs.ts": "zod",
   "src/lib/orgErrorHandler.ts": "orgErrorHandler.ts",
-  "src/lib/permissions.ts": "permissions.ts",
+  "src/lib/permissions.ts": "useCan",
   "src/lib/redirectUriChecklist.ts": "redirectUriChecklist.ts",
   "src/lib/resilience/__tests__/compareReport.test.ts": "compareReport.ts",
   "src/lib/resilience/autotune.test.ts": "autotune.ts",
   "src/lib/resilience/autotune.ts": "autotune.ts",
-  "src/lib/resilience/compareReport.ts": "Monitoring.tsx",
+  "src/lib/resilience/compareReport.ts": "ResilienceReport.tsx",
   "src/lib/resilience/report.ts": "useResilienceSimulator.ts",
-  "src/lib/resilience/scenarios.ts": "useResilienceSimulator.ts",
+  "src/lib/resilience/scenarios.ts": "scenarios.ts",
   "src/lib/resilience/simulator.test.ts": "useResilienceSimulator.ts",
-  "src/lib/resilience/simulator.ts": "simulator.ts",
-  "src/lib/rlsRegistry.ts": "RLSRegistryCoverage.tsx",
+  "src/lib/resilience/simulator.ts": "autotune.ts",
+  "src/lib/rlsRegistry.ts": "RLSDiscoveryView.tsx",
   "src/lib/sanitize.ts": "SafeHTML.tsx",
-  "src/lib/schemas/__tests__/validation.test.ts": "useCnpjEnrich.ts",
+  "src/lib/schemas/__tests__/validation.test.ts": "validation.test.ts",
   "src/lib/schemas/auth.ts": "useLoginForm.ts",
-  "src/lib/schemas/campaign.ts": "useCnpjEnrich.ts",
+  "src/lib/schemas/campaign.ts": "validation.test.ts",
   "src/lib/schemas/company.ts": "useCnpjEnrich.ts",
-  "src/lib/schemas/scrapeJob.ts": "useCnpjEnrich.ts",
+  "src/lib/schemas/scrapeJob.ts": "validation.test.ts",
   "src/lib/sourceQualityReport.test.ts": "SourceComparisonSummary.tsx",
   "src/lib/sourceQualityReport.ts": "SourceComparisonSummary.tsx",
-  "src/lib/utils.ts": "cn",
-  "src/lib/viewRegistry.ts": "LushaIntelligenceView.tsx",
+  "src/lib/utils.ts": "react",
+  "src/lib/viewRegistry.ts": "CommandPalette.tsx",
   "src/main.tsx": "App.tsx",
   "src/pages/A": "cenarios.mjs",
-  "src/pages/AcceptInvite.tsx": "react",
+  "src/pages/AcceptInvite.tsx": "@tanstack/react-query",
   "src/pages/AdminCompanies.tsx": "Monitoring.tsx",
   "src/pages/B": "cenarios.mjs",
   "src/pages/CnpjSettingsPage.tsx": "Monitoring.tsx",
-  "src/pages/Index.tsx": "react",
-  "src/pages/Login.tsx": "3. Functions chamadas pelo frontend (28)",
+  "src/pages/Index.tsx": "Index.tsx",
+  "src/pages/Login.tsx": "useLoginForm.ts",
   "src/pages/Monitoring.tsx": "Monitoring.tsx",
-  "src/pages/NotFound.tsx": "lucide-react",
+  "src/pages/NotFound.tsx": "react",
   "src/pages/OAuthConsent.tsx": "Monitoring.tsx",
-  "src/pages/ResetPassword.tsx": "lucide-react",
-  "src/pages/admin/Admin": "ref_node_fs",
+  "src/pages/ResetPassword.tsx": "react",
+  "src/pages/admin/Admin": "ref_node_child_process",
   "src/test/example.test.ts": "vitest",
-  "src/test/mockFramerMotion.ts": "vitest",
+  "src/test/mockFramerMotion.ts": "@testing-library/react",
   "src/test/setup.ts": "setup.ts",
   "src/tests/fuzzing-validation.test.ts": "vitest",
   "src/tests/load-stress.test.ts": "scenarios.ts",
@@ -2731,7 +2719,7 @@
   "supabase/functions/system-recovery-status/index.ts": "ref_https",
   "supabase/functions/track-click/index.ts": "campaign-dispatch/index.ts",
   "supabase/functions/track-open/index.ts": "campaign-dispatch/index.ts",
-  "supabase/functions/vault-cookie-health/index.ts": "vault-cookie-health/index.ts",
+  "supabase/functions/vault-cookie-health/index.ts": "req",
   "supabase/functions/web-dlq-replay/index.ts": "ref_npm_supabase",
   "supabase/functions/web-scrape-enqueue/index.ts": "ref_npm_supabase",
   "supabase/functions/web-scrape-extract/index.ts": "ref_npm_supabase",

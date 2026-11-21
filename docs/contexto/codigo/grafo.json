@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 526,
- "arestas": 1549,
+ "arestas": 1552,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -77,6 +77,10 @@
    "importado_por": 17
   },
   {
+   "arquivo": "supabase/functions/_shared/cron-auth.ts",
+   "importado_por": 17
+  },
+  {
    "arquivo": "src/hooks/useOrganizations.ts",
    "importado_por": 16
   },
@@ -94,10 +98,6 @@
   },
   {
    "arquivo": "src/hooks/useNavigationHistory.ts",
-   "importado_por": 14
-  },
-  {
-   "arquivo": "supabase/functions/_shared/cron-auth.ts",
    "importado_por": 14
   },
   {

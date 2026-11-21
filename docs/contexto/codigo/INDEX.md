@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5f0ccecff4b32dfdbeb7d69aff879d0d14f34420` (2026-11-21T15:37:20-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c229e3f35f4c302fb524e4993a0a59c38d501b7f` (2026-11-21T16:14:05-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1032 |
 | arquivos_codigo | 650 |
-| linhas_codigo | 111182 |
+| linhas_codigo | 111200 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -216,8 +216,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6583 nós · 14170 arestas · 571 comunidades · grafo do commit `5f0ccecf`
-- comunidades maiores: Monitoring.tsx (148), cn (141), OrgViolationsView.tsx (141), button.tsx (123), lucide-react (121), snapshot.py (102), LushaIntelligenceView.tsx (87), react (83), gerar.mjs (80), ref_node_fs (73), generate.py (71), dependencies (65)
+- 6583 nós · 14179 arestas · 578 comunidades · grafo do commit `c229e3f3`
+- comunidades maiores: Monitoring.tsx (158), react (139), @tanstack/react-query (135), snapshot.py (102), cn (99), OAuthSandboxPanel.tsx (90), gerar.mjs (80), generate.py (71), EmailAccountsPanel.tsx (69), dependencies (65), campaign-dispatch/index.ts (64), CommandPalette.tsx (61)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -329,6 +329,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `c229e3f` fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)
 - 2026-11-21 `5f0ccec` fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)
 - 2026-11-21 `cdb0c8b` fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)
 - 2026-11-21 `be2d500` fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `03dd603` merge: fix(seguranca): protege .vercel e .env* no gitignore de repo publico
 - 2026-11-21 `b7178cd` merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)
 - 2026-11-20 `a37f319` chore: adiciona backlog verificado e linha de base (#80)
-- 2026-11-20 `8e0be69` fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

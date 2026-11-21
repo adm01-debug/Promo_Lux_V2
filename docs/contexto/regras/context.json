@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
+  "sha": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 18:37 UTC",
+  "generated_at": "2026-11-21 19:14 UTC",
   "files_total": 1051,
   "code_files": 877,
-  "code_lines": 125710
+  "code_lines": 125728
  },
  "version": "1.3.2",
- "facts_hash": "6a40b6abaa89242a",
+ "facts_hash": "7ecb41acdea002b8",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -25956,7 +25956,7 @@
   {
    "module": "supabase/functions",
    "files": 123,
-   "lines": 21844,
+   "lines": 21862,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -77229,7 +77229,7 @@
   },
   "supabase/functions/email-poll-replies/index.ts": {
    "path": "supabase/functions/email-poll-replies/index.ts",
-   "lines": 370,
+   "lines": 376,
    "tables": [
     {
      "table": "email_accounts",
@@ -80192,7 +80192,7 @@
   },
   "supabase/functions/vault-cookie-health/index.ts": {
    "path": "supabase/functions/vault-cookie-health/index.ts",
-   "lines": 208,
+   "lines": 214,
    "rpc": [
     "evaluate_vault_cookie_alerts",
     "record_vault_cookie_snapshots"
@@ -80429,7 +80429,7 @@
   },
   "supabase/functions/web-scrape-worker/index.ts": {
    "path": "supabase/functions/web-scrape-worker/index.ts",
-   "lines": 414,
+   "lines": 420,
    "tables": [
     {
      "table": "robots_cache",
@@ -82116,10 +82116,21 @@
   }
  },
  "git": {
-  "sha": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
+  "sha": "c229e3f35f4c302fb524e4993a0a59c38d501b7f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c229e3f",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)",
+    "files": [
+     "supabase/functions/email-poll-replies/index.ts",
+     "supabase/functions/vault-cookie-health/index.ts",
+     "supabase/functions/web-scrape-worker/index.ts"
+    ]
+   },
    {
     "sha": "5f0ccec",
     "date": "2026-11-21",
@@ -82443,26 +82454,16 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "70c5f03",
-    "date": "2026-11-19",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)",
-    "files": [
-     "package-lock.json",
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    8
+    7
    ],
    [
     "package.json",
-    7
+    6
    ],
    [
     "supabase/functions/campaign-dispatch/index.ts",
@@ -82497,6 +82498,18 @@
     2
    ],
    [
+    "supabase/functions/email-poll-replies/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/vault-cookie-health/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/web-scrape-worker/index.ts",
+    1
+   ],
+   [
     "supabase/functions/_shared/__tests__/cron-auth.test.ts",
     1
    ],
@@ -82522,18 +82535,6 @@
    ],
    [
     "supabase/functions/purge-soft-deleted/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/reaper-alerts/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/retry-policy-tuner/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/scrape-queue-worker/index.ts",
     1
    ]
   ]
