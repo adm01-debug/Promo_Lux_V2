@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9e7af303b2a9ec5d5b71372af4b91cf2363d3021` (2026-11-21T12:26:05-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `04bf64700ed01b00c46deffc2d56c58333d3f5d2` (2026-11-21T14:11:44-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -216,14 +216,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6575 nós · 14102 arestas · 575 comunidades · grafo do commit `9e7af303`
+- 6575 nós · 14102 arestas · 575 comunidades · grafo do commit `04bf6470`
 - comunidades maiores: Monitoring.tsx (175), cn (113), input.tsx (109), react (108), lucide-react (108), gerar.mjs (80), package.json (77), generate.py (73), dependencies (65), campaign-dispatch/index.ts (64), AppBreadcrumbs.tsx (63), ref_node_fs (58)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (17)
-- package.json (13)
+- package.json (14)
 - .github/workflows/edge-tests-daily.yml (6)
 - AGENTS.md (6)
 - .github/workflows/ci.yml (4)
@@ -236,7 +236,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/prod-readiness.md (3)
 - scripts/ci/eslint-baseline.json (3)
 - src/App.tsx (3)
-- supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql (3)
+- supabase/config.toml (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -255,7 +255,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `maintenance:heal`: `sh scripts/maintenance/run.sh heal --root . --ref origin/main`
 - `test:maintenance`: `node --test scripts/maintenance/maintenance.unit.mjs`
 - `dev`: `vite`
-- `build`: `vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nao gerado, requer bun, build principal ja concluiu')`
+- `build`: `vite build && (npm run generate-audit-pdf || echo PDF de auditoria nao gerado, requer bun, build principal ja concluiu)`
 - `generate-audit-pdf`: `bun scripts/generate-audit-pdf.ts`
 - `build:dev`: `vite build --mode development`
 - `lint`: `eslint .`
@@ -329,6 +329,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `04bf647` fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)
 - 2026-11-21 `9e7af30` fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)
 - 2026-11-21 `ba9db20` fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)
 - 2026-11-21 `b983c3d` merge: feat(api): rate-limit server-side por API key na public-api
@@ -343,7 +344,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-20 `8b16f55` fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)
 - 2026-11-20 `cfce9da` infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)
 - 2026-11-20 `c4ed84b` infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)
-- 2026-11-20 `5481263` chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

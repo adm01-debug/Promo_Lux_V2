@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9e7af303b2a9ec5d5b71372af4b91cf2363d3021",
+  "commit": "04bf64700ed01b00c46deffc2d56c58333d3f5d2",
   "branch": "main",
-  "data_commit": "2026-11-21T12:26:05-03:00",
+  "data_commit": "2026-11-21T14:11:44-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "04bf647",
+    "data": "2026-11-21",
+    "assunto": "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)"
+   },
    {
     "sha": "9e7af30",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "0767e3a",
     "data": "2026-11-19",
     "assunto": "chore(deps)(deps-dev): bump brace-expansion from 1.1.16 to 1.1.22 (#61)"
-   },
-   {
-    "sha": "906b862",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)"
    }
   ],
-  "arquivos_mudados_7d": 63,
+  "arquivos_mudados_7d": 61,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "pasta": ".gitignore",
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "package.json",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
@@ -254,6 +254,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "docs/agentes/lovable-deploy.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "inventario/estado/README.md",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 59
+    "commits": 60
    },
    {
     "autor": "dependabot[bot]",

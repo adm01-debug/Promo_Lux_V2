@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9e7af303b2a9ec5d5b71372af4b91cf2363d3021",
+  "sha": "04bf64700ed01b00c46deffc2d56c58333d3f5d2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 15:26 UTC",
+  "generated_at": "2026-11-21 17:13 UTC",
   "files_total": 1049,
   "code_files": 875,
   "code_lines": 125505
  },
  "version": "1.3.2",
- "facts_hash": "a643d27da7aff82f",
+ "facts_hash": "6057370566073961",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -98,7 +98,7 @@
    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
    "dev": "vite",
-   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nao gerado, requer bun, build principal ja concluiu')",
+   "build": "vite build && (npm run generate-audit-pdf || echo PDF de auditoria nao gerado, requer bun, build principal ja concluiu)",
    "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",
    "build:dev": "vite build --mode development",
    "lint": "eslint .",
@@ -28624,6 +28624,7 @@
     "src/components/lux/LushaIntelligenceView.tsx",
     "src/components/lux/SettingsView.tsx",
     "src/components/lux/integrations/ApiDocsCard.tsx",
+    "src/hooks/useWebScrape.ts",
     "src/integrations/supabase/client.ts",
     "src/lib/api/gmaps.ts",
     "src/lib/api/workflows.ts",
@@ -71361,6 +71362,9 @@
      "url"
     ]
    },
+   "env": [
+    "VITE_SUPABASE_URL"
+   ],
    "errors": [
     "Falha ao enfileirar: ${e.message}",
     "Falha ao reprocessar DLQ: ${e.message}",
@@ -81965,10 +81969,21 @@
   }
  },
  "git": {
-  "sha": "9e7af303b2a9ec5d5b71372af4b91cf2363d3021",
+  "sha": "04bf64700ed01b00c46deffc2d56c58333d3f5d2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "04bf647",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)",
+    "files": [
+     "package.json",
+     "src/hooks/useWebScrape.ts",
+     "supabase/config.toml"
+    ]
+   },
    {
     "sha": "9e7af30",
     "date": "2026-11-21",
@@ -82276,28 +82291,20 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "99fb844",
-    "date": "2026-11-19",
-    "author": "adm01-debug",
-    "subject": "fix(ci): destrava bump vitest/vite corrigindo tipos do quality-gate (#60)",
-    "files": [
-     "package-lock.json",
-     "package.json",
-     "src/test/setup.ts",
-     "tsconfig.app.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    12
+    11
    ],
    [
     "package.json",
     7
+   ],
+   [
+    "supabase/config.toml",
+    2
    ],
    [
     "supabase/migrations/20261121120000_api_key_rate_limit.sql",
@@ -82314,6 +82321,10 @@
    [
     "src/App.tsx",
     2
+   ],
+   [
+    "src/hooks/useWebScrape.ts",
+    1
    ],
    [
     "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
@@ -82361,14 +82372,6 @@
    ],
    [
     "supabase/functions/_shared/__tests__/tracking-links.test.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/tracking-links.ts",
-    1
-   ],
-   [
-    ".gitignore",
     1
    ]
   ]

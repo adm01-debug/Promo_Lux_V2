@@ -55,7 +55,7 @@
    "automation:status": "node scripts/automation.mjs graph status",
    "automation:test": "node scripts/automation.mjs test",
    "automation:uninstall-hooks": "node scripts/automation.mjs uninstall-hooks",
-   "build": "vite build && (npm run generate-audit-pdf || echo 'PDF de auditoria nao gerado, requer bun, build principal ja concluiu')",
+   "build": "vite build && (npm run generate-audit-pdf || echo PDF de auditoria nao gerado, requer bun, build principal ja concluiu)",
    "build:dev": "vite build --mode development",
    "contexto:ia": "node scripts/ai-context/gerar.mjs --out docs/contexto/codigo",
    "contexto:ia:test": "node --test scripts/ai-context/gerar.unit.mjs",
@@ -801,10 +801,6 @@
     "arquivos": 2
    },
    {
-    "host": "pesfxhlbsjfmlysdkzhr.supabase.co",
-    "arquivos": 2
-   },
-   {
     "host": "www.acme.com",
     "arquivos": 2
    },
@@ -1030,6 +1026,10 @@
    },
    {
     "host": "pedidos.example",
+    "arquivos": 1
+   },
+   {
+    "host": "pesfxhlbsjfmlysdkzhr.supabase.co",
     "arquivos": 1
    },
    {

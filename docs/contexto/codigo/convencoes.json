@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)",
    "fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)",
    "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)",
    "merge: feat(api): rate-limit server-side por API key na public-api",
-   "merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webhooks)",
-   "merge: feat(ci): smoke de CORS das edge functions no production-smoke"
+   "merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webhooks)"
   ]
  },
  "pr_template": null,
