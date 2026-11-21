@@ -29,6 +29,7 @@ import { parseRobotsTxt, isAllowed, type RobotsPolicy } from "../_shared/web-scr
 import { extractContent } from "../_shared/web-scrape/html-to-markdown.ts";
 import { isEmptyShell, isTransientHttp, hostnameOf } from "../_shared/web-scrape/heuristics.ts";
 import { shouldInjectChaos } from "../_shared/web-scrape/chaos.ts";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -361,6 +362,11 @@ async function processTask(supabase: SupabaseClient, task: QueueTask, chaosEnabl
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  if (!isCronAuthorized(req, { allowAnon: true })) {
+    return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
+
 
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
