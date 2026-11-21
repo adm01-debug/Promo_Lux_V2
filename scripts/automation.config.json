@@ -158,6 +158,14 @@
       "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/db-migrations.yml. O dispatcher não executa esta operação."
     },
     {
+      "id": "legacy-cea957d6dac45c85",
+      "kind": "legacy",
+      "files": ["scripts/check-migration-drift.sh"],
+      "manual": ["sh", "scripts/check-migration-drift.sh"],
+      "triggers": ["manual"],
+      "reason": "Guarda de drift entre repo e banco alvo; chamado por .github/workflows/db-migrations.yml (job plan com STRICT=0, job apply estrito apos o db push). O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-98513bf7a8d2048b",
       "kind": "legacy",
       "files": ["scripts/check-migrations.sh"],
