@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "d1ae10a9be1ca04b167e4fb26a8c64f281f5d10f",
+  "sha": "b983c3d6da88eb5fdae38bcc4ba7004dbca40509",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 14:36 UTC",
-  "files_total": 1046,
-  "code_files": 872,
-  "code_lines": 125329
+  "generated_at": "2026-11-21 14:39 UTC",
+  "files_total": 1049,
+  "code_files": 875,
+  "code_lines": 125483
  },
  "version": "1.3.2",
- "facts_hash": "83dbd7815492d19d",
+ "facts_hash": "22772bfe1884f150",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,9 +232,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 343,
+   ".ts": 345,
    ".tsx": 277,
-   ".sql": 222,
+   ".sql": 223,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -9175,6 +9175,58 @@
     "comment": "",
     "origin": "migration"
    },
+   "api_rate_limits": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+     },
+     {
+      "name": "api_key_id",
+      "type": "UUID NOT NULL REFERENCES public.api_keys(id) ON DELETE CASCADE",
+      "fk": "api_keys.id ON DELETE CASCADE",
+      "generated": "",
+      "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+     },
+     {
+      "name": "window_start",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT date_trunc('hour', now())",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+     },
+     {
+      "name": "count",
+      "type": "INTEGER NOT NULL DEFAULT 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+     }
+    ],
+    "constraints": [
+     "UNIQUE (api_key_id, window_start)"
+    ],
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "oracle_v2_health": {
     "columns": [
      {
@@ -12077,6 +12129,26 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql"
+   },
+   {
+    "name": "users_view_own_api_rate_limits",
+    "table": "api_rate_limits",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.api_keys k WHERE k.id = api_rate_limits.api_key_id AND k.user_id = auth.uid() )",
+    "check": "",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "service_role_full_api_rate_limits",
+    "table": "api_rate_limits",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "triggers": [
@@ -12979,6 +13051,15 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql"
+   },
+   {
+    "name": "trg_api_rate_limits_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "api_rate_limits",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "functions": {
@@ -14833,6 +14914,23 @@
      "base",
      "email_suppressions",
      "lusha_contacts"
+    ]
+   },
+   "check_api_key_rate_limit": {
+    "args": "_api_key_id UUID, _limit INTEGER DEFAULT 100",
+    "returns": "TABLE(allowed BOOLEAN, current_count INTEGER, reset_at TIMESTAMPTZ)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_window TIMESTAMPTZ := date_trunc('hour', now()); v_count INTEGER; BEGIN IF _api_key_id IS NULL THEN RAISE EXCEPTION 'api_key_id é obrigatório'; END IF; INSERT INTO public.api_rate_limits (api_key_id, window_start, count) VALUES (_api_key_id, v_window, 1) ON CONFLICT (api_key_id, window_start) DO UPDATE SET count = public.api_rate_limits.count + 1, updated_at = now() RETURNING count INTO v_count; RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour'); END;",
+    "raises": [
+     "api_key_id é obrigatório"
+    ],
+    "tables": [
+     "SET",
+     "api_rate_limits",
+     "v_count"
     ]
    },
    "Args": {
@@ -17611,6 +17709,14 @@
     "unique": false,
     "where": "WHERE deleted_at IS NULL",
     "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_api_rate_limits_window",
+    "table": "api_rate_limits",
+    "columns": "api_key_id, window_start DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "cron_jobs": [],
@@ -17847,6 +17953,7 @@
    "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql",
    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+   "supabase/migrations/20261121120000_api_key_rate_limit.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -17948,7 +18055,8 @@
    "queue_sla_history": "enabled",
    "sla_autotune_runs": "enabled",
    "apollo_search_cache": "enabled",
-   "apollo_rate_state": "enabled"
+   "apollo_rate_state": "enabled",
+   "api_rate_limits": "enabled"
   },
   "grants": [
    {
@@ -21798,6 +21906,38 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "api_rate_limits",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "api_rate_limits",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "check_api_key_rate_limit",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "check_api_key_rate_limit",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "raises": [
@@ -22210,6 +22350,11 @@
     "function": "sla_autotune_blocked_streaks",
     "msg": "forbidden",
     "src": "supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql"
+   },
+   {
+    "function": "check_api_key_rate_limit",
+    "msg": "api_key_id é obrigatório",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "seed": [],
@@ -25807,8 +25952,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 119,
-   "lines": 21526,
+   "files": 121,
+   "lines": 21617,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -25870,6 +26015,7 @@
     "workflows"
    ],
    "exports": [
+    "api-rate-limit.ts: RateLimitDecision, parseRateLimitDecision, retryAfterSeconds",
     "apify-fixtures.ts: NormalizedInstagramItem, MOCK_DATASET_FIXTURES",
     "apify-gateway.ts: FaultKind, FaultSpec, FaultConfig, _resetFaultRegistry, getMockStats, _resetMockStats",
     "apollo-cache.ts: APOLLO_CACHE_TTL_HIT_SECONDS, APOLLO_CACHE_TTL_EMPTY_SECONDS, APOLLO_COOLDOWN_FORBIDDEN_SECONDS, APOLLO_COOLDOWN_RATE_LIMIT_SECONDS, ApolloCacheKeyInput, buildApolloCacheKey",
@@ -25910,12 +26056,12 @@
     "_fixtures.ts: FixtureContext, UserFixture, AdminUserFixture, createNonAdminUserFixture, createAdminUserFixture"
    ],
    "docs": [
+    "api-rate-limit.ts: Logic-a pura de decisao de rate-limit da public-api, extraida para teste unitario (convencao do projeto: edge functions testam so o que vive em _shared). A RPC check_api_key_rate_limit devolve uma linha com allowed/current_count/reset_at.",
     "apify-gateway.test.ts: Testes de injeção de falhas do apify-gateway mock. Cobre: rate_limit_429, timeout, actor_run_failed, empty_dataset.",
     "apify-gateway.ts: Apify Gateway wrapper with dev-mode mocking. Set `APIFY_MOCK_MODE=true` in Edge Function secrets to bypass the real connector-gateway and return deterministic fixtures. This lets the Instagram worker + queue + DLQ + UI be validated end-to-end without an active Apify connection. Real mode: routes thr …",
     "apollo-cache.ts: ============================================================================ _shared/apollo-cache.ts Cache agressivo + controle de rate limit para as chamadas ao Apollo. Motivação (dupla): 1. CRÉDITO — o Apollo cobra por consulta; o mesmo domínio + mesmo filtro de departamento é buscado repetidament …",
     "apollo-client.ts: ============================================================================ _shared/apollo-client.ts Cliente do Apollo.io via gateway do Lovable. Usado APENAS como fallback de identificação quando a Lusha devolve zero decisores para um departamento. Chamamos `mixed_people/search`, que NÃO consome c …",
-    "apollo-departments.ts: ============================================================================ _shared/apollo-departments.ts Ponte entre os 16 enums de departamento da Lusha e os filtros do Apollo.io. O Apollo aceita `person_departments[]` (taxonomia própria, snake_case) e `person_titles[]` (texto livre, casamento po …",
-    "bitrix-client.ts: ============================================================================ _shared/bitrix-client.ts Wrapper Bitrix24 REST (webhook). Paridade 1:1 com o Workflow 2 do n8n. ============================================================================"
+    "apollo-departments.ts: ============================================================================ _shared/apollo-departments.ts Ponte entre os 16 enums de departamento da Lusha e os filtros do Apollo.io. O Apollo aceita `person_departments[]` (taxonomia própria, snake_case) e `person_titles[]` (texto livre, casamento po …"
    ],
    "deps": [
     "https:",
@@ -25927,6 +26073,7 @@
    ],
    "imports_modules": [],
    "file_list": [
+    "supabase/functions/_shared/api-rate-limit.ts",
     "supabase/functions/_shared/apify-fixtures.ts",
     "supabase/functions/_shared/apify-gateway.test.ts",
     "supabase/functions/_shared/apify-gateway.ts",
@@ -25958,6 +26105,7 @@
     "supabase/functions/_shared/tracing.ts",
     "supabase/functions/_shared/tracking-links.ts",
     "supabase/functions/_shared/tracking-signature.ts",
+    "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
     "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
     "supabase/functions/_shared/__tests__/apollo-fallback.test.ts",
     "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
@@ -26004,15 +26152,13 @@
     "supabase/functions/email-poll-replies/index.ts",
     "supabase/functions/email-verify/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
-    "supabase/functions/gmaps-proxy/index.ts",
-    "supabase/functions/health/index.ts",
-    "supabase/functions/instagram-connection-status/index.ts"
+    "supabase/functions/gmaps-proxy/index.ts"
    ]
   },
   {
    "module": "supabase/migrations",
-   "files": 218,
-   "lines": 12644,
+   "files": 219,
+   "lines": 12707,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -28534,6 +28680,9 @@
     "e2e/dlq-web-smoke.spec.ts",
     "supabase/functions/dlq-alerts/index.ts"
    ],
+   "check_api_key_rate_limit": [
+    "supabase/functions/public-api/index.ts"
+   ],
    "check_oracle_rate_limit": [
     "supabase/functions/lusha-reveal/index.ts",
     "supabase/functions/oracle-push-bitrix/index.ts",
@@ -29023,6 +29172,9 @@
    ],
    "instagram_scrape_queue": [
     "instagram_scrape_results"
+   ],
+   "api_keys": [
+    "api_rate_limits"
    ]
   },
   "tables_only_in_code": [
@@ -29043,6 +29195,7 @@
    "tx"
   ],
   "tables_only_in_schema": [
+   "api_rate_limits",
    "apollo_rate_state",
    "apollo_search_cache",
    "job_exports",
@@ -31152,6 +31305,10 @@
     "text": "apenas os três métodos usados, sem depender de tipos ainda não publicados."
    },
    {
+    "file": "supabase/functions/_shared/api-rate-limit.ts",
+    "text": "Logic-a pura de decisao de rate-limit da public-api, extraida para teste"
+   },
+   {
     "file": "supabase/functions/_shared/apify-fixtures.ts",
     "text": "- profile: business account + creator account (sem publicPhone/publicEmail)."
    },
@@ -31493,7 +31650,15 @@
    },
    {
     "file": "supabase/functions/public-api/index.ts",
+    "text": "Limite de requisições por API key por hora (janela fixa, server-side)"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
     "text": "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
+    "text": "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
    },
    {
     "file": "supabase/functions/reaper-alerts/index.ts",
@@ -35765,6 +35930,41 @@
     "table": "apollo_rate_state",
     "column": "updated_at",
     "rule": "default now()"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "api_key_id",
+    "rule": "obrigatório; FK → api_keys.id ON DELETE CASCADE"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "window_start",
+    "rule": "default date_trunc('hour'"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "count",
+    "rule": "default 0"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "api_rate_limits",
+    "column": "(tabela)",
+    "rule": "UNIQUE (api_key_id, window_start)"
    }
   ],
   "params": [
@@ -36092,6 +36292,11 @@
     "file": "supabase/functions/pg-net-watchdog/index.ts",
     "name": "BACKLOG_THRESHOLD",
     "value": "100"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
+    "name": "API_RATE_LIMIT_PER_HOUR",
+    "value": "600"
    },
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
@@ -41079,6 +41284,10 @@
    {
     "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
     "line": "DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+    "line": "RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');"
    }
   ],
   "percents": [
@@ -44611,6 +44820,38 @@
    {
     "file": "supabase/functions/_shared/apify-gateway.test.ts",
     "name": "env APIFY_MOCK_FAULTS wildcard "
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "parseRateLimitDecision"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "aprova quando a RPC devolve allowed=true"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "bloqueia quando a RPC devolve allowed=false"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "fail-open em resposta vazia/nula"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "trata objeto ?nico e array de uma linha da mesma forma"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "retryAfterSeconds"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "usa resetAt futuro e nunca devolve 0"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "fallback de 1h sem reset_at"
    },
    {
     "file": "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
@@ -48678,6 +48919,26 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql"
+   },
+   {
+    "name": "users_view_own_api_rate_limits",
+    "table": "api_rate_limits",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "EXISTS ( SELECT 1 FROM public.api_keys k WHERE k.id = api_rate_limits.api_key_id AND k.user_id = auth.uid() )",
+    "check": "",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "service_role_full_api_rate_limits",
+    "table": "api_rate_limits",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "db_triggers": [
@@ -49580,6 +49841,15 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql"
+   },
+   {
+    "name": "trg_api_rate_limits_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "api_rate_limits",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "db_functions": {
@@ -51436,6 +51706,23 @@
      "lusha_contacts"
     ]
    },
+   "check_api_key_rate_limit": {
+    "args": "_api_key_id UUID, _limit INTEGER DEFAULT 100",
+    "returns": "TABLE(allowed BOOLEAN, current_count INTEGER, reset_at TIMESTAMPTZ)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_window TIMESTAMPTZ := date_trunc('hour', now()); v_count INTEGER; BEGIN IF _api_key_id IS NULL THEN RAISE EXCEPTION 'api_key_id é obrigatório'; END IF; INSERT INTO public.api_rate_limits (api_key_id, window_start, count) VALUES (_api_key_id, v_window, 1) ON CONFLICT (api_key_id, window_start) DO UPDATE SET count = public.api_rate_limits.count + 1, updated_at = now() RETURNING count INTO v_count; RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour'); END;",
+    "raises": [
+     "api_key_id é obrigatório"
+    ],
+    "tables": [
+     "SET",
+     "api_rate_limits",
+     "v_count"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -52014,6 +52301,11 @@
     "function": "sla_autotune_blocked_streaks",
     "msg": "forbidden",
     "src": "supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql"
+   },
+   {
+    "function": "check_api_key_rate_limit",
+    "msg": "api_key_id é obrigatório",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "db_generated": [],
@@ -53623,6 +53915,22 @@
     "UPDATE": [],
     "DELETE": []
    },
+   "api_rate_limits": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: EXISTS ( SELECT 1 FROM public.api_keys k WHERE k.id = api_rate_limits.api_key_id AND k.user_id = auth.uid() )",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
+   },
    "api_request_logs": {
     "rls": "enabled",
     "SELECT": [
@@ -55073,7 +55381,8 @@
    "supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql",
    "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql",
    "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql",
-   "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+   "supabase/migrations/20261121120000_api_key_rate_limit.sql"
   ],
   "security_definer_fns": [
    "accept_org_invite",
@@ -55096,6 +55405,7 @@
    "capture_dlq_health_snapshots",
    "capture_sla_snapshot",
    "capture_web_dlq_health_snapshots",
+   "check_api_key_rate_limit",
    "check_oracle_rate_limit",
    "claim_instagram_job",
    "claim_instagram_tasks",
@@ -59034,6 +59344,38 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "api_rate_limits",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "api_rate_limits",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "check_api_key_rate_limit",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "check_api_key_rate_limit",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
   "guards": [
@@ -59206,7 +59548,8 @@
    "queue_sla_history",
    "sla_autotune_runs",
    "apollo_search_cache",
-   "apollo_rate_state"
+   "apollo_rate_state",
+   "api_rate_limits"
   ],
   "tenant_cov": 0.67,
   "soft_delete": [
@@ -59551,6 +59894,10 @@
    ],
    "apollo_search_cache": [],
    "apollo_rate_state": [
+    "updated_at"
+   ],
+   "api_rate_limits": [
+    "created_at",
     "updated_at"
    ],
    "oracle_v2_health": [],
@@ -60484,6 +60831,11 @@
     "where": []
    },
    {
+    "kind": "tenant",
+    "msg": "`api_rate_limits` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto)",
+    "where": []
+   },
+   {
     "kind": "edge",
     "msg": "edge function `dashboard-edge` invocada mas não existe em supabase/functions/",
     "where": [
@@ -60707,7 +61059,7 @@
    "`web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "95/98 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "96/99 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -74002,6 +74354,19 @@
     "should block cross-tenant injection attempts in values"
    ]
   },
+  "supabase/functions/_shared/api-rate-limit.ts": {
+   "path": "supabase/functions/_shared/api-rate-limit.ts",
+   "lines": 31,
+   "exports": [
+    "interface RateLimitDecision",
+    "function parseRateLimitDecision",
+    "function retryAfterSeconds"
+   ],
+   "rule_comments": [
+    "Logic-a pura de decisao de rate-limit da public-api, extraida para teste"
+   ],
+   "doc": "Logic-a pura de decisao de rate-limit da public-api, extraida para teste unitario (convencao do projeto: edge functions testam so o que vive em _shared). A RPC check_api_key_rate_limit devolve uma linha com allowed/current_count/reset_at."
+  },
   "supabase/functions/_shared/apify-fixtures.ts": {
    "path": "supabase/functions/_shared/apify-fixtures.ts",
    "lines": 360,
@@ -75099,6 +75464,21 @@
     "tracking (ex.: campaign-dispatch, quando enviar emails reais) deve seguir:"
    ],
    "doc": "Assinatura HMAC para links de tracking (track-click/track-open). track-click fazia 302 para qualquer `u` http(s) sem vínculo criptográfico com o destinatário — um atacante podia montar `.../track-click?u=https://phishing.example&r=<uuid qualquer>` e obter um redirect confiável a partir do domínio do …"
+  },
+  "supabase/functions/_shared/__tests__/api-rate-limit.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+   "lines": 37,
+   "is_test": true,
+   "tests": [
+    "parseRateLimitDecision",
+    "aprova quando a RPC devolve allowed=true",
+    "bloqueia quando a RPC devolve allowed=false",
+    "fail-open em resposta vazia/nula",
+    "trata objeto ?nico e array de uma linha da mesma forma",
+    "retryAfterSeconds",
+    "usa resetAt futuro e nunca devolve 0",
+    "fallback de 1h sem reset_at"
+   ]
   },
   "supabase/functions/_shared/__tests__/apollo-cache.test.ts": {
    "path": "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
@@ -78843,7 +79223,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 252,
+   "lines": 275,
    "tables": [
     {
      "table": "api_request_logs",
@@ -78873,6 +79253,7 @@
    },
    "dyn_from": 5,
    "rpc": [
+    "check_api_key_rate_limit",
     "touch_api_key",
     "verify_api_key"
    ],
@@ -78880,9 +79261,17 @@
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
+   "params": [
+    {
+     "name": "API_RATE_LIMIT_PER_HOUR",
+     "value": "600"
+    }
+   ],
    "rule_comments": [
     "GET    /companies?limit=&offset=",
-    "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado"
+    "Limite de requisições por API key por hora (janela fixa, server-side)",
+    "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado",
+    "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
    ],
    "doc": "Public REST API authenticated via X-API-Key header Endpoints: GET /me (returns current API key info) GET /companies?limit=&offset= POST /companies (write scope) GET /companies/:id PATCH /companies/:id (write scope) DELETE /companies/:id (write scope)",
    "uses_service_role": true
@@ -81557,13 +81946,33 @@
     "DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
    ],
    "uses_service_role": true
+  },
+  "supabase/migrations/20261121120000_api_key_rate_limit.sql": {
+   "path": "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+   "lines": 63,
+   "temporal": [
+    "RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');"
+   ],
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "d1ae10a9be1ca04b167e4fb26a8c64f281f5d10f",
+  "sha": "b983c3d6da88eb5fdae38bcc4ba7004dbca40509",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b983c3d",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "merge: feat(api): rate-limit server-side por API key na public-api",
+    "files": [
+     "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+     "supabase/functions/_shared/api-rate-limit.ts",
+     "supabase/functions/public-api/index.ts",
+     "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+    ]
+   },
    {
     "sha": "d1ae10a",
     "date": "2026-11-21",
@@ -81870,21 +82279,12 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "706d6f8",
-    "date": "2026-11-19",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps): bump fast-uri from 3.1.3 to 3.1.9 (#51)",
-    "files": [
-     "package-lock.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    15
+    14
    ],
    [
     "package.json",
@@ -81897,6 +82297,22 @@
    [
     "src/App.tsx",
     2
+   ],
+   [
+    "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/api-rate-limit.ts",
+    1
+   ],
+   [
+    "supabase/functions/public-api/index.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
+    1
    ],
    [
     "src/components/lux/RecycleBinView.tsx",
@@ -81944,22 +82360,6 @@
    ],
    [
     "docs/pendencias/_estado-itens-1-3.md",
-    1
-   ],
-   [
-    "docs/pendencias/_backlog-verificado.md",
-    1
-   ],
-   [
-    "docs/pendencias/_linha-de-base.md",
-    1
-   ],
-   [
-    "supabase/functions/admin-list-companies/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/ai-agent/index.ts",
     1
    ]
   ]

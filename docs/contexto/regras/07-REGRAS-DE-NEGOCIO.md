@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d1ae10a9be` · branch `main` · 2026-11-21 14:36 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b983c3d6da` · branch `main` · 2026-11-21 14:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -270,6 +270,8 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `apollo_search_cache` | apollo_cache_service_all | ALL | service_role | permissive | `true` | `true` |
 | `apollo_rate_state` | apollo_rate_read_authenticated | SELECT | authenticated | permissive | `true` |  |
 | `apollo_rate_state` | apollo_rate_service_all | ALL | service_role | permissive | `true` | `true` |
+| `api_rate_limits` | users_view_own_api_rate_limits | SELECT | authenticated | permissive | `EXISTS ( SELECT 1 FROM public.api_keys k WHERE k.id = api_rate_limits.api_key_id AND k.user_id = auth.uid() )` |  |
+| `api_rate_limits` | service_role_full_api_rate_limits | ALL | service_role | permissive | `true` | `true` |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -575,7 +577,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | `provider` | obrigatório; CHECK provider IN ('gmail','outlook') |
 | `oauth_sandbox_snapshots` | `scope_type` | obrigatório; CHECK scope_type IN ('user','organization') |
 | `oauth_sandbox_snapshots` | `redirect_uri` | obrigatório |
-| … +545 linhas — lista completa em `context.json` | | |
+| … +552 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -681,6 +683,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_cnpj_enrich_queue_updated | BEFORE UPDATE | `cnpj_enrich_queue` | `update_updated_at_column` |  |
 | update_queue_sla_defaults_updated_at | BEFORE UPDATE | `queue_sla_defaults` | `update_updated_at_column` |  |
 | trg_log_queue_sla_change | AFTER INSERT OR UPDATE | `queue_sla_defaults` | `log_queue_sla_change` |  |
+| trg_api_rate_limits_updated_at | BEFORE UPDATE | `api_rate_limits` | `update_updated_at_column` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -768,6 +771,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `apply_sla_recommendation` | no recommendation available for queue % | `supabase/migrations/20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql` |
 | `apply_sla_recommendation` | insufficient sample for queue % | `supabase/migrations/20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql` |
 | `sla_autotune_blocked_streaks` | forbidden | `supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql` |
+| `check_api_key_rate_limit` | api_key_id é obrigatório | `supabase/migrations/20261121120000_api_key_rate_limit.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -1548,6 +1552,7 @@ _nenhum item encontrado_
 | `ALERT_EVENT` | `"security.org_violation_threshold"` | `supabase/functions/org-violation-alerts/index.ts` |
 | `ERROR_RATE_THRESHOLD` | `5.0` | `supabase/functions/pg-net-watchdog/index.ts` |
 | `BACKLOG_THRESHOLD` | `100` | `supabase/functions/pg-net-watchdog/index.ts` |
+| `API_RATE_LIMIT_PER_HOUR` | `600` | `supabase/functions/public-api/index.ts` |
 | `CIRCUIT_SERVICE` | `"gmaps"` | `supabase/functions/scrape-queue-worker/index.ts` |
 | `DEFER_DELAY_SECS` | `60` | `supabase/functions/scrape-queue-worker/index.ts` |
 | `GMAPS_API_BASE` | `"https://gmaps.atomicabr.com.br/api/v1"` | `supabase/functions/scrape-queue-worker/index.ts` |
@@ -1653,6 +1658,7 @@ _nenhum item encontrado_
 | `DELETE FROM public.email_suppressions WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
 | `DELETE FROM public.webhooks WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
 | `DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');` | `supabase/migrations/20261121120000_api_key_rate_limit.sql` |
 
 ### H.3 Limites de paginação
 
@@ -2018,7 +2024,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1151 testes em 108 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1159 testes em 109 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2075,6 +2081,7 @@ _nenhum item encontrado_
 | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 8 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · injeta filtro de org mesmo quando chamador encadeia múltiplos .eq/.neq … |
 | `src/lib/__tests__/orgErrorHandler.e2e.test.ts` | 8 | orgErrorHandler — E2E switching de org durante edição · mostra toast quando UPDATE falha após troca de org no meio da edição · ação  · handler global captura unhandledrejection com OrgMismatchError e mostra toast … |
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
+| `supabase/functions/_shared/__tests__/api-rate-limit.test.ts` | 8 | parseRateLimitDecision · aprova quando a RPC devolve allowed=true · bloqueia quando a RPC devolve allowed=false · fail-open em resposta vazia/nula … |
 | `supabase/functions/_shared/__tests__/instagram-config-hash.test.ts` | 8 | normalizeTarget: trim, lowercase, remove @ e # · clampLimit: default, floor, ceil e truncamento · computeConfigHash: mesma tupla ⇒ mesmo hash (estabilidade) · computeConfigHash: invariante a variações de forma do target … |
 | `e2e/protected-navigation.spec.ts` | 7 | Navegação protegida — redirecionamento · rota protegida ${route} redireciona para /login sem sessão · rota inexistente renderiza página 404 · Navegação protegida — modo demo … |
 | `src/components/lux/__tests__/CompaniesView.test.tsx` | 7 | CompaniesView — P0 Mobile Actions & P1 Score Tooltip · renders the view title · renders Score column header with HelpCircle tooltip · renders export CSV button … |
@@ -2263,6 +2270,7 @@ _nenhum item encontrado_
 | espelha `defer_scrape_task` no banco: a tarefa apenas aguarda o provedor. | `src/lib/resilience/simulator.ts` |
 | AutoTopProgressBar está no App.tsx para escopo global, o local trata apenas navegação suave se necessário */} | `src/pages/Index.tsx` |
 | apenas os três métodos usados, sem depender de tipos ainda não publicados. | `src/pages/OAuthConsent.tsx` |
+| Logic-a pura de decisao de rate-limit da public-api, extraida para teste | `supabase/functions/_shared/api-rate-limit.ts` |
 | - profile: business account + creator account (sem publicPhone/publicEmail). | `supabase/functions/_shared/apify-fixtures.ts` |
 | Contato (profile + posts quando business account) | `supabase/functions/_shared/apify-fixtures.ts` |
 | Localização/negócio (profile) | `supabase/functions/_shared/apify-fixtures.ts` |
@@ -2348,7 +2356,9 @@ _nenhum item encontrado_
 | limite e está fora do cooldown: | `supabase/functions/org-violation-alerts/index.ts` |
 | * O endpoint não retorna dados sensíveis: apenas resumo agregado. | `supabase/functions/org-violation-alerts/index.ts` |
 | GET    /companies?limit=&offset= | `supabase/functions/public-api/index.ts` |
+| Limite de requisições por API key por hora (janela fixa, server-side) | `supabase/functions/public-api/index.ts` |
 | Só os campos de negócio legítimos abaixo passam; tudo mais é descartado | `supabase/functions/public-api/index.ts` |
+| Rate limit server-side por API key (janela fixa de 1h, RPC atômica) | `supabase/functions/public-api/index.ts` |
 | limitado: apenas leituras + inserts em history/notifications com cooldown. | `supabase/functions/reaper-alerts/index.ts` |
 | ignore — cleanup deve ser idempotente */ } | `supabase/functions/rls-tests/_fixtures.ts` |
 | * Classifica se um erro deve ser retentado (transitório) ou não (permanente). */ | `supabase/functions/scrape-queue-worker/index.ts` |

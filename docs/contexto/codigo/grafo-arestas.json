@@ -2220,6 +2220,9 @@
    "supabase/functions/_shared/oracle-logger.ts",
    "supabase/functions/_shared/org-membership.ts"
   ],
+  "supabase/functions/public-api/index.ts": [
+   "supabase/functions/_shared/api-rate-limit.ts"
+  ],
   "supabase/functions/rls-tests/index.ts": [
    "supabase/functions/_shared/rlsTableRegistry.ts"
   ],

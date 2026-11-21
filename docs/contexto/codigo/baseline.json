@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d1ae10a9be1ca04b167e4fb26a8c64f281f5d10f",
+  "commit": "b983c3d6da88eb5fdae38bcc4ba7004dbca40509",
   "branch": "main",
-  "data_commit": "2026-11-21T11:35:53-03:00",
+  "data_commit": "2026-11-21T11:39:00-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b983c3d",
+    "data": "2026-11-21",
+    "assunto": "merge: feat(api): rate-limit server-side por API key na public-api"
+   },
    {
     "sha": "d1ae10a",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "736d3d6",
     "data": "2026-11-19",
     "assunto": "chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)"
-   },
-   {
-    "sha": "b2ce2ea",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)"
    }
   ],
-  "arquivos_mudados_7d": 58,
+  "arquivos_mudados_7d": 62,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 14
+    "mudancas": 16
    },
    {
     "pasta": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 56
+    "commits": 57
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1027,
-  "arquivos_codigo": 646,
-  "linhas_codigo": 110864,
+  "arquivos_total": 1030,
+  "arquivos_codigo": 648,
+  "linhas_codigo": 110955,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -321,10 +321,10 @@
   "componentes": 241,
   "hooks": 78,
   "edge_functions": 58,
-  "tabelas": 96,
-  "migrations": 218,
+  "tabelas": 97,
+  "migrations": 219,
   "cron_jobs": 6,
-  "testes": 122,
+  "testes": 123,
   "workflows": 9,
   "scripts": 49,
   "docs_md": 80
@@ -587,8 +587,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 119,
-   "linhas": 21526
+   "arquivos": 121,
+   "linhas": 21617
   },
   "tailwind.config.ts": {
    "arquivos": 1,

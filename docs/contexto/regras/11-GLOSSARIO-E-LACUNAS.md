@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d1ae10a9be` · branch `main` · 2026-11-21 14:36 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b983c3d6da` · branch `main` · 2026-11-21 14:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -12,6 +12,7 @@
 | `api_latency_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `api_latency_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `api_latency_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
+| `api_rate_limits` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `api_request_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `apollo_rate_state` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `apollo_search_cache` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
@@ -286,6 +287,7 @@ _nenhum item encontrado_
 | tenant | `sla_autotune_runs` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `apollo_search_cache` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `apollo_rate_state` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
+| tenant | `api_rate_limits` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | edge | edge function `dashboard-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `fixture-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `ghost-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
@@ -337,7 +339,7 @@ _nenhum item encontrado_
 - `web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 95/98 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 96/99 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

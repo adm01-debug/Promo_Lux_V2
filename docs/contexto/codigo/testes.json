@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 122,
+ "total": 123,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 100
+  "unit": 101
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 77
+   "arquivos": 78
   },
   {
    "padrao": "e2e/",
@@ -916,6 +916,15 @@
    "casos": 3
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+   "tipo": "unit",
+   "linhas": 37,
+   "testa": [
+    "supabase/functions/_shared/api-rate-limit.ts"
+   ],
+   "casos": 6
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
    "tipo": "unit",
    "linhas": 103,
@@ -1221,6 +1230,7 @@
   "src/lib/schemas/scrapeJob.ts": 1,
   "src/lib/sourceQualityReport.ts": 1,
   "src/lib/utils.ts": 1,
+  "supabase/functions/_shared/api-rate-limit.ts": 1,
   "supabase/functions/_shared/apify-fixtures.ts": 2,
   "supabase/functions/_shared/apify-gateway.ts": 1,
   "supabase/functions/_shared/apollo-cache.ts": 1,

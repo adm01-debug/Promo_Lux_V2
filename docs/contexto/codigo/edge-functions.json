@@ -9,6 +9,7 @@
   "qa-ingest-run"
  ],
  "shared": [
+  "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
   "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
   "supabase/functions/_shared/__tests__/apollo-fallback.test.ts",
   "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
@@ -30,6 +31,7 @@
   "supabase/functions/_shared/__tests__/tracking-links.test.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
   "supabase/functions/_shared/__tests__/web-scrape.test.ts",
+  "supabase/functions/_shared/api-rate-limit.ts",
   "supabase/functions/_shared/apify-fixtures.ts",
   "supabase/functions/_shared/apify-gateway.test.ts",
   "supabase/functions/_shared/apify-gateway.ts",
@@ -1464,7 +1466,7 @@
    "nome": "public-api",
    "entrada": "supabase/functions/public-api/index.ts",
    "arquivos": 1,
-   "linhas": 252,
+   "linhas": 275,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -1478,6 +1480,7 @@
     "api_request_logs"
    ],
    "rpcs": [
+    "check_api_key_rate_limit",
     "touch_api_key",
     "verify_api_key"
    ],
@@ -1488,7 +1491,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "api-rate-limit.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/integrations/ApiDocsCard.tsx"
    ],

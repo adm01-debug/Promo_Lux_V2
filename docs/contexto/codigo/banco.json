@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 218,
+ "migrations": 219,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -77,6 +77,7 @@
   "capture_dlq_health_snapshots",
   "capture_sla_snapshot",
   "capture_web_dlq_health_snapshots",
+  "check_api_key_rate_limit",
   "check_oracle_rate_limit",
   "circuit_breaker_settings_touch",
   "claim_instagram_job",
@@ -191,6 +192,13 @@
    "evento": "insert or update",
    "tabela": "api_latency_alert_settings",
    "funcao": "validate_api_latency_alert_settings"
+  },
+  {
+   "nome": "trg_api_rate_limits_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "api_rate_limits",
+   "funcao": "update_updated_at_column"
   },
   {
    "nome": "tr_update_auth_rate_limits_updated_at",
@@ -1521,6 +1529,85 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "api_rate_limits": {
+   "colunas": {
+    "api_key_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "api_keys"
+    },
+    "count": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "window_start": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "date_trunc('hour', now())",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "service_role_full_api_rate_limits",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "users_view_own_api_rate_limits",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_api_rate_limits_window",
+     "colunas": "api_key_id, window_start DESC",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "api_key_id->api_keys"
+   ],
+   "criada_em": "20261121120000_api_key_rate_limit.sql",
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_api_rate_limits_updated_at"
+   ],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "api_request_logs": {
    "colunas": {
@@ -15698,6 +15785,11 @@
   },
   {
    "nome": "capture_web_dlq_health_snapshots",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "check_api_key_rate_limit",
    "definida": true,
    "usada_em": 1
   },
