@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash2, RotateCcw, Building2, Kanban, Mail, Workflow, Loader2 } from "lucide-react";
-import { db, type SoftDeleteTable } from "@/integrations/supabase/withOrg";
+import { Trash2, RotateCcw, Building2, Kanban, Mail, Workflow, KeyRound, Webhook, AtSign, ShieldBan, Loader2 } from "lucide-react";
+import { db, type SoftDeleteTable, TRASH_LABEL_COLUMN } from "@/integrations/supabase/withOrg";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
@@ -12,7 +12,7 @@ import {
 
 interface TrashItem {
   id: string;
-  name: string;
+  label: string;
   deleted_at: string;
 }
 
@@ -21,6 +21,10 @@ const TABS: { key: SoftDeleteTable; label: string; icon: typeof Building2 }[] = 
   { key: "deals", label: "Negócios", icon: Kanban },
   { key: "campaigns", label: "Campanhas", icon: Mail },
   { key: "workflows", label: "Workflows", icon: Workflow },
+  { key: "email_suppressions", label: "Supressões", icon: ShieldBan },
+  { key: "email_accounts", label: "Contas de email", icon: AtSign },
+  { key: "api_keys", label: "Chaves de API", icon: KeyRound },
+  { key: "webhooks", label: "Webhooks", icon: Webhook },
 ];
 
 const daysLeft = (deletedAt: string) => {
@@ -35,12 +39,17 @@ function TrashList({ table }: { table: SoftDeleteTable }) {
   const { data, isLoading } = useQuery<TrashItem[]>({
     queryKey: ["trash", table],
     queryFn: async () => {
+      const label = TRASH_LABEL_COLUMN[table];
       const { data, error } = await db
         .trash(table)
-        .select("id, name, deleted_at")
+        .select(`id, ${label}, deleted_at`)
         .order("deleted_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as TrashItem[];
+      return (data ?? []).map((row) => ({
+        id: row.id as string,
+        label: String(row[label as keyof typeof row] ?? "") || "Sem nome",
+        deleted_at: row.deleted_at as string,
+      }));
     },
   });
 
@@ -82,7 +91,7 @@ function TrashList({ table }: { table: SoftDeleteTable }) {
         {data.map((item) => (
           <div key={item.id} className="glass rounded-lg p-3 flex items-center gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{item.name || "Sem nome"}</p>
+              <p className="text-sm font-medium text-foreground truncate">{item.label}</p>
               <p className="text-[10px] text-muted-foreground">
                 Excluído em {new Date(item.deleted_at).toLocaleString("pt-BR")} · expira em {daysLeft(item.deleted_at)} dia(s)
               </p>
@@ -102,7 +111,7 @@ function TrashList({ table }: { table: SoftDeleteTable }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir permanentemente?</AlertDialogTitle>
             <AlertDialogDescription>
-              "{purgeTarget?.name}" será removido de forma definitiva e não poderá ser recuperado.
+              "{purgeTarget?.label}" será removido de forma definitiva e não poderá ser recuperado.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
