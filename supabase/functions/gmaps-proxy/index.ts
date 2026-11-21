@@ -43,6 +43,7 @@ import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ip
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
 import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
 import { fetchPlacesResults } from "../_shared/places-fallback.ts";
+import { getUserOrgIds } from "../_shared/org-membership.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -233,6 +234,12 @@ serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  // O client acima e service_role, entao `auth.uid()` e NULL nos DEFAULTs das
+  // tabelas e `default_org_for_current_user()` tambem devolve NULL. Sem isso o
+  // INSERT em scrape_jobs falhava com "null value in column organization_id"
+  // para qualquer usuario, e a extracao nunca gravava um job.
+  const userOrgId = (await getUserOrgIds(supabase, userId))[0] ?? null;
+
   const actionRaw = url.searchParams.get("action");
 
   // Validate action param
@@ -285,6 +292,7 @@ serve(async (req) => {
             if (!existing) {
               await supabase.from("scrape_jobs").insert({
                 user_id: userId,
+                organization_id: userOrgId,
                 external_id: job.ID as string,
                 name: job.Name as string,
                 status: status,
@@ -363,6 +371,12 @@ serve(async (req) => {
       if (!parsed.success) {
         return badRequest(corsHeaders, parsed.error.flatten().fieldErrors);
       }
+      if (!userOrgId) {
+        return new Response(
+          JSON.stringify({ error: "User is not a member of any organization" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
       const body = { name: parsed.data.name, ...parsed.data.config };
 
       // G4: injeta proxies ativos da organização quando o usuário não passou explícitos.
@@ -399,6 +413,7 @@ serve(async (req) => {
         .from("scrape_jobs")
         .insert({
           user_id: userId,
+          organization_id: userOrgId,
           name: parsed.data.name,
           status: "pending",
           source: "gmaps",
@@ -707,6 +722,7 @@ serve(async (req) => {
           companiesCreated++;
           await supabase.from("scrape_results").insert({
             user_id: userId,
+            organization_id: job.organization_id,
             job_id: job_id,
             company_id: company.id,
             raw_data: rawRow,
@@ -725,6 +741,7 @@ serve(async (req) => {
       if (companiesCreated > 0) {
         await supabase.from("notifications").insert({
           user_id: userId,
+          organization_id: job.organization_id,
           type: "scrape",
           title: companiesCreated === 1
             ? "Nova empresa importada"
