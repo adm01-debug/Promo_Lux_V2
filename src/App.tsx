@@ -138,19 +138,23 @@ function PageLoader() {
 }
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, mfaRequired } = useAuth();
   const { isDemoMode } = useDemo();
   if (isDemoMode) return <>{children}</>;
   if (loading) return <PageLoader />;
   if (!user) return <Navigate to="/login" replace />;
+  // Sessao existente mas ainda em AAL1 com fator ativo: exige o codigo do
+  // autenticador antes de liberar o dashboard.
+  if (mfaRequired) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, mfaRequired } = useAuth();
   const { isDemoMode } = useDemo();
   if (isDemoMode) return <Navigate to="/" replace />;
   if (loading) return <PageLoader />;
+  if (mfaRequired) return <>{children}</>;
   if (user) {
     const pendingInvite = sessionStorage.getItem("lux:pending-invite");
     if (pendingInvite) {
