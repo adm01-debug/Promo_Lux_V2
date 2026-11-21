@@ -11,6 +11,7 @@
 //   GET    /stakeholders
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { parseRateLimitDecision, retryAfterSeconds } from "../_shared/api-rate-limit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -28,6 +29,9 @@ async function sha256Hex(input: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
+
+// Limite de requisições por API key por hora (janela fixa, server-side)
+const API_RATE_LIMIT_PER_HOUR = 600;
 
 const ALLOWED_TABLES = ["companies", "deals", "stakeholders"] as const;
 type AllowedTable = (typeof ALLOWED_TABLES)[number];
@@ -80,10 +84,10 @@ Deno.serve(async (req) => {
   } = { api_key_id: null, api_key_prefix: null, organization_id: null, user_id: null, resource: null };
   let supabaseForLog: ReturnType<typeof createClient> | null = null;
 
-  const respond = async (body: unknown, status = 200, errorMessage?: string) => {
+  const respond = async (body: unknown, status = 200, errorMessage?: string, extraHeaders: Record<string, string> = {}) => {
     const res = new Response(JSON.stringify(body), {
       status,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json", ...extraHeaders },
     });
     try {
       const client =
@@ -127,6 +131,25 @@ Deno.serve(async (req) => {
     if (keyErr || !keyRows?.length) return await respond({ error: "Invalid or expired API key" }, 401);
     const { user_id, scopes, key_id } = keyRows[0];
     await supabase.rpc("touch_api_key", { _key_id: key_id });
+
+    // Rate limit server-side por API key (janela fixa de 1h, RPC atômica)
+    const { data: rl } = await supabase.rpc("check_api_key_rate_limit", {
+      _api_key_id: key_id,
+      _limit: API_RATE_LIMIT_PER_HOUR,
+    });
+    const rlDecision = parseRateLimitDecision(rl);
+    if (!rlDecision.allowed) {
+      return await respond(
+        {
+          error: "Rate limit exceeded. Retry after the current window resets.",
+          current_count: rlDecision.currentCount,
+          reset_at: rlDecision.resetAt,
+        },
+        429,
+        undefined,
+        { "Retry-After": retryAfterSeconds(rlDecision.resetAt) },
+      );
+    }
     logCtx.api_key_id = key_id;
     logCtx.user_id = user_id;
     // Fetch prefix + org for richer log context (best-effort)
