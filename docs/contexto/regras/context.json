@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "568555da3775de7128ef5ffa66fc4d16711a83d4",
+  "sha": "d1ae10a9be1ca04b167e4fb26a8c64f281f5d10f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 14:33 UTC",
-  "files_total": 1045,
-  "code_files": 871,
-  "code_lines": 125253
+  "generated_at": "2026-11-21 14:36 UTC",
+  "files_total": 1046,
+  "code_files": 872,
+  "code_lines": 125329
  },
  "version": "1.3.2",
- "facts_hash": "c4f52b855c0ec473",
+ "facts_hash": "83dbd7815492d19d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   "languages": {
    ".ts": 343,
    ".tsx": 277,
-   ".sql": 221,
+   ".sql": 222,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -2383,6 +2383,13 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
+     },
+     {
+      "name": "deleted_at",
+      "type": "timestamptz NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
      }
     ],
     "constraints": [],
@@ -2482,6 +2489,13 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
+     },
+     {
+      "name": "deleted_at",
+      "type": "timestamptz NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
      }
     ],
     "constraints": [],
@@ -3001,6 +3015,13 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260423132453_085a9a2d-ac8b-4217-ab86-c846a418e14c.sql"
+     },
+     {
+      "name": "deleted_at",
+      "type": "timestamptz NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
      },
      {
       "name": "reconnect_base_delay_seconds",
@@ -4407,6 +4428,13 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260711175945_67e29e04-fe5c-4289-b936-b748b112dae5.sql"
+     },
+     {
+      "name": "deleted_at",
+      "type": "timestamptz NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
      }
     ],
     "constraints": [
@@ -13378,15 +13406,19 @@
     "args": "",
     "returns": "void",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; END;",
+    "body": "BEGIN DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.email_suppressions WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.email_accounts WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.api_keys WHERE deleted_at IS NOT NULL AND delet …",
     "raises": [],
     "tables": [
+     "api_keys",
      "campaigns",
      "companies",
      "deals",
+     "email_accounts",
+     "email_suppressions",
+     "webhooks",
      "workflows"
     ]
    },
@@ -17515,6 +17547,70 @@
     "unique": false,
     "where": "",
     "src": "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql"
+   },
+   {
+    "name": "idx_email_suppressions_deleted",
+    "table": "email_suppressions",
+    "columns": "deleted_at",
+    "unique": false,
+    "where": "WHERE deleted_at IS NOT NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_email_accounts_deleted",
+    "table": "email_accounts",
+    "columns": "deleted_at",
+    "unique": false,
+    "where": "WHERE deleted_at IS NOT NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_api_keys_deleted",
+    "table": "api_keys",
+    "columns": "deleted_at",
+    "unique": false,
+    "where": "WHERE deleted_at IS NOT NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_webhooks_deleted",
+    "table": "webhooks",
+    "columns": "deleted_at",
+    "unique": false,
+    "where": "WHERE deleted_at IS NOT NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_email_suppressions_active",
+    "table": "email_suppressions",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "WHERE deleted_at IS NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_email_accounts_active",
+    "table": "email_accounts",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "WHERE deleted_at IS NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_api_keys_active",
+    "table": "api_keys",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "WHERE deleted_at IS NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "name": "idx_webhooks_active",
+    "table": "webhooks",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "WHERE deleted_at IS NULL",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
    }
   ],
   "cron_jobs": [],
@@ -17750,6 +17846,7 @@
    "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql",
    "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql",
    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
+   "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -21685,6 +21782,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "purge_soft_deleted",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "purge_soft_deleted",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
    }
   ],
   "raises": [
@@ -24990,7 +25103,7 @@
   {
    "module": "src/components",
    "files": 285,
-   "lines": 45413,
+   "lines": 45422,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -25427,7 +25540,7 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 7334,
+   "lines": 7357,
    "tables": [
     "automation_alerts",
     "companies",
@@ -25898,8 +26011,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 217,
-   "lines": 12600,
+   "files": 218,
+   "lines": 12644,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -29452,7 +29565,7 @@
    {
     "file": "src/integrations/supabase/withOrg.ts",
     "name": "SoftDeleteTable",
-    "values": "companies | deals | campaigns | workflows"
+    "values": "companies | deals | campaigns | workflows | email_suppressions | email_accounts | api_keys | webhooks"
    },
    {
     "file": "src/lib/emailErrorMessages.ts",
@@ -40934,6 +41047,38 @@
    {
     "file": "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql",
     "line": "DELETE FROM public.apollo_search_cache WHERE expires_at < now() - interval '7 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.api_keys WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.email_accounts WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.email_suppressions WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.webhooks WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   },
+   {
+    "file": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "line": "DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
    }
   ],
   "percents": [
@@ -49862,15 +50007,19 @@
     "args": "",
     "returns": "void",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "BEGIN DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; END;",
+    "body": "BEGIN DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.email_suppressions WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.email_accounts WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days'; DELETE FROM public.api_keys WHERE deleted_at IS NOT NULL AND delet …",
     "raises": [],
     "tables": [
+     "api_keys",
      "campaigns",
      "companies",
      "deals",
+     "email_accounts",
+     "email_suppressions",
+     "webhooks",
      "workflows"
     ]
    },
@@ -54923,7 +55072,8 @@
    "supabase/migrations/20260726160203_640f5eb2-d3a6-4330-b600-07d3704b3d1c.sql",
    "supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql",
    "supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql",
-   "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql"
+   "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql",
+   "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
   ],
   "security_definer_fns": [
    "accept_org_invite",
@@ -58868,6 +59018,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "purge_soft_deleted",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "purge_soft_deleted",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
    }
   ],
   "guards": [
@@ -59069,16 +59235,32 @@
     "active"
    ],
    [
+    "api_keys",
+    "deleted_at"
+   ],
+   [
     "webhooks",
     "active"
+   ],
+   [
+    "webhooks",
+    "deleted_at"
    ],
    [
     "email_accounts",
     "active"
    ],
    [
+    "email_accounts",
+    "deleted_at"
+   ],
+   [
     "automation_alerts",
     "is_active"
+   ],
+   [
+    "email_suppressions",
+    "deleted_at"
    ],
    [
     "org_proxies",
@@ -64099,7 +64281,7 @@
   },
   "src/components/lux/RecycleBinView.tsx": {
    "path": "src/components/lux/RecycleBinView.tsx",
-   "lines": 152,
+   "lines": 161,
    "exports": [
     "const RecycleBinView"
    ],
@@ -71338,7 +71520,7 @@
   },
   "src/integrations/supabase/withOrg.ts": {
    "path": "src/integrations/supabase/withOrg.ts",
-   "lines": 414,
+   "lines": 437,
    "exports": [
     "const ACTIVE_ORG_STORAGE_KEY",
     "function setActiveOrgId",
@@ -71353,6 +71535,7 @@
     "function ensureSameOrg",
     "function fromOrg",
     "type SoftDeleteTable",
+    "const TRASH_LABEL_COLUMN",
     "const db"
    ],
    "tables": [
@@ -71376,7 +71559,7 @@
    "enums": [
     {
      "name": "SoftDeleteTable",
-     "values": "companies | deals | campaigns | workflows"
+     "values": "companies | deals | campaigns | workflows | email_suppressions | email_accounts | api_keys | webhooks"
     }
    ],
    "rule_comments": [
@@ -81359,13 +81542,39 @@
   "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql": {
    "path": "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
    "lines": 27
+  },
+  "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql": {
+   "path": "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+   "lines": 44,
+   "temporal": [
+    "DELETE FROM public.api_keys WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.email_accounts WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.email_suppressions WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.webhooks WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';",
+    "DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';"
+   ],
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "568555da3775de7128ef5ffa66fc4d16711a83d4",
+  "sha": "d1ae10a9be1ca04b167e4fb26a8c64f281f5d10f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "d1ae10a",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webhooks)",
+    "files": [
+     "src/components/lux/RecycleBinView.tsx",
+     "src/integrations/supabase/withOrg.ts",
+     "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
+    ]
+   },
    {
     "sha": "568555d",
     "date": "2026-11-21",
@@ -81670,19 +81879,6 @@
     "files": [
      "package-lock.json"
     ]
-   },
-   {
-    "sha": "2f44e2d",
-    "date": "2026-11-14",
-    "author": "adm01-debug",
-    "subject": "fix(ci): pina Supabase CLI v3.1.0 no job rls-tests (chave anotada x gotrue 2.194) (#48)",
-    "files": [
-     ".env",
-     ".env.test",
-     ".github/workflows/edge-tests-daily.yml",
-     ".gitignore",
-     "supabase/functions/rls-tests/index.test.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -81703,12 +81899,16 @@
     2
    ],
    [
-    ".gitignore",
-    2
+    "src/components/lux/RecycleBinView.tsx",
+    1
    ],
    [
-    ".github/workflows/edge-tests-daily.yml",
-    2
+    "src/integrations/supabase/withOrg.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    1
    ],
    [
     "src/components/lux/auth/LoginCard.tsx",
@@ -81739,6 +81939,10 @@
     1
    ],
    [
+    ".gitignore",
+    1
+   ],
+   [
     "docs/pendencias/_estado-itens-1-3.md",
     1
    ],
@@ -81756,14 +81960,6 @@
    ],
    [
     "supabase/functions/ai-agent/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/auth-rate-limit/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/gmaps-proxy/index.ts",
     1
    ]
   ]

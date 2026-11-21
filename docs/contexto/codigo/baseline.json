@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "568555da3775de7128ef5ffa66fc4d16711a83d4",
+  "commit": "d1ae10a9be1ca04b167e4fb26a8c64f281f5d10f",
   "branch": "main",
-  "data_commit": "2026-11-21T11:32:29-03:00",
+  "data_commit": "2026-11-21T11:35:53-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "d1ae10a",
+    "data": "2026-11-21",
+    "assunto": "merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webh"
+   },
    {
     "sha": "568555d",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "b2ce2ea",
     "data": "2026-11-19",
     "assunto": "chore(deps)(deps-dev): bump js-yaml from 3.15.0 to 3.15.2 (#66)"
-   },
-   {
-    "sha": "11f8576",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps): bump react-router-dom from 6.30.4 to 6.30.6 (#65)"
    }
   ],
-  "arquivos_mudados_7d": 55,
+  "arquivos_mudados_7d": 58,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -161,7 +161,7 @@
    },
    {
     "pasta": "src/components/lux",
-    "mudancas": 5
+    "mudancas": 6
    },
    {
     "pasta": ".github/workflows/ci.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 55
+    "commits": 56
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1026,
+  "arquivos_total": 1027,
   "arquivos_codigo": 646,
-  "linhas_codigo": 110832,
+  "linhas_codigo": 110864,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 78,
   "edge_functions": 58,
   "tabelas": 96,
-  "migrations": 217,
+  "migrations": 218,
   "cron_jobs": 6,
   "testes": 122,
   "workflows": 9,
@@ -552,7 +552,7 @@
   },
   "src/components": {
    "arquivos": 285,
-   "linhas": 45413
+   "linhas": 45422
   },
   "src/contexts": {
    "arquivos": 7,
@@ -564,7 +564,7 @@
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 7334
+   "linhas": 7357
   },
   "src/lib": {
    "arquivos": 53,
@@ -786,12 +786,16 @@
   "tabelas_sem_rls": [],
   "tabelas_usadas_sem_definicao": [],
   "tabelas_com_drift_migration_vs_types": [
+   "api_keys",
    "audit_logs",
    "circuit_breakers",
+   "email_accounts",
+   "email_suppressions",
    "feature_flags",
    "idempotency_keys",
    "lusha_contacts",
-   "organization_members"
+   "organization_members",
+   "webhooks"
   ],
   "rpcs_sem_definicao": [],
   "componentes_orfaos": [

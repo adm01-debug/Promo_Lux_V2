@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `568555da37` · branch `main` · 2026-11-21 14:33 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d1ae10a9be` · branch `main` · 2026-11-21 14:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1038,7 +1038,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | ReaperAlertReason | dead_detected \| no_recent_run | `src/hooks/useReaperAlerts.ts` |
 | Skin | gold \| blue \| green \| red \| purple \| orange | `src/hooks/useSkin.ts` |
 | WEBHOOK_EVENTS | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … | `src/hooks/useWebhooks.ts` |
-| SoftDeleteTable | companies \| deals \| campaigns \| workflows | `src/integrations/supabase/withOrg.ts` |
+| SoftDeleteTable | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks | `src/integrations/supabase/withOrg.ts` |
 | EmailErrorKind | auth \| sync | `src/lib/emailErrorMessages.ts` |
 | EmailErrorSeverity | warning \| error \| fatal | `src/lib/emailErrorMessages.ts` |
 | AppRole | admin \| sdr \| viewer | `src/lib/permissions.ts` |
@@ -1645,6 +1645,14 @@ _nenhum item encontrado_
 | `(public.sla_deadline(created_at, sla_seconds) <= now() + interval '30 seconds') DESC,` | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |
 | `(public.sla_deadline(q.created_at, q.sla_seconds) <= now() + interval '30 seconds') DESC,` | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |
 | `DELETE FROM public.apollo_search_cache WHERE expires_at < now() - interval '7 days';` | `supabase/migrations/20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql` |
+| `DELETE FROM public.api_keys WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.campaigns WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.companies WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.deals WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.email_accounts WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.email_suppressions WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.webhooks WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
+| `DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
 
 ### H.3 Limites de paginação
 

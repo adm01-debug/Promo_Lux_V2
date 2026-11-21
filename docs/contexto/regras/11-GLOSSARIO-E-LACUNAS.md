@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `568555da37` · branch `main` · 2026-11-21 14:33 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d1ae10a9be` · branch `main` · 2026-11-21 14:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -8,7 +8,7 @@
 | Termo | Significado / valores | Tamanho | Origem |
 |---|---|---|---|
 | `agent_chat_messages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
-| `api_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `api_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `api_latency_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `api_latency_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `api_latency_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
@@ -42,8 +42,8 @@
 | `dlq_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `dlq_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `dlq_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
-| `email_accounts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 24 colunas | migration |
-| `email_suppressions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
+| `email_accounts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 25 colunas | migration |
+| `email_suppressions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `email_sync_log` | Histórico de tentativas de polling/sincronização por conta de e-mail | 17 colunas | migration |
 | `feature_flags` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `health_checks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
@@ -102,7 +102,7 @@
 | `web_scrape_queue` | _(sem COMMENT ON TABLE — significado não documentado)_ | 23 colunas | migration |
 | `web_scrape_results` | _(sem COMMENT ON TABLE — significado não documentado)_ | 20 colunas | migration |
 | `webhook_deliveries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
-| `webhooks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
+| `webhooks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `workflow_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `workflows` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `app_role` (enum) | admin, sdr, viewer |  | banco |
@@ -136,7 +136,7 @@
 | `ReaperAlertReason` (TS) | dead_detected \| no_recent_run |  | `src/hooks/useReaperAlerts.ts` |
 | `Skin` (TS) | gold \| blue \| green \| red \| purple \| orange |  | `src/hooks/useSkin.ts` |
 | `WEBHOOK_EVENTS` (TS) | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … |  | `src/hooks/useWebhooks.ts` |
-| `SoftDeleteTable` (TS) | companies \| deals \| campaigns \| workflows |  | `src/integrations/supabase/withOrg.ts` |
+| `SoftDeleteTable` (TS) | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks |  | `src/integrations/supabase/withOrg.ts` |
 | `EmailErrorKind` (TS) | auth \| sync |  | `src/lib/emailErrorMessages.ts` |
 | `EmailErrorSeverity` (TS) | warning \| error \| fatal |  | `src/lib/emailErrorMessages.ts` |
 | `AppRole` (TS) | admin \| sdr \| viewer |  | `src/lib/permissions.ts` |

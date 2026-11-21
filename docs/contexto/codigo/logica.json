@@ -431,6 +431,7 @@
     "ORG_UNSCOPED_TABLES",
     "OrgMismatchError",
     "SoftDeleteTable",
+    "TRASH_LABEL_COLUMN",
     "clearActiveOrgId",
     "db",
     "ensureSameOrg",
@@ -440,7 +441,7 @@
     "setOrgErrorListener"
    ],
    "export_default": null,
-   "linhas": 414,
+   "linhas": 437,
    "tabelas": [],
    "rpcs": [],
    "edges": [],

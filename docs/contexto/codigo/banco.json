@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 217,
+ "migrations": 218,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1045,6 +1045,13 @@
      "default": "now()",
      "ref": null
     },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "expires_at": {
      "tipo": "timestamptz",
      "nn": false,
@@ -1144,6 +1151,16 @@
    ],
    "indices": [
     {
+     "nome": "idx_api_keys_active",
+     "colunas": "organization_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_api_keys_deleted",
+     "colunas": "deleted_at",
+     "unico": false
+    },
+    {
      "nome": "idx_api_keys_org",
      "colunas": "organization_id",
      "unico": false
@@ -1170,7 +1187,9 @@
     "user_id": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "deleted_at"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 1,
@@ -6451,6 +6470,13 @@
      "default": "now()",
      "ref": null
     },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "delta_link": {
      "tipo": "text",
      "nn": false,
@@ -6635,7 +6661,12 @@
    "indices": [
     {
      "nome": "idx_email_accounts_active",
-     "colunas": "active",
+     "colunas": "organization_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_email_accounts_deleted",
+     "colunas": "deleted_at",
      "unico": false
     },
     {
@@ -6683,7 +6714,9 @@
     "user_id": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "deleted_at"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 1,
@@ -6707,6 +6740,13 @@
      "nn": true,
      "pk": false,
      "default": "now()",
+     "ref": null
+    },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
      "ref": null
     },
     "email": {
@@ -6795,6 +6835,16 @@
    ],
    "indices": [
     {
+     "nome": "idx_email_suppressions_active",
+     "colunas": "organization_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_email_suppressions_deleted",
+     "colunas": "deleted_at",
+     "unico": false
+    },
+    {
      "nome": "idx_email_suppressions_source_campaign",
      "colunas": "source_campaign_id",
      "unico": false
@@ -6817,7 +6867,9 @@
     "updated_at": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "deleted_at"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 1,
@@ -15001,6 +15053,13 @@
      "default": "now()",
      "ref": null
     },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "events": {
      "tipo": "text[]",
      "nn": true,
@@ -15114,6 +15173,16 @@
    ],
    "indices": [
     {
+     "nome": "idx_webhooks_active",
+     "colunas": "organization_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_webhooks_deleted",
+     "colunas": "deleted_at",
+     "unico": false
+    },
+    {
      "nome": "idx_webhooks_org",
      "colunas": "organization_id",
      "unico": false
@@ -15142,7 +15211,9 @@
     "user_id": "string"
    },
    "drift": {
-    "so_na_migration": [],
+    "so_na_migration": [
+     "deleted_at"
+    ],
     "so_no_types": []
    },
    "usada_no_front": 1,
