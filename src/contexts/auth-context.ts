@@ -5,6 +5,12 @@ export type AuthContextType = {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  /**
+   * true enquanto o usuÃ¡rio possuir fator TOTP verificado mas a sessÃ£o
+   * ainda nÃ£o elevou a AAL2 (senha correta, cÃ³digo pendente).
+   */
+  mfaRequired: boolean;
+  setMfaRequired: (v: boolean) => void;
   signOut: () => Promise<void>;
 };
 
@@ -12,6 +18,8 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
   loading: true,
+  mfaRequired: false,
+  setMfaRequired: () => {},
   signOut: async () => {},
 });
 
