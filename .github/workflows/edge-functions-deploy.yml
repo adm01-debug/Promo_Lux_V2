@@ -29,11 +29,16 @@ on:
   pull_request:
     paths:
       - 'supabase/functions/**'
+      - 'supabase/config.toml'
       - '.github/workflows/edge-functions-deploy.yml'
   push:
     branches: [main, master]
     paths:
       - 'supabase/functions/**'
+      # config.toml carrega verify_jwt por function: sem ele no filtro, uma
+      # mudanca de gate (ex.: ligar verify_jwt de um worker) ficaria na main
+      # sem nunca ser aplicada em producao.
+      - 'supabase/config.toml'
   workflow_dispatch:
     inputs:
       environment:
