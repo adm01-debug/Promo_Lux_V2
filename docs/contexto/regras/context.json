@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "74324554b7ba227369a72fa446d936531e891f55",
+  "sha": "4931d9eb98709e8abeb33e1f96a4060e307f0812",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 21:08 UTC",
-  "files_total": 1060,
-  "code_files": 885,
-  "code_lines": 127868
+  "generated_at": "2026-11-21 21:18 UTC",
+  "files_total": 1066,
+  "code_files": 891,
+  "code_lines": 129132
  },
  "version": "1.3.2",
- "facts_hash": "c6c9b8d669f43427",
+ "facts_hash": "8f0039a71ac14576",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,9 +232,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 351,
-   ".tsx": 278,
-   ".sql": 226,
+   ".ts": 355,
+   ".tsx": 279,
+   ".sql": 227,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -9234,6 +9234,310 @@
     "comment": "",
     "origin": "migration"
    },
+   "lead_scores": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "stakeholder_id",
+      "type": "uuid not null references public.stakeholders(id) on delete cascade",
+      "fk": "stakeholders.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "uuid not null default auth.uid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "score",
+      "type": "integer not null default 0 check (score between 0 and 100)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "tier",
+      "type": "text not null default 'cold' check (tier in ('hot','warm','cold'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "signals",
+      "type": "jsonb not null default '{}'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "model_version",
+      "type": "text not null default 'v1'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "computed_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     }
+    ],
+    "constraints": [
+     "unique (stakeholder_id)"
+    ],
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "dashboard_layouts": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "uuid not null default auth.uid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "dashboard_key",
+      "type": "text not null default 'default'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "widgets",
+      "type": "jsonb not null default '[]'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     }
+    ],
+    "constraints": [
+     "unique (user_id, organization_id, dashboard_key)"
+    ],
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "deal_predictions": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "deal_id",
+      "type": "uuid not null references public.deals(id) on delete cascade",
+      "fk": "deals.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "uuid not null default auth.uid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "win_probability",
+      "type": "integer not null default 0 check (win_probability between 0 and 100)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "predicted_close_date",
+      "type": "date",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "weighted_value",
+      "type": "numeric not null default 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "drivers",
+      "type": "jsonb not null default '{}'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "model_version",
+      "type": "text not null default 'v1'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "computed_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     }
+    ],
+    "constraints": [
+     "unique (deal_id)"
+    ],
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "changelog_entries": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "slug",
+      "type": "text not null unique",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "title",
+      "type": "text not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "body",
+      "type": "text not null default ''",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "category",
+      "type": "text not null default 'feature' check (category in ('feature','fix','improvement','security','breaking'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "version",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "published_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "scheduled_reports": {
     "columns": [
      {
@@ -12528,6 +12832,176 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "name": "Members view lead_scores",
+    "table": "lead_scores",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id is null and user_id = auth.uid() or public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members upsert own lead_scores",
+    "table": "lead_scores",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members update lead_scores",
+    "table": "lead_scores",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Admins delete lead_scores",
+    "table": "lead_scores",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage lead_scores",
+    "table": "lead_scores",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users view own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users insert own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users update own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users delete own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members view deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members upsert deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members update deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Admins delete deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Authenticated view changelog",
+    "table": "changelog_entries",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "true",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage changelog",
+    "table": "changelog_entries",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "name": "Users view own scheduled_reports",
     "table": "scheduled_reports",
     "cmd": "SELECT",
@@ -13577,6 +14051,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "trg_lead_scores_updated",
+    "when": "BEFORE UPDATE",
+    "table": "lead_scores",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "trg_dashboard_layouts_updated",
+    "when": "BEFORE UPDATE",
+    "table": "dashboard_layouts",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "trg_deal_predictions_updated",
+    "when": "BEFORE UPDATE",
+    "table": "deal_predictions",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
    },
    {
     "name": "trg_scheduled_reports_updated",
@@ -15475,6 +15976,97 @@
      "SET",
      "api_rate_limits",
      "v_count"
+    ]
+   },
+   "compute_lead_score": {
+    "args": "_stakeholder_id uuid",
+    "returns": "table (score integer, tier text, signals jsonb)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_sh public.stakeholders; v_signals jsonb := '{}'::jsonb; v_score int := 0; v_seniority text; v_has_email boolean; v_has_phone boolean; v_has_linkedin boolean; v_recent_contact boolean; v_confidence int; begin select * into v_sh from public.stakeholders where id = _stakeholder_id; if not found then return query select 0, 'cold'::text, '{}'::jsonb; return; end if; v_seniority := lower(coalesce(v_sh.seniority, '') || ' ' || coalesce(v_sh.role, '')); v_has_email := coalesce(v_sh.email, '') <> ''; v_has_phone := coalesce(v_sh.phone, '') <> ''; v_has_linkedin := coalesce(v_sh.linkedin_url, '') <> ''; v_recent_contact := v_sh.last_contacted_at is not null and v_sh.last_contacted_at > now() …",
+    "raises": [],
+    "tables": [
+     "stakeholders",
+     "v_sh"
+    ]
+   },
+   "compute_deal_prediction": {
+    "args": "_deal_id uuid",
+    "returns": "table (win_probability integer, predicted_close_date date, weighted_value numeric, drivers jsonb)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_deal public.deals; v_stage public.deal_stages; v_drivers jsonb := '{}'::jsonb; v_prob int := 0; v_idle_days int := 0; v_acts int := 0; v_date date; begin select * into v_deal from public.deals where id = _deal_id; if not found then return query select 0, null::date, 0::numeric, '{}'::jsonb; return; end if; select * into v_stage from public.deal_stages where id = v_deal.stage_id; v_prob := coalesce(v_stage.probability, 0); v_drivers := v_drivers || jsonb_build_object('probabilidade_estagio', v_prob, 'estagio', coalesce(v_stage.name, 'sem_estagio')); select count(*) into v_acts from public.deal_activities where deal_id = _deal_id; v_idle_days := greatest(0, extract(day from now() - c …",
+    "raises": [],
+    "tables": [
+     "deal_activities",
+     "deal_stages",
+     "deals",
+     "now",
+     "v_acts",
+     "v_deal",
+     "v_stage"
+    ]
+   },
+   "refresh_lead_score": {
+    "args": "_stakeholder_id uuid",
+    "returns": "public.lead_scores",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_calc record; v_sh public.stakeholders; v_row public.lead_scores; begin select * into v_sh from public.stakeholders where id = _stakeholder_id; if not found then raise exception 'stakeholder % nao encontrado', _stakeholder_id; end if; select * into v_calc from public.compute_lead_score(_stakeholder_id); insert into public.lead_scores (stakeholder_id, organization_id, user_id, score, tier, signals) values (_stakeholder_id, v_sh.organization_id, coalesce(v_sh.user_id, auth.uid()), v_calc.score, v_calc.tier, v_calc.signals) on conflict (stakeholder_id) do update set score = excluded.score, tier = excluded.tier, signals = excluded.signals, computed_at = now(), updated_at = now() returni …",
+    "raises": [
+     "stakeholder % nao encontrado"
+    ],
+    "tables": [
+     "compute_lead_score",
+     "lead_scores",
+     "set",
+     "stakeholders",
+     "v_calc",
+     "v_row",
+     "v_sh"
+    ]
+   },
+   "refresh_deal_prediction": {
+    "args": "_deal_id uuid",
+    "returns": "public.deal_predictions",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_calc record; v_deal public.deals; v_row public.deal_predictions; begin select * into v_deal from public.deals where id = _deal_id; if not found then raise exception 'deal % nao encontrado', _deal_id; end if; select * into v_calc from public.compute_deal_prediction(_deal_id); insert into public.deal_predictions (deal_id, organization_id, user_id, win_probability, predicted_close_date, weighted_value, drivers) values (_deal_id, v_deal.organization_id, coalesce(v_deal.user_id, auth.uid()), v_calc.win_probability, v_calc.predicted_close_date, v_calc.weighted_value, v_calc.drivers) on conflict (deal_id) do update set win_probability = excluded.win_probability, predicted_close_date = exc …",
+    "raises": [
+     "deal % nao encontrado"
+    ],
+    "tables": [
+     "compute_deal_prediction",
+     "deal_predictions",
+     "deals",
+     "set",
+     "v_calc",
+     "v_deal",
+     "v_row"
+    ]
+   },
+   "refresh_org_scores": {
+    "args": "_org_id uuid",
+    "returns": "table (leads_atualizados integer, deals_atualizados integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_leads int := 0; v_deals int := 0; r record; begin if auth.uid() is not null and not public.has_org_role(_org_id, auth.uid(), 'admin') then raise exception 'apenas admin da organizacao pode recalcular scores'; end if; for r in select id from public.stakeholders where organization_id = _org_id loop perform public.refresh_lead_score(r.id); v_leads := v_leads + 1; end loop; for r in select id from public.deals where organization_id = _org_id and deleted_at is null loop perform public.refresh_deal_prediction(r.id); v_deals := v_deals + 1; end loop; return query select v_leads, v_deals; end;",
+    "raises": [
+     "apenas admin da organizacao pode recalcular scores"
+    ],
+    "tables": [
+     "deals",
+     "stakeholders"
     ]
    },
    "prune_cron_job_run_details": {
@@ -18356,6 +18948,54 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "name": "idx_lead_scores_org_tier",
+    "table": "lead_scores",
+    "columns": "organization_id, tier, score desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "idx_lead_scores_score",
+    "table": "lead_scores",
+    "columns": "organization_id, score desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "idx_dashboard_layouts_user",
+    "table": "dashboard_layouts",
+    "columns": "user_id, dashboard_key",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "idx_deal_predictions_org",
+    "table": "deal_predictions",
+    "columns": "organization_id, win_probability desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "idx_deal_predictions_close",
+    "table": "deal_predictions",
+    "columns": "predicted_close_date",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "idx_changelog_published",
+    "table": "changelog_entries",
+    "columns": "published_at desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "name": "idx_scheduled_reports_user",
     "table": "scheduled_reports",
     "columns": "user_id",
@@ -18673,6 +19313,7 @@
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
+   "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
    "src/integrations/supabase/types.ts"
@@ -18778,6 +19419,10 @@
    "apollo_search_cache": "enabled",
    "apollo_rate_state": "enabled",
    "api_rate_limits": "enabled",
+   "lead_scores": "enabled",
+   "dashboard_layouts": "enabled",
+   "deal_predictions": "enabled",
+   "changelog_entries": "enabled",
    "scheduled_reports": "enabled",
    "scheduled_report_runs": "enabled",
    "bulk_imports": "enabled",
@@ -22665,6 +23310,150 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "lead_scores",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "lead_scores",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "dashboard_layouts",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "dashboard_layouts",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "deal_predictions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "deal_predictions",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "changelog_entries",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "changelog_entries",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "compute_lead_score",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "compute_deal_prediction",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "refresh_lead_score",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "refresh_deal_prediction",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "refresh_org_scores",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "compute_lead_score",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "compute_deal_prediction",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_lead_score",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_deal_prediction",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_org_scores",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "kind": "revoke",
     "privs": "all",
     "object": "prune_cron_job_run_details",
@@ -23218,6 +24007,21 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "function": "refresh_lead_score",
+    "msg": "stakeholder % nao encontrado",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "function": "refresh_deal_prediction",
+    "msg": "deal % nao encontrado",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "function": "refresh_org_scores",
+    "msg": "apenas admin da organizacao pode recalcular scores",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "function": "prune_cron_job_run_details",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
@@ -23300,6 +24104,7 @@
     "file": "src/pages/Index.tsx",
     "component": "Index",
     "tables_transitive": [
+     "changelog_entries",
      "companies",
      "intent_signals",
      "notifications",
@@ -23314,7 +24119,7 @@
     "rpc_transitive": [
      "get_dashboard_stats"
     ],
-    "deps_count": 65
+    "deps_count": 67
    },
    {
     "path": "",
@@ -25358,7 +26163,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 286,
+  "components_count": 287,
   "hooks": [
    {
     "name": "useContacts",
@@ -25445,6 +26250,10 @@
     "file": "src/hooks/useBottomNavSwipe.ts"
    },
    {
+    "name": "useChangelog",
+    "file": "src/hooks/useChangelog.ts"
+   },
+   {
     "name": "useCircuitBreakerAlertSettings",
     "file": "src/hooks/useCircuitBreakerAlerts.ts"
    },
@@ -25497,8 +26306,16 @@
     "file": "src/hooks/useDashboardData.ts"
    },
    {
+    "name": "useDashboardLayout",
+    "file": "src/hooks/useDashboardLayout.ts"
+   },
+   {
     "name": "useDbHealth",
     "file": "src/hooks/useDbHealth.ts"
+   },
+   {
+    "name": "useDealPredictions",
+    "file": "src/hooks/useDealPredictions.ts"
    },
    {
     "name": "useDealStages",
@@ -25603,6 +26420,10 @@
    {
     "name": "useKeyboardShortcuts",
     "file": "src/hooks/useKeyboardShortcuts.ts"
+   },
+   {
+    "name": "useLeadScores",
+    "file": "src/hooks/useLeadScores.ts"
    },
    {
     "name": "useLoginForm",
@@ -26210,8 +27031,8 @@
   },
   {
    "module": "src/components",
-   "files": 286,
-   "lines": 45923,
+   "files": 287,
+   "lines": 46146,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -26261,6 +27082,7 @@
     "AutoTopProgressBar.tsx: AutoTopProgressBar",
     "AutomationsList.tsx: AutomationsList",
     "CampaignsView.tsx: CampaignsView",
+    "ChangelogDialog.tsx: ChangelogDialog, ChangelogButton",
     "CommandPalette.tsx: CommandPalette",
     "CompaniesMapView.tsx: CompaniesMapView",
     "CompaniesView.tsx: CompaniesView",
@@ -26288,8 +27110,7 @@
     "LushaIntelligenceView.tsx: LushaIntelligenceView",
     "LuxImage.tsx: LuxImage",
     "NotificationsPanel.tsx: NotificationsPanel",
-    "OnboardingTour.tsx: OnboardingTour",
-    "OrgErrorBanner.tsx: OrgErrorBanner"
+    "OnboardingTour.tsx: OnboardingTour"
    ],
    "docs": [
     "WorkflowEditor.tsx: Stub: implementação anterior perdida (arquivo corrompido em base64 truncado). Não é referenciado em nenhuma tela ativa. Reimplementar quando necessário.",
@@ -26346,6 +27167,7 @@
     "src/components/lux/AutoTopProgressBar.tsx",
     "src/components/lux/AutomationsList.tsx",
     "src/components/lux/CampaignsView.tsx",
+    "src/components/lux/ChangelogDialog.tsx",
     "src/components/lux/CommandPalette.tsx",
     "src/components/lux/CompaniesMapView.tsx",
     "src/components/lux/CompaniesView.tsx",
@@ -26412,8 +27234,7 @@
     "src/components/lux/__tests__/ErrorBoundary.test.tsx",
     "src/components/lux/__tests__/ICPConfigView.test.tsx",
     "src/components/lux/__tests__/MapFilters.test.tsx",
-    "src/components/lux/__tests__/SidebarFooter.test.tsx",
-    "src/components/lux/__tests__/StakeholderCard.test.tsx"
+    "src/components/lux/__tests__/SidebarFooter.test.tsx"
    ]
   },
   {
@@ -26453,14 +27274,15 @@
   },
   {
    "module": "src/hooks",
-   "files": 86,
-   "lines": 9502,
+   "files": 90,
+   "lines": 9851,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
     "api_latency_alert_settings",
     "audit_logs",
     "automation_execution_logs",
+    "changelog_entries",
     "circuit_breaker_alert_history",
     "circuit_breaker_alert_settings",
     "circuit_breaker_snapshots",
@@ -26468,8 +27290,10 @@
     "cnpj_enrich_queue",
     "companies",
     "company_reviews",
+    "dashboard_layouts",
     "db_health_snapshots",
     "deal_activities",
+    "deal_predictions",
     "deal_stages",
     "deal_tasks",
     "deals",
@@ -26481,6 +27305,7 @@
     "instagram_scrape_dead_letter",
     "intent_signals",
     "ipc_config",
+    "lead_scores",
     "notifications",
     "oauth_sandbox_snapshots",
     "org_proxies",
@@ -26518,6 +27343,7 @@
     "useAutomationLogs.ts: AutomationExecutionLog, AutomationLogFilters, useAutomationLogs",
     "useAutomationsMonitor.ts: CompanyAutomationRow, QueueRow, EventRow, DeadLetterRow, AutomationStage, StageStatus",
     "useBottomNavSwipe.ts: useBottomNavSwipe",
+    "useChangelog.ts: ChangelogEntry, CATEGORY_LABEL, markChangelogSeen, useChangelog",
     "useCircuitBreakerAlerts.ts: CircuitBreakerAlertSettings, CB_ALERT_DEFAULTS, useCircuitBreakerAlertSettings, useSaveCircuitBreakerAlertSettings, CircuitBreakerAlertHistoryItem, useCircuitBreakerAlertHistory",
     "useCircuitBreakers.ts: CircuitBreakerState, CircuitBreaker, useCircuitBreakers, useResetCircuitBreaker",
     "useCnpjAutoEnrichSetting.ts: useCnpjAutoEnrichSetting",
@@ -26526,7 +27352,9 @@
     "useCompanyReviews.ts: CompanyReview, useCompanyReviews",
     "useConfirm.tsx: ConfirmProvider",
     "useDashboardData.ts: DashboardStats, useDashboardStats, RecentCompany, useRecentCompanies, ActivityItem, useRecentActivity",
+    "useDashboardLayout.ts: DashboardWidget, useDashboardLayout",
     "useDbHealth.ts: DbHealthSnapshot, AlertSeverity, HealthAlert, computeAlerts, useDbHealth",
+    "useDealPredictions.ts: DealPrediction, useDealPredictions",
     "useDeals.ts: DealStage, Deal, useDealStages, useDeals, DealActivity, useDealActivities",
     "useDlqAlertSettings.ts: DlqQueueKind, DlqAlertSettings, DLQ_ALERT_DEFAULTS, useDlqAlertSettings, useSaveDlqAlertSettings, DlqAlertHistoryItem",
     "useDlqHealth.ts: DlqHealthMetrics, DlqHealthSeverity, DLQ_THRESHOLDS, dlqSeverity, useDlqHealth, DlqTrendPoint",
@@ -26542,10 +27370,7 @@
     "useFocusMode.ts: useFocusMode",
     "useICPConfig.ts: ICPValue, ICPCriterion, ICPConfig, useICPConfig",
     "useKeyboardShortcuts.ts: useKeyboardShortcuts",
-    "useLoginForm.ts: useLoginForm",
-    "useMFA.ts: MFAFactor, MFAEnrollData, AssuranceLevel, useMFA",
-    "useMembershipAuditLog.ts: MembershipAuditAction, AppRole, MembershipAuditEntry, MembershipAuditPage, useMembershipAuditLog, useMembershipAuditLogPaged",
-    "useNavigationHistory.ts: View, NavigationDirection, useNavigationHistory"
+    "useLeadScores.ts: LeadScore, LeadTier, TIER_LABEL, useLeadScores"
    ],
    "docs": [
     "oracleV2Helpers.ts: Helpers puros de UI/formatação do Oracle v2. Extraídos para permitir testes unitários sem montar contexto de React/Query."
@@ -26579,6 +27404,7 @@
     "src/hooks/useAutomationLogs.ts",
     "src/hooks/useAutomationsMonitor.ts",
     "src/hooks/useBottomNavSwipe.ts",
+    "src/hooks/useChangelog.ts",
     "src/hooks/useCircuitBreakerAlerts.ts",
     "src/hooks/useCircuitBreakers.ts",
     "src/hooks/useCnpjAutoEnrichSetting.ts",
@@ -26587,7 +27413,9 @@
     "src/hooks/useCompanyReviews.ts",
     "src/hooks/useConfirm.tsx",
     "src/hooks/useDashboardData.ts",
+    "src/hooks/useDashboardLayout.ts",
     "src/hooks/useDbHealth.ts",
+    "src/hooks/useDealPredictions.ts",
     "src/hooks/useDeals.ts",
     "src/hooks/useDlqAlertSettings.ts",
     "src/hooks/useDlqHealth.ts",
@@ -26603,6 +27431,7 @@
     "src/hooks/useFocusMode.ts",
     "src/hooks/useICPConfig.ts",
     "src/hooks/useKeyboardShortcuts.ts",
+    "src/hooks/useLeadScores.ts",
     "src/hooks/useLoginForm.ts",
     "src/hooks/useMFA.ts",
     "src/hooks/useMembershipAuditLog.ts",
@@ -26642,17 +27471,13 @@
     "src/hooks/useWebhooks.ts",
     "src/hooks/useWeeklyPerformance.ts",
     "src/hooks/__tests__/oracleV2Helpers.test.ts",
-    "src/hooks/__tests__/useAuditTrail.test.ts",
-    "src/hooks/__tests__/useConfirm.test.tsx",
-    "src/hooks/__tests__/useDlqReplay.test.ts",
-    "src/hooks/__tests__/useOraclePushBitrix.test.ts",
-    "src/hooks/__tests__/usePersistedFilters.test.ts"
+    "src/hooks/__tests__/useAuditTrail.test.ts"
    ]
   },
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 7562,
+   "lines": 7785,
    "tables": [
     "automation_alerts",
     "companies",
@@ -27129,8 +27954,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 222,
-   "lines": 13307,
+   "files": 223,
+   "lines": 13776,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -27413,6 +28238,11 @@
      "src/components/lux/CampaignsView.tsx"
     ]
    },
+   "changelog_entries": {
+    "select": [
+     "src/hooks/useChangelog.ts"
+    ]
+   },
    "circuit_breaker_alert_history": {
     "select": [
      "src/hooks/useCircuitBreakerAlerts.ts"
@@ -27556,6 +28386,14 @@
      "scripts/ai-context/gerar.unit.mjs"
     ]
    },
+   "dashboard_layouts": {
+    "select": [
+     "src/hooks/useDashboardLayout.ts"
+    ],
+    "ref": [
+     "src/hooks/useDashboardLayout.ts"
+    ]
+   },
    "dashboard_table": {
     "select": [
      "scripts/ai-context/gerar.unit.mjs"
@@ -27572,6 +28410,11 @@
     ],
     "insert": [
      "src/hooks/useDeals.ts"
+    ]
+   },
+   "deal_predictions": {
+    "select": [
+     "src/hooks/useDealPredictions.ts"
     ]
    },
    "deal_stages": {
@@ -27823,6 +28666,11 @@
     ],
     "delete": [
      "src/hooks/useICPConfig.ts"
+    ]
+   },
+   "lead_scores": {
+    "select": [
+     "src/hooks/useLeadScores.ts"
     ]
    },
    "lusha_contacts": {
@@ -28568,6 +29416,15 @@
     "sequence",
     "status"
    ],
+   "changelog_entries": [
+    "body",
+    "category",
+    "id",
+    "published_at",
+    "slug",
+    "title",
+    "version"
+   ],
    "circuit_breaker_alert_history": [
     "admins_notified",
     "failure_count",
@@ -28650,8 +29507,22 @@
    "company_reviews": [
     "company_id"
    ],
+   "dashboard_layouts": [
+    "dashboard_key",
+    "user_id",
+    "widgets"
+   ],
    "deal_activities": [
     "deal_id"
+   ],
+   "deal_predictions": [
+    "computed_at",
+    "deal_id",
+    "drivers",
+    "organization_id",
+    "predicted_close_date",
+    "weighted_value",
+    "win_probability"
    ],
    "deal_stages": [
     "id"
@@ -28800,6 +29671,14 @@
     "id",
     "is_active",
     "user_id"
+   ],
+   "lead_scores": [
+    "computed_at",
+    "organization_id",
+    "score",
+    "signals",
+    "stakeholder_id",
+    "tier"
    ],
    "lusha_contacts": [
     "bitrix_card_id",
@@ -29925,6 +30804,9 @@
    "record_vault_cookie_snapshots": [
     "supabase/functions/vault-cookie-health/index.ts"
    ],
+   "refresh_org_scores": [
+    "src/hooks/useLeadScores.ts"
+   ],
    "replay_dead_letter": [
     "src/hooks/useScrapeQueue.ts"
    ],
@@ -30169,6 +31051,7 @@
    "users": [
     "companies",
     "stakeholders",
+    "lead_scores",
     "intent_signals",
     "company_reviews",
     "scrape_jobs",
@@ -30200,6 +31083,7 @@
    ],
    "companies": [
     "stakeholders",
+    "lead_scores",
     "intent_signals",
     "company_reviews"
    ],
@@ -30231,6 +31115,9 @@
     "instagram_scrape_queue",
     "instagram_scrape_results",
     "instagram_scrape_dead_letter",
+    "lead_scores",
+    "dashboard_layouts",
+    "deal_predictions",
     "scheduled_reports",
     "scheduled_report_runs",
     "bulk_imports",
@@ -30238,7 +31125,8 @@
    ],
    "deals": [
     "deal_activities",
-    "deal_tasks"
+    "deal_tasks",
+    "deal_predictions"
    ],
    "webhooks": [
     "webhook_deliveries"
@@ -30265,6 +31153,9 @@
    ],
    "api_keys": [
     "api_rate_limits"
+   ],
+   "stakeholders": [
+    "lead_scores"
    ],
    "scheduled_reports": [
     "scheduled_report_runs"
@@ -31589,6 +32480,10 @@
     "msg": "Falha ao reiniciar disjuntor: ${err.message}"
    },
    {
+    "file": "src/hooks/useDashboardLayout.ts",
+    "msg": "Não foi possível salvar o layout no servidor"
+   },
+   {
     "file": "src/hooks/useDeals.ts",
     "msg": "Erro ao criar estágio"
    },
@@ -31607,6 +32502,14 @@
    {
     "file": "src/hooks/useICPConfig.ts",
     "msg": "Erro ao salvar"
+   },
+   {
+    "file": "src/hooks/useLeadScores.ts",
+    "msg": "Não foi possível recalcular os scores"
+   },
+   {
+    "file": "src/hooks/useLeadScores.ts",
+    "msg": "Organização ativa não definida"
    },
    {
     "file": "src/hooks/useLoginForm.ts",
@@ -37175,6 +38078,201 @@
     "rule": "UNIQUE (api_key_id, window_start)"
    },
    {
+    "table": "lead_scores",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "lead_scores",
+    "column": "stakeholder_id",
+    "rule": "obrigatório; FK → stakeholders.id on delete cascade"
+   },
+   {
+    "table": "lead_scores",
+    "column": "organization_id",
+    "rule": "FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "lead_scores",
+    "column": "user_id",
+    "rule": "default auth.uid()"
+   },
+   {
+    "table": "lead_scores",
+    "column": "score",
+    "rule": "default 0; CHECK score between 0 and 100"
+   },
+   {
+    "table": "lead_scores",
+    "column": "tier",
+    "rule": "default 'cold'; CHECK tier in ('hot','warm','cold')"
+   },
+   {
+    "table": "lead_scores",
+    "column": "signals",
+    "rule": "default '{}'::jsonb"
+   },
+   {
+    "table": "lead_scores",
+    "column": "model_version",
+    "rule": "default 'v1'"
+   },
+   {
+    "table": "lead_scores",
+    "column": "computed_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "lead_scores",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "lead_scores",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "lead_scores",
+    "column": "(tabela)",
+    "rule": "unique (stakeholder_id)"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "user_id",
+    "rule": "default auth.uid()"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "organization_id",
+    "rule": "FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "dashboard_key",
+    "rule": "default 'default'"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "widgets",
+    "rule": "default '[]'::jsonb"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "dashboard_layouts",
+    "column": "(tabela)",
+    "rule": "unique (user_id, organization_id, dashboard_key)"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "deal_id",
+    "rule": "obrigatório; FK → deals.id on delete cascade"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "organization_id",
+    "rule": "FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "user_id",
+    "rule": "default auth.uid()"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "win_probability",
+    "rule": "default 0; CHECK win_probability between 0 and 100"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "weighted_value",
+    "rule": "default 0"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "drivers",
+    "rule": "default '{}'::jsonb"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "model_version",
+    "rule": "default 'v1'"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "computed_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "deal_predictions",
+    "column": "(tabela)",
+    "rule": "unique (deal_id)"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "slug",
+    "rule": "obrigatório; único"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "title",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "body",
+    "rule": "default ''"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "category",
+    "rule": "default 'feature'; CHECK category in ('feature','fix','improvement','security','breaking')"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "published_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "changelog_entries",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
     "table": "scheduled_reports",
     "column": "id",
     "rule": "PK; default gen_random_uuid()"
@@ -42235,6 +43333,12 @@
     "body": "const data: number[] = []; let val = Math.max(seed * 0.4, 1); for (let i = 0; i < points; i++) { val = Math.max(0, val + (Math.sin(seed + i * 1.3) * seed * 0.15)); data.push(Math.round(val)); } // Ensure last point trends toward current value data[data.length - 1] = seed; return data;"
    },
    {
+    "file": "src/components/lux/deals/DealCard.tsx",
+    "name": "formatCurrency",
+    "params": "value: number, currency: string",
+    "body": ""
+   },
+   {
     "file": "src/components/lux/integrations/AuthUrlConfirmDialog.tsx",
     "name": "generateNonce",
     "params": "bytes = 24",
@@ -42817,6 +43921,10 @@
    {
     "file": "supabase/migrations/20261121120000_api_key_rate_limit.sql",
     "line": "RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');"
+   },
+   {
+    "file": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "line": "and v_sh.last_contacted_at > now() - interval '30 days';"
    }
   ],
   "percents": [
@@ -50534,6 +51642,176 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "name": "Members view lead_scores",
+    "table": "lead_scores",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id is null and user_id = auth.uid() or public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members upsert own lead_scores",
+    "table": "lead_scores",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members update lead_scores",
+    "table": "lead_scores",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Admins delete lead_scores",
+    "table": "lead_scores",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage lead_scores",
+    "table": "lead_scores",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users view own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users insert own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users update own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Users delete own dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage dashboard_layouts",
+    "table": "dashboard_layouts",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members view deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members upsert deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Members update deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "public.is_org_member(organization_id, auth.uid())",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Admins delete deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage deal_predictions",
+    "table": "deal_predictions",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Authenticated view changelog",
+    "table": "changelog_entries",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "true",
+    "check": "",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "Service manage changelog",
+    "table": "changelog_entries",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "name": "Users view own scheduled_reports",
     "table": "scheduled_reports",
     "cmd": "SELECT",
@@ -51583,6 +52861,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "trg_lead_scores_updated",
+    "when": "BEFORE UPDATE",
+    "table": "lead_scores",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "trg_dashboard_layouts_updated",
+    "when": "BEFORE UPDATE",
+    "table": "dashboard_layouts",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "name": "trg_deal_predictions_updated",
+    "when": "BEFORE UPDATE",
+    "table": "deal_predictions",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
    },
    {
     "name": "trg_scheduled_reports_updated",
@@ -53483,6 +54788,97 @@
      "v_count"
     ]
    },
+   "compute_lead_score": {
+    "args": "_stakeholder_id uuid",
+    "returns": "table (score integer, tier text, signals jsonb)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_sh public.stakeholders; v_signals jsonb := '{}'::jsonb; v_score int := 0; v_seniority text; v_has_email boolean; v_has_phone boolean; v_has_linkedin boolean; v_recent_contact boolean; v_confidence int; begin select * into v_sh from public.stakeholders where id = _stakeholder_id; if not found then return query select 0, 'cold'::text, '{}'::jsonb; return; end if; v_seniority := lower(coalesce(v_sh.seniority, '') || ' ' || coalesce(v_sh.role, '')); v_has_email := coalesce(v_sh.email, '') <> ''; v_has_phone := coalesce(v_sh.phone, '') <> ''; v_has_linkedin := coalesce(v_sh.linkedin_url, '') <> ''; v_recent_contact := v_sh.last_contacted_at is not null and v_sh.last_contacted_at > now() …",
+    "raises": [],
+    "tables": [
+     "stakeholders",
+     "v_sh"
+    ]
+   },
+   "compute_deal_prediction": {
+    "args": "_deal_id uuid",
+    "returns": "table (win_probability integer, predicted_close_date date, weighted_value numeric, drivers jsonb)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_deal public.deals; v_stage public.deal_stages; v_drivers jsonb := '{}'::jsonb; v_prob int := 0; v_idle_days int := 0; v_acts int := 0; v_date date; begin select * into v_deal from public.deals where id = _deal_id; if not found then return query select 0, null::date, 0::numeric, '{}'::jsonb; return; end if; select * into v_stage from public.deal_stages where id = v_deal.stage_id; v_prob := coalesce(v_stage.probability, 0); v_drivers := v_drivers || jsonb_build_object('probabilidade_estagio', v_prob, 'estagio', coalesce(v_stage.name, 'sem_estagio')); select count(*) into v_acts from public.deal_activities where deal_id = _deal_id; v_idle_days := greatest(0, extract(day from now() - c …",
+    "raises": [],
+    "tables": [
+     "deal_activities",
+     "deal_stages",
+     "deals",
+     "now",
+     "v_acts",
+     "v_deal",
+     "v_stage"
+    ]
+   },
+   "refresh_lead_score": {
+    "args": "_stakeholder_id uuid",
+    "returns": "public.lead_scores",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_calc record; v_sh public.stakeholders; v_row public.lead_scores; begin select * into v_sh from public.stakeholders where id = _stakeholder_id; if not found then raise exception 'stakeholder % nao encontrado', _stakeholder_id; end if; select * into v_calc from public.compute_lead_score(_stakeholder_id); insert into public.lead_scores (stakeholder_id, organization_id, user_id, score, tier, signals) values (_stakeholder_id, v_sh.organization_id, coalesce(v_sh.user_id, auth.uid()), v_calc.score, v_calc.tier, v_calc.signals) on conflict (stakeholder_id) do update set score = excluded.score, tier = excluded.tier, signals = excluded.signals, computed_at = now(), updated_at = now() returni …",
+    "raises": [
+     "stakeholder % nao encontrado"
+    ],
+    "tables": [
+     "compute_lead_score",
+     "lead_scores",
+     "set",
+     "stakeholders",
+     "v_calc",
+     "v_row",
+     "v_sh"
+    ]
+   },
+   "refresh_deal_prediction": {
+    "args": "_deal_id uuid",
+    "returns": "public.deal_predictions",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_calc record; v_deal public.deals; v_row public.deal_predictions; begin select * into v_deal from public.deals where id = _deal_id; if not found then raise exception 'deal % nao encontrado', _deal_id; end if; select * into v_calc from public.compute_deal_prediction(_deal_id); insert into public.deal_predictions (deal_id, organization_id, user_id, win_probability, predicted_close_date, weighted_value, drivers) values (_deal_id, v_deal.organization_id, coalesce(v_deal.user_id, auth.uid()), v_calc.win_probability, v_calc.predicted_close_date, v_calc.weighted_value, v_calc.drivers) on conflict (deal_id) do update set win_probability = excluded.win_probability, predicted_close_date = exc …",
+    "raises": [
+     "deal % nao encontrado"
+    ],
+    "tables": [
+     "compute_deal_prediction",
+     "deal_predictions",
+     "deals",
+     "set",
+     "v_calc",
+     "v_deal",
+     "v_row"
+    ]
+   },
+   "refresh_org_scores": {
+    "args": "_org_id uuid",
+    "returns": "table (leads_atualizados integer, deals_atualizados integer)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_leads int := 0; v_deals int := 0; r record; begin if auth.uid() is not null and not public.has_org_role(_org_id, auth.uid(), 'admin') then raise exception 'apenas admin da organizacao pode recalcular scores'; end if; for r in select id from public.stakeholders where organization_id = _org_id loop perform public.refresh_lead_score(r.id); v_leads := v_leads + 1; end loop; for r in select id from public.deals where organization_id = _org_id and deleted_at is null loop perform public.refresh_deal_prediction(r.id); v_deals := v_deals + 1; end loop; return query select v_leads, v_deals; end;",
+    "raises": [
+     "apenas admin da organizacao pode recalcular scores"
+    ],
+    "tables": [
+     "deals",
+     "stakeholders"
+    ]
+   },
    "prune_cron_job_run_details": {
     "args": "_retention_days integer default 30, _batch integer default 20000",
     "returns": "integer",
@@ -54161,6 +55557,21 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "function": "refresh_lead_score",
+    "msg": "stakeholder % nao encontrado",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "function": "refresh_deal_prediction",
+    "msg": "deal % nao encontrado",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "function": "refresh_org_scores",
+    "msg": "apenas admin da organizacao pode recalcular scores",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "function": "prune_cron_job_run_details",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
@@ -54350,6 +55761,10 @@
    {
     "file": "src/hooks/useAutomationsMonitor.ts",
     "limit": "500"
+   },
+   {
+    "file": "src/hooks/useChangelog.ts",
+    "limit": "20"
    },
    {
     "file": "src/hooks/useDashboardData.ts",
@@ -56058,6 +57473,22 @@
      "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
     ]
    },
+   "changelog_entries": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: true",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
+   },
    "circuit_breaker_alert_history": {
     "rls": "enabled",
     "SELECT": [
@@ -56182,6 +57613,25 @@
      "authenticated: public.is_org_member(organization_id, auth.uid())"
     ]
    },
+   "dashboard_layouts": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ]
+   },
    "db_health_snapshots": {
     "rls": "enabled",
     "SELECT": [
@@ -56204,6 +57654,25 @@
     ],
     "DELETE": [
      "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+    ]
+   },
+   "deal_predictions": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
     ]
    },
    "deal_stages": {
@@ -56464,6 +57933,25 @@
     ],
     "DELETE": [
      "public: auth.uid() = user_id"
+    ]
+   },
+   "lead_scores": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: organization_id is null and user_id = auth.uid() or public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "authenticated: organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
     ]
    },
    "lusha_contacts": {
@@ -57382,6 +58870,7 @@
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
+   "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
   ],
@@ -57417,6 +58906,8 @@
    "cnpj_reserve_rate_slot",
    "complete_scrape_task",
    "complete_web_scrape_task",
+   "compute_deal_prediction",
+   "compute_lead_score",
    "count_recent_org_violations",
    "create_default_deal_stages",
    "decide_ab_winner",
@@ -57478,6 +58969,9 @@
    "record_campaign_reply",
    "record_places_api_call",
    "record_vault_cookie_snapshots",
+   "refresh_deal_prediction",
+   "refresh_lead_score",
+   "refresh_org_scores",
    "replay_dead_letter",
    "replay_dead_letter_batch",
    "replay_instagram_dead_letter_batch",
@@ -61391,6 +62885,150 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    },
    {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "lead_scores",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "lead_scores",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "dashboard_layouts",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "dashboard_layouts",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "deal_predictions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "deal_predictions",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "changelog_entries",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "changelog_entries",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "compute_lead_score",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "compute_deal_prediction",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "refresh_lead_score",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "refresh_deal_prediction",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "refresh_org_scores",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "compute_lead_score",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "compute_deal_prediction",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_lead_score",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_deal_prediction",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "refresh_org_scores",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   },
+   {
     "kind": "revoke",
     "privs": "all",
     "object": "prune_cron_job_run_details",
@@ -61667,6 +63305,9 @@
    "instagram_scrape_queue",
    "instagram_scrape_results",
    "instagram_scrape_dead_letter",
+   "lead_scores",
+   "dashboard_layouts",
+   "deal_predictions",
    "scheduled_reports",
    "bulk_imports",
    "role_permissions",
@@ -62060,6 +63701,21 @@
    "api_rate_limits": [
     "created_at",
     "updated_at"
+   ],
+   "lead_scores": [
+    "created_at",
+    "updated_at"
+   ],
+   "dashboard_layouts": [
+    "created_at",
+    "updated_at"
+   ],
+   "deal_predictions": [
+    "created_at",
+    "updated_at"
+   ],
+   "changelog_entries": [
+    "created_at"
    ],
    "scheduled_reports": [
     "created_at",
@@ -63244,7 +64900,7 @@
    "`web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "100/103 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "104/107 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -65744,6 +67400,14 @@
     "invoke("
    ]
   },
+  "src/components/lux/ChangelogDialog.tsx": {
+   "path": "src/components/lux/ChangelogDialog.tsx",
+   "lines": 134,
+   "exports": [
+    "function ChangelogDialog",
+    "function ChangelogButton"
+   ]
+  },
   "src/components/lux/CommandPalette.tsx": {
    "path": "src/components/lux/CommandPalette.tsx",
    "lines": 213,
@@ -65975,7 +67639,7 @@
   },
   "src/components/lux/DashboardView.tsx": {
    "path": "src/components/lux/DashboardView.tsx",
-   "lines": 415,
+   "lines": 401,
    "exports": [
     "const DashboardView"
    ],
@@ -66002,7 +67666,7 @@
   },
   "src/components/lux/DealsView.tsx": {
    "path": "src/components/lux/DealsView.tsx",
-   "lines": 128,
+   "lines": 154,
    "exports": [
     "function DealsView"
    ]
@@ -67006,7 +68670,7 @@
   },
   "src/components/lux/StakeholderFinderView.tsx": {
    "path": "src/components/lux/StakeholderFinderView.tsx",
-   "lines": 240,
+   "lines": 245,
    "exports": [
     "const StakeholderFinderView"
    ],
@@ -68058,7 +69722,7 @@
   },
   "src/components/lux/deals/DealCard.tsx": {
    "path": "src/components/lux/deals/DealCard.tsx",
-   "lines": 73,
+   "lines": 115,
    "exports": [
     "function DealCard"
    ],
@@ -68068,11 +69732,18 @@
      "value": "deal",
      "kind": "escreve"
     }
+   ],
+   "calc_fns": [
+    {
+     "name": "formatCurrency",
+     "params": "value: number, currency: string",
+     "body": ""
+    }
    ]
   },
   "src/components/lux/deals/DealColumn.tsx": {
    "path": "src/components/lux/deals/DealColumn.tsx",
-   "lines": 60,
+   "lines": 62,
    "exports": [
     "function DealColumn"
    ],
@@ -68358,7 +70029,7 @@
   },
   "src/components/lux/layout/Header.tsx": {
    "path": "src/components/lux/layout/Header.tsx",
-   "lines": 295,
+   "lines": 297,
    "exports": [
     "const Header"
    ],
@@ -70602,7 +72273,7 @@
   },
   "src/components/lux/stakeholders/StakeholderCard.tsx": {
    "path": "src/components/lux/stakeholders/StakeholderCard.tsx",
-   "lines": 120,
+   "lines": 146,
    "exports": [
     "const StakeholderCard"
    ],
@@ -71493,6 +73164,39 @@
     "useBottomNavSwipe"
    ]
   },
+  "src/hooks/useChangelog.ts": {
+   "path": "src/hooks/useChangelog.ts",
+   "lines": 89,
+   "exports": [
+    "interface ChangelogEntry",
+    "const CATEGORY_LABEL",
+    "function markChangelogSeen",
+    "function useChangelog"
+   ],
+   "tables": [
+    {
+     "table": "changelog_entries",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "changelog_entries": [
+     "body",
+     "category",
+     "id",
+     "published_at",
+     "slug",
+     "title",
+     "version"
+    ]
+   },
+   "hooks": [
+    "useChangelog"
+   ],
+   "pagination": [
+    "20"
+   ]
+  },
   "src/hooks/useCircuitBreakerAlerts.ts": {
    "path": "src/hooks/useCircuitBreakerAlerts.ts",
    "lines": 118,
@@ -71877,6 +73581,37 @@
     "10"
    ]
   },
+  "src/hooks/useDashboardLayout.ts": {
+   "path": "src/hooks/useDashboardLayout.ts",
+   "lines": 138,
+   "exports": [
+    "interface DashboardWidget",
+    "function useDashboardLayout"
+   ],
+   "tables": [
+    {
+     "table": "dashboard_layouts",
+     "op": "select"
+    },
+    {
+     "table": "dashboard_layouts",
+     "op": "ref"
+    }
+   ],
+   "table_cols": {
+    "dashboard_layouts": [
+     "dashboard_key",
+     "user_id",
+     "widgets"
+    ]
+   },
+   "errors": [
+    "Não foi possível salvar o layout no servidor"
+   ],
+   "hooks": [
+    "useDashboardLayout"
+   ]
+  },
   "src/hooks/useDbHealth.ts": {
    "path": "src/hooks/useDbHealth.ts",
    "lines": 149,
@@ -71914,6 +73649,34 @@
      "params": "snapshots: DbHealthSnapshot[]",
      "body": "if (snapshots.length === 0) return []; const latest = snapshots[0]; const history = snapshots.slice(1); // baseline exclui o ponto atual const alerts: HealthAlert[] = []; // --- Saturação de conexões --- const connBaseline = history.map((s) => s.connection_pct); const connMean = mean(connBaseline); const connSd = stddev(connBaseline); const connThreshold = Math.max(connMean + 2 * connSd, 80); alerts.push({ key: \"connections\", label: \"Conexões\", value: `${latest.connection_pct}% (${latest.active_ …"
     }
+   ]
+  },
+  "src/hooks/useDealPredictions.ts": {
+   "path": "src/hooks/useDealPredictions.ts",
+   "lines": 50,
+   "exports": [
+    "interface DealPrediction",
+    "function useDealPredictions"
+   ],
+   "tables": [
+    {
+     "table": "deal_predictions",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "deal_predictions": [
+     "computed_at",
+     "deal_id",
+     "drivers",
+     "organization_id",
+     "predicted_close_date",
+     "weighted_value",
+     "win_probability"
+    ]
+   },
+   "hooks": [
+    "useDealPredictions"
    ]
   },
   "src/hooks/useDeals.ts": {
@@ -72544,6 +74307,42 @@
    ],
    "hooks": [
     "useKeyboardShortcuts"
+   ]
+  },
+  "src/hooks/useLeadScores.ts": {
+   "path": "src/hooks/useLeadScores.ts",
+   "lines": 72,
+   "exports": [
+    "interface LeadScore",
+    "type LeadTier",
+    "const TIER_LABEL",
+    "function useLeadScores"
+   ],
+   "tables": [
+    {
+     "table": "lead_scores",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "lead_scores": [
+     "computed_at",
+     "organization_id",
+     "score",
+     "signals",
+     "stakeholder_id",
+     "tier"
+    ]
+   },
+   "rpc": [
+    "refresh_org_scores"
+   ],
+   "errors": [
+    "Não foi possível recalcular os scores",
+    "Organização ativa não definida"
+   ],
+   "hooks": [
+    "useLeadScores"
    ]
   },
   "src/hooks/useLoginForm.ts": {
@@ -74190,7 +75989,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 6194,
+   "lines": 6414,
    "exports": [
     "type Json",
     "type Database",
@@ -74237,7 +76036,7 @@
   },
   "src/integrations/supabase/withOrg.ts": {
    "path": "src/integrations/supabase/withOrg.ts",
-   "lines": 437,
+   "lines": 440,
    "exports": [
     "const ACTIVE_ORG_STORAGE_KEY",
     "function setActiveOrgId",
@@ -84624,6 +86423,14 @@
    "lines": 120,
    "uses_service_role": true
   },
+  "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql": {
+   "path": "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+   "lines": 469,
+   "temporal": [
+    "and v_sh.last_contacted_at > now() - interval '30 days';"
+   ],
+   "uses_service_role": true
+  },
   "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql": {
    "path": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
    "lines": 111,
@@ -84636,10 +86443,34 @@
   }
  },
  "git": {
-  "sha": "74324554b7ba227369a72fa446d936531e891f55",
+  "sha": "4931d9eb98709e8abeb33e1f96a4060e307f0812",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "4931d9e",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)",
+    "files": [
+     "src/components/lux/ChangelogDialog.tsx",
+     "src/components/lux/DashboardView.tsx",
+     "src/components/lux/DealsView.tsx",
+     "src/components/lux/StakeholderFinderView.tsx",
+     "src/components/lux/deals/DealCard.tsx",
+     "src/components/lux/deals/DealColumn.tsx",
+     "src/components/lux/layout/Header.tsx",
+     "src/components/lux/stakeholders/StakeholderCard.tsx",
+     "src/hooks/useChangelog.ts",
+     "src/hooks/useDashboardLayout.ts",
+     "src/hooks/useDealPredictions.ts",
+     "src/hooks/useLeadScores.ts",
+     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
+     "src/integrations/supabase/types.ts",
+     "src/integrations/supabase/withOrg.ts",
+     "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+    ]
+   },
    {
     "sha": "7432455",
     "date": "2026-11-21",
@@ -84967,20 +86798,6 @@
     "files": [
      ".github/workflows/dependency-review.yml"
     ]
-   },
-   {
-    "sha": "b9cce50",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "infra(ci): recupera bump de GitHub Actions da PR#42 (fechada sem merge) (#72)",
-    "files": [
-     ".github/workflows/automation-local.yml",
-     ".github/workflows/ci.yml",
-     ".github/workflows/contexto.yml",
-     ".github/workflows/db-migrations.yml",
-     ".github/workflows/edge-tests-daily.yml",
-     ".github/workflows/inventario-estado-semanal.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -84991,6 +86808,14 @@
    [
     "supabase/functions/campaign-dispatch/index.ts",
     3
+   ],
+   [
+    "src/integrations/supabase/types.ts",
+    2
+   ],
+   [
+    "src/integrations/supabase/withOrg.ts",
+    2
    ],
    [
     "supabase/functions/cnpj-enrich-worker/index.ts",
@@ -85017,51 +86842,43 @@
     2
    ],
    [
-    "src/components/lux/AnalyticsView.tsx",
+    "src/components/lux/ChangelogDialog.tsx",
     1
    ],
    [
-    "src/components/lux/OrganizationsView.tsx",
+    "src/components/lux/DashboardView.tsx",
     1
    ],
    [
-    "src/components/lux/analytics/ScheduledReportsTab.tsx",
+    "src/components/lux/DealsView.tsx",
     1
    ],
    [
-    "src/components/lux/companies/ImportCompaniesDialog.tsx",
+    "src/components/lux/StakeholderFinderView.tsx",
     1
    ],
    [
-    "src/components/lux/permissions/PermissionsMatrix.tsx",
+    "src/components/lux/deals/DealCard.tsx",
     1
    ],
    [
-    "src/hooks/usePermissions.ts",
+    "src/components/lux/deals/DealColumn.tsx",
     1
    ],
    [
-    "src/hooks/useRolePermissions.ts",
+    "src/components/lux/layout/Header.tsx",
     1
    ],
    [
-    "src/hooks/useScheduledReports.ts",
+    "src/components/lux/stakeholders/StakeholderCard.tsx",
     1
    ],
    [
-    "src/integrations/supabase/types.ts",
+    "src/hooks/useChangelog.ts",
     1
    ],
    [
-    "supabase/functions/send-scheduled-reports/index.ts",
-    1
-   ],
-   [
-    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+    "src/hooks/useDashboardLayout.ts",
     1
    ]
   ]

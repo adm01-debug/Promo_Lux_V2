@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 80,
+ "total": 84,
  "hooks": [
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
@@ -131,7 +131,7 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 32,
+   "usado_por": 36,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
@@ -149,20 +149,20 @@
     "src/contexts/AuthContext.tsx",
     "src/hooks/useApiKeys.ts",
     "src/hooks/useAutomationsMonitor.ts",
+    "src/hooks/useChangelog.ts",
     "src/hooks/useDashboardData.ts",
+    "src/hooks/useDashboardLayout.ts",
+    "src/hooks/useDealPredictions.ts",
     "src/hooks/useDeals.ts",
     "src/hooks/useEmailSuppressions.ts",
     "src/hooks/useICPConfig.ts",
+    "src/hooks/useLeadScores.ts",
     "src/hooks/useOnboardingState.ts",
     "src/hooks/useOrganizations.ts",
     "src/hooks/usePermissions.ts",
     "src/hooks/useRealtimeCompanies.ts",
     "src/hooks/useRealtimeScrapeJobs.ts",
-    "src/hooks/useScheduledReports.ts",
-    "src/hooks/useSkin.ts",
-    "src/hooks/useTaskReminders.ts",
-    "src/hooks/useWebhooks.ts",
-    "src/pages/AcceptInvite.tsx"
+    "src/hooks/useScheduledReports.ts"
    ],
    "coberto_por_testes": 1
   },
@@ -511,6 +511,30 @@
    "coberto_por_testes": 0
   },
   {
+   "arquivo": "src/hooks/useChangelog.ts",
+   "hooks_exportados": [
+    "useChangelog"
+   ],
+   "linhas": 89,
+   "dominio": "hooks",
+   "tabelas": [
+    "changelog_entries"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useEffect",
+    "useQuery"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/ChangelogDialog.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useCircuitBreakerAlerts.ts",
    "hooks_exportados": [
     "useCircuitBreakerAlertHistory",
@@ -711,6 +735,33 @@
    "coberto_por_testes": 1
   },
   {
+   "arquivo": "src/hooks/useDashboardLayout.ts",
+   "hooks_exportados": [
+    "useDashboardLayout"
+   ],
+   "linhas": 138,
+   "dominio": "hooks",
+   "tabelas": [
+    "dashboard_layouts"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useCallback",
+    "useEffect",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/DashboardView.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useDbHealth.ts",
    "hooks_exportados": [
     "useDbHealth"
@@ -729,6 +780,29 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/components/lux/monitoring/DbHealthDashboard.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useDealPredictions.ts",
+   "hooks_exportados": [
+    "useDealPredictions"
+   ],
+   "linhas": 50,
+   "dominio": "hooks",
+   "tabelas": [
+    "deal_predictions"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useQuery"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/DealsView.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1106,6 +1180,34 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/pages/Index.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useLeadScores.ts",
+   "hooks_exportados": [
+    "useLeadScores"
+   ],
+   "linhas": 72,
+   "dominio": "hooks",
+   "tabelas": [
+    "lead_scores"
+   ],
+   "rpcs": [
+    "refresh_org_scores"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 2,
+   "usado_por_arquivos": [
+    "src/components/lux/DealsView.tsx",
+    "src/components/lux/StakeholderFinderView.tsx"
    ],
    "coberto_por_testes": 0
   },

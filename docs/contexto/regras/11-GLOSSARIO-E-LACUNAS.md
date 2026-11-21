@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `74324554b7` · branch `main` · 2026-11-21 21:08 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4931d9eb98` · branch `main` · 2026-11-21 21:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -27,6 +27,7 @@
 | `campaign_recipients` | _(sem COMMENT ON TABLE — significado não documentado)_ | 26 colunas | migration |
 | `campaign_replies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
 | `campaigns` | _(sem COMMENT ON TABLE — significado não documentado)_ | 22 colunas | migration |
+| `changelog_entries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `circuit_breaker_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `circuit_breaker_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `circuit_breaker_snapshots` | Telemetria append-only. Índices secundários removidos em 2026-07-21 por 0 uso (idx_scan=0). Recriar quando dashboard de histórico for implementado. | 8 colunas | migration |
@@ -36,8 +37,10 @@
 | `cnpj_enrich_rate_state` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
 | `companies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 48 colunas | migration |
 | `company_reviews` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
+| `dashboard_layouts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `db_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `deal_activities` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
+| `deal_predictions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `deal_stages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `deal_tasks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `deals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 19 colunas | migration |
@@ -56,6 +59,7 @@
 | `intent_signals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `ipc_config` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `job_exports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
+| `lead_scores` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `lusha_contacts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 55 colunas | migration |
 | `lusha_credit_usage_log` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `lusha_dm_search_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
@@ -347,7 +351,7 @@ _nenhum item encontrado_
 - `web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 100/103 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 104/107 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

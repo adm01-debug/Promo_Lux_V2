@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `74324554b7` · branch `main` · 2026-11-21 21:08 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `4931d9eb98` · branch `main` · 2026-11-21 21:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -272,6 +272,23 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `apollo_rate_state` | apollo_rate_service_all | ALL | service_role | permissive | `true` | `true` |
 | `api_rate_limits` | users_view_own_api_rate_limits | SELECT | authenticated | permissive | `EXISTS ( SELECT 1 FROM public.api_keys k WHERE k.id = api_rate_limits.api_key_id AND k.user_id = auth.uid() )` |  |
 | `api_rate_limits` | service_role_full_api_rate_limits | ALL | service_role | permissive | `true` | `true` |
+| `lead_scores` | Members view lead_scores | SELECT | authenticated | permissive | `organization_id is null and user_id = auth.uid() or public.is_org_member(organization_id, auth.uid())` |  |
+| `lead_scores` | Members upsert own lead_scores | INSERT | authenticated | permissive |  | `public.is_org_member(organization_id, auth.uid())` |
+| `lead_scores` | Members update lead_scores | UPDATE | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` | `public.is_org_member(organization_id, auth.uid())` |
+| `lead_scores` | Admins delete lead_scores | DELETE | authenticated | permissive | `organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| `lead_scores` | Service manage lead_scores | ALL | service_role | permissive | `true` | `true` |
+| `dashboard_layouts` | Users view own dashboard_layouts | SELECT | authenticated | permissive | `user_id = auth.uid()` |  |
+| `dashboard_layouts` | Users insert own dashboard_layouts | INSERT | authenticated | permissive |  | `user_id = auth.uid()` |
+| `dashboard_layouts` | Users update own dashboard_layouts | UPDATE | authenticated | permissive | `user_id = auth.uid()` | `user_id = auth.uid()` |
+| `dashboard_layouts` | Users delete own dashboard_layouts | DELETE | authenticated | permissive | `user_id = auth.uid()` |  |
+| `dashboard_layouts` | Service manage dashboard_layouts | ALL | service_role | permissive | `true` | `true` |
+| `deal_predictions` | Members view deal_predictions | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
+| `deal_predictions` | Members upsert deal_predictions | INSERT | authenticated | permissive |  | `public.is_org_member(organization_id, auth.uid())` |
+| `deal_predictions` | Members update deal_predictions | UPDATE | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` | `public.is_org_member(organization_id, auth.uid())` |
+| `deal_predictions` | Admins delete deal_predictions | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| `deal_predictions` | Service manage deal_predictions | ALL | service_role | permissive | `true` | `true` |
+| `changelog_entries` | Authenticated view changelog | SELECT | authenticated | permissive | `true` |  |
+| `changelog_entries` | Service manage changelog | ALL | service_role | permissive | `true` | `true` |
 | `scheduled_reports` | Users view own scheduled_reports | SELECT | authenticated | permissive | `user_id = auth.uid() and deleted_at is null` |  |
 | `scheduled_reports` | Users insert own scheduled_reports | INSERT | authenticated | permissive |  | `user_id = auth.uid()` |
 | `scheduled_reports` | Users update own scheduled_reports | UPDATE | authenticated | permissive | `user_id = auth.uid()` | `user_id = auth.uid()` |
@@ -591,7 +608,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | `provider` | obrigatório; CHECK provider IN ('gmail','outlook') |
 | `oauth_sandbox_snapshots` | `scope_type` | obrigatório; CHECK scope_type IN ('user','organization') |
 | `oauth_sandbox_snapshots` | `redirect_uri` | obrigatório |
-| … +596 linhas — lista completa em `context.json` | | |
+| … +635 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -698,6 +715,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | update_queue_sla_defaults_updated_at | BEFORE UPDATE | `queue_sla_defaults` | `update_updated_at_column` |  |
 | trg_log_queue_sla_change | AFTER INSERT OR UPDATE | `queue_sla_defaults` | `log_queue_sla_change` |  |
 | trg_api_rate_limits_updated_at | BEFORE UPDATE | `api_rate_limits` | `update_updated_at_column` |  |
+| trg_lead_scores_updated | BEFORE UPDATE | `lead_scores` | `update_updated_at_column` |  |
+| trg_dashboard_layouts_updated | BEFORE UPDATE | `dashboard_layouts` | `update_updated_at_column` |  |
+| trg_deal_predictions_updated | BEFORE UPDATE | `deal_predictions` | `update_updated_at_column` |  |
 | trg_scheduled_reports_updated | BEFORE UPDATE | `scheduled_reports` | `update_updated_at_column` |  |
 | trg_role_permissions_updated | BEFORE UPDATE | `role_permissions` | `update_updated_at_column` |  |
 | trg_seed_role_permissions | AFTER INSERT | `organizations` | `seed_role_permissions` |  |
@@ -789,6 +809,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `apply_sla_recommendation` | insufficient sample for queue % | `supabase/migrations/20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql` |
 | `sla_autotune_blocked_streaks` | forbidden | `supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql` |
 | `check_api_key_rate_limit` | api_key_id é obrigatório | `supabase/migrations/20261121120000_api_key_rate_limit.sql` |
+| `refresh_lead_score` | stakeholder % nao encontrado | `supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql` |
+| `refresh_deal_prediction` | deal % nao encontrado | `supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql` |
+| `refresh_org_scores` | apenas admin da organizacao pode recalcular scores | `supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql` |
 | `prune_cron_job_run_details` | Acesso negado: requer papel de administrador | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 | `prune_cron_job_run_details` | retencao invalida: % (minimo 1 dia) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 | `prune_cron_job_run_details` | lote invalido: % (entre 1 e 200000) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
@@ -1288,6 +1311,10 @@ _nenhum item encontrado_
   ```
   const data: number[] = []; let val = Math.max(seed * 0.4, 1); for (let i = 0; i < points; i++) { val = Math.max(0, val + (Math.sin(seed + i * 1.3) * seed * 0.15)); data.push(Math.round(val)); } // Ensure last point trends toward current value data[data.length - 1] = seed; return data;
   ```
+- **formatCurrency(value: number, currency: string)** — `src/components/lux/deals/DealCard.tsx`
+  ```
+  
+  ```
 - **generateNonce(bytes = 24)** — `src/components/lux/integrations/AuthUrlConfirmDialog.tsx`
   ```
   const arr = new Uint8Array(bytes); crypto.getRandomValues(arr); return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
@@ -1691,6 +1718,7 @@ _nenhum item encontrado_
 | `DELETE FROM public.webhooks WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
 | `DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
 | `RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');` | `supabase/migrations/20261121120000_api_key_rate_limit.sql` |
+| `and v_sh.last_contacted_at > now() - interval '30 days';` | `supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql` |
 
 ### H.3 Limites de paginação
 
@@ -1732,6 +1760,7 @@ _nenhum item encontrado_
 | 120 | `src/hooks/useAutomationsMonitor.ts` |
 | 200 | `src/hooks/useAutomationsMonitor.ts` |
 | 500 | `src/hooks/useAutomationsMonitor.ts` |
+| 20 | `src/hooks/useChangelog.ts` |
 | 10 | `src/hooks/useDashboardData.ts` |
 | 50 | `src/hooks/useOAuthSandboxSnapshots.ts` |
 | 50 | `src/hooks/usePartitionAdvisories.ts` |
@@ -1930,11 +1959,14 @@ _nenhum item encontrado_
 | useConfirm must be used within <ConfirmProvider> | `src/hooks/confirm-context.ts` |
 | Erro ao criar chave | `src/hooks/useApiKeys.ts` |
 | Falha ao reiniciar disjuntor: ${err.message} | `src/hooks/useCircuitBreakers.ts` |
+| Não foi possível salvar o layout no servidor | `src/hooks/useDashboardLayout.ts` |
 | Erro ao criar estágio | `src/hooks/useDeals.ts` |
 | No deal selected | `src/hooks/useDeals.ts` |
 | Não foi possível remover | `src/hooks/useDeals.ts` |
 | Informe um e-mail válido. | `src/hooks/useEmailSuppressions.ts` |
 | Erro ao salvar | `src/hooks/useICPConfig.ts` |
+| Não foi possível recalcular os scores | `src/hooks/useLeadScores.ts` |
+| Organização ativa não definida | `src/hooks/useLeadScores.ts` |
 | Acesso bloqueado | `src/hooks/useLoginForm.ts` |
 | Dados inválidos | `src/hooks/useLoginForm.ts` |
 | Erro no cadastro | `src/hooks/useLoginForm.ts` |

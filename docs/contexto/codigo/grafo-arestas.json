@@ -175,6 +175,14 @@
    "src/lib/demoData.ts",
    "src/lib/schemas/campaign.ts"
   ],
+  "src/components/lux/ChangelogDialog.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/components/ui/skeleton.tsx",
+   "src/hooks/useChangelog.ts",
+   "src/lib/utils.ts"
+  ],
   "src/components/lux/CommandPalette.tsx": [
    "src/components/lux/command-palette/commandPaletteData.ts",
    "src/components/ui/command.tsx",
@@ -274,6 +282,7 @@
    "src/components/ui/skeleton.tsx",
    "src/contexts/auth-context.ts",
    "src/contexts/demo-context.ts",
+   "src/hooks/useDashboardLayout.ts",
    "src/hooks/useThemeColors.ts",
    "src/hooks/useWeeklyPerformance.ts",
    "src/lib/utils.ts"
@@ -288,8 +297,11 @@
    "src/components/lux/deals/DealDetailDrawer.tsx",
    "src/components/lux/deals/StagesManagerDialog.tsx",
    "src/components/ui/button.tsx",
+   "src/hooks/useDealPredictions.ts",
    "src/hooks/useDeals.ts",
-   "src/hooks/useTaskReminders.ts"
+   "src/hooks/useLeadScores.ts",
+   "src/hooks/useTaskReminders.ts",
+   "src/lib/utils.ts"
   ],
   "src/components/lux/EditCompanyDialog.tsx": [
    "src/components/ui/button.tsx",
@@ -580,6 +592,7 @@
    "src/components/ui/input.tsx",
    "src/contexts/demo-context.ts",
    "src/hooks/use-toast.ts",
+   "src/hooks/useLeadScores.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts",
    "src/lib/demoData.ts"
@@ -937,6 +950,7 @@
   ],
   "src/components/lux/layout/Header.tsx": [
    "src/components/lux/AppBreadcrumbs.tsx",
+   "src/components/lux/ChangelogDialog.tsx",
    "src/components/lux/GradientAvatar.tsx",
    "src/components/lux/NotificationsPanel.tsx",
    "src/components/lux/ThemeToggle.tsx",
@@ -1714,6 +1728,10 @@
    "src/hooks/useNavigationHistory.ts",
    "src/hooks/useSwipeGesture.ts"
   ],
+  "src/hooks/useChangelog.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
   "src/hooks/useCircuitBreakerAlerts.ts": [
    "src/integrations/supabase/client.ts"
   ],
@@ -1744,8 +1762,18 @@
    "src/integrations/supabase/withOrg.ts",
    "src/lib/demoData.ts"
   ],
+  "src/hooks/useDashboardLayout.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
+  ],
   "src/hooks/useDbHealth.ts": [
    "src/integrations/supabase/client.ts"
+  ],
+  "src/hooks/useDealPredictions.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useDeals.ts": [
    "src/contexts/auth-context.ts",
@@ -1793,6 +1821,11 @@
   ],
   "src/hooks/useKeyboardShortcuts.ts": [
    "src/hooks/useNavigationHistory.ts"
+  ],
+  "src/hooks/useLeadScores.ts": [
+   "src/contexts/auth-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useLoginForm.ts": [
    "src/hooks/use-toast.ts",

@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 222,
+ "migrations": 223,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -90,6 +90,8 @@
   "cnpj_reserve_rate_slot",
   "complete_scrape_task",
   "complete_web_scrape_task",
+  "compute_deal_prediction",
+  "compute_lead_score",
   "compute_sla_backoff",
   "count_recent_org_violations",
   "create_default_deal_stages",
@@ -157,6 +159,9 @@
   "record_campaign_reply",
   "record_places_api_call",
   "record_vault_cookie_snapshots",
+  "refresh_deal_prediction",
+  "refresh_lead_score",
+  "refresh_org_scores",
   "replay_dead_letter",
   "replay_dead_letter_batch",
   "replay_instagram_dead_letter_batch",
@@ -396,6 +401,20 @@
    "funcao": "validate_company_rating"
   },
   {
+   "nome": "trg_dashboard_layouts_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "dashboard_layouts",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_deal_predictions_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "deal_predictions",
+   "funcao": "update_updated_at_column"
+  },
+  {
    "nome": "trg_deal_stages_updated",
    "quando": "before",
    "evento": "update",
@@ -540,6 +559,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "ipc_config",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_lead_scores_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "lead_scores",
    "funcao": "update_updated_at_column"
   },
   {
@@ -1047,6 +1073,11 @@
    "agenda": "*/30 * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "reaper-alerts"
+  },
+  {
+   "nome": "refresh-scores-daily",
+   "agenda": "23 5 * * *",
+   "migration": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
   },
   {
    "nome": "retry-policy-tuner-daily",
@@ -4267,6 +4298,109 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "changelog_entries": {
+   "colunas": {
+    "body": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "''",
+     "ref": null
+    },
+    "category": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'feature'",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "published_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "slug": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "title": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "version": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Authenticated view changelog",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage changelog",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_changelog_published",
+     "colunas": "published_at desc",
+     "unico": false
+    }
+   ],
+   "fks": [],
+   "criada_em": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+   "colunas_types": {
+    "body": "string",
+    "category": "string",
+    "created_at": "string",
+    "id": "string",
+    "published_at": "string",
+    "slug": "string",
+    "title": "string",
+    "version": "string | null"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "circuit_breaker_alert_history": {
    "colunas": {
     "admins_notified": {
@@ -5670,6 +5804,123 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "dashboard_layouts": {
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "dashboard_key": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'default'",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    },
+    "widgets": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'[]'::jsonb",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Service manage dashboard_layouts",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users delete own dashboard_layouts",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users insert own dashboard_layouts",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users update own dashboard_layouts",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users view own dashboard_layouts",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_dashboard_layouts_user",
+     "colunas": "user_id, dashboard_key",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+   "colunas_types": {
+    "created_at": "string",
+    "dashboard_key": "string",
+    "id": "string",
+    "organization_id": "string | null",
+    "updated_at": "string",
+    "user_id": "string",
+    "widgets": "Json"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_dashboard_layouts_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "db_health_snapshots": {
    "colunas": {
     "active_connections": {
@@ -5939,6 +6190,169 @@
    "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "deal_predictions": {
+   "colunas": {
+    "computed_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "deal_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "deals"
+    },
+    "drivers": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "model_version": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'v1'",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "predicted_close_date": {
+     "tipo": "date",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    },
+    "weighted_value": {
+     "tipo": "numeric",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "win_probability": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete deal_predictions",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members update deal_predictions",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members upsert deal_predictions",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view deal_predictions",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage deal_predictions",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_deal_predictions_close",
+     "colunas": "predicted_close_date",
+     "unico": false
+    },
+    {
+     "nome": "idx_deal_predictions_org",
+     "colunas": "organization_id, win_probability desc",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "deal_id->deals",
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+   "colunas_types": {
+    "computed_at": "string",
+    "created_at": "string",
+    "deal_id": "string",
+    "drivers": "Json",
+    "id": "string",
+    "model_version": "string",
+    "organization_id": "string | null",
+    "predicted_close_date": "string | null",
+    "updated_at": "string",
+    "user_id": "string",
+    "weighted_value": "number",
+    "win_probability": "number"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_deal_predictions_updated"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -8680,6 +9094,161 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": true
+  },
+  "lead_scores": {
+   "colunas": {
+    "computed_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "model_version": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'v1'",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "score": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "signals": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
+    "stakeholder_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "stakeholders"
+    },
+    "tier": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'cold'",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete lead_scores",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members update lead_scores",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members upsert own lead_scores",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view lead_scores",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage lead_scores",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_lead_scores_org_tier",
+     "colunas": "organization_id, tier, score desc",
+     "unico": false
+    },
+    {
+     "nome": "idx_lead_scores_score",
+     "colunas": "organization_id, score desc",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations",
+    "stakeholder_id->stakeholders"
+   ],
+   "criada_em": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
+   "colunas_types": {
+    "computed_at": "string",
+    "created_at": "string",
+    "id": "string",
+    "model_version": "string",
+    "organization_id": "string | null",
+    "score": "number",
+    "signals": "Json",
+    "stakeholder_id": "string",
+    "tier": "string",
+    "updated_at": "string",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_lead_scores_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
   },
   "lusha_contacts": {
    "colunas": {
@@ -16761,6 +17330,11 @@
   },
   {
    "nome": "record_vault_cookie_snapshots",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "refresh_org_scores",
    "definida": true,
    "usada_em": 1
   },

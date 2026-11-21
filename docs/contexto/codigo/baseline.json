@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "74324554b7ba227369a72fa446d936531e891f55",
+  "commit": "4931d9eb98709e8abeb33e1f96a4060e307f0812",
   "branch": "main",
-  "data_commit": "2026-11-21T18:08:19-03:00",
+  "data_commit": "2026-11-21T18:17:31-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "4931d9e",
+    "data": "2026-11-21",
+    "assunto": "feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)"
+   },
    {
     "sha": "7432455",
     "data": "2026-11-21",
@@ -126,15 +131,14 @@
     "sha": "8b16f55",
     "data": "2026-11-20",
     "assunto": "fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)"
-   },
-   {
-    "sha": "cfce9da",
-    "data": "2026-11-20",
-    "assunto": "infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)"
    }
   ],
-  "arquivos_mudados_7d": 94,
+  "arquivos_mudados_7d": 108,
   "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "src/components/lux",
+    "mudancas": 19
+   },
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 18
@@ -148,10 +152,6 @@
     "mudancas": 14
    },
    {
-    "pasta": "src/components/lux",
-    "mudancas": 11
-   },
-   {
     "pasta": ".gitignore",
     "mudancas": 7
    },
@@ -162,6 +162,10 @@
    {
     "pasta": "AGENTS.md",
     "mudancas": 6
+   },
+   {
+    "pasta": "src/integrations/supabase",
+    "mudancas": 5
    },
    {
     "pasta": "supabase/config.toml",
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".husky/pre-commit",
-    "mudancas": 3
-   },
-   {
-    "pasta": "docs/agentes/github-ci.md",
     "mudancas": 3
    }
   ],
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 71
+    "commits": 72
    },
    {
     "autor": "dependabot[bot]",
@@ -310,20 +310,20 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1041,
-  "arquivos_codigo": 655,
-  "linhas_codigo": 112740,
+  "arquivos_total": 1047,
+  "arquivos_codigo": 660,
+  "linhas_codigo": 113535,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 242,
-  "hooks": 80,
+  "componentes": 243,
+  "hooks": 84,
   "edge_functions": 60,
-  "tabelas": 101,
-  "migrations": 222,
-  "cron_jobs": 28,
+  "tabelas": 105,
+  "migrations": 223,
+  "cron_jobs": 29,
   "testes": 124,
   "workflows": 9,
   "scripts": 49,
@@ -551,20 +551,20 @@
    "linhas": 321
   },
   "src/components": {
-   "arquivos": 286,
-   "linhas": 45923
+   "arquivos": 287,
+   "linhas": 46146
   },
   "src/contexts": {
    "arquivos": 7,
    "linhas": 323
   },
   "src/hooks": {
-   "arquivos": 86,
-   "linhas": 9502
+   "arquivos": 90,
+   "linhas": 9851
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 7562
+   "linhas": 7785
   },
   "src/lib": {
    "arquivos": 53,
@@ -606,7 +606,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 6194
+   "linhas": 6414
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",

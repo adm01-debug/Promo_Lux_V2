@@ -33,6 +33,7 @@
     "useBottomNavSwipe",
     "useCallback",
     "useCan",
+    "useChangelog",
     "useCnpjAutoEnrichSetting",
     "useCnpjEnrich",
     "useCompanies",
@@ -45,6 +46,7 @@
     "useDashboardStats",
     "useDeadLetter",
     "useDealActivities",
+    "useDealPredictions",
     "useDealStages",
     "useDealTasks",
     "useDeals",
@@ -66,6 +68,7 @@
     "useInView",
     "useIsMobile",
     "useKeyboardShortcuts",
+    "useLeadScores",
     "useMap",
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged",
@@ -129,6 +132,7 @@
     "useAutomationsMonitor",
     "useBottomNavSwipe",
     "useCan",
+    "useChangelog",
     "useCnpjAutoEnrichSetting",
     "useCnpjEnrich",
     "useCompanyDetails",
@@ -138,6 +142,7 @@
     "useCreateOrganization",
     "useDashboardStats",
     "useDealActivities",
+    "useDealPredictions",
     "useDealStages",
     "useDealTasks",
     "useDeals",
@@ -154,6 +159,7 @@
     "useICPConfig",
     "useIsMobile",
     "useKeyboardShortcuts",
+    "useLeadScores",
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged",
     "useMyOrganizations",
@@ -203,10 +209,13 @@
     "campaign_recipients",
     "campaign_replies",
     "campaigns",
+    "changelog_entries",
     "cnpj_enrich_queue",
     "companies",
     "company_reviews",
+    "dashboard_layouts",
     "deal_activities",
+    "deal_predictions",
     "deal_stages",
     "deal_tasks",
     "deals",
@@ -216,6 +225,7 @@
     "feature_flags",
     "intent_signals",
     "ipc_config",
+    "lead_scores",
     "lusha_contacts",
     "lusha_dm_search_history",
     "lusha_search_sessions",
@@ -247,7 +257,8 @@
     "enrichment_funnel_counts",
     "get_dashboard_stats",
     "pg_catalog_rls_tables",
-    "pg_columns_for_insert"
+    "pg_columns_for_insert",
+    "refresh_org_scores"
    ],
    "edges": [
     "ai-agent",
@@ -304,7 +315,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 235
+   "arquivos_puxados": 240
   },
   {
    "protegida": true,
@@ -1186,6 +1197,7 @@
     "useDashboardStats",
     "useDeadLetter",
     "useDealActivities",
+    "useDealPredictions",
     "useDealStages",
     "useDealTasks",
     "useDeals",
@@ -1205,6 +1217,7 @@
     "useICPConfig",
     "useInView",
     "useIsMobile",
+    "useLeadScores",
     "useMap",
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged",
@@ -1268,6 +1281,7 @@
     "useCreateOrganization",
     "useDashboardStats",
     "useDealActivities",
+    "useDealPredictions",
     "useDealStages",
     "useDealTasks",
     "useDeals",
@@ -1282,6 +1296,7 @@
     "useFeatureFlags",
     "useICPConfig",
     "useIsMobile",
+    "useLeadScores",
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged",
     "useMyOrganizations",
@@ -1326,7 +1341,9 @@
     "cnpj_enrich_queue",
     "companies",
     "company_reviews",
+    "dashboard_layouts",
     "deal_activities",
+    "deal_predictions",
     "deal_stages",
     "deal_tasks",
     "deals",
@@ -1336,6 +1353,7 @@
     "feature_flags",
     "intent_signals",
     "ipc_config",
+    "lead_scores",
     "lusha_contacts",
     "lusha_dm_search_history",
     "lusha_search_sessions",
@@ -1367,7 +1385,8 @@
     "enrichment_funnel_counts",
     "get_dashboard_stats",
     "pg_catalog_rls_tables",
-    "pg_columns_for_insert"
+    "pg_columns_for_insert",
+    "refresh_org_scores"
    ],
    "edges": [
     "ai-agent",
@@ -1415,7 +1434,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 199
+   "arquivos_puxados": 202
   },
   {
    "id": "deals",
@@ -1427,11 +1446,13 @@
     "useConfirm",
     "useContext",
     "useDealActivities",
+    "useDealPredictions",
     "useDealStages",
     "useDealTasks",
     "useDeals",
     "useDroppable",
     "useEffect",
+    "useLeadScores",
     "useMemo",
     "useMutation",
     "useQuery",
@@ -1446,25 +1467,30 @@
     "useAuth",
     "useConfirm",
     "useDealActivities",
+    "useDealPredictions",
     "useDealStages",
     "useDealTasks",
     "useDeals",
+    "useLeadScores",
     "useTaskReminders"
    ],
    "tabelas": [
     "deal_activities",
+    "deal_predictions",
     "deal_stages",
     "deal_tasks",
-    "deals"
+    "deals",
+    "lead_scores"
    ],
    "rpcs": [
-    "create_default_deal_stages"
+    "create_default_deal_stages",
+    "refresh_org_scores"
    ],
    "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
-   "arquivos_puxados": 24
+   "arquivos_puxados": 26
   },
   {
    "id": "gmaps",
@@ -2161,6 +2187,7 @@
     "useDashboardStats",
     "useDemo",
     "useEffect",
+    "useLeadScores",
     "useMemo",
     "useMutation",
     "useMyOrganizations",
@@ -2183,6 +2210,7 @@
     "useCreateOrganization",
     "useDashboardStats",
     "useDemo",
+    "useLeadScores",
     "useMyOrganizations",
     "useOrgInvites",
     "useOrgMembers",
@@ -2195,6 +2223,7 @@
    ],
    "tabelas": [
     "companies",
+    "lead_scores",
     "notifications",
     "organization_invites",
     "organization_members",
@@ -2203,7 +2232,8 @@
     "stakeholders"
    ],
    "rpcs": [
-    "get_dashboard_stats"
+    "get_dashboard_stats",
+    "refresh_org_scores"
    ],
    "edges": [],
    "canais_realtime": [
@@ -2216,7 +2246,7 @@
     "CTO",
     "status"
    ],
-   "arquivos_puxados": 26
+   "arquivos_puxados": 27
   },
   {
    "id": "suppressions",
