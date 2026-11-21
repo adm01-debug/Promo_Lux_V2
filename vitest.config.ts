@@ -59,6 +59,7 @@ export default defineConfig({
           exclude: [
             "**/gmaps-mapper.test.ts",
             "**/places-fallback.test.ts",
+            "**/companies-upsert.test.ts",
             "**/hiker-normalize.test.ts",
             "**/hiker-normalize-extra.test.ts",
             "**/instagram-config-hash.test.ts",

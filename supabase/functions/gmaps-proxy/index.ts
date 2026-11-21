@@ -44,6 +44,7 @@ import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/
 import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
 import { fetchPlacesResults } from "../_shared/places-fallback.ts";
 import { getUserOrgIds } from "../_shared/org-membership.ts";
+import { upsertCompanies } from "../_shared/companies-upsert.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -665,9 +666,9 @@ serve(async (req) => {
 
         // G9: deduplicação por place_id quando disponível (o Google garante
         // unicidade global); senão cai no par legado (org, name, source).
-        const conflictTarget = mapped.place_id
-          ? "organization_id,place_id"
-          : "organization_id,name,source";
+        // A escolha da chave e o fallback vivem em upsertCompanies: o schema de
+        // producao pode estar com indice unico PARCIAL, que o PostgREST recusa
+        // em ON CONFLICT (42P10) e fazia o lote inteiro ser descartado.
 
         // organization_id vem do job (não do DEFAULT da coluna): o client
         // service_role não repassa Authorization, então auth.uid() é NULL.
@@ -707,11 +708,12 @@ serve(async (req) => {
           menu_url: mapped.menu_url,
         };
 
-        const { data: company, error: upsertError } = await supabase
-          .from("companies")
-          .upsert(payload, { onConflict: conflictTarget })
-          .select()
-          .single();
+        const { data: upserted, error: upsertError } = await upsertCompanies<{ id: string }>(
+          supabase,
+          payload,
+          { hasPlaceId: !!mapped.place_id },
+        );
+        const company = upserted[0];
 
         if (upsertError) {
           log.warn("company_upsert_failed", { error: upsertError.message, name: mapped.name });
