@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bb305ef63d` · branch `main` · 2026-11-21 20:18 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `74324554b7` · branch `main` · 2026-11-21 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -272,6 +272,20 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `apollo_rate_state` | apollo_rate_service_all | ALL | service_role | permissive | `true` | `true` |
 | `api_rate_limits` | users_view_own_api_rate_limits | SELECT | authenticated | permissive | `EXISTS ( SELECT 1 FROM public.api_keys k WHERE k.id = api_rate_limits.api_key_id AND k.user_id = auth.uid() )` |  |
 | `api_rate_limits` | service_role_full_api_rate_limits | ALL | service_role | permissive | `true` | `true` |
+| `scheduled_reports` | Users view own scheduled_reports | SELECT | authenticated | permissive | `user_id = auth.uid() and deleted_at is null` |  |
+| `scheduled_reports` | Users insert own scheduled_reports | INSERT | authenticated | permissive |  | `user_id = auth.uid()` |
+| `scheduled_reports` | Users update own scheduled_reports | UPDATE | authenticated | permissive | `user_id = auth.uid()` | `user_id = auth.uid()` |
+| `scheduled_reports` | Service manage scheduled_reports | ALL | service_role | permissive | `true` | `true` |
+| `scheduled_report_runs` | Users view own scheduled_report_runs | SELECT | authenticated | permissive | `user_id = auth.uid()` |  |
+| `scheduled_report_runs` | Service manage scheduled_report_runs | ALL | service_role | permissive | `true` | `true` |
+| `bulk_imports` | Users view own bulk_imports | SELECT | authenticated | permissive | `user_id = auth.uid()` |  |
+| `bulk_imports` | Users insert own bulk_imports | INSERT | authenticated | permissive |  | `user_id = auth.uid()` |
+| `bulk_imports` | Service manage bulk_imports | ALL | service_role | permissive | `true` | `true` |
+| `role_permissions` | Members view role_permissions | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
+| `role_permissions` | Admins insert role_permissions | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'admin')` |
+| `role_permissions` | Admins update role_permissions | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` | `public.has_org_role(organization_id, auth.uid(), 'admin')` |
+| `role_permissions` | Admins delete role_permissions | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| `role_permissions` | Service manage role_permissions | ALL | service_role | permissive | `true` | `true` |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -577,7 +591,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | `provider` | obrigatório; CHECK provider IN ('gmail','outlook') |
 | `oauth_sandbox_snapshots` | `scope_type` | obrigatório; CHECK scope_type IN ('user','organization') |
 | `oauth_sandbox_snapshots` | `redirect_uri` | obrigatório |
-| … +552 linhas — lista completa em `context.json` | | |
+| … +596 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -684,6 +698,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | update_queue_sla_defaults_updated_at | BEFORE UPDATE | `queue_sla_defaults` | `update_updated_at_column` |  |
 | trg_log_queue_sla_change | AFTER INSERT OR UPDATE | `queue_sla_defaults` | `log_queue_sla_change` |  |
 | trg_api_rate_limits_updated_at | BEFORE UPDATE | `api_rate_limits` | `update_updated_at_column` |  |
+| trg_scheduled_reports_updated | BEFORE UPDATE | `scheduled_reports` | `update_updated_at_column` |  |
+| trg_role_permissions_updated | BEFORE UPDATE | `role_permissions` | `update_updated_at_column` |  |
+| trg_seed_role_permissions | AFTER INSERT | `organizations` | `seed_role_permissions` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -777,6 +794,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `prune_cron_job_run_details` | lote invalido: % (entre 1 e 200000) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 | `prune_qa_reaper_runs` | Acesso negado: requer papel de administrador | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 | `prune_qa_reaper_runs` | retencao invalida: % (minimo 1 dia) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
+| `prune_scheduled_report_runs` | prune_scheduled_report_runs: admin only | `supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -819,6 +837,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `cnpj_enrich_cache` | `status` | `not_found`, `success` |  |
 | `cnpj_enrich_queue` | `status` | `completed`, `failed`, `not_found`, `pending`, `processing` | `pending` |
 | `apollo_search_cache` | `status` | `empty`, `hit` |  |
+| `scheduled_report_runs` | `status` | `failed`, `pending`, `sent`, `skipped` | `pending` |
 | `v_lux_enrichment_health` | `cnt_other_status` | **livre (sem enum/CHECK)** |  |
 
 ### E.2 Mapas de transição declarados no código
@@ -894,7 +913,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| `status` | `failed` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +10 |
+| `status` | `failed` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +11 |
 | `status` | `fulfilled` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
@@ -903,7 +922,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx` |
 | `status` | `online` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx` |
 | `status` | `paused` | compara, escreve | `src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
-| `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useWebhooks.ts`<br>… +5 |
+| `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +7 |
 | `status` | `processing` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts` |
 | `status` | `queued` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts`<br>`src/hooks/useScrapeQueue.ts`<br>… +5 |
 | `status` | `refresh_failed` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts` |
@@ -913,9 +932,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `retrying` | compara | `src/components/lux/integrations/WebhooksPanel.tsx` |
 | `status` | `running` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +7 |
 | `status` | `sending` | escreve | `supabase/functions/webhook-dispatcher/index.ts` |
-| `status` | `sent` | compara | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
+| `status` | `sent` | compara, escreve | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`supabase/functions/send-scheduled-reports/index.ts` |
 | `status` | `sent_to_bitrix` | compara, escreve | `src/hooks/useOracleV2.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
-| `status` | `skipped` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/webhook-dispatcher/index.ts` |
+| `status` | `skipped` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/send-scheduled-reports/index.ts`<br>… +1 |
 | `status` | `started` | compara | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
 | `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
 | `status` | `success` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>… +4 |
@@ -1045,6 +1064,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | View | dashboard \| icp \| workflows \| companies \| intent \| campaigns \| ai-agent \| analytics \| settings \| gmaps \| map \| stakeholders \| scrape-results \| organizations \| deals \| integrations \| org-violations \| rls-discovery \| monitoring \| automations \| recycle-bin \| suppressions \| lusha | `src/hooks/useNavigationHistory.ts` |
 | NavigationDirection | forward \| back | `src/hooks/useNavigationHistory.ts` |
 | ReaperAlertReason | dead_detected \| no_recent_run | `src/hooks/useReaperAlerts.ts` |
+| PermissionFlag | can_view \| can_create \| can_update \| can_delete \| can_manage | `src/hooks/useRolePermissions.ts` |
+| ReportMetric | conversion \| enrichment \| pipeline \| campaigns | `src/hooks/useScheduledReports.ts` |
+| ReportFrequency | daily \| weekly \| monthly | `src/hooks/useScheduledReports.ts` |
 | Skin | gold \| blue \| green \| red \| purple \| orange | `src/hooks/useSkin.ts` |
 | WEBHOOK_EVENTS | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … | `src/hooks/useWebhooks.ts` |
 | SoftDeleteTable | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks | `src/integrations/supabase/withOrg.ts` |
@@ -1310,6 +1332,10 @@ _nenhum item encontrado_
   ```
   if (snapshots.length === 0) return []; const latest = snapshots[0]; const history = snapshots.slice(1); // baseline exclui o ponto atual const alerts: HealthAlert[] = []; // --- Saturação de conexões --- const connBaseline = history.map((s) => s.connection_pct); const connMean = mean(connBaseline); const connSd = stddev(connBaseline); const connThreshold = Math.max(connMean + 2 * connSd, 80); alerts.push({ key: "connections", label: "Conexões", value: `${latest.connection_pct}% (${latest.active_ …
   ```
+- **canDo(entity: Entity, action: Action)** — `src/hooks/usePermissions.ts`
+  ```
+  if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);
+  ```
 - **calc(base: string, weights: number[])** — `src/lib/cnpj.ts`
   ```
   const sum = base.split("").reduce((acc, d, i) => acc + Number(d) * weights[i], 0); const rest = sum % 11; return rest < 2 ? 0 : 11 - rest;
@@ -1563,6 +1589,7 @@ _nenhum item encontrado_
 | `GMAPS_API_BASE` | `"https://gmaps.atomicabr.com.br/api/v1"` | `supabase/functions/scrape-queue-worker/index.ts` |
 | `BATCH_SIZE` | `10` | `supabase/functions/scrape-queue-worker/index.ts` |
 | `PARALLEL_CHUNK` | `3` | `supabase/functions/scrape-queue-worker/index.ts` |
+| `MAX_RECIPIENTS` | `20` | `supabase/functions/send-scheduled-reports/index.ts` |
 | `BATCH_SIZE` | `8` | `supabase/functions/web-scrape-worker/index.ts` |
 | `PARALLEL_CHUNK` | `3` | `supabase/functions/web-scrape-worker/index.ts` |
 | `DEFAULT_TIMEOUT_MS` | `20` | `supabase/functions/web-scrape-worker/index.ts` |
@@ -1680,6 +1707,7 @@ _nenhum item encontrado_
 | 500 | `src/components/lux/ScrapeResultsView.tsx` |
 | 100 | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
 | 50 | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
+| 5 | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | 0 | `src/components/lux/lusha/SessionsPanel.tsx` |
 | 1000 | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
 | 25 | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
@@ -1707,6 +1735,7 @@ _nenhum item encontrado_
 | 10 | `src/hooks/useDashboardData.ts` |
 | 50 | `src/hooks/useOAuthSandboxSnapshots.ts` |
 | 50 | `src/hooks/usePartitionAdvisories.ts` |
+| 20 | `src/hooks/useScheduledReports.ts` |
 | 200 | `src/hooks/useScrapeQueue.ts` |
 | 50 | `src/hooks/useWebhooks.ts` |
 | 1 | `supabase/functions/ai-agent/index.ts` |
@@ -1727,6 +1756,7 @@ _nenhum item encontrado_
 | 1 | `supabase/functions/reaper-alerts/index.ts` |
 | 5000 | `supabase/functions/retry-policy-tuner/index.ts` |
 | 1 | `supabase/functions/rls-tests/index.ts` |
+| 1 | `supabase/functions/send-scheduled-reports/index.ts` |
 | 1 | `supabase/functions/sla-alerts/index.ts` |
 | 1 | `supabase/functions/sla-auto-tune/index.ts` |
 | 1 | `supabase/functions/web-scrape-enqueue/index.ts` |
@@ -1925,6 +1955,13 @@ _nenhum item encontrado_
 | Não autenticado | `src/hooks/useOrganizations.ts` |
 | Org ou usuário ausente | `src/hooks/useOrganizations.ts` |
 | Falha ao carregar ${url}: HTTP ${res.status} | `src/hooks/useResilienceComparison.ts` |
+| Erro ao restaurar | `src/hooks/useRolePermissions.ts` |
+| Erro ao salvar permissão | `src/hooks/useRolePermissions.ts` |
+| Padrão indisponível | `src/hooks/useRolePermissions.ts` |
+| Erro ao alterar status | `src/hooks/useScheduledReports.ts` |
+| Erro ao atualizar | `src/hooks/useScheduledReports.ts` |
+| Erro ao criar relatório | `src/hooks/useScheduledReports.ts` |
+| Erro ao excluir | `src/hooks/useScheduledReports.ts` |
 | Falha ao expurgar: ${err.message} | `src/hooks/useScrapeQueue.ts` |
 | Falha ao reprocessar em lote: ${err.message} | `src/hooks/useScrapeQueue.ts` |
 | Falha ao reprocessar: ${err.message} | `src/hooks/useScrapeQueue.ts` |
@@ -2001,6 +2038,14 @@ _nenhum item encontrado_
 | Failed to sign in ${email}: ${error.message} | `supabase/functions/rls-tests/index.ts` |
 | create orgA: ${orgAErr.message} | `supabase/functions/rls-tests/index.ts` |
 | create orgB: ${orgBErr.message} | `supabase/functions/rls-tests/index.ts` |
+| Gmail send [${res.status}]: ${body.slice(0, 300)} | `supabase/functions/send-scheduled-reports/index.ts` |
+| OAuth nao configurado para ${acc.provider} | `supabase/functions/send-scheduled-reports/index.ts` |
+| Outlook send [${res.status}]: ${body.slice(0, 300)} | `supabase/functions/send-scheduled-reports/index.ts` |
+| Refresh falhou: ${code} | `supabase/functions/send-scheduled-reports/index.ts` |
+| Sem refresh token; reconexao necessaria | `supabase/functions/send-scheduled-reports/index.ts` |
+| leitura dos agendamentos: ${error.message} | `supabase/functions/send-scheduled-reports/index.ts` |
+| reserva do periodo: ${reserveErr.message} | `supabase/functions/send-scheduled-reports/index.ts` |
+| todos os envios falharam: ${failures[0]} | `supabase/functions/send-scheduled-reports/index.ts` |
 | stats_rpc: ${statsErr.message} | `supabase/functions/sla-alerts/index.ts` |
 | Invalid URL | `supabase/functions/track-click/index.ts` |
 | Invalid recipient | `supabase/functions/track-click/index.ts` |
@@ -2026,6 +2071,7 @@ _nenhum item encontrado_
 | `admin` | `src/hooks/usePermissions.ts` |
 | `sdr` | `src/hooks/usePermissions.ts` |
 | `viewer` | `src/hooks/usePermissions.ts` |
+| `input` | `src/hooks/useRolePermissions.ts` |
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
@@ -2170,6 +2216,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/hooks/useWebhooks.ts` |
 | `sendMail` | `supabase/functions/campaign-dispatch/index.ts` |
 | `notifyRows` | `supabase/functions/org-violation-alerts/index.ts` |
+| `sendMail` | `supabase/functions/send-scheduled-reports/index.ts` |
 | `notify` | `supabase/functions/workflow-engine/index.ts` |
 | `notify_on_scrape_import` | `supabase/migrations/20260331104943_bad1a93f-0ffb-4464-9289-e3fc1ccfe273.sql` |
 | `notify_on_enrichment` | `supabase/migrations/20260331113407_e60b6db5-9894-4230-8999-6f5365d420a3.sql` |
@@ -2225,6 +2272,7 @@ _nenhum item encontrado_
 | definição, mais de 5% dos itens da fila estouram o prazo — é um alvo | `src/components/lux/monitoring/slaRiskAnalysis.ts` |
 | inatingível, não uma meta ambiciosa. Isolamos a regra aqui para permitir | `src/components/lux/monitoring/slaRiskAnalysis.ts` |
 | * Render this when the user lacks the permission instead of nothing. */ | `src/components/lux/permissions/PermissionGate.tsx` |
+| * Habilita a edição (somente admin da organização). */ | `src/components/lux/permissions/PermissionsMatrix.tsx` |
 | - Mostra/edita configurações da org ativa (limite, janela, cooldown). | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | * Acesso: apenas admins (gate feito por `usePermissions` no caller). | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Regras: company_id não vazio; user_id somente dígitos. | `src/hooks/oracleV2Helpers.ts` |
@@ -2240,6 +2288,7 @@ _nenhum item encontrado_
 | * Lista snapshots de validação OAuth da organização ativa. | `src/hooks/useOAuthSandboxSnapshots.ts` |
 | * true somente quando TODOS os serviços, inclusive o opcional linkedin, estão prontos. */ | `src/hooks/useOracleV2.ts` |
 | HTTP 429 do rate-limit por organização vem com Retry-After em segundos. | `src/hooks/useOracleV2.ts` |
+| * A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a | `src/hooks/usePermissions.ts` |
 | * Hook de Rate Limit Híbrido: | `src/hooks/useRateLimit.ts` |
 | GAP-5: validação de parâmetros em modo de desenvolvimento. | `src/hooks/useRateLimit.ts` |
 | Check original: apenas quando ambos são finitos (evita falso positivo com Infinity) | `src/hooks/useRateLimit.ts` |
@@ -2248,6 +2297,7 @@ _nenhum item encontrado_
 | Cap mantém as entradas mais recentes (mais relevantes para o rate limit). | `src/hooks/useRateLimit.ts` |
 | - Semanticamente: "lock expira em 13/09/2285" (≈285 anos) — intent de "permanente" | `src/hooks/useRateLimit.ts` |
 | * GAP-4: Reseta o estado de rate limit para esta chave. | `src/hooks/useRateLimit.ts` |
+| Desfaz a alteração otimista: a matriz não pode divergir do banco. | `src/hooks/useRolePermissions.ts` |
 | `any`, modelamos apenas o contrato realmente usado pelo wrapper e a cadeia de | `src/integrations/supabase/withOrg.ts` |
 | ou apenas por edge functions / admin). Ficam sob RLS específica e NÃO | `src/integrations/supabase/withOrg.ts` |
 | * Utilitários de CNPJ — normalização e validação dos dígitos verificadores. | `src/lib/cnpj.ts` |
@@ -2372,6 +2422,9 @@ _nenhum item encontrado_
 | ignore — cleanup deve ser idempotente */ } | `supabase/functions/rls-tests/_fixtures.ts` |
 | * Classifica se um erro deve ser retentado (transitório) ou não (permanente). */ | `supabase/functions/scrape-queue-worker/index.ts` |
 | 4xx é erro do payload do cliente — não deve abrir o circuito. | `supabase/functions/scrape-queue-worker/index.ts` |
+| // Isolamento multi-tenant: envia apenas pela conta de e-mail da MESMA | `supabase/functions/send-scheduled-reports/index.ts` |
+| * Decide se o relatorio deve rodar agora. | `supabase/functions/send-scheduled-reports/index.ts` |
+| Regra: passou do horario configurado, o dia bate com a frequencia e ainda | `supabase/functions/send-scheduled-reports/index.ts` |
 | de cada fila (scrape/web/instagram) quando o desvio entre o prazo configurado | `supabase/functions/sla-auto-tune/index.ts` |
 | aberto). Isolado do motor GMaps — reusa apenas a malha compartilhada | `supabase/functions/web-scrape-worker/index.ts` |
 | ---------- SSRF (mínimo, sem DNS async pra evitar custo por task) ---------- | `supabase/functions/web-scrape-worker/index.ts` |

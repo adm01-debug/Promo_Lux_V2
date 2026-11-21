@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bb305ef63d` · branch `main` · 2026-11-21 20:18 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `74324554b7` · branch `main` · 2026-11-21 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -21,6 +21,7 @@
 | `automation_alerts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `automation_execution_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 25 colunas | migration |
 | `automation_steps` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
+| `bulk_imports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
 | `campaign_events` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `campaign_messages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `campaign_recipients` | _(sem COMMENT ON TABLE — significado não documentado)_ | 26 colunas | migration |
@@ -84,6 +85,9 @@
 | `reaper_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `retry_policy_advisories` | _(sem COMMENT ON TABLE — significado não documentado)_ | 20 colunas | migration |
 | `robots_cache` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
+| `role_permissions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `scheduled_report_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
+| `scheduled_reports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `scrape_dead_letter` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `scrape_jobs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 18 colunas | migration |
 | `scrape_queue` | _(sem COMMENT ON TABLE — significado não documentado)_ | 20 colunas | migration |
@@ -135,6 +139,9 @@
 | `View` (TS) | dashboard \| icp \| workflows \| companies \| intent \| campaigns \| ai-agent \| analytics \| settings \| gmaps \| map \| stakeholders \| scrape-results \| organizations \| deals \| integrations \| org-violations \| rls-discovery \| monitoring \| automations \| recycle-bin \| suppressions \| lusha |  | `src/hooks/useNavigationHistory.ts` |
 | `NavigationDirection` (TS) | forward \| back |  | `src/hooks/useNavigationHistory.ts` |
 | `ReaperAlertReason` (TS) | dead_detected \| no_recent_run |  | `src/hooks/useReaperAlerts.ts` |
+| `PermissionFlag` (TS) | can_view \| can_create \| can_update \| can_delete \| can_manage |  | `src/hooks/useRolePermissions.ts` |
+| `ReportMetric` (TS) | conversion \| enrichment \| pipeline \| campaigns |  | `src/hooks/useScheduledReports.ts` |
+| `ReportFrequency` (TS) | daily \| weekly \| monthly |  | `src/hooks/useScheduledReports.ts` |
 | `Skin` (TS) | gold \| blue \| green \| red \| purple \| orange |  | `src/hooks/useSkin.ts` |
 | `WEBHOOK_EVENTS` (TS) | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … |  | `src/hooks/useWebhooks.ts` |
 | `SoftDeleteTable` (TS) | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks |  | `src/integrations/supabase/withOrg.ts` |
@@ -288,6 +295,7 @@ _nenhum item encontrado_
 | tenant | `apollo_search_cache` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `apollo_rate_state` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `api_rate_limits` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
+| tenant | `scheduled_report_runs` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | edge | edge function `dashboard-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `fixture-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `ghost-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
@@ -339,7 +347,7 @@ _nenhum item encontrado_
 - `web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 96/99 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 100/103 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "bb305ef63d9ecdbfe431ed044bb347f4f500998a",
+  "commit": "74324554b7ba227369a72fa446d936531e891f55",
   "branch": "main",
-  "data_commit": "2026-11-21T17:17:12-03:00",
+  "data_commit": "2026-11-21T18:08:19-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7432455",
+    "data": "2026-11-21",
+    "assunto": "feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)"
+   },
    {
     "sha": "bb305ef",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "cfce9da",
     "data": "2026-11-20",
     "assunto": "infra: alinha project_id do config.toml com a producao (pttzwlbidamibjssqiqb) (#77)"
-   },
-   {
-    "sha": "c4ed84b",
-    "data": "2026-11-20",
-    "assunto": "infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)"
    }
   ],
-  "arquivos_mudados_7d": 83,
+  "arquivos_mudados_7d": 94,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -148,6 +148,10 @@
     "mudancas": 14
    },
    {
+    "pasta": "src/components/lux",
+    "mudancas": 11
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 7
    },
@@ -160,15 +164,11 @@
     "mudancas": 6
    },
    {
-    "pasta": "src/components/lux",
-    "mudancas": 6
+    "pasta": "supabase/config.toml",
+    "mudancas": 5
    },
    {
     "pasta": ".github/workflows/ci.yml",
-    "mudancas": 4
-   },
-   {
-    "pasta": "supabase/config.toml",
     "mudancas": 4
    },
    {
@@ -215,7 +215,7 @@
    },
    {
     "arquivo": "supabase/config.toml",
-    "mudancas": 5
+    "mudancas": 6
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 70
+    "commits": 71
    },
    {
     "autor": "dependabot[bot]",
@@ -310,20 +310,20 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1036,
-  "arquivos_codigo": 651,
-  "linhas_codigo": 111297,
+  "arquivos_total": 1041,
+  "arquivos_codigo": 655,
+  "linhas_codigo": 112740,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 241,
-  "hooks": 78,
-  "edge_functions": 59,
-  "tabelas": 97,
-  "migrations": 221,
-  "cron_jobs": 26,
+  "componentes": 242,
+  "hooks": 80,
+  "edge_functions": 60,
+  "tabelas": 101,
+  "migrations": 222,
+  "cron_jobs": 28,
   "testes": 124,
   "workflows": 9,
   "scripts": 49,
@@ -551,20 +551,20 @@
    "linhas": 321
   },
   "src/components": {
-   "arquivos": 285,
-   "linhas": 45422
+   "arquivos": 286,
+   "linhas": 45923
   },
   "src/contexts": {
    "arquivos": 7,
    "linhas": 323
   },
   "src/hooks": {
-   "arquivos": 84,
-   "linhas": 9231
+   "arquivos": 86,
+   "linhas": 9502
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 7357
+   "linhas": 7562
   },
   "src/lib": {
    "arquivos": 53,
@@ -587,8 +587,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 124,
-   "linhas": 21959
+   "arquivos": 125,
+   "linhas": 22425
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -606,7 +606,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 5989
+   "linhas": 6194
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",

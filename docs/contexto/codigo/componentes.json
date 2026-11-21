@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 241,
+ "total": 242,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -192,12 +192,28 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/analytics/ScheduledReportsTab.tsx",
+   "exports": [
+    "ScheduledReportsTab"
+   ],
+   "export_default": null,
+   "linhas": 353,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useScheduledReports"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/AnalyticsView.tsx",
    "exports": [
     "AnalyticsView"
    ],
    "export_default": null,
-   "linhas": 136,
+   "linhas": 144,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAnalyticsData",
@@ -594,12 +610,13 @@
     "ImportCompaniesDialog"
    ],
    "export_default": null,
-   "linhas": 220,
+   "linhas": 280,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast"
    ],
    "tabelas": [
+    "bulk_imports",
     "companies"
    ],
    "edges": [],
@@ -784,7 +801,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 9,
+   "usado_por": 10,
    "orfao": false
   },
   {
@@ -2508,9 +2525,11 @@
     "PermissionsMatrix"
    ],
    "export_default": null,
-   "linhas": 121,
+   "linhas": 201,
    "dominio": "components/lux",
-   "hooks_locais": [],
+   "hooks_locais": [
+    "useRolePermissions"
+   ],
    "tabelas": [],
    "edges": [],
    "usado_por": 1,
@@ -3052,7 +3071,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 94,
+   "usado_por": 95,
    "orfao": false
   },
   {
@@ -3087,7 +3106,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 113,
+   "usado_por": 115,
    "orfao": false
   },
   {
@@ -3246,7 +3265,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 25,
+   "usado_por": 26,
    "orfao": false
   },
   {
@@ -3366,7 +3385,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 49,
+   "usado_por": 50,
    "orfao": false
   },
   {
@@ -3380,7 +3399,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 35,
+   "usado_por": 36,
    "orfao": false
   },
   {
@@ -3549,7 +3568,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 25,
+   "usado_por": 26,
    "orfao": false
   },
   {
@@ -3639,7 +3658,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 24,
+   "usado_por": 25,
    "orfao": false
   },
   {
@@ -3681,7 +3700,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 17,
+   "usado_por": 18,
    "orfao": false
   },
   {

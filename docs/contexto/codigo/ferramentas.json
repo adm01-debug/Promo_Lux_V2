@@ -3,8 +3,8 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (625)",
-   "SQL (225)",
+   "TypeScript (629)",
+   "SQL (226)",
    "Markdown (81)",
    "JSON (38)",
    "JavaScript (22)",
@@ -741,6 +741,18 @@
     "arquivos": 8
    },
    {
+    "host": "graph.microsoft.com",
+    "arquivos": 5
+   },
+   {
+    "host": "login.microsoftonline.com",
+    "arquivos": 5
+   },
+   {
+    "host": "oauth2.googleapis.com",
+    "arquivos": 5
+   },
+   {
     "host": "supabase.atomicabr.com.br",
     "arquivos": 5
    },
@@ -750,18 +762,6 @@
    },
    {
     "host": "gmaps.atomicabr.com.br",
-    "arquivos": 4
-   },
-   {
-    "host": "graph.microsoft.com",
-    "arquivos": 4
-   },
-   {
-    "host": "login.microsoftonline.com",
-    "arquivos": 4
-   },
-   {
-    "host": "oauth2.googleapis.com",
     "arquivos": 4
    },
    {
@@ -781,6 +781,10 @@
     "arquivos": 3
    },
    {
+    "host": "gmail.googleapis.com",
+    "arquivos": 3
+   },
+   {
     "host": "nominatim.openstreetmap.org",
     "arquivos": 3
    },
@@ -794,10 +798,6 @@
    },
    {
     "host": "dashboard-services.lusha.com",
-    "arquivos": 2
-   },
-   {
-    "host": "gmail.googleapis.com",
     "arquivos": 2
    },
    {
@@ -1139,6 +1139,7 @@
    "migrate-helper",
    "public-api",
    "qa-ingest-run",
+   "send-scheduled-reports",
    "track-click",
    "track-open"
   ],
@@ -1269,6 +1270,7 @@
    }
   ],
   "rpcs_de_autorizacao": [
+   "default_role_permissions",
    "has_org_role",
    "has_role"
   ],

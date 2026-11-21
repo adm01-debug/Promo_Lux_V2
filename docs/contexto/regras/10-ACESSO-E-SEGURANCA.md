@@ -1,14 +1,14 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bb305ef63d` · branch `main` · 2026-11-21 20:18 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `74324554b7` · branch `main` · 2026-11-21 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
 
-`admin`, `agent`, `granted`, `sdr`, `user`, `viewer`
+`admin`, `agent`, `granted`, `input`, `sdr`, `user`, `viewer`
 
-- Tabelas de perfil/permissão: `organization_members`, `user_roles`
-- Colunas de perfil: `stakeholders.role` (text), `agent_chat_messages.role` (TEXT NOT NULL CHECK (role IN ('user', 'agent'))), `organization_members.role` (public.app_role NOT NULL DEFAULT 'viewer'), `organization_invites.role` (public.app_role NOT NULL DEFAULT 'viewer'), `user_roles.role` (public.app_role NOT NULL)
+- Tabelas de perfil/permissão: `organization_members`, `user_roles`, `role_permissions`
+- Colunas de perfil: `stakeholders.role` (text), `agent_chat_messages.role` (TEXT NOT NULL CHECK (role IN ('user', 'agent'))), `organization_members.role` (public.app_role NOT NULL DEFAULT 'viewer'), `organization_invites.role` (public.app_role NOT NULL DEFAULT 'viewer'), `user_roles.role` (public.app_role NOT NULL), `role_permissions.role` (public.app_role not null)
 - Claims do JWT usados em políticas/funções: nenhum
 - Funções usadas dentro de políticas RLS (a regra real está no corpo delas — veja `06`): `default_org_for_current_user`, `has_org_role`, `has_role`, `is_org_member`
 
@@ -30,6 +30,7 @@
 | `automation_alerts` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `automation_execution_logs` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | — | authenticated: public.has_role(auth.uid(), 'admin') |
 | `automation_steps` | enabled | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | — |
+| `bulk_imports` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true | service_role: true |
 | `campaign_events` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
 | `campaign_messages` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | — | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `campaign_recipients` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
@@ -93,6 +94,9 @@
 | `reaper_alert_settings` | enabled | authenticated: public.has_role(auth.uid(), 'admin')<br>service_role: true | service_role: true | authenticated: public.has_role(auth.uid(), 'admin')<br>service_role: true | service_role: true |
 | `retry_policy_advisories` | enabled | authenticated: (organization_id IS NULL AND public.has_role(auth.uid(), 'admin'::app_role)) OR (organization_id IS NOT NULL AND public.has_o | — | — | — |
 | `robots_cache` | enabled | authenticated: true | — | — | — |
+| `role_permissions` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
+| `scheduled_report_runs` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true | service_role: true | service_role: true |
+| `scheduled_reports` | enabled | authenticated: user_id = auth.uid() and deleted_at is null<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true |
 | `scrape_dead_letter` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
 | `scrape_jobs` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `scrape_queue` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
@@ -118,7 +122,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 177 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 179 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -176,6 +180,7 @@
 - `supabase/functions/rls-tests/index.test.ts`
 - `supabase/functions/rls-tests/index.ts`
 - `supabase/functions/scrape-queue-worker/index.ts`
+- `supabase/functions/send-scheduled-reports/index.ts`
 - `supabase/functions/sla-alerts/index.ts`
 - `supabase/functions/sla-auto-tune/index.ts`
 - `supabase/functions/system-recovery-status/index.ts`
@@ -269,8 +274,7 @@
 - `supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql`
 - `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql`
 - `supabase/migrations/20260722114256_52e41091-6d26-4aac-b35a-9a38958ee119.sql`
-- `supabase/migrations/20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql`
-- … +27 (lista completa em `context.json`)
+- … +29 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -288,6 +292,7 @@
 - `assert_service_or_admin`
 - `auto_tune_queue_slas`
 - `campaign_ab_stats`
+- `can_access`
 - `capture_api_latency_snapshots`
 - `capture_circuit_breaker_snapshots`
 - `capture_db_health_snapshot`
@@ -357,6 +362,7 @@
 - `prune_email_sync_log`
 - `prune_pg_net_health_snapshots`
 - `prune_qa_reaper_runs`
+- `prune_scheduled_report_runs`
 - `purge_dead_letter`
 - `purge_soft_deleted`
 - `reap_stuck_queue_tasks`
@@ -370,6 +376,7 @@
 - `replay_web_dead_letter_batch`
 - `reset_circuit_breaker`
 - `rollback_retry_advisory`
+- `seed_role_permissions`
 - `sla_autotune_blocked_streaks`
 - `sla_compliance_stats`
 - `sla_recommendations`
@@ -392,6 +399,7 @@
 - `email-oauth-callback`
 - `mcp`
 - `mcp-query`
+- `send-scheduled-reports`
 
 ## Rotas protegidas no front
 
@@ -413,15 +421,16 @@ Middleware matcher (Next.js): nenhum
 | Ação | Para/De | Privilégios | Objetos |
 |---|---|---|---|
 | grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +31 |
-| grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +23 |
+| grant | authenticated | insert, update, delete | `role_permissions` |
+| grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +25 |
 | grant | authenticated | select, insert | `automation_execution_logs`, `instagram_scrape_results`, `cnpj_enrich_queue` |
-| grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings` |
+| grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings`, `scheduled_reports`, `bulk_imports` |
 | grant | authenticated | select, update | `retry_policy_advisories`, `reaper_alert_settings` |
-| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +8 |
+| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +9 |
 | grant | authenticated, service_role | select | `oracle_v2_health`, `v_sec_definer_anon_grants`, `v_extensions_audit` |
 | grant | authenticated, service_role, anon | execute | `default_sla_seconds` |
-| grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +40 |
-| grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +86 |
+| grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +44 |
+| grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +87 |
 | grant | service_role | select | `oracle_v2_health` |
 | revoke | PUBLIC | all | `capture_db_health_snapshot`, `enqueue_scrape_task`, `claim_scrape_tasks`, `complete_scrape_task`, `fail_scrape_task`, `replay_dead_letter`, `evaluate_partition_policies`, `log_automation_event`, `reset_circuit_breaker`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts`, `record_vault_cookie_snapshots`, `evaluate_vault_cookie_alerts`, `claim_instagram_tasks`, `replay_instagram_dead_letter_batch` … +8 |
 | revoke | PUBLIC | execute | `get_sector_summary`, `get_dashboard_stats`, `enqueue_webhook_event`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages` … +20 |
@@ -437,7 +446,8 @@ Middleware matcher (Next.js): nenhum
 | revoke | authenticated | all | `replay_instagram_dead_letter_batch` |
 | revoke | authenticated | execute | `pg_columns_for_insert`, `pg_catalog_rls_tables`, `evaluate_org_violation_alerts`, `assert_service_or_admin` |
 | revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas` |
-| revoke | public, anon, authenticated | all | `update_updated_at_column`, `handle_updated_at`, `update_automation_steps_updated_at`, `increment_version`, `validate_ipc_score`, `normalize_suppression_email`, `cleanup_old_idempotency_keys`, `handle_new_organization`, `handle_new_user`, `enqueue_webhook_event`, `log_audit_event`, `process_audit_log`, `notify_on_workflow_complete`, `notify_on_enrichment`, `prevent_user_id_change` … +13 |
+| revoke | public, anon | all | `can_access` |
+| revoke | public, anon, authenticated | all | `update_updated_at_column`, `handle_updated_at`, `update_automation_steps_updated_at`, `increment_version`, `validate_ipc_score`, `normalize_suppression_email`, `cleanup_old_idempotency_keys`, `handle_new_organization`, `handle_new_user`, `enqueue_webhook_event`, `log_audit_event`, `process_audit_log`, `notify_on_workflow_complete`, `notify_on_enrichment`, `prevent_user_id_change` … +14 |
 
 ## Riscos de acesso detectados
 
@@ -447,8 +457,8 @@ Middleware matcher (Next.js): nenhum
 
 ## Multi-tenancy
 
-- Chave de tenant: **`organization_id`** presente em 66 tabela(s): `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages`, `organization_members`, `organization_invites`, `audit_logs`, `deal_stages`, `deals`, `deal_activities`, `deal_tasks`, `api_keys`, `webhooks`, `webhook_deliveries`, `campaign_recipients`, `campaign_events`, `email_accounts`, `campaign_messages`, `campaign_replies`, `api_request_logs`, `email_sync_log`, `oauth_sandbox_snapshots`, `org_violation_alert_settings`, `org_violation_alerts`, `idempotency_keys`, `feature_flags`, `automation_alerts`, `job_exports`, `automation_steps`, `email_suppressions`, `scrape_queue`, `scrape_dead_letter`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_credit_usage_log`, `lusha_search_sessions`, `oracle_rate_limits`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `places_api_usage`, `retry_policy_advisories`, `org_retry_policies`, `web_scrape_queue`, `web_scrape_results`, `web_scrape_dead_letter`, `instagram_scrape_queue`, `instagram_scrape_results`, `instagram_scrape_dead_letter`, `oracle_v2_health`, `v_lusha_cache_stats`, `v_lux_enrichment_health`
-- Cobertura: 67% das tabelas. Tabelas SEM a chave (verificar isolamento): `health_checks`, `circuit_breakers`, `auth_rate_limits`, `db_health_snapshots`, `partition_policies`, `partition_advisories`, `circuit_breaker_snapshots`, `circuit_breaker_alert_history`, `vault_cookie_snapshots`, `vault_cookie_alert_history`, `scrape_worker_state`, `robots_cache`, `pg_net_health_snapshots`, `qa_test_runs`, `qa_reaper_runs`, `reaper_alert_history`, `sla_alert_history`, `sla_snapshots`, `cnpj_enrich_cache`, `cnpj_enrich_rate_state`, `cnpj_enrich_queue`, `queue_sla_defaults`, `queue_sla_history`, `sla_autotune_runs`, `apollo_search_cache`, `apollo_rate_state`, `api_rate_limits`
+- Chave de tenant: **`organization_id`** presente em 69 tabela(s): `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages`, `organization_members`, `organization_invites`, `audit_logs`, `deal_stages`, `deals`, `deal_activities`, `deal_tasks`, `api_keys`, `webhooks`, `webhook_deliveries`, `campaign_recipients`, `campaign_events`, `email_accounts`, `campaign_messages`, `campaign_replies`, `api_request_logs`, `email_sync_log`, `oauth_sandbox_snapshots`, `org_violation_alert_settings`, `org_violation_alerts`, `idempotency_keys`, `feature_flags`, `automation_alerts`, `job_exports`, `automation_steps`, `email_suppressions`, `scrape_queue`, `scrape_dead_letter`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_credit_usage_log`, `lusha_search_sessions`, `oracle_rate_limits`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `places_api_usage`, `retry_policy_advisories`, `org_retry_policies`, `web_scrape_queue`, `web_scrape_results`, `web_scrape_dead_letter`, `instagram_scrape_queue`, `instagram_scrape_results`, `instagram_scrape_dead_letter`, `scheduled_reports`, `bulk_imports`, `role_permissions`, `oracle_v2_health`, `v_lusha_cache_stats`, `v_lux_enrichment_health`
+- Cobertura: 67% das tabelas. Tabelas SEM a chave (verificar isolamento): `health_checks`, `circuit_breakers`, `auth_rate_limits`, `db_health_snapshots`, `partition_policies`, `partition_advisories`, `circuit_breaker_snapshots`, `circuit_breaker_alert_history`, `vault_cookie_snapshots`, `vault_cookie_alert_history`, `scrape_worker_state`, `robots_cache`, `pg_net_health_snapshots`, `qa_test_runs`, `qa_reaper_runs`, `reaper_alert_history`, `sla_alert_history`, `sla_snapshots`, `cnpj_enrich_cache`, `cnpj_enrich_rate_state`, `cnpj_enrich_queue`, `queue_sla_defaults`, `queue_sla_history`, `sla_autotune_runs`, `apollo_search_cache`, `apollo_rate_state`, `api_rate_limits`, `scheduled_report_runs`
 
 ## Soft delete (registros 'apagados' continuam na tabela — filtre!)
 
@@ -468,6 +478,8 @@ Middleware matcher (Next.js): nenhum
 | `automation_alerts` | `is_active` |
 | `email_suppressions` | `deleted_at` |
 | `org_proxies` | `is_active` |
+| `scheduled_reports` | `active` |
+| `scheduled_reports` | `deleted_at` |
 
 ## Auditoria (colunas de rastreio)
 
@@ -549,6 +561,10 @@ Middleware matcher (Next.js): nenhum
 | `sla_autotune_runs` | `created_at` |
 | `apollo_rate_state` | `updated_at` |
 | `api_rate_limits` | `created_at`, `updated_at` |
+| `scheduled_reports` | `created_at`, `updated_at` |
+| `scheduled_report_runs` | `created_at` |
+| `bulk_imports` | `created_at` |
+| `role_permissions` | `created_at`, `updated_at` |
 
 ## Dados pessoais / sensíveis (LGPD — cuidado em logs, exports, prompts de IA)
 
@@ -586,6 +602,7 @@ Middleware matcher (Next.js): nenhum
 | `lusha_search_sessions` | `total_enriched` | `INTEGER` |
 | `lusha_search_sessions` | `total_inserted_bitrix` | `INTEGER` |
 | `pg_net_health_snapshots` | `total_requests` | `BIGINT` |
+| `bulk_imports` | `total_rows` | `integer` |
 | `v_lusha_cache_stats` | `total_contacts` | `number` |
 | `v_lux_enrichment_health` | `total_api_calls` | `number` |
 | `v_lux_enrichment_health` | `total_contacts` | `number` |

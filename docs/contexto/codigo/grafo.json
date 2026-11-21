@@ -1,16 +1,16 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 527,
- "arestas": 1552,
+ "nos": 531,
+ "arestas": 1572,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 113
+   "importado_por": 115
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 106
+   "importado_por": 107
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -18,7 +18,7 @@
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 94
+   "importado_por": 95
   },
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -26,11 +26,11 @@
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
-   "importado_por": 52
+   "importado_por": 53
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 49
+   "importado_por": 50
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
@@ -38,30 +38,30 @@
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 35
+   "importado_por": 36
   },
   {
    "arquivo": "src/contexts/auth-context.ts",
-   "importado_por": 32
+   "importado_por": 33
+  },
+  {
+   "arquivo": "src/components/ui/dialog.tsx",
+   "importado_por": 26
+  },
+  {
+   "arquivo": "src/components/ui/select.tsx",
+   "importado_por": 26
   },
   {
    "arquivo": "src/components/ui/tooltip.tsx",
    "importado_por": 26
   },
   {
-   "arquivo": "src/components/ui/dialog.tsx",
-   "importado_por": 25
-  },
-  {
-   "arquivo": "src/components/ui/select.tsx",
+   "arquivo": "src/components/ui/skeleton.tsx",
    "importado_por": 25
   },
   {
    "arquivo": "src/components/ui/scroll-area.tsx",
-   "importado_por": 24
-  },
-  {
-   "arquivo": "src/components/ui/skeleton.tsx",
    "importado_por": 24
   },
   {
@@ -70,19 +70,19 @@
   },
   {
    "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 17
+   "importado_por": 18
+  },
+  {
+   "arquivo": "supabase/functions/_shared/cron-auth.ts",
+   "importado_por": 18
   },
   {
    "arquivo": "src/contexts/demo-context.ts",
    "importado_por": 17
   },
   {
-   "arquivo": "supabase/functions/_shared/cron-auth.ts",
-   "importado_por": 17
-  },
-  {
    "arquivo": "src/hooks/useOrganizations.ts",
-   "importado_por": 16
+   "importado_por": 17
   },
   {
    "arquivo": "src/lib/resilience/simulator.ts",
@@ -113,12 +113,12 @@
    "importado_por": 12
   },
   {
-   "arquivo": "src/contexts/active-org-context.ts",
+   "arquivo": "src/components/lux/DataError.tsx",
    "importado_por": 11
   },
   {
-   "arquivo": "src/components/lux/DataError.tsx",
-   "importado_por": 10
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 11
   },
   {
    "arquivo": "src/components/ui/sheet.tsx",

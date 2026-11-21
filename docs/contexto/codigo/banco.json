@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 221,
+ "migrations": 222,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -71,6 +71,7 @@
   "assert_service_or_admin",
   "auto_tune_queue_slas",
   "campaign_ab_stats",
+  "can_access",
   "capture_api_latency_snapshots",
   "capture_circuit_breaker_snapshots",
   "capture_db_health_snapshot",
@@ -94,6 +95,7 @@
   "create_default_deal_stages",
   "decide_ab_winner",
   "default_org_for_current_user",
+  "default_role_permissions",
   "default_sla_seconds",
   "defer_scrape_task",
   "defer_web_scrape_task",
@@ -147,6 +149,7 @@
   "prune_email_sync_log",
   "prune_pg_net_health_snapshots",
   "prune_qa_reaper_runs",
+  "prune_scheduled_report_runs",
   "purge_dead_letter",
   "purge_soft_deleted",
   "reap_stuck_queue_tasks",
@@ -161,6 +164,7 @@
   "reset_circuit_breaker",
   "rollback_retry_advisory",
   "scrape_jobs_set_config_hash",
+  "seed_role_permissions",
   "sla_autotune_blocked_streaks",
   "sla_compliance_stats",
   "sla_deadline",
@@ -623,6 +627,13 @@
    "funcao": "handle_new_organization"
   },
   {
+   "nome": "trg_seed_role_permissions",
+   "quando": "after",
+   "evento": "insert",
+   "tabela": "organizations",
+   "funcao": "seed_role_permissions"
+  },
+  {
    "nome": "update_organizations_updated_at",
    "quando": "before",
    "evento": "update",
@@ -697,6 +708,20 @@
    "quando": "before",
    "evento": "update",
    "tabela": "reaper_alert_settings",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_role_permissions_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "role_permissions",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_scheduled_reports_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "scheduled_reports",
    "funcao": "update_updated_at_column"
   },
   {
@@ -1001,6 +1026,12 @@
    "migration": "20261121210000_retencao_cron_runs_e_qa_reaper.sql"
   },
   {
+   "nome": "prune-scheduled-report-runs-monthly",
+   "agenda": "53 3 1 * *",
+   "migration": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "chama_edge": "send-scheduled-reports"
+  },
+  {
    "nome": "purge-soft-deleted-daily",
    "agenda": "0 3 * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
@@ -1028,6 +1059,12 @@
    "agenda": "*/15 * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "dlq-alerts"
+  },
+  {
+   "nome": "send-scheduled-reports-hourly",
+   "agenda": "7 * * * *",
+   "migration": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "chama_edge": "send-scheduled-reports"
   },
   {
    "nome": "sla-alerts-hourly",
@@ -2994,6 +3031,146 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "bulk_imports": {
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "entity": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'companies'",
+     "ref": null
+    },
+    "errors": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'[]'::jsonb",
+     "ref": null
+    },
+    "file_name": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "inserted_count": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "invalid_count": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "skipped_count": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "total_rows": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Service manage bulk_imports",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users insert own bulk_imports",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users view own bulk_imports",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_bulk_imports_org",
+     "colunas": "organization_id, created_at desc",
+     "unico": false
+    },
+    {
+     "nome": "idx_bulk_imports_user",
+     "colunas": "user_id, created_at desc",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "colunas_types": {
+    "created_at": "string",
+    "entity": "string",
+    "errors": "Json",
+    "file_name": "string | null",
+    "id": "string",
+    "inserted_count": "number",
+    "invalid_count": "number",
+    "organization_id": "string | null",
+    "skipped_count": "number",
+    "total_rows": "number",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "campaign_events": {
    "colunas": {
     "campaign_id": {
@@ -3130,7 +3307,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "send-scheduled-reports"
+   ],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -5314,6 +5493,7 @@
     "mcp",
     "oracle-search-decisors",
     "rls-tests",
+    "send-scheduled-reports",
     "workflow-engine"
    ],
    "triggers": [
@@ -6315,7 +6495,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "send-scheduled-reports"
+   ],
    "triggers": [
     "increment_deals_version",
     "tr_deals_version",
@@ -6931,7 +7113,8 @@
     "campaign-dispatch",
     "email-oauth-callback",
     "email-oauth-disconnect",
-    "email-poll-replies"
+    "email-poll-replies",
+    "send-scheduled-reports"
    ],
    "triggers": [
     "trg_audit_email_accounts",
@@ -11037,6 +11220,7 @@
    ],
    "triggers": [
     "on_organization_created",
+    "trg_seed_role_permissions",
     "update_organizations_updated_at"
    ],
    "sem_rls": false,
@@ -12646,6 +12830,473 @@
     "web-scrape-worker"
    ],
    "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "role_permissions": {
+   "colunas": {
+    "can_create": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "can_delete": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "can_manage": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "can_update": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "can_view": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "resource": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "role": {
+     "tipo": "public",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete role_permissions",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Admins insert role_permissions",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Admins update role_permissions",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view role_permissions",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage role_permissions",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_role_permissions_org",
+     "colunas": "organization_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "colunas_types": {
+    "can_create": "boolean",
+    "can_delete": "boolean",
+    "can_manage": "boolean",
+    "can_update": "boolean",
+    "can_view": "boolean",
+    "created_at": "string",
+    "id": "string",
+    "organization_id": "string",
+    "resource": "string",
+    "role": "Database[\"public\"][\"Enums\"][\"app_role\"]",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_role_permissions_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "scheduled_report_runs": {
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "error_message": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "payload": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "period_end": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "period_start": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "recipients_count": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "report_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "scheduled_reports"
+    },
+    "status": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'pending'",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Service manage scheduled_report_runs",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users view own scheduled_report_runs",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_sched_report_runs_report",
+     "colunas": "report_id, created_at desc",
+     "unico": false
+    },
+    {
+     "nome": "uq_sched_report_runs_period",
+     "colunas": "report_id, period_start",
+     "unico": true
+    }
+   ],
+   "fks": [
+    "report_id->scheduled_reports"
+   ],
+   "criada_em": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "colunas_types": {
+    "created_at": "string",
+    "error_message": "string | null",
+    "id": "string",
+    "payload": "Json | null",
+    "period_end": "string",
+    "period_start": "string",
+    "recipients_count": "number",
+    "report_id": "string",
+    "status": "string",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [
+    "send-scheduled-reports"
+   ],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "scheduled_reports": {
+   "colunas": {
+    "active": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "day_of_month": {
+     "tipo": "smallint",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "day_of_week": {
+     "tipo": "smallint",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "filters": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
+    "frequency": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'weekly'",
+     "ref": null
+    },
+    "hour_utc": {
+     "tipo": "smallint",
+     "nn": true,
+     "pk": false,
+     "default": "9",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "last_sent_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "metric": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "recipients": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Service manage scheduled_reports",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users insert own scheduled_reports",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users update own scheduled_reports",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users view own scheduled_reports",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_scheduled_reports_due",
+     "colunas": "hour_utc",
+     "unico": false
+    },
+    {
+     "nome": "idx_scheduled_reports_user",
+     "colunas": "user_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "colunas_types": {
+    "active": "boolean",
+    "created_at": "string",
+    "day_of_month": "number | null",
+    "day_of_week": "number | null",
+    "deleted_at": "string | null",
+    "filters": "Json",
+    "frequency": "string",
+    "hour_utc": "number",
+    "id": "string",
+    "last_sent_at": "string | null",
+    "metric": "string",
+    "name": "string",
+    "organization_id": "string | null",
+    "recipients": "string[]",
+    "updated_at": "string",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [
+    "send-scheduled-reports"
+   ],
+   "triggers": [
+    "trg_scheduled_reports_updated"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -15967,6 +16618,11 @@
    "nome": "default_org_for_current_user",
    "definida": true,
    "usada_em": 7
+  },
+  {
+   "nome": "default_role_permissions",
+   "definida": true,
+   "usada_em": 1
   },
   {
    "nome": "defer_scrape_task",

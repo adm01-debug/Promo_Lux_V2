@@ -286,7 +286,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 31,
+   "usado_por": 32,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -373,7 +373,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 105,
+   "usado_por": 106,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -401,7 +401,7 @@
     "TablesUpdate"
    ],
    "export_default": null,
-   "linhas": 5989,
+   "linhas": 6194,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -450,7 +450,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 41,
+   "usado_por": 42,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -1135,7 +1135,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_modulos": [
     "components/lux",
     "hooks"

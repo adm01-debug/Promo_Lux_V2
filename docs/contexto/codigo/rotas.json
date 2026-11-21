@@ -98,7 +98,9 @@
     "useRef",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSaveOAuthSnapshot",
+    "useScheduledReports",
     "useSearchParams",
     "useSensor",
     "useSensors",
@@ -174,7 +176,9 @@
     "useRecentViews",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSaveOAuthSnapshot",
+    "useScheduledReports",
     "useSidebarState",
     "useSkin",
     "useSwipeGesture",
@@ -194,6 +198,7 @@
     "api_keys",
     "audit_logs",
     "automation_execution_logs",
+    "bulk_imports",
     "campaign_events",
     "campaign_recipients",
     "campaign_replies",
@@ -223,6 +228,9 @@
     "organizations",
     "places_api_usage",
     "profiles",
+    "role_permissions",
+    "scheduled_report_runs",
+    "scheduled_reports",
     "scrape_dead_letter",
     "scrape_jobs",
     "scrape_queue",
@@ -235,6 +243,7 @@
    "rpcs": [
     "campaign_ab_stats",
     "create_default_deal_stages",
+    "default_role_permissions",
     "enrichment_funnel_counts",
     "get_dashboard_stats",
     "pg_catalog_rls_tables",
@@ -295,7 +304,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 232
+   "arquivos_puxados": 235
   },
   {
    "protegida": true,
@@ -866,6 +875,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useScheduledReports",
     "useState",
     "useTheme",
     "useThemeColors",
@@ -887,6 +897,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useScheduledReports",
     "useThemeColors",
     "useToast",
     "useUpdateMemberRole"
@@ -899,6 +910,8 @@
     "organization_members",
     "organizations",
     "profiles",
+    "scheduled_report_runs",
+    "scheduled_reports",
     "scrape_jobs",
     "workflows"
    ],
@@ -915,7 +928,7 @@
     "CFO",
     "CTO"
    ],
-   "arquivos_puxados": 26
+   "arquivos_puxados": 35
   },
   {
    "id": "automations",
@@ -983,6 +996,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useState",
     "useToast",
     "useUnsavedChanges",
@@ -1004,6 +1018,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useToast",
     "useUnsavedChanges",
     "useUpdateMemberRole"
@@ -1018,10 +1033,12 @@
     "organization_invites",
     "organization_members",
     "organizations",
-    "profiles"
+    "profiles",
+    "role_permissions"
    ],
    "rpcs": [
     "campaign_ab_stats",
+    "default_role_permissions",
     "get_dashboard_stats"
    ],
    "edges": [
@@ -1039,7 +1056,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 33
+   "arquivos_puxados": 34
   },
   {
    "id": "companies",
@@ -1074,6 +1091,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useState",
     "useToast",
     "useUnsavedChanges",
@@ -1100,12 +1118,14 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useToast",
     "useUnsavedChanges",
     "useUpdateMemberRole"
    ],
    "tabelas": [
     "audit_logs",
+    "bulk_imports",
     "cnpj_enrich_queue",
     "companies",
     "company_reviews",
@@ -1115,9 +1135,11 @@
     "organization_members",
     "organizations",
     "profiles",
+    "role_permissions",
     "stakeholders"
    ],
    "rpcs": [
+    "default_role_permissions",
     "get_dashboard_stats"
    ],
    "edges": [
@@ -1137,7 +1159,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 59
+   "arquivos_puxados": 60
   },
   {
    "id": "dashboard",
@@ -1210,7 +1232,9 @@
     "useRef",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSaveOAuthSnapshot",
+    "useScheduledReports",
     "useSearchParams",
     "useSensor",
     "useSensors",
@@ -1275,7 +1299,9 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSaveOAuthSnapshot",
+    "useScheduledReports",
     "useTaskReminders",
     "useThemeColors",
     "useToast",
@@ -1292,6 +1318,7 @@
     "api_keys",
     "audit_logs",
     "automation_execution_logs",
+    "bulk_imports",
     "campaign_events",
     "campaign_recipients",
     "campaign_replies",
@@ -1321,6 +1348,9 @@
     "organizations",
     "places_api_usage",
     "profiles",
+    "role_permissions",
+    "scheduled_report_runs",
+    "scheduled_reports",
     "scrape_dead_letter",
     "scrape_jobs",
     "scrape_queue",
@@ -1333,6 +1363,7 @@
    "rpcs": [
     "campaign_ab_stats",
     "create_default_deal_stages",
+    "default_role_permissions",
     "enrichment_funnel_counts",
     "get_dashboard_stats",
     "pg_catalog_rls_tables",
@@ -1384,7 +1415,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 196
+   "arquivos_puxados": 199
   },
   {
    "id": "deals",
@@ -1558,6 +1589,7 @@
     "useQueryClient",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSaveOAuthSnapshot",
     "useState",
     "useToast",
@@ -1585,6 +1617,7 @@
     "usePermissions",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSaveOAuthSnapshot",
     "useToast",
     "useUpdateMemberRole",
@@ -1601,10 +1634,13 @@
     "organization_members",
     "organizations",
     "profiles",
+    "role_permissions",
     "webhook_deliveries",
     "webhooks"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "default_role_permissions"
+   ],
    "edges": [
     "email-oauth-callback",
     "email-oauth-connect",
@@ -1620,7 +1656,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 50
+   "arquivos_puxados": 51
   },
   {
    "id": "intent",
@@ -1849,6 +1885,7 @@
     "useQueryClient",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useState",
     "useUpdateMemberRole"
    ],
@@ -1864,6 +1901,7 @@
     "usePermissions",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useUpdateMemberRole"
    ],
    "tabelas": [
@@ -1873,9 +1911,12 @@
     "organization_invites",
     "organization_members",
     "organizations",
-    "profiles"
+    "profiles",
+    "role_permissions"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "default_role_permissions"
+   ],
    "edges": [
     "org-violation-alerts"
    ],
@@ -1888,7 +1929,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 25
+   "arquivos_puxados": 26
   },
   {
    "id": "organizations",
@@ -1913,6 +1954,7 @@
     "useQueryClient",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useState",
     "useToast",
     "useUpdateMemberRole"
@@ -1929,6 +1971,7 @@
     "useOrgMembers",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useToast",
     "useUpdateMemberRole"
    ],
@@ -1937,9 +1980,12 @@
     "organization_invites",
     "organization_members",
     "organizations",
-    "profiles"
+    "profiles",
+    "role_permissions"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "default_role_permissions"
+   ],
    "edges": [],
    "canais_realtime": [],
    "flags": [],
@@ -1947,7 +1993,7 @@
     "admin",
     "button"
    ],
-   "arquivos_puxados": 37
+   "arquivos_puxados": 38
   },
   {
    "id": "recycle-bin",
@@ -2054,6 +2100,7 @@
     "useQueryClient",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useState",
     "useToast",
     "useUnsavedChanges",
@@ -2071,6 +2118,7 @@
     "usePermissions",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useToast",
     "useUnsavedChanges",
     "useUpdateMemberRole"
@@ -2080,9 +2128,11 @@
     "organization_invites",
     "organization_members",
     "organizations",
-    "profiles"
+    "profiles",
+    "role_permissions"
    ],
    "rpcs": [
+    "default_role_permissions",
     "pg_catalog_rls_tables"
    ],
    "edges": [
@@ -2095,7 +2145,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 28
+   "arquivos_puxados": 29
   },
   {
    "id": "stakeholders",
@@ -2224,6 +2274,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useState",
     "useToast",
     "useUpdateMemberRole"
@@ -2244,6 +2295,7 @@
     "useRecentCompanies",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useToast",
     "useUpdateMemberRole"
    ],
@@ -2254,9 +2306,11 @@
     "organization_members",
     "organizations",
     "profiles",
+    "role_permissions",
     "workflows"
    ],
    "rpcs": [
+    "default_role_permissions",
     "get_dashboard_stats"
    ],
    "edges": [
@@ -2275,7 +2329,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 31
+   "arquivos_puxados": 32
   }
  ],
  "menu": [

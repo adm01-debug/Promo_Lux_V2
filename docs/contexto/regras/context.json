@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "bb305ef63d9ecdbfe431ed044bb347f4f500998a",
+  "sha": "74324554b7ba227369a72fa446d936531e891f55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 20:18 UTC",
-  "files_total": 1055,
-  "code_files": 880,
-  "code_lines": 126056
+  "generated_at": "2026-11-21 21:08 UTC",
+  "files_total": 1060,
+  "code_files": 885,
+  "code_lines": 127868
  },
  "version": "1.3.2",
- "facts_hash": "9e339b1c67e4cefa",
+ "facts_hash": "c6c9b8d669f43427",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,9 +232,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 348,
-   ".tsx": 277,
-   ".sql": 225,
+   ".ts": 351,
+   ".tsx": 278,
+   ".sql": 226,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -251,7 +251,8 @@
     "public-api",
     "email-oauth-callback",
     "mcp",
-    "mcp-query"
+    "mcp-query",
+    "send-scheduled-reports"
    ],
    "auth": {}
   },
@@ -9233,6 +9234,376 @@
     "comment": "",
     "origin": "migration"
    },
+   "scheduled_reports": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "uuid not null default auth.uid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "name",
+      "type": "text not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "metric",
+      "type": "text not null check (metric in ('conversion','enrichment','pipeline','campaigns'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "frequency",
+      "type": "text not null default 'weekly' check (frequency in ('daily','weekly','monthly'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "day_of_week",
+      "type": "smallint check (day_of_week between 0 and 6)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "day_of_month",
+      "type": "smallint check (day_of_month between 1 and 28)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "hour_utc",
+      "type": "smallint not null default 9 check (hour_utc between 0 and 23)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "recipients",
+      "type": "text[] not null default '{}'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "filters",
+      "type": "jsonb not null default '{}'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "active",
+      "type": "boolean not null default true",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "last_sent_at",
+      "type": "timestamptz",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "deleted_at",
+      "type": "timestamptz",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "scheduled_report_runs": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "report_id",
+      "type": "uuid not null references public.scheduled_reports(id) on delete cascade",
+      "fk": "scheduled_reports.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "uuid not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "period_start",
+      "type": "timestamptz not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "period_end",
+      "type": "timestamptz not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "status",
+      "type": "text not null default 'pending' check (status in ('pending','sent','failed','skipped'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "recipients_count",
+      "type": "integer not null default 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "error_message",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "payload",
+      "type": "jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "bulk_imports": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "user_id",
+      "type": "uuid not null default auth.uid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "entity",
+      "type": "text not null default 'companies' check (entity in ('companies','stakeholders','deals'))",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "file_name",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "total_rows",
+      "type": "integer not null default 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "inserted_count",
+      "type": "integer not null default 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "skipped_count",
+      "type": "integer not null default 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "invalid_count",
+      "type": "integer not null default 0",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "errors",
+      "type": "jsonb not null default '[]'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "role_permissions": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid not null references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "role",
+      "type": "public.app_role not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "resource",
+      "type": "text not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "can_view",
+      "type": "boolean not null default true",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "can_create",
+      "type": "boolean not null default false",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "can_update",
+      "type": "boolean not null default false",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "can_delete",
+      "type": "boolean not null default false",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "can_manage",
+      "type": "boolean not null default false",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+     }
+    ],
+    "constraints": [
+     "unique (organization_id, role, resource)"
+    ],
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "oracle_v2_health": {
     "columns": [
      {
@@ -12155,6 +12526,146 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "Users view own scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid() and deleted_at is null",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users insert own scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users update own scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users view own scheduled_report_runs",
+    "table": "scheduled_report_runs",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage scheduled_report_runs",
+    "table": "scheduled_report_runs",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users view own bulk_imports",
+    "table": "bulk_imports",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users insert own bulk_imports",
+    "table": "bulk_imports",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage bulk_imports",
+    "table": "bulk_imports",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Members view role_permissions",
+    "table": "role_permissions",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Admins insert role_permissions",
+    "table": "role_permissions",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Admins update role_permissions",
+    "table": "role_permissions",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Admins delete role_permissions",
+    "table": "role_permissions",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage role_permissions",
+    "table": "role_permissions",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "triggers": [
@@ -13066,6 +13577,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "trg_scheduled_reports_updated",
+    "when": "BEFORE UPDATE",
+    "table": "scheduled_reports",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "trg_role_permissions_updated",
+    "when": "BEFORE UPDATE",
+    "table": "role_permissions",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "trg_seed_role_permissions",
+    "when": "AFTER INSERT",
+    "table": "organizations",
+    "function": "seed_role_permissions",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "functions": {
@@ -14971,6 +15509,64 @@
     "tables": [
      "del",
      "qa_reaper_runs",
+     "v_count"
+    ]
+   },
+   "default_role_permissions": {
+    "args": "",
+    "returns": "table (\n  resource text, role public.app_role,\n  can_view boolean, can_create boolean, can_update boolean, can_delete boolean, can_manage boolean\n)",
+    "lang": "sql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "values ('companies', 'admin'::public.app_role, true, true, true, true, true), ('companies', 'sdr', true, true, true, false, false), ('companies', 'viewer', true, false, false, false, false), ('stakeholders', 'admin', true, true, true, true, true), ('stakeholders', 'sdr', true, true, true, false, false), ('stakeholders', 'viewer', true, false, false, false, false), ('deals', 'admin', true, true, true, true, true), ('deals', 'sdr', true, true, true, false, false), ('deals', 'viewer', true, false, false, false, false), ('campaigns', 'admin', true, true, true, true, true), ('campaigns', 'sdr', true, true, true, false, false), ('campaigns', 'viewer', true, false, false, false, false), ('workflows …",
+    "raises": [],
+    "tables": []
+   },
+   "seed_role_permissions": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin insert into public.role_permissions (organization_id, role, resource, can_view, can_create, can_update, can_delete, can_manage) select new.id, d.role, d.resource, d.can_view, d.can_create, d.can_update, d.can_delete, d.can_manage from public.default_role_permissions() d on conflict (organization_id, role, resource) do nothing; return new; end;",
+    "raises": [],
+    "tables": [
+     "default_role_permissions",
+     "role_permissions"
+    ]
+   },
+   "can_access": {
+    "args": "_org_id uuid, _user_id uuid, _resource text, _action text default 'view'",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_role public.app_role; v_perm public.role_permissions; begin if _user_id is null then return false; end if; select om.role into v_role from public.organization_members om where om.organization_id = _org_id and om.user_id = _user_id and om.deleted_at is null limit 1; if v_role is null then return false; end if; select * into v_perm from public.role_permissions rp where rp.organization_id = _org_id and rp.role = v_role and rp.resource = _resource limit 1; if found then return case _action when 'view' then v_perm.can_view when 'create' then v_perm.can_create when 'update' then v_perm.can_update when 'delete' then v_perm.can_delete when 'manage' then v_perm.can_manage else false end; en …",
+    "raises": [],
+    "tables": [
+     "organization_members",
+     "role_permissions",
+     "v_perm",
+     "v_role"
+    ]
+   },
+   "prune_scheduled_report_runs": {
+    "args": "_retention_days integer default 180",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_count integer := 0; begin if auth.uid() is not null and not public.has_role(auth.uid(), 'admin') then raise exception 'prune_scheduled_report_runs: admin only'; end if; with del as ( delete from public.scheduled_report_runs where created_at < now() - make_interval(days => _retention_days) returning 1 ) select count(*) into v_count from del; return v_count; end;",
+    "raises": [
+     "prune_scheduled_report_runs: admin only"
+    ],
+    "tables": [
+     "del",
+     "scheduled_report_runs",
      "v_count"
     ]
    },
@@ -17758,6 +18354,62 @@
     "unique": false,
     "where": "",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "idx_scheduled_reports_user",
+    "table": "scheduled_reports",
+    "columns": "user_id",
+    "unique": false,
+    "where": "where deleted_at is null",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "idx_scheduled_reports_due",
+    "table": "scheduled_reports",
+    "columns": "hour_utc",
+    "unique": false,
+    "where": "where deleted_at is null and active",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "idx_sched_report_runs_report",
+    "table": "scheduled_report_runs",
+    "columns": "report_id, created_at desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "uq_sched_report_runs_period",
+    "table": "scheduled_report_runs",
+    "columns": "report_id, period_start",
+    "unique": true,
+    "where": "where status in ('pending','sent')",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "idx_bulk_imports_user",
+    "table": "bulk_imports",
+    "columns": "user_id, created_at desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "idx_bulk_imports_org",
+    "table": "bulk_imports",
+    "columns": "organization_id, created_at desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "idx_role_permissions_org",
+    "table": "role_permissions",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "cron_jobs": [
@@ -17772,6 +18424,18 @@
     "schedule": "47 3 * * *",
     "body": "SELECT public.prune_qa_reaper_runs(30);",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "job": "prune-scheduled-report-runs-monthly",
+    "schedule": "53 3 1 * *",
+    "body": "SELECT public.prune_scheduled_report_runs(180);",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "job": "send-scheduled-reports-hourly",
+    "schedule": "7 * * * *",
+    "body": "SELECT net.http_post( url := 'https://pttzwlbidamibjssqiqb.supabase.co/functions/v1/send-scheduled-reports', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', (select decrypted_secret from vault.decrypted_secrets where name = 'SUPABASE_SERVICE_ROLE_KEY'), 'Authorization', …",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "views": {
@@ -18010,6 +18674,7 @@
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+   "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -18112,7 +18777,11 @@
    "sla_autotune_runs": "enabled",
    "apollo_search_cache": "enabled",
    "apollo_rate_state": "enabled",
-   "api_rate_limits": "enabled"
+   "api_rate_limits": "enabled",
+   "scheduled_reports": "enabled",
+   "scheduled_report_runs": "enabled",
+   "bulk_imports": "enabled",
+   "role_permissions": "enabled"
   },
   "grants": [
    {
@@ -22026,6 +22695,110 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "can_access",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "can_access",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "prune_scheduled_report_runs",
+    "objkind": "function",
+    "roles": "public, anon, authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "prune_scheduled_report_runs",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "scheduled_reports",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "scheduled_report_runs",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "bulk_imports",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "role_permissions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "insert, update, delete",
+    "object": "role_permissions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "scheduled_reports",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "scheduled_report_runs",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "bulk_imports",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "role_permissions",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "raises": [
@@ -22468,6 +23241,11 @@
     "function": "prune_qa_reaper_runs",
     "msg": "retencao invalida: % (minimo 1 dia)",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_scheduled_report_runs",
+    "msg": "prune_scheduled_report_runs: admin only",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "seed": [],
@@ -23865,6 +24643,51 @@
     "idempotency": false
    },
    {
+    "name": "send-scheduled-reports",
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "campaign_events",
+     "companies",
+     "deals",
+     "email_accounts",
+     "scheduled_report_runs",
+     "scheduled_reports"
+    ],
+    "env": [
+     "GOOGLE_OAUTH_CLIENT_ID",
+     "GOOGLE_OAUTH_CLIENT_SECRET",
+     "MS_OAUTH_CLIENT_ID",
+     "MS_OAUTH_CLIENT_SECRET",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [
+     "https://gmail.googleapis.com/gmail/v1/users/me/messages/…",
+     "https://graph.microsoft.com/v1.0/me/…"
+    ],
+    "invokes": [],
+    "doc": "Envio dos relatorios agendados de Analytics. Acionamento: pg_cron (sem body) processa todos os agendamentos vencidos. O \"vencido\" e calculado pela propria funcao a partir de frequency + day_of_week/day_of_month/hour_utc, comparando com last_sent_at — assim nao existe estado extra para dessincronizar …",
+    "errors": [
+     "Gmail send [${res.status}]: ${body.slice(0, 300)}",
+     "OAuth nao configurado para ${acc.provider}",
+     "Outlook send [${res.status}]: ${body.slice(0, 300)}",
+     "Refresh falhou: ${code}",
+     "Sem refresh token; reconexao necessaria",
+     "leitura dos agendamentos: ${error.message}",
+     "reserva do periodo: ${reserveErr.message}",
+     "todos os envios falharam: ${failures[0]}"
+    ],
+    "side_effects": [
+     "sendMail"
+    ],
+    "webhook_events": [],
+    "idempotency": true
+   },
+   {
     "name": "sla-alerts",
     "file": "supabase/functions/sla-alerts/index.ts",
     "methods": [
@@ -24535,7 +25358,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 285,
+  "components_count": 286,
   "hooks": [
    {
     "name": "useContacts",
@@ -24962,6 +25785,14 @@
     "file": "src/hooks/useResilienceSimulator.ts"
    },
    {
+    "name": "useRolePermissions",
+    "file": "src/hooks/useRolePermissions.ts"
+   },
+   {
+    "name": "useScheduledReports",
+    "file": "src/hooks/useScheduledReports.ts"
+   },
+   {
     "name": "useScrapeQueue",
     "file": "src/hooks/useScrapeQueue.ts"
    },
@@ -25379,13 +26210,14 @@
   },
   {
    "module": "src/components",
-   "files": 285,
-   "lines": 45422,
+   "files": 286,
+   "lines": 45923,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
     "automation_execution_logs",
     "automation_steps",
+    "bulk_imports",
     "campaign_events",
     "campaign_recipients",
     "campaign_replies",
@@ -25621,8 +26453,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 84,
-   "lines": 9231,
+   "files": 86,
+   "lines": 9502,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -25662,6 +26494,9 @@
     "profiles",
     "qa_reaper_runs",
     "reaper_alert_history",
+    "role_permissions",
+    "scheduled_report_runs",
+    "scheduled_reports",
     "scrape_dead_letter",
     "scrape_queue",
     "stakeholders",
@@ -25792,6 +26627,8 @@
     "src/hooks/useRecentViews.ts",
     "src/hooks/useResilienceComparison.ts",
     "src/hooks/useResilienceSimulator.ts",
+    "src/hooks/useRolePermissions.ts",
+    "src/hooks/useScheduledReports.ts",
     "src/hooks/useScrapeQueue.ts",
     "src/hooks/useSidebarState.ts",
     "src/hooks/useSkin.ts",
@@ -25809,15 +26646,13 @@
     "src/hooks/__tests__/useConfirm.test.tsx",
     "src/hooks/__tests__/useDlqReplay.test.ts",
     "src/hooks/__tests__/useOraclePushBitrix.test.ts",
-    "src/hooks/__tests__/usePersistedFilters.test.ts",
-    "src/hooks/__tests__/useRateLimit.logic.test.ts",
-    "src/hooks/__tests__/useRateLimit.test.ts"
+    "src/hooks/__tests__/usePersistedFilters.test.ts"
    ]
   },
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 7357,
+   "lines": 7562,
    "tables": [
     "automation_alerts",
     "companies",
@@ -26084,8 +26919,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 124,
-   "lines": 21959,
+   "files": 125,
+   "lines": 22425,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -26097,6 +26932,7 @@
     "automation_alerts",
     "automation_execution_logs",
     "automation_steps",
+    "campaign_events",
     "campaign_messages",
     "campaign_recipients",
     "campaigns",
@@ -26105,6 +26941,7 @@
     "cnpj_enrich_queue",
     "cnpj_enrich_rate_state",
     "companies",
+    "deals",
     "dlq_alert_history",
     "dlq_alert_settings",
     "dlq_health_snapshots",
@@ -26133,6 +26970,8 @@
     "reaper_alert_settings",
     "retry_policy_advisories",
     "robots_cache",
+    "scheduled_report_runs",
+    "scheduled_reports",
     "scrape_jobs",
     "scrape_results",
     "sla_alert_history",
@@ -26290,8 +27129,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 221,
-   "lines": 12938,
+   "files": 222,
+   "lines": 13307,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -26520,9 +27359,18 @@
      "supabase/functions/workflow-engine/index.ts"
     ]
    },
+   "bulk_imports": {
+    "select": [
+     "src/components/lux/companies/ImportCompaniesDialog.tsx"
+    ],
+    "insert": [
+     "src/components/lux/companies/ImportCompaniesDialog.tsx"
+    ]
+   },
    "campaign_events": {
     "select": [
-     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx"
+     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+     "supabase/functions/send-scheduled-reports/index.ts"
     ]
    },
    "campaign_messages": {
@@ -26655,6 +27503,7 @@
      "supabase/functions/mcp/index.ts",
      "supabase/functions/oracle-search-decisors/index.ts",
      "supabase/functions/rls-tests/index.ts",
+     "supabase/functions/send-scheduled-reports/index.ts",
      "supabase/functions/workflow-engine/index.ts"
     ],
     "ref": [
@@ -26758,7 +27607,8 @@
    "deals": {
     "select": [
      "src/hooks/useDeals.ts",
-     "src/integrations/supabase/__tests__/withOrg.switching.test.ts"
+     "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
+     "supabase/functions/send-scheduled-reports/index.ts"
     ],
     "insert": [
      "src/hooks/useDeals.ts"
@@ -26801,14 +27651,16 @@
      "supabase/functions/campaign-dispatch/index.ts",
      "supabase/functions/email-oauth-callback/index.ts",
      "supabase/functions/email-oauth-disconnect/index.ts",
-     "supabase/functions/email-poll-replies/index.ts"
+     "supabase/functions/email-poll-replies/index.ts",
+     "supabase/functions/send-scheduled-reports/index.ts"
     ],
     "update": [
      "src/components/lux/integrations/EmailAccountsPanel.tsx",
      "supabase/functions/campaign-dispatch/index.ts",
      "supabase/functions/email-oauth-callback/index.ts",
      "supabase/functions/email-oauth-disconnect/index.ts",
-     "supabase/functions/email-poll-replies/index.ts"
+     "supabase/functions/email-poll-replies/index.ts",
+     "supabase/functions/send-scheduled-reports/index.ts"
     ],
     "insert": [
      "supabase/functions/email-oauth-callback/index.ts"
@@ -27288,9 +28140,44 @@
      "supabase/functions/web-scrape-worker/index.ts"
     ]
    },
+   "role_permissions": {
+    "select": [
+     "src/hooks/useRolePermissions.ts"
+    ],
+    "update": [
+     "src/hooks/useRolePermissions.ts"
+    ],
+    "ref": [
+     "src/hooks/useRolePermissions.ts"
+    ]
+   },
    "runtime_table": {
     "select": [
      "scripts/ai-context/gerar.unit.mjs"
+    ]
+   },
+   "scheduled_report_runs": {
+    "select": [
+     "src/hooks/useScheduledReports.ts"
+    ],
+    "insert": [
+     "supabase/functions/send-scheduled-reports/index.ts"
+    ],
+    "update": [
+     "supabase/functions/send-scheduled-reports/index.ts"
+    ]
+   },
+   "scheduled_reports": {
+    "select": [
+     "src/hooks/useScheduledReports.ts",
+     "supabase/functions/send-scheduled-reports/index.ts"
+    ],
+    "insert": [
+     "src/hooks/useScheduledReports.ts"
+    ],
+    "update": [
+     "src/hooks/useScheduledReports.ts",
+     "supabase/functions/send-scheduled-reports/index.ts"
     ]
    },
    "scrape_dead_letter": {
@@ -27619,6 +28506,16 @@
     "id",
     "job_id"
    ],
+   "bulk_imports": [
+    "created_at",
+    "entity",
+    "file_name",
+    "id",
+    "inserted_count",
+    "invalid_count",
+    "skipped_count",
+    "total_rows"
+   ],
    "campaign_events": [
     "campaign_id",
     "event_type",
@@ -27768,7 +28665,10 @@
     "user_id"
    ],
    "deals": [
-    "id"
+    "created_at",
+    "deleted_at",
+    "id",
+    "value"
    ],
    "dlq_alert_history": [
     "admins_notified",
@@ -28110,6 +29010,36 @@
    "robots_cache": [
     "host"
    ],
+   "role_permissions": [
+    "organization_id",
+    "resource",
+    "role"
+   ],
+   "scheduled_report_runs": [
+    "created_at",
+    "error_message",
+    "id",
+    "period_start",
+    "recipients_count",
+    "report_id",
+    "status"
+   ],
+   "scheduled_reports": [
+    "active",
+    "day_of_month",
+    "day_of_week",
+    "deleted_at",
+    "filters",
+    "frequency",
+    "hour_utc",
+    "id",
+    "last_sent_at",
+    "metric",
+    "name",
+    "organization_id",
+    "recipients",
+    "user_id"
+   ],
    "scrape_dead_letter": [
     "attempts",
     "failed_at",
@@ -28411,13 +29341,15 @@
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-poll-replies/index.ts"
+    "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts"
    ],
    "GOOGLE_OAUTH_CLIENT_SECRET": [
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-poll-replies/index.ts"
+    "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts"
    ],
    "GRAPHIFY_FIXTURE_": [
     "scripts/graphify-local.unit.mjs"
@@ -28463,13 +29395,15 @@
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-poll-replies/index.ts"
+    "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts"
    ],
    "MS_OAUTH_CLIENT_SECRET": [
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-poll-replies/index.ts"
+    "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts"
    ],
    "NODE_ENV": [
     "scripts/ai-context/cenarios.mjs",
@@ -28640,6 +29574,7 @@
     "supabase/functions/rls-tests/index.test.ts",
     "supabase/functions/rls-tests/index.ts",
     "supabase/functions/scrape-queue-worker/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts",
     "supabase/functions/sla-alerts/index.ts",
     "supabase/functions/sla-auto-tune/index.ts",
     "supabase/functions/system-recovery-status/index.ts",
@@ -28705,6 +29640,7 @@
     "supabase/functions/rls-tests/index.test.ts",
     "supabase/functions/rls-tests/index.ts",
     "supabase/functions/scrape-queue-worker/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts",
     "supabase/functions/sla-alerts/index.ts",
     "supabase/functions/sla-auto-tune/index.ts",
     "supabase/functions/system-recovery-status/index.ts",
@@ -28872,6 +29808,9 @@
     "supabase/functions/lusha-reveal/index.ts",
     "supabase/functions/mcp/index.ts",
     "supabase/functions/web-scrape-enqueue/index.ts"
+   ],
+   "default_role_permissions": [
+    "src/hooks/useRolePermissions.ts"
    ],
    "defer_scrape_task": [
     "supabase/functions/scrape-queue-worker/index.ts"
@@ -29165,14 +30104,16 @@
    ],
    "https://gmail.googleapis.com": [
     "supabase/functions/campaign-dispatch/index.ts",
-    "supabase/functions/email-poll-replies/index.ts"
+    "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts"
    ],
    "https://gmaps.atomicabr.com.br": [
     "supabase/functions/health/index.ts"
    ],
    "https://graph.microsoft.com": [
     "supabase/functions/campaign-dispatch/index.ts",
-    "supabase/functions/email-oauth-callback/index.ts"
+    "supabase/functions/email-oauth-callback/index.ts",
+    "supabase/functions/send-scheduled-reports/index.ts"
    ],
    "https://login.microsoftonline.com": [
     "supabase/functions/email-oauth-callback/index.ts"
@@ -29289,7 +30230,11 @@
     "web_scrape_dead_letter",
     "instagram_scrape_queue",
     "instagram_scrape_results",
-    "instagram_scrape_dead_letter"
+    "instagram_scrape_dead_letter",
+    "scheduled_reports",
+    "scheduled_report_runs",
+    "bulk_imports",
+    "role_permissions"
    ],
    "deals": [
     "deal_activities",
@@ -29320,6 +30265,9 @@
    ],
    "api_keys": [
     "api_rate_limits"
+   ],
+   "scheduled_reports": [
+    "scheduled_report_runs"
    ]
   },
   "tables_only_in_code": [
@@ -29849,6 +30797,21 @@
     "file": "src/hooks/useReaperAlerts.ts",
     "name": "ReaperAlertReason",
     "values": "dead_detected | no_recent_run"
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "name": "PermissionFlag",
+    "values": "can_view | can_create | can_update | can_delete | can_manage"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "name": "ReportMetric",
+    "values": "conversion | enrichment | pipeline | campaigns"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "name": "ReportFrequency",
+    "values": "daily | weekly | monthly"
    },
    {
     "file": "src/hooks/useSkin.ts",
@@ -30726,6 +31689,34 @@
     "msg": "Falha ao carregar ${url}: HTTP ${res.status}"
    },
    {
+    "file": "src/hooks/useRolePermissions.ts",
+    "msg": "Erro ao restaurar"
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "msg": "Erro ao salvar permissão"
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "msg": "Padrão indisponível"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "msg": "Erro ao alterar status"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "msg": "Erro ao atualizar"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "msg": "Erro ao criar relatório"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "msg": "Erro ao excluir"
+   },
+   {
     "file": "src/hooks/useScrapeQueue.ts",
     "msg": "Falha ao expurgar: ${err.message}"
    },
@@ -31030,6 +32021,38 @@
     "msg": "create orgB: ${orgBErr.message}"
    },
    {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "Gmail send [${res.status}]: ${body.slice(0, 300)}"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "OAuth nao configurado para ${acc.provider}"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "Outlook send [${res.status}]: ${body.slice(0, 300)}"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "Refresh falhou: ${code}"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "Sem refresh token; reconexao necessaria"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "leitura dos agendamentos: ${error.message}"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "reserva do periodo: ${reserveErr.message}"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "msg": "todos os envios falharam: ${failures[0]}"
+   },
+   {
     "file": "supabase/functions/sla-alerts/index.ts",
     "msg": "stats_rpc: ${statsErr.message}"
    },
@@ -31110,6 +32133,10 @@
    {
     "file": "src/hooks/usePermissions.ts",
     "value": "viewer"
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "value": "input"
    },
    {
     "file": "supabase/functions/system-recovery-status/index.ts",
@@ -31246,6 +32273,10 @@
     "text": "* Render this when the user lacks the permission instead of nothing. */"
    },
    {
+    "file": "src/components/lux/permissions/PermissionsMatrix.tsx",
+    "text": "* Habilita a edição (somente admin da organização). */"
+   },
+   {
     "file": "src/components/lux/security/OrgViolationAlertsPanel.tsx",
     "text": "- Mostra/edita configurações da org ativa (limite, janela, cooldown)."
    },
@@ -31306,6 +32337,10 @@
     "text": "HTTP 429 do rate-limit por organização vem com Retry-After em segundos."
    },
    {
+    "file": "src/hooks/usePermissions.ts",
+    "text": "* A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a"
+   },
+   {
     "file": "src/hooks/useRateLimit.ts",
     "text": "* Hook de Rate Limit Híbrido:"
    },
@@ -31336,6 +32371,10 @@
    {
     "file": "src/hooks/useRateLimit.ts",
     "text": "* GAP-4: Reseta o estado de rate limit para esta chave."
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "text": "Desfaz a alteração otimista: a matriz não pode divergir do banco."
    },
    {
     "file": "src/integrations/supabase/withOrg.ts",
@@ -31832,6 +32871,18 @@
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
     "text": "4xx é erro do payload do cliente — não deve abrir o circuito."
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "text": "// Isolamento multi-tenant: envia apenas pela conta de e-mail da MESMA"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "text": "* Decide se o relatorio deve rodar agora."
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "text": "Regra: passou do horario configurado, o dia bate com a frequencia e ainda"
    },
    {
     "file": "supabase/functions/sla-auto-tune/index.ts",
@@ -36122,6 +37173,226 @@
     "table": "api_rate_limits",
     "column": "(tabela)",
     "rule": "UNIQUE (api_key_id, window_start)"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "user_id",
+    "rule": "default auth.uid()"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "organization_id",
+    "rule": "FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "name",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "metric",
+    "rule": "obrigatório; CHECK metric in ('conversion','enrichment','pipeline','campaigns')"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "frequency",
+    "rule": "default 'weekly'; CHECK frequency in ('daily','weekly','monthly')"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "day_of_week",
+    "rule": "CHECK day_of_week between 0 and 6"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "day_of_month",
+    "rule": "CHECK day_of_month between 1 and 28"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "hour_utc",
+    "rule": "default 9; CHECK hour_utc between 0 and 23"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "recipients",
+    "rule": "default '{}'"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "filters",
+    "rule": "default '{}'::jsonb"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "active",
+    "rule": "default true"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "scheduled_reports",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "report_id",
+    "rule": "obrigatório; FK → scheduled_reports.id on delete cascade"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "user_id",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "period_start",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "period_end",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "status",
+    "rule": "default 'pending'; CHECK status in ('pending','sent','failed','skipped')"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "recipients_count",
+    "rule": "default 0"
+   },
+   {
+    "table": "scheduled_report_runs",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "user_id",
+    "rule": "default auth.uid()"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "organization_id",
+    "rule": "FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "entity",
+    "rule": "default 'companies'; CHECK entity in ('companies','stakeholders','deals')"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "total_rows",
+    "rule": "default 0"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "inserted_count",
+    "rule": "default 0"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "skipped_count",
+    "rule": "default 0"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "invalid_count",
+    "rule": "default 0"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "errors",
+    "rule": "default '[]'::jsonb"
+   },
+   {
+    "table": "bulk_imports",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "role_permissions",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "role_permissions",
+    "column": "organization_id",
+    "rule": "obrigatório; FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "role_permissions",
+    "column": "role",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "role_permissions",
+    "column": "resource",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "role_permissions",
+    "column": "can_view",
+    "rule": "default true"
+   },
+   {
+    "table": "role_permissions",
+    "column": "can_create",
+    "rule": "default false"
+   },
+   {
+    "table": "role_permissions",
+    "column": "can_update",
+    "rule": "default false"
+   },
+   {
+    "table": "role_permissions",
+    "column": "can_delete",
+    "rule": "default false"
+   },
+   {
+    "table": "role_permissions",
+    "column": "can_manage",
+    "rule": "default false"
+   },
+   {
+    "table": "role_permissions",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "role_permissions",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "role_permissions",
+    "column": "(tabela)",
+    "rule": "unique (organization_id, role, resource)"
    }
   ],
   "params": [
@@ -36479,6 +37750,11 @@
     "file": "supabase/functions/scrape-queue-worker/index.ts",
     "name": "PARALLEL_CHUNK",
     "value": "3"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "name": "MAX_RECIPIENTS",
+    "value": "20"
    },
    {
     "file": "supabase/functions/web-scrape-worker/index.ts",
@@ -38369,6 +39645,12 @@
     "field": "status",
     "value": "failed",
     "kind": "compara"
+   },
+   {
+    "file": "src/hooks/useScheduledReports.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "escreve"
    },
    {
     "file": "src/hooks/useScrapeQueue.ts",
@@ -40627,6 +41909,90 @@
     "kind": "compara"
    },
    {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "skipped",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "skipped",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "skipped",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "sent",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "sent",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "failed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "failed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "failed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "sent",
+    "kind": "compara"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "failed",
+    "kind": "compara"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "skipped",
+    "kind": "compara"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "field": "status",
+    "value": "pending",
+    "kind": "filtra"
+   },
+   {
     "file": "supabase/functions/sla-alerts/index.ts",
     "field": "type",
     "value": "system",
@@ -40933,6 +42299,12 @@
     "name": "computeAlerts",
     "params": "snapshots: DbHealthSnapshot[]",
     "body": "if (snapshots.length === 0) return []; const latest = snapshots[0]; const history = snapshots.slice(1); // baseline exclui o ponto atual const alerts: HealthAlert[] = []; // --- Saturação de conexões --- const connBaseline = history.map((s) => s.connection_pct); const connMean = mean(connBaseline); const connSd = stddev(connBaseline); const connThreshold = Math.max(connMean + 2 * connSd, 80); alerts.push({ key: \"connections\", label: \"Conexões\", value: `${latest.connection_pct}% (${latest.active_ …"
+   },
+   {
+    "file": "src/hooks/usePermissions.ts",
+    "name": "canDo",
+    "params": "entity: Entity, action: Action",
+    "body": "if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);"
    },
    {
     "file": "src/lib/cnpj.ts",
@@ -46470,6 +47842,10 @@
     "call": "notifyRows"
    },
    {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
+    "call": "sendMail"
+   },
+   {
     "file": "supabase/functions/workflow-engine/index.ts",
     "call": "notify"
    },
@@ -49156,6 +50532,146 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "Users view own scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid() and deleted_at is null",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users insert own scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users update own scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage scheduled_reports",
+    "table": "scheduled_reports",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users view own scheduled_report_runs",
+    "table": "scheduled_report_runs",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage scheduled_report_runs",
+    "table": "scheduled_report_runs",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users view own bulk_imports",
+    "table": "bulk_imports",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Users insert own bulk_imports",
+    "table": "bulk_imports",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "user_id = auth.uid()",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage bulk_imports",
+    "table": "bulk_imports",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Members view role_permissions",
+    "table": "role_permissions",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Admins insert role_permissions",
+    "table": "role_permissions",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Admins update role_permissions",
+    "table": "role_permissions",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Admins delete role_permissions",
+    "table": "role_permissions",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "Service manage role_permissions",
+    "table": "role_permissions",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "db_triggers": [
@@ -50067,6 +51583,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "name": "trg_scheduled_reports_updated",
+    "when": "BEFORE UPDATE",
+    "table": "scheduled_reports",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "trg_role_permissions_updated",
+    "when": "BEFORE UPDATE",
+    "table": "role_permissions",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "trg_seed_role_permissions",
+    "when": "AFTER INSERT",
+    "table": "organizations",
+    "function": "seed_role_permissions",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "db_functions": {
@@ -51975,6 +53518,64 @@
      "v_count"
     ]
    },
+   "default_role_permissions": {
+    "args": "",
+    "returns": "table (\n  resource text, role public.app_role,\n  can_view boolean, can_create boolean, can_update boolean, can_delete boolean, can_manage boolean\n)",
+    "lang": "sql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "values ('companies', 'admin'::public.app_role, true, true, true, true, true), ('companies', 'sdr', true, true, true, false, false), ('companies', 'viewer', true, false, false, false, false), ('stakeholders', 'admin', true, true, true, true, true), ('stakeholders', 'sdr', true, true, true, false, false), ('stakeholders', 'viewer', true, false, false, false, false), ('deals', 'admin', true, true, true, true, true), ('deals', 'sdr', true, true, true, false, false), ('deals', 'viewer', true, false, false, false, false), ('campaigns', 'admin', true, true, true, true, true), ('campaigns', 'sdr', true, true, true, false, false), ('campaigns', 'viewer', true, false, false, false, false), ('workflows …",
+    "raises": [],
+    "tables": []
+   },
+   "seed_role_permissions": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin insert into public.role_permissions (organization_id, role, resource, can_view, can_create, can_update, can_delete, can_manage) select new.id, d.role, d.resource, d.can_view, d.can_create, d.can_update, d.can_delete, d.can_manage from public.default_role_permissions() d on conflict (organization_id, role, resource) do nothing; return new; end;",
+    "raises": [],
+    "tables": [
+     "default_role_permissions",
+     "role_permissions"
+    ]
+   },
+   "can_access": {
+    "args": "_org_id uuid, _user_id uuid, _resource text, _action text default 'view'",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_role public.app_role; v_perm public.role_permissions; begin if _user_id is null then return false; end if; select om.role into v_role from public.organization_members om where om.organization_id = _org_id and om.user_id = _user_id and om.deleted_at is null limit 1; if v_role is null then return false; end if; select * into v_perm from public.role_permissions rp where rp.organization_id = _org_id and rp.role = v_role and rp.resource = _resource limit 1; if found then return case _action when 'view' then v_perm.can_view when 'create' then v_perm.can_create when 'update' then v_perm.can_update when 'delete' then v_perm.can_delete when 'manage' then v_perm.can_manage else false end; en …",
+    "raises": [],
+    "tables": [
+     "organization_members",
+     "role_permissions",
+     "v_perm",
+     "v_role"
+    ]
+   },
+   "prune_scheduled_report_runs": {
+    "args": "_retention_days integer default 180",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_count integer := 0; begin if auth.uid() is not null and not public.has_role(auth.uid(), 'admin') then raise exception 'prune_scheduled_report_runs: admin only'; end if; with del as ( delete from public.scheduled_report_runs where created_at < now() - make_interval(days => _retention_days) returning 1 ) select count(*) into v_count from del; return v_count; end;",
+    "raises": [
+     "prune_scheduled_report_runs: admin only"
+    ],
+    "tables": [
+     "del",
+     "scheduled_report_runs",
+     "v_count"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -52583,6 +54184,11 @@
     "function": "prune_qa_reaper_runs",
     "msg": "retencao invalida: % (minimo 1 dia)",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_scheduled_report_runs",
+    "msg": "prune_scheduled_report_runs: admin only",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "db_generated": [],
@@ -52644,6 +54250,10 @@
    {
     "file": "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
     "limit": "50"
+   },
+   {
+    "file": "src/components/lux/companies/ImportCompaniesDialog.tsx",
+    "limit": "5"
    },
    {
     "file": "src/components/lux/lusha/SessionsPanel.tsx",
@@ -52754,6 +54364,10 @@
     "limit": "50"
    },
    {
+    "file": "src/hooks/useScheduledReports.ts",
+    "limit": "20"
+   },
+   {
     "file": "src/hooks/useScrapeQueue.ts",
     "limit": "200"
    },
@@ -52831,6 +54445,10 @@
    },
    {
     "file": "supabase/functions/rls-tests/index.ts",
+    "limit": "1"
+   },
+   {
+    "file": "supabase/functions/send-scheduled-reports/index.ts",
     "limit": "1"
    },
    {
@@ -53240,6 +54858,19 @@
      "type": "text NOT NULL CHECK (status IN ('hit','empty'))"
     },
     {
+     "table": "scheduled_report_runs",
+     "column": "status",
+     "enum": "",
+     "allowed": [
+      "failed",
+      "pending",
+      "sent",
+      "skipped"
+     ],
+     "default": "pending",
+     "type": "text not null default 'pending' check (status in ('pending','sent','failed','skipped'))"
+    },
+    {
      "table": "v_lux_enrichment_health",
      "column": "cnt_other_status",
      "enum": "",
@@ -53437,12 +55068,15 @@
       "compara:src/components/lux/monitoring/JobDetailsSheet.tsx",
       "escreve:src/components/lux/analytics/useAnalyticsData.ts",
       "escreve:src/components/lux/monitoring/JobDetailsSheet.tsx",
+      "escreve:src/hooks/useScheduledReports.ts",
       "escreve:src/hooks/useWebhooks.ts",
       "escreve:supabase/functions/cnpj-enrich-worker/index.ts",
       "escreve:supabase/functions/gmaps-proxy/index.ts",
       "escreve:supabase/functions/org-violation-alerts/index.ts",
+      "escreve:supabase/functions/send-scheduled-reports/index.ts",
       "escreve:supabase/functions/workflow-engine/index.ts",
       "filtra:supabase/functions/gmaps-proxy/index.ts",
+      "filtra:supabase/functions/send-scheduled-reports/index.ts",
       "filtra:supabase/functions/webhook-dispatcher/index.ts"
      ],
      "failed": [
@@ -53457,12 +55091,14 @@
       "compara:src/hooks/useRealtimeScrapeJobs.ts",
       "compara:src/pages/Monitoring.tsx",
       "compara:supabase/functions/retry-policy-tuner/index.ts",
+      "compara:supabase/functions/send-scheduled-reports/index.ts",
       "compara:supabase/functions/workflow-engine/index.ts",
       "escreve:src/components/lux/LushaIntelligenceView.tsx",
       "escreve:src/components/lux/lusha/SessionsPanel.tsx",
       "escreve:src/components/lux/monitoring/JobDetailsSheet.tsx",
       "escreve:src/hooks/useCnpjEnrich.ts",
       "escreve:supabase/functions/cnpj-enrich-worker/index.ts",
+      "escreve:supabase/functions/send-scheduled-reports/index.ts",
       "escreve:supabase/functions/web-scrape-worker/index.ts",
       "escreve:supabase/functions/webhook-dispatcher/index.ts"
      ],
@@ -53521,7 +55157,9 @@
       "compara:src/components/lux/campaigns/CampaignTrackingDrawer.tsx"
      ],
      "sent": [
-      "compara:src/components/lux/campaigns/CampaignTrackingDrawer.tsx"
+      "compara:src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+      "compara:supabase/functions/send-scheduled-reports/index.ts",
+      "escreve:supabase/functions/send-scheduled-reports/index.ts"
      ],
      "replied": [
       "compara:src/components/lux/campaigns/CampaignTrackingDrawer.tsx"
@@ -53540,9 +55178,11 @@
      "skipped": [
       "compara:src/components/lux/integrations/EmailSyncHistorySheet.tsx",
       "compara:supabase/functions/oracle-push-bitrix/index.ts",
+      "compara:supabase/functions/send-scheduled-reports/index.ts",
       "escreve:supabase/functions/email-poll-replies/index.ts",
       "escreve:supabase/functions/oracle-enrich-contact/index.ts",
       "escreve:supabase/functions/oracle-push-bitrix/index.ts",
+      "escreve:supabase/functions/send-scheduled-reports/index.ts",
       "escreve:supabase/functions/webhook-dispatcher/index.ts"
      ],
      "error": [
@@ -54084,13 +55724,15 @@
    "admin",
    "agent",
    "granted",
+   "input",
    "sdr",
    "user",
    "viewer"
   ],
   "role_tables": [
    "organization_members",
-   "user_roles"
+   "user_roles",
+   "role_permissions"
   ],
   "role_cols": [
    [
@@ -54117,6 +55759,11 @@
     "user_roles",
     "role",
     "public.app_role NOT NULL"
+   ],
+   [
+    "role_permissions",
+    "role",
+    "public.app_role not null"
    ]
   ],
   "jwt_claims": [],
@@ -54328,6 +55975,23 @@
      "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )"
     ],
     "DELETE": []
+   },
+   "bulk_imports": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
    },
    "campaign_events": {
     "rls": "enabled",
@@ -55204,6 +56868,59 @@
     "UPDATE": [],
     "DELETE": []
    },
+   "role_permissions": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
+    ]
+   },
+   "scheduled_report_runs": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
+   },
+   "scheduled_reports": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: user_id = auth.uid() and deleted_at is null",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "authenticated: user_id = auth.uid()",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
+   },
    "scrape_dead_letter": {
     "rls": "enabled",
     "SELECT": [
@@ -55544,6 +57261,7 @@
    "supabase/functions/rls-tests/index.test.ts",
    "supabase/functions/rls-tests/index.ts",
    "supabase/functions/scrape-queue-worker/index.ts",
+   "supabase/functions/send-scheduled-reports/index.ts",
    "supabase/functions/sla-alerts/index.ts",
    "supabase/functions/sla-auto-tune/index.ts",
    "supabase/functions/system-recovery-status/index.ts",
@@ -55664,7 +57382,8 @@
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
-   "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+   "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
   ],
   "security_definer_fns": [
    "accept_org_invite",
@@ -55681,6 +57400,7 @@
    "assert_service_or_admin",
    "auto_tune_queue_slas",
    "campaign_ab_stats",
+   "can_access",
    "capture_api_latency_snapshots",
    "capture_circuit_breaker_snapshots",
    "capture_db_health_snapshot",
@@ -55750,6 +57470,7 @@
    "prune_email_sync_log",
    "prune_pg_net_health_snapshots",
    "prune_qa_reaper_runs",
+   "prune_scheduled_report_runs",
    "purge_dead_letter",
    "purge_soft_deleted",
    "reap_stuck_queue_tasks",
@@ -55763,6 +57484,7 @@
    "replay_web_dead_letter_batch",
    "reset_circuit_breaker",
    "rollback_retry_advisory",
+   "seed_role_permissions",
    "sla_autotune_blocked_streaks",
    "sla_compliance_stats",
    "sla_recommendations",
@@ -55783,7 +57505,8 @@
    "public-api",
    "email-oauth-callback",
    "mcp",
-   "mcp-query"
+   "mcp-query",
+   "send-scheduled-reports"
   ],
   "auth_config": {},
   "grants": [
@@ -59698,6 +61421,110 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "can_access",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "can_access",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "prune_scheduled_report_runs",
+    "objkind": "function",
+    "roles": "public, anon, authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "prune_scheduled_report_runs",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "scheduled_reports",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "scheduled_report_runs",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "bulk_imports",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "role_permissions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "insert, update, delete",
+    "object": "role_permissions",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "scheduled_reports",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "scheduled_report_runs",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "bulk_imports",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "role_permissions",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
    }
   ],
   "guards": [
@@ -59840,6 +61667,9 @@
    "instagram_scrape_queue",
    "instagram_scrape_results",
    "instagram_scrape_dead_letter",
+   "scheduled_reports",
+   "bulk_imports",
+   "role_permissions",
    "oracle_v2_health",
    "v_lusha_cache_stats",
    "v_lux_enrichment_health"
@@ -59871,7 +61701,8 @@
    "sla_autotune_runs",
    "apollo_search_cache",
    "apollo_rate_state",
-   "api_rate_limits"
+   "api_rate_limits",
+   "scheduled_report_runs"
   ],
   "tenant_cov": 0.67,
   "soft_delete": [
@@ -59930,6 +61761,14 @@
    [
     "org_proxies",
     "is_active"
+   ],
+   [
+    "scheduled_reports",
+    "active"
+   ],
+   [
+    "scheduled_reports",
+    "deleted_at"
    ]
   ],
   "audit": {
@@ -60222,6 +62061,20 @@
     "created_at",
     "updated_at"
    ],
+   "scheduled_reports": [
+    "created_at",
+    "updated_at"
+   ],
+   "scheduled_report_runs": [
+    "created_at"
+   ],
+   "bulk_imports": [
+    "created_at"
+   ],
+   "role_permissions": [
+    "created_at",
+    "updated_at"
+   ],
    "oracle_v2_health": [],
    "v_lusha_cache_stats": [],
    "v_lux_enrichment_health": []
@@ -60349,6 +62202,11 @@
     "pg_net_health_snapshots",
     "total_requests",
     "BIGINT"
+   ],
+   [
+    "bulk_imports",
+    "total_rows",
+    "integer"
    ],
    [
     "v_lusha_cache_stats",
@@ -61158,6 +63016,11 @@
     "where": []
    },
    {
+    "kind": "tenant",
+    "msg": "`scheduled_report_runs` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto)",
+    "where": []
+   },
+   {
     "kind": "edge",
     "msg": "edge function `dashboard-edge` invocada mas não existe em supabase/functions/",
     "where": [
@@ -61381,7 +63244,7 @@
    "`web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "96/99 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "100/103 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -63703,7 +65566,7 @@
   },
   "src/components/lux/AnalyticsView.tsx": {
    "path": "src/components/lux/AnalyticsView.tsx",
-   "lines": 136,
+   "lines": 144,
    "exports": [
     "const AnalyticsView"
    ],
@@ -65654,6 +67517,13 @@
     "const DataEnrichmentTab"
    ]
   },
+  "src/components/lux/analytics/ScheduledReportsTab.tsx": {
+   "path": "src/components/lux/analytics/ScheduledReportsTab.tsx",
+   "lines": 353,
+   "exports": [
+    "const ScheduledReportsTab"
+   ]
+  },
   "src/components/lux/analytics/analytics-constants.ts": {
    "path": "src/components/lux/analytics/analytics-constants.ts",
    "lines": 9,
@@ -66131,11 +68001,15 @@
   },
   "src/components/lux/companies/ImportCompaniesDialog.tsx": {
    "path": "src/components/lux/companies/ImportCompaniesDialog.tsx",
-   "lines": 220,
+   "lines": 280,
    "exports": [
     "const ImportCompaniesDialog"
    ],
    "tables": [
+    {
+     "table": "bulk_imports",
+     "op": "select"
+    },
     {
      "table": "companies",
      "op": "select"
@@ -66143,9 +68017,23 @@
     {
      "table": "companies",
      "op": "insert"
+    },
+    {
+     "table": "bulk_imports",
+     "op": "insert"
     }
    ],
    "table_cols": {
+    "bulk_imports": [
+     "created_at",
+     "entity",
+     "file_name",
+     "id",
+     "inserted_count",
+     "invalid_count",
+     "skipped_count",
+     "total_rows"
+    ],
     "companies": [
      "cnpj",
      "name"
@@ -66156,6 +68044,9 @@
     "CSV vazio ou sem linhas de dados.",
     "Erro na importação",
     "Nenhuma organização ativa."
+   ],
+   "pagination": [
+    "5"
    ]
   },
   "src/components/lux/deals/AddDealDialog.tsx": {
@@ -68516,9 +70407,12 @@
   },
   "src/components/lux/permissions/PermissionsMatrix.tsx": {
    "path": "src/components/lux/permissions/PermissionsMatrix.tsx",
-   "lines": 121,
+   "lines": 201,
    "exports": [
     "const PermissionsMatrix"
+   ],
+   "rule_comments": [
+    "* Habilita a edição (somente admin da organização). */"
    ]
   },
   "src/components/lux/security/OrgViolationAlertsPanel.tsx": {
@@ -71171,7 +73065,7 @@
   },
   "src/hooks/usePermissions.ts": {
    "path": "src/hooks/usePermissions.ts",
-   "lines": 40,
+   "lines": 63,
    "exports": [
     "function usePermissions",
     "function useCan"
@@ -71198,9 +73092,19 @@
     "sdr",
     "viewer"
    ],
+   "rule_comments": [
+    "* A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a"
+   ],
    "hooks": [
     "usePermissions",
     "useCan"
+   ],
+   "calc_fns": [
+    {
+     "name": "canDo",
+     "params": "entity: Entity, action: Action",
+     "body": "if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);"
+    }
    ]
   },
   "src/hooks/usePersistedFilters.ts": {
@@ -71461,6 +73365,142 @@
    ],
    "hooks": [
     "useResilienceSimulator"
+   ]
+  },
+  "src/hooks/useRolePermissions.ts": {
+   "path": "src/hooks/useRolePermissions.ts",
+   "lines": 120,
+   "exports": [
+    "interface RolePermissionRow",
+    "type PermissionFlag",
+    "function useRolePermissions",
+    "const MANAGED_ENTITIES",
+    "const MANAGED_ROLES"
+   ],
+   "tables": [
+    {
+     "table": "role_permissions",
+     "op": "select"
+    },
+    {
+     "table": "role_permissions",
+     "op": "update"
+    },
+    {
+     "table": "role_permissions",
+     "op": "ref"
+    }
+   ],
+   "table_cols": {
+    "role_permissions": [
+     "organization_id",
+     "resource",
+     "role"
+    ]
+   },
+   "rpc": [
+    "default_role_permissions"
+   ],
+   "errors": [
+    "Erro ao restaurar",
+    "Erro ao salvar permissão",
+    "Padrão indisponível"
+   ],
+   "enums": [
+    {
+     "name": "PermissionFlag",
+     "values": "can_view | can_create | can_update | can_delete | can_manage"
+    }
+   ],
+   "role_checks": [
+    "input"
+   ],
+   "rule_comments": [
+    "Desfaz a alteração otimista: a matriz não pode divergir do banco."
+   ],
+   "hooks": [
+    "useRolePermissions"
+   ]
+  },
+  "src/hooks/useScheduledReports.ts": {
+   "path": "src/hooks/useScheduledReports.ts",
+   "lines": 128,
+   "exports": [
+    "type ReportMetric",
+    "type ReportFrequency",
+    "interface ScheduledReport",
+    "interface ReportRun",
+    "interface ReportInput",
+    "function useScheduledReports"
+   ],
+   "tables": [
+    {
+     "table": "scheduled_reports",
+     "op": "select"
+    },
+    {
+     "table": "scheduled_report_runs",
+     "op": "select"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "insert"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "update"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "update"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "update"
+    }
+   ],
+   "table_cols": {
+    "scheduled_reports": [
+     "deleted_at",
+     "id"
+    ],
+    "scheduled_report_runs": [
+     "created_at",
+     "error_message",
+     "id",
+     "recipients_count",
+     "report_id",
+     "status"
+    ]
+   },
+   "errors": [
+    "Erro ao alterar status",
+    "Erro ao atualizar",
+    "Erro ao criar relatório",
+    "Erro ao excluir"
+   ],
+   "enums": [
+    {
+     "name": "ReportMetric",
+     "values": "conversion | enrichment | pipeline | campaigns"
+    },
+    {
+     "name": "ReportFrequency",
+     "values": "daily | weekly | monthly"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "escreve"
+    }
+   ],
+   "hooks": [
+    "useScheduledReports"
+   ],
+   "pagination": [
+    "20"
    ]
   },
   "src/hooks/useScrapeQueue.ts": {
@@ -72150,7 +74190,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 5989,
+   "lines": 6194,
    "exports": [
     "type Json",
     "type Database",
@@ -80252,6 +82292,228 @@
    ],
    "uses_service_role": true
   },
+  "supabase/functions/send-scheduled-reports/index.ts": {
+   "path": "supabase/functions/send-scheduled-reports/index.ts",
+   "lines": 466,
+   "tables": [
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "deals",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "deals",
+     "op": "select"
+    },
+    {
+     "table": "campaign_events",
+     "op": "select"
+    },
+    {
+     "table": "email_accounts",
+     "op": "update"
+    },
+    {
+     "table": "email_accounts",
+     "op": "select"
+    },
+    {
+     "table": "scheduled_report_runs",
+     "op": "insert"
+    },
+    {
+     "table": "scheduled_report_runs",
+     "op": "update"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "update"
+    },
+    {
+     "table": "scheduled_report_runs",
+     "op": "update"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "companies": [
+     "created_at",
+     "deleted_at",
+     "enriched",
+     "id"
+    ],
+    "deals": [
+     "created_at",
+     "deleted_at",
+     "id",
+     "value"
+    ],
+    "campaign_events": [
+     "event_type",
+     "occurred_at"
+    ],
+    "email_accounts": [
+     "access_token",
+     "display_name",
+     "email",
+     "expires_at",
+     "id",
+     "organization_id",
+     "provider",
+     "reconnect_required",
+     "refresh_token",
+     "user_id"
+    ],
+    "scheduled_report_runs": [
+     "period_start",
+     "report_id",
+     "status"
+    ],
+    "scheduled_reports": [
+     "active",
+     "day_of_month",
+     "day_of_week",
+     "deleted_at",
+     "filters",
+     "frequency",
+     "hour_utc",
+     "id",
+     "last_sent_at",
+     "metric",
+     "name",
+     "organization_id",
+     "recipients",
+     "user_id"
+    ]
+   },
+   "external_urls": [
+    "https://gmail.googleapis.com/gmail/v1/users/me/messages/…",
+    "https://graph.microsoft.com/v1.0/me/…"
+   ],
+   "env": [
+    "GOOGLE_OAUTH_CLIENT_ID",
+    "GOOGLE_OAUTH_CLIENT_SECRET",
+    "MS_OAUTH_CLIENT_ID",
+    "MS_OAUTH_CLIENT_SECRET",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "errors": [
+    "Gmail send [${res.status}]: ${body.slice(0, 300)}",
+    "OAuth nao configurado para ${acc.provider}",
+    "Outlook send [${res.status}]: ${body.slice(0, 300)}",
+    "Refresh falhou: ${code}",
+    "Sem refresh token; reconexao necessaria",
+    "leitura dos agendamentos: ${error.message}",
+    "reserva do periodo: ${reserveErr.message}",
+    "todos os envios falharam: ${failures[0]}"
+   ],
+   "params": [
+    {
+     "name": "MAX_RECIPIENTS",
+     "value": "20"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "skipped",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "skipped",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "skipped",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "sent",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "sent",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "sent",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "skipped",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "filtra"
+    },
+    {
+     "field": "status",
+     "value": "pending",
+     "kind": "filtra"
+    }
+   ],
+   "rule_comments": [
+    "// Isolamento multi-tenant: envia apenas pela conta de e-mail da MESMA",
+    "* Decide se o relatorio deve rodar agora.",
+    "Regra: passou do horario configurado, o dia bate com a frequencia e ainda"
+   ],
+   "doc": "Envio dos relatorios agendados de Analytics. Acionamento: pg_cron (sem body) processa todos os agendamentos vencidos. O \"vencido\" e calculado pela propria funcao a partir de frequency + day_of_week/day_of_month/hour_utc, comparando com last_sent_at — assim nao existe estado extra para dessincronizar …",
+   "side_effects": [
+    "sendMail"
+   ],
+   "pagination": [
+    "1"
+   ],
+   "uses_service_role": true
+  },
   "supabase/functions/sla-alerts/index.ts": {
    "path": "supabase/functions/sla-alerts/index.ts",
    "lines": 150,
@@ -82366,13 +84628,38 @@
    "path": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
    "lines": 111,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql": {
+   "path": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "lines": 369,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "bb305ef63d9ecdbfe431ed044bb347f4f500998a",
+  "sha": "74324554b7ba227369a72fa446d936531e891f55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "7432455",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)",
+    "files": [
+     "src/components/lux/AnalyticsView.tsx",
+     "src/components/lux/OrganizationsView.tsx",
+     "src/components/lux/analytics/ScheduledReportsTab.tsx",
+     "src/components/lux/companies/ImportCompaniesDialog.tsx",
+     "src/components/lux/permissions/PermissionsMatrix.tsx",
+     "src/hooks/usePermissions.ts",
+     "src/hooks/useRolePermissions.ts",
+     "src/hooks/useScheduledReports.ts",
+     "src/integrations/supabase/types.ts",
+     "supabase/config.toml",
+     "supabase/functions/send-scheduled-reports/index.ts",
+     "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+    ]
+   },
    {
     "sha": "bb305ef",
     "date": "2026-11-21",
@@ -82694,30 +84981,15 @@
      ".github/workflows/edge-tests-daily.yml",
      ".github/workflows/inventario-estado-semanal.yml"
     ]
-   },
-   {
-    "sha": "5392988",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "feat(deps): bump vite 6 para 8.3.8 (major) e corrige manualChunks para API do vite 8 (#71)",
-    "files": [
-     "package-lock.json",
-     "package.json",
-     "vite.config.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/config.toml",
-    4
+    5
    ],
    [
     "supabase/functions/campaign-dispatch/index.ts",
-    3
-   ],
-   [
-    "package.json",
     3
    ],
    [
@@ -82733,6 +85005,10 @@
     2
    ],
    [
+    "package.json",
+    2
+   ],
+   [
     "supabase/migrations/20261121120000_api_key_rate_limit.sql",
     2
    ],
@@ -82741,51 +85017,51 @@
     2
    ],
    [
-    "package-lock.json",
-    2
+    "src/components/lux/AnalyticsView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/OrganizationsView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/analytics/ScheduledReportsTab.tsx",
+    1
+   ],
+   [
+    "src/components/lux/companies/ImportCompaniesDialog.tsx",
+    1
+   ],
+   [
+    "src/components/lux/permissions/PermissionsMatrix.tsx",
+    1
+   ],
+   [
+    "src/hooks/usePermissions.ts",
+    1
+   ],
+   [
+    "src/hooks/useRolePermissions.ts",
+    1
+   ],
+   [
+    "src/hooks/useScheduledReports.ts",
+    1
+   ],
+   [
+    "src/integrations/supabase/types.ts",
+    1
+   ],
+   [
+    "supabase/functions/send-scheduled-reports/index.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+    1
    ],
    [
     "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
-    1
-   ],
-   [
-    "docs/AUDITORIA-FUNCIONALIDADES.md",
-    1
-   ],
-   [
-    "docs/auth.md",
-    1
-   ],
-   [
-    "supabase/functions/mcp-query/index.ts",
-    1
-   ],
-   [
-    "docs/ESTADO_ATUAL.md",
-    1
-   ],
-   [
-    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
-    1
-   ],
-   [
-    "supabase/functions/email-poll-replies/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/vault-cookie-health/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/web-scrape-worker/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/cron-auth.ts",
     1
    ]
   ]

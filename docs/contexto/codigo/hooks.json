@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 78,
+ "total": 80,
  "hooks": [
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
@@ -131,7 +131,7 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 31,
+   "usado_por": 32,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
@@ -158,11 +158,11 @@
     "src/hooks/usePermissions.ts",
     "src/hooks/useRealtimeCompanies.ts",
     "src/hooks/useRealtimeScrapeJobs.ts",
+    "src/hooks/useScheduledReports.ts",
     "src/hooks/useSkin.ts",
     "src/hooks/useTaskReminders.ts",
     "src/hooks/useWebhooks.ts",
-    "src/pages/AcceptInvite.tsx",
-    "src/pages/Index.tsx"
+    "src/pages/AcceptInvite.tsx"
    ],
    "coberto_por_testes": 1
   },
@@ -1351,7 +1351,7 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 16,
+   "usado_por": 17,
    "usado_por_arquivos": [
     "src/components/lux/OrgViolationsView.tsx",
     "src/components/lux/OrganizationsView.tsx",
@@ -1368,7 +1368,8 @@
     "src/contexts/ActiveOrgContext.tsx",
     "src/contexts/active-org-context.ts",
     "src/hooks/useDashboardData.ts",
-    "src/hooks/usePermissions.ts"
+    "src/hooks/usePermissions.ts",
+    "src/hooks/useRolePermissions.ts"
    ],
    "coberto_por_testes": 0
   },
@@ -1464,7 +1465,7 @@
     "useCan",
     "usePermissions"
    ],
-   "linhas": 40,
+   "linhas": 63,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
@@ -1473,7 +1474,8 @@
     "useActiveOrganization",
     "useAuth",
     "useMemo",
-    "useOrgMembers"
+    "useOrgMembers",
+    "useRolePermissions"
    ],
    "canais_realtime": [],
    "usado_por": 9,
@@ -1742,6 +1744,60 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/components/lux/monitoring/ResilienceSimulatorPanel.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useRolePermissions.ts",
+   "hooks_exportados": [
+    "useRolePermissions"
+   ],
+   "linhas": 120,
+   "dominio": "hooks",
+   "tabelas": [
+    "role_permissions"
+   ],
+   "rpcs": [
+    "default_role_permissions"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 2,
+   "usado_por_arquivos": [
+    "src/components/lux/permissions/PermissionsMatrix.tsx",
+    "src/hooks/usePermissions.ts"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useScheduledReports.ts",
+   "hooks_exportados": [
+    "useScheduledReports"
+   ],
+   "linhas": 128,
+   "dominio": "hooks",
+   "tabelas": [
+    "scheduled_report_runs",
+    "scheduled_reports"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/analytics/ScheduledReportsTab.tsx"
    ],
    "coberto_por_testes": 0
   },
