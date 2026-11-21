@@ -36,3 +36,11 @@ verify_jwt = false
 
 [functions.mcp]
 verify_jwt = false
+
+# mcp-query - gateway SQL/admin com gate proprio (header x-mcp-secret comparado
+# com o secret MCP_SECRET). Roda com verify_jwt = false porque quem chama e um
+# cliente MCP externo sem Authorization do Supabase; o gate esta no codigo.
+# Sem esta secao o deploy aplica verify_jwt = true e o gateway responde 401
+# antes do codigo rodar.
+[functions.mcp-query]
+verify_jwt = false
