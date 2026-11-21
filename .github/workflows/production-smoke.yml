@@ -49,3 +49,29 @@ jobs:
             fi
           done
           exit "$FAILED"
+
+      - name: Check edge functions CORS allowlist (Vercel origin)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Cada edge function com allowlist restritiva DEVE devolver ACAO com o
+          # dominio de producao (Vercel). Sem isto, o browser bloqueia a chamada.
+          # Funcoes wildcard (ACAO: *) sao permitidas por desenho.
+          FUNCTIONS="health admin-list-companies ai-agent auth-rate-limit gmaps-proxy lusha-cookie-health lusha-decision-makers lusha-reveal lusha-search oracle-cookies-preflight oracle-enrich-contact oracle-push-bitrix oracle-search-decisors rls-tests workflow-engine"
+          ORIGIN="https://promo-lux-v2.vercel.app"
+          FAILED=0
+          for FN in $FUNCTIONS; do
+            A_LINE=$(curl -fsSL -o /dev/null -D - -X OPTIONS "https://pttzwlbidamibjssqiqb.supabase.co/functions/v1/$FN" -H "Origin: $ORIGIN" -H "Access-Control-Request-Method: GET" 2>/dev/null | tr -d "\r" | grep -i "^access-control-allow-origin:" | head -1)
+            ACAO=${A_LINE#*: }
+            ACAO=${ACAO//$'\r'/}
+            if [ "$ACAO" = "$ORIGIN" ]; then
+              echo "OK: $FN -> $ACAO"
+            elif [ "$ACAO" = "*" ]; then
+              echo "OK: $FN -> wildcard (por desenho)"
+            else
+              # ACAO diferente da origem (ex.: dominio legado) = browser bloqueia
+              echo "::error::$FN devolve ACAO '$ACAO' - allowlist sem o dominio de producao"
+              FAILED=1
+            fi
+          done
+          exit "$FAILED"
