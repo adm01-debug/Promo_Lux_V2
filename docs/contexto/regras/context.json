@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "ef039bf804dc74df64555be28b57f7ee1c810cc1",
+  "sha": "ab467daf98faad40fb46dd18384bacca78314b91",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 21:39 UTC",
-  "files_total": 1068,
-  "code_files": 893,
-  "code_lines": 129175
+  "generated_at": "2026-11-21 22:45 UTC",
+  "files_total": 1070,
+  "code_files": 895,
+  "code_lines": 129596
  },
  "version": "1.3.2",
- "facts_hash": "7e3819567e9a45e3",
+ "facts_hash": "6c475560d2222e3c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,7 +232,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 355,
+   ".ts": 357,
    ".tsx": 279,
    ".sql": 229,
    ".mjs": 20,
@@ -24743,6 +24743,7 @@
      "scrape_results"
     ],
     "env": [
+     "GOOGLE_MAPS_API_KEY",
      "SUPABASE_ANON_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
@@ -24753,7 +24754,8 @@
     "errors": [
      "Circuit breaker is open",
      "Failed to download results from external API",
-     "Job not found or has no external ID"
+     "Job not found or has no external ID",
+     "Places API returned no results"
     ],
     "side_effects": [],
     "webhook_events": [],
@@ -24771,12 +24773,14 @@
      "organizations"
     ],
     "env": [
+     "GOOGLE_MAPS_API_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
     "external": [
      "https://ai.gateway.lovable.dev/health",
-     "https://gmaps.atomicabr.com.br/api/v1/…"
+     "https://gmaps.atomicabr.com.br/api/v1/…",
+     "https://places.googleapis.com/v1/…"
     ],
     "invokes": [],
     "doc": "",
@@ -26748,7 +26752,7 @@
   {
    "module": "(raiz)",
    "files": 9,
-   "lines": 344,
+   "lines": 345,
    "tables": [],
    "exports": [
     "eslint.config.js: tseslint",
@@ -27754,8 +27758,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 125,
-   "lines": 22425,
+   "files": 127,
+   "lines": 22845,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -27846,6 +27850,7 @@
     "oracle-logger.ts: OracleLoggerInit, LogLevel, LogEntry, OracleLogger",
     "org-membership.ts: getUserOrgIds, isUserOrgMember",
     "phone-br.ts: NormalizedPhone, normalizePhoneBR, formatPhoneBitrix",
+    "places-fallback.ts: placeToRow, fetchPlacesResults, checkPlacesApi",
     "rlsTableRegistry.ts: AppEnv, RlsTableSpec, RLS_TABLES, RLS_TABLES_EXEMPT, ENV_EXEMPT_TABLES",
     "safe-update.ts: updateContact",
     "schemas.ts: ScrapeJobConfigSchema, CreateScrapeJobSchema, ScoringCriteriaSchema, IPCConfigSchema",
@@ -27859,8 +27864,7 @@
     "heuristics.ts: isEmptyShell, isTransientHttp, hostnameOf",
     "html-to-markdown.ts: ExtractedContent, extractContent",
     "robots.ts: RobotsRule, RobotsPolicy, parseRobotsTxt, isAllowed",
-    "index.ts: fetchCnpjaProvider",
-    "_fixtures.ts: FixtureContext, UserFixture, AdminUserFixture, createNonAdminUserFixture, createAdminUserFixture"
+    "index.ts: fetchCnpjaProvider"
    ],
    "docs": [
     "api-rate-limit.ts: Logic-a pura de decisao de rate-limit da public-api, extraida para teste unitario (convencao do projeto: edge functions testam so o que vive em _shared). A RPC check_api_key_rate_limit devolve uma linha com allowed/current_count/reset_at.",
@@ -27906,6 +27910,7 @@
     "supabase/functions/_shared/oracle-logger.ts",
     "supabase/functions/_shared/org-membership.ts",
     "supabase/functions/_shared/phone-br.ts",
+    "supabase/functions/_shared/places-fallback.ts",
     "supabase/functions/_shared/rlsTableRegistry.ts",
     "supabase/functions/_shared/safe-update.ts",
     "supabase/functions/_shared/schemas.ts",
@@ -27932,6 +27937,7 @@
     "supabase/functions/_shared/__tests__/lusha-client.test.ts",
     "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
     "supabase/functions/_shared/__tests__/phone-br.test.ts",
+    "supabase/functions/_shared/__tests__/places-fallback.test.ts",
     "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
     "supabase/functions/_shared/__tests__/tracking-links.test.ts",
     "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
@@ -27957,9 +27963,7 @@
     "supabase/functions/dlq-alerts/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-oauth-disconnect/index.ts",
-    "supabase/functions/email-poll-replies/index.ts",
-    "supabase/functions/email-verify/index.ts"
+    "supabase/functions/email-oauth-disconnect/index.ts"
    ]
   },
   {
@@ -30224,7 +30228,11 @@
     "supabase/functions/scrape-queue-worker/index.ts"
    ],
    "GOOGLE_MAPS_API_KEY": [
-    "supabase/functions/gmaps-places-search/index.ts"
+    "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "supabase/functions/_shared/places-fallback.ts",
+    "supabase/functions/gmaps-places-search/index.ts",
+    "supabase/functions/gmaps-proxy/index.ts",
+    "supabase/functions/health/index.ts"
    ],
    "GOOGLE_OAUTH_CLIENT_ID": [
     "supabase/functions/campaign-dispatch/index.ts",
@@ -31018,6 +31026,9 @@
    "https://oauth2.googleapis.com": [
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts"
+   ],
+   "https://places.googleapis.com": [
+    "supabase/functions/health/index.ts"
    ],
    "https://www.googleapis.com": [
     "supabase/functions/email-oauth-callback/index.ts"
@@ -32854,6 +32865,10 @@
     "msg": "Job not found or has no external ID"
    },
    {
+    "file": "supabase/functions/gmaps-proxy/index.ts",
+    "msg": "Places API returned no results"
+   },
+   {
     "file": "supabase/functions/instagram-worker/index.ts",
     "msg": "results_insert_failed: ${insErr.message}"
    },
@@ -33780,6 +33795,14 @@
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
     "text": "* Classifica se um erro deve ser retentado (transitório) ou não (permanente). */"
+   },
+   {
+    "file": "supabase/functions/scrape-queue-worker/index.ts",
+    "text": "* Retorna `true` quando assumiu a tarefa (o chamador nao deve falhar)."
+   },
+   {
+    "file": "supabase/functions/scrape-queue-worker/index.ts",
+    "text": "Fallback: provedor fora do ar (5xx/429) nao deve virar dead-letter enquanto"
    },
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
@@ -41655,6 +41678,36 @@
     "kind": "compara"
    },
    {
+    "file": "supabase/functions/_shared/places-fallback.ts",
+    "field": "status",
+    "value": "healthy",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/places-fallback.ts",
+    "field": "status",
+    "value": "unhealthy",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/places-fallback.ts",
+    "field": "status",
+    "value": "healthy",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/places-fallback.ts",
+    "field": "status",
+    "value": "unhealthy",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/_shared/places-fallback.ts",
+    "field": "status",
+    "value": "unhealthy",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/_shared/rlsTableRegistry.ts",
     "field": "type",
     "value": "note",
@@ -41890,6 +41943,18 @@
    },
    {
     "file": "supabase/functions/gmaps-proxy/index.ts",
+    "field": "status",
+    "value": "completed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/index.ts",
+    "field": "status",
+    "value": "completed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/index.ts",
     "field": "type",
     "value": "scrape",
     "kind": "escreve"
@@ -41922,6 +41987,18 @@
     "file": "supabase/functions/health/index.ts",
     "field": "status",
     "value": "healthy",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/health/index.ts",
+    "field": "status",
+    "value": "unhealthy",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/health/index.ts",
+    "field": "status",
+    "value": "degraded",
     "kind": "escreve"
    },
    {
@@ -42991,6 +43068,12 @@
     "field": "role",
     "value": "admin",
     "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/scrape-queue-worker/index.ts",
+    "field": "status",
+    "value": "completed",
+    "kind": "escreve"
    },
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
@@ -48599,6 +48682,34 @@
    {
     "file": "supabase/functions/_shared/__tests__/phone-br.test.ts",
     "name": "é idempotente (formatar o já formatado não muda)"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "placeToRow maps Places API place to gosom-compatible row"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "placeToRow tolerates places with only required fields"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "fetchPlacesResults returns null when API key is absent"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "fetchPlacesResults returns null when every keyword call fails"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "fetchPlacesResults flattens results from all keywords and caps page size"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "fetchPlacesResults keeps going when one keyword fails"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "name": "checkPlacesApi reports unhealthy without key and healthy on 200"
    },
    {
     "file": "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
@@ -56473,6 +56584,7 @@
       "escreve:supabase/functions/gmaps-proxy/index.ts",
       "escreve:supabase/functions/lusha-search/index.ts",
       "escreve:supabase/functions/oracle-search-decisors/index.ts",
+      "escreve:supabase/functions/scrape-queue-worker/index.ts",
       "escreve:supabase/functions/workflow-engine/index.ts",
       "filtra:supabase/functions/workflow-engine/index.ts"
      ],
@@ -56637,6 +56749,7 @@
       "compara:supabase/functions/health/index.ts",
       "escreve:src/components/lux/lusha/LushaCookieHealthBanner.tsx",
       "escreve:src/components/lux/monitoring/MonitoringView.tsx",
+      "escreve:supabase/functions/_shared/places-fallback.ts",
       "escreve:supabase/functions/health/index.ts",
       "escreve:supabase/functions/lusha-cookie-health/index.ts"
      ],
@@ -56663,6 +56776,7 @@
      ],
      "degraded": [
       "compara:src/components/lux/monitoring/MonitoringView.tsx",
+      "escreve:supabase/functions/health/index.ts",
       "escreve:supabase/functions/oracle-push-bitrix/index.ts",
       "escreve:supabase/functions/oracle-search-decisors/index.ts"
      ],
@@ -56720,6 +56834,7 @@
       "escreve:supabase/functions/_shared/lusha-client.ts"
      ],
      "unhealthy": [
+      "escreve:supabase/functions/_shared/places-fallback.ts",
       "escreve:supabase/functions/health/index.ts"
      ],
      "retry": [
@@ -64978,7 +65093,7 @@
   },
   "vitest.config.ts": {
    "path": "vitest.config.ts",
-   "lines": 70,
+   "lines": 71,
    "exports": [
     "default defineConfig"
    ]
@@ -79480,6 +79595,46 @@
    ],
    "doc": "============================================================================ _shared/phone-br.ts Normalização de telefones brasileiros. Formato canônico: E.164 +55... Detecta 10 dígitos (fixo) e 11 dígitos (celular com 9). Números internacionais não-BR são retornados sem alteração se tiverem \"+\". == …"
   },
+  "supabase/functions/_shared/places-fallback.ts": {
+   "path": "supabase/functions/_shared/places-fallback.ts",
+   "lines": 144,
+   "exports": [
+    "function placeToRow",
+    "function fetchPlacesResults",
+    "function checkPlacesApi"
+   ],
+   "env": [
+    "GOOGLE_MAPS_API_KEY"
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "healthy",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "unhealthy",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "healthy",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "unhealthy",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "unhealthy",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "Fallback de extracao Google Maps via Places API (New). O backend `gmaps.atomicabr.com.br` (scraper gosom/omkar) pode estar fora do ar. Quando isso acontece o fluxo historico criava o job, nunca recebia `external_id` e a extracao ficava inerte — `gmaps-proxy` respondia `api_online: false` e nenhuma e …"
+  },
   "supabase/functions/_shared/rlsTableRegistry.ts": {
    "path": "supabase/functions/_shared/rlsTableRegistry.ts",
    "lines": 159,
@@ -80130,6 +80285,23 @@
     "mantém internacional em E.164, sem converter para BR",
     "retorna null para entrada inválida",
     "é idempotente (formatar o já formatado não muda)"
+   ]
+  },
+  "supabase/functions/_shared/__tests__/places-fallback.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+   "lines": 142,
+   "is_test": true,
+   "env": [
+    "GOOGLE_MAPS_API_KEY"
+   ],
+   "tests": [
+    "placeToRow maps Places API place to gosom-compatible row",
+    "placeToRow tolerates places with only required fields",
+    "fetchPlacesResults returns null when API key is absent",
+    "fetchPlacesResults returns null when every keyword call fails",
+    "fetchPlacesResults flattens results from all keywords and caps page size",
+    "fetchPlacesResults keeps going when one keyword fails",
+    "checkPlacesApi reports unhealthy without key and healthy on 200"
    ]
   },
   "supabase/functions/_shared/__tests__/ssrf-guard.test.ts": {
@@ -81469,7 +81641,7 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 777,
+   "lines": 824,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -81510,6 +81682,10 @@
     {
      "table": "scrape_jobs",
      "op": "select"
+    },
+    {
+     "table": "scrape_jobs",
+     "op": "update"
     },
     {
      "table": "scrape_jobs",
@@ -81592,6 +81768,7 @@
     ]
    },
    "env": [
+    "GOOGLE_MAPS_API_KEY",
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
@@ -81599,7 +81776,8 @@
    "errors": [
     "Circuit breaker is open",
     "Failed to download results from external API",
-    "Job not found or has no external ID"
+    "Job not found or has no external ID",
+    "Places API returned no results"
    ],
    "zod": [
     {
@@ -81665,6 +81843,16 @@
      "kind": "escreve"
     },
     {
+     "field": "status",
+     "value": "completed",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "completed",
+     "kind": "escreve"
+    },
+    {
      "field": "type",
      "value": "scrape",
      "kind": "escreve"
@@ -81699,7 +81887,7 @@
   },
   "supabase/functions/health/index.ts": {
    "path": "supabase/functions/health/index.ts",
-   "lines": 106,
+   "lines": 136,
    "tables": [
     {
      "table": "organizations",
@@ -81717,9 +81905,11 @@
    },
    "external_urls": [
     "https://ai.gateway.lovable.dev/health",
-    "https://gmaps.atomicabr.com.br/api/v1/…"
+    "https://gmaps.atomicabr.com.br/api/v1/…",
+    "https://places.googleapis.com/v1/…"
    ],
    "env": [
+    "GOOGLE_MAPS_API_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -81732,6 +81922,16 @@
     {
      "field": "status",
      "value": "healthy",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "unhealthy",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "degraded",
      "kind": "escreve"
     },
     {
@@ -84016,8 +84216,12 @@
   },
   "supabase/functions/scrape-queue-worker/index.ts": {
    "path": "supabase/functions/scrape-queue-worker/index.ts",
-   "lines": 423,
+   "lines": 480,
    "tables": [
+    {
+     "table": "scrape_jobs",
+     "op": "update"
+    },
     {
      "table": "scrape_jobs",
      "op": "update"
@@ -84082,6 +84286,11 @@
    "status_values": [
     {
      "field": "status",
+     "value": "completed",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
      "value": "running",
      "kind": "escreve"
     },
@@ -84103,6 +84312,8 @@
    ],
    "rule_comments": [
     "* Classifica se um erro deve ser retentado (transitório) ou não (permanente). */",
+    "* Retorna `true` quando assumiu a tarefa (o chamador nao deve falhar).",
+    "Fallback: provedor fora do ar (5xx/429) nao deve virar dead-letter enquanto",
     "4xx é erro do payload do cliente — não deve abrir o circuito."
    ],
    "percents": [
@@ -86471,10 +86682,24 @@
   }
  },
  "git": {
-  "sha": "ef039bf804dc74df64555be28b57f7ee1c810cc1",
+  "sha": "ab467daf98faad40fb46dd18384bacca78314b91",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "ab467da",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)",
+    "files": [
+     "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+     "supabase/functions/_shared/places-fallback.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/health/index.ts",
+     "supabase/functions/scrape-queue-worker/index.ts",
+     "vitest.config.ts"
+    ]
+   },
    {
     "sha": "ef039bf",
     "date": "2026-11-21",
@@ -86811,21 +87036,6 @@
      "scripts/check-edge-fn-target.sh",
      "scripts/check-functions-lint.sh"
     ]
-   },
-   {
-    "sha": "5481263",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)",
-    "files": [
-     ".github/workflows/production-smoke.yml",
-     "README.md",
-     "docs/AUDITORIA_TECNICA_SCORECARD.md",
-     "docs/FUNCIONALIDADES.md",
-     "docs/LUSHA-INTEGRATION.md",
-     "docs/agentes/lovable-deploy.md",
-     "docs/prod-readiness.md"
-    ]
    }
   ],
   "hot_files": [
@@ -86834,8 +87044,20 @@
     5
    ],
    [
+    "supabase/functions/gmaps-proxy/index.ts",
+    3
+   ],
+   [
     "supabase/functions/campaign-dispatch/index.ts",
     3
+   ],
+   [
+    "supabase/functions/health/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/scrape-queue-worker/index.ts",
+    2
    ],
    [
     "src/integrations/supabase/types.ts",
@@ -86847,10 +87069,6 @@
    ],
    [
     "supabase/functions/cnpj-enrich-worker/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/gmaps-proxy/index.ts",
     2
    ],
    [
@@ -86866,8 +87084,16 @@
     2
    ],
    [
-    ".github/workflows/production-smoke.yml",
-    2
+    "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/places-fallback.ts",
+    1
+   ],
+   [
+    "vitest.config.ts",
+    1
    ],
    [
     "supabase/migrations/20261122103000_fix_rls_dashboard_layouts_org.sql",
@@ -86891,22 +87117,6 @@
    ],
    [
     "src/components/lux/StakeholderFinderView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/deals/DealCard.tsx",
-    1
-   ],
-   [
-    "src/components/lux/deals/DealColumn.tsx",
-    1
-   ],
-   [
-    "src/components/lux/layout/Header.tsx",
-    1
-   ],
-   [
-    "src/components/lux/stakeholders/StakeholderCard.tsx",
     1
    ]
   ]

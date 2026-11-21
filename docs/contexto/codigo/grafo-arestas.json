@@ -2213,6 +2213,9 @@
    "supabase/functions/_shared/cookies.ts",
    "supabase/functions/_shared/lusha-departments.ts"
   ],
+  "supabase/functions/_shared/places-fallback.ts": [
+   "supabase/functions/_shared/gmaps-mapper.ts"
+  ],
   "supabase/functions/_shared/safe-update.ts": [
    "supabase/functions/_shared/oracle-logger.ts"
   ],
@@ -2246,6 +2249,7 @@
    "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/domain/ipc/scoring.ts",
    "supabase/functions/_shared/gmaps-mapper.ts",
+   "supabase/functions/_shared/places-fallback.ts",
    "supabase/functions/_shared/schemas.ts",
    "supabase/functions/_shared/tracing.ts"
   ],
@@ -2316,7 +2320,8 @@
   "supabase/functions/scrape-queue-worker/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",
    "supabase/functions/_shared/cron-auth.ts",
-   "supabase/functions/_shared/omkar-gmaps-config.ts"
+   "supabase/functions/_shared/omkar-gmaps-config.ts",
+   "supabase/functions/_shared/places-fallback.ts"
   ],
   "supabase/functions/send-scheduled-reports/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"

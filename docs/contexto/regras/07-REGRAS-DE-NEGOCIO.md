@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ef039bf804` · branch `main` · 2026-11-21 21:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ab467daf98` · branch `main` · 2026-11-21 22:45 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -919,11 +919,11 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `blocked` | escreve | `supabase/functions/webhook-dispatcher/index.ts` |
 | `status` | `bounced` | compara | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
 | `status` | `cancelled` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx` |
-| `status` | `completed` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +10 |
+| `status` | `completed` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +11 |
 | `status` | `connected` | escreve | `src/components/lux/SettingsView.tsx` |
 | `status` | `crit` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
 | `status` | `dead` | compara, escreve | `supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
-| `status` | `degraded` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/oracle-search-decisors/index.ts` |
+| `status` | `degraded` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/oracle-search-decisors/index.ts` |
 | `status` | `done` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationStageBadge.tsx` |
 | `status` | `draft` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/lib/demoData.ts` |
 | `status` | `empty` | compara | `supabase/functions/_shared/apollo-cache.ts` |
@@ -938,7 +938,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
 | `status` | `failed` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +11 |
 | `status` | `fulfilled` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
-| `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
+| `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
 | `status` | `masked` | compara, escreve | `supabase/functions/_shared/lusha-client.ts` |
 | `status` | `not_found` | compara, escreve | `src/hooks/useCnpjEnrich.ts`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
@@ -962,7 +962,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
 | `status` | `success` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>… +4 |
 | `status` | `timeout` | escreve | `src/hooks/useCnpjEnrich.ts` |
-| `status` | `unhealthy` | escreve | `supabase/functions/health/index.ts` |
+| `status` | `unhealthy` | escreve | `supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts` |
 | `status` | `unknown` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `verified` | compara, escreve | `src/components/auth/MFAVerify.tsx`<br>`src/components/lux/settings/MFASetup.tsx`<br>`src/hooks/useMFA.ts`<br>`supabase/functions/_shared/leadcontact-client.ts` |
 | `status` | `warn` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
@@ -2050,6 +2050,7 @@ _nenhum item encontrado_
 | Circuit breaker is open | `supabase/functions/gmaps-proxy/index.ts` |
 | Failed to download results from external API | `supabase/functions/gmaps-proxy/index.ts` |
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
+| Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
 | results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
 | Configura\xE7\xE3o do backend indispon\xEDvel para esta ferramenta. | `supabase/functions/mcp/index.ts` |
 | unauthorized | `supabase/functions/migrate-helper/index.ts` |
@@ -2107,7 +2108,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1174 testes em 110 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1181 testes em 111 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2180,6 +2181,7 @@ _nenhum item encontrado_
 | `src/tests/load-stress.test.ts` | 7 | load-stress: motor de resiliência · processa 500 cenários em menos de 5s (throughput >= 100 cenários/s) · mantém sucesso >= 70% no agregado com política default · cenários client_4xx com failureRate 0.95 vão majoritariamente para DLQ (comportamento correto) … |
 | `supabase/functions/_shared/apify-gateway.test.ts` | 7 | fault: rate_limit_429 em startActorRun · fault: timeout em startActorRun respeita timeoutMs · fault: actor_run_failed marca run como FAILED e propaga no poll · fault: empty_dataset devolve [] em getDatasetItems … |
 | `supabase/functions/_shared/__tests__/chaos.stress.test.ts` | 7 | Chaos determinístico — stress · A1: Determinismo em 1.000 amostras · A2: Distribuição rate=0.01 em 20.000 tasks dentro de [0.005, 0.020] · A3: Bordas rate=0 e rate=1 em 500 tasks … |
+| `supabase/functions/_shared/__tests__/places-fallback.test.ts` | 7 | placeToRow maps Places API place to gosom-compatible row · placeToRow tolerates places with only required fields · fetchPlacesResults returns null when API key is absent · fetchPlacesResults returns null when every keyword call fails … |
 | `src/components/lux/__tests__/EmptyState.test.tsx` | 6 | EmptyState · renders title and description · renders action button when actionLabel and onAction provided · renders multiple action buttons … |
 | `src/components/lux/__tests__/WorkflowCard.test.tsx` | 6 | WorkflowCard · renders workflow name and description · renders status badge · calls onToggleExpand when clicked … |
 | `src/components/lux/layout/__tests__/Header.test.tsx` | 6 | Header · renders user initial when no avatar · renders avatar component when url provided · calls onOpenMobileSidebar on menu click … |
@@ -2453,6 +2455,8 @@ _nenhum item encontrado_
 | limitado: apenas leituras + inserts em history/notifications com cooldown. | `supabase/functions/reaper-alerts/index.ts` |
 | ignore — cleanup deve ser idempotente */ } | `supabase/functions/rls-tests/_fixtures.ts` |
 | * Classifica se um erro deve ser retentado (transitório) ou não (permanente). */ | `supabase/functions/scrape-queue-worker/index.ts` |
+| * Retorna `true` quando assumiu a tarefa (o chamador nao deve falhar). | `supabase/functions/scrape-queue-worker/index.ts` |
+| Fallback: provedor fora do ar (5xx/429) nao deve virar dead-letter enquanto | `supabase/functions/scrape-queue-worker/index.ts` |
 | 4xx é erro do payload do cliente — não deve abrir o circuito. | `supabase/functions/scrape-queue-worker/index.ts` |
 | // Isolamento multi-tenant: envia apenas pela conta de e-mail da MESMA | `supabase/functions/send-scheduled-reports/index.ts` |
 | * Decide se o relatorio deve rodar agora. | `supabase/functions/send-scheduled-reports/index.ts` |

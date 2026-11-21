@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 124,
+ "total": 125,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 102
+  "unit": 103
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 79
+   "arquivos": 80
   },
   {
    "padrao": "e2e/",
@@ -1093,6 +1093,16 @@
    "casos": 19
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+   "tipo": "unit",
+   "linhas": 142,
+   "testa": [
+    "supabase/functions/_shared/gmaps-mapper.ts",
+    "supabase/functions/_shared/places-fallback.ts"
+   ],
+   "casos": 7
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
    "tipo": "unit",
    "linhas": 151,
@@ -1250,7 +1260,7 @@
   "supabase/functions/_shared/cron-auth.ts": 1,
   "supabase/functions/_shared/dns-guard.ts": 1,
   "supabase/functions/_shared/domain/ipc/scoring.ts": 1,
-  "supabase/functions/_shared/gmaps-mapper.ts": 1,
+  "supabase/functions/_shared/gmaps-mapper.ts": 2,
   "supabase/functions/_shared/hiker-client.ts": 2,
   "supabase/functions/_shared/instagram-config-hash.ts": 1,
   "supabase/functions/_shared/lead-identity.ts": 1,
@@ -1260,6 +1270,7 @@
   "supabase/functions/_shared/lusha-departments.ts": 1,
   "supabase/functions/_shared/omkar-gmaps-config.ts": 1,
   "supabase/functions/_shared/phone-br.ts": 1,
+  "supabase/functions/_shared/places-fallback.ts": 1,
   "supabase/functions/_shared/ssrf-guard.ts": 1,
   "supabase/functions/_shared/tracking-links.ts": 1,
   "supabase/functions/_shared/tracking-signature.ts": 1,

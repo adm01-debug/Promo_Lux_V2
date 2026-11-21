@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (634)",
+   "TypeScript (636)",
    "SQL (229)",
    "Markdown (81)",
    "JSON (38)",
@@ -805,7 +805,15 @@
     "arquivos": 2
    },
    {
+    "host": "maps.google.com",
+    "arquivos": 2
+   },
+   {
     "host": "open.cnpja.com",
+    "arquivos": 2
+   },
+   {
+    "host": "places.googleapis.com",
     "arquivos": 2
    },
    {
@@ -1017,10 +1025,6 @@
     "arquivos": 1
    },
    {
-    "host": "maps.google.com",
-    "arquivos": 1
-   },
-   {
     "host": "menu.example",
     "arquivos": 1
    },
@@ -1074,6 +1078,10 @@
    },
    {
     "host": "retailmax.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "sapporo.example",
     "arquivos": 1
    },
    {

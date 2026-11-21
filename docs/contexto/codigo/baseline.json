@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ef039bf804dc74df64555be28b57f7ee1c810cc1",
+  "commit": "ab467daf98faad40fb46dd18384bacca78314b91",
   "branch": "main",
-  "data_commit": "2026-11-21T18:39:23-03:00",
+  "data_commit": "2026-11-21T19:44:12-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "ab467da",
+    "data": "2026-11-21",
+    "assunto": "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)"
+   },
    {
     "sha": "ef039bf",
     "data": "2026-11-21",
@@ -126,22 +131,17 @@
     "sha": "b7178cd",
     "data": "2026-11-21",
     "assunto": "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)"
-   },
-   {
-    "sha": "a37f319",
-    "data": "2026-11-20",
-    "assunto": "chore: adiciona backlog verificado e linha de base (#80)"
    }
   ],
-  "arquivos_mudados_7d": 110,
+  "arquivos_mudados_7d": 113,
   "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "supabase/functions/_shared",
+    "mudancas": 20
+   },
    {
     "pasta": "src/components/lux",
     "mudancas": 19
-   },
-   {
-    "pasta": "supabase/functions/_shared",
-    "mudancas": 18
    },
    {
     "pasta": "package-lock.json",
@@ -262,6 +262,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "ai-context.config.json",
     "mudancas": 2
-   },
-   {
-    "arquivo": "docs/AUDITORIA_TECNICA_SCORECARD.md",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 74
+    "commits": 75
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1049,
-  "arquivos_codigo": 660,
-  "linhas_codigo": 113535,
+  "arquivos_total": 1051,
+  "arquivos_codigo": 662,
+  "linhas_codigo": 113956,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 105,
   "migrations": 225,
   "cron_jobs": 29,
-  "testes": 124,
+  "testes": 125,
   "workflows": 9,
   "scripts": 49,
   "docs_md": 81
@@ -587,8 +587,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 125,
-   "linhas": 22425
+   "arquivos": 127,
+   "linhas": 22845
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -600,7 +600,7 @@
   },
   "vitest.config.ts": {
    "arquivos": 1,
-   "linhas": 70
+   "linhas": 71
   }
  },
  "maiores_arquivos": [
@@ -642,7 +642,7 @@
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 777
+   "linhas": 824
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",

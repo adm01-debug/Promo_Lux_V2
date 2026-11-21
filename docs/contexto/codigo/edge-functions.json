@@ -35,6 +35,7 @@
   "supabase/functions/_shared/__tests__/lusha-client.test.ts",
   "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
   "supabase/functions/_shared/__tests__/phone-br.test.ts",
+  "supabase/functions/_shared/__tests__/places-fallback.test.ts",
   "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
   "supabase/functions/_shared/__tests__/tracking-links.test.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
@@ -68,6 +69,7 @@
   "supabase/functions/_shared/oracle-logger.ts",
   "supabase/functions/_shared/org-membership.ts",
   "supabase/functions/_shared/phone-br.ts",
+  "supabase/functions/_shared/places-fallback.ts",
   "supabase/functions/_shared/rlsTableRegistry.ts",
   "supabase/functions/_shared/safe-update.ts",
   "supabase/functions/_shared/schemas.ts",
@@ -734,7 +736,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 777,
+   "linhas": 824,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -753,6 +755,7 @@
    ],
    "rpcs": [],
    "env": [
+    "GOOGLE_MAPS_API_KEY",
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
@@ -769,6 +772,7 @@
     "circuit-breaker.ts",
     "cron-auth.ts",
     "gmaps-mapper.ts",
+    "places-fallback.ts",
     "schemas.ts",
     "scoring.ts",
     "tracing.ts"
@@ -785,7 +789,7 @@
    "nome": "health",
    "entrada": "supabase/functions/health/index.ts",
    "arquivos": 1,
-   "linhas": 106,
+   "linhas": 136,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -796,6 +800,7 @@
    ],
    "rpcs": [],
    "env": [
+    "GOOGLE_MAPS_API_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -806,6 +811,7 @@
     "gmaps.atomicabr.com.br",
     "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
     "lux-ai-company-finder.lovable.app",
+    "places.googleapis.com",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
@@ -1723,7 +1729,7 @@
    "nome": "scrape-queue-worker",
    "entrada": "supabase/functions/scrape-queue-worker/index.ts",
    "arquivos": 1,
-   "linhas": 423,
+   "linhas": 480,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1756,7 +1762,8 @@
    "usa_shared": [
     "circuit-breaker.ts",
     "cron-auth.ts",
-    "omkar-gmaps-config.ts"
+    "omkar-gmaps-config.ts",
+    "places-fallback.ts"
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
