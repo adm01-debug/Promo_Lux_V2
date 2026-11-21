@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { Upload, Loader2, FileText, CheckCircle2, AlertTriangle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Upload, Loader2, FileText, CheckCircle2, AlertTriangle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription,
@@ -66,6 +67,24 @@ export const ImportCompaniesDialog = () => {
   const [open, setOpen] = useState(false);
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
+
+  const { data: history } = useQuery({
+    queryKey: ["bulk_imports-history"],
+    enabled: open,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bulk_imports")
+        .select("id,file_name,total_rows,inserted_count,skipped_count,invalid_count,created_at")
+        .eq("entity", "companies")
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return (data ?? []) as Array<{
+        id: string; file_name: string | null; total_rows: number;
+        inserted_count: number; skipped_count: number; invalid_count: number; created_at: string;
+      }>;
+    },
+  });
 
   const handleFile = async (file: File) => {
     setImporting(true);
@@ -140,9 +159,31 @@ export const ImportCompaniesDialog = () => {
         }
       }
 
+      // Trilha da importação: registra o que entrou, o que foi ignorado e os
+      // motivos, para permitir auditar uma carga errada depois. Best-effort:
+      // se o log falhar, os dados já foram gravados e não desfazemos a carga.
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        const { error: logErr } = await supabase.from("bulk_imports").insert({
+          user_id: userData.user?.id,
+          organization_id: orgId,
+          entity: "companies",
+          file_name: file.name,
+          total_rows: rows.length - 1,
+          inserted_count: res.inserted,
+          skipped_count: res.skipped,
+          invalid_count: res.invalid,
+          errors: res.errors,
+        } as never);
+        if (logErr) console.warn("bulk_imports log falhou:", logErr.message);
+      } catch (logEx) {
+        console.warn("bulk_imports log falhou:", logEx);
+      }
+
       setResult(res);
       queryClient.invalidateQueries({ queryKey: ["companies-list"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["bulk_imports-history"] });
       toast({
         title: "Importação concluída",
         description: `${res.inserted} adicionada(s), ${res.skipped} duplicada(s) ignorada(s), ${res.invalid} inválida(s).`,
@@ -213,6 +254,25 @@ export const ImportCompaniesDialog = () => {
             {importing ? "Importando..." : result ? "Importar outro arquivo" : "Escolher arquivo"}
           </Button>
         </DialogFooter>
+
+        {!!(history ?? []).length && (
+          <div className="border-t border-border/50 pt-3 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <History className="h-3.5 w-3.5" /> Importações recentes
+            </div>
+            {(history ?? []).map((h) => (
+              <div key={h.id} className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span className="truncate">{h.file_name ?? "arquivo.csv"}</span>
+                <span className="shrink-0 tabular-nums">
+                  {h.inserted_count} ok · {h.skipped_count} dup · {h.invalid_count} inv
+                  <span className="ml-2 text-muted-foreground/60">
+                    {new Date(h.created_at).toLocaleDateString("pt-BR")}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -44,3 +44,8 @@ verify_jwt = false
 # antes do codigo rodar.
 [functions.mcp-query]
 verify_jwt = false
+# Envio dos relatorios agendados. Chamada por pg_cron com a service_role key
+# vinda do vault; o gate efeito esta em cron-auth (isCronAuthorized), nao no
+# verify_jwt do gateway.
+[functions.send-scheduled-reports]
+verify_jwt = false

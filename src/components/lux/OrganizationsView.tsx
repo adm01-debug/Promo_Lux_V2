@@ -454,7 +454,7 @@ export const OrganizationsView = () => {
                   </p>
                 </div>
                 <div className="p-4">
-                  <PermissionsMatrix currentRole={myRole} />
+                  <PermissionsMatrix currentRole={myRole} editable={myRole === "admin"} />
                 </div>
               </div>
             </>

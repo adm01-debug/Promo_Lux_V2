@@ -607,6 +607,48 @@ export type Database = {
           },
         ]
       }
+      bulk_imports: {
+        Row: {
+          created_at: string
+          entity: string
+          errors: Json
+          file_name: string | null
+          id: string
+          inserted_count: number
+          invalid_count: number
+          organization_id: string | null
+          skipped_count: number
+          total_rows: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity?: string
+          errors?: Json
+          file_name?: string | null
+          id?: string
+          inserted_count?: number
+          invalid_count?: number
+          organization_id?: string | null
+          skipped_count?: number
+          total_rows?: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          entity?: string
+          errors?: Json
+          file_name?: string | null
+          id?: string
+          inserted_count?: number
+          invalid_count?: number
+          organization_id?: string | null
+          skipped_count?: number
+          total_rows?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       campaign_events: {
         Row: {
           campaign_id: string
@@ -3858,6 +3900,144 @@ export type Database = {
         }
         Relationships: []
       }
+      role_permissions: {
+        Row: {
+          can_create: boolean
+          can_delete: boolean
+          can_manage: boolean
+          can_update: boolean
+          can_view: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          resource: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          can_create?: boolean
+          can_delete?: boolean
+          can_manage?: boolean
+          can_update?: boolean
+          can_view?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          resource: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          can_create?: boolean
+          can_delete?: boolean
+          can_manage?: boolean
+          can_update?: boolean
+          can_view?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          resource?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scheduled_report_runs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          payload: Json | null
+          period_end: string
+          period_start: string
+          recipients_count: number
+          report_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json | null
+          period_end: string
+          period_start: string
+          recipients_count?: number
+          report_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json | null
+          period_end?: string
+          period_start?: string
+          recipients_count?: number
+          report_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      scheduled_reports: {
+        Row: {
+          active: boolean
+          created_at: string
+          day_of_month: number | null
+          day_of_week: number | null
+          deleted_at: string | null
+          filters: Json
+          frequency: string
+          hour_utc: number
+          id: string
+          last_sent_at: string | null
+          metric: string
+          name: string
+          organization_id: string | null
+          recipients: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          day_of_month?: number | null
+          day_of_week?: number | null
+          deleted_at?: string | null
+          filters?: Json
+          frequency?: string
+          hour_utc?: number
+          id?: string
+          last_sent_at?: string | null
+          metric: string
+          name: string
+          organization_id?: string | null
+          recipients?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          day_of_month?: number | null
+          day_of_week?: number | null
+          deleted_at?: string | null
+          filters?: Json
+          frequency?: string
+          hour_utc?: number
+          id?: string
+          last_sent_at?: string | null
+          metric?: string
+          name?: string
+          organization_id?: string | null
+          recipients?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       scrape_jobs: {
         Row: {
           auto_sync: boolean | null
@@ -4992,6 +5172,15 @@ export type Database = {
           reason: string
         }[]
       }
+      can_access: {
+        Args: {
+          _action?: string
+          _org_id: string
+          _resource: string
+          _user_id: string
+        }
+        Returns: boolean
+      }
       campaign_ab_stats: {
         Args: { _campaign_id: string }
         Returns: {
@@ -5227,6 +5416,18 @@ export type Database = {
       decide_ab_winner: { Args: { _campaign_id: string }; Returns: string }
       default_org_for_current_user: { Args: never; Returns: string }
       default_sla_seconds: { Args: { _queue_kind: string }; Returns: number }
+      default_role_permissions: {
+        Args: never
+        Returns: {
+          can_create: boolean
+          can_delete: boolean
+          can_manage: boolean
+          can_update: boolean
+          can_view: boolean
+          resource: string
+          role: Database["public"]["Enums"]["app_role"]
+        }[]
+      }
       defer_scrape_task: {
         Args: { _delay_secs?: number; _id: string; _reason?: string }
         Returns: Database["public"]["Enums"]["scrape_queue_status"]
@@ -5567,6 +5768,10 @@ export type Database = {
       prune_dlq_health_snapshots: { Args: never; Returns: number }
       prune_email_sync_log: {
         Args: { retention_days?: number }
+        Returns: number
+      }
+      prune_scheduled_report_runs: {
+        Args: { _retention_days?: number }
         Returns: number
       }
       prune_pg_net_health_snapshots: {
