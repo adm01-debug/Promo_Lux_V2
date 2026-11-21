@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 220,
+ "migrations": 221,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -142,9 +142,11 @@
   "prune_auth_rate_limits",
   "prune_automation_execution_logs",
   "prune_campaign_events",
+  "prune_cron_job_run_details",
   "prune_dlq_health_snapshots",
   "prune_email_sync_log",
   "prune_pg_net_health_snapshots",
+  "prune_qa_reaper_runs",
   "purge_dead_letter",
   "purge_soft_deleted",
   "reap_stuck_queue_tasks",
@@ -987,6 +989,16 @@
    "agenda": "* * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "scrape-queue-worker"
+  },
+  {
+   "nome": "prune-cron-job-run-details-daily",
+   "agenda": "41 3 * * *",
+   "migration": "20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+  },
+  {
+   "nome": "prune-qa-reaper-runs-daily",
+   "agenda": "47 3 * * *",
+   "migration": "20261121210000_retencao_cron_runs_e_qa_reaper.sql"
   },
   {
    "nome": "purge-soft-deleted-daily",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "6cea0205a5063b3f948783a58750e7c7f35f2335",
+  "sha": "bb305ef63d9ecdbfe431ed044bb347f4f500998a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 20:12 UTC",
-  "files_total": 1053,
-  "code_files": 879,
-  "code_lines": 125945
+  "generated_at": "2026-11-21 20:18 UTC",
+  "files_total": 1055,
+  "code_files": 880,
+  "code_lines": 126056
  },
  "version": "1.3.2",
- "facts_hash": "0f4608e242a6bb64",
+ "facts_hash": "9e339b1c67e4cefa",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   "languages": {
    ".ts": 348,
    ".tsx": 277,
-   ".sql": 224,
+   ".sql": 225,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -14939,6 +14939,41 @@
      "v_count"
     ]
    },
+   "prune_cron_job_run_details": {
+    "args": "_retention_days integer default 30, _batch integer default 20000",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_total integer := 0; v_batch integer := 0; begin if auth.uid() is not null and not public.has_role(auth.uid(), 'admin') then raise exception 'Acesso negado: requer papel de administrador'; end if; if _retention_days is null or _retention_days < 1 then raise exception 'retencao invalida: % (minimo 1 dia)', _retention_days; end if; if _batch is null or _batch < 1 or _batch > 200000 then raise exception 'lote invalido: % (entre 1 e 200000)', _batch; end if; loop delete from cron.job_run_details where runid in ( select runid from cron.job_run_details where start_time < now() - make_interval(days => _retention_days) limit _batch ); get diagnostics v_batch = row_count; v_total := v_total …",
+    "raises": [
+     "Acesso negado: requer papel de administrador",
+     "retencao invalida: % (minimo 1 dia)",
+     "lote invalido: % (entre 1 e 200000)"
+    ],
+    "tables": [
+     "cron"
+    ]
+   },
+   "prune_qa_reaper_runs": {
+    "args": "_retention_days integer default 30",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_count integer := 0; begin if auth.uid() is not null and not public.has_role(auth.uid(), 'admin') then raise exception 'Acesso negado: requer papel de administrador'; end if; if _retention_days is null or _retention_days < 1 then raise exception 'retencao invalida: % (minimo 1 dia)', _retention_days; end if; with del as ( delete from public.qa_reaper_runs where ran_at < now() - make_interval(days => _retention_days) returning 1 ) select count(*) into v_count from del; return v_count; end;",
+    "raises": [
+     "Acesso negado: requer papel de administrador",
+     "retencao invalida: % (minimo 1 dia)"
+    ],
+    "tables": [
+     "del",
+     "qa_reaper_runs",
+     "v_count"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -17725,7 +17760,20 @@
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
    }
   ],
-  "cron_jobs": [],
+  "cron_jobs": [
+   {
+    "job": "prune-cron-job-run-details-daily",
+    "schedule": "41 3 * * *",
+    "body": "SELECT public.prune_cron_job_run_details(30, 20000);",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "job": "prune-qa-reaper-runs-daily",
+    "schedule": "47 3 * * *",
+    "body": "SELECT public.prune_qa_reaper_runs(30);",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   }
+  ],
   "views": {
    "oracle_v2_health": {
     "body": "SELECT organization_id, source, count(*) FILTER (WHERE created_at >= now() - interval '24 hours') AS events_24h, count(*) FILTER (WHERE status = 'error' AND created_at >= now() - interval '24 hours') AS errors_24h, count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hours') AS success_24h, ROUND( 100.0 * count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hours') / NULLIF(count(*) FILTER (WHERE created_at >= now() - interval '24 hours'), 0), 2 ) AS success_rate_pct, max(created_at) AS last_event_at FROM public.automation_execution_logs …",
@@ -17961,6 +18009,7 @@
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
    "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
+   "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -21945,6 +21994,38 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "prune_cron_job_run_details",
+    "objkind": "function",
+    "roles": "public, anon, authenticated",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "prune_cron_job_run_details",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "prune_qa_reaper_runs",
+    "objkind": "function",
+    "roles": "public, anon, authenticated",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "prune_qa_reaper_runs",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
    }
   ],
   "raises": [
@@ -22362,6 +22443,31 @@
     "function": "check_api_key_rate_limit",
     "msg": "api_key_id é obrigatório",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "function": "prune_cron_job_run_details",
+    "msg": "Acesso negado: requer papel de administrador",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_cron_job_run_details",
+    "msg": "retencao invalida: % (minimo 1 dia)",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_cron_job_run_details",
+    "msg": "lote invalido: % (entre 1 e 200000)",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_qa_reaper_runs",
+    "msg": "Acesso negado: requer papel de administrador",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_qa_reaper_runs",
+    "msg": "retencao invalida: % (minimo 1 dia)",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
    }
   ],
   "seed": [],
@@ -26184,8 +26290,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 220,
-   "lines": 12827,
+   "files": 221,
+   "lines": 12938,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -51834,6 +51940,41 @@
      "v_count"
     ]
    },
+   "prune_cron_job_run_details": {
+    "args": "_retention_days integer default 30, _batch integer default 20000",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_total integer := 0; v_batch integer := 0; begin if auth.uid() is not null and not public.has_role(auth.uid(), 'admin') then raise exception 'Acesso negado: requer papel de administrador'; end if; if _retention_days is null or _retention_days < 1 then raise exception 'retencao invalida: % (minimo 1 dia)', _retention_days; end if; if _batch is null or _batch < 1 or _batch > 200000 then raise exception 'lote invalido: % (entre 1 e 200000)', _batch; end if; loop delete from cron.job_run_details where runid in ( select runid from cron.job_run_details where start_time < now() - make_interval(days => _retention_days) limit _batch ); get diagnostics v_batch = row_count; v_total := v_total …",
+    "raises": [
+     "Acesso negado: requer papel de administrador",
+     "retencao invalida: % (minimo 1 dia)",
+     "lote invalido: % (entre 1 e 200000)"
+    ],
+    "tables": [
+     "cron"
+    ]
+   },
+   "prune_qa_reaper_runs": {
+    "args": "_retention_days integer default 30",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_count integer := 0; begin if auth.uid() is not null and not public.has_role(auth.uid(), 'admin') then raise exception 'Acesso negado: requer papel de administrador'; end if; if _retention_days is null or _retention_days < 1 then raise exception 'retencao invalida: % (minimo 1 dia)', _retention_days; end if; with del as ( delete from public.qa_reaper_runs where ran_at < now() - make_interval(days => _retention_days) returning 1 ) select count(*) into v_count from del; return v_count; end;",
+    "raises": [
+     "Acesso negado: requer papel de administrador",
+     "retencao invalida: % (minimo 1 dia)"
+    ],
+    "tables": [
+     "del",
+     "qa_reaper_runs",
+     "v_count"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -52417,6 +52558,31 @@
     "function": "check_api_key_rate_limit",
     "msg": "api_key_id é obrigatório",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "function": "prune_cron_job_run_details",
+    "msg": "Acesso negado: requer papel de administrador",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_cron_job_run_details",
+    "msg": "retencao invalida: % (minimo 1 dia)",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_cron_job_run_details",
+    "msg": "lote invalido: % (entre 1 e 200000)",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_qa_reaper_runs",
+    "msg": "Acesso negado: requer papel de administrador",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "function": "prune_qa_reaper_runs",
+    "msg": "retencao invalida: % (minimo 1 dia)",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
    }
   ],
   "db_generated": [],
@@ -55497,7 +55663,8 @@
    "supabase/migrations/20260726202849_3000bff4-27a1-4b89-b9b9-cd8a1ab17dbc.sql",
    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
-   "supabase/migrations/20261121190000_version_crons_with_vault_key.sql"
+   "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
+   "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
   ],
   "security_definer_fns": [
    "accept_org_invite",
@@ -55578,9 +55745,11 @@
    "prune_auth_rate_limits",
    "prune_automation_execution_logs",
    "prune_campaign_events",
+   "prune_cron_job_run_details",
    "prune_dlq_health_snapshots",
    "prune_email_sync_log",
    "prune_pg_net_health_snapshots",
+   "prune_qa_reaper_runs",
    "purge_dead_letter",
    "purge_soft_deleted",
    "reap_stuck_queue_tasks",
@@ -59497,6 +59666,38 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261121120000_api_key_rate_limit.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "prune_cron_job_run_details",
+    "objkind": "function",
+    "roles": "public, anon, authenticated",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "prune_cron_job_run_details",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "prune_qa_reaper_runs",
+    "objkind": "function",
+    "roles": "public, anon, authenticated",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "prune_qa_reaper_runs",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
    }
   ],
   "guards": [
@@ -82160,13 +82361,36 @@
    "path": "supabase/migrations/20261121190000_version_crons_with_vault_key.sql",
    "lines": 120,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql": {
+   "path": "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+   "lines": 111,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "6cea0205a5063b3f948783a58750e7c7f35f2335",
+  "sha": "bb305ef63d9ecdbfe431ed044bb347f4f500998a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "bb305ef",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)",
+    "files": [
+     "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+    ]
+   },
+   {
+    "sha": "cb0dbe3",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)",
+    "files": [
+     "docs/AUDITORIA-FUNCIONALIDADES.md"
+    ]
+   },
    {
     "sha": "6cea020",
     "date": "2026-11-21",
@@ -82481,44 +82705,19 @@
      "package.json",
      "vite.config.ts"
     ]
-   },
-   {
-    "sha": "c97523a",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix(devdeps): overrides minimatch 11.0.1 e postcss-selector-parser 6.1.5 abatem 2 CVEs medium (#70)",
-    "files": [
-     "package-lock.json",
-     "package.json"
-    ]
-   },
-   {
-    "sha": "5095441",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)",
-    "files": [
-     "package-lock.json",
-     "package.json",
-     "src/lib/schemas/company.ts"
-    ]
    }
   ],
   "hot_files": [
-   [
-    "package.json",
-    5
-   ],
    [
     "supabase/config.toml",
     4
    ],
    [
-    "package-lock.json",
-    4
+    "supabase/functions/campaign-dispatch/index.ts",
+    3
    ],
    [
-    "supabase/functions/campaign-dispatch/index.ts",
+    "package.json",
     3
    ],
    [
@@ -82540,6 +82739,18 @@
    [
     ".github/workflows/production-smoke.yml",
     2
+   ],
+   [
+    "package-lock.json",
+    2
+   ],
+   [
+    "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql",
+    1
+   ],
+   [
+    "docs/AUDITORIA-FUNCIONALIDADES.md",
+    1
    ],
    [
     "docs/auth.md",
@@ -82575,14 +82786,6 @@
    ],
    [
     "supabase/functions/_shared/cron-auth.ts",
-    1
-   ],
-   [
-    "supabase/functions/circuit-breaker-alerts/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/dlq-alerts/index.ts",
     1
    ]
   ]

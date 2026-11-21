@@ -4,8 +4,8 @@
  "stack": {
   "linguagens": [
    "TypeScript (625)",
-   "SQL (224)",
-   "Markdown (80)",
+   "SQL (225)",
+   "Markdown (81)",
    "JSON (38)",
    "JavaScript (22)",
    "Shell (13)",
@@ -455,6 +455,11 @@
    "arquivo": "README.md",
    "titulo": "LUX IA — Sistema de Prospecção B2B Inteligente",
    "linhas": 282
+  },
+  {
+   "arquivo": "docs/AUDITORIA-FUNCIONALIDADES.md",
+   "titulo": "Auditoria de Funcionalidades — Promo_Lux_V2",
+   "linhas": 134
   },
   {
    "arquivo": "docs/AUDITORIA_BACKEND_SENIOR.md",

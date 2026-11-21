@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6cea0205a5063b3f948783a58750e7c7f35f2335",
+  "commit": "bb305ef63d9ecdbfe431ed044bb347f4f500998a",
   "branch": "main",
-  "data_commit": "2026-11-21T17:10:10-03:00",
+  "data_commit": "2026-11-21T17:17:12-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "bb305ef",
+    "data": "2026-11-21",
+    "assunto": "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)"
+   },
+   {
+    "sha": "cb0dbe3",
+    "data": "2026-11-21",
+    "assunto": "docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)"
+   },
    {
     "sha": "6cea020",
     "data": "2026-11-21",
@@ -121,19 +131,9 @@
     "sha": "c4ed84b",
     "data": "2026-11-20",
     "assunto": "infra: workflow de deploy de edge functions no Supabase (espelha db-migrations) (#76)"
-   },
-   {
-    "sha": "5481263",
-    "data": "2026-11-20",
-    "assunto": "chore(ci)+docs: smoke de producao aponta Vercel (producao real) e doc do deploy alinhada ao pivot Lovable->Vercel (#75)"
-   },
-   {
-    "sha": "4848e17",
-    "data": "2026-11-20",
-    "assunto": "chore(deps): resolve 6 vulnerabilidades dev (zod high, glob moderate) via dedupe do lockfile (#74)"
    }
   ],
-  "arquivos_mudados_7d": 81,
+  "arquivos_mudados_7d": 83,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 68
+    "commits": 70
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1034,
+  "arquivos_total": 1036,
   "arquivos_codigo": 651,
   "linhas_codigo": 111297,
   "rotas": 10,
@@ -322,12 +322,12 @@
   "hooks": 78,
   "edge_functions": 59,
   "tabelas": 97,
-  "migrations": 220,
-  "cron_jobs": 24,
+  "migrations": 221,
+  "cron_jobs": 26,
   "testes": 124,
   "workflows": 9,
   "scripts": 49,
-  "docs_md": 80
+  "docs_md": 81
  },
  "por_pasta": {
   "commitlint.config.cjs": {

@@ -34,7 +34,7 @@
    "scripts/sql (3)"
   ],
   "docs": [
-   "docs (20)",
+   "docs (21)",
    "(raiz) (5)"
   ]
  },
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)",
+   "docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)",
    "fix(docs): decodifica auth.md que estava gravado em base64 (#100)",
    "fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)",
-   "docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)",
-   "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)",
-   "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)"
+   "docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)"
   ]
  },
  "pr_template": null,

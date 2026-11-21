@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6cea0205a5` · branch `main` · 2026-11-21 20:12 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bb305ef63d` · branch `main` · 2026-11-21 20:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -772,6 +772,11 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `apply_sla_recommendation` | insufficient sample for queue % | `supabase/migrations/20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql` |
 | `sla_autotune_blocked_streaks` | forbidden | `supabase/migrations/20260726160244_761f8ad7-97f4-42a1-a5b2-56668e573d89.sql` |
 | `check_api_key_rate_limit` | api_key_id é obrigatório | `supabase/migrations/20261121120000_api_key_rate_limit.sql` |
+| `prune_cron_job_run_details` | Acesso negado: requer papel de administrador | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
+| `prune_cron_job_run_details` | retencao invalida: % (minimo 1 dia) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
+| `prune_cron_job_run_details` | lote invalido: % (entre 1 e 200000) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
+| `prune_qa_reaper_runs` | Acesso negado: requer papel de administrador | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
+| `prune_qa_reaper_runs` | retencao invalida: % (minimo 1 dia) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
