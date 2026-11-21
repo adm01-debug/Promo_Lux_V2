@@ -61,17 +61,47 @@ serve(async (req) => {
     results.checks.database = { status: "unhealthy", error: (err as Error).message };
   }
 
-  // Check External APIs (Gmaps)
+  // Check External APIs (Gmaps): scraper externo + fallback Places API.
+  // A extracao funciona se QUALQUER um dos dois responder, entao reportamos o
+  // estado de cada um — antes o 404 do scraper marcava a extracao como
+  // quebrada mesmo com a Places API saudavel.
   const gmapsStart = performance.now();
   try {
     const res = await fetch("https://gmaps.atomicabr.com.br/api/v1/jobs", { signal: AbortSignal.timeout(3000) });
-    results.checks.gmaps_api = { 
-      status: res.ok ? "healthy" : "unhealthy", 
+    results.checks.gmaps_api = {
+      status: res.ok ? "healthy" : "degraded",
       latency_ms: Math.round(performance.now() - gmapsStart),
-      status_code: res.status 
+      status_code: res.status,
+      note: res.ok ? undefined : "scraper externo offline; fallback activo via Places API",
     };
   } catch (err) {
-    results.checks.gmaps_api = { status: "unhealthy", error: (err as Error).message };
+    results.checks.gmaps_api = { status: "degraded", error: (err as Error).message, note: "scraper externo offline; fallback activo via Places API" };
+  }
+
+  const placesKey = Deno.env.get("GOOGLE_MAPS_API_KEY");
+  const placesStart = performance.now();
+  if (!placesKey) {
+    results.checks.google_places_api = { status: "unhealthy", error: "GOOGLE_MAPS_API_KEY ausente" };
+  } else {
+    try {
+      const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": placesKey,
+          "X-Goog-FieldMask": "places.id",
+        },
+        body: JSON.stringify({ textQuery: "cafe", maxResultCount: 1 }),
+        signal: AbortSignal.timeout(5000),
+      });
+      results.checks.google_places_api = {
+        status: res.ok ? "healthy" : "unhealthy",
+        latency_ms: Math.round(performance.now() - placesStart),
+        status_code: res.status,
+      };
+    } catch (err) {
+      results.checks.google_places_api = { status: "unhealthy", error: (err as Error).message };
+    }
   }
 
   // Check AI Gateway (simple reachability)

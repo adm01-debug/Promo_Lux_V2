@@ -10,6 +10,7 @@ import {
   OMKAR_ROUTES,
   type LuxScrapeConfig,
 } from "../_shared/omkar-gmaps-config.ts";
+import { fetchPlacesResults } from "../_shared/places-fallback.ts";
 
 
 /** Serviço externo protegido pelo circuit breaker. */
@@ -91,6 +92,56 @@ function isTransient(status: number | null, err?: unknown): boolean {
   if (status === 408 || status === 425 || status === 429) return true; // throttle/timeout
   if (status >= 500) return true; // falha do servidor externo
   return false; // 4xx (400/401/403/404/422...) => permanente
+}
+
+/**
+ * Conclui a tarefa usando a Places API quando o scraper externo falhou.
+ *
+ * Sem isso, um scraper fora do ar transforma toda tarefa em dead-letter e a
+ * extracao de empresas para de vez. A Places API entrega o mesmo tipo de dado,
+ * entao marcamos o job como concluido com os resultados reais.
+ *
+ * Retorna `true` quando assumiu a tarefa (o chamador nao deve falhar).
+ */
+async function completeWithPlacesFallback(
+  supabase: ReturnType<typeof createClient>,
+  task: QueueTask,
+  cfg: Record<string, unknown>,
+  attempt: number,
+  startedAt: number,
+  reason: string,
+): Promise<boolean> {
+  const keywords = Array.isArray(cfg.keywords) ? (cfg.keywords as string[]) : [];
+  if (!keywords.length) return false;
+
+  const rows = await fetchPlacesResults(keywords, 20, (cfg.lang as string) ?? "pt-BR");
+  if (!rows?.length) return false;
+
+  const externalId = `places:${task.scrape_job_id ?? task.id}`;
+  if (task.scrape_job_id) {
+    await supabase.from("scrape_jobs")
+      .update({
+        external_id: externalId,
+        status: "completed",
+        results_count: rows.length,
+        completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", task.scrape_job_id);
+  }
+  await supabase.rpc("complete_scrape_task", { _id: task.id });
+  await audit(supabase, task, {
+    _phase: "complete",
+    _status: "succeeded",
+    _level: "warn",
+    _message: "Resultados obtidos via Places API (fallback) porque o provedor externo falhou",
+    _failure_reason: reason,
+    _attempt: attempt,
+    _duration_ms: Math.round(performance.now() - startedAt),
+    _metadata: { fallback: "places_api", results: rows.length, external_id: externalId },
+  });
+  log("warn", "task_completed_via_places_fallback", { task_id: task.id, reason, results: rows.length });
+  return true;
 }
 
 interface QueueTask {
@@ -222,6 +273,9 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
   } catch (err) {
     // Rede/timeout => transitório. Sinaliza o circuit breaker (saúde do provedor).
     await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});
+    // Fallback: com o scraper externo fora do ar, retentar só enche a DLQ.
+    // A Places API entrega o mesmo dado, então concluímos a tarefa.
+    if (!useOmkar && await completeWithPlacesFallback(supabase, task, cfg, attempt, startedAt, (err as Error).message)) return;
     const message = `network_error: ${(err as Error).message}`;
     const result = await supabase.rpc("fail_scrape_task", { _id: task.id, _error: message, _transient: true });
     const dead = result.data === "dead";
@@ -243,6 +297,9 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
   if (!res.ok) {
     const bodyText = await res.text().catch(() => "");
     const transient = isTransient(res.status);
+    // Fallback: provedor fora do ar (5xx/429) nao deve virar dead-letter enquanto
+    // a Places API puder entregar os resultados da mesma busca.
+    if (transient && !useOmkar && await completeWithPlacesFallback(supabase, task, cfg, attempt, startedAt, `http_${res.status}`)) return;
     // Só falhas transitórias (5xx/429/timeout) indicam degradação do provedor.
     // 4xx é erro do payload do cliente — não deve abrir o circuito.
     if (transient) await reportFailure(supabase, CIRCUIT_SERVICE).catch(() => {});
