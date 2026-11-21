@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (622)",
+   "TypeScript (624)",
    "SQL (223)",
    "Markdown (80)",
    "JSON (38)",
@@ -610,6 +610,8 @@
    "CNPJA_LIMIT_RPM",
    "CNPJA_OPEN_LIMIT_RPM",
    "CNPJ_WORKER_BATCH",
+   "CRON_ANON_KEY",
+   "CRON_SERVICE_KEY",
    "EXTERNAL_VAULT_ANON_KEY",
    "GMAPS_OMKAR_API_KEY",
    "GMAPS_OMKAR_BASE_URL",
@@ -930,6 +932,10 @@
    },
    {
     "host": "evil.example",
+    "arquivos": 1
+   },
+   {
+    "host": "example.test",
     "arquivos": 1
    },
    {

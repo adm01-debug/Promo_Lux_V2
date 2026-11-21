@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (78)",
+   "co-localizado (__tests__) (79)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)",
    "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)",
    "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)",
    "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)",
-   "fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)",
-   "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)"
+   "fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)"
   ]
  },
  "pr_template": null,

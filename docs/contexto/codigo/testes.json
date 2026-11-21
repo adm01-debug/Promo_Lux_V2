@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 123,
+ "total": 124,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 101
+  "unit": 102
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 78
+   "arquivos": 79
   },
   {
    "padrao": "e2e/",
@@ -982,6 +982,15 @@
    "casos": 5
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+   "tipo": "unit",
+   "linhas": 81,
+   "testa": [
+    "supabase/functions/_shared/cron-auth.ts"
+   ],
+   "casos": 12
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
    "tipo": "unit",
    "linhas": 85,
@@ -1238,6 +1247,7 @@
   "supabase/functions/_shared/apollo-departments.ts": 1,
   "supabase/functions/_shared/bitrix-client.ts": 1,
   "supabase/functions/_shared/company-domain.ts": 1,
+  "supabase/functions/_shared/cron-auth.ts": 1,
   "supabase/functions/_shared/dns-guard.ts": 1,
   "supabase/functions/_shared/domain/ipc/scoring.ts": 1,
   "supabase/functions/_shared/gmaps-mapper.ts": 1,

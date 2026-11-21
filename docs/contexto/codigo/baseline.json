@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "cdb0c8be820757030b8c2a1316fc31f86f3096a3",
+  "commit": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
   "branch": "main",
-  "data_commit": "2026-11-21T14:51:18-03:00",
+  "data_commit": "2026-11-21T15:37:20-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5f0ccec",
+    "data": "2026-11-21",
+    "assunto": "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)"
+   },
    {
     "sha": "cdb0c8b",
     "data": "2026-11-21",
@@ -126,22 +131,17 @@
     "sha": "5095441",
     "data": "2026-11-20",
     "assunto": "feat(deps): bump zod 3 para 4 (4.6.7) e preserva opcionalidade de cnpj (#69)"
-   },
-   {
-    "sha": "f9ab8eb",
-    "data": "2026-11-20",
-    "assunto": "chore(deps)(deps): bump react-router and react-router-dom (#68)"
    }
   ],
-  "arquivos_mudados_7d": 62,
+  "arquivos_mudados_7d": 74,
   "pastas_mais_mudadas_30d": [
+   {
+    "pasta": "supabase/functions/_shared",
+    "mudancas": 18
+   },
    {
     "pasta": "package-lock.json",
     "mudancas": 17
-   },
-   {
-    "pasta": "supabase/functions/_shared",
-    "mudancas": 16
    },
    {
     "pasta": "package.json",
@@ -258,6 +258,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "docs/AUDITORIA_TECNICA_SCORECARD.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "docs/agentes/banco.md",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 62
+    "commits": 63
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1030,
-  "arquivos_codigo": 648,
-  "linhas_codigo": 110991,
+  "arquivos_total": 1032,
+  "arquivos_codigo": 650,
+  "linhas_codigo": 111182,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 97,
   "migrations": 219,
   "cron_jobs": 6,
-  "testes": 123,
+  "testes": 124,
   "workflows": 9,
   "scripts": 49,
   "docs_md": 80
@@ -587,8 +587,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 121,
-   "linhas": 21653
+   "arquivos": 123,
+   "linhas": 21844
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -641,6 +641,10 @@
    "linhas": 871
   },
   {
+   "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+   "linhas": 777
+  },
+  {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
    "linhas": 763
   },
@@ -655,10 +659,6 @@
   {
    "arquivo": "src/pages/Monitoring.tsx",
    "linhas": 726
-  },
-  {
-   "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 713
   },
   {
    "arquivo": "supabase/functions/workflow-engine/index.ts",

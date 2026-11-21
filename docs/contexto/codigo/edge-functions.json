@@ -21,6 +21,7 @@
   "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
   "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
   "supabase/functions/_shared/__tests__/chaos.test.ts",
+  "supabase/functions/_shared/__tests__/cron-auth.test.ts",
   "supabase/functions/_shared/__tests__/dns-guard.test.ts",
   "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
   "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts",
@@ -47,6 +48,7 @@
   "supabase/functions/_shared/circuit-breaker.ts",
   "supabase/functions/_shared/company-domain.ts",
   "supabase/functions/_shared/cookies.ts",
+  "supabase/functions/_shared/cron-auth.ts",
   "supabase/functions/_shared/departmentMap.ts",
   "supabase/functions/_shared/dns-guard.ts",
   "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
@@ -286,6 +288,7 @@
     "oauth2.googleapis.com"
    ],
    "usa_shared": [
+    "cron-auth.ts",
     "tracking-links.ts"
    ],
    "chamada_pelo_front": [
@@ -317,7 +320,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -367,7 +372,7 @@
    "nome": "cnpj-enrich-worker",
    "entrada": "supabase/functions/cnpj-enrich-worker/index.ts",
    "arquivos": 1,
-   "linhas": 224,
+   "linhas": 223,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -394,7 +399,9 @@
     "api.cnpja.com",
     "open.cnpja.com"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -490,7 +497,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -721,7 +730,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 713,
+   "linhas": 777,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -754,6 +763,7 @@
    ],
    "usa_shared": [
     "circuit-breaker.ts",
+    "cron-auth.ts",
     "gmaps-mapper.ts",
     "schemas.ts",
     "scoring.ts",
@@ -988,7 +998,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1461,7 +1473,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1526,7 +1540,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1568,7 +1584,7 @@
    "nome": "reaper-alerts",
    "entrada": "supabase/functions/reaper-alerts/index.ts",
    "arquivos": 1,
-   "linhas": 205,
+   "linhas": 200,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1582,14 +1598,15 @@
    ],
    "rpcs": [],
    "env": [
-    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1618,7 +1635,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1673,7 +1692,7 @@
    "nome": "scrape-queue-worker",
    "entrada": "supabase/functions/scrape-queue-worker/index.ts",
    "arquivos": 1,
-   "linhas": 407,
+   "linhas": 423,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1705,6 +1724,7 @@
    ],
    "usa_shared": [
     "circuit-breaker.ts",
+    "cron-auth.ts",
     "omkar-gmaps-config.ts"
    ],
    "chamada_pelo_front": [],
@@ -1717,7 +1737,7 @@
    "nome": "sla-alerts",
    "entrada": "supabase/functions/sla-alerts/index.ts",
    "arquivos": 1,
-   "linhas": 155,
+   "linhas": 150,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1732,14 +1752,15 @@
     "sla_compliance_stats"
    ],
    "env": [
-    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1750,7 +1771,7 @@
    "nome": "sla-auto-tune",
    "entrada": "supabase/functions/sla-auto-tune/index.ts",
    "arquivos": 1,
-   "linhas": 167,
+   "linhas": 162,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1766,14 +1787,15 @@
     "sla_autotune_blocked_streaks"
    ],
    "env": [
-    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,

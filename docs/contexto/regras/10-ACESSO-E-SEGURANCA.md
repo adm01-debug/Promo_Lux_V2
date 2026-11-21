@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cdb0c8be82` · branch `main` · 2026-11-21 17:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5f0ccecff4` · branch `main` · 2026-11-21 18:37 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -118,7 +118,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 172 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 174 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -131,7 +131,9 @@
 - `scripts/supabase_snapshot/snapshot.py`
 - `src/integrations/supabase/withOrg.ts`
 - `src/lib/mcp/supabase.ts`
+- `supabase/functions/_shared/__tests__/cron-auth.test.ts`
 - `supabase/functions/_shared/apollo-cache.ts`
+- `supabase/functions/_shared/cron-auth.ts`
 - `supabase/functions/_shared/org-membership.ts`
 - `supabase/functions/_shared/rlsTableRegistry.ts`
 - `supabase/functions/admin-list-companies/index.ts`
@@ -268,9 +270,7 @@
 - `supabase/migrations/20260722114256_52e41091-6d26-4aac-b35a-9a38958ee119.sql`
 - `supabase/migrations/20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql`
 - `supabase/migrations/20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql`
-- `supabase/migrations/20260722124907_fd724c3f-8336-49ef-94e6-e6169bfdff71.sql`
-- `supabase/migrations/20260723105701_8063c052-209d-42e5-a34b-bd3c0f8427a5.sql`
-- … +22 (lista completa em `context.json`)
+- … +24 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 

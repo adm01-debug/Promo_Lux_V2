@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cdb0c8be82` · branch `main` · 2026-11-21 17:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5f0ccecff4` · branch `main` · 2026-11-21 18:37 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2024,7 +2024,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1159 testes em 109 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1174 testes em 110 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2048,6 +2048,7 @@ _nenhum item encontrado_
 | `e2e/lusha-flows.spec.ts` | 15 | Lusha Intelligence — fluxos ampliados (R33) · A · Busca · 1) sucesso rápido devolve SearchResponse mínimo · 2) resposta lenta (2s) resolve sem erro … |
 | `src/lib/lusha/__tests__/departmentMap.test.ts` | 15 | departmentMap — fonte de verdade compartilhada · congela DEPT_MAP e sugestões (imutabilidade) · mantém pelo menos 12 sugestões PT sem duplicatas · mapeia todas as sugestões PT canônicas para um enum EN válido … |
 | `supabase/functions/_shared/__tests__/bitrix-client.test.ts` | 15 | resolveDeptEnum · resolve Compras · resolve Marketing · resolve Recursos Humanos … |
+| `supabase/functions/_shared/__tests__/cron-auth.test.ts` | 15 | timingSafeEqual · compara conteudo, nao referencia · rejeita tamanhos diferentes · requestToken … |
 | `src/components/lux/lusha/SessionsPanel.test.tsx` | 14 | SessionsPanel (R36 server-side) · estado vazio original quando o backend retorna zero sem filtros · renderiza uma linha por sessão retornada pelo servidor · mostra badge  … |
 | `src/lib/sourceQualityReport.test.ts` | 14 | totalsForSource · soma linhas e recalcula taxas sobre os totais · retorna taxas nulas sem amostra · ignora linhas de outra fonte … |
 | `src/lib/__tests__/orgErrorHandler.test.ts` | 14 | handleOrgError → toast · dispara toast específico para INSERT sem org · dispara toast específico para UPDATE sem org · dispara toast específico para DELETE sem org … |
@@ -2289,6 +2290,7 @@ _nenhum item encontrado_
 | Cache local por-isolate SOMENTE do fast-path (state === "closed"). | `supabase/functions/_shared/circuit-breaker.ts` |
 | Invalidar cache imediatamente: qualquer falha deve forçar próxima | `supabase/functions/_shared/circuit-breaker.ts` |
 | Aceita tanto o header completo quanto apenas o valor bruto. | `supabase/functions/_shared/cookies.ts` |
+| o gate apenas libera a execução, e todas as operações internas usam o client | `supabase/functions/_shared/cron-auth.ts` |
 | caminho relativo. NÃO adicionar deps externas aqui — deve permanecer puro. | `supabase/functions/_shared/departmentMap.ts` |
 | Business Development | `supabase/functions/_shared/departmentMap.ts` |
 | * true quando o domínio NÃO pode ser consultado (interno, reservado ou IP literal). */ | `supabase/functions/_shared/dns-guard.ts` |
@@ -2341,6 +2343,7 @@ _nenhum item encontrado_
 | Validação básica de redirect_uri | `supabase/functions/email-oauth-connect/index.ts` |
 | Permissão: dono pode remover a sua própria; org accounts exigem admin | `supabase/functions/email-oauth-disconnect/index.ts` |
 | Falha silenciosa: contabilidade não deve derrubar a resposta. | `supabase/functions/gmaps-places-search/index.ts` |
+| fluxo autenticado, porem sem usuario. Escopo estrito -- apenas atualiza o | `supabase/functions/gmaps-proxy/index.ts` |
 | params?: { limit?: number, correlation_id?: string, max_attempts?: number } } | `supabase/functions/instagram-enqueue/index.ts` |
 | Não expõe payload sensível — retorna somente resumo. | `supabase/functions/instagram-worker/index.ts` |
 | ── 3. Chamada Lusha V3 (apenas domínios sem cache) ── | `supabase/functions/lusha-decision-makers/index.ts` |

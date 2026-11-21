@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "cdb0c8be820757030b8c2a1316fc31f86f3096a3",
+  "sha": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-21 17:51 UTC",
-  "files_total": 1049,
-  "code_files": 875,
-  "code_lines": 125519
+  "generated_at": "2026-11-21 18:37 UTC",
+  "files_total": 1051,
+  "code_files": 877,
+  "code_lines": 125710
  },
  "version": "1.3.2",
- "facts_hash": "aa1af641acd1696d",
+ "facts_hash": "6a40b6abaa89242a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,7 +232,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 345,
+   ".ts": 347,
    ".tsx": 277,
    ".sql": 223,
    ".mjs": 20,
@@ -22715,7 +22715,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [],
     "env": [
      "SUPABASE_SERVICE_ROLE_KEY",
@@ -22839,7 +22839,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "dlq_alert_history",
      "dlq_alert_settings",
@@ -23214,7 +23214,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "api_latency_alert_history",
      "api_latency_alert_settings",
@@ -23532,7 +23532,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "notifications",
      "pg_net_health_snapshots",
@@ -23583,7 +23583,7 @@
     "methods": [
      "POST?"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [],
     "env": [
      "SUPABASE_SERVICE_ROLE_KEY",
@@ -23628,7 +23628,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "notifications",
      "qa_reaper_runs",
@@ -23637,7 +23637,6 @@
      "user_roles"
     ],
     "env": [
-     "SUPABASE_ANON_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
@@ -23655,7 +23654,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "automation_execution_logs",
      "retry_policy_advisories",
@@ -23742,7 +23741,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "notifications",
      "sla_alert_history",
@@ -23750,7 +23749,6 @@
      "user_roles"
     ],
     "env": [
-     "SUPABASE_ANON_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
@@ -23770,7 +23768,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
     "tables": [
      "notifications",
      "organization_members",
@@ -23778,7 +23776,6 @@
      "user_roles"
     ],
     "env": [
-     "SUPABASE_ANON_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
@@ -25958,8 +25955,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 121,
-   "lines": 21653,
+   "files": 123,
+   "lines": 21844,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -26031,6 +26028,7 @@
     "circuit-breaker.ts: checkCircuitBreaker, reportSuccess, reportFailure",
     "company-domain.ts: normalizeDomain, DomainCandidates, ResolvedDomain, resolveCompanyDomain",
     "cookies.ts: ServicoCookie, VaultCookie, CookieVaultUnavailable, CookieNotReady, fetchAllCookies, getCookie",
+    "cron-auth.ts: timingSafeEqual, requestToken, isCronAuthorized",
     "departmentMap.ts: DEPT_MAP, SUGGESTED_DEPARTMENTS_PT, DepartmentResolution, resolveDepartments, findPtLabelForEn",
     "dns-guard.ts: isBlockedLookupDomain, isNullMx, usableMx, isRevokedDkim",
     "gmaps-mapper.ts: RawGmapsRow, MappedCompany, mapGmapsRow, parseCsv",
@@ -26090,6 +26088,7 @@
     "supabase/functions/_shared/circuit-breaker.ts",
     "supabase/functions/_shared/company-domain.ts",
     "supabase/functions/_shared/cookies.ts",
+    "supabase/functions/_shared/cron-auth.ts",
     "supabase/functions/_shared/departmentMap.ts",
     "supabase/functions/_shared/dns-guard.ts",
     "supabase/functions/_shared/gmaps-mapper.ts",
@@ -26118,6 +26117,7 @@
     "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
     "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
     "supabase/functions/_shared/__tests__/chaos.test.ts",
+    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
     "supabase/functions/_shared/__tests__/dns-guard.test.ts",
     "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
     "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts",
@@ -26156,9 +26156,7 @@
     "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
     "supabase/functions/email-poll-replies/index.ts",
-    "supabase/functions/email-verify/index.ts",
-    "supabase/functions/gmaps-places-search/index.ts",
-    "supabase/functions/gmaps-proxy/index.ts"
+    "supabase/functions/email-verify/index.ts"
    ]
   },
   {
@@ -28204,6 +28202,12 @@
    "CODE_SCAN_DIRS": [
     "scripts/supabase_snapshot/snapshot.py"
    ],
+   "CRON_ANON_KEY": [
+    "supabase/functions/_shared/cron-auth.ts"
+   ],
+   "CRON_SERVICE_KEY": [
+    "supabase/functions/_shared/cron-auth.ts"
+   ],
    "DB_URL": [
     "scripts/ai-context/gerar.unit.mjs"
    ],
@@ -28403,6 +28407,7 @@
     "scripts/supabase_snapshot/snapshot.py"
    ],
    "SUPABASE_ANON_KEY": [
+    "supabase/functions/_shared/cron-auth.ts",
     "supabase/functions/ai-agent/index.ts",
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
@@ -28424,11 +28429,8 @@
     "supabase/functions/oracle-enrich-contact/index.ts",
     "supabase/functions/oracle-push-bitrix/index.ts",
     "supabase/functions/oracle-search-decisors/index.ts",
-    "supabase/functions/reaper-alerts/index.ts",
     "supabase/functions/rls-tests/index.test.ts",
     "supabase/functions/rls-tests/index.ts",
-    "supabase/functions/sla-alerts/index.ts",
-    "supabase/functions/sla-auto-tune/index.ts",
     "supabase/functions/system-recovery-status/index.ts",
     "supabase/functions/web-dlq-replay/index.ts",
     "supabase/functions/web-scrape-enqueue/index.ts",
@@ -28465,6 +28467,7 @@
     "e2e/dlq-web-smoke.spec.ts",
     "e2e/instagram-dlq-replay.spec.ts",
     "e2e/instagram-worker-smoke.spec.ts",
+    "supabase/functions/_shared/cron-auth.ts",
     "supabase/functions/admin-list-companies/index.ts",
     "supabase/functions/ai-agent/index.ts",
     "supabase/functions/api-latency-alerts/index.ts",
@@ -31389,6 +31392,10 @@
     "text": "Aceita tanto o header completo quanto apenas o valor bruto."
    },
    {
+    "file": "supabase/functions/_shared/cron-auth.ts",
+    "text": "o gate apenas libera a execução, e todas as operações internas usam o client"
+   },
+   {
     "file": "supabase/functions/_shared/departmentMap.ts",
     "text": "caminho relativo. NÃO adicionar deps externas aqui — deve permanecer puro."
    },
@@ -31595,6 +31602,10 @@
    {
     "file": "supabase/functions/gmaps-places-search/index.ts",
     "text": "Falha silenciosa: contabilidade não deve derrubar a resposta."
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/index.ts",
+    "text": "fluxo autenticado, porem sem usuario. Escopo estrito -- apenas atualiza o"
    },
    {
     "file": "supabase/functions/instagram-enqueue/index.ts",
@@ -45142,6 +45153,66 @@
     "name": "rejeita task_id vazio"
    },
    {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "timingSafeEqual"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "compara conteudo, nao referencia"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "rejeita tamanhos diferentes"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "requestToken"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "prefere Authorization Bearer"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "cai para apikey quando nao ha Bearer"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "devolve vazio sem headers"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "isCronAuthorized"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "autoriza a service key do cron"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "nega anonimo sem header"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "nega token desconhecido"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "nega a anon key por padrao"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "aceita a anon key com allowAnon"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "nao autoriza quando nenhum secret esta configurado"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "name": "nao autoriza header vazio contra secret vazio"
+   },
+   {
     "file": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
     "name": "isBlockedLookupDomain"
    },
@@ -55234,7 +55305,9 @@
    "scripts/supabase_snapshot/snapshot.py",
    "src/integrations/supabase/withOrg.ts",
    "src/lib/mcp/supabase.ts",
+   "supabase/functions/_shared/__tests__/cron-auth.test.ts",
    "supabase/functions/_shared/apollo-cache.ts",
+   "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/org-membership.ts",
    "supabase/functions/_shared/rlsTableRegistry.ts",
    "supabase/functions/admin-list-companies/index.ts",
@@ -74930,6 +75003,26 @@
     "const jitter = base * 0.3 * (Math.random() * 2 - 1);"
    ]
   },
+  "supabase/functions/_shared/cron-auth.ts": {
+   "path": "supabase/functions/_shared/cron-auth.ts",
+   "lines": 46,
+   "exports": [
+    "function timingSafeEqual",
+    "function requestToken",
+    "function isCronAuthorized"
+   ],
+   "env": [
+    "CRON_ANON_KEY",
+    "CRON_SERVICE_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY"
+   ],
+   "rule_comments": [
+    "o gate apenas libera a execução, e todas as operações internas usam o client"
+   ],
+   "doc": "Gate de autenticação para edge functions invocadas por cron (pg_cron/net.http_post). Motivo: o valor runtime de `SUPABASE_SERVICE_ROLE_KEY` NÃO corresponde a nenhuma chave listável do projeto (a service_role foi rotacionada e o secret ficou obsoleto). Comparar contra ele quebrava todos os crons que …",
+   "uses_service_role": true
+  },
   "supabase/functions/_shared/departmentMap.ts": {
    "path": "supabase/functions/_shared/departmentMap.ts",
    "lines": 189,
@@ -75610,6 +75703,42 @@
     "distribui aproximadamente próximo do rate esperado em N=5000",
     "rejeita task_id vazio"
    ]
+  },
+  "supabase/functions/_shared/__tests__/cron-auth.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+   "lines": 81,
+   "is_test": true,
+   "params": [
+    {
+     "name": "SERVICE",
+     "value": "\"service-role-key-de-teste\""
+    },
+    {
+     "name": "ANON",
+     "value": "\"anon-key-de-teste\""
+    }
+   ],
+   "rule_comments": [
+    "existir apenas no momento da chamada - nao no import."
+   ],
+   "tests": [
+    "timingSafeEqual",
+    "compara conteudo, nao referencia",
+    "rejeita tamanhos diferentes",
+    "requestToken",
+    "prefere Authorization Bearer",
+    "cai para apikey quando nao ha Bearer",
+    "devolve vazio sem headers",
+    "isCronAuthorized",
+    "autoriza a service key do cron",
+    "nega anonimo sem header",
+    "nega token desconhecido",
+    "nega a anon key por padrao",
+    "aceita a anon key com allowAnon",
+    "nao autoriza quando nenhum secret esta configurado",
+    "nao autoriza header vazio contra secret vazio"
+   ],
+   "uses_service_role": true
   },
   "supabase/functions/_shared/__tests__/dns-guard.test.ts": {
    "path": "supabase/functions/_shared/__tests__/dns-guard.test.ts",
@@ -76683,7 +76812,7 @@
   },
   "supabase/functions/cnpj-enrich-worker/index.ts": {
    "path": "supabase/functions/cnpj-enrich-worker/index.ts",
-   "lines": 224,
+   "lines": 223,
    "tables": [
     {
      "table": "cnpj_enrich_queue",
@@ -77250,8 +77379,16 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 713,
+   "lines": 777,
    "tables": [
+    {
+     "table": "scrape_jobs",
+     "op": "select"
+    },
+    {
+     "table": "scrape_jobs",
+     "op": "update"
+    },
     {
      "table": "scrape_jobs",
      "op": "select"
@@ -77457,6 +77594,9 @@
      "value": "pending",
      "kind": "filtra"
     }
+   ],
+   "rule_comments": [
+    "fluxo autenticado, porem sem usuario. Escopo estrito -- apenas atualiza o"
    ],
    "temporal": [
     "const CB_RESET_TIMEOUT = 60000; // 1 minuto"
@@ -79344,7 +79484,7 @@
   },
   "supabase/functions/reaper-alerts/index.ts": {
    "path": "supabase/functions/reaper-alerts/index.ts",
-   "lines": 205,
+   "lines": 200,
    "tables": [
     {
      "table": "reaper_alert_settings",
@@ -79395,7 +79535,6 @@
     ]
    },
    "env": [
-    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -79776,7 +79915,7 @@
   },
   "supabase/functions/scrape-queue-worker/index.ts": {
    "path": "supabase/functions/scrape-queue-worker/index.ts",
-   "lines": 407,
+   "lines": 423,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -79872,7 +80011,7 @@
   },
   "supabase/functions/sla-alerts/index.ts": {
    "path": "supabase/functions/sla-alerts/index.ts",
-   "lines": 155,
+   "lines": 150,
    "tables": [
     {
      "table": "sla_alert_settings",
@@ -79916,7 +80055,6 @@
     "sla_compliance_stats"
    ],
    "env": [
-    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -79943,7 +80081,7 @@
   },
   "supabase/functions/sla-auto-tune/index.ts": {
    "path": "supabase/functions/sla-auto-tune/index.ts",
-   "lines": 167,
+   "lines": 162,
    "tables": [
     {
      "table": "sla_autotune_runs",
@@ -79977,7 +80115,6 @@
     "sla_autotune_blocked_streaks"
    ],
    "env": [
-    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -81979,10 +82116,33 @@
   }
  },
  "git": {
-  "sha": "cdb0c8be820757030b8c2a1316fc31f86f3096a3",
+  "sha": "5f0ccecff4b32dfdbeb7d69aff879d0d14f34420",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5f0ccec",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)",
+    "files": [
+     "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+     "supabase/functions/_shared/cron-auth.ts",
+     "supabase/functions/campaign-dispatch/index.ts",
+     "supabase/functions/circuit-breaker-alerts/index.ts",
+     "supabase/functions/cnpj-enrich-worker/index.ts",
+     "supabase/functions/dlq-alerts/index.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/latency-alerts/index.ts",
+     "supabase/functions/pg-net-watchdog/index.ts",
+     "supabase/functions/purge-soft-deleted/index.ts",
+     "supabase/functions/reaper-alerts/index.ts",
+     "supabase/functions/retry-policy-tuner/index.ts",
+     "supabase/functions/scrape-queue-worker/index.ts",
+     "supabase/functions/sla-alerts/index.ts",
+     "supabase/functions/sla-auto-tune/index.ts"
+    ]
+   },
    {
     "sha": "cdb0c8b",
     "date": "2026-11-21",
@@ -82293,29 +82453,32 @@
      "package-lock.json",
      "package.json"
     ]
-   },
-   {
-    "sha": "736d3d6",
-    "date": "2026-11-19",
-    "author": "dependabot[bot]",
-    "subject": "chore(deps)(deps-dev): bump browserslist from 4.28.2 to 4.29.6 (#63)",
-    "files": [
-     "package-lock.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "package-lock.json",
-    9
+    8
    ],
    [
     "package.json",
     7
    ],
    [
+    "supabase/functions/campaign-dispatch/index.ts",
+    3
+   ],
+   [
     "supabase/config.toml",
     3
+   ],
+   [
+    "supabase/functions/cnpj-enrich-worker/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/gmaps-proxy/index.ts",
+    2
    ],
    [
     ".github/workflows/edge-functions-deploy.yml",
@@ -82323,10 +82486,6 @@
    ],
    [
     "supabase/migrations/20261121120000_api_key_rate_limit.sql",
-    2
-   ],
-   [
-    "supabase/functions/campaign-dispatch/index.ts",
     2
    ],
    [
@@ -82338,51 +82497,43 @@
     2
    ],
    [
-    "supabase/functions/cnpj-enrich-worker/index.ts",
+    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
     1
    ],
    [
-    "src/hooks/useWebScrape.ts",
+    "supabase/functions/_shared/cron-auth.ts",
     1
    ],
    [
-    "supabase/migrations/20261113185209_c8b5eb39-e1fc-4162-888d-44f31e096ff1.sql",
+    "supabase/functions/circuit-breaker-alerts/index.ts",
     1
    ],
    [
-    "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "supabase/functions/dlq-alerts/index.ts",
     1
    ],
    [
-    "supabase/functions/_shared/api-rate-limit.ts",
+    "supabase/functions/latency-alerts/index.ts",
     1
    ],
    [
-    "supabase/functions/public-api/index.ts",
+    "supabase/functions/pg-net-watchdog/index.ts",
     1
    ],
    [
-    "src/components/lux/RecycleBinView.tsx",
+    "supabase/functions/purge-soft-deleted/index.ts",
     1
    ],
    [
-    "src/integrations/supabase/withOrg.ts",
+    "supabase/functions/reaper-alerts/index.ts",
     1
    ],
    [
-    "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql",
+    "supabase/functions/retry-policy-tuner/index.ts",
     1
    ],
    [
-    "src/components/lux/auth/LoginCard.tsx",
-    1
-   ],
-   [
-    "src/contexts/AuthContext.tsx",
-    1
-   ],
-   [
-    "src/contexts/auth-context.ts",
+    "supabase/functions/scrape-queue-worker/index.ts",
     1
    ]
   ]

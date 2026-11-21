@@ -2162,16 +2162,27 @@
    "supabase/functions/_shared/tracking-signature.ts"
   ],
   "supabase/functions/campaign-dispatch/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/tracking-links.ts"
+  ],
+  "supabase/functions/circuit-breaker-alerts/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
+  "supabase/functions/cnpj-enrich-worker/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
   ],
   "supabase/functions/deliverability-check/index.ts": [
    "supabase/functions/_shared/dns-guard.ts"
+  ],
+  "supabase/functions/dlq-alerts/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
   ],
   "supabase/functions/email-verify/index.ts": [
    "supabase/functions/_shared/dns-guard.ts"
   ],
   "supabase/functions/gmaps-proxy/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/domain/ipc/scoring.ts",
    "supabase/functions/_shared/gmaps-mapper.ts",
    "supabase/functions/_shared/schemas.ts",
@@ -2186,6 +2197,9 @@
   "supabase/functions/instagram-worker/index.ts": [
    "supabase/functions/_shared/apify-fixtures.ts",
    "supabase/functions/_shared/hiker-client.ts"
+  ],
+  "supabase/functions/latency-alerts/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
   ],
   "supabase/functions/lusha-search/index.ts": [
    "supabase/functions/_shared/departmentMap.ts"
@@ -2220,15 +2234,34 @@
    "supabase/functions/_shared/oracle-logger.ts",
    "supabase/functions/_shared/org-membership.ts"
   ],
+  "supabase/functions/pg-net-watchdog/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/public-api/index.ts": [
    "supabase/functions/_shared/api-rate-limit.ts"
+  ],
+  "supabase/functions/purge-soft-deleted/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
+  "supabase/functions/reaper-alerts/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
+  "supabase/functions/retry-policy-tuner/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
   ],
   "supabase/functions/rls-tests/index.ts": [
    "supabase/functions/_shared/rlsTableRegistry.ts"
   ],
   "supabase/functions/scrape-queue-worker/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/omkar-gmaps-config.ts"
+  ],
+  "supabase/functions/sla-alerts/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
+  "supabase/functions/sla-auto-tune/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
   ],
   "supabase/functions/track-click/index.ts": [
    "supabase/functions/_shared/tracking-signature.ts"

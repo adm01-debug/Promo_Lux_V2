@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 525,
- "arestas": 1536,
+ "nos": 526,
+ "arestas": 1549,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -97,6 +97,10 @@
    "importado_por": 14
   },
   {
+   "arquivo": "supabase/functions/_shared/cron-auth.ts",
+   "importado_por": 14
+  },
+  {
    "arquivo": "src/components/ui/alert-dialog.tsx",
    "importado_por": 12
   },
@@ -158,10 +162,6 @@
   },
   {
    "arquivo": "src/components/ui/progress.tsx",
-   "importado_por": 6
-  },
-  {
-   "arquivo": "src/components/ui/textarea.tsx",
    "importado_por": 6
   }
  ],
