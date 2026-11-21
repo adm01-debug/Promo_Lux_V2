@@ -1,4 +1,4 @@
-﻿-- x security: remove EXECUTE public de funções-orfãs SECURITY DEFINER em produção.
+-- x security: remove EXECUTE public de funções-orfãs SECURITY DEFINER em produção.
 -- Estas funções (exec_sql, _qa_run_test, mcp_exec) NÃO existem em nenhuma migration:
 -- foram criadas fora de versão em produção. Nenhum chamador em src/ ou supabase/functions/.
 -- exec_sql(text) era executável por anon/authenticated via REST RPC -> RCE em produção

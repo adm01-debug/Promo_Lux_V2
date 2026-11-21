@@ -1,4 +1,4 @@
-﻿-- Rate limit server-side por API key (public-api).
+-- Rate limit server-side por API key (public-api).
 -- Espelha o padrão do oracle_rate_limits (janela fixa 1h, atomic ON CONFLICT).
 CREATE TABLE public.api_rate_limits (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
