@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ba9db20a2f74c028f5af79d5e2b1009a368d21c9",
+  "commit": "9e7af303b2a9ec5d5b71372af4b91cf2363d3021",
   "branch": "main",
-  "data_commit": "2026-11-21T12:12:07-03:00",
+  "data_commit": "2026-11-21T12:26:05-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9e7af30",
+    "data": "2026-11-21",
+    "assunto": "fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)"
+   },
    {
     "sha": "ba9db20",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "906b862",
     "data": "2026-11-19",
     "assunto": "chore(deps)(deps-dev): bump @humanfs/node from 0.16.6 to 0.16.8 (#62)"
-   },
-   {
-    "sha": "70c5f03",
-    "data": "2026-11-19",
-    "assunto": "chore(deps)(deps-dev): bump postcss from 8.5.19 to 8.5.33 (#67)"
    }
   ],
-  "arquivos_mudados_7d": 62,
+  "arquivos_mudados_7d": 63,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 58
+    "commits": 59
    },
    {
     "autor": "dependabot[bot]",
