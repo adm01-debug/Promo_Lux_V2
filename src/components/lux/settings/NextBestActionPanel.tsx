@@ -72,7 +72,7 @@ export function NextBestActionPanel() {
   const refresh = useRefreshNextBestActions();
   const dismiss = useDismissNextBestAction();
 
-  const rows = data ?? [];
+  const rows = useMemo(() => data ?? [], [data]);
   const urgentes = useMemo(() => rows.filter((r) => r.priority >= 70).length, [rows]);
 
   return (
