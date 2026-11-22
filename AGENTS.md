@@ -30,8 +30,8 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
 - Diagnóstico antes de patch: logs e estado real, ponto exato (arquivo:linha), causa; várias causas → liste
   todas, corrija a pedida.
 - Antes da PR: `npm run lint`, `npx tsc --noEmit -p tsconfig.app.json` e `npm run test` **do que tocou**. Só erro seu conta; erro
-  herdado da `main` → "Próximos passos". O CI **não** cobre você: `ci.yml` está em base64 e nunca executou
-  (`docs/agentes/github-ci.md`) — rodar local é a única rede.
+  herdado da `main` → "Próximos passos". `ci.yml` roda em toda PR; ainda assim rode local antes do push,
+  porque `Supabase Preview` é ruído e não cobre typecheck.
 - "Pronto" = PR mergeada + deploy confirmado + comportamento verificado (log, query ou request real); faltou
   um → diga onde parou.
 - Funcionalidade pronta = integrada ponta a ponta (rota em `src/App.tsx`, entrada na UI/sidebar, hook/edge
@@ -89,20 +89,24 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
 - Diagnóstico = produção só leitura; teste = Postgres descartável (`supabase db start` + `supabase migration
   up --local`). DDL só pelo fluxo de `banco.md` (arquivo → PR → **chame o dono** → merge → `db-migrations.yml`
   aplica com aprovação no Environment `production`). Destrutivo, segredos e rotação: só com o dono.
-- **Não existe ledger**: `supabase_migrations.schema_migrations` não existe no projeto vivo; 212 migrations no
-  repo, 6 corrompidas em base64. O ambiente não é reconstruível a partir do código — trate toda migration
-  como de alto risco.
+- **Ledger reconciliado** (2026-11-22): 241 migrations no repo, 0 em base64, ledger e banco alinhados e
+  `20260718140000` (registrada sem efeito) corrigida pela PR #108. Migration nova ainda é DDL: regra 8.
 
 ## Serviços
-- **Lovable** — ler `docs/agentes/lovable-deploy.md` ao confirmar deploy, mexer em env var ou domínio. Front e
-  edge functions sobem pela Lovable; produção em `https://lux-ai-company-finder.lovable.app`. Não há
-  `vercel.json` neste repo. `VITE_*` vai para o bundle e é público — nunca segredo com esse prefixo.
+- **Vercel** — produção real. `vercel.json` existe (`installCommand`, `buildCommand`, `outputDirectory:
+  dist`, `framework: vite`); o front sobe em `https://promo-lux-v2.vercel.app` apontando para o Supabase
+  `pttzwlbidamibjssqiqb`. Confirmar deploy em `docs/agentes/lovable-deploy.md`.
+- **Lovable (legado, morto)** — `https://lux-ai-company-finder.lovable.app` responde 200 mas serve bundle de
+  ~mai/2026 que aponta para `cjxkodfpohnugpionkam.supabase.co`, **projeto extinto (NXDOMAIN)**; o bundle não
+  tem `/status`, `/survey/:token`, `/monitoring` nem `/admin`. Não é produção: não validar nada lá.
+  `VITE_*` vai para o bundle e é público — nunca segredo com esse prefixo.
 - **Integrações externas** — ler `docs/agentes/servicos-externos.md` ao mexer em raspagem, enriquecimento ou
   push de lead: GMaps Scraper (`gmaps.atomicabr.com.br`), Lusha, Apify/Hiker (Instagram), Bitrix (Oracle),
   Lovable AI Gateway. Chave de provedor só em secret da edge function, nunca no front.
 - **GitHub/CI** — ler `docs/agentes/github-ci.md` antes de tocar em `.github/workflows/`, settings ou
-  Environments. São **5** workflows (os 3 originais + `contexto.yml` e `inventario-estado-semanal.yml`);
-  dos 3 originais nenhum concluiu com sucesso, e `ci.yml` e 10 outros arquivos estão em base64. Consertar isso é item do dono.
+  Environments. São **9** workflows e `ci.yml` executa e conclui com sucesso. `Supabase Preview` falha em
+  toda PR (413 da conta) e **não** é required. Edge functions sobem por `edge-functions-deploy.yml`, com
+  aprovação manual no Environment `Production`.
 - **Regras de domínio** — ler `docs/agentes/regras-dominio.md` ao mexer em IPC/scoring, multi-tenant
   (`withOrg`), filas/DLQ, soft delete ou fixtures de E2E.
 

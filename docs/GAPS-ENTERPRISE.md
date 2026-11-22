@@ -230,54 +230,72 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 ## 3. Matriz Comparativa
 
-| # | Capacidade | LUX IA | Apollo | ZoomInfo | Outreach | Prioridade |
-|---|---|---|---|---|---|---|
-| 1 | Multi-tenant org/teams | ❌ | ✅ | ✅ | ✅ | P0 |
-| 2 | RBAC (Admin/SDR/Viewer) | ❌ | ✅ | ✅ | ✅ | P0 |
-| 3 | Audit log | ❌ | ✅ | ✅ | ✅ | P0 |
-| 4 | SSO/SAML | ❌ | ✅ | ✅ | ✅ | P0 |
-| 5 | SCIM | ❌ | ✅ | ✅ | ✅ | P0 |
-| 6 | MFA/2FA | ❌ | ✅ | ✅ | ✅ | P0 |
-| 7 | SOC 2 Type II | ❌ | ✅ | ✅ | ✅ | P0 |
-| 8 | GDPR/LGPD docs | ❌ | ✅ | ✅ | ✅ | P0 |
-| 9 | Deals/Pipeline (Kanban) | ❌ | ✅ | 🟡 | ✅ | P0 |
-| 10 | Activities timeline | ❌ | ✅ | ✅ | ✅ | P0 |
-| 11 | Tasks & reminders | ❌ | ✅ | ✅ | ✅ | P0 |
-| 12 | Email send engine | ❌ | ✅ | ✅ | ✅ | P0 |
-| 13 | Email tracking (opens/clicks) | ❌ | ✅ | ✅ | ✅ | P0 |
-| 14 | Reply detection | ❌ | ✅ | ✅ | ✅ | P0 |
-| 15 | A/B testing campaigns | ❌ | ✅ | 🟡 | ✅ | P1 |
-| 16 | LinkedIn touches | ❌ | ✅ | 🟡 | ✅ | P1 |
-| 17 | Cold call dialer | ❌ | ✅ | ✅ | ✅ | P1 |
-| 18 | API REST pública | ❌ | ✅ | ✅ | ✅ | P0 |
-| 19 | Webhooks de saída | ❌ | ✅ | ✅ | ✅ | P0 |
-| 20 | Zapier/Make app | ❌ | ✅ | ✅ | ✅ | P1 |
-| 21 | HubSpot/Salesforce sync | ❌ | ✅ | ✅ | ✅ | P0 |
-| 22 | Slack notifications | ❌ | ✅ | ✅ | ✅ | P1 |
-| 23 | Chrome Extension | ❌ | ✅ | ✅ | ✅ | P1 |
-| 24 | Mobile native app | 🟡 PWA | ✅ | ✅ | ✅ | P2 |
-| 25 | Email enrichment | ❌ | ✅ | ✅ | 🟡 | P1 |
-| 26 | Technographics | ❌ | ✅ | ✅ | ❌ | P1 |
-| 27 | Intent signals (3rd party) | 🟡 manual | ✅ | ✅ | ✅ | P1 |
-| 28 | Lead scoring ML | 🟡 manual (IPC) | ✅ | ✅ | ✅ | P1 |
-| 29 | Conversation intelligence | ❌ | 🟡 | 🟡 | ✅ | P1 |
-| 30 | Email writer (AI) | 🟡 chat | ✅ | ✅ | ✅ | P1 |
-| 31 | Workflow visual editor | ❌ | ✅ | 🟡 | ✅ | P1 |
-| 32 | Workflow scheduling | ❌ | ✅ | ✅ | ✅ | P1 |
-| 33 | Custom dashboards | ❌ | ✅ | ✅ | ✅ | P1 |
-| 34 | Scheduled reports | ❌ | ✅ | ✅ | ✅ | P1 |
-| 35 | Goals/quotas | ❌ | ✅ | ✅ | ✅ | P1 |
-| 36 | Bulk CSV import | ❌ | ✅ | ✅ | ✅ | P2 |
-| 37 | Soft delete + recycle bin | ❌ | ✅ | ✅ | ✅ | P2 |
-| 38 | Field history | ❌ | ✅ | ✅ | ✅ | P2 |
-| 39 | Status page público | ❌ | ✅ | ✅ | ✅ | P2 |
-| 40 | Realtime updates | ✅ | ✅ | ✅ | ✅ | — |
-| 41 | RLS por tenant | ✅ | ✅ | ✅ | ✅ | — |
-| 42 | PWA offline | ✅ | 🟡 | 🟡 | 🟡 | — |
-| 43 | a11y (WCAG AA) | 🟡 | ✅ | ✅ | ✅ | P1 |
-| 44 | Testes E2E + RLS | ✅ | n/d | n/d | n/d | — |
+> **Reconciliado em 2026-11-22 contra o repo e o banco de produção** (REST real em
+> `pttzwlbidamibjssqiqb` + inventário de `supabase/migrations/` e `supabase/functions/`).
+> A versão anterior marcava ❌ em quase tudo; a maioria já existia. Legenda: ✅ existe e está
+> ligada ponta a ponta · 🟡 existe incompleto · ❌ ausente de verdade.
 
-**Cobertura LUX IA:** ~40% (vs ~95% nas plataformas de referência).
+| # | Capacidade | Estado | Evidência |
+|---|---|---|---|
+| 1 | Multi-tenant org/teams | ✅ | `organizations`, `organization_members`, `withOrg.ts` |
+| 2 | RBAC (Admin/SDR/Viewer) | ✅ | `role_permissions` (210 linhas), `usePermissions`, `PermissionGate` em 13 componentes |
+| 3 | Audit log | ✅ | `audit_logs`, `useAuditTrail`, `AuditTrailPanel` em `Monitoring.tsx` |
+| 4 | SSO/SAML | ❌ | 0 tabela, 0 código. Custo/decisão de produto |
+| 5 | SCIM | ❌ | 0 tabela, 0 código (o match em migration é um comentário) |
+| 6 | MFA/2FA | ✅ | `useMFA`, `MFAEnroll.tsx`, `MFAVerify.tsx` (TOTP nativo do Supabase Auth) |
+| 7 | SOC 2 Type II | 🟡 | controles técnicos prontos (auditoria, RLS, DLP); certificação é processo pago |
+| 8 | GDPR/LGPD docs | ✅ | `data_subject_requests`, `DsarPanel`, `pii_redaction_rules`, `PiiMaskingPanel` |
+| 9 | Deals/Pipeline (Kanban) | ✅ | `deals`, `DealsView.tsx`, `deal_lost_reasons` |
+| 10 | Activities timeline | ✅ | `deal_activities`, `DealDetailDrawer.tsx` |
+| 11 | Tasks & reminders | ✅ | `deal_tasks`, `DealTasksPanel` |
+| 12 | Email send engine | ✅ | `campaign-dispatch`, `email_accounts`, OAuth Gmail/M365 (`email-oauth-connect`) |
+| 13 | Email tracking (opens/clicks) | ✅ | `track-open`, `track-click`, `CampaignTrackingDrawer.tsx` |
+| 14 | Reply detection | ✅ | `email-poll-replies` (IMAP), `CampaignTrackingDrawer.tsx` |
+| 15 | A/B testing campaigns | 🟡 | coluna `variant` + índice por variante (migration); sem editor de variantes na UI |
+| 16 | LinkedIn touches | ✅ | `lusha-*`, `scrape-queue-worker`, `StakeholderFinderView` |
+| 17 | Cold call dialer | ❌ | ausente |
+| 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
+| 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
+| 20 | Zapier/Make app | ❌ | ausente |
+| 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
+| 22 | Slack notifications | ❌ | ausente (webhook genérico cobre o caso) |
+| 23 | Chrome Extension | ❌ | ausente |
+| 24 | Mobile native app | 🟡 | PWA apenas |
+| 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
+| 26 | Technographics | ❌ | ausente |
+| 27 | Intent signals | 🟡 | `IntentSignalsView.tsx` (entrada manual) |
+| 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
+| 29 | Conversation intelligence | ❌ | ausente |
+| 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
+| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx`, `workflows`, `workflow_runs`, `workflow-engine` |
+| 32 | Workflow scheduling | ✅ | crons versionados + `workflow-engine` |
+| 33 | Custom dashboards | ✅ | `dashboard_layouts`, `useDashboardLayout`, `DashboardView.tsx` |
+| 34 | Scheduled reports | ✅ | `scheduled_reports`, `send-scheduled-reports` |
+| 35 | Goals/quotas | ✅ | `sales_goals`, `GoalsTab`, `org_leaderboard` |
+| 36 | Bulk CSV import | ✅ | `bulk_imports`, `ImportCompaniesDialog.tsx` |
+| 37 | Soft delete + recycle bin | ✅ | `deleted_at` + `RecycleBinView` + `purge-soft-deleted` (8 tabelas de negócio) |
+| 38 | Field history | ✅ | `audit_logs.old_data/new_data` + `AuditTrailPanel` |
+| 39 | Status page público | ✅ | `incidents`, `get_public_status`, `StatusPage` (rota `/status`) |
+| 40 | Realtime updates | ✅ | Supabase Realtime |
+| 41 | RLS por tenant | ✅ | 0 tabelas sem RLS em `public` |
+| 42 | PWA offline | ✅ | `vite-plugin-pwa` |
+| 43 | a11y (WCAG AA) | 🟡 | parcial |
+| 44 | Testes E2E + RLS | ✅ | Playwright + `rls-tests` |
+| 45 | Session management | ✅ | `list_my_sessions`, `revoke_my_session`, `ActiveSessionsPanel` |
+| 46 | IP allowlist | ✅ | `ip_allowlist`, `IpAllowlistPanel` |
+| 47 | NPS/satisfaction | ✅ | `satisfaction_surveys/responses`, `SatisfactionTab` |
+| 48 | Email templates por org | ✅ | `email_templates`, `EmailTemplatesTab` |
+| 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
+| 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
+
+**Cobertura LUX IA: 35/50 = 70% completos · 6/50 = 12% parciais · 9/50 = 18% ausentes.**
+
+Ausentes de verdade (9): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
+`hubspot_salesforce` (21), `slack` (22), `chrome_extension` (23), `technographic` (26),
+`conversation_intel` (29). Os que dependem de decisão de custo/produto e **não** de engenharia:
+SAML/SCIM, dialer, conectores nativos, Chrome Extension. Os implementáveis hoje por engenharia são
+`slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`) e `technographic` (reusa
+`cnpj-enrich`).
 
 ---
 
