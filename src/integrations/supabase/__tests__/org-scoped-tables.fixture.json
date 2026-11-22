@@ -44,6 +44,7 @@
     "lusha_credit_usage_log",
     "lusha_dm_search_history",
     "lusha_search_sessions",
+    "next_best_actions",
     "notifications",
     "oauth_sandbox_snapshots",
     "oracle_rate_limits",

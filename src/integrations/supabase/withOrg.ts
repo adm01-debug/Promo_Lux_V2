@@ -110,6 +110,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "ip_allowlist",
   "ipc_config",
   "notifications",
+  "next_best_actions",
   "oauth_sandbox_snapshots",
   "pii_redaction_rules",
   "sales_goals",

@@ -19,6 +19,7 @@ import { MFASetup } from "@/components/lux/settings/MFASetup";
 import { IpAllowlistPanel } from "@/components/lux/settings/IpAllowlistPanel";
 import { AuditLogExportPanel } from "@/components/lux/settings/AuditLogExportPanel";
 import { PiiMaskingPanel } from "@/components/lux/settings/PiiMaskingPanel";
+import { NextBestActionPanel } from "@/components/lux/settings/NextBestActionPanel";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { StickySaveBar } from "./StickySaveBar";
 
@@ -291,6 +292,9 @@ export const SettingsView = () => {
 
                   <Separator className="bg-border/30" />
                   <PiiMaskingPanel />
+
+                  <Separator className="bg-border/30" />
+                  <NextBestActionPanel />
                 </>
               )}
 

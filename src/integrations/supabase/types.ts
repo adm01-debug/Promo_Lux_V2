@@ -3378,6 +3378,79 @@ export type Database = {
           },
         ]
       }
+      next_best_actions: {
+        Row: {
+          action_type: string
+          channel: string
+          created_at: string
+          days_since_contact: number | null
+          deal_id: string
+          dismissed_at: string | null
+          id: string
+          organization_id: string
+          priority: number
+          reason: string
+          stakeholder_id: string | null
+          suggested_at: string
+          updated_at: string
+          win_probability: number | null
+        }
+        Insert: {
+          action_type: string
+          channel: string
+          created_at?: string
+          days_since_contact?: number | null
+          deal_id: string
+          dismissed_at?: string | null
+          id?: string
+          organization_id: string
+          priority?: number
+          reason: string
+          stakeholder_id?: string | null
+          suggested_at?: string
+          updated_at?: string
+          win_probability?: number | null
+        }
+        Update: {
+          action_type?: string
+          channel?: string
+          created_at?: string
+          days_since_contact?: number | null
+          deal_id?: string
+          dismissed_at?: string | null
+          id?: string
+          organization_id?: string
+          priority?: number
+          reason?: string
+          stakeholder_id?: string | null
+          suggested_at?: string
+          updated_at?: string
+          win_probability?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "next_best_actions_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: true
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "next_best_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "next_best_actions_stakeholder_id_fkey"
+            columns: ["stakeholder_id"]
+            isOneToOne: false
+            referencedRelation: "stakeholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -5820,6 +5893,35 @@ export type Database = {
       is_ip_allowed: { Args: { _ip: string; _org_id: string }; Returns: boolean }
       touch_last_known_ip: { Args: Record<string, never>; Returns: undefined }
       list_my_sessions: { Args: Record<string, never>; Returns: { id: string; created_at: string; updated_at: string; user_agent: string; ip: string; is_current: boolean }[] }
+      dismiss_next_best_action: { Args: { _id: string }; Returns: boolean }
+      list_next_best_actions: {
+        Args: { _org_id: string; _limit?: number; _include_dismissed?: boolean }
+        Returns: {
+          id: string
+          deal_id: string
+          deal_title: string
+          deal_value: number
+          stage_name: string
+          stakeholder_id: string
+          stakeholder_name: string
+          stakeholder_email: string
+          stakeholder_phone: string
+          stakeholder_linkedin: string
+          action_type: string
+          channel: string
+          priority: number
+          reason: string
+          days_since_contact: number
+          win_probability: number
+          suggested_at: string
+          dismissed_at: string
+        }[]
+      }
+      nba_recommend: {
+        Args: { _days_since: number; _win_prob: number; _has_email: boolean; _has_phone: boolean; _has_linkedin: boolean }
+        Returns: Json
+      }
+      refresh_next_best_actions: { Args: { _org_id: string }; Returns: number }
       revoke_my_session: { Args: { _session_id: string }; Returns: boolean }
       revoke_other_sessions: { Args: Record<string, never>; Returns: number }
       audit_log_facets: { Args: { _org_id: string }; Returns: Json }
