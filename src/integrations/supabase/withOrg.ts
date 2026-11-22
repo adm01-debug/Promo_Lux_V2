@@ -108,6 +108,8 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "notifications",
   "oauth_sandbox_snapshots",
   "sales_goals",
+  "satisfaction_responses",
+  "satisfaction_surveys",
   "scrape_jobs",
   "scrape_results",
   "stakeholders",

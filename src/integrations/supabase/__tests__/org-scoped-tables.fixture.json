@@ -51,6 +51,8 @@
     "organization_invites",
     "organization_members",
     "scrape_dead_letter",
+    "satisfaction_responses",
+    "satisfaction_surveys",
     "scrape_jobs",
     "scrape_queue",
     "sales_goals",
