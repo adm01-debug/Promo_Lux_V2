@@ -115,6 +115,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "sales_goals",
   "satisfaction_responses",
   "satisfaction_surveys",
+  "scrape_jobs",
   "scrape_results",
   "stakeholders",
   "webhook_deliveries",
