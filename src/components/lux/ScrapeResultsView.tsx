@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataError } from "@/components/lux/DataError";
 import { EmptyState } from "@/components/lux/EmptyState";
+import { PermissionGate } from "@/components/lux/permissions/PermissionGate";
 import type { TablesInsert } from "@/integrations/supabase/types";
 
 type RawData = Record<string, unknown>;
@@ -342,37 +343,43 @@ export const ScrapeResultsView = () => {
                             )}
                             <div className="flex flex-wrap gap-2 pt-1" onClick={(e) => e.stopPropagation()}>
                               {!isProcessed && (
-                                <Button
-                                  size="sm"
-                                  className="gap-1.5 text-xs"
-                                  disabled={convertMutation.isPending}
-                                  onClick={() => convertMutation.mutate(row)}
-                                >
-                                  {convertMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Building2 className="h-3.5 w-3.5" />}
-                                  Converter em empresa
-                                </Button>
+                                <PermissionGate entity="scrape_jobs" action="create">
+                                  <Button
+                                    size="sm"
+                                    className="gap-1.5 text-xs"
+                                    disabled={convertMutation.isPending}
+                                    onClick={() => convertMutation.mutate(row)}
+                                  >
+                                    {convertMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Building2 className="h-3.5 w-3.5" />}
+                                    Converter em empresa
+                                  </Button>
+                                </PermissionGate>
                               )}
                               {isProcessed && (
+                                <PermissionGate entity="scrape_jobs" action="edit">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-1.5 text-xs"
+                                    disabled={reprocessMutation.isPending}
+                                    onClick={() => reprocessMutation.mutate(row.id)}
+                                  >
+                                    {reprocessMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="h-3.5 w-3.5" />}
+                                    Reprocessar
+                                  </Button>
+                                </PermissionGate>
+                              )}
+                              <PermissionGate entity="scrape_jobs" action="delete">
                                 <Button
                                   size="sm"
-                                  variant="outline"
-                                  className="gap-1.5 text-xs"
-                                  disabled={reprocessMutation.isPending}
-                                  onClick={() => reprocessMutation.mutate(row.id)}
+                                  variant="ghost"
+                                  className="gap-1.5 text-xs text-destructive hover:text-destructive"
+                                  disabled={deleteMutation.isPending}
+                                  onClick={() => deleteMutation.mutate(row.id)}
                                 >
-                                  {reprocessMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="h-3.5 w-3.5" />}
-                                  Reprocessar
+                                  <Trash2 className="h-3.5 w-3.5" /> Excluir
                                 </Button>
-                              )}
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="gap-1.5 text-xs text-destructive hover:text-destructive"
-                                disabled={deleteMutation.isPending}
-                                onClick={() => deleteMutation.mutate(row.id)}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" /> Excluir
-                              </Button>
+                              </PermissionGate>
                             </div>
                           </div>
                         </motion.div>
