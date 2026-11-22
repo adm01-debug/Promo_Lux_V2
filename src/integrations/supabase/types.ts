@@ -2383,6 +2383,57 @@ export type Database = {
         }
         Relationships: []
       }
+      incidents: {
+        Row: {
+          body: string | null
+          components: string[]
+          created_at: string
+          deleted_at: string | null
+          id: string
+          impact: string
+          organization_id: string
+          postmortem: string | null
+          resolved_at: string | null
+          started_at: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          components?: string[]
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          impact?: string
+          organization_id?: string
+          postmortem?: string | null
+          resolved_at?: string | null
+          started_at?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          body?: string | null
+          components?: string[]
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          impact?: string
+          organization_id?: string
+          postmortem?: string | null
+          resolved_at?: string | null
+          started_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       idempotency_keys: {
         Row: {
           created_at: string
@@ -5507,6 +5558,9 @@ export type Database = {
           scale_max: number
           score_index: number | null
           survey_id: string
+        }
+        Relationships: []
+      }
       email_template_stats: {
         Row: {
           category: string | null
@@ -5592,6 +5646,7 @@ export type Database = {
           _token: string
         }
         Returns: Json
+      }
       duplicate_email_template: {
         Args: { _template_id: string; _name?: string | null }
         Returns: string
@@ -5599,6 +5654,16 @@ export type Database = {
       mark_email_template_used: {
         Args: { _template_id: string }
         Returns: undefined
+      }
+      get_public_status: { Args: Record<string, never>; Returns: Json }
+      get_public_uptime: {
+        Args: { _days?: number }
+        Returns: {
+          day: string
+          events: number
+          failures: number
+          uptime_pct: number | null
+        }[]
       }
       accept_org_invite: { Args: { _token: string }; Returns: string }
       advance_recipient_step: {

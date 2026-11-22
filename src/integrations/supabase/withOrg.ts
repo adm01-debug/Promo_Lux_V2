@@ -104,6 +104,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "email_accounts",
   "email_templates",
   "email_suppressions",
+  "incidents",
   "intent_signals",
   "ipc_config",
   "notifications",
