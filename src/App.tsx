@@ -37,6 +37,7 @@ const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
+const SurveyResponse = lazy(() => import("./pages/SurveyResponse"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Monitoring = lazy(() => import("./pages/Monitoring"));
 const CnpjSettingsPage = lazy(() => import("./pages/CnpjSettingsPage"));
@@ -244,6 +245,14 @@ function AnimatedRoutes() {
                 <AdminCompanies />
               </PageTransition>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/survey/:token"
+          element={
+            <PageTransition>
+              <SurveyResponse />
+            </PageTransition>
           }
         />
         <Route path="/lusha" element={<Navigate to="/?view=lusha" replace />} />

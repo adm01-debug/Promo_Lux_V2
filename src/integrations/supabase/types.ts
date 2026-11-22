@@ -4169,6 +4169,100 @@ export type Database = {
         }
         Relationships: []
       }
+      satisfaction_surveys: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string
+          id: string
+          kind: string
+          name: string
+          organization_id: string
+          question: string
+          scale_max: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          id?: string
+          kind: string
+          name: string
+          organization_id: string
+          question: string
+          scale_max?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          id?: string
+          kind?: string
+          name?: string
+          organization_id?: string
+          question?: string
+          scale_max?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "satisfaction_surveys_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      satisfaction_responses: {
+        Row: {
+          comment: string | null
+          company_id: string | null
+          contact_email: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          responded_at: string | null
+          score: number | null
+          survey_id: string
+          token: string
+        }
+        Insert: {
+          comment?: string | null
+          company_id?: string | null
+          contact_email?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          responded_at?: string | null
+          score?: number | null
+          survey_id: string
+          token?: string
+        }
+        Update: {
+          comment?: string | null
+          company_id?: string | null
+          contact_email?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          responded_at?: string | null
+          score?: number | null
+          survey_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "satisfaction_responses_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "satisfaction_surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scheduled_reports: {
         Row: {
           active: boolean
@@ -5185,6 +5279,24 @@ export type Database = {
       }
     }
     Views: {
+      satisfaction_stats: {
+        Row: {
+          active: boolean
+          avg_score: number | null
+          detractors: number
+          kind: string
+          name: string
+          organization_id: string
+          passives: number
+          pending: number
+          promoters: number
+          responses: number
+          scale_max: number
+          score_index: number | null
+          survey_id: string
+        }
+        Relationships: []
+      }
       oracle_v2_health: {
         Row: {
           errors_24h: number | null
@@ -5251,6 +5363,15 @@ export type Database = {
       }
     }
     Functions: {
+      get_survey_by_token: { Args: { _token: string }; Returns: Json }
+      submit_survey_response: {
+        Args: {
+          _comment?: string
+          _score: number
+          _token: string
+        }
+        Returns: Json
+      }
       accept_org_invite: { Args: { _token: string }; Returns: string }
       advance_recipient_step: {
         Args: {

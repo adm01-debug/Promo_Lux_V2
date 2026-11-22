@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, Building2, Target, FileDown, Loader2, Filter, CalendarClock } from "lucide-react";
+import { BarChart3, TrendingUp, Building2, Target, FileDown, Loader2, Filter, CalendarClock, MessageSquareHeart } from "lucide-react";
 import { DataError } from "@/components/lux/DataError";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +13,7 @@ import { useAnalyticsData } from "./analytics/useAnalyticsData";
 import { ConversionTab } from "./analytics/ConversionTab";
 import { DataEnrichmentTab } from "./analytics/DataEnrichmentTab";
 import { ScheduledReportsTab } from "./analytics/ScheduledReportsTab";
+import { SatisfactionTab } from "./analytics/SatisfactionTab";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -108,6 +109,9 @@ export const AnalyticsView = () => {
           <TabsTrigger value="dados" className="gap-1.5 text-xs">
             <BarChart3 className="h-3.5 w-3.5" /> Dados & Enriquecimento
           </TabsTrigger>
+          <TabsTrigger value="satisfacao" className="gap-1.5 text-xs">
+            <MessageSquareHeart className="h-3.5 w-3.5" /> NPS & CSAT
+          </TabsTrigger>
           <TabsTrigger value="agendados" className="gap-1.5 text-xs">
             <CalendarClock className="h-3.5 w-3.5" /> Relatórios Agendados
           </TabsTrigger>
@@ -132,6 +136,10 @@ export const AnalyticsView = () => {
             totalCompanies={d.totalCompanies}
             enrichedCount={d.enrichedCount}
           />
+        </TabsContent>
+
+        <TabsContent value="satisfacao" className="space-y-6">
+          <SatisfactionTab />
         </TabsContent>
 
         <TabsContent value="agendados" className="space-y-6">
