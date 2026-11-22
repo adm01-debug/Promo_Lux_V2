@@ -16,6 +16,7 @@
  * O endpoint não retorna dados sensíveis: apenas resumo agregado.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -86,6 +87,17 @@ Deno.serve(async (req) => {
       const { data, error } = await admin.auth.getUser(token);
       if (!error && data.user) manualUserId = data.user.id;
     }
+  }
+
+  // Sem gate, qualquer anonimo disparava a avaliacao, inseria alertas em
+  // org_violation_alerts e enfileirava webhooks de seguranca. A anon key e
+  // publica (vai no bundle do front), entao nao serve como credencial:
+  // exige cron (service_role) ou JWT de usuario real.
+  if (!isCronAuthorized(req) && !manualUserId) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   try {
