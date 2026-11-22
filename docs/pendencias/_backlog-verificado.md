@@ -19,14 +19,24 @@ O GAPS-ENTERPRISE (abr-2026) esta DEFASADO: a maioria dos itens P0 que ele marca
 - PARCIAL: demais tabelas (suppressions, email_accounts, api_keys, webhooks, etc.) ainda sao hard delete. Decisao: ampliar padrao `deleted_at` para as tabelas de dados de negocio.
 - EXECUTAVEL AGORA? Sim, migration nova + ajuste de views. Toca RLS/DDL -> regra 8, requer APROVADO do dono para merge.
 
-## 2. Atingir campos orphan da auditoria (SEM migration e SEM tabela no banco)
-- `scheduled_reports` (relatorios agendados)
-- `dashboard_layouts` (dashboards customizaveis)
-- `field_history` (field-level history)
-- `bulk_imports` (bulk import CSV dedup)
-- `deal_predictions` / `lead_scores` (ML scoring turbinado)
-- `role_permissions` (matriz de permissoes fina)
-Todos nao existem no banco (271 tabelas consultadas) e nao ha migration. Sao features "enterprise P1/P2" - nao sao regressao nem bug.
+## 2. Campos orphan da auditoria — RECONFERIDO em 2026-11-22 contra o banco real
+
+O levantamento anterior estava errado: 6 das 7 tabelas **existem** em producao, com RLS e
+triggers, e 5 delas estao integradas de ponta a ponta no front.
+
+| Tabela | Existe? | RLS | Uso real no codigo |
+| --- | --- | --- | --- |
+| `scheduled_reports` | SIM | 4 politicas | `useScheduledReports` -> `ScheduledReportsTab` -> `AnalyticsView`; cron `send-scheduled-reports-hourly` ativo e versionado em `20261121230000` |
+| `dashboard_layouts` | SIM | 5 politicas | `DashboardView.tsx:71-72` persiste por usuario no banco, localStorage so como cache de primeiro paint |
+| `bulk_imports` | SIM | 3 politicas | `ImportCompaniesDialog.tsx:76,167` grava e le historico de importacao |
+| `deal_predictions` | SIM | 5 politicas | usado no scoring |
+| `lead_scores` | SIM | 5 politicas | usado no scoring |
+| `role_permissions` | SIM | 5 politicas | 210 linhas; `useRolePermissions` + `usePermissions` + `PermissionGate` em 13 componentes |
+| `field_history` | NAO | — | coberto por `audit_logs.old_data/new_data`; nao precisa de tabela propria |
+
+Ausentes de verdade (nao citadas neste item): `saml_providers` (item 1 acima) e
+`suppressions` (item 1 do soft-delete). Nenhuma das 6 e feature "enterprise P1/P2" pendente:
+ja estao implementadas e em uso.
 
 ## 3. Gap REAL confirmado por request: CORS allowlist (RESOLVIDO nesta sessao)
 - 15 edge functions com allowlist restritiva so tinham dominio Lovable; producao Vercel bloqueava no browser.
@@ -37,6 +47,22 @@ Todos nao existem no banco (271 tabelas consultadas) e nao ha migration. Sao fea
 - Missing: smoke test de preflight CORS em producao (peca hoje este gap de novo).
 
 ## 5. Proximos itens executaveis (por impacto)
-1. [EDGE] smoke CORS no production-smoke.yml (pega allowlist sem o dominio Vercel)
+
+1. [RESOLVIDO] smoke CORS no `production-smoke.yml` — presente e cobrindo 17 functions
+   (`production-smoke.yml:53-64`, checa `Access-Control-Allow-Origin` com origem Vercel).
 2. [DDL] ampliar soft-delete padrao p/ tabelas de negocio (regra 8; APROVADO do dono)
 3. [DONO] desligar Lovable legacy no painel (acao manual) - URL serve bundle defasado
+
+## 6. Reconciliacao de migrations (2026-11-22)
+
+- repo = 225 migrations `supabase/migrations/*.sql`, banco = 225 registros. **Zero pendente,
+  zero so-no-banco.**
+- DDL esperado do repo (108 tabelas, 314 indices) x banco (104 tabelas, 426 indices): todas as
+  diferencas investigadas e descartadas.
+  - `ponto_*` (4 tabelas): criadas e dropadas 4 min depois por `20260512191500`.
+  - `idx_email_messages_pending`, `idx_campaign_contacts_pending`: tabelas base inexistentes, o
+    `DO $$` da migration tem guarda `IF EXISTS` e nunca executou.
+  - `idx_lc_unique_linkedin_org`, `idx_lss_*`: renomeadas (`lusha_contacts_org_linkedin_uk`,
+    `lusha_contacts_search_sessions_org_idem`...), cobertura equivalente.
+- Unico caso real de "registrada sem efeito": `20260718140000`, resolvido pela PR #108.
+- RLS: **0 tabelas** sem RLS em `public` e **0** com RLS ligado e nenhuma politica.
