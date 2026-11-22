@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `1cd082b188` · branch `main` · 2026-11-22 02:34 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7a94840a0c` · branch `main` · 2026-11-22 02:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2250,6 +2250,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/components/lux/integrations/DisconnectAccountDialog.tsx` |
 | `invoke(` | `src/components/lux/integrations/EmailAccountsPanel.tsx` |
 | `invoke(` | `src/components/lux/integrations/OAuthSandboxPanel.tsx` |
+| `invoke(` | `src/components/lux/lusha/EmailVerifyBadge.tsx` |
 | `invoke(` | `src/components/lux/monitoring/InstagramConnectionPanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/JobDetailsSheet.tsx` |

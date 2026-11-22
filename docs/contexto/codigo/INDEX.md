@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `1cd082b1880e7158e81e1cd7785ea9047e644b07` (2026-11-21T23:34:16-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7a94840a0ccc3d3a2de218bb27b4be1cb68a1271` (2026-11-21T23:39:08-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (640), SQL (232), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (641), SQL (232), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,15 +34,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1059 |
-| arquivos_codigo | 666 |
-| linhas_codigo | 114729 |
+| arquivos_total | 1060 |
+| arquivos_codigo | 667 |
+| linhas_codigo | 114849 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
 | itens_menu | 26 |
 | modulos | 22 |
-| componentes | 245 |
+| componentes | 246 |
 | hooks | 84 |
 | edge_functions | 60 |
 | tabelas | 105 |
@@ -55,7 +55,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Onde ficam as coisas
 - telas: src/components (23), src/pages (9)
-- componentes: src/components (230), src/pages (9), src/contexts (3)
+- componentes: src/components (231), src/pages (9), src/contexts (3)
 - hooks: src/hooks (77), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (38), src/integrations (4), src/contexts (3)
 - testes: co-localizado (__tests__) (81), e2e/ (19), co-localizado (*.test) (16)
@@ -69,14 +69,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components/lux | 26 | 23 | 200 | 115 | 26 | 75 |
+| components/lux | 26 | 23 | 201 | 115 | 27 | 75 |
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
-| hooks | 0 | 0 | 78 | 123 | 22 | 67 |
-| lib | 0 | 0 | 16 | 61 | 21 | 48 |
+| hooks | 0 | 0 | 78 | 123 | 23 | 67 |
+| lib | 0 | 0 | 16 | 61 | 22 | 48 |
 | lib/mcp | 0 | 0 | 7 | 0 | 0 | 3 |
 | lib/resilience | 0 | 0 | 5 | 0 | 0 | 0 |
-| pages | 0 | 9 | 9 | 124 | 29 | 76 |
+| pages | 0 | 9 | 9 | 124 | 30 | 76 |
 
 ## Rotas (url → arquivo)
 - `/` [tela] → src/pages/Index.tsx (protegida)
@@ -135,7 +135,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `email-oauth-connect` — tabelas: -; chamada por 2 arquivo(s) do front
 - `email-oauth-disconnect` — tabelas: audit_logs, email_accounts; chamada por 1 arquivo(s) do front
 - `email-poll-replies` — tabelas: email_accounts, email_sync_log; chamada por 1 arquivo(s) do front, por SQL/cron
-- `email-verify` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `email-verify` — tabelas: -; chamada por 1 arquivo(s) do front
 - `gmaps-places-search` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `gmaps-proxy` — tabelas: idempotency_keys, ipc_config, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front, por SQL/cron
 - `health` — tabelas: health_checks, organizations; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -228,7 +228,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 0
-- edges_orfas: 13 — ex.: api-latency-alerts, audit-logs-prune, email-verify
+- edges_orfas: 12 — ex.: api-latency-alerts, audit-logs-prune, gmaps-places-search
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 0
 - tabelas_usadas_sem_definicao: 0
@@ -242,8 +242,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6773 nós · 14649 arestas · 580 comunidades · grafo do commit `1cd082b1`
-- comunidades maiores: @tanstack/react-query (211), lucide-react (180), react (136), framer-motion (123), utils.ts (120), cn (107), snapshot.py (102), JobDetailsSheet.tsx (86), package.json (82), gerar.mjs (80), generate.py (73), OrganizationsView.tsx (73)
+- 6779 nós · 14671 arestas · 579 comunidades · grafo do commit `7a94840a`
+- comunidades maiores: Monitoring.tsx (153), react (151), snapshot.py (102), framer-motion (98), @tanstack/react-query (97), utils.ts (91), cn (85), gerar.mjs (80), lushaMocks.ts (71), OAuthSandboxPanel.tsx (68), ref_node_fs (67), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -356,6 +356,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `7a94840` feat(ui): verificação de entregabilidade do e-mail do contato (#122)
 - 2026-11-21 `1cd082b` feat(ui): expõe o checker de entregabilidade na conta de e-mail (#121)
 - 2026-11-21 `bccf303` feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)
 - 2026-11-21 `3dd0aea` fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)
@@ -370,7 +371,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `c45eec0` chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)
 - 2026-11-21 `31805c5` fix(edge): restaura auth de 6 functions quebradas por getClaims inexistente (#110)
 - 2026-11-21 `99a180a` fix(extracao): grava organization_id nos jobs criados via service_role (#107)
-- 2026-11-21 `ab467da` fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

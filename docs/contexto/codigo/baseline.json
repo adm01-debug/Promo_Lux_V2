@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "1cd082b1880e7158e81e1cd7785ea9047e644b07",
+  "commit": "7a94840a0ccc3d3a2de218bb27b4be1cb68a1271",
   "branch": "main",
-  "data_commit": "2026-11-21T23:34:16-03:00",
+  "data_commit": "2026-11-21T23:39:08-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7a94840",
+    "data": "2026-11-21",
+    "assunto": "feat(ui): verificação de entregabilidade do e-mail do contato (#122)"
+   },
    {
     "sha": "1cd082b",
     "data": "2026-11-21",
@@ -126,18 +131,13 @@
     "sha": "9f6188b",
     "data": "2026-11-21",
     "assunto": "docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)"
-   },
-   {
-    "sha": "7e2e6d2",
-    "data": "2026-11-21",
-    "assunto": "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)"
    }
   ],
-  "arquivos_mudados_7d": 132,
+  "arquivos_mudados_7d": 134,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 22
+    "mudancas": 24
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 89
+    "commits": 90
    },
    {
     "autor": "dependabot[bot]",
@@ -310,15 +310,15 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1059,
-  "arquivos_codigo": 666,
-  "linhas_codigo": 114729,
+  "arquivos_total": 1060,
+  "arquivos_codigo": 667,
+  "linhas_codigo": 114849,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 245,
+  "componentes": 246,
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
@@ -551,8 +551,8 @@
    "linhas": 321
   },
   "src/components": {
-   "arquivos": 289,
-   "linhas": 46534
+   "arquivos": 290,
+   "linhas": 46654
   },
   "src/contexts": {
    "arquivos": 7,
@@ -638,7 +638,7 @@
   },
   {
    "arquivo": "src/components/lux/lusha/OracleV2Panel.tsx",
-   "linhas": 871
+   "linhas": 873
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
@@ -752,7 +752,6 @@
   "edges_orfas": [
    "api-latency-alerts",
    "audit-logs-prune",
-   "email-verify",
    "gmaps-places-search",
    "health",
    "instagram-dlq-replay",

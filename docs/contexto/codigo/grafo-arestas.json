@@ -999,6 +999,12 @@
    "src/components/ui/table.tsx",
    "src/components/ui/tooltip.tsx"
   ],
+  "src/components/lux/lusha/EmailVerifyBadge.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/tooltip.tsx",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
   "src/components/lux/lusha/LushaCookieHealthBanner.tsx": [
    "src/integrations/supabase/client.ts",
    "src/lib/utils.ts"
@@ -1007,6 +1013,7 @@
    "src/components/ui/button.tsx"
   ],
   "src/components/lux/lusha/OracleV2Panel.tsx": [
+   "src/components/lux/lusha/EmailVerifyBadge.tsx",
    "src/components/ui/alert-dialog.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",

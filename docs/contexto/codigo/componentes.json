@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 245,
+ "total": 246,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -1428,6 +1428,22 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/lusha/EmailVerifyBadge.tsx",
+   "exports": [
+    "EmailVerifyBadge"
+   ],
+   "export_default": null,
+   "linhas": 118,
+   "dominio": "components/lux",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [
+    "email-verify"
+   ],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/lusha/LushaCookieHealthBanner.tsx",
    "exports": [
     "LushaCookieHealthBanner",
@@ -1464,7 +1480,7 @@
     "OracleV2Panel"
    ],
    "export_default": null,
-   "linhas": 871,
+   "linhas": 873,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
@@ -3124,7 +3140,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 98,
+   "usado_por": 99,
    "orfao": false
   },
   {
@@ -3888,7 +3904,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 15,
+   "usado_por": 16,
    "orfao": false
   },
   {

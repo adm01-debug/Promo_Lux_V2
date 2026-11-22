@@ -7,7 +7,7 @@
    "src/pages (9)"
   ],
   "componentes": [
-   "src/components (230)",
+   "src/components (231)",
    "src/pages (9)",
    "src/contexts (3)"
   ],
@@ -47,7 +47,7 @@
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (245)"
+  ".tsx (246)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(ui): verificação de entregabilidade do e-mail do contato (#122)",
    "feat(ui): expõe o checker de entregabilidade na conta de e-mail (#121)",
    "feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)",
    "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)",
-   "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)",
-   "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)"
+   "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)"
   ]
  },
  "pr_template": null,

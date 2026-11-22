@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 540,
- "arestas": 1619,
+ "nos": 541,
+ "arestas": 1624,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -10,15 +10,15 @@
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 113
+   "importado_por": 114
   },
   {
    "arquivo": "src/lib/utils.ts",
-   "importado_por": 106
+   "importado_por": 107
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 98
+   "importado_por": 99
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
@@ -53,11 +53,11 @@
    "importado_por": 27
   },
   {
-   "arquivo": "src/components/ui/skeleton.tsx",
-   "importado_por": 26
+   "arquivo": "src/components/ui/tooltip.tsx",
+   "importado_por": 27
   },
   {
-   "arquivo": "src/components/ui/tooltip.tsx",
+   "arquivo": "src/components/ui/skeleton.tsx",
    "importado_por": 26
   },
   {

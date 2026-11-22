@@ -269,6 +269,7 @@
     "email-oauth-connect",
     "email-oauth-disconnect",
     "email-poll-replies",
+    "email-verify",
     "gmaps-proxy",
     "lusha-cookie-health",
     "lusha-decision-makers",
@@ -316,7 +317,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 241
+   "arquivos_puxados": 242
   },
   {
    "protegida": true,
@@ -1400,6 +1401,7 @@
     "email-oauth-connect",
     "email-oauth-disconnect",
     "email-poll-replies",
+    "email-verify",
     "gmaps-proxy",
     "lusha-cookie-health",
     "lusha-decision-makers",
@@ -1438,7 +1440,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 203
+   "arquivos_puxados": 204
   },
   {
    "id": "deals",
@@ -1825,6 +1827,7 @@
    ],
    "rpcs": [],
    "edges": [
+    "email-verify",
     "lusha-cookie-health",
     "lusha-decision-makers",
     "lusha-search",
@@ -1845,7 +1848,7 @@
     "progressbar",
     "status"
    ],
-   "arquivos_puxados": 41
+   "arquivos_puxados": 42
   },
   {
    "id": "map",
