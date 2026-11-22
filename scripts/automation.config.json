@@ -86,6 +86,14 @@
       ]
     },
     {
+      "id": "helper-patch-mcp-plugin",
+      "kind": "helper",
+      "files": ["scripts/patch-mcp-plugin.mjs"],
+      "manual": ["node", "scripts/patch-mcp-plugin.mjs"],
+      "triggers": ["manual", "precommit", "PR"],
+      "callers": ["package.json"]
+    },
+    {
       "id": "helper-a66c7eed64d4",
       "kind": "helper",
       "files": ["scripts/staged-autofix/run.mjs"],
