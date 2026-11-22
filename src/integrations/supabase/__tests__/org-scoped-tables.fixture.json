@@ -41,6 +41,7 @@
     "lusha_search_sessions",
     "notifications",
     "oauth_sandbox_snapshots",
+    "pii_redaction_rules",
     "oracle_rate_limits",
     "org_proxies",
     "org_retry_policies",

@@ -14,6 +14,7 @@ import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
+import { PiiMaskingPanel } from "@/components/lux/settings/PiiMaskingPanel";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { StickySaveBar } from "./StickySaveBar";
 
@@ -279,6 +280,8 @@ export const SettingsView = () => {
                   <Separator className="bg-border/30" />
                   <RLSRegistryCoverage />
                   <RLSVerificationPanel />
+                  <Separator className="bg-border/30" />
+                  <PiiMaskingPanel />
                 </>
               )}
             </div>
