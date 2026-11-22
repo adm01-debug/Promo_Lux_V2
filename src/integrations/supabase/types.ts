@@ -5300,6 +5300,9 @@ export type Database = {
       ip_in_cidr: { Args: { _cidr: string; _ip: string }; Returns: boolean }
       is_ip_allowed: { Args: { _ip: string; _org_id: string }; Returns: boolean }
       touch_last_known_ip: { Args: Record<string, never>; Returns: undefined }
+      list_my_sessions: { Args: Record<string, never>; Returns: { id: string; created_at: string; updated_at: string; user_agent: string; ip: string; is_current: boolean }[] }
+      revoke_my_session: { Args: { _session_id: string }; Returns: boolean }
+      revoke_other_sessions: { Args: Record<string, never>; Returns: number }
       advance_recipient_step: {
         Args: {
           _completed: boolean

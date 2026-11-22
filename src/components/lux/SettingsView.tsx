@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
+import { ActiveSessionsPanel } from "@/components/lux/settings/ActiveSessionsPanel";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
@@ -283,6 +284,9 @@ export const SettingsView = () => {
                   <RLSVerificationPanel />
                 </>
               )}
+
+              <Separator className="bg-border/30" />
+              <ActiveSessionsPanel />
             </div>
           )}
 
