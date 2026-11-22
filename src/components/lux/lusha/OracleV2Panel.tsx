@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { SUGGESTED_DEPARTMENTS_PT } from "@/lib/lusha/departmentMap";
+import { EmailVerifyBadge } from "./EmailVerifyBadge";
 import { cn } from "@/lib/utils";
 import {
   useOraclePreflight,
@@ -559,6 +560,7 @@ function ContactRow({
           {contact.email && (
             <span className="flex items-center gap-1 text-foreground">
               <Mail className="h-3 w-3" /> {contact.email}
+              <EmailVerifyBadge email={contact.email} className="ml-1" />
             </span>
           )}
           {contact.phone_formatted && (
