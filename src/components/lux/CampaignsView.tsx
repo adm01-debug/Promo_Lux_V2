@@ -3,8 +3,9 @@ import { validateCampaign } from "@/lib/schemas/campaign";
 import { useDemo } from "@/contexts/demo-context";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { DEMO_CAMPAIGNS } from "@/lib/demoData";
-import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil, Activity } from "lucide-react";
+import { Mail, Plus, Play, Pause, BarChart3, Users, Clock, Trash2, Loader2, CheckCircle2, Pencil, Activity, FileText } from "lucide-react";
 import { CampaignTrackingDrawer } from "@/components/lux/campaigns/CampaignTrackingDrawer";
+import { EmailTemplatesTab } from "@/components/lux/campaigns/EmailTemplatesTab";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -61,6 +62,7 @@ export const CampaignsView = () => {
   const [formSequence, setFormSequence] = useState<SequenceStep[]>(defaultSequence);
   const [formAb, setFormAb] = useState<AbConfig>(defaultAb);
   const [dirty, setDirty] = useState(false);
+  const [view, setView] = useState<"campanhas" | "templates">("campanhas");
 
   const resetForm = () => {
     setFormName("");
@@ -242,6 +244,25 @@ export const CampaignsView = () => {
             {activeCount} ativas — {totalSent} emails enviados
           </p>
         </div>
+        <div className="flex items-center gap-2">
+        <div className="inline-flex rounded-lg border border-border p-0.5">
+          <Button
+            size="sm"
+            variant={view === "campanhas" ? "secondary" : "ghost"}
+            onClick={() => setView("campanhas")}
+            className="h-8 gap-1.5 text-xs"
+          >
+            <Mail className="h-3.5 w-3.5" /> Campanhas
+          </Button>
+          <Button
+            size="sm"
+            variant={view === "templates" ? "secondary" : "ghost"}
+            onClick={() => setView("templates")}
+            className="h-8 gap-1.5 text-xs"
+          >
+            <FileText className="h-3.5 w-3.5" /> Templates
+          </Button>
+        </div>
         <Dialog open={createOpen} onOpenChange={guardedCloseCreate}>
           {canCreate && (
             <DialogTrigger asChild>
@@ -267,6 +288,7 @@ export const CampaignsView = () => {
             </Button>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Edit Dialog */}
@@ -292,6 +314,10 @@ export const CampaignsView = () => {
         </DialogContent>
       </Dialog>
 
+      {view === "templates" ? (
+        <EmailTemplatesTab />
+      ) : (
+        <>
       {/* Quick stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
@@ -430,6 +456,8 @@ export const CampaignsView = () => {
             );
           })}
         </div>
+      )}
+        </>
       )}
 
       <CampaignTrackingDrawer

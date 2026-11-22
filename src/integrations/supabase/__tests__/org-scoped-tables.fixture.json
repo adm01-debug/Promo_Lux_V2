@@ -28,6 +28,7 @@
     "dlq_alert_settings",
     "dlq_health_snapshots",
     "email_accounts",
+    "email_templates",
     "email_suppressions",
     "email_sync_log",
     "feature_flags",
