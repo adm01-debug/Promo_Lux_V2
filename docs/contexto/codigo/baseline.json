@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "bccf3033dd87d7f22566a8da4675a8ea422585ce",
+  "commit": "1cd082b1880e7158e81e1cd7785ea9047e644b07",
   "branch": "main",
-  "data_commit": "2026-11-21T23:17:27-03:00",
+  "data_commit": "2026-11-21T23:34:16-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "1cd082b",
+    "data": "2026-11-21",
+    "assunto": "feat(ui): expõe o checker de entregabilidade na conta de e-mail (#121)"
+   },
    {
     "sha": "bccf303",
     "data": "2026-11-21",
@@ -126,22 +131,17 @@
     "sha": "7e2e6d2",
     "data": "2026-11-21",
     "assunto": "feat(crons): versiona os 18 crons HTTP lendo a chave do vault (#96)"
-   },
-   {
-    "sha": "c229e3f",
-    "data": "2026-11-21",
-    "assunto": "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)"
    }
   ],
-  "arquivos_mudados_7d": 130,
+  "arquivos_mudados_7d": 132,
   "pastas_mais_mudadas_30d": [
    {
-    "pasta": "supabase/functions/_shared",
+    "pasta": "src/components/lux",
     "mudancas": 22
    },
    {
-    "pasta": "src/components/lux",
-    "mudancas": 20
+    "pasta": "supabase/functions/_shared",
+    "mudancas": 22
    },
    {
     "pasta": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 88
+    "commits": 89
    },
    {
     "autor": "dependabot[bot]",
@@ -310,15 +310,15 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1058,
-  "arquivos_codigo": 665,
-  "linhas_codigo": 114518,
+  "arquivos_total": 1059,
+  "arquivos_codigo": 666,
+  "linhas_codigo": 114729,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 244,
+  "componentes": 245,
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
@@ -551,8 +551,8 @@
    "linhas": 321
   },
   "src/components": {
-   "arquivos": 288,
-   "linhas": 46323
+   "arquivos": 289,
+   "linhas": 46534
   },
   "src/contexts": {
    "arquivos": 7,
@@ -682,7 +682,7 @@
   },
   {
    "arquivo": "src/components/lux/integrations/EmailAccountsPanel.tsx",
-   "linhas": 585
+   "linhas": 602
   },
   {
    "arquivo": "supabase/functions/lusha-search/index.ts",
@@ -752,7 +752,6 @@
   "edges_orfas": [
    "api-latency-alerts",
    "audit-logs-prune",
-   "deliverability-check",
    "email-verify",
    "gmaps-places-search",
    "health",

@@ -109,9 +109,9 @@
   },
   {
    "modulo": "components/lux",
-   "arquivos": 199,
+   "arquivos": 200,
    "testes": 31,
-   "linhas": 38735,
+   "linhas": 38946,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -166,7 +166,7 @@
     "workflows"
    ],
    "rotas_http": [],
-   "componentes": 180,
+   "componentes": 181,
    "hooks_locais": [
     "useAcknowledgeAdvisory",
     "useActiveOrganization",
@@ -291,6 +291,7 @@
     "ai-agent",
     "campaign-dispatch",
     "cnpj-enrich",
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
@@ -461,6 +462,7 @@
     "edges": [
      "ai-agent",
      "campaign-dispatch",
+     "deliverability-check",
      "email-oauth-callback",
      "email-oauth-connect",
      "email-oauth-disconnect",
@@ -1018,6 +1020,7 @@
     "auth-rate-limit",
     "campaign-dispatch",
     "cnpj-enrich",
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
@@ -1448,6 +1451,7 @@
     "ai-agent",
     "campaign-dispatch",
     "cnpj-enrich",
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
@@ -1988,6 +1992,7 @@
     "campaign-dispatch",
     "cnpj-enrich",
     "cnpj-settings-status",
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",

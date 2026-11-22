@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bccf3033dd` · branch `main` · 2026-11-22 02:18 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `1cd082b188` · branch `main` · 2026-11-22 02:34 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1911,6 +1911,7 @@ _nenhum item encontrado_
 | Erro na importação | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | Nenhuma organização ativa. | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | Não foi possível copiar | `src/components/lux/integrations/AuthUrlConfirmDialog.tsx` |
+| ; import { Loader2, ShieldCheck, AlertCircle } from  | `src/components/lux/integrations/DeliverabilityCheckDialog.tsx` |
 | No account | `src/components/lux/integrations/DisconnectAccountDialog.tsx` |
 | Falha ao exportar. | `src/components/lux/integrations/DryRunLogsPanel.tsx` |
 | ${acc.email} — ${info.description} ${info.actionHint} | `src/components/lux/integrations/EmailAccountsPanel.tsx` |
@@ -2245,6 +2246,7 @@ _nenhum item encontrado_
 | `notifyLongSearch` | `src/components/lux/LushaIntelligenceView.tsx` |
 | `notifyOnCancel` | `src/components/lux/LushaIntelligenceView.tsx` |
 | `notifyOnFailure` | `src/components/lux/LushaIntelligenceView.tsx` |
+| `invoke(` | `src/components/lux/integrations/DeliverabilityCheckDialog.tsx` |
 | `invoke(` | `src/components/lux/integrations/DisconnectAccountDialog.tsx` |
 | `invoke(` | `src/components/lux/integrations/EmailAccountsPanel.tsx` |
 | `invoke(` | `src/components/lux/integrations/OAuthSandboxPanel.tsx` |

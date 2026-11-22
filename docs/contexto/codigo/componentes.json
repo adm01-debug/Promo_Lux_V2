@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 244,
+ "total": 245,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -1125,6 +1125,22 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/integrations/DeliverabilityCheckDialog.tsx",
+   "exports": [
+    "DeliverabilityCheckDialog"
+   ],
+   "export_default": null,
+   "linhas": 194,
+   "dominio": "components/lux",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [
+    "deliverability-check"
+   ],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/integrations/DisconnectAccountDialog.tsx",
    "exports": [
     "DisconnectAccountDialog"
@@ -1180,7 +1196,7 @@
     "EmailAccountsPanel"
    ],
    "export_default": null,
-   "linhas": 585,
+   "linhas": 602,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -3077,7 +3093,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 5,
+   "usado_por": 6,
    "orfao": false
   },
   {
@@ -3108,7 +3124,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 97,
+   "usado_por": 98,
    "orfao": false
   },
   {
@@ -3143,7 +3159,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 117,
+   "usado_por": 118,
    "orfao": false
   },
   {
@@ -3302,7 +3318,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 27,
+   "usado_por": 28,
    "orfao": false
   },
   {

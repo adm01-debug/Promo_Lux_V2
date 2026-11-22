@@ -264,6 +264,7 @@
     "ai-agent",
     "campaign-dispatch",
     "cnpj-enrich",
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
@@ -315,7 +316,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 240
+   "arquivos_puxados": 241
   },
   {
    "protegida": true,
@@ -1394,6 +1395,7 @@
     "ai-agent",
     "campaign-dispatch",
     "cnpj-enrich",
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
@@ -1436,7 +1438,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 202
+   "arquivos_puxados": 203
   },
   {
    "id": "deals",
@@ -1670,6 +1672,7 @@
     "default_role_permissions"
    ],
    "edges": [
+    "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
     "email-oauth-disconnect",
@@ -1681,10 +1684,11 @@
    "flags": [],
    "papeis": [
     "admin",
+    "alert",
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 51
+   "arquivos_puxados": 53
   },
   {
    "id": "intent",

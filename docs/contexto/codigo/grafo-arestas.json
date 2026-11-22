@@ -838,6 +838,13 @@
    "src/components/ui/dialog.tsx",
    "src/hooks/use-toast.ts"
   ],
+  "src/components/lux/integrations/DeliverabilityCheckDialog.tsx": [
+   "src/components/ui/alert.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/dialog.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
   "src/components/lux/integrations/DisconnectAccountDialog.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -865,6 +872,7 @@
    "src/hooks/useOrganizations.ts"
   ],
   "src/components/lux/integrations/EmailAccountsPanel.tsx": [
+   "src/components/lux/integrations/DeliverabilityCheckDialog.tsx",
    "src/components/lux/integrations/DisconnectAccountDialog.tsx",
    "src/components/lux/integrations/EmailAccountsAuditPanel.tsx",
    "src/components/lux/integrations/EmailSyncHistorySheet.tsx",
