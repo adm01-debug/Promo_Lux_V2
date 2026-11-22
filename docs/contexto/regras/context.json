@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42",
+  "sha": "3dd0aead5acbe3c6c0003974af95d1eb408b8066",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 01:51 UTC",
-  "files_total": 1073,
-  "code_files": 897,
-  "code_lines": 129767
+  "generated_at": "2026-11-22 01:56 UTC",
+  "files_total": 1076,
+  "code_files": 900,
+  "code_lines": 130131
  },
  "version": "1.3.2",
- "facts_hash": "11b98be3489fefc2",
+ "facts_hash": "453f1184540c3b30",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -232,9 +232,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 357,
+   ".ts": 359,
    ".tsx": 279,
-   ".sql": 231,
+   ".sql": 232,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -19052,6 +19052,22 @@
     "unique": false,
     "where": "",
     "src": "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   },
+   {
+    "name": "uq_companies_org_name_source",
+    "table": "companies",
+    "columns": "organization_id, name, source",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql"
+   },
+   {
+    "name": "companies_org_place_id_uk",
+    "table": "companies",
+    "columns": "organization_id, place_id",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql"
    }
   ],
   "cron_jobs": [
@@ -19327,6 +19343,7 @@
    "supabase/migrations/20261122100000_fix_grant_refresh_org_scores.sql",
    "supabase/migrations/20261122103000_fix_rls_dashboard_layouts_org.sql",
    "supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql",
+   "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql",
    "supabase/migrations/20261122130000_cron_org_violation_alerts.sql",
    "src/integrations/supabase/types.ts"
   ],
@@ -26766,7 +26783,7 @@
   {
    "module": "(raiz)",
    "files": 9,
-   "lines": 345,
+   "lines": 346,
    "tables": [],
    "exports": [
     "eslint.config.js: tseslint",
@@ -27772,8 +27789,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 127,
-   "lines": 22922,
+   "files": 129,
+   "lines": 23227,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -27847,6 +27864,7 @@
     "apollo-departments.ts: ApolloDepartmentFilter, apolloFilterForLushaDepartments, lushaEnumsWithoutApolloMapping, APOLLO_DEPARTMENT_MAP",
     "bitrix-client.ts: BITRIX_ENTITY_TYPE_ID, BITRIX_CATEGORY_ID, BITRIX_STAGES, BITRIX_FIELDS, resolveDeptEnum, BitrixError",
     "circuit-breaker.ts: checkCircuitBreaker, reportSuccess, reportFailure",
+    "companies-upsert.ts: UpsertStrategy, UpsertCompaniesResult, upsertCompanies",
     "company-domain.ts: normalizeDomain, DomainCandidates, ResolvedDomain, resolveCompanyDomain",
     "cookies.ts: ServicoCookie, VaultCookie, CookieVaultUnavailable, CookieNotReady, fetchAllCookies, getCookie",
     "cron-auth.ts: timingSafeEqual, requestToken, isCronAuthorized",
@@ -27877,8 +27895,7 @@
     "chaos.ts: shouldInjectChaos",
     "heuristics.ts: isEmptyShell, isTransientHttp, hostnameOf",
     "html-to-markdown.ts: ExtractedContent, extractContent",
-    "robots.ts: RobotsRule, RobotsPolicy, parseRobotsTxt, isAllowed",
-    "index.ts: fetchCnpjaProvider"
+    "robots.ts: RobotsRule, RobotsPolicy, parseRobotsTxt, isAllowed"
    ],
    "docs": [
     "api-rate-limit.ts: Logic-a pura de decisao de rate-limit da public-api, extraida para teste unitario (convencao do projeto: edge functions testam so o que vive em _shared). A RPC check_api_key_rate_limit devolve uma linha com allowed/current_count/reset_at.",
@@ -27907,6 +27924,7 @@
     "supabase/functions/_shared/apollo-departments.ts",
     "supabase/functions/_shared/bitrix-client.ts",
     "supabase/functions/_shared/circuit-breaker.ts",
+    "supabase/functions/_shared/companies-upsert.ts",
     "supabase/functions/_shared/company-domain.ts",
     "supabase/functions/_shared/cookies.ts",
     "supabase/functions/_shared/cron-auth.ts",
@@ -27939,6 +27957,7 @@
     "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
     "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
     "supabase/functions/_shared/__tests__/chaos.test.ts",
+    "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
     "supabase/functions/_shared/__tests__/cron-auth.test.ts",
     "supabase/functions/_shared/__tests__/dns-guard.test.ts",
     "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
@@ -27975,15 +27994,13 @@
     "supabase/functions/cnpj-settings-status/index.ts",
     "supabase/functions/deliverability-check/index.ts",
     "supabase/functions/dlq-alerts/index.ts",
-    "supabase/functions/email-oauth-callback/index.ts",
-    "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-oauth-disconnect/index.ts"
+    "supabase/functions/email-oauth-callback/index.ts"
    ]
   },
   {
    "module": "supabase/migrations",
-   "files": 227,
-   "lines": 13913,
+   "files": 228,
+   "lines": 13971,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -28355,9 +28372,9 @@
      "src/lib/mcp/tools/get-company.ts",
      "src/lib/mcp/tools/list-companies.ts",
      "src/tests/multi-tenant.test.ts",
+     "supabase/functions/_shared/companies-upsert.ts",
      "supabase/functions/admin-list-companies/index.ts",
      "supabase/functions/ai-agent/index.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
      "supabase/functions/mcp/index.ts",
      "supabase/functions/oracle-search-decisors/index.ts",
      "supabase/functions/rls-tests/index.ts",
@@ -28376,6 +28393,7 @@
      "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
      "src/lib/__tests__/orgErrorHandler.e2e.test.ts",
      "src/lib/orgErrorHandler.ts",
+     "supabase/functions/_shared/companies-upsert.ts",
      "supabase/functions/rls-tests/index.ts",
      "supabase/functions/workflow-engine/index.ts"
     ],
@@ -28395,13 +28413,13 @@
      "src/integrations/supabase/withOrg.ts",
      "src/lib/orgErrorHandler.ts",
      "src/tests/multi-tenant.test.ts",
+     "supabase/functions/_shared/companies-upsert.ts",
      "supabase/functions/rls-tests/index.ts"
     ],
     "upsert": [
      "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
      "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/workflow-engine/index.ts"
+     "supabase/functions/_shared/companies-upsert.ts"
     ]
    },
    "company_reviews": {
@@ -31831,6 +31849,11 @@
     "file": "supabase/functions/_shared/apollo-cache.ts",
     "name": "ApolloRateReason",
     "values": "ok | cooldown | minute_limit | daily_limit | unavailable"
+   },
+   {
+    "file": "supabase/functions/_shared/companies-upsert.ts",
+    "name": "UpsertStrategy",
+    "values": "place_id | name_source | manual"
    },
    {
     "file": "supabase/functions/_shared/cookies.ts",
@@ -47885,6 +47908,34 @@
     "name": "rejeita task_id vazio"
    },
    {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: usa place_id quando o banco aceita"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: cai para name_source quando place_id da 42P10"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: sem constraint, insere quando a empresa ainda nao existe"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: sem constraint, atualiza quando a empresa ja existe"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: nao tenta outra chave em erro real (RLS)"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: sem place_id vai direto para org,name,source"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    "name": "upsertCompanies: infere hasPlaceId do proprio lote"
+   },
+   {
     "file": "supabase/functions/_shared/__tests__/cron-auth.test.ts",
     "name": "timingSafeEqual"
    },
@@ -55937,6 +55988,10 @@
    {
     "file": "src/hooks/useWebhooks.ts",
     "limit": "50"
+   },
+   {
+    "file": "supabase/functions/_shared/companies-upsert.ts",
+    "limit": "1"
    },
    {
     "file": "supabase/functions/ai-agent/index.ts",
@@ -65122,7 +65177,7 @@
   },
   "vitest.config.ts": {
    "path": "vitest.config.ts",
-   "lines": 71,
+   "lines": 72,
    "exports": [
     "default defineConfig"
    ]
@@ -79182,6 +79237,48 @@
     "// aceita sem consultar o banco. Reduz load em ~80% em cenário de carga"
    ]
   },
+  "supabase/functions/_shared/companies-upsert.ts": {
+   "path": "supabase/functions/_shared/companies-upsert.ts",
+   "lines": 158,
+   "exports": [
+    "type UpsertStrategy",
+    "interface UpsertCompaniesResult",
+    "function upsertCompanies"
+   ],
+   "tables": [
+    {
+     "table": "companies",
+     "op": "select,upsert"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select,update"
+    },
+    {
+     "table": "companies",
+     "op": "insert,select"
+    }
+   ],
+   "table_cols": {
+    "companies": [
+     "id"
+    ]
+   },
+   "enums": [
+    {
+     "name": "UpsertStrategy",
+     "values": "place_id | name_source | manual"
+    }
+   ],
+   "doc": "============================================================================ _shared/companies-upsert.ts `companies` tem dois indices unicos concorrentes e o PostgREST precisa saber exatamente qual deles usar no `ON CONFLICT`: - `uq_companies_org_name_source` (organization_id, name, source) - `compa …",
+   "pagination": [
+    "1"
+   ]
+  },
   "supabase/functions/_shared/company-domain.ts": {
    "path": "supabase/functions/_shared/company-domain.ts",
    "lines": 89,
@@ -79976,6 +80073,24 @@
     "respeita rate=1 (sempre injeta)",
     "distribui aproximadamente próximo do rate esperado em N=5000",
     "rejeita task_id vazio"
+   ]
+  },
+  "supabase/functions/_shared/__tests__/companies-upsert.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+   "lines": 139,
+   "is_test": true,
+   "rule_comments": [
+    "Regressao: o fallback funcionou, entao NAO pode reportar erro. Reportar o"
+   ],
+   "doc": "Testes Deno para _shared/companies-upsert.ts. O alvo do `onConflict` no PostgREST precisa casar com um indice unico TOTAL. Em producao o schema tinha `companies_org_place_id_uk` como indice PARCIAL (WHERE place_id IS NOT NULL AND deleted_at IS NULL): o PostgREST respondia 42P10 e o lote inteiro de e …",
+   "tests": [
+    "upsertCompanies: usa place_id quando o banco aceita",
+    "upsertCompanies: cai para name_source quando place_id da 42P10",
+    "upsertCompanies: sem constraint, insere quando a empresa ainda nao existe",
+    "upsertCompanies: sem constraint, atualiza quando a empresa ja existe",
+    "upsertCompanies: nao tenta outra chave em erro real (RLS)",
+    "upsertCompanies: sem place_id vai direto para org,name,source",
+    "upsertCompanies: infere hasPlaceId do proprio lote"
    ]
   },
   "supabase/functions/_shared/__tests__/cron-auth.test.ts": {
@@ -81670,7 +81785,7 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 841,
+   "lines": 843,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -81739,10 +81854,6 @@
     {
      "table": "ipc_config",
      "op": "select"
-    },
-    {
-     "table": "companies",
-     "op": "select,upsert"
     },
     {
      "table": "scrape_results",
@@ -85224,7 +85335,7 @@
   },
   "supabase/functions/workflow-engine/index.ts": {
    "path": "supabase/functions/workflow-engine/index.ts",
-   "lines": 708,
+   "lines": 714,
    "tables": [
     {
      "table": "workflows",
@@ -85293,10 +85404,6 @@
     {
      "table": "scrape_results",
      "op": "select"
-    },
-    {
-     "table": "companies",
-     "op": "select,upsert"
     },
     {
      "table": "scrape_results",
@@ -86721,6 +86828,10 @@
     "ORDER BY (public.sla_deadline(q.created_at, q.sla_seconds) <= now() + interval '30 seconds') DESC,"
    ]
   },
+  "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql": {
+   "path": "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql",
+   "lines": 58
+  },
   "supabase/migrations/20261122130000_cron_org_violation_alerts.sql": {
    "path": "supabase/migrations/20261122130000_cron_org_violation_alerts.sql",
    "lines": 37,
@@ -86728,10 +86839,24 @@
   }
  },
  "git": {
-  "sha": "cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42",
+  "sha": "3dd0aead5acbe3c6c0003974af95d1eb408b8066",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "3dd0aea",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)",
+    "files": [
+     "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+     "supabase/functions/_shared/companies-upsert.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/workflow-engine/index.ts",
+     "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql",
+     "vitest.config.ts"
+    ]
+   },
    {
     "sha": "cadd1d6",
     "date": "2026-11-21",
@@ -87059,24 +87184,12 @@
     "files": [
      "supabase/functions/campaign-dispatch/index.ts"
     ]
-   },
-   {
-    "sha": "b983c3d",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "merge: feat(api): rate-limit server-side por API key na public-api",
-    "files": [
-     "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
-     "supabase/functions/_shared/api-rate-limit.ts",
-     "supabase/functions/public-api/index.ts",
-     "supabase/migrations/20261121120000_api_key_rate_limit.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/functions/gmaps-proxy/index.ts",
-    4
+    5
    ],
    [
     "supabase/config.toml",
@@ -87085,6 +87198,10 @@
    [
     "supabase/functions/scrape-queue-worker/index.ts",
     3
+   ],
+   [
+    "vitest.config.ts",
+    2
    ],
    [
     "docs/ESTADO_ATUAL.md",
@@ -87127,8 +87244,20 @@
     2
    ],
    [
-    "supabase/migrations/20261121120000_api_key_rate_limit.sql",
-    2
+    "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/companies-upsert.ts",
+    1
+   ],
+   [
+    "supabase/functions/workflow-engine/index.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql",
+    1
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -87136,22 +87265,6 @@
    ],
    [
     "scripts/automation.config.json",
-    1
-   ],
-   [
-    "scripts/check-migration-drift.sh",
-    1
-   ],
-   [
-    "supabase/migrations/20261122130000_cron_org_violation_alerts.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql",
-    1
-   ],
-   [
-    "supabase/functions/org-violation-alerts/index.ts",
     1
    ]
   ]

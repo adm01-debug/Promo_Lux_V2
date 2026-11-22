@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cadd1d6d64` · branch `main` · 2026-11-22 01:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3dd0aead5a` · branch `main` · 2026-11-22 01:56 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1108,6 +1108,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | FaultKind | rate_limit_429 \| timeout \| actor_run_failed \| empty_dataset | `supabase/functions/_shared/apify-gateway.ts` |
 | ApifyRunStatus | READY \| RUNNING \| SUCCEEDED \| FAILED \| TIMING-OUT \| TIMED-OUT \| ABORTING \| ABORTED | `supabase/functions/_shared/apify-gateway.ts` |
 | ApolloRateReason | ok \| cooldown \| minute_limit \| daily_limit \| unavailable | `supabase/functions/_shared/apollo-cache.ts` |
+| UpsertStrategy | place_id \| name_source \| manual | `supabase/functions/_shared/companies-upsert.ts` |
 | ServicoCookie | lusha \| leadcontact \| linkedin | `supabase/functions/_shared/cookies.ts` |
 | HikerErrorClass | rate_limit \| server \| network \| client \| not_found \| auth \| timeout | `supabase/functions/_shared/hiker-client.ts` |
 | InstagramTargetType | profile \| posts \| hashtag \| comments | `supabase/functions/_shared/instagram-config-hash.ts` |
@@ -1769,6 +1770,7 @@ _nenhum item encontrado_
 | 20 | `src/hooks/useScheduledReports.ts` |
 | 200 | `src/hooks/useScrapeQueue.ts` |
 | 50 | `src/hooks/useWebhooks.ts` |
+| 1 | `supabase/functions/_shared/companies-upsert.ts` |
 | 1 | `supabase/functions/ai-agent/index.ts` |
 | 10 | `supabase/functions/ai-agent/index.ts` |
 | 5 | `supabase/functions/ai-agent/index.ts` |
@@ -2110,7 +2112,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1181 testes em 111 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1188 testes em 112 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2183,6 +2185,7 @@ _nenhum item encontrado_
 | `src/tests/load-stress.test.ts` | 7 | load-stress: motor de resiliência · processa 500 cenários em menos de 5s (throughput >= 100 cenários/s) · mantém sucesso >= 70% no agregado com política default · cenários client_4xx com failureRate 0.95 vão majoritariamente para DLQ (comportamento correto) … |
 | `supabase/functions/_shared/apify-gateway.test.ts` | 7 | fault: rate_limit_429 em startActorRun · fault: timeout em startActorRun respeita timeoutMs · fault: actor_run_failed marca run como FAILED e propaga no poll · fault: empty_dataset devolve [] em getDatasetItems … |
 | `supabase/functions/_shared/__tests__/chaos.stress.test.ts` | 7 | Chaos determinístico — stress · A1: Determinismo em 1.000 amostras · A2: Distribuição rate=0.01 em 20.000 tasks dentro de [0.005, 0.020] · A3: Bordas rate=0 e rate=1 em 500 tasks … |
+| `supabase/functions/_shared/__tests__/companies-upsert.test.ts` | 7 | upsertCompanies: usa place_id quando o banco aceita · upsertCompanies: cai para name_source quando place_id da 42P10 · upsertCompanies: sem constraint, insere quando a empresa ainda nao existe · upsertCompanies: sem constraint, atualiza quando a empresa ja existe … |
 | `supabase/functions/_shared/__tests__/places-fallback.test.ts` | 7 | placeToRow maps Places API place to gosom-compatible row · placeToRow tolerates places with only required fields · fetchPlacesResults returns null when API key is absent · fetchPlacesResults returns null when every keyword call fails … |
 | `src/components/lux/__tests__/EmptyState.test.tsx` | 6 | EmptyState · renders title and description · renders action button when actionLabel and onAction provided · renders multiple action buttons … |
 | `src/components/lux/__tests__/WorkflowCard.test.tsx` | 6 | WorkflowCard · renders workflow name and description · renders status badge · calls onToggleExpand when clicked … |

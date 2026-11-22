@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cadd1d6d64` · branch `main` · 2026-11-22 01:51 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3dd0aead5a` · branch `main` · 2026-11-22 01:56 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -164,6 +164,7 @@
 | `FaultKind` (TS) | rate_limit_429 \| timeout \| actor_run_failed \| empty_dataset |  | `supabase/functions/_shared/apify-gateway.ts` |
 | `ApifyRunStatus` (TS) | READY \| RUNNING \| SUCCEEDED \| FAILED \| TIMING-OUT \| TIMED-OUT \| ABORTING \| ABORTED |  | `supabase/functions/_shared/apify-gateway.ts` |
 | `ApolloRateReason` (TS) | ok \| cooldown \| minute_limit \| daily_limit \| unavailable |  | `supabase/functions/_shared/apollo-cache.ts` |
+| `UpsertStrategy` (TS) | place_id \| name_source \| manual |  | `supabase/functions/_shared/companies-upsert.ts` |
 | `ServicoCookie` (TS) | lusha \| leadcontact \| linkedin |  | `supabase/functions/_shared/cookies.ts` |
 | `HikerErrorClass` (TS) | rate_limit \| server \| network \| client \| not_found \| auth \| timeout |  | `supabase/functions/_shared/hiker-client.ts` |
 | `InstagramTargetType` (TS) | profile \| posts \| hashtag \| comments |  | `supabase/functions/_shared/instagram-config-hash.ts` |

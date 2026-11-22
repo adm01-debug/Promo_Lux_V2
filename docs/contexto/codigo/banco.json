@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 227,
+ "migrations": 228,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -5627,9 +5627,9 @@
    },
    "usada_no_front": 17,
    "usada_em_edges": [
+    "_shared",
     "admin-list-companies",
     "ai-agent",
-    "gmaps-proxy",
     "mcp",
     "oracle-search-decisors",
     "rls-tests",

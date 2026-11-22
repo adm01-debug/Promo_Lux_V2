@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42",
+  "commit": "3dd0aead5acbe3c6c0003974af95d1eb408b8066",
   "branch": "main",
-  "data_commit": "2026-11-21T22:51:03-03:00",
+  "data_commit": "2026-11-21T22:56:00-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "3dd0aea",
+    "data": "2026-11-21",
+    "assunto": "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)"
+   },
    {
     "sha": "cadd1d6",
     "data": "2026-11-21",
@@ -126,18 +131,13 @@
     "sha": "5f0ccec",
     "data": "2026-11-21",
     "assunto": "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)"
-   },
-   {
-    "sha": "cdb0c8b",
-    "data": "2026-11-21",
-    "assunto": "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)"
    }
   ],
-  "arquivos_mudados_7d": 125,
+  "arquivos_mudados_7d": 128,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 20
+    "mudancas": 22
    },
    {
     "pasta": "src/components/lux",
@@ -164,15 +164,15 @@
     "mudancas": 6
    },
    {
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 6
+   },
+   {
     "pasta": "src/integrations/supabase",
     "mudancas": 5
    },
    {
     "pasta": "supabase/config.toml",
-    "mudancas": 5
-   },
-   {
-    "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 5
    },
    {
@@ -219,7 +219,7 @@
    },
    {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-    "mudancas": 5
+    "mudancas": 6
    },
    {
     "arquivo": ".github/workflows/ci.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 86
+    "commits": 87
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1054,
-  "arquivos_codigo": 662,
-  "linhas_codigo": 114033,
+  "arquivos_total": 1057,
+  "arquivos_codigo": 664,
+  "linhas_codigo": 114339,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,9 +322,9 @@
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
-  "migrations": 227,
+  "migrations": 228,
   "cron_jobs": 30,
-  "testes": 125,
+  "testes": 126,
   "workflows": 9,
   "scripts": 50,
   "docs_md": 81
@@ -587,8 +587,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 127,
-   "linhas": 22922
+   "arquivos": 129,
+   "linhas": 23227
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -600,7 +600,7 @@
   },
   "vitest.config.ts": {
    "arquivos": 1,
-   "linhas": 71
+   "linhas": 72
   }
  },
  "maiores_arquivos": [
@@ -642,7 +642,7 @@
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 841
+   "linhas": 843
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
@@ -662,7 +662,7 @@
   },
   {
    "arquivo": "supabase/functions/workflow-engine/index.ts",
-   "linhas": 708
+   "linhas": 714
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",

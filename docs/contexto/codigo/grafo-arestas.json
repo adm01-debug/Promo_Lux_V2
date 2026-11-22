@@ -2246,6 +2246,7 @@
   ],
   "supabase/functions/gmaps-proxy/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",
+   "supabase/functions/_shared/companies-upsert.ts",
    "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/domain/ipc/scoring.ts",
    "supabase/functions/_shared/gmaps-mapper.ts",
@@ -2359,6 +2360,9 @@
   "supabase/functions/webhook-dispatcher/index.ts": [
    "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/ssrf-guard.ts"
+  ],
+  "supabase/functions/workflow-engine/index.ts": [
+   "supabase/functions/_shared/companies-upsert.ts"
   ]
  }
 }

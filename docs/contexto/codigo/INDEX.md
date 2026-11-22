@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42` (2026-11-21T22:51:03-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `3dd0aead5acbe3c6c0003974af95d1eb408b8066` (2026-11-21T22:56:00-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (636), SQL (231), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (638), SQL (232), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1054 |
-| arquivos_codigo | 662 |
-| linhas_codigo | 114033 |
+| arquivos_total | 1057 |
+| arquivos_codigo | 664 |
+| linhas_codigo | 114339 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -46,9 +46,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 84 |
 | edge_functions | 60 |
 | tabelas | 105 |
-| migrations | 227 |
+| migrations | 228 |
 | cron_jobs | 30 |
-| testes | 125 |
+| testes | 126 |
 | workflows | 9 |
 | scripts | 50 |
 | docs_md | 81 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (228), src/pages (9), src/contexts (3)
 - hooks: src/hooks (77), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (38), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (80), e2e/ (19), co-localizado (*.test) (16)
+- testes: co-localizado (__tests__) (81), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/sql (3)
@@ -137,7 +137,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `email-poll-replies` — tabelas: email_accounts, email_sync_log; chamada por 1 arquivo(s) do front, por SQL/cron
 - `email-verify` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `gmaps-places-search` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
-- `gmaps-proxy` — tabelas: companies, idempotency_keys, ipc_config, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front, por SQL/cron
+- `gmaps-proxy` — tabelas: idempotency_keys, ipc_config, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front, por SQL/cron
 - `health` — tabelas: health_checks, organizations; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-connection-status` — tabelas: -; chamada por 1 arquivo(s) do front
 - `instagram-dlq-replay` — tabelas: organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -242,8 +242,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6744 nós · 14560 arestas · 564 comunidades · grafo do commit `cadd1d6d`
-- comunidades maiores: Monitoring.tsx (183), react (173), cn (148), snapshot.py (108), withOrg.ts (95), lucide-react (86), CompaniesView.tsx (83), gerar.mjs (80), JobDetailsSheet.tsx (78), generate.py (71), Login.tsx (70), useActiveOrganization (68)
+- 6759 nós · 14584 arestas · 592 comunidades · grafo do commit `3dd0aead`
+- comunidades maiores: lucide-react (152), OrganizationsView.tsx (132), cn (114), button.tsx (100), ref_node_fs (87), gerar.mjs (80), generate.py (75), OrgViolationsView.tsx (71), lushaMocks.ts (68), hooks/use-toast.ts (68), react (67), LushaIntelligenceView.tsx (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -253,7 +253,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/edge-tests-daily.yml (6)
 - AGENTS.md (6)
 - supabase/config.toml (6)
-- supabase/functions/gmaps-proxy/index.ts (5)
+- supabase/functions/gmaps-proxy/index.ts (6)
 - .github/workflows/ci.yml (4)
 - .github/workflows/db-migrations.yml (4)
 - scripts/ci/eslint-baseline.json (4)
@@ -356,6 +356,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `3dd0aea` fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)
 - 2026-11-21 `cadd1d6` chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)
 - 2026-11-21 `57edd92` feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)
 - 2026-11-21 `c14eeb4` fix(db): claim_instagram_job volta a reservar jobs do worker (#111)
@@ -370,7 +371,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `ab467da` fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)
 - 2026-11-21 `ef039bf` fix: fecha RLS cross-tenant em dashboard_layouts (#105)
 - 2026-11-21 `8723328` fix: grant execute de refresh_org_scores para authenticated (#104)
-- 2026-11-21 `4931d9e` feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

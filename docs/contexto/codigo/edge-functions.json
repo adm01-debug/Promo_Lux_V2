@@ -23,6 +23,7 @@
   "supabase/functions/_shared/__tests__/chaos.chi2.test.ts",
   "supabase/functions/_shared/__tests__/chaos.stress.test.ts",
   "supabase/functions/_shared/__tests__/chaos.test.ts",
+  "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
   "supabase/functions/_shared/__tests__/cron-auth.test.ts",
   "supabase/functions/_shared/__tests__/dns-guard.test.ts",
   "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
@@ -49,6 +50,7 @@
   "supabase/functions/_shared/apollo-departments.ts",
   "supabase/functions/_shared/bitrix-client.ts",
   "supabase/functions/_shared/circuit-breaker.ts",
+  "supabase/functions/_shared/companies-upsert.ts",
   "supabase/functions/_shared/company-domain.ts",
   "supabase/functions/_shared/cookies.ts",
   "supabase/functions/_shared/cron-auth.ts",
@@ -736,7 +738,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 841,
+   "linhas": 843,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -745,7 +747,6 @@
     "POST"
    ],
    "tabelas": [
-    "companies",
     "idempotency_keys",
     "ipc_config",
     "notifications",
@@ -770,6 +771,7 @@
    ],
    "usa_shared": [
     "circuit-breaker.ts",
+    "companies-upsert.ts",
     "cron-auth.ts",
     "gmaps-mapper.ts",
     "org-membership.ts",
@@ -2224,7 +2226,7 @@
    "nome": "workflow-engine",
    "entrada": "supabase/functions/workflow-engine/index.ts",
    "arquivos": 1,
-   "linhas": 708,
+   "linhas": 714,
    "verify_jwt": true,
    "metodos": [
     "GET",
@@ -2257,7 +2259,9 @@
     "lux-ai-company-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "companies-upsert.ts"
+   ],
    "chamada_pelo_front": [
     "src/lib/api/workflows.ts"
    ],
