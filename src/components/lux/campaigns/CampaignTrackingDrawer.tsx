@@ -122,6 +122,8 @@ export const CampaignTrackingDrawer = ({
         variant: string; recipients: number; sent: number; opened: number;
         clicked: number; replied: number; bounced: number;
         open_rate: number | null; click_rate: number | null; reply_rate: number | null;
+        p_value: number | null; lift_pct: number | null;
+        is_significant: boolean; is_winner: boolean;
       }>;
     },
   });
@@ -133,7 +135,9 @@ export const CampaignTrackingDrawer = ({
     queryFn: async () => {
       const { data, error } = await supabase
         .from("campaigns")
-        .select("ab_test_enabled,ab_winner_metric,ab_winner_variant,ab_winner_decided_at")
+        .select(
+          "ab_test_enabled,ab_winner_metric,ab_winner_variant,ab_winner_decided_at,ab_winner_p_value,ab_winner_lift,ab_winner_reason,ab_min_sample,ab_min_confidence",
+        )
         .eq("id", campaignId!)
         .maybeSingle();
       if (error) throw error;
@@ -142,21 +146,27 @@ export const CampaignTrackingDrawer = ({
         ab_winner_metric: string;
         ab_winner_variant: string | null;
         ab_winner_decided_at: string | null;
+        ab_winner_p_value: number | null;
+        ab_winner_lift: number | null;
+        ab_winner_reason: string | null;
+        ab_min_sample: number;
+        ab_min_confidence: number;
       } | null;
     },
   });
 
   const hasAbTest = abStats.length > 1;
-  // Vencedora: prioriza a decisão automática persistida; senão calcula localmente
-  // (maior reply_rate, com open_rate como desempate).
-  const winner =
-    abConfig?.ab_winner_variant ??
-    (hasAbTest
-      ? [...abStats].sort(
-          (a, b) => (b.reply_rate ?? 0) - (a.reply_rate ?? 0) || (b.open_rate ?? 0) - (a.open_rate ?? 0),
-        )[0]?.variant
-      : null);
-
+  // Vencedora OFICIAL: só a decisão persistida pelo banco, que exige
+  // significância estatística (p <= 1 - ab_min_confidence). Nunca é inferida
+  // no cliente: taxa maior com amostra pequena é ruído, não vitória.
+  const winner = abConfig?.ab_winner_variant ?? null;
+  // Líder provisório pela métrica, só para orientar a leitura da tabela.
+  const leader = hasAbTest
+    ? [...abStats].sort(
+        (a, b) => (b.reply_rate ?? 0) - (a.reply_rate ?? 0) || (b.open_rate ?? 0) - (a.open_rate ?? 0),
+      )[0]?.variant ?? null
+    : null;
+  const minConfidence = abConfig?.ab_min_confidence ?? 0.95;
 
 
   const sent = recipients.filter((r) => r.sent_at).length;
@@ -201,32 +211,65 @@ export const CampaignTrackingDrawer = ({
         {hasAbTest && (
           <section className="mt-6">
             <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Teste A/B por variante</h3>
-            {abConfig?.ab_winner_variant && abConfig.ab_winner_decided_at && (
-              <p className="text-[11px] text-primary mb-2">
-                Vencedora <strong>{abConfig.ab_winner_variant}</strong> definida automaticamente em{" "}
-                {new Date(abConfig.ab_winner_decided_at).toLocaleString("pt-BR", {
-                  day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
-                })}{" "}
-                (métrica: {abConfig.ab_winner_metric}).
+            {abConfig?.ab_winner_variant && abConfig.ab_winner_decided_at ? (
+              <>
+                <p className="text-[11px] text-primary mb-2">
+                  Vencedora <strong>{abConfig.ab_winner_variant}</strong> definida em{" "}
+                  {new Date(abConfig.ab_winner_decided_at).toLocaleString("pt-BR", {
+                    day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+                  })}{" "}
+                  (métrica: {abConfig.ab_winner_metric}
+                  {abConfig.ab_winner_p_value != null && (
+                    <>
+                      , p-valor {abConfig.ab_winner_p_value.toFixed(4)}
+                      {abConfig.ab_winner_lift != null && <> , ganho {abConfig.ab_winner_lift.toFixed(1)}%</>}
+                    </>
+                  )}
+                  ).
+                </p>
+                {abConfig.ab_winner_reason && (
+                  <p className="text-[10px] text-muted-foreground mb-2">{abConfig.ab_winner_reason}</p>
+                )}
+              </>
+            ) : hasAbTest ? (
+              <p className="text-[11px] text-muted-foreground mb-2">
+                Sem significância estatística ainda — o teste segue dividindo o tráfego. Só há vencedora quando o
+                p-valor fica abaixo de {(1 - minConfidence).toFixed(2)} e cada variante tem no mínimo{" "}
+                {abConfig?.ab_min_sample ?? 20} envios.
+                {leader && <> Líder provisório: <strong>{leader}</strong>.</>}
               </p>
-            )}
+            ) : null}
             <div className="space-y-2">
               {abStats.map((v) => (
                 <div
                   key={v.variant}
-                  className={`glass rounded-lg p-3 ${v.variant === winner ? "ring-1 ring-primary/60" : ""}`}
+                  className={`glass rounded-lg p-3 ${
+                    v.variant === winner
+                      ? "ring-1 ring-primary/60"
+                      : v.variant === leader
+                        ? "ring-1 ring-border"
+                        : ""
+                  }`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Badge variant={v.variant === winner ? "default" : "outline"} className="h-5">
                         Variante {v.variant}
                       </Badge>
-                      {v.variant === winner && (
+                      {v.variant === winner ? (
                         <span className="text-[10px] uppercase tracking-widest text-primary">Vencedora</span>
-                      )}
+                      ) : v.variant === leader ? (
+                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                          Líder provisório
+                        </span>
+                      ) : null}
                     </div>
                     <span className="text-[10px] text-muted-foreground font-mono">
                       {v.sent}/{v.recipients} enviados
+                      {v.p_value != null && <> · p {v.p_value.toFixed(4)}</>}
+                      {v.lift_pct != null && v.variant !== leader && (
+                        <> · {v.lift_pct > 0 ? "+" : ""}{v.lift_pct.toFixed(1)}%</>
+                      )}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center">
