@@ -4,7 +4,7 @@
  "stack": {
   "linguagens": [
    "TypeScript (636)",
-   "SQL (229)",
+   "SQL (230)",
    "Markdown (81)",
    "JSON (38)",
    "JavaScript (22)",
@@ -489,7 +489,7 @@
   {
    "arquivo": "docs/ESTADO_ATUAL.md",
    "titulo": "ESTADO ATUAL DO SISTEMA — LUX IA",
-   "linhas": 176
+   "linhas": 179
   },
   {
    "arquivo": "docs/FUNCIONALIDADES.md",

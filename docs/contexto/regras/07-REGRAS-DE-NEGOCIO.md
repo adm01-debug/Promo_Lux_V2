@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e7ba9e274f` · branch `main` · 2026-11-22 01:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c14eeb4071` · branch `main` · 2026-11-22 01:40 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1719,6 +1719,8 @@ _nenhum item encontrado_
 | `DELETE FROM public.workflows WHERE deleted_at IS NOT NULL AND deleted_at < now() - interval '30 days';` | `supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql` |
 | `RETURN QUERY SELECT (v_count <= _limit)::boolean, v_count, (v_window + interval '1 hour');` | `supabase/migrations/20261121120000_api_key_rate_limit.sql` |
 | `and v_sh.last_contacted_at > now() - interval '30 days';` | `supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql` |
+| `(public.sla_deadline(q.created_at, q.sla_seconds) <= now() + interval '30 seconds') AS breaching,` | `supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql` |
+| `ORDER BY (public.sla_deadline(q.created_at, q.sla_seconds) <= now() + interval '30 seconds') DESC,` | `supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql` |
 
 ### H.3 Limites de paginação
 

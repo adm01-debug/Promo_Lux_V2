@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e7ba9e274f2901b7c45679713356f5c97ec6a8bd",
+  "commit": "c14eeb4071387257ea298b04af33add631a98399",
   "branch": "main",
-  "data_commit": "2026-11-21T22:15:06-03:00",
+  "data_commit": "2026-11-21T22:39:55-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c14eeb4",
+    "data": "2026-11-21",
+    "assunto": "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)"
+   },
+   {
+    "sha": "4bfa973",
+    "data": "2026-11-21",
+    "assunto": "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)"
+   },
    {
     "sha": "e7ba9e2",
     "data": "2026-11-21",
@@ -121,19 +131,9 @@
     "sha": "04bf647",
     "data": "2026-11-21",
     "assunto": "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)"
-   },
-   {
-    "sha": "9e7af30",
-    "data": "2026-11-21",
-    "assunto": "fix(migrations): remove BOM das migrations que quebravam o Supabase Preview (#89)"
-   },
-   {
-    "sha": "ba9db20",
-    "data": "2026-11-21",
-    "assunto": "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)"
    }
   ],
-  "arquivos_mudados_7d": 122,
+  "arquivos_mudados_7d": 123,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 82
+    "commits": 84
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1051,
+  "arquivos_total": 1052,
   "arquivos_codigo": 662,
   "linhas_codigo": 114033,
   "rotas": 10,
@@ -322,7 +322,7 @@
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
-  "migrations": 225,
+  "migrations": 226,
   "cron_jobs": 29,
   "testes": 125,
   "workflows": 9,

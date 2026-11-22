@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e7ba9e274f2901b7c45679713356f5c97ec6a8bd` (2026-11-21T22:15:06-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c14eeb4071387257ea298b04af33add631a98399` (2026-11-21T22:39:55-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (636), SQL (229), Markdown (81), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
+- linguagens: TypeScript (636), SQL (230), Markdown (81), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1051 |
+| arquivos_total | 1052 |
 | arquivos_codigo | 662 |
 | linhas_codigo | 114033 |
 | rotas | 10 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 84 |
 | edge_functions | 60 |
 | tabelas | 105 |
-| migrations | 225 |
+| migrations | 226 |
 | cron_jobs | 29 |
 | testes | 125 |
 | workflows | 9 |
@@ -241,8 +241,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6738 nós · 14557 arestas · 585 comunidades · grafo do commit `e7ba9e27`
-- comunidades maiores: react (112), badge.tsx (100), @tanstack/react-query (87), gerar.mjs (80), cn (77), generate.py (75), DashboardView.tsx (72), OAuthSandboxPanel.tsx (68), dependencies (65), campaign-dispatch/index.ts (64), framer-motion (64), IntentSignalsView.tsx (63)
+- 6741 nós · 14559 arestas · 581 comunidades · grafo do commit `c14eeb40`
+- comunidades maiores: react (157), Monitoring.tsx (144), @tanstack/react-query (135), snapshot.py (102), JobDetailsSheet.tsx (99), LushaIntelligenceView.tsx (90), lucide-react (89), OrganizationsView.tsx (89), gerar.mjs (80), cn (76), ref_node_fs (67), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -336,7 +336,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/AUDITORIA_FIRECRAWL.md` — Auditoria de Paridade — LUX IA vs Firecrawl (199 linhas)
 - `docs/AUDITORIA_TECNICA_SCORECARD.md` (223 linhas)
 - `docs/AUTOMACAO_LOCAL.md` — Automação local — Promo_Lux_V2 (111 linhas)
-- `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (176 linhas)
+- `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (179 linhas)
 - `docs/FUNCIONALIDADES.md` — LUX IA — Análise Executiva de Funcionalidades (455 linhas)
 - `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (408 linhas)
 - `docs/LGPD.md` — 🛡️ Relatório de Conformidade LGPD — LUX IA (45 linhas)
@@ -355,6 +355,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `c14eeb4` fix(db): claim_instagram_job volta a reservar jobs do worker (#111)
+- 2026-11-21 `4bfa973` docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)
 - 2026-11-21 `e7ba9e2` fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)
 - 2026-11-21 `3c37882` fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)
 - 2026-11-21 `443ff87` fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)
@@ -368,8 +370,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `4931d9e` feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)
 - 2026-11-21 `7432455` feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)
 - 2026-11-21 `bb305ef` chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)
-- 2026-11-21 `cb0dbe3` docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)
-- 2026-11-21 `6cea020` fix(docs): decodifica auth.md que estava gravado em base64 (#100)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

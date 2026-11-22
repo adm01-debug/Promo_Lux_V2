@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)",
+   "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)",
    "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)",
    "fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)",
-   "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)",
-   "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)",
-   "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)"
+   "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)"
   ]
  },
  "pr_template": null,
