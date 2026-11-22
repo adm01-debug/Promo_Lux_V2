@@ -891,7 +891,7 @@
    "nome": "instagram-enqueue",
    "entrada": "supabase/functions/instagram-enqueue/index.ts",
    "arquivos": 1,
-   "linhas": 146,
+   "linhas": 144,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1686,7 +1686,7 @@
    "nome": "rls-tests",
    "entrada": "supabase/functions/rls-tests/index.ts",
    "arquivos": 2,
-   "linhas": 707,
+   "linhas": 706,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"

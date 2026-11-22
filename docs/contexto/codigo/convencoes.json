@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(edge): restaura auth de 6 functions quebradas por getClaims inexistente (#110)",
    "fix(extracao): grava organization_id nos jobs criados via service_role (#107)",
    "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)",
    "fix: fecha RLS cross-tenant em dashboard_layouts (#105)",
-   "fix: grant execute de refresh_org_scores para authenticated (#104)",
-   "feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)"
+   "fix: grant execute de refresh_org_scores para authenticated (#104)"
   ]
  },
  "pr_template": null,
