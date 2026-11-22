@@ -1659,11 +1659,48 @@ export type Database = {
           subject_email?: string
           subject_name?: string | null
           subject_user_id?: string | null
-          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "data_subject_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pii_redaction_rules: {
+        Row: {
+          action: string
+          category: string
+          created_at: string
+          enabled: boolean
+          id: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          action?: string
+          category: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          category?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pii_redaction_rules_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -5461,6 +5498,72 @@ export type Database = {
           subject_email: string
           subject_name: string
         }[]
+      }
+      list_pii_rules: {
+        Args: { _org_id: string }
+        Returns: {
+          action: string
+          category: string
+          enabled: boolean
+        }[]
+      }
+      pii_active_rules: {
+        Args: { _org_id: string }
+        Returns: {
+          action: string
+          category: string
+        }[]
+      }
+      pii_apply_category: {
+        Args: { _action: string; _category: string; _value: string }
+        Returns: string
+      }
+      pii_hash: { Args: { _value: string }; Returns: string }
+      pii_redact_jsonb: {
+        Args: { _data: Json; _org_id: string }
+        Returns: Json
+      }
+      pii_redact_text: {
+        Args: { _org_id: string; _value: string }
+        Returns: string
+      }
+      pii_regex: { Args: { _category: string }; Returns: string }
+      pii_scan: {
+        Args: { _org_id: string }
+        Returns: {
+          category: string
+          column_name: string
+          rows_total: number
+          rows_with_pii: number
+          table_name: string
+        }[]
+      }
+      read_audit_logs_safe: {
+        Args: {
+          _action?: string
+          _limit?: number
+          _org_id: string
+          _table_name?: string
+        }
+        Returns: {
+          action: string
+          created_at: string
+          id: string
+          new_data: Json
+          old_data: Json
+          record_id: string
+          table_name: string
+          user_id: string
+        }[]
+      }
+      set_pii_rule: {
+        Args: {
+          _action?: string
+          _category: string
+          _enabled?: boolean
+          _org_id: string
+        }
+        Returns: boolean
       }
       advance_recipient_step: {
         Args: {
