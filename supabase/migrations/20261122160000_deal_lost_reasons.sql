@@ -124,5 +124,11 @@ BEGIN
 END;
 $$;
 
+-- Sem GRANT o PostgREST responde "permission denied" mesmo com RLS e policy
+-- corretas (RLS filtra linhas, GRANT libera a tabela).
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.deal_lost_reasons TO authenticated;
+GRANT ALL ON public.deal_lost_reasons TO service_role;
+GRANT SELECT ON public.deal_lost_reason_stats TO authenticated;
+GRANT SELECT ON public.deal_lost_reason_stats TO service_role;
 REVOKE EXECUTE ON FUNCTION public.seed_default_lost_reasons(uuid) FROM anon;
 GRANT EXECUTE ON FUNCTION public.seed_default_lost_reasons(uuid) TO authenticated;
