@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9e9f9639cddb91d19aba3c8f5484978e189666b6",
+  "commit": "5c14e83c38f63eb0e7d820996296aa56e639c889",
   "branch": "main",
-  "data_commit": "2026-11-22T10:33:46-03:00",
+  "data_commit": "2026-11-22T11:27:01-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5c14e83",
+    "data": "2026-11-22",
+    "assunto": "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)"
+   },
    {
     "sha": "9e9f963",
     "data": "2026-11-22",
@@ -126,14 +131,9 @@
     "sha": "99a180a",
     "data": "2026-11-21",
     "assunto": "fix(extracao): grava organization_id nos jobs criados via service_role (#107)"
-   },
-   {
-    "sha": "ab467da",
-    "data": "2026-11-21",
-    "assunto": "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)"
    }
   ],
-  "arquivos_mudados_7d": 185,
+  "arquivos_mudados_7d": 187,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -160,16 +160,20 @@
     "mudancas": 7
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "pasta": "AGENTS.md",
+    "mudancas": 7
    },
    {
-    "pasta": "AGENTS.md",
+    "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
     "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 6
+   },
+   {
+    "pasta": "docs/ESTADO_ATUAL.md",
+    "mudancas": 5
    },
    {
     "pasta": "supabase/config.toml",
@@ -181,10 +185,6 @@
    },
    {
     "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 4
-   },
-   {
-    "pasta": "docs/ESTADO_ATUAL.md",
     "mudancas": 4
    },
    {
@@ -206,11 +206,11 @@
     "mudancas": 15
    },
    {
-    "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "arquivo": "AGENTS.md",
+    "mudancas": 7
    },
    {
-    "arquivo": "AGENTS.md",
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -222,15 +222,15 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 4
    },
    {
     "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/ESTADO_ATUAL.md",
     "mudancas": 4
    },
    {
@@ -266,6 +266,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "docs/agentes/lovable-deploy.md",
+    "mudancas": 3
+   },
+   {
     "arquivo": "docs/agentes/mapa-repo.md",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/scrape-queue-worker/index.ts",
     "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 99
+    "commits": 100
    },
    {
     "autor": "dependabot[bot]",

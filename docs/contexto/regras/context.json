@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "9e9f9639cddb91d19aba3c8f5484978e189666b6",
+  "sha": "5c14e83c38f63eb0e7d820996296aa56e639c889",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 13:35 UTC",
+  "generated_at": "2026-11-22 14:29 UTC",
   "files_total": 1120,
   "code_files": 944,
   "code_lines": 138672
@@ -95730,10 +95730,22 @@
   }
  },
  "git": {
-  "sha": "9e9f9639cddb91d19aba3c8f5484978e189666b6",
+  "sha": "5c14e83c38f63eb0e7d820996296aa56e639c889",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5c14e83",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)",
+    "files": [
+     "AGENTS.md",
+     "docs/ESTADO_ATUAL.md",
+     "docs/agentes/lovable-deploy.md",
+     "docs/estado/04-integracoes.md"
+    ]
+   },
    {
     "sha": "9e9f963",
     "date": "2026-11-22",
@@ -96107,18 +96119,13 @@
      "supabase/functions/send-scheduled-reports/index.ts",
      "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
     ]
-   },
-   {
-    "sha": "bb305ef",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)",
-    "files": [
-     "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
-    ]
    }
   ],
   "hot_files": [
+   [
+    "docs/ESTADO_ATUAL.md",
+    4
+   ],
    [
     "docs/GAPS-ENTERPRISE.md",
     4
@@ -96129,10 +96136,6 @@
    ],
    [
     "src/integrations/supabase/types.ts",
-    3
-   ],
-   [
-    "docs/ESTADO_ATUAL.md",
     3
    ],
    [
@@ -96172,6 +96175,18 @@
     2
    ],
    [
+    "AGENTS.md",
+    1
+   ],
+   [
+    "docs/agentes/lovable-deploy.md",
+    1
+   ],
+   [
+    "docs/estado/04-integracoes.md",
+    1
+   ],
+   [
     ".env.test",
     1
    ],
@@ -96185,18 +96200,6 @@
    ],
    [
     "supabase/functions/admin-list-companies/index.ts",
-    1
-   ],
-   [
-    "package.json",
-    1
-   ],
-   [
-    "scripts/patch-mcp-plugin.mjs",
-    1
-   ],
-   [
-    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
     1
    ]
   ]

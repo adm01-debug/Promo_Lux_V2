@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9e9f9639cddb91d19aba3c8f5484978e189666b6` (2026-11-22T10:33:46-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5c14e83c38f63eb0e7d820996296aa56e639c889` (2026-11-22T11:27:01-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -245,7 +245,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7083 nós · 15569 arestas · 604 comunidades · grafo do commit `9e9f9639`
+- 7083 nós · 15569 arestas · 604 comunidades · grafo do commit `5c14e83c`
 - comunidades maiores: lucide-react (155), button.tsx (139), cn (135), react (95), @tanstack/react-query (89), gerar.mjs (80), utils.ts (73), generate.py (71), vitest (70), campaign-dispatch/index.ts (67), CompaniesView.tsx (66), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -253,13 +253,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (17)
 - package.json (15)
+- AGENTS.md (7)
 - .github/workflows/edge-tests-daily.yml (6)
-- AGENTS.md (6)
 - supabase/config.toml (6)
 - supabase/functions/gmaps-proxy/index.ts (6)
+- docs/ESTADO_ATUAL.md (5)
 - .github/workflows/ci.yml (4)
 - .github/workflows/db-migrations.yml (4)
-- docs/ESTADO_ATUAL.md (4)
 - docs/GAPS-ENTERPRISE.md (4)
 - scripts/automation.config.json (4)
 - scripts/ci/eslint-baseline.json (4)
@@ -361,6 +361,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-22 `5c14e83` docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)
 - 2026-11-22 `9e9f963` fix(seguranca): troca token admin vazado por JWT + papel admin (#144)
 - 2026-11-22 `b3ecb1b` fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)
 - 2026-11-22 `fddbb4f` feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)
@@ -375,7 +376,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `bccf303` feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)
 - 2026-11-21 `3dd0aea` fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)
 - 2026-11-21 `cadd1d6` chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)
-- 2026-11-21 `57edd92` feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
