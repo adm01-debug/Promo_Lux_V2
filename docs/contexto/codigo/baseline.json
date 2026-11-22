@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5c14e83c38f63eb0e7d820996296aa56e639c889",
+  "commit": "4df75d32cc4552131a2ba7ffcc1e74362847f221",
   "branch": "main",
-  "data_commit": "2026-11-22T11:27:01-03:00",
+  "data_commit": "2026-11-22T12:43:27-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "4df75d3",
+    "data": "2026-11-22",
+    "assunto": "chore: remove artefatos temporarios commitados por engano na #146 (#147)"
+   },
+   {
+    "sha": "f9cdd00",
+    "data": "2026-11-22",
+    "assunto": "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)"
+   },
    {
     "sha": "5c14e83",
     "data": "2026-11-22",
@@ -121,19 +131,9 @@
     "sha": "c45eec0",
     "data": "2026-11-21",
     "assunto": "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)"
-   },
-   {
-    "sha": "31805c5",
-    "data": "2026-11-21",
-    "assunto": "fix(edge): restaura auth de 6 functions quebradas por getClaims inexistente (#110)"
-   },
-   {
-    "sha": "99a180a",
-    "data": "2026-11-21",
-    "assunto": "fix(extracao): grava organization_id nos jobs criados via service_role (#107)"
    }
   ],
-  "arquivos_mudados_7d": 187,
+  "arquivos_mudados_7d": 191,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -152,16 +152,16 @@
     "mudancas": 15
    },
    {
-    "pasta": "src/integrations/supabase",
+    "pasta": ".gitignore",
     "mudancas": 8
    },
    {
-    "pasta": ".gitignore",
-    "mudancas": 7
+    "pasta": "AGENTS.md",
+    "mudancas": 8
    },
    {
-    "pasta": "AGENTS.md",
-    "mudancas": 7
+    "pasta": "src/integrations/supabase",
+    "mudancas": 8
    },
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
@@ -173,6 +173,10 @@
    },
    {
     "pasta": "docs/ESTADO_ATUAL.md",
+    "mudancas": 5
+   },
+   {
+    "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 5
    },
    {
@@ -188,11 +192,7 @@
     "mudancas": 4
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 4
-   },
-   {
-    "pasta": "scripts/automation.config.json",
+    "pasta": "docs/agentes/lovable-deploy.md",
     "mudancas": 4
    }
   ],
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
@@ -226,6 +226,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 4
    },
@@ -234,7 +238,7 @@
     "mudancas": 4
    },
    {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "arquivo": "docs/agentes/lovable-deploy.md",
     "mudancas": 4
    },
    {
@@ -263,10 +267,6 @@
    },
    {
     "arquivo": "docs/agentes/github-ci.md",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "docs/agentes/lovable-deploy.md",
     "mudancas": 3
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 100
+    "commits": 102
    },
    {
     "autor": "dependabot[bot]",

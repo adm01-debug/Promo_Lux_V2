@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore: remove artefatos temporarios commitados por engano na #146 (#147)",
+   "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)",
    "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)",
    "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)",
-   "fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)",
-   "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)",
-   "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)"
+   "fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)"
   ]
  },
  "pr_template": null,
