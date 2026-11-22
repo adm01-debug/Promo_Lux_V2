@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "7a94840a0ccc3d3a2de218bb27b4be1cb68a1271",
+  "sha": "c07fc7df438d46fce7942abc52e79200c61b8bd2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 02:39 UTC",
+  "generated_at": "2026-11-22 02:56 UTC",
   "files_total": 1079,
   "code_files": 903,
   "code_lines": 130641
@@ -86944,10 +86944,19 @@
   }
  },
  "git": {
-  "sha": "7a94840a0ccc3d3a2de218bb27b4be1cb68a1271",
+  "sha": "c07fc7df438d46fce7942abc52e79200c61b8bd2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c07fc7d",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "docs: atualiza o backlog com o estado medido do banco (#123)",
+    "files": [
+     "docs/ESTADO_ATUAL.md"
+    ]
+   },
    {
     "sha": "7a94840",
     "date": "2026-11-21",
@@ -87280,21 +87289,16 @@
      "supabase/config.toml",
      "supabase/functions/cnpj-enrich-worker/index.ts"
     ]
-   },
-   {
-    "sha": "be2d500",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)",
-    "files": [
-     ".github/workflows/edge-functions-deploy.yml"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/functions/gmaps-proxy/index.ts",
     5
+   ],
+   [
+    "docs/ESTADO_ATUAL.md",
+    3
    ],
    [
     "supabase/functions/scrape-queue-worker/index.ts",
@@ -87306,10 +87310,6 @@
    ],
    [
     "vitest.config.ts",
-    2
-   ],
-   [
-    "docs/ESTADO_ATUAL.md",
     2
    ],
    [

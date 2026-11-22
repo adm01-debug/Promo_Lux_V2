@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7a94840a0ccc3d3a2de218bb27b4be1cb68a1271` (2026-11-21T23:39:08-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c07fc7df438d46fce7942abc52e79200c61b8bd2` (2026-11-21T23:47:47-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -242,7 +242,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6779 nós · 14671 arestas · 579 comunidades · grafo do commit `7a94840a`
+- 6779 nós · 14671 arestas · 579 comunidades · grafo do commit `c07fc7df`
 - comunidades maiores: Monitoring.tsx (153), react (151), snapshot.py (102), framer-motion (98), @tanstack/react-query (97), utils.ts (91), cn (85), gerar.mjs (80), lushaMocks.ts (71), OAuthSandboxPanel.tsx (68), ref_node_fs (67), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -260,9 +260,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/contexto.yml (3)
 - .github/workflows/inventario-estado-semanal.yml (3)
 - .husky/pre-commit (3)
+- docs/ESTADO_ATUAL.md (3)
 - docs/agentes/github-ci.md (3)
 - docs/agentes/mapa-repo.md (3)
-- docs/prod-readiness.md (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -337,7 +337,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/AUDITORIA_FIRECRAWL.md` — Auditoria de Paridade — LUX IA vs Firecrawl (199 linhas)
 - `docs/AUDITORIA_TECNICA_SCORECARD.md` (223 linhas)
 - `docs/AUTOMACAO_LOCAL.md` — Automação local — Promo_Lux_V2 (111 linhas)
-- `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (179 linhas)
+- `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (181 linhas)
 - `docs/FUNCIONALIDADES.md` — LUX IA — Análise Executiva de Funcionalidades (455 linhas)
 - `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (408 linhas)
 - `docs/LGPD.md` — 🛡️ Relatório de Conformidade LGPD — LUX IA (45 linhas)
@@ -356,6 +356,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `c07fc7d` docs: atualiza o backlog com o estado medido do banco (#123)
 - 2026-11-21 `7a94840` feat(ui): verificação de entregabilidade do e-mail do contato (#122)
 - 2026-11-21 `1cd082b` feat(ui): expõe o checker de entregabilidade na conta de e-mail (#121)
 - 2026-11-21 `bccf303` feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)
@@ -370,7 +371,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `77b7e67` fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)
 - 2026-11-21 `c45eec0` chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)
 - 2026-11-21 `31805c5` fix(edge): restaura auth de 6 functions quebradas por getClaims inexistente (#110)
-- 2026-11-21 `99a180a` fix(extracao): grava organization_id nos jobs criados via service_role (#107)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

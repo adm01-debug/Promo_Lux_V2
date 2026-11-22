@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7a94840a0ccc3d3a2de218bb27b4be1cb68a1271",
+  "commit": "c07fc7df438d46fce7942abc52e79200c61b8bd2",
   "branch": "main",
-  "data_commit": "2026-11-21T23:39:08-03:00",
+  "data_commit": "2026-11-21T23:47:47-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c07fc7d",
+    "data": "2026-11-21",
+    "assunto": "docs: atualiza o backlog com o estado medido do banco (#123)"
+   },
    {
     "sha": "7a94840",
     "data": "2026-11-21",
@@ -126,11 +131,6 @@
     "sha": "e5ef06d",
     "data": "2026-11-21",
     "assunto": "fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)"
-   },
-   {
-    "sha": "9f6188b",
-    "data": "2026-11-21",
-    "assunto": "docs: reescreve ESTADO_ATUAL.md com medicao de 21/11, nao de agosto (#99)"
    }
   ],
   "arquivos_mudados_7d": 134,
@@ -246,6 +246,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 3
+   },
+   {
     "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/edge-functions-deploy.yml",
     "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/production-smoke.yml",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 90
+    "commits": 91
    },
    {
     "autor": "dependabot[bot]",
