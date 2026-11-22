@@ -66,3 +66,27 @@ ja estao implementadas e em uso.
     `lusha_contacts_search_sessions_org_idem`...), cobertura equivalente.
 - Unico caso real de "registrada sem efeito": `20260718140000`, resolvido pela PR #108.
 - RLS: **0 tabelas** sem RLS em `public` e **0** com RLS ligado e nenhuma politica.
+
+## 7. Gap REAL: steps de workflow sao decorativos (2026-11-22)
+
+O usuario cria um workflow pelo `WorkflowsView`, mas **nao escolhe os steps**. Evidencia:
+
+- `src/components/lux/WorkflowsView.tsx:39-44` — `defaultSteps` fixo com 4 steps
+  (source / enrich / filter / action) e `:118` `handleCreate` grava sempre esse array.
+  O dialog (`:140-147`) apenas **renderiza** `defaultSteps` como preview; nao ha input,
+  reordenacao, adicao ou remocao de step.
+- `supabase/functions/workflow-engine/index.ts:213` (`action === "run"`) **nao le**
+  `workflow.steps`: o pipeline e fixo (scrape -> enrich -> filter -> save), controlado
+  por `workflow.config`. `steps` e gravado em `:158` e nunca interpretado.
+- `src/components/lux/automation/WorkflowEditor.tsx:1` e stub (`return null`) e nao e
+  referenciado por nenhum componente.
+
+Consequencia: todo workflow executa o mesmo pipeline; o campo `steps` existe no schema
+mas nao tem efeito. Nao e bug de producao (o pipeline fixo funciona), e sim feature
+pela metade. Duas opcoes, ambas exigem decisao:
+
+1. Remover o campo `steps` da UI e do insert, assumindo pipeline unico. Custo baixo, sem
+   DDL, mas perde a promessa de "workflow customizavel".
+2. Tornar o engine data-driven: iterar `workflow.steps` com um registry de handlers e
+   manter o pipeline atual como template padrao. Muda o motor de execucao (arquitetura),
+   toca `workflow-engine` (deploy de edge function) -> regra 8.
