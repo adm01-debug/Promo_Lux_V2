@@ -735,6 +735,8 @@
    ],
    "edges": [
     "instagram-connection-status",
+    "instagram-enqueue",
+    "instagram-worker-health",
     "qa-ingest-run",
     "vault-cookie-health"
    ],
@@ -751,7 +753,7 @@
     "img",
     "status"
    ],
-   "arquivos_puxados": 115
+   "arquivos_puxados": 116
   },
   {
    "protegida": false,

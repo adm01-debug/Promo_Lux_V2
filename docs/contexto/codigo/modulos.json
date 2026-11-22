@@ -109,9 +109,9 @@
   },
   {
    "modulo": "components/lux",
-   "arquivos": 198,
+   "arquivos": 199,
    "testes": 31,
-   "linhas": 38558,
+   "linhas": 38735,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -166,7 +166,7 @@
     "workflows"
    ],
    "rotas_http": [],
-   "componentes": 179,
+   "componentes": 180,
    "hooks_locais": [
     "useAcknowledgeAdvisory",
     "useActiveOrganization",
@@ -297,6 +297,8 @@
     "email-poll-replies",
     "gmaps-proxy",
     "instagram-connection-status",
+    "instagram-enqueue",
+    "instagram-worker-health",
     "lusha-cookie-health",
     "lusha-decision-makers",
     "lusha-search",
@@ -464,6 +466,8 @@
      "email-oauth-disconnect",
      "email-poll-replies",
      "instagram-connection-status",
+     "instagram-enqueue",
+     "instagram-worker-health",
      "lusha-cookie-health",
      "lusha-decision-makers",
      "lusha-search",
@@ -1835,7 +1839,7 @@
    "modulo": "pages",
    "arquivos": 9,
    "testes": 0,
-   "linhas": 1901,
+   "linhas": 1903,
    "itens_menu": [],
    "telas": [
     "/",
@@ -1990,6 +1994,8 @@
     "email-poll-replies",
     "gmaps-proxy",
     "instagram-connection-status",
+    "instagram-enqueue",
+    "instagram-worker-health",
     "lusha-cookie-health",
     "lusha-decision-makers",
     "lusha-search",

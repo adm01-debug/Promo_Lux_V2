@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `3dd0aead5a` · branch `main` · 2026-11-22 01:56 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `bccf3033dd` · branch `main` · 2026-11-22 02:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -922,7 +922,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `completed` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +11 |
 | `status` | `connected` | escreve | `src/components/lux/SettingsView.tsx` |
 | `status` | `crit` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
-| `status` | `dead` | compara, escreve | `supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
+| `status` | `dead` | compara, escreve | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
 | `status` | `degraded` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/oracle-search-decisors/index.ts` |
 | `status` | `done` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationStageBadge.tsx` |
 | `status` | `draft` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/lib/demoData.ts` |
@@ -1272,6 +1272,7 @@ _nenhum item encontrado_
 | `dlq-pc` | type=number, min=1, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
 | `dlq-cons` | type=number, min=1, max=24, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
 | `dlq-cd` | type=number, min=1, max=168, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
+| `ig-limit` | type=number, min=1, max=200 | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx` |
 | `concurrent` | type=number, min=1, max=100 | `src/components/lux/monitoring/OrgRateLimitsView.tsx` |
 | `perhour` | type=number, min=1, max=10000 | `src/components/lux/monitoring/OrgRateLimitsView.tsx` |
 | `sla-window` | type=number, min=1, max=168 | `src/components/lux/monitoring/SlaAlertSettingsCard.tsx` |
@@ -1936,6 +1937,8 @@ _nenhum item encontrado_
 | Selecione uma organização ativa. | `src/components/lux/monitoring/DLQReplayPanel.tsx` |
 | Falha ao reprocessar: ${err instanceof Error ? err.message :  | `src/components/lux/monitoring/DlqTriageView.tsx` |
 | ; import {   Camera,   CheckCircle2,   XCircle,   AlertTriangle,   RefreshCw,   Key,   ExternalLink,   Loader2,   Info, } from  | `src/components/lux/monitoring/InstagramConnectionPanel.tsx` |
+| ; import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from  | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx` |
+| Informe o alvo da coleta. | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx` |
 | Falha ao executar ação. | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | Falha ao reiniciar etapa. | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | Falha ao salvar: ${e instanceof Error ? e.message :  | `src/components/lux/monitoring/OrgRateLimitsView.tsx` |
@@ -2246,6 +2249,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/components/lux/integrations/EmailAccountsPanel.tsx` |
 | `invoke(` | `src/components/lux/integrations/OAuthSandboxPanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/InstagramConnectionPanel.tsx` |
+| `invoke(` | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | `invoke(` | `src/components/lux/monitoring/VaultCookiesPanel.tsx` |
 | `invoke(` | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |

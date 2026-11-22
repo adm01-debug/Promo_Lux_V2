@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 243,
+ "total": 244,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -1796,6 +1796,23 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
+   "exports": [
+    "InstagramEnqueuePanel"
+   ],
+   "export_default": null,
+   "linhas": 177,
+   "dominio": "components/lux",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [
+    "instagram-enqueue",
+    "instagram-worker-health"
+   ],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
    "exports": [
     "JobDetailsSheet"
@@ -3060,7 +3077,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 4,
+   "usado_por": 5,
    "orfao": false
   },
   {
@@ -3091,7 +3108,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 96,
+   "usado_por": 97,
    "orfao": false
   },
   {
@@ -3126,7 +3143,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 116,
+   "usado_por": 117,
    "orfao": false
   },
   {
@@ -3160,7 +3177,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 53,
+   "usado_por": 54,
    "orfao": false
   },
   {
@@ -3405,7 +3422,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 50,
+   "usado_por": 51,
    "orfao": false
   },
   {
@@ -3419,7 +3436,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 36,
+   "usado_por": 37,
    "orfao": false
   },
   {
@@ -3588,7 +3605,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 26,
+   "usado_por": 27,
    "orfao": false
   },
   {
@@ -4029,7 +4046,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 726,
+   "linhas": 728,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

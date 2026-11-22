@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "3dd0aead5acbe3c6c0003974af95d1eb408b8066",
+  "commit": "bccf3033dd87d7f22566a8da4675a8ea422585ce",
   "branch": "main",
-  "data_commit": "2026-11-21T22:56:00-03:00",
+  "data_commit": "2026-11-21T23:17:27-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "bccf303",
+    "data": "2026-11-21",
+    "assunto": "feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)"
+   },
    {
     "sha": "3dd0aea",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "c229e3f",
     "data": "2026-11-21",
     "assunto": "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)"
-   },
-   {
-    "sha": "5f0ccec",
-    "data": "2026-11-21",
-    "assunto": "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)"
    }
   ],
-  "arquivos_mudados_7d": 128,
+  "arquivos_mudados_7d": 130,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "src/components/lux",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "pasta": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 87
+    "commits": 88
    },
    {
     "autor": "dependabot[bot]",
@@ -310,15 +310,15 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1057,
-  "arquivos_codigo": 664,
-  "linhas_codigo": 114339,
+  "arquivos_total": 1058,
+  "arquivos_codigo": 665,
+  "linhas_codigo": 114518,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 243,
+  "componentes": 244,
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
@@ -551,8 +551,8 @@
    "linhas": 321
   },
   "src/components": {
-   "arquivos": 287,
-   "linhas": 46146
+   "arquivos": 288,
+   "linhas": 46323
   },
   "src/contexts": {
    "arquivos": 7,
@@ -576,7 +576,7 @@
   },
   "src/pages": {
    "arquivos": 9,
-   "linhas": 1901
+   "linhas": 1903
   },
   "src/test": {
    "arquivos": 3,
@@ -658,7 +658,7 @@
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 726
+   "linhas": 728
   },
   {
    "arquivo": "supabase/functions/workflow-engine/index.ts",
@@ -757,9 +757,7 @@
    "gmaps-places-search",
    "health",
    "instagram-dlq-replay",
-   "instagram-enqueue",
    "instagram-worker",
-   "instagram-worker-health",
    "lusha-reveal",
    "system-recovery-status",
    "web-dlq-replay",

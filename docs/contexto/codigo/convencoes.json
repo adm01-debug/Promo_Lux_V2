@@ -7,7 +7,7 @@
    "src/pages (9)"
   ],
   "componentes": [
-   "src/components (228)",
+   "src/components (229)",
    "src/pages (9)",
    "src/contexts (3)"
   ],
@@ -47,7 +47,7 @@
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (243)"
+  ".tsx (244)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)",
    "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)",
    "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)",
    "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)",
-   "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)",
-   "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)"
+   "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)"
   ]
  },
  "pr_template": null,
