@@ -7,7 +7,7 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
 | Plataforma de deploy | **Vercel** (projeto `juca1/promo-lux-v2`) — deploy automático a cada merge em `main` (`vercel.json` presente na raiz; `installCommand: npm install --legacy-peer-deps`, `buildCommand: npm run build`, `framework: vite`). Lovable foi **abandonado** como plataforma de deploy (ver `README.md` para histórico) |
 | Produção (front) | `https://promo-lux-v2.vercel.app` |
 | Backend | Supabase `pttzwlbidamibjssqiqb` (ver `docs/agentes/banco.md`) |
-| Lovable (legado) | `https://lux-ai-company-finder.lovable.app` — **defasado e não mais usado**; bundle servido lá é snapshot de 01-ago (sem Admin/Monitoring/CNPJ). Não use como referência do que está em produção |
+| Lovable (legado, **morto**) | `https://lux-ai-company-finder.lovable.app` responde 200 mas serve bundle congelado de ~mai/2026 que aponta para `cjxkodfpohnugpionkam.supabase.co` — **projeto extinto (NXDOMAIN, verificado em 2026-11-22 via DNS do Windows, Google DoH e Cloudflare DoH)**. O bundle tem só `/`, `/login`, `/reset-password`, `*` — sem `/status`, `/survey/:token`, `/monitoring`, `/admin`. Não use como referência do que está em produção; validar lá produz falso negativo |
 | Framework / build / output | Vite 5 + React 19 · `npm run build` · `dist/` · Node 20 no CI · `outputDirectory: dist` no Vercel |
 | Artefatos da plataforma | `.lovable/plan.md`, `.lovable/memory/design/tokens.md`, `.lovable/mcp/manifest.json` |
 | Plugin de build | `lovable-tagger` (só em `mode === "development"`) e `@lovable.dev/mcp-js/stacks/supabase/vite` (`mcpPlugin()`), ambos em `vite.config.ts` |
@@ -16,7 +16,7 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
 ## Deploy e edge functions
 
 - **Front:** publicado pela **Vercel**. Merge em `main` = build + deploy em `promo-lux-v2.vercel.app` (via `vercel.json`). Em 20-nov-2026, o bundle servido em produção (`index-D_pE71Dk.js`) continha os marcadores `admin/companies`, `settings/cnpj` e `Monitoring` — **alinhado com a main** (23 views + 9 pages em `src/lib/viewRegistry.ts`). Confirme o resultado abrindo a URL de produção e reporte; não diga "deployado" sem isso. O smoke test `.github/workflows/production-smoke.yml` monitora essa paridade diariamente.
-- **Edge functions:** o repo **não tem workflow próprio de deploy** (nem `db-migrations.yml` — esse só faz `supabase db push` de migrations) — deploy de funções em produção: `NÃO VERIFICADO` (reverificar com quem opera o Supabase). `verify_jwt` por função
+- **Edge functions:** sobem por `.github/workflows/edge-functions-deploy.yml` (jobs `plan` e `apply`, ambos com `environment: Production` — cada um exige aprovação manual em *Review deployments*; `apply` pode falhar com `500 Function deploy failed due to an internal error`, transitório, retry resolve). O `db-migrations.yml` é separado e só faz `supabase db push`. `verify_jwt` por função fica em `supabase/config.toml`; funções com `verify_jwt = false` são superfície pública e exigem gate próprio no código.
   fica em `supabase/config.toml` — hoje com `verify_jwt = false` em `qa-ingest-run`, `admin-list-companies`
   e `migrate-helper`. Mexer nesses três é mexer em superfície pública: trate como mudança de segurança.
 - **MCP do produto:** `supabase/functions/mcp/` serve `/functions/v1/mcp` com OAuth
