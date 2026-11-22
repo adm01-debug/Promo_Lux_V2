@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `fddbb4fa2a87f5ac1e2490eb5d0014a8d2dea68f` (2026-11-22T09:36:35-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b3ecb1b787b2b3e8ffcd5ff027ad6a4373d95d10` (2026-11-22T10:26:39-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (668), SQL (245), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (668), SQL (245), Markdown (81), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1100 |
-| arquivos_codigo | 694 |
-| linhas_codigo | 120146 |
+| arquivos_total | 1101 |
+| arquivos_codigo | 695 |
+| linhas_codigo | 120196 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -50,7 +50,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | cron_jobs | 31 |
 | testes | 126 |
 | workflows | 9 |
-| scripts | 50 |
+| scripts | 51 |
 | docs_md | 81 |
 
 ## Onde ficam as coisas
@@ -245,14 +245,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7079 nós · 15561 arestas · 592 comunidades · grafo do commit `fddbb4fa`
-- comunidades maiores: react (187), lucide-react (181), @tanstack/react-query (116), snapshot.py (102), cn (86), utils.ts (81), gerar.mjs (80), LushaIntelligenceView.tsx (78), CampaignsView.tsx (75), generate.py (73), lushaMocks.ts (71), useAuth (71)
+- 7083 nós · 15567 arestas · 607 comunidades · grafo do commit `b3ecb1b7`
+- comunidades maiores: lucide-react (157), button.tsx (139), cn (135), react (102), OrganizationsView.tsx (102), badge.tsx (81), gerar.mjs (80), generate.py (71), vitest (70), hooks/use-toast.ts (70), utils.ts (68), campaign-dispatch/index.ts (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (17)
-- package.json (14)
+- package.json (15)
 - .github/workflows/edge-tests-daily.yml (6)
 - AGENTS.md (6)
 - supabase/config.toml (6)
@@ -261,11 +261,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/db-migrations.yml (4)
 - docs/ESTADO_ATUAL.md (4)
 - docs/GAPS-ENTERPRISE.md (4)
+- scripts/automation.config.json (4)
 - scripts/ci/eslint-baseline.json (4)
 - src/App.tsx (4)
 - .github/workflows/contexto.yml (3)
 - .github/workflows/inventario-estado-semanal.yml (3)
-- .husky/pre-commit (3)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -283,7 +283,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `maintenance:check`: `sh scripts/maintenance/run.sh check --root . --ref origin/main`
 - `maintenance:heal`: `sh scripts/maintenance/run.sh heal --root . --ref origin/main`
 - `test:maintenance`: `node --test scripts/maintenance/maintenance.unit.mjs`
-- `dev`: `vite`
+- `dev`: `node scripts/patch-mcp-plugin.mjs && vite`
+- `patch:mcp-plugin`: `node scripts/patch-mcp-plugin.mjs`
+- `prebuild`: `node scripts/patch-mcp-plugin.mjs`
 - `build`: `vite build && (npm run generate-audit-pdf || echo PDF de auditoria nao gerado, requer bun, build principal ja concluiu)`
 - `generate-audit-pdf`: `bun scripts/generate-audit-pdf.ts`
 - `build:dev`: `vite build --mode development`
@@ -359,6 +361,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-22 `b3ecb1b` fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)
 - 2026-11-22 `fddbb4f` feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)
 - 2026-11-22 `427ec06` fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)
 - 2026-11-22 `378947c` chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)
@@ -373,7 +376,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `cadd1d6` chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)
 - 2026-11-21 `57edd92` feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)
 - 2026-11-21 `c14eeb4` fix(db): claim_instagram_job volta a reservar jobs do worker (#111)
-- 2026-11-21 `4bfa973` docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 50,
+ "total": 51,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -425,6 +425,19 @@
    "linhas": 37,
    "env": [],
    "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/patch-mcp-plugin.mjs",
+   "descricao": "* Workaround for a bug in @lovable.dev/mcp-js on Windows.",
+   "linhas": 50,
+   "env": [],
+   "npm_scripts": [
+    "dev",
+    "patch:mcp-plugin",
+    "prebuild"
+   ],
    "workflows": [],
    "orfao": false
   },
