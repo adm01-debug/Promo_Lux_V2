@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "336b2288e4a3f46d1fd5e2ea5bb11f586c072194",
+  "sha": "9b85ca6aa2953e342b17454934e5d56f9536cfed",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 18:28 UTC",
+  "generated_at": "2026-11-22 18:56 UTC",
   "files_total": 1120,
   "code_files": 944,
   "code_lines": 138697
@@ -95730,10 +95730,19 @@
   }
  },
  "git": {
-  "sha": "336b2288e4a3f46d1fd5e2ea5bb11f586c072194",
+  "sha": "9b85ca6aa2953e342b17454934e5d56f9536cfed",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9b85ca6",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "docs: registra gap dos steps de workflow serem decorativos (#157)",
+    "files": [
+     "docs/pendencias/_backlog-verificado.md"
+    ]
+   },
    {
     "sha": "336b228",
     "date": "2026-11-22",
@@ -96090,20 +96099,6 @@
     "files": [
      "supabase/functions/gmaps-proxy/index.ts"
     ]
-   },
-   {
-    "sha": "ab467da",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)",
-    "files": [
-     "supabase/functions/_shared/__tests__/places-fallback.test.ts",
-     "supabase/functions/_shared/places-fallback.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/health/index.ts",
-     "supabase/functions/scrape-queue-worker/index.ts",
-     "vitest.config.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -96117,7 +96112,11 @@
    ],
    [
     "supabase/functions/gmaps-proxy/index.ts",
-    4
+    3
+   ],
+   [
+    "docs/pendencias/_backlog-verificado.md",
+    2
    ],
    [
     "src/components/lux/DealsView.tsx",
@@ -96160,14 +96159,6 @@
     2
    ],
    [
-    "vitest.config.ts",
-    2
-   ],
-   [
-    "supabase/functions/scrape-queue-worker/index.ts",
-    2
-   ],
-   [
     "src/components/lux/IntegrationsView.tsx",
     1
    ],
@@ -96185,6 +96176,10 @@
    ],
    [
     ".env.test",
+    1
+   ],
+   [
+    "src/pages/AdminCompanies.tsx",
     1
    ]
   ]

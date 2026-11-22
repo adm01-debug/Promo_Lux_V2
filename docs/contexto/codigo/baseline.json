@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "336b2288e4a3f46d1fd5e2ea5bb11f586c072194",
+  "commit": "9b85ca6aa2953e342b17454934e5d56f9536cfed",
   "branch": "main",
-  "data_commit": "2026-11-22T15:27:14-03:00",
+  "data_commit": "2026-11-22T15:47:53-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9b85ca6",
+    "data": "2026-11-22",
+    "assunto": "docs: registra gap dos steps de workflow serem decorativos (#157)"
+   },
    {
     "sha": "336b228",
     "data": "2026-11-22",
@@ -126,11 +131,6 @@
     "sha": "3c37882",
     "data": "2026-11-21",
     "assunto": "fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)"
-   },
-   {
-    "sha": "443ff87",
-    "data": "2026-11-21",
-    "assunto": "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)"
    }
   ],
   "arquivos_mudados_7d": 193,
@@ -274,6 +274,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "docs/pendencias/_backlog-verificado.md",
+    "mudancas": 3
+   },
+   {
     "arquivo": "docs/prod-readiness.md",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/campaign-dispatch/index.ts",
     "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/mcp/index.ts",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 104
+    "commits": 105
    },
    {
     "autor": "dependabot[bot]",

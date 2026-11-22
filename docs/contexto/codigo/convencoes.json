@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "docs: registra gap dos steps de workflow serem decorativos (#157)",
    "feat: aplica PermissionGate em deals e integracoes (#154)",
    "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)",
    "chore: remove artefatos temporarios commitados por engano na #146 (#147)",
-   "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)",
-   "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)"
+   "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)"
   ]
  },
  "pr_template": null,
