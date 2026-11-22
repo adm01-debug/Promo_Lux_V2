@@ -6,13 +6,14 @@ import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2, ArrowLeftRight, History } from "lucide-react";
+import { Mail, RefreshCw, Trash2, Plus, AlertCircle, CheckCircle2, User as UserIcon, Building2, KeyRound, Link2, ArrowLeftRight, History, ShieldCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
 import { DisconnectAccountDialog } from "./DisconnectAccountDialog";
 import { EmailAccountsAuditPanel } from "./EmailAccountsAuditPanel";
 import { EmailSyncHistorySheet } from "./EmailSyncHistorySheet";
+import { DeliverabilityCheckDialog } from "./DeliverabilityCheckDialog";
 import { describeEmailError, isAuthErrorMessage } from "@/lib/emailErrorMessages";
 import {
   AlertDialog,
@@ -56,6 +57,7 @@ export function EmailAccountsPanel() {
   const [disconnectTarget, setDisconnectTarget] = useState<Account | null>(null);
   const [scopeChangeTarget, setScopeChangeTarget] = useState<Account | null>(null);
   const [historyTarget, setHistoryTarget] = useState<Account | null>(null);
+  const [deliverabilityTarget, setDeliverabilityTarget] = useState<Account | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["email-accounts", user?.id],
@@ -504,6 +506,15 @@ export function EmailAccountsPanel() {
               <Button
                 size="sm"
                 variant="ghost"
+                className="h-8 gap-1 text-xs"
+                onClick={() => setDeliverabilityTarget(acc)}
+                title="Verificar SPF, DKIM, DMARC e MX do domínio"
+              >
+                <ShieldCheck className="h-3 w-3" /> Entregabilidade
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
                 className="h-8 text-destructive hover:text-destructive"
                 onClick={() => (canManage ? setDisconnectTarget(acc) : blockedToast())}
                 disabled={!canManage}
@@ -527,6 +538,12 @@ export function EmailAccountsPanel() {
         account={historyTarget ? { id: historyTarget.id, email: historyTarget.email, provider: historyTarget.provider } : null}
         open={!!historyTarget}
         onOpenChange={(o) => !o && setHistoryTarget(null)}
+      />
+
+      <DeliverabilityCheckDialog
+        email={deliverabilityTarget?.email ?? null}
+        open={!!deliverabilityTarget}
+        onOpenChange={(o) => !o && setDeliverabilityTarget(null)}
       />
 
       {isAdmin && <EmailAccountsAuditPanel />}
