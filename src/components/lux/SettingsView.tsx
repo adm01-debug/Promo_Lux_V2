@@ -16,6 +16,7 @@ import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationP
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
 import { IpAllowlistPanel } from "@/components/lux/settings/IpAllowlistPanel";
+import { AuditLogExportPanel } from "@/components/lux/settings/AuditLogExportPanel";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { StickySaveBar } from "./StickySaveBar";
 
@@ -287,6 +288,9 @@ export const SettingsView = () => {
 
               <Separator className="bg-border/30" />
               <ActiveSessionsPanel />
+
+              <Separator className="bg-border/30" />
+              <AuditLogExportPanel />
             </div>
           )}
 

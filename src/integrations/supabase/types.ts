@@ -5303,6 +5303,43 @@ export type Database = {
       list_my_sessions: { Args: Record<string, never>; Returns: { id: string; created_at: string; updated_at: string; user_agent: string; ip: string; is_current: boolean }[] }
       revoke_my_session: { Args: { _session_id: string }; Returns: boolean }
       revoke_other_sessions: { Args: Record<string, never>; Returns: number }
+      audit_log_facets: { Args: { _org_id: string }; Returns: Json }
+      count_audit_logs: {
+        Args: {
+          _action?: string
+          _from?: string
+          _org_id: string
+          _table_name?: string
+          _to?: string
+          _user_id?: string
+        }
+        Returns: number
+      }
+      export_audit_logs: {
+        Args: {
+          _action?: string
+          _after_created_at?: string
+          _after_id?: string
+          _from?: string
+          _limit?: number
+          _org_id: string
+          _table_name?: string
+          _to?: string
+          _user_id?: string
+        }
+        Returns: {
+          id: string
+          organization_id: string
+          user_id: string
+          action: string
+          table_name: string
+          record_id: string
+          old_data: Json
+          new_data: Json
+          metadata: Json
+          created_at: string
+        }[]
+      }
       advance_recipient_step: {
         Args: {
           _completed: boolean
