@@ -5252,6 +5252,9 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      list_my_sessions: { Args: Record<string, never>; Returns: { id: string; created_at: string; updated_at: string; user_agent: string; ip: string; is_current: boolean }[] }
+      revoke_my_session: { Args: { _session_id: string }; Returns: boolean }
+      revoke_other_sessions: { Args: Record<string, never>; Returns: number }
       advance_recipient_step: {
         Args: {
           _completed: boolean
