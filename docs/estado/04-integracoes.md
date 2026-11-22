@@ -30,7 +30,7 @@ Base factual de tudo o que segue. Ocorrências de `Deno.env.get`:
 | Google Maps | `GOOGLE_MAPS_API_KEY`, `GMAPS_PROVIDER`, `GMAPS_OMKAR_BASE_URL`, `GMAPS_OMKAR_API_KEY` | 4 |
 | BrightData | `BRIGHTDATA_API_TOKEN` | 1 |
 | Tracking | `TRACKING_SIGNING_SECRET` | 2 |
-| Operacional | `QA_INGEST_TOKEN`, `ADMIN_LIST_TOKEN`, `APP_ENV` | 3 |
+| Operacional | `QA_INGEST_TOKEN`, `APP_ENV` | 2 |
 
 ---
 

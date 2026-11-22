@@ -93,7 +93,7 @@ A maior relação do banco inteiro: **1.108.334 linhas, ~1013 MB, +4 MB/dia**. `
 - **Cron não silencia falha.** 293.319 execuções em 30 dias, 0 falhas. Os 401 que apareceram em 21/11 foram entre 18:40–18:49Z, antes do rewrite do gate; depois de 19:05Z, 198 respostas e todas 200.
 - **Sem código morto no front.** 258 arquivos `.tsx` em `src/components`, dos quais 25 são `*.test.tsx` (233 de código). Varredura de referência: os arquivos sem referência externa são **todos** testes.
 - **`exec_sql` fechado.** O RCE que existia (executável por `anon`/`authenticated` via REST RPC) foi fechado pela migration `20261113185209`: ACL só `postgres`/`service_role`, `has_function_privilege` = false para `anon` e `authenticated`.
-- **Segredo não está no histórico.** `MCP_SECRET` nunca apareceu em `git log --all -S`. `VITE_ADMIN_LIST_TOKEN` foi rotacionado — o valor vazado em `4e216082` hoje devolve **401**.
+- **Segredo não está no histórico.** `MCP_SECRET` nunca apareceu em `git log --all -S`. `VITE_ADMIN_LIST_TOKEN` foi **eliminado** (PR #144): o endpoint `admin-list-companies` agora exige JWT + papel `admin` em `organization_members`, então não há mais segredo a vazar.
 
 ---
 

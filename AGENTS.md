@@ -23,8 +23,8 @@ do fix. Responda sempre em PT-BR. Suplemento operacional do Hermes: `.hermes.md`
 - Segredos nunca em código, commit ou resposta — só em secret do serviço (edge: `supabase secrets set` ou
   painel Lovable/Supabase; CI: GitHub Environments `staging`/`production`). PAT exposto em chat → rotacionar
   na hora. Nunca imprima nem commite tokens, `service_role` ou o conteúdo de `.env`.
-  **Risco aberto:** `.env` está versionado (`git ls-files .env`) e `.gitignore` não o cobre; ele carrega
-  `VITE_ADMIN_LIST_TOKEN`. Não piore (nada de secret novo ali) — remoção/rotação é decisão do dono.
+  `.env` **não** é versionado (`.gitignore` cobre `.env` e `.env*`). Nenhum segredo deve ser exposto
+  via env `VITE_*`: essas variáveis são inlinadas no bundle JS público em build time.
 
 ## Bugs e funcionalidades
 - Diagnóstico antes de patch: logs e estado real, ponto exato (arquivo:linha), causa; várias causas → liste

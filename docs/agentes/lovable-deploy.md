@@ -37,12 +37,11 @@ Ler quando for confirmar um deploy, mexer em env var, domínio ou deploy de edge
   `BITRIX_WEBHOOK_BASE`, `TRACKING_SIGNING_SECRET`, OAuth client secrets. Tudo isso é secret de edge
   function (`Deno.env.get`) — inventário completo em `docs/estado/04-integracoes.md` §1.
 - Vars usadas pelo front (`src/integrations/supabase/client.ts`): `VITE_SUPABASE_URL` e
-  `VITE_SUPABASE_PUBLISHABLE_KEY`. `VITE_SUPABASE_PROJECT_ID` e `VITE_ADMIN_LIST_TOKEN` também existem no
-  `.env`.
+  `VITE_SUPABASE_PUBLISHABLE_KEY`. `VITE_SUPABASE_PROJECT_ID` também existe no `.env`.
 - **`.env` não é mais versionado** (removido do tracking em `fix(ci): pina Supabase CLI v3.1.0 no job
-  rls-tests` — PR #48; o `.gitignore` cobre `.env`, `.env.local` e `.env.*.local`). O `.env` local carrega
-  `VITE_ADMIN_LIST_TOKEN`. Nunca adicione nada novo ali e nunca imprima o conteúdo; rotacionar o token é
-  decisão do dono.
+  rls-tests` — PR #48; o `.gitignore` cobre `.env`, `.env.local` e `.env.*.local`). Nada de segredo em env
+  `VITE_*`: essas variáveis são inlinadas no bundle JS público em build time. Autorização de admin usa
+  JWT + papel em `organization_members`.
 - Env vars de E2E, todas opcionais com fallback público: `E2E_BASE_URL`, `E2E_SUPABASE_URL`,
   `E2E_SUPABASE_ANON_KEY`, `E2E_USER_A_EMAIL`/`_PASSWORD`, `E2E_USER_B_EMAIL`/`_PASSWORD`
   (`e2e/helpers/supabase.ts`). Sem elas, os testes de RLS caem no ref divergente — ver `banco.md`.
