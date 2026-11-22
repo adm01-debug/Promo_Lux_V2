@@ -885,6 +885,54 @@ export type Database = {
           },
         ]
       }
+      campaign_warmup_state: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          current_day: number
+          emails_sent_today: number
+          id: string
+          last_reset_date: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          current_day?: number
+          emails_sent_today?: number
+          id?: string
+          last_reset_date?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          current_day?: number
+          emails_sent_today?: number
+          id?: string
+          last_reset_date?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_warmup_state_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: true
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_warmup_state_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_replies: {
         Row: {
           body_text: string | null
@@ -5496,6 +5544,59 @@ export type Database = {
           },
         ]
       }
+      warmup_profiles: {
+        Row: {
+          allowed_weekdays: number[]
+          created_at: string
+          daily_increment: number
+          enabled: boolean
+          id: string
+          max_per_day: number
+          organization_id: string
+          ramp_days: number
+          send_window_end: number
+          send_window_start: number
+          start_per_day: number
+          updated_at: string
+        }
+        Insert: {
+          allowed_weekdays?: number[]
+          created_at?: string
+          daily_increment?: number
+          enabled?: boolean
+          id?: string
+          max_per_day?: number
+          organization_id?: string
+          ramp_days?: number
+          send_window_end?: number
+          send_window_start?: number
+          start_per_day?: number
+          updated_at?: string
+        }
+        Update: {
+          allowed_weekdays?: number[]
+          created_at?: string
+          daily_increment?: number
+          enabled?: boolean
+          id?: string
+          max_per_day?: number
+          organization_id?: string
+          ramp_days?: number
+          send_window_end?: number
+          send_window_start?: number
+          start_per_day?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "warmup_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_deliveries: {
         Row: {
           attempts: number
@@ -5878,6 +5979,21 @@ export type Database = {
         Returns: undefined
       }
       get_public_status: { Args: Record<string, never>; Returns: Json }
+      get_warmup_slot: {
+        Args: { _org_id: string; _campaign_id: string }
+        Returns: {
+          allowed: boolean
+          daily_limit: number | null
+          emails_sent_today: number
+          remaining: number | null
+          current_day: number | null
+          reason: string
+        }[]
+      }
+      consume_warmup_slot: {
+        Args: { _campaign_id: string; _count: number }
+        Returns: undefined
+      }
       get_public_uptime: {
         Args: { _days?: number }
         Returns: {

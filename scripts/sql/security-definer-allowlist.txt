@@ -24,6 +24,7 @@ create_default_deal_stages
 dlq_health_metrics
 dlq_health_trend
 get_dashboard_stats
+get_warmup_slot
 replay_dead_letter
 replay_dead_letter_batch
 reset_circuit_breaker

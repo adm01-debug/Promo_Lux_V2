@@ -217,9 +217,26 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
     .order("next_action_at", { ascending: true })
     .limit(BATCH_PER_CAMPAIGN);
 
-  if (recErr) throw new Error(`load recipients: ${recErr.message}`);
-  if (!recipients || recipients.length === 0) {
+  if (recErr) throw new Error(`load recipients: ${recErr.message}`);  if (!recipients || recipients.length === 0) {
     return { skipped: false, reason: "no recipients ready", sent: 0, failed: 0 };
+  }
+
+  // C13 — aquecimento (warm-up) de domínio. Sem perfil configurado a RPC libera
+  // tudo (no_profile); com perfil aplica teto diário, dias e janela de envio.
+  const { data: warmup, error: warmupErr } = await admin.rpc("get_warmup_slot", {
+    _org_id: campaign.organization_id,
+    _campaign_id: campaign.id,
+  });
+  if (warmupErr) throw new Error(`get_warmup_slot: ${warmupErr.message}`);
+  const slot = Array.isArray(warmup) ? warmup[0] : warmup;
+
+  if (slot && slot.allowed === false) {
+    return {
+      skipped: true,
+      reason: `warmup: ${slot.reason}`,
+      sent: 0, failed: 0, waiting: 0, completed: 0,
+      warmup_reason: slot.reason,
+    };
   }
 
   // Lista de supressão (compliance/deliverability): e-mails que descadastraram,
@@ -264,7 +281,12 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
   let waiting = 0;
   let completed = 0;
 
-  for (const r of recipients as Recipient[]) {
+  // Teto do ciclo: o lote nunca passa do que resta no aquecimento.
+  const remaining = typeof slot?.remaining === "number" ? slot.remaining : null;
+  const batch = remaining === null ? recipients.length : Math.min(recipients.length, remaining);
+  const queue = (recipients as Recipient[]).slice(0, batch);
+
+  for (const r of queue) {
     // Determina a etapa corrente. Fora dos limites → conclui a sequência.
     const stepIdx = clampStep(r.current_step, steps.length);
     if (stepIdx >= steps.length) {
@@ -425,11 +447,20 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
 
   // Avalia seleção automática de vencedor A/B (opt-in via ab_test_enabled).
   // A função é idempotente e barata; ignora campanhas sem teste ativo.
+  // Consome o aquecimento com o número real de envios bem-sucedidos.
+  if (sent > 0) {
+    const { error: consumeErr } = await admin.rpc("consume_warmup_slot", {
+      _campaign_id: campaign.id,
+      _count: sent,
+    });
+    if (consumeErr) console.error("consume_warmup_slot:", consumeErr.message);
+  }
+
   if (campaign.ab_test_enabled) {
     await admin.rpc("decide_ab_winner", { _campaign_id: campaign.id });
   }
 
-  return { skipped: false, sent, failed, waiting, completed, account: fresh.email };
+  return { skipped: false, sent, failed, waiting, completed, account: fresh.email, warmup_remaining: typeof slot?.remaining === "number" ? slot.remaining - sent : null };
 }
 
 /** Normaliza a sequência JSONB em uma lista de etapas ordenadas (email/wait). */
