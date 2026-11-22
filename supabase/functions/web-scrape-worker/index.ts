@@ -363,7 +363,7 @@ async function processTask(supabase: SupabaseClient, task: QueueTask, chaosEnabl
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  if (!isCronAuthorized(req, { allowAnon: true })) {
+  if (!isCronAuthorized(req)) {
     return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 

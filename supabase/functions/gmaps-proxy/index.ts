@@ -207,7 +207,7 @@ serve(async (req) => {
   // existentes. Basta a credencial de cron valida — o front sempre manda JWT
   // de usuario, entao nao ha ambiguidade.
   const authHeader = req.headers.get("Authorization");
-  if (isCronAuthorized(req, { allowAnon: true })) {
+  if (isCronAuthorized(req)) {
     return await runAutoSync(corsHeaders);
   }
 

@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
   // cron (padrão de agendamento pg_cron neste projeto). Efeito colateral é
   // limitado: apenas leituras + inserts em history/notifications com cooldown.
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  const authorized = isCronAuthorized(req, { allowAnon: true });
+  const authorized = isCronAuthorized(req);
   if (!authorized) {
     return json(401, { ok: false, error: "unauthorized" });
   }
