@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  if (!isCronAuthorized(req, { allowAnon: true })) {
+  if (!isCronAuthorized(req)) {
     return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 

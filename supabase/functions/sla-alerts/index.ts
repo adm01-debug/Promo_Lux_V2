@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  const authorized = isCronAuthorized(req, { allowAnon: true });
+  const authorized = isCronAuthorized(req);
   if (!authorized) return json(401, { ok: false, error: "unauthorized" });
 
   try {

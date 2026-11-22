@@ -350,7 +350,7 @@ async function processTask(supabase: ReturnType<typeof createClient>, task: Queu
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  if (!isCronAuthorized(req, { allowAnon: true })) {
+  if (!isCronAuthorized(req)) {
     return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
