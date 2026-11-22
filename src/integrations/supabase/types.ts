@@ -2066,6 +2066,66 @@ export type Database = {
           },
         ]
       }
+      email_templates: {
+        Row: {
+          body: string | null
+          category: string
+          created_at: string
+          deleted_at: string | null
+          description: string | null
+          id: string
+          last_used_at: string | null
+          name: string
+          organization_id: string
+          sequence: Json | null
+          subject: string | null
+          tags: string[]
+          updated_at: string
+          usage_count: number
+          user_id: string
+          variables: string[]
+          version: number
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          last_used_at?: string | null
+          name: string
+          organization_id?: string
+          sequence?: Json | null
+          subject?: string | null
+          tags?: string[]
+          updated_at?: string
+          usage_count?: number
+          user_id?: string
+          variables?: string[]
+          version?: number
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          organization_id?: string
+          sequence?: Json | null
+          subject?: string | null
+          tags?: string[]
+          updated_at?: string
+          usage_count?: number
+          user_id?: string
+          variables?: string[]
+          version?: number
+        }
+        Relationships: []
+      }
       email_accounts: {
         Row: {
           access_token: string | null
@@ -5447,6 +5507,14 @@ export type Database = {
           scale_max: number
           score_index: number | null
           survey_id: string
+      email_template_stats: {
+        Row: {
+          category: string | null
+          organization_id: string | null
+          templates: number | null
+          ultimo_uso: string | null
+          usados: number | null
+          usos_totais: number | null
         }
         Relationships: []
       }
@@ -5524,6 +5592,13 @@ export type Database = {
           _token: string
         }
         Returns: Json
+      duplicate_email_template: {
+        Args: { _template_id: string; _name?: string | null }
+        Returns: string
+      }
+      mark_email_template_used: {
+        Args: { _template_id: string }
+        Returns: undefined
       }
       accept_org_invite: { Args: { _token: string }; Returns: string }
       advance_recipient_step: {
