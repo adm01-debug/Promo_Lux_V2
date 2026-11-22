@@ -12,6 +12,10 @@
 #      aceito pelo Supabase Functions).
 #   3. `_shared/` nao pode conter index.ts -- se tiver, seria deployado como
 #      function; ela existe so para imports compartilhados.
+#   4. Nenhum import pode apontar para caminho absoluto (`npm:C:\...`,
+#      `npm:/home/...`). O bundler do @lovable.dev/mcp-js no Windows emite
+#      `npm:<caminho absoluto>` para o proprio entry, e o deploy falha com
+#      "npm package '...' does not exist". Ver issue de 2026-11-22.
 # ---------------------------------------------------------------------------
 set -uo pipefail
 
@@ -43,6 +47,14 @@ shopt -u nullglob
 
 if [ -f "$DIR/_shared/index.ts" ]; then
   fail "_shared/ contem index.ts -- ele seria deployado como function. Remova o index.ts de _shared."
+fi
+
+# 4. Imports com caminho absoluto quebram o bundle remoto do Supabase.
+ABS_IMPORTS=$(grep -rEn 'npm:(/|[A-Za-z]:)' "$DIR" 2>/dev/null || true)
+if [ -n "$ABS_IMPORTS" ]; then
+  while IFS= read -r line; do
+    fail "Import com caminho absoluto (quebra o deploy): $line"
+  done <<< "$ABS_IMPORTS"
 fi
 
 if [ "$ERRORS" -gt 0 ]; then
