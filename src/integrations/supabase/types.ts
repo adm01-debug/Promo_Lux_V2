@@ -5232,6 +5232,20 @@ export type Database = {
       }
     }
     Views: {
+      org_leaderboard: {
+        Row: {
+          activities: number
+          full_name: string | null
+          month_start: string
+          new_companies: number
+          organization_id: string
+          score_value: number
+          user_id: string
+          won_deals: number
+          won_value: number
+        }
+        Relationships: []
+      }
       sales_goal_progress: {
         Row: {
           achieved: number
