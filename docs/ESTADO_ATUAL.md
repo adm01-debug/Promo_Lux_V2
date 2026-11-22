@@ -110,13 +110,15 @@ A maior relação do banco inteiro: **1.108.334 linhas, ~1013 MB, +4 MB/dia**. `
 
 ### Aguardando sua autorização (regra 8 — DDL/deploy em produção)
 
-1. **PR #98** — retenção de 30 dias para `cron.job_run_details` (1013 MB) e `qa_reaper_runs`. Simulado: 815k linhas em 40 s, zero impacto funcional (maior consumidor pede `limit 50`).
+1. **PR #120** — cron `instagram-worker-1min`. O worker consome `instagram_scrape_queue` mas não tinha entrada em `cron.job`; medido: `Select-String "instagram-worker" supabase/migrations/*.sql` → 0 ocorrências. Sem ele, a tarefa enfileirada pelo painel (PR #119) fica em `queued` para sempre.
+2. **PR #98 — mergeada** (`bb305ef6`). Retenção aplicada e verificada em produção: `cron.job_run_details` caiu de **1013 MB para 135 MB** (295.748 linhas) e `qa_reaper_runs` está com 165.024 linhas; o cron `prune-cron-job-run-details-daily` roda às 03:41 com `active=True`.
 
 *(PR #97 já mergeada em 2026-11-21T20:04:10Z — ver §R3.)*
 
 ### Decisão de negócio
 
-3. **Features enterprise pendentes** (§R1). Seis das sete já existem e estão com RLS. Restam **cinco features nunca construídas**: `field_history`, `activities`, `tasks`, `invitations`, `saml_providers`. Nenhuma é referenciada por `src/**` ou `supabase/functions/**` — são escopo de produto, não bug de integração.
+4. **Features enterprise pendentes** (§R1). Seis das sete já existem e estão com RLS. Restam **cinco features nunca construídas**: `field_history`, `activities`, `tasks`, `invitations`, `saml_providers`. Nenhuma é referenciada por `src/**` ou `supabase/functions/**` — são escopo de produto, não bug de integração.
+5. **Motores prontos sem chamador** — `deliverability-check` (298 linhas, SPF/DKIM/DMARC/MX) e `email-verify` (291 linhas, formato/MX/descartável/conta de função) estavam deployados e **nenhum código os chamava**; `docs/GAPS-ENTERPRISE.md:98,111` os listava como "Inexistente". As PRs #121 e #122 fazem a integração na UI.
 
 ---
 
