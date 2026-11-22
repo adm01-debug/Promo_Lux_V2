@@ -1,17 +1,17 @@
 # Graph Report - Promo_Lux_V2  (2026-11-22)
 
 ## Corpus Check
-- 1080 files · ~656,008 words
+- 1081 files · ~656,238 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 20 file(s) not represented in the graph (top: (none) 10, .toml 5, .css 2)
 
 ## Summary
-- 7078 nodes · 15561 edges · 591 communities (361 shown, 230 thin omitted)
+- 7079 nodes · 15561 edges · 592 communities (361 shown, 231 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 441 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `427ec064`
+- Built from commit: `fddbb4fa`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -530,7 +530,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (591 total, 230 thin omitted)
+## Communities (592 total, 231 thin omitted)
 
 ### Community 0 - "react"
 Cohesion: 0.04
@@ -1978,18 +1978,18 @@ Nodes (3): oauthClient(), OAuthConsent(), decide()
 
 ## Knowledge Gaps
 - **2031 isolated node(s):** `session-start.sh script`, `PATH`, `version`, `sdk_version`, `path` (+2026 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3053 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **230 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3054 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **231 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `vitest` connect `vitest` to `LushaIntelligenceView.tsx`, `SessionsPanel.test.tsx`, `SlaHistoryTrendChart.tsx`, `useAuth`, `withOrg.ts`, `lusha/departmentMap.ts`, `downloadCSV`, `orgErrorHandler.audit.test.ts`, `campaign-dispatch/index.ts`, `lusha-client.ts`, `package.json`, `View`, `req`, `Index.tsx`, `oracle-push-bitrix/index.ts`, `oracle-enrich-contact/index.ts`, `compareReport.ts`, `Header.tsx`, `useOracleV2.ts`, `public-api/index.ts`, `DecisionMakersGrid.test.tsx`, `useCnpjEnrich.ts`, `oracle-search-decisors/index.ts`, `lead-identity.ts`, `web-scrape-worker/index.ts`, `orgErrorHandler.ts`, `gmaps-proxy/index.ts`, `SafeHTML.tsx`, `SourceComparisonSummary.tsx`, `scrape-queue-worker/index.ts`, `ssrf-guard.ts`, `vite.config.ts`, `deliverability-check/index.ts`, `aggregations.ts`, `Analisado`, `DlqAlertSettingsCard.tsx`, `historyUtils.fuzz.test.ts`, `usePersistedFilters`, `useResilienceSimulator.ts`, `useConfirm`, `useICPConfig.ts`, `useAuditTrail.ts`, `useLoginForm.ts`, `StakeholderCard.tsx`, `useRateLimit.logic.test.ts`, `DlqHealthCard`, `SlaHistoryCard`, `useDlqReplay.ts`, `autotune.ts`, `classify.ts`, `scenarios.ts`, `WorkflowCard.tsx`?**
-  _High betweenness centrality (0.143) - this node is a cross-community bridge._
+  _High betweenness centrality (0.142) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `lucide-react`, `@tanstack/react-query`, `cn`, `utils.ts`, `LushaIntelligenceView.tsx`, `CampaignsView.tsx`, `carousel.tsx`, `form.tsx`, `SlaHistoryTrendChart.tsx`, `useAuth`, `useFeatureFlag.ts`, `vitest`, `useActiveOrganization`, `App.tsx`, `toast.tsx`, `package.json`, `framer-motion`, `View`, `Index.tsx`, `CompanyDetailModal.tsx`, `Header.tsx`, `useOracleV2.ts`, `useEnvProfiles.ts`, `useCnpjEnrich.ts`, `useWebScrape.ts`, `PermissionsMatrix.tsx`, `AppBreadcrumbs.tsx`, `orgErrorHandler.ts`, `sidebar.tsx`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `StatsGrid.tsx`, `useDemo`, `useAutomationsMonitor.ts`, `ApiLatencyAlertSettingsCard.tsx`, `chart.tsx`, `DashboardView.tsx`, `ConversionTab.tsx`, `OnboardingTour.tsx`, `DlqAlertSettingsCard.tsx`, `usePersistedFilters`, `useResilienceSimulator.ts`, `CommandPalette.tsx`, `toggle-group.tsx`, `useLoginForm.ts`, `AutomationStatusPanel.tsx`, `ApiLatencyPanel.tsx`, `RLSVerificationPanel.tsx`, `StakeholderCard.tsx`, `calendar.tsx`, `MapMarkerIcons.tsx`, `useChangelog.ts`, `ThemeToggle.tsx`, `DlqHealthCard`, `PasswordStrengthMeter.tsx`, `drawer.tsx`, `navigation-menu.tsx`, `useDlqReplay.ts`, `Login.tsx`, `SatisfactionTab.tsx`?**
   _High betweenness centrality (0.087) - this node is a cross-community bridge._
 - **Why does `cn()` connect `cn` to `react`, `lucide-react`, `@tanstack/react-query`, `CookieCard`, `utils.ts`, `LushaIntelligenceView.tsx`, `CampaignsView.tsx`, `carousel.tsx`, `form.tsx`, `useAuth`, `vitest`, `toast.tsx`, `generateScenarios`, `framer-motion`, `View`, `Index.tsx`, `CompanyDetailModal.tsx`, `Header.tsx`, `useOracleV2.ts`, `AppBreadcrumbs.tsx`, `sidebar.tsx`, `ScrapeQueuePanel.tsx`, `useAutomationsMonitor.ts`, `SafeHTML.tsx`, `StatsGrid.tsx`, `SourceComparisonSummary.tsx`, `DealTasksPanel`, `chart.tsx`, `DashboardView.tsx`, `DlqAlertSettingsCard.tsx`, `useResilienceSimulator.ts`, `useConfirm`, `useAuditTrail.ts`, `CommandPalette.tsx`, `toggle-group.tsx`, `AutomationStatusPanel.tsx`, `useDbHealth.ts`, `EmailVerifyBadge`, `ApiLatencyPanel.tsx`, `ThemeToggle.tsx`, `useChangelog.ts`, `3. Functions chamadas pelo frontend (28)`, `calendar.tsx`, `DlqHealthCard`, `navigation-menu.tsx`, `drawer.tsx`, `DealCard.tsx`, `RetryPolicyAdvisoriesPanel`, `SatisfactionTab.tsx`, `WorkflowCard.tsx`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **What connects `session-start.sh script`, `PATH`, `version` to the rest of the system?**
   _2031 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `react` be split into smaller, more focused modules?**

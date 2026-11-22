@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "427ec06438f334507e4c8d3f9f1f6284074b768e",
+  "commit": "fddbb4fa2a87f5ac1e2490eb5d0014a8d2dea68f",
   "branch": "main",
-  "data_commit": "2026-11-22T09:24:10-03:00",
+  "data_commit": "2026-11-22T09:36:35-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "fddbb4f",
+    "data": "2026-11-22",
+    "assunto": "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)"
+   },
    {
     "sha": "427ec06",
     "data": "2026-11-22",
@@ -126,14 +131,9 @@
     "sha": "8723328",
     "data": "2026-11-21",
     "assunto": "fix: grant execute de refresh_org_scores para authenticated (#104)"
-   },
-   {
-    "sha": "4931d9e",
-    "data": "2026-11-21",
-    "assunto": "feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)"
    }
   ],
-  "arquivos_mudados_7d": 180,
+  "arquivos_mudados_7d": 181,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 96
+    "commits": 97
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1099,
+  "arquivos_total": 1100,
   "arquivos_codigo": 694,
   "linhas_codigo": 120146,
   "rotas": 12,
@@ -322,8 +322,8 @@
   "hooks": 96,
   "edge_functions": 60,
   "tabelas": 115,
-  "migrations": 240,
-  "cron_jobs": 30,
+  "migrations": 241,
+  "cron_jobs": 31,
   "testes": 126,
   "workflows": 9,
   "scripts": 50,
@@ -755,7 +755,6 @@
    "gmaps-places-search",
    "health",
    "instagram-dlq-replay",
-   "instagram-worker",
    "lusha-reveal",
    "system-recovery-status",
    "web-dlq-replay",

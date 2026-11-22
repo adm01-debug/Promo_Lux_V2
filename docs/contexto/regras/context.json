@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "427ec06438f334507e4c8d3f9f1f6284074b768e",
+  "sha": "fddbb4fa2a87f5ac1e2490eb5d0014a8d2dea68f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 12:25 UTC",
-  "files_total": 1118,
-  "code_files": 942,
-  "code_lines": 138559
+  "generated_at": "2026-11-22 12:37 UTC",
+  "files_total": 1119,
+  "code_files": 943,
+  "code_lines": 138603
  },
  "version": "1.3.2",
- "facts_hash": "118bf66a1b406e5a",
+ "facts_hash": "7163866e580bb7b0",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   "languages": {
    ".ts": 371,
    ".tsx": 297,
-   ".sql": 244,
+   ".sql": 245,
    ".mjs": 20,
    ".py": 5,
    ".js": 4,
@@ -21653,6 +21653,12 @@
     "schedule": "4-59/5 * * * *",
     "body": "SELECT net.http_post( url := 'https://pttzwlbidamibjssqiqb.supabase.co/functions/v1/org-violation-alerts', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', (select decrypted_secret from vault.decrypted_secrets where name = 'SUPABASE_SERVICE_ROLE_KEY'), 'Authorization', 'B …",
     "src": "supabase/migrations/20261122130000_cron_org_violation_alerts.sql"
+   },
+   {
+    "job": "instagram-worker-1min",
+    "schedule": "* * * * *",
+    "body": "SELECT net.http_post( url := 'https://pttzwlbidamibjssqiqb.supabase.co/functions/v1/instagram-worker', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', (select decrypted_secret from vault.decrypted_secrets where name = 'SUPABASE_SERVICE_ROLE_KEY'), 'Authorization', 'Beare …",
+    "src": "supabase/migrations/20261122280000_cron_instagram_worker.sql"
    }
   ],
   "views": {
@@ -21934,6 +21940,7 @@
    "supabase/migrations/20261122250000_dsar_lgpd.sql",
    "supabase/migrations/20261122260000_dlp_pii_masking.sql",
    "supabase/migrations/20261122270000_next_best_action.sql",
+   "supabase/migrations/20261122280000_cron_instagram_worker.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -31902,8 +31909,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 240,
-   "lines": 16592,
+   "files": 241,
+   "lines": 16636,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -65930,7 +65937,8 @@
    "supabase/migrations/20261122200000_email_templates.sql",
    "supabase/migrations/20261122210000_status_page.sql",
    "supabase/migrations/20261122220000_ip_allowlist.sql",
-   "supabase/migrations/20261122270000_next_best_action.sql"
+   "supabase/migrations/20261122270000_next_best_action.sql",
+   "supabase/migrations/20261122280000_cron_instagram_worker.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -95677,13 +95685,27 @@
    "path": "supabase/migrations/20261122270000_next_best_action.sql",
    "lines": 328,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261122280000_cron_instagram_worker.sql": {
+   "path": "supabase/migrations/20261122280000_cron_instagram_worker.sql",
+   "lines": 44,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "427ec06438f334507e4c8d3f9f1f6284074b768e",
+  "sha": "fddbb4fa2a87f5ac1e2490eb5d0014a8d2dea68f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "fddbb4f",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)",
+    "files": [
+     "supabase/migrations/20261122280000_cron_instagram_worker.sql"
+    ]
+   },
    {
     "sha": "427ec06",
     "date": "2026-11-22",
@@ -96052,16 +96074,6 @@
     "files": [
      "docs/auth.md"
     ]
-   },
-   {
-    "sha": "e5ef06d",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/mcp-query/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -96114,8 +96126,8 @@
     2
    ],
    [
-    "supabase/config.toml",
-    2
+    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
+    1
    ],
    [
     "scripts/check-functions-lint.sh",

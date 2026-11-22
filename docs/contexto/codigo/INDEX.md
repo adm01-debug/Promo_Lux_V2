@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `427ec06438f334507e4c8d3f9f1f6284074b768e` (2026-11-22T09:24:10-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `fddbb4fa2a87f5ac1e2490eb5d0014a8d2dea68f` (2026-11-22T09:36:35-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (668), SQL (244), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (668), SQL (245), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1099 |
+| arquivos_total | 1100 |
 | arquivos_codigo | 694 |
 | linhas_codigo | 120146 |
 | rotas | 12 |
@@ -46,8 +46,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 96 |
 | edge_functions | 60 |
 | tabelas | 115 |
-| migrations | 240 |
-| cron_jobs | 30 |
+| migrations | 241 |
+| cron_jobs | 31 |
 | testes | 126 |
 | workflows | 9 |
 | scripts | 50 |
@@ -144,7 +144,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `instagram-connection-status` — tabelas: -; chamada por 1 arquivo(s) do front
 - `instagram-dlq-replay` — tabelas: organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-enqueue` — tabelas: instagram_scrape_queue, organization_members; chamada por 1 arquivo(s) do front
-- `instagram-worker` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue, instagram_scrape_results; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `instagram-worker` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue, instagram_scrape_results; chamada por 0 arquivo(s) do front, por SQL/cron
 - `instagram-worker-health` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue; chamada por 1 arquivo(s) do front
 - `latency-alerts` — tabelas: api_latency_alert_history, api_latency_alert_settings, api_latency_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front, por SQL/cron
 - `lusha-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front
@@ -193,6 +193,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `dlq-alerts-15min` */15 * * * * → edge dlq-alerts (20261121190000_version_crons_with_vault_key.sql)
 - `email-poll-replies-5min` */5 * * * * → edge email-poll-replies (20261121190000_version_crons_with_vault_key.sql)
 - `evaluate-partition-policies-daily` 17 3 * * * (20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql)
+- `instagram-worker-1min` * * * * * → edge instagram-worker (20261122280000_cron_instagram_worker.sql)
 - `latency-alerts-15min` */15 * * * * → edge latency-alerts (20261121190000_version_crons_with_vault_key.sql)
 - `org-violation-alerts-5min` 4-59/5 * * * * → edge org-violation-alerts (20261122130000_cron_org_violation_alerts.sql)
 - `pg-net-snapshots-prune-weekly` 0 3 * * 0 (20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql)
@@ -230,7 +231,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 0
-- edges_orfas: 12 — ex.: api-latency-alerts, audit-logs-prune, gmaps-places-search
+- edges_orfas: 11 — ex.: api-latency-alerts, audit-logs-prune, gmaps-places-search
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 0
 - tabelas_usadas_sem_definicao: 0
@@ -244,7 +245,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7078 nós · 15561 arestas · 591 comunidades · grafo do commit `427ec064`
+- 7079 nós · 15561 arestas · 592 comunidades · grafo do commit `fddbb4fa`
 - comunidades maiores: react (187), lucide-react (181), @tanstack/react-query (116), snapshot.py (102), cn (86), utils.ts (81), gerar.mjs (80), LushaIntelligenceView.tsx (78), CampaignsView.tsx (75), generate.py (73), lushaMocks.ts (71), useAuth (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -358,6 +359,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-22 `fddbb4f` feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)
 - 2026-11-22 `427ec06` fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)
 - 2026-11-22 `378947c` chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)
 - 2026-11-22 `5f42ddf` chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)
@@ -372,7 +374,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `57edd92` feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)
 - 2026-11-21 `c14eeb4` fix(db): claim_instagram_job volta a reservar jobs do worker (#111)
 - 2026-11-21 `4bfa973` docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)
-- 2026-11-21 `e7ba9e2` fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

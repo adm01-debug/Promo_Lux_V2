@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)",
    "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)",
    "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)",
    "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)",
-   "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)",
-   "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)"
+   "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)"
   ]
  },
  "pr_template": null,

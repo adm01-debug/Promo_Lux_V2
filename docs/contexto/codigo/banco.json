@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 240,
+ "migrations": 241,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1105,6 +1105,12 @@
    "nome": "evaluate-partition-policies-daily",
    "agenda": "17 3 * * *",
    "migration": "20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql"
+  },
+  {
+   "nome": "instagram-worker-1min",
+   "agenda": "* * * * *",
+   "migration": "20261122280000_cron_instagram_worker.sql",
+   "chama_edge": "instagram-worker"
   },
   {
    "nome": "latency-alerts-15min",
