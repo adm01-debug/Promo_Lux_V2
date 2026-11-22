@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c14eeb4071387257ea298b04af33add631a98399",
+  "commit": "57edd92513902f8c8cd852141b6521f1fdcf1bdc",
   "branch": "main",
-  "data_commit": "2026-11-21T22:39:55-03:00",
+  "data_commit": "2026-11-21T22:45:34-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "57edd92",
+    "data": "2026-11-21",
+    "assunto": "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)"
+   },
    {
     "sha": "c14eeb4",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "be2d500",
     "data": "2026-11-21",
     "assunto": "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)"
-   },
-   {
-    "sha": "04bf647",
-    "data": "2026-11-21",
-    "assunto": "fix(seguranca): exige JWT no cnpj-enrich-worker e remove ref hardcoded do web-scrape (#90)"
    }
   ],
-  "arquivos_mudados_7d": 123,
+  "arquivos_mudados_7d": 124,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 84
+    "commits": 85
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1052,
+  "arquivos_total": 1053,
   "arquivos_codigo": 662,
   "linhas_codigo": 114033,
   "rotas": 10,
@@ -322,8 +322,8 @@
   "hooks": 84,
   "edge_functions": 60,
   "tabelas": 105,
-  "migrations": 226,
-  "cron_jobs": 29,
+  "migrations": 227,
+  "cron_jobs": 30,
   "testes": 125,
   "workflows": 9,
   "scripts": 49,

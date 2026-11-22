@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 226,
+ "migrations": 227,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1023,6 +1023,12 @@
    "agenda": "*/15 * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "latency-alerts"
+  },
+  {
+   "nome": "org-violation-alerts-5min",
+   "agenda": "4-59/5 * * * *",
+   "migration": "20261122130000_cron_org_violation_alerts.sql",
+   "chama_edge": "org-violation-alerts"
   },
   {
    "nome": "pg-net-snapshots-prune-weekly",
