@@ -117,7 +117,7 @@ A maior relação do banco inteiro: **1.108.334 linhas, ~1013 MB, +4 MB/dia**. `
 
 ### Decisão de negócio
 
-4. **Features enterprise pendentes** (§R1). Seis das sete já existem e estão com RLS. Restam **cinco features nunca construídas**: `field_history`, `activities`, `tasks`, `invitations`, `saml_providers`. Nenhuma é referenciada por `src/**` ou `supabase/functions/**` — são escopo de produto, não bug de integração.
+4. **Features enterprise pendentes** (§R1). Das cinco listadas como "nunca construídas", **quatro existem** e foram verificadas nesta revisão: `activities` → `deal_activities` + `DealDetailDrawer:140` (timeline por deal), `tasks` → `deal_tasks` + `DealTasksPanel`, `invitations` → `organization_invites` + `InviteSection.tsx`, `field_history` → `audit_logs.old_data/new_data` + `AuditTrailPanel` montado em `Monitoring.tsx:635`. **Realmente ausente: `saml_providers`** (0 tabelas, 0 refs) — é escopo de SSO enterprise, não bug.
 5. **Motores prontos sem chamador** — `deliverability-check` (298 linhas, SPF/DKIM/DMARC/MX) e `email-verify` (291 linhas, formato/MX/descartável/conta de função) estavam deployados e **nenhum código os chamava**; `docs/GAPS-ENTERPRISE.md:98,111` os listava como "Inexistente". As PRs #121 e #122 fazem a integração na UI.
 
 ---
