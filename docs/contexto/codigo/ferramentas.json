@@ -8,7 +8,7 @@
    "Markdown (81)",
    "JSON (38)",
    "JavaScript (22)",
-   "Shell (13)",
+   "Shell (14)",
    "YAML (11)",
    "Python (5)"
   ],
@@ -271,6 +271,7 @@
    ],
    "permissoes": [],
    "scripts_usados": [
+    "scripts/check-migration-drift.sh",
     "scripts/check-migration-target.sh",
     "scripts/check-migrations.sh"
    ],

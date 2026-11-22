@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "57edd92513902f8c8cd852141b6521f1fdcf1bdc",
+  "commit": "cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42",
   "branch": "main",
-  "data_commit": "2026-11-21T22:45:34-03:00",
+  "data_commit": "2026-11-21T22:51:03-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "cadd1d6",
+    "data": "2026-11-21",
+    "assunto": "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)"
+   },
    {
     "sha": "57edd92",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "cdb0c8b",
     "data": "2026-11-21",
     "assunto": "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)"
-   },
-   {
-    "sha": "be2d500",
-    "data": "2026-11-21",
-    "assunto": "fix(ci): aplica mudancas de verify_jwt no deploy das edge functions (#91)"
    }
   ],
-  "arquivos_mudados_7d": 124,
+  "arquivos_mudados_7d": 125,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -180,6 +180,10 @@
     "mudancas": 4
    },
    {
+    "pasta": ".github/workflows/db-migrations.yml",
+    "mudancas": 4
+   },
+   {
     "pasta": "scripts/ci/eslint-baseline.json",
     "mudancas": 4
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": ".github/workflows/contexto.yml",
-    "mudancas": 3
-   },
-   {
-    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 3
    }
   ],
@@ -226,15 +226,15 @@
     "mudancas": 4
    },
    {
+    "arquivo": ".github/workflows/db-migrations.yml",
+    "mudancas": 4
+   },
+   {
     "arquivo": "scripts/ci/eslint-baseline.json",
     "mudancas": 4
    },
    {
     "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 3
-   },
-   {
-    "arquivo": ".github/workflows/db-migrations.yml",
     "mudancas": 3
    },
    {
@@ -255,6 +255,10 @@
    },
    {
     "arquivo": "docs/prod-readiness.md",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "scripts/automation.config.json",
     "mudancas": 3
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/production-smoke.yml",
     "mudancas": 2
-   },
-   {
-    "arquivo": "CONTRIBUTING.md",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 85
+    "commits": 86
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1053,
+  "arquivos_total": 1054,
   "arquivos_codigo": 662,
   "linhas_codigo": 114033,
   "rotas": 10,
@@ -326,7 +326,7 @@
   "cron_jobs": 30,
   "testes": 125,
   "workflows": 9,
-  "scripts": 49,
+  "scripts": 50,
   "docs_md": 81
  },
  "por_pasta": {

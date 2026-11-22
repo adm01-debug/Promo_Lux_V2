@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `57edd92513902f8c8cd852141b6521f1fdcf1bdc` (2026-11-21T22:45:34-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42` (2026-11-21T22:51:03-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (636), SQL (231), Markdown (81), JSON (38), JavaScript (22), Shell (13), YAML (11), Python (5)
+- linguagens: TypeScript (636), SQL (231), Markdown (81), JSON (38), JavaScript (22), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1053 |
+| arquivos_total | 1054 |
 | arquivos_codigo | 662 |
 | linhas_codigo | 114033 |
 | rotas | 10 |
@@ -50,7 +50,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | cron_jobs | 30 |
 | testes | 125 |
 | workflows | 9 |
-| scripts | 49 |
+| scripts | 50 |
 | docs_md | 81 |
 
 ## Onde ficam as coisas
@@ -242,8 +242,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6742 nós · 14559 arestas · 582 comunidades · grafo do commit `57edd925`
-- comunidades maiores: react (157), Monitoring.tsx (144), @tanstack/react-query (135), snapshot.py (102), JobDetailsSheet.tsx (99), LushaIntelligenceView.tsx (90), lucide-react (89), OrganizationsView.tsx (89), gerar.mjs (80), cn (76), ref_node_fs (67), dependencies (65)
+- 6744 nós · 14560 arestas · 564 comunidades · grafo do commit `cadd1d6d`
+- comunidades maiores: Monitoring.tsx (183), react (173), cn (148), snapshot.py (108), withOrg.ts (95), lucide-react (86), CompaniesView.tsx (83), gerar.mjs (80), JobDetailsSheet.tsx (78), generate.py (71), Login.tsx (70), useActiveOrganization (68)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -255,9 +255,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - supabase/config.toml (6)
 - supabase/functions/gmaps-proxy/index.ts (5)
 - .github/workflows/ci.yml (4)
+- .github/workflows/db-migrations.yml (4)
 - scripts/ci/eslint-baseline.json (4)
 - .github/workflows/contexto.yml (3)
-- .github/workflows/db-migrations.yml (3)
 - .github/workflows/inventario-estado-semanal.yml (3)
 - .husky/pre-commit (3)
 - docs/agentes/github-ci.md (3)
@@ -356,6 +356,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `cadd1d6` chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)
 - 2026-11-21 `57edd92` feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)
 - 2026-11-21 `c14eeb4` fix(db): claim_instagram_job volta a reservar jobs do worker (#111)
 - 2026-11-21 `4bfa973` docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)
@@ -370,7 +371,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `ef039bf` fix: fecha RLS cross-tenant em dashboard_layouts (#105)
 - 2026-11-21 `8723328` fix: grant execute de refresh_org_scores para authenticated (#104)
 - 2026-11-21 `4931d9e` feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)
-- 2026-11-21 `7432455` feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)",
    "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)",
    "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)",
    "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)",
-   "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)",
-   "fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)"
+   "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)"
   ]
  },
  "pr_template": null,

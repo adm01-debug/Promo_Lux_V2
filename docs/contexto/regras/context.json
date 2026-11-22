@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "57edd92513902f8c8cd852141b6521f1fdcf1bdc",
+  "sha": "cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 01:46 UTC",
-  "files_total": 1072,
+  "generated_at": "2026-11-22 01:51 UTC",
+  "files_total": 1073,
   "code_files": 897,
   "code_lines": 129767
  },
@@ -86728,10 +86728,21 @@
   }
  },
  "git": {
-  "sha": "57edd92513902f8c8cd852141b6521f1fdcf1bdc",
+  "sha": "cadd1d6d64a8b31b1e3899aac9d93bcb5a886e42",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "cadd1d6",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)",
+    "files": [
+     ".github/workflows/db-migrations.yml",
+     "scripts/automation.config.json",
+     "scripts/check-migration-drift.sh"
+    ]
+   },
    {
     "sha": "57edd92",
     "date": "2026-11-21",
@@ -87060,17 +87071,6 @@
      "supabase/functions/public-api/index.ts",
      "supabase/migrations/20261121120000_api_key_rate_limit.sql"
     ]
-   },
-   {
-    "sha": "d1ae10a",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webhooks)",
-    "files": [
-     "src/components/lux/RecycleBinView.tsx",
-     "src/integrations/supabase/withOrg.ts",
-     "supabase/migrations/20261121083400_soft_delete_tabelas_negocio.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -87119,10 +87119,6 @@
     2
    ],
    [
-    "src/integrations/supabase/withOrg.ts",
-    2
-   ],
-   [
     "supabase/functions/campaign-dispatch/index.ts",
     2
    ],
@@ -87135,6 +87131,18 @@
     2
    ],
    [
+    ".github/workflows/db-migrations.yml",
+    1
+   ],
+   [
+    "scripts/automation.config.json",
+    1
+   ],
+   [
+    "scripts/check-migration-drift.sh",
+    1
+   ],
+   [
     "supabase/migrations/20261122130000_cron_org_violation_alerts.sql",
     1
    ],
@@ -87144,14 +87152,6 @@
    ],
    [
     "supabase/functions/org-violation-alerts/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/instagram-connection-status/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/webhook-dispatcher/index.ts",
     1
    ]
   ]
