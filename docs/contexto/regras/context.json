@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "77b7e67116dee8504b52b9fe9099168aeec7ac7a",
+  "sha": "443ff87b9c6372566c409b980de2b6ad392629e9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 00:35 UTC",
+  "generated_at": "2026-11-22 00:49 UTC",
   "files_total": 1070,
   "code_files": 895,
-  "code_lines": 129610
+  "code_lines": 129633
  },
  "version": "1.3.2",
- "facts_hash": "d156d2570ced883b",
+ "facts_hash": "201744618be6cb12",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -25783,12 +25783,13 @@
      "OPTIONS",
      "POST"
     ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
     "tables": [
      "webhook_deliveries",
      "webhooks"
     ],
     "env": [
+     "SUPABASE_ANON_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
@@ -27760,7 +27761,7 @@
   {
    "module": "supabase/functions",
    "files": 127,
-   "lines": 22859,
+   "lines": 22882,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -30400,6 +30401,7 @@
     "supabase/functions/web-scrape-enqueue/index.ts",
     "supabase/functions/web-scrape-extract/index.ts",
     "supabase/functions/web-scrape-status/index.ts",
+    "supabase/functions/webhook-dispatcher/index.ts",
     "supabase/functions/workflow-engine/index.ts"
    ],
    "SUPABASE_DB_URL": [
@@ -85063,7 +85065,7 @@
   },
   "supabase/functions/webhook-dispatcher/index.ts": {
    "path": "supabase/functions/webhook-dispatcher/index.ts",
-   "lines": 185,
+   "lines": 208,
    "tables": [
     {
      "table": "webhook_deliveries",
@@ -85121,6 +85123,7 @@
     ]
    },
    "env": [
+    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -86683,10 +86686,19 @@
   }
  },
  "git": {
-  "sha": "77b7e67116dee8504b52b9fe9099168aeec7ac7a",
+  "sha": "443ff87b9c6372566c409b980de2b6ad392629e9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "443ff87",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)",
+    "files": [
+     "supabase/functions/webhook-dispatcher/index.ts"
+    ]
+   },
    {
     "sha": "77b7e67",
     "date": "2026-11-21",
@@ -87023,16 +87035,6 @@
     "files": [
      "docs/pendencias/_estado-itens-1-3.md"
     ]
-   },
-   {
-    "sha": "a37f319",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "chore: adiciona backlog verificado e linha de base (#80)",
-    "files": [
-     "docs/pendencias/_backlog-verificado.md",
-     "docs/pendencias/_linha-de-base.md"
-    ]
    }
   ],
   "hot_files": [
@@ -87077,10 +87079,6 @@
     2
    ],
    [
-    "docs/pendencias/_backlog-verificado.md",
-    2
-   ],
-   [
     "src/integrations/supabase/types.ts",
     2
    ],
@@ -87097,6 +87095,14 @@
     2
    ],
    [
+    "supabase/functions/webhook-dispatcher/index.ts",
+    1
+   ],
+   [
+    "docs/pendencias/_backlog-verificado.md",
+    1
+   ],
+   [
     "scripts/ci/eslint-baseline.json",
     1
    ],
@@ -87110,10 +87116,6 @@
    ],
    [
     "supabase/functions/email-oauth-disconnect/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/instagram-enqueue/index.ts",
     1
    ]
   ]

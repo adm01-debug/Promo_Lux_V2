@@ -2183,7 +2183,7 @@
    "nome": "webhook-dispatcher",
    "entrada": "supabase/functions/webhook-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 185,
+   "linhas": 208,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -2195,6 +2195,7 @@
    ],
    "rpcs": [],
    "env": [
+    "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -2202,6 +2203,7 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [
+    "cron-auth.ts",
     "ssrf-guard.ts"
    ],
    "chamada_pelo_front": [

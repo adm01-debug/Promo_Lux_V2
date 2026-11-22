@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)",
    "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)",
    "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)",
    "fix(edge): restaura auth de 6 functions quebradas por getClaims inexistente (#110)",
-   "fix(extracao): grava organization_id nos jobs criados via service_role (#107)",
-   "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)"
+   "fix(extracao): grava organization_id nos jobs criados via service_role (#107)"
   ]
  },
  "pr_template": null,

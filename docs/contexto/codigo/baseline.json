@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "77b7e67116dee8504b52b9fe9099168aeec7ac7a",
+  "commit": "443ff87b9c6372566c409b980de2b6ad392629e9",
   "branch": "main",
-  "data_commit": "2026-11-21T21:34:52-03:00",
+  "data_commit": "2026-11-21T21:48:41-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "443ff87",
+    "data": "2026-11-21",
+    "assunto": "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)"
+   },
    {
     "sha": "77b7e67",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "d1ae10a",
     "data": "2026-11-21",
     "assunto": "merge: feat(recycle-bin): amplia soft delete para tabelas de negocio (email_suppressions, email_accounts, api_keys, webh"
-   },
-   {
-    "sha": "568555d",
-    "data": "2026-11-21",
-    "assunto": "merge: feat(ci): smoke de CORS das edge functions no production-smoke"
    }
   ],
-  "arquivos_mudados_7d": 119,
+  "arquivos_mudados_7d": 120,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 79
+    "commits": 80
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1051,
   "arquivos_codigo": 662,
-  "linhas_codigo": 113970,
+  "linhas_codigo": 113993,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 127,
-   "linhas": 22859
+   "linhas": 22882
   },
   "tailwind.config.ts": {
    "arquivos": 1,

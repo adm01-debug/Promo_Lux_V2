@@ -2351,6 +2351,7 @@
    "supabase/functions/_shared/web-scrape/robots.ts"
   ],
   "supabase/functions/webhook-dispatcher/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/ssrf-guard.ts"
   ]
  }
