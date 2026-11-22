@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 569,
- "arestas": 1770,
+ "arestas": 1771,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -224,7 +224,6 @@
   "src/components/automation/WorkflowEditor.tsx",
   "src/components/lux/LuxImage.tsx",
   "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
-  "src/components/lux/permissions/PermissionGate.tsx",
   "src/components/ui/accordion.tsx",
   "src/components/ui/aspect-ratio.tsx",
   "src/components/ui/calendar.tsx",

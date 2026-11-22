@@ -562,6 +562,7 @@
   "src/components/lux/ScrapeResultsView.tsx": [
    "src/components/lux/DataError.tsx",
    "src/components/lux/EmptyState.tsx",
+   "src/components/lux/permissions/PermissionGate.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/input.tsx",

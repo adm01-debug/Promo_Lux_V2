@@ -408,7 +408,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 265
+   "arquivos_puxados": 266
   },
   {
    "protegida": true,
@@ -1795,7 +1795,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 227
+   "arquivos_puxados": 228
   },
   {
    "id": "deals",
@@ -2468,33 +2468,68 @@
    "arquivo": "src/components/lux/ScrapeResultsView.tsx",
    "registrada_em": "src/lib/viewRegistry.ts",
    "hooks": [
+    "useActiveOrganization",
     "useAuth",
+    "useCan",
     "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
     "useEffect",
     "useMemo",
     "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
     "useQuery",
     "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useRolePermissions",
     "useState",
-    "useToast"
+    "useToast",
+    "useUpdateMemberRole"
    ],
    "hooks_locais": [
+    "useActiveOrganization",
     "useAuth",
-    "useToast"
+    "useCan",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "usePermissions",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useRolePermissions",
+    "useToast",
+    "useUpdateMemberRole"
    ],
    "tabelas": [
     "companies",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
+    "role_permissions",
     "scrape_jobs",
     "scrape_results"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "default_role_permissions"
+   ],
    "edges": [],
    "canais_realtime": [
     "private:${user.id}:scrape-results"
    ],
    "flags": [],
-   "papeis": [],
-   "arquivos_puxados": 16
+   "papeis": [
+    "admin",
+    "sdr",
+    "viewer"
+   ],
+   "arquivos_puxados": 22
   },
   {
    "id": "settings",

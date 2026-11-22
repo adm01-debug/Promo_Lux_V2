@@ -1,17 +1,17 @@
 # Graph Report - Promo_Lux_V2  (2026-11-22)
 
 ## Corpus Check
-- 1082 files · ~656,783 words
+- 1082 files · ~656,801 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 20 file(s) not represented in the graph (top: (none) 10, .toml 5, .css 2)
 
 ## Summary
-- 7083 nodes · 15589 edges · 608 communities (377 shown, 231 thin omitted)
+- 7083 nodes · 15591 edges · 608 communities (377 shown, 231 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 461 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4df75d32`
+- Built from commit: `9fdb4553`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2068,7 +2068,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `vitest` connect `vitest` to `react`, `cn`, `Index.tsx`, `campaign-dispatch/index.ts`, `useDlqItems.ts`, `SlaHistoryTrendChart.tsx`, `package.json`, `lusha-client.ts`, `req`, `SessionsPanel.test.tsx`, `lusha/departmentMap.ts`, `orgErrorHandler.audit.test.ts`, `gmaps-proxy/index.ts`, `simulator.ts`, `oracle-search-decisors/index.ts`, `leadcontact-client.ts`, `useOracleV2.ts`, `CampaignsView`, `withOrg.ts`, `useDlqReplay.ts`, `web-scrape-worker/index.ts`, `deliverability-check/index.ts`, `orgErrorHandler.ts`, `public-api/index.ts`, `DecisionMakersGrid.test.tsx`, `Sidebar.tsx`, `SourceComparisonSummary.tsx`, `scrape-queue-worker/index.ts`, `SafeHTML.tsx`, `CompanyFilters.tsx`, `StakeholderFinderView.tsx`, `bitrix-client.ts`, `useRateLimit.ts`, `aggregations.ts`, `orgErrorHandler.e2e.test.ts`, `historyUtils.fuzz.test.ts`, `vite.config.ts`, `Analisado`, `useAuditTrail.ts`, `downloadCSV`, `apollo-cache.ts`, `DlqAlertSettingsCard.test.tsx`, `RetryAutoTunerCard.tsx`, `withOrg.maliciousFilters.test.ts`, `useRateLimit.logic.test.ts`, `DlqHealthCard`, `autotune.ts`, `SlaHistoryCard`, `compareReport.ts`, `AuthContext.tsx`?**
   _High betweenness centrality (0.142) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `lucide-react`, `button.tsx`, `cn`, `badge.tsx`, `Login.tsx`, `vitest`, `Index.tsx`, `OAuthSnapshotsPanel.tsx`, `CompaniesView.tsx`, `SlaHistoryTrendChart.tsx`, `framer-motion`, `package.json`, `useActiveOrganization`, `OracleV2ErrorBoundary.tsx`, `carousel.tsx`, `useCnpjEnrich.ts`, `DealDetailDrawer.tsx`, `ThemeToggle.tsx`, `toast.tsx`, `StatsGrid.tsx`, `DryRunLogsPanel.tsx`, `OrganizationsView.tsx`, `App.tsx`, `DashboardView.tsx`, `useDlqReplay.ts`, `useWebScrape.ts`, `Header.tsx`, `orgErrorHandler.ts`, `useEnvProfiles.ts`, `Sidebar.tsx`, `PageTransition.tsx`, `LeaderboardTab.tsx`, `useAutomationsMonitor.ts`, `useLostReasons.ts`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `CompanyFilters.tsx`, `StakeholderFinderView.tsx`, `PermissionsMatrix.tsx`, `demoData.ts`, `useRateLimit.ts`, `usePermissions.ts`, `useAuth`, `OnboardingTour.tsx`, `chart.tsx`, `CommandPalette.tsx`, `AutomationStatusPanel.tsx`, `DlqAlertSettingsCard.test.tsx`, `useDashboardLayout.ts`, `class-variance-authority`, `RetryAutoTunerCard.tsx`, `withOrg.maliciousFilters.test.ts`, `NotificationsPanel.tsx`, `ConversionTab.tsx`, `MapMarkerIcons.tsx`, `useDeals.ts`, `DlqAlertSettingsCard.tsx`, `DlqHealthCard`, `useResilienceSimulator.ts`, `PasswordStrengthMeter.tsx`, `useLoginForm.ts`, `ScrapeLatencyPanel.tsx`, `useChangelog.ts`, `form.tsx`, `PartitionAdvisoryPanel.tsx`, `RLSDiscoveryView.tsx`, `AuthContext.tsx`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+  _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **Why does `cn()` connect `cn` to `lucide-react`, `react`, `button.tsx`, `badge.tsx`, `Login.tsx`, `vitest`, `RetryPolicyAdvisoriesPanel`, `Index.tsx`, `carousel.tsx`, `CompaniesView.tsx`, `framer-motion`, `useActiveOrganization`, `CookieCard`, `DealDetailDrawer.tsx`, `ThemeToggle.tsx`, `toast.tsx`, `StatsGrid.tsx`, `DryRunLogsPanel.tsx`, `useOracleV2.ts`, `DashboardView.tsx`, `2. Módulos Principais (12 Views)`, `Header.tsx`, `WorkflowCard.tsx`, `Sidebar.tsx`, `LeaderboardTab.tsx`, `useAutomationsMonitor.ts`, `SourceComparisonSummary.tsx`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `CompanyFilters.tsx`, `3. Functions chamadas pelo frontend (28)`, `useAuth`, `chart.tsx`, `useAuditTrail.ts`, `CommandPalette.tsx`, `AutomationStatusPanel.tsx`, `2. Gaps por Categoria`, `class-variance-authority`, `RetryAutoTunerCard.tsx`, `NotificationsPanel.tsx`, `useDbHealth.ts`, `useDeals.ts`, `DlqAlertSettingsCard.tsx`, `DlqHealthCard`, `useResilienceSimulator.ts`, `ScrapeLatencyPanel.tsx`, `useChangelog.ts`, `form.tsx`, `PartitionAdvisoryPanel.tsx`?**
   _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **What connects `session-start.sh script`, `PATH`, `version` to the rest of the system?**

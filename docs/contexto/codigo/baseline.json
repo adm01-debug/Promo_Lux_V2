@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4df75d32cc4552131a2ba7ffcc1e74362847f221",
+  "commit": "9fdb45538b5a74353b681abe4e1f46580ae08b33",
   "branch": "main",
-  "data_commit": "2026-11-22T12:43:27-03:00",
+  "data_commit": "2026-11-22T15:21:23-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9fdb455",
+    "data": "2026-11-22",
+    "assunto": "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)"
+   },
    {
     "sha": "4df75d3",
     "data": "2026-11-22",
@@ -126,18 +131,13 @@
     "sha": "77b7e67",
     "data": "2026-11-21",
     "assunto": "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)"
-   },
-   {
-    "sha": "c45eec0",
-    "data": "2026-11-21",
-    "assunto": "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)"
    }
   ],
-  "arquivos_mudados_7d": 191,
+  "arquivos_mudados_7d": 192,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 43
+    "mudancas": 44
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 102
+    "commits": 103
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1101,
   "arquivos_codigo": 695,
-  "linhas_codigo": 120216,
+  "linhas_codigo": 120223,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 303,
-   "linhas": 49116
+   "linhas": 49123
   },
   "src/contexts": {
    "arquivos": 7,

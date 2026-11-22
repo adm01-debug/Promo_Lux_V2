@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)",
    "chore: remove artefatos temporarios commitados por engano na #146 (#147)",
    "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)",
    "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)",
-   "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)",
-   "fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)"
+   "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)"
   ]
  },
  "pr_template": null,

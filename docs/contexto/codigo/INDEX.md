@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `4df75d32cc4552131a2ba7ffcc1e74362847f221` (2026-11-22T12:43:27-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9fdb45538b5a74353b681abe4e1f46580ae08b33` (2026-11-22T15:21:23-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1101 |
 | arquivos_codigo | 695 |
-| linhas_codigo | 120216 |
+| linhas_codigo | 120223 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -245,7 +245,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7083 nós · 15589 arestas · 608 comunidades · grafo do commit `4df75d32`
+- 7083 nós · 15591 arestas · 608 comunidades · grafo do commit `9fdb4553`
 - comunidades maiores: lucide-react (175), react (166), button.tsx (150), cn (123), badge.tsx (116), gerar.mjs (80), vitest (79), ref_node_fs (71), Index.tsx (68), campaign-dispatch/index.ts (67), CompaniesView.tsx (66), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -361,6 +361,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-22 `9fdb455` fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)
 - 2026-11-22 `4df75d3` chore: remove artefatos temporarios commitados por engano na #146 (#147)
 - 2026-11-22 `f9cdd00` docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)
 - 2026-11-22 `5c14e83` docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)
@@ -375,7 +376,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `c07fc7d` docs: atualiza o backlog com o estado medido do banco (#123)
 - 2026-11-21 `7a94840` feat(ui): verificação de entregabilidade do e-mail do contato (#122)
 - 2026-11-21 `1cd082b` feat(ui): expõe o checker de entregabilidade na conta de e-mail (#121)
-- 2026-11-21 `bccf303` feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

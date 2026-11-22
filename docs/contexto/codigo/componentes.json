@@ -2831,7 +2831,7 @@
     "ScrapeResultsView"
    ],
    "export_default": null,
-   "linhas": 397,
+   "linhas": 404,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth"
