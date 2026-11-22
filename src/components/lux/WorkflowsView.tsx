@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { workflowApi, type Workflow } from "@/lib/api/workflows";
+import { workflowApi, type Workflow, type WorkflowPhase } from "@/lib/api/workflows";
 import type { Json, Tables } from "@/integrations/supabase/types";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
@@ -37,10 +37,16 @@ const stepIcons: Record<string, React.ReactNode> = {
 };
 
 const defaultSteps = [
-  { id: "s1", type: "source" as const, label: "Google Maps Scraper", provider: "gmaps.atomicabr" },
-  { id: "s2", type: "enrich" as const, label: "Importar & Enriquecer", provider: "Waterfall" },
-  { id: "s3", type: "filter" as const, label: "Scoring IPC", provider: "LUX IA" },
+  { id: "s1", type: "source" as const, label: "Google Maps Scraper", provider: "gmaps.atomicabr", phase: "scrape" as const },
+  { id: "s2", type: "enrich" as const, label: "Importar & Enriquecer", provider: "Waterfall", phase: "enrich" as const },
+  { id: "s3", type: "filter" as const, label: "Scoring IPC", provider: "LUX IA", phase: "ipc_score" as const },
   { id: "s4", type: "action" as const, label: "Salvar no Banco", provider: "Lovable Cloud" },
+];
+
+const phaseOptions: { phase: WorkflowPhase; label: string; hint: string }[] = [
+  { phase: "scrape", label: "Coletar no Google Maps", hint: "Busca empresas pelas keywords e raio" },
+  { phase: "enrich", label: "Enriquecer contatos", hint: "Importa empresas e extrai emails dos sites" },
+  { phase: "ipc_score", label: "Qualificar por IPC", hint: "Calcula a pontuação de cada lead" },
 ];
 
 export const WorkflowsView = () => {
@@ -56,6 +62,7 @@ export const WorkflowsView = () => {
   const [keywords, setKeywords] = useState("restaurantes, bares");
   const [radius, setRadius] = useState(10000);
   const [extractEmail, setExtractEmail] = useState(true);
+  const [enabledPhases, setEnabledPhases] = useState<WorkflowPhase[]>(["scrape", "enrich", "ipc_score"]);
 
   const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
     queryKey: ["workflows"],
@@ -114,9 +121,12 @@ export const WorkflowsView = () => {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); toast({ title: "Workflow removido" }); },
   });
 
+  const selectedSteps = defaultSteps.filter(s => !("phase" in s) || enabledPhases.includes(s.phase));
+
   const handleCreate = () => {
-    if (!newName.trim()) return;
-    createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps: defaultSteps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
+    if (!newName.trim() || enabledPhases.length === 0) return;
+    const steps = selectedSteps.map(s => ({ ...s }));
+    createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
   };
 
   const activeCount = workflows.filter(w => w.status === "active").length;
@@ -134,16 +144,33 @@ export const WorkflowsView = () => {
           <DialogContent className="bg-card border-border/50">
             <DialogHeader><DialogTitle className="flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Novo Workflow Automático</DialogTitle></DialogHeader>
             <div className="space-y-4 mt-2">
-              <StepProgress steps={defaultSteps.map(s => s.label)} currentStep={createMutation.isPending ? defaultSteps.length : 0} className="py-2" />
+              <StepProgress steps={selectedSteps.map(s => s.label)} currentStep={createMutation.isPending ? selectedSteps.length : 0} className="py-2" />
               <div className="flex items-center gap-2 overflow-x-auto pb-2">
-                {defaultSteps.map((step, i) => (
+                {selectedSteps.map((step, i) => (
                   <div key={step.id} className="flex items-center gap-2">
                     <div className={cn("rounded-md border px-2 py-1.5 flex items-center gap-1.5 whitespace-nowrap", stepColors[step.type])}>
                       {stepIcons[step.type]}<span className="text-[10px] font-medium">{step.label}</span>
                     </div>
-                    {i < defaultSteps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/40 flex-shrink-0" />}
+                    {i < selectedSteps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/40 flex-shrink-0" />}
                   </div>
                 ))}
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Etapas que este workflow executa</Label>
+                {phaseOptions.map(opt => (
+                  <div key={opt.phase} className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm text-foreground">{opt.label}</p>
+                      <p className="text-[10px] text-muted-foreground">{opt.hint}</p>
+                    </div>
+                    <Switch
+                      checked={enabledPhases.includes(opt.phase)}
+                      disabled={enabledPhases.length === 1 && enabledPhases.includes(opt.phase)}
+                      onCheckedChange={on => setEnabledPhases(prev => on ? [...prev, opt.phase] : prev.filter(p => p !== opt.phase))}
+                    />
+                  </div>
+                ))}
+                {enabledPhases.length === 0 && <p className="text-[10px] text-destructive">Selecione ao menos uma etapa.</p>}
               </div>
               <div className="space-y-2"><Label className="text-xs text-muted-foreground">Nome</Label><Input value={newName} onChange={e => setNewName(e.target.value)} className="h-9 text-sm" /></div>
               <div className="space-y-2"><Label className="text-xs text-muted-foreground">Descrição</Label><Input value={newDescription} onChange={e => setNewDescription(e.target.value)} className="h-9 text-sm" /></div>
@@ -153,7 +180,7 @@ export const WorkflowsView = () => {
                 <div><p className="text-sm text-foreground">Extrair emails</p><p className="text-[10px] text-muted-foreground">Busca emails nos sites encontrados</p></div>
                 <Switch checked={extractEmail} onCheckedChange={setExtractEmail} />
               </div>
-              <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim()} className="w-full gap-2">
+              <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim() || enabledPhases.length === 0} className="w-full gap-2">
                 {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
                 {createMutation.isPending ? "Criando..." : "Criar & Ativar Workflow"}
               </Button>

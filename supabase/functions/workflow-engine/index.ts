@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
 import { upsertCompanies } from "../_shared/companies-upsert.ts";
+import { phaseEnabled } from "../_shared/workflow-phases.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -287,286 +288,298 @@ serve(async (req) => {
         }).eq("id", stepId);
       };
 
-      try {
-        const keywords = (config.keywords as string[]) || ["empresas"];
-        const lang = (config.lang as string) || "pt";
-        const radius = (config.radius as number) || 10000;
-        const depth = (config.depth as number) || 1;
-        const emailFlag = config.email !== undefined ? Boolean(config.email) : true;
-        const fastMode = Boolean(config.fast_mode);
-
-        const { data: scrapeJob } = await supabase
-          .from("scrape_jobs")
-          .insert({
-            user_id: userId,
-            organization_id: workflow.organization_id,
-            name: `WF: ${workflow.name}`,
-            status: "pending",
-            source: "gmaps",
-            config: {
-              keywords, lang, radius, depth,
-              email: emailFlag, fast_mode: fastMode,
-              zoom: 15, lat: "0", lon: "0",
-              max_time: 480000000000, proxies: [],
-            },
-          })
-          .select()
-          .single();
-
-        scrapeJobId = scrapeJob?.id ?? null;
-
-        const stepInit = await insertStep("Inicialização", "Preparando ambiente e parâmetros de busca", { keywords, radius, depth });
-        
-        let externalId: string | null = null;
+      if (!phaseEnabled(workflow.steps, "scrape")) {
+        results.scrape = { status: "skipped" };
+      } else {
         try {
-          const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: `WF: ${workflow.name}`,
-              keywords, lang, radius, depth,
-              email: emailFlag, fast_mode: fastMode,
-              zoom: 15, lat: "0", lon: "0",
-              max_time: 480000000000, proxies: [],
-            }),
-            signal: AbortSignal.timeout(10000),
-          });
-          if (res.ok) {
-            const result = await res.json();
-            externalId = result.id || result.ID;
-            if (stepInit.data) await updateStep(stepInit.data.id, "completed", "Ambiente preparado com sucesso", { external_id: externalId });
-          } else {
-            const errText = await res.text();
-            if (stepInit.data) await updateStep(stepInit.data.id, "failed", "Falha ao iniciar job externo", { status: res.status, error: errText });
-          }
-        } catch (err) {
-          log.error("step_scrape_api_error", { error: (err as Error).message, workflow_id });
-          if (stepInit.data) await updateStep(stepInit.data.id, "failed", "Erro de conexão com API externa", null, (err as Error).stack);
-        }
+          const keywords = (config.keywords as string[]) || ["empresas"];
+          const lang = (config.lang as string) || "pt";
+          const radius = (config.radius as number) || 10000;
+          const depth = (config.depth as number) || 1;
+          const emailFlag = config.email !== undefined ? Boolean(config.email) : true;
+          const fastMode = Boolean(config.fast_mode);
 
-        const stepSearch = await insertStep("Busca de Leads", "Iniciando busca no Google Maps", { external_id: externalId });
-
-        if (scrapeJobId) {
-          await supabase
+          const { data: scrapeJob } = await supabase
             .from("scrape_jobs")
-            .update({ external_id: externalId, status: externalId ? "running" : "failed" })
-            .eq("id", scrapeJobId);
-        }
+            .insert({
+              user_id: userId,
+              organization_id: workflow.organization_id,
+              name: `WF: ${workflow.name}`,
+              status: "pending",
+              source: "gmaps",
+              config: {
+                keywords, lang, radius, depth,
+                email: emailFlag, fast_mode: fastMode,
+                zoom: 15, lat: "0", lon: "0",
+                max_time: 480000000000, proxies: [],
+              },
+            })
+            .select()
+            .single();
 
-        if (externalId && stepSearch.data) {
-          await updateStep(stepSearch.data.id, "completed", "Busca iniciada remotamente", { external_id: externalId });
-        } else if (stepSearch.data) {
-          await updateStep(stepSearch.data.id, "failed", "Não foi possível obter ID externo para busca");
-        }
+          scrapeJobId = scrapeJob?.id ?? null;
 
-        results.scrape = {
-          job_id: scrapeJobId,
-          external_id: externalId,
-          status: externalId ? "submitted" : "failed",
-          keywords,
-        };
-      } catch (err) {
-        log.error("step_scrape_error", { error: (err as Error).message, workflow_id });
-        results.scrape = { error: (err as Error).message };
+          const stepInit = await insertStep("Inicialização", "Preparando ambiente e parâmetros de busca", { keywords, radius, depth });
+        
+          let externalId: string | null = null;
+          try {
+            const res = await fetch(`${GMAPS_API_BASE}/jobs`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: `WF: ${workflow.name}`,
+                keywords, lang, radius, depth,
+                email: emailFlag, fast_mode: fastMode,
+                zoom: 15, lat: "0", lon: "0",
+                max_time: 480000000000, proxies: [],
+              }),
+              signal: AbortSignal.timeout(10000),
+            });
+            if (res.ok) {
+              const result = await res.json();
+              externalId = result.id || result.ID;
+              if (stepInit.data) await updateStep(stepInit.data.id, "completed", "Ambiente preparado com sucesso", { external_id: externalId });
+            } else {
+              const errText = await res.text();
+              if (stepInit.data) await updateStep(stepInit.data.id, "failed", "Falha ao iniciar job externo", { status: res.status, error: errText });
+            }
+          } catch (err) {
+            log.error("step_scrape_api_error", { error: (err as Error).message, workflow_id });
+            if (stepInit.data) await updateStep(stepInit.data.id, "failed", "Erro de conexão com API externa", null, (err as Error).stack);
+          }
+
+          const stepSearch = await insertStep("Busca de Leads", "Iniciando busca no Google Maps", { external_id: externalId });
+
+          if (scrapeJobId) {
+            await supabase
+              .from("scrape_jobs")
+              .update({ external_id: externalId, status: externalId ? "running" : "failed" })
+              .eq("id", scrapeJobId);
+          }
+
+          if (externalId && stepSearch.data) {
+            await updateStep(stepSearch.data.id, "completed", "Busca iniciada remotamente", { external_id: externalId });
+          } else if (stepSearch.data) {
+            await updateStep(stepSearch.data.id, "failed", "Não foi possível obter ID externo para busca");
+          }
+
+          results.scrape = {
+            job_id: scrapeJobId,
+            external_id: externalId,
+            status: externalId ? "submitted" : "failed",
+            keywords,
+          };
+        } catch (err) {
+          log.error("step_scrape_error", { error: (err as Error).message, workflow_id });
+          results.scrape = { error: (err as Error).message };
+        }
       }
 
       // ===== STEP 2: ENRICH =====
       await supabase.from("workflow_runs").update({ current_step: "enrich" }).eq("id", run.id);
-
-      const stepEnrich = await insertStep("Enriquecimento", "Iniciando processamento e extração de dados");
       let enrichedCount = 0;
-      try {
-        const { data: completedJobs } = await supabase
-          .from("scrape_jobs")
-          .select("id, external_id")
-          .eq("status", "completed")
-          .eq("source", "gmaps")
-          .eq("user_id", userId)
-          .order("created_at", { ascending: false })
-          .limit(5);
+      if (!phaseEnabled(workflow.steps, "enrich")) {
+        results.enrich = { status: "skipped" };
+      } else {
 
-        if (completedJobs) {
-          for (const job of completedJobs) {
-            if (!job.external_id) continue;
+        const stepEnrich = await insertStep("Enriquecimento", "Iniciando processamento e extração de dados");
+        try {
+          const { data: completedJobs } = await supabase
+            .from("scrape_jobs")
+            .select("id, external_id")
+            .eq("status", "completed")
+            .eq("source", "gmaps")
+            .eq("user_id", userId)
+            .order("created_at", { ascending: false })
+            .limit(5);
 
-            const { count } = await supabase
-              .from("scrape_results")
-              .select("id", { count: "exact", head: true })
-              .eq("job_id", job.id);
+          if (completedJobs) {
+            for (const job of completedJobs) {
+              if (!job.external_id) continue;
 
-            if ((count || 0) > 0) continue;
+              const { count } = await supabase
+                .from("scrape_results")
+                .select("id", { count: "exact", head: true })
+                .eq("job_id", job.id);
 
-            try {
-              const res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
-                signal: AbortSignal.timeout(15000),
-              });
-              if (!res.ok) continue;
+              if ((count || 0) > 0) continue;
 
-              const text = await res.text();
-              const lines = text.split("\n").filter(Boolean);
-              if (lines.length <= 1) continue;
-
-              const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
-
-              const batchCompanies: Record<string, unknown>[] = [];
-              const batchRawData: Record<string, string>[] = [];
-
-              for (let li = 1; li < lines.length; li++) {
-                const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
-                const obj: Record<string, string> = {};
-                headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
-
-                batchCompanies.push({
-                  user_id: userId,
-                  organization_id: workflow.organization_id,
-                  name: obj.name || obj.title || "Unknown",
-                  sector: obj.category || obj.type || "Não classificado",
-                  location: obj.address || obj.city || "",
-                  website: obj.website || obj.web_site || "",
-                  phone: obj.phone || "",
-                  email: obj.email || "",
-                  source: "gmaps",
-                  enriched: !!(obj.email || obj.phone),
-                  raw_data: obj,
+              try {
+                const res = await fetch(`${GMAPS_API_BASE}/jobs/${job.external_id}/download`, {
+                  signal: AbortSignal.timeout(15000),
                 });
-                batchRawData.push(obj);
-              }
+                if (!res.ok) continue;
 
-              if (batchCompanies.length > 0) {
-                // upsert (não insert): um único name+source repetido no lote —
-                // ou já existente na org — antes abortava o INSERT inteiro por
-                // violar a constraint única, descartando silenciosamente todo o
-                // resto do lote (0 empresas importadas, só logado). Upsert com
-                // onConflict mescla a duplicata em vez de derrubar o lote.
-                // upsertCompanies resolve o indice unico que o banco alvo
-                // realmente tem. Fixar onConflict aqui quebrava em 42P10 quando
-                // o schema estava com indice parcial e o lote inteiro era
-                // descartado (0 empresas importadas, so logado).
-                const { data: insertedCompanies, error: insError } = await upsertCompanies(
-                  supabase,
-                  batchCompanies,
-                  { hasPlaceId: false },
-                );
+                const text = await res.text();
+                const lines = text.split("\n").filter(Boolean);
+                if (lines.length <= 1) continue;
 
-                if (insError) {
-                  log.error("bulk_company_insert_failed", { error: insError.message });
-                  continue;
-                }
+                const headers = lines[0].split(",").map((h: string) => h.trim().replace(/"/g, ""));
 
-                if (insertedCompanies) {
-                  const resultsToInsert = insertedCompanies.map((c, idx) => ({
+                const batchCompanies: Record<string, unknown>[] = [];
+                const batchRawData: Record<string, string>[] = [];
+
+                for (let li = 1; li < lines.length; li++) {
+                  const values = lines[li].split(",").map((v: string) => v.trim().replace(/"/g, ""));
+                  const obj: Record<string, string> = {};
+                  headers.forEach((h: string, i: number) => { obj[h] = values[i] || ""; });
+
+                  batchCompanies.push({
                     user_id: userId,
                     organization_id: workflow.organization_id,
-                    job_id: job.id,
-                    company_id: c.id,
-                    raw_data: batchRawData[idx],
-                    processed: false,
-                  }));
-
-                  const { error: resError } = await supabase.from("scrape_results").insert(resultsToInsert);
-                  if (resError) log.error("bulk_results_insert_failed", { error: resError.message });
-                  enrichedCount += insertedCompanies.length;
+                    name: obj.name || obj.title || "Unknown",
+                    sector: obj.category || obj.type || "Não classificado",
+                    location: obj.address || obj.city || "",
+                    website: obj.website || obj.web_site || "",
+                    phone: obj.phone || "",
+                    email: obj.email || "",
+                    source: "gmaps",
+                    enriched: !!(obj.email || obj.phone),
+                    raw_data: obj,
+                  });
+                  batchRawData.push(obj);
                 }
-              }
 
-              await supabase
-                .from("scrape_jobs")
-                .update({ results_count: enrichedCount })
-                .eq("id", job.id);
-            } catch (err) {
-              log.error("step_enrich_download_error", { error: (err as Error).message, job_id: job.id });
+                if (batchCompanies.length > 0) {
+                  // upsert (não insert): um único name+source repetido no lote —
+                  // ou já existente na org — antes abortava o INSERT inteiro por
+                  // violar a constraint única, descartando silenciosamente todo o
+                  // resto do lote (0 empresas importadas, só logado). Upsert com
+                  // onConflict mescla a duplicata em vez de derrubar o lote.
+                  // upsertCompanies resolve o indice unico que o banco alvo
+                  // realmente tem. Fixar onConflict aqui quebrava em 42P10 quando
+                  // o schema estava com indice parcial e o lote inteiro era
+                  // descartado (0 empresas importadas, so logado).
+                  const { data: insertedCompanies, error: insError } = await upsertCompanies(
+                    supabase,
+                    batchCompanies,
+                    { hasPlaceId: false },
+                  );
+
+                  if (insError) {
+                    log.error("bulk_company_insert_failed", { error: insError.message });
+                    continue;
+                  }
+
+                  if (insertedCompanies) {
+                    const resultsToInsert = insertedCompanies.map((c, idx) => ({
+                      user_id: userId,
+                      organization_id: workflow.organization_id,
+                      job_id: job.id,
+                      company_id: c.id,
+                      raw_data: batchRawData[idx],
+                      processed: false,
+                    }));
+
+                    const { error: resError } = await supabase.from("scrape_results").insert(resultsToInsert);
+                    if (resError) log.error("bulk_results_insert_failed", { error: resError.message });
+                    enrichedCount += insertedCompanies.length;
+                  }
+                }
+
+                await supabase
+                  .from("scrape_jobs")
+                  .update({ results_count: enrichedCount })
+                  .eq("id", job.id);
+              } catch (err) {
+                log.error("step_enrich_download_error", { error: (err as Error).message, job_id: job.id });
+              }
             }
           }
-        }
 
-        if (stepEnrich.data) await updateStep(stepEnrich.data.id, "completed", `Enriquecimento concluído: ${enrichedCount} empresas processadas`, { count: enrichedCount });
-        results.enrich = { companies_imported: enrichedCount, status: "completed" };
-      } catch (err) {
-        log.error("step_enrich_error", { error: (err as Error).message, workflow_id });
-        if (stepEnrich.data) await updateStep(stepEnrich.data.id, "failed", "Falha durante enriquecimento", null, (err as Error).stack);
-        results.enrich = { error: (err as Error).message };
+          if (stepEnrich.data) await updateStep(stepEnrich.data.id, "completed", `Enriquecimento concluído: ${enrichedCount} empresas processadas`, { count: enrichedCount });
+          results.enrich = { companies_imported: enrichedCount, status: "completed" };
+        } catch (err) {
+          log.error("step_enrich_error", { error: (err as Error).message, workflow_id });
+          if (stepEnrich.data) await updateStep(stepEnrich.data.id, "failed", "Falha durante enriquecimento", null, (err as Error).stack);
+          results.enrich = { error: (err as Error).message };
+        }
       }
 
       // ===== STEP 3: IPC SCORING =====
       await supabase.from("workflow_runs").update({ current_step: "ipc_score" }).eq("id", run.id);
-
-      const stepIPC = await insertStep("Qualificação IPC", "Calculando pontuação de leads qualificados");
       let scoredCount = 0;
-      try {
-        const { data: ipcConfig } = await supabase
-          .from("ipc_config")
-          .select("*")
-          .eq("is_active", true)
-          .eq("user_id", userId)
-          .limit(1)
-          .maybeSingle();
+      if (!phaseEnabled(workflow.steps, "ipc_score")) {
+        results.ipc_score = { status: "skipped" };
+      } else {
 
-        const criteria = (ipcConfig?.criteria || {}) as Record<string, unknown>;
-        const criterSectors = (criteria.sectors || []) as string[];
-        const criterLocations = (criteria.locations || []) as string[];
+        const stepIPC = await insertStep("Qualificação IPC", "Calculando pontuação de leads qualificados");
+        try {
+          const { data: ipcConfig } = await supabase
+            .from("ipc_config")
+            .select("*")
+            .eq("is_active", true)
+            .eq("user_id", userId)
+            .limit(1)
+            .maybeSingle();
 
-        const { data: unscoredCompanies } = await supabase
-          .from("companies")
-          .select("*")
-          .eq("ipc_score", 0)
-          .eq("user_id", userId)
-          .limit(500);
+          const criteria = (ipcConfig?.criteria || {}) as Record<string, unknown>;
+          const criterSectors = (criteria.sectors || []) as string[];
+          const criterLocations = (criteria.locations || []) as string[];
 
-        if (unscoredCompanies) {
-          for (const company of unscoredCompanies) {
-            let score = 0;
+          const { data: unscoredCompanies } = await supabase
+            .from("companies")
+            .select("*")
+            .eq("ipc_score", 0)
+            .eq("user_id", userId)
+            .limit(500);
 
-            if (criterSectors.length > 0) {
-              const matches = criterSectors.some((s) =>
-                company.sector?.toLowerCase().includes(s.toLowerCase())
-              );
-              score += matches ? 30 : 5;
-            } else {
-              score += 15;
+          if (unscoredCompanies) {
+            for (const company of unscoredCompanies) {
+              let score = 0;
+
+              if (criterSectors.length > 0) {
+                const matches = criterSectors.some((s) =>
+                  company.sector?.toLowerCase().includes(s.toLowerCase())
+                );
+                score += matches ? 30 : 5;
+              } else {
+                score += 15;
+              }
+
+              if (criterLocations.length > 0) {
+                const matches = criterLocations.some((l) =>
+                  company.location?.toLowerCase().includes(l.toLowerCase())
+                );
+                score += matches ? 25 : 5;
+              } else {
+                score += 10;
+              }
+
+              if (company.email) score += 15;
+              if (company.phone) score += 10;
+              if (company.website) score += 10;
+
+              const raw = (company.raw_data || {}) as Record<string, unknown>;
+              if (raw.rating && parseFloat(String(raw.rating)) >= 4.0) score += 10;
+              if (raw.reviews_count && parseInt(String(raw.reviews_count)) > 50) score += 5;
+
+              score = Math.min(score, 100);
+
+              await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id).eq("user_id", userId);
+              scoredCount++;
             }
-
-            if (criterLocations.length > 0) {
-              const matches = criterLocations.some((l) =>
-                company.location?.toLowerCase().includes(l.toLowerCase())
-              );
-              score += matches ? 25 : 5;
-            } else {
-              score += 10;
-            }
-
-            if (company.email) score += 15;
-            if (company.phone) score += 10;
-            if (company.website) score += 10;
-
-            const raw = (company.raw_data || {}) as Record<string, unknown>;
-            if (raw.rating && parseFloat(String(raw.rating)) >= 4.0) score += 10;
-            if (raw.reviews_count && parseInt(String(raw.reviews_count)) > 50) score += 5;
-
-            score = Math.min(score, 100);
-
-            await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id).eq("user_id", userId);
-            scoredCount++;
           }
+
+          const { data: unprocessedResults } = await supabase
+            .from("scrape_results")
+            .select("id")
+            .eq("processed", false)
+            .eq("user_id", userId)
+            .limit(500);
+
+          if (unprocessedResults && unprocessedResults.length > 0) {
+            const ids = unprocessedResults.map(r => r.id);
+            await supabase.from("scrape_results").update({ processed: true }).in("id", ids);
+          }
+
+          if (stepIPC.data) await updateStep(stepIPC.data.id, "completed", `Qualificação concluída: ${scoredCount} empresas pontuadas`, { count: scoredCount });
+          results.ipc_score = { companies_scored: scoredCount, status: "completed" };
+        } catch (err) {
+          log.error("step_ipc_score_error", { error: (err as Error).message, workflow_id });
+          if (stepIPC.data) await updateStep(stepIPC.data.id, "failed", "Falha durante pontuação IPC", null, (err as Error).stack);
+          results.ipc_score = { error: (err as Error).message };
         }
-
-        const { data: unprocessedResults } = await supabase
-          .from("scrape_results")
-          .select("id")
-          .eq("processed", false)
-          .eq("user_id", userId)
-          .limit(500);
-
-        if (unprocessedResults && unprocessedResults.length > 0) {
-          const ids = unprocessedResults.map(r => r.id);
-          await supabase.from("scrape_results").update({ processed: true }).in("id", ids);
-        }
-
-        if (stepIPC.data) await updateStep(stepIPC.data.id, "completed", `Qualificação concluída: ${scoredCount} empresas pontuadas`, { count: scoredCount });
-        results.ipc_score = { companies_scored: scoredCount, status: "completed" };
-      } catch (err) {
-        log.error("step_ipc_score_error", { error: (err as Error).message, workflow_id });
-        if (stepIPC.data) await updateStep(stepIPC.data.id, "failed", "Falha durante pontuação IPC", null, (err as Error).stack);
-        results.ipc_score = { error: (err as Error).message };
       }
 
       // ===== STEP 4: FINALIZE =====

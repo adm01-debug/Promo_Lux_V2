@@ -2,11 +2,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/workflow-engine`;
 
+export type WorkflowPhase = "scrape" | "enrich" | "ipc_score";
+
 export interface WorkflowStep {
   id: string;
   type: "source" | "enrich" | "filter" | "action";
   label: string;
   provider?: string;
+  /** Fase do engine que este step liga. Ausente em workflows legados = todas rodam. */
+  phase?: WorkflowPhase;
 }
 
 export interface WorkflowRunResults {
