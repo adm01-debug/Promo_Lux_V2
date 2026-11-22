@@ -47,21 +47,23 @@ O LUX IA **não é um protótipo e não está em estado de emergência**. Medido
 
 ## 3. Riscos remanescentes, por gravidade
 
-### 🔴 R1 — Sete funcionalidades "enterprise" nunca foram construídas
+> **Reconciliado em 2026-11-21** com medição direta do banco (`pg_class` + `pg_policy`) e do repo. Os itens R1 e R3 foram corrigidos por estarem desatualizados: R1 media 7 tabelas ausentes, mas 6 existem com RLS; R3 já foi resolvido pela PR #97.
 
-Decisão de produto, não bug. Tabelas e RPCs **não existem**, e **nenhum código as referencia**:
+### 🟡 R1 — Seis das sete funcionalidades "enterprise" já existem; falta `field_history`
 
-| Item | Estado |
+**Reconciliado por medição direta** em 2026-11-21 (`pg_class` + `pg_policy`). O texto anterior afirmava que as sete estavam ausentes — estava errado:
+
+| Item | Estado medido |
 |---|---|
-| `scheduled_reports` | ausente |
-| `dashboard_layouts` | ausente |
-| `field_history` | ausente |
-| `bulk_imports` | ausente |
-| `deal_predictions` | ausente |
-| `lead_scores` | ausente |
-| `role_permissions` | ausente |
+| `scheduled_reports` | ✅ existe — RLS ligado, 4 policies |
+| `dashboard_layouts` | ✅ existe — RLS ligado, 5 policies |
+| `bulk_imports` | ✅ existe — RLS ligado, 3 policies |
+| `deal_predictions` | ✅ existe — RLS ligado, 5 policies |
+| `lead_scores` | ✅ existe — RLS ligado, 5 policies |
+| `role_permissions` | ✅ existe — RLS ligado, 5 policies, 210 linhas |
+| `field_history` | ❌ ausente — nenhum código referencia |
 
-São as únicas da lista original de `docs/pendencias/_backlog-verificado.md` que continuam fora. **Custo/benefício é seu** — cada uma exige tabela + RLS + RPC + UI + testes.
+Fora do escopo construído, confirmadas ausentes por `pg_class` e **sem nenhuma referência** em `src/**` ou `supabase/functions/**`: `field_history`, `activities`, `tasks`, `invitations`, `saml_providers`. São features nunca construídas — não bug de integração.
 
 ### 🟠 R2 — `cron.job_run_details` cresce sem poda: 1013 MB
 
@@ -69,9 +71,9 @@ A maior relação do banco inteiro: **1.108.334 linhas, ~1013 MB, +4 MB/dia**. `
 
 **Correção pronta e simulada**, aguardando autorização (é DDL em produção): PR #98 — retenção de 30 dias, apaga em lotes, medido em **815.022 linhas em 40 s**.
 
-### 🟡 R3 — Uma function roda sem fonte versionada (corrigido na PR #97)
+### ✅ R3 — Resolvido: `mcp-query` agora tem fonte versionada
 
-`mcp-query` roda em produção (`v7`, `ACTIVE`) desde 08/09/2026 mas não existia no repo nem no `config.toml`. Corrigido na **PR #97** (source recuperada do bundle publicado via `supabase functions download`). Enquanto a PR não mergeia, o código que atende produção continua sem fonte revisável.
+`mcp-query` rodava em produção (`v7`, `ACTIVE`) desde 08/09/2026 sem fonte no repo. **PR #97 mergeada** em 2026-11-21T20:04:10Z: source recuperada do bundle publicado e versionada em `supabase/functions/mcp-query/index.ts` (3929 bytes), com a seção `[functions.mcp-query] verify_jwt = false` em `supabase/config.toml:45-46`.
 
 ### 🟡 R4 — Três itens de infra fora do nosso controle
 
@@ -109,11 +111,12 @@ A maior relação do banco inteiro: **1.108.334 linhas, ~1013 MB, +4 MB/dia**. `
 ### Aguardando sua autorização (regra 8 — DDL/deploy em produção)
 
 1. **PR #98** — retenção de 30 dias para `cron.job_run_details` (1013 MB) e `qa_reaper_runs`. Simulado: 815k linhas em 40 s, zero impacto funcional (maior consumidor pede `limit 50`).
-2. **PR #97** — versiona `mcp-query` e a declara no `config.toml`. Sem isso, o próximo deploy de functions pode aplicar `verify_jwt = true` e derrubar o gateway MCP externo **sem erro visível no diff**.
+
+*(PR #97 já mergeada em 2026-11-21T20:04:10Z — ver §R3.)*
 
 ### Decisão de negócio
 
-3. **As 7 features enterprise** (§R1). São ~1 tabela + RLS + RPC + UI + testes cada. Dizer "nenhuma" também é resposta válida — aí o item sai do backlog em vez de ficar pendurado.
+3. **Features enterprise pendentes** (§R1). Seis das sete já existem e estão com RLS. Restam **cinco features nunca construídas**: `field_history`, `activities`, `tasks`, `invitations`, `saml_providers`. Nenhuma é referenciada por `src/**` ou `supabase/functions/**` — são escopo de produto, não bug de integração.
 
 ---
 
