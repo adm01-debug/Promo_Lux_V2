@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AdminCompany {
   id: string;
@@ -43,45 +44,38 @@ function orgLabel(id: string | null): string {
 
 export default function AdminCompaniesView() {
   const [search, setSearch] = useState("");
-  const token = import.meta.env.VITE_ADMIN_LIST_TOKEN as string | undefined;
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery<AdminResponse>({
     queryKey: ["admin-companies", search],
-    enabled: !!token,
     queryFn: async () => {
       const params = new URLSearchParams({ limit: "500" });
       if (search.trim()) params.set("q", search.trim());
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-list-companies?${params}`,
-        {
-          method: "GET",
-          headers: {
-            "X-Admin-Token": token!,
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
-          },
-        }
+      // functions.invoke anexa o JWT da sessão; a function valida JWT + papel admin.
+      const { data: payload, error: fnErr } = await supabase.functions.invoke(
+        `admin-list-companies?${params}`,
+        { method: "GET" }
       );
-      if (!res.ok) {
-        const body = await res.text();
-        throw new Error(`HTTP ${res.status}: ${body}`);
+      if (fnErr) {
+        const status = (fnErr as { context?: { status?: number } }).context?.status;
+        throw new Error(status === 401 || status === 403 ? "Forbidden" : fnErr.message);
       }
-      return res.json();
+      return payload as AdminResponse;
     },
   });
 
-  if (!token) {
+  if (isError && /Forbidden|401|403/.test(String(error))) {
     return (
       <div className="p-8 max-w-2xl mx-auto">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ShieldAlert className="h-5 w-5 text-amber-500" />
-              Admin token ausente
+              Acesso restrito
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
-            <p>Defina <code className="px-1 py-0.5 rounded bg-muted">VITE_ADMIN_LIST_TOKEN</code> no seu <code className="px-1 py-0.5 rounded bg-muted">.env</code> com o mesmo valor configurado em <code className="px-1 py-0.5 rounded bg-muted">supabase secrets</code>.</p>
-            <p>Reinicie o Vite após alterar o .env.</p>
+            <p>Esta visão lista empresas de todas as organizações e exige papel <code className="px-1 py-0.5 rounded bg-muted">admin</code> em alguma organização.</p>
+            <p>Peça a um administrador para conceder o papel ao seu usuário.</p>
           </CardContent>
         </Card>
       </div>

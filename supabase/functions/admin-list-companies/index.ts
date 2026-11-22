@@ -20,31 +20,57 @@ function corsFor(req: Request) {
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     "Access-Control-Allow-Origin": allowed,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-token",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Vary": "Origin",
   };
 }
 
-// Endpoint admin: lista companies de TODAS as orgs. Protegido por token
-// compartilhado via env var `ADMIN_LIST_TOKEN` (Supabase Dashboard → Edge
-// Functions → Secrets). Não usa service_role sem essa barreira — sem o
-// token, retorna 401 mesmo sendo GET.
+// Endpoint admin: lista companies de TODAS as orgs.
+//
+// Autorizacao por JWT + papel `admin`. Antes usava um token compartilhado
+// (`ADMIN_LIST_TOKEN`) lido pelo front via `VITE_ADMIN_LIST_TOKEN`; toda env
+// `VITE_*` e inlinada no bundle JS publico em build time, entao o token era
+// legivel por qualquer visitante e liberava este endpoint com service_role.
+// Nao ha mais segredo compartilhado: a autorizacao e o JWT do usuario.
 serve(async (req) => {
   const corsHeaders = corsFor(req);
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  const expected = Deno.env.get("ADMIN_LIST_TOKEN");
-  if (!expected) {
-    return new Response(JSON.stringify({ error: "ADMIN_LIST_TOKEN not configured" }), {
-      status: 500,
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-  const provided = req.headers.get("X-Admin-Token") ?? "";
-  if (provided !== expected) {
+
+  const supabaseUser = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_ANON_KEY") ?? Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? "",
+    { global: { headers: { Authorization: authHeader } } }
+  );
+
+  const { data: { user }, error: userErr } = await supabaseUser.auth.getUser();
+  if (userErr || !user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  // Listar companies de TODAS as orgs exige ser `admin` em alguma organizacao.
+  // Sem isso, qualquer usuario autenticado leria a base inteira.
+  const { data: adminRows, error: adminErr } = await supabaseUser
+    .from("organization_members")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .eq("role", "admin")
+    .limit(1);
+
+  if (adminErr || !adminRows?.length) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
