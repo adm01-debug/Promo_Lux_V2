@@ -223,7 +223,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Sandbox/staging | Inexistente | Ambiente cliente para testes |
 | Bulk import/export | Inexistente | CSV com mapeamento de colunas + dedup |
 | Soft delete | Hard delete | `deleted_at` + recycle bin com retenção |
-| Field-level history | Inexistente | JSONB diff por update + viewer |
+| Field-level history | ✅ Implementado — `audit_logs.old_data`/`new_data` (JSONB por update) + `AuditTrailPanel` (`Monitoring.tsx:635`) | JSONB diff por update + viewer |
 | Onboarding self-serve | Tour ✅ | + checklist progressivo + sample data |
 
 ---
