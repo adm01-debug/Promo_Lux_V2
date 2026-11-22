@@ -31,6 +31,7 @@
     "email_suppressions",
     "email_sync_log",
     "feature_flags",
+    "incidents",
     "intent_signals",
     "ipc_config",
     "job_exports",

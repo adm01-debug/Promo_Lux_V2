@@ -2273,6 +2273,57 @@ export type Database = {
         }
         Relationships: []
       }
+      incidents: {
+        Row: {
+          body: string | null
+          components: string[]
+          created_at: string
+          deleted_at: string | null
+          id: string
+          impact: string
+          organization_id: string
+          postmortem: string | null
+          resolved_at: string | null
+          started_at: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          components?: string[]
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          impact?: string
+          organization_id?: string
+          postmortem?: string | null
+          resolved_at?: string | null
+          started_at?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          body?: string | null
+          components?: string[]
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          impact?: string
+          organization_id?: string
+          postmortem?: string | null
+          resolved_at?: string | null
+          started_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       idempotency_keys: {
         Row: {
           created_at: string
@@ -5251,6 +5302,16 @@ export type Database = {
       }
     }
     Functions: {
+      get_public_status: { Args: Record<string, never>; Returns: Json }
+      get_public_uptime: {
+        Args: { _days?: number }
+        Returns: {
+          day: string
+          events: number
+          failures: number
+          uptime_pct: number | null
+        }[]
+      }
       accept_org_invite: { Args: { _token: string }; Returns: string }
       advance_recipient_step: {
         Args: {

@@ -42,6 +42,7 @@ const Monitoring = lazy(() => import("./pages/Monitoring"));
 const CnpjSettingsPage = lazy(() => import("./pages/CnpjSettingsPage"));
 const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const AdminCompanies = lazy(() => import("./pages/AdminCompanies"));
+const StatusPage = lazy(() => import("./pages/StatusPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -244,6 +245,14 @@ function AnimatedRoutes() {
                 <AdminCompanies />
               </PageTransition>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/status"
+          element={
+            <PageTransition>
+              <StatusPage />
+            </PageTransition>
           }
         />
         <Route path="/lusha" element={<Navigate to="/?view=lusha" replace />} />
