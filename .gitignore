@@ -62,3 +62,10 @@ supabase/cli-latest
 .env.*.local
 .vercel
 .env*
+
+# Saidas de gh para inspecao local (entraram na #146 por engano)
+*.tmp.json
+prs.json
+st.json
+deps.json
+ciruns.json
