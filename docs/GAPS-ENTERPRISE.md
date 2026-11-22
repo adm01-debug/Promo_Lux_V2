@@ -5,6 +5,7 @@
 **Versão:** 1.0
 **Data:** 2026-04-22
 **Escopo:** Funcionalidades, segurança, compliance, integrações e operações esperadas em SaaS B2B enterprise.
+> **Revisão 2026-11-22:** linhas marcadas ✅ foram verificadas contra migrations e código (`organizations`, `organization_members`, `user_roles`, `audit_logs`, `organization_invites`, `deals`/`deal_stages`, `deliverability-check`, `email-verify`). Os demais "Inexistente" seguem ausentes.
 
 ---
 
@@ -42,8 +43,8 @@
 - ✅ 12 módulos funcionais cobrindo o ciclo de prospecção
 
 **Lacunas críticas (P0):**
-- ❌ Single-user — sem organizações, times, roles, audit log
-- ❌ CRM/Pipeline ausente — sem deals, activities, tasks
+- ✅ Multi-tenant — `organizations` + `organization_members` + `user_roles` + `audit_logs` (migration `20260422201601`)
+- ✅ CRM/Pipeline presente — `deals` + `deal_stages` com `DealsView` roteado (`viewRegistry.ts:24`); falta `activities`/`tasks`
 - ❌ Engagement sem motor real — campanhas não enviam emails
 - ❌ Sem API pública, webhooks ou integrações nativas
 - ❌ Sem SSO/SAML, MFA, SOC 2 — bloqueia venda enterprise
@@ -58,12 +59,12 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
-| Organização/Workspace | Inexistente — cada `user_id` é uma ilha | Tabela `organizations` + `organization_members` |
-| Convite de membros | Inexistente | Email invite + onboarding por organização |
-| Roles & Permissions | Inexistente — sem `user_roles` | Admin, Manager, SDR, Viewer com matriz de permissões |
+| Organização/Workspace | ✅ Implementado — `organizations` + `organization_members` (`20260422201601`) + `useOrganizations` | Tabela `organizations` + `organization_members` |
+| Convite de membros | ✅ Implementado — `organization_invites` + `useOrganizations.ts:93,152` | Email invite + onboarding por organização |
+| Roles & Permissions | ✅ Implementado — `user_roles` (`20260513140617`) + `has_org_role()` + `role_permissions` | Admin, Manager, SDR, Viewer com matriz de permissões |
 | Compartilhamento | Tudo privado por user | Visibilidade configurável (privado/time/org) |
 | Billing por seat | Inexistente | Stripe/Paddle com seat-based + limites por plano |
-| Audit log | Inexistente | Tabela `audit_log` populada por triggers (quem fez o quê, quando) |
+| Audit log | ✅ Implementado — `audit_logs` (`20260422202021`), 86 refs no front | Tabela `audit_log` populada por triggers (quem fez o quê, quando) |
 | Transferência de propriedade | Inexistente | Reassign de empresas/campanhas entre membros |
 
 **Impacto:** Sem multi-tenancy, o produto não pode ser vendido para times — limite máximo de 1 usuário por conta.
@@ -95,7 +96,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Reply detection | Inexistente | IMAP/Gmail API para parar sequência ao responder |
 | A/B testing | Inexistente | Multivariado em subject/body/CTA |
 | Send time optimization | Inexistente | ML por timezone e padrão de abertura |
-| Deliverability | Inexistente | SPF/DKIM/DMARC checker, warmup, score |
+| Deliverability | ✅ Implementado — function `deliverability-check` (SPF/DKIM/DMARC/MX, grade A+…F) + `DeliverabilityCheckDialog` | SPF/DKIM/DMARC checker, warmup, score |
 | Multi-canal | Apenas email conceitual | LinkedIn touches, dialer, WhatsApp, SMS |
 | Templates compartilhados | Inexistente | Biblioteca por org com versionamento |
 
@@ -108,7 +109,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
 | Fontes de dados | Apenas Google Maps scraper | Apollo, ZoomInfo, Clearbit, Hunter, Snov, Lusha, Cognism |
-| Email verification | Inexistente | SMTP ping + catch-all + role detection |
+| Email verification | ✅ Implementado — function `email-verify` (SMTP ping, catch-all, role detection) + `EmailVerifyBadge` | SMTP ping + catch-all + role detection |
 | Technographics | Inexistente | BuiltWith/Wappalyzer — stack do prospect |
 | Firmographics completos | Setor + funcionários | Funding, headcount growth, NAICS/CNAE, parent company |
 | News & triggers | Inexistente | Funding rounds, hiring, layoffs, exec changes |
@@ -396,9 +397,9 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 | Pilar | Status atual | Após Fase 4 |
 |---|---|---|
-| Multi-tenancy | ❌ Single-user | ✅ Org + RBAC + Audit |
+| Multi-tenancy | ✅ Org + RBAC + Audit | ✅ Org + RBAC + Audit |
 | Engagement | ❌ UI sem motor | ✅ Email/LinkedIn real |
-| CRM | ❌ Inexistente | ✅ Kanban + activities |
+| CRM | 🟡 `deals` + `deal_stages` + Kanban | ✅ Kanban + activities |
 | Integrações | ❌ Nenhuma | ✅ API + webhooks + nativas |
 | Compliance | ❌ Nenhuma cert | ✅ SOC 2 + LGPD + GDPR |
 | IA | 🟡 Chat básico | ✅ ML scoring + writer + intel |
