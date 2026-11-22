@@ -2254,6 +2254,9 @@
    "supabase/functions/_shared/schemas.ts",
    "supabase/functions/_shared/tracing.ts"
   ],
+  "supabase/functions/instagram-connection-status/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/instagram-enqueue/index.ts": [
    "supabase/functions/_shared/instagram-config-hash.ts"
   ],

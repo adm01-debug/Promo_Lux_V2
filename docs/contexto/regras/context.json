@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "443ff87b9c6372566c409b980de2b6ad392629e9",
+  "sha": "3c3788292bbdeda0fed39feb0f0419f067f51e73",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 00:49 UTC",
+  "generated_at": "2026-11-22 00:54 UTC",
   "files_total": 1070,
   "code_files": 895,
-  "code_lines": 129633
+  "code_lines": 129661
  },
  "version": "1.3.2",
- "facts_hash": "201744618be6cb12",
+ "facts_hash": "8f57a9b468514448",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -24796,14 +24796,16 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "JWT do usuário",
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
     "tables": [],
     "env": [
      "APIFY_API_KEY",
      "APIFY_TOKEN",
      "BRIGHTDATA_API_TOKEN",
      "HIKER_API_KEY",
-     "HIKER_MOCK_MODE"
+     "HIKER_MOCK_MODE",
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_URL"
     ],
     "external": [
      "https://api.apify.com/v2/users/…",
@@ -27761,7 +27763,7 @@
   {
    "module": "supabase/functions",
    "files": 127,
-   "lines": 22882,
+   "lines": 22910,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -30384,6 +30386,7 @@
     "supabase/functions/email-verify/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
+    "supabase/functions/instagram-connection-status/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
     "supabase/functions/instagram-enqueue/index.ts",
     "supabase/functions/lusha-cookie-health/index.ts",
@@ -30514,6 +30517,7 @@
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
+    "supabase/functions/instagram-connection-status/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
     "supabase/functions/instagram-enqueue/index.ts",
     "supabase/functions/instagram-worker-health/index.ts",
@@ -58854,6 +58858,7 @@
    "supabase/functions/gmaps-places-search/index.ts",
    "supabase/functions/gmaps-proxy/index.ts",
    "supabase/functions/health/index.ts",
+   "supabase/functions/instagram-connection-status/index.ts",
    "supabase/functions/instagram-dlq-replay/index.ts",
    "supabase/functions/instagram-enqueue/index.ts",
    "supabase/functions/instagram-worker-health/index.ts",
@@ -81965,7 +81970,7 @@
   },
   "supabase/functions/instagram-connection-status/index.ts": {
    "path": "supabase/functions/instagram-connection-status/index.ts",
-   "lines": 129,
+   "lines": 157,
    "external_urls": [
     "https://api.apify.com/v2/users/…",
     "https://api.brightdata.com/dca/…",
@@ -81976,9 +81981,12 @@
     "APIFY_TOKEN",
     "BRIGHTDATA_API_TOKEN",
     "HIKER_API_KEY",
-    "HIKER_MOCK_MODE"
+    "HIKER_MOCK_MODE",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
    ],
-   "doc": "Diagnóstico das credenciais dos motores de Instagram (HikerAPI / Bright Data / Apify). Retorna presença de secrets e testa conectividade real quando possível."
+   "doc": "Diagnóstico das credenciais dos motores de Instagram (HikerAPI / Bright Data / Apify). Retorna presença de secrets e testa conectividade real quando possível.",
+   "uses_service_role": true
   },
   "supabase/functions/instagram-dlq-replay/index.ts": {
    "path": "supabase/functions/instagram-dlq-replay/index.ts",
@@ -86686,10 +86694,19 @@
   }
  },
  "git": {
-  "sha": "443ff87b9c6372566c409b980de2b6ad392629e9",
+  "sha": "3c3788292bbdeda0fed39feb0f0419f067f51e73",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "3c37882",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)",
+    "files": [
+     "supabase/functions/instagram-connection-status/index.ts"
+    ]
+   },
    {
     "sha": "443ff87",
     "date": "2026-11-21",
@@ -87026,15 +87043,6 @@
     "files": [
      ".gitignore"
     ]
-   },
-   {
-    "sha": "b7178cd",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "merge: chore(docs): registra estado final dos itens 2 e 3 (soft-delete e rotacao ADMIN_LIST_TOKEN)",
-    "files": [
-     "docs/pendencias/_estado-itens-1-3.md"
-    ]
    }
   ],
   "hot_files": [
@@ -87095,6 +87103,10 @@
     2
    ],
    [
+    "supabase/functions/instagram-connection-status/index.ts",
+    1
+   ],
+   [
     "supabase/functions/webhook-dispatcher/index.ts",
     1
    ],
@@ -87112,10 +87124,6 @@
    ],
    [
     "supabase/functions/email-oauth-connect/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/email-oauth-disconnect/index.ts",
     1
    ]
   ]

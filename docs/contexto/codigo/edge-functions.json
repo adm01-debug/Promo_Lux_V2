@@ -826,7 +826,7 @@
    "nome": "instagram-connection-status",
    "entrada": "supabase/functions/instagram-connection-status/index.ts",
    "arquivos": 1,
-   "linhas": 129,
+   "linhas": 157,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -838,7 +838,9 @@
     "APIFY_TOKEN",
     "BRIGHTDATA_API_TOKEN",
     "HIKER_API_KEY",
-    "HIKER_MOCK_MODE"
+    "HIKER_MOCK_MODE",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
    ],
    "buckets": [],
    "chama_edges": [],
@@ -847,7 +849,9 @@
     "api.brightdata.com",
     "api.hikerapi.com"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/monitoring/InstagramConnectionPanel.tsx"
    ],
