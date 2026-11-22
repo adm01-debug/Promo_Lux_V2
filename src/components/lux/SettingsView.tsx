@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
+import { DsarPanel } from "@/components/lux/settings/DsarPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
@@ -279,6 +280,9 @@ export const SettingsView = () => {
                   <Separator className="bg-border/30" />
                   <RLSRegistryCoverage />
                   <RLSVerificationPanel />
+
+                  <Separator className="bg-border/30" />
+                  <DsarPanel />
                 </>
               )}
             </div>

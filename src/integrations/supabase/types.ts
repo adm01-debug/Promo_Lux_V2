@@ -1603,6 +1603,74 @@ export type Database = {
           },
         ]
       }
+      data_subject_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          due_at: string
+          handled_by: string | null
+          id: string
+          legal_basis: string | null
+          notes: string | null
+          organization_id: string
+          rejection_reason: string | null
+          request_type: string
+          requested_at: string
+          result_summary: Json
+          status: string
+          subject_email: string
+          subject_name: string | null
+          subject_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          due_at: string
+          handled_by?: string | null
+          id?: string
+          legal_basis?: string | null
+          notes?: string | null
+          organization_id: string
+          rejection_reason?: string | null
+          request_type: string
+          requested_at?: string
+          result_summary?: Json
+          status?: string
+          subject_email: string
+          subject_name?: string | null
+          subject_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          due_at?: string
+          handled_by?: string | null
+          id?: string
+          legal_basis?: string | null
+          notes?: string | null
+          organization_id?: string
+          rejection_reason?: string | null
+          request_type?: string
+          requested_at?: string
+          result_summary?: Json
+          status?: string
+          subject_email?: string
+          subject_name?: string | null
+          subject_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_subject_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_activities: {
         Row: {
           content: string | null
@@ -5252,6 +5320,60 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      create_dsar_request: {
+        Args: {
+          _legal_basis?: string
+          _notes?: string
+          _org_id: string
+          _request_type: string
+          _subject_email: string
+          _subject_name?: string
+          _subject_user_id?: string
+        }
+        Returns: string
+      }
+      dsar_sla_alerts: {
+        Args: { _org_id: string; _within_days?: number }
+        Returns: {
+          days_remaining: number
+          due_at: string
+          id: string
+          is_overdue: boolean
+          request_type: string
+          subject_email: string
+        }[]
+      }
+      dsar_token: { Args: { _value: string }; Returns: string }
+      erase_subject_data: {
+        Args: { _org_id: string; _reason?: string; _subject_email: string; _subject_user_id?: string }
+        Returns: Json
+      }
+      export_subject_data: {
+        Args: { _org_id: string; _subject_email: string; _subject_user_id?: string }
+        Returns: Json
+      }
+      fulfill_dsar_request: {
+        Args: { _notes?: string; _org_id: string; _request_id: string }
+        Returns: Json
+      }
+      list_dsar_requests: {
+        Args: { _org_id: string }
+        Returns: {
+          completed_at: string
+          days_remaining: number
+          due_at: string
+          id: string
+          is_overdue: boolean
+          legal_basis: string
+          notes: string
+          request_type: string
+          requested_at: string
+          result_summary: Json
+          status: string
+          subject_email: string
+          subject_name: string
+        }[]
+      }
       advance_recipient_step: {
         Args: {
           _completed: boolean
