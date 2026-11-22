@@ -36,11 +36,19 @@ const stepIcons: Record<string, React.ReactNode> = {
   action: <Database className="h-3.5 w-3.5" />,
 };
 
-const defaultSteps = [
-  { id: "s1", type: "source" as const, label: "Google Maps Scraper", provider: "gmaps.atomicabr", phase: "scrape" as const },
-  { id: "s2", type: "enrich" as const, label: "Importar & Enriquecer", provider: "Waterfall", phase: "enrich" as const },
-  { id: "s3", type: "filter" as const, label: "Scoring IPC", provider: "LUX IA", phase: "ipc_score" as const },
-  { id: "s4", type: "action" as const, label: "Salvar no Banco", provider: "Lovable Cloud" },
+type DefaultStep = {
+  id: string;
+  type: "source" | "enrich" | "filter" | "action";
+  label: string;
+  provider: string;
+  phase?: WorkflowPhase;
+};
+
+const defaultSteps: DefaultStep[] = [
+  { id: "s1", type: "source", label: "Google Maps Scraper", provider: "gmaps.atomicabr", phase: "scrape" },
+  { id: "s2", type: "enrich", label: "Importar & Enriquecer", provider: "Waterfall", phase: "enrich" },
+  { id: "s3", type: "filter", label: "Scoring IPC", provider: "LUX IA", phase: "ipc_score" },
+  { id: "s4", type: "action", label: "Salvar no Banco", provider: "Lovable Cloud" },
 ];
 
 const phaseOptions: { phase: WorkflowPhase; label: string; hint: string }[] = [
@@ -121,11 +129,11 @@ export const WorkflowsView = () => {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); toast({ title: "Workflow removido" }); },
   });
 
-  const selectedSteps = defaultSteps.filter(s => !("phase" in s) || enabledPhases.includes(s.phase));
+  const selectedSteps = defaultSteps.filter(s => !s.phase || enabledPhases.includes(s.phase));
 
   const handleCreate = () => {
     if (!newName.trim() || enabledPhases.length === 0) return;
-    const steps = selectedSteps.map(s => ({ ...s }));
+    const steps = selectedSteps;
     createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
   };
 
