@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
+import { upsertCompanies } from "../_shared/companies-upsert.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -437,10 +438,15 @@ serve(async (req) => {
                 // violar a constraint única, descartando silenciosamente todo o
                 // resto do lote (0 empresas importadas, só logado). Upsert com
                 // onConflict mescla a duplicata em vez de derrubar o lote.
-                const { data: insertedCompanies, error: insError } = await supabase
-                  .from("companies")
-                  .upsert(batchCompanies, { onConflict: "organization_id,name,source" })
-                  .select();
+                // upsertCompanies resolve o indice unico que o banco alvo
+                // realmente tem. Fixar onConflict aqui quebrava em 42P10 quando
+                // o schema estava com indice parcial e o lote inteiro era
+                // descartado (0 empresas importadas, so logado).
+                const { data: insertedCompanies, error: insError } = await upsertCompanies(
+                  supabase,
+                  batchCompanies,
+                  { hasPlaceId: false },
+                );
 
                 if (insError) {
                   log.error("bulk_company_insert_failed", { error: insError.message });
