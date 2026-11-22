@@ -68,6 +68,7 @@
     "warmup_profiles",
     "webhook_deliveries",
     "webhooks",
+    "workflow_run_events",
     "workflow_runs",
     "workflows"
   ]

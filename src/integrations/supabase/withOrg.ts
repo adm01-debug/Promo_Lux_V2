@@ -122,6 +122,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "warmup_profiles",
   "webhook_deliveries",
   "webhooks",
+  "workflow_run_events",
   "workflow_runs",
   "workflows",
 ]);

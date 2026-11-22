@@ -5704,13 +5704,58 @@ export type Database = {
         }
         Relationships: []
       }
+      workflow_run_events: {
+        Row: {
+          created_at: string
+          dedupe_key: string | null
+          event_type: string
+          id: string
+          organization_id: string
+          payload: Json | null
+          run_id: string
+          step_name: string | null
+        }
+        Insert: {
+          created_at?: string
+          dedupe_key?: string | null
+          event_type: string
+          id?: string
+          organization_id: string
+          payload?: Json | null
+          run_id: string
+          step_name?: string | null
+        }
+        Update: {
+          created_at?: string
+          dedupe_key?: string | null
+          event_type?: string
+          id?: string
+          organization_id?: string
+          payload?: Json | null
+          run_id?: string
+          step_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_run_events_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workflow_runs: {
         Row: {
+          attempt: number
           completed_at: string | null
           created_at: string
           current_step: string | null
           error_message: string | null
+          heartbeat_at: string | null
           id: string
+          locked_by: string | null
+          locked_until: string | null
           organization_id: string
           results: Json | null
           started_at: string | null
@@ -5719,11 +5764,15 @@ export type Database = {
           workflow_id: string
         }
         Insert: {
+          attempt?: number
           completed_at?: string | null
           created_at?: string
           current_step?: string | null
           error_message?: string | null
+          heartbeat_at?: string | null
           id?: string
+          locked_by?: string | null
+          locked_until?: string | null
           organization_id?: string
           results?: Json | null
           started_at?: string | null
@@ -5732,11 +5781,15 @@ export type Database = {
           workflow_id: string
         }
         Update: {
+          attempt?: number
           completed_at?: string | null
           created_at?: string
           current_step?: string | null
           error_message?: string | null
+          heartbeat_at?: string | null
           id?: string
+          locked_by?: string | null
+          locked_until?: string | null
           organization_id?: string
           results?: Json | null
           started_at?: string | null
@@ -5961,6 +6014,48 @@ export type Database = {
       }
     }
     Functions: {
+      claim_workflow_run: {
+        Args: {
+          _lease_seconds?: number
+          _run_id?: string
+          _worker_id: string
+          _workflow_id?: string
+        }
+        Returns: {
+          attempt: number
+          current_step: string | null
+          organization_id: string
+          run_id: string
+          workflow_id: string
+        }[]
+      }
+      complete_workflow_step: {
+        Args: {
+          _payload?: Json
+          _run_id: string
+          _step_name: string
+          _worker_id: string
+        }
+        Returns: boolean
+      }
+      fail_workflow_step: {
+        Args: {
+          _error: string
+          _retry?: boolean
+          _run_id: string
+          _step_name: string
+          _worker_id: string
+        }
+        Returns: boolean
+      }
+      finish_workflow_run: {
+        Args: { _run_id: string; _worker_id: string }
+        Returns: boolean
+      }
+      heartbeat_workflow_run: {
+        Args: { _lease_seconds?: number; _run_id: string; _worker_id: string }
+        Returns: boolean
+      }
       get_survey_by_token: { Args: { _token: string }; Returns: Json }
       submit_survey_response: {
         Args: {
