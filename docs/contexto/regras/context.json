@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "31805c543d71a16f77648d5aff192b9e285cf01b",
+  "sha": "77b7e67116dee8504b52b9fe9099168aeec7ac7a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 00:17 UTC",
+  "generated_at": "2026-11-22 00:35 UTC",
   "files_total": 1070,
   "code_files": 895,
   "code_lines": 129610
@@ -86683,10 +86683,35 @@
   }
  },
  "git": {
-  "sha": "31805c543d71a16f77648d5aff192b9e285cf01b",
+  "sha": "77b7e67116dee8504b52b9fe9099168aeec7ac7a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "77b7e67",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)",
+    "files": [
+     "supabase/functions/email-poll-replies/index.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/reaper-alerts/index.ts",
+     "supabase/functions/scrape-queue-worker/index.ts",
+     "supabase/functions/sla-alerts/index.ts",
+     "supabase/functions/sla-auto-tune/index.ts",
+     "supabase/functions/vault-cookie-health/index.ts",
+     "supabase/functions/web-scrape-worker/index.ts"
+    ]
+   },
+   {
+    "sha": "c45eec0",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)",
+    "files": [
+     "docs/pendencias/_backlog-verificado.md"
+    ]
+   },
    {
     "sha": "31805c5",
     "date": "2026-11-21",
@@ -87008,38 +87033,6 @@
      "docs/pendencias/_backlog-verificado.md",
      "docs/pendencias/_linha-de-base.md"
     ]
-   },
-   {
-    "sha": "8e0be69",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix: adiciona dominio Vercel a allowlist CORS das 15 edge functions com allowlist restritiva (#79)",
-    "files": [
-     "supabase/functions/admin-list-companies/index.ts",
-     "supabase/functions/ai-agent/index.ts",
-     "supabase/functions/auth-rate-limit/index.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/health/index.ts",
-     "supabase/functions/lusha-cookie-health/index.ts",
-     "supabase/functions/lusha-decision-makers/index.ts",
-     "supabase/functions/lusha-reveal/index.ts",
-     "supabase/functions/lusha-search/index.ts",
-     "supabase/functions/oracle-cookies-preflight/index.ts",
-     "supabase/functions/oracle-enrich-contact/index.ts",
-     "supabase/functions/oracle-push-bitrix/index.ts",
-     "supabase/functions/oracle-search-decisors/index.ts",
-     "supabase/functions/rls-tests/index.ts",
-     "supabase/functions/workflow-engine/index.ts"
-    ]
-   },
-   {
-    "sha": "8b16f55",
-    "date": "2026-11-20",
-    "author": "adm01-debug",
-    "subject": "fix: torna script build portavel no Windows (ASCII sem parens aninhados) (#78)",
-    "files": [
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
@@ -87052,19 +87045,39 @@
     4
    ],
    [
+    "supabase/functions/scrape-queue-worker/index.ts",
+    3
+   ],
+   [
     "supabase/functions/campaign-dispatch/index.ts",
     3
    ],
    [
-    "supabase/functions/rls-tests/index.ts",
+    "supabase/functions/email-poll-replies/index.ts",
     2
    ],
    [
-    "supabase/functions/health/index.ts",
+    "supabase/functions/reaper-alerts/index.ts",
     2
    ],
    [
-    "supabase/functions/scrape-queue-worker/index.ts",
+    "supabase/functions/sla-alerts/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/sla-auto-tune/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/vault-cookie-health/index.ts",
+    2
+   ],
+   [
+    "supabase/functions/web-scrape-worker/index.ts",
+    2
+   ],
+   [
+    "docs/pendencias/_backlog-verificado.md",
     2
    ],
    [
@@ -87077,10 +87090,6 @@
    ],
    [
     "supabase/functions/cnpj-enrich-worker/index.ts",
-    2
-   ],
-   [
-    "package.json",
     2
    ],
    [
@@ -87105,22 +87114,6 @@
    ],
    [
     "supabase/functions/instagram-enqueue/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/system-recovery-status/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/__tests__/places-fallback.test.ts",
-    1
-   ],
-   [
-    "supabase/functions/_shared/places-fallback.ts",
-    1
-   ],
-   [
-    "vitest.config.ts",
     1
    ]
   ]

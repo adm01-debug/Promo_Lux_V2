@@ -2,11 +2,21 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "31805c543d71a16f77648d5aff192b9e285cf01b",
+  "commit": "77b7e67116dee8504b52b9fe9099168aeec7ac7a",
   "branch": "main",
-  "data_commit": "2026-11-21T21:16:31-03:00",
+  "data_commit": "2026-11-21T21:34:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "77b7e67",
+    "data": "2026-11-21",
+    "assunto": "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)"
+   },
+   {
+    "sha": "c45eec0",
+    "data": "2026-11-21",
+    "assunto": "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)"
+   },
    {
     "sha": "31805c5",
     "data": "2026-11-21",
@@ -121,16 +131,6 @@
     "sha": "568555d",
     "data": "2026-11-21",
     "assunto": "merge: feat(ci): smoke de CORS das edge functions no production-smoke"
-   },
-   {
-    "sha": "50782f3",
-    "data": "2026-11-21",
-    "assunto": "merge: feat(auth): exige verificacao MFA (TOTP) no login quando o usuario possui fator ativo"
-   },
-   {
-    "sha": "fe41396",
-    "data": "2026-11-21",
-    "assunto": "merge: feat(email): tracking de open/click assinado no envio de campanhas"
    }
   ],
   "arquivos_mudados_7d": 119,
@@ -172,15 +172,15 @@
     "mudancas": 5
    },
    {
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 5
+   },
+   {
     "pasta": ".github/workflows/ci.yml",
     "mudancas": 4
    },
    {
     "pasta": "scripts/ci/eslint-baseline.json",
-    "mudancas": 4
-   },
-   {
-    "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 4
    },
    {
@@ -218,15 +218,15 @@
     "mudancas": 6
    },
    {
+    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+    "mudancas": 5
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 4
    },
    {
     "arquivo": "scripts/ci/eslint-baseline.json",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 4
    },
    {
@@ -266,6 +266,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/scrape-queue-worker/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "CONTRIBUTING.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": "ai-context.config.json",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 77
+    "commits": 79
    },
    {
     "autor": "dependabot[bot]",
