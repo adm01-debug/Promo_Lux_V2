@@ -5,7 +5,7 @@
 **Versão:** 1.0
 **Data:** 2026-04-22
 **Escopo:** Funcionalidades, segurança, compliance, integrações e operações esperadas em SaaS B2B enterprise.
-> **Revisão 2026-11-22:** linhas marcadas ✅ foram verificadas contra migrations e código (`organizations`, `organization_members`, `user_roles`, `audit_logs`, `organization_invites`, `deals`/`deal_stages`, `deliverability-check`, `email-verify`). Os demais "Inexistente" seguem ausentes.
+> **Revisão 2026-11-22 (2ª passada):** linhas marcadas ✅ foram verificadas contra migrations **e** código com busca recursiva (ripgrep). Corrigidas nesta passada: `deal_predictions`/pipeline value, `deal_activities`, OAuth Gmail/Outlook, email tracking, reply detection, A/B testing, relatórios agendados, API pública, `api_keys`, `webhook_dispatcher`, MFA/TOTP, changelog in-app, `feature_flags`, bulk import/export. Os demais "Inexistente" foram re-checados e seguem ausentes (0 tabelas, 0 refs): SSO/SAML, SCIM, IP allowlist, DLP/PII masking, technographics, CRM sync, Slack/Teams/Calendly/WhatsApp, leaderboards, goals/quotas, lost reasons, email templates compartilhados, status page, help center, NPS/CSAT, sandbox.
 
 ---
 
@@ -76,8 +76,8 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
 | Deals/Opportunities | 🟡 Implementado — `deals` + `deal_stages` com Kanban (`DealsView`) | Kanban com stages customizáveis por org |
-| Pipeline value | Inexistente | Forecast, weighted revenue, close date |
-| Activities timeline | Inexistente — 0 tabelas `activities` e 0 refs no código | Timeline unificada por empresa/contato (calls, emails, meetings, notes) |
+| Pipeline value | ✅ `deal_predictions` (`weighted_value`, `win_probability`, `predicted_close_date`) + `DealCard.tsx:71` + `useDealPredictions` | Forecast, weighted revenue, close date |
+| Activities timeline | ✅ `deal_activities` (`20260422202642:50`) + `DealDetailDrawer.tsx:140` | Timeline unificada por empresa/contato (calls, emails, meetings, notes) |
 | Tasks & reminders | 🟡 Implementado — `deal_tasks` (`20260422202642:68`) com CRUD em `DealTasksPanel`; falta recurring/snooze | Due dates, assignee, recurring, snooze |
 | Lifecycle stages | Apenas `ipc_score` | MQL → SQL → Opportunity → Customer → Churn |
 | Lost reasons | Inexistente | Categorização de perda + análise |
@@ -91,10 +91,10 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
 | Motor de envio | `campaigns.sequence` é JSONB visual mas **não envia nada** | Worker que dispara emails reais |
-| OAuth Gmail/Outlook | Inexistente | Conectar inbox do usuário, enviar via SMTP autenticado |
-| Email tracking | Inexistente | Pixel de open + link tracking + UTMs |
-| Reply detection | Inexistente | IMAP/Gmail API para parar sequência ao responder |
-| A/B testing | Inexistente | Multivariado em subject/body/CTA |
+| OAuth Gmail/Outlook | ✅ `EmailAccountsPanel` + `email-poll-replies` + `sendGmail`/`sendOutlook` (`campaign-dispatch:364-365`) | Conectar inbox do usuário, enviar via SMTP autenticado |
+| Email tracking | ✅ `_shared/tracking-links.ts` + `CampaignTrackingDrawer.tsx` | Pixel de open + link tracking + UTMs |
+| Reply detection | ✅ `email-poll-replies/index.ts` (cron 5 min, Gmail/Outlook) | IMAP/Gmail API para parar sequência ao responder |
+| A/B testing | ✅ `ab_test_enabled`/`ab_winner_variant` (`campaign-dispatch:426-428`) + `CampaignsView.tsx:127` | Multivariado em subject/body/CTA |
 | Send time optimization | Inexistente | ML por timezone e padrão de abertura |
 | Deliverability | ✅ Implementado — function `deliverability-check` (SPF/DKIM/DMARC/MX, grade A+…F) + `DeliverabilityCheckDialog` | SPF/DKIM/DMARC checker, warmup, score |
 | Multi-canal | Apenas email conceitual | LinkedIn touches, dialer, WhatsApp, SMS |
@@ -139,7 +139,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
 | Dashboards customizáveis | Dashboard fixo | Drag widgets, salvar layouts por usuário/org |
-| Relatórios agendados | Inexistente | Daily/weekly/monthly digest por email |
+| Relatórios agendados | ✅ `scheduled_reports` + `useScheduledReports` + `ScheduledReportsTab.tsx` | Daily/weekly/monthly digest por email |
 | Funil customizável | Funil fixo prospects→meetings | Stages do pipeline configurável |
 | Cohort analysis | Inexistente | Conversão por mês de origem |
 | Attribution | Inexistente | Multi-touch, first/last touch, linear |
@@ -153,9 +153,9 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
-| API pública | Inexistente | REST + GraphQL com OpenAPI spec |
-| Autenticação API | Inexistente | API keys pessoais + por-org com scopes |
-| Webhooks de saída | Inexistente | Notificar sistemas externos em eventos |
+| API pública | ✅ `public-api/index.ts` (REST + X-API-Key, companies/deals/stakeholders) | REST + GraphQL com OpenAPI spec |
+| Autenticação API | ✅ `api_keys` (prefix/scopes/expires_at) + `ApiKeysPanel.tsx` | API keys pessoais + por-org com scopes |
+| Webhooks de saída | ✅ `webhook-dispatcher` + `webhook_deliveries` (HMAC, retry) | Notificar sistemas externos em eventos |
 | Rate limiting | Apenas client-side em login | Server-side por org/key com quotas |
 | Zapier/Make/n8n | Inexistente | App publicado em marketplaces |
 | CRM nativo | Inexistente | HubSpot, Salesforce, Pipedrive bidirecional |
@@ -175,7 +175,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 |---|---|---|
 | SSO/SAML | Inexistente | Okta, Azure AD, Google Workspace, OneLogin |
 | SCIM | Inexistente | Provisionamento automático de usuários |
-| MFA/2FA | Inexistente | TOTP obrigatório por org |
+| MFA/2FA | ✅ `MFAVerify`/`MFAEnroll`/`useMFA`/`MFASetup.tsx` (TOTP) | TOTP obrigatório por org |
 | IP allowlist | Inexistente | Por organização com CIDR |
 | Session management | Sessão única implícita | Listar/revogar sessões ativas, dispositivos |
 | SOC 2 Type II | Não certificado | Auditoria anual + relatório |
@@ -214,14 +214,14 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
 | Status page | Inexistente | status.luxai.com público (Better Stack/Instatus) |
-| Changelog in-app | Inexistente | Headway/Beamer-like notifications |
-| Feature flags | Inexistente | LaunchDarkly/PostHog para rollout gradual |
+| Changelog in-app | ✅ `changelog_entries` + `useChangelog` + `ChangelogDialog` (`Header.tsx:8`) | Headway/Beamer-like notifications |
+| Feature flags | ✅ `feature_flags` + `useFeatureFlag(s)` | LaunchDarkly/PostHog para rollout gradual |
 | Help center | Inexistente | Artigos, vídeos, chat de suporte (Intercom) |
 | NPS/CSAT | Inexistente | Coleta in-app contínua |
 | Observabilidade | Logs estruturados em edge functions | Sentry, Datadog, New Relic frontend+backend |
 | Backup PITR | Não documentado | Point-in-time recovery + DR runbook |
 | Sandbox/staging | Inexistente | Ambiente cliente para testes |
-| Bulk import/export | Inexistente | CSV com mapeamento de colunas + dedup |
+| Bulk import/export | ✅ `ImportCompaniesDialog` + `bulk_imports` + `downloadCSV` | CSV com mapeamento de colunas + dedup |
 | Soft delete | Hard delete | `deleted_at` + recycle bin com retenção |
 | Field-level history | ✅ Implementado — `audit_logs.old_data`/`new_data` (JSONB por update) + `AuditTrailPanel` (`Monitoring.tsx:635`) | JSONB diff por update + viewer |
 | Onboarding self-serve | Tour ✅ | + checklist progressivo + sample data |
