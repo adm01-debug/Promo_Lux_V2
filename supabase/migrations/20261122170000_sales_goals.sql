@@ -133,5 +133,14 @@ FROM public.sales_goal_progress p
 JOIN public.sales_goals g ON g.id = p.goal_id
 LEFT JOIN public.profiles pr ON pr.id = p.owner_id;
 
+-- Sem GRANT o PostgREST responde "permission denied" mesmo com RLS e policy
+-- corretas (RLS filtra linhas, GRANT libera a tabela).
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.sales_goals TO authenticated;
+GRANT ALL ON public.sales_goals TO service_role;
+GRANT SELECT ON public.sales_goal_progress TO authenticated;
+GRANT SELECT ON public.sales_goal_progress TO service_role;
+GRANT SELECT ON public.sales_goals_detailed TO authenticated;
+GRANT SELECT ON public.sales_goals_detailed TO service_role;
+
 COMMENT ON TABLE public.sales_goals IS 'Metas e cotas por membro (GAPS-ENTERPRISE:147).';
 COMMENT ON VIEW public.sales_goal_progress IS 'Progresso de cada meta medido contra deals/atividades/empresas reais.';
