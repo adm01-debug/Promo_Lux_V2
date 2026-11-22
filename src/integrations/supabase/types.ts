@@ -1647,6 +1647,50 @@ export type Database = {
           },
         ]
       }
+      deal_lost_reasons: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          id: string
+          label: string
+          organization_id: string | null
+          position: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          label: string
+          organization_id?: string | null
+          position?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          label?: string
+          organization_id?: string | null
+          position?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_lost_reasons_org_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_predictions: {
         Row: {
           computed_at: string
@@ -1815,6 +1859,8 @@ export type Database = {
           description: string | null
           expected_close_date: string | null
           id: string
+          lost_reason_id: string | null
+          lost_notes: string | null
           organization_id: string
           position: number
           priority: string
@@ -1836,6 +1882,8 @@ export type Database = {
           description?: string | null
           expected_close_date?: string | null
           id?: string
+          lost_reason_id?: string | null
+          lost_notes?: string | null
           organization_id?: string
           position?: number
           priority?: string
@@ -1857,6 +1905,8 @@ export type Database = {
           description?: string | null
           expected_close_date?: string | null
           id?: string
+          lost_reason_id?: string | null
+          lost_notes?: string | null
           organization_id?: string
           position?: number
           priority?: string
@@ -5185,6 +5235,17 @@ export type Database = {
       }
     }
     Views: {
+      deal_lost_reason_stats: {
+        Row: {
+          category: string | null
+          deal_count: number | null
+          label: string | null
+          lost_reason_id: string | null
+          organization_id: string | null
+          total_value: number | null
+        }
+        Relationships: []
+      }
       oracle_v2_health: {
         Row: {
           errors_24h: number | null

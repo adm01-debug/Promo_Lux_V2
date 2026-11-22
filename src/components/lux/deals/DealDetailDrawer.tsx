@@ -9,6 +9,7 @@ import { Trash2, Phone, Mail as MailIcon, Calendar as CalIcon, FileText, Activit
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDeals, useDealActivities, useDealStages, type Deal, type DealActivity } from "@/hooks/useDeals";
+import { useLostReasons } from "@/hooks/useLostReasons";
 import { useConfirm } from "@/hooks/confirm-context";
 import { DealTasksPanel } from "./DealTasksPanel";
 
@@ -25,6 +26,8 @@ const TYPE_ICONS: Record<DealActivity["type"], React.ElementType> = {
 export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
   const { updateDeal, deleteDeal } = useDeals();
   const { data: stages = [] } = useDealStages();
+  const { reasons } = useLostReasons();
+  const lostStage = stages.find((s) => s.id === deal?.stage_id)?.type === "lost";
   const { data: activities = [], addActivity } = useDealActivities(deal?.id ?? null);
   const confirm = useConfirm();
   const [actType, setActType] = useState<DealActivity["type"]>("note");
@@ -96,6 +99,36 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
             />
           </div>
         </div>
+
+        {lostStage && (
+          <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 space-y-2">
+            <label className="text-[10px] uppercase tracking-wider text-destructive font-medium">
+              Motivo da perda
+            </label>
+            <Select
+              value={deal.lost_reason_id ?? "none"}
+              onValueChange={(v) =>
+                updateDeal.mutate({ id: deal.id, lost_reason_id: v === "none" ? null : v, version: deal.version })
+              }
+            >
+              <SelectTrigger><SelectValue placeholder="Selecione o motivo" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Não informado</SelectItem>
+                {reasons.filter((r) => r.active).map((r) => (
+                  <SelectItem key={r.id} value={r.id}>{r.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Textarea
+              placeholder="Contexto da perda (opcional)"
+              defaultValue={deal.lost_notes ?? ""}
+              rows={2}
+              onBlur={(e) =>
+                updateDeal.mutate({ id: deal.id, lost_notes: e.target.value || null, version: deal.version })
+              }
+            />
+          </div>
+        )}
 
         <div className="mt-4">
           <label className="text-[10px] uppercase tracking-wider text-muted-foreground">Descrição</label>

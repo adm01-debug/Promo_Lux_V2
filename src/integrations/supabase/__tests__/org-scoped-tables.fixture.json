@@ -20,6 +20,7 @@
     "company_reviews",
     "dashboard_layouts",
     "deal_activities",
+    "deal_lost_reasons",
     "deal_predictions",
     "deal_stages",
     "deal_tasks",
