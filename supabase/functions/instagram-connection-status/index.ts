@@ -1,6 +1,8 @@
 // Diagnóstico das credenciais dos motores de Instagram (HikerAPI / Bright Data / Apify).
 // Retorna presença de secrets e testa conectividade real quando possível.
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 interface ProviderStatus {
   provider: "hikerapi" | "brightdata" | "apify";
@@ -103,6 +105,32 @@ async function checkApify(): Promise<ProviderStatus> {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  // Expõe quais providers têm credencial configurada, latência e códigos HTTP
+  // dos testes de conectividade. Isso é estado de infra, não dado público:
+  // exige cron (service_role) ou JWT de usuário real.
+  if (!isCronAuthorized(req)) {
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const anonClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: { user } } = await anonClient.auth.getUser();
+    if (!user) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+  }
+
   try {
     const [hiker, brightdata, apify] = await Promise.all([
       checkHiker(),
