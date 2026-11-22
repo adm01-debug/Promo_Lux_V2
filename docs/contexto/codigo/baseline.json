@@ -2,11 +2,26 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c07fc7df438d46fce7942abc52e79200c61b8bd2",
+  "commit": "5f42ddfbdd9d1b54b7cf2d86dcbd49ef2c39ab1f",
   "branch": "main",
-  "data_commit": "2026-11-21T23:47:47-03:00",
+  "data_commit": "2026-11-22T00:14:25-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5f42ddf",
+    "data": "2026-11-22",
+    "assunto": "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)"
+   },
+   {
+    "sha": "63a6f3f",
+    "data": "2026-11-22",
+    "assunto": "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)"
+   },
+   {
+    "sha": "2b0bddf",
+    "data": "2026-11-21",
+    "assunto": "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)"
+   },
    {
     "sha": "c07fc7d",
     "data": "2026-11-21",
@@ -116,24 +131,9 @@
     "sha": "bb305ef",
     "data": "2026-11-21",
     "assunto": "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)"
-   },
-   {
-    "sha": "cb0dbe3",
-    "data": "2026-11-21",
-    "assunto": "docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)"
-   },
-   {
-    "sha": "6cea020",
-    "data": "2026-11-21",
-    "assunto": "fix(docs): decodifica auth.md que estava gravado em base64 (#100)"
-   },
-   {
-    "sha": "e5ef06d",
-    "data": "2026-11-21",
-    "assunto": "fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)"
    }
   ],
-  "arquivos_mudados_7d": 134,
+  "arquivos_mudados_7d": 135,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -184,15 +184,15 @@
     "mudancas": 4
    },
    {
+    "pasta": "docs/ESTADO_ATUAL.md",
+    "mudancas": 4
+   },
+   {
     "pasta": "scripts/ci/eslint-baseline.json",
     "mudancas": 4
    },
    {
     "pasta": ".agents/skills/promo-lux-v2",
-    "mudancas": 3
-   },
-   {
-    "pasta": ".github/workflows/contexto.yml",
     "mudancas": 3
    }
   ],
@@ -230,6 +230,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 4
+   },
+   {
     "arquivo": "scripts/ci/eslint-baseline.json",
     "mudancas": 4
    },
@@ -246,7 +250,7 @@
     "mudancas": 3
    },
    {
-    "arquivo": "docs/ESTADO_ATUAL.md",
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 3
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/dependency-review.yml",
     "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/edge-functions-deploy.yml",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 91
+    "commits": 94
    },
    {
     "autor": "dependabot[bot]",

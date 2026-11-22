@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "c07fc7df438d46fce7942abc52e79200c61b8bd2",
+  "sha": "5f42ddfbdd9d1b54b7cf2d86dcbd49ef2c39ab1f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 02:56 UTC",
+  "generated_at": "2026-11-22 03:15 UTC",
   "files_total": 1079,
   "code_files": 903,
   "code_lines": 130641
@@ -86944,10 +86944,38 @@
   }
  },
  "git": {
-  "sha": "c07fc7df438d46fce7942abc52e79200c61b8bd2",
+  "sha": "5f42ddfbdd9d1b54b7cf2d86dcbd49ef2c39ab1f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5f42ddf",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md"
+    ]
+   },
+   {
+    "sha": "63a6f3f",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)",
+    "files": [
+     "docs/ESTADO_ATUAL.md",
+     "docs/GAPS-ENTERPRISE.md"
+    ]
+   },
+   {
+    "sha": "2b0bddf",
+    "date": "2026-11-21",
+    "author": "adm01-debug",
+    "subject": "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md"
+    ]
+   },
    {
     "sha": "c07fc7d",
     "date": "2026-11-21",
@@ -87245,67 +87273,19 @@
     "files": [
      "supabase/migrations/20261121190000_version_crons_with_vault_key.sql"
     ]
-   },
-   {
-    "sha": "c229e3f",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(seguranca): aplica gate de cron nas 3 functions abertas a anonimo (#95)",
-    "files": [
-     "supabase/functions/email-poll-replies/index.ts",
-     "supabase/functions/vault-cookie-health/index.ts",
-     "supabase/functions/web-scrape-worker/index.ts"
-    ]
-   },
-   {
-    "sha": "5f0ccec",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(auth): crons de producao recuperam acesso as edge functions (12/16 em 401) (#94)",
-    "files": [
-     "supabase/functions/_shared/__tests__/cron-auth.test.ts",
-     "supabase/functions/_shared/cron-auth.ts",
-     "supabase/functions/campaign-dispatch/index.ts",
-     "supabase/functions/circuit-breaker-alerts/index.ts",
-     "supabase/functions/cnpj-enrich-worker/index.ts",
-     "supabase/functions/dlq-alerts/index.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/latency-alerts/index.ts",
-     "supabase/functions/pg-net-watchdog/index.ts",
-     "supabase/functions/purge-soft-deleted/index.ts",
-     "supabase/functions/reaper-alerts/index.ts",
-     "supabase/functions/retry-policy-tuner/index.ts",
-     "supabase/functions/scrape-queue-worker/index.ts",
-     "supabase/functions/sla-alerts/index.ts",
-     "supabase/functions/sla-auto-tune/index.ts"
-    ]
-   },
-   {
-    "sha": "cdb0c8b",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(seguranca): restaura verify_jwt=false nas functions publicas e blinda o cnpj-enrich-worker (#92)",
-    "files": [
-     "supabase/config.toml",
-     "supabase/functions/cnpj-enrich-worker/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
-    "supabase/functions/gmaps-proxy/index.ts",
-    5
-   ],
-   [
     "docs/ESTADO_ATUAL.md",
-    3
+    4
    ],
    [
-    "supabase/functions/scrape-queue-worker/index.ts",
-    3
+    "supabase/functions/gmaps-proxy/index.ts",
+    4
    ],
    [
-    "supabase/config.toml",
+    "docs/GAPS-ENTERPRISE.md",
     3
    ],
    [
@@ -87313,27 +87293,7 @@
     2
    ],
    [
-    "supabase/functions/email-poll-replies/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/reaper-alerts/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/sla-alerts/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/sla-auto-tune/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/vault-cookie-health/index.ts",
-    2
-   ],
-   [
-    "supabase/functions/web-scrape-worker/index.ts",
+    "supabase/functions/scrape-queue-worker/index.ts",
     2
    ],
    [
@@ -87341,7 +87301,7 @@
     2
    ],
    [
-    "supabase/functions/cnpj-enrich-worker/index.ts",
+    "supabase/config.toml",
     2
    ],
    [
@@ -87370,6 +87330,30 @@
    ],
    [
     "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
+    1
+   ],
+   [
+    "supabase/functions/_shared/companies-upsert.ts",
+    1
+   ],
+   [
+    "supabase/functions/workflow-engine/index.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql",
+    1
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    1
+   ],
+   [
+    "scripts/automation.config.json",
+    1
+   ],
+   [
+    "scripts/check-migration-drift.sh",
     1
    ]
   ]
