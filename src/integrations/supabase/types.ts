@@ -1603,6 +1603,111 @@ export type Database = {
           },
         ]
       }
+      data_subject_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          due_at: string
+          handled_by: string | null
+          id: string
+          legal_basis: string | null
+          notes: string | null
+          organization_id: string
+          rejection_reason: string | null
+          request_type: string
+          requested_at: string
+          result_summary: Json
+          status: string
+          subject_email: string
+          subject_name: string | null
+          subject_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          due_at: string
+          handled_by?: string | null
+          id?: string
+          legal_basis?: string | null
+          notes?: string | null
+          organization_id: string
+          rejection_reason?: string | null
+          request_type: string
+          requested_at?: string
+          result_summary?: Json
+          status?: string
+          subject_email: string
+          subject_name?: string | null
+          subject_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          due_at?: string
+          handled_by?: string | null
+          id?: string
+          legal_basis?: string | null
+          notes?: string | null
+          organization_id?: string
+          rejection_reason?: string | null
+          request_type?: string
+          requested_at?: string
+          result_summary?: Json
+          status?: string
+          subject_email?: string
+          subject_name?: string | null
+          subject_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_subject_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pii_redaction_rules: {
+        Row: {
+          action: string
+          category: string
+          created_at: string
+          enabled: boolean
+          id: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          action?: string
+          category: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          category?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pii_redaction_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_activities: {
         Row: {
           content: string | null
@@ -2695,6 +2800,44 @@ export type Database = {
           },
         ]
       }
+      ip_allowlist: {
+        Row: {
+          cidr: string
+          created_at: string
+          created_by: string | null
+          id: string
+          label: string | null
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          cidr: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Update: {
+          cidr?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ip_allowlist_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ipc_config: {
         Row: {
           created_at: string
@@ -3647,6 +3790,8 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          ip_allowlist_enabled: boolean
+          last_known_ip: string | null
           name: string
           owner_id: string
           slug: string
@@ -3655,6 +3800,8 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          ip_allowlist_enabled?: boolean
+          last_known_ip?: string | null
           name: string
           owner_id: string
           slug: string
@@ -3663,6 +3810,8 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          ip_allowlist_enabled?: boolean
+          last_known_ip?: string | null
           name?: string
           owner_id?: string
           slug?: string
@@ -5666,6 +5815,170 @@ export type Database = {
         }[]
       }
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      get_my_ip_status: { Args: Record<string, never>; Returns: Json }
+      ip_in_cidr: { Args: { _cidr: string; _ip: string }; Returns: boolean }
+      is_ip_allowed: { Args: { _ip: string; _org_id: string }; Returns: boolean }
+      touch_last_known_ip: { Args: Record<string, never>; Returns: undefined }
+      list_my_sessions: { Args: Record<string, never>; Returns: { id: string; created_at: string; updated_at: string; user_agent: string; ip: string; is_current: boolean }[] }
+      revoke_my_session: { Args: { _session_id: string }; Returns: boolean }
+      revoke_other_sessions: { Args: Record<string, never>; Returns: number }
+      audit_log_facets: { Args: { _org_id: string }; Returns: Json }
+      count_audit_logs: {
+        Args: {
+          _action?: string
+          _from?: string
+          _org_id: string
+          _table_name?: string
+          _to?: string
+          _user_id?: string
+        }
+        Returns: number
+      }
+      export_audit_logs: {
+        Args: {
+          _action?: string
+          _after_created_at?: string
+          _after_id?: string
+          _from?: string
+          _limit?: number
+          _org_id: string
+          _table_name?: string
+          _to?: string
+          _user_id?: string
+        }
+        Returns: {
+          id: string
+          organization_id: string
+          user_id: string
+          action: string
+          table_name: string
+          record_id: string
+          old_data: Json
+          new_data: Json
+          metadata: Json
+          created_at: string
+        }[]
+      }
+      create_dsar_request: {
+        Args: {
+          _legal_basis?: string
+          _notes?: string
+          _org_id: string
+          _request_type: string
+          _subject_email: string
+          _subject_name?: string
+          _subject_user_id?: string
+        }
+        Returns: string
+      }
+      dsar_sla_alerts: {
+        Args: { _org_id: string; _within_days?: number }
+        Returns: {
+          days_remaining: number
+          due_at: string
+          id: string
+          is_overdue: boolean
+          request_type: string
+          subject_email: string
+        }[]
+      }
+      dsar_token: { Args: { _value: string }; Returns: string }
+      erase_subject_data: {
+        Args: { _org_id: string; _reason?: string; _subject_email: string; _subject_user_id?: string }
+        Returns: Json
+      }
+      export_subject_data: {
+        Args: { _org_id: string; _subject_email: string; _subject_user_id?: string }
+        Returns: Json
+      }
+      fulfill_dsar_request: {
+        Args: { _notes?: string; _org_id: string; _request_id: string }
+        Returns: Json
+      }
+      list_dsar_requests: {
+        Args: { _org_id: string }
+        Returns: {
+          completed_at: string
+          days_remaining: number
+          due_at: string
+          id: string
+          is_overdue: boolean
+          legal_basis: string
+          notes: string
+          request_type: string
+          requested_at: string
+          result_summary: Json
+          status: string
+          subject_email: string
+          subject_name: string
+        }[]
+      }
+      list_pii_rules: {
+        Args: { _org_id: string }
+        Returns: {
+          action: string
+          category: string
+          enabled: boolean
+        }[]
+      }
+      pii_active_rules: {
+        Args: { _org_id: string }
+        Returns: {
+          action: string
+          category: string
+        }[]
+      }
+      pii_apply_category: {
+        Args: { _action: string; _category: string; _value: string }
+        Returns: string
+      }
+      pii_hash: { Args: { _value: string }; Returns: string }
+      pii_redact_jsonb: {
+        Args: { _data: Json; _org_id: string }
+        Returns: Json
+      }
+      pii_redact_text: {
+        Args: { _org_id: string; _value: string }
+        Returns: string
+      }
+      pii_regex: { Args: { _category: string }; Returns: string }
+      pii_scan: {
+        Args: { _org_id: string }
+        Returns: {
+          category: string
+          column_name: string
+          rows_total: number
+          rows_with_pii: number
+          table_name: string
+        }[]
+      }
+      read_audit_logs_safe: {
+        Args: {
+          _action?: string
+          _limit?: number
+          _org_id: string
+          _table_name?: string
+        }
+        Returns: {
+          action: string
+          created_at: string
+          id: string
+          new_data: Json
+          old_data: Json
+          record_id: string
+          table_name: string
+          user_id: string
+        }[]
+      }
+      set_pii_rule: {
+        Args: {
+          _action?: string
+          _category: string
+          _enabled?: boolean
+          _org_id: string
+        }
+        Returns: boolean
+      }
       advance_recipient_step: {
         Args: {
           _completed: boolean
