@@ -26,15 +26,15 @@ Deno.serve(async (req) => {
   );
 
   const token = authHeader.replace("Bearer ", "");
-  const { data: claims, error: authErr } = await userClient.auth.getClaims(token);
-  if (authErr || !claims?.claims?.sub) {
+  const { data: claims, error: authErr } = await userClient.auth.getUser(token);
+  if (authErr || !claims?.user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...CORS, "Content-Type": "application/json" },
     });
   }
 
-  const userId = claims.claims.sub;
+  const userId = claims.user.id;
   const { data: isAdmin } = await userClient.rpc("has_role", { _user_id: userId, _role: "admin" });
   if (isAdmin !== true) {
     return new Response(JSON.stringify({ error: "Forbidden — admin only" }), {

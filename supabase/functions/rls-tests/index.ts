@@ -115,9 +115,8 @@ Deno.serve(async (req) => {
   const authClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: authHeader } },
   });
-  const token = authHeader.replace("Bearer ", "");
-  const { data: claimsData, error: claimsErr } = await authClient.auth.getClaims(token);
-  if (claimsErr || !claimsData?.claims?.sub) {
+  const { data: claimsData, error: claimsErr } = await authClient.auth.getUser();
+  if (claimsErr || !claimsData?.user) {
     log.error("rls_test_unauthorized", { reason: "invalid_jwt", err: claimsErr?.message });
     await recordDenial("invalid_jwt", { jwt_error: claimsErr?.message ?? null });
     return new Response(
@@ -126,7 +125,7 @@ Deno.serve(async (req) => {
     );
   }
 
-  const callerId = claimsData.claims.sub as string;
+  const callerId = claimsData.user.id as string;
   const adminClient = createClient(supabaseUrl, serviceKey);
   const { data: adminRows } = await adminClient
     .from("organization_members")
