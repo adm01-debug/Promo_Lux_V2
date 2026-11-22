@@ -25,6 +25,8 @@ export interface Deal {
   stakeholder_id: string | null;
   expected_close_date: string | null;
   closed_at: string | null;
+  lost_reason_id: string | null;
+  lost_notes: string | null;
   priority: "low" | "medium" | "high";
   tags: string[] | null;
   position: number;
