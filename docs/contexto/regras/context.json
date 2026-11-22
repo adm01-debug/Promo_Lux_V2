@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b3ecb1b787b2b3e8ffcd5ff027ad6a4373d95d10",
+  "sha": "9e9f9639cddb91d19aba3c8f5484978e189666b6",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 13:27 UTC",
+  "generated_at": "2026-11-22 13:35 UTC",
   "files_total": 1120,
   "code_files": 944,
-  "code_lines": 138653
+  "code_lines": 138672
  },
  "version": "1.3.2",
- "facts_hash": "f4e843d23a3c4965",
+ "facts_hash": "4bcca7b723ace901",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -27837,7 +27837,7 @@
     "tables_transitive": [],
     "invokes_transitive": [],
     "rpc_transitive": [],
-    "deps_count": 6
+    "deps_count": 8
    },
    {
     "path": "",
@@ -28024,10 +28024,12 @@
     ],
     "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
-     "companies"
+     "companies",
+     "organization_members"
     ],
     "env": [
-     "ADMIN_LIST_TOKEN",
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_PUBLISHABLE_KEY",
      "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
@@ -30940,7 +30942,7 @@
   {
    "module": "src",
    "files": 3,
-   "lines": 386,
+   "lines": 385,
    "tables": [],
    "exports": [
     "App.tsx: safeNextPath, App"
@@ -31604,7 +31606,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2238,
+   "lines": 2232,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -31703,7 +31705,7 @@
   {
    "module": "supabase/functions",
    "files": 129,
-   "lines": 23227,
+   "lines": 23253,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -32860,6 +32862,7 @@
     "select": [
      "src/hooks/useOrganizations.ts",
      "supabase/functions/_shared/org-membership.ts",
+     "supabase/functions/admin-list-companies/index.ts",
      "supabase/functions/dlq-alerts/index.ts",
      "supabase/functions/instagram-dlq-replay/index.ts",
      "supabase/functions/instagram-enqueue/index.ts",
@@ -34185,9 +34188,6 @@
    ]
   },
   "env": {
-   "ADMIN_LIST_TOKEN": [
-    "supabase/functions/admin-list-companies/index.ts"
-   ],
    "AI_CONTEXT_DIR": [
     "scripts/ai-context/gerar.mjs"
    ],
@@ -34482,6 +34482,7 @@
    ],
    "SUPABASE_ANON_KEY": [
     "supabase/functions/_shared/cron-auth.ts",
+    "supabase/functions/admin-list-companies/index.ts",
     "supabase/functions/ai-agent/index.ts",
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
@@ -34537,6 +34538,7 @@
    ],
    "SUPABASE_PUBLISHABLE_KEY": [
     "src/lib/mcp/supabase.ts",
+    "supabase/functions/admin-list-companies/index.ts",
     "supabase/functions/mcp/index.ts"
    ],
    "SUPABASE_SERVICE_ROLE_KEY": [
@@ -34674,9 +34676,6 @@
    "VITE_A": [
     "scripts/ai-context/cenarios.mjs"
    ],
-   "VITE_ADMIN_LIST_TOKEN": [
-    "src/pages/AdminCompanies.tsx"
-   ],
    "VITE_ANON": [
     "scripts/ai-context/gerar.unit.mjs"
    ],
@@ -34699,7 +34698,6 @@
     "src/integrations/supabase/client.ts",
     "src/lib/api/gmaps.ts",
     "src/lib/api/workflows.ts",
-    "src/pages/AdminCompanies.tsx",
     "supabase/functions/rls-tests/index.test.ts"
    ],
    "VITE_SUPABASE_URL": [
@@ -34717,7 +34715,6 @@
     "src/integrations/supabase/client.ts",
     "src/lib/api/gmaps.ts",
     "src/lib/api/workflows.ts",
-    "src/pages/AdminCompanies.tsx",
     "supabase/functions/rls-tests/index.test.ts"
    ],
    "XDG_STATE_HOME": [
@@ -37133,10 +37130,6 @@
    {
     "file": "src/lib/mcp/supabase.ts",
     "msg": "Configuração do backend indisponível para esta ferramenta."
-   },
-   {
-    "file": "src/pages/AdminCompanies.tsx",
-    "msg": "HTTP ${res.status}: ${body}"
    },
    {
     "file": "src/pages/ResetPassword.tsx",
@@ -46998,6 +46991,12 @@
     "kind": "escreve"
    },
    {
+    "file": "supabase/functions/admin-list-companies/index.ts",
+    "field": "role",
+    "value": "admin",
+    "kind": "filtra"
+   },
+   {
     "file": "supabase/functions/ai-agent/index.ts",
     "field": "role",
     "value": "system",
@@ -54418,6 +54417,10 @@
    },
    {
     "file": "src/hooks/useWebhooks.ts",
+    "call": "invoke("
+   },
+   {
+    "file": "src/pages/AdminCompanies.tsx",
     "call": "invoke("
    },
    {
@@ -62562,6 +62565,10 @@
     "limit": "1"
    },
    {
+    "file": "supabase/functions/admin-list-companies/index.ts",
+    "limit": "1"
+   },
+   {
     "file": "supabase/functions/ai-agent/index.ts",
     "limit": "1"
    },
@@ -63588,6 +63595,7 @@
       "compara:src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
       "compara:src/hooks/usePermissions.ts",
       "escreve:supabase/functions/rls-tests/_fixtures.ts",
+      "filtra:supabase/functions/admin-list-companies/index.ts",
       "filtra:supabase/functions/dlq-alerts/index.ts",
       "filtra:supabase/functions/latency-alerts/index.ts",
       "filtra:supabase/functions/org-violation-alerts/index.ts",
@@ -75114,7 +75122,7 @@
   },
   "src/vite-env.d.ts": {
    "path": "src/vite-env.d.ts",
-   "lines": 13,
+   "lines": 12,
    "doc": "/ <reference types=\"vite/client\" />"
   },
   "src/components/NavLink.tsx": {
@@ -87258,17 +87266,12 @@
   },
   "src/pages/AdminCompanies.tsx": {
    "path": "src/pages/AdminCompanies.tsx",
-   "lines": 190,
+   "lines": 184,
    "exports": [
     "function AdminCompaniesView"
    ],
-   "env": [
-    "VITE_ADMIN_LIST_TOKEN",
-    "VITE_SUPABASE_PUBLISHABLE_KEY",
-    "VITE_SUPABASE_URL"
-   ],
-   "errors": [
-    "HTTP ${res.status}: ${body}"
+   "side_effects": [
+    "invoke("
    ]
   },
   "src/pages/CnpjSettingsPage.tsx": {
@@ -89475,14 +89478,23 @@
   },
   "supabase/functions/admin-list-companies/index.ts": {
    "path": "supabase/functions/admin-list-companies/index.ts",
-   "lines": 89,
+   "lines": 115,
    "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
     {
      "table": "companies",
      "op": "select"
     }
    ],
    "table_cols": {
+    "organization_members": [
+     "organization_id",
+     "role",
+     "user_id"
+    ],
     "companies": [
      "created_at",
      "enriched",
@@ -89496,9 +89508,20 @@
     ]
    },
    "env": [
-    "ADMIN_LIST_TOKEN",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_PUBLISHABLE_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "filtra"
+    }
+   ],
+   "pagination": [
+    "1"
    ],
    "uses_service_role": true
   },
@@ -95707,10 +95730,22 @@
   }
  },
  "git": {
-  "sha": "b3ecb1b787b2b3e8ffcd5ff027ad6a4373d95d10",
+  "sha": "9e9f9639cddb91d19aba3c8f5484978e189666b6",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9e9f963",
+    "date": "2026-11-22",
+    "author": "adm01-debug",
+    "subject": "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)",
+    "files": [
+     ".env.test",
+     "src/pages/AdminCompanies.tsx",
+     "src/vite-env.d.ts",
+     "supabase/functions/admin-list-companies/index.ts"
+    ]
+   },
    {
     "sha": "b3ecb1b",
     "date": "2026-11-22",
@@ -96081,15 +96116,6 @@
     "files": [
      "supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql"
     ]
-   },
-   {
-    "sha": "cb0dbe3",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)",
-    "files": [
-     "docs/AUDITORIA-FUNCIONALIDADES.md"
-    ]
    }
   ],
   "hot_files": [
@@ -96146,6 +96172,22 @@
     2
    ],
    [
+    ".env.test",
+    1
+   ],
+   [
+    "src/pages/AdminCompanies.tsx",
+    1
+   ],
+   [
+    "src/vite-env.d.ts",
+    1
+   ],
+   [
+    "supabase/functions/admin-list-companies/index.ts",
+    1
+   ],
+   [
     "package.json",
     1
    ],
@@ -96155,22 +96197,6 @@
    ],
    [
     "supabase/migrations/20261122280000_cron_instagram_worker.sql",
-    1
-   ],
-   [
-    "scripts/check-functions-lint.sh",
-    1
-   ],
-   [
-    "src/App.tsx",
-    1
-   ],
-   [
-    "src/components/lux/CampaignsView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/SettingsView.tsx",
     1
    ]
   ]

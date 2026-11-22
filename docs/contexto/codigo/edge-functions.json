@@ -89,17 +89,19 @@
    "nome": "admin-list-companies",
    "entrada": "supabase/functions/admin-list-companies/index.ts",
    "arquivos": 1,
-   "linhas": 89,
+   "linhas": 115,
    "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
    "tabelas": [
-    "companies"
+    "companies",
+    "organization_members"
    ],
    "rpcs": [],
    "env": [
-    "ADMIN_LIST_TOKEN",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_PUBLISHABLE_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
@@ -111,9 +113,7 @@
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
-   "chamada_pelo_front": [
-    "src/pages/AdminCompanies.tsx"
-   ],
+   "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
    "orfa": false,

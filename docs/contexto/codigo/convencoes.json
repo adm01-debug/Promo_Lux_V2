@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)",
    "fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)",
    "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)",
    "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)",
-   "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)",
-   "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)"
+   "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)"
   ]
  },
  "pr_template": null,

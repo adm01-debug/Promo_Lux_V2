@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b3ecb1b787` · branch `main` · 2026-11-22 13:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9e9f9639cd` · branch `main` · 2026-11-22 13:35 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1035,7 +1035,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `CEO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CFO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CTO` | escreve | `src/lib/demoData.ts` |
-| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>… +8 |
+| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>`supabase/functions/admin-list-companies/index.ts`<br>… +9 |
 | `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
 | `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
 | `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
@@ -1883,6 +1883,7 @@ _nenhum item encontrado_
 | 200 | `src/hooks/useScrapeQueue.ts` |
 | 50 | `src/hooks/useWebhooks.ts` |
 | 1 | `supabase/functions/_shared/companies-upsert.ts` |
+| 1 | `supabase/functions/admin-list-companies/index.ts` |
 | 1 | `supabase/functions/ai-agent/index.ts` |
 | 10 | `supabase/functions/ai-agent/index.ts` |
 | 5 | `supabase/functions/ai-agent/index.ts` |
@@ -2155,7 +2156,6 @@ _nenhum item encontrado_
 | Not authenticated | `src/lib/api/gmaps.ts` |
 | Not authenticated | `src/lib/api/workflows.ts` |
 | Configuração do backend indisponível para esta ferramenta. | `src/lib/mcp/supabase.ts` |
-| HTTP ${res.status}: ${body} | `src/pages/AdminCompanies.tsx` |
 | >As senhas não coincidem.</p>           )}            <Button type= | `src/pages/ResetPassword.tsx` |
 | Dados inválidos | `src/pages/ResetPassword.tsx` |
 | Apify não configurado: defina APIFY_MOCK_MODE=true ou conecte o Apify (LOVABLE_API_KEY + APIFY_API_KEY). | `supabase/functions/_shared/apify-gateway.ts` |
@@ -2213,7 +2213,8 @@ _nenhum item encontrado_
 | createAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: upsert member failed: ${memberErr.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createNonAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +23 linhas — lista completa em `context.json` | |
+| createNonAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
+| … +22 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2377,6 +2378,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/hooks/useRateLimit.ts` |
 | `notify` | `src/hooks/useRealtimeScrapeJobs.ts` |
 | `invoke(` | `src/hooks/useWebhooks.ts` |
+| `invoke(` | `src/pages/AdminCompanies.tsx` |
 | `sendMail` | `supabase/functions/campaign-dispatch/index.ts` |
 | `notifyRows` | `supabase/functions/org-violation-alerts/index.ts` |
 | `sendMail` | `supabase/functions/send-scheduled-reports/index.ts` |

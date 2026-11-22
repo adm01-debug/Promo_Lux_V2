@@ -488,13 +488,11 @@
    "hooks_locais": [],
    "tabelas": [],
    "rpcs": [],
-   "edges": [
-    "admin-list-companies"
-   ],
+   "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
-   "arquivos_puxados": 6
+   "arquivos_puxados": 8
   },
   {
    "protegida": false,

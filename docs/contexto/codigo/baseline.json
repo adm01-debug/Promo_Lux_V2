@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b3ecb1b787b2b3e8ffcd5ff027ad6a4373d95d10",
+  "commit": "9e9f9639cddb91d19aba3c8f5484978e189666b6",
   "branch": "main",
-  "data_commit": "2026-11-22T10:26:39-03:00",
+  "data_commit": "2026-11-22T10:33:46-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9e9f963",
+    "data": "2026-11-22",
+    "assunto": "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)"
+   },
    {
     "sha": "b3ecb1b",
     "data": "2026-11-22",
@@ -126,14 +131,9 @@
     "sha": "ab467da",
     "data": "2026-11-21",
     "assunto": "fix(extracao): fallback da Google Places API ressuscita a extracao Google Maps (#106)"
-   },
-   {
-    "sha": "ef039bf",
-    "data": "2026-11-21",
-    "assunto": "fix: fecha RLS cross-tenant em dashboard_layouts (#105)"
    }
   ],
-  "arquivos_mudados_7d": 182,
+  "arquivos_mudados_7d": 185,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 98
+    "commits": 99
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1101,
   "arquivos_codigo": 695,
-  "linhas_codigo": 120196,
+  "linhas_codigo": 120216,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -580,7 +580,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2238
+   "linhas": 2232
   },
   "src/test": {
    "arquivos": 3,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 129,
-   "linhas": 23227
+   "linhas": 23253
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -814,7 +814,6 @@
    "PROD",
    "SUPABASE_PUBLISHABLE_KEY",
    "SUPABASE_URL",
-   "VITE_ADMIN_LIST_TOKEN",
    "VITE_SUPABASE_PROJECT_ID",
    "VITE_SUPABASE_PUBLISHABLE_KEY",
    "VITE_SUPABASE_URL"

@@ -2289,7 +2289,8 @@
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/input.tsx",
-   "src/components/ui/skeleton.tsx"
+   "src/components/ui/skeleton.tsx",
+   "src/integrations/supabase/client.ts"
   ],
   "src/pages/CnpjSettingsPage.tsx": [
    "src/components/ui/badge.tsx",

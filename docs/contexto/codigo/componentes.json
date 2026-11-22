@@ -4232,13 +4232,11 @@
     "AdminCompaniesView"
    ],
    "export_default": "AdminCompaniesView",
-   "linhas": 190,
+   "linhas": 184,
    "dominio": "pages",
    "hooks_locais": [],
    "tabelas": [],
-   "edges": [
-    "admin-list-companies"
-   ],
+   "edges": [],
    "usado_por": 1,
    "orfao": false
   },
