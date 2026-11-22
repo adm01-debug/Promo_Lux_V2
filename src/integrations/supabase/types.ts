@@ -6698,6 +6698,51 @@ export type Database = {
           success_7d: number
         }[]
       }
+      company_analytics_summary: {
+        Args: { _org_id: string }
+        Returns: {
+          avg_ipc: number
+          enriched_companies: number
+          enriched_pct: number
+          top_sector: string
+          total_companies: number
+          with_email: number
+          with_phone: number
+          with_website: number
+        }[]
+      }
+      company_growth_trend: {
+        Args: { _months?: number; _org_id: string }
+        Returns: {
+          enriched_companies: number
+          month_start: string
+          new_companies: number
+        }[]
+      }
+      company_ipc_distribution: {
+        Args: { _org_id: string }
+        Returns: {
+          bucket: string
+          bucket_pos: number
+          total: number
+        }[]
+      }
+      company_sector_distribution: {
+        Args: { _limit?: number; _org_id: string }
+        Returns: {
+          pct: number
+          sector: string
+          total: number
+        }[]
+      }
+      company_source_distribution: {
+        Args: { _limit?: number; _org_id: string }
+        Returns: {
+          enriched: number
+          source: string
+          total: number
+        }[]
+      }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_sector_summary: {
         Args: { p_user_id: string }
