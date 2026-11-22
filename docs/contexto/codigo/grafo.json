@@ -1,79 +1,87 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 541,
- "arestas": 1624,
+ "nos": 568,
+ "arestas": 1769,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 118
+   "importado_por": 130
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 114
-  },
-  {
-   "arquivo": "src/lib/utils.ts",
-   "importado_por": 107
+   "importado_por": 126
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 99
+   "importado_por": 110
   },
   {
-   "arquivo": "src/integrations/supabase/withOrg.ts",
-   "importado_por": 56
-  },
-  {
-   "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 54
+   "arquivo": "src/lib/utils.ts",
+   "importado_por": 110
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 51
+   "importado_por": 60
+  },
+  {
+   "arquivo": "src/components/ui/card.tsx",
+   "importado_por": 59
+  },
+  {
+   "arquivo": "src/integrations/supabase/withOrg.ts",
+   "importado_por": 57
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
-   "importado_por": 48
+   "importado_por": 54
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 37
+   "importado_por": 46
   },
   {
    "arquivo": "src/contexts/auth-context.ts",
-   "importado_por": 37
-  },
-  {
-   "arquivo": "src/components/ui/dialog.tsx",
-   "importado_por": 28
+   "importado_por": 38
   },
   {
    "arquivo": "src/components/ui/select.tsx",
-   "importado_por": 27
+   "importado_por": 36
+  },
+  {
+   "arquivo": "src/components/ui/dialog.tsx",
+   "importado_por": 33
+  },
+  {
+   "arquivo": "src/components/ui/skeleton.tsx",
+   "importado_por": 31
   },
   {
    "arquivo": "src/components/ui/tooltip.tsx",
    "importado_por": 27
   },
   {
-   "arquivo": "src/components/ui/skeleton.tsx",
-   "importado_por": 26
-  },
-  {
    "arquivo": "src/components/ui/scroll-area.tsx",
    "importado_por": 24
+  },
+  {
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 21
   },
   {
    "arquivo": "supabase/functions/_shared/cron-auth.ts",
    "importado_por": 21
   },
   {
+   "arquivo": "src/components/ui/switch.tsx",
+   "importado_por": 20
+  },
+  {
    "arquivo": "src/components/lux/EmptyState.tsx",
    "importado_por": 18
   },
   {
-   "arquivo": "src/components/ui/switch.tsx",
+   "arquivo": "src/hooks/useOrganizations.ts",
    "importado_por": 18
   },
   {
@@ -81,8 +89,8 @@
    "importado_por": 17
   },
   {
-   "arquivo": "src/hooks/useOrganizations.ts",
-   "importado_por": 17
+   "arquivo": "src/integrations/supabase/types.ts",
+   "importado_por": 16
   },
   {
    "arquivo": "src/lib/resilience/simulator.ts",
@@ -93,12 +101,12 @@
    "importado_por": 15
   },
   {
-   "arquivo": "src/integrations/supabase/types.ts",
-   "importado_por": 15
-  },
-  {
    "arquivo": "src/hooks/useNavigationHistory.ts",
    "importado_por": 14
+  },
+  {
+   "arquivo": "src/components/lux/DataError.tsx",
+   "importado_por": 13
   },
   {
    "arquivo": "src/components/ui/alert-dialog.tsx",
@@ -113,11 +121,7 @@
    "importado_por": 12
   },
   {
-   "arquivo": "src/components/lux/DataError.tsx",
-   "importado_por": 11
-  },
-  {
-   "arquivo": "src/contexts/active-org-context.ts",
+   "arquivo": "src/components/ui/table.tsx",
    "importado_por": 11
   },
   {
@@ -129,7 +133,7 @@
    "importado_por": 9
   },
   {
-   "arquivo": "src/components/ui/table.tsx",
+   "arquivo": "src/components/ui/textarea.tsx",
    "importado_por": 9
   },
   {
@@ -138,6 +142,10 @@
   },
   {
    "arquivo": "src/components/ui/checkbox.tsx",
+   "importado_por": 8
+  },
+  {
+   "arquivo": "src/components/ui/progress.tsx",
    "importado_por": 8
   },
   {
@@ -155,18 +163,10 @@
   {
    "arquivo": "src/hooks/unsaved-changes-context.ts",
    "importado_por": 7
-  },
-  {
-   "arquivo": "src/hooks/useDeals.ts",
-   "importado_por": 7
-  },
-  {
-   "arquivo": "src/components/ui/alert.tsx",
-   "importado_por": 6
   }
  ],
  "ciclos": {
-  "total": 5,
+  "total": 6,
   "maiores": [
    {
     "tamanho": 4,
@@ -175,6 +175,14 @@
      "src/components/lux/QuickActions.tsx",
      "src/hooks/useNavigationHistory.ts",
      "src/lib/viewRegistry.ts"
+    ]
+   },
+   {
+    "tamanho": 3,
+    "arquivos": [
+     "src/components/lux/campaigns/CampaignFormFields.tsx",
+     "src/components/lux/campaigns/EmailTemplatePicker.tsx",
+     "src/hooks/useEmailTemplates.ts"
     ]
    },
    {
@@ -245,13 +253,13 @@
  "modulos_mais_acoplados": [
   {
    "modulo": "hooks",
-   "depende_de": 8,
+   "depende_de": 9,
    "importado_por": 6
   },
   {
    "modulo": "components/lux",
    "depende_de": 11,
-   "importado_por": 2
+   "importado_por": 3
   },
   {
    "modulo": "lib",

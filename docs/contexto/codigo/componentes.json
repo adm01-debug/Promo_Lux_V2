@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 246,
+ "total": 261,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -20,7 +20,7 @@
     "App"
    ],
    "export_default": "App",
-   "linhas": 321,
+   "linhas": 339,
    "dominio": null,
    "hooks_locais": [
     "useAuth",
@@ -192,6 +192,63 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/analytics/GoalsTab.tsx",
+   "exports": [
+    "GoalsTab"
+   ],
+   "export_default": null,
+   "linhas": 322,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useCreateGoal",
+    "useDeleteGoal",
+    "useOrgMembers",
+    "useSalesGoals",
+    "useUpdateGoal"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/analytics/LeaderboardTab.tsx",
+   "exports": [
+    "LeaderboardTab"
+   ],
+   "export_default": null,
+   "linhas": 152,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useLeaderboard"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/analytics/SatisfactionTab.tsx",
+   "exports": [
+    "SatisfactionTab"
+   ],
+   "export_default": null,
+   "linhas": 230,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useCreateSurvey",
+    "useCreateSurveyInvite",
+    "useDeleteSurvey",
+    "useSurveys",
+    "useToggleSurvey"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/analytics/ScheduledReportsTab.tsx",
    "exports": [
     "ScheduledReportsTab"
@@ -213,7 +270,7 @@
     "AnalyticsView"
    ],
    "export_default": null,
-   "linhas": 144,
+   "linhas": 168,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAnalyticsData",
@@ -521,12 +578,12 @@
     "SequenceVariant"
    ],
    "export_default": null,
-   "linhas": 232,
+   "linhas": 235,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 1,
+   "usado_por": 3,
    "orfao": false
   },
   {
@@ -549,12 +606,48 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/campaigns/EmailTemplatePicker.tsx",
+   "exports": [
+    "EmailTemplatePicker"
+   ],
+   "export_default": null,
+   "linhas": 51,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useEmailTemplates"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/campaigns/EmailTemplatesTab.tsx",
+   "exports": [
+    "EmailTemplatesTab"
+   ],
+   "export_default": null,
+   "linhas": 302,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useDeleteEmailTemplate",
+    "useDuplicateEmailTemplate",
+    "useEmailTemplateStats",
+    "useEmailTemplates",
+    "useSaveEmailTemplate"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/CampaignsView.tsx",
    "exports": [
     "CampaignsView"
    ],
    "export_default": null,
-   "linhas": 443,
+   "linhas": 471,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -818,7 +911,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 10,
+   "usado_por": 12,
    "orfao": false
   },
   {
@@ -871,13 +964,14 @@
     "DealDetailDrawer"
    ],
    "export_default": null,
-   "linhas": 172,
+   "linhas": 205,
    "dominio": "components/lux",
    "hooks_locais": [
     "useConfirm",
     "useDealActivities",
     "useDealStages",
-    "useDeals"
+    "useDeals",
+    "useLostReasons"
    ],
    "tabelas": [],
    "edges": [],
@@ -895,6 +989,24 @@
    "hooks_locais": [
     "useConfirm",
     "useDealTasks"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/deals/LostReasonsDialog.tsx",
+   "exports": [
+    "LostReasonsDialog"
+   ],
+   "export_default": null,
+   "linhas": 135,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useLostReasonSeed",
+    "useLostReasonStats",
+    "useLostReasons"
    ],
    "tabelas": [],
    "edges": [],
@@ -924,7 +1036,7 @@
     "DealsView"
    ],
    "export_default": null,
-   "linhas": 154,
+   "linhas": 160,
    "dominio": "components/lux",
    "hooks_locais": [
     "useDealPredictions",
@@ -1805,6 +1917,25 @@
    "hooks_locais": [
     "useDlqItems",
     "useReplayDlqBatch"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/IncidentsPanel.tsx",
+   "exports": [
+    "IncidentsPanel"
+   ],
+   "export_default": null,
+   "linhas": 188,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useIncidents",
+    "usePublicStatus",
+    "useResolveIncident",
+    "useSaveIncident"
    ],
    "tabelas": [],
    "edges": [],
@@ -2736,6 +2867,70 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/settings/ActiveSessionsPanel.tsx",
+   "exports": [
+    "ActiveSessionsPanel"
+   ],
+   "export_default": null,
+   "linhas": 90,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useActiveSessions"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/settings/AuditLogExportPanel.tsx",
+   "exports": [
+    "AuditLogExportPanel"
+   ],
+   "export_default": null,
+   "linhas": 99,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useAuditLogExport"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/settings/DsarPanel.tsx",
+   "exports": [
+    "DsarPanel"
+   ],
+   "export_default": null,
+   "linhas": 189,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useDsar"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/settings/IpAllowlistPanel.tsx",
+   "exports": [
+    "IpAllowlistPanel"
+   ],
+   "export_default": null,
+   "linhas": 136,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useIpAllowlist"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/settings/MFASetup.tsx",
    "exports": [
     "MFASetup"
@@ -2744,6 +2939,42 @@
    "linhas": 195,
    "dominio": "components/lux",
    "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/settings/NextBestActionPanel.tsx",
+   "exports": [
+    "NextBestActionPanel"
+   ],
+   "export_default": null,
+   "linhas": 189,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useDismissNextBestAction",
+    "useNextBestActions",
+    "useRefreshNextBestActions"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/settings/PiiMaskingPanel.tsx",
+   "exports": [
+    "PiiMaskingPanel"
+   ],
+   "export_default": null,
+   "linhas": 257,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "usePiiPreview",
+    "usePiiRules",
+    "usePiiScan"
+   ],
    "tabelas": [],
    "edges": [],
    "usado_por": 1,
@@ -2801,7 +3032,7 @@
     "SettingsView"
    ],
    "export_default": null,
-   "linhas": 368,
+   "linhas": 396,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -3125,7 +3356,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 4,
+   "usado_por": 5,
    "orfao": false
   },
   {
@@ -3140,7 +3371,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 99,
+   "usado_por": 110,
    "orfao": false
   },
   {
@@ -3175,7 +3406,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 118,
+   "usado_por": 130,
    "orfao": false
   },
   {
@@ -3209,7 +3440,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 54,
+   "usado_por": 59,
    "orfao": false
   },
   {
@@ -3334,7 +3565,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 28,
+   "usado_por": 33,
    "orfao": false
   },
   {
@@ -3454,7 +3685,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 51,
+   "usado_por": 60,
    "orfao": false
   },
   {
@@ -3468,7 +3699,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 37,
+   "usado_por": 46,
    "orfao": false
   },
   {
@@ -3568,7 +3799,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 6,
+   "usado_por": 8,
    "orfao": false
   },
   {
@@ -3637,7 +3868,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 27,
+   "usado_por": 36,
    "orfao": false
   },
   {
@@ -3727,7 +3958,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 26,
+   "usado_por": 31,
    "orfao": false
   },
   {
@@ -3769,7 +4000,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 18,
+   "usado_por": 20,
    "orfao": false
   },
   {
@@ -3790,7 +4021,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 9,
+   "usado_por": 11,
    "orfao": false
   },
   {
@@ -3822,7 +4053,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 6,
+   "usado_por": 9,
    "orfao": false
   },
   {
@@ -4078,7 +4309,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 728,
+   "linhas": 737,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",
@@ -4128,6 +4359,37 @@
    ],
    "export_default": "ResetPasswordPage",
    "linhas": 155,
+   "dominio": "pages",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/pages/StatusPage.tsx",
+   "exports": [
+    "StatusPage"
+   ],
+   "export_default": "StatusPage",
+   "linhas": 166,
+   "dominio": "pages",
+   "hooks_locais": [
+    "usePublicStatus",
+    "usePublicUptime"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/pages/SurveyResponse.tsx",
+   "exports": [
+    "SurveyResponse"
+   ],
+   "export_default": "SurveyResponse",
+   "linhas": 160,
    "dominio": "pages",
    "hooks_locais": [],
    "tabelas": [],

@@ -1198,22 +1198,12 @@
    "nome": "mcp",
    "entrada": "supabase/functions/mcp/index.ts",
    "arquivos": 1,
-   "linhas": 242,
+   "linhas": 9,
    "verify_jwt": false,
    "metodos": [],
-   "tabelas": [
-    "companies",
-    "lusha_contacts",
-    "scrape_jobs"
-   ],
-   "rpcs": [
-    "default_org_for_current_user",
-    "get_dashboard_stats"
-   ],
-   "env": [
-    "SUPABASE_PUBLISHABLE_KEY",
-    "SUPABASE_URL"
-   ],
+   "tabelas": [],
+   "rpcs": [],
+   "env": [],
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5f42ddfbdd` · branch `main` · 2026-11-22 03:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `378947ce26` · branch `main` · 2026-11-22 11:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -303,6 +303,15 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `role_permissions` | Service manage role_permissions | ALL | service_role | permissive | `true` | `true` |
 | `dashboard_layouts` | Users insert own dashboard_layouts | INSERT | authenticated | permissive |  | `user_id = auth.uid() and (organization_id is null or public.is_org_member(organization_id, auth.uid()))` |
 | `dashboard_layouts` | Users update own dashboard_layouts | UPDATE | authenticated | permissive | `user_id = auth.uid()` | `user_id = auth.uid() and (organization_id is null or public.is_org_member(organization_id, auth.uid()))` |
+| `deal_lost_reasons` | Members view lost reasons | SELECT | authenticated | permissive | `organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid())` |  |
+| `deal_lost_reasons` | SDR+ insert lost reasons | INSERT | authenticated | permissive |  | `organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'sdr')` |
+| `deal_lost_reasons` | SDR+ update lost reasons | UPDATE | authenticated | permissive | `organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'sdr')` | `organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'sdr')` |
+| `deal_lost_reasons` | Admins delete lost reasons | DELETE | authenticated | permissive | `organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| `sales_goals` | Members view goals | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
+| `sales_goals` | SDR+ insert goals | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
+| `sales_goals` | SDR+ update goals | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
+| `sales_goals` | Admins delete goals | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| … +28 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -438,6 +447,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `organizations` | `owner_id` | obrigatório |
 | `organizations` | `created_at` | default now() |
 | `organizations` | `updated_at` | default now() |
+| `organizations` | `ip_allowlist_enabled` | default false |
 | `organization_members` | `id` | PK; default gen_random_uuid() |
 | `organization_members` | `organization_id` | obrigatório; FK → organizations.id ON DELETE CASCADE |
 | `organization_members` | `user_id` | obrigatório |
@@ -484,6 +494,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `deals` | `updated_at` | default now() |
 | `deals` | `organization_id` | default public.default_org_for_current_user() |
 | `deals` | `version` | default 1 |
+| `deals` | `lost_reason_id` | FK → deal_lost_reasons.id ON DELETE SET NULL |
 | `deal_activities` | `id` | PK; default gen_random_uuid() |
 | `deal_activities` | `user_id` | default auth.uid() |
 | `deal_activities` | `deal_id` | obrigatório; FK → deals.id ON DELETE CASCADE |
@@ -606,9 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | `user_id` | default auth.uid() |
 | `oauth_sandbox_snapshots` | `label` | obrigatório |
 | `oauth_sandbox_snapshots` | `provider` | obrigatório; CHECK provider IN ('gmail','outlook') |
-| `oauth_sandbox_snapshots` | `scope_type` | obrigatório; CHECK scope_type IN ('user','organization') |
-| `oauth_sandbox_snapshots` | `redirect_uri` | obrigatório |
-| … +635 linhas — lista completa em `context.json` | | |
+| … +779 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -721,6 +730,12 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_scheduled_reports_updated | BEFORE UPDATE | `scheduled_reports` | `update_updated_at_column` |  |
 | trg_role_permissions_updated | BEFORE UPDATE | `role_permissions` | `update_updated_at_column` |  |
 | trg_seed_role_permissions | AFTER INSERT | `organizations` | `seed_role_permissions` |  |
+| trg_deal_lost_reasons_updated | BEFORE UPDATE | `deal_lost_reasons` | `update_updated_at_column` |  |
+| trg_sales_goals_updated | BEFORE UPDATE | `sales_goals` | `update_updated_at_column` |  |
+| trg_satisfaction_surveys_updated | BEFORE UPDATE | `satisfaction_surveys` | `update_updated_at_column` |  |
+| trg_email_templates_updated | BEFORE UPDATE | `email_templates` | `update_updated_at_column` |  |
+| trg_incidents_updated | BEFORE UPDATE | `incidents` | `update_updated_at_column` |  |
+| trg_next_best_actions_updated | BEFORE UPDATE | `next_best_actions` | `update_updated_at_column` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -818,6 +833,50 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `prune_qa_reaper_runs` | Acesso negado: requer papel de administrador | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 | `prune_qa_reaper_runs` | retencao invalida: % (minimo 1 dia) | `supabase/migrations/20261121210000_retencao_cron_runs_e_qa_reaper.sql` |
 | `prune_scheduled_report_runs` | prune_scheduled_report_runs: admin only | `supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql` |
+| `seed_default_lost_reasons` | org_id obrigatorio | `supabase/migrations/20261122160000_deal_lost_reasons.sql` |
+| `seed_default_lost_reasons` | sem permissao na organizacao | `supabase/migrations/20261122160000_deal_lost_reasons.sql` |
+| `submit_survey_response` | token_invalido | `supabase/migrations/20261122190000_satisfaction_surveys.sql` |
+| `submit_survey_response` | pesquisa_inativa | `supabase/migrations/20261122190000_satisfaction_surveys.sql` |
+| `submit_survey_response` | nota_fora_da_escala | `supabase/migrations/20261122190000_satisfaction_surveys.sql` |
+| `mark_email_template_used` | template inexistente ou sem permissao | `supabase/migrations/20261122200000_email_templates.sql` |
+| `duplicate_email_template` | template inexistente | `supabase/migrations/20261122200000_email_templates.sql` |
+| `duplicate_email_template` | sem permissao na organizacao | `supabase/migrations/20261122200000_email_templates.sql` |
+| `export_audit_logs` | nao autenticado | `supabase/migrations/20261122240000_audit_log_export.sql` |
+| `export_audit_logs` | apenas admin da organizacao pode exportar audit log | `supabase/migrations/20261122240000_audit_log_export.sql` |
+| `count_audit_logs` | nao autenticado | `supabase/migrations/20261122240000_audit_log_export.sql` |
+| `count_audit_logs` | apenas admin da organizacao pode contar audit log | `supabase/migrations/20261122240000_audit_log_export.sql` |
+| `audit_log_facets` | nao autenticado | `supabase/migrations/20261122240000_audit_log_export.sql` |
+| `audit_log_facets` | apenas admin da organizacao pode listar facets | `supabase/migrations/20261122240000_audit_log_export.sql` |
+| `export_subject_data` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `export_subject_data` | apenas admin da organizacao pode exportar dados de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `export_subject_data` | email do titular invalido | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `erase_subject_data` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `erase_subject_data` | apenas admin da organizacao pode apagar dados de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `erase_subject_data` | email do titular invalido | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `create_dsar_request` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `create_dsar_request` | apenas admin da organizacao pode registrar pedido de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `list_dsar_requests` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `list_dsar_requests` | apenas admin da organizacao pode listar pedidos de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `fulfill_dsar_request` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `fulfill_dsar_request` | apenas admin da organizacao pode atender pedido de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `fulfill_dsar_request` | pedido nao encontrado nesta organizacao | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `dsar_sla_alerts` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `dsar_sla_alerts` | apenas admin da organizacao pode consultar SLA de pedidos | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `read_audit_logs_safe` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `read_audit_logs_safe` | apenas admin da organizacao pode ler audit log mascarado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `pii_scan` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `pii_scan` | apenas admin da organizacao pode varrer PII | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `list_pii_rules` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `list_pii_rules` | apenas admin da organizacao pode listar regras de PII | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `set_pii_rule` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `set_pii_rule` | apenas admin da organizacao pode alterar regras de PII | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
+| `refresh_next_best_actions` | nao autenticado | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `refresh_next_best_actions` | usuario nao pertence a organizacao | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `list_next_best_actions` | nao autenticado | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `list_next_best_actions` | usuario nao pertence a organizacao | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `dismiss_next_best_action` | nao autenticado | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `dismiss_next_best_action` | sugestao nao encontrada | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `dismiss_next_best_action` | usuario nao pertence a organizacao | `supabase/migrations/20261122270000_next_best_action.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -861,6 +920,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `cnpj_enrich_queue` | `status` | `completed`, `failed`, `not_found`, `pending`, `processing` | `pending` |
 | `apollo_search_cache` | `status` | `empty`, `hit` |  |
 | `scheduled_report_runs` | `status` | `failed`, `pending`, `sent`, `skipped` | `pending` |
+| `incidents` | `status` | `identified`, `investigating`, `monitoring`, `resolved` | `investigating` |
+| `data_subject_requests` | `status` | `completed`, `pending`, `processing`, `rejected` | `pending` |
 | `v_lux_enrichment_health` | `cnt_other_status` | **livre (sem enum/CHECK)** |  |
 
 ### E.2 Mapas de transição declarados no código
@@ -915,11 +976,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `accepting` | compara | `src/pages/AcceptInvite.tsx` |
 | `status` | `active` | compara, escreve, filtra | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/CampaignsView.tsx`<br>`src/components/lux/WorkflowsView.tsx`<br>`src/components/lux/layout/Sidebar.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>… +3 |
 | `status` | `all` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>`src/components/lux/lusha/historyUtils.ts` |
+| `status` | `already_completed` | compara | `src/hooks/useDsar.ts` |
 | `status` | `bitrix_duplicate` | compara, escreve | `supabase/functions/oracle-push-bitrix/index.ts` |
 | `status` | `blocked` | escreve | `supabase/functions/webhook-dispatcher/index.ts` |
 | `status` | `bounced` | compara | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
 | `status` | `cancelled` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx` |
-| `status` | `completed` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +11 |
+| `status` | `completed` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +13 |
 | `status` | `connected` | escreve | `src/components/lux/SettingsView.tsx` |
 | `status` | `crit` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
 | `status` | `dead` | compara, escreve | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
@@ -940,6 +1002,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `fulfilled` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
+| `status` | `investigating` | escreve | `src/components/lux/monitoring/IncidentsPanel.tsx`<br>`src/hooks/useStatusPage.ts` |
 | `status` | `masked` | compara, escreve | `supabase/functions/_shared/lusha-client.ts` |
 | `status` | `not_found` | compara, escreve | `src/hooks/useCnpjEnrich.ts`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx` |
@@ -951,6 +1014,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `refresh_failed` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts` |
 | `status` | `rejected` | compara | `supabase/functions/scrape-queue-worker/index.ts` |
 | `status` | `replied` | compara | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
+| `status` | `resolved` | compara, escreve | `src/components/lux/monitoring/IncidentsPanel.tsx`<br>`src/hooks/useStatusPage.ts`<br>`src/pages/StatusPage.tsx` |
 | `status` | `retry` | escreve | `supabase/functions/instagram-worker/index.ts` |
 | `status` | `retrying` | compara | `src/components/lux/integrations/WebhooksPanel.tsx` |
 | `status` | `running` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +7 |
@@ -992,7 +1056,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `courses` | escreve | `src/components/lux/lusha/DecisionMakersGrid.tsx` |
 | `type` | `deal` | compara, escreve | `src/components/lux/ActivityFeed.tsx`<br>`src/components/lux/deals/DealCard.tsx` |
 | `type` | `discovery` | escreve | `src/hooks/useCompanyDetails.ts` |
-| `type` | `email` | compara, escreve | `src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx`<br>`supabase/functions/campaign-dispatch/index.ts` |
+| `type` | `email` | compara, escreve | `src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx`<br>`src/components/lux/campaigns/EmailTemplatePicker.tsx`<br>`supabase/functions/campaign-dispatch/index.ts` |
 | `type` | `enrich` | escreve | `src/components/lux/WorkflowsView.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
 | `type` | `enrichment` | compara, escreve | `src/components/lux/ActivityFeed.tsx`<br>`src/hooks/useCompanyDetails.ts`<br>`src/lib/demoData.ts` |
 | `type` | `error` | escreve | `src/lib/demoData.ts` |
@@ -1003,6 +1067,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `job_failed` | escreve | `src/pages/Monitoring.tsx` |
 | `type` | `job_posting` | escreve | `src/lib/demoData.ts` |
 | `type` | `json_object` | escreve | `supabase/functions/web-scrape-extract/index.ts` |
+| `type` | `lost` | compara | `src/components/lux/deals/DealDetailDrawer.tsx` |
 | `type` | `note` | escreve | `src/hooks/useDeals.ts`<br>`supabase/functions/_shared/rlsTableRegistry.ts` |
 | `type` | `open` | escreve | `src/hooks/useDeals.ts` |
 | `type` | `range` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
@@ -1017,7 +1082,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `system` | escreve | `src/lib/demoData.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>`supabase/functions/latency-alerts/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/pg-net-watchdog/index.ts`<br>… +3 |
 | `type` | `tags` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
 | `type` | `technology_change` | escreve | `src/lib/demoData.ts` |
-| `type` | `text` | escreve | `src/lib/mcp/supabase.ts`<br>`src/lib/mcp/tools/get-company.ts`<br>`src/lib/mcp/tools/get-dashboard-stats.ts`<br>`src/lib/mcp/tools/list-companies.ts`<br>`src/lib/mcp/tools/list-decision-makers.ts`<br>… +2 |
+| `type` | `text` | escreve | `src/lib/mcp/supabase.ts`<br>`src/lib/mcp/tools/get-company.ts`<br>`src/lib/mcp/tools/get-dashboard-stats.ts`<br>`src/lib/mcp/tools/list-companies.ts`<br>`src/lib/mcp/tools/list-decision-makers.ts`<br>… +1 |
 | `type` | `totp` | escreve | `src/hooks/useMFA.ts` |
 | `type` | `wait` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx` |
 | `type` | `website_visit` | escreve | `src/lib/demoData.ts` |
@@ -1080,17 +1145,31 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | DlqQueueKind | scrape \| web | `src/hooks/useDlqAlertSettings.ts` |
 | DlqHealthSeverity | critical \| warning \| ok | `src/hooks/useDlqHealth.ts` |
 | DlqMotor | instagram \| web | `src/hooks/useDlqReplay.ts` |
+| DsarRequestType | access \| portability \| erasure \| rectification | `src/hooks/useDsar.ts` |
+| DsarStatus | pending \| processing \| completed \| rejected | `src/hooks/useDsar.ts` |
 | EmailAccountAuditAction | connected \| disconnected \| scope_changed \| tokens_refreshed \| reactivated \| deactivated \| error_recorded \| polled \| updated | `src/hooks/useEmailAccountAuditLog.ts` |
 | SuppressionReason | unsubscribe \| bounce \| complaint \| manual | `src/hooks/useEmailSuppressions.ts` |
 | EmailSyncStatus | success \| error \| skipped \| refresh_failed | `src/hooks/useEmailSyncLog.ts` |
+| TEMPLATE_CATEGORIES | "prospeccao", "follow-up", "reuniao", "proposta", "reativacao", "geral", | `src/hooks/useEmailTemplates.ts` |
+| TEMPLATE_VARIABLES | "{{empresa}}", "{{contato}}", "{{cargo}}", "{{cidade}}", "{{segmento}}", "{{remetente}}", | `src/hooks/useEmailTemplates.ts` |
+| LeaderboardMetric | won_value \| won_deals \| activities \| new_companies | `src/hooks/useLeaderboard.ts` |
+| LostReasonCategory | price \| competitor \| timing \| no_budget \| no_fit \| no_response \| internal \| other | `src/hooks/useLostReasons.ts` |
 | MembershipAuditAction | added \| removed \| role_changed \| left \| other | `src/hooks/useMembershipAuditLog.ts` |
 | View | dashboard \| icp \| workflows \| companies \| intent \| campaigns \| ai-agent \| analytics \| settings \| gmaps \| map \| stakeholders \| scrape-results \| organizations \| deals \| integrations \| org-violations \| rls-discovery \| monitoring \| automations \| recycle-bin \| suppressions \| lusha | `src/hooks/useNavigationHistory.ts` |
 | NavigationDirection | forward \| back | `src/hooks/useNavigationHistory.ts` |
+| NbaActionType | follow_up \| call \| email \| linkedin \| meeting \| proposal \| reengage \| close | `src/hooks/useNextBestActions.ts` |
+| NbaChannel | email \| phone \| linkedin \| in_person | `src/hooks/useNextBestActions.ts` |
+| PiiCategory | email \| phone \| cpf \| cnpj \| credit_card \| secret | `src/hooks/usePiiRules.ts` |
+| PiiAction | mask \| redact \| hash | `src/hooks/usePiiRules.ts` |
 | ReaperAlertReason | dead_detected \| no_recent_run | `src/hooks/useReaperAlerts.ts` |
 | PermissionFlag | can_view \| can_create \| can_update \| can_delete \| can_manage | `src/hooks/useRolePermissions.ts` |
+| GoalPeriod | month \| quarter \| year | `src/hooks/useSalesGoals.ts` |
+| GoalMetric | won_value \| won_deals \| activities \| new_companies | `src/hooks/useSalesGoals.ts` |
+| SurveyKind | nps \| csat | `src/hooks/useSatisfaction.ts` |
 | ReportMetric | conversion \| enrichment \| pipeline \| campaigns | `src/hooks/useScheduledReports.ts` |
 | ReportFrequency | daily \| weekly \| monthly | `src/hooks/useScheduledReports.ts` |
 | Skin | gold \| blue \| green \| red \| purple \| orange | `src/hooks/useSkin.ts` |
+| ComponentState | operational \| degraded \| outage \| unknown | `src/hooks/useStatusPage.ts` |
 | WEBHOOK_EVENTS | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … | `src/hooks/useWebhooks.ts` |
 | SoftDeleteTable | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks | `src/integrations/supabase/withOrg.ts` |
 | EmailErrorKind | auth \| sync | `src/lib/emailErrorMessages.ts` |
@@ -1284,6 +1363,9 @@ _nenhum item encontrado_
 | `alerts-threshold` | type=number, min=1 | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | `alerts-window` | type=number, min=5, max=1440 | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | `alerts-cooldown` | type=number, min=1, max=1440 | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
+| `audit-from` | type=date | `src/components/lux/settings/AuditLogExportPanel.tsx` |
+| `audit-to` | type=date | `src/components/lux/settings/AuditLogExportPanel.tsx` |
+| `dsar-email` | type=email | `src/components/lux/settings/DsarPanel.tsx` |
 
 ## G. Fórmulas e derivações (como valores são calculados)
 
@@ -1298,6 +1380,12 @@ _nenhum item encontrado_
 | `oracle_v2_health` | `SELECT organization_id, source, count(*) FILTER (WHERE created_at >= now() - interval '24 hours') AS events_24h, count(*) FILTER (WHERE status = 'error' AND created_at >= now() - interval '24 hours') AS errors_24h, count(*) FILTER (WHERE status = 'success' AND created_at >= now() - interval '24 hour …` |
 | `v_sec_definer_anon_grants` | `SELECT n.nspname AS schema_name, p.proname AS function_name, pg_get_function_identity_arguments(p.oid) AS function_args, r.rolname AS grantee_role, 'EXECUTE' AS privilege_type, CASE WHEN r.rolname = 'anon' THEN '🔴 CRÍTICO' WHEN r.rolname = 'authenticated' AND p.prosecdef THEN '🟡 REVISAR' ELSE '🟢 OK' …` |
 | `v_extensions_audit` | `SELECT e.extname AS extension_name, n.nspname AS current_schema, e.extversion AS version, CASE n.nspname WHEN 'public' THEN '⚠️ Em public — candidata à migração para extensions' WHEN 'extensions' THEN '✅ Já no schema correto' ELSE '🔵 Outro schema — OK' END AS status, CASE e.extname WHEN 'uuid-ossp' …` |
+| `deal_lost_reason_stats` | `SELECT d.organization_id, r.id AS lost_reason_id, r.label, r.category, COUNT(*)::int AS deal_count, COALESCE(SUM(d.value), 0) AS total_value FROM public.deals d JOIN public.deal_lost_reasons r ON r.id = d.lost_reason_id JOIN public.deal_stages s ON s.id = d.stage_id AND s.type = 'lost' GROUP BY d.or …` |
+| `sales_goal_progress` | `SELECT g.id AS goal_id, g.organization_id, g.owner_id, g.period, g.period_start, g.metric, g.target, CASE g.metric WHEN 'won_value' THEN COALESCE(w.total_value, 0) WHEN 'won_deals' THEN COALESCE(w.deal_count, 0) WHEN 'activities' THEN COALESCE(a.activity_count, 0) WHEN 'new_companies' THEN COALESCE( …` |
+| `sales_goals_detailed` | `SELECT p.*, pr.full_name AS owner_name, g.created_at, g.updated_at FROM public.sales_goal_progress p JOIN public.sales_goals g ON g.id = p.goal_id LEFT JOIN public.profiles pr ON pr.id = p.owner_id` |
+| `org_leaderboard` | `WITH months AS ( SELECT DISTINCT date_trunc('month', d.closed_at)::date AS month_start, d.organization_id FROM public.deals d WHERE d.closed_at IS NOT NULL AND d.deleted_at IS NULL UNION SELECT DISTINCT date_trunc('month', ac.created_at)::date, ac.organization_id FROM public.deal_activities ac ), ba …` |
+| `satisfaction_stats` | `SELECT s.id AS survey_id, s.organization_id, s.name, s.kind, s.scale_max, s.active, COUNT(r.id) FILTER (WHERE r.responded_at IS NOT NULL) AS responses, ROUND(AVG(r.score) FILTER (WHERE r.responded_at IS NOT NULL)::numeric, 2) AS avg_score, COUNT(r.id) FILTER (WHERE r.responded_at IS NOT NULL AND r.s …` |
+| `email_template_stats` | `select t.organization_id, t.category, count(*)::integer as templates, count(*) filter (where t.usage_count > 0)::integer as usados, coalesce(sum(t.usage_count), 0)::integer as usos_totais, max(t.last_used_at) as ultimo_uso from public.email_templates t where t.deleted_at is null group by t.organizat …` |
 
 ### G.3 Funções de cálculo/decisão no código
 
@@ -1312,6 +1400,14 @@ _nenhum item encontrado_
 - **generateSparkData(seed: number, points = 7)** — `src/components/lux/StatsGrid.tsx`
   ```
   const data: number[] = []; let val = Math.max(seed * 0.4, 1); for (let i = 0; i < points; i++) { val = Math.max(0, val + (Math.sin(seed + i * 1.3) * seed * 0.15)); data.push(Math.round(val)); } // Ensure last point trends toward current value data[data.length - 1] = seed; return data;
+  ```
+- **formatCurrency(v: number, currency = "BRL")** — `src/components/lux/analytics/GoalsTab.tsx`
+  ```
+  
+  ```
+- **apply(id: string)** — `src/components/lux/campaigns/EmailTemplatePicker.tsx`
+  ```
+  const t = templates.find((x) => x.id === id); if (!t) return; const steps: SequenceStep[] = t.sequence && t.sequence.length > 0 ? t.sequence.map((s, i) => ({ ...s, id: s.id || `t${Date.now()}-${i}` })) : [{ id: `t${Date.now()}`, type: "email", label: t.name, subject: t.subject ?? "", body: t.body ?? "" }]; onApply(steps); void markEmailTemplateUsed(t.id);
   ```
 - **formatCurrency(value: number, currency: string)** — `src/components/lux/deals/DealCard.tsx`
   ```
@@ -1360,6 +1456,14 @@ _nenhum item encontrado_
 - **computeAlerts(snapshots: DbHealthSnapshot[])** — `src/hooks/useDbHealth.ts`
   ```
   if (snapshots.length === 0) return []; const latest = snapshots[0]; const history = snapshots.slice(1); // baseline exclui o ponto atual const alerts: HealthAlert[] = []; // --- Saturação de conexões --- const connBaseline = history.map((s) => s.connection_pct); const connMean = mean(connBaseline); const connSd = stddev(connBaseline); const connThreshold = Math.max(connMean + 2 * connSd, 80); alerts.push({ key: "connections", label: "Conexões", value: `${latest.connection_pct}% (${latest.active_ …
+  ```
+- **rankBy(rows: LeaderboardRow[], metric: LeaderboardMetric)** — `src/hooks/useLeaderboard.ts`
+  ```
+  
+  ```
+- **invalidate()** — `src/hooks/useLostReasons.ts`
+  ```
+  qc.invalidateQueries({ queryKey: ["deal_lost_reasons", orgId] });
   ```
 - **canDo(entity: Entity, action: Action)** — `src/hooks/usePermissions.ts`
   ```
@@ -1572,6 +1676,8 @@ _nenhum item encontrado_
 | `MOBILE_BREAKPOINT` | `768` | `src/hooks/use-mobile.tsx` |
 | `TOAST_LIMIT` | `1` | `src/hooks/use-toast.ts` |
 | `TOAST_REMOVE_DELAY` | `1000000` | `src/hooks/use-toast.ts` |
+| `PAGE` | `1000` | `src/hooks/useAuditLogExport.ts` |
+| `MAX_PAGES` | `200` | `src/hooks/useAuditLogExport.ts` |
 | `EVENT` | `"lux:cnpj-auto-enrich-changed"` | `src/hooks/useCnpjAutoEnrichSetting.ts` |
 | `POLL_INTERVAL_MS` | `2500` | `src/hooks/useCnpjEnrich.ts` |
 | `POLL_TIMEOUT_MS` | `90` | `src/hooks/useCnpjEnrich.ts` |
@@ -1723,6 +1829,11 @@ _nenhum item encontrado_
 | `and v_sh.last_contacted_at > now() - interval '30 days';` | `supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql` |
 | `(public.sla_deadline(q.created_at, q.sla_seconds) <= now() + interval '30 seconds') AS breaching,` | `supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql` |
 | `ORDER BY (public.sla_deadline(q.created_at, q.sla_seconds) <= now() + interval '30 seconds') DESC,` | `supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql` |
+| `and started_at >= now() - interval '30 days'` | `supabase/migrations/20261122210000_status_page.sql` |
+| `count(*) filter (where created_at >= now() - interval '24 hours') as events_24h,` | `supabase/migrations/20261122210000_status_page.sql` |
+| `where created_at >= now() - interval '7 days'` | `supabase/migrations/20261122210000_status_page.sql` |
+| `where status in ('failed','dead') and created_at >= now() - interval '24 hours'` | `supabase/migrations/20261122210000_status_page.sql` |
+| `_subject_user_id, _legal_basis, _notes, now() + interval '30 days'` | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 
 ### H.3 Limites de paginação
 
@@ -1965,14 +2076,28 @@ _nenhum item encontrado_
 | useFormField should be used within <FormField> | `src/components/ui/use-form-field.ts` |
 | useSidebar must be used within a SidebarProvider. | `src/components/ui/use-sidebar.ts` |
 | useConfirm must be used within <ConfirmProvider> | `src/hooks/confirm-context.ts` |
+| Falha ao encerrar sessão | `src/hooks/useActiveSessions.ts` |
+| Falha ao encerrar sessões | `src/hooks/useActiveSessions.ts` |
+| Sessão não encontrada ou já encerrada | `src/hooks/useActiveSessions.ts` |
 | Erro ao criar chave | `src/hooks/useApiKeys.ts` |
+| Export truncado em ${MAX_PAGES * PAGE} linhas — refine o período. | `src/hooks/useAuditLogExport.ts` |
+| Falha na exportação | `src/hooks/useAuditLogExport.ts` |
+| Organização não selecionada | `src/hooks/useAuditLogExport.ts` |
 | Falha ao reiniciar disjuntor: ${err.message} | `src/hooks/useCircuitBreakers.ts` |
 | Não foi possível salvar o layout no servidor | `src/hooks/useDashboardLayout.ts` |
 | Erro ao criar estágio | `src/hooks/useDeals.ts` |
 | No deal selected | `src/hooks/useDeals.ts` |
 | Não foi possível remover | `src/hooks/useDeals.ts` |
+| Falha ao atender pedido | `src/hooks/useDsar.ts` |
+| Falha ao exportar | `src/hooks/useDsar.ts` |
+| Falha ao registrar pedido | `src/hooks/useDsar.ts` |
+| Organização não selecionada | `src/hooks/useDsar.ts` |
 | Informe um e-mail válido. | `src/hooks/useEmailSuppressions.ts` |
 | Erro ao salvar | `src/hooks/useICPConfig.ts` |
+| Falha ao adicionar | `src/hooks/useIpAllowlist.ts` |
+| Falha ao alterar | `src/hooks/useIpAllowlist.ts` |
+| Falha ao remover | `src/hooks/useIpAllowlist.ts` |
+| Organização não selecionada | `src/hooks/useIpAllowlist.ts` |
 | Não foi possível recalcular os scores | `src/hooks/useLeadScores.ts` |
 | Organização ativa não definida | `src/hooks/useLeadScores.ts` |
 | Acesso bloqueado | `src/hooks/useLoginForm.ts` |
@@ -1980,6 +2105,12 @@ _nenhum item encontrado_
 | Erro no cadastro | `src/hooks/useLoginForm.ts` |
 | Erro no login | `src/hooks/useLoginForm.ts` |
 | Segurança: Bloqueio Ativo | `src/hooks/useLoginForm.ts` |
+| Erro ao adicionar motivo | `src/hooks/useLostReasons.ts` |
+| Erro ao atualizar motivo | `src/hooks/useLostReasons.ts` |
+| Erro ao remover motivo | `src/hooks/useLostReasons.ts` |
+| Falha ao dispensar: ${e.message} | `src/hooks/useNextBestActions.ts` |
+| Falha ao recalcular: ${e.message} | `src/hooks/useNextBestActions.ts` |
+| Organizacao ativa nao definida | `src/hooks/useNextBestActions.ts` |
 | Bitrix indisponível — circuit breaker aberto. Tente em 1 min. | `src/hooks/useOracleV2.ts` |
 | Bitrix não configurado (secret BITRIX_WEBHOOK_BASE ausente). | `src/hooks/useOracleV2.ts` |
 | Busca de decisores falhou: ${msg} | `src/hooks/useOracleV2.ts` |
@@ -1994,10 +2125,18 @@ _nenhum item encontrado_
 | Organização não selecionada | `src/hooks/useOrgRateLimit.ts` |
 | Não autenticado | `src/hooks/useOrganizations.ts` |
 | Org ou usuário ausente | `src/hooks/useOrganizations.ts` |
+| Erro ao salvar regra | `src/hooks/usePiiRules.ts` |
+| Erro ao varrer PII | `src/hooks/usePiiRules.ts` |
 | Falha ao carregar ${url}: HTTP ${res.status} | `src/hooks/useResilienceComparison.ts` |
 | Erro ao restaurar | `src/hooks/useRolePermissions.ts` |
 | Erro ao salvar permissão | `src/hooks/useRolePermissions.ts` |
 | Padrão indisponível | `src/hooks/useRolePermissions.ts` |
+| Erro ao atualizar | `src/hooks/useSalesGoals.ts` |
+| Erro ao criar meta | `src/hooks/useSalesGoals.ts` |
+| Erro ao remover | `src/hooks/useSalesGoals.ts` |
+| Erro ao criar pesquisa | `src/hooks/useSatisfaction.ts` |
+| Erro ao gerar link | `src/hooks/useSatisfaction.ts` |
+| Erro ao remover | `src/hooks/useSatisfaction.ts` |
 | Erro ao alterar status | `src/hooks/useScheduledReports.ts` |
 | Erro ao atualizar | `src/hooks/useScheduledReports.ts` |
 | Erro ao criar relatório | `src/hooks/useScheduledReports.ts` |
@@ -2060,7 +2199,6 @@ _nenhum item encontrado_
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
 | Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
 | results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
-| Configura\xE7\xE3o do backend indispon\xEDvel para esta ferramenta. | `supabase/functions/mcp/index.ts` |
 | unauthorized | `supabase/functions/migrate-helper/index.ts` |
 | unknown_action | `supabase/functions/migrate-helper/index.ts` |
 | CookieVaultUnavailable após 3 tentativas: ${(lastErr as Error).message} | `supabase/functions/oracle-cookies-preflight/index.ts` |
@@ -2075,28 +2213,7 @@ _nenhum item encontrado_
 | createAdminUserFixture: upsert member failed: ${memberErr.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createNonAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createNonAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| Failed to create user ${email}: ${error.message} | `supabase/functions/rls-tests/index.ts` |
-| Failed to sign in ${email}: ${error.message} | `supabase/functions/rls-tests/index.ts` |
-| create orgA: ${orgAErr.message} | `supabase/functions/rls-tests/index.ts` |
-| create orgB: ${orgBErr.message} | `supabase/functions/rls-tests/index.ts` |
-| Gmail send [${res.status}]: ${body.slice(0, 300)} | `supabase/functions/send-scheduled-reports/index.ts` |
-| OAuth nao configurado para ${acc.provider} | `supabase/functions/send-scheduled-reports/index.ts` |
-| Outlook send [${res.status}]: ${body.slice(0, 300)} | `supabase/functions/send-scheduled-reports/index.ts` |
-| Refresh falhou: ${code} | `supabase/functions/send-scheduled-reports/index.ts` |
-| Sem refresh token; reconexao necessaria | `supabase/functions/send-scheduled-reports/index.ts` |
-| leitura dos agendamentos: ${error.message} | `supabase/functions/send-scheduled-reports/index.ts` |
-| reserva do periodo: ${reserveErr.message} | `supabase/functions/send-scheduled-reports/index.ts` |
-| todos os envios falharam: ${failures[0]} | `supabase/functions/send-scheduled-reports/index.ts` |
-| stats_rpc: ${statsErr.message} | `supabase/functions/sla-alerts/index.ts` |
-| Invalid URL | `supabase/functions/track-click/index.ts` |
-| Invalid recipient | `supabase/functions/track-click/index.ts` |
-| Invalid signature | `supabase/functions/track-click/index.ts` |
-| insert_result_failed: ${insErr?.message ??  | `supabase/functions/web-scrape-worker/index.ts` |
-| no_response | `supabase/functions/web-scrape-worker/index.ts` |
-| , { type:  | `supabase/functions/workflow-engine/index.ts` |
-| Step not found | `supabase/functions/workflow-engine/index.ts` |
-| Unauthorized | `supabase/functions/workflow-engine/index.ts` |
-| Workflow not found | `supabase/functions/workflow-engine/index.ts` |
+| … +22 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2324,8 +2441,10 @@ _nenhum item encontrado_
 | Regras: company_id não vazio; user_id somente dígitos. | `src/hooks/oracleV2Helpers.ts` |
 | apenas administradores enxerguem os registros do próprio workspace. | `src/hooks/useAuditTrail.ts` |
 | * Configuração global (singleton) dos alertas de disjuntor. Somente admins | `src/hooks/useCircuitBreakerAlerts.ts` |
+| * Incrementa usage_count. Best-effort: falhar aqui nao deve travar o envio. */ | `src/hooks/useEmailTemplates.ts` |
 | Apenas flag global | `src/hooks/useFeatureFlag.ts` |
 | Only if not in a modal or menu (those handle Esc themselves) | `src/hooks/useKeyboardShortcuts.ts` |
+| * Marcador de que o negócio foi perdido — usado no formulário de fechamento. */ | `src/hooks/useLostReasons.ts` |
 | - SQL action must be `delete` | `src/hooks/useMembershipAuditLog.ts` |
 | - `old_data` must exist with an explicit `user_id` (cascades that null | `src/hooks/useMembershipAuditLog.ts` |
 | - `actor_id` must be present and equal to `old_data.user_id` (not merely | `src/hooks/useMembershipAuditLog.ts` |

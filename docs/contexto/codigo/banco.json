@@ -6,12 +6,12 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 228,
+ "migrations": 240,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
  "avisos": [
-  "17 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
+  "19 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
  ],
  "extensoes": [
   "pg_cron",
@@ -52,11 +52,19 @@
   ]
  },
  "views": [
+  "deal_lost_reason_stats",
+  "email_template_stats",
   "oracle_v2_health",
+  "org_leaderboard",
+  "sales_goal_progress",
+  "sales_goals_detailed",
+  "satisfaction_stats",
   "v_extensions_audit",
   "v_sec_definer_anon_grants"
  ],
  "funcoes": [
+  "_dsar_pseudonymize",
+  "_pii_redact_jsonb",
   "accept_org_invite",
   "advance_recipient_step",
   "api_latency_percentiles",
@@ -69,6 +77,7 @@
   "apply_retry_advisory",
   "apply_sla_recommendation",
   "assert_service_or_admin",
+  "audit_log_facets",
   "auto_tune_queue_slas",
   "campaign_ab_stats",
   "can_access",
@@ -93,44 +102,66 @@
   "compute_deal_prediction",
   "compute_lead_score",
   "compute_sla_backoff",
+  "count_audit_logs",
   "count_recent_org_violations",
   "create_default_deal_stages",
+  "create_dsar_request",
   "decide_ab_winner",
   "default_org_for_current_user",
   "default_role_permissions",
   "default_sla_seconds",
   "defer_scrape_task",
   "defer_web_scrape_task",
+  "dismiss_next_best_action",
   "dlq_health_metrics",
   "dlq_health_trend",
   "dlq_purge_stale_network_errors",
   "dlq_top_reasons",
+  "dsar_sla_alerts",
+  "dsar_token",
+  "duplicate_email_template",
   "enqueue_scrape_task",
   "enqueue_webhook_event",
   "enrichment_funnel_counts",
+  "erase_subject_data",
   "evaluate_api_latency_alerts",
   "evaluate_circuit_breaker_alerts",
   "evaluate_dlq_alerts",
   "evaluate_org_violation_alerts",
   "evaluate_partition_policies",
   "evaluate_vault_cookie_alerts",
+  "export_audit_logs",
+  "export_subject_data",
   "fail_scrape_task",
   "fail_web_scrape_task",
   "fn_web_scrape_regression_check",
+  "fulfill_dsar_request",
   "get_dashboard_stats",
+  "get_my_ip_status",
+  "get_public_status",
+  "get_public_uptime",
   "get_sector_summary",
+  "get_survey_by_token",
   "handle_new_organization",
   "handle_new_user",
   "handle_updated_at",
   "has_org_role",
   "has_role",
   "increment_version",
+  "ip_in_cidr",
+  "is_ip_allowed",
   "is_org_member",
   "is_service_role",
+  "list_dsar_requests",
+  "list_my_sessions",
+  "list_next_best_actions",
+  "list_pii_rules",
   "log_audit_event",
   "log_automation_event",
   "log_deal_stage_change",
   "log_queue_sla_change",
+  "mark_email_template_used",
+  "nba_recommend",
   "normalize_suppression_email",
   "notify_on_enrichment",
   "notify_on_workflow_complete",
@@ -139,6 +170,13 @@
   "pg_net_health",
   "pg_net_watchdog_should_notify",
   "pg_net_watchdog_try_lock",
+  "pii_active_rules",
+  "pii_apply_category",
+  "pii_hash",
+  "pii_redact_jsonb",
+  "pii_redact_text",
+  "pii_regex",
+  "pii_scan",
   "prevent_user_id_change",
   "prune_api_latency_snapshots",
   "prune_api_request_logs",
@@ -154,6 +192,7 @@
   "prune_scheduled_report_runs",
   "purge_dead_letter",
   "purge_soft_deleted",
+  "read_audit_logs_safe",
   "reap_stuck_queue_tasks",
   "record_campaign_event",
   "record_campaign_reply",
@@ -161,23 +200,30 @@
   "record_vault_cookie_snapshots",
   "refresh_deal_prediction",
   "refresh_lead_score",
+  "refresh_next_best_actions",
   "refresh_org_scores",
   "replay_dead_letter",
   "replay_dead_letter_batch",
   "replay_instagram_dead_letter_batch",
   "replay_web_dead_letter_batch",
   "reset_circuit_breaker",
+  "revoke_my_session",
+  "revoke_other_sessions",
   "rollback_retry_advisory",
   "scrape_jobs_set_config_hash",
+  "seed_default_lost_reasons",
   "seed_role_permissions",
+  "set_pii_rule",
   "sla_autotune_blocked_streaks",
   "sla_compliance_stats",
   "sla_deadline",
   "sla_recommendations",
   "source_quality_report",
+  "submit_survey_response",
   "sync_suppression_from_recipient",
   "system_recovery_health",
   "touch_api_key",
+  "touch_last_known_ip",
   "update_automation_steps_updated_at",
   "update_updated_at_column",
   "validate_api_latency_alert_settings",
@@ -408,6 +454,13 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "trg_deal_lost_reasons_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "deal_lost_reasons",
+   "funcao": "update_updated_at_column"
+  },
+  {
    "nome": "trg_deal_predictions_updated",
    "quando": "before",
    "evento": "update",
@@ -506,10 +559,24 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "trg_email_templates_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "email_templates",
+   "funcao": "update_updated_at_column"
+  },
+  {
    "nome": "update_feature_flags_updated_at",
    "quando": "before",
    "evento": "update",
    "tabela": "feature_flags",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_incidents_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "incidents",
    "funcao": "update_updated_at_column"
   },
   {
@@ -587,6 +654,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "lusha_search_sessions",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_next_best_actions_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "next_best_actions",
    "funcao": "update_updated_at_column"
   },
   {
@@ -741,6 +815,20 @@
    "quando": "before",
    "evento": "update",
    "tabela": "role_permissions",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_sales_goals_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "sales_goals",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_satisfaction_surveys_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "satisfaction_surveys",
    "funcao": "update_updated_at_column"
   },
   {
@@ -5630,7 +5718,6 @@
     "_shared",
     "admin-list-companies",
     "ai-agent",
-    "mcp",
     "oracle-search-decisors",
     "rls-tests",
     "send-scheduled-reports",
@@ -5927,6 +6014,194 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "data_subject_requests": {
+   "colunas": {
+    "completed_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "due_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "handled_by": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "legal_basis": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "notes": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "rejection_reason": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "request_type": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "requested_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "result_summary": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
+    "status": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'pending'",
+     "ref": null
+    },
+    "subject_email": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "subject_name": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "subject_user_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "dsr_insert_admin",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "dsr_select_admin",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "dsr_update_admin",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_dsr_org_status",
+     "colunas": "organization_id, status, due_at",
+     "unico": false
+    },
+    {
+     "nome": "idx_dsr_subject",
+     "colunas": "organization_id, lower(subject_email",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122250000_dsar_lgpd.sql",
+   "colunas_types": {
+    "completed_at": "string | null",
+    "created_at": "string",
+    "due_at": "string",
+    "handled_by": "string | null",
+    "id": "string",
+    "legal_basis": "string | null",
+    "notes": "string | null",
+    "organization_id": "string",
+    "rejection_reason": "string | null",
+    "request_type": "string",
+    "requested_at": "string",
+    "result_summary": "Json",
+    "status": "string",
+    "subject_email": "string",
+    "subject_name": "string | null",
+    "subject_user_id": "string | null",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": true
+  },
   "db_health_snapshots": {
    "colunas": {
     "active_connections": {
@@ -6196,6 +6471,133 @@
    "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "deal_lost_reasons": {
+   "colunas": {
+    "active": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "category": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'other'",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "label": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "position": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete lost reasons",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view lost reasons",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ insert lost reasons",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ update lost reasons",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_deal_lost_reasons_org",
+     "colunas": "organization_id, position",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122160000_deal_lost_reasons.sql",
+   "colunas_types": {
+    "active": "boolean",
+    "category": "string",
+    "created_at": "string",
+    "id": "string",
+    "label": "string",
+    "organization_id": "string | null",
+    "position": "number",
+    "updated_at": "string",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_deal_lost_reasons_updated"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -6735,6 +7137,20 @@
      "default": "gen_random_uuid()",
      "ref": null
     },
+    "lost_notes": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "lost_reason_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "deal_lost_reasons"
+    },
     "organization_id": {
      "tipo": "uuid",
      "nn": true,
@@ -6863,6 +7279,11 @@
      "unico": false
     },
     {
+     "nome": "idx_deals_lost_reason",
+     "colunas": "lost_reason_id",
+     "unico": false
+    },
+    {
      "nome": "idx_deals_org",
      "colunas": "organization_id",
      "unico": false
@@ -6885,6 +7306,7 @@
    ],
    "fks": [
     "company_id->companies",
+    "lost_reason_id->deal_lost_reasons",
     "stage_id->deal_stages",
     "stakeholder_id->stakeholders"
    ],
@@ -6898,6 +7320,8 @@
     "description": "string | null",
     "expected_close_date": "string | null",
     "id": "string",
+    "lost_notes": "string | null",
+    "lost_reason_id": "string | null",
     "organization_id": "string",
     "position": "number",
     "priority": "string",
@@ -7888,6 +8312,203 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "email_templates": {
+   "colunas": {
+    "body": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "category": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'geral'",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "description": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "last_used_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "sequence": {
+     "tipo": "jsonb",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "subject": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "tags": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "usage_count": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    },
+    "variables": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'",
+     "ref": null
+    },
+    "version": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "1",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete email_templates",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members insert email_templates",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members update email_templates",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view email_templates",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage email_templates",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_email_templates_org",
+     "colunas": "organization_id, updated_at desc",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122200000_email_templates.sql",
+   "colunas_types": {
+    "body": "string | null",
+    "category": "string",
+    "created_at": "string",
+    "deleted_at": "string | null",
+    "description": "string | null",
+    "id": "string",
+    "last_used_at": "string | null",
+    "name": "string",
+    "organization_id": "string",
+    "sequence": "Json | null",
+    "subject": "string | null",
+    "tags": "string[]",
+    "updated_at": "string",
+    "usage_count": "number",
+    "user_id": "string",
+    "variables": "string[]",
+    "version": "number"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_email_templates_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "feature_flags": {
    "colunas": {
     "config": {
@@ -8169,6 +8790,184 @@
     "gmaps-proxy"
    ],
    "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "incidents": {
+   "colunas": {
+    "body": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "components": {
+     "tipo": "text[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "deleted_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "impact": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'minor'",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "postmortem": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "resolved_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "started_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "status": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'investigating'",
+     "ref": null
+    },
+    "title": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete incidents",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members insert incidents",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members update incidents",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view incidents",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage incidents",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_incidents_open",
+     "colunas": "started_at desc",
+     "unico": false
+    },
+    {
+     "nome": "idx_incidents_org",
+     "colunas": "organization_id, started_at desc",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122210000_status_page.sql",
+   "colunas_types": {
+    "body": "string | null",
+    "components": "string[]",
+    "created_at": "string",
+    "deleted_at": "string | null",
+    "id": "string",
+    "impact": "string",
+    "organization_id": "string",
+    "postmortem": "string | null",
+    "resolved_at": "string | null",
+    "started_at": "string",
+    "status": "string",
+    "title": "string",
+    "updated_at": "string",
+    "user_id": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_incidents_updated"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -8837,6 +9636,97 @@
     "prevent_user_id_change_intent_signals",
     "trg_prevent_user_id_change_intent_signals"
    ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "ip_allowlist": {
+   "colunas": {
+    "cidr": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_by": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "label": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins manage ip allowlist",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "ip_allowlist_org_idx",
+     "colunas": "organization_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122220000_ip_allowlist.sql",
+   "colunas_types": {
+    "cidr": "string",
+    "created_at": "string",
+    "created_by": "string | null",
+    "id": "string",
+    "label": "string | null",
+    "organization_id": "string",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -9831,7 +10721,6 @@
     "_shared",
     "lusha-decision-makers",
     "lusha-search",
-    "mcp",
     "oracle-enrich-contact",
     "oracle-push-bitrix",
     "oracle-search-decisors"
@@ -10478,6 +11367,186 @@
    ],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "next_best_actions": {
+   "colunas": {
+    "action_type": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "channel": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "days_since_contact": {
+     "tipo": "integer",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "deal_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "deals"
+    },
+    "dismissed_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "priority": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "50",
+     "ref": null
+    },
+    "reason": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "stakeholder_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "stakeholders"
+    },
+    "suggested_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "win_probability": {
+     "tipo": "integer",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete next_best_actions",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members update next_best_actions",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members upsert next_best_actions",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view next_best_actions",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage next_best_actions",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_next_best_actions_org_priority",
+     "colunas": "organization_id, priority DESC, suggested_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_next_best_actions_pending",
+     "colunas": "organization_id",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "deal_id->deals",
+    "organization_id->organizations",
+    "stakeholder_id->stakeholders"
+   ],
+   "criada_em": "20261122270000_next_best_action.sql",
+   "colunas_types": {
+    "action_type": "string",
+    "channel": "string",
+    "created_at": "string",
+    "days_since_contact": "number | null",
+    "deal_id": "string",
+    "dismissed_at": "string | null",
+    "id": "string",
+    "organization_id": "string",
+    "priority": "number",
+    "reason": "string",
+    "stakeholder_id": "string | null",
+    "suggested_at": "string",
+    "updated_at": "string",
+    "win_probability": "number | null"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_next_best_actions_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "notifications": {
    "colunas": {
@@ -11717,6 +12786,20 @@
      "default": "gen_random_uuid()",
      "ref": null
     },
+    "ip_allowlist_enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    },
+    "last_known_ip": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "name": {
      "tipo": "text",
      "nn": true,
@@ -11779,6 +12862,8 @@
    "colunas_types": {
     "created_at": "string",
     "id": "string",
+    "ip_allowlist_enabled": "boolean",
+    "last_known_ip": "string | null",
     "name": "string",
     "owner_id": "string",
     "slug": "string",
@@ -11788,7 +12873,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 1,
+   "usada_no_front": 2,
    "usada_em_edges": [
     "health",
     "rls-tests"
@@ -12176,6 +13261,103 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "pii_redaction_rules": {
+   "colunas": {
+    "action": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'mask'",
+     "ref": null
+    },
+    "category": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "pii_rules_select_admin",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "pii_rules_write_admin",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_pii_rules_org",
+     "colunas": "organization_id, enabled",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122260000_dlp_pii_masking.sql",
+   "colunas_types": {
+    "action": "string",
+    "category": "string",
+    "created_at": "string",
+    "enabled": "boolean",
+    "id": "string",
+    "organization_id": "string",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "places_api_usage": {
    "colunas": {
@@ -13557,6 +14739,429 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "sales_goals": {
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_by": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "metric": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "owner_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "period": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "period_start": {
+     "tipo": "date",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "target": {
+     "tipo": "numeric",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "user_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete goals",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view goals",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ insert goals",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ update goals",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_sales_goals_org_period",
+     "colunas": "organization_id, period_start DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_sales_goals_owner",
+     "colunas": "organization_id, owner_id, period_start DESC",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122170000_sales_goals.sql",
+   "colunas_types": {
+    "created_at": "string",
+    "created_by": "string",
+    "id": "string",
+    "metric": "string",
+    "organization_id": "string",
+    "owner_id": "string | null",
+    "period": "string",
+    "period_start": "string",
+    "target": "number",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [
+     "user_id"
+    ],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_sales_goals_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "satisfaction_responses": {
+   "colunas": {
+    "comment": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "company_id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "companies"
+    },
+    "contact_email": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "responded_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "score": {
+     "tipo": "integer",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "survey_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "satisfaction_surveys"
+    },
+    "token": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "encode(gen_random_bytes(24), 'hex')",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete responses",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view responses",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ insert responses",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_satisfaction_responses_org",
+     "colunas": "organization_id, responded_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_satisfaction_responses_survey",
+     "colunas": "survey_id, responded_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_satisfaction_responses_token",
+     "colunas": "token",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "company_id->companies",
+    "organization_id->organizations",
+    "survey_id->satisfaction_surveys"
+   ],
+   "criada_em": "20261122190000_satisfaction_surveys.sql",
+   "colunas_types": {
+    "comment": "string | null",
+    "company_id": "string | null",
+    "contact_email": "string | null",
+    "created_at": "string",
+    "id": "string",
+    "organization_id": "string",
+    "responded_at": "string | null",
+    "score": "number | null",
+    "survey_id": "string",
+    "token": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
+  "satisfaction_surveys": {
+   "colunas": {
+    "active": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_by": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": "auth.uid()",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "kind": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "name": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "question": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "scale_max": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "10",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete surveys",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view surveys",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ insert surveys",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "SDR+ update surveys",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_satisfaction_surveys_org",
+     "colunas": "organization_id, created_at DESC",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261122190000_satisfaction_surveys.sql",
+   "colunas_types": {
+    "active": "boolean",
+    "created_at": "string",
+    "created_by": "string",
+    "id": "string",
+    "kind": "string",
+    "name": "string",
+    "organization_id": "string",
+    "question": "string",
+    "scale_max": "number",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_satisfaction_surveys_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "scheduled_report_runs": {
    "colunas": {
     "created_at": {
@@ -14255,7 +15860,6 @@
    "usada_em_edges": [
     "ai-agent",
     "gmaps-proxy",
-    "mcp",
     "scrape-queue-worker",
     "workflow-engine"
    ],
@@ -17110,6 +18714,11 @@
    "usada_em": 2
   },
   {
+   "nome": "audit_log_facets",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "auto_tune_queue_slas",
    "definida": true,
    "usada_em": 1
@@ -17180,7 +18789,17 @@
    "usada_em": 1
   },
   {
+   "nome": "count_audit_logs",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "create_default_deal_stages",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "create_dsar_request",
    "definida": true,
    "usada_em": 1
   },
@@ -17192,7 +18811,7 @@
   {
    "nome": "default_org_for_current_user",
    "definida": true,
-   "usada_em": 7
+   "usada_em": 6
   },
   {
    "nome": "default_role_permissions",
@@ -17210,12 +18829,27 @@
    "usada_em": 1
   },
   {
+   "nome": "dismiss_next_best_action",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "dlq_health_metrics",
    "definida": true,
    "usada_em": 1
   },
   {
    "nome": "dlq_health_trend",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "dsar_sla_alerts",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "duplicate_email_template",
    "definida": true,
    "usada_em": 1
   },
@@ -17250,6 +18884,16 @@
    "usada_em": 1
   },
   {
+   "nome": "export_audit_logs",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "export_subject_data",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "fail_scrape_task",
    "definida": true,
    "usada_em": 1
@@ -17260,12 +18904,37 @@
    "usada_em": 1
   },
   {
+   "nome": "fulfill_dsar_request",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "get_dashboard_stats",
    "definida": true,
-   "usada_em": 3
+   "usada_em": 2
+  },
+  {
+   "nome": "get_my_ip_status",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "get_public_status",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "get_public_uptime",
+   "definida": true,
+   "usada_em": 1
   },
   {
    "nome": "get_sector_summary",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "get_survey_by_token",
    "definida": true,
    "usada_em": 1
   },
@@ -17280,7 +18949,32 @@
    "usada_em": 1
   },
   {
+   "nome": "list_dsar_requests",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "list_my_sessions",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "list_next_best_actions",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "list_pii_rules",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "log_automation_event",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "mark_email_template_used",
    "definida": true,
    "usada_em": 1
   },
@@ -17306,6 +19000,16 @@
   },
   {
    "nome": "pg_net_watchdog_try_lock",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "pii_redact_text",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "pii_scan",
    "definida": true,
    "usada_em": 1
   },
@@ -17340,6 +19044,11 @@
    "usada_em": 1
   },
   {
+   "nome": "refresh_next_best_actions",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "refresh_org_scores",
    "definida": true,
    "usada_em": 1
@@ -17370,7 +19079,22 @@
    "usada_em": 1
   },
   {
+   "nome": "revoke_my_session",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "revoke_other_sessions",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "rollback_retry_advisory",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "set_pii_rule",
    "definida": true,
    "usada_em": 1
   },
@@ -17395,12 +19119,22 @@
    "usada_em": 1
   },
   {
+   "nome": "submit_survey_response",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "system_recovery_health",
    "definida": true,
    "usada_em": 1
   },
   {
    "nome": "touch_api_key",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "touch_last_known_ip",
    "definida": true,
    "usada_em": 1
   },

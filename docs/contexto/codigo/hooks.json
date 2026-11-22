@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 84,
+ "total": 96,
  "hooks": [
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
@@ -101,19 +101,29 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 11,
+   "usado_por": 21,
    "usado_por_arquivos": [
+    "src/components/lux/analytics/GoalsTab.tsx",
     "src/components/lux/monitoring/DLQReplayPanel.tsx",
     "src/contexts/ActiveOrgContext.tsx",
+    "src/hooks/useAuditLogExport.ts",
     "src/hooks/useDlqItems.ts",
     "src/hooks/useDlqReplay.ts",
+    "src/hooks/useDsar.ts",
+    "src/hooks/useIpAllowlist.ts",
+    "src/hooks/useLeaderboard.ts",
+    "src/hooks/useLostReasons.ts",
+    "src/hooks/useNextBestActions.ts",
     "src/hooks/useOrgProxies.ts",
     "src/hooks/useOrgRateLimit.ts",
     "src/hooks/useOrganizations.ts",
+    "src/hooks/usePiiRules.ts",
     "src/hooks/usePlacesApiUsage.ts",
     "src/hooks/useRealtimeCompanies.ts",
     "src/hooks/useRealtimeJobDetails.ts",
-    "src/hooks/useRealtimeScrapeJobs.ts"
+    "src/hooks/useRealtimeScrapeJobs.ts",
+    "src/hooks/useSalesGoals.ts",
+    "src/hooks/useSatisfaction.ts"
    ],
    "coberto_por_testes": 0
   },
@@ -131,7 +141,7 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 36,
+   "usado_por": 37,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
@@ -157,12 +167,12 @@
     "src/hooks/useEmailSuppressions.ts",
     "src/hooks/useICPConfig.ts",
     "src/hooks/useLeadScores.ts",
+    "src/hooks/useLostReasons.ts",
     "src/hooks/useOnboardingState.ts",
     "src/hooks/useOrganizations.ts",
     "src/hooks/usePermissions.ts",
     "src/hooks/useRealtimeCompanies.ts",
-    "src/hooks/useRealtimeScrapeJobs.ts",
-    "src/hooks/useScheduledReports.ts"
+    "src/hooks/useRealtimeScrapeJobs.ts"
    ],
    "coberto_por_testes": 1
   },
@@ -288,7 +298,7 @@
     "useEffect"
    ],
    "canais_realtime": [],
-   "usado_por": 48,
+   "usado_por": 54,
    "usado_por_arquivos": [
     "src/components/auth/MFAEnroll.tsx",
     "src/components/lux/AIAgentView.tsx",
@@ -320,6 +330,33 @@
     "src/components/lux/integrations/OAuthSnapshotsPanel.tsx",
     "src/components/lux/integrations/RedirectUriChecklist.tsx",
     "src/components/lux/lusha/SessionsPanel.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useActiveSessions.ts",
+   "hooks_exportados": [
+    "useActiveSessions"
+   ],
+   "linhas": 97,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [
+    "list_my_sessions",
+    "revoke_my_session",
+    "revoke_other_sessions"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useCallback",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/ActiveSessionsPanel.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -398,6 +435,33 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useAuditLogExport.ts",
+   "hooks_exportados": [
+    "useAuditLogExport"
+   ],
+   "linhas": 155,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [
+    "audit_log_facets",
+    "count_audit_logs",
+    "export_audit_logs"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useCallback",
+    "useQuery",
+    "useState"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/AuditLogExportPanel.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -814,7 +878,7 @@
     "useDealTasks",
     "useDeals"
    ],
-   "linhas": 322,
+   "linhas": 324,
    "dominio": "hooks",
    "tabelas": [
     "deal_activities",
@@ -977,6 +1041,36 @@
    "coberto_por_testes": 0
   },
   {
+   "arquivo": "src/hooks/useDsar.ts",
+   "hooks_exportados": [
+    "useDsar"
+   ],
+   "linhas": 172,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [
+    "create_dsar_request",
+    "dsar_sla_alerts",
+    "export_subject_data",
+    "fulfill_dsar_request",
+    "list_dsar_requests"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useCallback",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/DsarPanel.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useEmailAccountAuditLog.ts",
    "hooks_exportados": [
     "useEmailAccountAuditLog"
@@ -1043,6 +1137,39 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/components/lux/integrations/EmailSyncHistorySheet.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useEmailTemplates.ts",
+   "hooks_exportados": [
+    "useDeleteEmailTemplate",
+    "useDuplicateEmailTemplate",
+    "useEmailTemplateStats",
+    "useEmailTemplates",
+    "useSaveEmailTemplate"
+   ],
+   "linhas": 169,
+   "dominio": "hooks",
+   "tabelas": [
+    "email_template_stats",
+    "email_templates"
+   ],
+   "rpcs": [
+    "duplicate_email_template",
+    "mark_email_template_used"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 2,
+   "usado_por_arquivos": [
+    "src/components/lux/campaigns/EmailTemplatePicker.tsx",
+    "src/components/lux/campaigns/EmailTemplatesTab.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1163,6 +1290,36 @@
    "coberto_por_testes": 1
   },
   {
+   "arquivo": "src/hooks/useIpAllowlist.ts",
+   "hooks_exportados": [
+    "useIpAllowlist"
+   ],
+   "linhas": 142,
+   "dominio": "hooks",
+   "tabelas": [
+    "ip_allowlist",
+    "organizations"
+   ],
+   "rpcs": [
+    "get_my_ip_status",
+    "touch_last_known_ip"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useCallback",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/IpAllowlistPanel.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useKeyboardShortcuts.ts",
    "hooks_exportados": [
     "useKeyboardShortcuts"
@@ -1180,6 +1337,29 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/pages/Index.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useLeaderboard.ts",
+   "hooks_exportados": [
+    "useLeaderboard"
+   ],
+   "linhas": 67,
+   "dominio": "hooks",
+   "tabelas": [
+    "org_leaderboard"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useQuery"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/analytics/LeaderboardTab.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1230,6 +1410,37 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/pages/Login.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useLostReasons.ts",
+   "hooks_exportados": [
+    "useLostReasonSeed",
+    "useLostReasonStats",
+    "useLostReasons"
+   ],
+   "linhas": 161,
+   "dominio": "hooks",
+   "tabelas": [
+    "deal_lost_reason_stats",
+    "deal_lost_reasons"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useAuth",
+    "useEffect",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 2,
+   "usado_por_arquivos": [
+    "src/components/lux/deals/DealDetailDrawer.tsx",
+    "src/components/lux/deals/LostReasonsDialog.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1315,6 +1526,35 @@
     "src/hooks/useRecentViews.ts",
     "src/lib/viewRegistry.ts",
     "src/pages/Index.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useNextBestActions.ts",
+   "hooks_exportados": [
+    "useDismissNextBestAction",
+    "useNextBestActions",
+    "useRefreshNextBestActions"
+   ],
+   "linhas": 113,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [
+    "dismiss_next_best_action",
+    "list_next_best_actions",
+    "refresh_next_best_actions"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/NextBestActionPanel.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1453,10 +1693,11 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 17,
+   "usado_por": 18,
    "usado_por_arquivos": [
     "src/components/lux/OrgViolationsView.tsx",
     "src/components/lux/OrganizationsView.tsx",
+    "src/components/lux/analytics/GoalsTab.tsx",
     "src/components/lux/integrations/EmailAccountsAuditPanel.tsx",
     "src/components/lux/lusha/OracleV2Panel.tsx",
     "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
@@ -1616,6 +1857,36 @@
     "src/components/lux/monitoring/DlqHealthCard.tsx"
    ],
    "coberto_por_testes": 1
+  },
+  {
+   "arquivo": "src/hooks/usePiiRules.ts",
+   "hooks_exportados": [
+    "usePiiPreview",
+    "usePiiRules",
+    "usePiiScan"
+   ],
+   "linhas": 116,
+   "dominio": "hooks",
+   "tabelas": [],
+   "rpcs": [
+    "list_pii_rules",
+    "pii_redact_text",
+    "pii_scan",
+    "set_pii_rule"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/PiiMaskingPanel.tsx"
+   ],
+   "coberto_por_testes": 0
   },
   {
    "arquivo": "src/hooks/usePlacesApiUsage.ts",
@@ -1878,6 +2149,70 @@
    "coberto_por_testes": 0
   },
   {
+   "arquivo": "src/hooks/useSalesGoals.ts",
+   "hooks_exportados": [
+    "useCreateGoal",
+    "useDeleteGoal",
+    "useSalesGoals",
+    "useUpdateGoal"
+   ],
+   "linhas": 128,
+   "dominio": "hooks",
+   "tabelas": [
+    "sales_goals",
+    "sales_goals_detailed"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/analytics/GoalsTab.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useSatisfaction.ts",
+   "hooks_exportados": [
+    "useCreateSurvey",
+    "useCreateSurveyInvite",
+    "useDeleteSurvey",
+    "useSurveys",
+    "useToggleSurvey"
+   ],
+   "linhas": 153,
+   "dominio": "hooks",
+   "tabelas": [
+    "satisfaction_responses",
+    "satisfaction_stats",
+    "satisfaction_surveys"
+   ],
+   "rpcs": [
+    "get_survey_by_token",
+    "submit_survey_response"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 2,
+   "usado_por_arquivos": [
+    "src/components/lux/analytics/SatisfactionTab.tsx",
+    "src/pages/SurveyResponse.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
    "arquivo": "src/hooks/useScheduledReports.ts",
    "hooks_exportados": [
     "useScheduledReports"
@@ -1978,6 +2313,38 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/components/lux/ThemeToggle.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useStatusPage.ts",
+   "hooks_exportados": [
+    "useIncidents",
+    "usePublicStatus",
+    "usePublicUptime",
+    "useResolveIncident",
+    "useSaveIncident"
+   ],
+   "linhas": 168,
+   "dominio": "hooks",
+   "tabelas": [
+    "incidents"
+   ],
+   "rpcs": [
+    "get_public_status",
+    "get_public_uptime"
+   ],
+   "edges": [],
+   "hooks_internos": [
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 2,
+   "usado_por_arquivos": [
+    "src/components/lux/monitoring/IncidentsPanel.tsx",
+    "src/pages/StatusPage.tsx"
    ],
    "coberto_por_testes": 0
   },

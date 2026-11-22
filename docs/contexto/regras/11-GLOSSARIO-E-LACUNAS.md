@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5f42ddfbdd` · branch `main` · 2026-11-22 03:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `378947ce26` · branch `main` · 2026-11-22 11:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -38,25 +38,32 @@
 | `companies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 48 colunas | migration |
 | `company_reviews` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `dashboard_layouts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
+| `data_subject_requests` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
 | `db_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `deal_activities` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
+| `deal_lost_reason_stats` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | types.ts |
+| `deal_lost_reasons` | Catálogo de motivos de perda por organização (GAPS-ENTERPRISE:83). | 9 colunas | migration |
 | `deal_predictions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `deal_stages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `deal_tasks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
-| `deals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 19 colunas | migration |
+| `deals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 21 colunas | migration |
 | `dlq_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `dlq_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `dlq_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `email_accounts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 25 colunas | migration |
 | `email_suppressions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `email_sync_log` | Histórico de tentativas de polling/sincronização por conta de e-mail | 17 colunas | migration |
+| `email_template_stats` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | types.ts |
+| `email_templates` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
 | `feature_flags` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `health_checks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `idempotency_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
+| `incidents` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `instagram_scrape_dead_letter` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `instagram_scrape_queue` | _(sem COMMENT ON TABLE — significado não documentado)_ | 20 colunas | migration |
 | `instagram_scrape_results` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `intent_signals` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `ip_allowlist` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `ipc_config` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `job_exports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `lead_scores` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
@@ -64,10 +71,12 @@
 | `lusha_credit_usage_log` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `lusha_dm_search_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `lusha_search_sessions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 29 colunas | migration |
+| `next_best_actions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `notifications` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `oauth_sandbox_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `oracle_rate_limits` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `oracle_v2_health` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | types.ts |
+| `org_leaderboard` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | types.ts |
 | `org_proxies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `org_retry_policies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
 | `org_scrape_rate_limits` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
@@ -75,10 +84,11 @@
 | `org_violation_alerts` | Histórico de alertas de taxa de OrgMismatchError. Evento webhook: security.org_violation_threshold | 11 colunas | migration |
 | `organization_invites` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `organization_members` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
-| `organizations` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
+| `organizations` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `partition_advisories` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `partition_policies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `pg_net_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
+| `pii_redaction_rules` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `places_api_usage` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `profiles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `qa_reaper_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
@@ -90,6 +100,12 @@
 | `retry_policy_advisories` | _(sem COMMENT ON TABLE — significado não documentado)_ | 20 colunas | migration |
 | `robots_cache` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
 | `role_permissions` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `sales_goal_progress` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | types.ts |
+| `sales_goals` | Metas e cotas por membro (GAPS-ENTERPRISE:147). | 11 colunas | migration |
+| `sales_goals_detailed` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | types.ts |
+| `satisfaction_responses` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
+| `satisfaction_stats` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | types.ts |
+| `satisfaction_surveys` | Pesquisas de NPS/CSAT por organizacao (GAPS-ENTERPRISE). | 10 colunas | migration |
 | `scheduled_report_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `scheduled_reports` | _(sem COMMENT ON TABLE — significado não documentado)_ | 16 colunas | migration |
 | `scrape_dead_letter` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
@@ -136,17 +152,31 @@
 | `DlqQueueKind` (TS) | scrape \| web |  | `src/hooks/useDlqAlertSettings.ts` |
 | `DlqHealthSeverity` (TS) | critical \| warning \| ok |  | `src/hooks/useDlqHealth.ts` |
 | `DlqMotor` (TS) | instagram \| web |  | `src/hooks/useDlqReplay.ts` |
+| `DsarRequestType` (TS) | access \| portability \| erasure \| rectification |  | `src/hooks/useDsar.ts` |
+| `DsarStatus` (TS) | pending \| processing \| completed \| rejected |  | `src/hooks/useDsar.ts` |
 | `EmailAccountAuditAction` (TS) | connected \| disconnected \| scope_changed \| tokens_refreshed \| reactivated \| deactivated \| error_recorded \| polled \| updated |  | `src/hooks/useEmailAccountAuditLog.ts` |
 | `SuppressionReason` (TS) | unsubscribe \| bounce \| complaint \| manual |  | `src/hooks/useEmailSuppressions.ts` |
 | `EmailSyncStatus` (TS) | success \| error \| skipped \| refresh_failed |  | `src/hooks/useEmailSyncLog.ts` |
+| `TEMPLATE_CATEGORIES` (TS) | "prospeccao", "follow-up", "reuniao", "proposta", "reativacao", "geral", |  | `src/hooks/useEmailTemplates.ts` |
+| `TEMPLATE_VARIABLES` (TS) | "{{empresa}}", "{{contato}}", "{{cargo}}", "{{cidade}}", "{{segmento}}", "{{remetente}}", |  | `src/hooks/useEmailTemplates.ts` |
+| `LeaderboardMetric` (TS) | won_value \| won_deals \| activities \| new_companies |  | `src/hooks/useLeaderboard.ts` |
+| `LostReasonCategory` (TS) | price \| competitor \| timing \| no_budget \| no_fit \| no_response \| internal \| other |  | `src/hooks/useLostReasons.ts` |
 | `MembershipAuditAction` (TS) | added \| removed \| role_changed \| left \| other |  | `src/hooks/useMembershipAuditLog.ts` |
 | `View` (TS) | dashboard \| icp \| workflows \| companies \| intent \| campaigns \| ai-agent \| analytics \| settings \| gmaps \| map \| stakeholders \| scrape-results \| organizations \| deals \| integrations \| org-violations \| rls-discovery \| monitoring \| automations \| recycle-bin \| suppressions \| lusha |  | `src/hooks/useNavigationHistory.ts` |
 | `NavigationDirection` (TS) | forward \| back |  | `src/hooks/useNavigationHistory.ts` |
+| `NbaActionType` (TS) | follow_up \| call \| email \| linkedin \| meeting \| proposal \| reengage \| close |  | `src/hooks/useNextBestActions.ts` |
+| `NbaChannel` (TS) | email \| phone \| linkedin \| in_person |  | `src/hooks/useNextBestActions.ts` |
+| `PiiCategory` (TS) | email \| phone \| cpf \| cnpj \| credit_card \| secret |  | `src/hooks/usePiiRules.ts` |
+| `PiiAction` (TS) | mask \| redact \| hash |  | `src/hooks/usePiiRules.ts` |
 | `ReaperAlertReason` (TS) | dead_detected \| no_recent_run |  | `src/hooks/useReaperAlerts.ts` |
 | `PermissionFlag` (TS) | can_view \| can_create \| can_update \| can_delete \| can_manage |  | `src/hooks/useRolePermissions.ts` |
+| `GoalPeriod` (TS) | month \| quarter \| year |  | `src/hooks/useSalesGoals.ts` |
+| `GoalMetric` (TS) | won_value \| won_deals \| activities \| new_companies |  | `src/hooks/useSalesGoals.ts` |
+| `SurveyKind` (TS) | nps \| csat |  | `src/hooks/useSatisfaction.ts` |
 | `ReportMetric` (TS) | conversion \| enrichment \| pipeline \| campaigns |  | `src/hooks/useScheduledReports.ts` |
 | `ReportFrequency` (TS) | daily \| weekly \| monthly |  | `src/hooks/useScheduledReports.ts` |
 | `Skin` (TS) | gold \| blue \| green \| red \| purple \| orange |  | `src/hooks/useSkin.ts` |
+| `ComponentState` (TS) | operational \| degraded \| outage \| unknown |  | `src/hooks/useStatusPage.ts` |
 | `WEBHOOK_EVENTS` (TS) | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … |  | `src/hooks/useWebhooks.ts` |
 | `SoftDeleteTable` (TS) | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks |  | `src/integrations/supabase/withOrg.ts` |
 | `EmailErrorKind` (TS) | auth \| sync |  | `src/lib/emailErrorMessages.ts` |
@@ -190,9 +220,7 @@ _nenhum item encontrado_
 | status | valor `follow_up_1` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:src/lib/demoData.ts` |
 | status | valor `linkedin_connect` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:src/lib/demoData.ts` |
 | status | valor `follow_up_2` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:src/lib/demoData.ts` |
-| status | valor `call` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:src/lib/demoData.ts` |
 | status | valor `email_reengagement` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:src/lib/demoData.ts` |
-| status | valor `follow_up` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:src/lib/demoData.ts` |
 | status | valor `number` para `step` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/campaign-dispatch/index.ts` |
 | status | valor `enrich_email` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `enrich_phone` para `step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/oracle-enrich-contact/index.ts` |
@@ -219,11 +247,11 @@ _nenhum item encontrado_
 | status | valor `verified` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/auth/MFAVerify.tsx`<br>`compara:src/components/lux/settings/MFASetup.tsx`<br>`compara:src/hooks/useMFA.ts`<br>`compara:supabase/functions/_shared/leadcontact-client.ts` |
 | status | valor `SUBSCRIBED` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/LushaIntelligenceView.tsx` |
 | status | valor `CLOSED` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/LushaIntelligenceView.tsx` |
-| status | valor `unknown` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`escreve:supabase/functions/lusha-cookie-health/index.ts` |
 | status | valor `expiring_soon` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
 | status | valor `enriching` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx` |
 | status | valor `online` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/monitoring/MonitoringView.tsx`<br>`escreve:src/components/lux/monitoring/MonitoringView.tsx` |
 | status | valor `crit` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/monitoring/SlaCompliancePanel.tsx` |
+| status | valor `already_completed` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/hooks/useDsar.ts` |
 | status | valor `enriched` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts`<br>`escreve:src/hooks/useOracleV2.ts`<br>`escreve:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `sent_to_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:src/hooks/useOracleV2.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `accepting` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/AcceptInvite.tsx` |
@@ -234,7 +262,6 @@ _nenhum item encontrado_
 | status | valor `error_rate_limit` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `error_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `bitrix_duplicate` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
-| status | valor `rejected` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/scrape-queue-worker/index.ts` |
 | status | valor `blocked` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/webhook-dispatcher/index.ts` |
 | status | valor `enriched` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx`<br>`escreve:src/components/lux/LushaIntelligenceView.tsx`<br>`filtra:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `pending_enrichment` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx`<br>`escreve:supabase/functions/lusha-decision-makers/index.ts`<br>`escreve:supabase/functions/oracle-search-decisors/index.ts` |
@@ -272,7 +299,12 @@ _nenhum item encontrado_
 | tabela | tabela `tabela` usada no código não existe nas migrations/types do repo | `scripts/inventario/gerar-repo.mjs` |
 | tabela | tabela `tools_runtime` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `tx` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
+| rls | `deal_lost_reason_stats`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useLostReasons.ts` |
+| rls | `email_template_stats`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useEmailTemplates.ts` |
+| rls | `org_leaderboard`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useLeaderboard.ts` |
 | rls | `retry_policy_advisories`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
+| rls | `sales_goals_detailed`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useSalesGoals.ts` |
+| rls | `satisfaction_stats`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useSatisfaction.ts` |
 | tenant | `health_checks` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `circuit_breakers` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `auth_rate_limits` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
@@ -352,7 +384,7 @@ _nenhum item encontrado_
 - `web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 104/107 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 117/123 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

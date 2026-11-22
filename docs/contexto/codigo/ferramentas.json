@@ -3,8 +3,8 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (641)",
-   "SQL (232)",
+   "TypeScript (668)",
+   "SQL (244)",
    "Markdown (81)",
    "JSON (38)",
    "JavaScript (22)",
@@ -640,7 +640,6 @@
    "SUPABASE_DB_URL",
    "SUPABASE_EXTERNAL_ANON_KEY",
    "SUPABASE_EXTERNAL_URL",
-   "SUPABASE_PUBLISHABLE_KEY",
    "SUPABASE_SERVICE_ROLE_KEY",
    "SUPABASE_URL",
    "TRACKING_SIGNING_SECRET",
@@ -1289,7 +1288,9 @@
    "/*",
    "/invite/:token",
    "/login",
-   "/reset-password"
+   "/reset-password",
+   "/status",
+   "/survey/:token"
   ],
   "menu_com_papeis": [],
   "tabelas_sem_rls": []

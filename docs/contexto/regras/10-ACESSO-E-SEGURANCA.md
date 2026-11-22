@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5f42ddfbdd` · branch `main` · 2026-11-22 03:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `378947ce26` · branch `main` · 2026-11-22 11:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -47,8 +47,11 @@
 | `companies` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `company_reviews` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) |
 | `dashboard_layouts` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true<br>authenticated: user_id = auth.uid() and (organization_id is null or public.is_org_member(organization_id, auth.uid())) | service_role: true<br>authenticated: user_id = auth.uid() | authenticated: user_id = auth.uid()<br>service_role: true |
+| `data_subject_requests` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | — |
 | `db_health_snapshots` | enabled | authenticated: public.has_role(auth.uid(), 'admin') | — | — | — |
 | `deal_activities` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
+| `deal_lost_reason_stats` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
+| `deal_lost_reasons` | enabled | authenticated: organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid()) | authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `deal_predictions` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
 | `deal_stages` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `deal_tasks` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
@@ -59,13 +62,17 @@
 | `email_accounts` | enabled | authenticated: (scope_type = 'user' AND user_id = auth.uid()) OR (scope_type = 'organization' AND public.is_org_member(organization_id, auth<br>service_role: true | authenticated: (scope_type = 'user' AND user_id = auth.uid()) OR (scope_type = 'organization' AND public.has_org_role(organization_id, auth.<br>service_role: true | authenticated: (scope_type = 'user' AND user_id = auth.uid()) OR (scope_type = 'organization' AND public.has_org_role(organization_id, auth.<br>service_role: true | authenticated: (scope_type = 'user' AND user_id = auth.uid()) OR (scope_type = 'organization' AND public.has_org_role(organization_id, auth.<br>service_role: true |
 | `email_suppressions` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) |
 | `email_sync_log` | enabled | authenticated: EXISTS ( SELECT 1 FROM public.email_accounts ea WHERE ea.id = email_sync_log.email_account_id AND ( (ea.scope_type = 'user' A<br>service_role: true | service_role: true | service_role: true | service_role: true |
+| `email_template_stats` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
+| `email_templates` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) and deleted_at is null<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
 | `feature_flags` | enabled | public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `health_checks` | enabled | public: auth.role() = 'authenticated' | — | — | — |
 | `idempotency_keys` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id<br>public: auth.uid() = user_id | — | — |
+| `incidents` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) and deleted_at is null<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
 | `instagram_scrape_dead_letter` | enabled | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | — | — | — |
 | `instagram_scrape_queue` | enabled | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) |
 | `instagram_scrape_results` | enabled | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | — | — | — |
 | `intent_signals` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
+| `ip_allowlist` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) |
 | `ipc_config` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid())<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') |
 | `job_exports` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `lead_scores` | enabled | authenticated: organization_id is null and user_id = auth.uid() or public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
@@ -73,10 +80,12 @@
 | `lusha_credit_usage_log` | enabled | authenticated: organization_id IS NOT NULL AND public.is_org_member(organization_id, auth.uid())<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `lusha_dm_search_history` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `lusha_search_sessions` | enabled | public: organization_id = public.default_org_for_current_user()<br>service_role: true | public: user_id = auth.uid() AND organization_id = public.default_org_for_current_user()<br>service_role: true | public: organization_id = public.default_org_for_current_user()<br>service_role: true | public: organization_id = public.default_org_for_current_user()<br>service_role: true |
+| `next_best_actions` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
 | `notifications` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true |
 | `oauth_sandbox_snapshots` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role = 'admin' ) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) AND user_id = auth.uid()<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role = 'admin' ) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role = 'admin' ) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role = 'admin' ) |
 | `oracle_rate_limits` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `oracle_v2_health` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
+| `org_leaderboard` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
 | `org_proxies` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `org_retry_policies` | enabled | authenticated: public.is_org_member(auth.uid(), organization_id) | — | — | — |
 | `org_scrape_rate_limits` | enabled | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin')<br>authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin') | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin') | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin') |
@@ -88,6 +97,7 @@
 | `partition_advisories` | enabled | authenticated: public.has_role(auth.uid(), 'admin') | — | authenticated: public.has_role(auth.uid(), 'admin') | — |
 | `partition_policies` | enabled | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') | authenticated: public.has_role(auth.uid(), 'admin') |
 | `pg_net_health_snapshots` | enabled | authenticated: public.has_role(auth.uid(), 'admin') | — | — | — |
+| `pii_redaction_rules` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) |
 | `places_api_usage` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
 | `profiles` | enabled | authenticated: auth.uid() = id | authenticated: auth.uid() = id | authenticated: auth.uid() = id | authenticated: id = auth.uid() |
 | `qa_reaper_runs` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
@@ -99,6 +109,12 @@
 | `retry_policy_advisories` | enabled | authenticated: (organization_id IS NULL AND public.has_role(auth.uid(), 'admin'::app_role)) OR (organization_id IS NOT NULL AND public.has_o | — | — | — |
 | `robots_cache` | enabled | authenticated: true | — | — | — |
 | `role_permissions` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
+| `sales_goal_progress` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
+| `sales_goals` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
+| `sales_goals_detailed` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
+| `satisfaction_responses` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | — | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
+| `satisfaction_stats` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
+| `satisfaction_surveys` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `scheduled_report_runs` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `scheduled_reports` | enabled | authenticated: user_id = auth.uid() and deleted_at is null<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true |
 | `scrape_dead_letter` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
@@ -126,7 +142,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 183 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 191 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -278,10 +294,12 @@
 - `supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql`
 - `supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql`
 - `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql`
-- … +33 (lista completa em `context.json`)
+- … +41 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
+- `_dsar_pseudonymize`
+- `_pii_redact_jsonb`
 - `accept_org_invite`
 - `advance_recipient_step`
 - `api_latency_percentiles`
@@ -294,6 +312,7 @@
 - `apply_retry_advisory`
 - `apply_sla_recommendation`
 - `assert_service_or_admin`
+- `audit_log_facets`
 - `auto_tune_queue_slas`
 - `campaign_ab_stats`
 - `can_access`
@@ -315,40 +334,59 @@
 - `complete_web_scrape_task`
 - `compute_deal_prediction`
 - `compute_lead_score`
+- `count_audit_logs`
 - `count_recent_org_violations`
 - `create_default_deal_stages`
+- `create_dsar_request`
 - `decide_ab_winner`
 - `default_org_for_current_user`
 - `default_sla_seconds`
 - `defer_scrape_task`
 - `defer_web_scrape_task`
+- `dismiss_next_best_action`
 - `dlq_health_metrics`
 - `dlq_health_trend`
 - `dlq_purge_stale_network_errors`
 - `dlq_top_reasons`
+- `dsar_sla_alerts`
+- `duplicate_email_template`
 - `enqueue_scrape_task`
 - `enqueue_webhook_event`
+- `erase_subject_data`
 - `evaluate_api_latency_alerts`
 - `evaluate_circuit_breaker_alerts`
 - `evaluate_dlq_alerts`
 - `evaluate_org_violation_alerts`
 - `evaluate_partition_policies`
 - `evaluate_vault_cookie_alerts`
+- `export_audit_logs`
+- `export_subject_data`
 - `fail_scrape_task`
 - `fail_web_scrape_task`
 - `fn_web_scrape_regression_check`
+- `fulfill_dsar_request`
 - `get_dashboard_stats`
+- `get_my_ip_status`
+- `get_public_status`
+- `get_public_uptime`
 - `get_sector_summary`
+- `get_survey_by_token`
 - `handle_new_organization`
 - `handle_new_user`
 - `has_org_role`
 - `has_role`
+- `is_ip_allowed`
 - `is_org_member`
 - `is_service_role`
+- `list_dsar_requests`
+- `list_my_sessions`
+- `list_next_best_actions`
+- `list_pii_rules`
 - `log_audit_event`
 - `log_automation_event`
 - `log_deal_stage_change`
 - `log_queue_sla_change`
+- `mark_email_template_used`
 - `notify_on_enrichment`
 - `notify_on_workflow_complete`
 - `pg_catalog_rls_tables`
@@ -356,6 +394,10 @@
 - `pg_net_health`
 - `pg_net_watchdog_should_notify`
 - `pg_net_watchdog_try_lock`
+- `pii_active_rules`
+- `pii_redact_jsonb`
+- `pii_redact_text`
+- `pii_scan`
 - `prevent_user_id_change`
 - `prune_api_latency_snapshots`
 - `prune_api_request_logs`
@@ -371,6 +413,7 @@
 - `prune_scheduled_report_runs`
 - `purge_dead_letter`
 - `purge_soft_deleted`
+- `read_audit_logs_safe`
 - `reap_stuck_queue_tasks`
 - `record_campaign_event`
 - `record_campaign_reply`
@@ -378,20 +421,27 @@
 - `record_vault_cookie_snapshots`
 - `refresh_deal_prediction`
 - `refresh_lead_score`
+- `refresh_next_best_actions`
 - `refresh_org_scores`
 - `replay_dead_letter`
 - `replay_dead_letter_batch`
 - `replay_instagram_dead_letter_batch`
 - `replay_web_dead_letter_batch`
 - `reset_circuit_breaker`
+- `revoke_my_session`
+- `revoke_other_sessions`
 - `rollback_retry_advisory`
+- `seed_default_lost_reasons`
 - `seed_role_permissions`
+- `set_pii_rule`
 - `sla_autotune_blocked_streaks`
 - `sla_compliance_stats`
 - `sla_recommendations`
+- `submit_survey_response`
 - `sync_suppression_from_recipient`
 - `system_recovery_health`
 - `touch_api_key`
+- `touch_last_known_ip`
 - `verify_api_key`
 - `web_dlq_health_metrics`
 - `worker_report_batch`
@@ -429,18 +479,22 @@ Middleware matcher (Next.js): nenhum
 
 | Ação | Para/De | Privilégios | Objetos |
 |---|---|---|---|
-| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +32 |
+| grant | anon | execute | `get_survey_by_token`, `submit_survey_response` |
+| grant | anon, authenticated | execute | `get_public_status`, `get_public_uptime` |
+| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +65 |
 | grant | authenticated | insert, update, delete | `role_permissions` |
-| grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +26 |
+| grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +32 |
 | grant | authenticated | select, insert | `automation_execution_logs`, `instagram_scrape_results`, `cnpj_enrich_queue` |
-| grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings`, `lead_scores`, `dashboard_layouts` … +3 |
+| grant | authenticated | select, insert, delete | `satisfaction_responses` |
+| grant | authenticated | select, insert, update | `data_subject_requests` |
+| grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings`, `lead_scores`, `dashboard_layouts` … +11 |
 | grant | authenticated | select, update | `retry_policy_advisories`, `reaper_alert_settings` |
-| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +13 |
+| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +16 |
 | grant | authenticated, service_role | select | `oracle_v2_health`, `v_sec_definer_anon_grants`, `v_extensions_audit` |
 | grant | authenticated, service_role, anon | execute | `default_sla_seconds` |
-| grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +48 |
+| grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +56 |
 | grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +88 |
-| grant | service_role | select | `oracle_v2_health` |
+| grant | service_role | select | `oracle_v2_health`, `deal_lost_reason_stats`, `sales_goal_progress`, `sales_goals_detailed`, `org_leaderboard`, `satisfaction_stats`, `email_template_stats` |
 | revoke | PUBLIC | all | `capture_db_health_snapshot`, `enqueue_scrape_task`, `claim_scrape_tasks`, `complete_scrape_task`, `fail_scrape_task`, `replay_dead_letter`, `evaluate_partition_policies`, `log_automation_event`, `reset_circuit_breaker`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts`, `record_vault_cookie_snapshots`, `evaluate_vault_cookie_alerts`, `claim_instagram_tasks`, `replay_instagram_dead_letter_batch` … +8 |
 | revoke | PUBLIC | execute | `get_sector_summary`, `get_dashboard_stats`, `enqueue_webhook_event`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages` … +20 |
 | revoke | PUBLIC, anon | all | `replay_dead_letter_batch`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_trend`, `capture_api_latency_snapshots`, `evaluate_api_latency_alerts`, `prune_api_latency_snapshots`, `worker_should_run`, `worker_report_batch`, `dlq_top_reasons`, `api_latency_percentiles`, `apply_retry_advisory`, `rollback_retry_advisory`, `enrichment_funnel_counts`, `sla_deadline` … +1 |
@@ -448,13 +502,14 @@ Middleware matcher (Next.js): nenhum
 | revoke | PUBLIC, anon, authenticated | all | `pg_catalog_rls_tables`, `defer_scrape_task`, `dlq_purge_stale_network_errors`, `record_places_api_call`, `claim_web_scrape_tasks`, `complete_web_scrape_task`, `fail_web_scrape_task`, `defer_web_scrape_task`, `prune_api_request_logs`, `prune_audit_logs`, `prune_automation_execution_logs`, `prune_campaign_events`, `prune_email_sync_log`, `worker_report_batch`, `worker_should_run` … +8 |
 | revoke | PUBLIC, anon, authenticated | execute | `purge_soft_deleted`, `advance_recipient_step`, `decide_ab_winner`, `replay_web_dead_letter_batch`, `web_dlq_health_metrics`, `api_latency_percentiles`, `dlq_top_reasons`, `prune_pg_net_health_snapshots`, `pg_net_watchdog_should_notify`, `pg_net_watchdog_try_lock`, `system_recovery_health` |
 | revoke | PUBLIC, authenticated, anon | execute | `check_oracle_rate_limit`, `check_api_key_rate_limit` |
-| revoke | anon | all | `v_sec_definer_anon_grants`, `v_extensions_audit`, `replay_instagram_dead_letter_batch` |
-| revoke | anon | execute | `get_dashboard_stats`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `api_latency_stats`, `reset_circuit_breaker`, `evaluate_partition_policies`, `enqueue_scrape_task`, `replay_dead_letter` … +5 |
+| revoke | anon | all | `v_sec_definer_anon_grants`, `v_extensions_audit`, `replay_instagram_dead_letter_batch`, `incidents` |
+| revoke | anon | execute | `get_dashboard_stats`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `api_latency_stats`, `reset_circuit_breaker`, `evaluate_partition_policies`, `enqueue_scrape_task`, `replay_dead_letter` … +8 |
 | revoke | anon, authenticated | execute | `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables` … +14 |
 | revoke | anon, authenticated, PUBLIC | execute | `public` |
 | revoke | authenticated | all | `replay_instagram_dead_letter_batch` |
 | revoke | authenticated | execute | `pg_columns_for_insert`, `pg_catalog_rls_tables`, `evaluate_org_violation_alerts`, `assert_service_or_admin` |
-| revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas` |
+| revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas`, `is_ip_allowed`, `get_my_ip_status`, `touch_last_known_ip`, `list_my_sessions`, `revoke_my_session`, `revoke_other_sessions`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets` … +23 |
+| revoke | public | execute | `get_survey_by_token`, `submit_survey_response`, `get_public_status`, `get_public_uptime` |
 | revoke | public, anon | all | `compute_lead_score`, `compute_deal_prediction`, `refresh_lead_score`, `refresh_deal_prediction`, `refresh_org_scores`, `can_access` |
 | revoke | public, anon, authenticated | all | `update_updated_at_column`, `handle_updated_at`, `update_automation_steps_updated_at`, `increment_version`, `validate_ipc_score`, `normalize_suppression_email`, `cleanup_old_idempotency_keys`, `handle_new_organization`, `handle_new_user`, `enqueue_webhook_event`, `log_audit_event`, `process_audit_log`, `notify_on_workflow_complete`, `notify_on_enrichment`, `prevent_user_id_change` … +14 |
 
@@ -462,12 +517,17 @@ Middleware matcher (Next.js): nenhum
 
 | Tabela | Problema | Arquivos |
 |---|---|---|
+| `deal_lost_reason_stats` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useLostReasons.ts` |
+| `email_template_stats` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useEmailTemplates.ts` |
+| `org_leaderboard` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useLeaderboard.ts` |
 | `retry_policy_advisories` | front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
+| `sales_goals_detailed` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useSalesGoals.ts` |
+| `satisfaction_stats` | acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useSatisfaction.ts` |
 
 ## Multi-tenancy
 
-- Chave de tenant: **`organization_id`** presente em 72 tabela(s): `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages`, `organization_members`, `organization_invites`, `audit_logs`, `deal_stages`, `deals`, `deal_activities`, `deal_tasks`, `api_keys`, `webhooks`, `webhook_deliveries`, `campaign_recipients`, `campaign_events`, `email_accounts`, `campaign_messages`, `campaign_replies`, `api_request_logs`, `email_sync_log`, `oauth_sandbox_snapshots`, `org_violation_alert_settings`, `org_violation_alerts`, `idempotency_keys`, `feature_flags`, `automation_alerts`, `job_exports`, `automation_steps`, `email_suppressions`, `scrape_queue`, `scrape_dead_letter`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_credit_usage_log`, `lusha_search_sessions`, `oracle_rate_limits`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `places_api_usage`, `retry_policy_advisories`, `org_retry_policies`, `web_scrape_queue`, `web_scrape_results`, `web_scrape_dead_letter`, `instagram_scrape_queue`, `instagram_scrape_results`, `instagram_scrape_dead_letter`, `lead_scores`, `dashboard_layouts`, `deal_predictions`, `scheduled_reports`, `bulk_imports`, `role_permissions`, `oracle_v2_health`, `v_lusha_cache_stats`, `v_lux_enrichment_health`
-- Cobertura: 67% das tabelas. Tabelas SEM a chave (verificar isolamento): `health_checks`, `circuit_breakers`, `auth_rate_limits`, `db_health_snapshots`, `partition_policies`, `partition_advisories`, `circuit_breaker_snapshots`, `circuit_breaker_alert_history`, `vault_cookie_snapshots`, `vault_cookie_alert_history`, `scrape_worker_state`, `robots_cache`, `pg_net_health_snapshots`, `qa_test_runs`, `qa_reaper_runs`, `reaper_alert_history`, `sla_alert_history`, `sla_snapshots`, `cnpj_enrich_cache`, `cnpj_enrich_rate_state`, `cnpj_enrich_queue`, `queue_sla_defaults`, `queue_sla_history`, `sla_autotune_runs`, `apollo_search_cache`, `apollo_rate_state`, `api_rate_limits`, `scheduled_report_runs`
+- Chave de tenant: **`organization_id`** presente em 88 tabela(s): `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages`, `organization_members`, `organization_invites`, `audit_logs`, `deal_stages`, `deals`, `deal_activities`, `deal_tasks`, `api_keys`, `webhooks`, `webhook_deliveries`, `campaign_recipients`, `campaign_events`, `email_accounts`, `campaign_messages`, `campaign_replies`, `api_request_logs`, `email_sync_log`, `oauth_sandbox_snapshots`, `org_violation_alert_settings`, `org_violation_alerts`, `idempotency_keys`, `feature_flags`, `automation_alerts`, `job_exports`, `automation_steps`, `email_suppressions`, `scrape_queue`, `scrape_dead_letter`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_credit_usage_log`, `lusha_search_sessions`, `oracle_rate_limits`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `places_api_usage`, `retry_policy_advisories`, `org_retry_policies`, `web_scrape_queue`, `web_scrape_results`, `web_scrape_dead_letter`, `instagram_scrape_queue`, `instagram_scrape_results`, `instagram_scrape_dead_letter`, `lead_scores`, `dashboard_layouts`, `deal_predictions`, `scheduled_reports`, `bulk_imports`, `role_permissions`, `deal_lost_reasons`, `sales_goals`, `satisfaction_surveys`, `satisfaction_responses`, `email_templates`, `incidents`, `ip_allowlist`, `data_subject_requests`, `pii_redaction_rules`, `next_best_actions`, `deal_lost_reason_stats`, `org_leaderboard`, `sales_goal_progress`, `sales_goals_detailed`, `satisfaction_stats`, `email_template_stats`, `oracle_v2_health`, `v_lusha_cache_stats`, `v_lux_enrichment_health`
+- Cobertura: 72% das tabelas. Tabelas SEM a chave (verificar isolamento): `health_checks`, `circuit_breakers`, `auth_rate_limits`, `db_health_snapshots`, `partition_policies`, `partition_advisories`, `circuit_breaker_snapshots`, `circuit_breaker_alert_history`, `vault_cookie_snapshots`, `vault_cookie_alert_history`, `scrape_worker_state`, `robots_cache`, `pg_net_health_snapshots`, `qa_test_runs`, `qa_reaper_runs`, `reaper_alert_history`, `sla_alert_history`, `sla_snapshots`, `cnpj_enrich_cache`, `cnpj_enrich_rate_state`, `cnpj_enrich_queue`, `queue_sla_defaults`, `queue_sla_history`, `sla_autotune_runs`, `apollo_search_cache`, `apollo_rate_state`, `api_rate_limits`, `scheduled_report_runs`
 
 ## Soft delete (registros 'apagados' continuam na tabela — filtre!)
 
@@ -489,6 +549,11 @@ Middleware matcher (Next.js): nenhum
 | `org_proxies` | `is_active` |
 | `scheduled_reports` | `active` |
 | `scheduled_reports` | `deleted_at` |
+| `deal_lost_reasons` | `active` |
+| `satisfaction_surveys` | `active` |
+| `email_templates` | `deleted_at` |
+| `incidents` | `deleted_at` |
+| `satisfaction_stats` | `active` |
 
 ## Auditoria (colunas de rastreio)
 
@@ -578,6 +643,17 @@ Middleware matcher (Next.js): nenhum
 | `scheduled_report_runs` | `created_at` |
 | `bulk_imports` | `created_at` |
 | `role_permissions` | `created_at`, `updated_at` |
+| `deal_lost_reasons` | `created_at`, `updated_at` |
+| `sales_goals` | `created_at`, `created_by`, `updated_at` |
+| `satisfaction_surveys` | `created_at`, `created_by`, `updated_at` |
+| `satisfaction_responses` | `created_at` |
+| `email_templates` | `created_at`, `updated_at` |
+| `incidents` | `created_at`, `updated_at` |
+| `ip_allowlist` | `created_at`, `created_by`, `updated_at` |
+| `data_subject_requests` | `created_at`, `updated_at` |
+| `pii_redaction_rules` | `created_at`, `updated_at` |
+| `next_best_actions` | `created_at`, `updated_at` |
+| `sales_goals_detailed` | `created_at`, `updated_at` |
 
 ## Dados pessoais / sensíveis (LGPD — cuidado em logs, exports, prompts de IA)
 
@@ -616,6 +692,7 @@ Middleware matcher (Next.js): nenhum
 | `lusha_search_sessions` | `total_inserted_bitrix` | `INTEGER` |
 | `pg_net_health_snapshots` | `total_requests` | `BIGINT` |
 | `bulk_imports` | `total_rows` | `integer` |
+| `deal_lost_reason_stats` | `total_value` | `number` |
 | `v_lusha_cache_stats` | `total_contacts` | `number` |
 | `v_lux_enrichment_health` | `total_api_calls` | `number` |
 | `v_lux_enrichment_health` | `total_contacts` | `number` |

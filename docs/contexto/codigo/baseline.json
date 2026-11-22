@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5f42ddfbdd9d1b54b7cf2d86dcbd49ef2c39ab1f",
+  "commit": "378947ce260f72d402da793adee31f5970a58620",
   "branch": "main",
-  "data_commit": "2026-11-22T00:14:25-03:00",
+  "data_commit": "2026-11-22T08:42:15-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "378947c",
+    "data": "2026-11-22",
+    "assunto": "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)"
+   },
    {
     "sha": "5f42ddf",
     "data": "2026-11-22",
@@ -126,18 +131,13 @@
     "sha": "7432455",
     "data": "2026-11-21",
     "assunto": "feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)"
-   },
-   {
-    "sha": "bb305ef",
-    "data": "2026-11-21",
-    "assunto": "chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)"
    }
   ],
-  "arquivos_mudados_7d": 135,
+  "arquivos_mudados_7d": 180,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 24
+    "mudancas": 43
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -150,6 +150,10 @@
    {
     "pasta": "package.json",
     "mudancas": 14
+   },
+   {
+    "pasta": "src/integrations/supabase",
+    "mudancas": 8
    },
    {
     "pasta": ".gitignore",
@@ -168,10 +172,6 @@
     "mudancas": 6
    },
    {
-    "pasta": "src/integrations/supabase",
-    "mudancas": 5
-   },
-   {
     "pasta": "supabase/config.toml",
     "mudancas": 5
    },
@@ -188,12 +188,12 @@
     "mudancas": 4
    },
    {
-    "pasta": "scripts/ci/eslint-baseline.json",
+    "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 4
    },
    {
-    "pasta": ".agents/skills/promo-lux-v2",
-    "mudancas": 3
+    "pasta": "scripts/ci/eslint-baseline.json",
+    "mudancas": 4
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -234,7 +234,15 @@
     "mudancas": 4
    },
    {
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 4
+   },
+   {
     "arquivo": "scripts/ci/eslint-baseline.json",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "src/App.tsx",
     "mudancas": 4
    },
    {
@@ -247,10 +255,6 @@
    },
    {
     "arquivo": ".husky/pre-commit",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 3
    },
    {
@@ -270,7 +274,11 @@
     "mudancas": 3
    },
    {
-    "arquivo": "src/App.tsx",
+    "arquivo": "src/integrations/supabase/types.ts",
+    "mudancas": 3
+   },
+   {
+    "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 3
    },
    {
@@ -288,20 +296,12 @@
    {
     "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
     "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/automation-local.yml",
-    "mudancas": 2
-   },
-   {
-    "arquivo": ".github/workflows/dependency-review.yml",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 94
+    "commits": 95
    },
    {
     "autor": "dependabot[bot]",
@@ -310,19 +310,19 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1060,
-  "arquivos_codigo": 667,
-  "linhas_codigo": 114849,
-  "rotas": 10,
+  "arquivos_total": 1099,
+  "arquivos_codigo": 694,
+  "linhas_codigo": 119913,
+  "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 246,
-  "hooks": 84,
+  "componentes": 261,
+  "hooks": 96,
   "edge_functions": 60,
-  "tabelas": 105,
-  "migrations": 228,
+  "tabelas": 115,
+  "migrations": 240,
   "cron_jobs": 30,
   "testes": 126,
   "workflows": 9,
@@ -548,23 +548,23 @@
   },
   "src/App.tsx": {
    "arquivos": 1,
-   "linhas": 321
+   "linhas": 339
   },
   "src/components": {
-   "arquivos": 290,
-   "linhas": 46654
+   "arquivos": 303,
+   "linhas": 49116
   },
   "src/contexts": {
    "arquivos": 7,
    "linhas": 323
   },
   "src/hooks": {
-   "arquivos": 90,
-   "linhas": 9851
+   "arquivos": 102,
+   "linhas": 11494
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 7785
+   "linhas": 8624
   },
   "src/lib": {
    "arquivos": 53,
@@ -575,8 +575,8 @@
    "linhas": 34
   },
   "src/pages": {
-   "arquivos": 9,
-   "linhas": 1903
+   "arquivos": 11,
+   "linhas": 2238
   },
   "src/test": {
    "arquivos": 3,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 129,
-   "linhas": 23227
+   "linhas": 22994
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -606,7 +606,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 6414
+   "linhas": 7243
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
@@ -658,7 +658,7 @@
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 728
+   "linhas": 737
   },
   {
    "arquivo": "supabase/functions/workflow-engine/index.ts",
@@ -776,6 +776,7 @@
    "idempotency_keys",
    "lusha_contacts",
    "organization_members",
+   "sales_goals",
    "webhooks"
   ],
   "rpcs_sem_definicao": [],
@@ -815,7 +816,7 @@
    "VITE_SUPABASE_PUBLISHABLE_KEY",
    "VITE_SUPABASE_URL"
   ],
-  "ciclos_de_import": 5,
+  "ciclos_de_import": 6,
   "possiveis_segredos_no_codigo": [
    "e2e/helpers/supabase.ts:7",
    "supabase/functions/_shared/__tests__/lusha-client.test.ts:33",
