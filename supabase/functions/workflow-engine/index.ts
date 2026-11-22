@@ -176,21 +176,27 @@ serve(async (req) => {
 
       const { data: step, error: stepError } = await supabase
         .from("automation_steps")
-        .select("*, scrape_jobs(organization_id)")
+        .select("id, name, job_id, run_id, organization_id")
         .eq("id", step_id)
         .single();
-      
+
       if (stepError || !step) throw new Error("Step not found");
 
-      // Verify organization access
+      // Steps de workflow pertencem a um run e nao a um scrape_job — o org vem da
+      // propria linha, nao do join. `scrape_jobs(...)` vinha null e estourava 500.
+      const stepOrgId = step.organization_id;
+      if (!stepOrgId) return new Response(JSON.stringify({ error: "Step sem organizacao" }), { status: 422, headers: corsHeaders });
+
       const { data: membership } = await supabase
         .from("organization_members")
-        .select("id")
-        .eq("organization_id", step.scrape_jobs.organization_id)
+        .select("role")
+        .eq("organization_id", stepOrgId)
         .eq("user_id", userId)
-        .single();
-      
-      if (!membership) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 403, headers: corsHeaders });
+        .maybeSingle();
+
+      if (!membership) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 403, headers: corsHeaders });
+      }
 
       // Update step to pending
       await supabase.from("automation_steps").update({ 
@@ -678,8 +684,10 @@ serve(async (req) => {
     }
 
     // DELETE workflow
-    if (action === "delete" && req.method === "POST") {
-      const { workflow_id } = await req.json();
+    if (action === "delete" && (req.method === "POST" || req.method === "DELETE")) {
+      // A UI chama com DELETE + ?id=; a API antiga mandava POST + { workflow_id }.
+      const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
+      const workflow_id = body.workflow_id ?? url.searchParams.get("id");
       if (!workflow_id || !z.string().uuid().safeParse(workflow_id).success) {
         return badRequest(corsHeaders, { workflow_id: "Valid UUID required" });
       }
