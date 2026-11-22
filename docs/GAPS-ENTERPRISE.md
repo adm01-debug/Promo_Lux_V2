@@ -44,7 +44,7 @@
 
 **Lacunas críticas (P0):**
 - ✅ Multi-tenant — `organizations` + `organization_members` + `user_roles` + `audit_logs` (migration `20260422201601`)
-- ✅ CRM/Pipeline presente — `deals` + `deal_stages` com `DealsView` roteado (`viewRegistry.ts:24`); falta `activities`/`tasks`
+- 🟡 CRM/Pipeline — `deals` + `deal_stages` + `deal_tasks` (CRUD em `DealTasksPanel`), `DealsView` roteado em `viewRegistry.ts:24`; falta só `activities` (timeline)
 - ❌ Engagement sem motor real — campanhas não enviam emails
 - ❌ Sem API pública, webhooks ou integrações nativas
 - ❌ Sem SSO/SAML, MFA, SOC 2 — bloqueia venda enterprise
@@ -75,10 +75,10 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
-| Deals/Opportunities | Inexistente | Kanban com stages customizáveis por org |
+| Deals/Opportunities | 🟡 Implementado — `deals` + `deal_stages` com Kanban (`DealsView`) | Kanban com stages customizáveis por org |
 | Pipeline value | Inexistente | Forecast, weighted revenue, close date |
-| Activities timeline | Inexistente | Timeline unificada por empresa/contato (calls, emails, meetings, notes) |
-| Tasks & reminders | Inexistente | Due dates, assignee, recurring, snooze |
+| Activities timeline | Inexistente — 0 tabelas `activities` e 0 refs no código | Timeline unificada por empresa/contato (calls, emails, meetings, notes) |
+| Tasks & reminders | 🟡 Implementado — `deal_tasks` (`20260422202642:68`) com CRUD em `DealTasksPanel`; falta recurring/snooze | Due dates, assignee, recurring, snooze |
 | Lifecycle stages | Apenas `ipc_score` | MQL → SQL → Opportunity → Customer → Churn |
 | Lost reasons | Inexistente | Categorização de perda + análise |
 
@@ -397,8 +397,8 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 | Pilar | Status atual | Após Fase 4 |
 |---|---|---|
-| Multi-tenancy | ✅ Org + RBAC + Audit | ✅ Org + RBAC + Audit |
-| Engagement | ❌ UI sem motor | ✅ Email/LinkedIn real |
+| Engagement | 🟡 `campaign-dispatch` envia via Gmail/Outlook (`index.ts:364-365`); falta tracking de reply | ✅ Email/LinkedIn real |
+| CRM | 🟡 `deals` + `deal_tasks` + Kanban | ✅ Kanban + activities |
 | CRM | 🟡 `deals` + `deal_stages` + Kanban | ✅ Kanban + activities |
 | Integrações | ❌ Nenhuma | ✅ API + webhooks + nativas |
 | Compliance | ❌ Nenhuma cert | ✅ SOC 2 + LGPD + GDPR |
