@@ -5718,6 +5718,7 @@
     "_shared",
     "admin-list-companies",
     "ai-agent",
+    "mcp",
     "oracle-search-decisors",
     "rls-tests",
     "send-scheduled-reports",
@@ -10721,6 +10722,7 @@
     "_shared",
     "lusha-decision-makers",
     "lusha-search",
+    "mcp",
     "oracle-enrich-contact",
     "oracle-push-bitrix",
     "oracle-search-decisors"
@@ -15860,6 +15862,7 @@
    "usada_em_edges": [
     "ai-agent",
     "gmaps-proxy",
+    "mcp",
     "scrape-queue-worker",
     "workflow-engine"
    ],
@@ -18811,7 +18814,7 @@
   {
    "nome": "default_org_for_current_user",
    "definida": true,
-   "usada_em": 6
+   "usada_em": 7
   },
   {
    "nome": "default_role_permissions",
@@ -18911,7 +18914,7 @@
   {
    "nome": "get_dashboard_stats",
    "definida": true,
-   "usada_em": 2
+   "usada_em": 3
   },
   {
    "nome": "get_my_ip_status",

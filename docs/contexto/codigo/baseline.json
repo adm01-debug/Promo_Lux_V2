@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "378947ce260f72d402da793adee31f5970a58620",
+  "commit": "427ec06438f334507e4c8d3f9f1f6284074b768e",
   "branch": "main",
-  "data_commit": "2026-11-22T08:42:15-03:00",
+  "data_commit": "2026-11-22T09:24:10-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "427ec06",
+    "data": "2026-11-22",
+    "assunto": "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)"
+   },
    {
     "sha": "378947c",
     "data": "2026-11-22",
@@ -126,11 +131,6 @@
     "sha": "4931d9e",
     "data": "2026-11-21",
     "assunto": "feat: lead scoring, previsao de deals, layout de dashboard e changelog in-app (#103)"
-   },
-   {
-    "sha": "7432455",
-    "data": "2026-11-21",
-    "assunto": "feat: relatorios agendados, historico de importacao e matriz de permissoes (#102)"
    }
   ],
   "arquivos_mudados_7d": 180,
@@ -286,22 +286,22 @@
     "mudancas": 3
    },
    {
+    "arquivo": "supabase/functions/mcp/index.ts",
+    "mudancas": 3
+   },
+   {
     "arquivo": "supabase/functions/scrape-queue-worker/index.ts",
     "mudancas": 3
    },
    {
     "arquivo": "supabase/migrations/20260721083823_A1-assert-service-or-admin-guard.sql",
     "mudancas": 3
-   },
-   {
-    "arquivo": ".claude/skills/promo-lux-v2/SKILL.md",
-    "mudancas": 2
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 95
+    "commits": 96
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1099,
   "arquivos_codigo": 694,
-  "linhas_codigo": 119913,
+  "linhas_codigo": 120146,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 129,
-   "linhas": 22994
+   "linhas": 23227
   },
   "tailwind.config.ts": {
    "arquivos": 1,

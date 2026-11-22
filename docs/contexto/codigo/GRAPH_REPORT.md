@@ -1,157 +1,162 @@
 # Graph Report - Promo_Lux_V2  (2026-11-22)
 
 ## Corpus Check
-- 1080 files · ~654,892 words
+- 1080 files · ~656,008 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 20 file(s) not represented in the graph (top: (none) 10, .toml 5, .css 2)
 
 ## Summary
-- 7076 nodes · 15558 edges · 580 communities (350 shown, 230 thin omitted)
+- 7078 nodes · 15561 edges · 591 communities (361 shown, 230 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 441 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `378947ce`
+- Built from commit: `427ec064`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- lucide-react
-- cn
-- OrganizationsView.tsx
 - react
-- snapshot.py
-- DashboardView.tsx
-- App.tsx
-- gerar.mjs
-- generate.py
-- LushaIntelligenceView.tsx
-- useActiveOrganization
-- req
+- lucide-react
 - @tanstack/react-query
-- oracle-search-decisors/index.ts
-- vitest
-- oracle-enrich-contact/index.ts
-- Index.tsx
-- campaign-dispatch/index.ts
-- dependencies
-- withOrg.ts
-- framer-motion
-- NotificationsPanel.tsx
-- package.json
-- hooks/use-toast.ts
-- ref_node_fs
-- lib.mjs
+- snapshot.py
+- cn
+- utils.ts
+- gerar.mjs
+- LushaIntelligenceView.tsx
+- CampaignsView.tsx
+- generate.py
+- lushaMocks.ts
 - useAuth
+- campaign-dispatch/index.ts
+- ref_node_fs
+- withOrg.ts
+- dependencies
+- vitest
+- useActiveOrganization
+- App.tsx
+- lib.mjs
 - lusha-client.ts
-- ConversionTab.tsx
-- Sidebar.tsx
-- StakeholderFinderView.tsx
+- package.json
+- framer-motion
+- View
 - scripts
-- ref_https
-- gmaps-proxy/index.ts
-- lint-ratchet.mjs
-- DealDetailDrawer.tsx
-- OracleV2Panel.tsx
-- graphify-local.mjs
+- req
+- Index.tsx
 - automation.mjs
-- test_snapshot.py
-- ref_node_child_process
-- RLSDiscoveryView.tsx
+- lint-ratchet.mjs
 - oracle-push-bitrix/index.ts
-- apify-gateway.ts
-- .collect
+- graphify-local.mjs
+- oracle-enrich-contact/index.ts
+- compareReport.ts
 - ref_npm_supabase
-- deliverability-check/index.ts
-- web-scrape-worker/index.ts
-- devDependencies
-- SourceComparisonReport.tsx
-- status
-- 20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql
+- CompanyDetailModal.tsx
 - Header.tsx
+- useOracleV2.ts
+- oracle-search-decisors/index.ts
+- useCnpjEnrich.ts
+- apify-gateway.ts
+- PermissionsMatrix.tsx
+- cenarios.mjs
+- lead-identity.ts
+- web-scrape-worker/index.ts
+- test_snapshot.py
+- ref_https
+- orgErrorHandler.ts
+- sidebar.tsx
+- gmaps-proxy/index.ts
+- devDependencies
+- useAutomationsMonitor.ts
+- 20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql
+- useDemo
 - 20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql
 - Fase 1 — 22 Dimensões (nota + evidências + gaps + ações)
-- EmailAccountsAuditPanel.tsx
+- SourceComparisonSummary.tsx
 - scrape-queue-worker/index.ts
 - 20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql
-- WorkflowCard.tsx
-- auth
-- cenarios.mjs
+- DealTasksPanel
 - useNextBestActions.ts
-- scenarios.ts
-- useAutomationsMonitor.ts
-- DlqHealthCard.tsx
-- PermissionsMatrix.tsx
-- supabase/types.ts
+- auth
+- retry-policy-tuner/index.ts
+- .collect
+- deliverability-check/index.ts
 - hiker-client.ts
-- CommandPalette.tsx
 - LUX IA — Análise Executiva de Funcionalidades
+- status
 - 20261121230000_scheduled_reports_bulk_imports_role_permissions.sql
 - gen-round36-preflight.ts
 - aggregations.ts
 - 20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql
 - Analisado
-- useAuditTrail.ts
+- DashboardView.tsx
+- ConversionTab.tsx
+- OnboardingTour.tsx
 - gen-round27-qa-preflight.ts
+- DlqAlertSettingsCard.tsx
 - historyUtils.fuzz.test.ts
+- 2. GAPS-ENTERPRISE, categoria por categoria
 - 20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql
-- 3. Recursos Transversais
+- useResilienceSimulator.ts
+- useConfirm
+- useICPConfig.ts
+- useAuditTrail.ts
+- CommandPalette.tsx
+- useLoginForm.ts
+- gerar.unit.mjs
 - useStatusPage.ts
 - AutomationStatusPanel.tsx
-- useResilienceSimulator.ts
 - 20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql
 - 20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql
 - compilerOptions
-- lushaMocks.ts
+- gmaps-mapper.ts
+- ai-agent
 - ApiLatencyPanel.tsx
+- RLSVerificationPanel.tsx
+- view-skeleton-map.tsx
 - workflow-engine/index.ts
-- Ações
-- CompaniesMapView.tsx
-- OnboardingTour.tsx
-- CompaniesView.tsx
-- autotune.ts
+- StakeholderCard.tsx
 - useRateLimit.logic.test.ts
 - instagram-worker/index.ts
 - 20260404152316_16dc3cfe-cf24-464a-92ac-eeb60220a5ee.sql
+- 3. Functions chamadas pelo frontend (28)
+- MapMarkerIcons.tsx
 - Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn
 - Fluxo de Migrações — Supabase CLI / CI
 - modulos
-- DlqAlertSettingsCard.tsx
+- DlqHealthCard
 - send-scheduled-reports/index.ts
 - components.json
-- README.md
 - PasswordStrengthMeter.tsx
-- helpers/auth.ts
+- ESTADO ATUAL DO SISTEMA — LUX IA
 - LUX IA — Sistema de Prospecção B2B Inteligente
 - uniq
 - SnapshotDBStatsTests
-- SatisfactionTab.tsx
-- useDlqItems.ts
-- ESTADO ATUAL DO SISTEMA — LUX IA
-- EmailVerifyBadge.tsx
+- useDlqReplay.ts
+- autotune.ts
+- README.md
+- Login.tsx
 - 20261122270000_next_best_action.sql
 - 20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql
-- useLoginForm.ts
-- form.tsx
-- useDlqReplay.ts
+- DealCard.tsx
 - has
 - simulator.ts
 - gen-round20-validation.ts
-- compareReport.ts
+- scenarios.ts
+- SatisfactionTab.tsx
+- WorkflowCard.tsx
 - lusha-decision-makers/index.ts
 - lusha-search/index.ts
 - index.test.ts
 - 20260329204544_d66f3a77-7ee1-4839-a095-939ec69f31c5.sql
 - compilerOptions
 - withOrg
-- ADR-011: Rodada #17 — Motor de scrape web + hardening final
-- Auditoria de Paridade — LUX IA vs Firecrawl
+- Regras de domínio que o código não deixa óbvio — referência para agentes
 - Lusha Intelligence — Integração LUX
 - public/manifest.json
 - carousel.tsx
+- form.tsx
 - SlaHistoryTrendChart.tsx
 - downloadCSV
-- useCnpjEnrich.ts
 - cnpj-enrich/index.ts
 - rls-tests/index.ts
 - 20260723105701_8063c052-209d-42e5-a34b-bd3c0f8427a5.sql
@@ -159,8 +164,9 @@
 - 20261122260000_dlp_pii_masking.sql
 - ADR-021 — Rodada #27: QA Exaustivo & Hardening Funcional
 - Dimensão 3 — Dados e Runtime
-- Observabilidade
 - toast.tsx
+- generateScenarios
+- useEmailAccountAuditLog.ts
 - 20260404163754_10399fc9-2e6c-48d9-b69a-80a3cab69139.sql
 - 20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql
 - 20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql
@@ -168,49 +174,45 @@
 - 20261121083400_soft_delete_tabelas_negocio.sql
 - 20261122190000_satisfaction_surveys.sql
 - 20261122250000_dsar_lgpd.sql
-- zod
 - SnapshotCallerFreshnessTests
 - Dimensão 5 — Infraestrutura, CI e Testes
-- Login.tsx
-- LUX IA — Gaps Enterprise
-- Backlog verificado — Promo_Lux_V2
-- prod-readiness.md
-- @playwright/test
+- Schema das Tabelas Principais — LUX IA
 - 20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql
+- redirectUriChecklist.ts
 - useWebScrape.ts
-- exportRLSReport.ts
+- supabase/types.ts
 - public-api/index.ts
 - 20260721202447_89e985ca-54bf-4b99-820b-fd8f8622ee5c.sql
 - ADR-015 — Rodada #21: Concorrência, Hardening final e Verificação de Produção
-- ADR-022 — Rodada #28: Excelência Funcional & Acessibilidade
 - 2. Detalhamento por Categoria
-- validation.test.ts
-- rls-guarantees.spec.ts
+- LUX IA — Gaps Enterprise
 - Levantamento OSS + Plano de PoC — Descoberta de email/telefone a partir do LinkedIn
 - 20260721084800_A3A4-extensions-audit-partial-indexes.sql
 - 20260512191102_aff07670-7c57-4490-ac63-037bca7ef086.sql
+- AppBreadcrumbs.tsx
 - gen-round28-preflight.ts
 - CurrentSqlSourcesTests
 - supabase-snapshot
-- useLostReasons.ts
-- DecisionMakersGrid.tsx
 - ScrapeQueuePanel.tsx
 - SafeHTML.tsx
+- StatsGrid.tsx
 - cnpj-enrich-worker/index.ts
+- email-poll-replies/index.ts
 - instagram-config-hash.ts
+- ssrf-guard.ts
 - 20260404172748_2299d1bd-90eb-4649-a208-e2badfc64dcb.sql
 - 20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql
 - 20261122160000_deal_lost_reasons.sql
-- retry-policy-tuner/index.ts
-- Regras de domínio que o código não deixa óbvio — referência para agentes
 - 20260721160317_0ec1e345-b66a-44eb-aca3-e7a8fc7a931e.sql
 - public.automation_steps
 - vite.config.ts
 - readText
 - gen-round29-preflight.ts
 - SnapshotFunctionCallerTests
+- SnapshotHeartbeatTests
+- ApiLatencyAlertSettingsCard.tsx
+- useMembershipAuditLog.ts
 - chart.tsx
-- redirectUriChecklist.ts
 - 20260423120024_1d1aada5-8bc8-4099-b508-8ccbd1154e69.sql
 - 20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql
 - 20260514211631_6b19ac15-65fa-4c53-a169-c42ed4aebda8.sql
@@ -222,17 +224,15 @@
 - ADR-013 — Rodada #19: Chaos determinístico e regressão automática do motor web
 - ADR-017 — Rodada #23: Diagnóstico final dos WARNs residuais
 - ADR-018 — Rodada #24: Profundidade operacional além do teto do linter
-- ADR-023: Rodada #29 — Refactor Safety & Paridade de Optimistic Locking
 - 2. Detalhamento por Categoria
-- Dimensão 1 — Frontend / Apresentação
 - 🛡️ Relatório de Conformidade LGPD — LUX IA
+- Observabilidade
 - Webhooks — Guia de Integração
 - 20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql
 - toggle-group.tsx
+- gen-round26-preflight.ts
 - gerar-repo.mjs
-- emailErrorMessages.ts
 - useDbHealth.ts
-- useEmailAccountAuditLog.ts
 - oracle-cookies-preflight/index.ts
 - NormalizedInstagramItem
 - 20260422202021_d5f5a68d-778f-4f72-9c1e-9bdf9366b87f.sql
@@ -246,36 +246,48 @@
 - ADR-019 — Rodada #25: Alert dedup, retenção de snapshots e idempotência do watchdog
 - ADR-020 — Rodada #26: Recuperabilidade e compactação de longo prazo
 - Dimensão 4 — Integrações
+- ThemeToggle.tsx
+- useChangelog.ts
+- Backlog verificado — Promo_Lux_V2
 - Runbook — Disaster Recovery
 - Prospecção / CRM
+- Raspagem (GMaps)
 - 20260715203137_54228599-d263-451d-953e-efa5710f18d7.sql
 - 20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql
-- gen-web-scrape-reports.ts
+- navigation-menu.tsx
+- drawer.tsx
+- useAnalyticsData.ts
 - CompanyOpenHours.tsx
-- useOAuthSandboxSnapshots.ts
 - SlaHistoryCard
 - SlaRecommendationRowItem.tsx
+- useCircuitBreakerAlerts.ts
+- classify.ts
+- lusha-reveal/index.ts
 - 20260329210127_fcc12cf8-75cd-4115-bc0c-044112253d94.sql
 - public.campaign_recipients
 - 20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql
 - 20261122200000_email_templates.sql
+- RetryPolicyAdvisoriesPanel
 - ADR-016 — Rodada #22: Redução final de superfície de ataque em SECURITY DEFINER
 - ADR-025 — Rodada #31: Split do DecisionMakersGrid
 - ADR-026 — Rodada #32: Split do SessionsPanel
 - Banco de dados — referência para agentes
 - GitHub (perímetro, CI, workflows) — referência para agentes
 - Dimensão 2 — Backend / Edge Functions
+- prod-readiness.md
 - Template de Migration (sem credenciais)
 - 20260722124907_fd724c3f-8336-49ef-94e6-e6169bfdff71.sql
 - 20260329230948_e4848145-36b1-4a64-bd22-24f09c5e6733.sql
 - 20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql
-- regras_negocio — regras de negócio para agentes de IA
+- gen-web-scrape-reports.ts
 - mc-r40-preflight.ts
 - publish.sh
+- run
 - SessionsPanel.test.tsx
-- usePermissions.ts
 - useFeatureFlag.ts
 - lusha/departmentMap.ts
+- orgErrorHandler.audit.test.ts
+- vault-cookie-health/index.ts
 - 20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql
 - 20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql
 - 20260529192436_e9ae6a02-9480-457e-9348-b74fd77f7ac7.sql
@@ -286,18 +298,19 @@
 - public.reap_stuck_queue_tasks
 - public.org_leaderboard
 - Changelog
+- ADR-008: Política de Soft Delete e Retenção de Dados
 - ADR-014 — Rodada #20: Validação Exaustiva Multi-Camada
 - Mapa do repositório — referência para agentes
 - 📋 Inventário de Funcionalidades (Auditado)
 - Automação local — Promo_Lux_V2
-- ai-agent
 - Incidente: drift de migrations em produção — reconciliação (2026-11-13)
 - Promo_Lux_V2 — Regras da Casa (Hermes) — suplemento
 - 20260721160130_e5e286aa-5116-4c57-b798-8efc7f234642.sql
 - 20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql
 - scripts/graphify — grafo de código (graphify)
-- useScheduledReports.ts
-- PageTransition.tsx
+- CompaniesView
+- useEnvProfiles.ts
+- DecisionMakersGrid.test.tsx
 - scrape-job-machine.ts
 - 20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql
 - 20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql
@@ -309,16 +322,15 @@
 - ECC for Codex CLI
 - ADR-001: Dark Gold Theme com Glass Morphism
 - ADR-002: RLS por user_id em Todas as Tabelas
+- ADR-003: Edge Functions como Proxy Seguro
 - ADR-005: Lovable AI Gateway para Chat
 - ADR-007: Defense-in-depth com Org Isolation Proxy
 - ADR-024 — Rodada #30: Refactor Safety & Split Inicial do LushaIntelligenceView
 - ADR-028 — Rodada #34: Regressão para primitivas Lusha (StatusBadge, constants, types)
-- Tenancy & Auth
+- Ações
 - 20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql
 - Setup Local
-- seguranca-processo.mjs
-- ErrorBoundary
-- useRateLimit.ts
+- ai-agent/index.ts
 - 20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql
 - 20260423104533_19b8cd82-90e8-416b-bb5e-9567539b58ef.sql
 - 20260423143453_ee5b0d4b-305d-4575-81d2-b038ba742828.sql
@@ -328,9 +340,6 @@
 - 20260723141937_f8cf0e61-609b-49e1-a283-8fb8984bef9d.sql
 - 20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql
 - vercel.json
-- ADR-004: Realtime com Canais Privados
-- ADR-012 — Rodada #18: Observabilidade multi-fila + CI guard de `queue_kind`
-- ADR-027 — Rodada #33 · E2E ampliado do módulo Lusha
 - ADR-029 — Rodada #35: Fuzz de historyUtils + contrato tipado do DecisionMakersGrid
 - Estado real do projeto — inventário gerado
 - 20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql
@@ -338,7 +347,6 @@
 - 20260712221649_ebd72ce1-f9b5-4de9-88f8-d5a40fbad66f.sql
 - WorkflowEditor.tsx
 - OracleV2ErrorBoundary
-- DlqAlertSettingsCard.test.tsx
 - usePersistedFilters
 - mcp-query/index.ts
 - 20260331113407_e60b6db5-9894-4230-8999-6f5365d420a3.sql
@@ -357,6 +365,7 @@
 - 20260723151608_e6d6bea6-4782-4c65-8e71-dc20990d36a2.sql
 - Promo Lux V2 (LUX IA) — convenções
 - Promo Lux V2 (LUX IA) — convenções
+- EmailVerifyBadge
 - Estado dos itens executaveis — Promo_Lux_V2
 - _linha-de-base.md
 - tokens.md
@@ -364,6 +373,7 @@
 - public.pg_catalog_rls_tables
 - 20260331104943_bad1a93f-0ffb-4464-9289-e3fc1ccfe273.sql
 - public.replay_web_dead_letter_batch
+- calendar.tsx
 - setup.ts
 - isSrc
 - check-migrations.sh
@@ -384,11 +394,11 @@
 - selectors.ts
 - lint-staged
 - public.sla_autotune_blocked_streaks
-- functions/mcp/index.ts
 - ai-context — contexto de código para agentes de IA
 - check-edge-fn-target.sh
 - check-functions-lint.sh
 - check-migration-target.sh
+- CookieCard
 - lib/constants.ts
 - oauthClient
 - vite-env.d.ts
@@ -520,219 +530,219 @@
 ## Import Cycles
 - None detected.
 
-## Communities (580 total, 230 thin omitted)
+## Communities (591 total, 230 thin omitted)
 
-### Community 0 - "lucide-react"
+### Community 0 - "react"
 Cohesion: 0.04
-Nodes (108): Decisão de negócio, class-variance-authority, lucide-react, recharts, MFAEnrollProps, Step, MFAVerifyProps, AutomationKpiCards() (+100 more)
+Nodes (124): react, AddCompanyDialog(), GeoStatus, fmtValue(), formatCurrency(), GoalCard(), EMPTY_FORM, FREQ_LABEL (+116 more)
 
-### Community 1 - "cn"
+### Community 1 - "lucide-react"
 Cohesion: 0.03
-Nodes (119): @radix-ui/react-accordion, @radix-ui/react-context-menu, @radix-ui/react-hover-card, @radix-ui/react-menubar, @radix-ui/react-navigation-menu, @radix-ui/react-radio-group, react-resizable-panels, vaul (+111 more)
+Nodes (133): class-variance-authority, date-fns, lucide-react, recharts, MFAEnrollProps, Step, MFAVerifyProps, STATUS_LABEL (+125 more)
 
-### Community 2 - "OrganizationsView.tsx"
-Cohesion: 0.05
-Nodes (101): fmtValue(), formatCurrency(), GoalCard(), EMPTY_FORM, FREQ_LABEL, METRIC_LABEL, RUN_BADGE, WEEKDAYS (+93 more)
+### Community 2 - "@tanstack/react-query"
+Cohesion: 0.03
+Nodes (85): @tanstack/react-query, AgentMessage, WELCOME_MSG, PasswordInput(), LushaCookieHealth, LushaCookieHealthBanner(), LushaCookieHealthOk, PartitionAdvisoryPanel() (+77 more)
 
-### Community 3 - "react"
-Cohesion: 0.05
-Nodes (66): @radix-ui/react-popover, react, AddCompanyDialog(), GeoStatus, EmailInput(), EmailInputProps, ForgotPasswordOverlayProps, PasswordInput() (+58 more)
-
-### Community 4 - "snapshot.py"
+### Community 3 - "snapshot.py"
 Cohesion: 0.06
-Nodes (97): Any, Connection, decimal, Exception, psycopg, psycopg_rows, api(), api_section() (+89 more)
+Nodes (99): Any, Connection, decimal, Exception, hashlib, psycopg, psycopg_rows, api() (+91 more)
 
-### Community 5 - "DashboardView.tsx"
-Cohesion: 0.04
-Nodes (63): R28-01 — Hook `useConfirm` + `ConfirmProvider` (novo), 2.1 Dashboard (`DashboardView`), 2.5 Sinais de Intenção (`IntentSignalsView`), ActivityFeed, COLORS, AnalyticsCompany, AnalyticsScrapeJob, AnalyticsWorkflow (+55 more)
+### Community 4 - "cn"
+Cohesion: 0.03
+Nodes (77): @radix-ui/react-accordion, @radix-ui/react-context-menu, @radix-ui/react-hover-card, @radix-ui/react-menubar, @radix-ui/react-popover, @radix-ui/react-radio-group, react-resizable-panels, MessageBubble() (+69 more)
 
-### Community 6 - "App.tsx"
-Cohesion: 0.04
-Nodes (62): 1. Arquitetura de navegação, next-themes, react-dom, react-router-dom, AdminCompanies, App(), CnpjSettingsPage, GlobalOrgErrorListener() (+54 more)
+### Community 5 - "utils.ts"
+Cohesion: 0.06
+Nodes (54): Company, ScoreRange, CompanyFiltersProps, CompanyFiltersState, FacetGroup, CompanyPagination(), CompanyPaginationProps, REASON_STYLES (+46 more)
 
-### Community 7 - "gerar.mjs"
+### Community 6 - "gerar.mjs"
 Cohesion: 0.03
 Nodes (68): AGG_KEYS, aliasesByBase, ALL, allDocs, ambiguos, apiHttp, args, banco (+60 more)
 
-### Community 8 - "generate.py"
-Cohesion: 0.08
-Nodes (74): collections, hashlib, analyze_code_file(), balanced(), build_access(), build_audit(), build_dataflow(), chain() (+66 more)
-
-### Community 9 - "LushaIntelligenceView.tsx"
+### Community 7 - "LushaIntelligenceView.tsx"
 Cohesion: 0.06
-Nodes (53): 3.11 Error Handling, date-fns, iconMap, statusConfig, container, EmptyState(), EmptyStateAction, EmptyStateProps (+45 more)
+Nodes (55): react-router-dom, sonner, container, EmptyState(), EmptyStateAction, EmptyStateProps, fadeUp, DecisionMakerRow (+47 more)
 
-### Community 10 - "useActiveOrganization"
-Cohesion: 0.04
-Nodes (64): GoalsTab(), formatValue(), initials(), LeaderboardTab(), medal(), OrgRateLimitsView(), WorkspaceSelectorProps, AuditLogExportPanel() (+56 more)
-
-### Community 11 - "req"
-Cohesion: 0.04
-Nodes (45): corsHeaders, log(), LogFields, CORS, QueueKind, Setting, corsHeaders, EmailAccount (+37 more)
-
-### Community 12 - "@tanstack/react-query"
-Cohesion: 0.04
-Nodes (48): sonner, @tanstack/react-query, BOTTOM_NAV_TABS, tapSpring, ApiLatencyAlertSettingsCard(), clamp(), fmtMs(), ReaperHistoryPanel() (+40 more)
-
-### Community 13 - "oracle-search-decisors/index.ts"
+### Community 8 - "CampaignsView.tsx"
 Cohesion: 0.05
-Nodes (58): ALLOWED_ORIGINS, ContatoComOrigem, InputSchema, APOLLO_CACHE_TTL_EMPTY_SECONDS, APOLLO_CACHE_TTL_HIT_SECONDS, APOLLO_COOLDOWN_FORBIDDEN_SECONDS, APOLLO_COOLDOWN_RATE_LIMIT_SECONDS, ApolloCachedEntry (+50 more)
+Nodes (60): AbConfig, CampaignFormFields(), firstEmailIndex(), CampaignTrackingDrawer(), Event, eventIcon, Recipient, statusBadgeVariant() (+52 more)
 
-### Community 14 - "vitest"
-Cohesion: 0.06
-Nodes (35): @testing-library/react, vitest, CompanyTable(), getScoreBg(), getScoreColor(), getScoreGlow(), rowVariants, Header (+27 more)
+### Community 9 - "generate.py"
+Cohesion: 0.08
+Nodes (72): collections, analyze_code_file(), balanced(), build_access(), build_audit(), build_dataflow(), chain(), collect_existing_docs() (+64 more)
 
-### Community 15 - "oracle-enrich-contact/index.ts"
-Cohesion: 0.06
-Nodes (47): ADR-0006, Update que não pode falhar em silêncio, runAutoSync(), ALLOWED_ORIGINS, ContactRow, enrichOne(), EnrichResult, InputSchema (+39 more)
+### Community 10 - "lushaMocks.ts"
+Cohesion: 0.05
+Nodes (44): ADR-027 — Rodada #33 · E2E ampliado do módulo Lusha, Consequências, Contexto, Decisão, Fora de escopo, companies, enterDemoMode(), loginOrDemo() (+36 more)
 
-### Community 16 - "Index.tsx"
-Cohesion: 0.07
-Nodes (49): Mudanças, 3.3 Atalhos de Teclado (`useKeyboardShortcuts`), CommandPalette(), ConnectionStatus(), EditCompanyDialog(), REASON_STYLES, KeyboardShortcutsDialog(), Advisory (+41 more)
+### Community 11 - "useAuth"
+Cohesion: 0.05
+Nodes (59): 1. Resumo Executivo, 2.2 CRM & Pipeline (P0), DealsView(), EmailSuppressionsView(), DeliveriesDrawer(), WebhooksPanel(), ROLE_COLOR, ROLE_LABEL (+51 more)
 
-### Community 17 - "campaign-dispatch/index.ts"
-Cohesion: 0.06
-Nodes (55): Integrações externas — referência para agentes, Modo mock, Quem está vivo de verdade, Testes Deno × Vitest, 3. 🟨 IMPLEMENTADO_PARCIAL (7), 2.11 Agente IA (`AIAgentView`), 2.3 Outreach & Engagement (P0), AIAgentView() (+47 more)
+### Community 12 - "campaign-dispatch/index.ts"
+Cohesion: 0.05
+Nodes (57): Integrações externas — referência para agentes, Modo mock, Quem está vivo de verdade, Testes Deno × Vitest, 3. 🟨 IMPLEMENTADO_PARCIAL (7), 2.11 Agente IA (`AIAgentView`), 2.3 Outreach & Engagement (P0), AIAgentView() (+49 more)
 
-### Community 18 - "dependencies"
+### Community 13 - "ref_node_fs"
+Cohesion: 0.04
+Nodes (50): eslint, ref_node_child_process, ref_node_fs, ref_node_os, ref_node_path, atual, base, CONJUNTO_RAIZ (+42 more)
+
+### Community 14 - "withOrg.ts"
+Cohesion: 0.04
+Nodes (42): src_integrations_supabase_tests_org_scoped_tables_fixture, builder, Call, callOrder, builder, Call, callOrder, builder (+34 more)
+
+### Community 15 - "dependencies"
 Cohesion: 0.03
 Nodes (65): dependencies, class-variance-authority, clsx, cmdk, date-fns, @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities (+57 more)
 
-### Community 19 - "withOrg.ts"
-Cohesion: 0.05
-Nodes (40): ActiveOrgContext, ActiveOrgProvider(), src_integrations_supabase_tests_org_scoped_tables_fixture, builder, Call, callOrder, builder, Call (+32 more)
-
-### Community 20 - "framer-motion"
-Cohesion: 0.05
-Nodes (43): framer-motion, cardVariants, AuthLogo(), ForgotPasswordOverlay(), fadeUp, LoginCardProps, stagger, tabSlide (+35 more)
-
-### Community 21 - "NotificationsPanel.tsx"
+### Community 16 - "vitest"
 Cohesion: 0.06
-Nodes (44): @radix-ui/react-dialog, CampaignTrackingDrawer(), Event, eventIcon, Recipient, statusBadgeVariant(), DryRunLogsPanel(), AccountLite (+36 more)
+Nodes (29): vitest, HighlightText(), CompanyTable(), getScoreBg(), getScoreColor(), getScoreGlow(), rowVariants, CASES (+21 more)
 
-### Community 22 - "package.json"
-Cohesion: 0.04
-Nodes (51): name, private, type, version, autoprefixer, clsx, commitlint, @commitlint/config-conventional (+43 more)
+### Community 17 - "useActiveOrganization"
+Cohesion: 0.05
+Nodes (50): GoalsTab(), fmtBRL(), LostReasonsDialog(), OrgRateLimitsView(), PiiMaskingPanel(), useActiveOrganization(), asError(), downloadJson() (+42 more)
 
-### Community 23 - "hooks/use-toast.ts"
-Cohesion: 0.06
-Nodes (50): JobDetailsSheet(), PartitionAdvisoryPanel(), pct(), PolicyCard(), AlertHistoryTable(), AlertRow, computeStatus(), CookieCard() (+42 more)
+### Community 18 - "App.tsx"
+Cohesion: 0.05
+Nodes (43): 1. Arquitetura de navegação, 2. As 23 views — classificação com evidência, 3. Recursos transversais, 4. Código morto — critério de detecção testado, 5. Lacunas desta dimensão, Dimensão 1 — Frontend / Apresentação, 3.5 Navegação e Histórico, 3.1 Telas / rotas (frontend) (+35 more)
 
-### Community 24 - "ref_node_fs"
-Cohesion: 0.04
-Nodes (42): ref_node_fs, ref_node_path, atual, base, CONJUNTO_RAIZ, missing, REQUIRED_SECTIONS, chaosRates (+34 more)
-
-### Community 25 - "lib.mjs"
+### Community 19 - "lib.mjs"
 Cohesion: 0.12
 Nodes (50): ref_node_events, ref_node_module, ref_node_string_decoder, acquire(), activeChildren, checked(), commitWithHooks(), dependencyFingerprint() (+42 more)
 
-### Community 26 - "useAuth"
+### Community 20 - "lusha-client.ts"
 Cohesion: 0.07
-Nodes (43): Decisão, 3. Functions chamadas pelo frontend (28), 3.10 Personalização, 3.2 Realtime, 6.1 Testes, 2.2 CRM & Pipeline (P0), AcceptInvite, DealsView() (+35 more)
+Nodes (52): assertLushaOk(), assertLushaSessionToken(), b64urlDecode(), buildSearchAgentBody(), cleanCompanyName(), COMMON_HEADERS, findPayloadPhone(), findRevealedEmail() (+44 more)
 
-### Community 27 - "lusha-client.ts"
+### Community 21 - "package.json"
+Cohesion: 0.04
+Nodes (46): name, private, type, version, autoprefixer, clsx, commitlint, @commitlint/config-conventional (+38 more)
+
+### Community 22 - "framer-motion"
 Cohesion: 0.07
-Nodes (50): assertLushaOk(), assertLushaSessionToken(), b64urlDecode(), buildSearchAgentBody(), cleanCompanyName(), COMMON_HEADERS, findPayloadPhone(), findRevealedEmail() (+42 more)
+Nodes (33): framer-motion, iconMap, formatValue(), initials(), LeaderboardTab(), medal(), statusConfig, CompanyReviewsList() (+25 more)
 
-### Community 28 - "ConversionTab.tsx"
+### Community 23 - "View"
 Cohesion: 0.06
-Nodes (43): ADR-008: Política de Soft Delete e Retenção de Dados, Consequências, Contexto, Decisão, Status, 1. Veredito, 2. GAPS-ENTERPRISE, categoria por categoria, 3. Quick Wins do GAPS-ENTERPRISE (10 itens) (+35 more)
+Nodes (38): 3.4 Mobile, AppBreadcrumbsProps, BreadcrumbEntry, CommandPaletteProps, BreadcrumbItem, HeaderProps, BOTTOM_NAV_TABS, MobileBottomNav() (+30 more)
 
-### Community 29 - "Sidebar.tsx"
-Cohesion: 0.07
-Nodes (39): AppBreadcrumbs, AppBreadcrumbsProps, BreadcrumbEntry, getViewIcon(), BreadcrumbItem, HeaderProps, MobileBottomNavProps, NAV_ITEMS (+31 more)
-
-### Community 30 - "StakeholderFinderView.tsx"
-Cohesion: 0.09
-Nodes (38): 2.6 Stakeholders (`StakeholderFinderView`), LinkedinIcon(), DashboardSkeleton(), AccessibleSkeleton(), ChartSkeleton(), StatCardSkeleton(), TableRowSkeleton(), AIAgentSkeleton() (+30 more)
-
-### Community 31 - "scripts"
+### Community 24 - "scripts"
 Cohesion: 0.04
 Nodes (49): scripts, analyze, automation:check, automation:doctor, automation:graph, automation:heal, automation:install-hooks, automation:nightly (+41 more)
 
-### Community 32 - "ref_https"
-Cohesion: 0.04
-Nodes (26): ref_https, ALLOWED_ORIGINS, ALLOWED_ORIGINS, getCorsHeaders(), isLocalDevOrigin(), MessageSchema, corsHeaders, log() (+18 more)
+### Community 25 - "req"
+Cohesion: 0.06
+Nodes (27): corsHeaders, log(), LogFields, CORS, QueueKind, Setting, ProviderStatus, CORS (+19 more)
 
-### Community 33 - "gmaps-proxy/index.ts"
+### Community 26 - "Index.tsx"
 Cohesion: 0.07
-Nodes (31): RFC-4180, ActionSchema, ALLOWED_ORIGINS, CreateJobSchema, SyncResultsSchema, calculateIPCScore(), CompanyData, IPCHittingCriteria (+23 more)
+Nodes (30): Decisão, 3.11 Error Handling, 3.2 Realtime, 3.3 Atalhos de Teclado (`useKeyboardShortcuts`), 3.6 Acessibilidade (a11y), 3.7 PWA, 3. Recursos Transversais, 6.1 Testes (+22 more)
 
-### Community 34 - "lint-ratchet.mjs"
+### Community 27 - "automation.mjs"
+Cohesion: 0.13
+Nodes (43): adapter(), appendExclude(), APPROVED, atomic(), command(), digest(), doctor(), EVENTS (+35 more)
+
+### Community 28 - "lint-ratchet.mjs"
 Cohesion: 0.11
 Nodes (40): anchoredKey(), changedLintableFiles(), changedPaths(), changedRemovedFiles(), compareBaseline(), createBaseline(), createSnapshot(), eslintCommandArguments() (+32 more)
 
-### Community 35 - "DealDetailDrawer.tsx"
-Cohesion: 0.10
-Nodes (37): Fora de escopo (roadmap), Consequências, D2 — 4 `window.confirm` remanescentes (não 5 como o inventário R27 sugeria), R28-04 — A11y pontual, Contexto, Passo 2 — `useConfirm` sweep, @dnd-kit/core, @dnd-kit/sortable (+29 more)
-
-### Community 36 - "OracleV2Panel.tsx"
+### Community 29 - "oracle-push-bitrix/index.ts"
 Cohesion: 0.07
-Nodes (32): Circuit breakers, Configuração, Cookies — o que fazer quando quebrar, Feature flag, Fluxo end-to-end, Idempotência, Observabilidade, Oracle v2 — Runbook (+24 more)
+Nodes (35): ADR-0006, Update que não pode falhar em silêncio, ALLOWED_ORIGINS, ContactRow, InputSchema, PushResult, PushStatus, SessionCtx (+27 more)
 
-### Community 37 - "graphify-local.mjs"
+### Community 30 - "graphify-local.mjs"
 Cohesion: 0.14
 Nodes (38): ref_node_crypto, acquire(), acquireGlobal(), active, adoptInitial(), assertResources(), atomic(), canonical() (+30 more)
 
-### Community 38 - "automation.mjs"
-Cohesion: 0.14
-Nodes (40): adapter(), appendExclude(), APPROVED, atomic(), command(), digest(), doctor(), EVENTS (+32 more)
+### Community 31 - "oracle-enrich-contact/index.ts"
+Cohesion: 0.10
+Nodes (32): ALLOWED_ORIGINS, ContactRow, enrichOne(), EnrichResult, InputSchema, pickBestEmail(), pickBestPhone(), CookieNotReady (+24 more)
 
-### Community 39 - "test_snapshot.py"
-Cohesion: 0.07
-Nodes (34): argparse, contextlib, copy, datetime, importlib_util, io, json, os (+26 more)
+### Community 32 - "compareReport.ts"
+Cohesion: 0.06
+Nodes (36): 1. O que é o Firecrawl, 2.1 Capacidades de coleta (o que o Firecrawl faz), 2.2 Infraestrutura de execução (o que o LUX IA tem), 2. Matriz de paridade, 3. Gaps priorizados (Firecrawl → LUX), 4. Três caminhos, com trade-offs honestos, 5. Recomendação, 6. Riscos e observações (+28 more)
 
-### Community 40 - "ref_node_child_process"
-Cohesion: 0.07
-Nodes (31): eslint, ref_node_assert, ref_node_child_process, ref_node_os, ref_node_test, ref_node_url, fixture(), GERADOR (+23 more)
+### Community 33 - "ref_npm_supabase"
+Cohesion: 0.05
+Nodes (18): ref_npm_lovable_dev, ref_npm_supabase, ref_npm_zod_3_23_8, ref_npm_zod_3_25_76, CNPJA_API_KEY, LIMIT_AUTH_RPM, LIMIT_OPEN_RPM, BodySchema (+10 more)
 
-### Community 41 - "RLSDiscoveryView.tsx"
-Cohesion: 0.07
-Nodes (31): AgentMessage, MessageBubble(), WELCOME_MSG, AutomationEventsFeed(), levelIcon(), levelTone(), AutomationQueuePanel(), STATUS_LABEL (+23 more)
-
-### Community 42 - "oracle-push-bitrix/index.ts"
+### Community 34 - "CompanyDetailModal.tsx"
 Cohesion: 0.08
-Nodes (31): Multi-tenant — `service_role` nas edge functions é bypass de RLS, ALLOWED_ORIGINS, ContactRow, InputSchema, PushResult, PushStatus, SessionCtx, base() (+23 more)
+Nodes (27): cardVariants, AuthLogo(), GoogleLoginButton(), GoogleLoginButtonProps, fadeUp, LoginCardProps, stagger, tabSlide (+19 more)
 
-### Community 43 - "apify-gateway.ts"
+### Community 35 - "Header.tsx"
+Cohesion: 0.08
+Nodes (32): 2.4 Empresas (`CompaniesView`), 3.9 Notificações (`NotificationsPanel`), @radix-ui/react-dropdown-menu, Company, CompanyTableRow(), CompanyTableRowProps, getScoreBg(), getScoreColor() (+24 more)
+
+### Community 36 - "useOracleV2.ts"
+Cohesion: 0.07
+Nodes (31): Circuit breakers, Configuração, Cookies — o que fazer quando quebrar, Feature flag, Fluxo end-to-end, Idempotência, Observabilidade, Oracle v2 — Runbook (+23 more)
+
+### Community 37 - "oracle-search-decisors/index.ts"
+Cohesion: 0.09
+Nodes (31): ALLOWED_ORIGINS, ContatoComOrigem, InputSchema, APOLLO_CACHE_TTL_EMPTY_SECONDS, APOLLO_CACHE_TTL_HIT_SECONDS, APOLLO_COOLDOWN_FORBIDDEN_SECONDS, APOLLO_COOLDOWN_RATE_LIMIT_SECONDS, ApolloCachedEntry (+23 more)
+
+### Community 38 - "useCnpjEnrich.ts"
+Cohesion: 0.11
+Nodes (23): RFC-8414, @lovable.dev/mcp-js, zod, CnpjActivity, CnpjEnrichData, CnpjEnrichStatus, CnpjPartner, EnrichResponse (+15 more)
+
+### Community 39 - "apify-gateway.ts"
 Cohesion: 0.10
 Nodes (30): Apify Mock Mode (Dev / E2E), Como ativar, Desligando, Limitações, Uso típico, ApifyClientOptions, ApifyRun, ApifyRunStatus (+22 more)
 
-### Community 44 - ".collect"
-Cohesion: 0.16
-Nodes (8): function(), migration(), 24 sequências: seção × histórico/SQL disponível × repetição × recuperação., SnapshotFailureMatrixTests, SnapshotFixture, SnapshotHeartbeatTests, SnapshotSQLRecoveryTests, structural_records()
-
-### Community 45 - "ref_npm_supabase"
-Cohesion: 0.06
-Nodes (16): ref_npm_supabase, ref_npm_zod_3_23_8, CNPJA_API_KEY, LIMIT_AUTH_RPM, LIMIT_OPEN_RPM, BodySchema, FIELD_MASK, GOOGLE_MAPS_API_KEY (+8 more)
-
-### Community 46 - "deliverability-check/index.ts"
+### Community 40 - "PermissionsMatrix.tsx"
 Cohesion: 0.11
-Nodes (26): checkDeliverability(), CORS_HEADERS, DeliverabilityResult, DeliverabilitySchema, RFC-6376, RFC-7505, CORS_HEADERS, DISPOSABLE_DOMAINS (+18 more)
+Nodes (32): 2. Campos orphan da auditoria — RECONFERIDO em 2026-11-22 contra o banco real, PermissionGate(), Props, FLAG, PermissionsMatrix(), Props, ROLE_COLOR, useOrgMembers() (+24 more)
 
-### Community 47 - "web-scrape-worker/index.ts"
+### Community 41 - "cenarios.mjs"
+Cohesion: 0.06
+Nodes (29): base(), comp(), fails, GERADOR, JS, KEEP, ok(), PKG() (+21 more)
+
+### Community 42 - "lead-identity.ts"
+Cohesion: 0.11
+Nodes (27): APOLLO_DEPARTMENT_MAP, ApolloDepartmentFilter, apolloFilterForLushaDepartments(), lushaEnumsWithoutApolloMapping(), MAP, DomainCandidates, FREE_EMAIL_DOMAINS, normalizeDomain() (+19 more)
+
+### Community 43 - "web-scrape-worker/index.ts"
 Cohesion: 0.13
 Nodes (25): checkCircuitBreaker(), hashString(), mulberry32(), shouldInjectChaos(), hostnameOf(), isEmptyShell(), isTransientHttp(), decodeEntities() (+17 more)
 
-### Community 48 - "devDependencies"
+### Community 44 - "test_snapshot.py"
+Cohesion: 0.10
+Nodes (28): argparse, contextlib, copy, datetime, importlib_util, io, json, os (+20 more)
+
+### Community 45 - "ref_https"
+Cohesion: 0.06
+Nodes (15): ref_https, ALLOWED_ORIGINS, corsHeaders, log(), LogFields, ALLOWED_ORIGINS, corsHeaders, corsHeaders (+7 more)
+
+### Community 46 - "orgErrorHandler.ts"
+Cohesion: 0.12
+Nodes (29): OrgErrorBanner(), clearOrgErrorBanner(), copyForMismatch(), copyForMissing(), emit(), ENTITY_LABELS, entityLabel(), handleOrgError() (+21 more)
+
+### Community 47 - "sidebar.tsx"
+Cohesion: 0.08
+Nodes (29): Separator, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel (+21 more)
+
+### Community 48 - "gmaps-proxy/index.ts"
+Cohesion: 0.09
+Nodes (22): ActionSchema, ALLOWED_ORIGINS, CreateJobSchema, runAutoSync(), SyncResultsSchema, CircuitBreakerRow, closedCache, invalidateClosedCache() (+14 more)
+
+### Community 49 - "devDependencies"
 Cohesion: 0.06
 Nodes (32): devDependencies, autoprefixer, axe-playwright, commitlint, @commitlint/config-conventional, eslint, @eslint/js, eslint-plugin-react-hooks (+24 more)
 
-### Community 49 - "SourceComparisonReport.tsx"
-Cohesion: 0.14
-Nodes (26): Bucket, BUCKETS, PERIODS, SourceComparisonReport(), deltaTone(), MetricConfig, METRICS, SourceComparisonSummary() (+18 more)
-
-### Community 50 - "status"
-Cohesion: 0.09
-Nodes (30): `automation_alerts`, `automation_steps`, Automação / Workflows, `campaign_events`, `campaign_messages`, `campaign_recipients`, `campaign_replies`, `campaigns` (+22 more)
+### Community 50 - "useAutomationsMonitor.ts"
+Cohesion: 0.10
+Nodes (28): AutomationKpiCards(), CardDef, pct(), AutomationStageBadge(), Props, STAGE_ICONS, STAGE_LABELS, AutomationKpis (+20 more)
 
 ### Community 51 - "20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql"
 Cohesion: 0.09
 Nodes (29): idx_companies_created_at, idx_companies_enriched, idx_companies_ipc_score, idx_companies_sector, idx_companies_source, idx_companies_starred, idx_intent_signals_company_id, idx_notifications_created_at (+21 more)
 
-### Community 52 - "Header.tsx"
+### Community 52 - "useDemo"
 Cohesion: 0.11
-Nodes (25): @radix-ui/react-dropdown-menu, Company, CompanyTableRow(), CompanyTableRowProps, getScoreBg(), getScoreColor(), HighlightText(), GradientAvatar() (+17 more)
+Nodes (23): DEMO_KEY, DemoContext, DemoContextType, useDemo(), ActivityItem, DashboardStats, fetchDashboardStats(), RecentCompany (+15 more)
 
 ### Community 53 - "20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql"
 Cohesion: 0.09
@@ -742,9 +752,9 @@ Nodes (28): idx_campaigns_user_id, idx_companies_created_at, idx_companies_secto
 Cohesion: 0.07
 Nodes (27): 10. OBSERVABILIDADE — 5/10, 11. LÓGICA DE NEGÓCIO — 8/10, 12. MANUTENIBILIDADE — 8/10, 13. OPERACIONALIDADE — 6/10, 14. PERFORMANCE — 7/10, 15. QUALIDADE DE CÓDIGO — 9/10, 16. SEGURANÇA — 8/10, 17. TESTES — 9/10 (+19 more)
 
-### Community 55 - "EmailAccountsAuditPanel.tsx"
-Cohesion: 0.11
-Nodes (21): CompanyReviewsList(), Props, relativeDate(), ACTION_META, actorInitials(), EmailAccountsAuditPanel(), formatWhen(), summary() (+13 more)
+### Community 55 - "SourceComparisonSummary.tsx"
+Cohesion: 0.14
+Nodes (23): SourceComparisonReport(), deltaTone(), MetricConfig, METRICS, SourceComparisonSummary(), SourceComparisonSummaryProps, bucketLabel(), HEADERS (+15 more)
 
 ### Community 56 - "scrape-queue-worker/index.ts"
 Cohesion: 0.13
@@ -754,453 +764,453 @@ Nodes (25): audit(), completeWithPlacesFallback(), corsHeaders, GMAPS_PROVIDER, 
 Cohesion: 0.11
 Nodes (23): idx_robots_cache_expires, idx_web_scrape_dl_org, idx_web_scrape_dl_pending, idx_web_scrape_queue_due, idx_web_scrape_queue_org, idx_web_scrape_queue_trace, idx_web_scrape_results_org, idx_web_scrape_results_task (+15 more)
 
-### Community 58 - "WorkflowCard.tsx"
+### Community 58 - "DealTasksPanel"
 Cohesion: 0.09
-Nodes (22): 2.10 Campanhas (`CampaignsView`), 2.12 Configurações (`SettingsView`), 2.3 Configurar IPC (`ICPConfigView`), 2.4 Empresas (`CompaniesView`), 2.7 Workflows (`WorkflowsView`), 2. Módulos Principais (12 Views), CampaignsView(), ICPConfigView() (+14 more)
+Nodes (26): Fora de escopo (roadmap), D1 — Optimistic locking silenciosamente quebrado em `useDeals.updateDeal`, D2 — 4 `window.confirm` remanescentes (não 5 como o inventário R27 sugeria), Descobertas críticas nesta rodada, ADR-023: Rodada #29 — Refactor Safety & Paridade de Optimistic Locking, Consequências, Contexto, Decisão (+18 more)
 
-### Community 59 - "auth"
+### Community 59 - "useNextBestActions.ts"
+Cohesion: 0.09
+Nodes (25): 2.1 Multi-tenancy & Organizações (P0), 2.5 Workflows & Automação (P1), 2.6 Analytics & Reporting (P1), 2.7 Integrações & API (P0), 2.9 IA & Machine Learning (P1), 2. Gaps por Categoria, describeSchedule(), FormState (+17 more)
+
+### Community 60 - "auth"
 Cohesion: 0.08
 Nodes (22): auth, accepted_audiences, issuer, type, mcp, server, tools, path (+14 more)
 
-### Community 60 - "cenarios.mjs"
-Cohesion: 0.08
-Nodes (22): base(), comp(), fails, GERADOR, JS, KEEP, PKG(), route() (+14 more)
-
-### Community 61 - "useNextBestActions.ts"
+### Community 61 - "retry-policy-tuner/index.ts"
 Cohesion: 0.10
-Nodes (24): 2.10 Operações & DevEx (P2), 2.1 Multi-tenancy & Organizações (P0), 2.5 Workflows & Automação (P1), 2.6 Analytics & Reporting (P1), 2.7 Integrações & API (P0), 2.9 IA & Machine Learning (P1), 2. Gaps por Categoria, ChangelogButton() (+16 more)
+Nodes (24): 1) Discriminador `queue_kind` na malha de resiliência, 2) `retry-policy-tuner` cobre `scrape` + `web`, 3) `dlq-alerts` cobre `scrape` + `web`, 4) Chaos Engineering do motor web, 5) Hardening de `search_path`, 6) SECURITY DEFINER — allowlist atualizada, ADR-011: Rodada #17 — Motor de scrape web + hardening final, Consequências (+16 more)
 
-### Community 62 - "scenarios.ts"
-Cohesion: 0.11
-Nodes (18): combinedWorst, genericPreflight, output, regressionGate, summarize(), genericPreflight, output, regressionGate (+10 more)
+### Community 62 - ".collect"
+Cohesion: 0.24
+Nodes (7): function(), migration(), 24 sequências: seção × histórico/SQL disponível × repetição × recuperação., SnapshotFailureMatrixTests, SnapshotFixture, SnapshotSQLRecoveryTests, structural_records()
 
-### Community 63 - "useAutomationsMonitor.ts"
-Cohesion: 0.13
-Nodes (23): AutomationStageBadge(), Props, STAGE_ICONS, STAGE_LABELS, AutomationStage, CompanyAutomationRow, DeadLetterRow, EventRow (+15 more)
-
-### Community 64 - "DlqHealthCard.tsx"
+### Community 63 - "deliverability-check/index.ts"
 Cohesion: 0.12
-Nodes (22): AlertMarker, DlqHealthCard(), formatAge(), Metric(), RANGE_OPTIONS, sevLabel, sevStyles, automationLogRows (+14 more)
+Nodes (20): checkDeliverability(), CORS_HEADERS, DeliverabilityResult, DeliverabilitySchema, RFC-6376, RFC-7505, CORS_HEADERS, DISPOSABLE_DOMAINS (+12 more)
 
-### Community 65 - "PermissionsMatrix.tsx"
-Cohesion: 0.13
-Nodes (23): FLAG, PermissionsMatrix(), Props, ROLE_COLOR, MANAGED_ENTITIES, MANAGED_ROLES, PermissionFlag, RolePermissionRow (+15 more)
-
-### Community 66 - "supabase/types.ts"
-Cohesion: 0.10
-Nodes (22): FeatureFlag, useFeatureFlag(), useFeatureFlags(), DEFAULT_CRITERIA, ICPConfig, ICPCriterion, ICPValue, AppRole (+14 more)
-
-### Community 67 - "hiker-client.ts"
+### Community 64 - "hiker-client.ts"
 Cohesion: 0.17
 Nodes (22): arr(), baseItem(), classify(), classifyMedia(), extractComments(), extractEmailFromBio(), extractHashtags(), extractMentions() (+14 more)
 
-### Community 68 - "CommandPalette.tsx"
-Cohesion: 0.13
-Nodes (20): cmdk, helpItems, sections, VIEW_ICONS, VIEW_LABELS, CommandPaletteProps, QuickAction, Command (+12 more)
-
-### Community 69 - "LUX IA — Análise Executiva de Funcionalidades"
+### Community 65 - "LUX IA — Análise Executiva de Funcionalidades"
 Cohesion: 0.08
 Nodes (23): 1. Visão Geral, 4. Backend e Banco de Dados, 5. Edge Functions, 6.2 CI/CD (`.github/workflows/ci.yml`), 6.3 Build e Deploy, 6.4 Observabilidade, 6. Qualidade e Infraestrutura, 7.1 Autenticação e Autorização (+15 more)
 
-### Community 70 - "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+### Community 66 - "status"
+Cohesion: 0.11
+Nodes (24): `automation_alerts`, `automation_execution_logs`, `automation_steps`, Automação / Workflows, `campaign_events`, `campaign_messages`, `campaign_recipients`, `campaign_replies` (+16 more)
+
+### Community 67 - "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
 Cohesion: 0.13
 Nodes (20): public.seed_role_permissions, resource, role, idx_bulk_imports_org, idx_bulk_imports_user, idx_role_permissions_org, idx_sched_report_runs_report, idx_scheduled_reports_due (+12 more)
 
-### Community 71 - "gen-round36-preflight.ts"
+### Community 68 - "gen-round36-preflight.ts"
 Cohesion: 0.08
 Nodes (20): dlqRate, Fault, FAULTS, gaps, gate, LATS, meanAttempts, p95Backoff (+12 more)
 
-### Community 72 - "aggregations.ts"
+### Community 69 - "aggregations.ts"
 Cohesion: 0.12
 Nodes (18): AlertDot, AlertDotSource, AlertHistoryPoint, CorrelatableLog, correlateSpikesWithLogs(), CorrelationOptions, DailyFrequencyPoint, detectSpikes() (+10 more)
 
-### Community 73 - "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+### Community 70 - "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
 Cohesion: 0.13
 Nodes (22): idx_changelog_published, idx_dashboard_layouts_user, idx_deal_predictions_close, idx_deal_predictions_org, idx_lead_scores_org_tier, idx_lead_scores_score, public.changelog_entries, public.compute_deal_prediction() (+14 more)
 
-### Community 74 - "Analisado"
+### Community 71 - "Analisado"
 Cohesion: 0.25
 Nodes (18): Analisado, Refatorado, Testado, [Unreleased] - 2026-07-22, Decisão, DEPT_GROUPS, DecisionMakersGridProps, RowProps (+10 more)
 
-### Community 75 - "useAuditTrail.ts"
-Cohesion: 0.10
-Nodes (19): `api_keys`, `api_request_logs`, `idempotency_keys`, Integração / API, `webhook_deliveries`, `webhooks`, auditResult, Call (+11 more)
+### Community 72 - "DashboardView.tsx"
+Cohesion: 0.13
+Nodes (19): 2.1 Dashboard (`DashboardView`), ActivityFeed, AutomationsList(), CustomTooltipProps, DashboardView(), DashboardViewProps, DEFAULT_ORDER, TooltipPayloadItem (+11 more)
 
-### Community 76 - "gen-round27-qa-preflight.ts"
+### Community 73 - "ConversionTab.tsx"
+Cohesion: 0.14
+Nodes (17): 2.2 Analytics (`AnalyticsView`), jspdf, jspdf-autotable, CustomTooltip(), TooltipPayloadItem, AnimatedCounter(), AnimatedDonut(), MiniDonut() (+9 more)
+
+### Community 74 - "OnboardingTour.tsx"
+Cohesion: 0.16
+Nodes (16): 3.8 Onboarding, COLORS, ConfettiEffect(), Particle, getTooltipPosition(), TooltipPosition, TourSpotlight(), TourSpotlightProps (+8 more)
+
+### Community 75 - "gen-round27-qa-preflight.ts"
 Cohesion: 0.09
 Nodes (21): authScenarios, dealScenarios, departments, emailScenarios, GA, GB, GC, GD (+13 more)
+
+### Community 76 - "DlqAlertSettingsCard.tsx"
+Cohesion: 0.15
+Nodes (19): clamp(), DlqAlertSettingsCard(), normalizePageSize(), PAGE_SIZE_OPTIONS, PERIOD_OPTIONS, historyRows, mockSettings, saveMutate (+11 more)
 
 ### Community 77 - "historyUtils.fuzz.test.ts"
 Cohesion: 0.20
 Nodes (15): Decisão, buildHistoryCsvRows(), DMHistoryEntry, DMHistoryStatus, filterHistory(), findRecentDuplicate(), formatDurationMs(), HistoryFilters (+7 more)
 
-### Community 78 - "20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql"
+### Community 78 - "2. GAPS-ENTERPRISE, categoria por categoria"
+Cohesion: 0.12
+Nodes (21): 1. Veredito, 2. GAPS-ENTERPRISE, categoria por categoria, 3. Quick Wins do GAPS-ENTERPRISE (10 itens), 4. As 7 features "enterprise P1/P2" do backlog, 5. Estado de saude medido, 6. O que realmente falta (honesto), 7. Correcao ao backlog anterior, 8. Como reproduzir esta auditoria (+13 more)
+
+### Community 79 - "20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql"
 Cohesion: 0.14
 Nodes (21): public.notify_on_workflow_complete, public.notify_on_enrichment, public.prevent_user_id_change, public.update_updated_at_column, public.validate_ipc_score, trg_campaigns_prevent_uid_change, trg_campaigns_updated_at, trg_companies_enrichment_notify (+13 more)
 
-### Community 79 - "3. Recursos Transversais"
-Cohesion: 0.11
-Nodes (17): 3.4 Mobile, 3.5 Navegação e Histórico, 3.6 Acessibilidade (a11y), 3.7 PWA, 3.9 Notificações (`NotificationsPanel`), 3. Recursos Transversais, AutoTopProgressBar(), MobileBottomNav() (+9 more)
+### Community 80 - "useResilienceSimulator.ts"
+Cohesion: 0.15
+Nodes (18): ResilienceSimulatorPanel(), INITIAL, RunOptions, SimulationState, useResilienceSimulator(), buildGapReport(), DEFAULT_THRESHOLDS, Gap (+10 more)
 
-### Community 80 - "useStatusPage.ts"
+### Community 81 - "useConfirm"
+Cohesion: 0.13
+Nodes (19): ADR-022 — Rodada #28: Excelência Funcional & Acessibilidade, Consequências, Contexto, Correções aplicadas, Escopo deferido para R29, Métricas antes / depois, Preflight, R28-01 — Hook `useConfirm` + `ConfirmProvider` (novo) (+11 more)
+
+### Community 82 - "useICPConfig.ts"
+Cohesion: 0.11
+Nodes (19): 2.10 Campanhas (`CampaignsView`), 2.12 Configurações (`SettingsView`), 2.3 Configurar IPC (`ICPConfigView`), 2.5 Sinais de Intenção (`IntentSignalsView`), 2.8 Google Maps Scraper (`GmapsScraperView`), 2. Módulos Principais (12 Views), CampaignsView(), getStatus() (+11 more)
+
+### Community 83 - "useAuditTrail.ts"
+Cohesion: 0.12
+Nodes (17): `api_request_logs`, AuditTrailPanel(), auditResult, Call, calls, method(), profilesResult, AuditActionFilter (+9 more)
+
+### Community 84 - "CommandPalette.tsx"
+Cohesion: 0.14
+Nodes (18): cmdk, @radix-ui/react-dialog, helpItems, sections, VIEW_ICONS, VIEW_LABELS, CommandPalette(), QuickAction (+10 more)
+
+### Community 85 - "useLoginForm.ts"
+Cohesion: 0.13
+Nodes (16): @lovable.dev/cloud-auth-js, getStorage(), parseLockTs(), RateLimitConfig, useRateLimit(), lovable, lovableAuth, SignInOptions (+8 more)
+
+### Community 86 - "gerar.unit.mjs"
+Cohesion: 0.13
+Nodes (17): ref_node_assert, ref_node_test, ref_node_url, fixture(), GERADOR, isolatedFixture(), out, root (+9 more)
+
+### Community 87 - "useStatusPage.ts"
 Cohesion: 0.15
 Nodes (19): StatusPage, IncidentsPanel(), ComponentState, IMPACT_LABEL, Incident, INCIDENT_STATUS_LABEL, PublicIncident, PublicStatus (+11 more)
 
-### Community 81 - "AutomationStatusPanel.tsx"
+### Community 88 - "AutomationStatusPanel.tsx"
 Cohesion: 0.13
 Nodes (18): AutomationStatusPanel, countBy(), countTable(), DlqTable, ExecutionLog, FailureByStep, fetchFailuresByStep(), fetchQueueSnapshots() (+10 more)
 
-### Community 82 - "useResilienceSimulator.ts"
-Cohesion: 0.17
-Nodes (18): INITIAL, RunOptions, SimulationState, useResilienceSimulator(), buildGapReport(), DEFAULT_THRESHOLDS, Gap, GapReport (+10 more)
-
-### Community 83 - "20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql"
+### Community 89 - "20260403184426_736fd65b-d84a-4f85-ac2e-ecaf018ba617.sql"
 Cohesion: 0.10
 Nodes (20): idx_campaigns_user_id, idx_companies_user_id, idx_intent_signals_user_id, idx_ipc_config_user_id, idx_notifications_user_id, idx_scrape_jobs_user_id, idx_scrape_results_user_id, idx_stakeholders_user_id (+12 more)
 
-### Community 84 - "20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql"
+### Community 90 - "20260711183245_343e3e60-abd3-4b60-8278-f84fd3c37bd6.sql"
 Cohesion: 0.12
 Nodes (20): idx_automation_alerts_org, idx_automation_alerts_user, idx_campaign_messages_email_account, idx_campaign_recipients_company, idx_campaign_recipients_stakeholder, idx_campaign_replies_email_account, idx_campaign_replies_message, idx_deals_stage (+12 more)
 
-### Community 85 - "compilerOptions"
+### Community 91 - "compilerOptions"
 Cohesion: 0.10
 Nodes (20): compilerOptions, allowImportingTsExtensions, isolatedModules, jsx, lib, module, moduleDetection, moduleResolution (+12 more)
 
-### Community 86 - "lushaMocks.ts"
-Cohesion: 0.23
-Nodes (15): Decisão, assertMockHit(), delay(), DMOkOptions, jsonResponse(), MockHandle, mockLushaCookieHealth(), mockLushaDMOk() (+7 more)
+### Community 92 - "gmaps-mapper.ts"
+Cohesion: 0.18
+Nodes (15): RFC-4180, arr(), bool(), json(), mapGmapsRow(), MappedCompany, num(), parseCsv() (+7 more)
 
-### Community 87 - "ApiLatencyPanel.tsx"
+### Community 93 - "ai-agent"
+Cohesion: 0.10
+Nodes (19): ai-agent, Ações, Contexto injetado automaticamente, `DELETE ?action=delete&id=<uuid>`, Descrição, Descrição, Edge Functions — Documentação, `GET ?action=list` (+11 more)
+
+### Community 94 - "ApiLatencyPanel.tsx"
 Cohesion: 0.22
 Nodes (16): ApiLatencyPanel(), fmtMs(), LatencyRow(), LatencyRowProps, SEVERITY_STYLES, WINDOWS, LatencySparkline(), LatencySparklineProps (+8 more)
 
-### Community 88 - "workflow-engine/index.ts"
+### Community 95 - "RLSVerificationPanel.tsx"
+Cohesion: 0.19
+Nodes (18): ApiResponse, HistoryEntry, OP_STYLES, ParsedTest, parseTest(), RLSVerificationPanel(), RuleOp, TestResult (+10 more)
+
+### Community 96 - "view-skeleton-map.tsx"
+Cohesion: 0.21
+Nodes (16): AccessibleSkeleton(), ChartSkeleton(), StatCardSkeleton(), TableRowSkeleton(), AIAgentSkeleton(), AnalyticsSkeleton(), CampaignsSkeleton(), CompaniesSkeleton() (+8 more)
+
+### Community 97 - "workflow-engine/index.ts"
 Cohesion: 0.13
 Nodes (13): isMissingConstraint(), mergeByNaturalKey(), naturalKeyOf(), upsertCompanies(), UpsertCompaniesResult, UpsertStrategy, Behavior, ERRO_42P10 (+5 more)
 
-### Community 89 - "Ações"
-Cohesion: 0.11
-Nodes (18): Ações, Ações, `DELETE ?action=delete&id=<uuid>`, `DELETE ?action=delete&id=<uuid>`, Descrição, Edge Functions — Documentação, `GET ?action=list`, `GET ?action=list` (+10 more)
+### Community 98 - "StakeholderCard.tsx"
+Cohesion: 0.23
+Nodes (14): 2.6 Stakeholders (`StakeholderFinderView`), LinkedinIcon(), getInitials(), getScoreGradient(), getSeniority(), seniorityConfig, LeadScore, Stakeholder (+6 more)
 
-### Community 90 - "CompaniesMapView.tsx"
-Cohesion: 0.20
-Nodes (16): 2.9 Mapa de Empresas (`CompaniesMapView`), leaflet, leaflet.markercluster, react-leaflet, CompaniesMapView(), MapFilters(), CompanyWithCoords, extractCoords() (+8 more)
-
-### Community 91 - "OnboardingTour.tsx"
-Cohesion: 0.16
-Nodes (14): 3.8 Onboarding, COLORS, ConfettiEffect(), Particle, getTooltipPosition(), TooltipPosition, TourSpotlight(), TourSpotlightProps (+6 more)
-
-### Community 92 - "CompaniesView.tsx"
-Cohesion: 0.21
-Nodes (15): CompaniesView(), Company, FacetItem, getCity(), getScoreRange(), ScoreRange, CompanyFilters(), CompanyFiltersProps (+7 more)
-
-### Community 93 - "autotune.ts"
-Cohesion: 0.18
-Nodes (17): pct(), RetryAutoTunerCard(), autoTune(), bandOf(), BandRecommendation, clamp01(), DEFAULT_POLICY_GRID, DEFAULT_SLA_BANDS (+9 more)
-
-### Community 94 - "useRateLimit.logic.test.ts"
+### Community 99 - "useRateLimit.logic.test.ts"
 Cohesion: 0.26
 Nodes (4): MockStorage, parseLockTs(), RateLimitConfig, RateLimitSim
 
-### Community 95 - "instagram-worker/index.ts"
+### Community 100 - "instagram-worker/index.ts"
 Cohesion: 0.22
 Nodes (8): BATCH_SIZE, Job, runJob(), computeBackoff(), extractMedias(), HikerClient, HikerError, mockResult()
 
-### Community 96 - "20260404152316_16dc3cfe-cf24-464a-92ac-eeb60220a5ee.sql"
+### Community 101 - "20260404152316_16dc3cfe-cf24-464a-92ac-eeb60220a5ee.sql"
 Cohesion: 0.12
 Nodes (18): idx_campaigns_user_created, idx_companies_user_created, idx_companies_user_score, idx_companies_user_source, idx_intent_signals_user_created, idx_notifications_user_created, idx_scrape_jobs_user_created, idx_scrape_results_job (+10 more)
 
-### Community 97 - "Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn"
+### Community 102 - "3. Functions chamadas pelo frontend (28)"
+Cohesion: 0.13
+Nodes (16): 3. Functions chamadas pelo frontend (28), 2.7 Workflows (`WorkflowsView`), ApiDocsCard(), EmailAccountsPanel(), isAuthError(), kindBadgeVariant(), OrgViolationsView(), WorkflowsView() (+8 more)
+
+### Community 103 - "MapMarkerIcons.tsx"
+Cohesion: 0.15
+Nodes (16): 2.9 Mapa de Empresas (`CompaniesMapView`), leaflet, leaflet.markercluster, react-leaflet, CompaniesMapView(), MapFilters(), CompanyWithCoords, extractCoords() (+8 more)
+
+### Community 104 - "Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn"
 Cohesion: 0.11
 Nodes (17): 1. Metodologia, 2. Categoria 1 — Scrapers via cookie/sessão LinkedIn (Voyager, `li_at`, JSESSIONID), 3. Categoria 2 — SDKs/wrappers de APIs comerciais de enriquecimento, 4. Categoria 3 — Permutação de email + verificação MX/SMTP, 5. Categoria 4 — OSINT / dorks / páginas públicas, 6. Top 5 candidatos aplicáveis ao LUX, 7. Riscos jurídicos, 8. Recomendação arquitetural (+9 more)
 
-### Community 98 - "Fluxo de Migrações — Supabase CLI / CI"
+### Community 105 - "Fluxo de Migrações — Supabase CLI / CI"
 Cohesion: 0.11
 Nodes (17): 1. Visão geral, 2.1 GitHub Environments, 2.2 Proteção do ambiente de produção, 2.3 Token com o menor escopo possível, 2. Configuração inicial (uma vez), 3.1 Criar uma migration, 3.2 Validar antes de abrir o PR, 3.3 Abrir o PR (+9 more)
 
-### Community 99 - "modulos"
+### Community 106 - "modulos"
 Cohesion: 0.18
 Nodes (18): aggregate(), anyFile(), camadaDe(), cap(), closure(), componentes, dominioDe(), enrich() (+10 more)
 
-### Community 100 - "DlqAlertSettingsCard.tsx"
-Cohesion: 0.21
-Nodes (16): clamp(), DlqAlertSettingsCard(), normalizePageSize(), PAGE_SIZE_OPTIONS, PERIOD_OPTIONS, DLQ_ALERT_DEFAULTS, DlqAlertHistoryItem, DlqAlertSettings (+8 more)
+### Community 107 - "DlqHealthCard"
+Cohesion: 0.13
+Nodes (16): DlqHealthCard(), formatAge(), automationLogRows, infoToast, rangeCalls, successToast, trendRows, DLQ_THRESHOLDS (+8 more)
 
-### Community 101 - "send-scheduled-reports/index.ts"
+### Community 108 - "send-scheduled-reports/index.ts"
 Cohesion: 0.18
 Nodes (17): buildEmail(), collectMetrics(), corsHeaders, EmailAccount, encodeBase64Url(), encodeMimeSubject(), ensureFreshToken(), fmt() (+9 more)
 
-### Community 102 - "components.json"
+### Community 109 - "components.json"
 Cohesion: 0.12
 Nodes (16): aliases, components, hooks, lib, ui, utils, rsc, $schema (+8 more)
 
-### Community 103 - "README.md"
-Cohesion: 0.12
-Nodes (13): ADR-003: Edge Functions como Proxy Seguro, Consequências, Contexto, Decisão, Status, ADR-006: Structured Logging em Edge Functions, Consequências, Contexto (+5 more)
-
-### Community 104 - "PasswordStrengthMeter.tsx"
+### Community 110 - "PasswordStrengthMeter.tsx"
 Cohesion: 0.12
 Nodes (15): 🔑 Amtenticação Social, 📝 Auditoria, 🚡 Checklist Auth, Estratégia de Autenticação — LUX IA, 📱 Multi-Fator (MFA) -- Melhoria I41, 🔷 OTP / Magic Link Expiry, 🛡✆ Rate Limiting (Brute-Force), 🔒 Segurança de Senhas (+7 more)
 
-### Community 105 - "helpers/auth.ts"
-Cohesion: 0.27
-Nodes (7): companies, enterDemoMode(), loginOrDemo(), navigateToView(), playwright_fixture_expect, playwright_fixture_test, axe-playwright
+### Community 111 - "ESTADO ATUAL DO SISTEMA — LUX IA"
+Cohesion: 0.12
+Nodes (17): 1. Veredito em uma tela, 2. Contagem honesta, 3. Riscos remanescentes, por gravidade, 4. O que está bom — medido, não presumido, 5. O que esta revisão NÃO cobriu, 6. Próximos passos, por valor, 7. Verificação independente desta revisão, 8. O que mudou desde a auditoria de 2026-08-16 (+9 more)
 
-### Community 106 - "LUX IA — Sistema de Prospecção B2B Inteligente"
+### Community 112 - "LUX IA — Sistema de Prospecção B2B Inteligente"
 Cohesion: 0.12
 Nodes (17): ADRs, Arquitetura, Auditoria Enterprise, Autenticação e Segurança, Banco de Dados, Deploy, Design System, Edge Functions (+9 more)
 
-### Community 107 - "uniq"
+### Community 113 - "uniq"
 Cohesion: 0.17
 Nodes (17): allMatches(), byCount(), dockerfiles, envNames(), flags, git(), gitInfo, gitInfoCommit() (+9 more)
 
-### Community 108 - "SnapshotDBStatsTests"
+### Community 114 - "SnapshotDBStatsTests"
 Cohesion: 0.21
 Nodes (4): OfflineConnection, Catálogo e resultados sintéticos; nenhum driver, socket ou banco real., SnapshotDBStatsTests, query()
 
-### Community 109 - "SatisfactionTab.tsx"
-Cohesion: 0.22
-Nodes (14): Breakdown(), SatisfactionTab(), fetchSurveyByToken(), KIND_LABEL, PublicSurvey, submitSurveyResponse(), SurveyKind, SurveyStats (+6 more)
+### Community 115 - "useDlqReplay.ts"
+Cohesion: 0.15
+Nodes (14): MotorTabBadge(), MotorView(), MotorViewProps, invokeMock, DlqMetrics, DlqMotor, DlqReplayInput, DlqReplayItem (+6 more)
 
-### Community 110 - "useDlqItems.ts"
-Cohesion: 0.20
-Nodes (12): 2.2 Infraestrutura de execução (o que o LUX IA tem), DlqTriageView(), DlqItem, useDlqItems(), useReplayDlqBatch(), CATEGORY_META, classifyDlqReason(), DLQ_CATEGORIES (+4 more)
+### Community 116 - "autotune.ts"
+Cohesion: 0.21
+Nodes (15): autoTune(), bandOf(), BandRecommendation, clamp01(), DEFAULT_POLICY_GRID, DEFAULT_SLA_BANDS, DEFAULT_WEIGHTS, enumeratePolicies() (+7 more)
 
-### Community 111 - "ESTADO ATUAL DO SISTEMA — LUX IA"
+### Community 117 - "README.md"
 Cohesion: 0.12
-Nodes (16): 1. Veredito em uma tela, 2. Contagem honesta, 3. Riscos remanescentes, por gravidade, 4. O que está bom — medido, não presumido, 5. O que esta revisão NÃO cobriu, 6. Próximos passos, por valor, 7. Verificação independente desta revisão, 8. O que mudou desde a auditoria de 2026-08-16 (+8 more)
+Nodes (12): ADR-004: Realtime com Canais Privados, Consequências, Contexto, Status, ADR-006: Structured Logging em Edge Functions, Consequências, Contexto, Decisão (+4 more)
 
-### Community 112 - "EmailVerifyBadge.tsx"
+### Community 118 - "Login.tsx"
 Cohesion: 0.17
-Nodes (14): 2.4 Data Enrichment (P1), CHECK_LABELS, EmailVerifyBadge(), tone(), VerifyResult, visualize(), fmtUsd(), PlacesApiUsageCard() (+6 more)
+Nodes (12): 3.1 Autenticação (`Login.tsx`, `AuthContext`), Login, FloatingParticles(), Particle, ForgotPasswordOverlay(), GOLD_COLORS, GoldConfetti(), Particle (+4 more)
 
-### Community 113 - "20261122270000_next_best_action.sql"
+### Community 119 - "20261122270000_next_best_action.sql"
 Cohesion: 0.17
 Nodes (13): public.deal_predictions, idx_next_best_actions_org_priority, idx_next_best_actions_pending, public.dismiss_next_best_action(), public.nba_recommend(), public.next_best_actions, public, public.deal_activities (+5 more)
 
-### Community 114 - "20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
+### Community 120 - "20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
 Cohesion: 0.20
 Nodes (14): public.handle_new_organization, idx_invites_org, idx_invites_token, idx_org_members_org, idx_org_members_user, on_organization_created, public.accept_org_invite(), public.has_org_role() (+6 more)
 
-### Community 115 - "useLoginForm.ts"
-Cohesion: 0.15
-Nodes (13): @lovable.dev/cloud-auth-js, postAuthRedirect(), lovable, lovableAuth, SignInOptions, LoginInput, loginSchema, NewPasswordInput (+5 more)
+### Community 121 - "DealCard.tsx"
+Cohesion: 0.18
+Nodes (14): @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities, Props, DealCard(), formatCurrency(), Prediction, PRIORITY_COLORS (+6 more)
 
-### Community 116 - "form.tsx"
-Cohesion: 0.19
-Nodes (13): @radix-ui/react-label, @radix-ui/react-slot, react-hook-form, FormControl, FormDescription, FormItem, FormLabel, FormMessage (+5 more)
-
-### Community 117 - "useDlqReplay.ts"
-Cohesion: 0.17
-Nodes (13): @supabase/supabase-js, MotorTabBadge(), MotorView(), invokeMock, DlqMetrics, DlqReplayInput, DlqReplayItem, DlqReplayResult (+5 more)
-
-### Community 118 - "has"
+### Community 122 - "has"
 Cohesion: 0.16
 Nodes (16): aliasesFor(), baseOf(), componentFile(), convencoes, dirOf(), edges, exists(), has() (+8 more)
 
-### Community 119 - "simulator.ts"
+### Community 123 - "simulator.ts"
 Cohesion: 0.18
 Nodes (13): perScenario, scenarios, summary, LEGACY, perScenario, scenarios, summary, CircuitBreakerConfig (+5 more)
 
-### Community 120 - "gen-round20-validation.ts"
+### Community 124 - "gen-round20-validation.ts"
 Cohesion: 0.13
 Nodes (13): chaosBreakdown, chaosRates, detectionTimes, drifts, failures, gauss(), noises, orgBreakdown (+5 more)
 
-### Community 121 - "compareReport.ts"
-Cohesion: 0.20
-Nodes (12): fetchJson(), useResilienceComparison(), avg(), buildComparison(), Classification, classifyRow(), ComparisonReport, ComparisonRow (+4 more)
+### Community 125 - "scenarios.ts"
+Cohesion: 0.15
+Nodes (10): lat, scenarios, t0, perScenario, scenarios, summary, DEFAULT_GRID, ScenarioGridConfig (+2 more)
 
-### Community 122 - "lusha-decision-makers/index.ts"
+### Community 126 - "SatisfactionTab.tsx"
+Cohesion: 0.24
+Nodes (13): SatisfactionTab(), fetchSurveyByToken(), KIND_LABEL, PublicSurvey, submitSurveyResponse(), SurveyKind, SurveyStats, useCreateSurvey() (+5 more)
+
+### Community 127 - "WorkflowCard.tsx"
+Cohesion: 0.17
+Nodes (12): mockWorkflow, defaultSteps, statusConfig, stepColors, stepIcons, WorkflowCard(), WorkflowCardProps, Workflow (+4 more)
+
+### Community 128 - "lusha-decision-makers/index.ts"
 Cohesion: 0.12
 Nodes (9): ALLOWED_ORIGINS, CachedContactRow, log(), LogLevel, LushaApiResponse, LushaRawDecisionMaker, LushaRawItem, NormalizedDecisionMaker (+1 more)
 
-### Community 123 - "lusha-search/index.ts"
+### Community 129 - "lusha-search/index.ts"
 Cohesion: 0.14
 Nodes (9): ALLOWED_ORIGINS, DAILY_SEARCH_QUOTA, SearchInput, SearchSchema, DepartmentResolution, DEPT_MAP, findPtLabelForEn(), resolveDepartments() (+1 more)
 
-### Community 124 - "index.test.ts"
+### Community 130 - "index.test.ts"
 Cohesion: 0.20
 Nodes (11): AdminUserFixture, CLIENT_OPTS, createAdminUserFixture(), createNonAdminUserFixture(), FixtureContext, makeIdSuffix(), safeRun(), UserFixture (+3 more)
 
-### Community 125 - "20260329204544_d66f3a77-7ee1-4839-a095-939ec69f31c5.sql"
+### Community 131 - "20260329204544_d66f3a77-7ee1-4839-a095-939ec69f31c5.sql"
 Cohesion: 0.21
 Nodes (14): idx_companies_ipc_score, idx_companies_sector, idx_companies_source, idx_scrape_jobs_status, idx_scrape_results_company_id, idx_scrape_results_job_id, public.companies, public.ipc_config (+6 more)
 
-### Community 126 - "compilerOptions"
+### Community 132 - "compilerOptions"
 Cohesion: 0.12
 Nodes (15): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+7 more)
 
-### Community 127 - "withOrg"
+### Community 133 - "withOrg"
 Cohesion: 0.14
 Nodes (13): Serviços, 🏗️ Arquitetura, 🚀 Como Contribuir, 📐 Guia de Contribuição — LUX IA, 🧪 Testes e CI, ADR-007: Multi-tenant Defense-in-Depth com Proxy Wrapper (`withOrg`), Consequências, Contexto (+5 more)
 
-### Community 128 - "ADR-011: Rodada #17 — Motor de scrape web + hardening final"
-Cohesion: 0.13
-Nodes (14): 1) Discriminador `queue_kind` na malha de resiliência, 3) `dlq-alerts` cobre `scrape` + `web`, 4) Chaos Engineering do motor web, 5) Hardening de `search_path`, 6) SECURITY DEFINER — allowlist atualizada, ADR-011: Rodada #17 — Motor de scrape web + hardening final, Consequências, Contexto (+6 more)
+### Community 134 - "Regras de domínio que o código não deixa óbvio — referência para agentes"
+Cohesion: 0.14
+Nodes (13): Auditoria, Cobertura de RLS — registro obrigatório, E2E — fixtures e usuários de teste, Feature flags, Filas, DLQ e reaper, Logging, Multi-tenant — `service_role` nas edge functions é bypass de RLS, Multi-tenant — `withOrg` é obrigatório no front (+5 more)
 
-### Community 129 - "Auditoria de Paridade — LUX IA vs Firecrawl"
-Cohesion: 0.13
-Nodes (14): 1. O que é o Firecrawl, 2.1 Capacidades de coleta (o que o Firecrawl faz), 2. Matriz de paridade, 3. Gaps priorizados (Firecrawl → LUX), 4. Três caminhos, com trade-offs honestos, 5. Recomendação, 6. Riscos e observações, 7. Apêndice — comandos de verificação (+6 more)
-
-### Community 130 - "Lusha Intelligence — Integração LUX"
+### Community 135 - "Lusha Intelligence — Integração LUX"
 Cohesion: 0.13
 Nodes (14): 🏗️ Arquitetura, 📁 Arquivos do Projeto, 🔧 Configuração, Cookie Lusha expira em ~30-90 dias, Cookie Vault (Supabase Self-hosted), 🗃️ Estrutura de Dados, `lusha_contacts` (Supabase LUX), Lusha Intelligence — Integração LUX (+6 more)
 
-### Community 131 - "public/manifest.json"
+### Community 136 - "public/manifest.json"
 Cohesion: 0.13
 Nodes (14): background_color, categories, description, display, icons, lang, name, orientation (+6 more)
 
-### Community 132 - "carousel.tsx"
+### Community 137 - "carousel.tsx"
 Cohesion: 0.17
 Nodes (14): embla-carousel-react, Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem, CarouselNext (+6 more)
 
-### Community 133 - "SlaHistoryTrendChart.tsx"
+### Community 138 - "form.tsx"
+Cohesion: 0.21
+Nodes (12): @radix-ui/react-label, react-hook-form, FormControl, FormDescription, FormItem, FormLabel, FormMessage, FormFieldContext (+4 more)
+
+### Community 139 - "SlaHistoryTrendChart.tsx"
 Cohesion: 0.18
 Nodes (10): buildSlaChartData(), SlaChartData, SlaChartPoint, SlaHistoryPoint, COLORS, DotPayload, LABELS, SlaHistoryTrendChart() (+2 more)
 
-### Community 134 - "downloadCSV"
+### Community 140 - "downloadCSV"
 Cohesion: 0.21
 Nodes (11): buildPayloadFromColumns(), buildRegistrySnippet(), RLSDiscoveryView(), sampleValueFor(), buildCsv(), CsvValue, downloadCsv(), escapeCell() (+3 more)
 
-### Community 135 - "useCnpjEnrich.ts"
-Cohesion: 0.24
-Nodes (12): CnpjActivity, CnpjEnrichData, CnpjEnrichStatus, CnpjPartner, EnrichResponse, pollJob(), useCnpjEnrich(), formatCnpj() (+4 more)
-
-### Community 136 - "cnpj-enrich/index.ts"
+### Community 141 - "cnpj-enrich/index.ts"
 Cohesion: 0.16
 Nodes (10): BodySchema, CNPJA_API_KEY, CnpjaAddress, CnpjaResponse, formatCnaeCode(), formatCnpj(), formatPhone(), LIMIT_AUTH_RPM (+2 more)
 
-### Community 137 - "rls-tests/index.ts"
+### Community 142 - "rls-tests/index.ts"
 Cohesion: 0.17
 Nodes (7): ALLOWED_ORIGINS, TestResult, AppEnv, ENV_EXEMPT_TABLES, RLS_TABLES, RLS_TABLES_EXEMPT, RlsTableSpec
 
-### Community 138 - "20260723105701_8063c052-209d-42e5-a34b-bd3c0f8427a5.sql"
+### Community 143 - "20260723105701_8063c052-209d-42e5-a34b-bd3c0f8427a5.sql"
 Cohesion: 0.22
 Nodes (13): idx_ig_dlq_org_time, idx_ig_queue_config_hash_active, idx_ig_queue_org, idx_ig_queue_status_next, idx_ig_results_org_time, idx_ig_results_queue, public.instagram_scrape_dead_letter, public.instagram_scrape_queue (+5 more)
 
-### Community 139 - "public.sales_goal_progress"
+### Community 144 - "public.sales_goal_progress"
 Cohesion: 0.18
 Nodes (14): idx_sales_goals_org_period, idx_sales_goals_owner, public.sales_goal_progress, public.sales_goals, public.sales_goals_detailed, public, public.companies, public.deal_activities (+6 more)
 
-### Community 140 - "20261122260000_dlp_pii_masking.sql"
+### Community 145 - "20261122260000_dlp_pii_masking.sql"
 Cohesion: 0.15
 Nodes (5): idx_pii_rules_org, public.pii_active_rules(), public.pii_redaction_rules, public, public.organizations
 
-### Community 141 - "ADR-021 — Rodada #27: QA Exaustivo & Hardening Funcional"
+### Community 146 - "ADR-021 — Rodada #27: QA Exaustivo & Hardening Funcional"
 Cohesion: 0.14
 Nodes (13): ADR-021 — Rodada #27: QA Exaustivo & Hardening Funcional, Auditorias paralelas (4 subagents `capable`), Consequências, Contexto, Correções críticas aplicadas nesta rodada, Métricas antes / depois, Preflight, R27-CRIT-01 — Gate service_role em 6 cron functions (+5 more)
 
-### Community 142 - "Dimensão 3 — Dados e Runtime"
+### Community 147 - "Dimensão 3 — Dados e Runtime"
 Cohesion: 0.14
 Nodes (14): 1. Panorama do banco — VERIFICADO, 2. Mecanismos de dados (6 itens), 3. Os 30 cron jobs — todos verificados, 4. Dormência: 58 de 95 tabelas (61,1%) estão vazias, 5.1 Não existe ledger de migrations, 5.2 Quatro migrations são inexecutáveis e seus objetos estão ausentes, 5.3 Contenção verificada — produção não está quebrada por isso, 5.4 Agendamentos parcialmente versionados (+6 more)
 
-### Community 143 - "Observabilidade"
-Cohesion: 0.14
-Nodes (14): `api_latency_snapshots`, `audit_logs`, `automation_execution_logs`, `circuit_breakers`, `db_health_snapshots`, `dlq_health_snapshots`, `feature_flags`, `health_checks` (+6 more)
-
-### Community 144 - "toast.tsx"
+### Community 148 - "toast.tsx"
 Cohesion: 0.21
 Nodes (12): @radix-ui/react-toast, Toast, ToastAction, ToastActionElement, ToastClose, ToastDescription, ToastProps, src_components_ui_toast_toastprovider (+4 more)
 
-### Community 145 - "20260404163754_10399fc9-2e6c-48d9-b69a-80a3cab69139.sql"
+### Community 149 - "generateScenarios"
+Cohesion: 0.16
+Nodes (12): combinedWorst, genericPreflight, output, regressionGate, summarize(), genericPreflight, output, regressionGate (+4 more)
+
+### Community 150 - "useEmailAccountAuditLog.ts"
+Cohesion: 0.19
+Nodes (13): actorInitials(), EmailAccountsAuditPanel(), formatWhen(), summary(), classify(), EmailAccountAuditAction, EmailAccountAuditEntry, EmailAccountAuditPage (+5 more)
+
+### Community 151 - "20260404163754_10399fc9-2e6c-48d9-b69a-80a3cab69139.sql"
 Cohesion: 0.25
 Nodes (12): public.prevent_user_id_change, trg_prevent_user_id_change_agent_chat, trg_prevent_user_id_change_campaigns, trg_prevent_user_id_change_companies, trg_prevent_user_id_change_intent_signals, trg_prevent_user_id_change_ipc_config, trg_prevent_user_id_change_notifications, trg_prevent_user_id_change_scrape_jobs (+4 more)
 
-### Community 146 - "20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql"
+### Community 152 - "20260711153030_aa1d1717-df92-42e1-b3b4-639bb3547ce1.sql"
 Cohesion: 0.19
 Nodes (12): idx_campaigns_active, idx_campaigns_deleted, idx_companies_active, idx_companies_deleted, idx_deals_active, idx_deals_deleted, idx_workflows_active, idx_workflows_deleted (+4 more)
 
-### Community 147 - "20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql"
+### Community 153 - "20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql"
 Cohesion: 0.19
 Nodes (9): idx_scrape_dlq_org, idx_scrape_queue_due, idx_scrape_queue_org, public.enqueue_scrape_task(), public.scrape_dead_letter, public.scrape_queue, public.scrape_jobs, public.update_updated_at_column (+1 more)
 
-### Community 148 - "20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
+### Community 154 - "20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql"
 Cohesion: 0.27
 Nodes (13): idx_lc_bitrix_card, idx_lc_company_org, idx_lc_dept_org, idx_lc_email, idx_lc_linkedin_followers, idx_lc_raw_payload_gin, idx_lc_session, idx_lc_skills (+5 more)
 
-### Community 149 - "20261121083400_soft_delete_tabelas_negocio.sql"
+### Community 155 - "20261121083400_soft_delete_tabelas_negocio.sql"
 Cohesion: 0.19
 Nodes (12): idx_api_keys_active, idx_api_keys_deleted, idx_email_accounts_active, idx_email_accounts_deleted, idx_email_suppressions_active, idx_email_suppressions_deleted, idx_webhooks_active, idx_webhooks_deleted (+4 more)
 
-### Community 150 - "20261122190000_satisfaction_surveys.sql"
+### Community 156 - "20261122190000_satisfaction_surveys.sql"
 Cohesion: 0.26
 Nodes (13): idx_satisfaction_responses_org, idx_satisfaction_responses_survey, idx_satisfaction_responses_token, idx_satisfaction_surveys_org, public.get_survey_by_token(), public.satisfaction_responses, public.satisfaction_stats, public.satisfaction_surveys (+5 more)
 
-### Community 151 - "20261122250000_dsar_lgpd.sql"
+### Community 157 - "20261122250000_dsar_lgpd.sql"
 Cohesion: 0.16
 Nodes (6): idx_dsr_org_status, idx_dsr_subject, public.data_subject_requests, public._dsar_pseudonymize(), information_schema.columns, public.organizations
 
-### Community 152 - "zod"
-Cohesion: 0.46
-Nodes (5): RFC-8414, @lovable.dev/mcp-js, zod, supabaseForUser(), toolError()
-
-### Community 153 - "SnapshotCallerFreshnessTests"
+### Community 158 - "SnapshotCallerFreshnessTests"
 Cohesion: 0.29
 Nodes (4): Deploy e edge functions, Lovable e deploy — referência para agentes, Regras de env vars, SnapshotCallerFreshnessTests
 
-### Community 154 - "Dimensão 5 — Infraestrutura, CI e Testes"
+### Community 159 - "Dimensão 5 — Infraestrutura, CI e Testes"
 Cohesion: 0.15
 Nodes (13): 1. Estado dos 3 workflows — conclusão real, não aparência, 2.1 Três provas independentes, 2.2 O que está morto junto, 2.3 Bug de segunda ordem: consertar o base64 não basta, 2.4 Um dos próprios scripts de guard também está em base64, 2. ⬛ O portão de qualidade nunca executou — `ci.yml` em base64, 3. 🟨 `edge-tests-daily.yml` — roda todo dia e falha todo dia, 4. Inventário de testes: 111 arquivos, 0 executados em CI (+5 more)
 
-### Community 155 - "Login.tsx"
-Cohesion: 0.22
-Nodes (10): 3.1 Autenticação (`Login.tsx`, `AuthContext`), Login, FloatingParticles(), Particle, GOLD_COLORS, GoldConfetti(), Particle, GoogleLoadingOverlay() (+2 more)
-
-### Community 156 - "LUX IA — Gaps Enterprise"
+### Community 160 - "Schema das Tabelas Principais — LUX IA"
 Cohesion: 0.15
-Nodes (12): 1. Resumo Executivo, 3. Matriz Comparativa, 4. Roadmap em 4 Fases (12 meses), 5. Quick Wins (≤ 2 semanas), 6. Ameaças Competitivas, Fase 1 — Multi-tenant Foundation (Meses 1-3), Fase 2 — Engagement Engine (Meses 4-6), Fase 3 — CRM & Integrações (Meses 7-9) (+4 more)
+Nodes (12): `api_keys`, `idempotency_keys`, Integração / API, `organization_invites`, `organization_members`, `organizations`, `profiles`, Schema das Tabelas Principais — LUX IA (+4 more)
 
-### Community 157 - "Backlog verificado — Promo_Lux_V2"
-Cohesion: 0.17
-Nodes (12): 1. Gap REAL: soft delete fora das 8 tabelas principais, 2. Campos orphan da auditoria — RECONFERIDO em 2026-11-22 contra o banco real, 3. Gap REAL confirmado por request: CORS allowlist (RESOLVIDO nesta sessao), 4. Gap REAL observado no CI (Dependency Review), 5. Proximos itens executaveis (por impacto), 6. Reconciliacao de migrations (2026-11-22), Backlog verificado — Promo_Lux_V2, Nao-executar ainda (exige decisao de negocio/custo) (+4 more)
-
-### Community 158 - "prod-readiness.md"
-Cohesion: 0.15
-Nodes (12): 1. Qualidade local (na branch `main`, worktree isolado), 2.1 Causa do vermelho em `edge-tests-daily` (corrigido na #35), 2.2 Causa do vermelho em `db-migrations` (fix na PR #38), 2. Workflows do GitHub Actions (últimos runs no main), 3.1 Telas / rotas (frontend), 3.2 Edge Functions (58 deployáveis em `supabase/functions/`, excluindo `_shared/`), 3.3 Banco de dados, 3.4 Integrações (+4 more)
-
-### Community 159 - "@playwright/test"
-Cohesion: 0.17
-Nodes (5): drainQueue(), hasBackend, invokeWorker(), ORACLE_TIMEOUT, @playwright/test
-
-### Community 160 - "20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql"
+### Community 161 - "20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql"
 Cohesion: 0.21
 Nodes (9): public.circuit_breaker_settings_touch, idx_cb_alert_history_service, idx_cb_alert_history_triggered, idx_cb_snapshots_captured, idx_cb_snapshots_service_captured, public.circuit_breaker_alert_history, public.circuit_breaker_alert_settings, public.circuit_breaker_snapshots (+1 more)
 
-### Community 161 - "useWebScrape.ts"
+### Community 162 - "redirectUriChecklist.ts"
+Cohesion: 0.27
+Nodes (12): RedirectUriChecklist(), buildRedirectUriChecklist(), ChecklistItem, ChecklistReport, CheckSeverity, compareAgainst(), normalizeRedirectUri(), parseAuthorizedInput() (+4 more)
+
+### Community 163 - "useWebScrape.ts"
 Cohesion: 0.26
 Nodes (12): WebScrapeView(), EnqueueOptions, invoke(), useEnqueueWebScrape(), useReplayWebDlq(), useWebDlqHealth(), useWebScrapeExtract(), useWebScrapeState() (+4 more)
 
-### Community 162 - "exportRLSReport.ts"
-Cohesion: 0.28
-Nodes (12): parseTest(), RLSVerificationPanel(), buildHTML(), escapeHTML(), exportHistoryCSV(), exportHistoryEntryPDF(), exportReportCSV(), exportReportPDF() (+4 more)
+### Community 164 - "supabase/types.ts"
+Cohesion: 0.19
+Nodes (11): FeatureFlag, useFeatureFlag(), useFeatureFlags(), CompositeTypes, Constants, DatabaseWithoutInternals, DefaultSchema, Enums (+3 more)
 
-### Community 163 - "public-api/index.ts"
+### Community 165 - "public-api/index.ts"
 Cohesion: 0.21
 Nodes (7): ALLOWED_TABLES, AllowedTable, corsHeaders, WRITABLE_COLUMNS, parseRateLimitDecision(), RateLimitDecision, retryAfterSeconds()
 
-### Community 164 - "20260721202447_89e985ca-54bf-4b99-820b-fd8f8622ee5c.sql"
+### Community 166 - "20260721202447_89e985ca-54bf-4b99-820b-fd8f8622ee5c.sql"
 Cohesion: 0.18
 Nodes (12): idx_automation_logs_org_created, idx_automation_logs_status_created, idx_campaign_recipients_campaign_status, idx_lusha_contacts_org_status, idx_retry_policy_advisories_pending, idx_scrape_queue_org_status, public.retry_policy_advisories, auth.users (+4 more)
 
-### Community 165 - "ADR-015 — Rodada #21: Concorrência, Hardening final e Verificação de Produção"
+### Community 167 - "ADR-015 — Rodada #21: Concorrência, Hardening final e Verificação de Produção"
 Cohesion: 0.17
 Nodes (11): 1. Preflight de concorrência (Monte Carlo, 500 cenários), 2. Verificação real das permissões da fila, 3. Regressão web (`fn_web_scrape_regression_check`), 4. Isolamento anon, 5. Hardening de funções `fn_lux_*`, ADR-015 — Rodada #21: Concorrência, Hardening final e Verificação de Produção, Artefatos, Decisão (+3 more)
 
-### Community 166 - "ADR-022 — Rodada #28: Excelência Funcional & Acessibilidade"
-Cohesion: 0.17
-Nodes (11): ADR-022 — Rodada #28: Excelência Funcional & Acessibilidade, Contexto, Correções aplicadas, D1 — Optimistic locking silenciosamente quebrado em `useDeals.updateDeal`, Descobertas críticas nesta rodada, Escopo deferido para R29, Métricas antes / depois, Preflight (+3 more)
-
-### Community 167 - "2. Detalhamento por Categoria"
+### Community 168 - "2. Detalhamento por Categoria"
 Cohesion: 0.17
 Nodes (11): 1. Sumário Executivo, 2.1 Segurança, 2.2 Performance & Custos, 2.3 Manutenibilidade, 2.4 Operação (Observabilidade), 2.5 Integrações, 2. Detalhamento por Categoria, 3. Lista de Prioridades (Roadmap) (+3 more)
 
-### Community 168 - "validation.test.ts"
-Cohesion: 0.20
-Nodes (9): 2.8 Google Maps Scraper (`GmapsScraperView`), getStatus(), GmapsScraperView(), CampaignFormData, campaignSchema, validateCampaign(), ScrapeJobFormData, scrapeJobSchema (+1 more)
-
-### Community 169 - "rls-guarantees.spec.ts"
-Cohesion: 0.26
-Nodes (10): anonClient(), authedClient(), getTenantCreds(), isReadBlocked(), SUPABASE_ANON_KEY, SUPABASE_URL, TestUserCreds, { a: tenantA, b: tenantB } (+2 more)
+### Community 169 - "LUX IA — Gaps Enterprise"
+Cohesion: 0.17
+Nodes (11): 3. Matriz Comparativa, 4. Roadmap em 4 Fases (12 meses), 5. Quick Wins (≤ 2 semanas), 6. Ameaças Competitivas, Fase 1 — Multi-tenant Foundation (Meses 1-3), Fase 2 — Engagement Engine (Meses 4-6), Fase 3 — CRM & Integrações (Meses 7-9), Fase 4 — Enterprise & AI (Meses 10-12) (+3 more)
 
 ### Community 170 - "Levantamento OSS + Plano de PoC — Descoberta de email/telefone a partir do LinkedIn"
 Cohesion: 0.17
@@ -1214,57 +1224,57 @@ Nodes (11): public.campaign_contacts, idx_automation_steps_pending, idx_campaign
 Cohesion: 0.29
 Nodes (10): public.handle_updated_at, public.ponto_ajustes, public.ponto_banco_horas, public.ponto_configuracoes, public.ponto_registros, auth.users, public.organizations, trigger_ponto_ajustes_updated_at (+2 more)
 
-### Community 173 - "gen-round28-preflight.ts"
+### Community 173 - "AppBreadcrumbs.tsx"
+Cohesion: 0.27
+Nodes (10): @radix-ui/react-slot, AppBreadcrumbs, getViewIcon(), Breadcrumb, BreadcrumbEllipsis(), BreadcrumbItem, BreadcrumbLink, BreadcrumbList (+2 more)
+
+### Community 174 - "gen-round28-preflight.ts"
 Cohesion: 0.20
 Nodes (10): between(), byGroup, DIALOGS, kbMs, rand, report, Result, results (+2 more)
 
-### Community 175 - "supabase-snapshot"
+### Community 176 - "supabase-snapshot"
 Cohesion: 0.17
 Nodes (11): Como interpretar referências a funções, Comportamento, Estatísticas de consultas, O que é coletado, Onde está o resultado (neste repo), Rodar localmente, Role somente leitura (opcional — não enxerga pg_cron), Secret necessário (+3 more)
 
-### Community 176 - "useLostReasons.ts"
-Cohesion: 0.21
-Nodes (10): fmtBRL(), LostReasonsDialog(), CATEGORY_LABEL, DEFAULT_LOST_REASONS, LostReason, LostReasonCategory, LostReasonStat, useLostReasons() (+2 more)
-
-### Community 177 - "DecisionMakersGrid.tsx"
-Cohesion: 0.20
-Nodes (8): DecisionMakerRow, DecisionMakersGrid, DetailsPayload, baseResult, dm1, dm2, renderGrid(), seniorityClass()
-
-### Community 178 - "ScrapeQueuePanel.tsx"
+### Community 177 - "ScrapeQueuePanel.tsx"
 Cohesion: 0.33
 Nodes (9): ScrapeQueuePanel(), statusMeta, DeadLetterItem, ScrapeQueueItem, useDeadLetterQueue(), usePurgeDeadLetter(), useReplayDeadLetter(), useReplayDeadLetterBatch() (+1 more)
 
-### Community 179 - "SafeHTML.tsx"
+### Community 178 - "SafeHTML.tsx"
 Cohesion: 0.30
 Nodes (8): SafeHTML(), SafeHTMLProps, ENTITY_MAP, escapeHtml(), sanitizeEmail(), sanitizeInput(), sanitizeUrl(), stripTags()
+
+### Community 179 - "StatsGrid.tsx"
+Cohesion: 0.18
+Nodes (9): CARD_STYLES, generateSparkData(), ICON_BG, SPARK_COLORS, Sparkline(), StatCard(), StatCardProps, StatsGrid (+1 more)
 
 ### Community 180 - "cnpj-enrich-worker/index.ts"
 Cohesion: 0.21
 Nodes (9): BATCH_SIZE, CNPJA_API_KEY, formatCnaeCode(), formatCnpj(), formatPhone(), LIMIT_AUTH_RPM, LIMIT_OPEN_RPM, normalize() (+1 more)
 
-### Community 181 - "instagram-config-hash.ts"
+### Community 181 - "email-poll-replies/index.ts"
+Cohesion: 0.29
+Nodes (10): corsHeaders, EmailAccount, ensureFreshToken(), isFatalRefreshError(), json(), normalizeMsgId(), parseFromHeader(), pollGmail() (+2 more)
+
+### Community 182 - "instagram-config-hash.ts"
 Cohesion: 0.35
 Nodes (8): TARGET_TYPES, canonicalizeConfig(), clampLimit(), computeConfigHash(), ConfigHashInput, InstagramTargetType, normalizeTarget(), sha256Hex()
 
-### Community 182 - "20260404172748_2299d1bd-90eb-4649-a208-e2badfc64dcb.sql"
+### Community 183 - "ssrf-guard.ts"
+Cohesion: 0.35
+Nodes (7): assertSafeOutboundUrl(), checkUrlSyncPart(), isDisallowedHostLiteral(), isPrivateOrReservedIPv4(), isPrivateOrReservedIPv6(), UrlSafetyVerdict, corsHeaders
+
+### Community 184 - "20260404172748_2299d1bd-90eb-4649-a208-e2badfc64dcb.sql"
 Cohesion: 0.30
 Nodes (11): prevent_user_id_change_campaigns, prevent_user_id_change_companies, prevent_user_id_change_intent_signals, prevent_user_id_change_ipc_config, prevent_user_id_change_notifications, prevent_user_id_change_scrape_jobs, prevent_user_id_change_scrape_results, prevent_user_id_change_stakeholders (+3 more)
 
-### Community 183 - "20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql"
+### Community 185 - "20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql"
 Cohesion: 0.18
 Nodes (7): idx_ig_queue_sla_due, idx_scrape_queue_sla_due, idx_web_scrape_queue_sla_due, public.claim_instagram_job(), public.instagram_scrape_queue, public.scrape_queue, public.web_scrape_queue
 
-### Community 184 - "20261122160000_deal_lost_reasons.sql"
+### Community 186 - "20261122160000_deal_lost_reasons.sql"
 Cohesion: 0.21
 Nodes (10): idx_deal_lost_reasons_org, idx_deals_lost_reason, public.deal_lost_reason_stats, public.deal_lost_reasons, public, public.deal_stages, public.deals, public.organizations (+2 more)
-
-### Community 185 - "retry-policy-tuner/index.ts"
-Cohesion: 0.29
-Nodes (10): 2) `retry-policy-tuner` cobre `scrape` + `web`, bootstrapPValue(), candidatesFor(), CORS, CURRENT_BY_KIND, mulberry32(), observedFailureRate(), Policy (+2 more)
-
-### Community 186 - "Regras de domínio que o código não deixa óbvio — referência para agentes"
-Cohesion: 0.18
-Nodes (10): Auditoria, Cobertura de RLS — registro obrigatório, E2E — fixtures e usuários de teste, Feature flags, Filas, DLQ e reaper, Logging, Multi-tenant — `withOrg` é obrigatório no front, Regras de domínio que o código não deixa óbvio — referência para agentes (+2 more)
 
 ### Community 187 - "20260721160317_0ec1e345-b66a-44eb-aca3-e7a8fc7a931e.sql"
 Cohesion: 0.20
@@ -1286,101 +1296,97 @@ Nodes (11): changelogTopo, composes, countLines(), docsRaiz, docTitle(), envExam
 Cohesion: 0.22
 Nodes (9): between(), byGroup, rand, report, restoreMs, Result, results, roll() (+1 more)
 
-### Community 193 - "chart.tsx"
+### Community 194 - "ApiLatencyAlertSettingsCard.tsx"
+Cohesion: 0.36
+Nodes (9): ApiLatencyAlertSettingsCard(), clamp(), fmtMs(), API_LATENCY_ALERT_DEFAULTS, ApiLatencyAlertHistoryItem, ApiLatencyAlertSettings, useApiLatencyAlertHistory(), useApiLatencyAlertSettings() (+1 more)
+
+### Community 195 - "useMembershipAuditLog.ts"
+Cohesion: 0.24
+Nodes (10): describe(), labelFor(), MembershipAuditLog, AppRole, classify(), MembershipAuditAction, MembershipAuditPage, useMembershipAuditLog() (+2 more)
+
+### Community 196 - "chart.tsx"
 Cohesion: 0.25
 Nodes (9): ChartConfig, ChartContainer, ChartContext, ChartContextProps, ChartLegendContent, ChartTooltipContent, getPayloadConfigFromPayload(), THEMES (+1 more)
 
-### Community 194 - "redirectUriChecklist.ts"
-Cohesion: 0.33
-Nodes (10): buildRedirectUriChecklist(), ChecklistItem, ChecklistReport, CheckSeverity, compareAgainst(), normalizeRedirectUri(), pathHasTrailingSlash(), safeParse() (+2 more)
-
-### Community 195 - "20260423120024_1d1aada5-8bc8-4099-b508-8ccbd1154e69.sql"
+### Community 197 - "20260423120024_1d1aada5-8bc8-4099-b508-8ccbd1154e69.sql"
 Cohesion: 0.22
 Nodes (10): idx_campaign_events_campaign_occurred, idx_campaign_events_recipient, idx_campaign_messages_recipient_step, idx_campaign_recipients_campaign_status, idx_campaign_replies_campaign_received, public.record_campaign_event(), public.campaign_events, public.campaign_messages (+2 more)
 
-### Community 196 - "20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql"
+### Community 198 - "20260513143457_ed6e3550-afbc-4e7c-ad45-8c048853bd3d.sql"
 Cohesion: 0.18
 Nodes (10): idx_api_request_logs_created, idx_audit_logs_org_created, idx_campaign_events_org_occurred, idx_companies_ipc_sector, idx_scrape_results_org_created, public.api_request_logs, public.audit_logs, public.campaign_events (+2 more)
 
-### Community 197 - "20260514211631_6b19ac15-65fa-4c53-a169-c42ed4aebda8.sql"
+### Community 199 - "20260514211631_6b19ac15-65fa-4c53-a169-c42ed4aebda8.sql"
 Cohesion: 0.18
 Nodes (10): idx_campaigns_org_id, idx_companies_org_id, idx_deals_org_id, idx_stakeholders_org_id, idx_workflow_runs_org_id, public.campaigns, public.companies, public.deals (+2 more)
 
-### Community 198 - "20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql"
+### Community 200 - "20260715164721_4941d6f0-67de-4394-abbc-f628c66d051a.sql"
 Cohesion: 0.22
 Nodes (10): circuit_breakers_service_name_uk, feature_flags_flag_key_uk, lusha_contacts_dedup_hash_idx, lusha_contacts_org_linkedin_uk, lusha_contacts_status_org_idx, lusha_search_sessions_idem_uk, public.circuit_breakers, public.feature_flags (+2 more)
 
-### Community 199 - "20260723163333_1a069315-7a41-4119-8840-208bbca5fe89.sql"
+### Community 201 - "20260723163333_1a069315-7a41-4119-8840-208bbca5fe89.sql"
 Cohesion: 0.25
 Nodes (9): cnpj_enrich_cache_expires_idx, cnpj_enrich_queue_cnpj_idx, cnpj_enrich_queue_due_idx, public.cnpj_claim_enrich_jobs(), public.cnpj_enrich_cache, public.cnpj_enrich_queue, public.cnpj_enrich_rate_state, public.update_updated_at_column (+1 more)
 
-### Community 200 - "compilerOptions"
+### Community 202 - "compilerOptions"
 Cohesion: 0.18
 Nodes (10): compilerOptions, allowJs, noImplicitAny, noUnusedLocals, noUnusedParameters, paths, skipLibCheck, strictNullChecks (+2 more)
 
-### Community 201 - "AGENTS.md — Promo Lux V2 (LUX IA)"
+### Community 203 - "AGENTS.md — Promo Lux V2 (LUX IA)"
 Cohesion: 0.20
 Nodes (9): AGENTS.md — Promo Lux V2 (LUX IA), Banco — ler `docs/agentes/banco.md` antes de SQL, migration ou deploy, Bugs e funcionalidades, Comunicação, Contexto gerado (branch `contexto`) — scripts autônomos, Fluxo Git — detalhe em `docs/agentes/github-ci.md`, Grafo de código (graphify), Postura (+1 more)
 
-### Community 202 - "ADR-009: Security Baseline (20-warnings)"
+### Community 204 - "ADR-009: Security Baseline (20-warnings)"
 Cohesion: 0.20
 Nodes (9): 1) 19 SECURITY DEFINER aceitas, 2) `pg_net` em schema `public`, ADR-009: Security Baseline (20-warnings), Allowlist canônica, Consequências, Contexto, Decisão, Referências (+1 more)
 
-### Community 203 - "ADR-013 — Rodada #19: Chaos determinístico e regressão automática do motor web"
+### Community 205 - "ADR-013 — Rodada #19: Chaos determinístico e regressão automática do motor web"
 Cohesion: 0.22
 Nodes (9): ADR-013 — Rodada #19: Chaos determinístico e regressão automática do motor web, Consequências, Contexto, Decisão, Escopo NÃO incluso (Rodada #20), Preflight, Validação exaustiva (2026-07-22), fetchSnapshot() (+1 more)
 
-### Community 204 - "ADR-017 — Rodada #23: Diagnóstico final dos WARNs residuais"
+### Community 206 - "ADR-017 — Rodada #23: Diagnóstico final dos WARNs residuais"
 Cohesion: 0.20
 Nodes (9): 1. WARN de `Extension in Public` (lint 0014) — `pg_net`, 2. WARN de `authenticated_security_definer_function_executable` (lint 0029) — 20 ocorrências, ADR-017 — Rodada #23: Diagnóstico final dos WARNs residuais, Ação de acompanhamento, Contexto, Decisão, Investigação executada, Referências (+1 more)
 
-### Community 205 - "ADR-018 — Rodada #24: Profundidade operacional além do teto do linter"
+### Community 207 - "ADR-018 — Rodada #24: Profundidade operacional além do teto do linter"
 Cohesion: 0.20
 Nodes (9): 1. Preflight Monte Carlo — 600 cenários, 2. Watchdog do `pg_net`, 3. Allowlist SECURITY DEFINER com enforcement bidirecional, 4. Smoke test do DLQ web, ADR-018 — Rodada #24: Profundidade operacional além do teto do linter, Consequências, Contexto, Decisão (+1 more)
 
-### Community 206 - "ADR-023: Rodada #29 — Refactor Safety & Paridade de Optimistic Locking"
-Cohesion: 0.20
-Nodes (9): ADR-023: Rodada #29 — Refactor Safety & Paridade de Optimistic Locking, Consequências, Decisão, Métricas, Passo 0 — Preflight Monte Carlo (1100 cenários, seed=2929), Passo 1 — Optimistic locking em `EditCompanyDialog`, Passo 3 — Split do `LushaIntelligenceView` (deferido para R30), Referências (+1 more)
-
-### Community 207 - "2. Detalhamento por Categoria"
+### Community 208 - "2. Detalhamento por Categoria"
 Cohesion: 0.20
 Nodes (9): 1. Sumário Executivo, 2.1 Segurança 🔴 → ✅, 2.2 Banco de Dados & Performance 🟡 → ✅, 2.3 Lógica de Negócio & Manutenibilidade 🔵, 2.4 Operação & Custos 🔵, 2. Detalhamento por Categoria, 3. Lista de Prioridades (Roadmap), 4. Benchmarking (+1 more)
-
-### Community 208 - "Dimensão 1 — Frontend / Apresentação"
-Cohesion: 0.27
-Nodes (5): 2. As 23 views — classificação com evidência, 3. Recursos transversais, 4. Código morto — critério de detecção testado, 5. Lacunas desta dimensão, Dimensão 1 — Frontend / Apresentação
 
 ### Community 209 - "🛡️ Relatório de Conformidade LGPD — LUX IA"
 Cohesion: 0.20
 Nodes (9): 1. Agentes de Tratamento, 2.1. Dados de Usuários (B2C), 2.2. Dados de Prospecção (B2B) — Raspagem Google Maps, 2. Tipos de Dados Coletados, 3. Base Legal para o Tratamento, 4. Direitos dos Titulares, 5. Medidas de Segurança (SRE-grade), 6. Retenção de Dados (+1 more)
 
-### Community 210 - "Webhooks — Guia de Integração"
+### Community 210 - "Observabilidade"
+Cohesion: 0.20
+Nodes (10): `api_latency_snapshots`, `audit_logs`, `circuit_breakers`, `db_health_snapshots`, `dlq_health_snapshots`, `feature_flags`, `health_checks`, `ipc_config` (+2 more)
+
+### Community 211 - "Webhooks — Guia de Integração"
 Cohesion: 0.20
 Nodes (9): Headers enviados, Idempotência, Node.js (Express), Payload, Política de retry, Python (FastAPI), Python (Flask), Verificação da assinatura (+1 more)
 
-### Community 211 - "20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
+### Community 212 - "20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
 Cohesion: 0.27
 Nodes (8): public.process_audit_log, audit_companies_trigger, audit_deals_trigger, public.audit_logs, public.has_role(), public.user_roles, auth.users, public.organizations
 
-### Community 212 - "toggle-group.tsx"
+### Community 213 - "toggle-group.tsx"
 Cohesion: 0.29
 Nodes (7): @radix-ui/react-toggle, @radix-ui/react-toggle-group, ToggleGroup, ToggleGroupContext, ToggleGroupItem, Toggle, toggleVariants
 
-### Community 213 - "gerar-repo.mjs"
+### Community 214 - "gen-round26-preflight.ts"
+Cohesion: 0.20
+Nodes (8): GA, GB, GC, groupA, groupB, groupC, rand, report
+
+### Community 215 - "gerar-repo.mjs"
 Cohesion: 0.24
 Nodes (8): edges, executarRg(), FDIR, inventario, OUT, rgCount(), rgFiles(), semChamador
 
-### Community 214 - "emailErrorMessages.ts"
-Cohesion: 0.24
-Nodes (9): isAuthError(), describeEmailError(), EmailErrorInfo, EmailErrorKind, EmailErrorSeverity, FALLBACK_AUTH_HINTS, isAuthErrorMessage(), looksLikeAuth() (+1 more)
-
-### Community 215 - "useDbHealth.ts"
+### Community 216 - "useDbHealth.ts"
 Cohesion: 0.29
 Nodes (9): DbHealthDashboard(), formatBytes(), AlertSeverity, computeAlerts(), DbHealthSnapshot, HealthAlert, mean(), stddev() (+1 more)
-
-### Community 216 - "useEmailAccountAuditLog.ts"
-Cohesion: 0.29
-Nodes (9): classify(), EmailAccountAuditAction, EmailAccountAuditEntry, EmailAccountAuditPage, pickStr(), SYNC_FIELDS, toEntry(), TOKEN_FIELDS (+1 more)
 
 ### Community 217 - "oracle-cookies-preflight/index.ts"
 Cohesion: 0.20
@@ -1434,513 +1440,561 @@ Nodes (8): 1. Índices BRIN em append-only, 2. Health consolidado para DR, 3. Ru
 Cohesion: 0.22
 Nodes (8): 1. Inventário de secrets consumidos pelas Edge Functions, 2. ✅ IMPLEMENTADO_TOTAL (2), 4. 🟦 SUGERIDO_OU_INICIADO — construídas e desligadas (7), 5. 🟦 SUGERIDO_OU_INICIADO — apenas propostas em documentação (6), 6. Falso-positivo descartado — registro do método, 7. Leitura consolidada, 8. Lacunas desta dimensão, Dimensão 4 — Integrações
 
-### Community 230 - "Runbook — Disaster Recovery"
+### Community 230 - "ThemeToggle.tsx"
+Cohesion: 0.33
+Nodes (7): 3.10 Personalização, skins, ThemeToggle(), src_components_ui_popover_popover, src_components_ui_popover_popovertrigger, Skin, useSkin()
+
+### Community 231 - "useChangelog.ts"
+Cohesion: 0.31
+Nodes (8): 2.10 Operações & DevEx (P2), ChangelogButton(), ChangelogDialog(), CATEGORY_LABEL, ChangelogEntry, markChangelogSeen(), readSeen(), useChangelog()
+
+### Community 232 - "Backlog verificado — Promo_Lux_V2"
+Cohesion: 0.22
+Nodes (8): 1. Gap REAL: soft delete fora das 8 tabelas principais, 3. Gap REAL confirmado por request: CORS allowlist (RESOLVIDO nesta sessao), 4. Gap REAL observado no CI (Dependency Review), 5. Proximos itens executaveis (por impacto), 6. Reconciliacao de migrations (2026-11-22), Backlog verificado — Promo_Lux_V2, Nao-executar ainda (exige decisao de negocio/custo), Status geral
+
+### Community 233 - "Runbook — Disaster Recovery"
 Cohesion: 0.22
 Nodes (8): 0. Diagnóstico inicial (30 s), 1. Rehidratação de crons, 2. Drenagem de DLQ, 3. Validação pg_net, 4. Reautenticação service_role, 5. Checklist RPO/RTO, 6. Cenários testados (preflight R26), Runbook — Disaster Recovery
 
-### Community 231 - "Prospecção / CRM"
+### Community 234 - "Prospecção / CRM"
 Cohesion: 0.22
 Nodes (9): `companies`, `company_reviews`, `deal_activities`, `deal_stages`, `deal_tasks`, `deals`, `intent_signals`, Prospecção / CRM (+1 more)
 
-### Community 232 - "20260715203137_54228599-d263-451d-953e-efa5710f18d7.sql"
+### Community 235 - "Raspagem (GMaps)"
+Cohesion: 0.22
+Nodes (9): `job_exports`, `org_proxies`, `org_scrape_rate_limits`, `places_api_usage`, Raspagem (GMaps), `scrape_dead_letter`, `scrape_jobs`, `scrape_queue` (+1 more)
+
+### Community 236 - "20260715203137_54228599-d263-451d-953e-efa5710f18d7.sql"
 Cohesion: 0.33
 Nodes (7): public.user_roles, idx_vault_alerts_servico_time, idx_vault_snapshots_servico_time, public.evaluate_vault_cookie_alerts(), public.vault_cookie_alert_history, public.vault_cookie_snapshots, public.organization_members
 
-### Community 233 - "20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql"
+### Community 237 - "20260721164832_429da0f9-d40e-4b2e-868f-e93baeea477a.sql"
 Cohesion: 0.31
 Nodes (7): public.validate_company_rating, companies_latlon_idx, companies_org_place_id_uk, companies_rating_idx, companies_review_count_idx, public.companies, validate_company_rating_trg
 
-### Community 234 - "gen-web-scrape-reports.ts"
-Cohesion: 0.22
-Nodes (7): FAULT_MIX, mode, OPTIMIZED_POLICY, perScenario, scenarios, summary, FaultType
+### Community 238 - "navigation-menu.tsx"
+Cohesion: 0.25
+Nodes (8): @radix-ui/react-navigation-menu, NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle, NavigationMenuViewport
 
-### Community 235 - "CompanyOpenHours.tsx"
+### Community 239 - "drawer.tsx"
+Cohesion: 0.22
+Nodes (7): vaul, DrawerContent, DrawerDescription, DrawerFooter(), DrawerHeader(), DrawerOverlay, DrawerTitle
+
+### Community 240 - "useAnalyticsData.ts"
+Cohesion: 0.25
+Nodes (7): COLORS, AnalyticsCompany, AnalyticsScrapeJob, AnalyticsWorkflow, DEMO_CAMPAIGNS, DEMO_COMPANIES_FULL, DEMO_WORKFLOWS
+
+### Community 241 - "CompanyOpenHours.tsx"
 Cohesion: 0.28
 Nodes (8): CompanyOpenHours(), DAY_INDEX_TO_KEY, DAY_LABELS_PT, DAY_ORDER, DayRow, isOpenNow(), normalize(), Props
 
-### Community 236 - "useOAuthSandboxSnapshots.ts"
-Cohesion: 0.31
-Nodes (8): OAuthSnapshotsPanel(), diffSnapshots(), KEY, OAuthSnapshot, SnapshotDiffEntry, useDeleteOAuthSnapshot(), useOAuthSandboxSnapshots(), useSaveOAuthSnapshot()
-
-### Community 237 - "SlaHistoryCard"
+### Community 242 - "SlaHistoryCard"
 Cohesion: 0.28
 Nodes (5): SlaHistoryCard(), applyFilters(), handleExport(), detectSlaRisk(), SlaRiskItem
 
-### Community 238 - "SlaRecommendationRowItem.tsx"
+### Community 243 - "SlaRecommendationRowItem.tsx"
 Cohesion: 0.31
 Nodes (8): fmtProvenance(), fmtSeconds(), LABELS, SlaRecommendationRowItem(), SlaRecommendationRowItemProps, SOURCE_LABELS, VERDICTS, SlaRecommendationRow
 
-### Community 239 - "20260329210127_fcc12cf8-75cd-4115-bc0c-044112253d94.sql"
+### Community 244 - "useCircuitBreakerAlerts.ts"
+Cohesion: 0.22
+Nodes (4): CB_ALERT_DEFAULTS, CircuitBreakerAlertHistoryItem, CircuitBreakerAlertSettings, CircuitBreakerSnapshot
+
+### Community 245 - "classify.ts"
+Cohesion: 0.31
+Nodes (6): CATEGORY_META, classifyDlqReason(), DLQ_CATEGORIES, dlqCategoryLabel(), DlqReasonLabel, RULES
+
+### Community 246 - "lusha-reveal/index.ts"
+Cohesion: 0.22
+Nodes (7): ALLOWED_ORIGINS, LushaRevealEmail, LushaRevealEntry, LushaRevealPerson, LushaRevealPhone, LushaRevealResponse, RevealedContact
+
+### Community 247 - "20260329210127_fcc12cf8-75cd-4115-bc0c-044112253d94.sql"
 Cohesion: 0.33
 Nodes (8): idx_stakeholders_company, idx_stakeholders_department, idx_stakeholders_role, idx_stakeholders_seniority, public.stakeholders, public.companies, public.update_updated_at_column, update_stakeholders_updated_at
 
-### Community 240 - "public.campaign_recipients"
+### Community 248 - "public.campaign_recipients"
 Cohesion: 0.31
 Nodes (7): idx_campaign_recipients_campaign, idx_campaign_recipients_org, idx_campaign_recipients_unique, public.campaign_recipients, public.campaigns, public.companies, public.stakeholders
 
-### Community 241 - "20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql"
+### Community 249 - "20260726202430_a6a7d5f4-f0a9-4d11-b9fe-c203c5f222e3.sql"
 Cohesion: 0.31
 Nodes (5): apollo_search_cache_domain_idx, apollo_search_cache_expires_idx, public.apollo_rate_consume(), public.apollo_rate_state, public.apollo_search_cache
 
-### Community 242 - "20261122200000_email_templates.sql"
+### Community 250 - "20261122200000_email_templates.sql"
 Cohesion: 0.31
 Nodes (7): idx_email_templates_org, public.duplicate_email_template(), public.email_template_stats, public.email_templates, public.organizations, public.update_updated_at_column, trg_email_templates_updated
 
-### Community 243 - "ADR-016 — Rodada #22: Redução final de superfície de ataque em SECURITY DEFINER"
+### Community 251 - "RetryPolicyAdvisoriesPanel"
+Cohesion: 0.25
+Nodes (7): ADR-012 — Rodada #18: Observabilidade multi-fila + CI guard de `queue_kind`, Consequências, Decisão, Mudanças, Não-decisões, fmtPolicy(), RetryPolicyAdvisoriesPanel()
+
+### Community 252 - "ADR-016 — Rodada #22: Redução final de superfície de ataque em SECURITY DEFINER"
 Cohesion: 0.25
 Nodes (7): ADR-016 — Rodada #22: Redução final de superfície de ataque em SECURITY DEFINER, Ação, Contexto, Decisão, Gaps residuais aceitos, Preflight Monte Carlo (400 cenários), Resultados
 
-### Community 244 - "ADR-025 — Rodada #31: Split do DecisionMakersGrid"
+### Community 253 - "ADR-025 — Rodada #31: Split do DecisionMakersGrid"
 Cohesion: 0.25
 Nodes (7): ADR-025 — Rodada #31: Split do DecisionMakersGrid, Consequências, Contexto, Decisão, Guard-rails desta rodada, Próximos passos (R32), handleReveal()
 
-### Community 245 - "ADR-026 — Rodada #32: Split do SessionsPanel"
+### Community 254 - "ADR-026 — Rodada #32: Split do SessionsPanel"
 Cohesion: 0.25
 Nodes (7): ADR-026 — Rodada #32: Split do SessionsPanel, Consequências, Contexto, Decisão, Fora de escopo (R33+), Guard-rails desta rodada, Por que paginação com só 10 registros?
 
-### Community 246 - "Banco de dados — referência para agentes"
+### Community 255 - "Banco de dados — referência para agentes"
 Cohesion: 0.25
 Nodes (7): Banco de dados — referência para agentes, Bancos que NÃO são deste projeto (não escrever neles), Onde se trabalha, Panorama medido do banco vivo, `pesfxhlbsjfmlysdkzhr` — ref divergente cravado no código, Projeto OFICIAL, Regras de migration
 
-### Community 247 - "GitHub (perímetro, CI, workflows) — referência para agentes"
+### Community 256 - "GitHub (perímetro, CI, workflows) — referência para agentes"
 Cohesion: 0.25
 Nodes (7): Armadilhas já medidas (não repita o diagnóstico), Escrita no GitHub, GitHub (perímetro, CI, workflows) — referência para agentes, Guards que você pode rodar antes do PR, Perímetro do GitHub — estado canônico, Por que você não conserta isso sozinho, Workflows — estado real, não aparência
 
-### Community 248 - "Dimensão 2 — Backend / Edge Functions"
+### Community 257 - "Dimensão 2 — Backend / Edge Functions"
 Cohesion: 0.25
 Nodes (8): 1. Como "quem chama" foi determinado, 2. Functions com cron ativo (17), 4. Sem nenhum chamador — 🟦 e ⬛ (12), 5. Achado transversal: o tracking de campanha está partido, 6. Lacunas desta dimensão, Dimensão 2 — Backend / Edge Functions, ⬛ MORTO_OU_ABANDONADO (3) — nenhum caminho de execução chega, 🟦 SUGERIDO_OU_INICIADO (9) — existe, mas o fio nunca foi ligado
 
-### Community 249 - "Template de Migration (sem credenciais)"
+### Community 258 - "prod-readiness.md"
+Cohesion: 0.25
+Nodes (7): 1. Qualidade local (na branch `main`, worktree isolado), 2.1 Causa do vermelho em `edge-tests-daily` (corrigido na #35), 2.2 Causa do vermelho em `db-migrations` (fix na PR #38), 2. Workflows do GitHub Actions (últimos runs no main), 4. Qualidade do código (varredura de "pela metade"), 5. PRs (estado em 2026-11-14), 6. Resumo
+
+### Community 259 - "Template de Migration (sem credenciais)"
 Cohesion: 0.25
 Nodes (7): Como pedir, O que nunca aparece aqui, Padrão — alterar tabela existente, Padrão — função / RPC, Padrão obrigatório — nova tabela, Template de Migration (sem credenciais), Verificação local antes do push
 
-### Community 250 - "20260722124907_fd724c3f-8336-49ef-94e6-e6169bfdff71.sql"
+### Community 260 - "20260722124907_fd724c3f-8336-49ef-94e6-e6169bfdff71.sql"
 Cohesion: 0.25
 Nodes (6): public.db_health_snapshots, public.pg_net_health_snapshots, idx_autoexec_created_brin, idx_db_health_captured_brin, idx_pgnet_health_captured_brin, public.automation_execution_logs
 
-### Community 251 - "20260329230948_e4848145-36b1-4a64-bd22-24f09c5e6733.sql"
+### Community 261 - "20260329230948_e4848145-36b1-4a64-bd22-24f09c5e6733.sql"
 Cohesion: 0.25
 Nodes (6): public.handle_new_user, on_auth_user_created, public.profiles, auth.users, public.update_updated_at_column, update_profiles_updated_at
 
-### Community 252 - "20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql"
+### Community 262 - "20260726155455_442c5206-c8ca-4b76-858e-3da32a7cb6c2.sql"
 Cohesion: 0.29
 Nodes (6): public.log_queue_sla_change, idx_queue_sla_history_kind_created, public.auto_tune_queue_slas(), public.queue_sla_history, public.queue_sla_defaults, trg_log_queue_sla_change
 
-### Community 253 - "regras_negocio — regras de negócio para agentes de IA"
+### Community 263 - "gen-web-scrape-reports.ts"
 Cohesion: 0.25
-Nodes (7): ok(), Arquivos, Fontes SQL, Regras humanas, regras_negocio — regras de negócio para agentes de IA, Rodar local, Testes de regressão
+Nodes (6): FAULT_MIX, mode, OPTIMIZED_POLICY, perScenario, scenarios, summary
 
-### Community 254 - "mc-r40-preflight.ts"
+### Community 264 - "mc-r40-preflight.ts"
 Cohesion: 0.25
 Nodes (7): byCat, bySev, report, results, scenarios, t0, DEFAULT_BREAKER_SIM
 
-### Community 255 - "publish.sh"
+### Community 265 - "publish.sh"
 Cohesion: 0.46
 Nodes (7): assert_no_foreign_staged_changes(), discard_generated_output_commit(), generated_commit_is_head(), generated_output_conflict_is_recoverable(), remember_generated_head(), publish.sh script, stage()
 
-### Community 257 - "usePermissions.ts"
-Cohesion: 0.46
-Nodes (6): PermissionGate(), Props, FLAG, useCan(), Action, Entity
+### Community 266 - "run"
+Cohesion: 0.25
+Nodes (6): db_stats_case(), recovery_case(), run(), section(), source_freshness_case(), run()
 
-### Community 258 - "useFeatureFlag.ts"
+### Community 268 - "useFeatureFlag.ts"
 Cohesion: 0.36
 Nodes (3): FeatureFlagCache, FlagCacheEntry, useFeatureFlag()
 
-### Community 259 - "lusha/departmentMap.ts"
+### Community 269 - "lusha/departmentMap.ts"
 Cohesion: 0.57
 Nodes (5): DepartmentResolution, DEPT_MAP, findPtLabelForEn(), resolveDepartments(), SUGGESTED_DEPARTMENTS_PT
 
-### Community 260 - "20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql"
+### Community 270 - "orgErrorHandler.audit.test.ts"
+Cohesion: 0.29
+Nodes (5): fromImpl(), insertImpl(), toastError, toastInfo, toastSuccess
+
+### Community 271 - "vault-cookie-health/index.ts"
+Cohesion: 0.29
+Nodes (7): corsHeaders, fetchVault(), log(), SERVICES, Servico, SnapshotPayload, VaultRow
+
+### Community 272 - "20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql"
 Cohesion: 0.39
 Nodes (7): idx_workflow_runs_status, idx_workflow_runs_workflow_id, idx_workflows_status, public.workflow_runs, public.workflows, public.update_updated_at_column, update_workflows_updated_at
 
-### Community 261 - "20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql"
+### Community 273 - "20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql"
 Cohesion: 0.39
 Nodes (7): idx_scrape_jobs_created_at, idx_scrape_jobs_status_org, public.automation_alerts, public.job_exports, auth.users, public.organizations, public.scrape_jobs
 
-### Community 262 - "20260529192436_e9ae6a02-9480-457e-9348-b74fd77f7ac7.sql"
+### Community 274 - "20260529192436_e9ae6a02-9480-457e-9348-b74fd77f7ac7.sql"
 Cohesion: 0.29
 Nodes (7): idx_automation_steps_job_id, idx_scrape_jobs_created_at, idx_scrape_jobs_org_status, idx_scrape_results_job_id, public.automation_steps, public.scrape_jobs, public.scrape_results
 
-### Community 263 - "20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql"
+### Community 275 - "20260712184705_499e82f4-33c4-443a-82b6-21735caafc4b.sql"
 Cohesion: 0.36
 Nodes (6): idx_partition_advisories_table_created, idx_partition_advisories_unacked, public.partition_advisories, public.partition_policies, public.update_updated_at_column, trg_partition_policies_updated_at
 
-### Community 264 - "20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
+### Community 276 - "20260715110637_3b3c9da2-985e-4da4-82bf-37c8c8fc1b1d.sql"
 Cohesion: 0.36
 Nodes (7): idx_lusha_dm_hist_user_created, idx_lusha_dm_hist_user_domain, idx_lusha_dm_hist_user_status, public.lusha_dm_search_history, auth.users, public.update_updated_at_column, trg_lusha_dm_hist_updated
 
-### Community 265 - "public.lusha_search_sessions"
+### Community 277 - "public.lusha_search_sessions"
 Cohesion: 0.39
 Nodes (7): idx_lss_org_company, idx_lss_org_idem, idx_lss_org_status, idx_lss_user, public.lusha_search_sessions, public, public.companies
 
-### Community 266 - "20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql"
+### Community 278 - "20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql"
 Cohesion: 0.36
 Nodes (7): idx_retry_advisories_org, public.apply_retry_advisory(), public.org_retry_policies, public.rollback_retry_advisory(), auth.users, public.organizations, public.retry_policy_advisories
 
-### Community 267 - "public.reap_stuck_queue_tasks"
+### Community 279 - "public.reap_stuck_queue_tasks"
 Cohesion: 0.29
 Nodes (7): idx_qa_reaper_runs_ran_at, public.qa_reaper_runs, public.reap_stuck_queue_tasks(), public.instagram_scrape_dead_letter, public.instagram_scrape_queue, public.scrape_queue, public.web_scrape_queue
 
-### Community 268 - "public.org_leaderboard"
+### Community 280 - "public.org_leaderboard"
 Cohesion: 0.25
 Nodes (7): public.org_leaderboard, public.companies, public.deal_activities, public.deal_stages, public.deals, public.organization_members, public.profiles
 
-### Community 269 - "Changelog"
+### Community 281 - "Changelog"
 Cohesion: 0.29
 Nodes (6): [10.0.0] - 2026-05-13, Adicionado, Adicionado, Alterado, Changelog, [Unreleased] - 2026-07-21
 
-### Community 270 - "ADR-014 — Rodada #20: Validação Exaustiva Multi-Camada"
+### Community 282 - "ADR-008: Política de Soft Delete e Retenção de Dados"
+Cohesion: 0.29
+Nodes (6): ADR-008: Política de Soft Delete e Retenção de Dados, Consequências, Contexto, Decisão, Status, RecycleBinView()
+
+### Community 283 - "ADR-014 — Rodada #20: Validação Exaustiva Multi-Camada"
 Cohesion: 0.29
 Nodes (6): ADR-014 — Rodada #20: Validação Exaustiva Multi-Camada, Artefatos, Decisão, Escopo executado, Gaps residuais, Métricas agregadas
 
-### Community 271 - "Mapa do repositório — referência para agentes"
+### Community 284 - "Mapa do repositório — referência para agentes"
 Cohesion: 0.29
 Nodes (6): Automações, Comandos, Grafo de código (graphify) — detalhes, Mapa do repositório — referência para agentes, Mapa rápido, Onde olhar primeiro
 
-### Community 272 - "📋 Inventário de Funcionalidades (Auditado)"
+### Community 285 - "📋 Inventário de Funcionalidades (Auditado)"
 Cohesion: 0.29
 Nodes (7): 1. Módulo de Autenticação & Identidade, 2. Módulo de Prospecção (IA & Scrapers), 3. Módulo de Vendas & CRM, 🔎 Evidências Técnicas e Rastreabilidade, 📋 Inventário de Funcionalidades (Auditado), 🚀 Plano de Evolução (Próximos Passos), 📝 Relatório de Auditoria Enterprise — LUX IA (v10.0)
 
-### Community 273 - "Automação local — Promo_Lux_V2"
+### Community 286 - "Automação local — Promo_Lux_V2"
 Cohesion: 0.29
 Nodes (6): Automação local — Promo_Lux_V2, Comandos, Gatilhos e ativação, Hooks e workflows anteriores, Registro exato dos demais scripts, Suites efetivamente executadas
 
-### Community 274 - "ai-agent"
-Cohesion: 0.29
-Nodes (7): ai-agent, Contexto injetado automaticamente, Descrição, Headers, Request, Response, Validação
-
-### Community 275 - "Incidente: drift de migrations em produção — reconciliação (2026-11-13)"
+### Community 287 - "Incidente: drift de migrations em produção — reconciliação (2026-11-13)"
 Cohesion: 0.29
 Nodes (6): Ação, Causa raiz, Estado, Incidente: drift de migrations em produção — reconciliação (2026-11-13), Segurança do deploy (verificado em 2026-11-13), Validação pós-fix
 
-### Community 276 - "Promo_Lux_V2 — Regras da Casa (Hermes) — suplemento"
+### Community 288 - "Promo_Lux_V2 — Regras da Casa (Hermes) — suplemento"
 Cohesion: 0.29
 Nodes (6): Barreiras (cadeado físico), Comandos usuais, Identidade, Padrão de Chat (Hermes) — subpasta por sessão, Promo_Lux_V2 — Regras da Casa (Hermes) — suplemento, Regra de Ouro (casa do Joaquim)
 
-### Community 277 - "20260721160130_e5e286aa-5116-4c57-b798-8efc7f234642.sql"
+### Community 289 - "20260721160130_e5e286aa-5116-4c57-b798-8efc7f234642.sql"
 Cohesion: 0.33
 Nodes (5): public.scrape_jobs_set_config_hash, scrape_jobs_org_config_active_uk, scrape_jobs_set_config_hash_trg, scrape_jobs_trace_id_idx, public.scrape_jobs
 
-### Community 278 - "20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql"
+### Community 290 - "20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql"
 Cohesion: 0.29
 Nodes (4): public.validate_dlq_alert_settings, public.dlq_alert_settings, public.organizations, trg_validate_dlq_alert_settings
 
-### Community 279 - "scripts/graphify — grafo de código (graphify)"
+### Community 291 - "scripts/graphify — grafo de código (graphify)"
 Cohesion: 0.29
 Nodes (6): Como rodar, O que faz, Observações, scripts/graphify — grafo de código (graphify), Secrets, Uso
 
-### Community 280 - "useScheduledReports.ts"
-Cohesion: 0.33
-Nodes (6): FormState, ReportFrequency, ReportInput, ReportMetric, ReportRun, ScheduledReport
+### Community 292 - "CompaniesView"
+Cohesion: 0.38
+Nodes (6): CompaniesView(), FacetItem, getCity(), getScoreRange(), CompanyFilters(), ensureSameOrg()
 
-### Community 281 - "PageTransition.tsx"
-Cohesion: 0.33
-Nodes (4): itemVariants, PageTransition(), PageTransitionProps, pageVariants
+### Community 293 - "useEnvProfiles.ts"
+Cohesion: 0.48
+Nodes (6): EnvProfilesPanelProps, defaultProfiles(), EnvProfile, read(), useEnvProfiles(), write()
 
-### Community 282 - "scrape-job-machine.ts"
+### Community 294 - "DecisionMakersGrid.test.tsx"
+Cohesion: 0.33
+Nodes (5): baseResult, dm1, dm2, renderGrid(), seniorityClass()
+
+### Community 295 - "scrape-job-machine.ts"
 Cohesion: 0.29
 Nodes (4): ScrapeJobStateConfig, ScrapeJobStateMachine, ScrapeJobStatus, ScrapeJobTransitions
 
-### Community 283 - "20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql"
+### Community 296 - "20260422203255_3b2aeb56-1914-4579-8d43-456aecec6dc6.sql"
 Cohesion: 0.38
 Nodes (3): idx_api_keys_hash, idx_api_keys_user, public.api_keys
 
-### Community 284 - "20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql"
+### Community 297 - "20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql"
 Cohesion: 0.33
 Nodes (4): idx_auth_rate_limits_identifier, public.auth_rate_limits, public.update_updated_at_column, tr_update_auth_rate_limits_updated_at
 
-### Community 285 - "20260711175945_67e29e04-fe5c-4289-b936-b748b112dae5.sql"
+### Community 298 - "20260711175945_67e29e04-fe5c-4289-b936-b748b112dae5.sql"
 Cohesion: 0.33
 Nodes (4): idx_email_suppressions_org_email, public.email_suppressions, public.campaigns, public.organizations
 
-### Community 286 - "20260712195304_af0be010-9de3-4b89-a80b-ca8cd03fb754.sql"
+### Community 299 - "20260712195304_af0be010-9de3-4b89-a80b-ca8cd03fb754.sql"
 Cohesion: 0.38
 Nodes (4): idx_dlq_snapshots_org_time, public.capture_dlq_health_snapshots(), public.dlq_health_snapshots, public.organizations
 
-### Community 287 - "20260721173318_793c82ac-697e-441f-8ec6-774c564bcad5.sql"
+### Community 300 - "20260721173318_793c82ac-697e-441f-8ec6-774c564bcad5.sql"
 Cohesion: 0.33
 Nodes (5): places_api_usage_org_month_idx, public.places_api_usage, public.organizations, public.update_updated_at_column, trg_places_api_usage_updated_at
 
-### Community 288 - "20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql"
+### Community 301 - "20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql"
 Cohesion: 0.29
 Nodes (4): idx_campaign_events_occurred_brin, idx_email_sync_log_created_brin, public.campaign_events, public.email_sync_log
 
-### Community 289 - "20261121120000_api_key_rate_limit.sql"
+### Community 302 - "20261121120000_api_key_rate_limit.sql"
 Cohesion: 0.33
 Nodes (5): idx_api_rate_limits_window, public.api_rate_limits, public.api_keys, public.update_updated_at_column, trg_api_rate_limits_updated_at
 
-### Community 290 - "ECC for Codex CLI"
+### Community 303 - "ECC for Codex CLI"
 Cohesion: 0.33
 Nodes (5): ECC for Codex CLI, MCP Baseline, Multi-Agent Support, Repo Skill, Repo-specific warnings
 
-### Community 291 - "ADR-001: Dark Gold Theme com Glass Morphism"
+### Community 304 - "ADR-001: Dark Gold Theme com Glass Morphism"
 Cohesion: 0.33
 Nodes (5): ADR-001: Dark Gold Theme com Glass Morphism, Consequências, Contexto, Decisão, Status
 
-### Community 292 - "ADR-002: RLS por user_id em Todas as Tabelas"
+### Community 305 - "ADR-002: RLS por user_id em Todas as Tabelas"
 Cohesion: 0.33
 Nodes (5): ADR-002: RLS por user_id em Todas as Tabelas, Consequências, Contexto, Decisão, Status
 
-### Community 293 - "ADR-005: Lovable AI Gateway para Chat"
+### Community 306 - "ADR-003: Edge Functions como Proxy Seguro"
+Cohesion: 0.33
+Nodes (5): ADR-003: Edge Functions como Proxy Seguro, Consequências, Contexto, Decisão, Status
+
+### Community 307 - "ADR-005: Lovable AI Gateway para Chat"
 Cohesion: 0.33
 Nodes (5): ADR-005: Lovable AI Gateway para Chat, Consequências, Contexto, Decisão, Status
 
-### Community 294 - "ADR-007: Defense-in-depth com Org Isolation Proxy"
+### Community 308 - "ADR-007: Defense-in-depth com Org Isolation Proxy"
 Cohesion: 0.33
 Nodes (5): ADR-007: Defense-in-depth com Org Isolation Proxy, Consequências, Contexto, Decisão, Status
 
-### Community 295 - "ADR-024 — Rodada #30: Refactor Safety & Split Inicial do LushaIntelligenceView"
+### Community 309 - "ADR-024 — Rodada #30: Refactor Safety & Split Inicial do LushaIntelligenceView"
 Cohesion: 0.33
 Nodes (5): ADR-024 — Rodada #30: Refactor Safety & Split Inicial do LushaIntelligenceView, Consequências, Contexto, Guard-rails desta rodada, Preflight
 
-### Community 296 - "ADR-028 — Rodada #34: Regressão para primitivas Lusha (StatusBadge, constants, types)"
+### Community 310 - "ADR-028 — Rodada #34: Regressão para primitivas Lusha (StatusBadge, constants, types)"
 Cohesion: 0.33
 Nodes (5): ADR-028 — Rodada #34: Regressão para primitivas Lusha (StatusBadge, constants, types), Consequências, Contexto, Decisão, Guard-rails
 
-### Community 297 - "Tenancy & Auth"
+### Community 311 - "Ações"
 Cohesion: 0.33
-Nodes (6): `organization_invites`, `organization_members`, `organizations`, `profiles`, Tenancy & Auth, `user_roles`
+Nodes (6): Ações, `DELETE ?action=delete&id=<uuid>`, `GET ?action=list`, gmaps-proxy, `POST ?action=create`, `POST ?action=sync-results`
 
-### Community 298 - "20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql"
+### Community 312 - "20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql"
 Cohesion: 0.33
 Nodes (4): public.dlq_alert_history, public.dlq_health_snapshots, idx_dlq_alert_history_org_kind_time, idx_dlq_snapshots_org_kind_time
 
-### Community 299 - "Setup Local"
+### Community 313 - "Setup Local"
 Cohesion: 0.33
 Nodes (6): Build, Desenvolvimento, Instalação, Pré-requisitos, Setup Local, Testes
 
-### Community 300 - "seguranca-processo.mjs"
-Cohesion: 0.47
-Nodes (5): caminhoRealMesmoSeAusente(), estaDentro(), RAIZ_REPO, RAIZES_PERMITIDAS, resolverCaminhoPermitido()
+### Community 314 - "ai-agent/index.ts"
+Cohesion: 0.40
+Nodes (4): ALLOWED_ORIGINS, getCorsHeaders(), isLocalDevOrigin(), MessageSchema
 
-### Community 302 - "useRateLimit.ts"
-Cohesion: 0.53
-Nodes (4): getStorage(), parseLockTs(), RateLimitConfig, useRateLimit()
-
-### Community 303 - "20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
+### Community 315 - "20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
 Cohesion: 0.33
 Nodes (4): idx_companies_org, public._default_org_for_user(), public.companies, public.organization_members
 
-### Community 304 - "20260423104533_19b8cd82-90e8-416b-bb5e-9567539b58ef.sql"
+### Community 316 - "20260423104533_19b8cd82-90e8-416b-bb5e-9567539b58ef.sql"
 Cohesion: 0.53
 Nodes (4): idx_email_accounts_active, idx_email_accounts_org, idx_email_accounts_unique, public.email_accounts
 
-### Community 305 - "20260423143453_ee5b0d4b-305d-4575-81d2-b038ba742828.sql"
+### Community 317 - "20260423143453_ee5b0d4b-305d-4575-81d2-b038ba742828.sql"
 Cohesion: 0.33
 Nodes (3): public.org_violation_alert_settings, public, public.organizations
 
-### Community 306 - "20260711164350_a039d6a7-9068-401a-b17e-eed3d3f33a10.sql"
+### Community 318 - "20260711164350_a039d6a7-9068-401a-b17e-eed3d3f33a10.sql"
 Cohesion: 0.33
 Nodes (4): idx_campaign_messages_recipient_step_unique, idx_campaign_recipients_next_action, public.campaign_messages, public.campaign_recipients
 
-### Community 307 - "20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql"
+### Community 319 - "20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql"
 Cohesion: 0.40
 Nodes (4): idx_oracle_rate_limits_window, public.oracle_rate_limits, public.update_updated_at_column, trg_oracle_rate_limits_updated_at
 
-### Community 308 - "20260715170411_d78dbcae-7de5-419d-8e89-a88f64ad3211.sql"
+### Community 320 - "20260715170411_d78dbcae-7de5-419d-8e89-a88f64ad3211.sql"
 Cohesion: 0.53
 Nodes (5): idx_automation_logs_correlation, idx_automation_logs_org_date, idx_automation_logs_source_status_date, public.oracle_v2_health, public.automation_execution_logs
 
-### Community 309 - "20260723141937_f8cf0e61-609b-49e1-a283-8fb8984bef9d.sql"
+### Community 321 - "20260723141937_f8cf0e61-609b-49e1-a283-8fb8984bef9d.sql"
 Cohesion: 0.40
 Nodes (5): idx_reaper_alert_history_triggered_at, public.reaper_alert_history, public.reaper_alert_settings, public.update_updated_at_column, trg_reaper_alert_settings_updated_at
 
-### Community 310 - "20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql"
+### Community 322 - "20260726155237_a262859f-a87b-4824-ab59-51e0702db5ee.sql"
 Cohesion: 0.40
 Nodes (4): public.default_sla_seconds(), public.queue_sla_defaults, public.update_updated_at_column, update_queue_sla_defaults_updated_at
 
-### Community 311 - "vercel.json"
+### Community 323 - "vercel.json"
 Cohesion: 0.33
 Nodes (5): buildCommand, framework, installCommand, outputDirectory, $schema
 
-### Community 312 - "ADR-004: Realtime com Canais Privados"
-Cohesion: 0.40
-Nodes (4): ADR-004: Realtime com Canais Privados, Consequências, Contexto, Status
-
-### Community 313 - "ADR-012 — Rodada #18: Observabilidade multi-fila + CI guard de `queue_kind`"
-Cohesion: 0.40
-Nodes (4): ADR-012 — Rodada #18: Observabilidade multi-fila + CI guard de `queue_kind`, Consequências, Decisão, Não-decisões
-
-### Community 314 - "ADR-027 — Rodada #33 · E2E ampliado do módulo Lusha"
-Cohesion: 0.40
-Nodes (4): ADR-027 — Rodada #33 · E2E ampliado do módulo Lusha, Consequências, Contexto, Fora de escopo
-
-### Community 315 - "ADR-029 — Rodada #35: Fuzz de historyUtils + contrato tipado do DecisionMakersGrid"
+### Community 324 - "ADR-029 — Rodada #35: Fuzz de historyUtils + contrato tipado do DecisionMakersGrid"
 Cohesion: 0.40
 Nodes (4): ADR-029 — Rodada #35: Fuzz de historyUtils + contrato tipado do DecisionMakersGrid, Consequências, Contexto, Referências
 
-### Community 316 - "Estado real do projeto — inventário gerado"
+### Community 326 - "Estado real do projeto — inventário gerado"
 Cohesion: 0.40
 Nodes (4): Atualização automática, Como ler `edges.json`, Estado real do projeto — inventário gerado, O que NÃO está aqui
 
-### Community 317 - "20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql"
+### Community 327 - "20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql"
 Cohesion: 0.50
 Nodes (4): net._http_response, idx_pg_net_health_snapshots_captured_at, public.pg_net_health(), public.pg_net_health_snapshots
 
-### Community 318 - "overrides"
+### Community 328 - "overrides"
 Cohesion: 0.40
 Nodes (5): esbuild, overrides, @lovable.dev/mcp-js, minimatch, postcss-selector-parser
 
-### Community 319 - "20260712221649_ebd72ce1-f9b5-4de9-88f8-d5a40fbad66f.sql"
+### Community 329 - "20260712221649_ebd72ce1-f9b5-4de9-88f8-d5a40fbad66f.sql"
 Cohesion: 0.40
 Nodes (4): public.partition_advisories, idx_partition_advisories_policy_id, idx_scrape_queue_scrape_job_id, public.scrape_queue
 
-### Community 320 - "WorkflowEditor.tsx"
+### Community 330 - "WorkflowEditor.tsx"
 Cohesion: 0.40
 Nodes (3): StepType, WorkflowEditorProps, WorkflowStep
 
-### Community 322 - "DlqAlertSettingsCard.test.tsx"
-Cohesion: 0.40
-Nodes (3): historyRows, mockSettings, saveMutate
-
-### Community 323 - "usePersistedFilters"
+### Community 332 - "usePersistedFilters"
 Cohesion: 0.70
 Nodes (3): deserialize(), serialize(), usePersistedFilters()
 
-### Community 327 - "20260423120419_d02ef035-594f-4c5b-91c8-a1d7606f1e38.sql"
+### Community 336 - "20260423120419_d02ef035-594f-4c5b-91c8-a1d7606f1e38.sql"
 Cohesion: 0.70
 Nodes (4): idx_api_request_logs_api_key, idx_api_request_logs_created, idx_api_request_logs_org, public.api_request_logs
 
-### Community 328 - "public.email_sync_log"
+### Community 337 - "public.email_sync_log"
 Cohesion: 0.60
 Nodes (4): idx_email_sync_log_account_created, idx_email_sync_log_org_created, public.email_sync_log, public.email_accounts
 
-### Community 329 - "20260513140311_99494649-cb75-4b6d-bd9a-14cc962d3422.sql"
+### Community 338 - "20260513140311_99494649-cb75-4b6d-bd9a-14cc962d3422.sql"
 Cohesion: 0.50
 Nodes (3): increment_companies_version, increment_deals_version, public.increment_version
 
-### Community 330 - "20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
+### Community 339 - "20260513142941_0c428fd9-e0be-42ff-b2ac-61530544e704.sql"
 Cohesion: 0.40
 Nodes (4): public.feature_flags, public.health_checks, public.update_updated_at_column, update_feature_flags_updated_at
 
-### Community 331 - "public.campaign_ab_stats"
+### Community 340 - "public.campaign_ab_stats"
 Cohesion: 0.50
 Nodes (4): idx_campaign_recipients_variant, public.campaign_ab_stats(), public.campaign_recipients, public.campaigns
 
-### Community 332 - "20260711192630_fcde3421-0316-4556-9d2a-472ae6ad44e2.sql"
+### Community 341 - "20260711192630_fcde3421-0316-4556-9d2a-472ae6ad44e2.sql"
 Cohesion: 0.40
 Nodes (4): idx_wh_deliv_pending, idx_workflow_runs_active, public.webhook_deliveries, public.workflow_runs
 
-### Community 333 - "20260712200213_b4344f28-90cf-4c1a-bdb9-2b6fdf0bc489.sql"
+### Community 342 - "20260712200213_b4344f28-90cf-4c1a-bdb9-2b6fdf0bc489.sql"
 Cohesion: 0.50
 Nodes (3): idx_dlq_alert_history_org_time, public.dlq_alert_history, public.organizations
 
-### Community 334 - "20260715173951_fc973fc4-d422-460e-b82c-d3d126464d49.sql"
+### Community 343 - "20260715173951_fc973fc4-d422-460e-b82c-d3d126464d49.sql"
 Cohesion: 0.40
 Nodes (4): idx_lusha_contacts_org_pending, idx_lusha_search_sessions_org_idem, public.lusha_contacts, public.lusha_search_sessions
 
-### Community 336 - "20260723132331_88c31cec-6b47-4273-8e02-34f93b65ae7c.sql"
+### Community 345 - "20260723132331_88c31cec-6b47-4273-8e02-34f93b65ae7c.sql"
 Cohesion: 0.70
 Nodes (4): idx_qa_test_runs_created_at, idx_qa_test_runs_kind_created, idx_qa_test_runs_round, public.qa_test_runs
 
-### Community 337 - "public.sla_compliance_stats"
+### Community 346 - "public.sla_compliance_stats"
 Cohesion: 0.40
 Nodes (4): public.sla_compliance_stats(), public.instagram_scrape_queue, public.scrape_queue, public.web_scrape_queue
 
-### Community 338 - "20260723151608_e6d6bea6-4782-4c65-8e71-dc20990d36a2.sql"
+### Community 347 - "20260723151608_e6d6bea6-4782-4c65-8e71-dc20990d36a2.sql"
 Cohesion: 0.60
 Nodes (3): public.sla_snapshots, sla_snapshots_captured_idx, sla_snapshots_queue_captured_idx
 
-### Community 339 - "Promo Lux V2 (LUX IA) — convenções"
+### Community 348 - "Promo Lux V2 (LUX IA) — convenções"
 Cohesion: 0.50
 Nodes (3): Commits, Código, Promo Lux V2 (LUX IA) — convenções
 
-### Community 340 - "Promo Lux V2 (LUX IA) — convenções"
+### Community 349 - "Promo Lux V2 (LUX IA) — convenções"
 Cohesion: 0.50
 Nodes (3): Commits, Código, Promo Lux V2 (LUX IA) — convenções
 
-### Community 341 - "Estado dos itens executaveis — Promo_Lux_V2"
+### Community 350 - "EmailVerifyBadge"
+Cohesion: 0.50
+Nodes (4): 2.4 Data Enrichment (P1), EmailVerifyBadge(), tone(), visualize()
+
+### Community 351 - "Estado dos itens executaveis — Promo_Lux_V2"
 Cohesion: 0.50
 Nodes (3): Estado dos itens executaveis — Promo_Lux_V2, Item 2 — Soft delete ampliado para tabelas de negocio, Item 3 — Rotacao ADMIN_LIST_TOKEN
 
-### Community 342 - "_linha-de-base.md"
+### Community 352 - "_linha-de-base.md"
 Cohesion: 0.50
 Nodes (3): Build / typecheck / lint / testes, Docs de referencia, Estado real do sistema (inventario - evidencia viva, nao doc)
 
-### Community 343 - "tokens.md"
+### Community 353 - "tokens.md"
 Cohesion: 0.50
 Nodes (3): Fonts, Theme, Utilities
 
-### Community 344 - "allowScripts"
+### Community 354 - "allowScripts"
 Cohesion: 0.50
 Nodes (4): allowScripts, esbuild@0.25.12, esbuild@0.28.1, @swc/core@1.13.2
 
-### Community 345 - "public.pg_catalog_rls_tables"
+### Community 355 - "public.pg_catalog_rls_tables"
 Cohesion: 0.50
 Nodes (3): pg_class, public.pg_catalog_rls_tables(), pg_namespace
 
-### Community 347 - "public.replay_web_dead_letter_batch"
+### Community 357 - "public.replay_web_dead_letter_batch"
 Cohesion: 0.50
 Nodes (3): public.web_scrape_dead_letter, public.replay_web_dead_letter_batch(), v_payload
 
-### Community 349 - "isSrc"
+### Community 358 - "calendar.tsx"
+Cohesion: 0.50
+Nodes (3): react-day-picker, Calendar(), CalendarProps
+
+### Community 360 - "isSrc"
 Cohesion: 0.50
 Nodes (4): appFiles, envUsadas, isSrc(), routeFiles
 
-### Community 351 - "20260423133918_84d3ccb8-e713-4324-8670-2d2db1abbdd6.sql"
+### Community 362 - "20260423133918_84d3ccb8-e713-4324-8670-2d2db1abbdd6.sql"
 Cohesion: 0.83
 Nodes (3): idx_oauth_snapshots_org_created, idx_oauth_snapshots_provider, public.oauth_sandbox_snapshots
 
-### Community 352 - "public.get_dashboard_stats"
+### Community 363 - "public.get_dashboard_stats"
 Cohesion: 0.50
 Nodes (3): public.get_dashboard_stats(), information_schema.columns, public.organization_members
 
-### Community 353 - "public.decide_ab_winner"
+### Community 364 - "public.decide_ab_winner"
 Cohesion: 0.50
 Nodes (3): public.decide_ab_winner(), public.campaign_recipients, public.campaigns
 
-### Community 354 - "20260713123502_4fc8df5b-c6d1-43ca-97e4-bf37d2882dcc.sql"
+### Community 365 - "20260713123502_4fc8df5b-c6d1-43ca-97e4-bf37d2882dcc.sql"
 Cohesion: 0.67
 Nodes (3): public.log_audit_event, trg_audit_scrape_jobs, trg_audit_workflow_runs
 
-### Community 355 - "20260715150000_lusha_credit_usage_log_redeclara.sql"
+### Community 366 - "20260715150000_lusha_credit_usage_log_redeclara.sql"
 Cohesion: 0.83
 Nodes (3): idx_lcul_operation, idx_lcul_org_created, public.lusha_credit_usage_log
 
-### Community 357 - "public.company_reviews"
+### Community 368 - "public.company_reviews"
 Cohesion: 0.50
 Nodes (3): public.company_reviews, public.companies, public.organizations
 
-### Community 358 - "public.replay_instagram_dead_letter_batch"
+### Community 369 - "public.replay_instagram_dead_letter_batch"
 Cohesion: 0.50
 Nodes (3): public.replay_instagram_dead_letter_batch(), public.instagram_scrape_dead_letter, public.instagram_scrape_queue
 
-### Community 361 - "public.source_quality_report"
+### Community 372 - "public.source_quality_report"
 Cohesion: 0.50
 Nodes (3): public.source_quality_report(), public.email_suppressions, public.lusha_contacts
 
-### Community 362 - "20261122120000_fix_companies_dedupe_e_takeover.sql"
+### Community 373 - "20261122120000_fix_companies_dedupe_e_takeover.sql"
 Cohesion: 0.67
 Nodes (3): companies_org_place_id_uk, public.companies, uq_companies_org_name_source
 
-### Community 368 - "lint-staged"
+### Community 379 - "lint-staged"
 Cohesion: 0.67
 Nodes (3): lint-staged, *.{json,css,md}, *.{ts,tsx,js,jsx,mts,cts,mjs,cjs}
 
-### Community 376 - "oauthClient"
+### Community 385 - "CookieCard"
+Cohesion: 0.67
+Nodes (3): computeStatus(), CookieCard(), useSnapshotHistory()
+
+### Community 387 - "oauthClient"
 Cohesion: 1.00
 Nodes (3): oauthClient(), OAuthConsent(), decide()
 
 ## Knowledge Gaps
 - **2031 isolated node(s):** `session-start.sh script`, `PATH`, `version`, `sdk_version`, `path` (+2026 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3051 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3053 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **230 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `vitest` connect `vitest` to `SessionsPanel.test.tsx`, `cn`, `lusha/departmentMap.ts`, `SlaHistoryTrendChart.tsx`, `downloadCSV`, `App.tsx`, `req`, `@tanstack/react-query`, `oracle-search-decisors/index.ts`, `oracle-enrich-contact/index.ts`, `Index.tsx`, `campaign-dispatch/index.ts`, `withOrg.ts`, `package.json`, `lusha-client.ts`, `Sidebar.tsx`, `StakeholderFinderView.tsx`, `gmaps-proxy/index.ts`, `public-api/index.ts`, `OracleV2Panel.tsx`, `validation.test.ts`, `oracle-push-bitrix/index.ts`, `ErrorBoundary`, `useRateLimit.ts`, `web-scrape-worker/index.ts`, `deliverability-check/index.ts`, `DecisionMakersGrid.tsx`, `SourceComparisonReport.tsx`, `SafeHTML.tsx`, `scrape-queue-worker/index.ts`, `WorkflowCard.tsx`, `vite.config.ts`, `scenarios.ts`, `DlqHealthCard.tsx`, `DlqAlertSettingsCard.test.tsx`, `usePersistedFilters`, `CommandPalette.tsx`, `aggregations.ts`, `Analisado`, `useAuditTrail.ts`, `historyUtils.fuzz.test.ts`, `useResilienceSimulator.ts`, `CompaniesView.tsx`, `autotune.ts`, `useRateLimit.logic.test.ts`, `SlaHistoryCard`, `useDlqItems.ts`, `useDlqReplay.ts`, `compareReport.ts`?**
+- **Why does `vitest` connect `vitest` to `LushaIntelligenceView.tsx`, `SessionsPanel.test.tsx`, `SlaHistoryTrendChart.tsx`, `useAuth`, `withOrg.ts`, `lusha/departmentMap.ts`, `downloadCSV`, `orgErrorHandler.audit.test.ts`, `campaign-dispatch/index.ts`, `lusha-client.ts`, `package.json`, `View`, `req`, `Index.tsx`, `oracle-push-bitrix/index.ts`, `oracle-enrich-contact/index.ts`, `compareReport.ts`, `Header.tsx`, `useOracleV2.ts`, `public-api/index.ts`, `DecisionMakersGrid.test.tsx`, `useCnpjEnrich.ts`, `oracle-search-decisors/index.ts`, `lead-identity.ts`, `web-scrape-worker/index.ts`, `orgErrorHandler.ts`, `gmaps-proxy/index.ts`, `SafeHTML.tsx`, `SourceComparisonSummary.tsx`, `scrape-queue-worker/index.ts`, `ssrf-guard.ts`, `vite.config.ts`, `deliverability-check/index.ts`, `aggregations.ts`, `Analisado`, `DlqAlertSettingsCard.tsx`, `historyUtils.fuzz.test.ts`, `usePersistedFilters`, `useResilienceSimulator.ts`, `useConfirm`, `useICPConfig.ts`, `useAuditTrail.ts`, `useLoginForm.ts`, `StakeholderCard.tsx`, `useRateLimit.logic.test.ts`, `DlqHealthCard`, `SlaHistoryCard`, `useDlqReplay.ts`, `autotune.ts`, `classify.ts`, `scenarios.ts`, `WorkflowCard.tsx`?**
   _High betweenness centrality (0.143) - this node is a cross-community bridge._
-- **Why does `react` connect `react` to `lucide-react`, `cn`, `OrganizationsView.tsx`, `usePermissions.ts`, `carousel.tsx`, `DashboardView.tsx`, `App.tsx`, `SlaHistoryTrendChart.tsx`, `useCnpjEnrich.ts`, `LushaIntelligenceView.tsx`, `useActiveOrganization`, `useFeatureFlag.ts`, `@tanstack/react-query`, `vitest`, `Index.tsx`, `toast.tsx`, `withOrg.ts`, `framer-motion`, `NotificationsPanel.tsx`, `package.json`, `hooks/use-toast.ts`, `PageTransition.tsx`, `useAuth`, `Login.tsx`, `ConversionTab.tsx`, `Sidebar.tsx`, `StakeholderFinderView.tsx`, `useWebScrape.ts`, `DealDetailDrawer.tsx`, `OracleV2Panel.tsx`, `RLSDiscoveryView.tsx`, `useRateLimit.ts`, `useLostReasons.ts`, `DecisionMakersGrid.tsx`, `ScrapeQueuePanel.tsx`, `SourceComparisonReport.tsx`, `Header.tsx`, `SafeHTML.tsx`, `EmailAccountsAuditPanel.tsx`, `useNextBestActions.ts`, `useAutomationsMonitor.ts`, `DlqHealthCard.tsx`, `PermissionsMatrix.tsx`, `DlqAlertSettingsCard.test.tsx`, `chart.tsx`, `CommandPalette.tsx`, `usePersistedFilters`, `3. Recursos Transversais`, `AutomationStatusPanel.tsx`, `useResilienceSimulator.ts`, `toggle-group.tsx`, `ApiLatencyPanel.tsx`, `CompaniesMapView.tsx`, `OnboardingTour.tsx`, `CompaniesView.tsx`, `DlqAlertSettingsCard.tsx`, `PasswordStrengthMeter.tsx`, `SatisfactionTab.tsx`, `useLoginForm.ts`, `form.tsx`, `useDlqReplay.ts`?**
+- **Why does `react` connect `react` to `lucide-react`, `@tanstack/react-query`, `cn`, `utils.ts`, `LushaIntelligenceView.tsx`, `CampaignsView.tsx`, `carousel.tsx`, `form.tsx`, `SlaHistoryTrendChart.tsx`, `useAuth`, `useFeatureFlag.ts`, `vitest`, `useActiveOrganization`, `App.tsx`, `toast.tsx`, `package.json`, `framer-motion`, `View`, `Index.tsx`, `CompanyDetailModal.tsx`, `Header.tsx`, `useOracleV2.ts`, `useEnvProfiles.ts`, `useCnpjEnrich.ts`, `useWebScrape.ts`, `PermissionsMatrix.tsx`, `AppBreadcrumbs.tsx`, `orgErrorHandler.ts`, `sidebar.tsx`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `StatsGrid.tsx`, `useDemo`, `useAutomationsMonitor.ts`, `ApiLatencyAlertSettingsCard.tsx`, `chart.tsx`, `DashboardView.tsx`, `ConversionTab.tsx`, `OnboardingTour.tsx`, `DlqAlertSettingsCard.tsx`, `usePersistedFilters`, `useResilienceSimulator.ts`, `CommandPalette.tsx`, `toggle-group.tsx`, `useLoginForm.ts`, `AutomationStatusPanel.tsx`, `ApiLatencyPanel.tsx`, `RLSVerificationPanel.tsx`, `StakeholderCard.tsx`, `calendar.tsx`, `MapMarkerIcons.tsx`, `useChangelog.ts`, `ThemeToggle.tsx`, `DlqHealthCard`, `PasswordStrengthMeter.tsx`, `drawer.tsx`, `navigation-menu.tsx`, `useDlqReplay.ts`, `Login.tsx`, `SatisfactionTab.tsx`?**
   _High betweenness centrality (0.087) - this node is a cross-community bridge._
-- **Why does `cn()` connect `cn` to `lucide-react`, `OrganizationsView.tsx`, `react`, `carousel.tsx`, `DashboardView.tsx`, `LushaIntelligenceView.tsx`, `useActiveOrganization`, `@tanstack/react-query`, `vitest`, `Index.tsx`, `toast.tsx`, `framer-motion`, `NotificationsPanel.tsx`, `hooks/use-toast.ts`, `useAuth`, `Sidebar.tsx`, `DealDetailDrawer.tsx`, `OracleV2Panel.tsx`, `RLSDiscoveryView.tsx`, `SourceComparisonReport.tsx`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `Header.tsx`, `EmailAccountsAuditPanel.tsx`, `WorkflowCard.tsx`, `useNextBestActions.ts`, `useAutomationsMonitor.ts`, `DlqHealthCard.tsx`, `chart.tsx`, `CommandPalette.tsx`, `3. Recursos Transversais`, `AutomationStatusPanel.tsx`, `toggle-group.tsx`, `ApiLatencyPanel.tsx`, `useDbHealth.ts`, `autotune.ts`, `DlqAlertSettingsCard.tsx`, `SatisfactionTab.tsx`, `EmailVerifyBadge.tsx`, `form.tsx`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `react`, `lucide-react`, `@tanstack/react-query`, `CookieCard`, `utils.ts`, `LushaIntelligenceView.tsx`, `CampaignsView.tsx`, `carousel.tsx`, `form.tsx`, `useAuth`, `vitest`, `toast.tsx`, `generateScenarios`, `framer-motion`, `View`, `Index.tsx`, `CompanyDetailModal.tsx`, `Header.tsx`, `useOracleV2.ts`, `AppBreadcrumbs.tsx`, `sidebar.tsx`, `ScrapeQueuePanel.tsx`, `useAutomationsMonitor.ts`, `SafeHTML.tsx`, `StatsGrid.tsx`, `SourceComparisonSummary.tsx`, `DealTasksPanel`, `chart.tsx`, `DashboardView.tsx`, `DlqAlertSettingsCard.tsx`, `useResilienceSimulator.ts`, `useConfirm`, `useAuditTrail.ts`, `CommandPalette.tsx`, `toggle-group.tsx`, `AutomationStatusPanel.tsx`, `useDbHealth.ts`, `EmailVerifyBadge`, `ApiLatencyPanel.tsx`, `ThemeToggle.tsx`, `useChangelog.ts`, `3. Functions chamadas pelo frontend (28)`, `calendar.tsx`, `DlqHealthCard`, `navigation-menu.tsx`, `drawer.tsx`, `DealCard.tsx`, `RetryPolicyAdvisoriesPanel`, `SatisfactionTab.tsx`, `WorkflowCard.tsx`?**
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **What connects `session-start.sh script`, `PATH`, `version` to the rest of the system?**
   _2031 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `react` be split into smaller, more focused modules?**
+  _Cohesion score 0.042953251681904434 - nodes in this community are weakly interconnected._
 - **Should `lucide-react` be split into smaller, more focused modules?**
-  _Cohesion score 0.0401728258871116 - nodes in this community are weakly interconnected._
-- **Should `cn` be split into smaller, more focused modules?**
-  _Cohesion score 0.025077081192189106 - nodes in this community are weakly interconnected._
-- **Should `OrganizationsView.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.04862601975096608 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.03370165745856354 - nodes in this community are weakly interconnected._
+- **Should `@tanstack/react-query` be split into smaller, more focused modules?**
+  _Cohesion score 0.030584707646176913 - nodes in this community are weakly interconnected._

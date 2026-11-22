@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)",
    "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)",
    "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)",
    "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)",
-   "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)",
-   "docs: atualiza o backlog com o estado medido do banco (#123)"
+   "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)"
   ]
  },
  "pr_template": null,

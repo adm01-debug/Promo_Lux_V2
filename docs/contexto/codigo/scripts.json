@@ -77,7 +77,7 @@
   {
    "arquivo": "scripts/check-functions-lint.sh",
    "descricao": "--------------------------------------------------------------------------- check-functions-lint.sh",
-   "linhas": 53,
+   "linhas": 65,
    "env": [],
    "npm_scripts": [],
    "workflows": [

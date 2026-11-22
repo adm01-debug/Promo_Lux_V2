@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `378947ce26` · branch `main` · 2026-11-22 11:42 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `427ec06438` · branch `main` · 2026-11-22 12:25 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1082,7 +1082,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `system` | escreve | `src/lib/demoData.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>`supabase/functions/latency-alerts/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/pg-net-watchdog/index.ts`<br>… +3 |
 | `type` | `tags` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
 | `type` | `technology_change` | escreve | `src/lib/demoData.ts` |
-| `type` | `text` | escreve | `src/lib/mcp/supabase.ts`<br>`src/lib/mcp/tools/get-company.ts`<br>`src/lib/mcp/tools/get-dashboard-stats.ts`<br>`src/lib/mcp/tools/list-companies.ts`<br>`src/lib/mcp/tools/list-decision-makers.ts`<br>… +1 |
+| `type` | `text` | escreve | `src/lib/mcp/supabase.ts`<br>`src/lib/mcp/tools/get-company.ts`<br>`src/lib/mcp/tools/get-dashboard-stats.ts`<br>`src/lib/mcp/tools/list-companies.ts`<br>`src/lib/mcp/tools/list-decision-makers.ts`<br>… +2 |
 | `type` | `totp` | escreve | `src/hooks/useMFA.ts` |
 | `type` | `wait` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx` |
 | `type` | `website_visit` | escreve | `src/lib/demoData.ts` |
@@ -2199,6 +2199,7 @@ _nenhum item encontrado_
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
 | Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
 | results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
+| Configura\xE7\xE3o do backend indispon\xEDvel para esta ferramenta. | `supabase/functions/mcp/index.ts` |
 | unauthorized | `supabase/functions/migrate-helper/index.ts` |
 | unknown_action | `supabase/functions/migrate-helper/index.ts` |
 | CookieVaultUnavailable após 3 tentativas: ${(lastErr as Error).message} | `supabase/functions/oracle-cookies-preflight/index.ts` |
@@ -2212,8 +2213,7 @@ _nenhum item encontrado_
 | createAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: upsert member failed: ${memberErr.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createNonAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| createNonAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +22 linhas — lista completa em `context.json` | |
+| … +23 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

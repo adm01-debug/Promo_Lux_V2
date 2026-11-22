@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `378947ce260f72d402da793adee31f5970a58620` (2026-11-22T08:42:15-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `427ec06438f334507e4c8d3f9f1f6284074b768e` (2026-11-22T09:24:10-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1099 |
 | arquivos_codigo | 694 |
-| linhas_codigo | 119913 |
+| linhas_codigo | 120146 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -151,7 +151,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `lusha-decision-makers` — tabelas: lusha_contacts, organization_members; chamada por 1 arquivo(s) do front
 - `lusha-reveal` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `lusha-search` — tabelas: audit_logs, lusha_contacts, lusha_search_sessions, notifications; chamada por 2 arquivo(s) do front
-- `mcp` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
+- `mcp` (verify_jwt=false) — tabelas: companies, lusha_contacts, scrape_jobs; chamada por 0 arquivo(s) do front
 - `mcp-query` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `oracle-cookies-preflight` — tabelas: automation_execution_logs; chamada por 1 arquivo(s) do front
@@ -244,8 +244,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7076 nós · 15558 arestas · 580 comunidades · grafo do commit `378947ce`
-- comunidades maiores: lucide-react (148), cn (140), OrganizationsView.tsx (137), react (102), snapshot.py (100), DashboardView.tsx (81), App.tsx (80), gerar.mjs (80), generate.py (75), LushaIntelligenceView.tsx (75), useActiveOrganization (74), req (72)
+- 7078 nós · 15561 arestas · 591 comunidades · grafo do commit `427ec064`
+- comunidades maiores: react (187), lucide-react (181), @tanstack/react-query (116), snapshot.py (102), cn (86), utils.ts (81), gerar.mjs (80), LushaIntelligenceView.tsx (78), CampaignsView.tsx (75), generate.py (73), lushaMocks.ts (71), useAuth (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -358,6 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-22 `427ec06` fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)
 - 2026-11-22 `378947c` chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)
 - 2026-11-22 `5f42ddf` chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)
 - 2026-11-22 `63a6f3f` chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)
@@ -372,7 +373,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `c14eeb4` fix(db): claim_instagram_job volta a reservar jobs do worker (#111)
 - 2026-11-21 `4bfa973` docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)
 - 2026-11-21 `e7ba9e2` fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)
-- 2026-11-21 `3c37882` fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
