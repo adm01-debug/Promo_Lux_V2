@@ -32,6 +32,7 @@
     "email_sync_log",
     "feature_flags",
     "intent_signals",
+    "ip_allowlist",
     "ipc_config",
     "job_exports",
     "lead_scores",

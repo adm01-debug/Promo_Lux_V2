@@ -2534,6 +2534,44 @@ export type Database = {
           },
         ]
       }
+      ip_allowlist: {
+        Row: {
+          cidr: string
+          created_at: string
+          created_by: string | null
+          id: string
+          label: string | null
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          cidr: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Update: {
+          cidr?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ip_allowlist_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ipc_config: {
         Row: {
           created_at: string
@@ -3486,6 +3524,8 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          ip_allowlist_enabled: boolean
+          last_known_ip: string | null
           name: string
           owner_id: string
           slug: string
@@ -3494,6 +3534,8 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          ip_allowlist_enabled?: boolean
+          last_known_ip?: string | null
           name: string
           owner_id: string
           slug: string
@@ -3502,6 +3544,8 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          ip_allowlist_enabled?: boolean
+          last_known_ip?: string | null
           name?: string
           owner_id?: string
           slug?: string
@@ -5252,6 +5296,10 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      get_my_ip_status: { Args: Record<string, never>; Returns: Json }
+      ip_in_cidr: { Args: { _cidr: string; _ip: string }; Returns: boolean }
+      is_ip_allowed: { Args: { _ip: string; _org_id: string }; Returns: boolean }
+      touch_last_known_ip: { Args: Record<string, never>; Returns: undefined }
       advance_recipient_step: {
         Args: {
           _completed: boolean

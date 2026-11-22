@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Settings, User, Bell, Link2, Key, Shield, Save, Check, Loader2, RotateCcw } from "lucide-react";
+import { Settings, User, Bell, Link2, Key, Shield, ShieldCheck, Save, Check, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,15 +14,17 @@ import { useCan } from "@/hooks/usePermissions";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
+import { IpAllowlistPanel } from "@/components/lux/settings/IpAllowlistPanel";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { StickySaveBar } from "./StickySaveBar";
 
-type SettingsTab = "account" | "notifications" | "integrations" | "api";
+type SettingsTab = "account" | "notifications" | "integrations" | "security" | "api";
 
 const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
   { id: "account", label: "Conta", icon: <User className="h-4 w-4" /> },
   { id: "notifications", label: "Notificações", icon: <Bell className="h-4 w-4" /> },
   { id: "integrations", label: "Integrações", icon: <Link2 className="h-4 w-4" /> },
+  { id: "security", label: "Segurança", icon: <ShieldCheck className="h-4 w-4" /> },
   { id: "api", label: "API & Chaves", icon: <Key className="h-4 w-4" /> },
 ];
 
@@ -329,6 +331,12 @@ export const SettingsView = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {activeTab === "security" && (
+            <div className="glass rounded-lg p-6">
+              <IpAllowlistPanel />
             </div>
           )}
 
