@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { useCan } from "@/hooks/usePermissions";
 import { ActiveSessionsPanel } from "@/components/lux/settings/ActiveSessionsPanel";
 import { RLSVerificationPanel } from "@/components/lux/settings/RLSVerificationPanel";
+import { DsarPanel } from "@/components/lux/settings/DsarPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
 import { IpAllowlistPanel } from "@/components/lux/settings/IpAllowlistPanel";
@@ -283,6 +284,9 @@ export const SettingsView = () => {
                   <Separator className="bg-border/30" />
                   <RLSRegistryCoverage />
                   <RLSVerificationPanel />
+
+                  <Separator className="bg-border/30" />
+                  <DsarPanel />
                 </>
               )}
 

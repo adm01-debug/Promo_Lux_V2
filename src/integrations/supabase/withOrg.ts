@@ -96,6 +96,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "campaign_replies",
   "campaigns",
   "companies",
+  "data_subject_requests",
   "deal_activities",
   "deal_stages",
   "deal_tasks",

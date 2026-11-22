@@ -19,6 +19,7 @@
     "companies",
     "company_reviews",
     "dashboard_layouts",
+    "data_subject_requests",
     "deal_activities",
     "deal_predictions",
     "deal_stages",
