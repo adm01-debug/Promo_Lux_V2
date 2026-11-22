@@ -3,7 +3,7 @@ import {
   DndContext, DragOverlay, PointerSensor, useSensor, useSensors,
   closestCorners, type DragStartEvent, type DragEndEvent, type DragOverEvent,
 } from "@dnd-kit/core";
-import { Plus, Settings as SettingsIcon, TrendingUp, RefreshCw } from "lucide-react";
+import { Plus, Settings as SettingsIcon, TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useDeals, useDealStages, type Deal } from "@/hooks/useDeals";
@@ -14,6 +14,7 @@ import { useDealPredictions } from "@/hooks/useDealPredictions";
 import { useLeadScores } from "@/hooks/useLeadScores";
 import { AddDealDialog } from "./deals/AddDealDialog";
 import { StagesManagerDialog } from "./deals/StagesManagerDialog";
+import { LostReasonsDialog } from "./deals/LostReasonsDialog";
 import { DealDetailDrawer } from "./deals/DealDetailDrawer";
 
 export function DealsView() {
@@ -26,6 +27,7 @@ export function DealsView() {
 
   const [addOpen, setAddOpen] = useState(false);
   const [stagesOpen, setStagesOpen] = useState(false);
+  const [lostOpen, setLostOpen] = useState(false);
   const [defaultStage, setDefaultStage] = useState<string | null>(null);
   const [activeDeal, setActiveDeal] = useState<Deal | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -107,6 +109,9 @@ export function DealsView() {
           <Button variant="outline" onClick={() => setStagesOpen(true)}>
             <SettingsIcon className="h-4 w-4 mr-1.5" /> Estágios
           </Button>
+          <Button variant="outline" onClick={() => setLostOpen(true)}>
+            <TrendingDown className="h-4 w-4 mr-1.5" /> Perdas
+          </Button>
           <Button onClick={() => { setDefaultStage(null); setAddOpen(true); }}>
             <Plus className="h-4 w-4 mr-1.5" /> Novo Negócio
           </Button>
@@ -148,6 +153,7 @@ export function DealsView() {
 
       <AddDealDialog open={addOpen} onOpenChange={setAddOpen} stages={stages} defaultStageId={defaultStage} />
       <StagesManagerDialog open={stagesOpen} onOpenChange={setStagesOpen} />
+      <LostReasonsDialog open={lostOpen} onOpenChange={setLostOpen} />
       <DealDetailDrawer deal={activeDeal} open={detailOpen} onOpenChange={setDetailOpen} />
     </div>
   );

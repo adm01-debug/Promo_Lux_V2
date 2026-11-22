@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EmailTemplatePicker } from "./EmailTemplatePicker";
 
 // Uma variante A/B do primeiro e-mail (assunto/corpo alternativos).
 export type SequenceVariant = { label?: string; subject?: string; body?: string };
@@ -85,6 +86,8 @@ export const CampaignFormFields = ({
         <Label className="text-xs text-muted-foreground">Nº de Prospects</Label>
         <Input value={prospects} onChange={(e) => setProspects(e.target.value)} type="number" className="h-9 text-sm" />
       </div>
+
+      <EmailTemplatePicker onApply={setSequence} />
 
       <div className="space-y-2">
         <Label className="text-xs text-muted-foreground">Sequência</Label>

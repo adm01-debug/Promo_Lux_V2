@@ -80,7 +80,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Activities timeline | ✅ `deal_activities` (`20260422202642:50`) + `DealDetailDrawer.tsx:140` | Timeline unificada por empresa/contato (calls, emails, meetings, notes) |
 | Tasks & reminders | 🟡 Implementado — `deal_tasks` (`20260422202642:68`) com CRUD em `DealTasksPanel`; falta recurring/snooze | Due dates, assignee, recurring, snooze |
 | Lifecycle stages | Apenas `ipc_score` | MQL → SQL → Opportunity → Customer → Churn |
-| Lost reasons | Inexistente | Categorização de perda + análise |
+| Lost reasons | ✅ `deal_lost_reasons` (`20261122160000`) | Categorização de perda + análise |
 
 **Impacto:** Sem CRM nativo, usuários precisam exportar para HubSpot/Salesforce — LUX vira ferramenta auxiliar, não hub de receita.
 
@@ -98,7 +98,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Send time optimization | Inexistente | ML por timezone e padrão de abertura |
 | Deliverability | ✅ Implementado — function `deliverability-check` (SPF/DKIM/DMARC/MX, grade A+…F) + `DeliverabilityCheckDialog` | SPF/DKIM/DMARC checker, warmup, score |
 | Multi-canal | Apenas email conceitual | LinkedIn touches, dialer, WhatsApp, SMS |
-| Templates compartilhados | Inexistente | Biblioteca por org com versionamento |
+| Templates compartilhados | ✅ `email_templates` por organização (`20261122200000`) | Biblioteca por org com versionamento |
 
 **Impacto:** Campanhas existem como UI mas **não geram receita real** — gap crítico vs Apollo/Outreach/Salesloft.
 
@@ -143,8 +143,8 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Funil customizável | Funil fixo prospects→meetings | Stages do pipeline configurável |
 | Cohort analysis | Inexistente | Conversão por mês de origem |
 | Attribution | Inexistente | Multi-touch, first/last touch, linear |
-| Leaderboards | Inexistente | Ranking de SDRs/AEs por métrica |
-| Goals & quotas | Inexistente | Tracking vs target por usuário/equipe |
+| Leaderboards | ✅ `org_leaderboard` (`20261122180000`) | Ranking de SDRs/AEs por métrica |
+| Goals & quotas | ✅ `sales_goals` (`20261122170000`) | Tracking vs target por usuário/equipe |
 | Export | PDF Analytics | + Excel multi-aba, API de relatórios, embedded BI |
 
 ---
@@ -176,16 +176,16 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | SSO/SAML | Inexistente | Okta, Azure AD, Google Workspace, OneLogin |
 | SCIM | Inexistente | Provisionamento automático de usuários |
 | MFA/2FA | ✅ `MFAVerify`/`MFAEnroll`/`useMFA`/`MFASetup.tsx` (TOTP) | TOTP obrigatório por org |
-| IP allowlist | Inexistente | Por organização com CIDR |
+| IP allowlist | ✅ `ip_allowlist` (`20261122220000`) | Por organização com CIDR |
 | Session management | Sessão única implícita | Listar/revogar sessões ativas, dispositivos |
 | SOC 2 Type II | Não certificado | Auditoria anual + relatório |
 | ISO 27001 | Não certificado | SGSI documentado |
 | GDPR/LGPD docs | Inexistente | DPA, Privacy Policy, ROPA, DPIA |
 | Data residency | Fixa (Lovable Cloud) | Escolher região (US/EU/BR) por org |
-| Audit log exportável | Inexistente | Immutable, retention 1+ ano, export SIEM |
+| Audit log exportável | ✅ `export_audit_logs` + `count_audit_logs` + `audit_log_facets` (`20261122240000`) | Immutable, retention 1+ ano, export SIEM |
 | DSAR/Right to be Forgotten | Manual | Fluxo automatizado por usuário/org |
 | BYOK (encryption) | Sem opção | Chave gerenciada pelo cliente (KMS) |
-| DLP & PII masking | Inexistente | Mascarar PII em logs e exports |
+| DLP & PII masking | ✅ `pii_redaction_rules` + `pii_redact_text` + `read_audit_logs_safe` (`20261122260000`) | Mascarar PII em logs e exports |
 | Pen test report | Inexistente | Relatório anual de pentest |
 | Vulnerability disclosure | Inexistente | Programa público + bug bounty |
 
@@ -199,7 +199,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 |---|---|---|
 | Chat IA | Gemini 2.5 Flash sem contexto rico | Já feito ✅ |
 | Lead scoring por ML | IPC manual com pesos | Modelo treinado em dados históricos do tenant |
-| Next best action | Inexistente | Sugestão por contato (call vs email vs LinkedIn) |
+| Next best action | ✅ `next_best_actions` + `nba_recommend` + `refresh_next_best_actions` + `NextBestActionPanel` / `useNextBestActions` | Sugestão por contato (call vs email vs LinkedIn) |
 | Email writer em massa | Inexistente | Personalização contextual por prospect |
 | Conversation intelligence | Inexistente | Transcrever calls, summary, sentiment, talk ratio (Gong/Chorus-like) |
 | Deal risk prediction | Inexistente | Likelihood-to-close por deal |
@@ -213,11 +213,11 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 
 | Gap | Estado atual | Padrão enterprise |
 |---|---|---|
-| Status page | Inexistente | status.luxai.com público (Better Stack/Instatus) |
+| Status page | ✅ `incidents` + `20261122210000_status_page.sql` | status.luxai.com público (Better Stack/Instatus) |
 | Changelog in-app | ✅ `changelog_entries` + `useChangelog` + `ChangelogDialog` (`Header.tsx:8`) | Headway/Beamer-like notifications |
 | Feature flags | ✅ `feature_flags` + `useFeatureFlag(s)` | LaunchDarkly/PostHog para rollout gradual |
 | Help center | Inexistente | Artigos, vídeos, chat de suporte (Intercom) |
-| NPS/CSAT | Inexistente | Coleta in-app contínua |
+| NPS/CSAT | ✅ `satisfaction_surveys` + `satisfaction_responses` (`20261122190000`) | Coleta in-app contínua |
 | Observabilidade | Logs estruturados em edge functions | Sentry, Datadog, New Relic frontend+backend |
 | Backup PITR | Não documentado | Point-in-time recovery + DR runbook |
 | Sandbox/staging | Inexistente | Ambiente cliente para testes |
