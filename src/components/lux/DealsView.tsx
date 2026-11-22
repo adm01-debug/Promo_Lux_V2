@@ -16,6 +16,7 @@ import { AddDealDialog } from "./deals/AddDealDialog";
 import { StagesManagerDialog } from "./deals/StagesManagerDialog";
 import { LostReasonsDialog } from "./deals/LostReasonsDialog";
 import { DealDetailDrawer } from "./deals/DealDetailDrawer";
+import { PermissionGate } from "@/components/lux/permissions/PermissionGate";
 
 export function DealsView() {
   useTaskReminders();
@@ -112,9 +113,11 @@ export function DealsView() {
           <Button variant="outline" onClick={() => setLostOpen(true)}>
             <TrendingDown className="h-4 w-4 mr-1.5" /> Perdas
           </Button>
-          <Button onClick={() => { setDefaultStage(null); setAddOpen(true); }}>
-            <Plus className="h-4 w-4 mr-1.5" /> Novo Negócio
-          </Button>
+          <PermissionGate entity="deals" action="create">
+            <Button onClick={() => { setDefaultStage(null); setAddOpen(true); }}>
+              <Plus className="h-4 w-4 mr-1.5" /> Novo Negócio
+            </Button>
+          </PermissionGate>
         </div>
       </div>
 
