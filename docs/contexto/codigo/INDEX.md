@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `3c3788292bbdeda0fed39feb0f0419f067f51e73` (2026-11-21T21:53:50-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e7ba9e274f2901b7c45679713356f5c97ec6a8bd` (2026-11-21T22:15:06-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1051 |
 | arquivos_codigo | 662 |
-| linhas_codigo | 114021 |
+| linhas_codigo | 114033 |
 | rotas | 10 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -241,7 +241,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 6738 nós · 14554 arestas · 586 comunidades · grafo do commit `3c378829`
+- 6738 nós · 14557 arestas · 585 comunidades · grafo do commit `e7ba9e27`
 - comunidades maiores: react (112), badge.tsx (100), @tanstack/react-query (87), gerar.mjs (80), cn (77), generate.py (75), DashboardView.tsx (72), OAuthSandboxPanel.tsx (68), dependencies (65), campaign-dispatch/index.ts (64), framer-motion (64), IntentSignalsView.tsx (63)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useActiveOrganization() (src/contexts/active-org-context.ts), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -355,6 +355,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-21 `e7ba9e2` fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)
 - 2026-11-21 `3c37882` fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)
 - 2026-11-21 `443ff87` fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)
 - 2026-11-21 `77b7e67` fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)
@@ -369,7 +370,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-21 `bb305ef` chore(db): retencao de 30 dias para cron.job_run_details (1013 MB) e qa_reaper_runs (#98)
 - 2026-11-21 `cb0dbe3` docs: auditoria das funcionalidades planejadas contra banco e codigo reais (#101)
 - 2026-11-21 `6cea020` fix(docs): decodifica auth.md que estava gravado em base64 (#100)
-- 2026-11-21 `e5ef06d` fix(functions): versiona a mcp-query (orfa em producao) e a declara no config.toml (#97)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "3c3788292bbdeda0fed39feb0f0419f067f51e73",
+  "commit": "e7ba9e274f2901b7c45679713356f5c97ec6a8bd",
   "branch": "main",
-  "data_commit": "2026-11-21T21:53:50-03:00",
+  "data_commit": "2026-11-21T22:15:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e7ba9e2",
+    "data": "2026-11-21",
+    "assunto": "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)"
+   },
    {
     "sha": "3c37882",
     "data": "2026-11-21",
@@ -126,14 +131,9 @@
     "sha": "ba9db20",
     "data": "2026-11-21",
     "assunto": "fix(campaign-dispatch): bloqueia disparo anonimo com gate de auth (#88)"
-   },
-   {
-    "sha": "b983c3d",
-    "data": "2026-11-21",
-    "assunto": "merge: feat(api): rate-limit server-side por API key na public-api"
    }
   ],
-  "arquivos_mudados_7d": 121,
+  "arquivos_mudados_7d": 122,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 81
+    "commits": 82
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1051,
   "arquivos_codigo": 662,
-  "linhas_codigo": 114021,
+  "linhas_codigo": 114033,
   "rotas": 10,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -588,7 +588,7 @@
   },
   "supabase/functions": {
    "arquivos": 127,
-   "linhas": 22910
+   "linhas": 22922
   },
   "tailwind.config.ts": {
    "arquivos": 1,

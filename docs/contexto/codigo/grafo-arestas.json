@@ -2303,6 +2303,9 @@
    "supabase/functions/_shared/oracle-logger.ts",
    "supabase/functions/_shared/org-membership.ts"
   ],
+  "supabase/functions/org-violation-alerts/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/pg-net-watchdog/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],

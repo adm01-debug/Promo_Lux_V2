@@ -1457,7 +1457,7 @@
    "nome": "org-violation-alerts",
    "entrada": "supabase/functions/org-violation-alerts/index.ts",
    "arquivos": 1,
-   "linhas": 258,
+   "linhas": 270,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1480,7 +1480,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/security/OrgViolationAlertsPanel.tsx"
    ],

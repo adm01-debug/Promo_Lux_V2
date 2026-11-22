@@ -4,21 +4,21 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "3c3788292bbdeda0fed39feb0f0419f067f51e73",
+ "commit_do_grafo": "e7ba9e274f2901b7c45679713356f5c97ec6a8bd",
  "grafo_atual": true,
  "nos": 6738,
- "arestas": 14554,
- "comunidades_total": 586,
+ "arestas": 14557,
+ "comunidades_total": 585,
  "relacoes": {
   "calls": 2141,
   "cites": 12,
   "contains": 5016,
   "defines": 12,
   "dynamic_import": 50,
-  "imports": 3123,
-  "imports_from": 2920,
+  "imports": 3124,
+  "imports_from": 2921,
   "indexes": 301,
-  "indirect_call": 127,
+  "indirect_call": 128,
   "inherits": 9,
   "method": 117,
   "rationale_for": 23,
@@ -28,8 +28,8 @@
   "triggers": 92
  },
  "origem": {
-  "EXTRACTED": 14138,
-  "INFERRED": 416
+  "EXTRACTED": 14140,
+  "INFERRED": 417
  },
  "comunidades": [
   {
@@ -384,6 +384,23 @@
   },
   {
    "id": 23,
+   "nome": "req",
+   "nos": 48,
+   "callables": 26,
+   "arquivos": 12,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "supabase/functions/_shared/cron-auth.ts",
+    "supabase/functions/circuit-breaker-alerts/index.ts",
+    "supabase/functions/dlq-alerts/index.ts",
+    "supabase/functions/instagram-connection-status/index.ts",
+    "supabase/functions/latency-alerts/index.ts",
+    "supabase/functions/org-violation-alerts/index.ts",
+    "supabase/functions/pg-net-watchdog/index.ts"
+   ]
+  },
+  {
+   "id": 24,
    "nome": "oracle-search-decisors/index.ts",
    "nos": 48,
    "callables": 32,
@@ -400,7 +417,7 @@
    ]
   },
   {
-   "id": 24,
+   "id": 25,
    "nome": "automation.mjs",
    "nos": 47,
    "callables": 35,
@@ -412,7 +429,7 @@
    ]
   },
   {
-   "id": 25,
+   "id": 26,
    "nome": "gmaps-proxy/index.ts",
    "nos": 46,
    "callables": 26,
@@ -429,7 +446,7 @@
    ]
   },
   {
-   "id": 26,
+   "id": 27,
    "nome": "lint-ratchet.mjs",
    "nos": 46,
    "callables": 42,
@@ -441,7 +458,7 @@
    ]
   },
   {
-   "id": 27,
+   "id": 28,
    "nome": "snapshot.py",
    "nos": 45,
    "callables": 35,
@@ -451,7 +468,7 @@
    ]
   },
   {
-   "id": 28,
+   "id": 29,
    "nome": "Monitoring.tsx",
    "nos": 44,
    "callables": 33,
@@ -468,7 +485,7 @@
    ]
   },
   {
-   "id": 29,
+   "id": 30,
    "nome": "LoginCard.tsx",
    "nos": 43,
    "callables": 23,
@@ -485,7 +502,7 @@
    ]
   },
   {
-   "id": 30,
+   "id": 31,
    "nome": "graphify-local.mjs",
    "nos": 43,
    "callables": 36,
@@ -496,27 +513,10 @@
    ]
   },
   {
-   "id": 31,
-   "nome": "req",
-   "nos": 43,
-   "callables": 23,
-   "arquivos": 11,
-   "exemplos_arquivos": [
-    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
-    "supabase/functions/_shared/cron-auth.ts",
-    "supabase/functions/circuit-breaker-alerts/index.ts",
-    "supabase/functions/dlq-alerts/index.ts",
-    "supabase/functions/instagram-connection-status/index.ts",
-    "supabase/functions/latency-alerts/index.ts",
-    "supabase/functions/pg-net-watchdog/index.ts",
-    "supabase/functions/purge-soft-deleted/index.ts"
-   ]
-  },
-  {
    "id": 32,
    "nome": "ref_https",
-   "nos": 41,
-   "callables": 19,
+   "nos": 42,
+   "callables": 18,
    "arquivos": 11,
    "exemplos_arquivos": [
     "supabase/functions/admin-list-companies/index.ts",
@@ -524,9 +524,9 @@
     "supabase/functions/audit-logs-prune/index.ts",
     "supabase/functions/auth-rate-limit/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
+    "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
-    "supabase/functions/health/index.ts",
-    "supabase/functions/lusha-cookie-health/index.ts"
+    "supabase/functions/health/index.ts"
    ]
   },
   {
@@ -2723,7 +2723,7 @@
   "supabase/functions/deliverability-check/index.ts": "deliverability-check/index.ts",
   "supabase/functions/dlq-alerts/index.ts": "req",
   "supabase/functions/email-oauth-callback/index.ts": "ref_https",
-  "supabase/functions/email-oauth-connect/index.ts": "email-oauth-connect/index.ts",
+  "supabase/functions/email-oauth-connect/index.ts": "ref_https",
   "supabase/functions/email-oauth-disconnect/index.ts": "ref_https",
   "supabase/functions/email-poll-replies/index.ts": "email-poll-replies/index.ts",
   "supabase/functions/email-verify/index.ts": "deliverability-check/index.ts",
@@ -2747,7 +2747,7 @@
   "supabase/functions/oracle-enrich-contact/index.ts": "oracle-enrich-contact/index.ts",
   "supabase/functions/oracle-push-bitrix/index.ts": "oracle-enrich-contact/index.ts",
   "supabase/functions/oracle-search-decisors/index.ts": "oracle-search-decisors/index.ts",
-  "supabase/functions/org-violation-alerts/index.ts": "ref_https",
+  "supabase/functions/org-violation-alerts/index.ts": "req",
   "supabase/functions/pg-net-watchdog/index.ts": "req",
   "supabase/functions/public-api/index.ts": "public-api/index.ts",
   "supabase/functions/purge-soft-deleted/index.ts": "req",
