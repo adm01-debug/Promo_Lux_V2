@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, Building2, Target, FileDown, Loader2, Filter, CalendarClock } from "lucide-react";
+import { BarChart3, TrendingUp, Building2, Target, FileDown, Loader2, Filter, CalendarClock, Gauge, Trophy } from "lucide-react";
 import { DataError } from "@/components/lux/DataError";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +13,8 @@ import { useAnalyticsData } from "./analytics/useAnalyticsData";
 import { ConversionTab } from "./analytics/ConversionTab";
 import { DataEnrichmentTab } from "./analytics/DataEnrichmentTab";
 import { ScheduledReportsTab } from "./analytics/ScheduledReportsTab";
+import { GoalsTab } from "./analytics/GoalsTab";
+import { LeaderboardTab } from "./analytics/LeaderboardTab";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -108,6 +110,12 @@ export const AnalyticsView = () => {
           <TabsTrigger value="dados" className="gap-1.5 text-xs">
             <BarChart3 className="h-3.5 w-3.5" /> Dados & Enriquecimento
           </TabsTrigger>
+          <TabsTrigger value="metas" className="gap-1.5 text-xs">
+            <Gauge className="h-3.5 w-3.5" /> Metas
+          </TabsTrigger>
+          <TabsTrigger value="ranking" className="gap-1.5 text-xs">
+            <Trophy className="h-3.5 w-3.5" /> Ranking
+          </TabsTrigger>
           <TabsTrigger value="agendados" className="gap-1.5 text-xs">
             <CalendarClock className="h-3.5 w-3.5" /> Relatórios Agendados
           </TabsTrigger>
@@ -132,6 +140,14 @@ export const AnalyticsView = () => {
             totalCompanies={d.totalCompanies}
             enrichedCount={d.enrichedCount}
           />
+        </TabsContent>
+
+        <TabsContent value="metas" className="space-y-6">
+          <GoalsTab />
+        </TabsContent>
+
+        <TabsContent value="ranking" className="space-y-6">
+          <LeaderboardTab />
         </TabsContent>
 
         <TabsContent value="agendados" className="space-y-6">

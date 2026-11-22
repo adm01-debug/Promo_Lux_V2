@@ -53,6 +53,7 @@
     "scrape_dead_letter",
     "scrape_jobs",
     "scrape_queue",
+    "sales_goals",
     "scrape_results",
     "stakeholders",
     "webhook_deliveries",

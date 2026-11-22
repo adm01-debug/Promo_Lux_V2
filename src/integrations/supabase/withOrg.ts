@@ -107,6 +107,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "ipc_config",
   "notifications",
   "oauth_sandbox_snapshots",
+  "sales_goals",
   "scrape_jobs",
   "scrape_results",
   "stakeholders",

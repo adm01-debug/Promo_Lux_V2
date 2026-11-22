@@ -4219,6 +4219,53 @@ export type Database = {
         }
         Relationships: []
       }
+      sales_goals: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          metric: string
+          organization_id: string
+          owner_id: string | null
+          period: string
+          period_start: string
+          target: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          metric: string
+          organization_id: string
+          owner_id?: string | null
+          period: string
+          period_start: string
+          target: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          metric?: string
+          organization_id?: string
+          owner_id?: string | null
+          period?: string
+          period_start?: string
+          target?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_goals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scheduled_reports: {
         Row: {
           active: boolean
@@ -5243,6 +5290,51 @@ export type Database = {
           lost_reason_id: string | null
           organization_id: string | null
           total_value: number | null
+        }
+        Relationships: []
+      }
+      org_leaderboard: {
+        Row: {
+          activities: number
+          full_name: string | null
+          month_start: string
+          new_companies: number
+          organization_id: string
+          score_value: number
+          user_id: string
+          won_deals: number
+          won_value: number
+        }
+        Relationships: []
+      }
+      sales_goal_progress: {
+        Row: {
+          achieved: number
+          goal_id: string
+          metric: string
+          organization_id: string
+          owner_id: string | null
+          pct: number
+          period: string
+          period_start: string
+          target: number
+        }
+        Relationships: []
+      }
+      sales_goals_detailed: {
+        Row: {
+          achieved: number
+          created_at: string
+          goal_id: string
+          metric: string
+          organization_id: string
+          owner_id: string | null
+          owner_name: string | null
+          pct: number
+          period: string
+          period_start: string
+          target: number
+          updated_at: string
         }
         Relationships: []
       }
