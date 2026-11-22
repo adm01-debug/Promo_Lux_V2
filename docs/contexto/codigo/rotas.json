@@ -1805,6 +1805,7 @@
    "hooks": [
     "useActiveOrganization",
     "useAuth",
+    "useCan",
     "useConfirm",
     "useContext",
     "useCreateInvite",
@@ -1825,10 +1826,12 @@
     "useMyOrganizations",
     "useOrgInvites",
     "useOrgMembers",
+    "usePermissions",
     "useQuery",
     "useQueryClient",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useSensor",
     "useSensors",
     "useSortable",
@@ -1839,6 +1842,7 @@
    "hooks_locais": [
     "useActiveOrganization",
     "useAuth",
+    "useCan",
     "useConfirm",
     "useCreateInvite",
     "useCreateOrganization",
@@ -1854,8 +1858,10 @@
     "useMyOrganizations",
     "useOrgInvites",
     "useOrgMembers",
+    "usePermissions",
     "useRemoveMember",
     "useRevokeInvite",
+    "useRolePermissions",
     "useTaskReminders",
     "useUpdateMemberRole"
    ],
@@ -1871,17 +1877,23 @@
     "organization_invites",
     "organization_members",
     "organizations",
-    "profiles"
+    "profiles",
+    "role_permissions"
    ],
    "rpcs": [
     "create_default_deal_stages",
+    "default_role_permissions",
     "refresh_org_scores"
    ],
    "edges": [],
    "canais_realtime": [],
    "flags": [],
-   "papeis": [],
-   "arquivos_puxados": 32
+   "papeis": [
+    "admin",
+    "sdr",
+    "viewer"
+   ],
+   "arquivos_puxados": 36
   },
   {
    "id": "gmaps",
@@ -2075,7 +2087,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 53
+   "arquivos_puxados": 55
   },
   {
    "id": "intent",

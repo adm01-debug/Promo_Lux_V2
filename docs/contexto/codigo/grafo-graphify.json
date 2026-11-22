@@ -4,19 +4,19 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "9fdb45538b5a74353b681abe4e1f46580ae08b33",
+ "commit_do_grafo": "336b2288e4a3f46d1fd5e2ea5bb11f586c072194",
  "grafo_atual": true,
  "nos": 7083,
- "arestas": 15591,
- "comunidades_total": 608,
+ "arestas": 15597,
+ "comunidades_total": 601,
  "relacoes": {
   "calls": 2231,
   "cites": 12,
   "contains": 5268,
   "defines": 12,
   "dynamic_import": 52,
-  "imports": 3459,
-  "imports_from": 3150,
+  "imports": 3462,
+  "imports_from": 3153,
   "indexes": 320,
   "indirect_call": 129,
   "inherits": 9,
@@ -28,7 +28,7 @@
   "triggers": 98
  },
  "origem": {
-  "EXTRACTED": 15130,
+  "EXTRACTED": 15136,
   "INFERRED": 461
  },
  "comunidades": [
@@ -334,6 +334,23 @@
   },
   {
    "id": 20,
+   "nome": "DealDetailDrawer.tsx",
+   "nos": 50,
+   "callables": 27,
+   "arquivos": 18,
+   "exemplos_arquivos": [
+    "docs/GAPS-ENTERPRISE.md",
+    "docs/adr/021-round27-qa-exhaustive.md",
+    "docs/adr/022-round28-functional-excellence.md",
+    "docs/adr/023-round29-refactor-safety-and-parity.md",
+    "package.json",
+    "src/components/lux/DealsView.tsx",
+    "src/components/lux/deals/AddDealDialog.tsx",
+    "src/components/lux/deals/DealCard.tsx"
+   ]
+  },
+  {
+   "id": 21,
    "nome": "oracle-search-decisors/index.ts",
    "nos": 48,
    "callables": 32,
@@ -350,7 +367,7 @@
    ]
   },
   {
-   "id": 21,
+   "id": 22,
    "nome": "snapshot.py",
    "nos": 46,
    "callables": 34,
@@ -360,7 +377,7 @@
    ]
   },
   {
-   "id": 22,
+   "id": 23,
    "nome": "gmaps-proxy/index.ts",
    "nos": 46,
    "callables": 26,
@@ -377,7 +394,7 @@
    ]
   },
   {
-   "id": 23,
+   "id": 24,
    "nome": "automation.mjs",
    "nos": 46,
    "callables": 35,
@@ -389,7 +406,7 @@
    ]
   },
   {
-   "id": 24,
+   "id": 25,
    "nome": "lint-ratchet.mjs",
    "nos": 46,
    "callables": 42,
@@ -398,23 +415,6 @@
     "scripts/ci/lint-ratchet.mjs",
     "scripts/ci/lint-ratchet.unit.mjs",
     "scripts/lib/seguranca-processo.mjs"
-   ]
-  },
-  {
-   "id": 25,
-   "nome": "DryRunLogsPanel.tsx",
-   "nos": 46,
-   "callables": 27,
-   "arquivos": 9,
-   "exemplos_arquivos": [
-    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-    "src/components/lux/integrations/DryRunLogsPanel.tsx",
-    "src/components/lux/integrations/EmailSyncHistorySheet.tsx",
-    "src/components/lux/integrations/OAuthSandboxPanel.tsx",
-    "src/components/lux/organizations/MembershipAuditDetailSheet.tsx",
-    "src/components/ui/sheet.tsx",
-    "src/hooks/useDryRunLogs.ts",
-    "src/hooks/useEmailSyncLog.ts"
    ]
   },
   {
@@ -511,6 +511,22 @@
   },
   {
    "id": 32,
+   "nome": "NotificationsPanel.tsx",
+   "nos": 39,
+   "callables": 21,
+   "arquivos": 7,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/NotificationsPanel.tsx",
+    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+    "src/components/lux/integrations/DryRunLogsPanel.tsx",
+    "src/components/lux/integrations/EmailSyncHistorySheet.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/hooks/useEmailSyncLog.ts"
+   ]
+  },
+  {
+   "id": 33,
    "nome": "Campanhas & Email",
    "nos": 39,
    "callables": 0,
@@ -520,7 +536,7 @@
    ]
   },
   {
-   "id": 33,
+   "id": 34,
    "nome": "apify-gateway.ts",
    "nos": 37,
    "callables": 25,
@@ -533,7 +549,7 @@
    ]
   },
   {
-   "id": 34,
+   "id": 35,
    "nome": ".collect",
    "nos": 37,
    "callables": 36,
@@ -543,7 +559,7 @@
    ]
   },
   {
-   "id": 35,
+   "id": 36,
    "nome": "leadcontact-client.ts",
    "nos": 37,
    "callables": 27,
@@ -559,7 +575,7 @@
    ]
   },
   {
-   "id": 36,
+   "id": 37,
    "nome": "useOracleV2.ts",
    "nos": 35,
    "callables": 21,
@@ -573,7 +589,7 @@
    ]
   },
   {
-   "id": 37,
+   "id": 38,
    "nome": "App.tsx",
    "nos": 34,
    "callables": 13,
@@ -590,7 +606,7 @@
    ]
   },
   {
-   "id": 38,
+   "id": 39,
    "nome": "DashboardView.tsx",
    "nos": 34,
    "callables": 20,
@@ -607,7 +623,21 @@
    ]
   },
   {
-   "id": 39,
+   "id": 40,
+   "nome": "PermissionsMatrix.tsx",
+   "nos": 34,
+   "callables": 13,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/permissions/PermissionGate.tsx",
+    "src/components/lux/permissions/PermissionsMatrix.tsx",
+    "src/hooks/usePermissions.ts",
+    "src/hooks/useRolePermissions.ts",
+    "src/lib/permissions.ts"
+   ]
+  },
+  {
+   "id": 41,
    "nome": "withOrg.ts",
    "nos": 34,
    "callables": 18,
@@ -619,7 +649,7 @@
    ]
   },
   {
-   "id": 40,
+   "id": 42,
    "nome": "deliverability-check/index.ts",
    "nos": 34,
    "callables": 16,
@@ -634,7 +664,7 @@
    ]
   },
   {
-   "id": 41,
+   "id": 43,
    "nome": "web-scrape-worker/index.ts",
    "nos": 34,
    "callables": 25,
@@ -651,7 +681,7 @@
    ]
   },
   {
-   "id": 42,
+   "id": 44,
    "nome": "Header.tsx",
    "nos": 33,
    "callables": 14,
@@ -668,7 +698,7 @@
    ]
   },
   {
-   "id": 43,
+   "id": 45,
    "nome": "orgErrorHandler.ts",
    "nos": 33,
    "callables": 22,
@@ -680,7 +710,7 @@
    ]
   },
   {
-   "id": 44,
+   "id": 46,
    "nome": "devDependencies",
    "nos": 32,
    "callables": 0,
@@ -690,7 +720,21 @@
    ]
   },
   {
-   "id": 45,
+   "id": 47,
+   "nome": "useAutomationsMonitor.ts",
+   "nos": 32,
+   "callables": 25,
+   "arquivos": 5,
+   "exemplos_arquivos": [
+    "src/components/lux/automations/AutomationStageBadge.tsx",
+    "src/hooks/useAutomationsMonitor.ts",
+    "src/hooks/useCompanyDetails.ts",
+    "src/hooks/useLeadScores.ts",
+    "src/integrations/supabase/withOrg.ts"
+   ]
+  },
+  {
+   "id": 48,
    "nome": "20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql",
    "nos": 31,
    "callables": 0,
@@ -700,7 +744,7 @@
    ]
   },
   {
-   "id": 46,
+   "id": 49,
    "nome": "Sidebar.tsx",
    "nos": 30,
    "callables": 11,
@@ -715,7 +759,7 @@
    ]
   },
   {
-   "id": 47,
+   "id": 50,
    "nome": "ref_node_child_process",
    "nos": 29,
    "callables": 7,
@@ -732,7 +776,7 @@
    ]
   },
   {
-   "id": 48,
+   "id": 51,
    "nome": "LeaderboardTab.tsx",
    "nos": 29,
    "callables": 18,
@@ -747,7 +791,7 @@
    ]
   },
   {
-   "id": 49,
+   "id": 52,
    "nome": "20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql",
    "nos": 29,
    "callables": 0,
@@ -757,7 +801,7 @@
    ]
   },
   {
-   "id": 50,
+   "id": 53,
    "nome": "Fase 1 — 22 Dimensões (nota + evidências + gaps + ações)",
    "nos": 28,
    "callables": 0,
@@ -767,21 +811,7 @@
    ]
   },
   {
-   "id": 51,
-   "nome": "useAutomationsMonitor.ts",
-   "nos": 28,
-   "callables": 23,
-   "arquivos": 5,
-   "exemplos_arquivos": [
-    "src/components/lux/automations/AutomationStageBadge.tsx",
-    "src/hooks/useAutomationsMonitor.ts",
-    "src/hooks/useCompanyDetails.ts",
-    "src/integrations/supabase/withOrg.ts",
-    "src/pages/Monitoring.tsx"
-   ]
-  },
-  {
-   "id": 52,
+   "id": 54,
    "nome": "SourceComparisonSummary.tsx",
    "nos": 28,
    "callables": 21,
@@ -795,7 +825,7 @@
    ]
   },
   {
-   "id": 53,
+   "id": 55,
    "nome": "scrape-queue-worker/index.ts",
    "nos": 28,
    "callables": 19,
@@ -807,7 +837,7 @@
    ]
   },
   {
-   "id": 54,
+   "id": 56,
    "nome": "20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql",
    "nos": 28,
    "callables": 0,
@@ -817,7 +847,7 @@
    ]
   },
   {
-   "id": 55,
+   "id": 57,
    "nome": "withOrg",
    "nos": 27,
    "callables": 2,
@@ -832,7 +862,7 @@
    ]
   },
   {
-   "id": 56,
+   "id": 58,
    "nome": "auth",
    "nos": 27,
    "callables": 0,
@@ -844,7 +874,7 @@
    ]
   },
   {
-   "id": 57,
+   "id": 59,
    "nome": "cenarios.mjs",
    "nos": 27,
    "callables": 9,
@@ -861,7 +891,7 @@
    ]
   },
   {
-   "id": 58,
+   "id": 60,
    "nome": "hiker-client.ts",
    "nos": 26,
    "callables": 24,
@@ -872,7 +902,7 @@
    ]
   },
   {
-   "id": 59,
+   "id": 61,
    "nome": "Any",
    "nos": 25,
    "callables": 22,
@@ -882,7 +912,7 @@
    ]
   },
   {
-   "id": 60,
+   "id": 62,
    "nome": "CompanyFilters.tsx",
    "nos": 25,
    "callables": 13,
@@ -899,79 +929,9 @@
    ]
   },
   {
-   "id": 61,
-   "nome": "StakeholderFinderView.tsx",
-   "nos": 25,
-   "callables": 14,
-   "arquivos": 8,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "src/components/lux/StakeholderFinderView.tsx",
-    "src/components/lux/__tests__/StakeholderCard.test.tsx",
-    "src/components/lux/icons/LinkedinIcon.tsx",
-    "src/components/lux/stakeholders/StakeholderCard.tsx",
-    "src/components/lux/stakeholders/StakeholderListRow.tsx",
-    "src/components/lux/stakeholders/stakeholder-utils.ts",
-    "src/lib/demoData.ts"
-   ]
-  },
-  {
-   "id": 62,
-   "nome": "PermissionsMatrix.tsx",
-   "nos": 25,
-   "callables": 7,
-   "arquivos": 3,
-   "exemplos_arquivos": [
-    "src/components/lux/permissions/PermissionsMatrix.tsx",
-    "src/hooks/useRolePermissions.ts",
-    "src/lib/permissions.ts"
-   ]
-  },
-  {
    "id": 63,
-   "nome": "bitrix-client.ts",
-   "nos": 25,
-   "callables": 17,
-   "arquivos": 2,
-   "exemplos_arquivos": [
-    "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
-    "supabase/functions/_shared/bitrix-client.ts"
-   ]
-  },
-  {
-   "id": 64,
-   "nome": "LUX IA — Análise Executiva de Funcionalidades",
-   "nos": 24,
-   "callables": 0,
-   "arquivos": 1,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md"
-   ]
-  },
-  {
-   "id": 65,
-   "nome": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
-   "nos": 24,
-   "callables": 0,
-   "arquivos": 1,
-   "exemplos_arquivos": [
-    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
-   ]
-  },
-  {
-   "id": 66,
-   "nome": "gen-round36-preflight.ts",
-   "nos": 24,
-   "callables": 6,
-   "arquivos": 1,
-   "exemplos_arquivos": [
-    "scripts/gen-round36-preflight.ts"
-   ]
-  },
-  {
-   "id": 67,
    "nome": "demoData.ts",
-   "nos": 24,
+   "nos": 25,
    "callables": 8,
    "arquivos": 5,
    "exemplos_arquivos": [
@@ -983,7 +943,64 @@
    ]
   },
   {
+   "id": 64,
+   "nome": "bitrix-client.ts",
+   "nos": 25,
+   "callables": 17,
+   "arquivos": 2,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/bitrix-client.test.ts",
+    "supabase/functions/_shared/bitrix-client.ts"
+   ]
+  },
+  {
+   "id": 65,
+   "nome": "LUX IA — Análise Executiva de Funcionalidades",
+   "nos": 24,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md"
+   ]
+  },
+  {
+   "id": 66,
+   "nome": "StakeholderFinderView.tsx",
+   "nos": 24,
+   "callables": 14,
+   "arquivos": 7,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "src/components/lux/StakeholderFinderView.tsx",
+    "src/components/lux/__tests__/StakeholderCard.test.tsx",
+    "src/components/lux/icons/LinkedinIcon.tsx",
+    "src/components/lux/stakeholders/StakeholderCard.tsx",
+    "src/components/lux/stakeholders/StakeholderListRow.tsx",
+    "src/components/lux/stakeholders/stakeholder-utils.ts"
+   ]
+  },
+  {
+   "id": 67,
+   "nome": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
+   "nos": 24,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "supabase/migrations/20261121230000_scheduled_reports_bulk_imports_role_permissions.sql"
+   ]
+  },
+  {
    "id": 68,
+   "nome": "gen-round36-preflight.ts",
+   "nos": 24,
+   "callables": 6,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "scripts/gen-round36-preflight.ts"
+   ]
+  },
+  {
+   "id": 69,
    "nome": "aggregations.ts",
    "nos": 24,
    "callables": 21,
@@ -994,30 +1011,13 @@
    ]
   },
   {
-   "id": 69,
+   "id": 70,
    "nome": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
    "nos": 24,
    "callables": 0,
    "arquivos": 1,
    "exemplos_arquivos": [
     "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
-   ]
-  },
-  {
-   "id": 70,
-   "nome": "useAuth",
-   "nos": 23,
-   "callables": 15,
-   "arquivos": 13,
-   "exemplos_arquivos": [
-    "docs/GAPS-ENTERPRISE.md",
-    "docs/adr/021-round27-qa-exhaustive.md",
-    "docs/adr/023-round29-refactor-safety-and-parity.md",
-    "src/components/lux/DealsView.tsx",
-    "src/components/lux/deals/AddDealDialog.tsx",
-    "src/components/lux/deals/DealTasksPanel.tsx",
-    "src/components/lux/deals/StagesManagerDialog.tsx",
-    "src/contexts/auth-context.ts"
    ]
   },
   {
@@ -1032,6 +1032,35 @@
   },
   {
    "id": 72,
+   "nome": "useAuth",
+   "nos": 23,
+   "callables": 19,
+   "arquivos": 7,
+   "exemplos_arquivos": [
+    "src/components/lux/ScrapeResultsView.tsx",
+    "src/components/lux/deals/LostReasonsDialog.tsx",
+    "src/contexts/auth-context.ts",
+    "src/hooks/useDashboardLayout.ts",
+    "src/hooks/useLostReasons.ts",
+    "src/pages/AcceptInvite.tsx",
+    "src/pages/Monitoring.tsx"
+   ]
+  },
+  {
+   "id": 73,
+   "nome": "DlqAlertSettingsCard.tsx",
+   "nos": 23,
+   "callables": 14,
+   "arquivos": 4,
+   "exemplos_arquivos": [
+    "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+    "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx",
+    "src/hooks/useDlqAlertSettings.ts",
+    "src/lib/dlq/aggregations.ts"
+   ]
+  },
+  {
+   "id": 74,
    "nome": "view-skeleton-map.tsx",
    "nos": 23,
    "callables": 16,
@@ -1045,7 +1074,7 @@
    ]
   },
   {
-   "id": 73,
+   "id": 75,
    "nome": "orgErrorHandler.e2e.test.ts",
    "nos": 22,
    "callables": 8,
@@ -1059,7 +1088,7 @@
    ]
   },
   {
-   "id": 74,
+   "id": 76,
    "nome": "historyUtils.fuzz.test.ts",
    "nos": 22,
    "callables": 14,
@@ -1073,7 +1102,7 @@
    ]
   },
   {
-   "id": 75,
+   "id": 77,
    "nome": "OnboardingTour.tsx",
    "nos": 22,
    "callables": 11,
@@ -1090,7 +1119,7 @@
    ]
   },
   {
-   "id": 76,
+   "id": 78,
    "nome": "20260405144948_934c8ede-500a-4593-afdb-6f219e284fbc.sql",
    "nos": 22,
    "callables": 0,
@@ -1100,47 +1129,13 @@
    ]
   },
   {
-   "id": 77,
+   "id": 79,
    "nome": "parse_sql_schema",
    "nos": 22,
    "callables": 19,
    "arquivos": 1,
    "exemplos_arquivos": [
     "scripts/regras_negocio/generate.py"
-   ]
-  },
-  {
-   "id": 78,
-   "nome": "Analisado",
-   "nos": 21,
-   "callables": 12,
-   "arquivos": 9,
-   "exemplos_arquivos": [
-    "CHANGELOG.md",
-    "docs/adr/024-round30-refactor-safety-split.md",
-    "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
-    "src/components/lux/lusha/DecisionMakersGrid.tsx",
-    "src/components/lux/lusha/SessionsPanel.tsx",
-    "src/components/lux/lusha/constants.test.ts",
-    "src/components/lux/lusha/constants.ts",
-    "src/components/lux/lusha/types.test.ts"
-   ]
-  },
-  {
-   "id": 79,
-   "nome": "2. GAPS-ENTERPRISE, categoria por categoria",
-   "nos": 21,
-   "callables": 10,
-   "arquivos": 10,
-   "exemplos_arquivos": [
-    "docs/AUDITORIA-FUNCIONALIDADES.md",
-    "docs/GAPS-ENTERPRISE.md",
-    "src/components/auth/MFAEnroll.tsx",
-    "src/components/auth/MFAVerify.tsx",
-    "src/components/lux/analytics/ConversionTab.tsx",
-    "src/components/lux/analytics/DataEnrichmentTab.tsx",
-    "src/components/lux/automations/AutomationsRealtimeView.tsx",
-    "src/components/lux/companies/ImportCompaniesDialog.tsx"
    ]
   }
  ],
@@ -1996,7 +1991,7 @@
   "docs/AUTOMACAO_LOCAL.md": "Automação local — Promo_Lux_V2",
   "docs/ESTADO_ATUAL.md": "ESTADO ATUAL DO SISTEMA — LUX IA",
   "docs/FUNCIONALIDADES.md": "react",
-  "docs/GAPS-ENTERPRISE.md": "usePermissions.ts",
+  "docs/GAPS-ENTERPRISE.md": "3. Matriz Comparativa",
   "docs/LGPD.md": "🛡️ Relatório de Conformidade LGPD — LUX IA",
   "docs/LUSHA-INTEGRATION.md": "Lusha Intelligence — Integração LUX",
   "docs/ORACLE_V2.md": "useOracleV2.ts",
@@ -2008,7 +2003,7 @@
   "docs/adr/006-structured-logging.md": "ADR-006: Structured Logging em Edge Functions",
   "docs/adr/007-multi-tenant-defense-in-depth.md": "withOrg",
   "docs/adr/007-org-isolation-proxy.md": "orgErrorHandler.e2e.test.ts",
-  "docs/adr/008-soft-delete-policy.md": "ADR-008: Política de Soft Delete e Retenção de Dados",
+  "docs/adr/008-soft-delete-policy.md": "3. Matriz Comparativa",
   "docs/adr/009-security-baseline.md": "ADR-009: Security Baseline (20-warnings)",
   "docs/adr/011-round17-baseline.md": "ADR-011: Rodada #17 — Motor de scrape web + hardening final",
   "docs/adr/012-round18-observability.md": "RetryPolicyAdvisoriesPanel",
@@ -2022,7 +2017,7 @@
   "docs/adr/020-round26-recoverability.md": "ADR-020 — Rodada #26: Recuperabilidade e compactação de longo prazo",
   "docs/adr/021-round27-qa-exhaustive.md": "ADR-021 — Rodada #27: QA Exaustivo & Hardening Funcional",
   "docs/adr/022-round28-functional-excellence.md": "DealDetailDrawer.tsx",
-  "docs/adr/023-round29-refactor-safety-and-parity.md": "ADR-023: Rodada #29 — Refactor Safety & Paridade de Optimistic Locking",
+  "docs/adr/023-round29-refactor-safety-and-parity.md": "DealDetailDrawer.tsx",
   "docs/adr/024-round30-refactor-safety-split.md": "ADR-024 — Rodada #30: Refactor Safety & Split Inicial do LushaIntelligenceView",
   "docs/adr/025-round31-decision-makers-grid-split.md": "ADR-025 — Rodada #31: Split do DecisionMakersGrid",
   "docs/adr/026-round32-sessions-panel-split.md": "ADR-026 — Rodada #32: Split do SessionsPanel",
@@ -2041,11 +2036,11 @@
   "docs/contexto/regras/manual/README.md": "manual/README.md",
   "docs/edge-functions.md": "Ações",
   "docs/erd.md": "🗺️ Diagrama Entidade-Relacionamento (ERD)",
-  "docs/estado/01-frontend.md": "Dimensão 2 — Backend / Edge Functions",
-  "docs/estado/02-backend-edge-functions.md": "Dimensão 2 — Backend / Edge Functions",
+  "docs/estado/01-frontend.md": "ESTADO_ATUAL.md",
+  "docs/estado/02-backend-edge-functions.md": "3. Matriz Comparativa",
   "docs/estado/03-dados-e-runtime.md": "Dimensão 3 — Dados e Runtime",
   "docs/estado/04-integracoes.md": "Dimensão 4 — Integrações",
-  "docs/estado/05-infra-ci-testes.md": "Dimensão 2 — Backend / Edge Functions",
+  "docs/estado/05-infra-ci-testes.md": "Dimensão 5 — Infraestrutura, CI e Testes",
   "docs/openapi.ts": "openapi.ts",
   "docs/pendencias/_backlog-verificado.md": "useScheduledReports.ts",
   "docs/pendencias/_estado-itens-1-3.md": "Estado dos itens executaveis — Promo_Lux_V2",
@@ -2056,7 +2051,7 @@
   "docs/runbooks/drift-reconciliacao-2026-11-13.md": "Incidente: drift de migrations em produção — reconciliação (2026-11-13)",
   "docs/runbooks/migration-template.md": "Template de Migration (sem credenciais)",
   "docs/runbooks/migrations.md": "Fluxo de Migrações — Supabase CLI / CI",
-  "docs/schema-tabelas-principais.md": "Observabilidade",
+  "docs/schema-tabelas-principais.md": "useAuditTrail.ts",
   "docs/webhooks.md": "Webhooks — Guia de Integração",
   "e2e/accessibility.spec.ts": "helpers/auth.ts",
   "e2e/auth.spec.ts": "helpers/auth.ts",
@@ -2106,7 +2101,7 @@
   "scripts/check-security-definer.sh": "check-security-definer.sh",
   "scripts/ci/check-claude-md-integrity.mjs": "ref_node_fs",
   "scripts/ci/lint-ratchet.mjs": "lint-ratchet.mjs",
-  "scripts/ci/lint-ratchet.unit.mjs": "lint-ratchet.mjs",
+  "scripts/ci/lint-ratchet.unit.mjs": "Automação / Workflows",
   "scripts/gen-current-report.ts": "simulateScenario",
   "scripts/gen-legacy-baseline.ts": "simulateScenario",
   "scripts/gen-round18-preflight.ts": "simulateScenario",
@@ -2186,7 +2181,7 @@
   "src/components/lux/ConnectionStatus.tsx": "Index.tsx",
   "src/components/lux/DashboardView.tsx": "DashboardView.tsx",
   "src/components/lux/DataError.tsx": "button.tsx",
-  "src/components/lux/DealsView.tsx": "useAuth",
+  "src/components/lux/DealsView.tsx": "DealDetailDrawer.tsx",
   "src/components/lux/EditCompanyDialog.tsx": "react",
   "src/components/lux/EmailSuppressionsView.tsx": "CompaniesView.tsx",
   "src/components/lux/EmptyState.tsx": "badge.tsx",
@@ -2271,30 +2266,30 @@
   "src/components/lux/automations/AutomationsRealtimeView.tsx": "2. GAPS-ENTERPRISE, categoria por categoria",
   "src/components/lux/automations/CompanyAutomationTable.tsx": "framer-motion",
   "src/components/lux/campaigns/CampaignFormFields.tsx": "button.tsx",
-  "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": "DryRunLogsPanel.tsx",
+  "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": "NotificationsPanel.tsx",
   "src/components/lux/campaigns/EmailTemplatePicker.tsx": "button.tsx",
   "src/components/lux/campaigns/EmailTemplatesTab.tsx": "button.tsx",
   "src/components/lux/command-palette/commandPaletteData.ts": "CommandPalette.tsx",
   "src/components/lux/companies/CompanyTableRow.tsx": "Header.tsx",
   "src/components/lux/companies/ImportCompaniesDialog.tsx": "react",
   "src/components/lux/company-filters-utils.ts": "CompanyFilters.tsx",
-  "src/components/lux/deals/AddDealDialog.tsx": "useDeals.ts",
-  "src/components/lux/deals/DealCard.tsx": "useDeals.ts",
-  "src/components/lux/deals/DealColumn.tsx": "useDeals.ts",
-  "src/components/lux/deals/DealDetailDrawer.tsx": "useDeals.ts",
+  "src/components/lux/deals/AddDealDialog.tsx": "DealDetailDrawer.tsx",
+  "src/components/lux/deals/DealCard.tsx": "DealDetailDrawer.tsx",
+  "src/components/lux/deals/DealColumn.tsx": "DealDetailDrawer.tsx",
+  "src/components/lux/deals/DealDetailDrawer.tsx": "DealDetailDrawer.tsx",
   "src/components/lux/deals/DealTasksPanel.tsx": "button.tsx",
-  "src/components/lux/deals/LostReasonsDialog.tsx": "useLostReasons.ts",
+  "src/components/lux/deals/LostReasonsDialog.tsx": "useAuth",
   "src/components/lux/deals/StagesManagerDialog.tsx": "button.tsx",
   "src/components/lux/icons/LinkedinIcon.tsx": "StakeholderFinderView.tsx",
-  "src/components/lux/integrations/ApiDocsCard.tsx": "3. Functions chamadas pelo frontend (28)",
+  "src/components/lux/integrations/ApiDocsCard.tsx": "3. Matriz Comparativa",
   "src/components/lux/integrations/ApiKeysPanel.tsx": "react",
   "src/components/lux/integrations/AuthUrlConfirmDialog.tsx": "button.tsx",
   "src/components/lux/integrations/DeliverabilityCheckDialog.tsx": "button.tsx",
   "src/components/lux/integrations/DisconnectAccountDialog.tsx": "button.tsx",
-  "src/components/lux/integrations/DryRunLogsPanel.tsx": "DryRunLogsPanel.tsx",
+  "src/components/lux/integrations/DryRunLogsPanel.tsx": "useEnvProfiles.ts",
   "src/components/lux/integrations/EmailAccountsAuditPanel.tsx": "LeaderboardTab.tsx",
   "src/components/lux/integrations/EmailAccountsPanel.tsx": "CompaniesView.tsx",
-  "src/components/lux/integrations/EmailSyncHistorySheet.tsx": "DryRunLogsPanel.tsx",
+  "src/components/lux/integrations/EmailSyncHistorySheet.tsx": "NotificationsPanel.tsx",
   "src/components/lux/integrations/EnvProfilesPanel.tsx": "useEnvProfiles.ts",
   "src/components/lux/integrations/OAuthSandboxPanel.tsx": "button.tsx",
   "src/components/lux/integrations/OAuthSnapshotsPanel.tsx": "OAuthSnapshotsPanel.tsx",
@@ -2329,7 +2324,7 @@
   "src/components/lux/map/MarkerClusterLayer.tsx": "MapMarkerIcons.tsx",
   "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": "useActiveOrganization",
   "src/components/lux/monitoring/ApiLatencyPanel.tsx": "ScrapeLatencyPanel.tsx",
-  "src/components/lux/monitoring/AuditTrailPanel.tsx": "useAuditTrail.ts",
+  "src/components/lux/monitoring/AuditTrailPanel.tsx": "AuditTrailPanel",
   "src/components/lux/monitoring/AutomationLogsPanel.tsx": "lucide-react",
   "src/components/lux/monitoring/AutomationStatusPanel.tsx": "AutomationStatusPanel.tsx",
   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": "lucide-react",
@@ -2370,7 +2365,7 @@
   "src/components/lux/monitoring/SourceComparisonTable.tsx": "SourceComparisonSummary.tsx",
   "src/components/lux/monitoring/VaultCookiesPanel.tsx": "lucide-react",
   "src/components/lux/monitoring/WebScrapeView.tsx": "useWebScrape.ts",
-  "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx": "DlqAlertSettingsCard.test.tsx",
+  "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx": "DlqAlertSettingsCard.tsx",
   "src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx": "DlqHealthCard",
   "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": "SlaHistoryTrendChart.tsx",
   "src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts": "SlaHistoryCard",
@@ -2385,11 +2380,11 @@
   "src/components/lux/organizations/ActivityHistory.tsx": "OrganizationsView.tsx",
   "src/components/lux/organizations/InviteSection.tsx": "OrganizationsView.tsx",
   "src/components/lux/organizations/MemberRow.tsx": "OrganizationsView.tsx",
-  "src/components/lux/organizations/MembershipAuditDetailSheet.tsx": "DryRunLogsPanel.tsx",
+  "src/components/lux/organizations/MembershipAuditDetailSheet.tsx": "MembershipAuditDetailSheet.tsx",
   "src/components/lux/organizations/MembershipAuditLog.tsx": "button.tsx",
   "src/components/lux/organizations/WorkspaceSelector.tsx": "OrganizationsView.tsx",
   "src/components/lux/organizations/WorkspaceSwitcher.tsx": "Header.tsx",
-  "src/components/lux/permissions/PermissionGate.tsx": "usePermissions.ts",
+  "src/components/lux/permissions/PermissionGate.tsx": "PermissionsMatrix.tsx",
   "src/components/lux/permissions/PermissionsMatrix.tsx": "PermissionsMatrix.tsx",
   "src/components/lux/security/OrgViolationAlertsPanel.tsx": "badge.tsx",
   "src/components/lux/settings/ActiveSessionsPanel.tsx": "react",
@@ -2446,7 +2441,7 @@
   "src/components/ui/scroll-area.tsx": "lucide-react",
   "src/components/ui/select.tsx": "button.tsx",
   "src/components/ui/separator.tsx": "cn",
-  "src/components/ui/sheet.tsx": "DryRunLogsPanel.tsx",
+  "src/components/ui/sheet.tsx": "NotificationsPanel.tsx",
   "src/components/ui/sidebar.tsx": "cn",
   "src/components/ui/skeleton.tsx": "button.tsx",
   "src/components/ui/slider.tsx": "button.tsx",
@@ -2506,15 +2501,15 @@
   "src/hooks/useCompanyReviews.ts": "react",
   "src/hooks/useConfirm.tsx": "CompaniesView.tsx",
   "src/hooks/useDashboardData.ts": "demoData.ts",
-  "src/hooks/useDashboardLayout.ts": "useDashboardLayout.ts",
+  "src/hooks/useDashboardLayout.ts": "useAuth",
   "src/hooks/useDbHealth.ts": "useDbHealth.ts",
-  "src/hooks/useDealPredictions.ts": "useAuth",
-  "src/hooks/useDeals.ts": "useDeals.ts",
+  "src/hooks/useDealPredictions.ts": "DealDetailDrawer.tsx",
+  "src/hooks/useDeals.ts": "DealDetailDrawer.tsx",
   "src/hooks/useDlqAlertSettings.ts": "DlqAlertSettingsCard.tsx",
   "src/hooks/useDlqHealth.ts": "DlqHealthCard",
   "src/hooks/useDlqItems.ts": "useDlqItems.ts",
   "src/hooks/useDlqReplay.ts": "useDlqReplay.ts",
-  "src/hooks/useDryRunLogs.ts": "DryRunLogsPanel.tsx",
+  "src/hooks/useDryRunLogs.ts": "useEnvProfiles.ts",
   "src/hooks/useDsar.ts": "react",
   "src/hooks/useEmailAccountAuditLog.ts": "useEmailAccountAuditLog.ts",
   "src/hooks/useEmailSuppressions.ts": "CompaniesView.tsx",
@@ -2527,12 +2522,12 @@
   "src/hooks/useICPConfig.ts": "react",
   "src/hooks/useIpAllowlist.ts": "react",
   "src/hooks/useKeyboardShortcuts.ts": "Index.tsx",
-  "src/hooks/useLeadScores.ts": "useAuth",
+  "src/hooks/useLeadScores.ts": "useAutomationsMonitor.ts",
   "src/hooks/useLeaderboard.ts": "LeaderboardTab.tsx",
   "src/hooks/useLoginForm.ts": "useLoginForm.ts",
-  "src/hooks/useLostReasons.ts": "useLostReasons.ts",
+  "src/hooks/useLostReasons.ts": "useAuth",
   "src/hooks/useMFA.ts": "lucide-react",
-  "src/hooks/useMembershipAuditLog.ts": "useMembershipAuditLog.ts",
+  "src/hooks/useMembershipAuditLog.ts": "MembershipAuditDetailSheet.tsx",
   "src/hooks/useNavigationHistory.ts": "Index.tsx",
   "src/hooks/useNextBestActions.ts": "badge.tsx",
   "src/hooks/useNotificationCount.ts": "Header.tsx",
@@ -2543,7 +2538,7 @@
   "src/hooks/useOrgRateLimit.ts": "useActiveOrganization",
   "src/hooks/useOrganizations.ts": "OrganizationsView.tsx",
   "src/hooks/usePartitionAdvisories.ts": "PartitionAdvisoryPanel.tsx",
-  "src/hooks/usePermissions.ts": "usePermissions.ts",
+  "src/hooks/usePermissions.ts": "PermissionsMatrix.tsx",
   "src/hooks/usePersistedFilters.ts": "CompanyFilters.tsx",
   "src/hooks/usePiiRules.ts": "badge.tsx",
   "src/hooks/usePlacesApiUsage.ts": "badge.tsx",
@@ -2565,7 +2560,7 @@
   "src/hooks/useSkin.ts": "ThemeToggle.tsx",
   "src/hooks/useStatusPage.ts": "useStatusPage.ts",
   "src/hooks/useSwipeGesture.ts": "Index.tsx",
-  "src/hooks/useTaskReminders.ts": "useAuth",
+  "src/hooks/useTaskReminders.ts": "DealDetailDrawer.tsx",
   "src/hooks/useThemeColors.ts": "DashboardView.tsx",
   "src/hooks/useUnsavedChanges.tsx": "App.tsx",
   "src/hooks/useVirtualCompanies.ts": "vitest",
@@ -2615,7 +2610,7 @@
   "src/lib/mcp/tools/list-decision-makers.ts": "zod",
   "src/lib/mcp/tools/list-scrape-jobs.ts": "zod",
   "src/lib/orgErrorHandler.ts": "orgErrorHandler.ts",
-  "src/lib/permissions.ts": "usePermissions.ts",
+  "src/lib/permissions.ts": "PermissionsMatrix.tsx",
   "src/lib/redirectUriChecklist.ts": "redirectUriChecklist.ts",
   "src/lib/resilience/__tests__/compareReport.test.ts": "compareReport.ts",
   "src/lib/resilience/autotune.test.ts": "autotune.ts",
@@ -2703,7 +2698,7 @@
   "supabase/functions/_shared/domain/ipc/scoring.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/domain/scrape-job-machine.ts": "scrape-job-machine.ts",
   "supabase/functions/_shared/gmaps-mapper.ts": "gmaps-proxy/index.ts",
-  "supabase/functions/_shared/hiker-client.ts": "NormalizedInstagramItem",
+  "supabase/functions/_shared/hiker-client.ts": "instagram-worker/index.ts",
   "supabase/functions/_shared/instagram-config-hash.ts": "instagram-config-hash.ts",
   "supabase/functions/_shared/lead-identity.ts": "oracle-search-decisors/index.ts",
   "supabase/functions/_shared/leadcontact-client.ts": "oracle-enrich-contact/index.ts",

@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 569,
- "arestas": 1771,
+ "arestas": 1774,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -78,7 +78,7 @@
   },
   {
    "arquivo": "src/components/lux/EmptyState.tsx",
-   "importado_por": 18
+   "importado_por": 19
   },
   {
    "arquivo": "src/hooks/useOrganizations.ts",

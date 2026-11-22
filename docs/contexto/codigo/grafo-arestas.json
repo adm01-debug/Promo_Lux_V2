@@ -303,6 +303,7 @@
    "src/components/lux/deals/DealDetailDrawer.tsx",
    "src/components/lux/deals/LostReasonsDialog.tsx",
    "src/components/lux/deals/StagesManagerDialog.tsx",
+   "src/components/lux/permissions/PermissionGate.tsx",
    "src/components/ui/button.tsx",
    "src/hooks/useDealPredictions.ts",
    "src/hooks/useDeals.ts",
@@ -380,11 +381,13 @@
    "src/hooks/useICPConfig.ts"
   ],
   "src/components/lux/IntegrationsView.tsx": [
+   "src/components/lux/EmptyState.tsx",
    "src/components/lux/integrations/ApiDocsCard.tsx",
    "src/components/lux/integrations/ApiKeysPanel.tsx",
    "src/components/lux/integrations/EmailAccountsPanel.tsx",
    "src/components/lux/integrations/OAuthSandboxPanel.tsx",
    "src/components/lux/integrations/WebhooksPanel.tsx",
+   "src/components/lux/permissions/PermissionGate.tsx",
    "src/components/ui/tabs.tsx"
   ],
   "src/components/lux/IntentSignalsView.tsx": [

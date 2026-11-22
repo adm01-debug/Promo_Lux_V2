@@ -1036,7 +1036,7 @@
     "DealsView"
    ],
    "export_default": null,
-   "linhas": 160,
+   "linhas": 163,
    "dominio": "components/lux",
    "hooks_locais": [
     "useDealPredictions",
@@ -1096,7 +1096,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 17,
+   "usado_por": 18,
    "orfao": false
   },
   {
@@ -1434,7 +1434,7 @@
     "IntegrationsView"
    ],
    "export_default": null,
-   "linhas": 39,
+   "linhas": 54,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9fdb45538b5a74353b681abe4e1f46580ae08b33",
+  "commit": "336b2288e4a3f46d1fd5e2ea5bb11f586c072194",
   "branch": "main",
-  "data_commit": "2026-11-22T15:21:23-03:00",
+  "data_commit": "2026-11-22T15:27:14-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "336b228",
+    "data": "2026-11-22",
+    "assunto": "feat: aplica PermissionGate em deals e integracoes (#154)"
+   },
    {
     "sha": "9fdb455",
     "data": "2026-11-22",
@@ -126,18 +131,13 @@
     "sha": "443ff87",
     "data": "2026-11-21",
     "assunto": "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)"
-   },
-   {
-    "sha": "77b7e67",
-    "data": "2026-11-21",
-    "assunto": "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)"
    }
   ],
-  "arquivos_mudados_7d": 192,
+  "arquivos_mudados_7d": 193,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 44
+    "mudancas": 46
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -278,6 +278,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": "src/components/lux/DealsView.tsx",
+    "mudancas": 3
+   },
+   {
     "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/mcp/index.ts",
     "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/scrape-queue-worker/index.ts",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 103
+    "commits": 104
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1101,
   "arquivos_codigo": 695,
-  "linhas_codigo": 120223,
+  "linhas_codigo": 120241,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 303,
-   "linhas": 49123
+   "linhas": 49141
   },
   "src/contexts": {
    "arquivos": 7,
