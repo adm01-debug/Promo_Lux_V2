@@ -6,6 +6,9 @@ import { WebhooksPanel } from "./integrations/WebhooksPanel";
 import { ApiDocsCard } from "./integrations/ApiDocsCard";
 import { EmailAccountsPanel } from "./integrations/EmailAccountsPanel";
 import { OAuthSandboxPanel } from "./integrations/OAuthSandboxPanel";
+import { PermissionGate } from "@/components/lux/permissions/PermissionGate";
+import { EmptyState } from "@/components/lux/EmptyState";
+import { ShieldAlert } from "lucide-react";
 
 export function IntegrationsView() {
   const [tab, setTab] = useState("api-keys");
@@ -19,21 +22,33 @@ export function IntegrationsView() {
         </p>
       </div>
 
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList>
-          <TabsTrigger value="api-keys" className="gap-1.5"><Key className="h-3.5 w-3.5" /> API Keys</TabsTrigger>
-          <TabsTrigger value="webhooks" className="gap-1.5"><WebhookIcon className="h-3.5 w-3.5" /> Webhooks</TabsTrigger>
-          <TabsTrigger value="email" className="gap-1.5"><Mail className="h-3.5 w-3.5" /> Email Accounts</TabsTrigger>
-          <TabsTrigger value="oauth-sandbox" className="gap-1.5"><FlaskConical className="h-3.5 w-3.5" /> OAuth Sandbox</TabsTrigger>
-          <TabsTrigger value="docs">Documentação</TabsTrigger>
-        </TabsList>
+      <PermissionGate
+        entity="integrations"
+        action="view"
+        fallback={
+          <EmptyState
+            icon={ShieldAlert}
+            title="Acesso restrito a administradores"
+            description="As chaves de API, webhooks e contas de e-mail da organização só podem ser vistas por administradores. Peça a um admin do workspace para liberar o acesso."
+          />
+        }
+      >
+        <Tabs value={tab} onValueChange={setTab}>
+          <TabsList>
+            <TabsTrigger value="api-keys" className="gap-1.5"><Key className="h-3.5 w-3.5" /> API Keys</TabsTrigger>
+            <TabsTrigger value="webhooks" className="gap-1.5"><WebhookIcon className="h-3.5 w-3.5" /> Webhooks</TabsTrigger>
+            <TabsTrigger value="email" className="gap-1.5"><Mail className="h-3.5 w-3.5" /> Email Accounts</TabsTrigger>
+            <TabsTrigger value="oauth-sandbox" className="gap-1.5"><FlaskConical className="h-3.5 w-3.5" /> OAuth Sandbox</TabsTrigger>
+            <TabsTrigger value="docs">Documentação</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="api-keys" className="mt-4"><ApiKeysPanel /></TabsContent>
-        <TabsContent value="webhooks" className="mt-4"><WebhooksPanel /></TabsContent>
-        <TabsContent value="email" className="mt-4"><EmailAccountsPanel /></TabsContent>
-        <TabsContent value="oauth-sandbox" className="mt-4"><OAuthSandboxPanel /></TabsContent>
-        <TabsContent value="docs" className="mt-4"><ApiDocsCard /></TabsContent>
-      </Tabs>
+          <TabsContent value="api-keys" className="mt-4"><ApiKeysPanel /></TabsContent>
+          <TabsContent value="webhooks" className="mt-4"><WebhooksPanel /></TabsContent>
+          <TabsContent value="email" className="mt-4"><EmailAccountsPanel /></TabsContent>
+          <TabsContent value="oauth-sandbox" className="mt-4"><OAuthSandboxPanel /></TabsContent>
+          <TabsContent value="docs" className="mt-4"><ApiDocsCard /></TabsContent>
+        </Tabs>
+      </PermissionGate>
     </div>
   );
 }
