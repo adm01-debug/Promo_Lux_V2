@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)",
    "feat: steps de workflow controlam quais fases do engine executam (#158)",
    "feat: exige significancia estatistica para eleger vencedora A/B (#150)",
    "fix: exige admin da org no replay de DLQ (#155)",
-   "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)",
-   "docs: registra gap dos steps de workflow serem decorativos (#157)"
+   "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)"
   ]
  },
  "pr_template": null,

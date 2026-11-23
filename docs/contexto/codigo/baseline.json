@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942",
+  "commit": "c5a2f4108cc8160ea6dc3423eb9e0983f17a79cd",
   "branch": "main",
-  "data_commit": "2026-11-23T11:00:33-03:00",
+  "data_commit": "2026-11-23T11:16:05-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c5a2f41",
+    "data": "2026-11-23",
+    "assunto": "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)"
+   },
    {
     "sha": "cf23a12",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "cadd1d6",
     "data": "2026-11-21",
     "assunto": "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)"
-   },
-   {
-    "sha": "57edd92",
-    "data": "2026-11-21",
-    "assunto": "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)"
    }
   ],
-  "arquivos_mudados_7d": 211,
+  "arquivos_mudados_7d": 219,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 51
+    "mudancas": 55
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -164,11 +164,11 @@
     "mudancas": 8
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 7
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -210,11 +210,11 @@
     "mudancas": 8
    },
    {
-    "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 7
    },
    {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 109
+    "commits": 110
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1110,
-  "arquivos_codigo": 697,
-  "linhas_codigo": 120996,
+  "arquivos_total": 1113,
+  "arquivos_codigo": 700,
+  "linhas_codigo": 121707,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,7 +320,7 @@
   "modulos": 22,
   "componentes": 262,
   "hooks": 96,
-  "edge_functions": 60,
+  "edge_functions": 63,
   "tabelas": 115,
   "migrations": 242,
   "cron_jobs": 31,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 303,
-   "linhas": 49583
+   "linhas": 49750
   },
   "src/contexts": {
    "arquivos": 7,
@@ -591,8 +591,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 131,
-   "linhas": 23542
+   "arquivos": 134,
+   "linhas": 24086
   },
   "tailwind.config.ts": {
    "arquivos": 1,

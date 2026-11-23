@@ -2476,6 +2476,7 @@
     "audit-logs-prune",
     "email-oauth-disconnect",
     "lusha-search",
+    "public-api",
     "rls-tests",
     "workflow-engine"
    ],
@@ -5762,6 +5763,7 @@
     "oracle-search-decisors",
     "rls-tests",
     "send-scheduled-reports",
+    "technographics-detect",
     "workflow-engine"
    ],
    "triggers": [
@@ -6510,7 +6512,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "conversation-intel"
+   ],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -7381,6 +7385,8 @@
    },
    "usada_no_front": 1,
    "usada_em_edges": [
+    "conversation-intel",
+    "lead-score-ai",
     "send-scheduled-reports"
    ],
    "triggers": [
@@ -9672,7 +9678,10 @@
     "so_no_types": []
    },
    "usada_no_front": 3,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "lead-score-ai",
+    "technographics-detect"
+   ],
    "triggers": [
     "prevent_user_id_change_intent_signals",
     "trg_prevent_user_id_change_intent_signals"
@@ -10180,7 +10189,9 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "lead-score-ai"
+   ],
    "triggers": [
     "trg_lead_scores_updated"
    ],
@@ -12795,14 +12806,17 @@
    "usada_em_edges": [
     "_shared",
     "admin-list-companies",
+    "conversation-intel",
     "dlq-alerts",
     "instagram-dlq-replay",
     "instagram-enqueue",
     "latency-alerts",
+    "lead-score-ai",
     "lusha-decision-makers",
     "org-violation-alerts",
     "rls-tests",
     "sla-auto-tune",
+    "technographics-detect",
     "web-dlq-replay",
     "web-scrape-enqueue",
     "workflow-engine"
@@ -17069,7 +17083,9 @@
     "so_no_types": []
    },
    "usada_no_front": 3,
-   "usada_em_edges": [],
+   "usada_em_edges": [
+    "lead-score-ai"
+   ],
    "triggers": [
     "prevent_user_id_change_stakeholders",
     "trg_prevent_user_id_change_stakeholders",

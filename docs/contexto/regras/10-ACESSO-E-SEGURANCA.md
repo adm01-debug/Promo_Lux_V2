@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cf23a12bd9` · branch `main` · 2026-11-23 14:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c5a2f4108c` · branch `main` · 2026-11-23 14:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -142,7 +142,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 194 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 197 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -171,6 +171,7 @@
 - `supabase/functions/cnpj-enrich-worker/index.ts`
 - `supabase/functions/cnpj-enrich/index.ts`
 - `supabase/functions/cnpj-settings-status/index.ts`
+- `supabase/functions/conversation-intel/index.ts`
 - `supabase/functions/dlq-alerts/index.ts`
 - `supabase/functions/email-oauth-callback/index.ts`
 - `supabase/functions/email-oauth-disconnect/index.ts`
@@ -184,6 +185,7 @@
 - `supabase/functions/instagram-worker-health/index.ts`
 - `supabase/functions/instagram-worker/index.ts`
 - `supabase/functions/latency-alerts/index.ts`
+- `supabase/functions/lead-score-ai/index.ts`
 - `supabase/functions/lusha-reveal/index.ts`
 - `supabase/functions/lusha-search/index.ts`
 - `supabase/functions/mcp-query/index.ts`
@@ -206,6 +208,7 @@
 - `supabase/functions/sla-alerts/index.ts`
 - `supabase/functions/sla-auto-tune/index.ts`
 - `supabase/functions/system-recovery-status/index.ts`
+- `supabase/functions/technographics-detect/index.ts`
 - `supabase/functions/track-click/index.ts`
 - `supabase/functions/track-open/index.ts`
 - `supabase/functions/vault-cookie-health/index.ts`
@@ -291,10 +294,7 @@
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
 - `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
 - `supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql`
-- `supabase/migrations/20260721230311_59215542-a0b3-4468-b60a-b80b411a334f.sql`
-- `supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql`
-- `supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql`
-- … +44 (lista completa em `context.json`)
+- … +47 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 

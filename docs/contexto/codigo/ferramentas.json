@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (670)",
+   "TypeScript (673)",
    "SQL (246)",
    "Markdown (87)",
    "JSON (38)",
@@ -745,6 +745,10 @@
     "arquivos": 8
    },
    {
+    "host": "ai.gateway.lovable.dev",
+    "arquivos": 5
+   },
+   {
     "host": "graph.microsoft.com",
     "arquivos": 5
    },
@@ -771,10 +775,6 @@
    {
     "host": "www.linkedin.com",
     "arquivos": 4
-   },
-   {
-    "host": "ai.gateway.lovable.dev",
-    "arquivos": 3
    },
    {
     "host": "connector-gateway.lovable.dev",
@@ -942,6 +942,10 @@
    },
    {
     "host": "eduspark.com.br",
+    "arquivos": 1
+   },
+   {
+    "host": "empresa.com.br",
     "arquivos": 1
    },
    {
@@ -1180,6 +1184,10 @@
     "ocorrencias": 9
    },
    {
+    "papel": "user",
+    "ocorrencias": 6
+   },
+   {
     "papel": "button",
     "ocorrencias": 4
    },
@@ -1188,7 +1196,7 @@
     "ocorrencias": 4
    },
    {
-    "papel": "user",
+    "papel": "system",
     "ocorrencias": 4
    },
    {
@@ -1213,10 +1221,6 @@
    },
    {
     "papel": "region",
-    "ocorrencias": 2
-   },
-   {
-    "papel": "system",
     "ocorrencias": 2
    },
    {

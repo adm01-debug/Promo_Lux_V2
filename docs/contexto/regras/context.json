@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942",
+  "sha": "c5a2f4108cc8160ea6dc3423eb9e0983f17a79cd",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 14:10 UTC",
-  "files_total": 1129,
-  "code_files": 947,
-  "code_lines": 139901
+  "generated_at": "2026-11-23 14:18 UTC",
+  "files_total": 1132,
+  "code_files": 950,
+  "code_lines": 140612
  },
  "version": "1.3.2",
- "facts_hash": "7997c0d09f83cc04",
+ "facts_hash": "84befa0af630426f",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 373,
+   ".ts": 376,
    ".tsx": 297,
    ".sql": 246,
    ".mjs": 21,
@@ -28414,6 +28414,34 @@
     "idempotency": false
    },
    {
+    "name": "conversation-intel",
+    "file": "supabase/functions/conversation-intel/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "tables": [
+     "deal_activities",
+     "deals",
+     "organization_members"
+    ],
+    "env": [
+     "LOVABLE_API_KEY",
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [
+     "https://ai.gateway.lovable.dev/v1/chat/…"
+    ],
+    "invokes": [],
+    "doc": "Conversation Intelligence — analisa textos de interações de vendas (emails, notas, ligações) usando LLM e extrai: • sentimento (positive/neutral/negative) • sinais de compra (buying_signals[]) • itens de ação (action_items[]) • próximos passos sugeridos (next_steps[]) • tópicos-chave (topics[]) • re …",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
     "name": "deliverability-check",
     "file": "supabase/functions/deliverability-check/index.ts",
     "methods": [
@@ -28844,6 +28872,36 @@
     "idempotency": false
    },
    {
+    "name": "lead-score-ai",
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "tables": [
+     "deals",
+     "intent_signals",
+     "lead_scores",
+     "organization_members",
+     "stakeholders"
+    ],
+    "env": [
+     "LOVABLE_API_KEY",
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [
+     "https://ai.gateway.lovable.dev/v1/chat/…"
+    ],
+    "invokes": [],
+    "doc": "Lead Scoring ML — pontua um stakeholder com Gemini 2.5 Flash Enriquece o scoring heurístico (SQL) com análise contextual de IA: - Perfil do stakeholder (cargo, seniority, contatos) - Histórico de intent signals (últimos 30 dias) - Deals ativos vinculados à empresa - Atividades recentes POST { stakeh …",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
     "name": "lusha-cookie-health",
     "file": "supabase/functions/lusha-cookie-health/index.ts",
     "methods": [
@@ -29193,7 +29251,8 @@
     "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
      "api_keys",
-     "api_request_logs"
+     "api_request_logs",
+     "audit_logs"
     ],
     "env": [
      "SUPABASE_SERVICE_ROLE_KEY",
@@ -29480,6 +29539,33 @@
     "doc": "system-recovery-status — Rodada #26 Retorna panorama consolidado de crons, filas e snapshots para diagnóstico de DR. Admin-only (valida has_role via JWT do usuário).",
     "errors": [],
     "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
+    "name": "technographics-detect",
+    "file": "supabase/functions/technographics-detect/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "tables": [
+     "companies",
+     "intent_signals",
+     "organization_members"
+    ],
+    "env": [
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "Detecção de technographics via HTML scraping. Detecta tecnologias usadas no site de uma empresa e registra como intent_signals do tipo \"tech_adoption\". POST { company_id: uuid, website_url?: string } → { detected: TechSignal[], already_known: number }",
+    "errors": [],
+    "side_effects": [
+     "mercadopago"
+    ],
     "webhook_events": [],
     "idempotency": false
    },
@@ -31097,7 +31183,7 @@
   {
    "module": "src/components",
    "files": 303,
-   "lines": 49583,
+   "lines": 49750,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -31826,8 +31912,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 131,
-   "lines": 23542,
+   "files": 134,
+   "lines": 24086,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -31848,6 +31934,7 @@
     "cnpj_enrich_queue",
     "cnpj_enrich_rate_state",
     "companies",
+    "deal_activities",
     "deals",
     "dlq_alert_history",
     "dlq_alert_settings",
@@ -31861,7 +31948,9 @@
     "instagram_scrape_dead_letter",
     "instagram_scrape_queue",
     "instagram_scrape_results",
+    "intent_signals",
     "ipc_config",
+    "lead_scores",
     "lusha_contacts",
     "lusha_search_sessions",
     "notifications",
@@ -31884,6 +31973,7 @@
     "sla_alert_history",
     "sla_alert_settings",
     "sla_autotune_runs",
+    "stakeholders",
     "user_roles",
     "web_scrape_queue",
     "web_scrape_results",
@@ -32031,7 +32121,7 @@
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-enrich-worker/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
-    "supabase/functions/deliverability-check/index.ts"
+    "supabase/functions/conversation-intel/index.ts"
    ]
   },
   {
@@ -32198,7 +32288,8 @@
      "src/components/lux/settings/RLSVerificationPanel.tsx",
      "src/hooks/useAuditTrail.ts",
      "src/hooks/useEmailAccountAuditLog.ts",
-     "src/hooks/useMembershipAuditLog.ts"
+     "src/hooks/useMembershipAuditLog.ts",
+     "supabase/functions/public-api/index.ts"
     ],
     "insert": [
      "src/lib/orgErrorHandler.ts",
@@ -32416,6 +32507,7 @@
      "supabase/functions/oracle-search-decisors/index.ts",
      "supabase/functions/rls-tests/index.ts",
      "supabase/functions/send-scheduled-reports/index.ts",
+     "supabase/functions/technographics-detect/index.ts",
      "supabase/functions/workflow-engine/index.ts"
     ],
     "ref": [
@@ -32489,10 +32581,12 @@
    },
    "deal_activities": {
     "select": [
-     "src/hooks/useDeals.ts"
+     "src/hooks/useDeals.ts",
+     "supabase/functions/conversation-intel/index.ts"
     ],
     "insert": [
-     "src/hooks/useDeals.ts"
+     "src/hooks/useDeals.ts",
+     "supabase/functions/conversation-intel/index.ts"
     ]
    },
    "deal_lost_reason_stats": {
@@ -32556,6 +32650,8 @@
     "select": [
      "src/hooks/useDeals.ts",
      "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
+     "supabase/functions/conversation-intel/index.ts",
+     "supabase/functions/lead-score-ai/index.ts",
      "supabase/functions/send-scheduled-reports/index.ts"
     ],
     "insert": [
@@ -32771,10 +32867,13 @@
     "select": [
      "src/components/lux/IntentSignalsView.tsx",
      "src/components/lux/layout/Sidebar.tsx",
-     "src/hooks/useCompanyDetails.ts"
+     "src/hooks/useCompanyDetails.ts",
+     "supabase/functions/lead-score-ai/index.ts",
+     "supabase/functions/technographics-detect/index.ts"
     ],
     "insert": [
-     "src/components/lux/IntentSignalsView.tsx"
+     "src/components/lux/IntentSignalsView.tsx",
+     "supabase/functions/technographics-detect/index.ts"
     ],
     "update": [
      "src/components/lux/IntentSignalsView.tsx"
@@ -32814,6 +32913,9 @@
    "lead_scores": {
     "select": [
      "src/hooks/useLeadScores.ts"
+    ],
+    "ref": [
+     "supabase/functions/lead-score-ai/index.ts"
     ]
    },
    "lusha_contacts": {
@@ -32985,15 +33087,18 @@
      "src/hooks/useOrganizations.ts",
      "supabase/functions/_shared/org-membership.ts",
      "supabase/functions/admin-list-companies/index.ts",
+     "supabase/functions/conversation-intel/index.ts",
      "supabase/functions/dlq-alerts/index.ts",
      "supabase/functions/instagram-dlq-replay/index.ts",
      "supabase/functions/instagram-enqueue/index.ts",
      "supabase/functions/latency-alerts/index.ts",
+     "supabase/functions/lead-score-ai/index.ts",
      "supabase/functions/lusha-decision-makers/index.ts",
      "supabase/functions/org-violation-alerts/index.ts",
      "supabase/functions/rls-tests/_fixtures.ts",
      "supabase/functions/rls-tests/index.ts",
      "supabase/functions/sla-auto-tune/index.ts",
+     "supabase/functions/technographics-detect/index.ts",
      "supabase/functions/web-dlq-replay/index.ts",
      "supabase/functions/web-scrape-enqueue/index.ts",
      "supabase/functions/workflow-engine/index.ts"
@@ -33324,7 +33429,8 @@
     "select": [
      "src/components/lux/CommandPalette.tsx",
      "src/components/lux/StakeholderFinderView.tsx",
-     "src/hooks/useCompanyDetails.ts"
+     "src/hooks/useCompanyDetails.ts",
+     "supabase/functions/lead-score-ai/index.ts"
     ]
    },
    "t": {
@@ -33520,11 +33626,13 @@
     "actor_id",
     "created_at",
     "id",
+    "metadata",
     "new_data",
     "old_data",
     "organization_id",
     "record_id",
-    "table_name"
+    "table_name",
+    "user_id"
    ],
    "auth_rate_limits": [
     "identifier"
@@ -33720,7 +33828,8 @@
     "widgets"
    ],
    "deal_activities": [
-    "deal_id"
+    "deal_id",
+    "id"
    ],
    "deal_lost_reason_stats": [
     "category",
@@ -33758,9 +33867,16 @@
     "user_id"
    ],
    "deals": [
+    "company_id",
+    "company_name",
     "created_at",
     "deleted_at",
     "id",
+    "organization_id",
+    "stage_id",
+    "title",
+    "updated_at",
+    "user_id",
     "value"
    ],
    "dlq_alert_history": [
@@ -33892,7 +34008,10 @@
     "created_at",
     "details",
     "id",
+    "score",
     "signal",
+    "source",
+    "stakeholder_id",
     "strength",
     "type"
    ],
@@ -34242,6 +34361,7 @@
     "full_name",
     "id",
     "linkedin_url",
+    "organization_id",
     "role"
    ],
    "user_roles": [
@@ -34514,7 +34634,9 @@
     "supabase/functions/_shared/apify-gateway.ts",
     "supabase/functions/_shared/apollo-client.ts",
     "supabase/functions/ai-agent/index.ts",
+    "supabase/functions/conversation-intel/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
+    "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/web-scrape-extract/index.ts"
    ],
    "LUSHA_API_KEY": [
@@ -34621,6 +34743,7 @@
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/conversation-intel/index.ts",
     "supabase/functions/deliverability-check/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
@@ -34631,6 +34754,7 @@
     "supabase/functions/instagram-connection-status/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
     "supabase/functions/instagram-enqueue/index.ts",
+    "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/lusha-cookie-health/index.ts",
     "supabase/functions/lusha-decision-makers/index.ts",
     "supabase/functions/lusha-reveal/index.ts",
@@ -34642,6 +34766,7 @@
     "supabase/functions/rls-tests/index.test.ts",
     "supabase/functions/rls-tests/index.ts",
     "supabase/functions/system-recovery-status/index.ts",
+    "supabase/functions/technographics-detect/index.ts",
     "supabase/functions/web-dlq-replay/index.ts",
     "supabase/functions/web-scrape-enqueue/index.ts",
     "supabase/functions/web-scrape-extract/index.ts",
@@ -34690,6 +34815,7 @@
     "supabase/functions/cnpj-enrich-worker/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/conversation-intel/index.ts",
     "supabase/functions/dlq-alerts/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
@@ -34702,6 +34828,7 @@
     "supabase/functions/instagram-worker-health/index.ts",
     "supabase/functions/instagram-worker/index.ts",
     "supabase/functions/latency-alerts/index.ts",
+    "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/lusha-reveal/index.ts",
     "supabase/functions/lusha-search/index.ts",
     "supabase/functions/mcp-query/index.ts",
@@ -34724,6 +34851,7 @@
     "supabase/functions/sla-alerts/index.ts",
     "supabase/functions/sla-auto-tune/index.ts",
     "supabase/functions/system-recovery-status/index.ts",
+    "supabase/functions/technographics-detect/index.ts",
     "supabase/functions/track-click/index.ts",
     "supabase/functions/track-open/index.ts",
     "supabase/functions/vault-cookie-health/index.ts",
@@ -34750,6 +34878,7 @@
     "supabase/functions/cnpj-enrich-worker/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/conversation-intel/index.ts",
     "supabase/functions/deliverability-check/index.ts",
     "supabase/functions/dlq-alerts/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
@@ -34766,6 +34895,7 @@
     "supabase/functions/instagram-worker-health/index.ts",
     "supabase/functions/instagram-worker/index.ts",
     "supabase/functions/latency-alerts/index.ts",
+    "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/lusha-cookie-health/index.ts",
     "supabase/functions/lusha-decision-makers/index.ts",
     "supabase/functions/lusha-reveal/index.ts",
@@ -34791,6 +34921,7 @@
     "supabase/functions/sla-alerts/index.ts",
     "supabase/functions/sla-auto-tune/index.ts",
     "supabase/functions/system-recovery-status/index.ts",
+    "supabase/functions/technographics-detect/index.ts",
     "supabase/functions/track-click/index.ts",
     "supabase/functions/track-open/index.ts",
     "supabase/functions/vault-cookie-health/index.ts",
@@ -35214,6 +35345,9 @@
    "campaign-dispatch": [
     "src/components/lux/CampaignsView.tsx"
    ],
+   "conversation-intel": [
+    "src/components/lux/deals/DealDetailDrawer.tsx"
+   ],
    "dashboard-edge": [
     "scripts/ai-context/gerar.unit.mjs"
    ],
@@ -35251,6 +35385,9 @@
    "instagram-worker-health": [
     "src/components/lux/monitoring/InstagramEnqueuePanel.tsx"
    ],
+   "lead-score-ai": [
+    "src/components/lux/StakeholderFinderView.tsx"
+   ],
    "org-violation-alerts": [
     "src/components/lux/security/OrgViolationAlertsPanel.tsx"
    ],
@@ -35268,6 +35405,9 @@
    ],
    "send-email": [
     "scripts/ai-context/gerar.unit.mjs"
+   ],
+   "technographics-detect": [
+    "src/components/lux/IntentSignalsView.tsx"
    ],
    "tools-edge": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -35315,7 +35455,9 @@
    ],
    "https://ai.gateway.lovable.dev": [
     "supabase/functions/ai-agent/index.ts",
+    "supabase/functions/conversation-intel/index.ts",
     "supabase/functions/health/index.ts",
+    "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/web-scrape-extract/index.ts"
    ],
    "https://api.apify.com": [
@@ -35570,8 +35712,24 @@
     "column": "error_reason"
    },
    {
+    "table": "intent_signals",
+    "column": "score"
+   },
+   {
+    "table": "intent_signals",
+    "column": "source"
+   },
+   {
+    "table": "intent_signals",
+    "column": "stakeholder_id"
+   },
+   {
     "table": "api_latency_alert_history",
     "column": "triggered_at"
+   },
+   {
+    "table": "deals",
+    "column": "company_name"
    },
    {
     "table": "health_checks",
@@ -36594,6 +36752,10 @@
     "msg": "Erro ao atualizar"
    },
    {
+    "file": "src/components/lux/IntentSignalsView.tsx",
+    "msg": "Erro ao detectar"
+   },
+   {
     "file": "src/components/lux/LushaIntelligenceView.tsx",
     "msg": "\n          className="
    },
@@ -36718,6 +36880,10 @@
     "msg": "Erro ao salvar"
    },
    {
+    "file": "src/components/lux/StakeholderFinderView.tsx",
+    "msg": "Erro no score IA"
+   },
+   {
     "file": "src/components/lux/WorkflowsView.tsx",
     "msg": "Erro ao executar"
    },
@@ -36740,6 +36906,10 @@
    {
     "file": "src/components/lux/companies/ImportCompaniesDialog.tsx",
     "msg": "Nenhuma organização ativa."
+   },
+   {
+    "file": "src/components/lux/deals/DealDetailDrawer.tsx",
+    "msg": "Escreva o texto antes de analisar"
    },
    {
     "file": "src/components/lux/integrations/AuthUrlConfirmDialog.tsx",
@@ -38294,6 +38464,10 @@
     "text": "Não expõe payload sensível — retorna somente resumo."
    },
    {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "text": "24 * 60 * 60 * 1000).toISOString()).order(\"created_at\", { ascending: false }).limit(10),"
+   },
+   {
     "file": "supabase/functions/lusha-decision-makers/index.ts",
     "text": "── 3. Chamada Lusha V3 (apenas domínios sem cache) ──"
    },
@@ -38351,6 +38525,10 @@
    },
    {
     "file": "supabase/functions/public-api/index.ts",
+    "text": "GET    /events?limit=&after=&table=&action=  (Zapier polling trigger)"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
     "text": "Limite de requisições por API key por hora (janela fixa, server-side)"
    },
    {
@@ -38360,6 +38538,10 @@
    {
     "file": "supabase/functions/public-api/index.ts",
     "text": "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
+    "text": "Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE"
    },
    {
     "file": "supabase/functions/reaper-alerts/index.ts",
@@ -44928,6 +45110,12 @@
     "kind": "escreve"
    },
    {
+    "file": "src/components/lux/StakeholderFinderView.tsx",
+    "field": "status",
+    "value": "fulfilled",
+    "kind": "compara"
+   },
+   {
     "file": "src/components/lux/StatsGrid.tsx",
     "field": "type",
     "value": "spring",
@@ -45243,6 +45431,12 @@
     "file": "src/components/lux/deals/DealDetailDrawer.tsx",
     "field": "type",
     "value": "lost",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/deals/DealDetailDrawer.tsx",
+    "field": "type",
+    "value": "conversation_intel",
     "kind": "compara"
    },
    {
@@ -47418,6 +47612,24 @@
     "kind": "compara"
    },
    {
+    "file": "supabase/functions/conversation-intel/index.ts",
+    "field": "role",
+    "value": "system",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/conversation-intel/index.ts",
+    "field": "role",
+    "value": "user",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/conversation-intel/index.ts",
+    "field": "type",
+    "value": "conversation_intel",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/dlq-alerts/index.ts",
     "field": "type",
     "value": "system",
@@ -47644,6 +47856,18 @@
     "field": "role",
     "value": "admin",
     "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "field": "role",
+    "value": "system",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "field": "role",
+    "value": "user",
+    "kind": "escreve"
    },
    {
     "file": "supabase/functions/lusha-cookie-health/index.ts",
@@ -48774,6 +48998,18 @@
     "kind": "filtra"
    },
    {
+    "file": "supabase/functions/technographics-detect/index.ts",
+    "field": "type",
+    "value": "tech_adoption",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/technographics-detect/index.ts",
+    "field": "type",
+    "value": "tech_adoption",
+    "kind": "filtra"
+   },
+   {
     "file": "supabase/functions/web-scrape-enqueue/index.ts",
     "field": "status",
     "value": "queued",
@@ -49444,6 +49680,10 @@
    {
     "file": "supabase/functions/instagram-worker-health/index.ts",
     "line": "const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();"
+   },
+   {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "line": "adminClient.from(\"intent_signals\").select(\"type, signal, score, source, created_at\").eq(\"stakeholder_id\", stakeholder_id).gte(\"created_at\", new Date(Date.now() …"
    },
    {
     "file": "supabase/functions/lusha-search/index.ts",
@@ -54709,6 +54949,10 @@
     "call": "invoke("
    },
    {
+    "file": "src/components/lux/IntentSignalsView.tsx",
+    "call": "invoke("
+   },
+   {
     "file": "src/components/lux/LushaIntelligenceView.tsx",
     "call": "notifyLongSearch"
    },
@@ -54719,6 +54963,14 @@
    {
     "file": "src/components/lux/LushaIntelligenceView.tsx",
     "call": "notifyOnFailure"
+   },
+   {
+    "file": "src/components/lux/StakeholderFinderView.tsx",
+    "call": "invoke("
+   },
+   {
+    "file": "src/components/lux/deals/DealDetailDrawer.tsx",
+    "call": "invoke("
    },
    {
     "file": "src/components/lux/integrations/DeliverabilityCheckDialog.tsx",
@@ -54795,6 +55047,10 @@
    {
     "file": "supabase/functions/send-scheduled-reports/index.ts",
     "call": "sendMail"
+   },
+   {
+    "file": "supabase/functions/technographics-detect/index.ts",
+    "call": "mercadopago"
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
@@ -62978,6 +63234,10 @@
     "limit": "1000"
    },
    {
+    "file": "supabase/functions/conversation-intel/index.ts",
+    "limit": "1"
+   },
+   {
     "file": "supabase/functions/dlq-alerts/index.ts",
     "limit": "1"
    },
@@ -63010,6 +63270,18 @@
     "limit": "10"
    },
    {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "limit": "1"
+   },
+   {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "limit": "10"
+   },
+   {
+    "file": "supabase/functions/lead-score-ai/index.ts",
+    "limit": "5"
+   },
+   {
     "file": "supabase/functions/lusha-decision-makers/index.ts",
     "limit": "1"
    },
@@ -63039,6 +63311,10 @@
    },
    {
     "file": "supabase/functions/sla-auto-tune/index.ts",
+    "limit": "1"
+   },
+   {
+    "file": "supabase/functions/technographics-detect/index.ts",
     "limit": "1"
    },
    {
@@ -63756,6 +64032,10 @@
      "connected": [
       "escreve:src/components/lux/SettingsView.tsx"
      ],
+     "fulfilled": [
+      "compara:src/components/lux/StakeholderFinderView.tsx",
+      "compara:supabase/functions/oracle-enrich-contact/index.ts"
+     ],
      "succeeded": [
       "compara:src/components/lux/automations/AutomationEventsFeed.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
@@ -63937,9 +64217,6 @@
       "compara:supabase/functions/oracle-enrich-contact/index.ts",
       "escreve:supabase/functions/oracle-enrich-contact/index.ts"
      ],
-     "fulfilled": [
-      "compara:supabase/functions/oracle-enrich-contact/index.ts"
-     ],
      "error_auth": [
       "compara:supabase/functions/oracle-enrich-contact/index.ts"
      ],
@@ -64101,6 +64378,10 @@
      "lost": [
       "compara:src/components/lux/deals/DealDetailDrawer.tsx"
      ],
+     "conversation_intel": [
+      "compara:src/components/lux/deals/DealDetailDrawer.tsx",
+      "escreve:supabase/functions/conversation-intel/index.ts"
+     ],
      "courses": [
       "escreve:src/components/lux/lusha/DecisionMakersGrid.tsx"
      ],
@@ -64204,6 +64485,10 @@
       "compara:supabase/functions/_shared/hiker-client.ts",
       "compara:supabase/functions/_shared/leadcontact-client.ts"
      ],
+     "tech_adoption": [
+      "escreve:supabase/functions/technographics-detect/index.ts",
+      "filtra:supabase/functions/technographics-detect/index.ts"
+     ],
      "json_object": [
       "escreve:supabase/functions/web-scrape-extract/index.ts"
      ]
@@ -64214,6 +64499,8 @@
       "escreve:src/components/lux/AIAgentView.tsx",
       "escreve:supabase/functions/_shared/rlsTableRegistry.ts",
       "escreve:supabase/functions/ai-agent/index.ts",
+      "escreve:supabase/functions/conversation-intel/index.ts",
+      "escreve:supabase/functions/lead-score-ai/index.ts",
       "escreve:supabase/functions/web-scrape-extract/index.ts"
      ],
      "agent": [
@@ -64254,6 +64541,8 @@
      ],
      "system": [
       "escreve:supabase/functions/ai-agent/index.ts",
+      "escreve:supabase/functions/conversation-intel/index.ts",
+      "escreve:supabase/functions/lead-score-ai/index.ts",
       "escreve:supabase/functions/web-scrape-extract/index.ts"
      ]
     },
@@ -66203,6 +66492,7 @@
    "supabase/functions/cnpj-enrich-worker/index.ts",
    "supabase/functions/cnpj-enrich/index.ts",
    "supabase/functions/cnpj-settings-status/index.ts",
+   "supabase/functions/conversation-intel/index.ts",
    "supabase/functions/dlq-alerts/index.ts",
    "supabase/functions/email-oauth-callback/index.ts",
    "supabase/functions/email-oauth-disconnect/index.ts",
@@ -66216,6 +66506,7 @@
    "supabase/functions/instagram-worker-health/index.ts",
    "supabase/functions/instagram-worker/index.ts",
    "supabase/functions/latency-alerts/index.ts",
+   "supabase/functions/lead-score-ai/index.ts",
    "supabase/functions/lusha-reveal/index.ts",
    "supabase/functions/lusha-search/index.ts",
    "supabase/functions/mcp-query/index.ts",
@@ -66238,6 +66529,7 @@
    "supabase/functions/sla-alerts/index.ts",
    "supabase/functions/sla-auto-tune/index.ts",
    "supabase/functions/system-recovery-status/index.ts",
+   "supabase/functions/technographics-detect/index.ts",
    "supabase/functions/track-click/index.ts",
    "supabase/functions/track-open/index.ts",
    "supabase/functions/vault-cookie-health/index.ts",
@@ -72707,6 +72999,14 @@
    },
    {
     "kind": "status",
+    "msg": "valor `fulfilled` para `status` usado no código não existe em nenhum enum do banco/TS",
+    "where": [
+     "compara:src/components/lux/StakeholderFinderView.tsx",
+     "compara:supabase/functions/oracle-enrich-contact/index.ts"
+    ]
+   },
+   {
+    "kind": "status",
     "msg": "valor `expiring_soon` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx"
@@ -72780,13 +73080,6 @@
     "where": [
      "compara:supabase/functions/oracle-enrich-contact/index.ts",
      "escreve:supabase/functions/oracle-enrich-contact/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `fulfilled` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:supabase/functions/oracle-enrich-contact/index.ts"
     ]
    },
    {
@@ -72955,7 +73248,27 @@
    },
    {
     "kind": "coluna",
+    "msg": "coluna `score` usada no código não existe no schema de `intent_signals`",
+    "where": []
+   },
+   {
+    "kind": "coluna",
+    "msg": "coluna `source` usada no código não existe no schema de `intent_signals`",
+    "where": []
+   },
+   {
+    "kind": "coluna",
+    "msg": "coluna `stakeholder_id` usada no código não existe no schema de `intent_signals`",
+    "where": []
+   },
+   {
+    "kind": "coluna",
     "msg": "coluna `triggered_at` usada no código não existe no schema de `api_latency_alert_history`",
+    "where": []
+   },
+   {
+    "kind": "coluna",
+    "msg": "coluna `company_name` usada no código não existe no schema de `deals`",
     "where": []
    },
    {
@@ -76575,7 +76888,7 @@
   },
   "src/components/lux/IntentSignalsView.tsx": {
    "path": "src/components/lux/IntentSignalsView.tsx",
-   "lines": 333,
+   "lines": 404,
    "exports": [
     "const IntentSignalsView"
    ],
@@ -76602,11 +76915,18 @@
      "id"
     ]
    },
+   "invokes": [
+    "technographics-detect"
+   ],
    "errors": [
-    "Erro ao atualizar"
+    "Erro ao atualizar",
+    "Erro ao detectar"
    ],
    "percents": [
     "transition={{ delay: i * 0.03 }}"
+   ],
+   "side_effects": [
+    "invoke("
    ],
    "pagination": [
     "50"
@@ -77353,7 +77673,7 @@
   },
   "src/components/lux/StakeholderFinderView.tsx": {
    "path": "src/components/lux/StakeholderFinderView.tsx",
-   "lines": 245,
+   "lines": 274,
    "exports": [
     "const StakeholderFinderView"
    ],
@@ -77363,8 +77683,24 @@
      "op": "select"
     }
    ],
+   "invokes": [
+    "lead-score-ai"
+   ],
+   "errors": [
+    "Erro no score IA"
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "fulfilled",
+     "kind": "compara"
+    }
+   ],
    "temporal": [
     "setTimeout(() => setCopiedEmail(null), 2000);"
+   ],
+   "side_effects": [
+    "invoke("
    ]
   },
   "src/components/lux/StatsGrid.tsx": {
@@ -78536,16 +78872,30 @@
   },
   "src/components/lux/deals/DealDetailDrawer.tsx": {
    "path": "src/components/lux/deals/DealDetailDrawer.tsx",
-   "lines": 205,
+   "lines": 271,
    "exports": [
     "function DealDetailDrawer"
+   ],
+   "invokes": [
+    "conversation-intel"
+   ],
+   "errors": [
+    "Escreva o texto antes de analisar"
    ],
    "status_values": [
     {
      "field": "type",
      "value": "lost",
      "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "conversation_intel",
+     "kind": "compara"
     }
+   ],
+   "side_effects": [
+    "invoke("
    ]
   },
   "src/components/lux/deals/DealTasksPanel.tsx": {
@@ -78838,7 +79188,7 @@
   },
   "src/components/lux/layout/Header.tsx": {
    "path": "src/components/lux/layout/Header.tsx",
-   "lines": 297,
+   "lines": 298,
    "exports": [
     "const Header"
    ],
@@ -90883,6 +91233,70 @@
    ],
    "uses_service_role": true
   },
+  "supabase/functions/conversation-intel/index.ts": {
+   "path": "supabase/functions/conversation-intel/index.ts",
+   "lines": 150,
+   "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "deals",
+     "op": "select"
+    },
+    {
+     "table": "deal_activities",
+     "op": "insert,select"
+    }
+   ],
+   "table_cols": {
+    "organization_members": [
+     "organization_id",
+     "user_id"
+    ],
+    "deals": [
+     "company_name",
+     "id",
+     "title",
+     "user_id"
+    ],
+    "deal_activities": [
+     "id"
+    ]
+   },
+   "external_urls": [
+    "https://ai.gateway.lovable.dev/v1/chat/…"
+   ],
+   "env": [
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "system",
+     "kind": "escreve"
+    },
+    {
+     "field": "role",
+     "value": "user",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "conversation_intel",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "Conversation Intelligence — analisa textos de interações de vendas (emails, notas, ligações) usando LLM e extrai: • sentimento (positive/neutral/negative) • sinais de compra (buying_signals[]) • itens de ação (action_items[]) • próximos passos sugeridos (next_steps[]) • tópicos-chave (topics[]) • re …",
+   "pagination": [
+    "1"
+   ],
+   "uses_service_role": true
+  },
   "supabase/functions/deliverability-check/index.ts": {
    "path": "supabase/functions/deliverability-check/index.ts",
    "lines": 299,
@@ -91861,6 +92275,93 @@
    "pagination": [
     "1",
     "10"
+   ],
+   "uses_service_role": true
+  },
+  "supabase/functions/lead-score-ai/index.ts": {
+   "path": "supabase/functions/lead-score-ai/index.ts",
+   "lines": 173,
+   "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "stakeholders",
+     "op": "select"
+    },
+    {
+     "table": "intent_signals",
+     "op": "select"
+    },
+    {
+     "table": "deals",
+     "op": "select"
+    },
+    {
+     "table": "lead_scores",
+     "op": "ref"
+    }
+   ],
+   "table_cols": {
+    "organization_members": [
+     "organization_id",
+     "user_id"
+    ],
+    "stakeholders": [
+     "id",
+     "organization_id"
+    ],
+    "intent_signals": [
+     "created_at",
+     "score",
+     "signal",
+     "source",
+     "stakeholder_id",
+     "type"
+    ],
+    "deals": [
+     "company_id",
+     "deleted_at",
+     "organization_id",
+     "stage_id",
+     "title",
+     "updated_at",
+     "value"
+    ]
+   },
+   "external_urls": [
+    "https://ai.gateway.lovable.dev/v1/chat/…"
+   ],
+   "env": [
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "system",
+     "kind": "escreve"
+    },
+    {
+     "field": "role",
+     "value": "user",
+     "kind": "escreve"
+    }
+   ],
+   "rule_comments": [
+    "24 * 60 * 60 * 1000).toISOString()).order(\"created_at\", { ascending: false }).limit(10),"
+   ],
+   "doc": "Lead Scoring ML — pontua um stakeholder com Gemini 2.5 Flash Enriquece o scoring heurístico (SQL) com análise contextual de IA: - Perfil do stakeholder (cargo, seniority, contatos) - Histórico de intent signals (últimos 30 dias) - Deals ativos vinculados à empresa - Atividades recentes POST { stakeh …",
+   "temporal": [
+    "adminClient.from(\"intent_signals\").select(\"type, signal, score, source, created_at\").eq(\"stakeholder_id\", stakeholder_id).gte(\"created_at\", new Date(Date.now() …"
+   ],
+   "pagination": [
+    "1",
+    "10",
+    "5"
    ],
    "uses_service_role": true
   },
@@ -93301,7 +93802,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 275,
+   "lines": 314,
    "tables": [
     {
      "table": "api_request_logs",
@@ -93313,6 +93814,10 @@
     },
     {
      "table": "api_keys",
+     "op": "select"
+    },
+    {
+     "table": "audit_logs",
      "op": "select"
     }
    ],
@@ -93327,6 +93832,16 @@
      "organization_id",
      "prefix",
      "scopes"
+    ],
+    "audit_logs": [
+     "action",
+     "created_at",
+     "id",
+     "metadata",
+     "new_data",
+     "record_id",
+     "table_name",
+     "user_id"
     ]
    },
    "dyn_from": 5,
@@ -93347,9 +93862,11 @@
    ],
    "rule_comments": [
     "GET    /companies?limit=&offset=",
+    "GET    /events?limit=&after=&table=&action=  (Zapier polling trigger)",
     "Limite de requisições por API key por hora (janela fixa, server-side)",
     "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado",
-    "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
+    "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)",
+    "Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE"
    ],
    "doc": "Public REST API authenticated via X-API-Key header Endpoints: GET /me (returns current API key info) GET /companies?limit=&offset= POST /companies (write scope) GET /companies/:id PATCH /companies/:id (write scope) DELETE /companies/:id (write scope)",
    "uses_service_role": true
@@ -94304,6 +94821,73 @@
     "true"
    ],
    "doc": "system-recovery-status — Rodada #26 Retorna panorama consolidado de crons, filas e snapshots para diagnóstico de DR. Admin-only (valida has_role via JWT do usuário).",
+   "uses_service_role": true
+  },
+  "supabase/functions/technographics-detect/index.ts": {
+   "path": "supabase/functions/technographics-detect/index.ts",
+   "lines": 182,
+   "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "intent_signals",
+     "op": "select"
+    },
+    {
+     "table": "intent_signals",
+     "op": "insert"
+    }
+   ],
+   "table_cols": {
+    "organization_members": [
+     "organization_id",
+     "user_id"
+    ],
+    "companies": [
+     "id",
+     "name",
+     "website"
+    ],
+    "intent_signals": [
+     "company_id",
+     "signal",
+     "type"
+    ]
+   },
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "tech_adoption",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "tech_adoption",
+     "kind": "filtra"
+    }
+   ],
+   "doc": "Detecção de technographics via HTML scraping. Detecta tecnologias usadas no site de uma empresa e registra como intent_signals do tipo \"tech_adoption\". POST { company_id: uuid, website_url?: string } → { detected: TechSignal[], already_known: number }",
+   "side_effects": [
+    "mercadopago"
+   ],
+   "pagination": [
+    "1"
+   ],
    "uses_service_role": true
   },
   "supabase/functions/track-click/index.ts": {
@@ -96438,10 +97022,32 @@
   }
  },
  "git": {
-  "sha": "cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942",
+  "sha": "c5a2f4108cc8160ea6dc3423eb9e0983f17a79cd",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c5a2f41",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "public/manifest.json",
+     "src/components/lux/IntentSignalsView.tsx",
+     "src/components/lux/StakeholderFinderView.tsx",
+     "src/components/lux/deals/DealDetailDrawer.tsx",
+     "src/components/lux/layout/Header.tsx",
+     "src/components/ui/dialog.tsx",
+     "src/components/ui/dropdown-menu.tsx",
+     "src/components/ui/sheet.tsx",
+     "src/hooks/useDeals.ts",
+     "supabase/functions/conversation-intel/index.ts",
+     "supabase/functions/lead-score-ai/index.ts",
+     "supabase/functions/public-api/index.ts",
+     "supabase/functions/technographics-detect/index.ts"
+    ]
+   },
    {
     "sha": "cf23a12",
     "date": "2026-11-23",
@@ -96802,25 +97408,24 @@
     "files": [
      "supabase/functions/instagram-connection-status/index.ts"
     ]
-   },
-   {
-    "sha": "443ff87",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(edge): webhook-dispatcher deixa de aceitar chamada anonima (#114)",
-    "files": [
-     "supabase/functions/webhook-dispatcher/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    6
+    7
    ],
    [
     "docs/ESTADO_ATUAL.md",
     4
+   ],
+   [
+    "src/components/lux/deals/DealDetailDrawer.tsx",
+    2
+   ],
+   [
+    "src/hooks/useDeals.ts",
+    2
    ],
    [
     "supabase/functions/workflow-engine/index.ts",
@@ -96871,27 +97476,19 @@
     2
    ],
    [
-    "src/components/automation/WorkflowEditor.tsx",
+    "public/manifest.json",
     1
    ],
    [
-    "src/components/lux/WorkflowsView.tsx",
+    "src/components/lux/IntentSignalsView.tsx",
     1
    ],
    [
-    "src/components/lux/__tests__/WorkflowsView.test.tsx",
+    "src/components/lux/StakeholderFinderView.tsx",
     1
    ],
    [
-    "src/components/lux/monitoring/JobDetailsSheet.tsx",
-    1
-   ],
-   [
-    "src/components/lux/workflows/WorkflowCard.tsx",
-    1
-   ],
-   [
-    "src/lib/api/workflows.ts",
+    "src/components/lux/layout/Header.tsx",
     1
    ]
   ]

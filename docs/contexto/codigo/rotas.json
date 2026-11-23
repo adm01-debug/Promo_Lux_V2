@@ -359,6 +359,7 @@
     "ai-agent",
     "campaign-dispatch",
     "cnpj-enrich",
+    "conversation-intel",
     "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
@@ -366,6 +367,7 @@
     "email-poll-replies",
     "email-verify",
     "gmaps-proxy",
+    "lead-score-ai",
     "lusha-cookie-health",
     "lusha-decision-makers",
     "lusha-search",
@@ -376,6 +378,7 @@
     "org-violation-alerts",
     "public-api",
     "rls-tests",
+    "technographics-detect",
     "webhook-dispatcher",
     "workflow-engine"
    ],
@@ -1761,6 +1764,7 @@
     "ai-agent",
     "campaign-dispatch",
     "cnpj-enrich",
+    "conversation-intel",
     "deliverability-check",
     "email-oauth-callback",
     "email-oauth-connect",
@@ -1768,6 +1772,7 @@
     "email-poll-replies",
     "email-verify",
     "gmaps-proxy",
+    "lead-score-ai",
     "lusha-cookie-health",
     "lusha-decision-makers",
     "lusha-search",
@@ -1778,6 +1783,7 @@
     "org-violation-alerts",
     "public-api",
     "rls-tests",
+    "technographics-detect",
     "webhook-dispatcher",
     "workflow-engine"
    ],
@@ -1896,7 +1902,9 @@
     "default_role_permissions",
     "refresh_org_scores"
    ],
-   "edges": [],
+   "edges": [
+    "conversation-intel"
+   ],
    "canais_realtime": [],
    "flags": [],
    "papeis": [
@@ -2157,7 +2165,9 @@
    "rpcs": [
     "get_dashboard_stats"
    ],
-   "edges": [],
+   "edges": [
+    "technographics-detect"
+   ],
    "canais_realtime": [
     "private:${user.id}:${activeOrgId}:dashboard"
    ],
@@ -2728,7 +2738,9 @@
     "get_dashboard_stats",
     "refresh_org_scores"
    ],
-   "edges": [],
+   "edges": [
+    "lead-score-ai"
+   ],
    "canais_realtime": [
     "private:${user.id}:${activeOrgId}:dashboard"
    ],

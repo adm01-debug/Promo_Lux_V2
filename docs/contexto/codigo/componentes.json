@@ -981,7 +981,7 @@
     "DealDetailDrawer"
    ],
    "export_default": null,
-   "linhas": 205,
+   "linhas": 271,
    "dominio": "components/lux",
    "hooks_locais": [
     "useConfirm",
@@ -991,7 +991,9 @@
     "useLostReasons"
    ],
    "tabelas": [],
-   "edges": [],
+   "edges": [
+    "conversation-intel"
+   ],
    "usado_por": 1,
    "orfao": false
   },
@@ -1465,7 +1467,7 @@
     "IntentSignalsView"
    ],
    "export_default": null,
-   "linhas": 333,
+   "linhas": 404,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -1474,7 +1476,9 @@
    "tabelas": [
     "intent_signals"
    ],
-   "edges": [],
+   "edges": [
+    "technographics-detect"
+   ],
    "usado_por": 1,
    "orfao": false
   },
@@ -1498,7 +1502,7 @@
     "Header"
    ],
    "export_default": null,
-   "linhas": 297,
+   "linhas": 298,
    "dominio": "components/lux",
    "hooks_locais": [
     "useNotificationCount"
@@ -3125,7 +3129,7 @@
     "StakeholderFinderView"
    ],
    "export_default": null,
-   "linhas": 245,
+   "linhas": 274,
    "dominio": "components/lux",
    "hooks_locais": [
     "useDemo",
@@ -3134,7 +3138,9 @@
    "tabelas": [
     "stakeholders"
    ],
-   "edges": [],
+   "edges": [
+    "lead-score-ai"
+   ],
    "usado_por": 1,
    "orfao": false
   },
@@ -3389,7 +3395,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 110,
+   "usado_por": 111,
    "orfao": false
   },
   {
@@ -3424,7 +3430,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 131,
+   "usado_por": 132,
    "orfao": false
   },
   {

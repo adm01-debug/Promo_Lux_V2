@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942` (2026-11-23T11:00:33-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c5a2f4108cc8160ea6dc3423eb9e0983f17a79cd` (2026-11-23T11:16:05-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (670), SQL (246), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (673), SQL (246), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1110 |
-| arquivos_codigo | 697 |
-| linhas_codigo | 120996 |
+| arquivos_total | 1113 |
+| arquivos_codigo | 700 |
+| linhas_codigo | 121707 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -44,7 +44,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 22 |
 | componentes | 262 |
 | hooks | 96 |
-| edge_functions | 60 |
+| edge_functions | 63 |
 | tabelas | 115 |
 | migrations | 242 |
 | cron_jobs | 31 |
@@ -69,14 +69,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components/lux | 26 | 23 | 214 | 148 | 27 | 88 |
+| components/lux | 26 | 23 | 214 | 148 | 30 | 88 |
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
-| hooks | 0 | 0 | 90 | 156 | 23 | 81 |
-| lib | 0 | 0 | 16 | 90 | 22 | 61 |
+| hooks | 0 | 0 | 90 | 156 | 26 | 81 |
+| lib | 0 | 0 | 16 | 90 | 25 | 61 |
 | lib/mcp | 0 | 0 | 7 | 0 | 0 | 3 |
 | lib/resilience | 0 | 0 | 5 | 0 | 0 | 0 |
-| pages | 0 | 11 | 11 | 157 | 29 | 89 |
+| pages | 0 | 11 | 11 | 157 | 32 | 89 |
 
 ## Rotas (url → arquivo)
 - `/` [tela] → src/pages/Index.tsx (protegida)
@@ -131,6 +131,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `cnpj-enrich` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue; chamada por 1 arquivo(s) do front, por SQL/cron
 - `cnpj-enrich-worker` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue; chamada por 0 arquivo(s) do front, por SQL/cron
 - `cnpj-settings-status` — tabelas: cnpj_enrich_cache, cnpj_enrich_queue, cnpj_enrich_rate_state; chamada por 1 arquivo(s) do front
+- `conversation-intel` — tabelas: deal_activities, deals, organization_members; chamada por 1 arquivo(s) do front
 - `deliverability-check` — tabelas: -; chamada por 1 arquivo(s) do front
 - `dlq-alerts` — tabelas: dlq_alert_history, dlq_alert_settings, dlq_health_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front, por SQL/cron
 - `email-oauth-callback` (verify_jwt=false) — tabelas: email_accounts; chamada por 1 arquivo(s) do front
@@ -147,6 +148,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `instagram-worker` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue, instagram_scrape_results; chamada por 0 arquivo(s) do front, por SQL/cron
 - `instagram-worker-health` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue; chamada por 1 arquivo(s) do front
 - `latency-alerts` — tabelas: api_latency_alert_history, api_latency_alert_settings, api_latency_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front, por SQL/cron
+- `lead-score-ai` — tabelas: deals, intent_signals, lead_scores, organization_members, stakeholders; chamada por 1 arquivo(s) do front
 - `lusha-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front
 - `lusha-decision-makers` — tabelas: lusha_contacts, organization_members; chamada por 1 arquivo(s) do front
 - `lusha-reveal` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -160,7 +162,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `oracle-search-decisors` — tabelas: companies, lusha_contacts, lusha_search_sessions; chamada por 1 arquivo(s) do front
 - `org-violation-alerts` — tabelas: notifications, org_violation_alerts, organization_members, webhook_deliveries, webhooks; chamada por 1 arquivo(s) do front, por SQL/cron
 - `pg-net-watchdog` — tabelas: notifications, pg_net_health_snapshots, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
-- `public-api` (verify_jwt=false) — tabelas: api_keys, api_request_logs; chamada por 1 arquivo(s) do front
+- `public-api` (verify_jwt=false) — tabelas: api_keys, api_request_logs, audit_logs; chamada por 1 arquivo(s) do front
 - `purge-soft-deleted` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
 - `qa-ingest-run` (verify_jwt=false) — tabelas: qa_test_runs; chamada por 1 arquivo(s) do front
 - `reaper-alerts` — tabelas: notifications, qa_reaper_runs, reaper_alert_history, reaper_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
@@ -171,6 +173,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `sla-alerts` — tabelas: notifications, sla_alert_history, sla_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `sla-auto-tune` — tabelas: notifications, organization_members, sla_autotune_runs, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `system-recovery-status` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `technographics-detect` — tabelas: companies, intent_signals, organization_members; chamada por 1 arquivo(s) do front
 - `track-click` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `track-open` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `vault-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front, por SQL/cron
@@ -217,12 +220,12 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
-- hosts mais citados: lux-ai-company-finder.lovable.app, promo-lux-v2.vercel.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, www.linkedin.com, ai.gateway.lovable.dev, connector-gateway.lovable.dev
+- hosts mais citados: lux-ai-company-finder.lovable.app, promo-lux-v2.vercel.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, ai.gateway.lovable.dev, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, www.linkedin.com, connector-gateway.lovable.dev
 - webhooks recebidos: admin-list-companies, email-oauth-callback, mcp, mcp-query, migrate-helper, public-api, qa-ingest-run, send-scheduled-reports, track-click, track-open
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
 ## Permissões / papéis
-- papéis no código: alert (11), status (10), admin (9), button (4), dialog (4), user (4), group (3), main (3), CTO (2), navigation (2), presentation (2), region (2), system (2), CEO (1), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1), viewer (1)
+- papéis no código: alert (11), status (10), admin (9), user (6), button (4), dialog (4), system (4), group (3), main (3), CTO (2), navigation (2), presentation (2), region (2), CEO (1), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1), viewer (1)
 - enums de papel: app_role: admin|moderator|sdr|viewer
 - guards: nenhum · rotas protegidas: 5 · públicas: /*, /invite/:token, /login, /reset-password, /status, /survey/:token
 - feature flags: oracle_v2
@@ -245,8 +248,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7620 nós · 16236 arestas · 630 comunidades · grafo do commit `cf23a12b`
-- comunidades maiores: button.tsx (165), cn (115), lucide-react (109), vitest (107), react (104), CampaignsView.tsx (97), utils.ts (94), useActiveOrganization (92), gerar.mjs (80), badge.tsx (78), req (76), generate.py (71)
+- 7636 nós · 16259 arestas · 636 comunidades · grafo do commit `c5a2f410`
+- comunidades maiores: Monitoring.tsx (146), @tanstack/react-query (113), OrganizationsView.tsx (110), cn (108), badge.tsx (100), react (100), JobDetailsSheet.tsx (96), input.tsx (91), gerar.mjs (80), req (78), oracle-search-decisors/index.ts (69), gmaps-proxy/index.ts (68)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -254,8 +257,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - package-lock.json (17)
 - package.json (15)
 - AGENTS.md (8)
+- docs/GAPS-ENTERPRISE.md (7)
 - .github/workflows/edge-tests-daily.yml (6)
-- docs/GAPS-ENTERPRISE.md (6)
 - supabase/config.toml (6)
 - supabase/functions/gmaps-proxy/index.ts (6)
 - docs/ESTADO_ATUAL.md (5)
@@ -361,6 +364,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-23 `c5a2f41` feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)
 - 2026-11-23 `cf23a12` feat: steps de workflow controlam quais fases do engine executam (#158)
 - 2026-11-23 `0b2a228` feat: exige significancia estatistica para eleger vencedora A/B (#150)
 - 2026-11-23 `0801668` fix: exige admin da org no replay de DLQ (#155)
@@ -375,7 +379,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `b3ecb1b` fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)
 - 2026-11-22 `fddbb4f` feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)
 - 2026-11-22 `427ec06` fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)
-- 2026-11-22 `378947c` chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

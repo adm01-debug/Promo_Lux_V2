@@ -614,6 +614,7 @@
    "src/components/lux/icons/LinkedinIcon.tsx",
    "src/components/lux/stakeholders/StakeholderCard.tsx",
    "src/components/lux/stakeholders/StakeholderListRow.tsx",
+   "src/components/ui/button.tsx",
    "src/components/ui/input.tsx",
    "src/contexts/demo-context.ts",
    "src/hooks/use-toast.ts",
@@ -881,6 +882,7 @@
   ],
   "src/components/lux/deals/DealDetailDrawer.tsx": [
    "src/components/lux/deals/DealTasksPanel.tsx",
+   "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/input.tsx",
    "src/components/ui/select.tsx",
@@ -889,7 +891,8 @@
    "src/components/ui/textarea.tsx",
    "src/hooks/confirm-context.ts",
    "src/hooks/useDeals.ts",
-   "src/hooks/useLostReasons.ts"
+   "src/hooks/useLostReasons.ts",
+   "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/deals/DealTasksPanel.tsx": [
    "src/components/ui/button.tsx",

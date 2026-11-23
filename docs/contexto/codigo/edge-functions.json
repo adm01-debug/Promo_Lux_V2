@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 60,
+ "total": 63,
  "verify_jwt_false": [
   "admin-list-companies",
   "email-oauth-callback",
@@ -445,6 +445,41 @@
    "usa_shared": [],
    "chamada_pelo_front": [
     "src/pages/CnpjSettingsPage.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "conversation-intel",
+   "entrada": "supabase/functions/conversation-intel/index.ts",
+   "arquivos": 1,
+   "linhas": 150,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "deal_activities",
+    "deals",
+    "organization_members"
+   ],
+   "rpcs": [],
+   "env": [
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "ai.gateway.lovable.dev"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/deals/DealDetailDrawer.tsx"
    ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
@@ -1036,6 +1071,43 @@
    "testes": 0
   },
   {
+   "nome": "lead-score-ai",
+   "entrada": "supabase/functions/lead-score-ai/index.ts",
+   "arquivos": 1,
+   "linhas": 173,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "deals",
+    "intent_signals",
+    "lead_scores",
+    "organization_members",
+    "stakeholders"
+   ],
+   "rpcs": [],
+   "env": [
+    "LOVABLE_API_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "ai.gateway.lovable.dev"
+   ],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/StakeholderFinderView.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
    "nome": "lusha-cookie-health",
    "entrada": "supabase/functions/lusha-cookie-health/index.ts",
    "arquivos": 1,
@@ -1543,7 +1615,7 @@
    "nome": "public-api",
    "entrada": "supabase/functions/public-api/index.ts",
    "arquivos": 1,
-   "linhas": 275,
+   "linhas": 314,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
@@ -1554,7 +1626,8 @@
    ],
    "tabelas": [
     "api_keys",
-    "api_request_logs"
+    "api_request_logs",
+    "audit_logs"
    ],
    "rpcs": [
     "check_api_key_rate_limit",
@@ -1930,6 +2003,38 @@
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
    "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "technographics-detect",
+   "entrada": "supabase/functions/technographics-detect/index.ts",
+   "arquivos": 1,
+   "linhas": 182,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "companies",
+    "intent_signals",
+    "organization_members"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/IntentSignalsView.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
    "testes": 0
   },
   {

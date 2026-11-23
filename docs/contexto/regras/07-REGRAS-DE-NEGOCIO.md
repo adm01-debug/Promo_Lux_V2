@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cf23a12bd9` · branch `main` · 2026-11-23 14:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c5a2f4108c` · branch `main` · 2026-11-23 14:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -999,7 +999,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
 | `status` | `failed` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +11 |
-| `status` | `fulfilled` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
+| `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
 | `status` | `investigating` | escreve | `src/components/lux/monitoring/IncidentsPanel.tsx`<br>`src/hooks/useStatusPage.ts` |
@@ -1052,6 +1052,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `column` | escreve | `src/components/lux/deals/DealColumn.tsx` |
 | `type` | `condition` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `content_download` | escreve | `src/lib/demoData.ts` |
+| `type` | `conversation_intel` | compara, escreve | `src/components/lux/deals/DealDetailDrawer.tsx`<br>`supabase/functions/conversation-intel/index.ts` |
 | `type` | `courses` | escreve | `src/components/lux/lusha/DecisionMakersGrid.tsx` |
 | `type` | `deal` | compara, escreve | `src/components/lux/ActivityFeed.tsx`<br>`src/components/lux/deals/DealCard.tsx` |
 | `type` | `discovery` | escreve | `src/hooks/useCompanyDetails.ts` |
@@ -1082,6 +1083,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `system` | escreve | `src/lib/demoData.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>`supabase/functions/latency-alerts/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/pg-net-watchdog/index.ts`<br>… +3 |
 | `type` | `tag` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `tags` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
+| `type` | `tech_adoption` | escreve, filtra | `supabase/functions/technographics-detect/index.ts` |
 | `type` | `technology_change` | escreve | `src/lib/demoData.ts` |
 | `type` | `text` | escreve | `src/lib/mcp/supabase.ts`<br>`src/lib/mcp/tools/get-company.ts`<br>`src/lib/mcp/tools/get-dashboard-stats.ts`<br>`src/lib/mcp/tools/list-companies.ts`<br>`src/lib/mcp/tools/list-decision-makers.ts`<br>… +2 |
 | `type` | `totp` | escreve | `src/hooks/useMFA.ts` |
@@ -1094,8 +1096,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>`supabase/functions/admin-list-companies/index.ts`<br>… +9 |
 | `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
 | `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
-| `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
-| `role` | `user` | compara, escreve | `src/components/lux/AIAgentView.tsx`<br>`supabase/functions/_shared/rlsTableRegistry.ts`<br>`supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
+| `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
+| `role` | `user` | compara, escreve | `src/components/lux/AIAgentView.tsx`<br>`supabase/functions/_shared/rlsTableRegistry.ts`<br>`supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>… +1 |
 | `role` | `viewer` | compara | `src/hooks/usePermissions.ts` |
 | `enrichment_status` | `bitrix_duplicate` | compara, escreve | `src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `enrichment_status` | `enriched` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
@@ -1789,6 +1791,7 @@ _nenhum item encontrado_
 | `const TTL_SUCCESS_MS = 30 * 24 * 60 * 60 * 1000;` | `supabase/functions/cnpj-enrich-worker/index.ts` |
 | `const CB_RESET_TIMEOUT = 60000; // 1 minuto` | `supabase/functions/gmaps-proxy/index.ts` |
 | `const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();` | `supabase/functions/instagram-worker-health/index.ts` |
+| `adminClient.from("intent_signals").select("type, signal, score, source, created_at").eq("stakeholder_id", stakeholder_id).gte("created_at", new Date(Date.now() …` | `supabase/functions/lead-score-ai/index.ts` |
 | `await new Promise(r => setTimeout(r, 1500));` | `supabase/functions/lusha-search/index.ts` |
 | `const timeout = setTimeout(() => ctrl.abort(), 10000);` | `supabase/functions/webhook-dispatcher/index.ts` |
 | `expires_at timestamptz NOT NULL DEFAULT (now() + interval '7 days'),` | `supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql` |
@@ -1898,6 +1901,7 @@ _nenhum item encontrado_
 | 5 | `supabase/functions/ai-agent/index.ts` |
 | 1 | `supabase/functions/campaign-dispatch/index.ts` |
 | 1000 | `supabase/functions/cnpj-settings-status/index.ts` |
+| 1 | `supabase/functions/conversation-intel/index.ts` |
 | 1 | `supabase/functions/dlq-alerts/index.ts` |
 | 1 | `supabase/functions/gmaps-proxy/index.ts` |
 | 10 | `supabase/functions/gmaps-proxy/index.ts` |
@@ -1906,6 +1910,9 @@ _nenhum item encontrado_
 | 10 | `supabase/functions/instagram-worker-health/index.ts` |
 | 1 | `supabase/functions/latency-alerts/index.ts` |
 | 10 | `supabase/functions/latency-alerts/index.ts` |
+| 1 | `supabase/functions/lead-score-ai/index.ts` |
+| 10 | `supabase/functions/lead-score-ai/index.ts` |
+| 5 | `supabase/functions/lead-score-ai/index.ts` |
 | 1 | `supabase/functions/lusha-decision-makers/index.ts` |
 | 2000 | `supabase/functions/oracle-search-decisors/index.ts` |
 | 1 | `supabase/functions/reaper-alerts/index.ts` |
@@ -1914,6 +1921,7 @@ _nenhum item encontrado_
 | 1 | `supabase/functions/send-scheduled-reports/index.ts` |
 | 1 | `supabase/functions/sla-alerts/index.ts` |
 | 1 | `supabase/functions/sla-auto-tune/index.ts` |
+| 1 | `supabase/functions/technographics-detect/index.ts` |
 | 1 | `supabase/functions/web-scrape-enqueue/index.ts` |
 | 1 | `supabase/functions/workflow-engine/index.ts` |
 | 5 | `supabase/functions/workflow-engine/index.ts` |
@@ -1994,6 +2002,7 @@ _nenhum item encontrado_
 | Falha ao exportar: ${err.message} | `src/components/lux/GmapsScraperView.tsx` |
 | Falha ao importar: ${err.message} | `src/components/lux/GmapsScraperView.tsx` |
 | Erro ao atualizar | `src/components/lux/IntentSignalsView.tsx` |
+| Erro ao detectar | `src/components/lux/IntentSignalsView.tsx` |
 |            className= | `src/components/lux/LushaIntelligenceView.tsx` |
 | ${msg} Você poderá tentar novamente em ${wait}s. | `src/components/lux/LushaIntelligenceView.tsx` |
 | Domínio inválido | `src/components/lux/LushaIntelligenceView.tsx` |
@@ -2025,12 +2034,14 @@ _nenhum item encontrado_
 | A senha deve ter pelo menos 8 caracteres. | `src/components/lux/SettingsView.tsx` |
 | As senhas não coincidem. | `src/components/lux/SettingsView.tsx` |
 | Erro ao salvar | `src/components/lux/SettingsView.tsx` |
+| Erro no score IA | `src/components/lux/StakeholderFinderView.tsx` |
 | Erro ao executar | `src/components/lux/WorkflowsView.tsx` |
 |        aria-live= | `src/components/lux/auth/RateLimitWarning.tsx` |
 | CSV precisa de uma coluna de nome (ex:  | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | CSV vazio ou sem linhas de dados. | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | Erro na importação | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | Nenhuma organização ativa. | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
+| Escreva o texto antes de analisar | `src/components/lux/deals/DealDetailDrawer.tsx` |
 | Não foi possível copiar | `src/components/lux/integrations/AuthUrlConfirmDialog.tsx` |
 | ; import { Loader2, ShieldCheck, AlertCircle } from  | `src/components/lux/integrations/DeliverabilityCheckDialog.tsx` |
 | No account | `src/components/lux/integrations/DisconnectAccountDialog.tsx` |
@@ -2220,10 +2231,7 @@ _nenhum item encontrado_
 | createAdminUserFixture: insert org failed: ${orgErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: linha admin não persistiu (${checkErr?.message ??  | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| createAdminUserFixture: upsert member failed: ${memberErr.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| createNonAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| createNonAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +20 linhas — lista completa em `context.json` | |
+| … +23 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2371,9 +2379,12 @@ _nenhum item encontrado_
 |---|---|
 | `notify` | `src/components/automation/WorkflowEditor.tsx` |
 | `invoke(` | `src/components/lux/CampaignsView.tsx` |
+| `invoke(` | `src/components/lux/IntentSignalsView.tsx` |
 | `notifyLongSearch` | `src/components/lux/LushaIntelligenceView.tsx` |
 | `notifyOnCancel` | `src/components/lux/LushaIntelligenceView.tsx` |
 | `notifyOnFailure` | `src/components/lux/LushaIntelligenceView.tsx` |
+| `invoke(` | `src/components/lux/StakeholderFinderView.tsx` |
+| `invoke(` | `src/components/lux/deals/DealDetailDrawer.tsx` |
 | `invoke(` | `src/components/lux/integrations/DeliverabilityCheckDialog.tsx` |
 | `invoke(` | `src/components/lux/integrations/DisconnectAccountDialog.tsx` |
 | `invoke(` | `src/components/lux/integrations/EmailAccountsPanel.tsx` |
@@ -2393,6 +2404,7 @@ _nenhum item encontrado_
 | `sendMail` | `supabase/functions/campaign-dispatch/index.ts` |
 | `notifyRows` | `supabase/functions/org-violation-alerts/index.ts` |
 | `sendMail` | `supabase/functions/send-scheduled-reports/index.ts` |
+| `mercadopago` | `supabase/functions/technographics-detect/index.ts` |
 | `notify` | `supabase/functions/workflow-engine/index.ts` |
 | `notify_on_scrape_import` | `supabase/migrations/20260331104943_bad1a93f-0ffb-4464-9289-e3fc1ccfe273.sql` |
 | `notify_on_enrichment` | `supabase/migrations/20260331113407_e60b6db5-9894-4230-8999-6f5365d420a3.sql` |
@@ -2579,6 +2591,7 @@ _nenhum item encontrado_
 | fluxo autenticado, porem sem usuario. Escopo estrito -- apenas atualiza o | `supabase/functions/gmaps-proxy/index.ts` |
 | params?: { limit?: number, correlation_id?: string, max_attempts?: number } } | `supabase/functions/instagram-enqueue/index.ts` |
 | Não expõe payload sensível — retorna somente resumo. | `supabase/functions/instagram-worker/index.ts` |
+| 24 * 60 * 60 * 1000).toISOString()).order("created_at", { ascending: false }).limit(10), | `supabase/functions/lead-score-ai/index.ts` |
 | ── 3. Chamada Lusha V3 (apenas domínios sem cache) ── | `supabase/functions/lusha-decision-makers/index.ts` |
 | ── Rate limit dedicado: extrai Retry-After (segundos ou HTTP date) ── | `supabase/functions/lusha-decision-makers/index.ts` |
 | ── 4. Persistência em public.lusha_contacts (apenas resultados frescos) ── | `supabase/functions/lusha-decision-makers/index.ts` |
@@ -2593,9 +2606,11 @@ _nenhum item encontrado_
 | limite e está fora do cooldown: | `supabase/functions/org-violation-alerts/index.ts` |
 | * O endpoint não retorna dados sensíveis: apenas resumo agregado. | `supabase/functions/org-violation-alerts/index.ts` |
 | GET    /companies?limit=&offset= | `supabase/functions/public-api/index.ts` |
+| GET    /events?limit=&after=&table=&action=  (Zapier polling trigger) | `supabase/functions/public-api/index.ts` |
 | Limite de requisições por API key por hora (janela fixa, server-side) | `supabase/functions/public-api/index.ts` |
 | Só os campos de negócio legítimos abaixo passam; tudo mais é descartado | `supabase/functions/public-api/index.ts` |
 | Rate limit server-side por API key (janela fixa de 1h, RPC atômica) | `supabase/functions/public-api/index.ts` |
+| Parametros: ?limit=25&after=<id>&table=companies\|deals&action=INSERT\|UPDATE\|DELETE | `supabase/functions/public-api/index.ts` |
 | limitado: apenas leituras + inserts em history/notifications com cooldown. | `supabase/functions/reaper-alerts/index.ts` |
 | ignore — cleanup deve ser idempotente */ } | `supabase/functions/rls-tests/_fixtures.ts` |
 | * Classifica se um erro deve ser retentado (transitório) ou não (permanente). */ | `supabase/functions/scrape-queue-worker/index.ts` |

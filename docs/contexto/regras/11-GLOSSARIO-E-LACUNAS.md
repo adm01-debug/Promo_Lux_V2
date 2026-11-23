@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cf23a12bd9` · branch `main` · 2026-11-23 14:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c5a2f4108c` · branch `main` · 2026-11-23 14:18 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -249,6 +249,7 @@ _nenhum item encontrado_
 | status | valor `verified` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/auth/MFAVerify.tsx`<br>`compara:src/components/lux/settings/MFASetup.tsx`<br>`compara:src/hooks/useMFA.ts`<br>`compara:supabase/functions/_shared/leadcontact-client.ts` |
 | status | valor `SUBSCRIBED` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/LushaIntelligenceView.tsx` |
 | status | valor `CLOSED` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/LushaIntelligenceView.tsx` |
+| status | valor `fulfilled` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/StakeholderFinderView.tsx`<br>`compara:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `expiring_soon` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
 | status | valor `enriching` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx` |
 | status | valor `online` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/monitoring/MonitoringView.tsx`<br>`escreve:src/components/lux/monitoring/MonitoringView.tsx` |
@@ -259,7 +260,6 @@ _nenhum item encontrado_
 | status | valor `accepting` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/AcceptInvite.tsx` |
 | status | valor `masked` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/_shared/lusha-client.ts`<br>`escreve:supabase/functions/_shared/lusha-client.ts` |
 | status | valor `error_other` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts`<br>`escreve:supabase/functions/oracle-enrich-contact/index.ts` |
-| status | valor `fulfilled` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `error_auth` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `error_rate_limit` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `error_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
@@ -282,7 +282,11 @@ _nenhum item encontrado_
 | status | valor `expiring_soon` para `health_status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/lusha-cookie-health/index.ts` |
 | status | valor `save` para `current_step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/workflow-engine/index.ts` |
 | coluna | coluna `error_reason` usada no código não existe no schema de `instagram_scrape_dead_letter` |  |
+| coluna | coluna `score` usada no código não existe no schema de `intent_signals` |  |
+| coluna | coluna `source` usada no código não existe no schema de `intent_signals` |  |
+| coluna | coluna `stakeholder_id` usada no código não existe no schema de `intent_signals` |  |
 | coluna | coluna `triggered_at` usada no código não existe no schema de `api_latency_alert_history` |  |
+| coluna | coluna `company_name` usada no código não existe no schema de `deals` |  |
 | coluna | coluna `created_at` usada no código não existe no schema de `health_checks` |  |
 | tabela | tabela `a` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
 | tabela | tabela `contacts` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
