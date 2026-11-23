@@ -288,9 +288,9 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 46/50 = 92% completos · 1/50 = 2% parciais · 3/50 = 6% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 43/50 = 86% completos · 2/50 = 4% parciais · 5/50 = 10% ausentes (3ª passada 2026-11-22).**
 
-Ausentes de verdade (4): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
+Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
 Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
 
 
