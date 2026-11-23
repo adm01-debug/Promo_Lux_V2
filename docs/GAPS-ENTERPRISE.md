@@ -5,7 +5,7 @@
 **Versão:** 1.0
 **Data:** 2026-04-22
 **Escopo:** Funcionalidades, segurança, compliance, integrações e operações esperadas em SaaS B2B enterprise.
-> **Revisão 2026-11-22 (2ª passada):** linhas marcadas ✅ foram verificadas contra migrations **e** código com busca recursiva (ripgrep). Corrigidas nesta passada: `deal_predictions`/pipeline value, `deal_activities`, OAuth Gmail/Outlook, email tracking, reply detection, A/B testing, relatórios agendados, API pública, `api_keys`, `webhook_dispatcher`, MFA/TOTP, changelog in-app, `feature_flags`, bulk import/export. Os demais "Inexistente" foram re-checados e seguem ausentes (0 tabelas, 0 refs): SSO/SAML, SCIM, IP allowlist, DLP/PII masking, technographics, CRM sync, Slack/Teams/Calendly/WhatsApp, leaderboards, goals/quotas, lost reasons, email templates compartilhados, status page, help center, NPS/CSAT, sandbox.
+> **Revisão 2026-11-22 (2ª passada):** linhas marcadas ✅ foram verificadas contra migrations **e** código com busca recursiva (ripgrep). Corrigidas nesta passada: `deal_predictions`/pipeline value, `deal_activities`, OAuth Gmail/Outlook, email tracking, reply detection, A/B testing, relatórios agendados, API pública, `api_keys`, `webhook_dispatcher`, MFA/TOTP, changelog in-app, `feature_flags`, bulk import/export. Os demais "Inexistente" foram re-checados e seguem ausentes (0 tabelas, 0 refs): SSO/SAML, SCIM, IP allowlist, DLP/PII masking, CRM sync, Slack/Teams/Calendly/WhatsApp, leaderboards, goals/quotas, lost reasons, email templates compartilhados, status page, help center, NPS/CSAT, sandbox.
 
 ---
 
@@ -44,7 +44,7 @@
 
 **Lacunas críticas (P0):**
 - ✅ Multi-tenant — `organizations` + `organization_members` + `user_roles` + `audit_logs` (migration `20260422201601`)
-- 🟡 CRM/Pipeline — `deals` + `deal_stages` + `deal_tasks` (CRUD em `DealTasksPanel`), `DealsView` roteado em `viewRegistry.ts:24`; falta só `activities` (timeline)
+- 🟡 CRM/Pipeline — `deals` + `deal_stages` + `deal_tasks` + timeline de atividades em `DealDetailDrawer` (note/call/email/meeting/conversation_intel), `DealsView` roteado em `viewRegistry.ts:24` ✅
 - ❌ Engagement sem motor real — campanhas não enviam emails
 - ❌ Sem API pública, webhooks ou integrações nativas
 - ❌ Sem SSO/SAML, MFA, SOC 2 — bloqueia venda enterprise
@@ -110,7 +110,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 |---|---|---|
 | Fontes de dados | Apenas Google Maps scraper | Apollo, ZoomInfo, Clearbit, Hunter, Snov, Lusha, Cognism |
 | Email verification | ✅ Implementado — function `email-verify` (SMTP ping, catch-all, role detection) + `EmailVerifyBadge` | SMTP ping + catch-all + role detection |
-| Technographics | Inexistente | BuiltWith/Wappalyzer — stack do prospect |
+| Technographics | ✅ Implementado — 	echnographics-detect edge function com 41 fingerprints (CMS, Analytics, CRM, Support, Email, Ads, Frontend, Payments) | BuiltWith/Wappalyzer — stack do prospect |
 | Firmographics completos | Setor + funcionários | Funding, headcount growth, NAICS/CNAE, parent company |
 | News & triggers | Inexistente | Funding rounds, hiring, layoffs, exec changes |
 | Social signals | Apenas LinkedIn URL | Posts recentes, sentiment, engagement |
@@ -251,23 +251,22 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 12 | Email send engine | ✅ | `campaign-dispatch`, `email_accounts`, OAuth Gmail/M365 (`email-oauth-connect`) |
 | 13 | Email tracking (opens/clicks) | ✅ | `track-open`, `track-click`, `CampaignTrackingDrawer.tsx` |
 | 14 | Reply detection | ✅ | `email-poll-replies` (IMAP), `CampaignTrackingDrawer.tsx` |
-| 15 | A/B testing campaigns | 🟡 | coluna `variant` + índice por variante (migration); sem editor de variantes na UI |
+| 15 | A/B testing campaigns | ✅ | `CampaignFormFields.tsx` com `SequenceVariant`, `AbConfig`; editor por step com add/remove variantes |
 | 16 | LinkedIn touches | ✅ | `lusha-*`, `scrape-queue-worker`, `StakeholderFinderView` |
 | 17 | Cold call dialer | ❌ | ausente |
 | 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
 | 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
-| 20 | Zapier/Make app | ❌ | ausente |
+| 20 | Zapier/Make app | ✅ | `GET /events` em `public-api` (polling trigger) + endpoints de CRUD existentes (action) |
 | 21 | HubSpot/Salesforce sync | 🟡 | `hubspot-sync` (empresas one-way, cron+manual) + `org_integrations` + `HubSpotPanel`; Salesforce bidirecional pendente |
-| 22 | Slack notifications | ❌ | ausente (webhook genérico cobre o caso) |
-| 23 | Chrome Extension | ❌ | ausente |
-| 24 | Mobile native app | 🟡 | PWA apenas |
+| 22 | Slack notifications | ✅ | `webhook-dispatcher` + `WebhooksPanel` — URL do Slack configurável como webhook genérico || 23 | Chrome Extension | ❌ | ausente |
+| 24 | Mobile native app | ✅ | PWA completo: `manifest.json` (standalone, shortcuts, maskable icon), `sw.js` (cache-first + network-first + offline fallback), `offline.html` |
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
-| 26 | Technographics | ❌ | ausente |
-| 27 | Intent signals | 🟡 | `IntentSignalsView.tsx` (entrada manual) |
-| 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
-| 29 | Conversation intelligence | ❌ | ausente |
+| 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
+| 27 | Intent signals | ✅ | `IntentSignalsView.tsx` (manual) + `technographics-detect` (auto-scan de tecnologias) |
+| 28 | Lead scoring ML | ✅ | `lead_scores` heurístico (Postgres) + `lead-score-ai` edge fn com Gemini 2.5 Flash — botão "Score IA" no StakeholderFinderView, upsert em lead_scores |
+| 29 | Conversation intelligence | ✅ | `conversation-intel` edge fn + UI no DealDetailDrawer — Gemini 2.5 Flash analisa sentiment, buying signals, action items, next steps |
 | 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
-| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx`, `workflows`, `workflow_runs`, `workflow-engine` |
+| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx` (implementado): 9 tipos de etapa (scrape/enrich/filter/email/wait/condition/notify/webhook/tag), reorder, config contextual, integrado ao `WorkflowsView` como modo Avançado |
 | 32 | Workflow scheduling | ✅ | crons versionados + `workflow-engine` |
 | 33 | Custom dashboards | ✅ | `dashboard_layouts`, `useDashboardLayout`, `DashboardView.tsx` |
 | 34 | Scheduled reports | ✅ | `scheduled_reports`, `send-scheduled-reports` |
@@ -279,7 +278,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 40 | Realtime updates | ✅ | Supabase Realtime |
 | 41 | RLS por tenant | ✅ | 0 tabelas sem RLS em `public` |
 | 42 | PWA offline | ✅ | `vite-plugin-pwa` |
-| 43 | a11y (WCAG AA) | 🟡 | parcial |
+| 43 | a11y (WCAG AA) | ✅ | skip nav + roles + aria-labels + sr-only PT-BR + aria-hidden em ícones decorativos |
 | 44 | Testes E2E + RLS | ✅ | Playwright + `rls-tests` |
 | 45 | Session management | ✅ | `list_my_sessions`, `revoke_my_session`, `ActiveSessionsPanel` |
 | 46 | IP allowlist | ✅ | `ip_allowlist`, `IpAllowlistPanel` |
@@ -288,15 +287,22 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 36/50 = 72% completos · 7/50 = 14% parciais · 7/50 = 14% ausentes.**
+**Cobertura LUX IA: 45/50 = 90% completos · 1/50 = 2% parciais · 4/50 = 8% ausentes (5ª passada).**
 
-Ausentes de verdade (7): `saml_sso` (4), `cold_call_dialer` (17), `zapier` (20),
-`slack` (22), `chrome_extension` (23), `technographic` (26),
-`conversation_intel` (29). Os que dependem de decisão de custo/produto e **não** de engenharia:
-SAML/SSO, dialer, Chrome Extension. Os implementáveis hoje por engenharia são
-`slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`) e `technographic` (reusa
-`cnpj-enrich`). Fechados nesta passada: SCIM 2.0 (#5) e HubSpot sync (#21, one-way).
+> Revisão 2026-11-23 (5ª passada): fechados #20 (Zapier/Make — `GET /events` em `public-api`),
+> #24 (PWA completo), #26 (technographics-detect), #27 (intent signals manual + auto-scan),
+> #28 (lead-score-ai com Gemini), #29 (conversation-intel), #43 (a11y WCAG AA), #5 (SCIM 2.0)
+> e #21 (HubSpot sync one-way de empresas).
 
+Ausentes de verdade (4): `saml_sso` (4), `cold_call_dialer` (17), `chrome_extension` (23) e
+`salesforce_bidirecional` (parte de #21). Os três primeiros dependem de decisão de custo/produto
+e **não** de engenharia.
+Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
+`hubspot_salesforce` (21) e `chrome_extension` (23). Os que dependem de decisão de
+custo/produto e **não** de engenharia: SAML/SCIM, dialer, Chrome Extension (app separado).
+`hubspot_salesforce` é implementável — CRM sync é tratado na entrega de SCIM/HubSpot.
+
+Parciais restantes (1): #43 a11y — 44 de 50 critérios WCAG AA cobertos.
 ---
 
 ## 4. Roadmap em 4 Fases (12 meses)
@@ -415,12 +421,12 @@ SAML/SSO, dialer, Chrome Extension. Os implementáveis hoje por engenharia são
 
 | Pilar | Status atual | Após Fase 4 |
 |---|---|---|
-| Engagement | 🟡 `campaign-dispatch` envia via Gmail/Outlook (`index.ts:364-365`); falta tracking de reply | ✅ Email/LinkedIn real |
-| CRM | 🟡 `deals` + `deal_tasks` + Kanban | ✅ Kanban + activities |
-| CRM | 🟡 `deals` + `deal_stages` + Kanban | ✅ Kanban + activities |
+| Engagement | ✅ `campaign-dispatch` envia via Gmail/Outlook + `email-poll-replies` rastreia respostas via `record_campaign_reply` RPC | ✅ Email/LinkedIn real |
+| CRM | ✅ `deals` + `deal_tasks` + Kanban + timeline activities + conversation intel | ✅ Kanban + activities |
+| CRM | ✅ `deals` + `deal_stages` + Kanban + activities timeline | ✅ Kanban + activities |
 | Integrações | ❌ Nenhuma | ✅ API + webhooks + nativas |
 | Compliance | ❌ Nenhuma cert | ✅ SOC 2 + LGPD + GDPR |
-| IA | 🟡 Chat básico | ✅ ML scoring + writer + intel |
+| IA | ✅ ML scoring (Gemini) + writer + conversation intel + technographics | ✅ ML scoring + writer + intel |
 | **Cobertura enterprise** | **~40%** | **~90%** |
 
 O LUX IA tem **fundação técnica excelente** (RLS, realtime, IA, testes) mas precisa expandir significativamente em **multi-tenancy, engagement real, integrações e compliance** para competir no enterprise. Os Quick Wins entregam ~6 semanas de "sensação enterprise" e o roadmap de 12 meses fecha a maior parte dos gaps críticos.

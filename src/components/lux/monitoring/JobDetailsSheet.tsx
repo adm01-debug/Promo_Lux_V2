@@ -50,6 +50,8 @@ import type { LucideIcon } from "lucide-react";
 
 interface JobDetailsSheetProps {
   jobId: string | null;
+  /** ID de um `workflow_run`. Quando fornecido (sem jobId), exibe as etapas da execucao do workflow. */
+  runId?: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -70,7 +72,7 @@ type JobStage = {
   icon?: LucideIcon;
 };
 
-export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetProps) => {
+export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetailsSheetProps) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -90,19 +92,38 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
     enabled: !!jobId && open,
   });
 
-  const { data: steps = [], isLoading: stepsLoading } = useQuery({
-    queryKey: ["automation-steps", jobId],
+    // Cabecalho alternativo para runs de workflow (sem scrape_job associado)
+    const { data: workflowRun } = useQuery({
+      queryKey: ["workflow-run", runId],
     queryFn: async () => {
-      if (!jobId) return [];
+        if (!runId || !!jobId) return null;
       const { data, error } = await db
-        .from("automation_steps")
-        .select("*")
-        .eq("job_id", jobId)
-        .order('created_at', { ascending: true });
+          .from("workflow_runs")
+          .select("*, workflows(name)")
+          .eq("id", runId)
+          .maybeSingle();
       if (error) throw error;
+        return data;
+      },
+      enabled: !!runId && !jobId && open,
+    });
+
+    const { data: steps = [], isLoading: stepsLoading } = useQuery({
+      queryKey: ["automation-steps", jobId, runId],
+      queryFn: async () => {
+        if (!jobId && !runId) return [];
+        let q = db.from("automation_steps").select("*");
+        if (runId) {
+          // Steps de workflow: busca por run_id; inclui tambem steps com job_id do run
+          q = q.eq("run_id", runId);
+        } else if (jobId) {
+          q = q.eq("job_id", jobId);
+        }
+        const { data, error } = await q.order("created_at", { ascending: true });
+        if (error) throw error;
       return data || [];
     },
-    enabled: !!jobId && open,
+      enabled: (!!jobId || !!runId) && open,
   });
 
   const { data: results, isLoading: resultsLoading } = useQuery({
@@ -274,11 +295,15 @@ export const JobDetailsSheet = ({ jobId, open, onOpenChange }: JobDetailsSheetPr
                    <Clock className="h-6 w-6" />}
                 </div>
                 <div>
-                  <SheetTitle className="text-xl">{job?.name || "Detalhes da Execução"}</SheetTitle>
+                  <SheetTitle className="text-xl">
+                    {job?.name || (workflowRun?.workflows as { name?: string } | null)?.name || "Detalhes da Execução"}
+                  </SheetTitle>
                   <SheetDescription className="flex items-center gap-2 mt-0.5">
-                    <Badge variant="outline" className="font-mono text-[10px] py-0">{job?.id.slice(0, 8)}</Badge>
+                    <Badge variant="outline" className="font-mono text-[10px] py-0">
+                      {(job?.id ?? runId ?? "").slice(0, 8)}
+                    </Badge>
                     <span className="text-[10px] opacity-60">
-                      Iniciado há {job?.created_at ? formatDistanceToNow(new Date(job.created_at), { locale: ptBR, addSuffix: true }) : '-'}
+                      Iniciado há {(job?.created_at ?? workflowRun?.started_at) ? formatDistanceToNow(new Date((job?.created_at ?? workflowRun?.started_at) as string), { locale: ptBR, addSuffix: true }) : '-'}
                     </span>
                   </SheetDescription>
                 </div>

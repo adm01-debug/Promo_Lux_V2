@@ -3,11 +3,12 @@ import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_STAKEHOLDERS } from "@/lib/demoData";
 import { DataError } from "@/components/lux/DataError";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Users, Search, Filter, Crown, Briefcase, Building2, Mail, Phone,
-  X, Zap, UserCheck, UserX, Shield, Target, TrendingUp, Eye,
+  X, Zap, UserCheck, UserX, Shield, Target, TrendingUp, Eye, Brain, Loader2,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
@@ -58,7 +59,25 @@ export const StakeholderFinderView = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Scores de lead (cargo + canais + engajamento) vêm materializados do banco.
-  const { byId: leadScoreById } = useLeadScores();
+  const { byId: leadScoreById, refresh: refreshScores } = useLeadScores();
+  const qc = useQueryClient();
+
+  const aiScoreAllMutation = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const results = await Promise.allSettled(
+        ids.map((id) =>
+          supabase.functions.invoke("lead-score-ai", { body: { stakeholder_id: id } })
+        )
+      );
+      const ok = results.filter((r) => r.status === "fulfilled").length;
+      return ok;
+    },
+    onSuccess: (ok) => {
+      toast({ title: `${ok} scores IA calculados`, description: "Lead scores atualizados com Gemini." });
+      void qc.invalidateQueries({ queryKey: ["lead_scores"] });
+    },
+    onError: (err: Error) => toast({ title: "Erro no score IA", description: err.message, variant: "destructive" }),
+  });
 
   const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
     queryKey: ["stakeholders"],
@@ -120,7 +139,17 @@ export const StakeholderFinderView = () => {
           <h2 className="text-2xl font-bold text-foreground flex items-center gap-2"><Users className="h-6 w-6 text-primary" /> Stakeholder Finder</h2>
           <p className="text-sm text-muted-foreground mt-1">Descubra decisores e influenciadores — {stakeholders.length} stakeholders mapeados</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            size="sm" variant="outline"
+            disabled={aiScoreAllMutation.isPending || stakeholders.length === 0}
+            onClick={() => aiScoreAllMutation.mutate(filtered.slice(0, 20).map((s) => s.id))}
+            title="Recalcula os scores dos stakeholders visíveis usando Gemini AI (máx 20)"
+            className="gap-1.5 text-xs"
+          >
+            {aiScoreAllMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Brain className="h-3.5 w-3.5" />}
+            Score IA
+          </Button>
           <div className="flex rounded-lg border border-border/50 overflow-hidden">
             <button onClick={() => setViewMode("grid")} className={`px-3 py-1.5 text-xs font-medium transition-colors ${viewMode === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"}`}>Grid</button>
             <button onClick={() => setViewMode("list")} className={`px-3 py-1.5 text-xs font-medium transition-colors ${viewMode === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"}`}>Lista</button>

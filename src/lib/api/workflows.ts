@@ -1,12 +1,17 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveOrgId } from "@/integrations/supabase/withOrg";
 
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/workflow-engine`;
+
+export type WorkflowPhase = "scrape" | "enrich" | "ipc_score";
 
 export interface WorkflowStep {
   id: string;
   type: "source" | "enrich" | "filter" | "action";
   label: string;
   provider?: string;
+  /** Fase do engine que este step liga. Ausente em workflows legados = todas rodam. */
+  phase?: WorkflowPhase;
 }
 
 export interface WorkflowRunResults {
@@ -67,8 +72,11 @@ export const workflowApi = {
     return callWorkflowApi("list");
   },
 
-  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown> }): Promise<Workflow> {
-    return callWorkflowApi("create", { method: "POST", body: JSON.stringify(data) });
+  async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown>; organization_id?: string }): Promise<Workflow> {
+    // O engine roda com service_role e não tem auth.uid(): sem organization_id
+    // explícito o INSERT viola o NOT NULL. Manda a org ativa do tenant.
+    const organization_id = data.organization_id ?? getActiveOrgId() ?? undefined;
+    return callWorkflowApi("create", { method: "POST", body: JSON.stringify({ ...data, organization_id }) });
   },
 
   async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> {
