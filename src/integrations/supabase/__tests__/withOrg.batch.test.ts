@@ -159,7 +159,7 @@ describe("db (withOrg) — batch operations atomic rejection", () => {
         db.from("companies").update([
           { name: "ok", organization_id: ORG_A },
           { name: "evil", organization_id: ORG_B },
-        ] as unknown as Record<string, unknown>),
+                  ] as unknown as never),
       ).toThrow(OrgMismatchError);
       expect(callOrder.find((c) => c.method === "update")).toBeUndefined();
     });
@@ -168,7 +168,7 @@ describe("db (withOrg) — batch operations atomic rejection", () => {
       db.from("companies").update([
         { name: "a", organization_id: ORG_A },
         { name: "b" },
-      ] as unknown as Record<string, unknown>);
+              ] as unknown as never);
 
       const updateCall = callOrder.find((c) => c.method === "update");
       expect(updateCall?.args[0]).toEqual([{ name: "a" }, { name: "b" }]);

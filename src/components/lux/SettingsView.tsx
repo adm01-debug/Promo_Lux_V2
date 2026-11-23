@@ -268,7 +268,7 @@ export const SettingsView = () => {
                     if (user) {
                       supabase
                         .from("profiles")
-                        .update({ onboarding_completed: false } as Record<string, unknown>)
+                        .update({ onboarding_completed: false })
                         .eq("id", user.id)
                         .then(() => {
                           toast({ title: "Tour reiniciado!", description: "Recarregue a página para iniciar o tour." });

@@ -12,6 +12,7 @@ import { validateCompany } from "@/lib/schemas/company";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { OrgMismatchError } from "@/integrations/supabase/withOrg";
 import { handleOrgError } from "@/lib/orgErrorHandler";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 
 type GeoStatus = "idle" | "checking" | "found" | "not_found";
 
@@ -237,7 +238,7 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
     setFieldErrors({});
     setSaving(true);
     try {
-      const updateData: Record<string, string | number | null> = {
+      const updateData: TablesUpdate<"companies"> = {
         name: name.trim(),
         cnpj: result.data.cnpj || null,
         sector: sector || null,
@@ -248,7 +249,9 @@ export const EditCompanyDialog = ({ company, open, onOpenChange }: EditCompanyDi
         linkedin_url: linkedinUrl || null,
         instagram_url: instagramUrl || null,
         employees: employees || null,
-        revenue: revenue || null,
+        // revenue é numérico no banco: o PostgREST converte o texto do form
+        // (comportamento já em produção); texto inválido é rejeitado pelo banco.
+        revenue: (revenue || null) as TablesUpdate<"companies">["revenue"],
         description: description || null,
       };
 
