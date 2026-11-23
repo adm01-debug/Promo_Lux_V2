@@ -241,7 +241,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 2 | RBAC (Admin/SDR/Viewer) | ✅ | `role_permissions` (210 linhas), `usePermissions`, `PermissionGate` em 13 componentes |
 | 3 | Audit log | ✅ | `audit_logs`, `useAuditTrail`, `AuditTrailPanel` em `Monitoring.tsx` |
 | 4 | SSO/SAML | ❌ | 0 tabela, 0 código. Custo/decisão de produto |
-| 5 | SCIM | ❌ | 0 tabela, 0 código (o match em migration é um comentário) |
+| 5 | SCIM | ✅ | `scim` function (SCIM 2.0 Users CRUD + ServiceProviderConfig), `generate_scim_token`/`verify_scim_token`, `ScimPanel` |
 | 6 | MFA/2FA | ✅ | `useMFA`, `MFAEnroll.tsx`, `MFAVerify.tsx` (TOTP nativo do Supabase Auth) |
 | 7 | SOC 2 Type II | 🟡 | controles técnicos prontos (auditoria, RLS, DLP); certificação é processo pago |
 | 8 | GDPR/LGPD docs | ✅ | `data_subject_requests`, `DsarPanel`, `pii_redaction_rules`, `PiiMaskingPanel` |
@@ -257,9 +257,8 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
 | 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
 | 20 | Zapier/Make app | ✅ | `GET /events` em `public-api` (polling trigger) + endpoints de CRUD existentes (action) |
-| 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
-| 22 | Slack notifications | ✅ | `webhook-dispatcher` + `WebhooksPanel` — URL do Slack configurável como webhook genérico |
-| 23 | Chrome Extension | ❌ | ausente |
+| 21 | HubSpot/Salesforce sync | 🟡 | `hubspot-sync` (empresas one-way, cron+manual) + `org_integrations` + `HubSpotPanel`; Salesforce bidirecional pendente |
+| 22 | Slack notifications | ✅ | `webhook-dispatcher` + `WebhooksPanel` — URL do Slack configurável como webhook genérico || 23 | Chrome Extension | ❌ | ausente |
 | 24 | Mobile native app | ✅ | PWA completo: `manifest.json` (standalone, shortcuts, maskable icon), `sw.js` (cache-first + network-first + offline fallback), `offline.html` |
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
 | 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
@@ -288,12 +287,16 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 44/50 = 88% completos · 1/50 = 2% parciais · 5/50 = 10% ausentes (4ª passada).**
+**Cobertura LUX IA: 45/50 = 90% completos · 1/50 = 2% parciais · 4/50 = 8% ausentes (5ª passada).**
 
-> Revisão 2026-11-23 (4ª passada): fechados #20 (Zapier/Make — `GET /events` em `public-api`),
+> Revisão 2026-11-23 (5ª passada): fechados #20 (Zapier/Make — `GET /events` em `public-api`),
 > #24 (PWA completo), #26 (technographics-detect), #27 (intent signals manual + auto-scan),
-> #28 (lead-score-ai com Gemini), #29 (conversation-intel) e #43 (a11y WCAG AA).
+> #28 (lead-score-ai com Gemini), #29 (conversation-intel), #43 (a11y WCAG AA), #5 (SCIM 2.0)
+> e #21 (HubSpot sync one-way de empresas).
 
+Ausentes de verdade (4): `saml_sso` (4), `cold_call_dialer` (17), `chrome_extension` (23) e
+`salesforce_bidirecional` (parte de #21). Os três primeiros dependem de decisão de custo/produto
+e **não** de engenharia.
 Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
 `hubspot_salesforce` (21) e `chrome_extension` (23). Os que dependem de decisão de
 custo/produto e **não** de engenharia: SAML/SCIM, dialer, Chrome Extension (app separado).

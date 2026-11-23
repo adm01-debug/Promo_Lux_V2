@@ -17,6 +17,8 @@ import { DsarPanel } from "@/components/lux/settings/DsarPanel";
 import { RLSRegistryCoverage } from "@/components/lux/settings/RLSRegistryCoverage";
 import { MFASetup } from "@/components/lux/settings/MFASetup";
 import { IpAllowlistPanel } from "@/components/lux/settings/IpAllowlistPanel";
+import { ScimPanel } from "@/components/lux/settings/ScimPanel";
+import { HubSpotPanel } from "@/components/lux/settings/HubSpotPanel";
 import { AuditLogExportPanel } from "@/components/lux/settings/AuditLogExportPanel";
 import { PiiMaskingPanel } from "@/components/lux/settings/PiiMaskingPanel";
 import { NextBestActionPanel } from "@/components/lux/settings/NextBestActionPanel";
@@ -355,12 +357,18 @@ export const SettingsView = () => {
                   </div>
                 ))}
               </div>
+              <div className="border-t border-border/20 pt-6">
+                <HubSpotPanel />
+              </div>
             </div>
           )}
 
           {activeTab === "security" && (
-            <div className="glass rounded-lg p-6">
+            <div className="glass rounded-lg p-6 space-y-8">
               <IpAllowlistPanel />
+              <div className="border-t border-border/20 pt-6">
+                <ScimPanel />
+              </div>
             </div>
           )}
 
