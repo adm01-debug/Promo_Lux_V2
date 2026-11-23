@@ -91,6 +91,14 @@
    "src/components/ui/input-otp.tsx",
    "src/hooks/useMFA.ts"
   ],
+  "src/components/automation/WorkflowEditor.tsx": [
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/textarea.tsx",
+   "src/lib/utils.ts"
+  ],
   "src/components/lux/AIAgentView.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -637,9 +645,11 @@
    "src/components/lux/skeletons/SkeletonPrimitives.tsx"
   ],
   "src/components/lux/WorkflowsView.tsx": [
+   "src/components/automation/WorkflowEditor.tsx",
    "src/components/lux/DataError.tsx",
    "src/components/lux/StepProgress.tsx",
    "src/components/lux/ViewSkeleton.tsx",
+   "src/components/lux/monitoring/JobDetailsSheet.tsx",
    "src/components/lux/workflows/WorkflowCard.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/dialog.tsx",
@@ -2198,7 +2208,8 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/lib/api/workflows.ts": [
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/lib/csv.ts": [
    "src/lib/exportCSV.ts"
@@ -2592,7 +2603,8 @@
    "supabase/functions/_shared/ssrf-guard.ts"
   ],
   "supabase/functions/workflow-engine/index.ts": [
-   "supabase/functions/_shared/companies-upsert.ts"
+   "supabase/functions/_shared/companies-upsert.ts",
+   "supabase/functions/_shared/workflow-phases.ts"
   ]
  }
 }

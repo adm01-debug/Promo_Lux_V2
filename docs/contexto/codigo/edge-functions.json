@@ -41,6 +41,7 @@
   "supabase/functions/_shared/__tests__/tracking-links.test.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
   "supabase/functions/_shared/__tests__/web-scrape.test.ts",
+  "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
   "supabase/functions/_shared/api-rate-limit.ts",
   "supabase/functions/_shared/apify-fixtures.ts",
   "supabase/functions/_shared/apify-gateway.test.ts",
@@ -82,7 +83,8 @@
   "supabase/functions/_shared/web-scrape/chaos.ts",
   "supabase/functions/_shared/web-scrape/heuristics.ts",
   "supabase/functions/_shared/web-scrape/html-to-markdown.ts",
-  "supabase/functions/_shared/web-scrape/robots.ts"
+  "supabase/functions/_shared/web-scrape/robots.ts",
+  "supabase/functions/_shared/workflow-phases.ts"
  ],
  "edges": [
   {
@@ -2236,9 +2238,10 @@
    "nome": "workflow-engine",
    "entrada": "supabase/functions/workflow-engine/index.ts",
    "arquivos": 1,
-   "linhas": 714,
+   "linhas": 904,
    "verify_jwt": true,
    "metodos": [
+    "DELETE",
     "GET",
     "OPTIONS",
     "POST"
@@ -2270,7 +2273,8 @@
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
-    "companies-upsert.ts"
+    "companies-upsert.ts",
+    "workflow-phases.ts"
    ],
    "chamada_pelo_front": [
     "src/lib/api/workflows.ts"

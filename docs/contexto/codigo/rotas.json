@@ -116,6 +116,7 @@
     "useQueue",
     "useRealtimeCompanies",
     "useRealtimeInvalidation",
+    "useRealtimeJobDetails",
     "useRealtimeScrapeJobs",
     "useRecentActivity",
     "useRecentCompanies",
@@ -226,6 +227,7 @@
     "usePiiScan",
     "usePlacesApiUsage",
     "useRealtimeCompanies",
+    "useRealtimeJobDetails",
     "useRealtimeScrapeJobs",
     "useRecentActivity",
     "useRecentCompanies",
@@ -260,6 +262,7 @@
     "api_keys",
     "audit_logs",
     "automation_execution_logs",
+    "automation_steps",
     "bulk_imports",
     "campaign_events",
     "campaign_recipients",
@@ -315,6 +318,7 @@
     "stakeholders",
     "webhook_deliveries",
     "webhooks",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [
@@ -376,6 +380,7 @@
     "workflow-engine"
    ],
    "canais_realtime": [
+    "job-details:${jobId}",
     "lusha-dm-history-sync",
     "org:${activeOrgId}:automations",
     "org:${activeOrgId}:companies",
@@ -408,7 +413,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 266
+   "arquivos_puxados": 269
   },
   {
    "protegida": true,
@@ -815,7 +820,8 @@
     "vault_cookie_alert_history",
     "vault_cookie_snapshots",
     "web_scrape_dead_letter",
-    "web_scrape_queue"
+    "web_scrape_queue",
+    "workflow_runs"
    ],
    "rpcs": [
     "api_latency_stats",
@@ -1530,6 +1536,7 @@
     "useQueryClient",
     "useQueue",
     "useRealtimeInvalidation",
+    "useRealtimeJobDetails",
     "useRecentActivity",
     "useRecentCompanies",
     "useRef",
@@ -1628,6 +1635,7 @@
     "usePiiRules",
     "usePiiScan",
     "usePlacesApiUsage",
+    "useRealtimeJobDetails",
     "useRecentActivity",
     "useRecentCompanies",
     "useRefreshNextBestActions",
@@ -1657,6 +1665,7 @@
     "api_keys",
     "audit_logs",
     "automation_execution_logs",
+    "automation_steps",
     "bulk_imports",
     "campaign_events",
     "campaign_recipients",
@@ -1711,6 +1720,7 @@
     "stakeholders",
     "webhook_deliveries",
     "webhooks",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [
@@ -1772,6 +1782,7 @@
     "workflow-engine"
    ],
    "canais_realtime": [
+    "job-details:${jobId}",
     "lusha-dm-history-sync",
     "org:${activeOrgId}:automations",
     "private:${user.id}:${activeOrgId}:dashboard",
@@ -1795,7 +1806,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 228
+   "arquivos_puxados": 231
   },
   {
    "id": "deals",
@@ -2767,6 +2778,7 @@
    "hooks": [
     "useActiveOrganization",
     "useAuth",
+    "useCallback",
     "useCan",
     "useContext",
     "useCreateInvite",
@@ -2782,6 +2794,7 @@
     "usePermissions",
     "useQuery",
     "useQueryClient",
+    "useRealtimeJobDetails",
     "useRecentActivity",
     "useRecentCompanies",
     "useRemoveMember",
@@ -2803,6 +2816,7 @@
     "useOrgInvites",
     "useOrgMembers",
     "usePermissions",
+    "useRealtimeJobDetails",
     "useRecentActivity",
     "useRecentCompanies",
     "useRemoveMember",
@@ -2812,6 +2826,7 @@
     "useUpdateMemberRole"
    ],
    "tabelas": [
+    "automation_steps",
     "companies",
     "notifications",
     "organization_invites",
@@ -2819,6 +2834,9 @@
     "organizations",
     "profiles",
     "role_permissions",
+    "scrape_jobs",
+    "scrape_results",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [
@@ -2829,6 +2847,7 @@
     "workflow-engine"
    ],
    "canais_realtime": [
+    "job-details:${jobId}",
     "private:${user.id}:${activeOrgId}:dashboard"
    ],
    "flags": [],
@@ -2841,7 +2860,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 32
+   "arquivos_puxados": 41
   }
  ],
  "menu": [

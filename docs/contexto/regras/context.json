@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "0b2a2288ef2e5225808223dc254e558648359f9b",
+  "sha": "cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 11:49 UTC",
-  "files_total": 1127,
-  "code_files": 945,
-  "code_lines": 139233
+  "generated_at": "2026-11-23 14:10 UTC",
+  "files_total": 1129,
+  "code_files": 947,
+  "code_lines": 139901
  },
  "version": "1.3.2",
- "facts_hash": "29ee2526567a4da3",
+ "facts_hash": "7997c0d09f83cc04",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -234,7 +234,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 371,
+   ".ts": 373,
    ".tsx": 297,
    ".sql": 246,
    ".mjs": 21,
@@ -28034,7 +28034,8 @@
      "vault_cookie_alert_history",
      "vault_cookie_snapshots",
      "web_scrape_dead_letter",
-     "web_scrape_queue"
+     "web_scrape_queue",
+     "workflow_runs"
     ],
     "invokes_transitive": [
      "instagram-connection-status",
@@ -29707,6 +29708,7 @@
     "name": "workflow-engine",
     "file": "supabase/functions/workflow-engine/index.ts",
     "methods": [
+     "DELETE",
      "GET",
      "OPTIONS",
      "POST"
@@ -29734,9 +29736,7 @@
     "doc": "",
     "errors": [
      ", { type: ",
-     "Step not found",
-     "Unauthorized",
-     "Workflow not found"
+     "Step sem organizacao"
     ],
     "side_effects": [
      "notify"
@@ -31097,7 +31097,7 @@
   {
    "module": "src/components",
    "files": 303,
-   "lines": 49184,
+   "lines": 49583,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -31133,6 +31133,7 @@
     "vault_cookie_alert_history",
     "vault_cookie_snapshots",
     "web_scrape_queue",
+    "workflow_runs",
     "workflows"
    ],
    "exports": [
@@ -31178,12 +31179,12 @@
     "OnboardingTour.tsx: OnboardingTour"
    ],
    "docs": [
-    "WorkflowEditor.tsx: Stub: implementação anterior perdida (arquivo corrompido em base64 truncado). Não é referenciado em nenhuma tela ativa. Reimplementar quando necessário.",
     "historyUtils.ts: Utilitários puros para o histórico do Oráculo. Extraídos do componente para viabilizar testes unitários determinísticos.",
     "types.ts: Tipos compartilhados do módulo Lusha Intelligence. Extraídos de LushaIntelligenceView.tsx na Rodada #30 (refactor safety).",
     "MultiQueueResilienceCard.tsx: MultiQueueResilienceCard — Panorama unificado das duas filas (scrape/web). Read-only: usa snapshots existentes + advisories + web_scrape_queue direta.",
     "slaHistoryChartData.ts: Transformação pura dos registros de histórico de SLA em séries de gráfico. Extraída do componente para permitir teste unitário determinístico do carry-forward (manter o último valor conhecido de cada fila em cada ponto).",
-    "slaRiskAnalysis.ts: Análise pura de risco de SLA. Um SLA padrão configurado **abaixo** do p95 observado significa que, por definição, mais de 5% dos itens da fila estouram o prazo — é um alvo inatingível, não uma meta ambiciosa. Isolamos a regra aqui para permitir teste determinístico e reuso fora do componente."
+    "slaRiskAnalysis.ts: Análise pura de risco de SLA. Um SLA padrão configurado **abaixo** do p95 observado significa que, por definição, mais de 5% dos itens da fila estouram o prazo — é um alvo inatingível, não uma meta ambiciosa. Isolamos a regra aqui para permitir teste determinístico e reuso fora do componente.",
+    "OrgViolationAlertsPanel.tsx: Painel admin para o sistema de alertas de OrgMismatchError: - Mostra/edita configurações da org ativa (limite, janela, cooldown). - Lista os últimos alertas disparados. - Botão \"Avaliar agora\" invoca a edge function `org-violation-alerts`. Acesso: apenas admins (gate feito por `usePermissions` no ca …"
    ],
    "deps": [
     "@dnd-kit/core",
@@ -31595,7 +31596,7 @@
   {
    "module": "src/lib",
    "files": 53,
-   "lines": 6298,
+   "lines": 6306,
    "tables": [
     "audit_logs",
     "campaigns",
@@ -31622,7 +31623,7 @@
     "utils.ts: cn, generateTraceId, generateSpanId, createTraceparent, parseTraceparent",
     "viewRegistry.ts: prefetchView, VIEW_MAP",
     "gmaps.ts: ScrapeJob, CreateJobRequest, gmapsApi",
-    "workflows.ts: WorkflowStep, WorkflowRunResults, WorkflowRun, Workflow, workflowApi",
+    "workflows.ts: WorkflowPhase, WorkflowStep, WorkflowRunResults, WorkflowRun, Workflow, workflowApi",
     "aggregations.ts: AlertHistoryPoint, TrendPoint, filterByPeriod, PeriodStats, computePeriodStats, DailyFrequencyPoint",
     "classify.ts: DlqReasonCategory, DlqReasonLabel, classifyDlqReason, DLQ_CATEGORIES, dlqCategoryLabel, dlqCategoryRetryable",
     "departmentMap.data.ts: DEPT_MAP, SUGGESTED_DEPARTMENTS_PT, DepartmentResolution, resolveDepartments, findPtLabelForEn",
@@ -31825,8 +31826,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 129,
-   "lines": 23281,
+   "files": 131,
+   "lines": 23542,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -31926,12 +31927,12 @@
     "tracing.ts: generateTraceId, generateSpanId, getTraceparent, createTraceparent, parseTraceparent",
     "tracking-links.ts: openTrackingUrl, clickTrackingUrl, applyEmailTracking",
     "tracking-signature.ts: signTrackingParams, verifyTrackingParams",
+    "workflow-phases.ts: WORKFLOW_PHASES, WorkflowPhase, declaredPhases, phaseEnabled",
     "scrape-job-machine.ts: ScrapeJobStatus, ScrapeJobStateMachine, canTransitionScrapeJob, getNextScrapeJobStatus",
     "scoring.ts: CompanyData, IPCHittingCriteria, calculateIPCScore",
     "chaos.ts: shouldInjectChaos",
     "heuristics.ts: isEmptyShell, isTransientHttp, hostnameOf",
-    "html-to-markdown.ts: ExtractedContent, extractContent",
-    "robots.ts: RobotsRule, RobotsPolicy, parseRobotsTxt, isAllowed"
+    "html-to-markdown.ts: ExtractedContent, extractContent"
    ],
    "docs": [
     "api-rate-limit.ts: Logic-a pura de decisao de rate-limit da public-api, extraida para teste unitario (convencao do projeto: edge functions testam so o que vive em _shared). A RPC check_api_key_rate_limit devolve uma linha com allowed/current_count/reset_at.",
@@ -31986,6 +31987,7 @@
     "supabase/functions/_shared/tracing.ts",
     "supabase/functions/_shared/tracking-links.ts",
     "supabase/functions/_shared/tracking-signature.ts",
+    "supabase/functions/_shared/workflow-phases.ts",
     "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
     "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
     "supabase/functions/_shared/__tests__/apollo-fallback.test.ts",
@@ -32011,6 +32013,7 @@
     "supabase/functions/_shared/__tests__/tracking-links.test.ts",
     "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
     "supabase/functions/_shared/__tests__/web-scrape.test.ts",
+    "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
     "supabase/functions/_shared/domain/scrape-job-machine.ts",
     "supabase/functions/_shared/domain/ipc/scoring.ts",
     "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
@@ -32028,9 +32031,7 @@
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-enrich-worker/index.ts",
     "supabase/functions/cnpj-settings-status/index.ts",
-    "supabase/functions/deliverability-check/index.ts",
-    "supabase/functions/dlq-alerts/index.ts",
-    "supabase/functions/email-oauth-callback/index.ts"
+    "supabase/functions/deliverability-check/index.ts"
    ]
   },
   {
@@ -33434,10 +33435,11 @@
     ]
    },
    "workflow_runs": {
-    "insert": [
+    "select": [
+     "src/components/lux/monitoring/JobDetailsSheet.tsx",
      "supabase/functions/workflow-engine/index.ts"
     ],
-    "select": [
+    "insert": [
      "supabase/functions/workflow-engine/index.ts"
     ],
     "update": [
@@ -33467,8 +33469,7 @@
     ],
     "delete": [
      "src/components/lux/WorkflowsView.tsx",
-     "supabase/functions/rls-tests/index.ts",
-     "supabase/functions/workflow-engine/index.ts"
+     "supabase/functions/rls-tests/index.ts"
     ]
    }
   },
@@ -33550,7 +33551,10 @@
    ],
    "automation_steps": [
     "id",
-    "job_id"
+    "job_id",
+    "name",
+    "organization_id",
+    "run_id"
    ],
    "bulk_imports": [
     "created_at",
@@ -33905,6 +33909,7 @@
     "criteria",
     "id",
     "is_active",
+    "organization_id",
     "user_id"
    ],
    "lead_scores": [
@@ -34204,9 +34209,9 @@
     "created_at",
     "id",
     "job_id",
+    "organization_id",
     "processed",
-    "raw_data",
-    "user_id"
+    "raw_data"
    ],
    "sla_alert_history": [
     "breach_rate",
@@ -34300,14 +34305,17 @@
     "user_id"
    ],
    "workflow_runs": [
-    "id"
+    "id",
+    "workflow_id"
    ],
    "workflows": [
+    "deleted_at",
     "description",
     "id",
     "leads_processed",
     "leads_qualified",
     "name",
+    "organization_id",
     "status",
     "success_rate",
     "user_id"
@@ -35811,7 +35819,7 @@
     "file": "supabase/functions/workflow-engine/index.ts",
     "name": "CreateWorkflowSchema",
     "kind": "object",
-    "body": "{ name: z.string().min(1).max(255), description: z.string().max(1000).optional().default(\"\"), steps: z.array(z.record(z.unknown())).min(1).max(20), config: z.record(z.unknown()).default({}), }",
+    "body": "{ name: z.string().min(1).max(255), description: z.string().max(1000).optional().default(\"\"), steps: z.array(z.record(z.unknown())).min(1).max(20), config: z.record(z.unknown()).default({}), /** Org alvo; se omitida usa a primeira organização do usuário. */ organization_id: z.string().uuid(\"Invalid organization_id\").optional(), }",
     "refines": [],
     "chain": []
    },
@@ -35972,7 +35980,7 @@
    {
     "file": "src/components/automation/WorkflowEditor.tsx",
     "name": "StepType",
-    "values": "email | wait | condition | notify | webhook | tag"
+    "values": "email | wait | condition | notify | webhook | tag | scrape | enrich | filter"
    },
    {
     "file": "src/components/lux/company-filters-utils.ts",
@@ -36210,6 +36218,11 @@
     "values": "lusha | apollo"
    },
    {
+    "file": "src/lib/api/workflows.ts",
+    "name": "WorkflowPhase",
+    "values": "scrape | enrich | ipc_score"
+   },
+   {
     "file": "src/lib/dlq/aggregations.ts",
     "name": "SortKey",
     "values": "date | volume"
@@ -36283,6 +36296,11 @@
     "file": "supabase/functions/_shared/rlsTableRegistry.ts",
     "name": "AppEnv",
     "values": "dev | staging | prod"
+   },
+   {
+    "file": "supabase/functions/_shared/workflow-phases.ts",
+    "name": "WORKFLOW_PHASES",
+    "values": "\"scrape\", \"enrich\", \"ipc_score\""
    },
    {
     "file": "supabase/functions/_shared/domain/scrape-job-machine.ts",
@@ -37569,15 +37587,7 @@
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
-    "msg": "Step not found"
-   },
-   {
-    "file": "supabase/functions/workflow-engine/index.ts",
-    "msg": "Unauthorized"
-   },
-   {
-    "file": "supabase/functions/workflow-engine/index.ts",
-    "msg": "Workflow not found"
+    "msg": "Step sem organizacao"
    }
   ],
   "role_checks": [
@@ -38402,6 +38412,14 @@
    {
     "file": "supabase/functions/webhook-dispatcher/index.ts",
     "text": "ainda assim precisa estar pending/retrying e dentro do limite de"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "text": "apenas marcar \"pending\" fazia a UI anunciar \"reiniciado\" com o"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "text": "DELETE de workflow exige admin da org (mesma regra da policy"
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
@@ -44239,7 +44257,7 @@
    {
     "file": "src/lib/api/workflows.ts",
     "name": "workflowApi",
-    "body": "async list(): Promise<Workflow[]> { return callWorkflowApi(\"list\"); }, async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown> }): Promise<Workflow> { return callWorkflowApi(\"create\", { method: \"POST\", body: JSON.stringify(data) }); }, async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> { return callWorkflowApi(\"run\", { method: \"POST\", body: JSON.stringify({ workflow_id: workflowId }) }); }, async toggleStatus(workflowId: string, newStatus: string): Promise<void> { await callWorkflowApi(\"toggle-status\", { method: \"POST\", body: JSON.stringify({ workflow_id: workflowId, new_status: newStatus }), }); }, a …"
+    "body": "async list(): Promise<Workflow[]> { return callWorkflowApi(\"list\"); }, async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown>; organization_id?: string }): Promise<Workflow> { // O engine roda com service_role e não tem auth.uid(): sem organization_id // explícito o INSERT viola o NOT NULL. Manda a org ativa do tenant. const organization_id = data.organization_id ?? getActiveOrgId() ?? undefined; return callWorkflowApi(\"create\", { method: \"POST\", body: JSON.stringify({ ...data, organization_id }) }); }, async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> { return callWorkflowApi(\"run\", { method: \"POST …"
    }
   ],
   "status_values": [
@@ -44265,6 +44283,108 @@
     "file": "src/components/auth/MFAVerify.tsx",
     "field": "status",
     "value": "verified",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "phase",
+    "value": "scrape",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "phase",
+    "value": "enrich",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "phase",
+    "value": "ipc_score",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "scrape",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "email",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "wait",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "condition",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "webhook",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "notify",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "tag",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "scrape",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "email",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "wait",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "condition",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "webhook",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "notify",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/automation/WorkflowEditor.tsx",
+    "field": "type",
+    "value": "tag",
     "kind": "compara"
    },
    {
@@ -44840,6 +44960,24 @@
    {
     "file": "src/components/lux/WorkflowsView.tsx",
     "field": "type",
+    "value": "source",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "phase",
+    "value": "scrape",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "type",
+    "value": "enrich",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "phase",
     "value": "enrich",
     "kind": "escreve"
    },
@@ -44851,8 +44989,32 @@
    },
    {
     "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "phase",
+    "value": "ipc_score",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
     "field": "type",
     "value": "action",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "phase",
+    "value": "scrape",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "phase",
+    "value": "enrich",
+    "kind": "escreve"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "field": "phase",
+    "value": "ipc_score",
     "kind": "escreve"
    },
    {
@@ -47124,6 +47286,12 @@
     "kind": "escreve"
    },
    {
+    "file": "supabase/functions/_shared/workflow-phases.ts",
+    "field": "phase",
+    "value": "scrape",
+    "kind": "escreve"
+   },
+   {
     "file": "supabase/functions/admin-list-companies/index.ts",
     "field": "role",
     "value": "admin",
@@ -48710,6 +48878,12 @@
    {
     "file": "supabase/functions/workflow-engine/index.ts",
     "field": "status",
+    "value": "pending",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
     "value": "running",
     "kind": "escreve"
    },
@@ -48740,6 +48914,12 @@
    {
     "file": "supabase/functions/workflow-engine/index.ts",
     "field": "status",
+    "value": "skipped",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
     "value": "pending",
     "kind": "escreve"
    },
@@ -48752,6 +48932,12 @@
    {
     "file": "supabase/functions/workflow-engine/index.ts",
     "field": "status",
+    "value": "skipped",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
     "value": "completed",
     "kind": "escreve"
    },
@@ -48759,6 +48945,12 @@
     "file": "supabase/functions/workflow-engine/index.ts",
     "field": "current_step",
     "value": "ipc_score",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
+    "value": "skipped",
     "kind": "escreve"
    },
    {
@@ -54394,6 +54586,38 @@
     "name": "extrai hostname"
    },
    {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "declaredPhases"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "devolve vazio para steps ausente, nulo ou nao-array"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "ignora entradas sem phase ou com phase nao-string"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "coleta as fases declaradas"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "phaseEnabled"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "workflow legado (steps vazio) roda todas as fases"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "steps declarados habilitam apenas as fases listadas"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "name": "declarar so enrich mantem scrape e ipc_score desligados"
+   },
+   {
     "file": "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
     "name": "calculateIPCScore"
    },
@@ -54535,6 +54759,10 @@
    {
     "file": "src/components/lux/security/OrgViolationAlertsPanel.tsx",
     "call": "invoke("
+   },
+   {
+    "file": "src/components/lux/workflows/WorkflowCard.tsx",
+    "call": "notify"
    },
    {
     "file": "src/hooks/useDlqReplay.ts",
@@ -63566,7 +63794,8 @@
       "escreve:supabase/functions/oracle-enrich-contact/index.ts",
       "escreve:supabase/functions/oracle-push-bitrix/index.ts",
       "escreve:supabase/functions/send-scheduled-reports/index.ts",
-      "escreve:supabase/functions/webhook-dispatcher/index.ts"
+      "escreve:supabase/functions/webhook-dispatcher/index.ts",
+      "escreve:supabase/functions/workflow-engine/index.ts"
      ],
      "error": [
       "compara:src/components/lux/integrations/EmailSyncHistorySheet.tsx",
@@ -63738,56 +63967,66 @@
       "escreve:supabase/functions/webhook-dispatcher/index.ts"
      ]
     },
-    "role": {
-     "user": [
-      "compara:src/components/lux/AIAgentView.tsx",
-      "escreve:src/components/lux/AIAgentView.tsx",
-      "escreve:supabase/functions/_shared/rlsTableRegistry.ts",
-      "escreve:supabase/functions/ai-agent/index.ts",
-      "escreve:supabase/functions/web-scrape-extract/index.ts"
+    "phase": {
+     "scrape": [
+      "escreve:src/components/automation/WorkflowEditor.tsx",
+      "escreve:src/components/lux/WorkflowsView.tsx",
+      "escreve:supabase/functions/_shared/workflow-phases.ts"
      ],
-     "agent": [
-      "compara:src/components/lux/AIAgentView.tsx",
-      "escreve:src/components/lux/AIAgentView.tsx"
+     "enrich": [
+      "escreve:src/components/automation/WorkflowEditor.tsx",
+      "escreve:src/components/lux/WorkflowsView.tsx"
      ],
-     "admin": [
-      "compara:src/components/lux/OrganizationsView.tsx",
-      "compara:src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
-      "compara:src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
-      "compara:src/hooks/usePermissions.ts",
-      "escreve:supabase/functions/rls-tests/_fixtures.ts",
-      "filtra:supabase/functions/admin-list-companies/index.ts",
-      "filtra:supabase/functions/dlq-alerts/index.ts",
-      "filtra:supabase/functions/latency-alerts/index.ts",
-      "filtra:supabase/functions/org-violation-alerts/index.ts",
-      "filtra:supabase/functions/pg-net-watchdog/index.ts",
-      "filtra:supabase/functions/reaper-alerts/index.ts",
-      "filtra:supabase/functions/rls-tests/_fixtures.ts",
-      "filtra:supabase/functions/rls-tests/index.ts",
-      "filtra:supabase/functions/sla-alerts/index.ts",
-      "filtra:supabase/functions/sla-auto-tune/index.ts"
+     "ipc_score": [
+      "escreve:src/components/automation/WorkflowEditor.tsx",
+      "escreve:src/components/lux/WorkflowsView.tsx"
      ],
-     "sdr": [
-      "compara:src/hooks/usePermissions.ts"
+     "all": [
+      "compara:src/hooks/useAutomationLogs.ts",
+      "escreve:src/components/lux/monitoring/AutomationLogsPanel.tsx"
      ],
-     "viewer": [
-      "compara:src/hooks/usePermissions.ts"
+     "preflight": [
+      "escreve:supabase/functions/oracle-cookies-preflight/index.ts"
      ],
-     "CTO": [
-      "escreve:src/lib/demoData.ts"
+     "execute": [
+      "filtra:supabase/functions/retry-policy-tuner/index.ts"
      ],
-     "CEO": [
-      "escreve:src/lib/demoData.ts"
-     ],
-     "CFO": [
-      "escreve:src/lib/demoData.ts"
-     ],
-     "system": [
-      "escreve:supabase/functions/ai-agent/index.ts",
-      "escreve:supabase/functions/web-scrape-extract/index.ts"
+     "fail": [
+      "escreve:supabase/functions/web-scrape-worker/index.ts"
      ]
     },
     "type": {
+     "scrape": [
+      "compara:src/components/automation/WorkflowEditor.tsx",
+      "escreve:src/hooks/useRealtimeScrapeJobs.ts",
+      "escreve:src/lib/demoData.ts",
+      "escreve:supabase/functions/gmaps-proxy/index.ts"
+     ],
+     "email": [
+      "compara:src/components/automation/WorkflowEditor.tsx",
+      "compara:src/components/lux/campaigns/CampaignFormFields.tsx",
+      "escreve:src/components/lux/CampaignsView.tsx",
+      "escreve:src/components/lux/campaigns/CampaignFormFields.tsx",
+      "escreve:src/components/lux/campaigns/EmailTemplatePicker.tsx",
+      "escreve:supabase/functions/campaign-dispatch/index.ts"
+     ],
+     "wait": [
+      "compara:src/components/automation/WorkflowEditor.tsx",
+      "escreve:src/components/lux/CampaignsView.tsx",
+      "escreve:src/components/lux/campaigns/CampaignFormFields.tsx"
+     ],
+     "condition": [
+      "compara:src/components/automation/WorkflowEditor.tsx"
+     ],
+     "webhook": [
+      "compara:src/components/automation/WorkflowEditor.tsx"
+     ],
+     "notify": [
+      "compara:src/components/automation/WorkflowEditor.tsx"
+     ],
+     "tag": [
+      "compara:src/components/automation/WorkflowEditor.tsx"
+     ],
      "spring": [
       "escreve:src/components/lux/ActivityFeed.tsx",
       "escreve:src/components/lux/AnalyticsView.tsx",
@@ -63813,17 +64052,6 @@
       "compara:src/components/lux/ActivityFeed.tsx",
       "escreve:src/hooks/useCompanyDetails.ts",
       "escreve:src/lib/demoData.ts"
-     ],
-     "email": [
-      "compara:src/components/lux/campaigns/CampaignFormFields.tsx",
-      "escreve:src/components/lux/CampaignsView.tsx",
-      "escreve:src/components/lux/campaigns/CampaignFormFields.tsx",
-      "escreve:src/components/lux/campaigns/EmailTemplatePicker.tsx",
-      "escreve:supabase/functions/campaign-dispatch/index.ts"
-     ],
-     "wait": [
-      "escreve:src/components/lux/CampaignsView.tsx",
-      "escreve:src/components/lux/campaigns/CampaignFormFields.tsx"
      ],
      "tags": [
       "compara:src/components/lux/ICPConfigView.tsx",
@@ -63913,11 +64141,6 @@
      "totp": [
       "escreve:src/hooks/useMFA.ts"
      ],
-     "scrape": [
-      "escreve:src/hooks/useRealtimeScrapeJobs.ts",
-      "escreve:src/lib/demoData.ts",
-      "escreve:supabase/functions/gmaps-proxy/index.ts"
-     ],
      "system": [
       "escreve:src/lib/demoData.ts",
       "escreve:supabase/functions/dlq-alerts/index.ts",
@@ -63985,6 +64208,55 @@
       "escreve:supabase/functions/web-scrape-extract/index.ts"
      ]
     },
+    "role": {
+     "user": [
+      "compara:src/components/lux/AIAgentView.tsx",
+      "escreve:src/components/lux/AIAgentView.tsx",
+      "escreve:supabase/functions/_shared/rlsTableRegistry.ts",
+      "escreve:supabase/functions/ai-agent/index.ts",
+      "escreve:supabase/functions/web-scrape-extract/index.ts"
+     ],
+     "agent": [
+      "compara:src/components/lux/AIAgentView.tsx",
+      "escreve:src/components/lux/AIAgentView.tsx"
+     ],
+     "admin": [
+      "compara:src/components/lux/OrganizationsView.tsx",
+      "compara:src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+      "compara:src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+      "compara:src/hooks/usePermissions.ts",
+      "escreve:supabase/functions/rls-tests/_fixtures.ts",
+      "filtra:supabase/functions/admin-list-companies/index.ts",
+      "filtra:supabase/functions/dlq-alerts/index.ts",
+      "filtra:supabase/functions/latency-alerts/index.ts",
+      "filtra:supabase/functions/org-violation-alerts/index.ts",
+      "filtra:supabase/functions/pg-net-watchdog/index.ts",
+      "filtra:supabase/functions/reaper-alerts/index.ts",
+      "filtra:supabase/functions/rls-tests/_fixtures.ts",
+      "filtra:supabase/functions/rls-tests/index.ts",
+      "filtra:supabase/functions/sla-alerts/index.ts",
+      "filtra:supabase/functions/sla-auto-tune/index.ts"
+     ],
+     "sdr": [
+      "compara:src/hooks/usePermissions.ts"
+     ],
+     "viewer": [
+      "compara:src/hooks/usePermissions.ts"
+     ],
+     "CTO": [
+      "escreve:src/lib/demoData.ts"
+     ],
+     "CEO": [
+      "escreve:src/lib/demoData.ts"
+     ],
+     "CFO": [
+      "escreve:src/lib/demoData.ts"
+     ],
+     "system": [
+      "escreve:supabase/functions/ai-agent/index.ts",
+      "escreve:supabase/functions/web-scrape-extract/index.ts"
+     ]
+    },
     "enrichment_status": {
      "enriched": [
       "compara:src/components/lux/lusha/OracleV2Panel.tsx",
@@ -64038,21 +64310,6 @@
      ],
      "getDatasetItems": [
       "escreve:supabase/functions/_shared/apify-gateway.ts"
-     ]
-    },
-    "phase": {
-     "all": [
-      "compara:src/hooks/useAutomationLogs.ts",
-      "escreve:src/components/lux/monitoring/AutomationLogsPanel.tsx"
-     ],
-     "preflight": [
-      "escreve:supabase/functions/oracle-cookies-preflight/index.ts"
-     ],
-     "execute": [
-      "filtra:supabase/functions/retry-policy-tuner/index.ts"
-     ],
-     "fail": [
-      "escreve:supabase/functions/web-scrape-worker/index.ts"
      ]
     },
     "state": {
@@ -65929,6 +66186,7 @@
    "scripts/sql/check-function-grants.sql",
    "scripts/supabase_snapshot/snapshot.py",
    "src/integrations/supabase/withOrg.ts",
+   "src/lib/api/workflows.ts",
    "src/lib/mcp/supabase.ts",
    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
    "supabase/functions/_shared/apollo-cache.ts",
@@ -72570,6 +72828,13 @@
    },
    {
     "kind": "status",
+    "msg": "valor `preflight` para `phase` usado no código não existe em nenhum enum do banco/TS",
+    "where": [
+     "escreve:supabase/functions/oracle-cookies-preflight/index.ts"
+    ]
+   },
+   {
+    "kind": "status",
     "msg": "valor `enriched` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/components/lux/lusha/OracleV2Panel.tsx",
@@ -72650,13 +72915,6 @@
    },
    {
     "kind": "status",
-    "msg": "valor `preflight` para `phase` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/oracle-cookies-preflight/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `collapsed` para `state` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/components/ui/sidebar.tsx"
@@ -72681,20 +72939,6 @@
     "msg": "valor `expiring_soon` para `health_status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:supabase/functions/lusha-cookie-health/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `enrich` para `current_step` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/workflow-engine/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `ipc_score` para `current_step` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/workflow-engine/index.ts"
     ]
    },
    {
@@ -75408,7 +75652,7 @@
   },
   "src/components/automation/WorkflowEditor.tsx": {
    "path": "src/components/automation/WorkflowEditor.tsx",
-   "lines": 28,
+   "lines": 298,
    "exports": [
     "type StepType",
     "interface WorkflowStep",
@@ -75418,10 +75662,96 @@
    "enums": [
     {
      "name": "StepType",
-     "values": "email | wait | condition | notify | webhook | tag"
+     "values": "email | wait | condition | notify | webhook | tag | scrape | enrich | filter"
     }
    ],
-   "doc": "Stub: implementação anterior perdida (arquivo corrompido em base64 truncado). Não é referenciado em nenhuma tela ativa. Reimplementar quando necessário.",
+   "status_values": [
+    {
+     "field": "phase",
+     "value": "scrape",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
+     "value": "enrich",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
+     "value": "ipc_score",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "scrape",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "email",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "wait",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "condition",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "webhook",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "notify",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "tag",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "scrape",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "email",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "wait",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "condition",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "webhook",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "notify",
+     "kind": "compara"
+    },
+    {
+     "field": "type",
+     "value": "tag",
+     "kind": "compara"
+    }
+   ],
    "side_effects": [
     "notify"
    ]
@@ -77127,7 +77457,7 @@
   },
   "src/components/lux/WorkflowsView.tsx": {
    "path": "src/components/lux/WorkflowsView.tsx",
-   "lines": 210,
+   "lines": 293,
    "exports": [
     "const WorkflowsView"
    ],
@@ -77165,6 +77495,21 @@
     },
     {
      "field": "type",
+     "value": "source",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
+     "value": "scrape",
+     "kind": "escreve"
+    },
+    {
+     "field": "type",
+     "value": "enrich",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
      "value": "enrich",
      "kind": "escreve"
     },
@@ -77174,8 +77519,28 @@
      "kind": "escreve"
     },
     {
+     "field": "phase",
+     "value": "ipc_score",
+     "kind": "escreve"
+    },
+    {
      "field": "type",
      "value": "action",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
+     "value": "scrape",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
+     "value": "enrich",
+     "kind": "escreve"
+    },
+    {
+     "field": "phase",
+     "value": "ipc_score",
      "kind": "escreve"
     },
     {
@@ -77488,7 +77853,7 @@
   },
   "src/components/lux/__tests__/WorkflowsView.test.tsx": {
    "path": "src/components/lux/__tests__/WorkflowsView.test.tsx",
-   "lines": 96,
+   "lines": 97,
    "is_test": true,
    "tests": [
     "WorkflowsView",
@@ -79538,13 +79903,17 @@
   },
   "src/components/lux/monitoring/JobDetailsSheet.tsx": {
    "path": "src/components/lux/monitoring/JobDetailsSheet.tsx",
-   "lines": 657,
+   "lines": 682,
    "exports": [
     "const JobDetailsSheet"
    ],
    "tables": [
     {
      "table": "scrape_jobs",
+     "op": "select"
+    },
+    {
+     "table": "workflow_runs",
      "op": "select"
     },
     {
@@ -79572,8 +79941,8 @@
     "scrape_jobs": [
      "id"
     ],
-    "automation_steps": [
-     "job_id"
+    "workflow_runs": [
+     "id"
     ],
     "scrape_results": [
      "job_id"
@@ -80888,7 +81257,7 @@
   },
   "src/components/lux/workflows/WorkflowCard.tsx": {
    "path": "src/components/lux/workflows/WorkflowCard.tsx",
-   "lines": 173,
+   "lines": 193,
    "exports": [
     "const WorkflowCard"
    ],
@@ -80926,6 +81295,9 @@
    ],
    "percents": [
     "transition={{ delay: index * 0.06 }}"
+   ],
+   "side_effects": [
+    "notify"
    ]
   },
   "src/components/ui/accordion.tsx": {
@@ -86672,8 +87044,9 @@
   },
   "src/lib/api/workflows.ts": {
    "path": "src/lib/api/workflows.ts",
-   "lines": 89,
+   "lines": 97,
    "exports": [
+    "type WorkflowPhase",
     "interface WorkflowStep",
     "interface WorkflowRunResults",
     "interface WorkflowRun",
@@ -86687,10 +87060,16 @@
    "errors": [
     "Not authenticated"
    ],
+   "enums": [
+    {
+     "name": "WorkflowPhase",
+     "values": "scrape | enrich | ipc_score"
+    }
+   ],
    "transition_maps": [
     {
      "name": "workflowApi",
-     "body": "async list(): Promise<Workflow[]> { return callWorkflowApi(\"list\"); }, async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown> }): Promise<Workflow> { return callWorkflowApi(\"create\", { method: \"POST\", body: JSON.stringify(data) }); }, async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> { return callWorkflowApi(\"run\", { method: \"POST\", body: JSON.stringify({ workflow_id: workflowId }) }); }, async toggleStatus(workflowId: string, newStatus: string): Promise<void> { await callWorkflowApi(\"toggle-status\", { method: \"POST\", body: JSON.stringify({ workflow_id: workflowId, new_status: newStatus }), }); }, a …"
+     "body": "async list(): Promise<Workflow[]> { return callWorkflowApi(\"list\"); }, async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown>; organization_id?: string }): Promise<Workflow> { // O engine roda com service_role e não tem auth.uid(): sem organization_id // explícito o INSERT viola o NOT NULL. Manda a org ativa do tenant. const organization_id = data.organization_id ?? getActiveOrgId() ?? undefined; return callWorkflowApi(\"create\", { method: \"POST\", body: JSON.stringify({ ...data, organization_id }) }); }, async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> { return callWorkflowApi(\"run\", { method: \"POST …"
     }
    ],
    "status_values": [
@@ -86699,7 +87078,8 @@
      "value": "source",
      "kind": "escreve"
     }
-   ]
+   ],
+   "uses_service_role": true
   },
   "src/lib/dlq/aggregations.ts": {
    "path": "src/lib/dlq/aggregations.ts",
@@ -88981,6 +89361,30 @@
    ],
    "doc": "Assinatura HMAC para links de tracking (track-click/track-open). track-click fazia 302 para qualquer `u` http(s) sem vínculo criptográfico com o destinatário — um atacante podia montar `.../track-click?u=https://phishing.example&r=<uuid qualquer>` e obter um redirect confiável a partir do domínio do …"
   },
+  "supabase/functions/_shared/workflow-phases.ts": {
+   "path": "supabase/functions/_shared/workflow-phases.ts",
+   "lines": 24,
+   "exports": [
+    "const WORKFLOW_PHASES",
+    "type WorkflowPhase",
+    "function declaredPhases",
+    "function phaseEnabled"
+   ],
+   "enums": [
+    {
+     "name": "WORKFLOW_PHASES",
+     "values": "\"scrape\", \"enrich\", \"ipc_score\""
+    }
+   ],
+   "status_values": [
+    {
+     "field": "phase",
+     "value": "scrape",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "Fases executaveis de um workflow. O campo `workflows.steps` (jsonb) declara quais fases do pipeline rodam. Cada step pode trazer `{ phase: \"scrape\" | \"enrich\" | \"ipc_score\" }`. Workflows legados tem `steps` vazio ou sem `phase` — nesse caso todas as fases rodam, exatamente como antes deste campo pas …"
+  },
   "supabase/functions/_shared/__tests__/api-rate-limit.test.ts": {
    "path": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
    "lines": 37,
@@ -89576,6 +89980,21 @@
     "detecta SPA shell vazio",
     "classifica status transitório vs permanente",
     "extrai hostname"
+   ]
+  },
+  "supabase/functions/_shared/__tests__/workflow-phases.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+   "lines": 47,
+   "is_test": true,
+   "tests": [
+    "declaredPhases",
+    "devolve vazio para steps ausente, nulo ou nao-array",
+    "ignora entradas sem phase ou com phase nao-string",
+    "coleta as fases declaradas",
+    "phaseEnabled",
+    "workflow legado (steps vazio) roda todas as fases",
+    "steps declarados habilitam apenas as fases listadas",
+    "declarar so enrich mantem scrape e ipc_score desligados"
    ]
   },
   "supabase/functions/_shared/domain/scrape-job-machine.ts": {
@@ -94389,8 +94808,16 @@
   },
   "supabase/functions/workflow-engine/index.ts": {
    "path": "supabase/functions/workflow-engine/index.ts",
-   "lines": 714,
+   "lines": 904,
    "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
     {
      "table": "workflows",
      "op": "select"
@@ -94406,6 +94833,14 @@
     {
      "table": "organization_members",
      "op": "select"
+    },
+    {
+     "table": "workflow_runs",
+     "op": "select"
+    },
+    {
+     "table": "automation_steps",
+     "op": "update"
     },
     {
      "table": "automation_steps",
@@ -94521,11 +94956,19 @@
     },
     {
      "table": "workflows",
+     "op": "select"
+    },
+    {
+     "table": "workflows",
      "op": "update"
     },
     {
      "table": "workflows",
-     "op": "delete"
+     "op": "select"
+    },
+    {
+     "table": "workflows",
+     "op": "update"
     },
     {
      "table": "automation_alerts",
@@ -94533,42 +94976,49 @@
     }
    ],
    "table_cols": {
-    "workflows": [
-     "id",
+    "organization_members": [
+     "created_at",
+     "organization_id",
+     "role",
      "user_id"
     ],
     "automation_steps": [
-     "id"
-    ],
-    "organization_members": [
      "id",
+     "job_id",
+     "name",
      "organization_id",
-     "user_id"
+     "run_id"
     ],
     "workflow_runs": [
-     "id"
+     "id",
+     "workflow_id"
+    ],
+    "workflows": [
+     "deleted_at",
+     "id",
+     "organization_id"
     ],
     "scrape_jobs": [
      "external_id",
      "id",
+     "organization_id",
      "source",
-     "status",
-     "user_id"
+     "status"
     ],
     "scrape_results": [
      "id",
      "job_id",
-     "processed",
-     "user_id"
+     "organization_id",
+     "processed"
     ],
     "ipc_config": [
      "is_active",
-     "user_id"
+     "organization_id"
     ],
     "companies": [
      "id",
      "ipc_score",
-     "user_id"
+     "organization_id"
     ],
     "automation_alerts": [
      "event_type",
@@ -94583,15 +95033,13 @@
    ],
    "errors": [
     ", { type: ",
-    "Step not found",
-    "Unauthorized",
-    "Workflow not found"
+    "Step sem organizacao"
    ],
    "zod": [
     {
      "name": "CreateWorkflowSchema",
      "kind": "object",
-     "body": "{ name: z.string().min(1).max(255), description: z.string().max(1000).optional().default(\"\"), steps: z.array(z.record(z.unknown())).min(1).max(20), config: z.record(z.unknown()).default({}), }",
+     "body": "{ name: z.string().min(1).max(255), description: z.string().max(1000).optional().default(\"\"), steps: z.array(z.record(z.unknown())).min(1).max(20), config: z.record(z.unknown()).default({}), /** Org alvo; se omitida usa a primeira organização do usuário. */ organization_id: z.string().uuid(\"Invalid organization_id\").optional(), }",
      "refines": [],
      "chain": []
     },
@@ -94636,6 +95084,11 @@
     },
     {
      "field": "status",
+     "value": "pending",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
      "value": "running",
      "kind": "escreve"
     },
@@ -94661,6 +95114,11 @@
     },
     {
      "field": "status",
+     "value": "skipped",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
      "value": "pending",
      "kind": "escreve"
     },
@@ -94671,12 +95129,22 @@
     },
     {
      "field": "status",
+     "value": "skipped",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
      "value": "completed",
      "kind": "escreve"
     },
     {
      "field": "current_step",
      "value": "ipc_score",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "skipped",
      "kind": "escreve"
     },
     {
@@ -94716,6 +95184,8 @@
     }
    ],
    "rule_comments": [
+    "apenas marcar \"pending\" fazia a UI anunciar \"reiniciado\" com o",
+    "DELETE de workflow exige admin da org (mesma regra da policy",
     "best-effort: falha ao disparar alerta não deve mascarar o erro original */ }"
    ],
    "side_effects": [
@@ -95968,10 +96438,28 @@
   }
  },
  "git": {
-  "sha": "0b2a2288ef2e5225808223dc254e558648359f9b",
+  "sha": "cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "cf23a12",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat: steps de workflow controlam quais fases do engine executam (#158)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "src/components/automation/WorkflowEditor.tsx",
+     "src/components/lux/WorkflowsView.tsx",
+     "src/components/lux/__tests__/WorkflowsView.test.tsx",
+     "src/components/lux/monitoring/JobDetailsSheet.tsx",
+     "src/components/lux/workflows/WorkflowCard.tsx",
+     "src/lib/api/workflows.ts",
+     "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+     "supabase/functions/_shared/workflow-phases.ts",
+     "supabase/functions/workflow-engine/index.ts"
+    ]
+   },
    {
     "sha": "0b2a228",
     "date": "2026-11-23",
@@ -96323,32 +96811,20 @@
     "files": [
      "supabase/functions/webhook-dispatcher/index.ts"
     ]
-   },
-   {
-    "sha": "77b7e67",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(edge): remove a anon key publica do gate de 8 functions com efeito colateral (#113)",
-    "files": [
-     "supabase/functions/email-poll-replies/index.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/reaper-alerts/index.ts",
-     "supabase/functions/scrape-queue-worker/index.ts",
-     "supabase/functions/sla-alerts/index.ts",
-     "supabase/functions/sla-auto-tune/index.ts",
-     "supabase/functions/vault-cookie-health/index.ts",
-     "supabase/functions/web-scrape-worker/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    5
+    6
    ],
    [
     "docs/ESTADO_ATUAL.md",
     4
+   ],
+   [
+    "supabase/functions/workflow-engine/index.ts",
+    2
    ],
    [
     "src/integrations/supabase/types.ts",
@@ -96395,31 +96871,27 @@
     2
    ],
    [
-    "supabase/functions/gmaps-proxy/index.ts",
-    2
-   ],
-   [
-    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+    "src/components/automation/WorkflowEditor.tsx",
     1
    ],
    [
-    "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "src/components/lux/WorkflowsView.tsx",
     1
    ],
    [
-    "supabase/functions/instagram-dlq-replay/index.ts",
+    "src/components/lux/__tests__/WorkflowsView.test.tsx",
     1
    ],
    [
-    "supabase/functions/web-dlq-replay/index.ts",
+    "src/components/lux/monitoring/JobDetailsSheet.tsx",
     1
    ],
    [
-    "docs/qa/00-RESUMO.md",
+    "src/components/lux/workflows/WorkflowCard.tsx",
     1
    ],
    [
-    "docs/qa/01-INVENTARIO.md",
+    "src/lib/api/workflows.ts",
     1
    ]
   ]

@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 261,
+ "total": 262,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -59,6 +59,23 @@
    "hooks_locais": [
     "useMFA"
    ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/automation/WorkflowEditor.tsx",
+   "exports": [
+    "StepType",
+    "WorkflowEditor",
+    "WorkflowEditorProps",
+    "WorkflowStep"
+   ],
+   "export_default": null,
+   "linhas": 298,
+   "dominio": "components/automation",
+   "hooks_locais": [],
    "tabelas": [],
    "edges": [],
    "usado_por": 1,
@@ -1981,7 +1998,7 @@
     "JobDetailsSheet"
    ],
    "export_default": null,
-   "linhas": 657,
+   "linhas": 682,
    "dominio": "components/lux",
    "hooks_locais": [
     "useRealtimeJobDetails",
@@ -1990,10 +2007,11 @@
    "tabelas": [
     "automation_steps",
     "scrape_jobs",
-    "scrape_results"
+    "scrape_results",
+    "workflow_runs"
    ],
    "edges": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "orfao": false
   },
   {
@@ -3245,7 +3263,7 @@
     "WorkflowCard"
    ],
    "export_default": null,
-   "linhas": 173,
+   "linhas": 193,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -3259,7 +3277,7 @@
     "WorkflowsView"
    ],
    "export_default": null,
-   "linhas": 210,
+   "linhas": 293,
    "dominio": "components/lux",
    "hooks_locais": [
     "useCan",
@@ -3406,7 +3424,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 130,
+   "usado_por": 131,
    "orfao": false
   },
   {
@@ -3685,7 +3703,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 60,
+   "usado_por": 61,
    "orfao": false
   },
   {
@@ -3699,7 +3717,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 46,
+   "usado_por": 47,
    "orfao": false
   },
   {
@@ -3868,7 +3886,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 36,
+   "usado_por": 37,
    "orfao": false
   },
   {
@@ -4053,7 +4071,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 9,
+   "usado_por": 10,
    "orfao": false
   },
   {

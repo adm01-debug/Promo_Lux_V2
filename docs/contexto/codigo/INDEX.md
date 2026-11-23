@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0b2a2288ef2e5225808223dc254e558648359f9b` (2026-11-23T08:40:06-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942` (2026-11-23T11:00:33-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (668), SQL (246), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (670), SQL (246), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,31 +34,31 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1108 |
-| arquivos_codigo | 695 |
-| linhas_codigo | 120328 |
+| arquivos_total | 1110 |
+| arquivos_codigo | 697 |
+| linhas_codigo | 120996 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
 | itens_menu | 26 |
 | modulos | 22 |
-| componentes | 261 |
+| componentes | 262 |
 | hooks | 96 |
 | edge_functions | 60 |
 | tabelas | 115 |
 | migrations | 242 |
 | cron_jobs | 31 |
-| testes | 126 |
+| testes | 127 |
 | workflows | 9 |
 | scripts | 51 |
 | docs_md | 87 |
 
 ## Onde ficam as coisas
 - telas: src/components (23), src/pages (11)
-- componentes: src/components (244), src/pages (11), src/contexts (3)
+- componentes: src/components (245), src/pages (11), src/contexts (3)
 - hooks: src/hooks (89), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (38), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (81), e2e/ (19), co-localizado (*.test) (16)
+- testes: co-localizado (__tests__) (82), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/sql (3)
@@ -69,14 +69,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components/lux | 26 | 23 | 214 | 148 | 27 | 87 |
+| components/lux | 26 | 23 | 214 | 148 | 27 | 88 |
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
-| hooks | 0 | 0 | 90 | 156 | 23 | 79 |
-| lib | 0 | 0 | 16 | 89 | 22 | 59 |
+| hooks | 0 | 0 | 90 | 156 | 23 | 81 |
+| lib | 0 | 0 | 16 | 90 | 22 | 61 |
 | lib/mcp | 0 | 0 | 7 | 0 | 0 | 3 |
 | lib/resilience | 0 | 0 | 5 | 0 | 0 | 0 |
-| pages | 0 | 11 | 11 | 157 | 29 | 88 |
+| pages | 0 | 11 | 11 | 157 | 29 | 89 |
 
 ## Rotas (url → arquivo)
 - `/` [tela] → src/pages/Index.tsx (protegida)
@@ -245,8 +245,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7600 nós · 16182 arestas · 629 comunidades · grafo do commit `0b2a2288`
-- comunidades maiores: react (182), Monitoring.tsx (178), cn (137), lucide-react (122), snapshot.py (102), CompaniesView.tsx (93), withOrg.ts (93), utils.ts (84), useActiveOrganization (82), gerar.mjs (80), generate.py (71), @tanstack/react-query (69)
+- 7620 nós · 16236 arestas · 630 comunidades · grafo do commit `cf23a12b`
+- comunidades maiores: button.tsx (165), cn (115), lucide-react (109), vitest (107), react (104), CampaignsView.tsx (97), utils.ts (94), useActiveOrganization (92), gerar.mjs (80), badge.tsx (78), req (76), generate.py (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -255,10 +255,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - package.json (15)
 - AGENTS.md (8)
 - .github/workflows/edge-tests-daily.yml (6)
+- docs/GAPS-ENTERPRISE.md (6)
 - supabase/config.toml (6)
 - supabase/functions/gmaps-proxy/index.ts (6)
 - docs/ESTADO_ATUAL.md (5)
-- docs/GAPS-ENTERPRISE.md (5)
 - .github/workflows/ci.yml (4)
 - .github/workflows/db-migrations.yml (4)
 - docs/agentes/lovable-deploy.md (4)
@@ -344,7 +344,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/AUTOMACAO_LOCAL.md` — Automação local — Promo_Lux_V2 (111 linhas)
 - `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (181 linhas)
 - `docs/FUNCIONALIDADES.md` — LUX IA — Análise Executiva de Funcionalidades (455 linhas)
-- `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (427 linhas)
+- `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (430 linhas)
 - `docs/LGPD.md` — 🛡️ Relatório de Conformidade LGPD — LUX IA (45 linhas)
 - `docs/LUSHA-INTEGRATION.md` — Lusha Intelligence — Integração LUX (181 linhas)
 - `docs/ORACLE_V2.md` — Oracle v2 — Runbook (123 linhas)
@@ -361,6 +361,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-23 `cf23a12` feat: steps de workflow controlam quais fases do engine executam (#158)
 - 2026-11-23 `0b2a228` feat: exige significancia estatistica para eleger vencedora A/B (#150)
 - 2026-11-23 `0801668` fix: exige admin da org no replay de DLQ (#155)
 - 2026-11-23 `6cf80c9` chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)
@@ -375,7 +376,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `fddbb4f` feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)
 - 2026-11-22 `427ec06` fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)
 - 2026-11-22 `378947c` chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)
-- 2026-11-22 `5f42ddf` chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

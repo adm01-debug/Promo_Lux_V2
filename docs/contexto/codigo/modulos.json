@@ -83,11 +83,11 @@
    "modulo": "components/automation",
    "arquivos": 1,
    "testes": 0,
-   "linhas": 28,
+   "linhas": 298,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
-   "componentes": 0,
+   "componentes": 1,
    "hooks_locais": [],
    "hooks_definidos": [],
    "edges": [],
@@ -103,15 +103,22 @@
     "tabelas": [],
     "rpcs": []
    },
-   "importado_por_outros_modulos": [],
-   "depende_de_modulos": [],
-   "pacotes_externos": []
+   "importado_por_outros_modulos": [
+    "components/lux"
+   ],
+   "depende_de_modulos": [
+    "components/ui",
+    "lib"
+   ],
+   "pacotes_externos": [
+    "lucide-react"
+   ]
   },
   {
    "modulo": "components/lux",
    "arquivos": 214,
    "testes": 31,
-   "linhas": 41596,
+   "linhas": 41724,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -436,6 +443,7 @@
     "web_scrape_queue",
     "webhook_deliveries",
     "webhooks",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [
@@ -587,6 +595,7 @@
      "vault_cookie_alert_history",
      "vault_cookie_snapshots",
      "web_scrape_queue",
+     "workflow_runs",
      "workflows"
     ],
     "rpcs": [
@@ -610,6 +619,7 @@
    ],
    "depende_de_modulos": [
     "components/auth",
+    "components/automation",
     "components/ui",
     "contexts",
     "hooks",
@@ -685,6 +695,7 @@
    },
    "importado_por_outros_modulos": [
     "components/auth",
+    "components/automation",
     "components/lux",
     "hooks",
     "pages"
@@ -1187,6 +1198,7 @@
     "api_latency_alert_settings",
     "audit_logs",
     "automation_execution_logs",
+    "automation_steps",
     "bulk_imports",
     "campaign_events",
     "campaign_recipients",
@@ -1259,6 +1271,7 @@
     "web_scrape_queue",
     "webhook_deliveries",
     "webhooks",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [
@@ -1668,6 +1681,7 @@
     "usePiiRules",
     "usePiiScan",
     "usePlacesApiUsage",
+    "useRealtimeJobDetails",
     "useRecentActivity",
     "useRecentCompanies",
     "useRefreshNextBestActions",
@@ -1722,6 +1736,7 @@
     "api_keys",
     "audit_logs",
     "automation_execution_logs",
+    "automation_steps",
     "bulk_imports",
     "campaign_events",
     "campaign_recipients",
@@ -1776,6 +1791,7 @@
     "stakeholders",
     "webhook_deliveries",
     "webhooks",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [
@@ -1814,6 +1830,7 @@
    ],
    "buckets": [],
    "canais_realtime": [
+    "job-details:${jobId}",
     "lusha-dm-history-sync",
     "org:${activeOrgId}:automations",
     "private:${user.id}:${activeOrgId}:dashboard",
@@ -1854,6 +1871,7 @@
    },
    "importado_por_outros_modulos": [
     "components",
+    "components/automation",
     "components/lux",
     "components/ui",
     "hooks",
@@ -1906,7 +1924,7 @@
    "modulo": "lib/api",
    "arquivos": 2,
    "testes": 0,
-   "linhas": 227,
+   "linhas": 235,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -2421,6 +2439,7 @@
     "web_scrape_queue",
     "webhook_deliveries",
     "webhooks",
+    "workflow_runs",
     "workflows"
    ],
    "rpcs": [

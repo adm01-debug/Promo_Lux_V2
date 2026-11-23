@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 126,
+ "total": 127,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 104
+  "unit": 105
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 81
+   "arquivos": 82
   },
   {
    "padrao": "e2e/",
@@ -408,7 +408,7 @@
   {
    "arquivo": "src/components/lux/__tests__/WorkflowsView.test.tsx",
    "tipo": "unit",
-   "linhas": 96,
+   "linhas": 97,
    "testa": [
     "src/components/lux/WorkflowsView.tsx",
     "src/components/ui/tooltip.tsx"
@@ -1150,6 +1150,15 @@
    "casos": 8
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+   "tipo": "unit",
+   "linhas": 47,
+   "testa": [
+    "supabase/functions/_shared/workflow-phases.ts"
+   ],
+   "casos": 6
+  },
+  {
    "arquivo": "supabase/functions/_shared/apify-gateway.test.ts",
    "tipo": "unit",
    "linhas": 105,
@@ -1288,6 +1297,7 @@
   "supabase/functions/_shared/web-scrape/heuristics.ts": 1,
   "supabase/functions/_shared/web-scrape/html-to-markdown.ts": 1,
   "supabase/functions/_shared/web-scrape/robots.ts": 1,
+  "supabase/functions/_shared/workflow-phases.ts": 1,
   "supabase/functions/rls-tests/_fixtures.ts": 1
  },
  "sem_teste": {

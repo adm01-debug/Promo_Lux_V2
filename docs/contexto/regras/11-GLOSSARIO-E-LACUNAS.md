@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b2a2288ef` · branch `main` · 2026-11-23 11:49 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cf23a12bd9` · branch `main` · 2026-11-23 14:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -138,7 +138,7 @@
 | `scrape_queue_status` (enum) | queued, processing, succeeded, dead |  | banco |
 | `web_scrape_status` (enum) | queued, processing, succeeded, failed, dead |  | banco |
 | `workflow_status` (enum) | draft, active, paused, completed, failed, running, archived |  | banco |
-| `StepType` (TS) | email \| wait \| condition \| notify \| webhook \| tag |  | `src/components/automation/WorkflowEditor.tsx` |
+| `StepType` (TS) | email \| wait \| condition \| notify \| webhook \| tag \| scrape \| enrich \| filter |  | `src/components/automation/WorkflowEditor.tsx` |
 | `ScoreRange` (TS) | all \| 90+ \| 75-89 \| 60-74 \| <60 |  | `src/components/lux/company-filters-utils.ts` |
 | `DMHistoryStatus` (TS) | done \| failed \| cancelled \| processing \| queued |  | `src/components/lux/lusha/historyUtils.ts` |
 | `InviteFilter` (TS) | all \| pending \| accepted \| revoked \| expired |  | `src/components/lux/organizations/InviteSection.tsx` |
@@ -186,6 +186,7 @@
 | `Entity` (TS) | companies \| stakeholders \| deals \| campaigns \| workflows \| scrape_jobs \| integrations \| members \| invites \| audit_logs |  | `src/lib/permissions.ts` |
 | `CheckSeverity` (TS) | ok \| warning \| error |  | `src/lib/redirectUriChecklist.ts` |
 | `ContactSource` (TS) | lusha \| apollo |  | `src/lib/sourceQualityReport.ts` |
+| `WorkflowPhase` (TS) | scrape \| enrich \| ipc_score |  | `src/lib/api/workflows.ts` |
 | `SortKey` (TS) | date \| volume |  | `src/lib/dlq/aggregations.ts` |
 | `SortDir` (TS) | asc \| desc |  | `src/lib/dlq/aggregations.ts` |
 | `Classification` (TS) | improved \| regressed \| stable \| new \| removed |  | `src/lib/resilience/compareReport.ts` |
@@ -201,6 +202,7 @@
 | `OmkarReviewsSort` (TS) | newest \| most_relevant \| highest_rating \| lowest_rating |  | `supabase/functions/_shared/omkar-gmaps-config.ts` |
 | `LogLevel` (TS) | info \| warn \| error |  | `supabase/functions/_shared/oracle-logger.ts` |
 | `AppEnv` (TS) | dev \| staging \| prod |  | `supabase/functions/_shared/rlsTableRegistry.ts` |
+| `WORKFLOW_PHASES` (TS) | "scrape", "enrich", "ipc_score" |  | `supabase/functions/_shared/workflow-phases.ts` |
 | `ScrapeJobStatus` (TS) | pending \| running \| completed \| failed \| paused |  | `supabase/functions/_shared/domain/scrape-job-machine.ts` |
 
 ## Dados de referência (seed — planos, categorias, perfis fixos)
@@ -263,6 +265,7 @@ _nenhum item encontrado_
 | status | valor `error_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `bitrix_duplicate` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `blocked` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/webhook-dispatcher/index.ts` |
+| status | valor `preflight` para `phase` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/oracle-cookies-preflight/index.ts` |
 | status | valor `enriched` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx`<br>`escreve:src/components/lux/LushaIntelligenceView.tsx`<br>`filtra:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `pending_enrichment` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx`<br>`escreve:supabase/functions/lusha-decision-makers/index.ts`<br>`escreve:supabase/functions/oracle-search-decisors/index.ts` |
 | status | valor `enriching` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/OracleV2Panel.tsx`<br>`escreve:supabase/functions/oracle-enrich-contact/index.ts`<br>`filtra:supabase/functions/oracle-enrich-contact/index.ts` |
@@ -273,13 +276,10 @@ _nenhum item encontrado_
 | status | valor `pushing_bitrix` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `startActorRun` para `stage` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/_shared/apify-gateway.ts` |
 | status | valor `getDatasetItems` para `stage` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/_shared/apify-gateway.ts` |
-| status | valor `preflight` para `phase` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/oracle-cookies-preflight/index.ts` |
 | status | valor `collapsed` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/ui/sidebar.tsx` |
 | status | valor `expanded` para `state` usado no código não existe em nenhum enum do banco/TS | `escreve:src/components/ui/use-sidebar.ts` |
 | status | valor `string` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/email-oauth-callback/index.ts` |
 | status | valor `expiring_soon` para `health_status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/lusha-cookie-health/index.ts` |
-| status | valor `enrich` para `current_step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/workflow-engine/index.ts` |
-| status | valor `ipc_score` para `current_step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/workflow-engine/index.ts` |
 | status | valor `save` para `current_step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/workflow-engine/index.ts` |
 | coluna | coluna `error_reason` usada no código não existe no schema de `instagram_scrape_dead_letter` |  |
 | coluna | coluna `triggered_at` usada no código não existe no schema de `api_latency_alert_history` |  |

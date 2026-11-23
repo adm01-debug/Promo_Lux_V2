@@ -450,12 +450,13 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 46,
+   "usado_por": 47,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
     "hooks",
     "lib",
+    "lib/api",
     "pages"
    ],
    "coberto_por_testes": 11,
@@ -496,13 +497,14 @@
    "camada": "lib",
    "exports": [
     "Workflow",
+    "WorkflowPhase",
     "WorkflowRun",
     "WorkflowRunResults",
     "WorkflowStep",
     "workflowApi"
    ],
    "export_default": null,
-   "linhas": 89,
+   "linhas": 97,
    "tabelas": [],
    "rpcs": [],
    "edges": [
@@ -1550,9 +1552,10 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 109,
+   "usado_por": 110,
    "usado_por_modulos": [
     "components",
+    "components/automation",
     "components/lux",
     "components/ui",
     "hooks",

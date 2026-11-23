@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b2a2288ef` · branch `main` · 2026-11-23 11:49 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `cf23a12bd9` · branch `main` · 2026-11-23 14:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -928,7 +928,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 
 - **workflowApi** (`src/lib/api/workflows.ts`):
   ```ts
-  async list(): Promise<Workflow[]> { return callWorkflowApi("list"); }, async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown> }): Promise<Workflow> { return callWorkflowApi("create", { method: "POST", body: JSON.stringify(data) }); }, async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> { return callWorkflowApi("run", { method: "POST", body: JSON.stringify({ workflow_id: workflowId }) }); }, async toggleStatus(workflowId: string, newStatus: string): Promise<void> { await callWorkflowApi("toggle-status", { method: "POST", body: JSON.stringify({ workflow_id: workflowId, new_status: newStatus }), }); }, a …
+  async list(): Promise<Workflow[]> { return callWorkflowApi("list"); }, async create(data: { name: string; description: string; steps: WorkflowStep[]; config: Record<string, unknown>; organization_id?: string }): Promise<Workflow> { // O engine roda com service_role e não tem auth.uid(): sem organization_id // explícito o INSERT viola o NOT NULL. Manda a org ativa do tenant. const organization_id = data.organization_id ?? getActiveOrgId() ?? undefined; return callWorkflowApi("create", { method: "POST", body: JSON.stringify({ ...data, organization_id }) }); }, async run(workflowId: string): Promise<{ run_id: string; results: WorkflowRunResults }> { return callWorkflowApi("run", { method: "POST …
   ```
 
 ### E.3 Valores de status usados no código (escreve / compara / filtra)
@@ -1021,7 +1021,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `sending` | escreve | `supabase/functions/webhook-dispatcher/index.ts` |
 | `status` | `sent` | compara, escreve | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`supabase/functions/send-scheduled-reports/index.ts` |
 | `status` | `sent_to_bitrix` | compara, escreve | `src/hooks/useOracleV2.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
-| `status` | `skipped` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/send-scheduled-reports/index.ts`<br>… +1 |
+| `status` | `skipped` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/send-scheduled-reports/index.ts`<br>… +2 |
 | `status` | `started` | compara | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
 | `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
 | `status` | `success` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>… +4 |
@@ -1032,15 +1032,13 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `warn` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
 | `status` | `warning` | escreve | `supabase/functions/oracle-search-decisors/index.ts` |
 | `status` | `working` | compara | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/pages/Monitoring.tsx` |
-| `role` | `CEO` | escreve | `src/lib/demoData.ts` |
-| `role` | `CFO` | escreve | `src/lib/demoData.ts` |
-| `role` | `CTO` | escreve | `src/lib/demoData.ts` |
-| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>`supabase/functions/admin-list-companies/index.ts`<br>… +9 |
-| `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
-| `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
-| `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
-| `role` | `user` | compara, escreve | `src/components/lux/AIAgentView.tsx`<br>`supabase/functions/_shared/rlsTableRegistry.ts`<br>`supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
-| `role` | `viewer` | compara | `src/hooks/usePermissions.ts` |
+| `phase` | `all` | compara, escreve | `src/components/lux/monitoring/AutomationLogsPanel.tsx`<br>`src/hooks/useAutomationLogs.ts` |
+| `phase` | `enrich` | escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/components/lux/WorkflowsView.tsx` |
+| `phase` | `execute` | filtra | `supabase/functions/retry-policy-tuner/index.ts` |
+| `phase` | `fail` | escreve | `supabase/functions/web-scrape-worker/index.ts` |
+| `phase` | `ipc_score` | escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/components/lux/WorkflowsView.tsx` |
+| `phase` | `preflight` | escreve | `supabase/functions/oracle-cookies-preflight/index.ts` |
+| `phase` | `scrape` | escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/components/lux/WorkflowsView.tsx`<br>`supabase/functions/_shared/workflow-phases.ts` |
 | `type` | `ADD_TOAST` | compara, escreve | `src/hooks/use-toast.ts` |
 | `type` | `DISMISS_TOAST` | compara, escreve | `src/hooks/use-toast.ts` |
 | `type` | `Image` | escreve | `supabase/functions/_shared/apify-fixtures.ts` |
@@ -1052,11 +1050,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `awards` | escreve | `src/components/lux/lusha/DecisionMakersGrid.tsx` |
 | `type` | `certifications` | escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/DecisionMakersGrid.test-d.ts`<br>`src/components/lux/lusha/DecisionMakersGrid.tsx` |
 | `type` | `column` | escreve | `src/components/lux/deals/DealColumn.tsx` |
+| `type` | `condition` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `content_download` | escreve | `src/lib/demoData.ts` |
 | `type` | `courses` | escreve | `src/components/lux/lusha/DecisionMakersGrid.tsx` |
 | `type` | `deal` | compara, escreve | `src/components/lux/ActivityFeed.tsx`<br>`src/components/lux/deals/DealCard.tsx` |
 | `type` | `discovery` | escreve | `src/hooks/useCompanyDetails.ts` |
-| `type` | `email` | compara, escreve | `src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx`<br>`src/components/lux/campaigns/EmailTemplatePicker.tsx`<br>`supabase/functions/campaign-dispatch/index.ts` |
+| `type` | `email` | compara, escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx`<br>`src/components/lux/campaigns/EmailTemplatePicker.tsx`<br>`supabase/functions/campaign-dispatch/index.ts` |
 | `type` | `enrich` | escreve | `src/components/lux/WorkflowsView.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
 | `type` | `enrichment` | compara, escreve | `src/components/lux/ActivityFeed.tsx`<br>`src/hooks/useCompanyDetails.ts`<br>`src/lib/demoData.ts` |
 | `type` | `error` | escreve | `src/lib/demoData.ts` |
@@ -1069,9 +1068,10 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `json_object` | escreve | `supabase/functions/web-scrape-extract/index.ts` |
 | `type` | `lost` | compara | `src/components/lux/deals/DealDetailDrawer.tsx` |
 | `type` | `note` | escreve | `src/hooks/useDeals.ts`<br>`supabase/functions/_shared/rlsTableRegistry.ts` |
+| `type` | `notify` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `open` | escreve | `src/hooks/useDeals.ts` |
 | `type` | `range` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
-| `type` | `scrape` | escreve | `src/hooks/useRealtimeScrapeJobs.ts`<br>`src/lib/demoData.ts`<br>`supabase/functions/gmaps-proxy/index.ts` |
+| `type` | `scrape` | compara, escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/hooks/useRealtimeScrapeJobs.ts`<br>`src/lib/demoData.ts`<br>`supabase/functions/gmaps-proxy/index.ts` |
 | `type` | `select` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
 | `type` | `signal` | escreve | `src/hooks/useCompanyDetails.ts`<br>`src/lib/demoData.ts`<br>`supabase/functions/org-violation-alerts/index.ts` |
 | `type` | `social_engagement` | escreve | `src/lib/demoData.ts` |
@@ -1080,12 +1080,23 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `string` | compara | `supabase/functions/_shared/hiker-client.ts`<br>`supabase/functions/_shared/leadcontact-client.ts` |
 | `type` | `success` | compara, escreve | `src/components/lux/StepProgress.tsx`<br>`src/lib/demoData.ts` |
 | `type` | `system` | escreve | `src/lib/demoData.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>`supabase/functions/latency-alerts/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/pg-net-watchdog/index.ts`<br>… +3 |
+| `type` | `tag` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `tags` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
 | `type` | `technology_change` | escreve | `src/lib/demoData.ts` |
 | `type` | `text` | escreve | `src/lib/mcp/supabase.ts`<br>`src/lib/mcp/tools/get-company.ts`<br>`src/lib/mcp/tools/get-dashboard-stats.ts`<br>`src/lib/mcp/tools/list-companies.ts`<br>`src/lib/mcp/tools/list-decision-makers.ts`<br>… +2 |
 | `type` | `totp` | escreve | `src/hooks/useMFA.ts` |
-| `type` | `wait` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx` |
+| `type` | `wait` | compara, escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/components/lux/CampaignsView.tsx`<br>`src/components/lux/campaigns/CampaignFormFields.tsx` |
+| `type` | `webhook` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `website_visit` | escreve | `src/lib/demoData.ts` |
+| `role` | `CEO` | escreve | `src/lib/demoData.ts` |
+| `role` | `CFO` | escreve | `src/lib/demoData.ts` |
+| `role` | `CTO` | escreve | `src/lib/demoData.ts` |
+| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>`supabase/functions/admin-list-companies/index.ts`<br>… +9 |
+| `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
+| `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
+| `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
+| `role` | `user` | compara, escreve | `src/components/lux/AIAgentView.tsx`<br>`supabase/functions/_shared/rlsTableRegistry.ts`<br>`supabase/functions/ai-agent/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
+| `role` | `viewer` | compara | `src/hooks/usePermissions.ts` |
 | `enrichment_status` | `bitrix_duplicate` | compara, escreve | `src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `enrichment_status` | `enriched` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `enrichment_status` | `enriching` | compara, escreve, filtra | `src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
@@ -1099,10 +1110,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `stage` | `enrichment` | compara | `src/components/lux/automations/AutomationStageBadge.tsx` |
 | `stage` | `getDatasetItems` | escreve | `supabase/functions/_shared/apify-gateway.ts` |
 | `stage` | `startActorRun` | escreve | `supabase/functions/_shared/apify-gateway.ts` |
-| `phase` | `all` | compara, escreve | `src/components/lux/monitoring/AutomationLogsPanel.tsx`<br>`src/hooks/useAutomationLogs.ts` |
-| `phase` | `execute` | filtra | `supabase/functions/retry-policy-tuner/index.ts` |
-| `phase` | `fail` | escreve | `supabase/functions/web-scrape-worker/index.ts` |
-| `phase` | `preflight` | escreve | `supabase/functions/oracle-cookies-preflight/index.ts` |
 | `state` | `closed` | compara, escreve | `src/components/lux/monitoring/CircuitBreakerPanel.tsx`<br>`supabase/functions/_shared/circuit-breaker.ts` |
 | `state` | `collapsed` | compara | `src/components/ui/sidebar.tsx` |
 | `state` | `expanded` | escreve | `src/components/ui/use-sidebar.ts` |
@@ -1131,7 +1138,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | scrape_queue_status | `queued`, `processing`, `succeeded`, `dead` | banco |
 | web_scrape_status | `queued`, `processing`, `succeeded`, `failed`, `dead` | banco |
 | workflow_status | `draft`, `active`, `paused`, `completed`, `failed`, `running`, `archived` | banco |
-| StepType | email \| wait \| condition \| notify \| webhook \| tag | `src/components/automation/WorkflowEditor.tsx` |
+| StepType | email \| wait \| condition \| notify \| webhook \| tag \| scrape \| enrich \| filter | `src/components/automation/WorkflowEditor.tsx` |
 | ScoreRange | all \| 90+ \| 75-89 \| 60-74 \| <60 | `src/components/lux/company-filters-utils.ts` |
 | DMHistoryStatus | done \| failed \| cancelled \| processing \| queued | `src/components/lux/lusha/historyUtils.ts` |
 | InviteFilter | all \| pending \| accepted \| revoked \| expired | `src/components/lux/organizations/InviteSection.tsx` |
@@ -1179,6 +1186,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | Entity | companies \| stakeholders \| deals \| campaigns \| workflows \| scrape_jobs \| integrations \| members \| invites \| audit_logs | `src/lib/permissions.ts` |
 | CheckSeverity | ok \| warning \| error | `src/lib/redirectUriChecklist.ts` |
 | ContactSource | lusha \| apollo | `src/lib/sourceQualityReport.ts` |
+| WorkflowPhase | scrape \| enrich \| ipc_score | `src/lib/api/workflows.ts` |
 | SortKey | date \| volume | `src/lib/dlq/aggregations.ts` |
 | SortDir | asc \| desc | `src/lib/dlq/aggregations.ts` |
 | Classification | improved \| regressed \| stable \| new \| removed | `src/lib/resilience/compareReport.ts` |
@@ -1194,6 +1202,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | OmkarReviewsSort | newest \| most_relevant \| highest_rating \| lowest_rating | `supabase/functions/_shared/omkar-gmaps-config.ts` |
 | LogLevel | info \| warn \| error | `supabase/functions/_shared/oracle-logger.ts` |
 | AppEnv | dev \| staging \| prod | `supabase/functions/_shared/rlsTableRegistry.ts` |
+| WORKFLOW_PHASES | "scrape", "enrich", "ipc_score" | `supabase/functions/_shared/workflow-phases.ts` |
 | ScrapeJobStatus | pending \| running \| completed \| failed \| paused | `supabase/functions/_shared/domain/scrape-job-machine.ts` |
 
 ## F. Validações de entrada
@@ -1318,7 +1327,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
   ```
 - **CreateWorkflowSchema** (`supabase/functions/workflow-engine/index.ts`, z.object):
   ```ts
-  { name: z.string().min(1).max(255), description: z.string().max(1000).optional().default(""), steps: z.array(z.record(z.unknown())).min(1).max(20), config: z.record(z.unknown()).default({}), }
+  { name: z.string().min(1).max(255), description: z.string().max(1000).optional().default(""), steps: z.array(z.record(z.unknown())).min(1).max(20), config: z.record(z.unknown()).default({}), /** Org alvo; se omitida usa a primeira organização do usuário. */ organization_id: z.string().uuid("Invalid organization_id").optional(), }
   ```
 - **RunWorkflowSchema** (`supabase/functions/workflow-engine/index.ts`, z.object):
   ```ts
@@ -2214,7 +2223,7 @@ _nenhum item encontrado_
 | createAdminUserFixture: upsert member failed: ${memberErr.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createNonAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createNonAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +22 linhas — lista completa em `context.json` | |
+| … +20 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2234,7 +2243,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1188 testes em 112 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1196 testes em 113 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2294,6 +2303,7 @@ _nenhum item encontrado_
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
 | `supabase/functions/_shared/__tests__/api-rate-limit.test.ts` | 8 | parseRateLimitDecision · aprova quando a RPC devolve allowed=true · bloqueia quando a RPC devolve allowed=false · fail-open em resposta vazia/nula … |
 | `supabase/functions/_shared/__tests__/instagram-config-hash.test.ts` | 8 | normalizeTarget: trim, lowercase, remove @ e # · clampLimit: default, floor, ceil e truncamento · computeConfigHash: mesma tupla ⇒ mesmo hash (estabilidade) · computeConfigHash: invariante a variações de forma do target … |
+| `supabase/functions/_shared/__tests__/workflow-phases.test.ts` | 8 | declaredPhases · devolve vazio para steps ausente, nulo ou nao-array · ignora entradas sem phase ou com phase nao-string · coleta as fases declaradas … |
 | `e2e/protected-navigation.spec.ts` | 7 | Navegação protegida — redirecionamento · rota protegida ${route} redireciona para /login sem sessão · rota inexistente renderiza página 404 · Navegação protegida — modo demo … |
 | `src/components/lux/__tests__/CompaniesView.test.tsx` | 7 | CompaniesView — P0 Mobile Actions & P1 Score Tooltip · renders the view title · renders Score column header with HelpCircle tooltip · renders export CSV button … |
 | `src/components/lux/__tests__/DashboardView.test.tsx` | 7 | DashboardView — P1 Chart Legibility · renders Performance Semanal chart section · renders chart with strokeWidth 2.5 for better legibility · renders chart dots for data points … |
@@ -2374,6 +2384,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | `invoke(` | `src/components/lux/monitoring/VaultCookiesPanel.tsx` |
 | `invoke(` | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
+| `notify` | `src/components/lux/workflows/WorkflowCard.tsx` |
 | `invoke(` | `src/hooks/useDlqReplay.ts` |
 | `invoke(` | `src/hooks/useRateLimit.ts` |
 | `notify` | `src/hooks/useRealtimeScrapeJobs.ts` |
@@ -2598,6 +2609,8 @@ _nenhum item encontrado_
 | aberto). Isolado do motor GMaps — reusa apenas a malha compartilhada | `supabase/functions/web-scrape-worker/index.ts` |
 | ---------- SSRF (mínimo, sem DNS async pra evitar custo por task) ---------- | `supabase/functions/web-scrape-worker/index.ts` |
 | ainda assim precisa estar pending/retrying e dentro do limite de | `supabase/functions/webhook-dispatcher/index.ts` |
+| apenas marcar "pending" fazia a UI anunciar "reiniciado" com o | `supabase/functions/workflow-engine/index.ts` |
+| DELETE de workflow exige admin da org (mesma regra da policy | `supabase/functions/workflow-engine/index.ts` |
 | best-effort: falha ao disparar alerta não deve mascarar o erro original */ } | `supabase/functions/workflow-engine/index.ts` |
 | existem apenas no banco de | `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql` |
 | 41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |

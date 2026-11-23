@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0b2a2288ef2e5225808223dc254e558648359f9b",
+  "commit": "cf23a12bd9dd6cbc33ac432c6ebe98e7c43a4942",
   "branch": "main",
-  "data_commit": "2026-11-23T08:40:06-03:00",
+  "data_commit": "2026-11-23T11:00:33-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "cf23a12",
+    "data": "2026-11-23",
+    "assunto": "feat: steps de workflow controlam quais fases do engine executam (#158)"
+   },
    {
     "sha": "0b2a228",
     "data": "2026-11-23",
@@ -126,22 +131,17 @@
     "sha": "57edd92",
     "data": "2026-11-21",
     "assunto": "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)"
-   },
-   {
-    "sha": "c14eeb4",
-    "data": "2026-11-21",
-    "assunto": "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)"
    }
   ],
-  "arquivos_mudados_7d": 203,
+  "arquivos_mudados_7d": 211,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 47
+    "mudancas": 51
    },
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 22
+    "mudancas": 24
    },
    {
     "pasta": "package-lock.json",
@@ -168,15 +168,15 @@
     "mudancas": 6
    },
    {
+    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 6
+   },
+   {
     "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 6
    },
    {
     "pasta": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 5
    },
    {
@@ -214,6 +214,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 6
+   },
+   {
     "arquivo": "supabase/config.toml",
     "mudancas": 6
    },
@@ -223,10 +227,6 @@
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 108
+    "commits": 109
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1108,
-  "arquivos_codigo": 695,
-  "linhas_codigo": 120328,
+  "arquivos_total": 1110,
+  "arquivos_codigo": 697,
+  "linhas_codigo": 120996,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 261,
+  "componentes": 262,
   "hooks": 96,
   "edge_functions": 60,
   "tabelas": 115,
   "migrations": 242,
   "cron_jobs": 31,
-  "testes": 126,
+  "testes": 127,
   "workflows": 9,
   "scripts": 51,
   "docs_md": 87
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 303,
-   "linhas": 49184
+   "linhas": 49583
   },
   "src/contexts": {
    "arquivos": 7,
@@ -572,7 +572,7 @@
   },
   "src/lib": {
    "arquivos": 53,
-   "linhas": 6298
+   "linhas": 6306
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -591,8 +591,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 129,
-   "linhas": 23281
+   "arquivos": 131,
+   "linhas": 23542
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -637,6 +637,10 @@
    "linhas": 937
   },
   {
+   "arquivo": "supabase/functions/workflow-engine/index.ts",
+   "linhas": 904
+  },
+  {
    "arquivo": "scripts/maintenance/run.mjs",
    "linhas": 899
   },
@@ -665,12 +669,8 @@
    "linhas": 737
   },
   {
-   "arquivo": "supabase/functions/workflow-engine/index.ts",
-   "linhas": 714
-  },
-  {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
-   "linhas": 657
+   "linhas": 682
   },
   {
    "arquivo": "scripts/ci/lint-ratchet.mjs",

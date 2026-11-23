@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (668)",
+   "TypeScript (670)",
    "SQL (246)",
    "Markdown (87)",
    "JSON (38)",
@@ -502,7 +502,7 @@
   {
    "arquivo": "docs/GAPS-ENTERPRISE.md",
    "titulo": "LUX IA — Gaps Enterprise",
-   "linhas": 427
+   "linhas": 430
   },
   {
    "arquivo": "docs/LGPD.md",
