@@ -1,11 +1,11 @@
-# LUX IA — Gaps Enterprise
+﻿# LUX IA — Gaps Enterprise
 
 > Análise comparativa entre o LUX IA e plataformas enterprise de classe mundial em Sales Intelligence B2B (ZoomInfo, Apollo.io, Outreach, Salesloft, Cognism, Clay, HubSpot Breeze).
 
 **Versão:** 1.0
 **Data:** 2026-04-22
 **Escopo:** Funcionalidades, segurança, compliance, integrações e operações esperadas em SaaS B2B enterprise.
-> **Revisão 2026-11-22 (2ª passada):** linhas marcadas ✅ foram verificadas contra migrations **e** código com busca recursiva (ripgrep). Corrigidas nesta passada: `deal_predictions`/pipeline value, `deal_activities`, OAuth Gmail/Outlook, email tracking, reply detection, A/B testing, relatórios agendados, API pública, `api_keys`, `webhook_dispatcher`, MFA/TOTP, changelog in-app, `feature_flags`, bulk import/export. Os demais "Inexistente" foram re-checados e seguem ausentes (0 tabelas, 0 refs): SSO/SAML, SCIM, IP allowlist, DLP/PII masking, technographics, CRM sync, Slack/Teams/Calendly/WhatsApp, leaderboards, goals/quotas, lost reasons, email templates compartilhados, status page, help center, NPS/CSAT, sandbox.
+> **Revisão 2026-11-22 (2ª passada):** linhas marcadas ✅ foram verificadas contra migrations **e** código com busca recursiva (ripgrep). Corrigidas nesta passada: `deal_predictions`/pipeline value, `deal_activities`, OAuth Gmail/Outlook, email tracking, reply detection, A/B testing, relatórios agendados, API pública, `api_keys`, `webhook_dispatcher`, MFA/TOTP, changelog in-app, `feature_flags`, bulk import/export. Os demais "Inexistente" foram re-checados e seguem ausentes (0 tabelas, 0 refs): SSO/SAML, SCIM, IP allowlist, DLP/PII masking, CRM sync, Slack/Teams/Calendly/WhatsApp, leaderboards, goals/quotas, lost reasons, email templates compartilhados, status page, help center, NPS/CSAT, sandbox.
 
 ---
 
@@ -110,7 +110,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 |---|---|---|
 | Fontes de dados | Apenas Google Maps scraper | Apollo, ZoomInfo, Clearbit, Hunter, Snov, Lusha, Cognism |
 | Email verification | ✅ Implementado — function `email-verify` (SMTP ping, catch-all, role detection) + `EmailVerifyBadge` | SMTP ping + catch-all + role detection |
-| Technographics | Inexistente | BuiltWith/Wappalyzer — stack do prospect |
+| Technographics | ✅ Implementado — 	echnographics-detect edge function com 41 fingerprints (CMS, Analytics, CRM, Support, Email, Ads, Frontend, Payments) | BuiltWith/Wappalyzer — stack do prospect |
 | Firmographics completos | Setor + funcionários | Funding, headcount growth, NAICS/CNAE, parent company |
 | News & triggers | Inexistente | Funding rounds, hiring, layoffs, exec changes |
 | Social signals | Apenas LinkedIn URL | Posts recentes, sentiment, engagement |
@@ -262,7 +262,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 23 | Chrome Extension | ❌ | ausente |
 | 24 | Mobile native app | 🟡 | PWA apenas |
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
-| 26 | Technographics | ❌ | ausente |
+| 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
 | 27 | Intent signals | 🟡 | `IntentSignalsView.tsx` (entrada manual) |
 | 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
 | 29 | Conversation intelligence | ❌ | ausente |
@@ -288,14 +288,14 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 35/50 = 70% completos · 6/50 = 12% parciais · 9/50 = 18% ausentes.**
+**Cobertura LUX IA: 39/50 = 78% completos · 3/50 = 6% parciais · 8/50 = 16% ausentes (3ª passada 2026-11-22).**
 
-Ausentes de verdade (9): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
-`hubspot_salesforce` (21), `slack` (22), `chrome_extension` (23), `technographic` (26),
+Ausentes de verdade (8): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
+`hubspot_salesforce` (21), `slack` (22), `chrome_extension` (23),
 `conversation_intel` (29). Os que dependem de decisão de custo/produto e **não** de engenharia:
-SAML/SCIM, dialer, conectores nativos, Chrome Extension. Os implementáveis hoje por engenharia são
-`slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`) e `technographic` (reusa
-`cnpj-enrich`).
+SAML/SCIM, dialer, conectores nativos, Chrome Extension. Implementáveis hoje por engenharia:
+`slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`).
+
 
 ---
 

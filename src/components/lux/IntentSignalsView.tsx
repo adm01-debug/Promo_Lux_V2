@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_INTENT_SIGNALS } from "@/lib/demoData";
-import { Radar, TrendingUp, Eye, Globe, Briefcase, Plus, Loader2, Trash2, Pencil } from "lucide-react";
+import { Radar, TrendingUp, Eye, Globe, Briefcase, Plus, Loader2, Trash2, Pencil, Cpu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,10 @@ export const IntentSignalsView = () => {
   const [signal, setSignal] = useState("");
   const [strength, setStrength] = useState("medium");
   const [details, setDetails] = useState("");
+  const [detectOpen, setDetectOpen] = useState(false);
+  const [detectCompanyId, setDetectCompanyId] = useState("");
+  const [detectWebsite, setDetectWebsite] = useState("");
+  const [detectResult, setDetectResult] = useState<{ name: string; category: string; strength: string }[] | null>(null);
 
   const resetForm = () => {
     setCompanyName(""); setType("website_visit"); setSignal(""); setStrength("medium"); setDetails("");
@@ -123,6 +127,29 @@ export const IntentSignalsView = () => {
       queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
       toast({ title: "Sinal removido" });
     },
+  });
+
+  const detectMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke("technographics-detect", {
+        body: {
+          company_id: detectCompanyId.trim(),
+          ...(detectWebsite.trim() ? { website_url: detectWebsite.trim() } : {}),
+        },
+      });
+      if (error) throw error;
+      return data as { detected: { name: string; category: string; strength: string }[]; already_known: number };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      setDetectResult(data.detected);
+      if (data.detected.length === 0) {
+        toast({ title: "Nenhuma tecnologia nova detectada", description: `${data.already_known} já conhecidas.` });
+      } else {
+        toast({ title: `${data.detected.length} tecnologia(s) detectada(s)!`, description: "Sinais registrados em Intent Signals." });
+      }
+    },
+    onError: (err) => toast({ title: "Erro ao detectar", description: err.message, variant: "destructive" }),
   });
 
   const openEdit = (s: Tables<"intent_signals">) => {
@@ -203,19 +230,63 @@ export const IntentSignalsView = () => {
             Monitore sinais que indicam propensão de compra — {signals.length} sinais registrados
           </p>
         </div>
-        <Dialog open={createOpen} onOpenChange={(v) => { setCreateOpen(v); if (!v) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button className="gap-2"><Plus className="h-4 w-4" /> Registrar Sinal</Button>
-          </DialogTrigger>
-          <DialogContent className="bg-card border-border/50">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Radar className="h-5 w-5 text-primary" /> Novo Sinal de Intenção
-              </DialogTitle>
-            </DialogHeader>
-            <FormFields />
-          </DialogContent>
-        </Dialog>
+        <div className="flex gap-2 flex-wrap">
+          <Dialog open={detectOpen} onOpenChange={(v) => { setDetectOpen(v); if (!v) { setDetectCompanyId(""); setDetectWebsite(""); setDetectResult(null); } }}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2"><Cpu className="h-4 w-4" /> Detectar Tecnologias</Button>
+            </DialogTrigger>
+            <DialogContent className="bg-card border-border/50">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Cpu className="h-5 w-5 text-primary" /> Detectar Tecnologias do Site
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-2">
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">ID da Empresa (UUID)</Label>
+                  <Input value={detectCompanyId} onChange={(e) => setDetectCompanyId(e.target.value)} placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" className="h-9 text-sm font-mono" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground">URL do Site (opcional — usa website da empresa se omitido)</Label>
+                  <Input value={detectWebsite} onChange={(e) => setDetectWebsite(e.target.value)} placeholder="https://empresa.com.br" className="h-9 text-sm" />
+                </div>
+                {detectResult && detectResult.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground font-medium">Tecnologias detectadas:</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {detectResult.map((t) => (
+                        <Badge key={t.name} variant="outline" className="text-xs gap-1">
+                          <Globe className="h-3 w-3" /> {t.name} · {t.category}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <Button
+                  className="w-full gap-2"
+                  onClick={() => detectMutation.mutate()}
+                  disabled={!detectCompanyId.trim() || detectMutation.isPending}
+                >
+                  {detectMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Cpu className="h-4 w-4" />}
+                  {detectMutation.isPending ? "Analisando site..." : "Detectar agora"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={createOpen} onOpenChange={(v) => { setCreateOpen(v); if (!v) resetForm(); }}>
+            <DialogTrigger asChild>
+              <Button className="gap-2"><Plus className="h-4 w-4" /> Registrar Sinal</Button>
+            </DialogTrigger>
+            <DialogContent className="bg-card border-border/50">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Radar className="h-5 w-5 text-primary" /> Novo Sinal de Intenção
+                </DialogTitle>
+              </DialogHeader>
+              <FormFields />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Edit Dialog */}
