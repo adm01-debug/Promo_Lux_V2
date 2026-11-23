@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6e486a4ca6` · branch `main` · 2026-11-23 21:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `90d7ac8865` · branch `main` · 2026-11-23 21:31 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `sales_goals` | SDR+ insert goals | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | SDR+ update goals | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | Admins delete goals | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
-| … +37 linhas — lista completa em `context.json` | | | | | | |
+| … +38 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -455,6 +455,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `organization_members` | `user_id` | obrigatório |
 | `organization_members` | `role` | default 'viewer' |
 | `organization_members` | `created_at` | default now() |
+| `organization_members` | `scim_active` | obrigatório |
 | `organization_members` | `(tabela)` | UNIQUE (organization_id, user_id) |
 | `organization_invites` | `id` | PK; default gen_random_uuid() |
 | `organization_invites` | `organization_id` | obrigatório; FK → organizations.id ON DELETE CASCADE |
@@ -616,8 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `email_sync_log` | `created_at` | default now() |
 | `oauth_sandbox_snapshots` | `id` | PK; default gen_random_uuid() |
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
-| `oauth_sandbox_snapshots` | `user_id` | default auth.uid() |
-| … +810 linhas — lista completa em `context.json` | | |
+| … +819 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -896,6 +896,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `complete_workflow_step` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `fail_workflow_step` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `finish_workflow_run` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `generate_scim_token` | permission_denied | `supabase/migrations/20261124040000_scim_provisioning.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -1090,6 +1091,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `lost` | compara | `src/components/lux/deals/DealDetailDrawer.tsx` |
 | `type` | `note` | escreve | `src/hooks/useDeals.ts`<br>`supabase/functions/_shared/rlsTableRegistry.ts` |
 | `type` | `notify` | compara | `src/components/automation/WorkflowEditor.tsx` |
+| `type` | `oauthbearertoken` | escreve | `supabase/functions/scim/index.ts` |
 | `type` | `open` | escreve | `src/hooks/useDeals.ts` |
 | `type` | `range` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
 | `type` | `scrape` | compara, escreve | `src/components/automation/WorkflowEditor.tsx`<br>`src/hooks/useRealtimeScrapeJobs.ts`<br>`src/lib/demoData.ts`<br>`supabase/functions/gmaps-proxy/index.ts` |
@@ -1113,12 +1115,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `CEO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CFO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CTO` | escreve | `src/lib/demoData.ts` |
-| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +10 |
+| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +11 |
 | `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
 | `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
 | `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
 | `role` | `user` | compara, escreve | `src/components/lux/AIAgentView.tsx`<br>`supabase/functions/_shared/rlsTableRegistry.ts`<br>`supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>… +1 |
-| `role` | `viewer` | compara | `src/hooks/usePermissions.ts` |
+| `role` | `viewer` | compara, escreve | `src/hooks/usePermissions.ts`<br>`supabase/functions/scim/index.ts` |
 | `enrichment_status` | `bitrix_duplicate` | compara, escreve | `src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `enrichment_status` | `enriched` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `enrichment_status` | `enriching` | compara, escreve, filtra | `src/components/lux/lusha/OracleV2Panel.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
@@ -1743,6 +1745,8 @@ _nenhum item encontrado_
 | `CLOSED_CACHE_TTL_MS` | `3000` | `supabase/functions/_shared/circuit-breaker.ts` |
 | `BASE` | `"https://api.leadcontact.ai/api/contact"` | `supabase/functions/_shared/leadcontact-client.ts` |
 | `EXT_ORIGIN` | `"chrome-extension://imhlnhlbiencamnbpigopiibddajimep"` | `supabase/functions/_shared/leadcontact-client.ts` |
+| `SCIM_USER_SCHEMA` | `"urn:ietf:params:scim:schemas:core:2.0:User"` | `supabase/functions/_shared/scim-core.ts` |
+| `SCIM_LIST_SCHEMA` | `"urn:ietf:params:scim:api:messages:2.0:ListResponse"` | `supabase/functions/_shared/scim-core.ts` |
 | `MAX_TRACKED_LINKS` | `50` | `supabase/functions/_shared/tracking-links.ts` |
 | `RETENTION_DAYS` | `90` | `supabase/functions/audit-logs-prune/index.ts` |
 | `MAX_ATTEMPTS` | `5` | `supabase/functions/auth-rate-limit/index.ts` |
@@ -1757,11 +1761,14 @@ _nenhum item encontrado_
 | `CB_THRESHOLD` | `5` | `supabase/functions/gmaps-proxy/index.ts` |
 | `CB_RESET_TIMEOUT` | `60000` | `supabase/functions/gmaps-proxy/index.ts` |
 | `GMAPS_API_BASE` | `"https://gmaps.atomicabr.com.br/api/v1"` | `supabase/functions/gmaps-proxy/index.ts` |
+| `HUBSPOT_API` | `"https://api.hubapi.com"` | `supabase/functions/hubspot-sync/index.ts` |
 | `REVEAL_RATE_LIMIT_PER_HOUR` | `50` | `supabase/functions/lusha-reveal/index.ts` |
 | `ALERT_EVENT` | `"security.org_violation_threshold"` | `supabase/functions/org-violation-alerts/index.ts` |
 | `ERROR_RATE_THRESHOLD` | `5.0` | `supabase/functions/pg-net-watchdog/index.ts` |
 | `BACKLOG_THRESHOLD` | `100` | `supabase/functions/pg-net-watchdog/index.ts` |
 | `API_RATE_LIMIT_PER_HOUR` | `600` | `supabase/functions/public-api/index.ts` |
+| `SCIM_ERROR_SCHEMA` | `"urn:ietf:params:scim:api:messages:2.0:Error"` | `supabase/functions/scim/index.ts` |
+| `SCIM_CONTENT_TYPE` | `"application/scim+json"` | `supabase/functions/scim/index.ts` |
 | `CIRCUIT_SERVICE` | `"gmaps"` | `supabase/functions/scrape-queue-worker/index.ts` |
 | `DEFER_DELAY_SECS` | `60` | `supabase/functions/scrape-queue-worker/index.ts` |
 | `GMAPS_API_BASE` | `"https://gmaps.atomicabr.com.br/api/v1"` | `supabase/functions/scrape-queue-worker/index.ts` |
@@ -1942,6 +1949,7 @@ _nenhum item encontrado_
 | 1 | `supabase/functions/gmaps-proxy/index.ts` |
 | 10 | `supabase/functions/gmaps-proxy/index.ts` |
 | 1 | `supabase/functions/health/index.ts` |
+| 100 | `supabase/functions/hubspot-sync/index.ts` |
 | 1 | `supabase/functions/instagram-enqueue/index.ts` |
 | 10 | `supabase/functions/instagram-worker-health/index.ts` |
 | 1 | `supabase/functions/latency-alerts/index.ts` |
@@ -2126,8 +2134,15 @@ _nenhum item encontrado_
 | Falha ao avaliar | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Falha ao salvar | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Sem organização ativa | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
+| API Key nao pode ser vazia | `src/components/lux/settings/HubSpotPanel.tsx` |
+| Erro de sincronizacao: ${err.message} | `src/components/lux/settings/HubSpotPanel.tsx` |
+| Erro: ${err.message} | `src/components/lux/settings/HubSpotPanel.tsx` |
+| Nao autenticado | `src/components/lux/settings/HubSpotPanel.tsx` |
+| Org nao selecionada | `src/components/lux/settings/HubSpotPanel.tsx` |
 | Erro ao desativar | `src/components/lux/settings/MFASetup.tsx` |
 | Erro na verificação | `src/components/lux/settings/MFASetup.tsx` |
+| Erro: ${err.message} | `src/components/lux/settings/ScimPanel.tsx` |
+| Org nao selecionada | `src/components/lux/settings/ScimPanel.tsx` |
 |  className={cn(alertVariants({ variant }), className)} {...props} /> )); Alert.displayName =  | `src/components/ui/alert.tsx` |
 | useCarousel must be used within a <Carousel /> | `src/components/ui/carousel.tsx` |
 | useChart must be used within a <ChartContainer /> | `src/components/ui/chart.tsx` |
@@ -2256,18 +2271,11 @@ _nenhum item encontrado_
 | Failed to download results from external API | `supabase/functions/gmaps-proxy/index.ts` |
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
 | Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
+| HubSpot create failed: ${err} | `supabase/functions/hubspot-sync/index.ts` |
 | results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
 | Configura\xE7\xE3o do backend indispon\xEDvel para esta ferramenta. | `supabase/functions/mcp/index.ts` |
 | unauthorized | `supabase/functions/migrate-helper/index.ts` |
-| unknown_action | `supabase/functions/migrate-helper/index.ts` |
-| CookieVaultUnavailable após 3 tentativas: ${(lastErr as Error).message} | `supabase/functions/oracle-cookies-preflight/index.ts` |
-| SUPABASE_EXTERNAL_ANON_KEY ausente | `supabase/functions/oracle-cookies-preflight/index.ts` |
-| vault HTTP ${res.status}: ${body.slice(0, 200)} | `supabase/functions/oracle-cookies-preflight/index.ts` |
-| Unauthorized | `supabase/functions/purge-soft-deleted/index.ts` |
-| insert_advisory_${kind}: ${error.message} | `supabase/functions/retry-policy-tuner/index.ts` |
-| createAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| createAdminUserFixture: insert org failed: ${orgErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +25 linhas — lista completa em `context.json` | |
+| … +33 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2285,10 +2293,11 @@ _nenhum item encontrado_
 | `sdr` | `src/hooks/usePermissions.ts` |
 | `viewer` | `src/hooks/usePermissions.ts` |
 | `input` | `src/hooks/useRolePermissions.ts` |
+| `admin` | `supabase/functions/hubspot-sync/index.ts` |
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1196 testes em 113 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1206 testes em 114 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2330,6 +2339,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/web-scrape.test.ts` | 11 | robots.txt parser · permite quando não há regras · aplica Disallow para User-agent: * · prefere grupo específico do UA sobre wildcard … |
 | `src/components/lux/lusha/StatusBadge.test.tsx` | 10 | StatusBadge — contrato visual (R34) · renderiza status  · cobre exatamente as 13 chaves conhecidas do map · agrupa todos os estados error* sob label  … |
 | `src/hooks/__tests__/oracleV2Helpers.test.ts` | 10 | computeBitrixReadiness · marca pronto quando company_id e user_id numérico estão preenchidos · bloqueia quando company_id vazio · bloqueia quando user_id vazio … |
+| `supabase/functions/_shared/__tests__/scim-core.test.ts` | 10 | normalizeScimPath strips gateway prefix · normalizeScimPath strips bare /scim mount · normalizeScimPath keeps /v2 paths and normalizes leading slash · parseUserNameFilter extracts quoted value … |
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
 | `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
@@ -2432,6 +2442,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | `invoke(` | `src/components/lux/monitoring/VaultCookiesPanel.tsx` |
 | `invoke(` | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
+| `invoke(` | `src/components/lux/settings/HubSpotPanel.tsx` |
 | `notify` | `src/components/lux/workflows/WorkflowCard.tsx` |
 | `invoke(` | `src/hooks/useDlqReplay.ts` |
 | `invoke(` | `src/hooks/useRateLimit.ts` |

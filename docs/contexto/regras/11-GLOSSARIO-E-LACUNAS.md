@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6e486a4ca6` · branch `main` · 2026-11-23 21:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `90d7ac8865` · branch `main` · 2026-11-23 21:31 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -77,6 +77,7 @@
 | `oauth_sandbox_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `oracle_rate_limits` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `oracle_v2_health` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | types.ts |
+| `org_integrations` | Integracoes externas por org (HubSpot, Salesforce, Slack, etc.) | 8 colunas | migration |
 | `org_leaderboard` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | types.ts |
 | `org_proxies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `org_retry_policies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
@@ -84,8 +85,8 @@
 | `org_violation_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `org_violation_alerts` | Histórico de alertas de taxa de OrgMismatchError. Evento webhook: security.org_violation_threshold | 11 colunas | migration |
 | `organization_invites` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
-| `organization_members` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
-| `organizations` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
+| `organization_members` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
+| `organizations` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
 | `partition_advisories` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `partition_policies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `pg_net_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
@@ -392,7 +393,7 @@ _nenhum item encontrado_
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 120/126 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 120/127 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

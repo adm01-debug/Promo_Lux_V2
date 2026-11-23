@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "6e486a4ca689f28f86e9d6a1e0b050d25434daee",
+  "sha": "90d7ac8865233297aa70b0ae0e213900901a5322",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 21:27 UTC",
-  "files_total": 1140,
-  "code_files": 958,
-  "code_lines": 142844
+  "generated_at": "2026-11-23 21:31 UTC",
+  "files_total": 1147,
+  "code_files": 965,
+  "code_lines": 144017
  },
  "version": "1.3.2",
- "facts_hash": "7348bcabf3f59bd6",
+ "facts_hash": "f30283168d68a50b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -235,9 +235,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 377,
-   ".tsx": 299,
-   ".sql": 251,
+   ".ts": 381,
+   ".tsx": 301,
+   ".sql": 252,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -255,7 +255,9 @@
     "email-oauth-callback",
     "mcp",
     "mcp-query",
-    "send-scheduled-reports"
+    "send-scheduled-reports",
+    "scim",
+    "hubspot-sync"
    ],
    "auth": {}
   },
@@ -1762,6 +1764,13 @@
       "src": "supabase/migrations/20261122220000_ip_allowlist.sql"
      },
      {
+      "name": "scim_token_hash",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
       "name": "last_known_ip",
       "type": "string | null",
       "fk": "",
@@ -1810,6 +1819,20 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
+     },
+     {
+      "name": "scim_external_id",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "scim_active",
+      "type": "boolean not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [
@@ -11135,6 +11158,72 @@
     "comment": "",
     "origin": "migration"
    },
+   "org_integrations": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid PRIMARY KEY DEFAULT gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE",
+      "fk": "organizations.id ON DELETE CASCADE",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "provider",
+      "type": "text NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "config",
+      "type": "jsonb NOT NULL DEFAULT '{}'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "enabled",
+      "type": "boolean NOT NULL DEFAULT true",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "last_synced_at",
+      "type": "timestamptz",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+     }
+    ],
+    "constraints": [
+     "UNIQUE (organization_id, provider)"
+    ],
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "comment": "Integracoes externas por org (HubSpot, Salesforce, Slack, etc.)",
+    "origin": "migration"
+   },
    "deal_lost_reason_stats": {
     "columns": [
      {
@@ -15250,6 +15339,16 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "admins can manage integrations",
+    "table": "org_integrations",
+    "cmd": "ALL",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "triggers": [
@@ -19235,6 +19334,48 @@
      "workflow_runs"
     ]
    },
+   "generate_scim_token": {
+    "args": "p_org_id uuid",
+    "returns": "text",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_token text; v_hash text; BEGIN IF NOT has_org_role(p_org_id, auth.uid(), 'admin') THEN RAISE EXCEPTION 'permission_denied'; END IF; v_token := encode(gen_random_bytes(32), 'hex'); v_hash := encode(sha256(v_token::bytea), 'hex'); UPDATE public.organizations SET scim_token_hash = v_hash WHERE id = p_org_id; RETURN v_token; END;",
+    "raises": [
+     "permission_denied"
+    ],
+    "tables": [
+     "organizations"
+    ]
+   },
+   "verify_scim_token": {
+    "args": "p_org_id uuid, p_token text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_hash text; BEGIN SELECT scim_token_hash INTO v_hash FROM public.organizations WHERE id = p_org_id; RETURN v_hash IS NOT NULL AND v_hash = encode(sha256(p_token::bytea), 'hex'); END;",
+    "raises": [],
+    "tables": [
+     "organizations",
+     "v_hash"
+    ]
+   },
+   "get_hubspot_api_key": {
+    "args": "p_org_id uuid",
+    "returns": "text",
+    "lang": "sql",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "SELECT config->>'api_key' FROM public.org_integrations WHERE organization_id = p_org_id AND provider = 'hubspot' AND enabled = true;",
+    "raises": [],
+    "tables": [
+     "org_integrations"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -22323,6 +22464,14 @@
     "unique": true,
     "where": "where status in ('pending','queued','running')",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "idx_org_members_scim_id",
+    "table": "organization_members",
+    "columns": "organization_id, scim_external_id",
+    "unique": true,
+    "where": "WHERE scim_external_id IS NOT NULL",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "cron_jobs": [
@@ -22649,6 +22798,7 @@
    "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
    "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
    "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+   "supabase/migrations/20261124040000_scim_provisioning.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -22772,7 +22922,8 @@
    "next_best_actions": "enabled",
    "warmup_profiles": "enabled",
    "campaign_warmup_state": "enabled",
-   "workflow_run_events": "enabled"
+   "workflow_run_events": "enabled",
+   "org_integrations": "enabled"
   },
   "grants": [
    {
@@ -28166,6 +28317,46 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "generate_scim_token",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "verify_scim_token",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "org_integrations",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "org_integrations",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "raises": [
@@ -28928,6 +29119,11 @@
     "function": "finish_workflow_run",
     "msg": "run % nao existe",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "generate_scim_token",
+    "msg": "permission_denied",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "seed": [],
@@ -28948,7 +29144,11 @@
    "table:deal_lost_reasons": "Catálogo de motivos de perda por organização (GAPS-ENTERPRISE:83).",
    "table:sales_goals": "Metas e cotas por membro (GAPS-ENTERPRISE:147).",
    "table:satisfaction_surveys": "Pesquisas de NPS/CSAT por organizacao (GAPS-ENTERPRISE).",
-   "column:organizations.ip_allowlist_enabled": "Quando true, apenas IPs em ip_allowlist (ou de orgs sem regra) acessam dados. Default false."
+   "column:organizations.ip_allowlist_enabled": "Quando true, apenas IPs em ip_allowlist (ou de orgs sem regra) acessam dados. Default false.",
+   "column:organization_members.scim_external_id": "ID externo do usuario no IdP (Okta, Azure AD, etc.) — preenchido pelo SCIM endpoint",
+   "column:organization_members.scim_active": "Status de provisionamento SCIM; false = usuario desprovisionado pelo IdP",
+   "column:organizations.scim_token_hash": "SHA-256 do bearer token SCIM da org; comparado pelo edge function scim",
+   "table:org_integrations": "Integracoes externas por org (HubSpot, Salesforce, Slack, etc.)"
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -29735,6 +29935,32 @@
     "idempotency": false
    },
    {
+    "name": "hubspot-sync",
+    "file": "supabase/functions/hubspot-sync/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "companies",
+     "org_integrations",
+     "organization_members"
+    ],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "HubSpot sync edge function Sincroniza empresas e deals da org para o HubSpot CRM via Private App API. Modo cron (org-wide) ou single-company (admin JWT). Auth: - Cron: header CRON_SERVICE_KEY (isCronAuthorized). Body: { org_id }. - Admin JWT: Authorization Bearer <user jwt>, body { org_id, company_i …",
+    "errors": [
+     "HubSpot create failed: ${err}"
+    ],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
     "name": "instagram-connection-status",
     "file": "supabase/functions/instagram-connection-status/index.ts",
     "methods": [
@@ -30408,6 +30634,33 @@
      "create orgA: ${orgAErr.message}",
      "create orgB: ${orgBErr.message}"
     ],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
+    "name": "scim",
+    "file": "supabase/functions/scim/index.ts",
+    "methods": [
+     "DELETE",
+     "GET",
+     "OPTIONS",
+     "PATCH",
+     "POST",
+     "PUT"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "organization_members"
+    ],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "SCIM 2.0 provisioning endpoint. Base URL: {SUPABASE_URL}/functions/v1/scim/v2 Auth: Authorization: Bearer <scim_token> + X-Org-Id: <org_uuid> Routes: GET /v2/ServiceProviderConfig GET /v2/Users?filter=userName eq \"email\"&startIndex=1&count=100",
+    "errors": [],
     "side_effects": [],
     "webhook_events": [],
     "idempotency": false
@@ -31196,7 +31449,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 305,
+  "components_count": 307,
   "hooks": [
    {
     "name": "useContacts",
@@ -31907,7 +32160,7 @@
   {
    "module": "(raiz)",
    "files": 9,
-   "lines": 346,
+   "lines": 347,
    "tables": [],
    "exports": [
     "eslint.config.js: tseslint",
@@ -32201,8 +32454,8 @@
   },
   {
    "module": "src/components",
-   "files": 305,
-   "lines": 50280,
+   "files": 307,
+   "lines": 50614,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -32222,8 +32475,10 @@
     "lusha_dm_search_history",
     "lusha_search_sessions",
     "notifications",
+    "org_integrations",
     "org_violation_alert_settings",
     "org_violation_alerts",
+    "organizations",
     "profiles",
     "qa_test_runs",
     "queue_sla_defaults",
@@ -32661,7 +32916,7 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 8899,
+   "lines": 8957,
    "tables": [
     "automation_alerts",
     "companies",
@@ -32932,8 +33187,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 134,
-   "lines": 24218,
+   "files": 138,
+   "lines": 24884,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -32974,6 +33229,7 @@
     "lusha_contacts",
     "lusha_search_sessions",
     "notifications",
+    "org_integrations",
     "org_proxies",
     "org_violation_alerts",
     "organization_members",
@@ -33033,6 +33289,7 @@
     "rlsTableRegistry.ts: AppEnv, RlsTableSpec, RLS_TABLES, RLS_TABLES_EXEMPT, ENV_EXEMPT_TABLES",
     "safe-update.ts: updateContact",
     "schemas.ts: ScrapeJobConfigSchema, CreateScrapeJobSchema, ScoringCriteriaSchema, IPCConfigSchema",
+    "scim-core.ts: SCIM_USER_SCHEMA, SCIM_LIST_SCHEMA, MemberRow, AuthUserInfo, normalizeScimPath, parseUserNameFilter",
     "ssrf-guard.ts: isPrivateOrReservedIPv4, isPrivateOrReservedIPv6, isDisallowedHostLiteral, UrlSafetyVerdict, checkUrlSyncPart, assertSafeOutboundUrl",
     "tracing.ts: generateTraceId, generateSpanId, getTraceparent, createTraceparent, parseTraceparent",
     "tracking-links.ts: openTrackingUrl, clickTrackingUrl, applyEmailTracking",
@@ -33041,8 +33298,7 @@
     "scrape-job-machine.ts: ScrapeJobStatus, ScrapeJobStateMachine, canTransitionScrapeJob, getNextScrapeJobStatus",
     "scoring.ts: CompanyData, IPCHittingCriteria, calculateIPCScore",
     "chaos.ts: shouldInjectChaos",
-    "heuristics.ts: isEmptyShell, isTransientHttp, hostnameOf",
-    "html-to-markdown.ts: ExtractedContent, extractContent"
+    "heuristics.ts: isEmptyShell, isTransientHttp, hostnameOf"
    ],
    "docs": [
     "api-rate-limit.ts: Logic-a pura de decisao de rate-limit da public-api, extraida para teste unitario (convencao do projeto: edge functions testam so o que vive em _shared). A RPC check_api_key_rate_limit devolve uma linha com allowed/current_count/reset_at.",
@@ -33093,6 +33349,7 @@
     "supabase/functions/_shared/rlsTableRegistry.ts",
     "supabase/functions/_shared/safe-update.ts",
     "supabase/functions/_shared/schemas.ts",
+    "supabase/functions/_shared/scim-core.ts",
     "supabase/functions/_shared/ssrf-guard.ts",
     "supabase/functions/_shared/tracing.ts",
     "supabase/functions/_shared/tracking-links.ts",
@@ -33119,6 +33376,7 @@
     "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
     "supabase/functions/_shared/__tests__/phone-br.test.ts",
     "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "supabase/functions/_shared/__tests__/scim-core.test.ts",
     "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
     "supabase/functions/_shared/__tests__/tracking-links.test.ts",
     "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
@@ -33139,15 +33397,13 @@
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/circuit-breaker-alerts/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
-    "supabase/functions/cnpj-enrich-worker/index.ts",
-    "supabase/functions/cnpj-settings-status/index.ts",
-    "supabase/functions/conversation-intel/index.ts"
+    "supabase/functions/cnpj-enrich-worker/index.ts"
    ]
   },
   {
    "module": "supabase/migrations",
-   "files": 247,
-   "lines": 18270,
+   "files": 248,
+   "lines": 18384,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -33522,6 +33778,7 @@
      "supabase/functions/_shared/companies-upsert.ts",
      "supabase/functions/admin-list-companies/index.ts",
      "supabase/functions/ai-agent/index.ts",
+     "supabase/functions/hubspot-sync/index.ts",
      "supabase/functions/mcp/index.ts",
      "supabase/functions/oracle-search-decisors/index.ts",
      "supabase/functions/rls-tests/index.ts",
@@ -34042,6 +34299,18 @@
      "src/hooks/useOAuthSandboxSnapshots.ts"
     ]
    },
+   "org_integrations": {
+    "select": [
+     "src/components/lux/settings/HubSpotPanel.tsx",
+     "supabase/functions/hubspot-sync/index.ts"
+    ],
+    "upsert": [
+     "src/components/lux/settings/HubSpotPanel.tsx"
+    ],
+    "update": [
+     "supabase/functions/hubspot-sync/index.ts"
+    ]
+   },
    "org_leaderboard": {
     "select": [
      "src/hooks/useLeaderboard.ts"
@@ -34108,6 +34377,7 @@
      "supabase/functions/admin-list-companies/index.ts",
      "supabase/functions/conversation-intel/index.ts",
      "supabase/functions/dlq-alerts/index.ts",
+     "supabase/functions/hubspot-sync/index.ts",
      "supabase/functions/instagram-dlq-replay/index.ts",
      "supabase/functions/instagram-enqueue/index.ts",
      "supabase/functions/latency-alerts/index.ts",
@@ -34116,6 +34386,7 @@
      "supabase/functions/org-violation-alerts/index.ts",
      "supabase/functions/rls-tests/_fixtures.ts",
      "supabase/functions/rls-tests/index.ts",
+     "supabase/functions/scim/index.ts",
      "supabase/functions/sla-auto-tune/index.ts",
      "supabase/functions/technographics-detect/index.ts",
      "supabase/functions/web-dlq-replay/index.ts",
@@ -34123,7 +34394,8 @@
      "supabase/functions/workflow-engine/index.ts"
     ],
     "update": [
-     "src/hooks/useOrganizations.ts"
+     "src/hooks/useOrganizations.ts",
+     "supabase/functions/scim/index.ts"
     ],
     "delete": [
      "src/hooks/useOrganizations.ts",
@@ -34131,10 +34403,14 @@
     ],
     "upsert": [
      "supabase/functions/rls-tests/_fixtures.ts"
+    ],
+    "insert": [
+     "supabase/functions/scim/index.ts"
     ]
    },
    "organizations": {
     "select": [
+     "src/components/lux/settings/ScimPanel.tsx",
      "src/hooks/useIpAllowlist.ts",
      "src/hooks/useOrganizations.ts",
      "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
@@ -35145,6 +35421,14 @@
    "oauth_sandbox_snapshots": [
     "id"
    ],
+   "org_integrations": [
+    "config",
+    "enabled",
+    "id",
+    "last_synced_at",
+    "organization_id",
+    "provider"
+   ],
    "org_leaderboard": [
     "organization_id"
    ],
@@ -35199,6 +35483,7 @@
     "id",
     "ip_allowlist_enabled",
     "name",
+    "scim_token_hash",
     "slug"
    ],
    "partition_advisories": [
@@ -35860,6 +36145,7 @@
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
+    "supabase/functions/hubspot-sync/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
     "supabase/functions/instagram-enqueue/index.ts",
     "supabase/functions/instagram-worker-health/index.ts",
@@ -35883,6 +36169,7 @@
     "supabase/functions/retry-policy-tuner/index.ts",
     "supabase/functions/rls-tests/index.test.ts",
     "supabase/functions/rls-tests/index.ts",
+    "supabase/functions/scim/index.ts",
     "supabase/functions/scrape-queue-worker/index.ts",
     "supabase/functions/send-scheduled-reports/index.ts",
     "supabase/functions/sla-alerts/index.ts",
@@ -35926,6 +36213,7 @@
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
+    "supabase/functions/hubspot-sync/index.ts",
     "supabase/functions/instagram-connection-status/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
     "supabase/functions/instagram-enqueue/index.ts",
@@ -35953,6 +36241,7 @@
     "supabase/functions/retry-policy-tuner/index.ts",
     "supabase/functions/rls-tests/index.test.ts",
     "supabase/functions/rls-tests/index.ts",
+    "supabase/functions/scim/index.ts",
     "supabase/functions/scrape-queue-worker/index.ts",
     "supabase/functions/send-scheduled-reports/index.ts",
     "supabase/functions/sla-alerts/index.ts",
@@ -36013,6 +36302,7 @@
     "src/components/lux/LushaIntelligenceView.tsx",
     "src/components/lux/SettingsView.tsx",
     "src/components/lux/integrations/ApiDocsCard.tsx",
+    "src/components/lux/settings/ScimPanel.tsx",
     "src/hooks/useWebScrape.ts",
     "src/integrations/supabase/client.ts",
     "src/lib/api/gmaps.ts",
@@ -36224,6 +36514,9 @@
    "fulfill_dsar_request": [
     "src/hooks/useDsar.ts"
    ],
+   "generate_scim_token": [
+    "src/components/lux/settings/ScimPanel.tsx"
+   ],
    "get_dashboard_stats": [
     "src/hooks/useDashboardData.ts",
     "src/lib/mcp/tools/get-dashboard-stats.ts",
@@ -36401,6 +36694,9 @@
    "verify_api_key": [
     "supabase/functions/public-api/index.ts"
    ],
+   "verify_scim_token": [
+    "supabase/functions/scim/index.ts"
+   ],
    "worker_report_batch": [
     "supabase/functions/scrape-queue-worker/index.ts"
    ],
@@ -36445,6 +36741,9 @@
    ],
    "ghost-edge": [
     "scripts/ai-context/gerar.unit.mjs"
+   ],
+   "hubspot-sync": [
+    "src/components/lux/settings/HubSpotPanel.tsx"
    ],
    "inexistente": [
     "scripts/ai-context/cenarios.mjs"
@@ -36704,7 +37003,8 @@
     "next_best_actions",
     "warmup_profiles",
     "campaign_warmup_state",
-    "workflow_run_events"
+    "workflow_run_events",
+    "org_integrations"
    ],
    "deals": [
     "deal_activities",
@@ -38224,12 +38524,40 @@
     "msg": "Sem organização ativa"
    },
    {
+    "file": "src/components/lux/settings/HubSpotPanel.tsx",
+    "msg": "API Key nao pode ser vazia"
+   },
+   {
+    "file": "src/components/lux/settings/HubSpotPanel.tsx",
+    "msg": "Erro de sincronizacao: ${err.message}"
+   },
+   {
+    "file": "src/components/lux/settings/HubSpotPanel.tsx",
+    "msg": "Erro: ${err.message}"
+   },
+   {
+    "file": "src/components/lux/settings/HubSpotPanel.tsx",
+    "msg": "Nao autenticado"
+   },
+   {
+    "file": "src/components/lux/settings/HubSpotPanel.tsx",
+    "msg": "Org nao selecionada"
+   },
+   {
     "file": "src/components/lux/settings/MFASetup.tsx",
     "msg": "Erro ao desativar"
    },
    {
     "file": "src/components/lux/settings/MFASetup.tsx",
     "msg": "Erro na verificação"
+   },
+   {
+    "file": "src/components/lux/settings/ScimPanel.tsx",
+    "msg": "Erro: ${err.message}"
+   },
+   {
+    "file": "src/components/lux/settings/ScimPanel.tsx",
+    "msg": "Org nao selecionada"
    },
    {
     "file": "src/components/ui/alert.tsx",
@@ -38744,6 +39072,10 @@
     "msg": "Places API returned no results"
    },
    {
+    "file": "supabase/functions/hubspot-sync/index.ts",
+    "msg": "HubSpot create failed: ${err}"
+   },
+   {
     "file": "supabase/functions/instagram-worker/index.ts",
     "msg": "results_insert_failed: ${insErr.message}"
    },
@@ -38936,6 +39268,10 @@
    {
     "file": "src/hooks/useRolePermissions.ts",
     "value": "input"
+   },
+   {
+    "file": "supabase/functions/hubspot-sync/index.ts",
+    "value": "admin"
    },
    {
     "file": "supabase/functions/system-recovery-status/index.ts",
@@ -40454,6 +40790,11 @@
     "table": "organization_members",
     "column": "created_at",
     "rule": "default now()"
+   },
+   {
+    "table": "organization_members",
+    "column": "scim_active",
+    "rule": "obrigatório"
    },
    {
     "table": "organization_members",
@@ -45131,6 +45472,46 @@
     "rule": "constraint workflow_run_events_type_check check ( event_type in ('run_claimed','step_started','step_completed','step_failed','run_completed','run_failed') )"
    },
    {
+    "table": "org_integrations",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "org_integrations",
+    "column": "organization_id",
+    "rule": "obrigatório; FK → organizations.id ON DELETE CASCADE"
+   },
+   {
+    "table": "org_integrations",
+    "column": "provider",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "org_integrations",
+    "column": "config",
+    "rule": "default '{}'"
+   },
+   {
+    "table": "org_integrations",
+    "column": "enabled",
+    "rule": "default true"
+   },
+   {
+    "table": "org_integrations",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "org_integrations",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "org_integrations",
+    "column": "(tabela)",
+    "rule": "UNIQUE (organization_id, provider)"
+   },
+   {
     "table": "org_leaderboard",
     "column": "activities",
     "rule": "obrigatório"
@@ -45563,6 +45944,16 @@
     "value": "\"chrome-extension://imhlnhlbiencamnbpigopiibddajimep\""
    },
    {
+    "file": "supabase/functions/_shared/scim-core.ts",
+    "name": "SCIM_USER_SCHEMA",
+    "value": "\"urn:ietf:params:scim:schemas:core:2.0:User\""
+   },
+   {
+    "file": "supabase/functions/_shared/scim-core.ts",
+    "name": "SCIM_LIST_SCHEMA",
+    "value": "\"urn:ietf:params:scim:api:messages:2.0:ListResponse\""
+   },
+   {
     "file": "supabase/functions/_shared/tracking-links.ts",
     "name": "MAX_TRACKED_LINKS",
     "value": "50"
@@ -45633,6 +46024,11 @@
     "value": "\"https://gmaps.atomicabr.com.br/api/v1\""
    },
    {
+    "file": "supabase/functions/hubspot-sync/index.ts",
+    "name": "HUBSPOT_API",
+    "value": "\"https://api.hubapi.com\""
+   },
+   {
     "file": "supabase/functions/lusha-reveal/index.ts",
     "name": "REVEAL_RATE_LIMIT_PER_HOUR",
     "value": "50"
@@ -45656,6 +46052,16 @@
     "file": "supabase/functions/public-api/index.ts",
     "name": "API_RATE_LIMIT_PER_HOUR",
     "value": "600"
+   },
+   {
+    "file": "supabase/functions/scim/index.ts",
+    "name": "SCIM_ERROR_SCHEMA",
+    "value": "\"urn:ietf:params:scim:api:messages:2.0:Error\""
+   },
+   {
+    "file": "supabase/functions/scim/index.ts",
+    "name": "SCIM_CONTENT_TYPE",
+    "value": "\"application/scim+json\""
    },
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
@@ -49108,6 +49514,12 @@
     "kind": "compara"
    },
    {
+    "file": "supabase/functions/hubspot-sync/index.ts",
+    "field": "role",
+    "value": "admin",
+    "kind": "compara"
+   },
+   {
     "file": "supabase/functions/instagram-enqueue/index.ts",
     "field": "status",
     "value": "queued",
@@ -50162,6 +50574,18 @@
     "field": "role",
     "value": "admin",
     "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/scim/index.ts",
+    "field": "type",
+    "value": "oauthbearertoken",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/scim/index.ts",
+    "field": "role",
+    "value": "viewer",
+    "kind": "escreve"
    },
    {
     "file": "supabase/functions/scrape-queue-worker/index.ts",
@@ -55962,6 +56386,46 @@
     "name": "checkPlacesApi reports unhealthy without key and healthy on 200"
    },
    {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "normalizeScimPath strips gateway prefix"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "normalizeScimPath strips bare /scim mount"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "normalizeScimPath keeps /v2 paths and normalizes leading slash"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "parseUserNameFilter extracts quoted value"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "parseUserNameFilter is case-insensitive and returns null when absent"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "parsePatchOperations reads path=active boolean"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "parsePatchOperations reads externalId and ignores unrelated ops"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "parsePatchOperations reads no-path object form"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "toScimUser serializes identity from auth user info"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "name": "toScimUser falls back to user_id when email missing and omits externalId"
+   },
+   {
     "file": "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
     "name": "isPrivateOrReservedIPv4"
    },
@@ -56350,6 +56814,10 @@
    },
    {
     "file": "src/components/lux/security/OrgViolationAlertsPanel.tsx",
+    "call": "invoke("
+   },
+   {
+    "file": "src/components/lux/settings/HubSpotPanel.tsx",
     "call": "invoke("
    },
    {
@@ -59839,6 +60307,16 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "admins can manage integrations",
+    "table": "org_integrations",
+    "cmd": "ALL",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "db_triggers": [
@@ -63824,6 +64302,48 @@
      "workflow_runs"
     ]
    },
+   "generate_scim_token": {
+    "args": "p_org_id uuid",
+    "returns": "text",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_token text; v_hash text; BEGIN IF NOT has_org_role(p_org_id, auth.uid(), 'admin') THEN RAISE EXCEPTION 'permission_denied'; END IF; v_token := encode(gen_random_bytes(32), 'hex'); v_hash := encode(sha256(v_token::bytea), 'hex'); UPDATE public.organizations SET scim_token_hash = v_hash WHERE id = p_org_id; RETURN v_token; END;",
+    "raises": [
+     "permission_denied"
+    ],
+    "tables": [
+     "organizations"
+    ]
+   },
+   "verify_scim_token": {
+    "args": "p_org_id uuid, p_token text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_hash text; BEGIN SELECT scim_token_hash INTO v_hash FROM public.organizations WHERE id = p_org_id; RETURN v_hash IS NOT NULL AND v_hash = encode(sha256(p_token::bytea), 'hex'); END;",
+    "raises": [],
+    "tables": [
+     "organizations",
+     "v_hash"
+    ]
+   },
+   "get_hubspot_api_key": {
+    "args": "p_org_id uuid",
+    "returns": "text",
+    "lang": "sql",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "SELECT config->>'api_key' FROM public.org_integrations WHERE organization_id = p_org_id AND provider = 'hubspot' AND enabled = true;",
+    "raises": [],
+    "tables": [
+     "org_integrations"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -64752,6 +65272,11 @@
     "function": "finish_workflow_run",
     "msg": "run % nao existe",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "generate_scim_token",
+    "msg": "permission_denied",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "db_generated": [],
@@ -65017,6 +65542,10 @@
    {
     "file": "supabase/functions/health/index.ts",
     "limit": "1"
+   },
+   {
+    "file": "supabase/functions/hubspot-sync/index.ts",
+    "limit": "100"
    },
    {
     "file": "supabase/functions/instagram-enqueue/index.ts",
@@ -66260,6 +66789,9 @@
       "compara:supabase/functions/_shared/hiker-client.ts",
       "compara:supabase/functions/_shared/leadcontact-client.ts"
      ],
+     "oauthbearertoken": [
+      "escreve:supabase/functions/scim/index.ts"
+     ],
      "tech_adoption": [
       "escreve:supabase/functions/technographics-detect/index.ts",
       "filtra:supabase/functions/technographics-detect/index.ts"
@@ -66288,6 +66820,7 @@
       "compara:src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
       "compara:src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
       "compara:src/hooks/usePermissions.ts",
+      "compara:supabase/functions/hubspot-sync/index.ts",
       "escreve:supabase/functions/rls-tests/_fixtures.ts",
       "filtra:supabase/functions/admin-list-companies/index.ts",
       "filtra:supabase/functions/dlq-alerts/index.ts",
@@ -66304,7 +66837,8 @@
       "compara:src/hooks/usePermissions.ts"
      ],
      "viewer": [
-      "compara:src/hooks/usePermissions.ts"
+      "compara:src/hooks/usePermissions.ts",
+      "escreve:supabase/functions/scim/index.ts"
      ],
      "CTO": [
       "escreve:src/lib/demoData.ts"
@@ -67527,6 +68061,21 @@
     "UPDATE": [],
     "DELETE": []
    },
+   "org_integrations": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+    ],
+    "INSERT": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+    ],
+    "UPDATE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+    ],
+    "DELETE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+    ]
+   },
    "org_leaderboard": {
     "rls": "não encontrado",
     "SELECT": [],
@@ -68327,6 +68876,7 @@
    "supabase/functions/gmaps-places-search/index.ts",
    "supabase/functions/gmaps-proxy/index.ts",
    "supabase/functions/health/index.ts",
+   "supabase/functions/hubspot-sync/index.ts",
    "supabase/functions/instagram-connection-status/index.ts",
    "supabase/functions/instagram-dlq-replay/index.ts",
    "supabase/functions/instagram-enqueue/index.ts",
@@ -68351,6 +68901,7 @@
    "supabase/functions/retry-policy-tuner/index.ts",
    "supabase/functions/rls-tests/index.test.ts",
    "supabase/functions/rls-tests/index.ts",
+   "supabase/functions/scim/index.ts",
    "supabase/functions/scrape-queue-worker/index.ts",
    "supabase/functions/send-scheduled-reports/index.ts",
    "supabase/functions/sla-alerts/index.ts",
@@ -68492,7 +69043,8 @@
    "supabase/migrations/20261124000000_h37_company_analytics.sql",
    "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
    "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
-   "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+   "supabase/migrations/20261124040000_scim_provisioning.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -68572,7 +69124,9 @@
    "finish_workflow_run",
    "fn_web_scrape_regression_check",
    "fulfill_dsar_request",
+   "generate_scim_token",
    "get_dashboard_stats",
+   "get_hubspot_api_key",
    "get_my_ip_status",
    "get_public_status",
    "get_public_uptime",
@@ -68652,6 +69206,7 @@
    "touch_api_key",
    "touch_last_known_ip",
    "verify_api_key",
+   "verify_scim_token",
    "web_dlq_health_metrics",
    "worker_report_batch",
    "worker_should_run"
@@ -68666,7 +69221,9 @@
    "email-oauth-callback",
    "mcp",
    "mcp-query",
-   "send-scheduled-reports"
+   "send-scheduled-reports",
+   "scim",
+   "hubspot-sync"
   ],
   "auth_config": {},
   "grants": [
@@ -74061,6 +74618,46 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "generate_scim_token",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "verify_scim_token",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update, delete",
+    "object": "org_integrations",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "org_integrations",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
    }
   ],
   "guards": [
@@ -74222,6 +74819,7 @@
    "warmup_profiles",
    "campaign_warmup_state",
    "workflow_run_events",
+   "org_integrations",
    "deal_lost_reason_stats",
    "org_leaderboard",
    "sales_goal_progress",
@@ -74720,6 +75318,10 @@
    ],
    "workflow_run_events": [
     "created_at"
+   ],
+   "org_integrations": [
+    "created_at",
+    "updated_at"
    ],
    "deal_lost_reason_stats": [],
    "org_leaderboard": [],
@@ -75925,7 +76527,7 @@
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "120/126 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "120/127 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -75984,7 +76586,7 @@
   },
   "vitest.config.ts": {
    "path": "vitest.config.ts",
-   "lines": 72,
+   "lines": 73,
    "exports": [
     "default defineConfig"
    ]
@@ -79736,7 +80338,7 @@
   },
   "src/components/lux/SettingsView.tsx": {
    "path": "src/components/lux/SettingsView.tsx",
-   "lines": 400,
+   "lines": 408,
    "exports": [
     "const SettingsView"
    ],
@@ -83610,6 +84212,46 @@
     }
    ]
   },
+  "src/components/lux/settings/HubSpotPanel.tsx": {
+   "path": "src/components/lux/settings/HubSpotPanel.tsx",
+   "lines": 159,
+   "exports": [
+    "function HubSpotPanel"
+   ],
+   "tables": [
+    {
+     "table": "org_integrations",
+     "op": "select"
+    },
+    {
+     "table": "org_integrations",
+     "op": "upsert"
+    }
+   ],
+   "table_cols": {
+    "org_integrations": [
+     "config",
+     "enabled",
+     "id",
+     "last_synced_at",
+     "organization_id",
+     "provider"
+    ]
+   },
+   "invokes": [
+    "hubspot-sync"
+   ],
+   "errors": [
+    "API Key nao pode ser vazia",
+    "Erro de sincronizacao: ${err.message}",
+    "Erro: ${err.message}",
+    "Nao autenticado",
+    "Org nao selecionada"
+   ],
+   "side_effects": [
+    "invoke("
+   ]
+  },
   "src/components/lux/settings/IpAllowlistPanel.tsx": {
    "path": "src/components/lux/settings/IpAllowlistPanel.tsx",
    "lines": 136,
@@ -83705,6 +84347,35 @@
    ],
    "pagination": [
     "50"
+   ]
+  },
+  "src/components/lux/settings/ScimPanel.tsx": {
+   "path": "src/components/lux/settings/ScimPanel.tsx",
+   "lines": 167,
+   "exports": [
+    "function ScimPanel"
+   ],
+   "tables": [
+    {
+     "table": "organizations",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "organizations": [
+     "id",
+     "scim_token_hash"
+    ]
+   },
+   "rpc": [
+    "generate_scim_token"
+   ],
+   "env": [
+    "VITE_SUPABASE_URL"
+   ],
+   "errors": [
+    "Erro: ${err.message}",
+    "Org nao selecionada"
    ]
   },
   "src/components/lux/settings/WarmupPanel.tsx": {
@@ -88195,7 +88866,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 7515,
+   "lines": 7573,
    "exports": [
     "type Json",
     "type Database",
@@ -91879,6 +92550,31 @@
     }
    ]
   },
+  "supabase/functions/_shared/scim-core.ts": {
+   "path": "supabase/functions/_shared/scim-core.ts",
+   "lines": 82,
+   "exports": [
+    "const SCIM_USER_SCHEMA",
+    "const SCIM_LIST_SCHEMA",
+    "interface MemberRow",
+    "interface AuthUserInfo",
+    "function normalizeScimPath",
+    "function parseUserNameFilter",
+    "function parsePatchOperations",
+    "function toScimUser"
+   ],
+   "params": [
+    {
+     "name": "SCIM_USER_SCHEMA",
+     "value": "\"urn:ietf:params:scim:schemas:core:2.0:User\""
+    },
+    {
+     "name": "SCIM_LIST_SCHEMA",
+     "value": "\"urn:ietf:params:scim:api:messages:2.0:ListResponse\""
+    }
+   ],
+   "doc": "Pure helpers do endpoint SCIM 2.0 (sem I/O), extraídos para teste unitário. Mantidos aqui para que a função scim/index.ts fique testável via deno test."
+  },
   "supabase/functions/_shared/ssrf-guard.ts": {
    "path": "supabase/functions/_shared/ssrf-guard.ts",
    "lines": 132,
@@ -92482,6 +93178,23 @@
     "fetchPlacesResults flattens results from all keywords and caps page size",
     "fetchPlacesResults keeps going when one keyword fails",
     "checkPlacesApi reports unhealthy without key and healthy on 200"
+   ]
+  },
+  "supabase/functions/_shared/__tests__/scim-core.test.ts": {
+   "path": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+   "lines": 95,
+   "is_test": true,
+   "tests": [
+    "normalizeScimPath strips gateway prefix",
+    "normalizeScimPath strips bare /scim mount",
+    "normalizeScimPath keeps /v2 paths and normalizes leading slash",
+    "parseUserNameFilter extracts quoted value",
+    "parseUserNameFilter is case-insensitive and returns null when absent",
+    "parsePatchOperations reads path=active boolean",
+    "parsePatchOperations reads externalId and ignores unrelated ops",
+    "parsePatchOperations reads no-path object form",
+    "toScimUser serializes identity from auth user info",
+    "toScimUser falls back to user_id when email missing and omits externalId"
    ]
   },
   "supabase/functions/_shared/__tests__/ssrf-guard.test.ts": {
@@ -94235,6 +94948,87 @@
    ],
    "pagination": [
     "1"
+   ],
+   "uses_service_role": true
+  },
+  "supabase/functions/hubspot-sync/index.ts": {
+   "path": "supabase/functions/hubspot-sync/index.ts",
+   "lines": 204,
+   "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "org_integrations",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "select"
+    },
+    {
+     "table": "org_integrations",
+     "op": "update"
+    }
+   ],
+   "table_cols": {
+    "organization_members": [
+     "organization_id",
+     "role",
+     "user_id"
+    ],
+    "org_integrations": [
+     "config",
+     "enabled",
+     "organization_id",
+     "provider"
+    ],
+    "companies": [
+     "deleted_at",
+     "description",
+     "employees",
+     "id",
+     "location",
+     "name",
+     "organization_id",
+     "phone",
+     "raw_data",
+     "revenue",
+     "sector",
+     "website"
+    ]
+   },
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "errors": [
+    "HubSpot create failed: ${err}"
+   ],
+   "params": [
+    {
+     "name": "HUBSPOT_API",
+     "value": "\"https://api.hubapi.com\""
+    }
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "compara"
+    }
+   ],
+   "role_checks": [
+    "admin"
+   ],
+   "doc": "HubSpot sync edge function Sincroniza empresas e deals da org para o HubSpot CRM via Private App API. Modo cron (org-wide) ou single-company (admin JWT). Auth: - Cron: header CRON_SERVICE_KEY (isCronAuthorized). Body: { org_id }. - Admin JWT: Authorization Bearer <user jwt>, body { org_id, company_i …",
+   "pagination": [
+    "100"
    ],
    "uses_service_role": true
   },
@@ -96597,6 +97391,69 @@
    "pagination": [
     "1"
    ],
+   "uses_service_role": true
+  },
+  "supabase/functions/scim/index.ts": {
+   "path": "supabase/functions/scim/index.ts",
+   "lines": 285,
+   "tables": [
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "organization_members",
+     "op": "select"
+    },
+    {
+     "table": "organization_members",
+     "op": "insert,select"
+    },
+    {
+     "table": "organization_members",
+     "op": "select,update"
+    },
+    {
+     "table": "organization_members",
+     "op": "update"
+    }
+   ],
+   "table_cols": {
+    "organization_members": [
+     "organization_id",
+     "user_id"
+    ]
+   },
+   "rpc": [
+    "verify_scim_token"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "params": [
+    {
+     "name": "SCIM_ERROR_SCHEMA",
+     "value": "\"urn:ietf:params:scim:api:messages:2.0:Error\""
+    },
+    {
+     "name": "SCIM_CONTENT_TYPE",
+     "value": "\"application/scim+json\""
+    }
+   ],
+   "status_values": [
+    {
+     "field": "type",
+     "value": "oauthbearertoken",
+     "kind": "escreve"
+    },
+    {
+     "field": "role",
+     "value": "viewer",
+     "kind": "escreve"
+    }
+   ],
+   "doc": "SCIM 2.0 provisioning endpoint. Base URL: {SUPABASE_URL}/functions/v1/scim/v2 Auth: Authorization: Bearer <scim_token> + X-Org-Id: <org_uuid> Routes: GET /v2/ServiceProviderConfig GET /v2/Users?filter=userName eq \"email\"&startIndex=1&count=100",
    "uses_service_role": true
   },
   "supabase/functions/scrape-queue-worker/index.ts": {
@@ -99335,13 +100192,38 @@
     "locked_until = now() + interval '300 seconds',"
    ],
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124040000_scim_provisioning.sql": {
+   "path": "supabase/migrations/20261124040000_scim_provisioning.sql",
+   "lines": 114,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "6e486a4ca689f28f86e9d6a1e0b050d25434daee",
+  "sha": "90d7ac8865233297aa70b0ae0e213900901a5322",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "90d7ac8",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "src/components/lux/SettingsView.tsx",
+     "src/components/lux/settings/HubSpotPanel.tsx",
+     "src/components/lux/settings/ScimPanel.tsx",
+     "src/integrations/supabase/types.ts",
+     "supabase/config.toml",
+     "supabase/functions/_shared/__tests__/scim-core.test.ts",
+     "supabase/functions/_shared/scim-core.ts",
+     "supabase/functions/hubspot-sync/index.ts",
+     "supabase/functions/scim/index.ts",
+     "supabase/migrations/20261124040000_scim_provisioning.sql",
+     "vitest.config.ts"
+    ]
+   },
    {
     "sha": "6e486a4",
     "date": "2026-11-23",
@@ -99726,29 +100608,19 @@
      "src/components/lux/integrations/DeliverabilityCheckDialog.tsx",
      "src/components/lux/integrations/EmailAccountsPanel.tsx"
     ]
-   },
-   {
-    "sha": "bccf303",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)",
-    "files": [
-     "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
-     "src/pages/Monitoring.tsx"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    8
+    9
    ],
    [
     "src/integrations/supabase/types.ts",
-    4
+    5
    ],
    [
-    "src/pages/Monitoring.tsx",
+    "src/components/lux/SettingsView.tsx",
     3
    ],
    [
@@ -99757,10 +100629,6 @@
    ],
    [
     "scripts/sql/security-definer-allowlist.txt",
-    2
-   ],
-   [
-    "src/components/lux/SettingsView.tsx",
     2
    ],
    [
@@ -99777,6 +100645,10 @@
    ],
    [
     "src/components/lux/AnalyticsView.tsx",
+    2
+   ],
+   [
+    "src/pages/Monitoring.tsx",
     2
    ],
    [

@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 247,
+ "migrations": 248,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -147,7 +147,9 @@
   "finish_workflow_run",
   "fn_web_scrape_regression_check",
   "fulfill_dsar_request",
+  "generate_scim_token",
   "get_dashboard_stats",
+  "get_hubspot_api_key",
   "get_my_ip_status",
   "get_public_status",
   "get_public_uptime",
@@ -246,6 +248,7 @@
   "validate_dlq_alert_settings",
   "validate_ipc_score",
   "verify_api_key",
+  "verify_scim_token",
   "web_dlq_health_metrics",
   "worker_report_batch",
   "worker_should_run"
@@ -5941,6 +5944,7 @@
     "_shared",
     "admin-list-companies",
     "ai-agent",
+    "hubspot-sync",
     "mcp",
     "oracle-search-decisors",
     "rls-tests",
@@ -12228,6 +12232,101 @@
    "sem_rls": false,
    "nao_usada": true
   },
+  "org_integrations": {
+   "colunas": {
+    "config": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "last_synced_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "provider": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "admins can manage integrations",
+     "comando": "all",
+     "para": "authenticated",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261124040000_scim_provisioning.sql",
+   "colunas_types": {
+    "config": "Json",
+    "created_at": "string",
+    "enabled": "boolean",
+    "id": "string",
+    "last_synced_at": "string | null",
+    "organization_id": "string",
+    "provider": "string",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [
+    "hubspot-sync"
+   ],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "org_proxies": {
    "colunas": {
     "created_at": {
@@ -12915,6 +13014,20 @@
      "default": "'viewer'",
      "ref": null
     },
+    "scim_active": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "scim_external_id": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "user_id": {
      "tipo": "uuid",
      "nn": true,
@@ -12962,6 +13075,11 @@
      "unico": false
     },
     {
+     "nome": "idx_org_members_scim_id",
+     "colunas": "organization_id, scim_external_id",
+     "unico": true
+    },
+    {
      "nome": "idx_org_members_user",
      "colunas": "user_id",
      "unico": false
@@ -12976,6 +13094,8 @@
     "id": "string",
     "organization_id": "string",
     "role": "Database[\"public\"][\"Enums\"][\"app_role\"]",
+    "scim_active": "boolean",
+    "scim_external_id": "string | null",
     "user_id": "string"
    },
    "drift": {
@@ -12990,6 +13110,7 @@
     "admin-list-companies",
     "conversation-intel",
     "dlq-alerts",
+    "hubspot-sync",
     "instagram-dlq-replay",
     "instagram-enqueue",
     "latency-alerts",
@@ -12997,6 +13118,7 @@
     "lusha-decision-makers",
     "org-violation-alerts",
     "rls-tests",
+    "scim",
     "sla-auto-tune",
     "technographics-detect",
     "web-dlq-replay",
@@ -13053,6 +13175,13 @@
      "default": null,
      "ref": null
     },
+    "scim_token_hash": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "slug": {
      "tipo": "text",
      "nn": true,
@@ -13105,6 +13234,7 @@
     "last_known_ip": "string | null",
     "name": "string",
     "owner_id": "string",
+    "scim_token_hash": "string | null",
     "slug": "string",
     "updated_at": "string"
    },
@@ -13112,7 +13242,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 2,
+   "usada_no_front": 3,
    "usada_em_edges": [
     "health",
     "rls-tests"
@@ -19512,6 +19642,11 @@
    "usada_em": 1
   },
   {
+   "nome": "generate_scim_token",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "get_dashboard_stats",
    "definida": true,
    "usada_em": 3
@@ -19748,6 +19883,11 @@
   },
   {
    "nome": "verify_api_key",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "verify_scim_token",
    "definida": true,
    "usada_em": 1
   },

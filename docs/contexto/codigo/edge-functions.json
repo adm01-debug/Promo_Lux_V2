@@ -2,15 +2,17 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 63,
+ "total": 65,
  "verify_jwt_false": [
   "admin-list-companies",
   "email-oauth-callback",
+  "hubspot-sync",
   "mcp",
   "mcp-query",
   "migrate-helper",
   "public-api",
   "qa-ingest-run",
+  "scim",
   "send-scheduled-reports",
   "track-click",
   "track-open"
@@ -37,6 +39,7 @@
   "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts",
   "supabase/functions/_shared/__tests__/phone-br.test.ts",
   "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+  "supabase/functions/_shared/__tests__/scim-core.test.ts",
   "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
   "supabase/functions/_shared/__tests__/tracking-links.test.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
@@ -76,6 +79,7 @@
   "supabase/functions/_shared/rlsTableRegistry.ts",
   "supabase/functions/_shared/safe-update.ts",
   "supabase/functions/_shared/schemas.ts",
+  "supabase/functions/_shared/scim-core.ts",
   "supabase/functions/_shared/ssrf-guard.ts",
   "supabase/functions/_shared/tracing.ts",
   "supabase/functions/_shared/tracking-links.ts",
@@ -865,6 +869,41 @@
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
    "orfa": true,
+   "testes": 0
+  },
+  {
+   "nome": "hubspot-sync",
+   "entrada": "supabase/functions/hubspot-sync/index.ts",
+   "arquivos": 1,
+   "linhas": 204,
+   "verify_jwt": false,
+   "metodos": [
+    "OPTIONS"
+   ],
+   "tabelas": [
+    "companies",
+    "org_integrations",
+    "organization_members"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "api.hubapi.com"
+   ],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/components/lux/settings/HubSpotPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
    "testes": 0
   },
   {
@@ -1819,6 +1858,46 @@
    "chamada_por_sql_ou_cron": false,
    "orfa": false,
    "testes": 1
+  },
+  {
+   "nome": "scim",
+   "entrada": "supabase/functions/scim/index.ts",
+   "arquivos": 1,
+   "linhas": 285,
+   "verify_jwt": false,
+   "metodos": [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT"
+   ],
+   "tabelas": [
+    "organization_members"
+   ],
+   "rpcs": [
+    "verify_scim_token"
+   ],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [
+    "datatracker.ietf.org"
+   ],
+   "usa_shared": [
+    "scim-core.ts"
+   ],
+   "chamada_pelo_front": [
+    "src/components/lux/settings/ScimPanel.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
   },
   {
    "nome": "scrape-queue-worker",

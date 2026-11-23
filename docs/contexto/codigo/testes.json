@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 127,
+ "total": 128,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 105
+  "unit": 106
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 82
+   "arquivos": 83
   },
   {
    "padrao": "e2e/",
@@ -1112,6 +1112,15 @@
    "casos": 7
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/scim-core.test.ts",
+   "tipo": "unit",
+   "linhas": 95,
+   "testa": [
+    "supabase/functions/_shared/scim-core.ts"
+   ],
+   "casos": 10
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
    "tipo": "unit",
    "linhas": 151,
@@ -1290,6 +1299,7 @@
   "supabase/functions/_shared/omkar-gmaps-config.ts": 1,
   "supabase/functions/_shared/phone-br.ts": 1,
   "supabase/functions/_shared/places-fallback.ts": 1,
+  "supabase/functions/_shared/scim-core.ts": 1,
   "supabase/functions/_shared/ssrf-guard.ts": 1,
   "supabase/functions/_shared/tracking-links.ts": 1,
   "supabase/functions/_shared/tracking-signature.ts": 1,
@@ -1418,6 +1428,7 @@
    "gmaps-places-search",
    "gmaps-proxy",
    "health",
+   "hubspot-sync",
    "instagram-connection-status",
    "instagram-enqueue",
    "instagram-worker",
@@ -1442,6 +1453,7 @@
    "qa-ingest-run",
    "reaper-alerts",
    "retry-policy-tuner",
+   "scim",
    "scrape-queue-worker",
    "send-scheduled-reports",
    "sla-alerts",

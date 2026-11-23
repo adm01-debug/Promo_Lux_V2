@@ -7,7 +7,7 @@
    "src/pages (11)"
   ],
   "componentes": [
-   "src/components (247)",
+   "src/components (249)",
    "src/pages (11)",
    "src/contexts (3)"
   ],
@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (82)",
+   "co-localizado (__tests__) (83)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -42,12 +42,12 @@
   "componentes": "PascalCase (82%)",
   "hooks": "use + PascalCase",
   "servicos": "camelCase (81%)",
-  "edge_functions": "kebab-case (97%)",
+  "edge_functions": "kebab-case (95%)",
   "tabelas": "snake_case (91%)"
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (264)"
+  ".tsx (266)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)",
    "feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)",
    "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)",
    "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)",
-   "feat: liga a UI de configuracao dos alertas de disjuntor (#153)",
-   "fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)"
+   "feat: liga a UI de configuracao dos alertas de disjuntor (#153)"
   ]
  },
  "pr_template": null,

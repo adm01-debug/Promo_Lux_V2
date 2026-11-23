@@ -3,8 +3,8 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (676)",
-   "SQL (251)",
+   "TypeScript (682)",
+   "SQL (252)",
    "Markdown (87)",
    "JSON (38)",
    "JavaScript (23)",
@@ -503,7 +503,7 @@
   {
    "arquivo": "docs/GAPS-ENTERPRISE.md",
    "titulo": "LUX IA — Gaps Enterprise",
-   "linhas": 430
+   "linhas": 433
   },
   {
    "arquivo": "docs/LGPD.md",
@@ -874,6 +874,10 @@
     "arquivos": 1
    },
    {
+    "host": "api.hubapi.com",
+    "arquivos": 1
+   },
+   {
     "host": "api.leadcontact.ai",
     "arquivos": 1
    },
@@ -927,6 +931,10 @@
    },
    {
     "host": "datapulse.io",
+    "arquivos": 1
+   },
+   {
+    "host": "datatracker.ietf.org",
     "arquivos": 1
    },
    {
@@ -1070,6 +1078,10 @@
     "arquivos": 1
    },
    {
+    "host": "proj.supabase.co",
+    "arquivos": 1
+   },
+   {
     "host": "promobrindes.bitrix24.com.br",
     "arquivos": 1
    },
@@ -1149,11 +1161,13 @@
   "webhooks_recebidos": [
    "admin-list-companies",
    "email-oauth-callback",
+   "hubspot-sync",
    "mcp",
    "mcp-query",
    "migrate-helper",
    "public-api",
    "qa-ingest-run",
+   "scim",
    "send-scheduled-reports",
    "track-click",
    "track-open"
@@ -1173,12 +1187,12 @@
  "permissoes": {
   "papeis_no_codigo": [
    {
-    "papel": "alert",
+    "papel": "admin",
     "ocorrencias": 11
    },
    {
-    "papel": "admin",
-    "ocorrencias": 10
+    "papel": "alert",
+    "ocorrencias": 11
    },
    {
     "papel": "status",
@@ -1206,6 +1220,10 @@
    },
    {
     "papel": "main",
+    "ocorrencias": 3
+   },
+   {
+    "papel": "viewer",
     "ocorrencias": 3
    },
    {
@@ -1266,10 +1284,6 @@
    },
    {
     "papel": "separator",
-    "ocorrencias": 1
-   },
-   {
-    "papel": "viewer",
     "ocorrencias": 1
    }
   ],

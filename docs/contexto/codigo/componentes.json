@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 264,
+ "total": 266,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -2956,6 +2956,26 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/settings/HubSpotPanel.tsx",
+   "exports": [
+    "HubSpotPanel"
+   ],
+   "export_default": null,
+   "linhas": 159,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useActiveOrganization"
+   ],
+   "tabelas": [
+    "org_integrations"
+   ],
+   "edges": [
+    "hubspot-sync"
+   ],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/settings/IpAllowlistPanel.tsx",
    "exports": [
     "IpAllowlistPanel"
@@ -3068,6 +3088,26 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/settings/ScimPanel.tsx",
+   "exports": [
+    "ScimPanel"
+   ],
+   "export_default": null,
+   "linhas": 167,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useActiveOrganization"
+   ],
+   "tabelas": [
+    "organizations"
+   ],
+   "edges": [
+    "scim"
+   ],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/settings/WarmupPanel.tsx",
    "exports": [
     "WarmupPanel"
@@ -3089,7 +3129,7 @@
     "SettingsView"
    ],
    "export_default": null,
-   "linhas": 400,
+   "linhas": 408,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -3430,7 +3470,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 113,
+   "usado_por": 115,
    "orfao": false
   },
   {
@@ -3465,7 +3505,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 134,
+   "usado_por": 136,
    "orfao": false
   },
   {
@@ -3744,7 +3784,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 63,
+   "usado_por": 64,
    "orfao": false
   },
   {

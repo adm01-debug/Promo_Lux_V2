@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6e486a4ca689f28f86e9d6a1e0b050d25434daee",
+  "commit": "90d7ac8865233297aa70b0ae0e213900901a5322",
   "branch": "main",
-  "data_commit": "2026-11-23T18:26:37-03:00",
+  "data_commit": "2026-11-23T18:31:02-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "90d7ac8",
+    "data": "2026-11-23",
+    "assunto": "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)"
+   },
    {
     "sha": "6e486a4",
     "data": "2026-11-23",
@@ -126,22 +131,17 @@
     "sha": "5f42ddf",
     "data": "2026-11-22",
     "assunto": "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)"
-   },
-   {
-    "sha": "63a6f3f",
-    "data": "2026-11-22",
-    "assunto": "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)"
    }
   ],
-  "arquivos_mudados_7d": 231,
+  "arquivos_mudados_7d": 238,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 61
+    "mudancas": 64
    },
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 24
+    "mudancas": 26
    },
    {
     "pasta": "package-lock.json",
@@ -153,7 +153,11 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 13
+    "mudancas": 14
+   },
+   {
+    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 9
    },
    {
     "pasta": ".gitignore",
@@ -164,11 +168,11 @@
     "mudancas": 8
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 8
+    "pasta": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
+    "pasta": "supabase/config.toml",
     "mudancas": 6
    },
    {
@@ -181,10 +185,6 @@
    },
    {
     "pasta": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "pasta": "supabase/config.toml",
     "mudancas": 5
    },
    {
@@ -206,23 +206,23 @@
     "mudancas": 16
    },
    {
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 9
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 8
    },
    {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
-   },
-   {
     "arquivo": "src/integrations/supabase/types.ts",
-    "mudancas": 6
+    "mudancas": 7
    },
    {
     "arquivo": "supabase/config.toml",
+    "mudancas": 7
+   },
+   {
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 117
+    "commits": 118
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1121,
-  "arquivos_codigo": 703,
-  "linhas_codigo": 122749,
+  "arquivos_total": 1128,
+  "arquivos_codigo": 709,
+  "linhas_codigo": 123808,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 264,
+  "componentes": 266,
   "hooks": 97,
-  "edge_functions": 63,
-  "tabelas": 118,
-  "migrations": 247,
+  "edge_functions": 65,
+  "tabelas": 119,
+  "migrations": 248,
   "cron_jobs": 39,
-  "testes": 127,
+  "testes": 128,
   "workflows": 9,
   "scripts": 51,
   "docs_md": 87
@@ -555,8 +555,8 @@
    "linhas": 339
   },
   "src/components": {
-   "arquivos": 305,
-   "linhas": 50280
+   "arquivos": 307,
+   "linhas": 50614
   },
   "src/contexts": {
    "arquivos": 7,
@@ -568,7 +568,7 @@
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 8899
+   "linhas": 8957
   },
   "src/lib": {
    "arquivos": 53,
@@ -591,8 +591,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 134,
-   "linhas": 24218
+   "arquivos": 138,
+   "linhas": 24884
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -604,13 +604,13 @@
   },
   "vitest.config.ts": {
    "arquivos": 1,
-   "linhas": 72
+   "linhas": 73
   }
  },
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7515
+   "linhas": 7573
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",

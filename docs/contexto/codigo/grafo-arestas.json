@@ -590,12 +590,14 @@
    "src/components/lux/settings/ActiveSessionsPanel.tsx",
    "src/components/lux/settings/AuditLogExportPanel.tsx",
    "src/components/lux/settings/DsarPanel.tsx",
+   "src/components/lux/settings/HubSpotPanel.tsx",
    "src/components/lux/settings/IpAllowlistPanel.tsx",
    "src/components/lux/settings/MFASetup.tsx",
    "src/components/lux/settings/NextBestActionPanel.tsx",
    "src/components/lux/settings/PiiMaskingPanel.tsx",
    "src/components/lux/settings/RLSRegistryCoverage.tsx",
    "src/components/lux/settings/RLSVerificationPanel.tsx",
+   "src/components/lux/settings/ScimPanel.tsx",
    "src/components/lux/settings/WarmupPanel.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -1614,6 +1616,14 @@
    "src/components/ui/select.tsx",
    "src/hooks/useDsar.ts"
   ],
+  "src/components/lux/settings/HubSpotPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
+  ],
   "src/components/lux/settings/IpAllowlistPanel.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -1672,6 +1682,13 @@
    "src/hooks/use-toast.ts",
    "src/integrations/supabase/client.ts",
    "src/lib/exportRLSReport.ts"
+  ],
+  "src/components/lux/settings/ScimPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts",
+   "src/lib/utils.ts"
   ],
   "src/components/lux/settings/WarmupPanel.tsx": [
    "src/components/ui/badge.tsx",
@@ -2524,6 +2541,9 @@
    "supabase/functions/_shared/schemas.ts",
    "supabase/functions/_shared/tracing.ts"
   ],
+  "supabase/functions/hubspot-sync/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/instagram-connection-status/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],
@@ -2593,6 +2613,9 @@
   ],
   "supabase/functions/rls-tests/index.ts": [
    "supabase/functions/_shared/rlsTableRegistry.ts"
+  ],
+  "supabase/functions/scim/index.ts": [
+   "supabase/functions/_shared/scim-core.ts"
   ],
   "supabase/functions/scrape-queue-worker/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",

@@ -107,11 +107,13 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 22,
+   "usado_por": 24,
    "usado_por_arquivos": [
     "src/components/lux/analytics/GoalsTab.tsx",
     "src/components/lux/analytics/useAnalyticsData.ts",
     "src/components/lux/monitoring/DLQReplayPanel.tsx",
+    "src/components/lux/settings/HubSpotPanel.tsx",
+    "src/components/lux/settings/ScimPanel.tsx",
     "src/contexts/ActiveOrgContext.tsx",
     "src/hooks/useAuditLogExport.ts",
     "src/hooks/useDlqItems.ts",

@@ -297,6 +297,7 @@
     "lusha_search_sessions",
     "notifications",
     "oauth_sandbox_snapshots",
+    "org_integrations",
     "org_leaderboard",
     "org_violation_alert_settings",
     "org_violation_alerts",
@@ -343,6 +344,7 @@
     "export_audit_logs",
     "export_subject_data",
     "fulfill_dsar_request",
+    "generate_scim_token",
     "get_dashboard_stats",
     "get_my_ip_status",
     "get_survey_by_token",
@@ -375,6 +377,7 @@
     "email-poll-replies",
     "email-verify",
     "gmaps-proxy",
+    "hubspot-sync",
     "lead-score-ai",
     "lusha-cookie-health",
     "lusha-decision-makers",
@@ -386,6 +389,7 @@
     "org-violation-alerts",
     "public-api",
     "rls-tests",
+    "scim",
     "technographics-detect",
     "webhook-dispatcher",
     "workflow-engine"
@@ -424,7 +428,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 271
+   "arquivos_puxados": 273
   },
   {
    "protegida": true,
@@ -1726,6 +1730,7 @@
     "lusha_search_sessions",
     "notifications",
     "oauth_sandbox_snapshots",
+    "org_integrations",
     "org_leaderboard",
     "org_violation_alert_settings",
     "org_violation_alerts",
@@ -1772,6 +1777,7 @@
     "export_audit_logs",
     "export_subject_data",
     "fulfill_dsar_request",
+    "generate_scim_token",
     "get_dashboard_stats",
     "get_my_ip_status",
     "get_survey_by_token",
@@ -1804,6 +1810,7 @@
     "email-poll-replies",
     "email-verify",
     "gmaps-proxy",
+    "hubspot-sync",
     "lead-score-ai",
     "lusha-cookie-health",
     "lusha-decision-makers",
@@ -1815,6 +1822,7 @@
     "org-violation-alerts",
     "public-api",
     "rls-tests",
+    "scim",
     "technographics-detect",
     "webhook-dispatcher",
     "workflow-engine"
@@ -1844,7 +1852,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 233
+   "arquivos_puxados": 235
   },
   {
    "id": "deals",
@@ -2668,6 +2676,7 @@
    "tabelas": [
     "audit_logs",
     "ip_allowlist",
+    "org_integrations",
     "organization_invites",
     "organization_members",
     "organizations",
@@ -2685,6 +2694,7 @@
     "export_audit_logs",
     "export_subject_data",
     "fulfill_dsar_request",
+    "generate_scim_token",
     "get_my_ip_status",
     "list_dsar_requests",
     "list_my_sessions",
@@ -2700,7 +2710,9 @@
     "touch_last_known_ip"
    ],
    "edges": [
-    "rls-tests"
+    "hubspot-sync",
+    "rls-tests",
+    "scim"
    ],
    "canais_realtime": [],
    "flags": [],
@@ -2709,7 +2721,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 46
+   "arquivos_puxados": 48
   },
   {
    "id": "stakeholders",

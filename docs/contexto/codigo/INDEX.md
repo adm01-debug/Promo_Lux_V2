@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6e486a4ca689f28f86e9d6a1e0b050d25434daee` (2026-11-23T18:26:37-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `90d7ac8865233297aa70b0ae0e213900901a5322` (2026-11-23T18:31:02-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (676), SQL (251), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (682), SQL (252), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,49 +34,49 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1121 |
-| arquivos_codigo | 703 |
-| linhas_codigo | 122749 |
+| arquivos_total | 1128 |
+| arquivos_codigo | 709 |
+| linhas_codigo | 123808 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
 | itens_menu | 26 |
 | modulos | 22 |
-| componentes | 264 |
+| componentes | 266 |
 | hooks | 97 |
-| edge_functions | 63 |
-| tabelas | 118 |
-| migrations | 247 |
+| edge_functions | 65 |
+| tabelas | 119 |
+| migrations | 248 |
 | cron_jobs | 39 |
-| testes | 127 |
+| testes | 128 |
 | workflows | 9 |
 | scripts | 51 |
 | docs_md | 87 |
 
 ## Onde ficam as coisas
 - telas: src/components (23), src/pages (11)
-- componentes: src/components (247), src/pages (11), src/contexts (3)
+- componentes: src/components (249), src/pages (11), src/contexts (3)
 - hooks: src/hooks (90), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (38), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (82), e2e/ (19), co-localizado (*.test) (16)
+- testes: co-localizado (__tests__) (83), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/sql (3)
 - docs: docs (21), (raiz) (5)
-- nomenclatura: {"componentes":"PascalCase (82%)","hooks":"use + PascalCase","servicos":"camelCase (81%)","edge_functions":"kebab-case (97%)","tabelas":"snake_case (91%)"}
+- nomenclatura: {"componentes":"PascalCase (82%)","hooks":"use + PascalCase","servicos":"camelCase (81%)","edge_functions":"kebab-case (95%)","tabelas":"snake_case (91%)"}
 - instruções para agentes no repo: AGENTS.md, CLAUDE.md
 
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components/lux | 26 | 23 | 216 | 153 | 30 | 92 |
+| components/lux | 26 | 23 | 218 | 153 | 32 | 93 |
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
-| hooks | 0 | 0 | 91 | 157 | 26 | 82 |
-| lib | 0 | 0 | 16 | 91 | 25 | 62 |
+| hooks | 0 | 0 | 91 | 157 | 28 | 83 |
+| lib | 0 | 0 | 16 | 91 | 27 | 63 |
 | lib/mcp | 0 | 0 | 7 | 0 | 0 | 3 |
 | lib/resilience | 0 | 0 | 5 | 0 | 0 | 0 |
-| pages | 0 | 11 | 11 | 162 | 32 | 93 |
+| pages | 0 | 11 | 11 | 162 | 34 | 94 |
 
 ## Rotas (url → arquivo)
 - `/` [tela] → src/pages/Index.tsx (protegida)
@@ -142,6 +142,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `gmaps-places-search` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `gmaps-proxy` — tabelas: idempotency_keys, ipc_config, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front, por SQL/cron
 - `health` — tabelas: health_checks, organizations; chamada por 0 arquivo(s) do front — **ÓRFÃ**
+- `hubspot-sync` (verify_jwt=false) — tabelas: companies, org_integrations, organization_members; chamada por 1 arquivo(s) do front
 - `instagram-connection-status` — tabelas: -; chamada por 1 arquivo(s) do front
 - `instagram-dlq-replay` — tabelas: organization_members; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `instagram-enqueue` — tabelas: instagram_scrape_queue, organization_members; chamada por 1 arquivo(s) do front
@@ -168,6 +169,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `reaper-alerts` — tabelas: notifications, qa_reaper_runs, reaper_alert_history, reaper_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
 - `retry-policy-tuner` — tabelas: automation_execution_logs, retry_policy_advisories, web_scrape_queue; chamada por 0 arquivo(s) do front, por SQL/cron
 - `rls-tests` — tabelas: audit_logs, companies, organization_members, organizations, profiles, workflows; chamada por 1 arquivo(s) do front
+- `scim` (verify_jwt=false) — tabelas: organization_members; chamada por 1 arquivo(s) do front
 - `scrape-queue-worker` — tabelas: feature_flags, scrape_jobs; chamada por 0 arquivo(s) do front, por SQL/cron
 - `send-scheduled-reports` (verify_jwt=false) — tabelas: campaign_events, companies, deals, email_accounts, scheduled_report_runs, scheduled_reports; chamada por 0 arquivo(s) do front, por SQL/cron
 - `sla-alerts` — tabelas: notifications, sla_alert_history, sla_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
@@ -229,11 +231,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
 - hosts mais citados: lux-ai-company-finder.lovable.app, promo-lux-v2.vercel.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, ai.gateway.lovable.dev, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, www.linkedin.com, connector-gateway.lovable.dev
-- webhooks recebidos: admin-list-companies, email-oauth-callback, mcp, mcp-query, migrate-helper, public-api, qa-ingest-run, send-scheduled-reports, track-click, track-open
+- webhooks recebidos: admin-list-companies, email-oauth-callback, hubspot-sync, mcp, mcp-query, migrate-helper, public-api, qa-ingest-run, scim, send-scheduled-reports, track-click, track-open
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
 ## Permissões / papéis
-- papéis no código: alert (11), admin (10), status (10), user (6), button (4), dialog (4), system (4), group (3), main (3), CTO (2), navigation (2), presentation (2), region (2), CEO (1), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1), viewer (1)
+- papéis no código: admin (11), alert (11), status (10), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CTO (2), navigation (2), presentation (2), region (2), CEO (1), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1)
 - enums de papel: app_role: admin|moderator|sdr|viewer
 - guards: nenhum · rotas protegidas: 5 · públicas: /*, /invite/:token, /login, /reset-password, /status, /survey/:token
 - feature flags: oracle_v2
@@ -256,19 +258,19 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7701 nós · 16399 arestas · 653 comunidades · grafo do commit `6e486a4c`
-- comunidades maiores: lucide-react (189), cn (153), button.tsx (153), react (137), snapshot.py (108), @tanstack/react-query (93), gerar.mjs (80), client.ts (73), lushaMocks.ts (69), withOrg.ts (65), dependencies (65), ref_https (65)
-- símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
+- 7736 nós · 16493 arestas · 635 comunidades · grafo do commit `90d7ac88`
+- comunidades maiores: react (171), cn (164), card.tsx (137), hooks/use-toast.ts (113), @tanstack/react-query (113), snapshot.py (108), LushaIntelligenceView.tsx (94), useActiveOrganization (85), withOrg.ts (85), DashboardView.tsx (82), gerar.mjs (80), badge.tsx (79)
+- símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (17)
 - package.json (16)
+- docs/GAPS-ENTERPRISE.md (9)
 - AGENTS.md (8)
-- docs/GAPS-ENTERPRISE.md (8)
+- src/integrations/supabase/types.ts (7)
+- supabase/config.toml (7)
 - .github/workflows/edge-tests-daily.yml (6)
-- src/integrations/supabase/types.ts (6)
-- supabase/config.toml (6)
 - supabase/functions/gmaps-proxy/index.ts (6)
 - .github/workflows/db-migrations.yml (5)
 - docs/ESTADO_ATUAL.md (5)
@@ -356,7 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/AUTOMACAO_LOCAL.md` — Automação local — Promo_Lux_V2 (111 linhas)
 - `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (181 linhas)
 - `docs/FUNCIONALIDADES.md` — LUX IA — Análise Executiva de Funcionalidades (455 linhas)
-- `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (430 linhas)
+- `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (433 linhas)
 - `docs/LGPD.md` — 🛡️ Relatório de Conformidade LGPD — LUX IA (45 linhas)
 - `docs/LUSHA-INTEGRATION.md` — Lusha Intelligence — Integração LUX (181 linhas)
 - `docs/ORACLE_V2.md` — Oracle v2 — Runbook (123 linhas)
@@ -373,6 +375,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-23 `90d7ac8` feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)
 - 2026-11-23 `6e486a4` feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)
 - 2026-11-23 `825b08c` fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)
 - 2026-11-23 `f5416a9` feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)
@@ -387,7 +390,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `6cf80c9` chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)
 - 2026-11-22 `9b85ca6` docs: registra gap dos steps de workflow serem decorativos (#157)
 - 2026-11-22 `336b228` feat: aplica PermissionGate em deals e integracoes (#154)
-- 2026-11-22 `9fdb455` fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
