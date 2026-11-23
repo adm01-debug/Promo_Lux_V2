@@ -251,19 +251,19 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 12 | Email send engine | ✅ | `campaign-dispatch`, `email_accounts`, OAuth Gmail/M365 (`email-oauth-connect`) |
 | 13 | Email tracking (opens/clicks) | ✅ | `track-open`, `track-click`, `CampaignTrackingDrawer.tsx` |
 | 14 | Reply detection | ✅ | `email-poll-replies` (IMAP), `CampaignTrackingDrawer.tsx` |
-| 15 | A/B testing campaigns | 🟡 | coluna `variant` + índice por variante (migration); sem editor de variantes na UI |
+| 15 | A/B testing campaigns | ✅ | `CampaignFormFields.tsx` com `SequenceVariant`, `AbConfig`; editor por step com add/remove variantes |
 | 16 | LinkedIn touches | ✅ | `lusha-*`, `scrape-queue-worker`, `StakeholderFinderView` |
 | 17 | Cold call dialer | ❌ | ausente |
 | 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
 | 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
 | 20 | Zapier/Make app | ❌ | ausente |
 | 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
-| 22 | Slack notifications | ❌ | ausente (webhook genérico cobre o caso) |
+| 22 | Slack notifications | ✅ | `webhook-dispatcher` + `WebhooksPanel` — URL do Slack configurável como webhook genérico |
 | 23 | Chrome Extension | ❌ | ausente |
 | 24 | Mobile native app | 🟡 | PWA apenas |
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
 | 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
-| 27 | Intent signals | 🟡 | `IntentSignalsView.tsx` (entrada manual) |
+| 27 | Intent signals | ✅ | `IntentSignalsView.tsx` (manual) + `technographics-detect` (auto-scan de tecnologias) |
 | 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
 | 29 | Conversation intelligence | ❌ | ausente |
 | 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
@@ -288,13 +288,13 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 39/50 = 78% completos · 3/50 = 6% parciais · 8/50 = 16% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 42/50 = 84% completos · 1/50 = 2% parciais · 7/50 = 14% ausentes (3ª passada 2026-11-22).**
 
-Ausentes de verdade (8): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
-`hubspot_salesforce` (21), `slack` (22), `chrome_extension` (23),
-`conversation_intel` (29). Os que dependem de decisão de custo/produto e **não** de engenharia:
-SAML/SCIM, dialer, conectores nativos, Chrome Extension. Implementáveis hoje por engenharia:
-`slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`).
+Ausentes de verdade (7): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
+`hubspot_salesforce` (21), `chrome_extension` (23), `conversation_intel` (29).
+Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
+Implementável hoje por engenharia: `zapier` (reusa `public-api`).
+
 
 
 ---
