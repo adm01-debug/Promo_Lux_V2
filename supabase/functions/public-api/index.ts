@@ -9,6 +9,7 @@
 //   GET    /deals
 //   POST   /deals                (write scope)
 //   GET    /stakeholders
+//   GET    /events?limit=&after=&table=&action=  (Zapier polling trigger)
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { parseRateLimitDecision, retryAfterSeconds } from "../_shared/api-rate-limit.ts";
@@ -170,7 +171,7 @@ Deno.serve(async (req) => {
     const [resource, id] = segs;
     logCtx.resource = resource ?? null;
 
-    if (!resource) return await respond({ error: "Resource required (me|companies|deals|stakeholders)" }, 400);
+    if (!resource) return await respond({ error: "Resource required (me|companies|deals|stakeholders|events)" }, 400);
 
     // GET /me — return info about the authenticated API key
     if (resource === "me") {
@@ -195,6 +196,44 @@ Deno.serve(async (req) => {
           organization_id: keyRow.organization_id,
           user_id,
         },
+      });
+    }
+
+    // GET /events — polling trigger para Zapier (audit log paginado)
+    // Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE
+    if (resource === "events") {
+      if (req.method !== "GET") return await respond({ error: "Method not allowed" }, 405);
+      const limit = Math.min(100, parseInt(url.searchParams.get("limit") ?? "25") || 25);
+      const after = url.searchParams.get("after");
+      const filterTable = url.searchParams.get("table");
+      const filterAction = url.searchParams.get("action");
+
+      let q = supabase
+        .from("audit_logs")
+        .select("id, action, table_name, record_id, new_data, metadata, created_at")
+        .eq("user_id", user_id)
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .limit(limit);
+
+      if (after) q = q.lt("id", after);
+      if (filterTable) q = q.eq("table_name", filterTable);
+      if (filterAction) q = q.eq("action", filterAction.toUpperCase());
+
+      const { data: events, error: evErr } = await q;
+      if (evErr) return await respond({ error: evErr.message }, 500);
+
+      return await respond({
+        data: (events ?? []).map((e) => ({
+          id: e.id,
+          action: e.action,
+          table: e.table_name,
+          record_id: e.record_id,
+          payload: e.new_data,
+          metadata: e.metadata,
+          occurred_at: e.created_at,
+        })),
+        next_cursor: events?.length === limit ? events[events.length - 1]?.id : null,
       });
     }
 
