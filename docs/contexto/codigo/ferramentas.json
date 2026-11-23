@@ -85,6 +85,7 @@
    "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
    "patch:mcp-plugin": "node scripts/patch-mcp-plugin.mjs",
+   "postinstall": "node scripts/patch-mcp-plugin.mjs",
    "prebuild": "node scripts/patch-mcp-plugin.mjs",
    "prepare": "husky",
    "preview": "vite preview",

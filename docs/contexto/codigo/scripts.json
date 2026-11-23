@@ -436,6 +436,7 @@
    "npm_scripts": [
     "dev",
     "patch:mcp-plugin",
+    "postinstall",
     "prebuild"
    ],
    "workflows": [],

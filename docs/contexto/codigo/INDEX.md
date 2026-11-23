@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c5a2f4108cc8160ea6dc3423eb9e0983f17a79cd` (2026-11-23T11:16:05-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `076479ddce3fe05f7765d0b8635f12d7e284725e` (2026-11-23T12:04:58-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -248,14 +248,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7636 nós · 16259 arestas · 636 comunidades · grafo do commit `c5a2f410`
-- comunidades maiores: Monitoring.tsx (146), @tanstack/react-query (113), OrganizationsView.tsx (110), cn (108), badge.tsx (100), react (100), JobDetailsSheet.tsx (96), input.tsx (91), gerar.mjs (80), req (78), oracle-search-decisors/index.ts (69), gmaps-proxy/index.ts (68)
+- 7637 nós · 16260 arestas · 641 comunidades · grafo do commit `076479dd`
+- comunidades maiores: Monitoring.tsx (175), button.tsx (165), lucide-react (113), utils.ts (112), hooks/use-toast.ts (105), react (103), cn (84), gerar.mjs (80), lushaMocks.ts (69), req (67), dependencies (65), ref_node_fs (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (17)
-- package.json (15)
+- package.json (16)
 - AGENTS.md (8)
 - docs/GAPS-ENTERPRISE.md (7)
 - .github/workflows/edge-tests-daily.yml (6)
@@ -288,6 +288,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `test:maintenance`: `node --test scripts/maintenance/maintenance.unit.mjs`
 - `dev`: `node scripts/patch-mcp-plugin.mjs && vite`
 - `patch:mcp-plugin`: `node scripts/patch-mcp-plugin.mjs`
+- `postinstall`: `node scripts/patch-mcp-plugin.mjs`
 - `prebuild`: `node scripts/patch-mcp-plugin.mjs`
 - `build`: `vite build && (npm run generate-audit-pdf || echo PDF de auditoria nao gerado, requer bun, build principal ja concluiu)`
 - `generate-audit-pdf`: `bun scripts/generate-audit-pdf.ts`
@@ -364,6 +365,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-23 `076479d` fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)
 - 2026-11-23 `c5a2f41` feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)
 - 2026-11-23 `cf23a12` feat: steps de workflow controlam quais fases do engine executam (#158)
 - 2026-11-23 `0b2a228` feat: exige significancia estatistica para eleger vencedora A/B (#150)
@@ -378,7 +380,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `9e9f963` fix(seguranca): troca token admin vazado por JWT + papel admin (#144)
 - 2026-11-22 `b3ecb1b` fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)
 - 2026-11-22 `fddbb4f` feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)
-- 2026-11-22 `427ec06` fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

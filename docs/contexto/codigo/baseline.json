@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c5a2f4108cc8160ea6dc3423eb9e0983f17a79cd",
+  "commit": "076479ddce3fe05f7765d0b8635f12d7e284725e",
   "branch": "main",
-  "data_commit": "2026-11-23T11:16:05-03:00",
+  "data_commit": "2026-11-23T12:04:58-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "076479d",
+    "data": "2026-11-23",
+    "assunto": "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)"
+   },
    {
     "sha": "c5a2f41",
     "data": "2026-11-23",
@@ -126,11 +131,6 @@
     "sha": "3dd0aea",
     "data": "2026-11-21",
     "assunto": "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)"
-   },
-   {
-    "sha": "cadd1d6",
-    "data": "2026-11-21",
-    "assunto": "chore(infra): guarda que falha quando uma migration do repo nao chegou ao banco (#109)"
    }
   ],
   "arquivos_mudados_7d": 219,
@@ -149,7 +149,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "pasta": "src/integrations/supabase",
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "package.json",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 110
+    "commits": 111
    },
    {
     "autor": "dependabot[bot]",
