@@ -399,6 +399,18 @@ repository(owner:"adm01-debug", name:"Promo_Lux_V2") →
 **Evidência dos scripts (saem com sucesso quando falta `SUPABASE_DB_URL`):** `scripts/check-function-grants.sh:15-19`, `scripts/check-audit-triggers.sh:15-19`, `scripts/check-security-definer.sh:16-19`, `scripts/check-queue-kind-coverage.sh:9-12`, `scripts/check-anon-grants-view.sh:17-21`.
 **Evidência de que o segredo não existe (EXECUTADO, API do GitHub):** o repositório tem 6 segredos de Actions e nenhum é `SUPABASE_DB_URL` (`E2E_TEST_EMAIL`, `E2E_TEST_PASSWORD`, `VITE_ADMIN_LIST_TOKEN`, `VITE_SUPABASE_PROJECT_ID`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_URL`).
 **Evidência de que é obrigatório:** regra ativa na `main` exigindo os checks `quality-gate`, `Security Scan (...)` e `Database Guards (Grants/RLS + Audit Triggers)`.
+**Prova empírica, colhida no CI desta própria auditoria (EXECUTADO):** o job `Database Guards (Grants/RLS + Audit Triggers)` da execução sobre o commit `0c2d567` concluiu com **success** emitindo cinco avisos — e nada mais:
+
+```
+warning | SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de grants/RLS ignorado.
+warning | SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de auditoria ignorado.
+warning | SUPABASE_DB_URL não configurada — guard de SECURITY DEFINER ignorado.
+warning | SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de queue_kind ignorado.
+warning | SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de anon grants ignorado.
+```
+
+Os cinco guardas se declararam **ignorados** e o check obrigatório ficou **verde**. Não é inferência de leitura de código: é o portão da `main` aprovando, hoje, sem ter verificado nada.
+
 **Contradição interna:** `scripts/check-anon-grants-view.sh:9-10` promete por escrito "Em push sem `SUPABASE_DB_URL`: FALHA (obrigatório)" e `:17-21` faz o contrário; a variável `EVENT` lida em `:15` nunca é usada.
 **Impacto no negócio:** uma função exposta a visitante anônimo, um gatilho de auditoria removido ou uma tabela sem regra de acesso chegam a produção com o selo verde de aprovado. É este portão que deveria ter pegado G10-2, G11-1 e G14-1.
 
