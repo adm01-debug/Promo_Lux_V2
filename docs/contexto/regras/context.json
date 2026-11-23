@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "f4bf97706caafe63e790a4cb00ae9774148644dd",
+  "sha": "dc0141246485ba7a9668a9da8f83b5cee21095be",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 15:52 UTC",
+  "generated_at": "2026-11-23 19:22 UTC",
   "files_total": 1132,
   "code_files": 950,
   "code_lines": 140612
@@ -97023,10 +97023,19 @@
   }
  },
  "git": {
-  "sha": "f4bf97706caafe63e790a4cb00ae9774148644dd",
+  "sha": "dc0141246485ba7a9668a9da8f83b5cee21095be",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "dc01412",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)",
+    "files": [
+     ".github/workflows/db-migrations.yml"
+    ]
+   },
    {
     "sha": "f4bf977",
     "date": "2026-11-23",
@@ -97400,15 +97409,6 @@
     "files": [
      "supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql"
     ]
-   },
-   {
-    "sha": "4bfa973",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)",
-    "files": [
-     "docs/ESTADO_ATUAL.md"
-    ]
    }
   ],
   "hot_files": [
@@ -97418,7 +97418,11 @@
    ],
    [
     "docs/ESTADO_ATUAL.md",
-    4
+    3
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    2
    ],
    [
     "package.json",
@@ -97486,10 +97490,6 @@
    ],
    [
     "public/manifest.json",
-    1
-   ],
-   [
-    "src/components/lux/IntentSignalsView.tsx",
     1
    ]
   ]
