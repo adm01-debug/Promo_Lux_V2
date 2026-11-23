@@ -1024,10 +1024,14 @@ export type Database = {
       }
       campaigns: {
         Row: {
+          ab_min_confidence: number
           ab_min_sample: number
           ab_test_enabled: boolean
           ab_winner_decided_at: string | null
+          ab_winner_lift: number | null
           ab_winner_metric: string
+          ab_winner_p_value: number | null
+          ab_winner_reason: string | null
           ab_winner_variant: string | null
           bounced: number
           created_at: string
@@ -1048,10 +1052,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ab_min_confidence?: number
           ab_min_sample?: number
           ab_test_enabled?: boolean
           ab_winner_decided_at?: string | null
+          ab_winner_lift?: number | null
           ab_winner_metric?: string
+          ab_winner_p_value?: number | null
+          ab_winner_reason?: string | null
           ab_winner_variant?: string | null
           bounced?: number
           created_at?: string
@@ -1072,10 +1080,14 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          ab_min_confidence?: number
           ab_min_sample?: number
           ab_test_enabled?: boolean
           ab_winner_decided_at?: string | null
+          ab_winner_lift?: number | null
           ab_winner_metric?: string
+          ab_winner_p_value?: number | null
+          ab_winner_reason?: string | null
           ab_winner_variant?: string | null
           bounced?: number
           created_at?: string
@@ -6320,8 +6332,12 @@ export type Database = {
           bounced: number
           click_rate: number
           clicked: number
+          is_significant: boolean
+          is_winner: boolean
+          lift_pct: number | null
           open_rate: number
           opened: number
+          p_value: number | null
           recipients: number
           replied: number
           reply_rate: number
