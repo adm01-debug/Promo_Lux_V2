@@ -96,7 +96,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | Reply detection | ✅ `email-poll-replies/index.ts` (cron 5 min, Gmail/Outlook) | IMAP/Gmail API para parar sequência ao responder |
 | A/B testing | ✅ `ab_test_enabled`/`ab_winner_variant` (`campaign-dispatch:426-428`) + `CampaignsView.tsx:127` | Multivariado em subject/body/CTA |
 | Send time optimization | Inexistente | ML por timezone e padrão de abertura |
-| Deliverability | ✅ Implementado — function `deliverability-check` (SPF/DKIM/DMARC/MX, grade A+…F) + `DeliverabilityCheckDialog` | SPF/DKIM/DMARC checker, warmup, score |
+| Deliverability | ✅ Implementado — `deliverability-check` (SPF/DKIM/DMARC/MX, grade A+…F) + `DeliverabilityCheckDialog`; warm-up de domínio com teto diário em `warmup_profiles` + RPC `get_warmup_slot` consumida por `campaign-dispatch/index.ts:226` + painel `WarmupPanel` em Settings | ML de reputação preditiva |
 | Multi-canal | Apenas email conceitual | LinkedIn touches, dialer, WhatsApp, SMS |
 | Templates compartilhados | ✅ `email_templates` por organização (`20261122200000`) | Biblioteca por org com versionamento |
 

@@ -119,8 +119,10 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "scrape_jobs",
   "scrape_results",
   "stakeholders",
+  "warmup_profiles",
   "webhook_deliveries",
   "webhooks",
+  "workflow_run_events",
   "workflow_runs",
   "workflows",
 ]);
@@ -186,6 +188,7 @@ export const ORG_UNSCOPED_TABLES = new Set<string>([
   "org_violation_alerts",      // painel de segurança via supabase.from + RLS
   "scrape_dead_letter",        // DLQ: leitura via supabase.from + RPC de replay
   "scrape_queue",              // fila: escrita via RPC, leitura via supabase.from + RLS
+  "campaign_warmup_state",     // contador de aquecimento: leitura via supabase.from + RLS; escrita SO por RPC get/consume_warmup_slot (SECURITY DEFINER)
 ]);
 
 

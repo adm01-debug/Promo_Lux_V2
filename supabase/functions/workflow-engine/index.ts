@@ -173,6 +173,24 @@ serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  // D18: lease da execucao corrente. Setado quando o run e reivindicado; usado
+  // para batimento de lease por passo e para marcar complete/fail exatamente
+  // uma vez, mesmo que uma excecao atravesse o handler.
+  let runLease: { runId: string; workerId: string; step: string | null } | null = null;
+
+  // Beat do lease + registro do passo concluido na trilha de auditoria.
+  const markStep = async (stepName: string) => {
+    if (!runLease) return;
+    runLease.step = stepName;
+    const { error } = await supabase.rpc("complete_workflow_step", {
+      _run_id: runLease.runId,
+      _worker_id: runLease.workerId,
+      _step_name: stepName,
+      _payload: {},
+    });
+    if (error) log.warn("workflow_step_mark_failed", { step: stepName, error: error.message });
+  };
+
   const url = new URL(req.url);
   const actionRaw = url.searchParams.get("action");
 
@@ -342,7 +360,18 @@ serve(async (req) => {
 
       log.info("step_retry_triggered", { step_id, step_name: step.name, job_id: step.job_id });
 
-      return new Response(JSON.stringify({ success: true, message: "Etapa reiniciada" }), {
+      // D18: devolve o run para a fila para que o proximo claim o reassuma.
+      // Antes isto so trocava o status do step e nada reivindicava o trabalho,
+      // entao o "reiniciar etapa" nao reiniciava nada de fato.
+      const { data: requeued, error: requeueError } = await supabase
+        .from("workflow_runs")
+        .update({ status: "queued", locked_by: null, locked_until: null, error_message: null })
+        .eq("id", step.run_id)
+        .in("status", ["failed", "cancelled", "running"])
+        .select("id");
+      if (requeueError) log.warn("step_retry_requeue_failed", { error: requeueError.message });
+
+      return new Response(JSON.stringify({ success: true, message: "Etapa reiniciada", requeued: requeued?.length ?? 0 }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -370,7 +399,62 @@ serve(async (req) => {
         return forbidden(corsHeaders, "Requires sdr or admin role in the workflow organization");
       }
 
-      log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name });
+      // D18: um clique duplo (ou o retry do usuario junto com o run em curso)
+      // nao pode executar scrape/enrich/score duas vezes. O run e criado em
+      // 'pending' e o claim o toma atomicamente com lease: se este worker
+      // morrer, outro (ou o proximo clique apos a expiracao) reassume em vez de
+      // deixar o run travado em "running".
+      const workerId = `${userId}:${crypto.randomUUID()}`;
+
+      const { data: run, error: runError } = await supabase
+        .from("workflow_runs")
+        .insert({ 
+          workflow_id, 
+          user_id: userId, 
+          organization_id: workflow.organization_id,
+          status: "pending", 
+          current_step: "scrape" 
+        })
+        .select()
+        .single();
+      if (runError) {
+        // 23505 = violacao do indice unico parcial uq_workflow_runs_one_active:
+        // já existe uma execução viva deste workflow.
+        if ((runError as { code?: string }).code === "23505") {
+          log.info("workflow_run_contended", { workflow_id });
+          return new Response(
+            JSON.stringify({
+              error: "Já existe uma execução em andamento para este workflow",
+              code: "run_in_progress",
+            }),
+            { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
+        throw runError;
+      }
+
+      const { data: claimed, error: claimError } = await supabase.rpc("claim_workflow_run", {
+        _worker_id: workerId,
+        _lease_seconds: 600,
+        _run_id: run.id,
+      });
+      if (claimError) throw claimError;
+      const claimRow = Array.isArray(claimed) ? claimed[0] : claimed;
+      if (!claimRow) {
+        log.info("workflow_run_claim_skipped", { workflow_id, run_id: run.id });
+        return new Response(
+          JSON.stringify({ error: "Execução não pôde ser reivindicada", code: "run_not_claimable" }),
+          { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+      runLease = { runId: run.id, workerId, step: null };
+
+      await supabase
+        .from("workflow_runs")
+        .update({ status: "running" })
+        .eq("id", run.id);
+
+      log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name, run_id: run.id, attempt: claimRow.attempt });
 
       // Audit Log: Execution started
       await supabase.from("audit_logs").insert({
@@ -382,19 +466,7 @@ serve(async (req) => {
         metadata: { workflow_name: workflow.name }
       });
 
-      // Create run record
-      const { data: run, error: runError } = await supabase
-        .from("workflow_runs")
-        .insert({ 
-          workflow_id, 
-          user_id: userId, 
-          organization_id: workflow.organization_id,
-          status: "running", 
-          current_step: "scrape" 
-        })
-        .select()
-        .single();
-      if (runError) throw runError;
+      // Create run record — feito antes do claim (ver bloco D18 acima).
 
       await supabase
         .from("workflows")
@@ -520,6 +592,8 @@ serve(async (req) => {
 
       // ===== STEP 2: ENRICH =====
       await supabase.from("workflow_runs").update({ current_step: "enrich" }).eq("id", run.id);
+      await markStep("scrape");
+
       let enrichedCount = 0;
       if (!phaseEnabled(workflow.steps, "enrich")) {
         results.enrich = { status: "skipped" };
@@ -641,6 +715,8 @@ serve(async (req) => {
 
       // ===== STEP 3: IPC SCORING =====
       await supabase.from("workflow_runs").update({ current_step: "ipc_score" }).eq("id", run.id);
+      await markStep("enrich");
+
       let scoredCount = 0;
       if (!phaseEnabled(workflow.steps, "ipc_score")) {
         results.ipc_score = { status: "skipped" };
@@ -761,6 +837,15 @@ serve(async (req) => {
         .update({ status: "completed", current_step: null, results, completed_at: new Date().toISOString() })
         .eq("id", run.id);
 
+      await markStep("ipc_score");
+      if (runLease) {
+        const { error: finishError } = await supabase.rpc("finish_workflow_run", {
+          _run_id: runLease.runId,
+          _worker_id: runLease.workerId,
+        });
+        if (finishError) log.warn("workflow_run_finish_failed", { error: finishError.message });
+      }
+
       const duration = Math.round(performance.now() - start);
       log.info("workflow_run_complete", {
         workflow_id, run_id: run.id, duration_ms: duration,
@@ -879,6 +964,22 @@ serve(async (req) => {
   } catch (err) {
     const duration = Math.round(performance.now() - start);
     log.error("request_failed", { error: (err as Error).message, action, duration_ms: duration });
+
+    // D18: sem isso o run fica preso em "running" para sempre quando o handler
+    // estoura (timeout, erro de rede, RPC fora). Marca failed e libera o lease;
+    // fail_workflow_step pode reenfileirar o run se _retry=true e houver folga.
+    if (runLease) {
+      try {
+        const { error: failError } = await supabase.rpc("fail_workflow_step", {
+          _run_id: runLease.runId,
+          _worker_id: runLease.workerId,
+          _step_name: runLease.step ?? "run",
+          _error: (err as Error).message,
+          _retry: false,
+        });
+        if (failError) log.warn("workflow_run_fail_mark_failed", { error: failError.message });
+      } catch (_) { /* best-effort: falha ao marcar o run nao deve mascarar o erro original */ }
+    }
 
     // Try to notify failure
     try {
