@@ -621,8 +621,10 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 0,
-   "usado_por_arquivos": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx"
+   ],
    "coberto_por_testes": 0
   },
   {
@@ -1693,7 +1695,7 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 18,
+   "usado_por": 19,
    "usado_por_arquivos": [
     "src/components/lux/OrgViolationsView.tsx",
     "src/components/lux/OrganizationsView.tsx",
@@ -1701,6 +1703,7 @@
     "src/components/lux/integrations/EmailAccountsAuditPanel.tsx",
     "src/components/lux/lusha/OracleV2Panel.tsx",
     "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+    "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
     "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
     "src/components/lux/monitoring/DlqHealthCard.tsx",
     "src/components/lux/organizations/InviteSection.tsx",

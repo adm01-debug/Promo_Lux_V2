@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `dc01412464` · branch `main` · 2026-11-23 19:22 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b39b3b24fa` · branch `main` · 2026-11-23 20:28 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -482,6 +482,7 @@ Middleware matcher (Next.js): nenhum
 | grant | anon | execute | `get_survey_by_token`, `submit_survey_response` |
 | grant | anon, authenticated | execute | `get_public_status`, `get_public_uptime` |
 | grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +65 |
+| grant | authenticated | insert, update | `circuit_breaker_alert_settings` |
 | grant | authenticated | insert, update, delete | `role_permissions` |
 | grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +32 |
 | grant | authenticated | select, insert | `automation_execution_logs`, `instagram_scrape_results`, `cnpj_enrich_queue` |

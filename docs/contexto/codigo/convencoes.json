@@ -7,7 +7,7 @@
    "src/pages (11)"
   ],
   "componentes": [
-   "src/components (245)",
+   "src/components (246)",
    "src/pages (11)",
    "src/contexts (3)"
   ],
@@ -47,7 +47,7 @@
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (262)"
+  ".tsx (263)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat: liga a UI de configuracao dos alertas de disjuntor (#153)",
    "fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)",
    "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)",
    "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)",
-   "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)",
-   "feat: steps de workflow controlam quais fases do engine executam (#158)"
+   "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)"
   ]
  },
  "pr_template": null,

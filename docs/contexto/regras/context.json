@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "dc0141246485ba7a9668a9da8f83b5cee21095be",
+  "sha": "b39b3b24fa8fb54ce935e3a84109595839753af9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 19:22 UTC",
-  "files_total": 1132,
-  "code_files": 950,
-  "code_lines": 140612
+  "generated_at": "2026-11-23 20:28 UTC",
+  "files_total": 1134,
+  "code_files": 952,
+  "code_lines": 140801
  },
  "version": "1.3.2",
- "facts_hash": "65af950ca7517fbb",
+ "facts_hash": "14ad5c4000b4c702",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -236,8 +236,8 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 376,
-   ".tsx": 297,
-   ".sql": 246,
+   ".tsx": 298,
+   ".sql": 247,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -22001,6 +22001,7 @@
    "supabase/migrations/20261122270000_next_best_action.sql",
    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
    "supabase/migrations/20261122310000_c14_ab_significance.sql",
+   "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -27235,6 +27236,14 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "insert, update",
+    "object": "circuit_breaker_alert_settings",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
    }
   ],
   "raises": [
@@ -28002,6 +28011,9 @@
      "audit_logs",
      "automation_execution_logs",
      "automation_steps",
+     "circuit_breaker_alert_history",
+     "circuit_breaker_alert_settings",
+     "circuit_breaker_snapshots",
      "circuit_breakers",
      "companies",
      "db_health_snapshots",
@@ -28063,7 +28075,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 119
+    "deps_count": 121
    },
    {
     "path": "",
@@ -30182,7 +30194,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 303,
+  "components_count": 304,
   "hooks": [
    {
     "name": "useContacts",
@@ -31183,8 +31195,8 @@
   },
   {
    "module": "src/components",
-   "files": 303,
-   "lines": 49750,
+   "files": 304,
+   "lines": 49929,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -31815,7 +31827,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2232,
+   "lines": 2234,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -32127,8 +32139,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 242,
-   "lines": 17085,
+   "files": 243,
+   "lines": 17093,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -36045,6 +36057,16 @@
     "rules": "type=number, min=1, max=168, disabled=!isAdmin || !state"
    },
    {
+    "file": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+    "field": "cb-thr",
+    "rules": "type=number, min=1, max=100, disabled=!isAdmin"
+   },
+   {
+    "file": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+    "field": "cb-cd",
+    "rules": "type=number, min=1, max=1440, disabled=!isAdmin"
+   },
+   {
     "file": "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
     "field": "dlq-pc",
     "rules": "type=number, min=1, disabled=!isAdmin || !state"
@@ -37784,6 +37806,10 @@
    },
    {
     "file": "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+    "value": "admin"
+   },
+   {
+    "file": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
     "value": "admin"
    },
    {
@@ -45822,6 +45848,12 @@
     "file": "src/components/lux/monitoring/AutomationStatusPanel.tsx",
     "field": "status",
     "value": "succeeded",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+    "field": "role",
+    "value": "admin",
     "kind": "compara"
    },
    {
@@ -64511,6 +64543,7 @@
      "admin": [
       "compara:src/components/lux/OrganizationsView.tsx",
       "compara:src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+      "compara:src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
       "compara:src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
       "compara:src/hooks/usePermissions.ts",
       "escreve:supabase/functions/rls-tests/_fixtures.ts",
@@ -71939,6 +71972,14 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "insert, update",
+    "object": "circuit_breaker_alert_settings",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
    }
   ],
   "guards": [
@@ -80089,6 +80130,33 @@
    ],
    "pagination": [
     "20"
+   ]
+  },
+  "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx": {
+   "path": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+   "lines": 179,
+   "exports": [
+    "function CircuitBreakerAlertSettingsCard"
+   ],
+   "html_constraints": [
+    {
+     "field": "cb-thr",
+     "rules": "type=number, min=1, max=100, disabled=!isAdmin"
+    },
+    {
+     "field": "cb-cd",
+     "rules": "type=number, min=1, max=1440, disabled=!isAdmin"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "compara"
+    }
+   ],
+   "role_checks": [
+    "admin"
    ]
   },
   "src/components/lux/monitoring/CircuitBreakerPanel.tsx": {
@@ -88272,7 +88340,7 @@
   },
   "src/pages/Monitoring.tsx": {
    "path": "src/pages/Monitoring.tsx",
-   "lines": 737,
+   "lines": 739,
    "exports": [
     "default AutomationMonitoring"
    ],
@@ -97020,13 +97088,28 @@
    "path": "supabase/migrations/20261122310000_c14_ab_significance.sql",
    "lines": 449,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261122340000_cb_alert_settings_grant.sql": {
+   "path": "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
+   "lines": 8
   }
  },
  "git": {
-  "sha": "dc0141246485ba7a9668a9da8f83b5cee21095be",
+  "sha": "b39b3b24fa8fb54ce935e3a84109595839753af9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b39b3b2",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat: liga a UI de configuracao dos alertas de disjuntor (#153)",
+    "files": [
+     "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+     "src/pages/Monitoring.tsx",
+     "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
+    ]
+   },
    {
     "sha": "dc01412",
     "date": "2026-11-23",
@@ -97400,21 +97483,16 @@
     "files": [
      "supabase/migrations/20261122130000_cron_org_violation_alerts.sql"
     ]
-   },
-   {
-    "sha": "c14eeb4",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)",
-    "files": [
-     "supabase/migrations/20261122110000_fix_claim_instagram_job_window_lock.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
     7
+   ],
+   [
+    "src/pages/Monitoring.tsx",
+    3
    ],
    [
     "docs/ESTADO_ATUAL.md",
@@ -97481,15 +97559,11 @@
     2
    ],
    [
-    "src/pages/Monitoring.tsx",
-    2
-   ],
-   [
-    ".github/workflows/edge-functions-deploy.yml",
+    "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
     1
    ],
    [
-    "public/manifest.json",
+    "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
     1
    ]
   ]

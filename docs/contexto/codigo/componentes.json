@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 262,
+ "total": 263,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -1836,6 +1836,25 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+   "exports": [
+    "CircuitBreakerAlertSettingsCard"
+   ],
+   "export_default": null,
+   "linhas": 179,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useActiveOrganization",
+    "useCircuitBreakerAlertHistory",
+    "useCircuitBreakerAlertSettings",
+    "useSaveCircuitBreakerAlertSettings"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/monitoring/CircuitBreakerPanel.tsx",
    "exports": [
     "CircuitBreakerPanel"
@@ -3395,7 +3414,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 111,
+   "usado_por": 112,
    "orfao": false
   },
   {
@@ -3430,7 +3449,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 132,
+   "usado_por": 133,
    "orfao": false
   },
   {
@@ -3464,7 +3483,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 59,
+   "usado_por": 60,
    "orfao": false
   },
   {
@@ -3709,7 +3728,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 61,
+   "usado_por": 62,
    "orfao": false
   },
   {
@@ -3723,7 +3742,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 47,
+   "usado_por": 48,
    "orfao": false
   },
   {
@@ -4024,7 +4043,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 20,
+   "usado_por": 21,
    "orfao": false
   },
   {
@@ -4331,7 +4350,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 737,
+   "linhas": 739,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

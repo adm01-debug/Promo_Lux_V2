@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `dc01412464` · branch `main` · 2026-11-23 19:22 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b39b3b24fa` · branch `main` · 2026-11-23 20:28 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1093,7 +1093,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `CEO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CFO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CTO` | escreve | `src/lib/demoData.ts` |
-| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>`supabase/functions/admin-list-companies/index.ts`<br>… +9 |
+| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +10 |
 | `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
 | `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
 | `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
@@ -1359,6 +1359,8 @@ _nenhum item encontrado_
 | `lat-pc` | type=number, min=1, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
 | `lat-cons` | type=number, min=1, max=24, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
 | `lat-cd` | type=number, min=1, max=168, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
+| `cb-thr` | type=number, min=1, max=100, disabled=!isAdmin | `src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx` |
+| `cb-cd` | type=number, min=1, max=1440, disabled=!isAdmin | `src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx` |
 | `dlq-pc` | type=number, min=1, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
 | `dlq-cons` | type=number, min=1, max=24, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
 | `dlq-cd` | type=number, min=1, max=168, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
@@ -2243,6 +2245,7 @@ _nenhum item encontrado_
 | `admin` | `src/components/lux/OrganizationsView.tsx` |
 | `newRole` | `src/components/lux/OrganizationsView.tsx` |
 | `admin` | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
+| `admin` | `src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx` |
 | `admin` | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
 | `admin` | `src/hooks/usePermissions.ts` |
 | `sdr` | `src/hooks/usePermissions.ts` |

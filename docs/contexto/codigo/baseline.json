@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "dc0141246485ba7a9668a9da8f83b5cee21095be",
+  "commit": "b39b3b24fa8fb54ce935e3a84109595839753af9",
   "branch": "main",
-  "data_commit": "2026-11-23T16:21:30-03:00",
+  "data_commit": "2026-11-23T17:28:25-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b39b3b2",
+    "data": "2026-11-23",
+    "assunto": "feat: liga a UI de configuracao dos alertas de disjuntor (#153)"
+   },
    {
     "sha": "dc01412",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "7a94840",
     "data": "2026-11-21",
     "assunto": "feat(ui): verificação de entregabilidade do e-mail do contato (#122)"
-   },
-   {
-    "sha": "1cd082b",
-    "data": "2026-11-21",
-    "assunto": "feat(ui): expõe o checker de entregabilidade na conta de e-mail (#121)"
    }
   ],
-  "arquivos_mudados_7d": 219,
+  "arquivos_mudados_7d": 221,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 55
+    "mudancas": 56
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 113
+    "commits": 114
    },
    {
     "autor": "dependabot[bot]",
@@ -310,19 +310,19 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1113,
-  "arquivos_codigo": 700,
-  "linhas_codigo": 121707,
+  "arquivos_total": 1115,
+  "arquivos_codigo": 701,
+  "linhas_codigo": 121888,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 262,
+  "componentes": 263,
   "hooks": 96,
   "edge_functions": 63,
   "tabelas": 115,
-  "migrations": 242,
+  "migrations": 243,
   "cron_jobs": 31,
   "testes": 127,
   "workflows": 9,
@@ -555,8 +555,8 @@
    "linhas": 339
   },
   "src/components": {
-   "arquivos": 303,
-   "linhas": 49750
+   "arquivos": 304,
+   "linhas": 49929
   },
   "src/contexts": {
    "arquivos": 7,
@@ -580,7 +580,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2232
+   "linhas": 2234
   },
   "src/test": {
    "arquivos": 3,
@@ -657,16 +657,16 @@
    "linhas": 763
   },
   {
+   "arquivo": "src/pages/Monitoring.tsx",
+   "linhas": 739
+  },
+  {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
    "linhas": 739
   },
   {
    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
    "linhas": 738
-  },
-  {
-   "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 737
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
