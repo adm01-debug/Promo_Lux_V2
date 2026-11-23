@@ -10,6 +10,7 @@
     "test:maintenance": "node --test scripts/maintenance/maintenance.unit.mjs",
     "dev": "node scripts/patch-mcp-plugin.mjs && vite",
     "patch:mcp-plugin": "node scripts/patch-mcp-plugin.mjs",
+    "postinstall": "node scripts/patch-mcp-plugin.mjs",
     "prebuild": "node scripts/patch-mcp-plugin.mjs",
     "build": "vite build && (npm run generate-audit-pdf || echo PDF de auditoria nao gerado, requer bun, build principal ja concluiu)",
     "generate-audit-pdf": "bun scripts/generate-audit-pdf.ts",

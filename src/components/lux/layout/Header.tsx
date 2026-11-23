@@ -138,8 +138,9 @@ export const Header = memo(({
                   <button
                     onMouseDown={(e) => { e.preventDefault(); setSearchExpanded(false); }}
                     className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label="Fechar pesquisa"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </motion.div>
