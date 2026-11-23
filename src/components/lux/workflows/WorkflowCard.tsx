@@ -1,4 +1,4 @@
-import { Play, Pause, Trash2, Loader2, ArrowRight, Globe, ChevronRight, Activity } from "lucide-react";
+import { Play, Pause, Trash2, Loader2, ArrowRight, Globe, ChevronRight, Activity, Database, Filter, Mail, Clock, GitBranch, Bell, Webhook, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -14,17 +14,31 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
 };
 
 const stepIcons: Record<string, React.ReactNode> = {
-  source: <Globe className="h-3.5 w-3.5" />,
-  enrich: <Globe className="h-3.5 w-3.5" />,
-  filter: <Globe className="h-3.5 w-3.5" />,
-  action: <Globe className="h-3.5 w-3.5" />,
+  source:    <Globe className="h-3.5 w-3.5" />,
+  scrape:    <Globe className="h-3.5 w-3.5" />,
+  enrich:    <Database className="h-3.5 w-3.5" />,
+  filter:    <Filter className="h-3.5 w-3.5" />,
+  action:    <Database className="h-3.5 w-3.5" />,
+  email:     <Mail className="h-3.5 w-3.5" />,
+  wait:      <Clock className="h-3.5 w-3.5" />,
+  condition: <GitBranch className="h-3.5 w-3.5" />,
+  notify:    <Bell className="h-3.5 w-3.5" />,
+  webhook:   <Webhook className="h-3.5 w-3.5" />,
+  tag:       <Tag className="h-3.5 w-3.5" />,
 };
 
 const stepColors: Record<string, string> = {
-  source: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  enrich: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  filter: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-  action: "bg-green-500/20 text-green-400 border-green-500/30",
+  source:    "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  scrape:    "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  enrich:    "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  filter:    "bg-amber-500/20 text-amber-400 border-amber-500/30",
+  action:    "bg-green-500/20 text-green-400 border-green-500/30",
+  email:     "bg-green-500/20 text-green-400 border-green-500/30",
+  wait:      "bg-slate-500/20 text-slate-400 border-slate-500/30",
+  condition: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  notify:    "bg-pink-500/20 text-pink-400 border-pink-500/30",
+  webhook:   "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+  tag:       "bg-lime-500/20 text-lime-400 border-lime-500/30",
 };
 
 interface WorkflowCardProps {
