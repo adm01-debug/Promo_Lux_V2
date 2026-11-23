@@ -30,13 +30,31 @@
       "name": "Dashboard",
       "short_name": "Dashboard",
       "url": "/?view=dashboard",
+      "description": "Visão geral de métricas e pipeline",
       "icons": []
     },
     {
       "name": "Empresas",
       "short_name": "Empresas",
       "url": "/?view=companies",
+      "description": "Buscar e enriquecer empresas",
+      "icons": []
+    },
+    {
+      "name": "Pipeline",
+      "short_name": "Pipeline",
+      "url": "/?view=deals",
+      "description": "Kanban de oportunidades",
+      "icons": []
+    },
+    {
+      "name": "Campanhas",
+      "short_name": "Campanhas",
+      "url": "/?view=campaigns",
+      "description": "Disparar e acompanhar campanhas",
       "icons": []
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "display_override": ["standalone", "minimal-ui", "browser"]
 }

@@ -1,4 +1,4 @@
-import { Play, Pause, Trash2, Loader2, ArrowRight, Globe, ChevronRight } from "lucide-react";
+import { Play, Pause, Trash2, Loader2, ArrowRight, Globe, ChevronRight, Activity, Database, Filter, Mail, Clock, GitBranch, Bell, Webhook, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -14,17 +14,31 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
 };
 
 const stepIcons: Record<string, React.ReactNode> = {
-  source: <Globe className="h-3.5 w-3.5" />,
-  enrich: <Globe className="h-3.5 w-3.5" />,
-  filter: <Globe className="h-3.5 w-3.5" />,
-  action: <Globe className="h-3.5 w-3.5" />,
+  source:    <Globe className="h-3.5 w-3.5" />,
+  scrape:    <Globe className="h-3.5 w-3.5" />,
+  enrich:    <Database className="h-3.5 w-3.5" />,
+  filter:    <Filter className="h-3.5 w-3.5" />,
+  action:    <Database className="h-3.5 w-3.5" />,
+  email:     <Mail className="h-3.5 w-3.5" />,
+  wait:      <Clock className="h-3.5 w-3.5" />,
+  condition: <GitBranch className="h-3.5 w-3.5" />,
+  notify:    <Bell className="h-3.5 w-3.5" />,
+  webhook:   <Webhook className="h-3.5 w-3.5" />,
+  tag:       <Tag className="h-3.5 w-3.5" />,
 };
 
 const stepColors: Record<string, string> = {
-  source: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  enrich: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  filter: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-  action: "bg-green-500/20 text-green-400 border-green-500/30",
+  source:    "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  scrape:    "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  enrich:    "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  filter:    "bg-amber-500/20 text-amber-400 border-amber-500/30",
+  action:    "bg-green-500/20 text-green-400 border-green-500/30",
+  email:     "bg-green-500/20 text-green-400 border-green-500/30",
+  wait:      "bg-slate-500/20 text-slate-400 border-slate-500/30",
+  condition: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  notify:    "bg-pink-500/20 text-pink-400 border-pink-500/30",
+  webhook:   "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+  tag:       "bg-lime-500/20 text-lime-400 border-lime-500/30",
 };
 
 interface WorkflowCardProps {
@@ -36,6 +50,7 @@ interface WorkflowCardProps {
   onRun: (id: string) => void;
   onToggleStatus: (id: string, status: string) => void;
   onDelete: (id: string) => void;
+  onViewRun?: (runId: string) => void;
   canDelete?: boolean;
   canEdit?: boolean;
 }
@@ -47,7 +62,7 @@ const defaultSteps = [
   { id: "s4", type: "action" as const, label: "Salvar no Banco", provider: "Lovable Cloud" },
 ];
 
-export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onToggleExpand, onRun, onToggleStatus, onDelete, canDelete = true, canEdit = true }: WorkflowCardProps) => {
+export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onToggleExpand, onRun, onToggleStatus, onDelete, onViewRun, canDelete = true, canEdit = true }: WorkflowCardProps) => {
   const config = statusConfig[wf.status] || statusConfig.draft;
   const steps = (wf.steps || defaultSteps) as typeof defaultSteps;
   const lastRun = wf.workflow_runs?.[0];
@@ -146,6 +161,11 @@ export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onTog
                   <Button size="sm" className="gap-1.5 text-xs" disabled={isRunning} onClick={(e) => { e.stopPropagation(); onRun(wf.id); }}>
                     {isRunning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
                     {isRunning ? "Executando..." : "Executar Agora"}
+                  </Button>
+                )}
+                {lastRun?.id && onViewRun && (
+                  <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={(e) => { e.stopPropagation(); onViewRun(lastRun.id); }}>
+                    <Activity className="h-3 w-3" /> Ver Execução
                   </Button>
                 )}
                 {canEdit && wf.status === "active" ? (
