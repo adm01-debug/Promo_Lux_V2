@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6cf80c9d0036c33c462c6df182d2d12bd8bdddee",
+  "commit": "0801668cd9502a01d392b4a7a4b5ef1fbad1fe53",
   "branch": "main",
-  "data_commit": "2026-11-23T06:53:16-03:00",
+  "data_commit": "2026-11-23T07:55:16-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "0801668",
+    "data": "2026-11-23",
+    "assunto": "fix: exige admin da org no replay de DLQ (#155)"
+   },
    {
     "sha": "6cf80c9",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "4bfa973",
     "data": "2026-11-21",
     "assunto": "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)"
-   },
-   {
-    "sha": "e7ba9e2",
-    "data": "2026-11-21",
-    "assunto": "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)"
    }
   ],
-  "arquivos_mudados_7d": 199,
+  "arquivos_mudados_7d": 201,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 106
+    "commits": 107
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1107,
   "arquivos_codigo": 695,
-  "linhas_codigo": 120241,
+  "linhas_codigo": 120269,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 129,
-   "linhas": 23253
+   "linhas": 23281
   },
   "tailwind.config.ts": {
    "arquivos": 1,

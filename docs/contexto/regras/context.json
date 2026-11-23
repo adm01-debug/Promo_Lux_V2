@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "6cf80c9d0036c33c462c6df182d2d12bd8bdddee",
+  "sha": "0801668cd9502a01d392b4a7a4b5ef1fbad1fe53",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 09:56 UTC",
+  "generated_at": "2026-11-23 10:55 UTC",
   "files_total": 1126,
   "code_files": 944,
-  "code_lines": 138697
+  "code_lines": 138725
  },
  "version": "1.3.2",
- "facts_hash": "26a6c3792bac60fb",
+ "facts_hash": "666b5256085afe18",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -31705,7 +31705,7 @@
   {
    "module": "supabase/functions",
    "files": 129,
-   "lines": 23253,
+   "lines": 23281,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -34918,7 +34918,9 @@
    "has_org_role": [
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-oauth-disconnect/index.ts"
+    "supabase/functions/email-oauth-disconnect/index.ts",
+    "supabase/functions/instagram-dlq-replay/index.ts",
+    "supabase/functions/web-dlq-replay/index.ts"
    ],
    "has_role": [
     "supabase/functions/system-recovery-status/index.ts"
@@ -90943,7 +90945,7 @@
   },
   "supabase/functions/instagram-dlq-replay/index.ts": {
    "path": "supabase/functions/instagram-dlq-replay/index.ts",
-   "lines": 90,
+   "lines": 104,
    "tables": [
     {
      "table": "organization_members",
@@ -90957,6 +90959,7 @@
     ]
    },
    "rpc": [
+    "has_org_role",
     "replay_instagram_dead_letter_batch"
    ],
    "env": [
@@ -93707,7 +93710,7 @@
   },
   "supabase/functions/web-dlq-replay/index.ts": {
    "path": "supabase/functions/web-dlq-replay/index.ts",
-   "lines": 89,
+   "lines": 103,
    "tables": [
     {
      "table": "organization_members",
@@ -93721,6 +93724,7 @@
     ]
    },
    "rpc": [
+    "has_org_role",
     "replay_web_dead_letter_batch"
    ],
    "env": [
@@ -95730,10 +95734,20 @@
   }
  },
  "git": {
-  "sha": "6cf80c9d0036c33c462c6df182d2d12bd8bdddee",
+  "sha": "0801668cd9502a01d392b4a7a4b5ef1fbad1fe53",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "0801668",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix: exige admin da org no replay de DLQ (#155)",
+    "files": [
+     "supabase/functions/instagram-dlq-replay/index.ts",
+     "supabase/functions/web-dlq-replay/index.ts"
+    ]
+   },
    {
     "sha": "6cf80c9",
     "date": "2026-11-23",
@@ -96089,21 +96103,6 @@
     "files": [
      "docs/pendencias/_backlog-verificado.md"
     ]
-   },
-   {
-    "sha": "31805c5",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(edge): restaura auth de 6 functions quebradas por getClaims inexistente (#110)",
-    "files": [
-     "scripts/ci/eslint-baseline.json",
-     "supabase/functions/email-oauth-callback/index.ts",
-     "supabase/functions/email-oauth-connect/index.ts",
-     "supabase/functions/email-oauth-disconnect/index.ts",
-     "supabase/functions/instagram-enqueue/index.ts",
-     "supabase/functions/rls-tests/index.ts",
-     "supabase/functions/system-recovery-status/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -96164,6 +96163,14 @@
     2
    ],
    [
+    "supabase/functions/instagram-dlq-replay/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/web-dlq-replay/index.ts",
+    1
+   ],
+   [
     "docs/qa/00-RESUMO.md",
     1
    ],
@@ -96177,14 +96184,6 @@
    ],
    [
     "docs/qa/03-ACHADOS.md",
-    1
-   ],
-   [
-    "docs/qa/04-PLANO.md",
-    1
-   ],
-   [
-    "docs/qa/05-PROGRESSO.md",
     1
    ]
   ]

@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix: exige admin da org no replay de DLQ (#155)",
    "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)",
    "docs: registra gap dos steps de workflow serem decorativos (#157)",
    "feat: aplica PermissionGate em deals e integracoes (#154)",
-   "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)",
-   "chore: remove artefatos temporarios commitados por engano na #146 (#147)"
+   "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)"
   ]
  },
  "pr_template": null,

@@ -870,7 +870,7 @@
    "nome": "instagram-dlq-replay",
    "entrada": "supabase/functions/instagram-dlq-replay/index.ts",
    "arquivos": 1,
-   "linhas": 90,
+   "linhas": 104,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -880,6 +880,7 @@
     "organization_members"
    ],
    "rpcs": [
+    "has_org_role",
     "replay_instagram_dead_letter_batch"
    ],
    "env": [
@@ -2030,7 +2031,7 @@
    "nome": "web-dlq-replay",
    "entrada": "supabase/functions/web-dlq-replay/index.ts",
    "arquivos": 1,
-   "linhas": 89,
+   "linhas": 103,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -2040,6 +2041,7 @@
     "organization_members"
    ],
    "rpcs": [
+    "has_org_role",
     "replay_web_dead_letter_batch"
    ],
    "env": [

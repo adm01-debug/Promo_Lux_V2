@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6cf80c9d0036c33c462c6df182d2d12bd8bdddee` (2026-11-23T06:53:16-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0801668cd9502a01d392b4a7a4b5ef1fbad1fe53` (2026-11-23T07:55:16-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1107 |
 | arquivos_codigo | 695 |
-| linhas_codigo | 120241 |
+| linhas_codigo | 120269 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -245,7 +245,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7593 nós · 16176 arestas · 637 comunidades · grafo do commit `6cf80c9d`
+- 7593 nós · 16176 arestas · 637 comunidades · grafo do commit `0801668c`
 - comunidades maiores: lucide-react (157), button.tsx (147), badge.tsx (121), react (114), snapshot.py (102), @tanstack/react-query (100), LushaIntelligenceView.tsx (99), cn (94), gerar.mjs (80), package.json (77), generate.py (73), ref_https (71)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -361,6 +361,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-23 `0801668` fix: exige admin da org no replay de DLQ (#155)
 - 2026-11-23 `6cf80c9` chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)
 - 2026-11-22 `9b85ca6` docs: registra gap dos steps de workflow serem decorativos (#157)
 - 2026-11-22 `336b228` feat: aplica PermissionGate em deals e integracoes (#154)
@@ -375,7 +376,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `378947c` chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)
 - 2026-11-22 `5f42ddf` chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)
 - 2026-11-22 `63a6f3f` chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)
-- 2026-11-21 `2b0bddf` docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
