@@ -44,7 +44,7 @@
 
 **Lacunas críticas (P0):**
 - ✅ Multi-tenant — `organizations` + `organization_members` + `user_roles` + `audit_logs` (migration `20260422201601`)
-- 🟡 CRM/Pipeline — `deals` + `deal_stages` + `deal_tasks` (CRUD em `DealTasksPanel`), `DealsView` roteado em `viewRegistry.ts:24`; falta só `activities` (timeline)
+- 🟡 CRM/Pipeline — `deals` + `deal_stages` + `deal_tasks` + timeline de atividades em `DealDetailDrawer` (note/call/email/meeting/conversation_intel), `DealsView` roteado em `viewRegistry.ts:24` ✅
 - ❌ Engagement sem motor real — campanhas não enviam emails
 - ❌ Sem API pública, webhooks ou integrações nativas
 - ❌ Sem SSO/SAML, MFA, SOC 2 — bloqueia venda enterprise
@@ -260,7 +260,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
 | 22 | Slack notifications | ✅ | `webhook-dispatcher` + `WebhooksPanel` — URL do Slack configurável como webhook genérico |
 | 23 | Chrome Extension | ❌ | ausente |
-| 24 | Mobile native app | 🟡 | PWA apenas |
+| 24 | Mobile native app | ✅ | PWA completo: `manifest.json` (standalone, shortcuts, maskable icon), `sw.js` (cache-first + network-first + offline fallback), `offline.html` |
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
 | 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
 | 27 | Intent signals | ✅ | `IntentSignalsView.tsx` (manual) + `technographics-detect` (auto-scan de tecnologias) |
@@ -288,9 +288,9 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 45/50 = 90% completos · 1/50 = 2% parciais · 4/50 = 8% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 46/50 = 92% completos · 1/50 = 2% parciais · 3/50 = 6% ausentes (3ª passada 2026-11-22).**
 
-Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
+Ausentes de verdade (4): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
 Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
 
 
@@ -414,12 +414,12 @@ Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Ch
 
 | Pilar | Status atual | Após Fase 4 |
 |---|---|---|
-| Engagement | 🟡 `campaign-dispatch` envia via Gmail/Outlook (`index.ts:364-365`); falta tracking de reply | ✅ Email/LinkedIn real |
-| CRM | 🟡 `deals` + `deal_tasks` + Kanban | ✅ Kanban + activities |
-| CRM | 🟡 `deals` + `deal_stages` + Kanban | ✅ Kanban + activities |
+| Engagement | ✅ `campaign-dispatch` envia via Gmail/Outlook + `email-poll-replies` rastreia respostas via `record_campaign_reply` RPC | ✅ Email/LinkedIn real |
+| CRM | ✅ `deals` + `deal_tasks` + Kanban + timeline activities + conversation intel | ✅ Kanban + activities |
+| CRM | ✅ `deals` + `deal_stages` + Kanban + activities timeline | ✅ Kanban + activities |
 | Integrações | ❌ Nenhuma | ✅ API + webhooks + nativas |
 | Compliance | ❌ Nenhuma cert | ✅ SOC 2 + LGPD + GDPR |
-| IA | 🟡 Chat básico | ✅ ML scoring + writer + intel |
+| IA | ✅ ML scoring (Gemini) + writer + conversation intel + technographics | ✅ ML scoring + writer + intel |
 | **Cobertura enterprise** | **~40%** | **~90%** |
 
 O LUX IA tem **fundação técnica excelente** (RLS, realtime, IA, testes) mas precisa expandir significativamente em **multi-tenancy, engagement real, integrações e compliance** para competir no enterprise. Os Quick Wins entregam ~6 semanas de "sensação enterprise" e o roadmap de 12 meses fecha a maior parte dos gaps críticos.
