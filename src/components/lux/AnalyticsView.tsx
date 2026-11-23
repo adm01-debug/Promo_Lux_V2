@@ -143,6 +143,7 @@ export const AnalyticsView = () => {
             sectorData={d.sectorData}
             totalCompanies={d.totalCompanies}
             enrichedCount={d.enrichedCount}
+            growthData={d.growthData}
           />
         </TabsContent>
 
