@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)",
    "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)",
    "feat: liga a UI de configuracao dos alertas de disjuntor (#153)",
    "fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)",
-   "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)",
-   "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)"
+   "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)"
   ]
  },
  "pr_template": null,

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5416a97b9` · branch `main` · 2026-11-23 21:17 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `825b08cdc4` · branch `main` · 2026-11-23 21:22 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -770,7 +770,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `reset_circuit_breaker` | service_name é obrigatório | `supabase/migrations/20260712193650_6a6d3b0a-39c4-4681-8273-82b2c2880329.sql` |
 | `reset_circuit_breaker` | Circuit breaker não encontrado: % | `supabase/migrations/20260712193650_6a6d3b0a-39c4-4681-8273-82b2c2880329.sql` |
 | `purge_dead_letter` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712194532_9abe125d-6680-4fc4-a970-6b38016ca698.sql` |
-| `capture_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712195304_af0be010-9de3-4b89-a80b-ca8cd03fb754.sql` |
 | `prune_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712195304_af0be010-9de3-4b89-a80b-ca8cd03fb754.sql` |
 | `validate_dlq_alert_settings` | pending_critical deve ser >= 1 | `supabase/migrations/20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql` |
 | `validate_dlq_alert_settings` | consecutive deve estar entre 1 e 24 | `supabase/migrations/20260712195625_958a9a6c-29bf-4cb9-9188-cb2258d8656c.sql` |
@@ -779,7 +778,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `validate_api_latency_alert_settings` | p95_critical_ms deve ser >= 1 | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `validate_api_latency_alert_settings` | consecutive deve estar entre 1 e 24 | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `validate_api_latency_alert_settings` | cooldown_hours deve estar entre 1 e 168 | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
-| `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `evaluate_api_latency_alerts` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `prune_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `check_oracle_rate_limit` | organization_id é obrigatório | `supabase/migrations/20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql` |
@@ -807,7 +805,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fail_web_scrape_task` | Somente o worker do sistema pode falhar tarefas | `supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql` |
 | `fail_web_scrape_task` | Tarefa não encontrada | `supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql` |
 | `defer_web_scrape_task` | Somente o worker do sistema pode adiar tarefas | `supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql` |
-| `capture_web_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql` |
 | `pg_net_health` | Acesso negado: requer service_role ou admin | `supabase/migrations/20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql` |
 | `prune_pg_net_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql` |
 | `replay_web_dead_letter_batch` | Não autenticado | `supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql` |
@@ -887,6 +884,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `company_source_distribution` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
 | `company_sector_distribution` | org_id obrigatorio | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
 | `company_sector_distribution` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `capture_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
+| `capture_web_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
+| `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

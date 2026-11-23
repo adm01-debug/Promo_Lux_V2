@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f5416a97b9289b54b8491726136a945760bc69d1",
+  "commit": "825b08cdc4871816e7d3659f89fdb6e3ce6a31c1",
   "branch": "main",
-  "data_commit": "2026-11-23T18:17:08-03:00",
+  "data_commit": "2026-11-23T18:21:42-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "825b08c",
+    "data": "2026-11-23",
+    "assunto": "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)"
+   },
    {
     "sha": "f5416a9",
     "data": "2026-11-23",
@@ -126,14 +131,9 @@
     "sha": "2b0bddf",
     "data": "2026-11-21",
     "assunto": "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)"
-   },
-   {
-    "sha": "c07fc7d",
-    "data": "2026-11-21",
-    "assunto": "docs: atualiza o backlog com o estado medido do banco (#123)"
    }
   ],
-  "arquivos_mudados_7d": 226,
+  "arquivos_mudados_7d": 227,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 115
+    "commits": 116
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1116,
+  "arquivos_total": 1117,
   "arquivos_codigo": 701,
   "linhas_codigo": 122057,
   "rotas": 12,
@@ -322,8 +322,8 @@
   "hooks": 96,
   "edge_functions": 63,
   "tabelas": 115,
-  "migrations": 244,
-  "cron_jobs": 31,
+  "migrations": 245,
+  "cron_jobs": 39,
   "testes": 127,
   "workflows": 9,
   "scripts": 51,

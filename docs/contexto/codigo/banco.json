@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 244,
+ "migrations": 245,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1070,9 +1070,19 @@
    "chama_edge": "campaign-dispatch"
   },
   {
+   "nome": "capture-api-latency-15min",
+   "agenda": "*/15 * * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
+  },
+  {
    "nome": "capture-db-health",
    "agenda": "*/5 * * * *",
    "migration": "20260712183806_e5a47f1b-5acb-4925-8862-6b201a553e15.sql"
+  },
+  {
+   "nome": "capture-dlq-health-hourly",
+   "agenda": "0 * * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
   },
   {
    "nome": "circuit-breaker-alerts-every-5min",
@@ -1149,9 +1159,19 @@
    "chama_edge": "scrape-queue-worker"
   },
   {
+   "nome": "prune-api-latency-snapshots-daily",
+   "agenda": "29 3 * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
+  },
+  {
    "nome": "prune-cron-job-run-details-daily",
    "agenda": "41 3 * * *",
    "migration": "20261121210000_retencao_cron_runs_e_qa_reaper.sql"
+  },
+  {
+   "nome": "prune-dlq-health-snapshots-daily",
+   "agenda": "23 3 * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
   },
   {
    "nome": "prune-qa-reaper-runs-daily",
@@ -1163,6 +1183,11 @@
    "agenda": "53 3 1 * *",
    "migration": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
    "chama_edge": "send-scheduled-reports"
+  },
+  {
+   "nome": "purge-dead-letter-daily",
+   "agenda": "17 3 * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
   },
   {
    "nome": "purge-soft-deleted-daily",
@@ -1193,10 +1218,20 @@
    "chama_edge": "retry-policy-tuner"
   },
   {
+   "nome": "round18-capture-dlq-snapshots-10m",
+   "agenda": "*/10 * * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
+  },
+  {
    "nome": "round18-dlq-alerts-15m",
    "agenda": "*/15 * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "dlq-alerts"
+  },
+  {
+   "nome": "round19-web-scrape-regression-1h",
+   "agenda": "7 * * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
   },
   {
    "nome": "send-scheduled-reports-hourly",
@@ -1215,6 +1250,11 @@
    "agenda": "20 4 * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "sla-auto-tune"
+  },
+  {
+   "nome": "sla-snapshot-daily",
+   "agenda": "0 3 * * *",
+   "migration": "20261124010000_cron_snapshot_org_guard.sql"
   },
   {
    "nome": "sync-gmaps-jobs",

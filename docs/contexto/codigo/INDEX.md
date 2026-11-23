@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f5416a97b9289b54b8491726136a945760bc69d1` (2026-11-23T18:17:08-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `825b08cdc4871816e7d3659f89fdb6e3ce6a31c1` (2026-11-23T18:21:42-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (674), SQL (248), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
+- linguagens: TypeScript (674), SQL (249), Markdown (87), JSON (38), JavaScript (23), Shell (14), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1116 |
+| arquivos_total | 1117 |
 | arquivos_codigo | 701 |
 | linhas_codigo | 122057 |
 | rotas | 12 |
@@ -46,8 +46,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 96 |
 | edge_functions | 63 |
 | tabelas | 115 |
-| migrations | 244 |
-| cron_jobs | 31 |
+| migrations | 245 |
+| cron_jobs | 39 |
 | testes | 127 |
 | workflows | 9 |
 | scripts | 51 |
@@ -188,7 +188,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Cron jobs (pg_cron / vercel)
 - `campaign-dispatch-10min` */10 * * * * → edge campaign-dispatch (20261121190000_version_crons_with_vault_key.sql)
 - `campaign-dispatch-every-10min` */10 * * * * → edge campaign-dispatch (20261121190000_version_crons_with_vault_key.sql)
+- `capture-api-latency-15min` */15 * * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `capture-db-health` */5 * * * * (20260712183806_e5a47f1b-5acb-4925-8862-6b201a553e15.sql)
+- `capture-dlq-health-hourly` 0 * * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `circuit-breaker-alerts-every-5min` */5 * * * * → edge circuit-breaker-alerts (20261121190000_version_crons_with_vault_key.sql)
 - `cnpj-enrich-worker-every-2min` */2 * * * * → edge cnpj-enrich-worker (20261121190000_version_crons_with_vault_key.sql)
 - `daily-campaign-logs-retention` 30 3 * * * (20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql)
@@ -202,18 +204,24 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `pg-net-snapshots-prune-weekly` 0 3 * * 0 (20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql)
 - `pg-net-watchdog-30m` */30 * * * * → edge pg-net-watchdog (20261121190000_version_crons_with_vault_key.sql)
 - `process-scrape-queue` * * * * * → edge scrape-queue-worker (20261121190000_version_crons_with_vault_key.sql)
+- `prune-api-latency-snapshots-daily` 29 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `prune-cron-job-run-details-daily` 41 3 * * * (20261121210000_retencao_cron_runs_e_qa_reaper.sql)
+- `prune-dlq-health-snapshots-daily` 23 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `prune-qa-reaper-runs-daily` 47 3 * * * (20261121210000_retencao_cron_runs_e_qa_reaper.sql)
 - `prune-scheduled-report-runs-monthly` 53 3 1 * * → edge send-scheduled-reports (20261121230000_scheduled_reports_bulk_imports_role_permissions.sql)
+- `purge-dead-letter-daily` 17 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `purge-soft-deleted-daily` 0 3 * * * → edge purge-soft-deleted (20261121190000_version_crons_with_vault_key.sql)
 - `reap-stuck-queue-tasks` * * * * * (20260723134028_4f3b5c29-1e04-4d63-95d1-2bb0f069e917.sql)
 - `reaper-alerts-30min` */30 * * * * → edge reaper-alerts (20261121190000_version_crons_with_vault_key.sql)
 - `refresh-scores-daily` 23 5 * * * (20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql)
 - `retry-policy-tuner-daily` 0 3 * * * → edge retry-policy-tuner (20261121190000_version_crons_with_vault_key.sql)
+- `round18-capture-dlq-snapshots-10m` */10 * * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `round18-dlq-alerts-15m` */15 * * * * → edge dlq-alerts (20261121190000_version_crons_with_vault_key.sql)
+- `round19-web-scrape-regression-1h` 7 * * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `send-scheduled-reports-hourly` 7 * * * * → edge send-scheduled-reports (20261121230000_scheduled_reports_bulk_imports_role_permissions.sql)
 - `sla-alerts-hourly` 7 * * * * → edge sla-alerts (20261121190000_version_crons_with_vault_key.sql)
 - `sla-auto-tune-daily` 20 4 * * * → edge sla-auto-tune (20261121190000_version_crons_with_vault_key.sql)
+- `sla-snapshot-daily` 0 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `sync-gmaps-jobs` * * * * * → edge gmaps-proxy (20261121190000_version_crons_with_vault_key.sql)
 - `vault-cookie-health-daily` 0 9 * * * → edge vault-cookie-health (20261121190000_version_crons_with_vault_key.sql)
 - `web-scrape-worker-30s` 30 seconds → edge web-scrape-worker (20261121190000_version_crons_with_vault_key.sql)
@@ -248,8 +256,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7656 nós · 16315 arestas · 627 comunidades · grafo do commit `f5416a97`
-- comunidades maiores: Monitoring.tsx (162), react (130), input.tsx (129), snapshot.py (102), withOrg.ts (96), cn (93), framer-motion (92), LushaIntelligenceView.tsx (82), gerar.mjs (80), DashboardView.tsx (78), useAuth (76), OracleV2Panel.tsx (75)
+- 7661 nós · 16319 arestas · 649 comunidades · grafo do commit `825b08cd`
+- comunidades maiores: react (189), Monitoring.tsx (155), cn (123), utils.ts (109), lucide-react (82), gerar.mjs (80), ref_node_fs (74), NotificationsPanel.tsx (74), dependencies (65), @tanstack/react-query (64), CompanyDetailModal.tsx (63), framer-motion (58)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useAuth() (src/contexts/auth-context.ts), useActiveOrganization() (src/contexts/active-org-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -365,6 +373,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-23 `825b08c` fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)
 - 2026-11-23 `f5416a9` feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)
 - 2026-11-23 `b39b3b2` feat: liga a UI de configuracao dos alertas de disjuntor (#153)
 - 2026-11-23 `dc01412` fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)
@@ -379,7 +388,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-22 `336b228` feat: aplica PermissionGate em deals e integracoes (#154)
 - 2026-11-22 `9fdb455` fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)
 - 2026-11-22 `4df75d3` chore: remove artefatos temporarios commitados por engano na #146 (#147)
-- 2026-11-22 `f9cdd00` docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
