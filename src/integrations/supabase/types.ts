@@ -885,6 +885,54 @@ export type Database = {
           },
         ]
       }
+      campaign_warmup_state: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          current_day: number
+          emails_sent_today: number
+          id: string
+          last_reset_date: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          current_day?: number
+          emails_sent_today?: number
+          id?: string
+          last_reset_date?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          current_day?: number
+          emails_sent_today?: number
+          id?: string
+          last_reset_date?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_warmup_state_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: true
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_warmup_state_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_replies: {
         Row: {
           body_text: string | null
@@ -5558,6 +5606,59 @@ export type Database = {
           },
         ]
       }
+      warmup_profiles: {
+        Row: {
+          allowed_weekdays: number[]
+          created_at: string
+          daily_increment: number
+          enabled: boolean
+          id: string
+          max_per_day: number
+          organization_id: string
+          ramp_days: number
+          send_window_end: number
+          send_window_start: number
+          start_per_day: number
+          updated_at: string
+        }
+        Insert: {
+          allowed_weekdays?: number[]
+          created_at?: string
+          daily_increment?: number
+          enabled?: boolean
+          id?: string
+          max_per_day?: number
+          organization_id?: string
+          ramp_days?: number
+          send_window_end?: number
+          send_window_start?: number
+          start_per_day?: number
+          updated_at?: string
+        }
+        Update: {
+          allowed_weekdays?: number[]
+          created_at?: string
+          daily_increment?: number
+          enabled?: boolean
+          id?: string
+          max_per_day?: number
+          organization_id?: string
+          ramp_days?: number
+          send_window_end?: number
+          send_window_start?: number
+          start_per_day?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "warmup_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_deliveries: {
         Row: {
           attempts: number
@@ -5665,13 +5766,58 @@ export type Database = {
         }
         Relationships: []
       }
+      workflow_run_events: {
+        Row: {
+          created_at: string
+          dedupe_key: string | null
+          event_type: string
+          id: string
+          organization_id: string
+          payload: Json | null
+          run_id: string
+          step_name: string | null
+        }
+        Insert: {
+          created_at?: string
+          dedupe_key?: string | null
+          event_type: string
+          id?: string
+          organization_id: string
+          payload?: Json | null
+          run_id: string
+          step_name?: string | null
+        }
+        Update: {
+          created_at?: string
+          dedupe_key?: string | null
+          event_type?: string
+          id?: string
+          organization_id?: string
+          payload?: Json | null
+          run_id?: string
+          step_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_run_events_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workflow_runs: {
         Row: {
+          attempt: number
           completed_at: string | null
           created_at: string
           current_step: string | null
           error_message: string | null
+          heartbeat_at: string | null
           id: string
+          locked_by: string | null
+          locked_until: string | null
           organization_id: string
           results: Json | null
           started_at: string | null
@@ -5680,11 +5826,15 @@ export type Database = {
           workflow_id: string
         }
         Insert: {
+          attempt?: number
           completed_at?: string | null
           created_at?: string
           current_step?: string | null
           error_message?: string | null
+          heartbeat_at?: string | null
           id?: string
+          locked_by?: string | null
+          locked_until?: string | null
           organization_id?: string
           results?: Json | null
           started_at?: string | null
@@ -5693,11 +5843,15 @@ export type Database = {
           workflow_id: string
         }
         Update: {
+          attempt?: number
           completed_at?: string | null
           created_at?: string
           current_step?: string | null
           error_message?: string | null
+          heartbeat_at?: string | null
           id?: string
+          locked_by?: string | null
+          locked_until?: string | null
           organization_id?: string
           results?: Json | null
           started_at?: string | null
@@ -5922,6 +6076,48 @@ export type Database = {
       }
     }
     Functions: {
+      claim_workflow_run: {
+        Args: {
+          _lease_seconds?: number
+          _run_id?: string
+          _worker_id: string
+          _workflow_id?: string
+        }
+        Returns: {
+          attempt: number
+          current_step: string | null
+          organization_id: string
+          run_id: string
+          workflow_id: string
+        }[]
+      }
+      complete_workflow_step: {
+        Args: {
+          _payload?: Json
+          _run_id: string
+          _step_name: string
+          _worker_id: string
+        }
+        Returns: boolean
+      }
+      fail_workflow_step: {
+        Args: {
+          _error: string
+          _retry?: boolean
+          _run_id: string
+          _step_name: string
+          _worker_id: string
+        }
+        Returns: boolean
+      }
+      finish_workflow_run: {
+        Args: { _run_id: string; _worker_id: string }
+        Returns: boolean
+      }
+      heartbeat_workflow_run: {
+        Args: { _lease_seconds?: number; _run_id: string; _worker_id: string }
+        Returns: boolean
+      }
       get_survey_by_token: { Args: { _token: string }; Returns: Json }
       submit_survey_response: {
         Args: {
@@ -5940,6 +6136,21 @@ export type Database = {
         Returns: undefined
       }
       get_public_status: { Args: Record<string, never>; Returns: Json }
+      get_warmup_slot: {
+        Args: { _org_id: string; _campaign_id: string }
+        Returns: {
+          allowed: boolean
+          daily_limit: number | null
+          emails_sent_today: number
+          remaining: number | null
+          current_day: number | null
+          reason: string
+        }[]
+      }
+      consume_warmup_slot: {
+        Args: { _campaign_id: string; _count: number }
+        Returns: undefined
+      }
       get_public_uptime: {
         Args: { _days?: number }
         Returns: {
@@ -6762,6 +6973,51 @@ export type Database = {
           organization_id: string
           success_24h: number
           success_7d: number
+        }[]
+      }
+      company_analytics_summary: {
+        Args: { _org_id: string }
+        Returns: {
+          avg_ipc: number
+          enriched_companies: number
+          enriched_pct: number
+          top_sector: string
+          total_companies: number
+          with_email: number
+          with_phone: number
+          with_website: number
+        }[]
+      }
+      company_growth_trend: {
+        Args: { _months?: number; _org_id: string }
+        Returns: {
+          enriched_companies: number
+          month_start: string
+          new_companies: number
+        }[]
+      }
+      company_ipc_distribution: {
+        Args: { _org_id: string }
+        Returns: {
+          bucket: string
+          bucket_pos: number
+          total: number
+        }[]
+      }
+      company_sector_distribution: {
+        Args: { _limit?: number; _org_id: string }
+        Returns: {
+          pct: number
+          sector: string
+          total: number
+        }[]
+      }
+      company_source_distribution: {
+        Args: { _limit?: number; _org_id: string }
+        Returns: {
+          enriched: number
+          source: string
+          total: number
         }[]
       }
       get_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }

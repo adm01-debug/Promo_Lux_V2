@@ -22,6 +22,7 @@ import { HubSpotPanel } from "@/components/lux/settings/HubSpotPanel";
 import { AuditLogExportPanel } from "@/components/lux/settings/AuditLogExportPanel";
 import { PiiMaskingPanel } from "@/components/lux/settings/PiiMaskingPanel";
 import { NextBestActionPanel } from "@/components/lux/settings/NextBestActionPanel";
+import { WarmupPanel } from "@/components/lux/settings/WarmupPanel";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
 import { StickySaveBar } from "./StickySaveBar";
 
@@ -294,6 +295,9 @@ export const SettingsView = () => {
 
                   <Separator className="bg-border/30" />
                   <PiiMaskingPanel />
+
+                  <Separator className="bg-border/30" />
+                  <WarmupPanel />
 
                   <Separator className="bg-border/30" />
                   <NextBestActionPanel />

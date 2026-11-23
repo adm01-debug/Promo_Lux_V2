@@ -44,6 +44,7 @@ import { AutomationStatusPanel } from "@/components/lux/monitoring/AutomationSta
 import { AuditTrailPanel } from "@/components/lux/monitoring/AuditTrailPanel";
 import { ApiLatencyPanel } from "@/components/lux/monitoring/ApiLatencyPanel";
 import { ApiLatencyAlertSettingsCard } from "@/components/lux/monitoring/ApiLatencyAlertSettingsCard";
+import { CircuitBreakerAlertSettingsCard } from "@/components/lux/monitoring/CircuitBreakerAlertSettingsCard";
 import { VaultCookiesPanel } from "@/components/lux/monitoring/VaultCookiesPanel";
 import { OrgProxiesView } from "@/components/lux/OrgProxiesView";
 import { DlqTriageView } from "@/components/lux/monitoring/DlqTriageView";
@@ -664,6 +665,7 @@ const AutomationMonitoring = () => {
 
         <TabsContent value="circuit-breakers" className="space-y-4">
           <CircuitBreakerPanel />
+          <CircuitBreakerAlertSettingsCard />
         </TabsContent>
 
         <TabsContent value="latency" className="space-y-4">
