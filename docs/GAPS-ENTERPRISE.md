@@ -264,7 +264,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
 | 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
 | 27 | Intent signals | ✅ | `IntentSignalsView.tsx` (manual) + `technographics-detect` (auto-scan de tecnologias) |
-| 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
+| 28 | Lead scoring ML | ✅ | `lead_scores` heurístico (Postgres) + `lead-score-ai` edge fn com Gemini 2.5 Flash — botão "Score IA" no StakeholderFinderView, upsert em lead_scores |
 | 29 | Conversation intelligence | ✅ | `conversation-intel` edge fn + UI no DealDetailDrawer — Gemini 2.5 Flash analisa sentiment, buying signals, action items, next steps |
 | 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
 | 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx`, `workflows`, `workflow_runs`, `workflow-engine` |
@@ -288,7 +288,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 44/50 = 88% completos · 1/50 = 2% parciais · 5/50 = 10% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 45/50 = 90% completos · 1/50 = 2% parciais · 4/50 = 8% ausentes (3ª passada 2026-11-22).**
 
 Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
 Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
