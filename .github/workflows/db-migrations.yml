@@ -96,12 +96,18 @@ jobs:
   # -------------------------------------------------------------------------
   # 3. Plano (dry-run) contra o banco alvo. Em PR o alvo é SEMPRE staging.
   # -------------------------------------------------------------------------
+  # `plan` so roda em PR: em push na main ele era um job read-only que tambem
+  # pedia aprovacao do environment `production`. Como roda ANTES do `apply`,
+  # cada push exigia DUAS aprovacoes e a fila parava aqui (runs 45167250585,
+  # 45160431382 ficaram `waiting` por horas). Em push, o dry-run virou step do
+  # `apply` (ver job 4), entao o plano continua sendo impresso antes do push.
   plan:
-    name: Plano contra ${{ github.event_name == 'pull_request' && 'staging' || (inputs.environment || 'production') }}
+    name: Plano contra staging (PR)
     runs-on: ubuntu-latest
     needs: shadow
+    if: github.event_name == 'pull_request'
     environment:
-      name: ${{ github.event_name == 'pull_request' && 'staging' || (inputs.environment || 'production') }}
+      name: staging
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -140,7 +146,9 @@ jobs:
   apply:
     name: Aplicar em ${{ inputs.environment || 'production' }}
     runs-on: ubuntu-latest
-    needs: plan
+    # needs: shadow (e nao `plan`) porque o `plan` nao roda em push e um job
+    # que depende de job pulado tambem e pulado - o apply nunca rodaria.
+    needs: shadow
     if: github.event_name != 'pull_request'
     environment:
       name: ${{ inputs.environment || 'production' }}
@@ -161,6 +169,14 @@ jobs:
 
       - name: Link no projeto alvo
         run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Dry-run (plano impresso; nada e aplicado aqui)
+        # Veio do job `plan`, que nao roda em push. Mantem o principio 4:
+        # todo push em producao imprime o plano antes de aplicar.
+        run: |
+          echo "Migrations pendentes em $SUPABASE_PROJECT_REF:"
+          supabase migration list --linked
+          supabase db push --dry-run --linked
 
       - name: Aplicar migrations
         # --yes: sem isso o CLI aborta quando stdout não é TTY (runner GH),
