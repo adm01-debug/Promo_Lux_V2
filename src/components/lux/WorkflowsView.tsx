@@ -14,8 +14,10 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { workflowApi, type Workflow } from "@/lib/api/workflows";
+import { workflowApi, type Workflow, type WorkflowPhase } from "@/lib/api/workflows";
 import type { Json, Tables } from "@/integrations/supabase/types";
+import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
+import { WorkflowEditor, type WorkflowStep } from "@/components/automation/WorkflowEditor";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
@@ -36,11 +38,25 @@ const stepIcons: Record<string, React.ReactNode> = {
   action: <Database className="h-3.5 w-3.5" />,
 };
 
-const defaultSteps = [
-  { id: "s1", type: "source" as const, label: "Google Maps Scraper", provider: "gmaps.atomicabr" },
-  { id: "s2", type: "enrich" as const, label: "Importar & Enriquecer", provider: "Waterfall" },
-  { id: "s3", type: "filter" as const, label: "Scoring IPC", provider: "LUX IA" },
-  { id: "s4", type: "action" as const, label: "Salvar no Banco", provider: "Lovable Cloud" },
+type DefaultStep = {
+  id: string;
+  type: "source" | "enrich" | "filter" | "action";
+  label: string;
+  provider: string;
+  phase?: WorkflowPhase;
+};
+
+const defaultSteps: DefaultStep[] = [
+  { id: "s1", type: "source", label: "Google Maps Scraper", provider: "gmaps.atomicabr", phase: "scrape" },
+  { id: "s2", type: "enrich", label: "Importar & Enriquecer", provider: "Waterfall", phase: "enrich" },
+  { id: "s3", type: "filter", label: "Scoring IPC", provider: "LUX IA", phase: "ipc_score" },
+  { id: "s4", type: "action", label: "Salvar no Banco", provider: "Lovable Cloud" },
+];
+
+const phaseOptions: { phase: WorkflowPhase; label: string; hint: string }[] = [
+  { phase: "scrape", label: "Coletar no Google Maps", hint: "Busca empresas pelas keywords e raio" },
+  { phase: "enrich", label: "Enriquecer contatos", hint: "Importa empresas e extrai emails dos sites" },
+  { phase: "ipc_score", label: "Qualificar por IPC", hint: "Calcula a pontuação de cada lead" },
 ];
 
 export const WorkflowsView = () => {
@@ -51,18 +67,24 @@ export const WorkflowsView = () => {
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [runDetailsOpen, setRunDetailsOpen] = useState(false);
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [createMode, setCreateMode] = useState<"simple" | "advanced">("simple");
+  const [advancedSteps, setAdvancedSteps] = useState<WorkflowStep[]>([]);
   const [newName, setNewName] = useState("Google Maps → Enriquecimento → IPC");
   const [newDescription, setNewDescription] = useState("Raspa empresas, enriquece dados de contato e qualifica pelo IPC automaticamente");
   const [keywords, setKeywords] = useState("restaurantes, bares");
   const [radius, setRadius] = useState(10000);
   const [extractEmail, setExtractEmail] = useState(true);
+  const [enabledPhases, setEnabledPhases] = useState<WorkflowPhase[]>(["scrape", "enrich", "ipc_score"]);
 
   const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
     queryKey: ["workflows"],
     queryFn: isDemoMode
       ? () => DEMO_WORKFLOWS as unknown as Workflow[]
       : async () => {
-          try { return await workflowApi.list(); } catch {
+          try { return await workflowApi.list(); } catch (err) {
+            console.warn("[WorkflowsView] list via engine falhou, usando fallback direto:", err);
             const { supabase } = await import("@/integrations/supabase/client");
             const { data, error } = await db.from("workflows").select("*, workflow_runs(id, status, started_at, completed_at, results)").order("created_at", { ascending: false });
             if (error) throw error;
@@ -75,7 +97,13 @@ export const WorkflowsView = () => {
 
   const createMutation = useMutation({
     mutationFn: async (data: Parameters<typeof workflowApi.create>[0]) => {
-      try { return await workflowApi.create(data); } catch {
+      try {
+        return await workflowApi.create(data);
+      } catch (err) {
+        // Fallback direto no banco (RLS injeta org/user_id). Mantido para que
+        // uma indisponibilidade do engine não impeça criar o workflow — mas
+        // nunca em silêncio: o motivo fica no console.
+        console.warn("[WorkflowsView] create via engine falhou, usando fallback direto:", err);
         const { supabase } = await import("@/integrations/supabase/client");
         const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as unknown as Json, config: data.config as unknown as Json }).select().single();
         if (error) throw error;
@@ -94,7 +122,8 @@ export const WorkflowsView = () => {
 
   const toggleMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      try { await workflowApi.toggleStatus(id, status); } catch {
+      try { await workflowApi.toggleStatus(id, status); } catch (err) {
+        console.warn("[WorkflowsView] toggle via engine falhou, usando fallback direto:", err);
         const { supabase } = await import("@/integrations/supabase/client");
         const { error } = await db.from("workflows").update({ status: status as Tables<"workflows">["status"] }).eq("id", id);
         if (error) throw error;
@@ -105,7 +134,8 @@ export const WorkflowsView = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      try { await workflowApi.delete(id); } catch {
+      try { await workflowApi.delete(id); } catch (err) {
+        console.warn("[WorkflowsView] delete via engine falhou, usando fallback direto:", err);
         const { supabase } = await import("@/integrations/supabase/client");
         const { error } = await db.from("workflows").delete().eq("id", id);
         if (error) throw error;
@@ -114,9 +144,17 @@ export const WorkflowsView = () => {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); toast({ title: "Workflow removido" }); },
   });
 
+  const selectedSteps = defaultSteps.filter(s => !s.phase || enabledPhases.includes(s.phase));
+
   const handleCreate = () => {
     if (!newName.trim()) return;
-    createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps: defaultSteps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
+    if (createMode === "advanced") {
+      if (advancedSteps.length === 0) return;
+      createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps: advancedSteps as unknown as DefaultStep[], config: {} });
+      return;
+    }
+    if (enabledPhases.length === 0) return;
+    createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps: selectedSteps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
   };
 
   const activeCount = workflows.filter(w => w.status === "active").length;
@@ -131,29 +169,67 @@ export const WorkflowsView = () => {
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           {canCreate && <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" /> Novo Workflow</Button></DialogTrigger>}
-          <DialogContent className="bg-card border-border/50">
+          <DialogContent className="bg-card border-border/50 max-w-lg">
             <DialogHeader><DialogTitle className="flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Novo Workflow Automático</DialogTitle></DialogHeader>
-            <div className="space-y-4 mt-2">
-              <StepProgress steps={defaultSteps.map(s => s.label)} currentStep={createMutation.isPending ? defaultSteps.length : 0} className="py-2" />
-              <div className="flex items-center gap-2 overflow-x-auto pb-2">
-                {defaultSteps.map((step, i) => (
-                  <div key={step.id} className="flex items-center gap-2">
-                    <div className={cn("rounded-md border px-2 py-1.5 flex items-center gap-1.5 whitespace-nowrap", stepColors[step.type])}>
-                      {stepIcons[step.type]}<span className="text-[10px] font-medium">{step.label}</span>
-                    </div>
-                    {i < defaultSteps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/40 flex-shrink-0" />}
+            <div className="space-y-4 mt-2 max-h-[70vh] overflow-y-auto pr-1">
+              {/* Modo toggle */}
+              <div className="flex items-center gap-2 rounded-md border border-border/50 p-1">
+                <Button size="sm" variant={createMode === "simple" ? "secondary" : "ghost"} className="flex-1 text-xs h-7" onClick={() => setCreateMode("simple")}>Simples</Button>
+                <Button size="sm" variant={createMode === "advanced" ? "secondary" : "ghost"} className="flex-1 text-xs h-7" onClick={() => setCreateMode("advanced")}>Editor Avançado</Button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2">
+                <div className="space-y-1"><Label className="text-xs text-muted-foreground">Nome</Label><Input value={newName} onChange={e => setNewName(e.target.value)} className="h-9 text-sm" /></div>
+                <div className="space-y-1"><Label className="text-xs text-muted-foreground">Descrição</Label><Input value={newDescription} onChange={e => setNewDescription(e.target.value)} className="h-9 text-sm" /></div>
+              </div>
+
+              {createMode === "simple" ? (
+                <>
+                  <StepProgress steps={selectedSteps.map(s => s.label)} currentStep={createMutation.isPending ? selectedSteps.length : 0} className="py-2" />
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                    {selectedSteps.map((step, i) => (
+                      <div key={step.id} className="flex items-center gap-2">
+                        <div className={cn("rounded-md border px-2 py-1.5 flex items-center gap-1.5 whitespace-nowrap", stepColors[step.type])}>
+                          {stepIcons[step.type]}<span className="text-[10px] font-medium">{step.label}</span>
+                        </div>
+                        {i < selectedSteps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/40 flex-shrink-0" />}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Nome</Label><Input value={newName} onChange={e => setNewName(e.target.value)} className="h-9 text-sm" /></div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Descrição</Label><Input value={newDescription} onChange={e => setNewDescription(e.target.value)} className="h-9 text-sm" /></div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Keywords (Google Maps)</Label><Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="restaurantes, bares, hotéis" className="h-9 text-sm" /></div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Raio: {(radius / 1000).toFixed(0)}km</Label><Slider value={[radius]} onValueChange={([v]) => setRadius(v)} min={1000} max={50000} step={1000} /></div>
-              <div className="flex items-center justify-between">
-                <div><p className="text-sm text-foreground">Extrair emails</p><p className="text-[10px] text-muted-foreground">Busca emails nos sites encontrados</p></div>
-                <Switch checked={extractEmail} onCheckedChange={setExtractEmail} />
-              </div>
-              <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim()} className="w-full gap-2">
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Etapas que este workflow executa</Label>
+                    {phaseOptions.map(opt => (
+                      <div key={opt.phase} className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm text-foreground">{opt.label}</p>
+                          <p className="text-[10px] text-muted-foreground">{opt.hint}</p>
+                        </div>
+                        <Switch
+                          checked={enabledPhases.includes(opt.phase)}
+                          disabled={enabledPhases.length === 1 && enabledPhases.includes(opt.phase)}
+                          onCheckedChange={on => setEnabledPhases(prev => on ? [...prev, opt.phase] : prev.filter(p => p !== opt.phase))}
+                        />
+                      </div>
+                    ))}
+                    {enabledPhases.length === 0 && <p className="text-[10px] text-destructive">Selecione ao menos uma etapa.</p>}
+                  </div>
+                  <div className="space-y-2"><Label className="text-xs text-muted-foreground">Keywords (Google Maps)</Label><Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="restaurantes, bares, hotéis" className="h-9 text-sm" /></div>
+                  <div className="space-y-2"><Label className="text-xs text-muted-foreground">Raio: {(radius / 1000).toFixed(0)}km</Label><Slider value={[radius]} onValueChange={([v]) => setRadius(v)} min={1000} max={50000} step={1000} /></div>
+                  <div className="flex items-center justify-between">
+                    <div><p className="text-sm text-foreground">Extrair emails</p><p className="text-[10px] text-muted-foreground">Busca emails nos sites encontrados</p></div>
+                    <Switch checked={extractEmail} onCheckedChange={setExtractEmail} />
+                  </div>
+                </>
+              ) : (
+                <WorkflowEditor
+                  initialSteps={advancedSteps}
+                  onSave={setAdvancedSteps}
+                  saving={false}
+                  className="max-h-[45vh] overflow-y-auto"
+                />
+              )}
+
+              <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim() || (createMode === "simple" ? enabledPhases.length === 0 : advancedSteps.length === 0)} className="w-full gap-2">
                 {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
                 {createMutation.isPending ? "Criando..." : "Criar & Ativar Workflow"}
               </Button>
@@ -198,12 +274,19 @@ export const WorkflowsView = () => {
               onRun={(id) => runMutation.mutate(id)}
               onToggleStatus={(id, status) => toggleMutation.mutate({ id, status })}
               onDelete={(id) => deleteMutation.mutate(id)}
+              onViewRun={(runId) => { setSelectedRunId(runId); setRunDetailsOpen(true); }}
               canEdit={canEdit}
               canDelete={canDelete}
             />
           ))}
         </div>
       )}
+    <JobDetailsSheet
+        jobId={null}
+        runId={selectedRunId}
+        open={runDetailsOpen}
+        onOpenChange={setRunDetailsOpen}
+      />
     </div>
   );
 };
