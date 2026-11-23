@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0801668cd9` · branch `main` · 2026-11-23 10:55 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b2a2288ef` · branch `main` · 2026-11-23 11:49 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -432,6 +432,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `campaigns` | `organization_id` | default public.default_org_for_current_user() |
 | `campaigns` | `failed` | default 0 |
 | `campaigns` | `ab_test_enabled` | default false |
+| `campaigns` | `ab_min_confidence` | default 0.95 |
 | `campaigns` | `ab_min_sample` | obrigatório |
 | `campaigns` | `ab_winner_metric` | obrigatório |
 | `campaigns` | `bounced` | obrigatório |
@@ -616,8 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
 | `oauth_sandbox_snapshots` | `user_id` | default auth.uid() |
 | `oauth_sandbox_snapshots` | `label` | obrigatório |
-| `oauth_sandbox_snapshots` | `provider` | obrigatório; CHECK provider IN ('gmail','outlook') |
-| … +779 linhas — lista completa em `context.json` | | |
+| … +780 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -750,7 +750,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `accept_org_invite` | Convite expirado | `supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql` |
 | `record_campaign_event` | Recipient not found | `supabase/migrations/20260423120024_1d1aada5-8bc8-4099-b508-8ccbd1154e69.sql` |
 | `get_dashboard_stats` | Acesso negado à organização | `supabase/migrations/20260522142002_01f908df-71d7-469f-aa7a-fa389e561b44.sql` |
-| `decide_ab_winner` | Acesso negado à campanha | `supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql` |
 | `pg_catalog_rls_tables` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712112941_b8b623ce-a575-4757-98d5-1422d1ac9c66.sql` |
 | `pg_columns_for_insert` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712112941_b8b623ce-a575-4757-98d5-1422d1ac9c66.sql` |
 | `enqueue_scrape_task` | Não autenticado | `supabase/migrations/20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql` |
@@ -877,6 +876,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `dismiss_next_best_action` | nao autenticado | `supabase/migrations/20261122270000_next_best_action.sql` |
 | `dismiss_next_best_action` | sugestao nao encontrada | `supabase/migrations/20261122270000_next_best_action.sql` |
 | `dismiss_next_best_action` | usuario nao pertence a organizacao | `supabase/migrations/20261122270000_next_best_action.sql` |
+| `decide_ab_winner` | Acesso negado a campanha | `supabase/migrations/20261122310000_c14_ab_significance.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

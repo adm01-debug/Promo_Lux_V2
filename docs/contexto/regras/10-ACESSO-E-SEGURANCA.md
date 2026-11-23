@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0801668cd9` · branch `main` · 2026-11-23 10:55 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b2a2288ef` · branch `main` · 2026-11-23 11:49 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -142,7 +142,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 192 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 193 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -294,7 +294,7 @@
 - `supabase/migrations/20260722104240_34cd0552-a1fd-43e1-98fd-6aa0eb140c35.sql`
 - `supabase/migrations/20260722111704_d767ae92-d4c9-4722-b181-a07f63a8954d.sql`
 - `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql`
-- … +42 (lista completa em `context.json`)
+- … +43 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -489,18 +489,18 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated | select, insert, update | `data_subject_requests` |
 | grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings`, `lead_scores`, `dashboard_layouts` … +11 |
 | grant | authenticated | select, update | `retry_policy_advisories`, `reaper_alert_settings` |
-| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +16 |
+| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +17 |
 | grant | authenticated, service_role | select | `oracle_v2_health`, `v_sec_definer_anon_grants`, `v_extensions_audit` |
 | grant | authenticated, service_role, anon | execute | `default_sla_seconds` |
 | grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +56 |
-| grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +88 |
+| grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +91 |
 | grant | service_role | select | `oracle_v2_health`, `deal_lost_reason_stats`, `sales_goal_progress`, `sales_goals_detailed`, `org_leaderboard`, `satisfaction_stats`, `email_template_stats` |
 | revoke | PUBLIC | all | `capture_db_health_snapshot`, `enqueue_scrape_task`, `claim_scrape_tasks`, `complete_scrape_task`, `fail_scrape_task`, `replay_dead_letter`, `evaluate_partition_policies`, `log_automation_event`, `reset_circuit_breaker`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts`, `record_vault_cookie_snapshots`, `evaluate_vault_cookie_alerts`, `claim_instagram_tasks`, `replay_instagram_dead_letter_batch` … +8 |
 | revoke | PUBLIC | execute | `get_sector_summary`, `get_dashboard_stats`, `enqueue_webhook_event`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages` … +20 |
 | revoke | PUBLIC, anon | all | `replay_dead_letter_batch`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_trend`, `capture_api_latency_snapshots`, `evaluate_api_latency_alerts`, `prune_api_latency_snapshots`, `worker_should_run`, `worker_report_batch`, `dlq_top_reasons`, `api_latency_percentiles`, `apply_retry_advisory`, `rollback_retry_advisory`, `enrichment_funnel_counts`, `sla_deadline` … +1 |
-| revoke | PUBLIC, anon | execute | `get_sector_summary` |
+| revoke | PUBLIC, anon | execute | `get_sector_summary`, `campaign_ab_stats` |
 | revoke | PUBLIC, anon, authenticated | all | `pg_catalog_rls_tables`, `defer_scrape_task`, `dlq_purge_stale_network_errors`, `record_places_api_call`, `claim_web_scrape_tasks`, `complete_web_scrape_task`, `fail_web_scrape_task`, `defer_web_scrape_task`, `prune_api_request_logs`, `prune_audit_logs`, `prune_automation_execution_logs`, `prune_campaign_events`, `prune_email_sync_log`, `worker_report_batch`, `worker_should_run` … +8 |
-| revoke | PUBLIC, anon, authenticated | execute | `purge_soft_deleted`, `advance_recipient_step`, `decide_ab_winner`, `replay_web_dead_letter_batch`, `web_dlq_health_metrics`, `api_latency_percentiles`, `dlq_top_reasons`, `prune_pg_net_health_snapshots`, `pg_net_watchdog_should_notify`, `pg_net_watchdog_try_lock`, `system_recovery_health` |
+| revoke | PUBLIC, anon, authenticated | execute | `purge_soft_deleted`, `advance_recipient_step`, `decide_ab_winner`, `replay_web_dead_letter_batch`, `web_dlq_health_metrics`, `api_latency_percentiles`, `dlq_top_reasons`, `prune_pg_net_health_snapshots`, `pg_net_watchdog_should_notify`, `pg_net_watchdog_try_lock`, `system_recovery_health`, `normal_two_sided_p`, `ab_two_proportion_test`, `decide_ab_winner` |
 | revoke | PUBLIC, authenticated, anon | execute | `check_oracle_rate_limit`, `check_api_key_rate_limit` |
 | revoke | anon | all | `v_sec_definer_anon_grants`, `v_extensions_audit`, `replay_instagram_dead_letter_batch`, `incidents` |
 | revoke | anon | execute | `get_dashboard_stats`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `api_latency_stats`, `reset_circuit_breaker`, `evaluate_partition_policies`, `enqueue_scrape_task`, `replay_dead_letter` … +8 |

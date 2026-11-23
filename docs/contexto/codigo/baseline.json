@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0801668cd9502a01d392b4a7a4b5ef1fbad1fe53",
+  "commit": "0b2a2288ef2e5225808223dc254e558648359f9b",
   "branch": "main",
-  "data_commit": "2026-11-23T07:55:16-03:00",
+  "data_commit": "2026-11-23T08:40:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "0b2a228",
+    "data": "2026-11-23",
+    "assunto": "feat: exige significancia estatistica para eleger vencedora A/B (#150)"
+   },
    {
     "sha": "0801668",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "c14eeb4",
     "data": "2026-11-21",
     "assunto": "fix(db): claim_instagram_job volta a reservar jobs do worker (#111)"
-   },
-   {
-    "sha": "4bfa973",
-    "data": "2026-11-21",
-    "assunto": "docs: reconcilia ESTADO_ATUAL com medicao direta do banco (#118)"
    }
   ],
-  "arquivos_mudados_7d": 201,
+  "arquivos_mudados_7d": 203,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 46
+    "mudancas": 47
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -152,15 +152,15 @@
     "mudancas": 15
    },
    {
+    "pasta": "src/integrations/supabase",
+    "mudancas": 9
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 8
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "pasta": "src/integrations/supabase",
     "mudancas": 8
    },
    {
@@ -254,6 +254,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "src/integrations/supabase/types.ts",
+    "mudancas": 4
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 3
    },
@@ -286,10 +290,6 @@
     "mudancas": 3
    },
    {
-    "arquivo": "src/integrations/supabase/types.ts",
-    "mudancas": 3
-   },
-   {
     "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 3
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 107
+    "commits": 108
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1107,
+  "arquivos_total": 1108,
   "arquivos_codigo": 695,
-  "linhas_codigo": 120269,
+  "linhas_codigo": 120328,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 96,
   "edge_functions": 60,
   "tabelas": 115,
-  "migrations": 241,
+  "migrations": 242,
   "cron_jobs": 31,
   "testes": 126,
   "workflows": 9,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 303,
-   "linhas": 49141
+   "linhas": 49184
   },
   "src/contexts": {
    "arquivos": 7,
@@ -568,7 +568,7 @@
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 8624
+   "linhas": 8640
   },
   "src/lib": {
    "arquivos": 53,
@@ -610,7 +610,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7243
+   "linhas": 7259
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",

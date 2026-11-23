@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 241,
+ "migrations": 242,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -65,6 +65,7 @@
  "funcoes": [
   "_dsar_pseudonymize",
   "_pii_redact_jsonb",
+  "ab_two_proportion_test",
   "accept_org_invite",
   "advance_recipient_step",
   "api_latency_percentiles",
@@ -162,6 +163,7 @@
   "log_queue_sla_change",
   "mark_email_template_used",
   "nba_recommend",
+  "normal_two_sided_p",
   "normalize_suppression_email",
   "notify_on_enrichment",
   "notify_on_workflow_complete",
@@ -4137,6 +4139,13 @@
   },
   "campaigns": {
    "colunas": {
+    "ab_min_confidence": {
+     "tipo": "numeric",
+     "nn": true,
+     "pk": false,
+     "default": "0.95",
+     "ref": null
+    },
     "ab_min_sample": {
      "tipo": "integer",
      "nn": true,
@@ -4158,11 +4167,32 @@
      "default": null,
      "ref": null
     },
+    "ab_winner_lift": {
+     "tipo": "numeric",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "ab_winner_metric": {
      "tipo": "text",
      "nn": true,
      "pk": false,
      "default": "'reply'",
+     "ref": null
+    },
+    "ab_winner_p_value": {
+     "tipo": "numeric",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "ab_winner_reason": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
      "ref": null
     },
     "ab_winner_variant": {
@@ -4357,10 +4387,14 @@
    ],
    "criada_em": "20260403110857_b35a6a5c-ab23-4bbe-9a31-cfb59de97723.sql",
    "colunas_types": {
+    "ab_min_confidence": "number",
     "ab_min_sample": "number",
     "ab_test_enabled": "boolean",
     "ab_winner_decided_at": "string | null",
+    "ab_winner_lift": "number | null",
     "ab_winner_metric": "string",
+    "ab_winner_p_value": "number | null",
+    "ab_winner_reason": "string | null",
     "ab_winner_variant": "string | null",
     "bounced": "number",
     "created_at": "string",

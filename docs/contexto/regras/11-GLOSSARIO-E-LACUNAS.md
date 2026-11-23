@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0801668cd9` · branch `main` · 2026-11-23 10:55 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0b2a2288ef` · branch `main` · 2026-11-23 11:49 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -26,7 +26,7 @@
 | `campaign_messages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `campaign_recipients` | _(sem COMMENT ON TABLE — significado não documentado)_ | 26 colunas | migration |
 | `campaign_replies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
-| `campaigns` | _(sem COMMENT ON TABLE — significado não documentado)_ | 22 colunas | migration |
+| `campaigns` | _(sem COMMENT ON TABLE — significado não documentado)_ | 26 colunas | migration |
 | `changelog_entries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `circuit_breaker_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `circuit_breaker_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |

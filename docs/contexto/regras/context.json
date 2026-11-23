@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "0801668cd9502a01d392b4a7a4b5ef1fbad1fe53",
+  "sha": "0b2a2288ef2e5225808223dc254e558648359f9b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 10:55 UTC",
-  "files_total": 1126,
-  "code_files": 944,
-  "code_lines": 138725
+  "generated_at": "2026-11-23 11:49 UTC",
+  "files_total": 1127,
+  "code_files": 945,
+  "code_lines": 139233
  },
  "version": "1.3.2",
- "facts_hash": "666b5256085afe18",
+ "facts_hash": "29ee2526567a4da3",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -236,7 +236,7 @@
   "languages": {
    ".ts": 371,
    ".tsx": 297,
-   ".sql": 245,
+   ".sql": 246,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -1563,6 +1563,13 @@
       "src": "supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql"
      },
      {
+      "name": "ab_min_confidence",
+      "type": "numeric NOT NULL DEFAULT 0.95",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+     },
+     {
       "name": "ab_min_sample",
       "type": "number not null",
       "fk": "",
@@ -1577,8 +1584,29 @@
       "src": "src/integrations/supabase/types.ts"
      },
      {
+      "name": "ab_winner_lift",
+      "type": "number | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
       "name": "ab_winner_metric",
       "type": "string not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "ab_winner_p_value",
+      "type": "number | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "ab_winner_reason",
+      "type": "string | null",
       "fk": "",
       "generated": "",
       "src": "src/integrations/supabase/types.ts"
@@ -16352,39 +16380,26 @@
      "campaign_recipients"
     ]
    },
-   "campaign_ab_stats": {
-    "args": "_campaign_id uuid",
-    "returns": "TABLE(\n  variant text,\n  recipients bigint,\n  sent bigint,\n  opened bigint,\n  clicked bigint,\n  replied bigint,\n  bounced bigint,\n  open_rate numeric,\n  click_rate numeric,\n  reply_rate numeric\n)",
-    "lang": "sql",
-    "src": "supabase/migrations/20260711174027_42346d35-19a8-464a-a5ee-16dfa967d334.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "WITH allowed AS ( SELECT c.id FROM public.campaigns c WHERE c.id = _campaign_id AND public.is_org_member(c.organization_id, auth.uid()) ), base AS ( SELECT COALESCE(r.variant, 'A') AS variant, r.status, r.open_count, r.click_count, r.replied_at, r.bounced_at, r.sent_at FROM public.campaign_recipients r JOIN allowed a ON a.id = r.campaign_id ) SELECT variant, count(*)::bigint AS recipients, count(*) FILTER (WHERE sent_at IS NOT NULL)::bigint AS sent, count(*) FILTER (WHERE open_count > 0)::bigint AS opened, count(*) FILTER (WHERE click_count > 0)::bigint AS clicked, count(*) FILTER (WHERE replied_at IS NOT NULL)::bigint AS replied, count(*) FILTER (WHERE bounced_at IS NOT NULL)::bigint AS bou …",
-    "raises": [],
-    "tables": [
-     "allowed",
-     "base",
-     "campaign_recipients",
-     "campaigns"
-    ]
-   },
    "decide_ab_winner": {
     "args": "_campaign_id uuid",
     "returns": "text",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_campaign public.campaigns; v_winner text; v_min integer; v_variant_count integer; BEGIN SELECT * INTO v_campaign FROM public.campaigns WHERE id = _campaign_id; IF NOT FOUND THEN RETURN NULL; END IF; IF auth.uid() IS NOT NULL AND NOT public.is_org_member(v_campaign.organization_id, auth.uid()) THEN RAISE EXCEPTION 'Acesso negado à campanha'; END IF; IF v_campaign.ab_winner_variant IS NOT NULL OR NOT v_campaign.ab_test_enabled THEN RETURN v_campaign.ab_winner_variant; END IF; v_min := GREATEST(COALESCE(v_campaign.ab_min_sample, 20), 1); SELECT count(DISTINCT variant) INTO v_variant_count FROM public.campaign_recipients WHERE campaign_id = _campaign_id AND variant IS NOT NULL; IF v_va …",
+    "body": "DECLARE v_campaign public.campaigns; v_min integer; v_variant_count integer; v_metric text; v_best record; v_row record; v_second record; v_test record; BEGIN SELECT * INTO v_campaign FROM public.campaigns WHERE id = _campaign_id; IF NOT FOUND THEN RETURN NULL; END IF; IF auth.uid() IS NOT NULL AND NOT public.is_org_member(v_campaign.organization_id, auth.uid()) THEN RAISE EXCEPTION 'Acesso negado a campanha' USING ERRCODE = '42501'; END IF; IF v_campaign.ab_winner_variant IS NOT NULL OR NOT v_campaign.ab_test_enabled THEN RETURN v_campaign.ab_winner_variant; END IF; v_min := GREATEST(COALESCE(v_campaign.ab_min_sample, 20), 1); v_metric := COALESCE(v_campaign.ab_winner_metric, 'reply'); SELE …",
     "raises": [
-     "Acesso negado à campanha"
+     "Acesso negado a campanha"
     ],
     "tables": [
+     "ab_two_proportion_test",
+     "agg",
      "campaign_recipients",
      "campaigns",
+     "scored",
      "v_campaign",
-     "v_variant_count",
-     "v_winner"
+     "v_test",
+     "v_variant_count"
     ]
    },
    "normalize_suppression_email": {
@@ -18581,6 +18596,47 @@
     "tables": [
      "next_best_actions",
      "v_org"
+    ]
+   },
+   "normal_two_sided_p": {
+    "args": "_z float8",
+    "returns": "numeric",
+    "lang": "sql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "SELECT CASE WHEN _z IS NULL THEN NULL WHEN abs(_z) = 0 THEN 1::numeric ELSE ROUND( LEAST(GREATEST( power( 1 + 0.196854 * abs(_z) + 0.115194 * power(abs(_z), 2) + 0.000344 * power(abs(_z), 3) + 0.019527 * power(abs(_z), 4), -4 ), 0::float8 ), 1::float8)::numeric, 6 ) END;",
+    "raises": [],
+    "tables": []
+   },
+   "ab_two_proportion_test": {
+    "args": "_success_a bigint, _total_a bigint, _success_b bigint, _total_b bigint",
+    "returns": "TABLE(\n  p_value        numeric,\n  lift_pct       numeric,\n  is_significant boolean,\n  needed_sample  bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "DECLARE v_rate_a numeric; v_rate_b numeric; v_pooled numeric; v_se numeric; v_z float8; v_p numeric; v_lift numeric; v_needed bigint; v_delta numeric; BEGIN IF COALESCE(_total_a, 0) = 0 OR COALESCE(_total_b, 0) = 0 THEN RETURN QUERY SELECT NULL::numeric, NULL::numeric, false, NULL::bigint; RETURN; END IF; v_rate_a := _success_a::numeric / _total_a; v_rate_b := _success_b::numeric / _total_b; v_pooled := (_success_a + _success_b)::numeric / (_total_a + _total_b); v_delta := v_rate_b - v_rate_a; v_lift := CASE WHEN v_rate_a > 0 THEN ROUND(100.0 * v_delta / v_rate_a, 2) ELSE NULL END; IF v_rate_a = 0 AND v_rate_b = 0 THEN RETURN QUERY SELECT 1::numeric, 0::numeric, false, NULL::bigint; RETURN; …",
+    "raises": [],
+    "tables": []
+   },
+   "campaign_ab_stats": {
+    "args": "_campaign_id uuid",
+    "returns": "TABLE(\n  variant text,\n  recipients bigint,\n  sent bigint,\n  opened bigint,\n  clicked bigint,\n  replied bigint,\n  bounced bigint,\n  open_rate numeric,\n  click_rate numeric,\n  reply_rate numeric,\n  p_value numeric,\n  lift_pct numeric,\n  is_significant boolean,\n  is_winner boolean\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_campaign public.campaigns; v_metric text; v_top text; v_best record; v_stats record; BEGIN SELECT * INTO v_campaign FROM public.campaigns WHERE id = _campaign_id; IF NOT FOUND OR NOT public.is_org_member(v_campaign.organization_id, auth.uid()) THEN RETURN; END IF; v_metric := COALESCE(v_campaign.ab_winner_metric, 'reply'); SELECT s.variant INTO v_top FROM ( SELECT COALESCE(r.variant, 'A') AS variant, count(*) FILTER (WHERE r.sent_at IS NOT NULL) AS sent, count(*) FILTER (WHERE r.open_count > 0) AS opened, count(*) FILTER (WHERE r.click_count > 0) AS clicked, count(*) FILTER (WHERE r.replied_at IS NOT NULL) AS replied FROM public.campaign_recipients r WHERE r.campaign_id = _campaign …",
+    "raises": [],
+    "tables": [
+     "ab_two_proportion_test",
+     "campaign_recipients",
+     "campaigns",
+     "p_value",
+     "v_best",
+     "v_campaign",
+     "v_top"
     ]
    },
    "Args": {
@@ -21943,6 +21999,7 @@
    "supabase/migrations/20261122260000_dlp_pii_masking.sql",
    "supabase/migrations/20261122270000_next_best_action.sql",
    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
+   "supabase/migrations/20261122310000_c14_ab_significance.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -27113,6 +27170,70 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "campaign_ab_stats",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "campaign_ab_stats",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "normal_two_sided_p",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "ab_two_proportion_test",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "normal_two_sided_p",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "ab_two_proportion_test",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "decide_ab_winner",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "decide_ab_winner",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
    }
   ],
   "raises": [
@@ -27160,11 +27281,6 @@
     "function": "get_dashboard_stats",
     "msg": "Acesso negado à organização",
     "src": "supabase/migrations/20260522142002_01f908df-71d7-469f-aa7a-fa389e561b44.sql"
-   },
-   {
-    "function": "decide_ab_winner",
-    "msg": "Acesso negado à campanha",
-    "src": "supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql"
    },
    {
     "function": "pg_catalog_rls_tables",
@@ -27795,6 +27911,11 @@
     "function": "dismiss_next_best_action",
     "msg": "usuario nao pertence a organizacao",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "function": "decide_ab_winner",
+    "msg": "Acesso negado a campanha",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
    }
   ],
   "seed": [],
@@ -30976,7 +31097,7 @@
   {
    "module": "src/components",
    "files": 303,
-   "lines": 49141,
+   "lines": 49184,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -31433,7 +31554,7 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 8624,
+   "lines": 8640,
    "tables": [
     "automation_alerts",
     "companies",
@@ -31914,8 +32035,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 241,
-   "lines": 16636,
+   "files": 242,
+   "lines": 17085,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -33477,9 +33598,14 @@
     "subject"
    ],
    "campaigns": [
+    "ab_min_confidence",
+    "ab_min_sample",
     "ab_test_enabled",
     "ab_winner_decided_at",
+    "ab_winner_lift",
     "ab_winner_metric",
+    "ab_winner_p_value",
+    "ab_winner_reason",
     "ab_winner_variant",
     "deleted_at",
     "id",
@@ -38865,6 +38991,11 @@
     "table": "campaigns",
     "column": "ab_test_enabled",
     "rule": "default false"
+   },
+   {
+    "table": "campaigns",
+    "column": "ab_min_confidence",
+    "rule": "default 0.95"
    },
    {
     "table": "campaigns",
@@ -59269,39 +59400,26 @@
      "campaign_recipients"
     ]
    },
-   "campaign_ab_stats": {
-    "args": "_campaign_id uuid",
-    "returns": "TABLE(\n  variant text,\n  recipients bigint,\n  sent bigint,\n  opened bigint,\n  clicked bigint,\n  replied bigint,\n  bounced bigint,\n  open_rate numeric,\n  click_rate numeric,\n  reply_rate numeric\n)",
-    "lang": "sql",
-    "src": "supabase/migrations/20260711174027_42346d35-19a8-464a-a5ee-16dfa967d334.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "WITH allowed AS ( SELECT c.id FROM public.campaigns c WHERE c.id = _campaign_id AND public.is_org_member(c.organization_id, auth.uid()) ), base AS ( SELECT COALESCE(r.variant, 'A') AS variant, r.status, r.open_count, r.click_count, r.replied_at, r.bounced_at, r.sent_at FROM public.campaign_recipients r JOIN allowed a ON a.id = r.campaign_id ) SELECT variant, count(*)::bigint AS recipients, count(*) FILTER (WHERE sent_at IS NOT NULL)::bigint AS sent, count(*) FILTER (WHERE open_count > 0)::bigint AS opened, count(*) FILTER (WHERE click_count > 0)::bigint AS clicked, count(*) FILTER (WHERE replied_at IS NOT NULL)::bigint AS replied, count(*) FILTER (WHERE bounced_at IS NOT NULL)::bigint AS bou …",
-    "raises": [],
-    "tables": [
-     "allowed",
-     "base",
-     "campaign_recipients",
-     "campaigns"
-    ]
-   },
    "decide_ab_winner": {
     "args": "_campaign_id uuid",
     "returns": "text",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_campaign public.campaigns; v_winner text; v_min integer; v_variant_count integer; BEGIN SELECT * INTO v_campaign FROM public.campaigns WHERE id = _campaign_id; IF NOT FOUND THEN RETURN NULL; END IF; IF auth.uid() IS NOT NULL AND NOT public.is_org_member(v_campaign.organization_id, auth.uid()) THEN RAISE EXCEPTION 'Acesso negado à campanha'; END IF; IF v_campaign.ab_winner_variant IS NOT NULL OR NOT v_campaign.ab_test_enabled THEN RETURN v_campaign.ab_winner_variant; END IF; v_min := GREATEST(COALESCE(v_campaign.ab_min_sample, 20), 1); SELECT count(DISTINCT variant) INTO v_variant_count FROM public.campaign_recipients WHERE campaign_id = _campaign_id AND variant IS NOT NULL; IF v_va …",
+    "body": "DECLARE v_campaign public.campaigns; v_min integer; v_variant_count integer; v_metric text; v_best record; v_row record; v_second record; v_test record; BEGIN SELECT * INTO v_campaign FROM public.campaigns WHERE id = _campaign_id; IF NOT FOUND THEN RETURN NULL; END IF; IF auth.uid() IS NOT NULL AND NOT public.is_org_member(v_campaign.organization_id, auth.uid()) THEN RAISE EXCEPTION 'Acesso negado a campanha' USING ERRCODE = '42501'; END IF; IF v_campaign.ab_winner_variant IS NOT NULL OR NOT v_campaign.ab_test_enabled THEN RETURN v_campaign.ab_winner_variant; END IF; v_min := GREATEST(COALESCE(v_campaign.ab_min_sample, 20), 1); v_metric := COALESCE(v_campaign.ab_winner_metric, 'reply'); SELE …",
     "raises": [
-     "Acesso negado à campanha"
+     "Acesso negado a campanha"
     ],
     "tables": [
+     "ab_two_proportion_test",
+     "agg",
      "campaign_recipients",
      "campaigns",
+     "scored",
      "v_campaign",
-     "v_variant_count",
-     "v_winner"
+     "v_test",
+     "v_variant_count"
     ]
    },
    "normalize_suppression_email": {
@@ -61500,6 +61618,47 @@
      "v_org"
     ]
    },
+   "normal_two_sided_p": {
+    "args": "_z float8",
+    "returns": "numeric",
+    "lang": "sql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "SELECT CASE WHEN _z IS NULL THEN NULL WHEN abs(_z) = 0 THEN 1::numeric ELSE ROUND( LEAST(GREATEST( power( 1 + 0.196854 * abs(_z) + 0.115194 * power(abs(_z), 2) + 0.000344 * power(abs(_z), 3) + 0.019527 * power(abs(_z), 4), -4 ), 0::float8 ), 1::float8)::numeric, 6 ) END;",
+    "raises": [],
+    "tables": []
+   },
+   "ab_two_proportion_test": {
+    "args": "_success_a bigint, _total_a bigint, _success_b bigint, _total_b bigint",
+    "returns": "TABLE(\n  p_value        numeric,\n  lift_pct       numeric,\n  is_significant boolean,\n  needed_sample  bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "DECLARE v_rate_a numeric; v_rate_b numeric; v_pooled numeric; v_se numeric; v_z float8; v_p numeric; v_lift numeric; v_needed bigint; v_delta numeric; BEGIN IF COALESCE(_total_a, 0) = 0 OR COALESCE(_total_b, 0) = 0 THEN RETURN QUERY SELECT NULL::numeric, NULL::numeric, false, NULL::bigint; RETURN; END IF; v_rate_a := _success_a::numeric / _total_a; v_rate_b := _success_b::numeric / _total_b; v_pooled := (_success_a + _success_b)::numeric / (_total_a + _total_b); v_delta := v_rate_b - v_rate_a; v_lift := CASE WHEN v_rate_a > 0 THEN ROUND(100.0 * v_delta / v_rate_a, 2) ELSE NULL END; IF v_rate_a = 0 AND v_rate_b = 0 THEN RETURN QUERY SELECT 1::numeric, 0::numeric, false, NULL::bigint; RETURN; …",
+    "raises": [],
+    "tables": []
+   },
+   "campaign_ab_stats": {
+    "args": "_campaign_id uuid",
+    "returns": "TABLE(\n  variant text,\n  recipients bigint,\n  sent bigint,\n  opened bigint,\n  clicked bigint,\n  replied bigint,\n  bounced bigint,\n  open_rate numeric,\n  click_rate numeric,\n  reply_rate numeric,\n  p_value numeric,\n  lift_pct numeric,\n  is_significant boolean,\n  is_winner boolean\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_campaign public.campaigns; v_metric text; v_top text; v_best record; v_stats record; BEGIN SELECT * INTO v_campaign FROM public.campaigns WHERE id = _campaign_id; IF NOT FOUND OR NOT public.is_org_member(v_campaign.organization_id, auth.uid()) THEN RETURN; END IF; v_metric := COALESCE(v_campaign.ab_winner_metric, 'reply'); SELECT s.variant INTO v_top FROM ( SELECT COALESCE(r.variant, 'A') AS variant, count(*) FILTER (WHERE r.sent_at IS NOT NULL) AS sent, count(*) FILTER (WHERE r.open_count > 0) AS opened, count(*) FILTER (WHERE r.click_count > 0) AS clicked, count(*) FILTER (WHERE r.replied_at IS NOT NULL) AS replied FROM public.campaign_recipients r WHERE r.campaign_id = _campaign …",
+    "raises": [],
+    "tables": [
+     "ab_two_proportion_test",
+     "campaign_recipients",
+     "campaigns",
+     "p_value",
+     "v_best",
+     "v_campaign",
+     "v_top"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -61713,11 +61872,6 @@
     "function": "get_dashboard_stats",
     "msg": "Acesso negado à organização",
     "src": "supabase/migrations/20260522142002_01f908df-71d7-469f-aa7a-fa389e561b44.sql"
-   },
-   {
-    "function": "decide_ab_winner",
-    "msg": "Acesso negado à campanha",
-    "src": "supabase/migrations/20260711174405_36f70b09-66dc-4d24-9239-c257fe089ffa.sql"
    },
    {
     "function": "pg_catalog_rls_tables",
@@ -62348,6 +62502,11 @@
     "function": "dismiss_next_best_action",
     "msg": "usuario nao pertence a organizacao",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "function": "decide_ab_winner",
+    "msg": "Acesso negado a campanha",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
    }
   ],
   "db_generated": [],
@@ -65951,7 +66110,8 @@
    "supabase/migrations/20261122210000_status_page.sql",
    "supabase/migrations/20261122220000_ip_allowlist.sql",
    "supabase/migrations/20261122270000_next_best_action.sql",
-   "supabase/migrations/20261122280000_cron_instagram_worker.sql"
+   "supabase/migrations/20261122280000_cron_instagram_worker.sql",
+   "supabase/migrations/20261122310000_c14_ab_significance.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -71164,6 +71324,70 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "campaign_ab_stats",
+    "objkind": "function",
+    "roles": "PUBLIC, anon",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "campaign_ab_stats",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "normal_two_sided_p",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "ab_two_proportion_test",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "normal_two_sided_p",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "ab_two_proportion_test",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "decide_ab_winner",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "decide_ab_winner",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
    }
   ],
   "guards": [
@@ -77687,7 +77911,7 @@
   },
   "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": {
    "path": "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-   "lines": 335,
+   "lines": 378,
    "exports": [
     "const CampaignTrackingDrawer"
    ],
@@ -77732,9 +77956,14 @@
      "subject"
     ],
     "campaigns": [
+     "ab_min_confidence",
+     "ab_min_sample",
      "ab_test_enabled",
      "ab_winner_decided_at",
+     "ab_winner_lift",
      "ab_winner_metric",
+     "ab_winner_p_value",
+     "ab_winner_reason",
      "ab_winner_variant",
      "id"
     ]
@@ -84994,7 +85223,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 7243,
+   "lines": 7259,
    "exports": [
     "type Json",
     "type Database",
@@ -95731,13 +95960,29 @@
    "path": "supabase/migrations/20261122280000_cron_instagram_worker.sql",
    "lines": 44,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261122310000_c14_ab_significance.sql": {
+   "path": "supabase/migrations/20261122310000_c14_ab_significance.sql",
+   "lines": 449,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "0801668cd9502a01d392b4a7a4b5ef1fbad1fe53",
+  "sha": "0b2a2288ef2e5225808223dc254e558648359f9b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "0b2a228",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat: exige significancia estatistica para eleger vencedora A/B (#150)",
+    "files": [
+     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+     "src/integrations/supabase/types.ts",
+     "supabase/migrations/20261122310000_c14_ab_significance.sql"
+    ]
+   },
    {
     "sha": "0801668",
     "date": "2026-11-23",
@@ -96094,15 +96339,6 @@
      "supabase/functions/vault-cookie-health/index.ts",
      "supabase/functions/web-scrape-worker/index.ts"
     ]
-   },
-   {
-    "sha": "c45eec0",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "chore(docs): reconcilia o backlog com o banco real de 2026-11-22 (#112)",
-    "files": [
-     "docs/pendencias/_backlog-verificado.md"
-    ]
    }
   ],
   "hot_files": [
@@ -96115,7 +96351,7 @@
     4
    ],
    [
-    "docs/pendencias/_backlog-verificado.md",
+    "src/integrations/supabase/types.ts",
     2
    ],
    [
@@ -96163,6 +96399,14 @@
     2
    ],
    [
+    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+    1
+   ],
+   [
+    "supabase/migrations/20261122310000_c14_ab_significance.sql",
+    1
+   ],
+   [
     "supabase/functions/instagram-dlq-replay/index.ts",
     1
    ],
@@ -96176,14 +96420,6 @@
    ],
    [
     "docs/qa/01-INVENTARIO.md",
-    1
-   ],
-   [
-    "docs/qa/02-CENARIOS.md",
-    1
-   ],
-   [
-    "docs/qa/03-ACHADOS.md",
     1
    ]
   ]
