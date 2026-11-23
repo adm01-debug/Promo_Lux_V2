@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
 import { upsertCompanies } from "../_shared/companies-upsert.ts";
 import { phaseEnabled } from "../_shared/workflow-phases.ts";
@@ -51,6 +52,66 @@ function badRequest(corsHeaders: Record<string, string>, details: unknown) {
   });
 }
 
+// ── Multi-tenant ──
+// O client acima usa SERVICE_ROLE_KEY: ele ignora RLS e não tem `auth.uid()`,
+// então o DEFAULT public.default_org_for_current_user() da coluna
+// organization_id resolve para NULL e o INSERT viola o NOT NULL. Além disso,
+// filtrar por user_id impedia um membro de executar/editar workflow criado por
+// outro membro da mesma organização. A autorização real é: o chamador precisa
+// ser membro da organização dona da linha, e o papel dele na organização define
+// o que pode fazer (mesmas regras das policies de workflows.
+const ROLE_RANK: Record<string, number> = { viewer: 0, sdr: 1, admin: 2 };
+
+interface CallerOrg {
+  organization_id: string;
+  role: string;
+}
+
+/** Organizações do usuário, com o papel dele em cada uma. */
+async function listCallerOrgs(admin: SupabaseClient, userId: string): Promise<CallerOrg[]> {
+  const { data, error } = await admin
+    .from("organization_members")
+    .select("organization_id, role, created_at")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+  if (error || !data) return [];
+  return data.map((r) => ({
+    organization_id: (r as { organization_id: string }).organization_id,
+    role: (r as { role: string }).role,
+  }));
+}
+
+/** Papel do usuário numa organização específica (null = não é membro). */
+async function callerRoleIn(admin: SupabaseClient, userId: string, organizationId: string): Promise<string | null> {
+  const { data, error } = await admin
+    .from("organization_members")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("organization_id", organizationId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return (data as { role: string }).role;
+}
+
+function hasMinRole(role: string | null, minRole: string): boolean {
+  if (!role) return false;
+  return (ROLE_RANK[role] ?? -1) >= (ROLE_RANK[minRole] ?? 99);
+}
+
+function forbidden(corsHeaders: Record<string, string>, message: string) {
+  return new Response(JSON.stringify({ error: message }), {
+    status: 403,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+function notFound(corsHeaders: Record<string, string>, message = "Workflow not found") {
+  return new Response(JSON.stringify({ error: message }), {
+    status: 404,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
 // ── Schemas ──
 
 const CreateWorkflowSchema = z.object({
@@ -58,6 +119,8 @@ const CreateWorkflowSchema = z.object({
   description: z.string().max(1000).optional().default(""),
   steps: z.array(z.record(z.unknown())).min(1).max(20),
   config: z.record(z.unknown()).default({}),
+  /** Org alvo; se omitida usa a primeira organização do usuário. */
+  organization_id: z.string().uuid("Invalid organization_id").optional(),
 });
 
 const RunWorkflowSchema = z.object({
@@ -124,10 +187,18 @@ serve(async (req) => {
   try {
     // LIST workflows
     if (action === "list" && req.method === "GET") {
+      const orgs = await listCallerOrgs(supabase, userId);
+      if (orgs.length === 0) {
+        return new Response(JSON.stringify([]), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       const { data, error } = await supabase
         .from("workflows")
         .select("*, workflow_runs(id, status, started_at, completed_at, results)")
-        .eq("user_id", userId)
+        .in("organization_id", orgs.map((o) => o.organization_id))
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
       if (error) throw error;
 
@@ -147,10 +218,30 @@ serve(async (req) => {
       }
       const body = parsed.data;
 
+      // organization_id é NOT NULL e o service_role não tem auth.uid(), logo o
+      // DEFAULT da coluna retorna NULL. A org vem da requisição (quando enviada)
+      // e SEMPRE é validada contra a membership do chamador.
+      const orgs = await listCallerOrgs(supabase, userId);
+      const requestedOrgId = body.organization_id ?? null;
+      const targetOrg = requestedOrgId
+        ? orgs.find((o) => o.organization_id === requestedOrgId)
+        : orgs[0];
+
+      if (!targetOrg) {
+        return forbidden(
+          corsHeaders,
+          requestedOrgId ? "Not a member of the requested organization" : "User has no organization",
+        );
+      }
+      if (!hasMinRole(targetOrg.role, "sdr")) {
+        return forbidden(corsHeaders, "Requires sdr or admin role in the organization");
+      }
+
       const { data, error } = await supabase
         .from("workflows")
         .insert({
           user_id: userId,
+          organization_id: targetOrg.organization_id,
           name: body.name,
           description: body.description,
           status: "active",
@@ -178,9 +269,10 @@ serve(async (req) => {
         .from("automation_steps")
         .select("id, name, job_id, run_id, organization_id")
         .eq("id", step_id)
-        .single();
+        .maybeSingle();
 
-      if (stepError || !step) throw new Error("Step not found");
+      if (stepError) throw stepError;
+      if (!step) return notFound(corsHeaders, "Step not found");
 
       // Steps de workflow pertencem a um run e nao a um scrape_job — o org vem da
       // propria linha, nao do join. `scrape_jobs(...)` vinha null e estourava 500.
@@ -194,21 +286,60 @@ serve(async (req) => {
         .eq("user_id", userId)
         .maybeSingle();
 
-      if (!membership) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 403, headers: corsHeaders });
+      if (!hasMinRole((membership as { role?: string } | null)?.role ?? null, "sdr")) {
+        return forbidden(corsHeaders, "Requires sdr or admin role in the step organization");
       }
 
-      // Update step to pending
-      await supabase.from("automation_steps").update({ 
-        status: "pending", 
+      // Steps de workflow (run_id) nao sao consumidos por worker externo:
+      // apenas marcar "pending" fazia a UI anunciar "reiniciado" com o
+      // trabalho nunca refeito. As fases vivem dentro do action=run, entao
+      // reexecutamos o run reaproveitando o token do proprio caller (a
+      // autorizacao e revalidada na entrada do run, sem service_role extra).
+      if (step.run_id) {
+        const { data: runRow, error: runErr } = await supabase
+          .from("workflow_runs")
+          .select("workflow_id")
+          .eq("id", step.run_id)
+          .maybeSingle();
+        if (runErr) throw runErr;
+        if (!runRow?.workflow_id) return notFound(corsHeaders, "Run do step nao encontrado");
+
+        await supabase.from("automation_steps").update({
+          status: "pending",
+          error_stack: null,
+          message: "Reexecucao solicitada pelo usuario",
+          started_at: null,
+          completed_at: null,
+        }).eq("id", step_id);
+
+        const retryRes = await fetch(`${supabaseUrl}/functions/v1/workflow-engine?action=run`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: authHeader },
+          body: JSON.stringify({ workflow_id: runRow.workflow_id }),
+        });
+        const retryBody = await retryRes.json().catch(() => ({}));
+        if (!retryRes.ok) {
+          return new Response(JSON.stringify({ error: retryBody?.error ?? "Falha ao reexecutar o workflow" }), {
+            status: retryRes.status,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        log.info("step_retry_rerun", { step_id, run_id: step.run_id, workflow_id: runRow.workflow_id });
+        return new Response(JSON.stringify({ success: true, message: "Workflow reexecutado", run_id: retryBody?.run_id ?? null }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Steps de scrape (job_id) seguem o fluxo do worker externo de gmaps.
+      await supabase.from("automation_steps").update({
+        status: "pending",
         error_stack: null,
-        message: "Reiniciado pelo usuário",
+        message: "Reiniciado pelo usuario",
         started_at: new Date().toISOString(),
-        completed_at: null 
+        completed_at: null
       }).eq("id", step_id);
 
-      // In a real scenario, we would trigger the specific step logic here.
-      // For now, we'll simulate the restart of the job or the specific phase.
       log.info("step_retry_triggered", { step_id, step_name: step.name, job_id: step.job_id });
 
       return new Response(JSON.stringify({ success: true, message: "Etapa reiniciada" }), {
@@ -228,9 +359,16 @@ serve(async (req) => {
         .from("workflows")
         .select("*")
         .eq("id", workflow_id)
-        .eq("user_id", userId)
-        .single();
-      if (wfError || !workflow) throw new Error("Workflow not found");
+        .is("deleted_at", null)
+        .maybeSingle();
+      if (wfError) throw wfError;
+      if (!workflow) return notFound(corsHeaders);
+
+      // service_role ignora RLS: a autorização é revalidada aqui.
+      const role = await callerRoleIn(supabase, userId, workflow.organization_id);
+      if (!hasMinRole(role, "sdr")) {
+        return forbidden(corsHeaders, "Requires sdr or admin role in the workflow organization");
+      }
 
       log.info("workflow_run_start", { workflow_id, workflow_name: workflow.name });
 
@@ -261,8 +399,7 @@ serve(async (req) => {
       await supabase
         .from("workflows")
         .update({ status: "active", last_run_at: new Date().toISOString() })
-        .eq("id", workflow_id)
-        .eq("user_id", userId);
+        .eq("id", workflow_id);
 
       const config = workflow.config as Record<string, unknown>;
       const results: Record<string, unknown> = { summary: {} };
@@ -395,7 +532,7 @@ serve(async (req) => {
             .select("id, external_id")
             .eq("status", "completed")
             .eq("source", "gmaps")
-            .eq("user_id", userId)
+            .eq("organization_id", workflow.organization_id)
             .order("created_at", { ascending: false })
             .limit(5);
 
@@ -515,7 +652,7 @@ serve(async (req) => {
             .from("ipc_config")
             .select("*")
             .eq("is_active", true)
-            .eq("user_id", userId)
+            .eq("organization_id", workflow.organization_id)
             .limit(1)
             .maybeSingle();
 
@@ -527,7 +664,7 @@ serve(async (req) => {
             .from("companies")
             .select("*")
             .eq("ipc_score", 0)
-            .eq("user_id", userId)
+            .eq("organization_id", workflow.organization_id)
             .limit(500);
 
           if (unscoredCompanies) {
@@ -562,7 +699,7 @@ serve(async (req) => {
 
               score = Math.min(score, 100);
 
-              await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id).eq("user_id", userId);
+              await supabase.from("companies").update({ ipc_score: score }).eq("id", company.id);
               scoredCount++;
             }
           }
@@ -571,7 +708,7 @@ serve(async (req) => {
             .from("scrape_results")
             .select("id")
             .eq("processed", false)
-            .eq("user_id", userId)
+            .eq("organization_id", workflow.organization_id)
             .limit(500);
 
           if (unprocessedResults && unprocessedResults.length > 0) {
@@ -596,12 +733,12 @@ serve(async (req) => {
         .from("companies")
         .select("id", { count: "exact", head: true })
         .gte("ipc_score", 70)
-        .eq("user_id", userId);
+        .eq("organization_id", workflow.organization_id);
 
       const { count: totalCount } = await supabase
         .from("companies")
         .select("id", { count: "exact", head: true })
-        .eq("user_id", userId);
+        .eq("organization_id", workflow.organization_id);
 
       const totalProcessed = totalCount || 0;
       const totalQualified = qualifiedCount || 0;
@@ -612,8 +749,7 @@ serve(async (req) => {
       await supabase
         .from("workflows")
         .update({ leads_processed: totalProcessed, leads_qualified: totalQualified, success_rate: successRate })
-        .eq("id", workflow_id)
-        .eq("user_id", userId);
+        .eq("id", workflow_id);
 
       const summary = { total_companies: totalProcessed, qualified: totalQualified, success_rate: successRate };
       results.summary = summary;
@@ -668,11 +804,24 @@ serve(async (req) => {
       }
       const { workflow_id, new_status } = parsed.data;
 
+      const { data: wf, error: wfLookupError } = await supabase
+        .from("workflows")
+        .select("id, organization_id")
+        .eq("id", workflow_id)
+        .is("deleted_at", null)
+        .maybeSingle();
+      if (wfLookupError) throw wfLookupError;
+      if (!wf) return notFound(corsHeaders);
+
+      const role = await callerRoleIn(supabase, userId, wf.organization_id);
+      if (!hasMinRole(role, "sdr")) {
+        return forbidden(corsHeaders, "Requires sdr or admin role in the workflow organization");
+      }
+
       const { error } = await supabase
         .from("workflows")
         .update({ status: new_status })
-        .eq("id", workflow_id)
-        .eq("user_id", userId);
+        .eq("id", workflow_id);
       if (error) throw error;
 
       const duration = Math.round(performance.now() - start);
@@ -691,8 +840,28 @@ serve(async (req) => {
       if (!workflow_id || !z.string().uuid().safeParse(workflow_id).success) {
         return badRequest(corsHeaders, { workflow_id: "Valid UUID required" });
       }
-      
-      const { error } = await supabase.from("workflows").delete().eq("id", workflow_id).eq("user_id", userId);
+
+      const { data: wf, error: wfLookupError } = await supabase
+        .from("workflows")
+        .select("id, organization_id")
+        .eq("id", workflow_id)
+        .maybeSingle();
+      if (wfLookupError) throw wfLookupError;
+      if (!wf) return notFound(corsHeaders);
+
+      // DELETE de workflow exige admin da org (mesma regra da policy
+      // "Admins delete workflows").
+      const role = await callerRoleIn(supabase, userId, wf.organization_id);
+      if (!hasMinRole(role, "admin")) {
+        return forbidden(corsHeaders, "Requires admin role in the workflow organization");
+      }
+
+      // Soft delete (ADR-008): o registro vai para a lixeira por 30 dias em vez
+      // de sumir. Hard delete só no expurgo (purge_soft_deleted).
+      const { error } = await supabase
+        .from("workflows")
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", workflow_id);
       if (error) throw error;
 
       const duration = Math.round(performance.now() - start);

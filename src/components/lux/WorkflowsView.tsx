@@ -77,7 +77,8 @@ export const WorkflowsView = () => {
     queryFn: isDemoMode
       ? () => DEMO_WORKFLOWS as unknown as Workflow[]
       : async () => {
-          try { return await workflowApi.list(); } catch {
+          try { return await workflowApi.list(); } catch (err) {
+            console.warn("[WorkflowsView] list via engine falhou, usando fallback direto:", err);
             const { supabase } = await import("@/integrations/supabase/client");
             const { data, error } = await db.from("workflows").select("*, workflow_runs(id, status, started_at, completed_at, results)").order("created_at", { ascending: false });
             if (error) throw error;
@@ -90,7 +91,13 @@ export const WorkflowsView = () => {
 
   const createMutation = useMutation({
     mutationFn: async (data: Parameters<typeof workflowApi.create>[0]) => {
-      try { return await workflowApi.create(data); } catch {
+      try {
+        return await workflowApi.create(data);
+      } catch (err) {
+        // Fallback direto no banco (RLS injeta org/user_id). Mantido para que
+        // uma indisponibilidade do engine não impeça criar o workflow — mas
+        // nunca em silêncio: o motivo fica no console.
+        console.warn("[WorkflowsView] create via engine falhou, usando fallback direto:", err);
         const { supabase } = await import("@/integrations/supabase/client");
         const { data: row, error } = await db.from("workflows").insert({ name: data.name, description: data.description, status: "active", steps: data.steps as unknown as Json, config: data.config as unknown as Json }).select().single();
         if (error) throw error;
@@ -109,7 +116,8 @@ export const WorkflowsView = () => {
 
   const toggleMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      try { await workflowApi.toggleStatus(id, status); } catch {
+      try { await workflowApi.toggleStatus(id, status); } catch (err) {
+        console.warn("[WorkflowsView] toggle via engine falhou, usando fallback direto:", err);
         const { supabase } = await import("@/integrations/supabase/client");
         const { error } = await db.from("workflows").update({ status: status as Tables<"workflows">["status"] }).eq("id", id);
         if (error) throw error;
@@ -120,7 +128,8 @@ export const WorkflowsView = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      try { await workflowApi.delete(id); } catch {
+      try { await workflowApi.delete(id); } catch (err) {
+        console.warn("[WorkflowsView] delete via engine falhou, usando fallback direto:", err);
         const { supabase } = await import("@/integrations/supabase/client");
         const { error } = await db.from("workflows").delete().eq("id", id);
         if (error) throw error;
