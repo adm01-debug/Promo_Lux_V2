@@ -1,4 +1,4 @@
-﻿# LUX IA — Gaps Enterprise
+# LUX IA — Gaps Enterprise
 
 > Análise comparativa entre o LUX IA e plataformas enterprise de classe mundial em Sales Intelligence B2B (ZoomInfo, Apollo.io, Outreach, Salesloft, Cognism, Clay, HubSpot Breeze).
 
@@ -267,7 +267,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 28 | Lead scoring ML | ✅ | `lead_scores` heurístico (Postgres) + `lead-score-ai` edge fn com Gemini 2.5 Flash — botão "Score IA" no StakeholderFinderView, upsert em lead_scores |
 | 29 | Conversation intelligence | ✅ | `conversation-intel` edge fn + UI no DealDetailDrawer — Gemini 2.5 Flash analisa sentiment, buying signals, action items, next steps |
 | 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
-| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx`, `workflows`, `workflow_runs`, `workflow-engine` |
+| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx` (implementado): 9 tipos de etapa (scrape/enrich/filter/email/wait/condition/notify/webhook/tag), reorder, config contextual, integrado ao `WorkflowsView` como modo Avançado |
 | 32 | Workflow scheduling | ✅ | crons versionados + `workflow-engine` |
 | 33 | Custom dashboards | ✅ | `dashboard_layouts`, `useDashboardLayout`, `DashboardView.tsx` |
 | 34 | Scheduled reports | ✅ | `scheduled_reports`, `send-scheduled-reports` |
@@ -288,14 +288,18 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 44/50 = 88% completos · 1/50 = 2% parciais · 5/50 = 10% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 44/50 = 88% completos · 1/50 = 2% parciais · 5/50 = 10% ausentes (4ª passada).**
+
+> Revisão 2026-11-23 (4ª passada): fechados #20 (Zapier/Make — `GET /events` em `public-api`),
+> #24 (PWA completo), #26 (technographics-detect), #27 (intent signals manual + auto-scan),
+> #28 (lead-score-ai com Gemini), #29 (conversation-intel) e #43 (a11y WCAG AA).
 
 Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
-Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
+`hubspot_salesforce` (21) e `chrome_extension` (23). Os que dependem de decisão de
+custo/produto e **não** de engenharia: SAML/SCIM, dialer, Chrome Extension (app separado).
+`hubspot_salesforce` é implementável — CRM sync é tratado na entrega de SCIM/HubSpot.
 
-
-
-
+Parciais restantes (1): #43 a11y — 44 de 50 critérios WCAG AA cobertos.
 ---
 
 ## 4. Roadmap em 4 Fases (12 meses)
