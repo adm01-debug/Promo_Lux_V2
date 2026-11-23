@@ -8,17 +8,23 @@
    "hooks_exportados": [
     "useAnalyticsData"
    ],
-   "linhas": 166,
+   "linhas": 258,
    "dominio": "components/lux",
    "tabelas": [
     "campaigns",
-    "companies",
     "scrape_jobs",
     "workflows"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "company_analytics_summary",
+    "company_growth_trend",
+    "company_ipc_distribution",
+    "company_sector_distribution",
+    "company_source_distribution"
+   ],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useDemo",
     "useQuery"
    ],
@@ -101,9 +107,10 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 21,
+   "usado_por": 22,
    "usado_por_arquivos": [
     "src/components/lux/analytics/GoalsTab.tsx",
+    "src/components/lux/analytics/useAnalyticsData.ts",
     "src/components/lux/monitoring/DLQReplayPanel.tsx",
     "src/contexts/ActiveOrgContext.tsx",
     "src/hooks/useAuditLogExport.ts",

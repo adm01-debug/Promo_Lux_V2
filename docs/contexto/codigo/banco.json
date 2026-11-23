@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 243,
+ "migrations": 244,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -98,6 +98,11 @@
   "cleanup_old_idempotency_keys",
   "cnpj_claim_enrich_jobs",
   "cnpj_reserve_rate_slot",
+  "company_analytics_summary",
+  "company_growth_trend",
+  "company_ipc_distribution",
+  "company_sector_distribution",
+  "company_source_distribution",
   "complete_scrape_task",
   "complete_web_scrape_task",
   "compute_deal_prediction",
@@ -5754,7 +5759,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 17,
+   "usada_no_front": 16,
    "usada_em_edges": [
     "_shared",
     "admin-list-companies",
@@ -18837,6 +18842,31 @@
    "nome": "cnpj_reserve_rate_slot",
    "definida": true,
    "usada_em": 2
+  },
+  {
+   "nome": "company_analytics_summary",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "company_growth_trend",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "company_ipc_distribution",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "company_sector_distribution",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "company_source_distribution",
+   "definida": true,
+   "usada_em": 1
   },
   {
    "nome": "complete_scrape_task",

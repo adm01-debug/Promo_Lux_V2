@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b39b3b24fa8fb54ce935e3a84109595839753af9",
+  "commit": "f5416a97b9289b54b8491726136a945760bc69d1",
   "branch": "main",
-  "data_commit": "2026-11-23T17:28:25-03:00",
+  "data_commit": "2026-11-23T18:17:08-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f5416a9",
+    "data": "2026-11-23",
+    "assunto": "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)"
+   },
    {
     "sha": "b39b3b2",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "c07fc7d",
     "data": "2026-11-21",
     "assunto": "docs: atualiza o backlog com o estado medido do banco (#123)"
-   },
-   {
-    "sha": "7a94840",
-    "data": "2026-11-21",
-    "assunto": "feat(ui): verificação de entregabilidade do e-mail do contato (#122)"
    }
   ],
-  "arquivos_mudados_7d": 221,
+  "arquivos_mudados_7d": 226,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 56
+    "mudancas": 59
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -153,7 +153,7 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 9
+    "mudancas": 10
    },
    {
     "pasta": ".gitignore",
@@ -234,6 +234,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "src/integrations/supabase/types.ts",
+    "mudancas": 5
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 4
    },
@@ -251,10 +255,6 @@
    },
    {
     "arquivo": "src/App.tsx",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 4
    },
    {
@@ -290,18 +290,18 @@
     "mudancas": 3
    },
    {
-    "arquivo": "src/components/lux/DealsView.tsx",
+    "arquivo": "src/components/lux/AnalyticsView.tsx",
     "mudancas": 3
    },
    {
-    "arquivo": "src/integrations/supabase/withOrg.ts",
+    "arquivo": "src/components/lux/DealsView.tsx",
     "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 114
+    "commits": 115
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1115,
+  "arquivos_total": 1116,
   "arquivos_codigo": 701,
-  "linhas_codigo": 121888,
+  "linhas_codigo": 122057,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 96,
   "edge_functions": 63,
   "tabelas": 115,
-  "migrations": 243,
+  "migrations": 244,
   "cron_jobs": 31,
   "testes": 127,
   "workflows": 9,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 304,
-   "linhas": 49929
+   "linhas": 50053
   },
   "src/contexts": {
    "arquivos": 7,
@@ -568,7 +568,7 @@
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 8640
+   "linhas": 8685
   },
   "src/lib": {
    "arquivos": 53,
@@ -610,7 +610,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7259
+   "linhas": 7304
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",

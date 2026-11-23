@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b39b3b24fa` · branch `main` · 2026-11-23 20:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5416a97b9` · branch `main` · 2026-11-23 21:17 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -877,6 +877,16 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `dismiss_next_best_action` | sugestao nao encontrada | `supabase/migrations/20261122270000_next_best_action.sql` |
 | `dismiss_next_best_action` | usuario nao pertence a organizacao | `supabase/migrations/20261122270000_next_best_action.sql` |
 | `decide_ab_winner` | Acesso negado a campanha | `supabase/migrations/20261122310000_c14_ab_significance.sql` |
+| `company_analytics_summary` | org_id obrigatorio | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_analytics_summary` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_growth_trend` | org_id obrigatorio | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_growth_trend` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_ipc_distribution` | org_id obrigatorio | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_ipc_distribution` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_source_distribution` | org_id obrigatorio | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_source_distribution` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_sector_distribution` | org_id obrigatorio | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `company_sector_distribution` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -1848,6 +1858,7 @@ _nenhum item encontrado_
 | `where created_at >= now() - interval '7 days'` | `supabase/migrations/20261122210000_status_page.sql` |
 | `where status in ('failed','dead') and created_at >= now() - interval '24 hours'` | `supabase/migrations/20261122210000_status_page.sql` |
 | `_subject_user_id, _legal_basis, _notes, now() + interval '30 days'` | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
+| `interval '1 month'))::date as month_start` | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
 
 ### H.3 Limites de paginação
 
@@ -2038,6 +2049,7 @@ _nenhum item encontrado_
 | Erro ao salvar | `src/components/lux/SettingsView.tsx` |
 | Erro no score IA | `src/components/lux/StakeholderFinderView.tsx` |
 | Erro ao executar | `src/components/lux/WorkflowsView.tsx` |
+| Organizacao ativa nao definida | `src/components/lux/analytics/useAnalyticsData.ts` |
 |        aria-live= | `src/components/lux/auth/RateLimitWarning.tsx` |
 | CSV precisa de uma coluna de nome (ex:  | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
 | CSV vazio ou sem linhas de dados. | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
@@ -2232,8 +2244,7 @@ _nenhum item encontrado_
 | createAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: insert org failed: ${orgErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: linha admin não persistiu (${checkErr?.message ??  | `supabase/functions/rls-tests/_fixtures.ts` |
-| createAdminUserFixture: signIn failed: ${signErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +23 linhas — lista completa em `context.json` | |
+| … +24 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

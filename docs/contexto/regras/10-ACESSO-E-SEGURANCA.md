@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b39b3b24fa` · branch `main` · 2026-11-23 20:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5416a97b9` · branch `main` · 2026-11-23 21:17 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -142,7 +142,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 197 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 198 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -294,7 +294,7 @@
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
 - `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
 - `supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql`
-- … +47 (lista completa em `context.json`)
+- … +48 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -330,6 +330,11 @@
 - `claim_web_scrape_tasks`
 - `cnpj_claim_enrich_jobs`
 - `cnpj_reserve_rate_slot`
+- `company_analytics_summary`
+- `company_growth_trend`
+- `company_ipc_distribution`
+- `company_sector_distribution`
+- `company_source_distribution`
 - `complete_scrape_task`
 - `complete_web_scrape_task`
 - `compute_deal_prediction`
@@ -490,7 +495,7 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated | select, insert, update | `data_subject_requests` |
 | grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings`, `lead_scores`, `dashboard_layouts` … +11 |
 | grant | authenticated | select, update | `retry_policy_advisories`, `reaper_alert_settings` |
-| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +17 |
+| grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +22 |
 | grant | authenticated, service_role | select | `oracle_v2_health`, `v_sec_definer_anon_grants`, `v_extensions_audit` |
 | grant | authenticated, service_role, anon | execute | `default_sla_seconds` |
 | grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +56 |
@@ -511,7 +516,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | authenticated | execute | `pg_columns_for_insert`, `pg_catalog_rls_tables`, `evaluate_org_violation_alerts`, `assert_service_or_admin` |
 | revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas`, `is_ip_allowed`, `get_my_ip_status`, `touch_last_known_ip`, `list_my_sessions`, `revoke_my_session`, `revoke_other_sessions`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets` … +23 |
 | revoke | public | execute | `get_survey_by_token`, `submit_survey_response`, `get_public_status`, `get_public_uptime` |
-| revoke | public, anon | all | `compute_lead_score`, `compute_deal_prediction`, `refresh_lead_score`, `refresh_deal_prediction`, `refresh_org_scores`, `can_access` |
+| revoke | public, anon | all | `compute_lead_score`, `compute_deal_prediction`, `refresh_lead_score`, `refresh_deal_prediction`, `refresh_org_scores`, `can_access`, `company_analytics_summary`, `company_growth_trend`, `company_ipc_distribution`, `company_source_distribution`, `company_sector_distribution` |
 | revoke | public, anon, authenticated | all | `update_updated_at_column`, `handle_updated_at`, `update_automation_steps_updated_at`, `increment_version`, `validate_ipc_score`, `normalize_suppression_email`, `cleanup_old_idempotency_keys`, `handle_new_organization`, `handle_new_user`, `enqueue_webhook_event`, `log_audit_event`, `process_audit_log`, `notify_on_workflow_complete`, `notify_on_enrichment`, `prevent_user_id_change` … +14 |
 
 ## Riscos de acesso detectados

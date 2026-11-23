@@ -732,6 +732,7 @@
   ],
   "src/components/lux/analytics/useAnalyticsData.ts": [
    "src/components/lux/analytics/analytics-constants.ts",
+   "src/contexts/active-org-context.ts",
    "src/contexts/demo-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts",

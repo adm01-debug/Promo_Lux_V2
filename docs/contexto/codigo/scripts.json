@@ -505,7 +505,7 @@
   {
    "arquivo": "scripts/sql/check-function-grants.sql",
    "descricao": null,
-   "linhas": 103,
+   "linhas": 108,
    "env": [],
    "npm_scripts": [],
    "workflows": [],

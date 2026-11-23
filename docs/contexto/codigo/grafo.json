@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 574,
- "arestas": 1796,
+ "arestas": 1797,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -65,11 +65,11 @@
    "importado_por": 24
   },
   {
-   "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 21
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 22
   },
   {
-   "arquivo": "src/contexts/active-org-context.ts",
+   "arquivo": "src/components/ui/switch.tsx",
    "importado_por": 21
   },
   {

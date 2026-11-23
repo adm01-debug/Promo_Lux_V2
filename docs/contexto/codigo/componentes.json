@@ -200,7 +200,7 @@
     "DataEnrichmentTab"
    ],
    "export_default": null,
-   "linhas": 104,
+   "linhas": 135,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -287,7 +287,7 @@
     "AnalyticsView"
    ],
    "export_default": null,
-   "linhas": 168,
+   "linhas": 169,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAnalyticsData",

@@ -324,6 +324,11 @@
    "rpcs": [
     "audit_log_facets",
     "campaign_ab_stats",
+    "company_analytics_summary",
+    "company_growth_trend",
+    "company_ipc_distribution",
+    "company_sector_distribution",
+    "company_source_distribution",
     "count_audit_logs",
     "create_default_deal_stages",
     "create_dsar_request",
@@ -1199,6 +1204,11 @@
     "workflows"
    ],
    "rpcs": [
+    "company_analytics_summary",
+    "company_growth_trend",
+    "company_ipc_distribution",
+    "company_sector_distribution",
+    "company_source_distribution",
     "get_dashboard_stats",
     "get_survey_by_token",
     "submit_survey_response"
@@ -1740,6 +1750,11 @@
    "rpcs": [
     "audit_log_facets",
     "campaign_ab_stats",
+    "company_analytics_summary",
+    "company_growth_trend",
+    "company_ipc_distribution",
+    "company_sector_distribution",
+    "company_source_distribution",
     "count_audit_logs",
     "create_default_deal_stages",
     "create_dsar_request",

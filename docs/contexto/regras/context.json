@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b39b3b24fa8fb54ce935e3a84109595839753af9",
+  "sha": "f5416a97b9289b54b8491726136a945760bc69d1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 20:28 UTC",
-  "files_total": 1134,
-  "code_files": 952,
-  "code_lines": 140801
+  "generated_at": "2026-11-23 21:17 UTC",
+  "files_total": 1135,
+  "code_files": 953,
+  "code_lines": 141286
  },
  "version": "1.3.2",
- "facts_hash": "14ad5c4000b4c702",
+ "facts_hash": "d1ead92978efb600",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 376,
    ".tsx": 298,
-   ".sql": 247,
+   ".sql": 248,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -18640,6 +18640,95 @@
      "v_top"
     ]
    },
+   "company_analytics_summary": {
+    "args": "_org_id uuid",
+    "returns": "table (\n  total_companies bigint,\n  enriched_companies bigint,\n  enriched_pct numeric,\n  avg_ipc numeric,\n  with_email bigint,\n  with_phone bigint,\n  with_website bigint,\n  top_sector text\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; return query with base as ( select c.enriched, c.ipc_score, c.email, c.phone, c.website, c.sector from public.companies c where c.organization_id = _org_id and c.deleted_at is null ), agg as ( select count(*) as total, count(*) filter (where b.enriched) as enriched, avg(b.ipc_score) as avg_ipc, count(*) filter (where b.email is not null and btrim(b.email) <> '') as with_email, count(*) filter (where b.phone is not null and btrim(b.phone) <> '') as with_phone, co …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "agg",
+     "base",
+     "companies",
+     "top"
+    ]
+   },
+   "company_growth_trend": {
+    "args": "_org_id uuid, _months integer default 6",
+    "returns": "table (\n  month_start date,\n  new_companies bigint,\n  enriched_companies bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_months integer; begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; v_months := least(greatest(coalesce(_months, 6), 1), 24); return query with bounds as ( select (date_trunc('month', now()) - make_interval(months => v_months - 1))::date as first_month ), series as ( select (generate_series(b.first_month::timestamp, date_trunc('month', now()), interval '1 month'))::date as month_start from bounds b ), base as ( select date_trunc('month', c.created_at)::date as month_start, c.enriched from public.compani …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "base",
+     "bounds",
+     "companies",
+     "series"
+    ]
+   },
+   "company_ipc_distribution": {
+    "args": "_org_id uuid",
+    "returns": "table (\n  bucket text,\n  bucket_pos integer,\n  total bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; return query with buckets(bucket, bucket_pos, low, high) as ( values ('90-100', 1, 90, 100), ('75-89', 2, 75, 89), ('60-74', 3, 60, 74), ('< 60', 4, 0, 59) ), base as ( select coalesce(c.ipc_score, 0) as score from public.companies c where c.organization_id = _org_id and c.deleted_at is null ) select b.bucket, b.bucket_pos, count(x.score) from buckets b left join base x on x.score >= b.low and x.score <= b.high group by b.bucket, b.bucket_pos order by b.bucket_p …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "base",
+     "buckets",
+     "companies"
+    ]
+   },
+   "company_source_distribution": {
+    "args": "_org_id uuid, _limit integer default 7",
+    "returns": "table (\n  source text,\n  total bigint,\n  enriched bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_limit integer; begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; v_limit := least(greatest(coalesce(_limit, 7), 1), 50); return query select coalesce(c.source, 'manual') as source, count(*), count(*) filter (where c.enriched) from public.companies c where c.organization_id = _org_id and c.deleted_at is null group by 1 order by count(*) desc, 1 asc limit v_limit; end;",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "companies"
+    ]
+   },
+   "company_sector_distribution": {
+    "args": "_org_id uuid, _limit integer default 6",
+    "returns": "table (\n  sector text,\n  total bigint,\n  pct numeric\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_limit integer; begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; v_limit := least(greatest(coalesce(_limit, 6), 1), 50); return query with base as ( select coalesce(c.sector, 'Outros') as sector from public.companies c where c.organization_id = _org_id and c.deleted_at is null ), totals as ( select count(*) as grand_total from base ) select b.sector, count(*), round(100.0 * count(*) / nullif(t.grand_total, 0), 0) from base b, totals t group by b.sector, t.grand_total order by count(*) desc, b.sector a …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "base",
+     "companies"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -22002,6 +22091,7 @@
    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
    "supabase/migrations/20261122310000_c14_ab_significance.sql",
    "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
+   "supabase/migrations/20261124000000_h37_company_analytics.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -27244,6 +27334,86 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_analytics_summary",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_growth_trend",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_ipc_distribution",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_source_distribution",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_sector_distribution",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_analytics_summary",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_growth_trend",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_ipc_distribution",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_source_distribution",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_sector_distribution",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
    }
   ],
   "raises": [
@@ -27926,6 +28096,56 @@
     "function": "decide_ab_winner",
     "msg": "Acesso negado a campanha",
     "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "function": "company_analytics_summary",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_analytics_summary",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_growth_trend",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_growth_trend",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_ipc_distribution",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_ipc_distribution",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_source_distribution",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_source_distribution",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_sector_distribution",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_sector_distribution",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
    }
   ],
   "seed": [],
@@ -31028,7 +31248,7 @@
   {
    "module": "scripts",
    "files": 49,
-   "lines": 17297,
+   "lines": 17302,
    "tables": [
     "a",
     "contacts",
@@ -31196,7 +31416,7 @@
   {
    "module": "src/components",
    "files": 304,
-   "lines": 49929,
+   "lines": 50053,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -31654,7 +31874,7 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 8640,
+   "lines": 8685,
    "tables": [
     "automation_alerts",
     "companies",
@@ -32139,8 +32359,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 243,
-   "lines": 17093,
+   "files": 244,
+   "lines": 17404,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -32498,7 +32718,6 @@
      "src/components/lux/CompaniesView.tsx",
      "src/components/lux/CompanyDetailModal.tsx",
      "src/components/lux/ScrapeResultsView.tsx",
-     "src/components/lux/analytics/useAnalyticsData.ts",
      "src/components/lux/companies/ImportCompaniesDialog.tsx",
      "src/hooks/useAutomationsMonitor.ts",
      "src/hooks/useCompanyDetails.ts",
@@ -35074,6 +35293,21 @@
     "supabase/functions/cnpj-enrich-worker/index.ts",
     "supabase/functions/cnpj-enrich/index.ts"
    ],
+   "company_analytics_summary": [
+    "src/components/lux/analytics/useAnalyticsData.ts"
+   ],
+   "company_growth_trend": [
+    "src/components/lux/analytics/useAnalyticsData.ts"
+   ],
+   "company_ipc_distribution": [
+    "src/components/lux/analytics/useAnalyticsData.ts"
+   ],
+   "company_sector_distribution": [
+    "src/components/lux/analytics/useAnalyticsData.ts"
+   ],
+   "company_source_distribution": [
+    "src/components/lux/analytics/useAnalyticsData.ts"
+   ],
    "complete_scrape_task": [
     "supabase/functions/scrape-queue-worker/index.ts"
    ],
@@ -36909,6 +37143,10 @@
    {
     "file": "src/components/lux/WorkflowsView.tsx",
     "msg": "Erro ao executar"
+   },
+   {
+    "file": "src/components/lux/analytics/useAnalyticsData.ts",
+    "msg": "Organizacao ativa nao definida"
    },
    {
     "file": "src/components/lux/auth/RateLimitWarning.tsx",
@@ -49933,6 +50171,10 @@
    {
     "file": "supabase/migrations/20261122250000_dsar_lgpd.sql",
     "line": "_subject_user_id, _legal_basis, _notes, now() + interval '30 days'"
+   },
+   {
+    "file": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "line": "interval '1 month'))::date as month_start"
    }
   ],
   "percents": [
@@ -62176,6 +62418,95 @@
      "v_top"
     ]
    },
+   "company_analytics_summary": {
+    "args": "_org_id uuid",
+    "returns": "table (\n  total_companies bigint,\n  enriched_companies bigint,\n  enriched_pct numeric,\n  avg_ipc numeric,\n  with_email bigint,\n  with_phone bigint,\n  with_website bigint,\n  top_sector text\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; return query with base as ( select c.enriched, c.ipc_score, c.email, c.phone, c.website, c.sector from public.companies c where c.organization_id = _org_id and c.deleted_at is null ), agg as ( select count(*) as total, count(*) filter (where b.enriched) as enriched, avg(b.ipc_score) as avg_ipc, count(*) filter (where b.email is not null and btrim(b.email) <> '') as with_email, count(*) filter (where b.phone is not null and btrim(b.phone) <> '') as with_phone, co …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "agg",
+     "base",
+     "companies",
+     "top"
+    ]
+   },
+   "company_growth_trend": {
+    "args": "_org_id uuid, _months integer default 6",
+    "returns": "table (\n  month_start date,\n  new_companies bigint,\n  enriched_companies bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_months integer; begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; v_months := least(greatest(coalesce(_months, 6), 1), 24); return query with bounds as ( select (date_trunc('month', now()) - make_interval(months => v_months - 1))::date as first_month ), series as ( select (generate_series(b.first_month::timestamp, date_trunc('month', now()), interval '1 month'))::date as month_start from bounds b ), base as ( select date_trunc('month', c.created_at)::date as month_start, c.enriched from public.compani …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "base",
+     "bounds",
+     "companies",
+     "series"
+    ]
+   },
+   "company_ipc_distribution": {
+    "args": "_org_id uuid",
+    "returns": "table (\n  bucket text,\n  bucket_pos integer,\n  total bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; return query with buckets(bucket, bucket_pos, low, high) as ( values ('90-100', 1, 90, 100), ('75-89', 2, 75, 89), ('60-74', 3, 60, 74), ('< 60', 4, 0, 59) ), base as ( select coalesce(c.ipc_score, 0) as score from public.companies c where c.organization_id = _org_id and c.deleted_at is null ) select b.bucket, b.bucket_pos, count(x.score) from buckets b left join base x on x.score >= b.low and x.score <= b.high group by b.bucket, b.bucket_pos order by b.bucket_p …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "base",
+     "buckets",
+     "companies"
+    ]
+   },
+   "company_source_distribution": {
+    "args": "_org_id uuid, _limit integer default 7",
+    "returns": "table (\n  source text,\n  total bigint,\n  enriched bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_limit integer; begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; v_limit := least(greatest(coalesce(_limit, 7), 1), 50); return query select coalesce(c.source, 'manual') as source, count(*), count(*) filter (where c.enriched) from public.companies c where c.organization_id = _org_id and c.deleted_at is null group by 1 order by count(*) desc, 1 asc limit v_limit; end;",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "companies"
+    ]
+   },
+   "company_sector_distribution": {
+    "args": "_org_id uuid, _limit integer default 6",
+    "returns": "table (\n  sector text,\n  total bigint,\n  pct numeric\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_limit integer; begin if _org_id is null then raise exception 'org_id obrigatorio' using errcode = '22023'; end if; if not public.is_org_member(_org_id, auth.uid()) then raise exception 'sem permissao na organizacao' using errcode = '42501'; end if; v_limit := least(greatest(coalesce(_limit, 6), 1), 50); return query with base as ( select coalesce(c.sector, 'Outros') as sector from public.companies c where c.organization_id = _org_id and c.deleted_at is null ), totals as ( select count(*) as grand_total from base ) select b.sector, count(*), round(100.0 * count(*) / nullif(t.grand_total, 0), 0) from base b, totals t group by b.sector, t.grand_total order by count(*) desc, b.sector a …",
+    "raises": [
+     "org_id obrigatorio",
+     "sem permissao na organizacao"
+    ],
+    "tables": [
+     "base",
+     "companies"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -63024,6 +63355,56 @@
     "function": "decide_ab_winner",
     "msg": "Acesso negado a campanha",
     "src": "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   },
+   {
+    "function": "company_analytics_summary",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_analytics_summary",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_growth_trend",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_growth_trend",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_ipc_distribution",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_ipc_distribution",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_source_distribution",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_source_distribution",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_sector_distribution",
+    "msg": "org_id obrigatorio",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "function": "company_sector_distribution",
+    "msg": "sem permissao na organizacao",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
    }
   ],
   "db_generated": [],
@@ -66695,7 +67076,8 @@
    "supabase/migrations/20261122220000_ip_allowlist.sql",
    "supabase/migrations/20261122270000_next_best_action.sql",
    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
-   "supabase/migrations/20261122310000_c14_ab_significance.sql"
+   "supabase/migrations/20261122310000_c14_ab_significance.sql",
+   "supabase/migrations/20261124000000_h37_company_analytics.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -66730,6 +67112,11 @@
    "claim_web_scrape_tasks",
    "cnpj_claim_enrich_jobs",
    "cnpj_reserve_rate_slot",
+   "company_analytics_summary",
+   "company_growth_trend",
+   "company_ipc_distribution",
+   "company_sector_distribution",
+   "company_source_distribution",
    "complete_scrape_task",
    "complete_web_scrape_task",
    "compute_deal_prediction",
@@ -71980,6 +72367,86 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_analytics_summary",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_growth_trend",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_ipc_distribution",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_source_distribution",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "company_sector_distribution",
+    "objkind": "function",
+    "roles": "public, anon",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_analytics_summary",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_growth_trend",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_ipc_distribution",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_source_distribution",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "company_sector_distribution",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
    }
   ],
   "guards": [
@@ -75652,7 +76119,7 @@
   },
   "scripts/sql/check-function-grants.sql": {
    "path": "scripts/sql/check-function-grants.sql",
-   "lines": 103,
+   "lines": 108,
    "uses_service_role": true
   },
   "scripts/sql/check-queue-kind-coverage.sql": {
@@ -76260,7 +76727,7 @@
   },
   "src/components/lux/AnalyticsView.tsx": {
    "path": "src/components/lux/AnalyticsView.tsx",
-   "lines": 168,
+   "lines": 169,
    "exports": [
     "const AnalyticsView"
    ],
@@ -78272,7 +78739,7 @@
   },
   "src/components/lux/analytics/DataEnrichmentTab.tsx": {
    "path": "src/components/lux/analytics/DataEnrichmentTab.tsx",
-   "lines": 104,
+   "lines": 135,
    "exports": [
     "const DataEnrichmentTab"
    ]
@@ -78321,16 +78788,13 @@
   },
   "src/components/lux/analytics/useAnalyticsData.ts": {
    "path": "src/components/lux/analytics/useAnalyticsData.ts",
-   "lines": 166,
+   "lines": 258,
    "exports": [
     "interface AnalyticsCampaign",
+    "interface AnalyticsGrowthPoint",
     "function useAnalyticsData"
    ],
    "tables": [
-    {
-     "table": "companies",
-     "op": "select"
-    },
     {
      "table": "scrape_jobs",
      "op": "select"
@@ -78345,13 +78809,6 @@
     }
    ],
    "table_cols": {
-    "companies": [
-     "created_at",
-     "enriched",
-     "ipc_score",
-     "sector",
-     "source"
-    ],
     "scrape_jobs": [
      "created_at",
      "results_count",
@@ -78365,6 +78822,16 @@
      "success_rate"
     ]
    },
+   "rpc": [
+    "company_analytics_summary",
+    "company_growth_trend",
+    "company_ipc_distribution",
+    "company_sector_distribution",
+    "company_source_distribution"
+   ],
+   "errors": [
+    "Organizacao ativa nao definida"
+   ],
    "status_values": [
     {
      "field": "status",
@@ -86014,7 +86481,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 7259,
+   "lines": 7304,
    "exports": [
     "type Json",
     "type Database",
@@ -97092,13 +97559,36 @@
   "supabase/migrations/20261122340000_cb_alert_settings_grant.sql": {
    "path": "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
    "lines": 8
+  },
+  "supabase/migrations/20261124000000_h37_company_analytics.sql": {
+   "path": "supabase/migrations/20261124000000_h37_company_analytics.sql",
+   "lines": 311,
+   "temporal": [
+    "interval '1 month'))::date as month_start"
+   ],
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "b39b3b24fa8fb54ce935e3a84109595839753af9",
+  "sha": "f5416a97b9289b54b8491726136a945760bc69d1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f5416a9",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)",
+    "files": [
+     "scripts/sql/check-function-grants.sql",
+     "scripts/sql/security-definer-allowlist.txt",
+     "src/components/lux/AnalyticsView.tsx",
+     "src/components/lux/analytics/DataEnrichmentTab.tsx",
+     "src/components/lux/analytics/useAnalyticsData.ts",
+     "src/integrations/supabase/types.ts",
+     "supabase/migrations/20261124000000_h37_company_analytics.sql"
+    ]
+   },
    {
     "sha": "b39b3b2",
     "date": "2026-11-23",
@@ -97474,15 +97964,6 @@
      "scripts/automation.config.json",
      "scripts/check-migration-drift.sh"
     ]
-   },
-   {
-    "sha": "57edd92",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "feat(db): agenda org-violation-alerts a cada 5min (feature nunca rodou) (#117)",
-    "files": [
-     "supabase/migrations/20261122130000_cron_org_violation_alerts.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -97491,12 +97972,20 @@
     7
    ],
    [
+    "src/integrations/supabase/types.ts",
+    3
+   ],
+   [
     "src/pages/Monitoring.tsx",
     3
    ],
    [
     "docs/ESTADO_ATUAL.md",
     3
+   ],
+   [
+    "src/components/lux/AnalyticsView.tsx",
+    2
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -97516,10 +98005,6 @@
    ],
    [
     "supabase/functions/workflow-engine/index.ts",
-    2
-   ],
-   [
-    "src/integrations/supabase/types.ts",
     2
    ],
    [
@@ -97559,11 +98044,7 @@
     2
    ],
    [
-    "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
-    1
-   ],
-   [
-    "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
+    "scripts/sql/check-function-grants.sql",
     1
    ]
   ]
