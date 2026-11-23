@@ -56,7 +56,7 @@ function validate(p: unknown): p is RunPayload {
 
 // supabase/functions não usa os tipos gerados em src/integrations/supabase/types.ts
 // (ele nem lista qa_test_runs/qa_ingest_tokens), então o client fica sem schema fixo.
-type SbClient = SupabaseClient<any, "public", any>;
+type SbClient = SupabaseClient;
 
 const QA_ACTIONS = ["rotate", "list", "revoke"] as const;
 
@@ -169,7 +169,7 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(url, serviceKey, {
     auth: { persistSession: false },
-  }) as SbClient;
+    }) as unknown as SbClient;
 
   const action = req.headers.get("x-qa-action");
   if (action) return await handleTokenAdmin(action, req, supabase);
