@@ -3,14 +3,14 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@0.24.0";
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.6.0";
 
 // src/lib/mcp/tools/list-companies.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { z } from "npm:zod@^3.25.76";
+import { defineTool } from "npm:@lovable.dev/mcp-js@3.6.0";
+import { z } from "npm:zod@^4.6.7";
 
 // src/lib/mcp/supabase.ts
-import { createClient } from "npm:@supabase/supabase-js@^2.101.1";
+import { createClient } from "npm:@supabase/supabase-js@^2.119.2";
 function supabaseForUser(ctx) {
   const url = process.env.SUPABASE_URL;
   const anonKey = process.env.SUPABASE_PUBLISHABLE_KEY;
@@ -68,8 +68,8 @@ var list_companies_default = defineTool({
 });
 
 // src/lib/mcp/tools/get-company.ts
-import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { z as z2 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@3.6.0";
+import { z as z2 } from "npm:zod@^4.6.7";
 var get_company_default = defineTool2({
   name: "get_company",
   title: "Detalhar empresa",
@@ -99,8 +99,8 @@ var get_company_default = defineTool2({
 });
 
 // src/lib/mcp/tools/list-scrape-jobs.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { z as z3 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@3.6.0";
+import { z as z3 } from "npm:zod@^4.6.7";
 var list_scrape_jobs_default = defineTool3({
   name: "list_scrape_jobs",
   title: "Listar jobs de raspagem",
@@ -136,8 +136,8 @@ var list_scrape_jobs_default = defineTool3({
 });
 
 // src/lib/mcp/tools/get-dashboard-stats.ts
-import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { z as z4 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@3.6.0";
+import { z as z4 } from "npm:zod@^4.6.7";
 var get_dashboard_stats_default = defineTool4({
   name: "get_dashboard_stats",
   title: "Estat\xEDsticas do dashboard",
@@ -180,8 +180,8 @@ var get_dashboard_stats_default = defineTool4({
 });
 
 // src/lib/mcp/tools/list-decision-makers.ts
-import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { z as z5 } from "npm:zod@^3.25.76";
+import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@3.6.0";
+import { z as z5 } from "npm:zod@^4.6.7";
 var list_decision_makers_default = defineTool5({
   name: "list_decision_makers",
   title: "Listar decisores",
@@ -237,5 +237,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.24.0/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.6.0/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
