@@ -1,4 +1,4 @@
-﻿# LUX IA — Gaps Enterprise
+# LUX IA — Gaps Enterprise
 
 > Análise comparativa entre o LUX IA e plataformas enterprise de classe mundial em Sales Intelligence B2B (ZoomInfo, Apollo.io, Outreach, Salesloft, Cognism, Clay, HubSpot Breeze).
 
@@ -256,7 +256,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 17 | Cold call dialer | ❌ | ausente |
 | 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
 | 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
-| 20 | Zapier/Make app | ❌ | ausente |
+| 20 | Zapier/Make app | ✅ | `GET /events` em `public-api` (polling trigger) + endpoints de CRUD existentes (action) |
 | 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
 | 22 | Slack notifications | ✅ | `webhook-dispatcher` + `WebhooksPanel` — URL do Slack configurável como webhook genérico |
 | 23 | Chrome Extension | ❌ | ausente |
@@ -265,7 +265,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 26 | Technographics | ✅ | supabase/functions/technographics-detect/index.ts — 41 fingerprints, insere intent_signals type=tech_adoption |
 | 27 | Intent signals | ✅ | `IntentSignalsView.tsx` (manual) + `technographics-detect` (auto-scan de tecnologias) |
 | 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
-| 29 | Conversation intelligence | ❌ | ausente |
+| 29 | Conversation intelligence | ✅ | `conversation-intel` edge fn + UI no DealDetailDrawer — Gemini 2.5 Flash analisa sentiment, buying signals, action items, next steps |
 | 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
 | 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx`, `workflows`, `workflow_runs`, `workflow-engine` |
 | 32 | Workflow scheduling | ✅ | crons versionados + `workflow-engine` |
@@ -288,12 +288,11 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 42/50 = 84% completos · 1/50 = 2% parciais · 7/50 = 14% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 44/50 = 88% completos · 1/50 = 2% parciais · 5/50 = 10% ausentes (3ª passada 2026-11-22).**
 
-Ausentes de verdade (7): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
-`hubspot_salesforce` (21), `chrome_extension` (23), `conversation_intel` (29).
+Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
 Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
-Implementável hoje por engenharia: `zapier` (reusa `public-api`).
+
 
 
 
