@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { workflowApi, type Workflow, type WorkflowPhase } from "@/lib/api/workflows";
 import type { Json, Tables } from "@/integrations/supabase/types";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
+import { WorkflowEditor, type WorkflowStep } from "@/components/automation/WorkflowEditor";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
@@ -68,6 +69,8 @@ export const WorkflowsView = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [runDetailsOpen, setRunDetailsOpen] = useState(false);
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [createMode, setCreateMode] = useState<"simple" | "advanced">("simple");
+  const [advancedSteps, setAdvancedSteps] = useState<WorkflowStep[]>([]);
   const [newName, setNewName] = useState("Google Maps → Enriquecimento → IPC");
   const [newDescription, setNewDescription] = useState("Raspa empresas, enriquece dados de contato e qualifica pelo IPC automaticamente");
   const [keywords, setKeywords] = useState("restaurantes, bares");
@@ -144,9 +147,14 @@ export const WorkflowsView = () => {
   const selectedSteps = defaultSteps.filter(s => !s.phase || enabledPhases.includes(s.phase));
 
   const handleCreate = () => {
-    if (!newName.trim() || enabledPhases.length === 0) return;
-    const steps = selectedSteps;
-    createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
+    if (!newName.trim()) return;
+    if (createMode === "advanced") {
+      if (advancedSteps.length === 0) return;
+      createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps: advancedSteps as unknown as DefaultStep[], config: {} });
+      return;
+    }
+    if (enabledPhases.length === 0) return;
+    createMutation.mutate({ name: newName.trim(), description: newDescription.trim(), steps: selectedSteps, config: { keywords: keywords.split(",").map(k => k.trim()).filter(Boolean), radius, email: extractEmail, depth: 1, lang: "pt" } });
   };
 
   const activeCount = workflows.filter(w => w.status === "active").length;
@@ -161,46 +169,67 @@ export const WorkflowsView = () => {
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           {canCreate && <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" /> Novo Workflow</Button></DialogTrigger>}
-          <DialogContent className="bg-card border-border/50">
+          <DialogContent className="bg-card border-border/50 max-w-lg">
             <DialogHeader><DialogTitle className="flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Novo Workflow Automático</DialogTitle></DialogHeader>
-            <div className="space-y-4 mt-2">
-              <StepProgress steps={selectedSteps.map(s => s.label)} currentStep={createMutation.isPending ? selectedSteps.length : 0} className="py-2" />
-              <div className="flex items-center gap-2 overflow-x-auto pb-2">
-                {selectedSteps.map((step, i) => (
-                  <div key={step.id} className="flex items-center gap-2">
-                    <div className={cn("rounded-md border px-2 py-1.5 flex items-center gap-1.5 whitespace-nowrap", stepColors[step.type])}>
-                      {stepIcons[step.type]}<span className="text-[10px] font-medium">{step.label}</span>
-                    </div>
-                    {i < selectedSteps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/40 flex-shrink-0" />}
+            <div className="space-y-4 mt-2 max-h-[70vh] overflow-y-auto pr-1">
+              {/* Modo toggle */}
+              <div className="flex items-center gap-2 rounded-md border border-border/50 p-1">
+                <Button size="sm" variant={createMode === "simple" ? "secondary" : "ghost"} className="flex-1 text-xs h-7" onClick={() => setCreateMode("simple")}>Simples</Button>
+                <Button size="sm" variant={createMode === "advanced" ? "secondary" : "ghost"} className="flex-1 text-xs h-7" onClick={() => setCreateMode("advanced")}>Editor Avançado</Button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2">
+                <div className="space-y-1"><Label className="text-xs text-muted-foreground">Nome</Label><Input value={newName} onChange={e => setNewName(e.target.value)} className="h-9 text-sm" /></div>
+                <div className="space-y-1"><Label className="text-xs text-muted-foreground">Descrição</Label><Input value={newDescription} onChange={e => setNewDescription(e.target.value)} className="h-9 text-sm" /></div>
+              </div>
+
+              {createMode === "simple" ? (
+                <>
+                  <StepProgress steps={selectedSteps.map(s => s.label)} currentStep={createMutation.isPending ? selectedSteps.length : 0} className="py-2" />
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                    {selectedSteps.map((step, i) => (
+                      <div key={step.id} className="flex items-center gap-2">
+                        <div className={cn("rounded-md border px-2 py-1.5 flex items-center gap-1.5 whitespace-nowrap", stepColors[step.type])}>
+                          {stepIcons[step.type]}<span className="text-[10px] font-medium">{step.label}</span>
+                        </div>
+                        {i < selectedSteps.length - 1 && <ArrowRight className="h-3 w-3 text-muted-foreground/40 flex-shrink-0" />}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Etapas que este workflow executa</Label>
-                {phaseOptions.map(opt => (
-                  <div key={opt.phase} className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm text-foreground">{opt.label}</p>
-                      <p className="text-[10px] text-muted-foreground">{opt.hint}</p>
-                    </div>
-                    <Switch
-                      checked={enabledPhases.includes(opt.phase)}
-                      disabled={enabledPhases.length === 1 && enabledPhases.includes(opt.phase)}
-                      onCheckedChange={on => setEnabledPhases(prev => on ? [...prev, opt.phase] : prev.filter(p => p !== opt.phase))}
-                    />
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Etapas que este workflow executa</Label>
+                    {phaseOptions.map(opt => (
+                      <div key={opt.phase} className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm text-foreground">{opt.label}</p>
+                          <p className="text-[10px] text-muted-foreground">{opt.hint}</p>
+                        </div>
+                        <Switch
+                          checked={enabledPhases.includes(opt.phase)}
+                          disabled={enabledPhases.length === 1 && enabledPhases.includes(opt.phase)}
+                          onCheckedChange={on => setEnabledPhases(prev => on ? [...prev, opt.phase] : prev.filter(p => p !== opt.phase))}
+                        />
+                      </div>
+                    ))}
+                    {enabledPhases.length === 0 && <p className="text-[10px] text-destructive">Selecione ao menos uma etapa.</p>}
                   </div>
-                ))}
-                {enabledPhases.length === 0 && <p className="text-[10px] text-destructive">Selecione ao menos uma etapa.</p>}
-              </div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Nome</Label><Input value={newName} onChange={e => setNewName(e.target.value)} className="h-9 text-sm" /></div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Descrição</Label><Input value={newDescription} onChange={e => setNewDescription(e.target.value)} className="h-9 text-sm" /></div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Keywords (Google Maps)</Label><Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="restaurantes, bares, hotéis" className="h-9 text-sm" /></div>
-              <div className="space-y-2"><Label className="text-xs text-muted-foreground">Raio: {(radius / 1000).toFixed(0)}km</Label><Slider value={[radius]} onValueChange={([v]) => setRadius(v)} min={1000} max={50000} step={1000} /></div>
-              <div className="flex items-center justify-between">
-                <div><p className="text-sm text-foreground">Extrair emails</p><p className="text-[10px] text-muted-foreground">Busca emails nos sites encontrados</p></div>
-                <Switch checked={extractEmail} onCheckedChange={setExtractEmail} />
-              </div>
-              <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim() || enabledPhases.length === 0} className="w-full gap-2">
+                  <div className="space-y-2"><Label className="text-xs text-muted-foreground">Keywords (Google Maps)</Label><Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="restaurantes, bares, hotéis" className="h-9 text-sm" /></div>
+                  <div className="space-y-2"><Label className="text-xs text-muted-foreground">Raio: {(radius / 1000).toFixed(0)}km</Label><Slider value={[radius]} onValueChange={([v]) => setRadius(v)} min={1000} max={50000} step={1000} /></div>
+                  <div className="flex items-center justify-between">
+                    <div><p className="text-sm text-foreground">Extrair emails</p><p className="text-[10px] text-muted-foreground">Busca emails nos sites encontrados</p></div>
+                    <Switch checked={extractEmail} onCheckedChange={setExtractEmail} />
+                  </div>
+                </>
+              ) : (
+                <WorkflowEditor
+                  initialSteps={advancedSteps}
+                  onSave={setAdvancedSteps}
+                  saving={false}
+                  className="max-h-[45vh] overflow-y-auto"
+                />
+              )}
+
+              <Button onClick={handleCreate} disabled={createMutation.isPending || !newName.trim() || (createMode === "simple" ? enabledPhases.length === 0 : advancedSteps.length === 0)} className="w-full gap-2">
                 {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
                 {createMutation.isPending ? "Criando..." : "Criar & Ativar Workflow"}
               </Button>
