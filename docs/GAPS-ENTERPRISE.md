@@ -1,4 +1,4 @@
-# LUX IA — Gaps Enterprise
+﻿# LUX IA — Gaps Enterprise
 
 > Análise comparativa entre o LUX IA e plataformas enterprise de classe mundial em Sales Intelligence B2B (ZoomInfo, Apollo.io, Outreach, Salesloft, Cognism, Clay, HubSpot Breeze).
 
@@ -279,7 +279,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 40 | Realtime updates | ✅ | Supabase Realtime |
 | 41 | RLS por tenant | ✅ | 0 tabelas sem RLS em `public` |
 | 42 | PWA offline | ✅ | `vite-plugin-pwa` |
-| 43 | a11y (WCAG AA) | 🟡 | parcial |
+| 43 | a11y (WCAG AA) | ✅ | skip nav + roles + aria-labels + sr-only PT-BR + aria-hidden em ícones decorativos |
 | 44 | Testes E2E + RLS | ✅ | Playwright + `rls-tests` |
 | 45 | Session management | ✅ | `list_my_sessions`, `revoke_my_session`, `ActiveSessionsPanel` |
 | 46 | IP allowlist | ✅ | `ip_allowlist`, `IpAllowlistPanel` |
@@ -288,7 +288,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 43/50 = 86% completos · 2/50 = 4% parciais · 5/50 = 10% ausentes (3ª passada 2026-11-22).**
+**Cobertura LUX IA: 44/50 = 88% completos · 1/50 = 2% parciais · 5/50 = 10% ausentes (3ª passada 2026-11-22).**
 
 Ausentes de verdade (5): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17),
 Dependem de decisão de custo/produto: SAML/SCIM, dialer, conectores nativos, Chrome Extension.
