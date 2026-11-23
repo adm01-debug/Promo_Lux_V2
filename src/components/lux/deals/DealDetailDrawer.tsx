@@ -5,13 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Phone, Mail as MailIcon, Calendar as CalIcon, FileText, Activity } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Trash2, Phone, Mail as MailIcon, Calendar as CalIcon, FileText, Activity, Brain, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useDeals, useDealActivities, useDealStages, type Deal, type DealActivity } from "@/hooks/useDeals";
 import { useLostReasons } from "@/hooks/useLostReasons";
 import { useConfirm } from "@/hooks/confirm-context";
 import { DealTasksPanel } from "./DealTasksPanel";
+import { useMutation } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   deal: Deal | null;
@@ -20,7 +23,11 @@ interface Props {
 }
 
 const TYPE_ICONS: Record<DealActivity["type"], React.ElementType> = {
-  note: FileText, call: Phone, email: MailIcon, meeting: CalIcon, stage_change: Activity, system: Activity,
+  note: FileText, call: Phone, email: MailIcon, meeting: CalIcon, stage_change: Activity, system: Activity, conversation_intel: Brain,
+};
+
+const SENTIMENT_COLORS: Record<string, string> = {
+  positive: "default", neutral: "secondary", negative: "destructive",
 };
 
 export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
@@ -32,6 +39,19 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
   const confirm = useConfirm();
   const [actType, setActType] = useState<DealActivity["type"]>("note");
   const [actText, setActText] = useState("");
+  const [intelResult, setIntelResult] = useState<Record<string, unknown> | null>(null);
+
+  const intelMutation = useMutation({
+    mutationFn: async () => {
+      if (!actText.trim()) throw new Error("Escreva o texto antes de analisar");
+      const { data, error } = await supabase.functions.invoke("conversation-intel", {
+        body: { deal_id: deal!.id, text: actText.trim(), text_type: actType },
+      });
+      if (error) throw error;
+      return data as { analysis: Record<string, unknown>; activity_id: string };
+    },
+    onSuccess: (data) => setIntelResult(data.analysis),
+  });
 
   if (!deal) return null;
 
@@ -159,15 +179,50 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
                 value={actText} onChange={(e) => setActText(e.target.value)}
                 placeholder="Descreva a atividade..." rows={2} className="flex-1"
               />
-              <Button
-                size="sm"
-                onClick={async () => {
-                  if (!actText.trim()) return;
-                  await addActivity.mutateAsync({ type: actType, title: actText.trim().slice(0, 80), content: actText.trim() });
-                  setActText("");
-                }}
-              >Add</Button>
+              <div className="flex flex-col gap-1">
+                <Button
+                  size="sm"
+                  onClick={async () => {
+                    if (!actText.trim()) return;
+                    await addActivity.mutateAsync({ type: actType, title: actText.trim().slice(0, 80), content: actText.trim() });
+                    setActText("");
+                    setIntelResult(null);
+                  }}
+                >Add</Button>
+                <Button
+                  size="sm" variant="outline"
+                  disabled={!actText.trim() || intelMutation.isPending}
+                  onClick={() => intelMutation.mutate()}
+                  title="Analisar com IA"
+                >
+                  {intelMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Brain className="h-3.5 w-3.5" />}
+                </Button>
+              </div>
             </div>
+
+            {intelResult && (
+              <div className="p-3 rounded-lg border border-primary/30 glass space-y-2 text-xs">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold">Análise IA</span>
+                  <Badge variant={(SENTIMENT_COLORS[intelResult.sentiment as string] ?? "secondary") as Parameters<typeof Badge>[0]["variant"]}>
+                    {intelResult.sentiment as string}
+                  </Badge>
+                  {!!intelResult.urgency && (
+                    <Badge variant="outline">{intelResult.urgency as string}</Badge>
+                  )}
+                </div>
+                {!!intelResult.summary && <p className="text-muted-foreground">{intelResult.summary as string}</p>}
+                {Array.isArray(intelResult.buying_signals) && intelResult.buying_signals.length > 0 && (
+                  <div><span className="font-medium text-green-600">Sinais:</span> {(intelResult.buying_signals as string[]).join("; ")}</div>
+                )}
+                {Array.isArray(intelResult.action_items) && intelResult.action_items.length > 0 && (
+                  <div><span className="font-medium">Ações:</span> {(intelResult.action_items as string[]).join("; ")}</div>
+                )}
+                {Array.isArray(intelResult.next_steps) && intelResult.next_steps.length > 0 && (
+                  <div><span className="font-medium">Próximos passos:</span> {(intelResult.next_steps as string[]).join("; ")}</div>
+                )}
+              </div>
+            )}
 
             <div className="space-y-2">
               {activities.map((a) => {
@@ -182,6 +237,17 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
                       {a.content && a.content !== a.title && (
                         <p className="text-xs text-muted-foreground mt-0.5">{a.content}</p>
                       )}
+                    {a.type === "conversation_intel" && !!(a.metadata as Record<string, unknown>)?.analysis && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {(() => {
+                          const analysis = (a.metadata as Record<string, unknown>).analysis as Record<string, unknown>;
+                          return <>
+                            <Badge variant={(SENTIMENT_COLORS[analysis.sentiment as string] ?? "secondary") as Parameters<typeof Badge>[0]["variant"]} className="text-[10px]">{analysis.sentiment as string}</Badge>
+                            {!!analysis.urgency && <Badge variant="outline" className="text-[10px]">{analysis.urgency as string}</Badge>}
+                          </>;
+                        })()}
+                      </div>
+                    )}
                       <p className="text-[10px] text-muted-foreground mt-1">
                         {format(new Date(a.created_at), "dd MMM yyyy 'às' HH:mm", { locale: ptBR })}
                       </p>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
@@ -206,7 +206,7 @@ export function useDeals() {
 export interface DealActivity {
   id: string;
   deal_id: string;
-  type: "note" | "call" | "email" | "meeting" | "stage_change" | "system";
+  type: "note" | "call" | "email" | "meeting" | "stage_change" | "system" | "conversation_intel";
   title: string;
   content: string | null;
   metadata: unknown;

@@ -53,6 +53,7 @@ vi.mock("@/hooks/usePermissions", () => ({
 
 vi.mock("@/hooks/use-toast", () => ({
   toast: vi.fn(),
+  useToast: () => ({ toast: vi.fn(), dismiss: vi.fn(), toasts: [] }),
 }));
 
 vi.mock("framer-motion", async () => {

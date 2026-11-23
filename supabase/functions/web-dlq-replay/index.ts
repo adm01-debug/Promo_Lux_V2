@@ -64,6 +64,20 @@ Deno.serve(async (req) => {
     return json({ error: 'forbidden_org' }, 403);
   }
 
+  // Replay reenfileira scraping com custo de rede: só admin da org.
+  const { data: isOrgAdmin, error: roleErr } = await userClient.rpc('has_org_role', {
+    _org_id: parsed.organization_id,
+    _user_id: userId,
+    _min_role: 'admin',
+  });
+  if (roleErr) {
+    console.error('role_check_failed', roleErr);
+    return json({ error: 'role_check_failed' }, 500);
+  }
+  if (!isOrgAdmin) {
+    return json({ error: 'forbidden_role' }, 403);
+  }
+
   const { data, error } = await admin.rpc('replay_web_dead_letter_batch', {
     p_organization_id: parsed.organization_id,
     p_dlq_ids: parsed.dlq_ids ?? null,
