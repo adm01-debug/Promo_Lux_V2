@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "825b08cdc4871816e7d3659f89fdb6e3ce6a31c1",
+  "commit": "6e486a4ca689f28f86e9d6a1e0b050d25434daee",
   "branch": "main",
-  "data_commit": "2026-11-23T18:21:42-03:00",
+  "data_commit": "2026-11-23T18:26:37-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "6e486a4",
+    "data": "2026-11-23",
+    "assunto": "feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)"
+   },
    {
     "sha": "825b08c",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "63a6f3f",
     "data": "2026-11-22",
     "assunto": "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)"
-   },
-   {
-    "sha": "2b0bddf",
-    "data": "2026-11-21",
-    "assunto": "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)"
    }
   ],
-  "arquivos_mudados_7d": 227,
+  "arquivos_mudados_7d": 231,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 59
+    "mudancas": 61
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -153,7 +153,7 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 10
+    "mudancas": 13
    },
    {
     "pasta": ".gitignore",
@@ -165,7 +165,7 @@
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
@@ -211,10 +211,14 @@
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 6
+   },
+   {
+    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 6
    },
    {
@@ -231,10 +235,6 @@
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 5
    },
    {
@@ -255,6 +255,18 @@
    },
    {
     "arquivo": "src/App.tsx",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "src/integrations/supabase/withOrg.ts",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "supabase/functions/workflow-engine/index.ts",
     "mudancas": 4
    },
    {
@@ -284,24 +296,12 @@
    {
     "arquivo": "docs/pendencias/_backlog-verificado.md",
     "mudancas": 3
-   },
-   {
-    "arquivo": "docs/prod-readiness.md",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "src/components/lux/AnalyticsView.tsx",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "src/components/lux/DealsView.tsx",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 116
+    "commits": 117
    },
    {
     "autor": "dependabot[bot]",
@@ -310,19 +310,19 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1117,
-  "arquivos_codigo": 701,
-  "linhas_codigo": 122057,
+  "arquivos_total": 1121,
+  "arquivos_codigo": 703,
+  "linhas_codigo": 122749,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 263,
-  "hooks": 96,
+  "componentes": 264,
+  "hooks": 97,
   "edge_functions": 63,
-  "tabelas": 115,
-  "migrations": 245,
+  "tabelas": 118,
+  "migrations": 247,
   "cron_jobs": 39,
   "testes": 127,
   "workflows": 9,
@@ -555,20 +555,20 @@
    "linhas": 339
   },
   "src/components": {
-   "arquivos": 304,
-   "linhas": 50053
+   "arquivos": 305,
+   "linhas": 50280
   },
   "src/contexts": {
    "arquivos": 7,
    "linhas": 323
   },
   "src/hooks": {
-   "arquivos": 102,
-   "linhas": 11494
+   "arquivos": 103,
+   "linhas": 11613
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 8685
+   "linhas": 8899
   },
   "src/lib": {
    "arquivos": 53,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 134,
-   "linhas": 24086
+   "linhas": 24218
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -610,7 +610,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7304
+   "linhas": 7515
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
@@ -633,12 +633,12 @@
    "linhas": 1170
   },
   {
-   "arquivo": "scripts/maintenance/lib.mjs",
-   "linhas": 937
+   "arquivo": "supabase/functions/workflow-engine/index.ts",
+   "linhas": 1005
   },
   {
-   "arquivo": "supabase/functions/workflow-engine/index.ts",
-   "linhas": 904
+   "arquivo": "scripts/maintenance/lib.mjs",
+   "linhas": 937
   },
   {
    "arquivo": "scripts/maintenance/run.mjs",
@@ -653,6 +653,10 @@
    "linhas": 843
   },
   {
+   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+   "linhas": 769
+  },
+  {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
    "linhas": 763
   },
@@ -663,10 +667,6 @@
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
    "linhas": 739
-  },
-  {
-   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-   "linhas": 738
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",

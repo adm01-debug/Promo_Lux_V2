@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 245,
+ "migrations": 247,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -95,6 +95,7 @@
   "claim_instagram_tasks",
   "claim_scrape_tasks",
   "claim_web_scrape_tasks",
+  "claim_workflow_run",
   "cleanup_old_idempotency_keys",
   "cnpj_claim_enrich_jobs",
   "cnpj_reserve_rate_slot",
@@ -105,9 +106,11 @@
   "company_source_distribution",
   "complete_scrape_task",
   "complete_web_scrape_task",
+  "complete_workflow_step",
   "compute_deal_prediction",
   "compute_lead_score",
   "compute_sla_backoff",
+  "consume_warmup_slot",
   "count_audit_logs",
   "count_recent_org_violations",
   "create_default_deal_stages",
@@ -140,6 +143,8 @@
   "export_subject_data",
   "fail_scrape_task",
   "fail_web_scrape_task",
+  "fail_workflow_step",
+  "finish_workflow_run",
   "fn_web_scrape_regression_check",
   "fulfill_dsar_request",
   "get_dashboard_stats",
@@ -148,11 +153,13 @@
   "get_public_uptime",
   "get_sector_summary",
   "get_survey_by_token",
+  "get_warmup_slot",
   "handle_new_organization",
   "handle_new_user",
   "handle_updated_at",
   "has_org_role",
   "has_role",
+  "heartbeat_workflow_run",
   "increment_version",
   "ip_in_cidr",
   "is_ip_allowed",
@@ -185,6 +192,7 @@
   "pii_regex",
   "pii_scan",
   "prevent_user_id_change",
+  "prevent_workflow_run_events_update",
   "prune_api_latency_snapshots",
   "prune_api_request_logs",
   "prune_audit_logs",
@@ -304,6 +312,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "campaign_recipients",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_campaign_warmup_state_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "campaign_warmup_state",
    "funcao": "update_updated_at_column"
   },
   {
@@ -965,6 +980,13 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "trg_warmup_profiles_updated",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "warmup_profiles",
+   "funcao": "update_updated_at_column"
+  },
+  {
    "nome": "trg_web_scrape_queue_updated_at",
    "quando": "before",
    "evento": "update",
@@ -977,6 +999,13 @@
    "evento": "update",
    "tabela": "webhooks",
    "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_workflow_run_events_no_update",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "workflow_run_events",
+   "funcao": "prevent_workflow_run_events_update"
   },
   {
    "nome": "prevent_user_id_change_workflow_runs",
@@ -4182,6 +4211,114 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "campaign_warmup_state": {
+   "colunas": {
+    "campaign_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "campaigns"
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "current_day": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "1",
+     "ref": null
+    },
+    "emails_sent_today": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "last_reset_date": {
+     "tipo": "date",
+     "nn": true,
+     "pk": false,
+     "default": "current_date",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Members view campaign_warmup_state",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage campaign_warmup_state",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_campaign_warmup_state_org",
+     "colunas": "organization_id, last_reset_date desc",
+     "unico": false
+    }
+   ],
+   "fks": [
+    "campaign_id->campaigns",
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261124020000_c13_warmup_throttling.sql",
+   "colunas_types": {
+    "campaign_id": "string",
+    "created_at": "string",
+    "current_day": "number",
+    "emails_sent_today": "number",
+    "id": "string",
+    "last_reset_date": "string",
+    "organization_id": "string",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_campaign_warmup_state_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "campaigns": {
    "colunas": {
@@ -17392,6 +17529,157 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "warmup_profiles": {
+   "colunas": {
+    "allowed_weekdays": {
+     "tipo": "smallint[]",
+     "nn": true,
+     "pk": false,
+     "default": "'{1",
+     "ref": null
+    },
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "daily_increment": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "10",
+     "ref": null
+    },
+    "enabled": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "true",
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "max_per_day": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "200",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "ramp_days": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "14",
+     "ref": null
+    },
+    "send_window_end": {
+     "tipo": "smallint",
+     "nn": true,
+     "pk": false,
+     "default": "18",
+     "ref": null
+    },
+    "send_window_start": {
+     "tipo": "smallint",
+     "nn": true,
+     "pk": false,
+     "default": "9",
+     "ref": null
+    },
+    "start_per_day": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "20",
+     "ref": null
+    },
+    "updated_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Admins delete warmup_profiles",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Admins insert warmup_profiles",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Admins update warmup_profiles",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Members view warmup_profiles",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage warmup_profiles",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [],
+   "fks": [
+    "organization_id->organizations"
+   ],
+   "criada_em": "20261124020000_c13_warmup_throttling.sql",
+   "colunas_types": {
+    "allowed_weekdays": "number[]",
+    "created_at": "string",
+    "daily_increment": "number",
+    "enabled": "boolean",
+    "id": "string",
+    "max_per_day": "number",
+    "organization_id": "string",
+    "ramp_days": "number",
+    "send_window_end": "number",
+    "send_window_start": "number",
+    "start_per_day": "number",
+    "updated_at": "string"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 1,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_warmup_profiles_updated"
+   ],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "web_scrape_dead_letter": {
    "colunas": {
     "attempts": {
@@ -18369,8 +18657,133 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "workflow_run_events": {
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "dedupe_key": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "event_type": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "organization_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "organizations"
+    },
+    "payload": {
+     "tipo": "jsonb",
+     "nn": true,
+     "pk": false,
+     "default": "'{}'::jsonb",
+     "ref": null
+    },
+    "run_id": {
+     "tipo": "uuid",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": "workflow_runs"
+    },
+    "step_name": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [
+    {
+     "nome": "Members view workflow_run_events",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Service manage workflow_run_events",
+     "comando": "all",
+     "para": "service_role",
+     "tipo": "permissive"
+    }
+   ],
+   "indices": [
+    {
+     "nome": "idx_workflow_run_events_org",
+     "colunas": "organization_id, created_at desc",
+     "unico": false
+    },
+    {
+     "nome": "idx_workflow_run_events_run",
+     "colunas": "run_id, created_at desc",
+     "unico": false
+    },
+    {
+     "nome": "uq_workflow_run_events_dedupe",
+     "colunas": "run_id, dedupe_key",
+     "unico": true
+    }
+   ],
+   "fks": [
+    "organization_id->organizations",
+    "run_id->workflow_runs"
+   ],
+   "criada_em": "20261124030000_d18_durable_workflow_execution.sql",
+   "colunas_types": {
+    "created_at": "string",
+    "dedupe_key": "string | null",
+    "event_type": "string",
+    "id": "string",
+    "organization_id": "string",
+    "payload": "Json | null",
+    "run_id": "string",
+    "step_name": "string | null"
+   },
+   "drift": {
+    "so_na_migration": [],
+    "so_no_types": []
+   },
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [
+    "trg_workflow_run_events_no_update"
+   ],
+   "sem_rls": false,
+   "nao_usada": true
+  },
   "workflow_runs": {
    "colunas": {
+    "attempt": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "0",
+     "ref": null
+    },
     "completed_at": {
      "tipo": "timestamp with time zone",
      "nn": false,
@@ -18399,11 +18812,32 @@
      "default": null,
      "ref": null
     },
+    "heartbeat_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "id": {
      "tipo": "uuid",
      "nn": true,
      "pk": true,
      "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "locked_by": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "locked_until": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
      "ref": null
     },
     "organization_id": {
@@ -18489,6 +18923,11 @@
      "unico": false
     },
     {
+     "nome": "idx_workflow_runs_claim",
+     "colunas": "status, locked_until",
+     "unico": false
+    },
+    {
      "nome": "idx_workflow_runs_org",
      "colunas": "organization_id",
      "unico": false
@@ -18512,6 +18951,11 @@
      "nome": "idx_workflow_runs_workflow_id",
      "colunas": "workflow_id",
      "unico": false
+    },
+    {
+     "nome": "uq_workflow_runs_one_active",
+     "colunas": "workflow_id",
+     "unico": true
     }
    ],
    "fks": [
@@ -18520,11 +18964,15 @@
    ],
    "criada_em": "20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql",
    "colunas_types": {
+    "attempt": "number",
     "completed_at": "string | null",
     "created_at": "string",
     "current_step": "string | null",
     "error_message": "string | null",
+    "heartbeat_at": "string | null",
     "id": "string",
+    "locked_by": "string | null",
+    "locked_until": "string | null",
     "organization_id": "string",
     "results": "Json | null",
     "started_at": "string | null",
@@ -18874,6 +19322,11 @@
    "usada_em": 1
   },
   {
+   "nome": "claim_workflow_run",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "cnpj_claim_enrich_jobs",
    "definida": true,
    "usada_em": 1
@@ -18915,6 +19368,16 @@
   },
   {
    "nome": "complete_web_scrape_task",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "complete_workflow_step",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "consume_warmup_slot",
    "definida": true,
    "usada_em": 1
   },
@@ -19034,6 +19497,16 @@
    "usada_em": 1
   },
   {
+   "nome": "fail_workflow_step",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "finish_workflow_run",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
    "nome": "fulfill_dsar_request",
    "definida": true,
    "usada_em": 1
@@ -19065,6 +19538,11 @@
   },
   {
    "nome": "get_survey_by_token",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "get_warmup_slot",
    "definida": true,
    "usada_em": 1
   },

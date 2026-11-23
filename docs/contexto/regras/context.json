@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "825b08cdc4871816e7d3659f89fdb6e3ce6a31c1",
+  "sha": "6e486a4ca689f28f86e9d6a1e0b050d25434daee",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 21:22 UTC",
-  "files_total": 1136,
-  "code_files": 954,
-  "code_lines": 141500
+  "generated_at": "2026-11-23 21:27 UTC",
+  "files_total": 1140,
+  "code_files": 958,
+  "code_lines": 142844
  },
  "version": "1.3.2",
- "facts_hash": "b5d5d4e9985ea288",
+ "facts_hash": "7348bcabf3f59bd6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -235,9 +235,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 376,
-   ".tsx": 298,
-   ".sql": 249,
+   ".ts": 377,
+   ".tsx": 299,
+   ".sql": 251,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -1061,6 +1061,34 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
+     },
+     {
+      "name": "locked_by",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "attempt",
+      "type": "number not null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "heartbeat_at",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "locked_until",
+      "type": "string | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [
@@ -10881,6 +10909,232 @@
     "comment": "",
     "origin": "migration"
    },
+   "warmup_profiles": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid not null references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "start_per_day",
+      "type": "integer not null default 20 check (start_per_day > 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "daily_increment",
+      "type": "integer not null default 10 check (daily_increment >= 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "max_per_day",
+      "type": "integer not null default 200 check (max_per_day > 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "ramp_days",
+      "type": "integer not null default 14 check (ramp_days > 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "allowed_weekdays",
+      "type": "smallint[] not null default '{1,2,3,4,5}'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "send_window_start",
+      "type": "smallint not null default 9 check (send_window_start between 0 and 23)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "send_window_end",
+      "type": "smallint not null default 18 check (send_window_end between 0 and 23)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "enabled",
+      "type": "boolean not null default true",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     }
+    ],
+    "constraints": [
+     "unique (organization_id)"
+    ],
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "campaign_warmup_state": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid not null references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "campaign_id",
+      "type": "uuid not null references public.campaigns(id) on delete cascade",
+      "fk": "campaigns.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "current_day",
+      "type": "integer not null default 1 check (current_day > 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "emails_sent_today",
+      "type": "integer not null default 0 check (emails_sent_today >= 0)",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "last_reset_date",
+      "type": "date not null default current_date",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     },
+     {
+      "name": "updated_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+     }
+    ],
+    "constraints": [
+     "unique (campaign_id)"
+    ],
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+    "comment": "",
+    "origin": "migration"
+   },
+   "workflow_run_events": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid primary key default gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "run_id",
+      "type": "uuid not null references public.workflow_runs(id) on delete cascade",
+      "fk": "workflow_runs.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "organization_id",
+      "type": "uuid not null references public.organizations(id) on delete cascade",
+      "fk": "organizations.id on delete cascade",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "event_type",
+      "type": "text not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "step_name",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "dedupe_key",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "payload",
+      "type": "jsonb not null default '{}'::jsonb",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+     }
+    ],
+    "constraints": [
+     "constraint workflow_run_events_type_check check ( event_type in ('run_claimed','step_started','step_completed','step_failed','run_completed','run_failed') )"
+    ],
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "comment": "",
+    "origin": "migration"
+   },
    "deal_lost_reason_stats": {
     "columns": [
      {
@@ -14906,6 +15160,96 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "name": "Members view warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Admins insert warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Admins update warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Admins delete warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Service manage warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Members view campaign_warmup_state",
+    "table": "campaign_warmup_state",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Service manage campaign_warmup_state",
+    "table": "campaign_warmup_state",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Members view workflow_run_events",
+    "table": "workflow_run_events",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "Service manage workflow_run_events",
+    "table": "workflow_run_events",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "triggers": [
@@ -15925,6 +16269,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "name": "trg_warmup_profiles_updated",
+    "when": "BEFORE UPDATE",
+    "table": "warmup_profiles",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "trg_campaign_warmup_state_updated",
+    "when": "BEFORE UPDATE",
+    "table": "campaign_warmup_state",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "trg_workflow_run_events_no_update",
+    "when": "BEFORE UPDATE",
+    "table": "workflow_run_events",
+    "function": "prevent_workflow_run_events_update",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "functions": {
@@ -18730,6 +19101,138 @@
     "tables": [
      "base",
      "companies"
+    ]
+   },
+   "get_warmup_slot": {
+    "args": "_org_id uuid, _campaign_id uuid",
+    "returns": "table (\n  allowed boolean,\n  daily_limit integer,\n  emails_sent_today integer,\n  remaining integer,\n  current_day integer,\n  reason text\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_profile public.warmup_profiles%rowtype; v_state public.campaign_warmup_state%rowtype; v_today date := current_date; v_limit integer; v_sent integer; v_day integer; begin select * into v_profile from public.warmup_profiles where organization_id = _org_id and enabled; if not found then return query select true, null::integer, 0, null::integer, null::integer, 'no_profile'::text; return; end if; if not exists ( select 1 from public.campaigns where id = _campaign_id and organization_id = _org_id ) then raise exception 'campaign % nao pertence a organizacao %', _campaign_id, _org_id using errcode = '42501'; end if; if not ( (case when extract(isodow from now() at time zone 'UTC') = 7 the …",
+    "raises": [
+     "campaign % nao pertence a organizacao %"
+    ],
+    "tables": [
+     "campaign_warmup_state",
+     "campaigns",
+     "now",
+     "v_profile",
+     "v_state",
+     "warmup_profiles"
+    ]
+   },
+   "consume_warmup_slot": {
+    "args": "_campaign_id uuid, _count integer",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin if _count is null or _count <= 0 then return; end if; update public.campaign_warmup_state set emails_sent_today = emails_sent_today + _count where campaign_id = _campaign_id; end;",
+    "raises": [],
+    "tables": [
+     "campaign_warmup_state"
+    ]
+   },
+   "prevent_workflow_run_events_update": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "begin raise exception 'workflow_run_events e append-only: UPDATE nao permitido (run %)', old.run_id using errcode = '42501'; end;",
+    "raises": [
+     "workflow_run_events e append-only: UPDATE nao permitido (run %)"
+    ],
+    "tables": [
+     "nao"
+    ]
+   },
+   "claim_workflow_run": {
+    "args": "_worker_id text, _lease_seconds integer default 300, _workflow_id uuid default null, _run_id uuid default null",
+    "returns": "table (\n  run_id uuid,\n  workflow_id uuid,\n  organization_id uuid,\n  current_step text,\n  attempt integer\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_run public.workflow_runs%rowtype; v_lease interval; begin if _worker_id is null or length(trim(_worker_id)) = 0 then raise exception 'worker_id obrigatorio' using errcode = '22023'; end if; v_lease := make_interval(secs => greatest(coalesce(_lease_seconds, 300), 30)); select * into v_run from public.workflow_runs r where ( r.status in ('pending','queued') or (r.status = 'running' and (r.locked_until is null or r.locked_until < now())) ) and (_run_id is null or r.id = _run_id) and (_workflow_id is null or r.workflow_id = _workflow_id) order by r.created_at for update skip locked limit 1; if not found then return; end if; update public.workflow_runs as r set status = 'running', locke …",
+    "raises": [
+     "worker_id obrigatorio"
+    ],
+    "tables": [
+     "skip",
+     "v_run",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
+   "heartbeat_workflow_run": {
+    "args": "_run_id uuid, _worker_id text, _lease_seconds integer default 300",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_updated integer; begin update public.workflow_runs as r set locked_until = now() + make_interval(secs => greatest(coalesce(_lease_seconds, 300), 30)), heartbeat_at = now() where r.id = _run_id and r.locked_by = _worker_id and r.status = 'running'; get diagnostics v_updated = row_count; return v_updated > 0; end;",
+    "raises": [],
+    "tables": [
+     "workflow_runs"
+    ]
+   },
+   "complete_workflow_step": {
+    "args": "_run_id uuid, _worker_id text, _step_name text, _payload jsonb default '{}'::jsonb",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_run public.workflow_runs%rowtype; v_org uuid; begin select * into v_run from public.workflow_runs where id = _run_id for update; if not found then raise exception 'run % nao existe', _run_id using errcode = 'P0002'; end if; if v_run.locked_by is distinct from _worker_id then return false; end if; v_org := v_run.organization_id; insert into public.workflow_run_events (run_id, organization_id, event_type, step_name, dedupe_key, payload) values (_run_id, v_org, 'step_completed', _step_name, format('step:%s', _step_name), coalesce(_payload, '{}'::jsonb)) on conflict do nothing; update public.workflow_runs as r set current_step = _step_name, results = coalesce(r.results, '{}'::jsonb) || …",
+    "raises": [
+     "run % nao existe"
+    ],
+    "tables": [
+     "_worker_id",
+     "v_run",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
+   "fail_workflow_step": {
+    "args": "_run_id uuid, _worker_id text, _step_name text, _error text, _retry boolean default false",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_run public.workflow_runs%rowtype; v_max_attempts constant integer := 3; v_requeue boolean; begin select * into v_run from public.workflow_runs where id = _run_id for update; if not found then raise exception 'run % nao existe', _run_id using errcode = 'P0002'; end if; if v_run.locked_by is distinct from _worker_id then return false; end if; insert into public.workflow_run_events (run_id, organization_id, event_type, step_name, dedupe_key, payload) values (_run_id, v_run.organization_id, 'step_failed', _step_name, format('fail:%s:%s', _step_name, v_run.attempt), jsonb_build_object('error', _error, 'attempt', v_run.attempt)) on conflict do nothing; v_requeue := coalesce(_retry, false …",
+    "raises": [
+     "run % nao existe"
+    ],
+    "tables": [
+     "_worker_id",
+     "v_run",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
+   "finish_workflow_run": {
+    "args": "_run_id uuid, _worker_id text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_updated integer; v_org uuid; begin select organization_id into v_org from public.workflow_runs where id = _run_id; if not found then raise exception 'run % nao existe', _run_id using errcode = 'P0002'; end if; update public.workflow_runs as r set status = 'completed', current_step = null, completed_at = now(), locked_by = null, locked_until = null where r.id = _run_id and r.locked_by = _worker_id and r.status = 'running'; get diagnostics v_updated = row_count; if v_updated = 0 then return false; end if; insert into public.workflow_run_events (run_id, organization_id, event_type, dedupe_key, payload) values (_run_id, v_org, 'run_completed', null, jsonb_build_object('worker_id', _wor …",
+    "raises": [
+     "run % nao existe"
+    ],
+    "tables": [
+     "v_org",
+     "workflow_run_events",
+     "workflow_runs"
     ]
    },
    "Args": {
@@ -21772,6 +22275,54 @@
     "unique": false,
     "where": "WHERE dismissed_at IS NULL",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "name": "idx_campaign_warmup_state_org",
+    "table": "campaign_warmup_state",
+    "columns": "organization_id, last_reset_date desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "uq_workflow_run_events_dedupe",
+    "table": "workflow_run_events",
+    "columns": "run_id, dedupe_key",
+    "unique": true,
+    "where": "where dedupe_key is not null",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "idx_workflow_run_events_run",
+    "table": "workflow_run_events",
+    "columns": "run_id, created_at desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "idx_workflow_run_events_org",
+    "table": "workflow_run_events",
+    "columns": "organization_id, created_at desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "idx_workflow_runs_claim",
+    "table": "workflow_runs",
+    "columns": "status, locked_until",
+    "unique": false,
+    "where": "where status in ('pending','queued','running')",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "uq_workflow_runs_one_active",
+    "table": "workflow_runs",
+    "columns": "workflow_id",
+    "unique": true,
+    "where": "where status in ('pending','queued','running')",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "cron_jobs": [
@@ -22096,6 +22647,8 @@
    "supabase/migrations/20261122340000_cb_alert_settings_grant.sql",
    "supabase/migrations/20261124000000_h37_company_analytics.sql",
    "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
+   "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+   "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -22216,7 +22769,10 @@
    "ip_allowlist": "enabled",
    "data_subject_requests": "enabled",
    "pii_redaction_rules": "enabled",
-   "next_best_actions": "enabled"
+   "next_best_actions": "enabled",
+   "warmup_profiles": "enabled",
+   "campaign_warmup_state": "enabled",
+   "workflow_run_events": "enabled"
   },
   "grants": [
    {
@@ -27418,6 +27974,198 @@
     "objkind": "function",
     "roles": "authenticated, service_role",
     "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "campaign_warmup_state",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_warmup_slot",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "consume_warmup_slot",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_warmup_slot",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "consume_warmup_slot",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "warmup_profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "insert, update, delete",
+    "object": "warmup_profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "campaign_warmup_state",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "warmup_profiles",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "campaign_warmup_state",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "workflow_run_events",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "prevent_workflow_run_events_update",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "claim_workflow_run",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "heartbeat_workflow_run",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "complete_workflow_step",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "fail_workflow_step",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "finish_workflow_run",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "claim_workflow_run",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "heartbeat_workflow_run",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "complete_workflow_step",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fail_workflow_step",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "finish_workflow_run",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "workflow_run_events",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "workflow_run_events",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "raises": [
@@ -28150,6 +28898,36 @@
     "function": "capture_api_latency_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql"
+   },
+   {
+    "function": "get_warmup_slot",
+    "msg": "campaign % nao pertence a organizacao %",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "function": "prevent_workflow_run_events_update",
+    "msg": "workflow_run_events e append-only: UPDATE nao permitido (run %)",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "claim_workflow_run",
+    "msg": "worker_id obrigatorio",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "complete_workflow_step",
+    "msg": "run % nao existe",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "fail_workflow_step",
+    "msg": "run % nao existe",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "finish_workflow_run",
+    "msg": "run % nao existe",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "seed": [],
@@ -28538,9 +29316,9 @@
      "OAuth credentials not configured for ${acc.provider}",
      "Outlook send [${res.status}]: ${txt}",
      "Refresh failed: ${summary}",
+     "get_warmup_slot: ${warmupErr.message}",
      "load email account: ${accErr.message}",
-     "load recipients: ${recErr.message}",
-     "load suppressions: ${supErr.message}"
+     "load recipients: ${recErr.message}"
     ],
     "side_effects": [
      "sendMail"
@@ -30065,7 +30843,7 @@
      "notify"
     ],
     "webhook_events": [],
-    "idempotency": false
+    "idempotency": true
    }
   ],
   "api_routes": [
@@ -30418,7 +31196,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 304,
+  "components_count": 305,
   "hooks": [
    {
     "name": "useContacts",
@@ -31049,6 +31827,10 @@
     "file": "src/hooks/useVirtualization.ts"
    },
    {
+    "name": "useWarmupProfile",
+    "file": "src/hooks/useWarmupProfile.ts"
+   },
+   {
     "name": "useEnqueueWebScrape",
     "file": "src/hooks/useWebScrape.ts"
    },
@@ -31419,8 +32201,8 @@
   },
   {
    "module": "src/components",
-   "files": 304,
-   "lines": 50053,
+   "files": 305,
+   "lines": 50280,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -31663,8 +32445,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 102,
-   "lines": 11494,
+   "files": 103,
+   "lines": 11613,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -31726,6 +32508,7 @@
     "scrape_dead_letter",
     "scrape_queue",
     "stakeholders",
+    "warmup_profiles",
     "web_scrape_dead_letter",
     "web_scrape_queue",
     "webhook_deliveries",
@@ -31878,7 +32661,7 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 8685,
+   "lines": 8899,
    "tables": [
     "automation_alerts",
     "companies",
@@ -32150,7 +32933,7 @@
   {
    "module": "supabase/functions",
    "files": 134,
-   "lines": 24086,
+   "lines": 24218,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -32363,8 +33146,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 245,
-   "lines": 17618,
+   "files": 247,
+   "lines": 18270,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -33712,6 +34495,20 @@
      "src/components/lux/monitoring/VaultCookiesPanel.tsx"
     ]
    },
+   "warmup_profiles": {
+    "select": [
+     "src/hooks/useWarmupProfile.ts"
+    ],
+    "update": [
+     "src/hooks/useWarmupProfile.ts"
+    ],
+    "insert": [
+     "src/hooks/useWarmupProfile.ts"
+    ],
+    "delete": [
+     "src/hooks/useWarmupProfile.ts"
+    ]
+   },
    "web_scrape_dead_letter": {
     "select": [
      "e2e/dlq-web-smoke.spec.ts",
@@ -33781,10 +34578,10 @@
      "src/components/lux/monitoring/JobDetailsSheet.tsx",
      "supabase/functions/workflow-engine/index.ts"
     ],
-    "insert": [
+    "update": [
      "supabase/functions/workflow-engine/index.ts"
     ],
-    "update": [
+    "insert": [
      "supabase/functions/workflow-engine/index.ts"
     ]
    },
@@ -34607,6 +35404,9 @@
    "vault_cookie_snapshots": [
     "servico"
    ],
+   "warmup_profiles": [
+    "id"
+   ],
    "web_scrape_dead_letter": [
     "attempts",
     "created_at",
@@ -34662,6 +35462,7 @@
    ],
    "workflow_runs": [
     "id",
+    "status",
     "workflow_id"
    ],
    "workflows": [
@@ -35290,6 +36091,9 @@
    "claim_web_scrape_tasks": [
     "supabase/functions/web-scrape-worker/index.ts"
    ],
+   "claim_workflow_run": [
+    "supabase/functions/workflow-engine/index.ts"
+   ],
    "cnpj_claim_enrich_jobs": [
     "supabase/functions/cnpj-enrich-worker/index.ts"
    ],
@@ -35317,6 +36121,12 @@
    ],
    "complete_web_scrape_task": [
     "supabase/functions/web-scrape-worker/index.ts"
+   ],
+   "complete_workflow_step": [
+    "supabase/functions/workflow-engine/index.ts"
+   ],
+   "consume_warmup_slot": [
+    "supabase/functions/campaign-dispatch/index.ts"
    ],
    "count_audit_logs": [
     "src/hooks/useAuditLogExport.ts"
@@ -35399,6 +36209,12 @@
    "fail_web_scrape_task": [
     "supabase/functions/web-scrape-worker/index.ts"
    ],
+   "fail_workflow_step": [
+    "supabase/functions/workflow-engine/index.ts"
+   ],
+   "finish_workflow_run": [
+    "supabase/functions/workflow-engine/index.ts"
+   ],
    "fixture_rpc": [
     "scripts/ai-context/gerar.unit.mjs"
    ],
@@ -35427,6 +36243,9 @@
    ],
    "get_survey_by_token": [
     "src/hooks/useSatisfaction.ts"
+   ],
+   "get_warmup_slot": [
+    "supabase/functions/campaign-dispatch/index.ts"
    ],
    "ghost_rpc": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -35809,6 +36628,7 @@
     "ipc_config",
     "workflows",
     "workflow_runs",
+    "workflow_run_events",
     "profiles",
     "notifications",
     "campaigns",
@@ -35816,6 +36636,7 @@
     "campaign_events",
     "campaign_messages",
     "campaign_replies",
+    "campaign_warmup_state",
     "user_roles",
     "automation_alerts",
     "lusha_dm_search_history"
@@ -35827,7 +36648,8 @@
    ],
    "workflows": [
     "workflow_runs",
-    "automation_steps"
+    "automation_steps",
+    "workflow_run_events"
    ],
    "companies": [
     "stakeholders",
@@ -35879,7 +36701,10 @@
     "ip_allowlist",
     "data_subject_requests",
     "pii_redaction_rules",
-    "next_best_actions"
+    "next_best_actions",
+    "warmup_profiles",
+    "campaign_warmup_state",
+    "workflow_run_events"
    ],
    "deals": [
     "deal_activities",
@@ -35894,7 +36719,8 @@
     "campaign_recipients",
     "campaign_events",
     "campaign_messages",
-    "campaign_replies"
+    "campaign_replies",
+    "campaign_warmup_state"
    ],
    "campaign_recipients": [
     "campaign_events",
@@ -35905,7 +36731,8 @@
     "email_sync_log"
    ],
    "workflow_runs": [
-    "automation_steps"
+    "automation_steps",
+    "workflow_run_events"
    ],
    "instagram_scrape_queue": [
     "instagram_scrape_results"
@@ -35944,6 +36771,7 @@
    "api_rate_limits",
    "apollo_rate_state",
    "apollo_search_cache",
+   "campaign_warmup_state",
    "data_subject_requests",
    "job_exports",
    "lusha_credit_usage_log",
@@ -35955,7 +36783,8 @@
    "sales_goal_progress",
    "scrape_worker_state",
    "v_lusha_cache_stats",
-   "v_lux_enrichment_health"
+   "v_lux_enrichment_health",
+   "workflow_run_events"
   ],
   "columns_unknown": [
    {
@@ -36393,6 +37222,36 @@
     "file": "src/components/lux/settings/DsarPanel.tsx",
     "field": "dsar-email",
     "rules": "type=email"
+   },
+   {
+    "file": "src/components/lux/settings/WarmupPanel.tsx",
+    "field": "warmup-start",
+    "rules": "type=number, min=1"
+   },
+   {
+    "file": "src/components/lux/settings/WarmupPanel.tsx",
+    "field": "warmup-inc",
+    "rules": "type=number, min=0"
+   },
+   {
+    "file": "src/components/lux/settings/WarmupPanel.tsx",
+    "field": "warmup-max",
+    "rules": "max, type=number, min=1, max"
+   },
+   {
+    "file": "src/components/lux/settings/WarmupPanel.tsx",
+    "field": "warmup-days",
+    "rules": "type=number, min=1"
+   },
+   {
+    "file": "src/components/lux/settings/WarmupPanel.tsx",
+    "field": "warmup-from",
+    "rules": "type=number, min=0, max=23"
+   },
+   {
+    "file": "src/components/lux/settings/WarmupPanel.tsx",
+    "field": "warmup-to",
+    "rules": "type=number, min=0, max=23"
    }
   ],
   "enums": [
@@ -37826,6 +38685,10 @@
    },
    {
     "file": "supabase/functions/campaign-dispatch/index.ts",
+    "msg": "get_warmup_slot: ${warmupErr.message}"
+   },
+   {
+    "file": "supabase/functions/campaign-dispatch/index.ts",
     "msg": "load email account: ${accErr.message}"
    },
    {
@@ -38319,6 +39182,14 @@
    {
     "file": "src/hooks/useRolePermissions.ts",
     "text": "Desfaz a alteração otimista: a matriz não pode divergir do banco."
+   },
+   {
+    "file": "src/hooks/useWarmupProfile.ts",
+    "text": "perfil, `get_warmup_slot` barra o envio diario acima do limite, fora da"
+   },
+   {
+    "file": "src/hooks/useWarmupProfile.ts",
+    "text": "* Limite do dia para um dia do ramp-up: start + incremento*(dia-1), truncado em max. */"
    },
    {
     "file": "src/integrations/supabase/withOrg.ts",
@@ -38870,7 +39741,15 @@
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
+    "text": "nao pode executar scrape/enrich/score duas vezes. O run e criado em"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
     "text": "DELETE de workflow exige admin da org (mesma regra da policy"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "text": "best-effort: falha ao marcar o run nao deve mascarar o erro original */ }"
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
@@ -39185,6 +40064,11 @@
     "table": "workflow_runs",
     "column": "organization_id",
     "rule": "default public.default_org_for_current_user()"
+   },
+   {
+    "table": "workflow_runs",
+    "column": "attempt",
+    "rule": "obrigatório"
    },
    {
     "table": "workflow_runs",
@@ -44100,6 +44984,151 @@
     "table": "next_best_actions",
     "column": "(tabela)",
     "rule": "CONSTRAINT next_best_actions_priority_check CHECK (priority BETWEEN 0 AND 100)"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "organization_id",
+    "rule": "obrigatório; FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "start_per_day",
+    "rule": "default 20; CHECK start_per_day > 0"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "daily_increment",
+    "rule": "default 10; CHECK daily_increment >= 0"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "max_per_day",
+    "rule": "default 200; CHECK max_per_day > 0"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "ramp_days",
+    "rule": "default 14; CHECK ramp_days > 0"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "allowed_weekdays",
+    "rule": "default '{1"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "send_window_start",
+    "rule": "default 9; CHECK send_window_start between 0 and 23"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "send_window_end",
+    "rule": "default 18; CHECK send_window_end between 0 and 23"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "enabled",
+    "rule": "default true"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "warmup_profiles",
+    "column": "(tabela)",
+    "rule": "unique (organization_id)"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "organization_id",
+    "rule": "obrigatório; FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "campaign_id",
+    "rule": "obrigatório; FK → campaigns.id on delete cascade"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "current_day",
+    "rule": "default 1; CHECK current_day > 0"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "emails_sent_today",
+    "rule": "default 0; CHECK emails_sent_today >= 0"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "last_reset_date",
+    "rule": "default current_date"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "updated_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "campaign_warmup_state",
+    "column": "(tabela)",
+    "rule": "unique (campaign_id)"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "run_id",
+    "rule": "obrigatório; FK → workflow_runs.id on delete cascade"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "organization_id",
+    "rule": "obrigatório; FK → organizations.id on delete cascade"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "event_type",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "payload",
+    "rule": "default '{}'::jsonb"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "workflow_run_events",
+    "column": "(tabela)",
+    "rule": "constraint workflow_run_events_type_check check ( event_type in ('run_claimed','step_started','step_completed','step_failed','run_completed','run_failed') )"
    },
    {
     "table": "org_leaderboard",
@@ -49395,13 +50424,25 @@
    {
     "file": "supabase/functions/workflow-engine/index.ts",
     "field": "status",
-    "value": "running",
+    "value": "queued",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
+    "value": "pending",
     "kind": "escreve"
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
     "field": "current_step",
     "value": "scrape",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
+    "value": "running",
     "kind": "escreve"
    },
    {
@@ -49499,6 +50540,12 @@
     "field": "status",
     "value": "failed",
     "kind": "compara"
+   },
+   {
+    "file": "supabase/functions/workflow-engine/index.ts",
+    "field": "status",
+    "value": "failed",
+    "kind": "filtra"
    },
    {
     "file": "supabase/functions/workflow-engine/index.ts",
@@ -49627,6 +50674,12 @@
     "name": "canDo",
     "params": "entity: Entity, action: Action",
     "body": "if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);"
+   },
+   {
+    "file": "src/hooks/useWarmupProfile.ts",
+    "name": "validate",
+    "params": "input: WarmupInput",
+    "body": "if (!Number.isInteger(input.start_per_day) || input.start_per_day < 1) return \"Envios no dia 1 deve ser >= 1.\"; if (!Number.isInteger(input.daily_increment) || input.daily_increment < 0) return \"Incremento diário inválido.\"; if (!Number.isInteger(input.max_per_day) || input.max_per_day < input.start_per_day) return \"Teto diário deve ser >= envios do dia 1.\"; if (!Number.isInteger(input.ramp_days) || input.ramp_days < 1) return \"Duração do ramp-up deve ser >= 1 dia.\"; if (input.allowed_weekdays.l …"
    },
    {
     "file": "src/lib/cnpj.ts",
@@ -50179,6 +51232,14 @@
    {
     "file": "supabase/migrations/20261124000000_h37_company_analytics.sql",
     "line": "interval '1 month'))::date as month_start"
+   },
+   {
+    "file": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "line": "and created_at < now() - interval '1 hour';"
+   },
+   {
+    "file": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "line": "locked_until = now() + interval '300 seconds',"
    }
   ],
   "percents": [
@@ -58688,6 +59749,96 @@
     "using": "true",
     "check": "true",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "name": "Members view warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Admins insert warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "INSERT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Admins update warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "UPDATE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Admins delete warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
+    "check": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Service manage warmup_profiles",
+    "table": "warmup_profiles",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Members view campaign_warmup_state",
+    "table": "campaign_warmup_state",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Service manage campaign_warmup_state",
+    "table": "campaign_warmup_state",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "Members view workflow_run_events",
+    "table": "workflow_run_events",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "public.is_org_member(organization_id, auth.uid())",
+    "check": "",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "Service manage workflow_run_events",
+    "table": "workflow_run_events",
+    "cmd": "ALL",
+    "roles": "service_role",
+    "mode": "permissive",
+    "using": "true",
+    "check": "true",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "db_triggers": [
@@ -59707,6 +60858,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261122270000_next_best_action.sql"
+   },
+   {
+    "name": "trg_warmup_profiles_updated",
+    "when": "BEFORE UPDATE",
+    "table": "warmup_profiles",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "trg_campaign_warmup_state_updated",
+    "when": "BEFORE UPDATE",
+    "table": "campaign_warmup_state",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "name": "trg_workflow_run_events_no_update",
+    "when": "BEFORE UPDATE",
+    "table": "workflow_run_events",
+    "function": "prevent_workflow_run_events_update",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "db_functions": {
@@ -62514,6 +63692,138 @@
      "companies"
     ]
    },
+   "get_warmup_slot": {
+    "args": "_org_id uuid, _campaign_id uuid",
+    "returns": "table (\n  allowed boolean,\n  daily_limit integer,\n  emails_sent_today integer,\n  remaining integer,\n  current_day integer,\n  reason text\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_profile public.warmup_profiles%rowtype; v_state public.campaign_warmup_state%rowtype; v_today date := current_date; v_limit integer; v_sent integer; v_day integer; begin select * into v_profile from public.warmup_profiles where organization_id = _org_id and enabled; if not found then return query select true, null::integer, 0, null::integer, null::integer, 'no_profile'::text; return; end if; if not exists ( select 1 from public.campaigns where id = _campaign_id and organization_id = _org_id ) then raise exception 'campaign % nao pertence a organizacao %', _campaign_id, _org_id using errcode = '42501'; end if; if not ( (case when extract(isodow from now() at time zone 'UTC') = 7 the …",
+    "raises": [
+     "campaign % nao pertence a organizacao %"
+    ],
+    "tables": [
+     "campaign_warmup_state",
+     "campaigns",
+     "now",
+     "v_profile",
+     "v_state",
+     "warmup_profiles"
+    ]
+   },
+   "consume_warmup_slot": {
+    "args": "_campaign_id uuid, _count integer",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "begin if _count is null or _count <= 0 then return; end if; update public.campaign_warmup_state set emails_sent_today = emails_sent_today + _count where campaign_id = _campaign_id; end;",
+    "raises": [],
+    "tables": [
+     "campaign_warmup_state"
+    ]
+   },
+   "prevent_workflow_run_events_update": {
+    "args": "",
+    "returns": "trigger",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": false,
+    "search_path": false,
+    "body": "begin raise exception 'workflow_run_events e append-only: UPDATE nao permitido (run %)', old.run_id using errcode = '42501'; end;",
+    "raises": [
+     "workflow_run_events e append-only: UPDATE nao permitido (run %)"
+    ],
+    "tables": [
+     "nao"
+    ]
+   },
+   "claim_workflow_run": {
+    "args": "_worker_id text, _lease_seconds integer default 300, _workflow_id uuid default null, _run_id uuid default null",
+    "returns": "table (\n  run_id uuid,\n  workflow_id uuid,\n  organization_id uuid,\n  current_step text,\n  attempt integer\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_run public.workflow_runs%rowtype; v_lease interval; begin if _worker_id is null or length(trim(_worker_id)) = 0 then raise exception 'worker_id obrigatorio' using errcode = '22023'; end if; v_lease := make_interval(secs => greatest(coalesce(_lease_seconds, 300), 30)); select * into v_run from public.workflow_runs r where ( r.status in ('pending','queued') or (r.status = 'running' and (r.locked_until is null or r.locked_until < now())) ) and (_run_id is null or r.id = _run_id) and (_workflow_id is null or r.workflow_id = _workflow_id) order by r.created_at for update skip locked limit 1; if not found then return; end if; update public.workflow_runs as r set status = 'running', locke …",
+    "raises": [
+     "worker_id obrigatorio"
+    ],
+    "tables": [
+     "skip",
+     "v_run",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
+   "heartbeat_workflow_run": {
+    "args": "_run_id uuid, _worker_id text, _lease_seconds integer default 300",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_updated integer; begin update public.workflow_runs as r set locked_until = now() + make_interval(secs => greatest(coalesce(_lease_seconds, 300), 30)), heartbeat_at = now() where r.id = _run_id and r.locked_by = _worker_id and r.status = 'running'; get diagnostics v_updated = row_count; return v_updated > 0; end;",
+    "raises": [],
+    "tables": [
+     "workflow_runs"
+    ]
+   },
+   "complete_workflow_step": {
+    "args": "_run_id uuid, _worker_id text, _step_name text, _payload jsonb default '{}'::jsonb",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_run public.workflow_runs%rowtype; v_org uuid; begin select * into v_run from public.workflow_runs where id = _run_id for update; if not found then raise exception 'run % nao existe', _run_id using errcode = 'P0002'; end if; if v_run.locked_by is distinct from _worker_id then return false; end if; v_org := v_run.organization_id; insert into public.workflow_run_events (run_id, organization_id, event_type, step_name, dedupe_key, payload) values (_run_id, v_org, 'step_completed', _step_name, format('step:%s', _step_name), coalesce(_payload, '{}'::jsonb)) on conflict do nothing; update public.workflow_runs as r set current_step = _step_name, results = coalesce(r.results, '{}'::jsonb) || …",
+    "raises": [
+     "run % nao existe"
+    ],
+    "tables": [
+     "_worker_id",
+     "v_run",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
+   "fail_workflow_step": {
+    "args": "_run_id uuid, _worker_id text, _step_name text, _error text, _retry boolean default false",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_run public.workflow_runs%rowtype; v_max_attempts constant integer := 3; v_requeue boolean; begin select * into v_run from public.workflow_runs where id = _run_id for update; if not found then raise exception 'run % nao existe', _run_id using errcode = 'P0002'; end if; if v_run.locked_by is distinct from _worker_id then return false; end if; insert into public.workflow_run_events (run_id, organization_id, event_type, step_name, dedupe_key, payload) values (_run_id, v_run.organization_id, 'step_failed', _step_name, format('fail:%s:%s', _step_name, v_run.attempt), jsonb_build_object('error', _error, 'attempt', v_run.attempt)) on conflict do nothing; v_requeue := coalesce(_retry, false …",
+    "raises": [
+     "run % nao existe"
+    ],
+    "tables": [
+     "_worker_id",
+     "v_run",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
+   "finish_workflow_run": {
+    "args": "_run_id uuid, _worker_id text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_updated integer; v_org uuid; begin select organization_id into v_org from public.workflow_runs where id = _run_id; if not found then raise exception 'run % nao existe', _run_id using errcode = 'P0002'; end if; update public.workflow_runs as r set status = 'completed', current_step = null, completed_at = now(), locked_by = null, locked_until = null where r.id = _run_id and r.locked_by = _worker_id and r.status = 'running'; get diagnostics v_updated = row_count; if v_updated = 0 then return false; end if; insert into public.workflow_run_events (run_id, organization_id, event_type, dedupe_key, payload) values (_run_id, v_org, 'run_completed', null, jsonb_build_object('worker_id', _wor …",
+    "raises": [
+     "run % nao existe"
+    ],
+    "tables": [
+     "v_org",
+     "workflow_run_events",
+     "workflow_runs"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -63412,6 +64722,36 @@
     "function": "capture_api_latency_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql"
+   },
+   {
+    "function": "get_warmup_slot",
+    "msg": "campaign % nao pertence a organizacao %",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "function": "prevent_workflow_run_events_update",
+    "msg": "workflow_run_events e append-only: UPDATE nao permitido (run %)",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "claim_workflow_run",
+    "msg": "worker_id obrigatorio",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "complete_workflow_step",
+    "msg": "run % nao existe",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "fail_workflow_step",
+    "msg": "run % nao existe",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "function": "finish_workflow_run",
+    "msg": "run % nao existe",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "db_generated": [],
@@ -63621,6 +64961,10 @@
    {
     "file": "src/hooks/useScrapeQueue.ts",
     "limit": "200"
+   },
+   {
+    "file": "src/hooks/useWarmupProfile.ts",
+    "limit": "1"
    },
    {
     "file": "src/hooks/useWebhooks.ts",
@@ -64176,6 +65520,14 @@
      "type": "text NOT NULL DEFAULT 'pending'"
     },
     {
+     "table": "workflow_run_events",
+     "column": "step_name",
+     "enum": "",
+     "allowed": [],
+     "default": "",
+     "type": "text"
+    },
+    {
      "table": "v_lux_enrichment_health",
      "column": "cnt_other_status",
      "enum": "",
@@ -64408,7 +65760,8 @@
       "escreve:supabase/functions/cnpj-enrich-worker/index.ts",
       "escreve:supabase/functions/send-scheduled-reports/index.ts",
       "escreve:supabase/functions/web-scrape-worker/index.ts",
-      "escreve:supabase/functions/webhook-dispatcher/index.ts"
+      "escreve:supabase/functions/webhook-dispatcher/index.ts",
+      "filtra:supabase/functions/workflow-engine/index.ts"
      ],
      "queued": [
       "compara:src/components/lux/LushaIntelligenceView.tsx",
@@ -64420,6 +65773,7 @@
       "escreve:src/hooks/useWebScrape.ts",
       "escreve:supabase/functions/_shared/rlsTableRegistry.ts",
       "escreve:supabase/functions/instagram-worker/index.ts",
+      "escreve:supabase/functions/workflow-engine/index.ts",
       "filtra:supabase/functions/instagram-enqueue/index.ts",
       "filtra:supabase/functions/web-scrape-enqueue/index.ts"
      ],
@@ -65411,6 +66765,22 @@
     "INSERT": [],
     "UPDATE": [],
     "DELETE": []
+   },
+   "campaign_warmup_state": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
+    ]
    },
    "campaigns": {
     "rls": "enabled",
@@ -66740,6 +68110,25 @@
     "UPDATE": [],
     "DELETE": []
    },
+   "warmup_profiles": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
+    ],
+    "DELETE": [
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "service_role: true"
+    ]
+   },
    "web_scrape_dead_letter": {
     "rls": "enabled",
     "SELECT": [
@@ -66801,6 +68190,22 @@
     "DELETE": [
      "service_role: true",
      "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+    ]
+   },
+   "workflow_run_events": {
+    "rls": "enabled",
+    "SELECT": [
+     "authenticated: public.is_org_member(organization_id, auth.uid())",
+     "service_role: true"
+    ],
+    "INSERT": [
+     "service_role: true"
+    ],
+    "UPDATE": [
+     "service_role: true"
+    ],
+    "DELETE": [
+     "service_role: true"
     ]
    },
    "workflow_runs": {
@@ -67085,7 +68490,9 @@
    "supabase/migrations/20261122280000_cron_instagram_worker.sql",
    "supabase/migrations/20261122310000_c14_ab_significance.sql",
    "supabase/migrations/20261124000000_h37_company_analytics.sql",
-   "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql"
+   "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
+   "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+   "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -67118,6 +68525,7 @@
    "claim_instagram_tasks",
    "claim_scrape_tasks",
    "claim_web_scrape_tasks",
+   "claim_workflow_run",
    "cnpj_claim_enrich_jobs",
    "cnpj_reserve_rate_slot",
    "company_analytics_summary",
@@ -67127,8 +68535,10 @@
    "company_source_distribution",
    "complete_scrape_task",
    "complete_web_scrape_task",
+   "complete_workflow_step",
    "compute_deal_prediction",
    "compute_lead_score",
+   "consume_warmup_slot",
    "count_audit_logs",
    "count_recent_org_violations",
    "create_default_deal_stages",
@@ -67158,6 +68568,8 @@
    "export_subject_data",
    "fail_scrape_task",
    "fail_web_scrape_task",
+   "fail_workflow_step",
+   "finish_workflow_run",
    "fn_web_scrape_regression_check",
    "fulfill_dsar_request",
    "get_dashboard_stats",
@@ -67166,10 +68578,12 @@
    "get_public_uptime",
    "get_sector_summary",
    "get_survey_by_token",
+   "get_warmup_slot",
    "handle_new_organization",
    "handle_new_user",
    "has_org_role",
    "has_role",
+   "heartbeat_workflow_run",
    "is_ip_allowed",
    "is_org_member",
    "is_service_role",
@@ -72455,6 +73869,198 @@
     "objkind": "function",
     "roles": "authenticated, service_role",
     "src": "supabase/migrations/20261124000000_h37_company_analytics.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "campaign_warmup_state",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "get_warmup_slot",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "consume_warmup_slot",
+    "objkind": "function",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_warmup_slot",
+    "objkind": "function",
+    "roles": "authenticated, service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "consume_warmup_slot",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "warmup_profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "insert, update, delete",
+    "object": "warmup_profiles",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "campaign_warmup_state",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "warmup_profiles",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "campaign_warmup_state",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124020000_c13_warmup_throttling.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "insert, update, delete",
+    "object": "workflow_run_events",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "prevent_workflow_run_events_update",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "claim_workflow_run",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "heartbeat_workflow_run",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "complete_workflow_step",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "fail_workflow_step",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "finish_workflow_run",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "claim_workflow_run",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "heartbeat_workflow_run",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "complete_workflow_step",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fail_workflow_step",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "finish_workflow_run",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "workflow_run_events",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "workflow_run_events",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
    }
   ],
   "guards": [
@@ -72613,6 +74219,9 @@
    "data_subject_requests",
    "pii_redaction_rules",
    "next_best_actions",
+   "warmup_profiles",
+   "campaign_warmup_state",
+   "workflow_run_events",
    "deal_lost_reason_stats",
    "org_leaderboard",
    "sales_goal_progress",
@@ -73100,6 +74709,17 @@
    "next_best_actions": [
     "created_at",
     "updated_at"
+   ],
+   "warmup_profiles": [
+    "created_at",
+    "updated_at"
+   ],
+   "campaign_warmup_state": [
+    "created_at",
+    "updated_at"
+   ],
+   "workflow_run_events": [
+    "created_at"
    ],
    "deal_lost_reason_stats": [],
    "org_leaderboard": [],
@@ -74303,8 +75923,9 @@
    "`vault_cookie_snapshots.health_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
+   "`workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "117/123 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "120/126 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -78115,7 +79736,7 @@
   },
   "src/components/lux/SettingsView.tsx": {
    "path": "src/components/lux/SettingsView.tsx",
-   "lines": 396,
+   "lines": 400,
    "exports": [
     "const SettingsView"
    ],
@@ -82086,6 +83707,39 @@
     "50"
    ]
   },
+  "src/components/lux/settings/WarmupPanel.tsx": {
+   "path": "src/components/lux/settings/WarmupPanel.tsx",
+   "lines": 223,
+   "exports": [
+    "function WarmupPanel"
+   ],
+   "html_constraints": [
+    {
+     "field": "warmup-start",
+     "rules": "type=number, min=1"
+    },
+    {
+     "field": "warmup-inc",
+     "rules": "type=number, min=0"
+    },
+    {
+     "field": "warmup-max",
+     "rules": "max, type=number, min=1, max"
+    },
+    {
+     "field": "warmup-days",
+     "rules": "type=number, min=1"
+    },
+    {
+     "field": "warmup-from",
+     "rules": "type=number, min=0, max=23"
+    },
+    {
+     "field": "warmup-to",
+     "rules": "type=number, min=0, max=23"
+    }
+   ]
+  },
   "src/components/lux/skeletons/DashboardSkeleton.tsx": {
    "path": "src/components/lux/skeletons/DashboardSkeleton.tsx",
    "lines": 30,
@@ -85981,6 +87635,58 @@
     "useVirtualization"
    ]
   },
+  "src/hooks/useWarmupProfile.ts": {
+   "path": "src/hooks/useWarmupProfile.ts",
+   "lines": 119,
+   "exports": [
+    "interface WarmupProfile",
+    "interface WarmupState",
+    "interface WarmupInput",
+    "const WEEKDAY_LABELS",
+    "function dailyLimitFor",
+    "function useWarmupProfile"
+   ],
+   "tables": [
+    {
+     "table": "warmup_profiles",
+     "op": "select"
+    },
+    {
+     "table": "warmup_profiles",
+     "op": "update"
+    },
+    {
+     "table": "warmup_profiles",
+     "op": "insert"
+    },
+    {
+     "table": "warmup_profiles",
+     "op": "delete"
+    }
+   ],
+   "table_cols": {
+    "warmup_profiles": [
+     "id"
+    ]
+   },
+   "rule_comments": [
+    "perfil, `get_warmup_slot` barra o envio diario acima do limite, fora da",
+    "* Limite do dia para um dia do ramp-up: start + incremento*(dia-1), truncado em max. */"
+   ],
+   "hooks": [
+    "useWarmupProfile"
+   ],
+   "calc_fns": [
+    {
+     "name": "validate",
+     "params": "input: WarmupInput",
+     "body": "if (!Number.isInteger(input.start_per_day) || input.start_per_day < 1) return \"Envios no dia 1 deve ser >= 1.\"; if (!Number.isInteger(input.daily_increment) || input.daily_increment < 0) return \"Incremento diário inválido.\"; if (!Number.isInteger(input.max_per_day) || input.max_per_day < input.start_per_day) return \"Teto diário deve ser >= envios do dia 1.\"; if (!Number.isInteger(input.ramp_days) || input.ramp_days < 1) return \"Duração do ramp-up deve ser >= 1 dia.\"; if (input.allowed_weekdays.l …"
+    }
+   ],
+   "pagination": [
+    "1"
+   ]
+  },
   "src/hooks/useWebScrape.ts": {
    "path": "src/hooks/useWebScrape.ts",
    "lines": 171,
@@ -86489,7 +88195,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 7304,
+   "lines": 7515,
    "exports": [
     "type Json",
     "type Database",
@@ -86536,7 +88242,7 @@
   },
   "src/integrations/supabase/withOrg.ts": {
    "path": "src/integrations/supabase/withOrg.ts",
-   "lines": 450,
+   "lines": 453,
    "exports": [
     "const ACTIVE_ORG_STORAGE_KEY",
     "function setActiveOrgId",
@@ -91288,7 +92994,7 @@
   },
   "supabase/functions/campaign-dispatch/index.ts": {
    "path": "supabase/functions/campaign-dispatch/index.ts",
-   "lines": 738,
+   "lines": 769,
    "tables": [
     {
      "table": "campaigns",
@@ -91376,7 +93082,9 @@
    },
    "rpc": [
     "advance_recipient_step",
+    "consume_warmup_slot",
     "decide_ab_winner",
+    "get_warmup_slot",
     "record_campaign_event"
    ],
    "external_urls": [
@@ -91400,6 +93108,7 @@
     "OAuth credentials not configured for ${acc.provider}",
     "Outlook send [${res.status}]: ${txt}",
     "Refresh failed: ${summary}",
+    "get_warmup_slot: ${warmupErr.message}",
     "load email account: ${accErr.message}",
     "load recipients: ${recErr.message}",
     "load suppressions: ${supErr.message}",
@@ -95936,7 +97645,7 @@
   },
   "supabase/functions/workflow-engine/index.ts": {
    "path": "supabase/functions/workflow-engine/index.ts",
-   "lines": 904,
+   "lines": 1005,
    "tables": [
     {
      "table": "organization_members",
@@ -95975,16 +97684,24 @@
      "op": "update"
     },
     {
+     "table": "workflow_runs",
+     "op": "select,update"
+    },
+    {
      "table": "workflows",
      "op": "select"
     },
     {
-     "table": "audit_logs",
-     "op": "insert"
+     "table": "workflow_runs",
+     "op": "insert,select"
     },
     {
      "table": "workflow_runs",
-     "op": "insert,select"
+     "op": "update"
+    },
+    {
+     "table": "audit_logs",
+     "op": "insert"
     },
     {
      "table": "workflows",
@@ -96119,6 +97836,7 @@
     ],
     "workflow_runs": [
      "id",
+     "status",
      "workflow_id"
     ],
     "workflows": [
@@ -96154,6 +97872,12 @@
      "user_id"
     ]
    },
+   "rpc": [
+    "claim_workflow_run",
+    "complete_workflow_step",
+    "fail_workflow_step",
+    "finish_workflow_run"
+   ],
    "env": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
@@ -96217,12 +97941,22 @@
     },
     {
      "field": "status",
-     "value": "running",
+     "value": "queued",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "pending",
      "kind": "escreve"
     },
     {
      "field": "current_step",
      "value": "scrape",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "running",
      "kind": "escreve"
     },
     {
@@ -96307,13 +98041,20 @@
     },
     {
      "field": "status",
+     "value": "failed",
+     "kind": "filtra"
+    },
+    {
+     "field": "status",
      "value": "completed",
      "kind": "filtra"
     }
    ],
    "rule_comments": [
     "apenas marcar \"pending\" fazia a UI anunciar \"reiniciado\" com o",
+    "nao pode executar scrape/enrich/score duas vezes. O run e criado em",
     "DELETE de workflow exige admin da org (mesma regra da policy",
+    "best-effort: falha ao marcar o run nao deve mascarar o erro original */ }",
     "best-effort: falha ao disparar alerta não deve mascarar o erro original */ }"
    ],
    "side_effects": [
@@ -97580,13 +99321,47 @@
    "path": "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
    "lines": 214,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124020000_c13_warmup_throttling.sql": {
+   "path": "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+   "lines": 232,
+   "uses_service_role": true
+  },
+  "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql": {
+   "path": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
+   "lines": 420,
+   "temporal": [
+    "and created_at < now() - interval '1 hour';",
+    "locked_until = now() + interval '300 seconds',"
+   ],
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "825b08cdc4871816e7d3659f89fdb6e3ce6a31c1",
+  "sha": "6e486a4ca689f28f86e9d6a1e0b050d25434daee",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6e486a4",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "scripts/sql/security-definer-allowlist.txt",
+     "src/components/lux/SettingsView.tsx",
+     "src/components/lux/settings/WarmupPanel.tsx",
+     "src/hooks/useWarmupProfile.ts",
+     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
+     "src/integrations/supabase/types.ts",
+     "src/integrations/supabase/withOrg.ts",
+     "supabase/functions/campaign-dispatch/index.ts",
+     "supabase/functions/workflow-engine/index.ts",
+     "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
+     "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+    ]
+   },
    {
     "sha": "825b08c",
     "date": "2026-11-23",
@@ -97961,30 +99736,16 @@
      "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
      "src/pages/Monitoring.tsx"
     ]
-   },
-   {
-    "sha": "3dd0aea",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)",
-    "files": [
-     "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
-     "supabase/functions/_shared/companies-upsert.ts",
-     "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/workflow-engine/index.ts",
-     "supabase/migrations/20261122120000_fix_companies_dedupe_e_takeover.sql",
-     "vitest.config.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    7
+    8
    ],
    [
     "src/integrations/supabase/types.ts",
-    3
+    4
    ],
    [
     "src/pages/Monitoring.tsx",
@@ -97993,6 +99754,26 @@
    [
     "docs/ESTADO_ATUAL.md",
     3
+   ],
+   [
+    "scripts/sql/security-definer-allowlist.txt",
+    2
+   ],
+   [
+    "src/components/lux/SettingsView.tsx",
+    2
+   ],
+   [
+    "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
+    2
+   ],
+   [
+    "src/integrations/supabase/withOrg.ts",
+    2
+   ],
+   [
+    "supabase/functions/workflow-engine/index.ts",
+    2
    ],
    [
     "src/components/lux/AnalyticsView.tsx",
@@ -98008,10 +99789,6 @@
    ],
    [
     "src/hooks/useDeals.ts",
-    2
-   ],
-   [
-    "supabase/functions/workflow-engine/index.ts",
     2
    ],
    [
@@ -98041,22 +99818,6 @@
    [
     "docs/agentes/lovable-deploy.md",
     2
-   ],
-   [
-    "supabase/functions/mcp/index.ts",
-    2
-   ],
-   [
-    "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
-    1
-   ],
-   [
-    "scripts/sql/check-function-grants.sql",
-    1
-   ],
-   [
-    "scripts/sql/security-definer-allowlist.txt",
-    1
    ]
   ]
  }

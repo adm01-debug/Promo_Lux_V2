@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `825b08cdc4` · branch `main` · 2026-11-23 21:22 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6e486a4ca6` · branch `main` · 2026-11-23 21:27 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -26,6 +26,7 @@
 | `campaign_messages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `campaign_recipients` | _(sem COMMENT ON TABLE — significado não documentado)_ | 26 colunas | migration |
 | `campaign_replies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
+| `campaign_warmup_state` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `campaigns` | _(sem COMMENT ON TABLE — significado não documentado)_ | 26 colunas | migration |
 | `changelog_entries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
 | `circuit_breaker_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
@@ -123,12 +124,14 @@
 | `v_lux_enrichment_health` | _(sem COMMENT ON TABLE — significado não documentado)_ | 22 colunas | types.ts |
 | `vault_cookie_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `vault_cookie_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 9 colunas | migration |
+| `warmup_profiles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
 | `web_scrape_dead_letter` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
 | `web_scrape_queue` | _(sem COMMENT ON TABLE — significado não documentado)_ | 23 colunas | migration |
 | `web_scrape_results` | _(sem COMMENT ON TABLE — significado não documentado)_ | 20 colunas | migration |
 | `webhook_deliveries` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `webhooks` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
-| `workflow_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `workflow_run_events` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
+| `workflow_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `workflows` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |
 | `app_role` (enum) | admin, sdr, viewer |  | banco |
 | `audit_action` (enum) | create, update, delete, execute |  | banco |
@@ -387,8 +390,9 @@ _nenhum item encontrado_
 - `vault_cookie_snapshots.health_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
+- `workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 117/123 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 120/126 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

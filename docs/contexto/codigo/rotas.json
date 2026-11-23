@@ -149,6 +149,7 @@
     "useUpdateMemberRole",
     "useVirtualCompanies",
     "useVirtualization",
+    "useWarmupProfile",
     "useWebhookDeliveries",
     "useWebhooks",
     "useWeeklyPerformance"
@@ -253,6 +254,7 @@
     "useUpdateMemberRole",
     "useVirtualCompanies",
     "useVirtualization",
+    "useWarmupProfile",
     "useWebhookDeliveries",
     "useWebhooks",
     "useWeeklyPerformance"
@@ -316,6 +318,7 @@
     "scrape_queue",
     "scrape_results",
     "stakeholders",
+    "warmup_profiles",
     "webhook_deliveries",
     "webhooks",
     "workflow_runs",
@@ -421,7 +424,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 269
+   "arquivos_puxados": 271
   },
   {
    "protegida": true,
@@ -1588,6 +1591,7 @@
     "useUpdateMemberRole",
     "useVirtualCompanies",
     "useVirtualization",
+    "useWarmupProfile",
     "useWebhookDeliveries",
     "useWebhooks",
     "useWeeklyPerformance"
@@ -1680,6 +1684,7 @@
     "useUpdateMemberRole",
     "useVirtualCompanies",
     "useVirtualization",
+    "useWarmupProfile",
     "useWebhookDeliveries",
     "useWebhooks",
     "useWeeklyPerformance"
@@ -1742,6 +1747,7 @@
     "scrape_queue",
     "scrape_results",
     "stakeholders",
+    "warmup_profiles",
     "webhook_deliveries",
     "webhooks",
     "workflow_runs",
@@ -1838,7 +1844,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 231
+   "arquivos_puxados": 233
   },
   {
    "id": "deals",
@@ -2628,7 +2634,8 @@
     "useState",
     "useToast",
     "useUnsavedChanges",
-    "useUpdateMemberRole"
+    "useUpdateMemberRole",
+    "useWarmupProfile"
    ],
    "hooks_locais": [
     "useActiveOrganization",
@@ -2655,7 +2662,8 @@
     "useRolePermissions",
     "useToast",
     "useUnsavedChanges",
-    "useUpdateMemberRole"
+    "useUpdateMemberRole",
+    "useWarmupProfile"
    ],
    "tabelas": [
     "audit_logs",
@@ -2664,7 +2672,8 @@
     "organization_members",
     "organizations",
     "profiles",
-    "role_permissions"
+    "role_permissions",
+    "warmup_profiles"
    ],
    "rpcs": [
     "audit_log_facets",
@@ -2700,7 +2709,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 43
+   "arquivos_puxados": 46
   },
   {
    "id": "stakeholders",

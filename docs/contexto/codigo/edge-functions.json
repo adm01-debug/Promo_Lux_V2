@@ -257,7 +257,7 @@
    "nome": "campaign-dispatch",
    "entrada": "supabase/functions/campaign-dispatch/index.ts",
    "arquivos": 1,
-   "linhas": 738,
+   "linhas": 769,
    "verify_jwt": true,
    "metodos": [
     "GET",
@@ -273,7 +273,9 @@
    ],
    "rpcs": [
     "advance_recipient_step",
+    "consume_warmup_slot",
     "decide_ab_winner",
+    "get_warmup_slot",
     "record_campaign_event"
    ],
    "env": [
@@ -2343,7 +2345,7 @@
    "nome": "workflow-engine",
    "entrada": "supabase/functions/workflow-engine/index.ts",
    "arquivos": 1,
-   "linhas": 904,
+   "linhas": 1005,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -2363,7 +2365,12 @@
     "workflow_runs",
     "workflows"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "claim_workflow_run",
+    "complete_workflow_step",
+    "fail_workflow_step",
+    "finish_workflow_run"
+   ],
    "env": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",

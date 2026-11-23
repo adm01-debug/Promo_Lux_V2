@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 263,
+ "total": 264,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -3068,12 +3068,28 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/settings/WarmupPanel.tsx",
+   "exports": [
+    "WarmupPanel"
+   ],
+   "export_default": null,
+   "linhas": 223,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useWarmupProfile"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/SettingsView.tsx",
    "exports": [
     "SettingsView"
    ],
    "export_default": null,
-   "linhas": 396,
+   "linhas": 400,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -3414,7 +3430,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 112,
+   "usado_por": 113,
    "orfao": false
   },
   {
@@ -3449,7 +3465,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 133,
+   "usado_por": 134,
    "orfao": false
   },
   {
@@ -3728,7 +3744,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 62,
+   "usado_por": 63,
    "orfao": false
   },
   {
@@ -3742,7 +3758,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 48,
+   "usado_por": 49,
    "orfao": false
   },
   {
@@ -4043,7 +4059,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 21,
+   "usado_por": 22,
    "orfao": false
   },
   {

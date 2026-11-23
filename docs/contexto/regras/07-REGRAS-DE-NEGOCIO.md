@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `825b08cdc4` · branch `main` · 2026-11-23 21:22 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6e486a4ca6` · branch `main` · 2026-11-23 21:27 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `sales_goals` | SDR+ insert goals | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | SDR+ update goals | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | Admins delete goals | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
-| … +28 linhas — lista completa em `context.json` | | | | | | |
+| … +37 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -377,6 +377,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `workflow_runs` | `created_at` | default now() |
 | `workflow_runs` | `user_id` | default auth.uid(); FK → users.id ON DELETE CASCADE |
 | `workflow_runs` | `organization_id` | default public.default_org_for_current_user() |
+| `workflow_runs` | `attempt` | obrigatório |
 | `workflow_runs` | `(tabela)` | constraint workflow_runs_status_check CHECK (status IN ('pending','queued','running','completed','failed','cancelled')) |
 | `stakeholders` | `id` | PK; default gen_random_uuid() |
 | `stakeholders` | `company_id` | FK → companies.id ON DELETE CASCADE |
@@ -616,8 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `oauth_sandbox_snapshots` | `id` | PK; default gen_random_uuid() |
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
 | `oauth_sandbox_snapshots` | `user_id` | default auth.uid() |
-| `oauth_sandbox_snapshots` | `label` | obrigatório |
-| … +780 linhas — lista completa em `context.json` | | |
+| … +810 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -736,6 +736,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_email_templates_updated | BEFORE UPDATE | `email_templates` | `update_updated_at_column` |  |
 | trg_incidents_updated | BEFORE UPDATE | `incidents` | `update_updated_at_column` |  |
 | trg_next_best_actions_updated | BEFORE UPDATE | `next_best_actions` | `update_updated_at_column` |  |
+| trg_warmup_profiles_updated | BEFORE UPDATE | `warmup_profiles` | `update_updated_at_column` |  |
+| trg_campaign_warmup_state_updated | BEFORE UPDATE | `campaign_warmup_state` | `update_updated_at_column` |  |
+| trg_workflow_run_events_no_update | BEFORE UPDATE | `workflow_run_events` | `prevent_workflow_run_events_update` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -887,6 +890,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `capture_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
 | `capture_web_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
 | `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
+| `get_warmup_slot` | campaign % nao pertence a organizacao % | `supabase/migrations/20261124020000_c13_warmup_throttling.sql` |
+| `prevent_workflow_run_events_update` | workflow_run_events e append-only: UPDATE nao permitido (run %) | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `claim_workflow_run` | worker_id obrigatorio | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `complete_workflow_step` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `fail_workflow_step` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `finish_workflow_run` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -932,6 +941,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `scheduled_report_runs` | `status` | `failed`, `pending`, `sent`, `skipped` | `pending` |
 | `incidents` | `status` | `identified`, `investigating`, `monitoring`, `resolved` | `investigating` |
 | `data_subject_requests` | `status` | `completed`, `pending`, `processing`, `rejected` | `pending` |
+| `workflow_run_events` | `step_name` | **livre (sem enum/CHECK)** |  |
 | `v_lux_enrichment_health` | `cnt_other_status` | **livre (sem enum/CHECK)** |  |
 
 ### E.2 Mapas de transição declarados no código
@@ -1008,7 +1018,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| `status` | `failed` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +11 |
+| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +11 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
@@ -1020,7 +1030,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `paused` | compara, escreve | `src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
 | `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +7 |
 | `status` | `processing` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts` |
-| `status` | `queued` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts`<br>`src/hooks/useScrapeQueue.ts`<br>… +5 |
+| `status` | `queued` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts`<br>`src/hooks/useScrapeQueue.ts`<br>… +6 |
 | `status` | `refresh_failed` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts` |
 | `status` | `rejected` | compara | `supabase/functions/scrape-queue-worker/index.ts` |
 | `status` | `replied` | compara | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
@@ -1389,6 +1399,12 @@ _nenhum item encontrado_
 | `audit-from` | type=date | `src/components/lux/settings/AuditLogExportPanel.tsx` |
 | `audit-to` | type=date | `src/components/lux/settings/AuditLogExportPanel.tsx` |
 | `dsar-email` | type=email | `src/components/lux/settings/DsarPanel.tsx` |
+| `warmup-start` | type=number, min=1 | `src/components/lux/settings/WarmupPanel.tsx` |
+| `warmup-inc` | type=number, min=0 | `src/components/lux/settings/WarmupPanel.tsx` |
+| `warmup-max` | max, type=number, min=1, max | `src/components/lux/settings/WarmupPanel.tsx` |
+| `warmup-days` | type=number, min=1 | `src/components/lux/settings/WarmupPanel.tsx` |
+| `warmup-from` | type=number, min=0, max=23 | `src/components/lux/settings/WarmupPanel.tsx` |
+| `warmup-to` | type=number, min=0, max=23 | `src/components/lux/settings/WarmupPanel.tsx` |
 
 ## G. Fórmulas e derivações (como valores são calculados)
 
@@ -1491,6 +1507,10 @@ _nenhum item encontrado_
 - **canDo(entity: Entity, action: Action)** — `src/hooks/usePermissions.ts`
   ```
   if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);
+  ```
+- **validate(input: WarmupInput)** — `src/hooks/useWarmupProfile.ts`
+  ```
+  if (!Number.isInteger(input.start_per_day) || input.start_per_day < 1) return "Envios no dia 1 deve ser >= 1."; if (!Number.isInteger(input.daily_increment) || input.daily_increment < 0) return "Incremento diário inválido."; if (!Number.isInteger(input.max_per_day) || input.max_per_day < input.start_per_day) return "Teto diário deve ser >= envios do dia 1."; if (!Number.isInteger(input.ramp_days) || input.ramp_days < 1) return "Duração do ramp-up deve ser >= 1 dia."; if (input.allowed_weekdays.l …
   ```
 - **calc(base: string, weights: number[])** — `src/lib/cnpj.ts`
   ```
@@ -1859,6 +1879,8 @@ _nenhum item encontrado_
 | `where status in ('failed','dead') and created_at >= now() - interval '24 hours'` | `supabase/migrations/20261122210000_status_page.sql` |
 | `_subject_user_id, _legal_basis, _notes, now() + interval '30 days'` | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `interval '1 month'))::date as month_start` | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
+| `and created_at < now() - interval '1 hour';` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `locked_until = now() + interval '300 seconds',` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 
 ### H.3 Limites de paginação
 
@@ -1906,6 +1928,7 @@ _nenhum item encontrado_
 | 50 | `src/hooks/usePartitionAdvisories.ts` |
 | 20 | `src/hooks/useScheduledReports.ts` |
 | 200 | `src/hooks/useScrapeQueue.ts` |
+| 1 | `src/hooks/useWarmupProfile.ts` |
 | 50 | `src/hooks/useWebhooks.ts` |
 | 1 | `supabase/functions/_shared/companies-upsert.ts` |
 | 1 | `supabase/functions/admin-list-companies/index.ts` |
@@ -2218,6 +2241,7 @@ _nenhum item encontrado_
 | OAuth credentials not configured for ${acc.provider} | `supabase/functions/campaign-dispatch/index.ts` |
 | Outlook send [${res.status}]: ${txt} | `supabase/functions/campaign-dispatch/index.ts` |
 | Refresh failed: ${summary} | `supabase/functions/campaign-dispatch/index.ts` |
+| get_warmup_slot: ${warmupErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
 | load email account: ${accErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
 | load recipients: ${recErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
 | load suppressions: ${supErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
@@ -2243,8 +2267,7 @@ _nenhum item encontrado_
 | insert_advisory_${kind}: ${error.message} | `supabase/functions/retry-policy-tuner/index.ts` |
 | createAdminUserFixture: createUser failed: ${createErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
 | createAdminUserFixture: insert org failed: ${orgErr?.message} | `supabase/functions/rls-tests/_fixtures.ts` |
-| createAdminUserFixture: linha admin não persistiu (${checkErr?.message ??  | `supabase/functions/rls-tests/_fixtures.ts` |
-| … +24 linhas — lista completa em `context.json` | |
+| … +25 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2502,6 +2525,8 @@ _nenhum item encontrado_
 | - Semanticamente: "lock expira em 13/09/2285" (≈285 anos) — intent de "permanente" | `src/hooks/useRateLimit.ts` |
 | * GAP-4: Reseta o estado de rate limit para esta chave. | `src/hooks/useRateLimit.ts` |
 | Desfaz a alteração otimista: a matriz não pode divergir do banco. | `src/hooks/useRolePermissions.ts` |
+| perfil, `get_warmup_slot` barra o envio diario acima do limite, fora da | `src/hooks/useWarmupProfile.ts` |
+| * Limite do dia para um dia do ramp-up: start + incremento*(dia-1), truncado em max. */ | `src/hooks/useWarmupProfile.ts` |
 | `any`, modelamos apenas o contrato realmente usado pelo wrapper e a cadeia de | `src/integrations/supabase/withOrg.ts` |
 | ou apenas por edge functions / admin). Ficam sob RLS específica e NÃO | `src/integrations/supabase/withOrg.ts` |
 | * Utilitários de CNPJ — normalização e validação dos dígitos verificadores. | `src/lib/cnpj.ts` |
@@ -2639,7 +2664,9 @@ _nenhum item encontrado_
 | ---------- SSRF (mínimo, sem DNS async pra evitar custo por task) ---------- | `supabase/functions/web-scrape-worker/index.ts` |
 | ainda assim precisa estar pending/retrying e dentro do limite de | `supabase/functions/webhook-dispatcher/index.ts` |
 | apenas marcar "pending" fazia a UI anunciar "reiniciado" com o | `supabase/functions/workflow-engine/index.ts` |
+| nao pode executar scrape/enrich/score duas vezes. O run e criado em | `supabase/functions/workflow-engine/index.ts` |
 | DELETE de workflow exige admin da org (mesma regra da policy | `supabase/functions/workflow-engine/index.ts` |
+| best-effort: falha ao marcar o run nao deve mascarar o erro original */ } | `supabase/functions/workflow-engine/index.ts` |
 | best-effort: falha ao disparar alerta não deve mascarar o erro original */ } | `supabase/functions/workflow-engine/index.ts` |
 | existem apenas no banco de | `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql` |
 | 41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |

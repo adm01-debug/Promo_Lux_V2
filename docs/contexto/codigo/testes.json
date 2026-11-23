@@ -1391,6 +1391,7 @@
    "src/hooks/useThemeColors.ts",
    "src/hooks/useUnsavedChanges.tsx",
    "src/hooks/useVirtualization.ts",
+   "src/hooks/useWarmupProfile.ts",
    "src/hooks/useWebhooks.ts",
    "src/hooks/useWebScrape.ts",
    "src/hooks/useWeeklyPerformance.ts"

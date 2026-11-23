@@ -596,6 +596,7 @@
    "src/components/lux/settings/PiiMaskingPanel.tsx",
    "src/components/lux/settings/RLSRegistryCoverage.tsx",
    "src/components/lux/settings/RLSVerificationPanel.tsx",
+   "src/components/lux/settings/WarmupPanel.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/input.tsx",
@@ -1672,6 +1673,14 @@
    "src/integrations/supabase/client.ts",
    "src/lib/exportRLSReport.ts"
   ],
+  "src/components/lux/settings/WarmupPanel.tsx": [
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useWarmupProfile.ts"
+  ],
   "src/components/lux/skeletons/DashboardSkeleton.tsx": [
    "src/components/lux/skeletons/SkeletonPrimitives.tsx",
    "src/components/ui/skeleton.tsx"
@@ -2193,6 +2202,10 @@
    "src/hooks/unsaved-changes-context.ts"
   ],
   "src/hooks/useVirtualCompanies.ts": [
+   "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useWarmupProfile.ts": [
+   "src/contexts/auth-context.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useWebScrape.ts": [

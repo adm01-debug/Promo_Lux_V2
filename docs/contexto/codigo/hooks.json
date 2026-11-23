@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 96,
+ "total": 97,
  "hooks": [
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
@@ -148,7 +148,7 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 37,
+   "usado_por": 38,
    "usado_por_arquivos": [
     "src/App.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
@@ -2486,6 +2486,31 @@
    "usado_por": 1,
    "usado_por_arquivos": [
     "src/components/lux/CompanyTable.tsx"
+   ],
+   "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useWarmupProfile.ts",
+   "hooks_exportados": [
+    "useWarmupProfile"
+   ],
+   "linhas": 119,
+   "dominio": "hooks",
+   "tabelas": [
+    "warmup_profiles"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useAuth",
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/settings/WarmupPanel.tsx"
    ],
    "coberto_por_testes": 0
   },

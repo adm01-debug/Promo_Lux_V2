@@ -1,12 +1,12 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 574,
- "arestas": 1797,
+ "nos": 576,
+ "arestas": 1806,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 133
+   "importado_por": 134
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
@@ -14,7 +14,7 @@
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 112
+   "importado_por": 113
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -22,7 +22,7 @@
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 62
+   "importado_por": 63
   },
   {
    "arquivo": "src/components/ui/card.tsx",
@@ -30,7 +30,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
-   "importado_por": 58
+   "importado_por": 59
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
@@ -38,11 +38,11 @@
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 48
+   "importado_por": 49
   },
   {
    "arquivo": "src/contexts/auth-context.ts",
-   "importado_por": 38
+   "importado_por": 39
   },
   {
    "arquivo": "src/components/ui/select.tsx",
@@ -65,12 +65,12 @@
    "importado_por": 24
   },
   {
-   "arquivo": "src/contexts/active-org-context.ts",
+   "arquivo": "src/components/ui/switch.tsx",
    "importado_por": 22
   },
   {
-   "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 21
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 22
   },
   {
    "arquivo": "supabase/functions/_shared/cron-auth.ts",
