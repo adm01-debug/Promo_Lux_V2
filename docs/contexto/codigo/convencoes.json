@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)",
    "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)",
    "feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)",
    "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)",
-   "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)",
-   "feat: liga a UI de configuracao dos alertas de disjuntor (#153)"
+   "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)"
   ]
  },
  "pr_template": null,

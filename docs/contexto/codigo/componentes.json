@@ -1075,7 +1075,7 @@
     "EditCompanyDialog"
    ],
    "export_default": null,
-   "linhas": 409,
+   "linhas": 412,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast",
@@ -1671,7 +1671,7 @@
     "LushaIntelligenceView"
    ],
    "export_default": "LushaIntelligenceView",
-   "linhas": 2328,
+   "linhas": 2329,
    "dominio": "components/lux",
    "hooks_locais": [
     "useFeatureFlag"

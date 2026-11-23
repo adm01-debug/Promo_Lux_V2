@@ -4,10 +4,10 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "90d7ac8865233297aa70b0ae0e213900901a5322",
+ "commit_do_grafo": "23e9378798e8ba93dedf2b85e2e8e3320731c9b0",
  "grafo_atual": true,
  "nos": 7736,
- "arestas": 16493,
+ "arestas": 16497,
  "comunidades_total": 635,
  "relacoes": {
   "calls": 2252,
@@ -15,8 +15,8 @@
   "contains": 5879,
   "defines": 12,
   "dynamic_import": 52,
-  "imports": 3540,
-  "imports_from": 3226,
+  "imports": 3542,
+  "imports_from": 3228,
   "indexes": 327,
   "indirect_call": 130,
   "inherits": 9,
@@ -28,7 +28,7 @@
   "triggers": 101
  },
  "origem": {
-  "EXTRACTED": 15952,
+  "EXTRACTED": 15956,
   "INFERRED": 541
  },
  "comunidades": [
@@ -86,8 +86,8 @@
   {
    "id": 3,
    "nome": "hooks/use-toast.ts",
-   "nos": 113,
-   "callables": 61,
+   "nos": 121,
+   "callables": 67,
    "arquivos": 27,
    "exemplos_arquivos": [
     "docs/GAPS-ENTERPRISE.md",
@@ -130,6 +130,23 @@
   },
   {
    "id": 6,
+   "nome": "useActiveOrganization",
+   "nos": 100,
+   "callables": 77,
+   "arquivos": 26,
+   "exemplos_arquivos": [
+    "docs/GAPS-ENTERPRISE.md",
+    "docs/qa/04-PLANO.md",
+    "src/components/lux/analytics/GoalsTab.tsx",
+    "src/components/lux/analytics/SatisfactionTab.tsx",
+    "src/components/lux/campaigns/CampaignFormFields.tsx",
+    "src/components/lux/monitoring/DLQReplayPanel.tsx",
+    "src/components/lux/monitoring/OrgRateLimitsView.tsx",
+    "src/components/lux/settings/AuditLogExportPanel.tsx"
+   ]
+  },
+  {
+   "id": 7,
    "nome": "LushaIntelligenceView.tsx",
    "nos": 94,
    "callables": 45,
@@ -146,37 +163,20 @@
    ]
   },
   {
-   "id": 7,
-   "nome": "useActiveOrganization",
-   "nos": 85,
-   "callables": 65,
-   "arquivos": 23,
-   "exemplos_arquivos": [
-    "docs/GAPS-ENTERPRISE.md",
-    "docs/qa/04-PLANO.md",
-    "src/components/lux/analytics/GoalsTab.tsx",
-    "src/components/lux/analytics/SatisfactionTab.tsx",
-    "src/components/lux/campaigns/CampaignFormFields.tsx",
-    "src/components/lux/monitoring/OrgRateLimitsView.tsx",
-    "src/components/lux/settings/AuditLogExportPanel.tsx",
-    "src/components/lux/settings/HubSpotPanel.tsx"
-   ]
-  },
-  {
    "id": 8,
    "nome": "withOrg.ts",
-   "nos": 85,
-   "callables": 54,
+   "nos": 86,
+   "callables": 55,
    "arquivos": 13,
    "exemplos_arquivos": [
     "docs/qa/04-PLANO.md",
-    "src/components/lux/analytics/ScheduledReportsTab.tsx",
     "src/hooks/useAutomationsMonitor.ts",
     "src/hooks/useCompanyDetails.ts",
-    "src/hooks/useScheduledReports.ts",
+    "src/hooks/useMembershipAuditLog.ts",
     "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
     "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
-    "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts"
+    "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
+    "src/integrations/supabase/__tests__/withOrg.registry.test.ts"
    ]
   },
   {
@@ -585,23 +585,6 @@
   },
   {
    "id": 37,
-   "nome": "AIAgentView.tsx",
-   "nos": 41,
-   "callables": 24,
-   "arquivos": 16,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "docs/estado/02-backend-edge-functions.md",
-    "docs/pendencias/_backlog-verificado.md",
-    "docs/qa/04-PLANO.md",
-    "src/components/lux/AIAgentView.tsx",
-    "src/components/lux/IntentSignalsView.tsx",
-    "src/components/lux/OrgViolationsView.tsx",
-    "src/components/lux/ThemeToggle.tsx"
-   ]
-  },
-  {
-   "id": 38,
    "nome": "ref_npm_supabase",
    "nos": 41,
    "callables": 15,
@@ -618,7 +601,7 @@
    ]
   },
   {
-   "id": 39,
+   "id": 38,
    "nome": "ONDA 2 — Fluxos principais quebrados (047–092)",
    "nos": 40,
    "callables": 1,
@@ -630,7 +613,7 @@
    ]
   },
   {
-   "id": 40,
+   "id": 39,
    "nome": "Header.tsx",
    "nos": 39,
    "callables": 15,
@@ -647,7 +630,7 @@
    ]
   },
   {
-   "id": 41,
+   "id": 40,
    "nome": "Campanhas & Email",
    "nos": 39,
    "callables": 0,
@@ -657,7 +640,7 @@
    ]
   },
   {
-   "id": 42,
+   "id": 41,
    "nome": "ONDA 1 — Segurança e risco de perda de dado (001–046)",
    "nos": 38,
    "callables": 0,
@@ -667,7 +650,7 @@
    ]
   },
   {
-   "id": 43,
+   "id": 42,
    "nome": ".collect",
    "nos": 38,
    "callables": 36,
@@ -678,7 +661,7 @@
    ]
   },
   {
-   "id": 44,
+   "id": 43,
    "nome": "apify-gateway.ts",
    "nos": 37,
    "callables": 25,
@@ -688,6 +671,23 @@
     "supabase/functions/_shared/apify-gateway.test.ts",
     "supabase/functions/_shared/apify-gateway.ts",
     "supabase/functions/instagram-worker-health/index.ts"
+   ]
+  },
+  {
+   "id": 44,
+   "nome": "AIAgentView.tsx",
+   "nos": 37,
+   "callables": 19,
+   "arquivos": 18,
+   "exemplos_arquivos": [
+    "docs/FUNCIONALIDADES.md",
+    "docs/estado/02-backend-edge-functions.md",
+    "docs/pendencias/_backlog-verificado.md",
+    "docs/qa/04-PLANO.md",
+    "src/components/lux/AIAgentView.tsx",
+    "src/components/lux/ICPConfigView.tsx",
+    "src/components/lux/IntentSignalsView.tsx",
+    "src/components/lux/OrgViolationsView.tsx"
    ]
   },
   {
@@ -971,22 +971,6 @@
   },
   {
    "id": 66,
-   "nome": "supabase/types.ts",
-   "nos": 27,
-   "callables": 20,
-   "arquivos": 7,
-   "exemplos_arquivos": [
-    "docs/FUNCIONALIDADES.md",
-    "src/components/lux/ICPConfigView.tsx",
-    "src/components/lux/__tests__/ICPConfigView.test.tsx",
-    "src/hooks/useFeatureFlags.ts",
-    "src/hooks/useICPConfig.ts",
-    "src/hooks/useMembershipAuditLog.ts",
-    "src/integrations/supabase/types.ts"
-   ]
-  },
-  {
-   "id": 67,
    "nome": "auth",
    "nos": 27,
    "callables": 0,
@@ -998,7 +982,7 @@
    ]
   },
   {
-   "id": 68,
+   "id": 67,
    "nome": "campaign-dispatch/index.ts",
    "nos": 27,
    "callables": 24,
@@ -1008,7 +992,7 @@
    ]
   },
   {
-   "id": 69,
+   "id": 68,
    "nome": "oracle-search-decisors/index.ts",
    "nos": 27,
    "callables": 18,
@@ -1020,7 +1004,7 @@
    ]
   },
   {
-   "id": 70,
+   "id": 69,
    "nome": "SnapshotDBStatsTests",
    "nos": 26,
    "callables": 16,
@@ -1032,7 +1016,7 @@
    ]
   },
   {
-   "id": 71,
+   "id": 70,
    "nome": "ONDA 7 — Experiência de uso e consistência (251–277)",
    "nos": 26,
    "callables": 1,
@@ -1043,7 +1027,7 @@
    ]
   },
   {
-   "id": 72,
+   "id": 71,
    "nome": "scenarios.ts",
    "nos": 26,
    "callables": 5,
@@ -1059,7 +1043,7 @@
    ]
   },
   {
-   "id": 73,
+   "id": 72,
    "nome": "hiker-client.ts",
    "nos": 26,
    "callables": 24,
@@ -1070,7 +1054,7 @@
    ]
   },
   {
-   "id": 74,
+   "id": 73,
    "nome": "apollo-client.ts",
    "nos": 25,
    "callables": 17,
@@ -1084,7 +1068,7 @@
    ]
   },
   {
-   "id": 75,
+   "id": 74,
    "nome": "LUX IA — Análise Executiva de Funcionalidades",
    "nos": 24,
    "callables": 0,
@@ -1094,7 +1078,7 @@
    ]
   },
   {
-   "id": 76,
+   "id": 75,
    "nome": "AddCompanyDialog.tsx",
    "nos": 24,
    "callables": 17,
@@ -1110,7 +1094,7 @@
    ]
   },
   {
-   "id": 77,
+   "id": 76,
    "nome": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
    "nos": 24,
    "callables": 0,
@@ -1120,7 +1104,7 @@
    ]
   },
   {
-   "id": 78,
+   "id": 77,
    "nome": "gen-round36-preflight.ts",
    "nos": 24,
    "callables": 6,
@@ -1130,13 +1114,30 @@
    ]
   },
   {
-   "id": 79,
+   "id": 78,
    "nome": "20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql",
    "nos": 24,
    "callables": 0,
    "arquivos": 1,
    "exemplos_arquivos": [
     "supabase/migrations/20261121193000_lead_scores_dashboard_layouts_deal_predictions_changelog.sql"
+   ]
+  },
+  {
+   "id": 79,
+   "nome": "Analisado",
+   "nos": 23,
+   "callables": 12,
+   "arquivos": 9,
+   "exemplos_arquivos": [
+    "CHANGELOG.md",
+    "docs/adr/024-round30-refactor-safety-split.md",
+    "src/components/lux/lusha/DecisionMakersGrid.test-d.ts",
+    "src/components/lux/lusha/DecisionMakersGrid.tsx",
+    "src/components/lux/lusha/SessionsPanel.tsx",
+    "src/components/lux/lusha/constants.test.ts",
+    "src/components/lux/lusha/constants.ts",
+    "src/components/lux/lusha/types.test.ts"
    ]
   }
  ],
@@ -1243,7 +1244,7 @@
    "id": "src_components_lux_lushaintelligenceview",
    "rotulo": "LushaIntelligenceView.tsx",
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
-   "grau": 97,
+   "grau": 99,
    "comunidade": "LushaIntelligenceView.tsx"
   },
   {
@@ -2196,7 +2197,7 @@
   "src/components/lux/ErrorBoundary.tsx": "react",
   "src/components/lux/GmapsScraperView.tsx": "validation.test.ts",
   "src/components/lux/GradientAvatar.tsx": "Header.tsx",
-  "src/components/lux/ICPConfigView.tsx": "supabase/types.ts",
+  "src/components/lux/ICPConfigView.tsx": "AIAgentView.tsx",
   "src/components/lux/IntegrationsView.tsx": "G21-1 · Média · CONFIRMADO · RASTREADO — Menu mostra auditoria e infraestrutura para todos os papéis",
   "src/components/lux/IntentSignalsView.tsx": "hooks/use-toast.ts",
   "src/components/lux/KeyboardShortcutsDialog.tsx": "hooks/use-toast.ts",
@@ -2237,7 +2238,7 @@
   "src/components/lux/__tests__/DataError.test.tsx": "vitest",
   "src/components/lux/__tests__/EmptyState.test.tsx": "badge.tsx",
   "src/components/lux/__tests__/ErrorBoundary.test.tsx": "ErrorBoundary",
-  "src/components/lux/__tests__/ICPConfigView.test.tsx": "supabase/types.ts",
+  "src/components/lux/__tests__/ICPConfigView.test.tsx": "AIAgentView.tsx",
   "src/components/lux/__tests__/MapFilters.test.tsx": "vitest",
   "src/components/lux/__tests__/SidebarFooter.test.tsx": "Sidebar.tsx",
   "src/components/lux/__tests__/StakeholderCard.test.tsx": "CompanyDetailModal.tsx",
@@ -2252,7 +2253,7 @@
   "src/components/lux/analytics/GoalsTab.tsx": "react",
   "src/components/lux/analytics/LeaderboardTab.tsx": "framer-motion",
   "src/components/lux/analytics/SatisfactionTab.tsx": "react",
-  "src/components/lux/analytics/ScheduledReportsTab.tsx": "withOrg.ts",
+  "src/components/lux/analytics/ScheduledReportsTab.tsx": "useScheduledReports.ts",
   "src/components/lux/analytics/analytics-constants.ts": "DashboardView.tsx",
   "src/components/lux/analytics/useAnalyticsData.ts": "ConversionTab.tsx",
   "src/components/lux/auth/AuthLogo.tsx": "Monitoring.tsx",
@@ -2480,7 +2481,7 @@
   "src/hooks/__tests__/oracleV2Helpers.test.ts": "useOracleV2.ts",
   "src/hooks/__tests__/useAuditTrail.test.ts": "useAuditTrail.ts",
   "src/hooks/__tests__/useConfirm.test.tsx": "vitest",
-  "src/hooks/__tests__/useDlqReplay.test.ts": "AIAgentView.tsx",
+  "src/hooks/__tests__/useDlqReplay.test.ts": "useActiveOrganization",
   "src/hooks/__tests__/useOraclePushBitrix.test.ts": "@tanstack/react-query",
   "src/hooks/__tests__/usePersistedFilters.test.ts": "vitest",
   "src/hooks/__tests__/useRateLimit.logic.test.ts": "useRateLimit.logic.test.ts",
@@ -2528,9 +2529,9 @@
   "src/hooks/useEmailTemplates.ts": "EmailTemplatesTab.tsx",
   "src/hooks/useEnvProfiles.ts": "useEnvProfiles.ts",
   "src/hooks/useFeatureFlag.ts": "useFeatureFlag.ts",
-  "src/hooks/useFeatureFlags.ts": "supabase/types.ts",
+  "src/hooks/useFeatureFlags.ts": "AIAgentView.tsx",
   "src/hooks/useFocusMode.ts": "Index.tsx",
-  "src/hooks/useICPConfig.ts": "supabase/types.ts",
+  "src/hooks/useICPConfig.ts": "AIAgentView.tsx",
   "src/hooks/useIpAllowlist.ts": "useActiveOrganization",
   "src/hooks/useKeyboardShortcuts.ts": "Sidebar.tsx",
   "src/hooks/useLeadScores.ts": "@tanstack/react-query",
@@ -2565,7 +2566,7 @@
   "src/hooks/useRolePermissions.ts": "PermissionsMatrix.tsx",
   "src/hooks/useSalesGoals.ts": "useActiveOrganization",
   "src/hooks/useSatisfaction.ts": "useActiveOrganization",
-  "src/hooks/useScheduledReports.ts": "withOrg.ts",
+  "src/hooks/useScheduledReports.ts": "useScheduledReports.ts",
   "src/hooks/useScrapeQueue.ts": "ScrapeQueuePanel.tsx",
   "src/hooks/useSidebarState.ts": "Index.tsx",
   "src/hooks/useSkin.ts": "cn",

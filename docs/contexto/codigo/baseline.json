@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "90d7ac8865233297aa70b0ae0e213900901a5322",
+  "commit": "23e9378798e8ba93dedf2b85e2e8e3320731c9b0",
   "branch": "main",
-  "data_commit": "2026-11-23T18:31:02-03:00",
+  "data_commit": "2026-11-23T20:21:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "23e9378",
+    "data": "2026-11-23",
+    "assunto": "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)"
+   },
    {
     "sha": "90d7ac8",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "378947c",
     "data": "2026-11-22",
     "assunto": "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)"
-   },
-   {
-    "sha": "5f42ddf",
-    "data": "2026-11-22",
-    "assunto": "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)"
    }
   ],
-  "arquivos_mudados_7d": 238,
+  "arquivos_mudados_7d": 243,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 64
+    "mudancas": 67
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -145,15 +145,15 @@
    },
    {
     "pasta": "package-lock.json",
-    "mudancas": 17
+    "mudancas": 18
    },
    {
     "pasta": "package.json",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 14
+    "mudancas": 16
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 17
+    "mudancas": 18
    },
    {
     "arquivo": "package.json",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -258,11 +258,19 @@
     "mudancas": 4
    },
    {
+    "arquivo": "src/components/lux/SettingsView.tsx",
+    "mudancas": 4
+   },
+   {
     "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 4
    },
    {
     "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "supabase/functions/mcp/index.ts",
     "mudancas": 4
    },
    {
@@ -288,20 +296,12 @@
    {
     "arquivo": "docs/agentes/github-ci.md",
     "mudancas": 3
-   },
-   {
-    "arquivo": "docs/agentes/mapa-repo.md",
-    "mudancas": 3
-   },
-   {
-    "arquivo": "docs/pendencias/_backlog-verificado.md",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 118
+    "commits": 119
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1128,
   "arquivos_codigo": 709,
-  "linhas_codigo": 123808,
+  "linhas_codigo": 123812,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 307,
-   "linhas": 50614
+   "linhas": 50618
   },
   "src/contexts": {
    "arquivos": 7,
@@ -614,7 +614,7 @@
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
-   "linhas": 2328
+   "linhas": 2329
   },
   {
    "arquivo": "scripts/regras_negocio/generate.py",
