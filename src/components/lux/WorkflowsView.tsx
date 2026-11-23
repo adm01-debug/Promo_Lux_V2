@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { cn } from "@/lib/utils";
 import { workflowApi, type Workflow, type WorkflowPhase } from "@/lib/api/workflows";
 import type { Json, Tables } from "@/integrations/supabase/types";
+import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
@@ -65,6 +66,8 @@ export const WorkflowsView = () => {
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [runDetailsOpen, setRunDetailsOpen] = useState(false);
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
   const [newName, setNewName] = useState("Google Maps → Enriquecimento → IPC");
   const [newDescription, setNewDescription] = useState("Raspa empresas, enriquece dados de contato e qualifica pelo IPC automaticamente");
   const [keywords, setKeywords] = useState("restaurantes, bares");
@@ -242,12 +245,19 @@ export const WorkflowsView = () => {
               onRun={(id) => runMutation.mutate(id)}
               onToggleStatus={(id, status) => toggleMutation.mutate({ id, status })}
               onDelete={(id) => deleteMutation.mutate(id)}
+              onViewRun={(runId) => { setSelectedRunId(runId); setRunDetailsOpen(true); }}
               canEdit={canEdit}
               canDelete={canDelete}
             />
           ))}
         </div>
       )}
+    <JobDetailsSheet
+        jobId={null}
+        runId={selectedRunId}
+        open={runDetailsOpen}
+        onOpenChange={setRunDetailsOpen}
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Play, Pause, Trash2, Loader2, ArrowRight, Globe, ChevronRight } from "lucide-react";
+import { Play, Pause, Trash2, Loader2, ArrowRight, Globe, ChevronRight, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -36,6 +36,7 @@ interface WorkflowCardProps {
   onRun: (id: string) => void;
   onToggleStatus: (id: string, status: string) => void;
   onDelete: (id: string) => void;
+  onViewRun?: (runId: string) => void;
   canDelete?: boolean;
   canEdit?: boolean;
 }
@@ -47,7 +48,7 @@ const defaultSteps = [
   { id: "s4", type: "action" as const, label: "Salvar no Banco", provider: "Lovable Cloud" },
 ];
 
-export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onToggleExpand, onRun, onToggleStatus, onDelete, canDelete = true, canEdit = true }: WorkflowCardProps) => {
+export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onToggleExpand, onRun, onToggleStatus, onDelete, onViewRun, canDelete = true, canEdit = true }: WorkflowCardProps) => {
   const config = statusConfig[wf.status] || statusConfig.draft;
   const steps = (wf.steps || defaultSteps) as typeof defaultSteps;
   const lastRun = wf.workflow_runs?.[0];
@@ -146,6 +147,11 @@ export const WorkflowCard = ({ workflow: wf, index, isExpanded, isRunning, onTog
                   <Button size="sm" className="gap-1.5 text-xs" disabled={isRunning} onClick={(e) => { e.stopPropagation(); onRun(wf.id); }}>
                     {isRunning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
                     {isRunning ? "Executando..." : "Executar Agora"}
+                  </Button>
+                )}
+                {lastRun?.id && onViewRun && (
+                  <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={(e) => { e.stopPropagation(); onViewRun(lastRun.id); }}>
+                    <Activity className="h-3 w-3" /> Ver Execução
                   </Button>
                 )}
                 {canEdit && wf.status === "active" ? (
