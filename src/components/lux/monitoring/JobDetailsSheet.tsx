@@ -303,7 +303,7 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
                       {(job?.id ?? runId ?? "").slice(0, 8)}
                     </Badge>
                     <span className="text-[10px] opacity-60">
-                      Iniciado há {(job?.created_at ?? workflowRun?.started_at) ? formatDistanceToNow(new Date(job?.created_at ?? workflowRun?.started_at!), { locale: ptBR, addSuffix: true }) : '-'}
+                      Iniciado há {(job?.created_at ?? workflowRun?.started_at) ? formatDistanceToNow(new Date((job?.created_at ?? workflowRun?.started_at) as string), { locale: ptBR, addSuffix: true }) : '-'}
                     </span>
                   </SheetDescription>
                 </div>
