@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)",
    "docs: registra gap dos steps de workflow serem decorativos (#157)",
    "feat: aplica PermissionGate em deals e integracoes (#154)",
    "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)",
-   "chore: remove artefatos temporarios commitados por engano na #146 (#147)",
-   "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)"
+   "chore: remove artefatos temporarios commitados por engano na #146 (#147)"
   ]
  },
  "pr_template": null,

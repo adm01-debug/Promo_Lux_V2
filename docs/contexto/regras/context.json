@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "9b85ca6aa2953e342b17454934e5d56f9536cfed",
+  "sha": "6cf80c9d0036c33c462c6df182d2d12bd8bdddee",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-22 18:56 UTC",
-  "files_total": 1120,
+  "generated_at": "2026-11-23 09:56 UTC",
+  "files_total": 1126,
   "code_files": 944,
   "code_lines": 138697
  },
@@ -95730,10 +95730,24 @@
   }
  },
  "git": {
-  "sha": "9b85ca6aa2953e342b17454934e5d56f9536cfed",
+  "sha": "6cf80c9d0036c33c462c6df182d2d12bd8bdddee",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6cf80c9",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)",
+    "files": [
+     "docs/qa/00-RESUMO.md",
+     "docs/qa/01-INVENTARIO.md",
+     "docs/qa/02-CENARIOS.md",
+     "docs/qa/03-ACHADOS.md",
+     "docs/qa/04-PLANO.md",
+     "docs/qa/05-PROGRESSO.md"
+    ]
+   },
    {
     "sha": "9b85ca6",
     "date": "2026-11-22",
@@ -96090,15 +96104,6 @@
      "supabase/functions/rls-tests/index.ts",
      "supabase/functions/system-recovery-status/index.ts"
     ]
-   },
-   {
-    "sha": "99a180a",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(extracao): grava organization_id nos jobs criados via service_role (#107)",
-    "files": [
-     "supabase/functions/gmaps-proxy/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -96109,10 +96114,6 @@
    [
     "docs/ESTADO_ATUAL.md",
     4
-   ],
-   [
-    "supabase/functions/gmaps-proxy/index.ts",
-    3
    ],
    [
     "docs/pendencias/_backlog-verificado.md",
@@ -96159,27 +96160,31 @@
     2
    ],
    [
-    "src/components/lux/IntegrationsView.tsx",
+    "supabase/functions/gmaps-proxy/index.ts",
+    2
+   ],
+   [
+    "docs/qa/00-RESUMO.md",
     1
    ],
    [
-    "src/components/lux/ScrapeResultsView.tsx",
+    "docs/qa/01-INVENTARIO.md",
     1
    ],
    [
-    ".gitignore",
+    "docs/qa/02-CENARIOS.md",
     1
    ],
    [
-    "docs/estado/04-integracoes.md",
+    "docs/qa/03-ACHADOS.md",
     1
    ],
    [
-    ".env.test",
+    "docs/qa/04-PLANO.md",
     1
    ],
    [
-    "src/pages/AdminCompanies.tsx",
+    "docs/qa/05-PROGRESSO.md",
     1
    ]
   ]

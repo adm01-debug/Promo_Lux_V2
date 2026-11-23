@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9b85ca6aa2953e342b17454934e5d56f9536cfed",
+  "commit": "6cf80c9d0036c33c462c6df182d2d12bd8bdddee",
   "branch": "main",
-  "data_commit": "2026-11-22T15:47:53-03:00",
+  "data_commit": "2026-11-23T06:53:16-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "6cf80c9",
+    "data": "2026-11-23",
+    "assunto": "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)"
+   },
    {
     "sha": "9b85ca6",
     "data": "2026-11-22",
@@ -126,14 +131,9 @@
     "sha": "e7ba9e2",
     "data": "2026-11-21",
     "assunto": "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)"
-   },
-   {
-    "sha": "3c37882",
-    "data": "2026-11-21",
-    "assunto": "fix(edge): exige auth em instagram-connection-status (vazava estado de infra) (#115)"
    }
   ],
-  "arquivos_mudados_7d": 193,
+  "arquivos_mudados_7d": 199,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 105
+    "commits": 106
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1101,
+  "arquivos_total": 1107,
   "arquivos_codigo": 695,
   "linhas_codigo": 120241,
   "rotas": 12,
@@ -327,7 +327,7 @@
   "testes": 126,
   "workflows": 9,
   "scripts": 51,
-  "docs_md": 81
+  "docs_md": 87
  },
  "por_pasta": {
   "commitlint.config.cjs": {
