@@ -251,14 +251,14 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 12 | Email send engine | ✅ | `campaign-dispatch`, `email_accounts`, OAuth Gmail/M365 (`email-oauth-connect`) |
 | 13 | Email tracking (opens/clicks) | ✅ | `track-open`, `track-click`, `CampaignTrackingDrawer.tsx` |
 | 14 | Reply detection | ✅ | `email-poll-replies` (IMAP), `CampaignTrackingDrawer.tsx` |
-| 15 | A/B testing campaigns | 🟡 | coluna `variant` + índice por variante (migration); sem editor de variantes na UI |
+| 15 | A/B testing campaigns | ✅ | `CampaignFormFields.tsx`: editor de variantes A/B por etapa de email, config de amostra mínima e métrica de decisão |
 | 16 | LinkedIn touches | ✅ | `lusha-*`, `scrape-queue-worker`, `StakeholderFinderView` |
 | 17 | Cold call dialer | ❌ | ausente |
 | 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
 | 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
 | 20 | Zapier/Make app | ❌ | ausente |
 | 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
-| 22 | Slack notifications | ❌ | ausente (webhook genérico cobre o caso) |
+| 22 | Slack notifications | ✅ | coberto por `webhook-dispatcher` + `WebhooksPanel` — usuário registra Incoming Webhook URL do Slack como destino |
 | 23 | Chrome Extension | ❌ | ausente |
 | 24 | Mobile native app | 🟡 | PWA apenas |
 | 25 | Email enrichment | ✅ | `cnpj-enrich*`, `lusha-reveal`, `oracle-enrich-contact` |
@@ -267,7 +267,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 28 | Lead scoring ML | 🟡 | `lead_scores` + `useLeadScores`, regra heurística (IPC), não ML treinado |
 | 29 | Conversation intelligence | ❌ | ausente |
 | 30 | Email writer (AI) | ✅ | `ai-agent` function + `AIAgentView.tsx` |
-| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx`, `workflows`, `workflow_runs`, `workflow-engine` |
+| 31 | Workflow visual editor | ✅ | `WorkflowEditor.tsx` (implementado): 9 tipos de etapa (scrape/enrich/filter/email/wait/condition/notify/webhook/tag), reorder, config contextual, integrado ao `WorkflowsView` como modo Avançado |
 | 32 | Workflow scheduling | ✅ | crons versionados + `workflow-engine` |
 | 33 | Custom dashboards | ✅ | `dashboard_layouts`, `useDashboardLayout`, `DashboardView.tsx` |
 | 34 | Scheduled reports | ✅ | `scheduled_reports`, `send-scheduled-reports` |
@@ -288,14 +288,17 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 35/50 = 70% completos · 6/50 = 12% parciais · 9/50 = 18% ausentes.**
+**Cobertura LUX IA: 38/50 = 76% completos · 3/50 = 6% parciais · 9/50 = 18% ausentes.**
+
+> Revisão 2026-11-22 (3ª passada): fechados nesta passada: #15 (A/B testing UI ✅), #22 (Slack via webhook-dispatcher ✅), #31 (WorkflowEditor implementado com 9 tipos de etapa ✅).
 
 Ausentes de verdade (9): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
-`hubspot_salesforce` (21), `slack` (22), `chrome_extension` (23), `technographic` (26),
-`conversation_intel` (29). Os que dependem de decisão de custo/produto e **não** de engenharia:
-SAML/SCIM, dialer, conectores nativos, Chrome Extension. Os implementáveis hoje por engenharia são
-`slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`) e `technographic` (reusa
-`cnpj-enrich`).
+`hubspot_salesforce` (21), `chrome_extension` (23), `technographic` (26),
+`conversation_intel` (29), `mobile_native` (24 — PWA apenas). Os que dependem de decisão de custo/produto e **não** de engenharia:
+SAML/SCIM, dialer, conectores nativos CRM, Chrome Extension. Os implementáveis hoje por engenharia são
+`zapier` (reusa `public-api`) e `technographic` (reusa `cnpj-enrich`).
+
+Parciais restantes (3): #27 Intent signals (entrada manual), #28 Lead scoring (heurística), #43 a11y (parcial).
 
 ---
 
