@@ -18,9 +18,10 @@ interface DataEnrichmentTabProps {
   sectorData: { name: string; value: number; color: string }[];
   totalCompanies: number;
   enrichedCount: number;
+  growthData?: { month: string; novas: number; enriquecidas: number }[];
 }
 
-export const DataEnrichmentTab = ({ sourceData, scoreData, sectorData, totalCompanies, enrichedCount }: DataEnrichmentTabProps) => (
+export const DataEnrichmentTab = ({ sourceData, scoreData, sectorData, totalCompanies, enrichedCount, growthData = [] }: DataEnrichmentTabProps) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
     {/* Companies by source */}
     <motion.div custom={0} variants={cardVariants} initial="hidden" animate="visible" className="glass rounded-lg p-5">
@@ -84,8 +85,38 @@ export const DataEnrichmentTab = ({ sourceData, scoreData, sectorData, totalComp
       </div>
     </motion.div>
 
+    {/* Crescimento mensal — company_growth_trend() */}
+    <motion.div custom={3} variants={cardVariants} initial="hidden" animate="visible" className="glass rounded-lg p-5 lg:col-span-2">
+      <h3 className="text-sm font-semibold text-foreground mb-1">Crescimento de Empresas</h3>
+      <p className="text-xs text-muted-foreground mb-4">Novas empresas e quantas foram enriquecidas por mês</p>
+      {growthData.length === 0 ? (
+        <p className="text-xs text-muted-foreground py-10 text-center">Sem dados de crescimento no período.</p>
+      ) : (
+        <div className="h-[220px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={growthData} barGap={4}>
+              <XAxis
+                dataKey="month"
+                tick={{ fontSize: 10, fill: "hsl(215, 12%, 50%)" }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(v: string) => {
+                  const [y, m] = v.split("-");
+                  return `${m}/${(y ?? "").slice(2)}`;
+                }}
+              />
+              <YAxis tick={{ fontSize: 11, fill: "hsl(215, 12%, 50%)" }} axisLine={false} tickLine={false} allowDecimals={false} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="novas" fill="hsl(210, 80%, 60%)" radius={[4, 4, 0, 0]} name="Novas" />
+              <Bar dataKey="enriquecidas" fill="hsl(45, 100%, 58%)" radius={[4, 4, 0, 0]} name="Enriquecidas" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+    </motion.div>
+
     {/* Enrichment rate */}
-    <motion.div custom={3} variants={cardVariants} initial="hidden" animate="visible" className="glass rounded-lg p-5 flex flex-col justify-center">
+    <motion.div custom={4} variants={cardVariants} initial="hidden" animate="visible" className="glass rounded-lg p-5 flex flex-col justify-center">
       <h3 className="text-sm font-semibold text-foreground mb-1">Taxa de Enriquecimento</h3>
       <p className="text-xs text-muted-foreground mb-6">Percentual de empresas com dados completos</p>
       <div className="flex items-center justify-center">
