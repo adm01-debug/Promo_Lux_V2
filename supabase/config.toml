@@ -49,3 +49,14 @@ verify_jwt = false
 # verify_jwt do gateway.
 [functions.send-scheduled-reports]
 verify_jwt = false
+
+# SCIM 2.0 - IdPs (Okta, Azure AD) chamam com Bearer token SCIM proprio
+# (nao um JWT do Supabase). O gate esta no codigo (verify_scim_token RPC).
+# Sem esta secao o gateway responde 401 antes do codigo rodar.
+[functions.scim]
+verify_jwt = false
+
+# hubspot-sync - invocado por cron (CRON_SERVICE_KEY) ou por admin logado.
+# O gate esta no codigo (isCronAuthorized + checagem de role admin).
+[functions.hubspot-sync]
+verify_jwt = false

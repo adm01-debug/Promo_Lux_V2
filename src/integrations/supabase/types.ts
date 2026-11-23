@@ -3833,6 +3833,8 @@ export type Database = {
           id: string
           organization_id: string
           role: Database["public"]["Enums"]["app_role"]
+          scim_active: boolean
+          scim_external_id: string | null
           user_id: string
         }
         Insert: {
@@ -3840,6 +3842,8 @@ export type Database = {
           id?: string
           organization_id: string
           role?: Database["public"]["Enums"]["app_role"]
+          scim_active?: boolean
+          scim_external_id?: string | null
           user_id: string
         }
         Update: {
@@ -3847,6 +3851,8 @@ export type Database = {
           id?: string
           organization_id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          scim_active?: boolean
+          scim_external_id?: string | null
           user_id?: string
         }
         Relationships: [
@@ -3867,6 +3873,7 @@ export type Database = {
           last_known_ip: string | null
           name: string
           owner_id: string
+          scim_token_hash: string | null
           slug: string
           updated_at: string
         }
@@ -3877,6 +3884,7 @@ export type Database = {
           last_known_ip?: string | null
           name: string
           owner_id: string
+          scim_token_hash?: string | null
           slug: string
           updated_at?: string
         }
@@ -3887,10 +3895,52 @@ export type Database = {
           last_known_ip?: string | null
           name?: string
           owner_id?: string
+          scim_token_hash?: string | null
           slug?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      org_integrations: {
+        Row: {
+          config: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          last_synced_at: string | null
+          organization_id: string
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_synced_at?: string | null
+          organization_id: string
+          provider: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_synced_at?: string | null
+          organization_id?: string
+          provider?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       partition_advisories: {
         Row: {
@@ -6712,6 +6762,14 @@ export type Database = {
           _org_id: string
           _user_id: string
         }
+        Returns: boolean
+      }
+      generate_scim_token: {
+        Args: { p_org_id: string }
+        Returns: string
+      }
+      verify_scim_token: {
+        Args: { p_org_id: string; p_token: string }
         Returns: boolean
       }
       has_role: {

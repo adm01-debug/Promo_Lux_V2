@@ -241,7 +241,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 2 | RBAC (Admin/SDR/Viewer) | ✅ | `role_permissions` (210 linhas), `usePermissions`, `PermissionGate` em 13 componentes |
 | 3 | Audit log | ✅ | `audit_logs`, `useAuditTrail`, `AuditTrailPanel` em `Monitoring.tsx` |
 | 4 | SSO/SAML | ❌ | 0 tabela, 0 código. Custo/decisão de produto |
-| 5 | SCIM | ❌ | 0 tabela, 0 código (o match em migration é um comentário) |
+| 5 | SCIM | ✅ | `scim` function (SCIM 2.0 Users CRUD + ServiceProviderConfig), `generate_scim_token`/`verify_scim_token`, `ScimPanel` |
 | 6 | MFA/2FA | ✅ | `useMFA`, `MFAEnroll.tsx`, `MFAVerify.tsx` (TOTP nativo do Supabase Auth) |
 | 7 | SOC 2 Type II | 🟡 | controles técnicos prontos (auditoria, RLS, DLP); certificação é processo pago |
 | 8 | GDPR/LGPD docs | ✅ | `data_subject_requests`, `DsarPanel`, `pii_redaction_rules`, `PiiMaskingPanel` |
@@ -257,7 +257,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 18 | API REST pública | ✅ | `public-api` function + `api_keys` |
 | 19 | Webhooks de saída | ✅ | `webhooks`, `webhook_deliveries`, `webhook-dispatcher`, `WebhooksPanel` |
 | 20 | Zapier/Make app | ❌ | ausente |
-| 21 | HubSpot/Salesforce sync | ❌ | ausente (existe Oracle/Bitrix) |
+| 21 | HubSpot/Salesforce sync | 🟡 | `hubspot-sync` (empresas one-way, cron+manual) + `org_integrations` + `HubSpotPanel`; Salesforce bidirecional pendente |
 | 22 | Slack notifications | ❌ | ausente (webhook genérico cobre o caso) |
 | 23 | Chrome Extension | ❌ | ausente |
 | 24 | Mobile native app | 🟡 | PWA apenas |
@@ -288,14 +288,14 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | 49 | Next best action | ✅ | `next_best_actions`, `nba_recommend`, `NextBestActionPanel` |
 | 50 | DLP / PII masking | ✅ | `pii_redaction_rules`, `pii_scan`, `PiiMaskingPanel` |
 
-**Cobertura LUX IA: 35/50 = 70% completos · 6/50 = 12% parciais · 9/50 = 18% ausentes.**
+**Cobertura LUX IA: 36/50 = 72% completos · 7/50 = 14% parciais · 7/50 = 14% ausentes.**
 
-Ausentes de verdade (9): `saml_sso` (4), `scim` (5), `cold_call_dialer` (17), `zapier` (20),
-`hubspot_salesforce` (21), `slack` (22), `chrome_extension` (23), `technographic` (26),
+Ausentes de verdade (7): `saml_sso` (4), `cold_call_dialer` (17), `zapier` (20),
+`slack` (22), `chrome_extension` (23), `technographic` (26),
 `conversation_intel` (29). Os que dependem de decisão de custo/produto e **não** de engenharia:
-SAML/SCIM, dialer, conectores nativos, Chrome Extension. Os implementáveis hoje por engenharia são
+SAML/SSO, dialer, Chrome Extension. Os implementáveis hoje por engenharia são
 `slack` (reusa `webhook-dispatcher`), `zapier` (reusa `public-api`) e `technographic` (reusa
-`cnpj-enrich`).
+`cnpj-enrich`). Fechados nesta passada: SCIM 2.0 (#5) e HubSpot sync (#21, one-way).
 
 ---
 
