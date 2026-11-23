@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "076479ddce3fe05f7765d0b8635f12d7e284725e",
+  "commit": "f4bf97706caafe63e790a4cb00ae9774148644dd",
   "branch": "main",
-  "data_commit": "2026-11-23T12:04:58-03:00",
+  "data_commit": "2026-11-23T12:49:27-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f4bf977",
+    "data": "2026-11-23",
+    "assunto": "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)"
+   },
    {
     "sha": "076479d",
     "data": "2026-11-23",
@@ -126,11 +131,6 @@
     "sha": "bccf303",
     "data": "2026-11-21",
     "assunto": "feat(ui): painel de enfileiramento do Instagram na aba Monitoring (#119)"
-   },
-   {
-    "sha": "3dd0aea",
-    "data": "2026-11-21",
-    "assunto": "fix(extracao): dedupe de companies volta a funcionar e fecha takeover cross-tenant (#108)"
    }
   ],
   "arquivos_mudados_7d": 219,
@@ -262,6 +262,10 @@
     "mudancas": 3
    },
    {
+    "arquivo": ".github/workflows/edge-functions-deploy.yml",
+    "mudancas": 3
+   },
+   {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 3
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 3
-   },
-   {
-    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 111
+    "commits": 112
    },
    {
     "autor": "dependabot[bot]",

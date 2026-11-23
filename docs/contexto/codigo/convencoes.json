@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)",
    "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)",
    "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)",
    "feat: steps de workflow controlam quais fases do engine executam (#158)",
-   "feat: exige significancia estatistica para eleger vencedora A/B (#150)",
-   "fix: exige admin da org no replay de DLQ (#155)"
+   "feat: exige significancia estatistica para eleger vencedora A/B (#150)"
   ]
  },
  "pr_template": null,

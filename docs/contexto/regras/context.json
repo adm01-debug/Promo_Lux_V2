@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "076479ddce3fe05f7765d0b8635f12d7e284725e",
+  "sha": "f4bf97706caafe63e790a4cb00ae9774148644dd",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 15:12 UTC",
+  "generated_at": "2026-11-23 15:52 UTC",
   "files_total": 1132,
   "code_files": 950,
   "code_lines": 140612
@@ -97023,10 +97023,19 @@
   }
  },
  "git": {
-  "sha": "076479ddce3fe05f7765d0b8635f12d7e284725e",
+  "sha": "f4bf97706caafe63e790a4cb00ae9774148644dd",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f4bf977",
+    "date": "2026-11-23",
+    "author": "adm01-debug",
+    "subject": "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)",
+    "files": [
+     ".github/workflows/edge-functions-deploy.yml"
+    ]
+   },
    {
     "sha": "076479d",
     "date": "2026-11-23",
@@ -97400,15 +97409,6 @@
     "files": [
      "docs/ESTADO_ATUAL.md"
     ]
-   },
-   {
-    "sha": "e7ba9e2",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "fix(edge): exige auth em org-violation-alerts (anon disparava alertas e webhooks) (#116)",
-    "files": [
-     "supabase/functions/org-violation-alerts/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -97481,15 +97481,15 @@
     2
    ],
    [
+    ".github/workflows/edge-functions-deploy.yml",
+    1
+   ],
+   [
     "public/manifest.json",
     1
    ],
    [
     "src/components/lux/IntentSignalsView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/StakeholderFinderView.tsx",
     1
    ]
   ]
