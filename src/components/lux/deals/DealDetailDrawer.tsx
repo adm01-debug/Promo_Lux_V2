@@ -207,11 +207,11 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
                   <Badge variant={(SENTIMENT_COLORS[intelResult.sentiment as string] ?? "secondary") as Parameters<typeof Badge>[0]["variant"]}>
                     {intelResult.sentiment as string}
                   </Badge>
-                  {intelResult.urgency && (
+                  {!!intelResult.urgency && (
                     <Badge variant="outline">{intelResult.urgency as string}</Badge>
                   )}
                 </div>
-                {intelResult.summary && <p className="text-muted-foreground">{intelResult.summary as string}</p>}
+                {!!intelResult.summary && <p className="text-muted-foreground">{intelResult.summary as string}</p>}
                 {Array.isArray(intelResult.buying_signals) && intelResult.buying_signals.length > 0 && (
                   <div><span className="font-medium text-green-600">Sinais:</span> {(intelResult.buying_signals as string[]).join("; ")}</div>
                 )}
@@ -237,13 +237,13 @@ export function DealDetailDrawer({ deal, open, onOpenChange }: Props) {
                       {a.content && a.content !== a.title && (
                         <p className="text-xs text-muted-foreground mt-0.5">{a.content}</p>
                       )}
-                    {a.type === "conversation_intel" && (a.metadata as Record<string, unknown>)?.analysis && (
+                    {a.type === "conversation_intel" && !!(a.metadata as Record<string, unknown>)?.analysis && (
                       <div className="mt-1 flex flex-wrap gap-1">
                         {(() => {
                           const analysis = (a.metadata as Record<string, unknown>).analysis as Record<string, unknown>;
                           return <>
                             <Badge variant={(SENTIMENT_COLORS[analysis.sentiment as string] ?? "secondary") as Parameters<typeof Badge>[0]["variant"]} className="text-[10px]">{analysis.sentiment as string}</Badge>
-                            {analysis.urgency && <Badge variant="outline" className="text-[10px]">{analysis.urgency as string}</Badge>}
+                            {!!analysis.urgency && <Badge variant="outline" className="text-[10px]">{analysis.urgency as string}</Badge>}
                           </>;
                         })()}
                       </div>
