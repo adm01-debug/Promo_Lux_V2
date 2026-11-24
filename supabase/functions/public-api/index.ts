@@ -89,6 +89,20 @@ type ApiKeyAuth = {
   rateLimit: unknown;
 };
 
+// Payload das RPCs de um round-trip (public_api_me / public_api_events).
+type OneRoundTripResult = {
+  status?: number;
+  key_id?: string | null;
+  user_id?: string | null;
+  prefix?: string | null;
+  organization_id?: string | null;
+  current_count?: number | null;
+  reset_at?: string | null;
+  key?: Record<string, unknown> | null;
+  events?: Array<Record<string, unknown>> | null;
+  next_cursor?: string | null;
+};
+
 // Autentica a API key e devolve metadados + decisao de rate limit em UM
 // round-trip (RPC authenticate_api_key: valida, marca last_used_at, conta a
 // janela e devolve prefix/org). Enquanto a migration dessa RPC nao estiver
@@ -210,28 +224,88 @@ Deno.serve(async (req) => {
     const segs = fnIdx >= 0 ? parts.slice(fnIdx + 1) : parts;
     const [resource, id] = segs;
 
-    // /me fecha em 1 round-trip: a linha de api_keys sai JUNTO da RPC de auth.
-    // O prefix e deterministico (`src/hooks/useApiKeys.ts` gera
-    // `prefix: full.slice(0, 11)`), entao da para buscar a linha pelo prefixo do
-    // header enquanto a RPC valida a chave - Promise.all custa o mais lento, nao a
-    // soma. Medido em producao, PostgREST: 2 round-trips sequenciais ~670 ms
-    // contra ~300 ms de um round-trip isolado. O filtro por prefix nao substitui a
-    // validacao: a RPC continua decidindo 401/429 e o handler so aceita a linha
-    // cujo id bate com o key_id autenticado.
-    const isMe = resource === "me" && req.method === "GET";
-    const keyRowPromise = isMe
-      ? supabase
-        .from("api_keys")
-        .select("id, name, prefix, scopes, active, expires_at, last_used_at, created_at, organization_id")
-        .eq("prefix", apiKey.slice(0, 11))
-        .limit(5)
-      : null;
-
+    // GET /me e GET /events fecham em UM round-trip: a RPC autentica e devolve o
+    // dado no mesmo statement (public_api_me / public_api_events). Antes, todo
+    // request pagava dois: a auth e a leitura. Medido pelo pg_net (de dentro do
+    // Supabase, 24/11/2026): /events p50 287 ms e /companies p50 284 ms - o piso de
+    // dois round-trips de ~140 ms - contra 356 ms de /me, que ainda abria DUAS
+    // conexoes em paralelo (o Promise.all custa dois handshakes, nao um).
+    // authenticate_api_key continua sendo a unica autoridade de 401/429 e de quota;
+    // aqui so repassamos o status que ela devolveu.
     const keyHash = await sha256Hex(apiKey);
-    const [auth, keyRowRes] = await Promise.all([
-      authenticateApiKey(supabase, keyHash),
-      keyRowPromise ?? Promise.resolve(null),
-    ]);
+
+    if (resource === "me" || resource === "events") {
+      const { data: boot, error: bootErr } = await supabase.rpc(
+        resource === "me" ? "public_api_me" : "public_api_events",
+        resource === "me" ? { _key_hash: keyHash } : {
+          _key_hash: keyHash,
+          _limit: Math.min(100, parseInt(url.searchParams.get("limit") ?? "25") || 25),
+          _after: url.searchParams.get("after") || null,
+          _table_name: url.searchParams.get("table") || null,
+          _action: url.searchParams.get("action") || null,
+        },
+      );
+      if (bootErr) return await respond({ error: bootErr.message }, 500);
+      const b = (boot ?? {}) as OneRoundTripResult;
+      if (b.status === 401) return await respond({ error: "Invalid or expired API key" }, 401);
+      if (b.status === 429) {
+        return await respond(
+          {
+            error: "Rate limit exceeded. Retry after the current window resets.",
+            current_count: b.current_count ?? null,
+            reset_at: b.reset_at ?? null,
+          },
+          429,
+          undefined,
+          { "Retry-After": retryAfterSeconds(b.reset_at ?? null) },
+        );
+      }
+      if (b.status === 404) return await respond({ error: "API key not found" }, 404);
+      if (b.status !== 200) return await respond({ error: "Authentication failed" }, 500);
+
+      // So depois da credencial validada, como antes, o metodo errado vira 405.
+      if (req.method !== "GET") return await respond({ error: "Method not allowed" }, 405);
+
+      logCtx.api_key_id = b.key_id ?? null;
+      logCtx.user_id = b.user_id ?? null;
+      logCtx.api_key_prefix = b.prefix ?? null;
+      logCtx.organization_id = b.organization_id ?? null;
+      logCtx.resource = resource;
+
+      if (resource === "me") {
+        // A ordem das chaves e montada aqui: jsonb nao preserva a ordem de insercao.
+        const k = (b.key ?? {}) as Record<string, unknown>;
+        return await respond({
+          data: {
+            id: k.id,
+            name: k.name,
+            prefix: k.prefix,
+            scopes: k.scopes,
+            active: k.active,
+            expires_at: k.expires_at,
+            last_used_at: k.last_used_at,
+            created_at: k.created_at,
+            organization_id: k.organization_id,
+            user_id: b.user_id,
+          },
+        });
+      }
+
+      return await respond({
+        data: ((b.events ?? []) as Array<Record<string, unknown>>).map((e) => ({
+          id: e.id,
+          action: e.action,
+          table: e.table,
+          record_id: e.record_id,
+          payload: e.payload,
+          metadata: e.metadata,
+          occurred_at: e.occurred_at,
+        })),
+        next_cursor: b.next_cursor ?? null,
+      });
+    }
+
+    const auth = await authenticateApiKey(supabase, keyHash);
     if (!auth) return await respond({ error: "Invalid or expired API key" }, 401);
     const { user_id, scopes, key_id } = auth;
 
@@ -257,81 +331,6 @@ Deno.serve(async (req) => {
     logCtx.resource = resource ?? null;
 
     if (!resource) return await respond({ error: "Resource required (me|companies|deals|stakeholders|events)" }, 400);
-
-    // GET /me — return info about the authenticated API key
-    if (resource === "me") {
-      if (req.method !== "GET") return await respond({ error: "Method not allowed" }, 405);
-      // A linha normalmente ja veio em paralelo com a auth (keyRowRes). O find por
-      // id garante que uma colisao de prefixo ou o caminho legado caia no select
-      // por id em vez de responder dado de outra chave.
-      let keyRow = ((keyRowRes?.data ?? []) as Array<Record<string, unknown>>).find((r) => r.id === key_id) ?? null;
-      if (!keyRow) {
-        const { data: fallbackRow, error: meErr } = await supabase
-          .from("api_keys")
-          .select("id, name, prefix, scopes, active, expires_at, last_used_at, created_at, organization_id")
-          .eq("id", key_id)
-          .maybeSingle();
-        if (meErr) return await respond({ error: meErr.message }, 500);
-        keyRow = fallbackRow as Record<string, unknown> | null;
-      }
-      if (!keyRow) return await respond({ error: "API key not found" }, 404);
-      return await respond({
-        data: {
-          id: keyRow.id,
-          name: keyRow.name,
-          prefix: keyRow.prefix,
-          scopes: keyRow.scopes,
-          active: keyRow.active,
-          expires_at: keyRow.expires_at,
-          last_used_at: keyRow.last_used_at,
-          created_at: keyRow.created_at,
-          organization_id: keyRow.organization_id,
-          user_id,
-        },
-      });
-    }
-
-    // GET /events — polling trigger para Zapier (audit log paginado)
-    // Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE
-    if (resource === "events") {
-      if (req.method !== "GET") return await respond({ error: "Method not allowed" }, 405);
-      const limit = Math.min(100, parseInt(url.searchParams.get("limit") ?? "25") || 25);
-      const after = url.searchParams.get("after");
-      const filterTable = url.searchParams.get("table");
-      const filterAction = url.searchParams.get("action");
-
-      let q = supabase
-        .from("audit_logs")
-        .select("id, action, table_name, record_id, new_data, metadata, created_at")
-        .order("created_at", { ascending: false })
-        .order("id", { ascending: false })
-        .limit(limit);
-
-      // audit_logs escopa por organization_id (a chave e uma credencial da org);
-      // a coluna user_id nao existe nesta tabela (era a causa do 500).
-      if (logCtx.organization_id) q = q.eq("organization_id", logCtx.organization_id);
-      else q = q.eq("actor_id", user_id);
-
-      if (after) q = q.lt("id", after);
-      if (filterTable) q = q.eq("table_name", filterTable);
-      if (filterAction) q = q.eq("action", filterAction.toUpperCase());
-
-      const { data: events, error: evErr } = await q;
-      if (evErr) return await respond({ error: evErr.message }, 500);
-
-      return await respond({
-        data: (events ?? []).map((e) => ({
-          id: e.id,
-          action: e.action,
-          table: e.table_name,
-          record_id: e.record_id,
-          payload: e.new_data,
-          metadata: e.metadata,
-          occurred_at: e.created_at,
-        })),
-        next_cursor: events?.length === limit ? events[events.length - 1]?.id : null,
-      });
-    }
 
     if (!ALLOWED_TABLES.includes(resource as AllowedTable)) {
       return await respond({ error: "Unknown resource" }, 404);
