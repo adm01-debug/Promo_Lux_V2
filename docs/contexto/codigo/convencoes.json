@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix: taxa de erro da API conta so falha de servidor (5xx) (#184)",
    "fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)",
    "chore: remove o dominio Lovable das origens, metadados e user-agent (#182)",
    "fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)",
-   "fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)",
-   "chore: inventario do estado real (gerado em 24/11) (#180)"
+   "fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)"
   ]
  },
  "pr_template": null,

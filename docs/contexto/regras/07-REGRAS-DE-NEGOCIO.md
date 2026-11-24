@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8da6120b21` · branch `main` · 2026-11-24 14:55 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8444c90269` · branch `main` · 2026-11-24 15:05 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -892,7 +892,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `company_sector_distribution` | sem permissao na organizacao | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
 | `capture_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
 | `capture_web_dlq_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
-| `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124010000_cron_snapshot_org_guard.sql` |
 | `get_warmup_slot` | campaign % nao pertence a organizacao % | `supabase/migrations/20261124020000_c13_warmup_throttling.sql` |
 | `prevent_workflow_run_events_update` | workflow_run_events e append-only: UPDATE nao permitido (run %) | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `claim_workflow_run` | worker_id obrigatorio | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
@@ -903,6 +902,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fn_lux_save_enriched_contact` | organization_id Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `fn_lux_save_enriched_contact` | linkedin_url nÃ£o pode ser vazia | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `fn_lux_save_enriched_contact` | full_name Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
+| `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

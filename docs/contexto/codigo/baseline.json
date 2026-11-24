@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8da6120b21abdca687b855204aadc845a7681efe",
+  "commit": "8444c902696838c5caed1e1dc6bd0507838bde0a",
   "branch": "main",
-  "data_commit": "2026-11-24T11:55:13-03:00",
+  "data_commit": "2026-11-24T12:04:48-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8444c90",
+    "data": "2026-11-24",
+    "assunto": "fix: taxa de erro da API conta so falha de servidor (5xx) (#184)"
+   },
    {
     "sha": "8da6120",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "0b2a228",
     "data": "2026-11-23",
     "assunto": "feat: exige significancia estatistica para eleger vencedora A/B (#150)"
-   },
-   {
-    "sha": "0801668",
-    "data": "2026-11-23",
-    "assunto": "fix: exige admin da org no replay de DLQ (#155)"
    }
   ],
-  "arquivos_mudados_7d": 257,
+  "arquivos_mudados_7d": 258,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 131
+    "commits": 132
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1135,
+  "arquivos_total": 1136,
   "arquivos_codigo": 710,
   "linhas_codigo": 124406,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 252,
+  "migrations": 253,
   "cron_jobs": 40,
   "testes": 128,
   "workflows": 9,
