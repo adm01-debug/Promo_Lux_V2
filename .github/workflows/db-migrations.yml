@@ -137,8 +137,9 @@ jobs:
         run: bash scripts/check-migration-drift.sh
 
       - name: Guarda de schema (banco x replay das migrations)
-        # Informativo em PR: aqui o alvo e producao (read-only) e o objetivo e
-        # ver o diff antes de qualquer push. A assercao estrita roda no `apply`.
+        # Informativo em PR: o alvo deste job e o ambiente `staging`, que fica
+        # atras da main de proposito (o diff lista o que ele ainda nao tem).
+        # Aqui serve de smoke test do comando; a assercao estrita roda no `apply`.
         env:
           STRICT: '0'
         run: bash scripts/check-schema-replay-drift.sh
