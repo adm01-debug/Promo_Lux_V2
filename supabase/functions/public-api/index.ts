@@ -89,7 +89,7 @@ type ApiKeyAuth = {
   rateLimit: unknown;
 };
 
-// Payload das RPCs de um round-trip (public_api_me / public_api_events).
+// Payload das RPCs de um round-trip (public_api_me / public_api_events / public_api_list).
 type OneRoundTripResult = {
   status?: number;
   key_id?: string | null;
@@ -101,6 +101,8 @@ type OneRoundTripResult = {
   key?: Record<string, unknown> | null;
   events?: Array<Record<string, unknown>> | null;
   next_cursor?: string | null;
+  items?: Array<Record<string, unknown>> | null;
+  total?: number | null;
 };
 
 // Autentica a API key e devolve metadados + decisao de rate limit em UM
@@ -234,19 +236,11 @@ Deno.serve(async (req) => {
     // aqui so repassamos o status que ela devolveu.
     const keyHash = await sha256Hex(apiKey);
 
-    if (resource === "me" || resource === "events") {
-      const { data: boot, error: bootErr } = await supabase.rpc(
-        resource === "me" ? "public_api_me" : "public_api_events",
-        resource === "me" ? { _key_hash: keyHash } : {
-          _key_hash: keyHash,
-          _limit: Math.min(100, parseInt(url.searchParams.get("limit") ?? "25") || 25),
-          _after: url.searchParams.get("after") || null,
-          _table_name: url.searchParams.get("table") || null,
-          _action: url.searchParams.get("action") || null,
-        },
-      );
-      if (bootErr) return await respond({ error: bootErr.message }, 500);
-      const b = (boot ?? {}) as OneRoundTripResult;
+
+    // Resposta de recusa comum as RPCs de um round-trip: devolve a Response
+    // quando a credencial nao passou, ou null quando o status e 200 e quem
+    // chamou monta o corpo de sucesso.
+    const oneRoundTripRejection = async (b: OneRoundTripResult): Promise<Response | null> => {
       if (b.status === 401) return await respond({ error: "Invalid or expired API key" }, 401);
       if (b.status === 429) {
         return await respond(
@@ -262,6 +256,24 @@ Deno.serve(async (req) => {
       }
       if (b.status === 404) return await respond({ error: "API key not found" }, 404);
       if (b.status !== 200) return await respond({ error: "Authentication failed" }, 500);
+      return null;
+    };
+
+    if (resource === "me" || resource === "events") {
+      const { data: boot, error: bootErr } = await supabase.rpc(
+        resource === "me" ? "public_api_me" : "public_api_events",
+        resource === "me" ? { _key_hash: keyHash } : {
+          _key_hash: keyHash,
+          _limit: Math.min(100, parseInt(url.searchParams.get("limit") ?? "25") || 25),
+          _after: url.searchParams.get("after") || null,
+          _table_name: url.searchParams.get("table") || null,
+          _action: url.searchParams.get("action") || null,
+        },
+      );
+      if (bootErr) return await respond({ error: bootErr.message }, 500);
+      const b = (boot ?? {}) as OneRoundTripResult;
+      const rejected = await oneRoundTripRejection(b);
+      if (rejected) return rejected;
 
       // So depois da credencial validada, como antes, o metodo errado vira 405.
       if (req.method !== "GET") return await respond({ error: "Method not allowed" }, 405);
@@ -303,6 +315,40 @@ Deno.serve(async (req) => {
         })),
         next_cursor: b.next_cursor ?? null,
       });
+    }
+
+    // GET lista (companies/deals/stakeholders) tambem fecha em UM round-trip
+    // (RPC public_api_list). Os limites usam a MESMA expressao do caminho
+    // historico logo abaixo - min(Number(limit ?? 50), 200) e max(Number(offset
+    // ?? 0), 0) - e este caminho so vale para inteiro valido: entrada estranha
+    // (?limit=abc, ?limit=0, ?limit=-5) cai no caminho antigo, para nao trocar o
+    // que o header Range do PostgREST fazia.
+    if (req.method === "GET" && !id && resource && ALLOWED_TABLES.includes(resource as AllowedTable)) {
+      const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 200);
+      const offset = Math.max(Number(url.searchParams.get("offset") ?? 0), 0);
+      if (Number.isInteger(limit) && limit >= 1 && Number.isInteger(offset)) {
+        const { data: listBoot, error: listErr } = await supabase.rpc("public_api_list", {
+          _key_hash: keyHash,
+          _table_name: resource,
+          _limit: limit,
+          _offset: offset,
+          _name: url.searchParams.get("name") || null,
+          _sector: url.searchParams.get("sector") || null,
+        });
+        if (listErr) return await respond({ error: listErr.message }, 500);
+
+        const b = (listBoot ?? {}) as OneRoundTripResult;
+        const rejected = await oneRoundTripRejection(b);
+        if (rejected) return rejected;
+
+        logCtx.api_key_id = b.key_id ?? null;
+        logCtx.user_id = b.user_id ?? null;
+        logCtx.api_key_prefix = b.prefix ?? null;
+        logCtx.organization_id = b.organization_id ?? null;
+        logCtx.resource = resource;
+
+        return await respond({ data: b.items ?? [], total: b.total ?? null, limit, offset });
+      }
     }
 
     const auth = await authenticateApiKey(supabase, keyHash);
