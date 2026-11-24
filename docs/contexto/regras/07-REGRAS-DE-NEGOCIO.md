@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `60535f3d30` · branch `main` · 2026-11-24 17:43 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6e23c2a56f` · branch `main` · 2026-11-24 20:36 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -903,6 +903,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fn_lux_save_enriched_contact` | linkedin_url nÃ£o pode ser vazia | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `fn_lux_save_enriched_contact` | full_name Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql` |
+| `public_api_list` | recurso nao permitido na API publica: % | `supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -2674,6 +2675,8 @@ _nenhum item encontrado_
 | Limite de requisições por API key por hora (janela fixa, server-side) | `supabase/functions/public-api/index.ts` |
 | Só os campos de negócio legítimos abaixo passam; tudo mais é descartado | `supabase/functions/public-api/index.ts` |
 | Autentica a API key e devolve metadados + decisao de rate limit em UM | `supabase/functions/public-api/index.ts` |
+| historico logo abaixo - min(Number(limit ?? 50), 200) e max(Number(offset | `supabase/functions/public-api/index.ts` |
+| (?limit=abc, ?limit=0, ?limit=-5) cai no caminho antigo, para nao trocar o | `supabase/functions/public-api/index.ts` |
 | Rate limit server-side por API key (janela fixa de 1h, RPC atômica) | `supabase/functions/public-api/index.ts` |
 | Devolvido em texto claro uma única vez; o banco guarda apenas o hash. | `supabase/functions/qa-ingest-run/index.ts` |
 | limitado: apenas leituras + inserts em history/notifications com cooldown. | `supabase/functions/reaper-alerts/index.ts` |
@@ -2697,3 +2700,4 @@ _nenhum item encontrado_
 | existem apenas no banco de | `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql` |
 | 41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |
 | janela de rate limit fixa de 1 hora, UPSERT atomico em api_rate_limits | `supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql` |
+| ORDER BY created_at DESC com a mesma janela de LIMIT/OFFSET que o header | `supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql` |

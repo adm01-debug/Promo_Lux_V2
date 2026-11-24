@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "60535f3d30a566354dd15c98bb17c866f11f6782",
+  "commit": "6e23c2a56fcc2cad5e69d2fac35a11b3a9362eca",
   "branch": "main",
-  "data_commit": "2026-11-24T14:40:09-03:00",
+  "data_commit": "2026-11-24T17:35:47-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "6e23c2a",
+    "data": "2026-11-24",
+    "assunto": "perf(api-publica): lista de companies/deals/stakeholders em um unico round-trip (#193)"
+   },
    {
     "sha": "60535f3",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "6e486a4",
     "data": "2026-11-23",
     "assunto": "feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)"
-   },
-   {
-    "sha": "825b08c",
-    "data": "2026-11-23",
-    "assunto": "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)"
    }
   ],
-  "arquivos_mudados_7d": 265,
+  "arquivos_mudados_7d": 266,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -180,11 +180,11 @@
     "mudancas": 7
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "pasta": "supabase/functions/public-api",
+    "mudancas": 7
    },
    {
-    "pasta": "supabase/functions/public-api",
+    "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -230,11 +230,11 @@
     "mudancas": 7
    },
    {
-    "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "arquivo": "supabase/functions/public-api/index.ts",
+    "mudancas": 7
    },
    {
-    "arquivo": "supabase/functions/public-api/index.ts",
+    "arquivo": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 140
+    "commits": 141
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1143,
+  "arquivos_total": 1144,
   "arquivos_codigo": 710,
-  "linhas_codigo": 124507,
+  "linhas_codigo": 124553,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 259,
+  "migrations": 260,
   "cron_jobs": 42,
   "testes": 128,
   "workflows": 9,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 25055
+   "linhas": 25101
   },
   "tailwind.config.ts": {
    "arquivos": 1,

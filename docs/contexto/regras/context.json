@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "60535f3d30a566354dd15c98bb17c866f11f6782",
+  "sha": "6e23c2a56fcc2cad5e69d2fac35a11b3a9362eca",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 17:43 UTC",
-  "files_total": 1162,
-  "code_files": 977,
-  "code_lines": 146064
+  "generated_at": "2026-11-24 20:36 UTC",
+  "files_total": 1163,
+  "code_files": 978,
+  "code_lines": 146228
  },
  "version": "1.3.2",
- "facts_hash": "4b7f53fe3e1a14d2",
+ "facts_hash": "98eb81d6b9f54e9c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 302,
-   ".sql": 263,
+   ".sql": 264,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -19731,6 +19731,25 @@
      "v_events"
     ]
    },
+   "public_api_list": {
+    "args": "_key_hash TEXT, _table_name TEXT, _limit INTEGER DEFAULT 50, _offset INTEGER DEFAULT 0, _name TEXT DEFAULT NULL, _sector TEXT DEFAULT NULL",
+    "returns": "JSON",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_auth RECORD; v_limit INTEGER := greatest(coalesce(_limit, 50), 1); v_offset INTEGER := greatest(coalesce(_offset, 0), 0); v_where TEXT; v_items JSON; v_total BIGINT; BEGIN PERFORM set_config('TimeZone', 'UTC', true); IF _table_name IS NULL OR _table_name NOT IN ('companies', 'deals', 'stakeholders') THEN RAISE EXCEPTION 'recurso nao permitido na API publica: %', _table_name; END IF; SELECT * INTO v_auth FROM public.authenticate_api_key(_key_hash, 600); IF v_auth.key_id IS NULL THEN RETURN json_build_object('status', 401); END IF; IF v_auth.allowed IS NOT TRUE THEN RETURN json_build_object( 'status', 429, 'current_count', v_auth.current_count, 'reset_at', v_auth.reset_at ); END IF; …",
+    "raises": [
+     "recurso nao permitido na API publica: %"
+    ],
+    "tables": [
+     "authenticate_api_key",
+     "public",
+     "v_auth",
+     "v_items",
+     "v_total"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -23432,6 +23451,7 @@
    "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
    "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
    "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
+   "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29119,6 +29139,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
    }
   ],
   "raises": [
@@ -29901,6 +29937,11 @@
     "function": "capture_api_latency_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql"
+   },
+   {
+    "function": "public_api_list",
+    "msg": "recurso nao permitido na API publica: %",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
    }
   ],
   "seed": [],
@@ -33970,7 +34011,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 25055,
+   "lines": 25101,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -34185,8 +34226,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 259,
-   "lines": 19732,
+   "files": 260,
+   "lines": 19850,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -37401,6 +37442,9 @@
    ],
    "pii_scan": [
     "src/hooks/usePiiRules.ts"
+   ],
+   "public_api_list": [
+    "supabase/functions/public-api/index.ts"
    ],
    "purge_dead_letter": [
     "src/hooks/useScrapeQueue.ts"
@@ -40838,6 +40882,14 @@
    },
    {
     "file": "supabase/functions/public-api/index.ts",
+    "text": "historico logo abaixo - min(Number(limit ?? 50), 200) e max(Number(offset"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
+    "text": "(?limit=abc, ?limit=0, ?limit=-5) cai no caminho antigo, para nao trocar o"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
     "text": "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
    },
    {
@@ -40927,6 +40979,10 @@
    {
     "file": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
     "text": "janela de rate limit fixa de 1 hora, UPSERT atomico em api_rate_limits"
+   },
+   {
+    "file": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+    "text": "ORDER BY created_at DESC com a mesma janela de LIMIT/OFFSET que o header"
    }
   ],
   "db_constraints": [
@@ -65566,6 +65622,25 @@
      "v_events"
     ]
    },
+   "public_api_list": {
+    "args": "_key_hash TEXT, _table_name TEXT, _limit INTEGER DEFAULT 50, _offset INTEGER DEFAULT 0, _name TEXT DEFAULT NULL, _sector TEXT DEFAULT NULL",
+    "returns": "JSON",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_auth RECORD; v_limit INTEGER := greatest(coalesce(_limit, 50), 1); v_offset INTEGER := greatest(coalesce(_offset, 0), 0); v_where TEXT; v_items JSON; v_total BIGINT; BEGIN PERFORM set_config('TimeZone', 'UTC', true); IF _table_name IS NULL OR _table_name NOT IN ('companies', 'deals', 'stakeholders') THEN RAISE EXCEPTION 'recurso nao permitido na API publica: %', _table_name; END IF; SELECT * INTO v_auth FROM public.authenticate_api_key(_key_hash, 600); IF v_auth.key_id IS NULL THEN RETURN json_build_object('status', 401); END IF; IF v_auth.allowed IS NOT TRUE THEN RETURN json_build_object( 'status', 429, 'current_count', v_auth.current_count, 'reset_at', v_auth.reset_at ); END IF; …",
+    "raises": [
+     "recurso nao permitido na API publica: %"
+    ],
+    "tables": [
+     "authenticate_api_key",
+     "public",
+     "v_auth",
+     "v_items",
+     "v_total"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -66437,6 +66512,11 @@
     "function": "capture_api_latency_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql"
+   },
+   {
+    "function": "public_api_list",
+    "msg": "recurso nao permitido na API publica: %",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
    }
   ],
   "db_generated": [],
@@ -70297,7 +70377,8 @@
    "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
    "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
    "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
-   "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql"
+   "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
+   "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -70433,6 +70514,7 @@
    "prune_qa_reaper_runs",
    "prune_scheduled_report_runs",
    "public_api_events",
+   "public_api_list",
    "public_api_me",
    "purge_dead_letter",
    "purge_soft_deleted",
@@ -76047,6 +76129,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
    }
   ],
   "guards": [
@@ -98183,7 +98281,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 410,
+   "lines": 456,
    "tables": [
     {
      "table": "api_keys",
@@ -98205,6 +98303,7 @@
    "rpc": [
     "authenticate_api_key",
     "check_api_key_rate_limit",
+    "public_api_list",
     "touch_api_key",
     "verify_api_key"
    ],
@@ -98224,6 +98323,8 @@
     "Limite de requisições por API key por hora (janela fixa, server-side)",
     "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado",
     "Autentica a API key e devolve metadados + decisao de rate limit em UM",
+    "historico logo abaixo - min(Number(limit ?? 50), 200) e max(Number(offset",
+    "(?limit=abc, ?limit=0, ?limit=-5) cai no caminho antigo, para nao trocar o",
     "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
    ],
    "doc": "Public REST API authenticated via X-API-Key header Endpoints: GET /me (returns current API key info) GET /companies?limit=&offset= POST /companies (write scope) GET /companies/:id PATCH /companies/:id (write scope) DELETE /companies/:id (write scope)",
@@ -101614,13 +101715,31 @@
    "path": "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
    "lines": 181,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql": {
+   "path": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+   "lines": 118,
+   "rule_comments": [
+    "ORDER BY created_at DESC com a mesma janela de LIMIT/OFFSET que o header"
+   ],
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "60535f3d30a566354dd15c98bb17c866f11f6782",
+  "sha": "6e23c2a56fcc2cad5e69d2fac35a11b3a9362eca",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6e23c2a",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "perf(api-publica): lista de companies/deals/stakeholders em um unico round-trip (#193)",
+    "files": [
+     "supabase/functions/public-api/index.ts",
+     "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+    ]
+   },
    {
     "sha": "60535f3",
     "date": "2026-11-24",
@@ -101952,21 +102071,12 @@
     "files": [
      ".github/workflows/edge-functions-deploy.yml"
     ]
-   },
-   {
-    "sha": "076479d",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)",
-    "files": [
-     "package.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/functions/public-api/index.ts",
-    4
+    5
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -102005,16 +102115,16 @@
     2
    ],
    [
-    "package.json",
-    2
-   ],
-   [
     "docs/GAPS-ENTERPRISE.md",
     2
    ],
    [
     "scripts/sql/security-definer-allowlist.txt",
     2
+   ],
+   [
+    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+    1
    ],
    [
     "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",

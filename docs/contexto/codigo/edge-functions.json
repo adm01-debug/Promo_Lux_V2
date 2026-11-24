@@ -1613,7 +1613,7 @@
    "nome": "public-api",
    "entrada": "supabase/functions/public-api/index.ts",
    "arquivos": 1,
-   "linhas": 410,
+   "linhas": 456,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
@@ -1629,6 +1629,7 @@
    "rpcs": [
     "authenticate_api_key",
     "check_api_key_rate_limit",
+    "public_api_list",
     "touch_api_key",
     "verify_api_key"
    ],

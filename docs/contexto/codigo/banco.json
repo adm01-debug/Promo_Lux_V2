@@ -6,12 +6,12 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 259,
+ "migrations": 260,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
  "avisos": [
-  "19 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
+  "20 bloco(s) com DDL dinâmico (EXECUTE format/...) não modelado — policies/colunas criadas dinamicamente podem faltar; confira no banco vivo"
  ],
  "extensoes": [
   "pg_cron",
@@ -241,6 +241,7 @@
   "prune_qa_reaper_runs",
   "prune_scheduled_report_runs",
   "public_api_events",
+  "public_api_list",
   "public_api_me",
   "purge_dead_letter",
   "purge_soft_deleted",
@@ -20115,6 +20116,11 @@
   },
   {
    "nome": "pii_scan",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "public_api_list",
    "definida": true,
    "usada_em": 1
   },
