@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "0995c3154142cf5dad596bfd18123714a79a5889",
+  "sha": "8da6120b21abdca687b855204aadc845a7681efe",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 14:42 UTC",
+  "generated_at": "2026-11-24 14:55 UTC",
   "files_total": 1154,
   "code_files": 970,
   "code_lines": 145400
@@ -101397,10 +101397,20 @@
   }
  },
  "git": {
-  "sha": "0995c3154142cf5dad596bfd18123714a79a5889",
+  "sha": "8da6120b21abdca687b855204aadc845a7681efe",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8da6120",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)",
+    "files": [
+     ".github/workflows/db-migrations.yml",
+     "scripts/check-schema-replay-drift.sh"
+    ]
+   },
    {
     "sha": "0995c31",
     "date": "2026-11-24",
@@ -101761,31 +101771,20 @@
      "prs.json",
      "st.json"
     ]
-   },
-   {
-    "sha": "f9cdd00",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)",
-    "files": [
-     "AGENTS.md",
-     "ciruns.json",
-     "deps.json",
-     "docs/GAPS-ENTERPRISE.md",
-     "docs/agentes/lovable-deploy.md",
-     "prs.json",
-     "st.json"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    5
+    4
    ],
    [
     "src/integrations/supabase/types.ts",
     4
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    3
    ],
    [
     "supabase/functions/workflow-engine/index.ts",
@@ -101794,6 +101793,10 @@
    [
     "src/components/lux/SettingsView.tsx",
     3
+   ],
+   [
+    "scripts/check-schema-replay-drift.sh",
+    2
    ],
    [
     "supabase/functions/public-api/index.ts",
@@ -101805,10 +101808,6 @@
    ],
    [
     "supabase/migrations/20261124040000_scim_provisioning.sql",
-    2
-   ],
-   [
-    ".github/workflows/db-migrations.yml",
     2
    ],
    [
@@ -101828,22 +101827,6 @@
     2
    ],
    [
-    "ciruns.json",
-    2
-   ],
-   [
-    "deps.json",
-    2
-   ],
-   [
-    "prs.json",
-    2
-   ],
-   [
-    "st.json",
-    2
-   ],
-   [
     "index.html",
     1
    ],
@@ -101857,6 +101840,18 @@
    ],
    [
     "supabase/functions/auth-rate-limit/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/gmaps-proxy/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/health/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/lusha-cookie-health/index.ts",
     1
    ]
   ]

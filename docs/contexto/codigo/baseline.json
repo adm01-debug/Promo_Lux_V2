@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0995c3154142cf5dad596bfd18123714a79a5889",
+  "commit": "8da6120b21abdca687b855204aadc845a7681efe",
   "branch": "main",
-  "data_commit": "2026-11-24T11:41:03-03:00",
+  "data_commit": "2026-11-24T11:55:13-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8da6120",
+    "data": "2026-11-24",
+    "assunto": "fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)"
+   },
    {
     "sha": "0995c31",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "0801668",
     "data": "2026-11-23",
     "assunto": "fix: exige admin da org no replay de DLQ (#155)"
-   },
-   {
-    "sha": "6cf80c9",
-    "data": "2026-11-23",
-    "assunto": "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)"
    }
   ],
   "arquivos_mudados_7d": 257,
@@ -168,16 +168,16 @@
     "mudancas": 8
    },
    {
+    "pasta": ".github/workflows/db-migrations.yml",
+    "mudancas": 7
+   },
+   {
     "pasta": "supabase/config.toml",
     "mudancas": 7
    },
    {
     "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 7
-   },
-   {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 6
    },
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
@@ -218,16 +218,16 @@
     "mudancas": 8
    },
    {
+    "arquivo": ".github/workflows/db-migrations.yml",
+    "mudancas": 7
+   },
+   {
     "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 7
    },
    {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 7
-   },
-   {
-    "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 6
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 130
+    "commits": 131
    },
    {
     "autor": "dependabot[bot]",

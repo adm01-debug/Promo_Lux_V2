@@ -145,7 +145,7 @@
   {
    "arquivo": "scripts/check-schema-replay-drift.sh",
    "descricao": "--------------------------------------------------------------------------- check-schema-replay-drift.sh",
-   "linhas": 92,
+   "linhas": 109,
    "env": [],
    "npm_scripts": [],
    "workflows": [

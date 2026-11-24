@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0995c3154142cf5dad596bfd18123714a79a5889` (2026-11-24T11:41:03-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8da6120b21abdca687b855204aadc845a7681efe` (2026-11-24T11:55:13-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -259,7 +259,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7857 nós · 16662 arestas · 665 comunidades · grafo do commit `0995c315`
+- 7857 nós · 16662 arestas · 665 comunidades · grafo do commit `8da6120b`
 - comunidades maiores: Monitoring.tsx (191), input.tsx (168), @tanstack/react-query (145), react (135), cn (126), lucide-react (117), OrgViolationsView.tsx (103), Index.tsx (86), vitest (83), gerar.mjs (80), req (78), generate.py (73)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -270,9 +270,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - docs/GAPS-ENTERPRISE.md (9)
 - AGENTS.md (8)
 - supabase/config.toml (8)
+- .github/workflows/db-migrations.yml (7)
 - src/integrations/supabase/types.ts (7)
 - supabase/functions/gmaps-proxy/index.ts (7)
-- .github/workflows/db-migrations.yml (6)
 - .github/workflows/edge-tests-daily.yml (6)
 - docs/ESTADO_ATUAL.md (5)
 - scripts/automation.config.json (5)
@@ -376,6 +376,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `8da6120` fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)
 - 2026-11-24 `0995c31` chore: remove o dominio Lovable das origens, metadados e user-agent (#182)
 - 2026-11-24 `d8c8604` fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)
 - 2026-11-24 `69c63ff` fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)
@@ -390,7 +391,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `23e9378` chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)
 - 2026-11-23 `90d7ac8` feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)
 - 2026-11-23 `6e486a4` feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)
-- 2026-11-23 `825b08c` fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
