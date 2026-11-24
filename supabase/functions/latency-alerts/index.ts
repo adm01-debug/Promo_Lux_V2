@@ -37,39 +37,48 @@ Deno.serve(async (req) => {
       .order("captured_at", { ascending: false })
       .limit(10);
     if (!snap?.length) continue;
-    const worst = Math.max(...snap.map((r: any) => Number(r.p95_ms ?? 0)));
-    if (worst < (s.p95_threshold_ms ?? 5000)) continue;
+    const snapT = snap as Array<{ path: string | null; p95_ms: number | null }>;
+    const pior = snapT.reduce((a, b) => (Number(b.p95_ms ?? 0) > Number(a.p95_ms ?? 0) ? b : a));
+    const worst = Number(pior.p95_ms ?? 0);
+    const limite = Number(s.p95_critical_ms ?? 1500);
+    if (worst < limite) continue;
 
     const { data: last } = await supa
       .from("api_latency_alert_history")
-      .select("triggered_at")
+      .select("created_at")
       .eq("organization_id", s.organization_id)
-      .order("triggered_at", { ascending: false })
+      .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (last && new Date(last.triggered_at).getTime() > Date.now() - (s.cooldown_minutes ?? 60) * 60_000) continue;
-
-    await supa.from("api_latency_alert_history").insert({
-      organization_id: s.organization_id,
-      p95_ms: worst,
-      threshold_ms: s.p95_threshold_ms,
-      severity: worst > (s.p95_threshold_ms ?? 5000) * 2 ? "critical" : "warning",
-    });
+    if (last && new Date(last.created_at).getTime() > Date.now() - Number(s.cooldown_hours ?? 6) * 3_600_000) continue;
 
     const { data: admins } = await supa
       .from("organization_members")
       .select("user_id")
       .eq("organization_id", s.organization_id)
       .eq("role", "admin");
+    let notificados = 0;
     for (const a of admins ?? []) {
-      await supa.from("notifications").insert({
+      const { error: erroNotif } = await supa.from("notifications").insert({
         user_id: a.user_id,
+        organization_id: s.organization_id,
         type: "system",
         title: "Latência de API alta",
-        message: `p95 observado ${worst}ms excedeu o limite de ${s.p95_threshold_ms}ms.`,
-        metadata: { organization_id: s.organization_id, p95_ms: worst },
+        message: `p95 observado ${worst}ms excedeu o limite de ${limite}ms.`,
+        metadata: { organization_id: s.organization_id, path: pior.path, p95_ms: worst },
       });
+      if (!erroNotif) notificados++;
     }
+
+    await supa.from("api_latency_alert_history").insert({
+      organization_id: s.organization_id,
+      path: pior.path,
+      p95_ms: worst,
+      p95_critical_ms: limite,
+      consecutive: 1,
+      admins_notified: notificados,
+    });
+
     triggered++;
   }
 
