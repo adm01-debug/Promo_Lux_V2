@@ -211,10 +211,14 @@ Deno.serve(async (req) => {
       let q = supabase
         .from("audit_logs")
         .select("id, action, table_name, record_id, new_data, metadata, created_at")
-        .eq("user_id", user_id)
         .order("created_at", { ascending: false })
         .order("id", { ascending: false })
         .limit(limit);
+
+      // audit_logs escopa por organization_id (a chave e uma credencial da org);
+      // a coluna user_id nao existe nesta tabela (era a causa do 500).
+      if (logCtx.organization_id) q = q.eq("organization_id", logCtx.organization_id);
+      else q = q.eq("actor_id", user_id);
 
       if (after) q = q.lt("id", after);
       if (filterTable) q = q.eq("table_name", filterTable);
