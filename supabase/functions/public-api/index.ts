@@ -69,6 +69,84 @@ function pickWritable(table: AllowedTable, body: Record<string, unknown>): Recor
   return out;
 }
 
+// Client do supabase-js derivado da fabrica abaixo: sem o tipo Database gerado
+// (nao existe no repo), os generics ficam implicitos e nao ha `any` escrito.
+function createAdminClient() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+}
+
+type SupabaseApiClient = ReturnType<typeof createAdminClient>;
+
+type ApiKeyAuth = {
+  key_id: string;
+  user_id: string;
+  scopes: string[];
+  prefix: string | null;
+  organization_id: string | null;
+  rateLimit: unknown;
+};
+
+// Autentica a API key e devolve metadados + decisao de rate limit em UM
+// round-trip (RPC authenticate_api_key: valida, marca last_used_at, conta a
+// janela e devolve prefix/org). Enquanto a migration dessa RPC nao estiver
+// aplicada na instancia, cai no caminho historico de 4 round-trips.
+async function authenticateApiKey(supabase: SupabaseApiClient, keyHash: string): Promise<ApiKeyAuth | null> {
+  const { data, error } = await supabase.rpc("authenticate_api_key", {
+    _key_hash: keyHash,
+    _limit: API_RATE_LIMIT_PER_HOUR,
+  });
+
+  if (!error) {
+    const row = (data ?? [])[0] as {
+      key_id: string;
+      user_id: string;
+      scopes: string[] | null;
+      prefix: string | null;
+      organization_id: string | null;
+      allowed: boolean | null;
+      current_count: number | null;
+      reset_at: string | null;
+    } | undefined;
+    if (!row) return null;
+    return {
+      key_id: row.key_id,
+      user_id: row.user_id,
+      scopes: row.scopes ?? [],
+      prefix: row.prefix ?? null,
+      organization_id: row.organization_id ?? null,
+      rateLimit: { allowed: row.allowed, current_count: row.current_count, reset_at: row.reset_at },
+    };
+  }
+
+  const missingFunction = error.code === "PGRST202" || /Could not find the function/i.test(error.message ?? "");
+  if (!missingFunction) return null;
+
+  const { data: keyRows, error: keyErr } = await supabase.rpc("verify_api_key", { _key_hash: keyHash });
+  if (keyErr || !keyRows?.length) return null;
+  const legacy = keyRows[0] as { user_id: string; scopes: string[] | null; key_id: string };
+  await supabase.rpc("touch_api_key", { _key_id: legacy.key_id });
+  const { data: rl } = await supabase.rpc("check_api_key_rate_limit", {
+    _api_key_id: legacy.key_id,
+    _limit: API_RATE_LIMIT_PER_HOUR,
+  });
+  const { data: meta } = await supabase
+    .from("api_keys")
+    .select("prefix, organization_id")
+    .eq("id", legacy.key_id)
+    .maybeSingle();
+  return {
+    key_id: legacy.key_id,
+    user_id: legacy.user_id,
+    scopes: legacy.scopes ?? [],
+    prefix: meta?.prefix ?? null,
+    organization_id: meta?.organization_id ?? null,
+    rateLimit: rl,
+  };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -83,7 +161,7 @@ Deno.serve(async (req) => {
     user_id: string | null;
     resource: string | null;
   } = { api_key_id: null, api_key_prefix: null, organization_id: null, user_id: null, resource: null };
-  let supabaseForLog: ReturnType<typeof createClient> | null = null;
+  let supabaseForLog: SupabaseApiClient | null = null;
 
   const respond = async (body: unknown, status = 200, errorMessage?: string, extraHeaders: Record<string, string> = {}) => {
     const res = new Response(JSON.stringify(body), {
@@ -91,13 +169,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json", ...extraHeaders },
     });
     try {
-      const client =
-        supabaseForLog ??
-        createClient(
-          Deno.env.get("SUPABASE_URL")!,
-          Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-        );
-      await client.from("api_request_logs").insert({
+      const client = supabaseForLog ?? createAdminClient();
+      const logged = client.from("api_request_logs").insert({
         api_key_id: logCtx.api_key_id,
         api_key_prefix: logCtx.api_key_prefix,
         organization_id: logCtx.organization_id,
@@ -110,7 +183,14 @@ Deno.serve(async (req) => {
         ip_address: ip,
         user_agent: userAgent,
         error_message: errorMessage ?? (status >= 400 ? (typeof body === "object" && body && "error" in body ? String((body as { error: unknown }).error) : null) : null),
-      });
+      })
+        // O log nunca pode atrasar a resposta: sai do caminho critico.
+        .then(() => {}, () => {});
+      const edgeRuntime = (globalThis as {
+        EdgeRuntime?: { waitUntil?: (promise: PromiseLike<unknown>) => void };
+      }).EdgeRuntime;
+      if (edgeRuntime?.waitUntil) edgeRuntime.waitUntil(logged);
+      else await logged;
     } catch (_) {
       // Never let logging break the response
     }
@@ -121,24 +201,16 @@ Deno.serve(async (req) => {
     const apiKey = req.headers.get("x-api-key");
     if (!apiKey) return await respond({ error: "Missing X-API-Key header" }, 401);
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    const supabase = createAdminClient();
     supabaseForLog = supabase;
 
     const keyHash = await sha256Hex(apiKey);
-    const { data: keyRows, error: keyErr } = await supabase.rpc("verify_api_key", { _key_hash: keyHash });
-    if (keyErr || !keyRows?.length) return await respond({ error: "Invalid or expired API key" }, 401);
-    const { user_id, scopes, key_id } = keyRows[0];
-    await supabase.rpc("touch_api_key", { _key_id: key_id });
+    const auth = await authenticateApiKey(supabase, keyHash);
+    if (!auth) return await respond({ error: "Invalid or expired API key" }, 401);
+    const { user_id, scopes, key_id } = auth;
 
     // Rate limit server-side por API key (janela fixa de 1h, RPC atômica)
-    const { data: rl } = await supabase.rpc("check_api_key_rate_limit", {
-      _api_key_id: key_id,
-      _limit: API_RATE_LIMIT_PER_HOUR,
-    });
-    const rlDecision = parseRateLimitDecision(rl);
+    const rlDecision = parseRateLimitDecision(auth.rateLimit);
     if (!rlDecision.allowed) {
       return await respond(
         {
@@ -153,16 +225,8 @@ Deno.serve(async (req) => {
     }
     logCtx.api_key_id = key_id;
     logCtx.user_id = user_id;
-    // Fetch prefix + org for richer log context (best-effort)
-    const { data: keyMeta } = await supabase
-      .from("api_keys")
-      .select("prefix, organization_id")
-      .eq("id", key_id)
-      .maybeSingle();
-    if (keyMeta) {
-      logCtx.api_key_prefix = keyMeta.prefix ?? null;
-      logCtx.organization_id = keyMeta.organization_id ?? null;
-    }
+    logCtx.api_key_prefix = auth.prefix;
+    logCtx.organization_id = auth.organization_id;
 
     // Path is something like /public-api/companies/:id — strip the function prefix
     const parts = url.pathname.split("/").filter(Boolean);
