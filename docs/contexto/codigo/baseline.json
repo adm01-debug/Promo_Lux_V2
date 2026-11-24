@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "faad34a4240afda1e4eabc5a7c8da67d3e378e8b",
+  "commit": "25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e",
   "branch": "main",
-  "data_commit": "2026-11-24T06:53:22-03:00",
+  "data_commit": "2026-11-24T08:31:43-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "25e2bf3",
+    "data": "2026-11-24",
+    "assunto": "chore: inventario do estado real (semanal)"
+   },
    {
     "sha": "faad34a",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "b3ecb1b",
     "data": "2026-11-22",
     "assunto": "fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)"
-   },
-   {
-    "sha": "fddbb4f",
-    "data": "2026-11-22",
-    "assunto": "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)"
    }
   ],
-  "arquivos_mudados_7d": 248,
+  "arquivos_mudados_7d": 249,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 121
+    "commits": 122
    },
    {
     "autor": "dependabot[bot]",

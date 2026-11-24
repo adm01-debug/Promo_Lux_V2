@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "faad34a4240afda1e4eabc5a7c8da67d3e378e8b",
+  "sha": "25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 09:53 UTC",
+  "generated_at": "2026-11-24 11:38 UTC",
   "files_total": 1150,
   "code_files": 968,
   "code_lines": 145043
@@ -101328,10 +101328,19 @@
   }
  },
  "git": {
-  "sha": "faad34a4240afda1e4eabc5a7c8da67d3e378e8b",
+  "sha": "25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "25e2bf3",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore: inventario do estado real (semanal)",
+    "files": [
+     "inventario/estado/edges.json"
+    ]
+   },
    {
     "sha": "faad34a",
     "date": "2026-11-24",
@@ -101737,21 +101746,12 @@
      "docs/ESTADO_ATUAL.md",
      "docs/GAPS-ENTERPRISE.md"
     ]
-   },
-   {
-    "sha": "2b0bddf",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "docs: reconcilia GAPS-ENTERPRISE com o que existe em produção (#124)",
-    "files": [
-     "docs/GAPS-ENTERPRISE.md"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    9
+    8
    ],
    [
     "src/integrations/supabase/types.ts",

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `faad34a4240afda1e4eabc5a7c8da67d3e378e8b` (2026-11-24T06:53:22-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e` (2026-11-24T08:31:43-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -258,7 +258,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7841 nós · 16620 arestas · 695 comunidades · grafo do commit `faad34a4`
+- 7841 nós · 16620 arestas · 695 comunidades · grafo do commit `25e2bf32`
 - comunidades maiores: button.tsx (167), react (166), Monitoring.tsx (157), lucide-react (93), hooks/use-toast.ts (91), cn (88), gerar.mjs (80), CompaniesView.tsx (79), generate.py (73), lushaMocks.ts (69), campaign-dispatch/index.ts (67), OrganizationsView.tsx (66)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -375,6 +375,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `25e2bf3` chore: inventario do estado real (semanal)
 - 2026-11-24 `faad34a` fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)
 - 2026-11-24 `588525f` fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)
 - 2026-11-23 `23e9378` chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)
@@ -389,7 +390,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `c5a2f41` feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)
 - 2026-11-23 `cf23a12` feat: steps de workflow controlam quais fases do engine executam (#158)
 - 2026-11-23 `0b2a228` feat: exige significancia estatistica para eleger vencedora A/B (#150)
-- 2026-11-23 `0801668` fix: exige admin da org no replay de DLQ (#155)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
