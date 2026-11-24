@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "6e23c2a56fcc2cad5e69d2fac35a11b3a9362eca",
+  "sha": "9894b1d9998d2eea970d30c7b5e3b81ada706367",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 20:36 UTC",
-  "files_total": 1163,
-  "code_files": 978,
-  "code_lines": 146228
+  "generated_at": "2026-11-24 20:39 UTC",
+  "files_total": 1164,
+  "code_files": 979,
+  "code_lines": 146310
  },
  "version": "1.3.2",
- "facts_hash": "98eb81d6b9f54e9c",
+ "facts_hash": "125c69118566f7c3",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 302,
-   ".sql": 264,
+   ".sql": 265,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -23452,6 +23452,7 @@
    "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
    "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+   "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -34226,8 +34227,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 260,
-   "lines": 19850,
+   "files": 261,
+   "lines": 19932,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -101723,13 +101724,26 @@
     "ORDER BY created_at DESC com a mesma janela de LIMIT/OFFSET que o header"
    ],
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql": {
+   "path": "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
+   "lines": 82
   }
  },
  "git": {
-  "sha": "6e23c2a56fcc2cad5e69d2fac35a11b3a9362eca",
+  "sha": "9894b1d9998d2eea970d30c7b5e3b81ada706367",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9894b1d",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)",
+    "files": [
+     "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql"
+    ]
+   },
    {
     "sha": "6e23c2a",
     "date": "2026-11-24",
@@ -102062,15 +102076,6 @@
     "files": [
      ".github/workflows/db-migrations.yml"
     ]
-   },
-   {
-    "sha": "f4bf977",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)",
-    "files": [
-     ".github/workflows/edge-functions-deploy.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -102123,6 +102128,10 @@
     2
    ],
    [
+    "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
+    1
+   ],
+   [
     "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
     1
    ],
@@ -102148,10 +102157,6 @@
    ],
    [
     "supabase/functions/latency-alerts/index.ts",
-    1
-   ],
-   [
-    "scripts/schema-drift-baseline.txt",
     1
    ]
   ]

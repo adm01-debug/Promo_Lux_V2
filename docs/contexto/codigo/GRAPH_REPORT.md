@@ -1,17 +1,17 @@
 # Graph Report - Promo_Lux_V2  (2026-11-24)
 
 ## Corpus Check
-- 1124 files · ~788,907 words
+- 1125 files · ~789,321 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 20 file(s) not represented in the graph (top: (none) 10, .toml 5, .css 2)
 
 ## Summary
-- 7883 nodes · 16682 edges · 701 communities (429 shown, 272 thin omitted)
+- 7884 nodes · 16682 edges · 702 communities (429 shown, 273 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 542 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6e23c2a5`
+- Built from commit: `9894b1d9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -633,7 +633,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (701 total, 272 thin omitted)
+## Communities (702 total, 273 thin omitted)
 
 ### Community 0 - "@tanstack/react-query"
 Cohesion: 0.03
@@ -2353,16 +2353,16 @@ Nodes (3): idx_retry_policy_advisories_applied_by, idx_retry_policy_advisories_r
 
 ## Knowledge Gaps
 - **2473 isolated node(s):** `session-start.sh script`, `PATH`, `version`, `sdk_version`, `path` (+2468 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3574 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **272 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3575 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **273 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `vitest` connect `vitest` to `scenarios.ts`, `cn`, `compareReport.ts`, `withOrg.ts`, `req`, `oracle-enrich-contact/index.ts`, `classify.ts`, `orgErrorHandler.audit.test.ts`, `SlaHistoryTrendChart.tsx`, `package.json`, `Sidebar.tsx`, `gmaps-proxy/index.ts`, `ErrorBoundary`, `orgErrorHandler.e2e.test.ts`, `web-scrape-worker/index.ts`, `OracleV2Panel.tsx`, `orgErrorHandler.ts`, `SessionsPanel.test.tsx`, `lusha/departmentMap.ts`, `2. Módulos Principais (12 Views)`, `validation.test.ts`, `oracle-push-bitrix/index.ts`, `deliverability-check/index.ts`, `workflow-engine/index.ts`, `lusha-client.ts`, `oracle-search-decisors/index.ts`, `scrape-queue-worker/index.ts`, `StakeholderFinderView.tsx`, `downloadCSV`, `SourceComparisonSummary.tsx`, `SafeHTML.tsx`, `CompaniesView.tsx`, `DecisionMakersGrid.test.tsx`, `LushaIntelligenceView`, `apollo-client.ts`, `aggregations.ts`, `Analisado`, `tracking-signature.ts`, `vite.config.ts`, `useResilienceSimulator.ts`, `useRateLimit.ts`, `csv.ts`, `useRateLimit.logic.test.ts`, `DlqHealthCard`, `public-api/index.ts`, `useAuditTrail.ts`, `autotune.ts`, `lead-identity.ts`, `DlqAlertSettingsCard.test.tsx`?**
-  _High betweenness centrality (0.107) - this node is a cross-community bridge._
+  _High betweenness centrality (0.108) - this node is a cross-community bridge._
 - **Why does `react` connect `react` to `@tanstack/react-query`, `Monitoring.tsx`, `LushaIntelligenceView.tsx`, `cn`, `ConversionTab.tsx`, `lucide-react`, `vitest`, `db`, `WebScrapeView.tsx`, `navigation-menu.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `hooks/use-toast.ts`, `ResilienceReport.tsx`, `useActiveOrganization`, `DealsView.tsx`, `carousel.tsx`, `Index.tsx`, `form.tsx`, `SlaHistoryTrendChart.tsx`, `MembershipAuditLog.tsx`, `package.json`, `useActiveSessions.ts`, `App.tsx`, `Sidebar.tsx`, `useLoginForm.ts`, `radio-group.tsx`, `toast.tsx`, `useAuth`, `PermissionsMatrix.tsx`, `OracleV2Panel.tsx`, `orgErrorHandler.ts`, `getActiveOrgId`, `SettingsView.tsx`, `Header.tsx`, `useFeatureFlag.ts`, `SatisfactionTab.tsx`, `CircuitBreakerAlertSettingsCard.tsx`, `withOrg.ts`, `StakeholderFinderView.tsx`, `ThemeToggle.tsx`, `downloadCSV`, `hover-card.tsx`, `LuxImage.tsx`, `CompaniesView.tsx`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `NavLink.tsx`, `useEnvProfiles.ts`, `OnboardingTour.tsx`, `MFAEnroll.tsx`, `useResilienceSimulator.ts`, `ApiLatencyAlertSettingsCard.tsx`, `AutomationStatusPanel.tsx`, `chart.tsx`, `CommandPalette.tsx`, `ApiLatencyPanel.tsx`, `useRateLimit.ts`, `CompaniesMapView.tsx`, `3. Recursos Transversais`, `DlqAlertSettingsCard.tsx`, `DlqHealthCard`, `PasswordStrengthMeter.tsx`, `toggle-group.tsx`, `pagination.tsx`, `useCnpjEnrich.ts`, `Login.tsx`, `DlqAlertSettingsCard.test.tsx`?**
-  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Why does `cn()` connect `cn` to `@tanstack/react-query`, `react`, `Monitoring.tsx`, `LushaIntelligenceView.tsx`, `db`, `lucide-react`, `vitest`, `useActiveOrganization`, `navigation-menu.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `hooks/use-toast.ts`, `DealsView.tsx`, `carousel.tsx`, `Index.tsx`, `form.tsx`, `Sidebar.tsx`, `G21-1 · Média · CONFIRMADO · RASTREADO — Menu mostra auditoria e infraestrutura para todos os papéis`, `radio-group.tsx`, `generateScenarios`, `WorkflowCard.tsx`, `toast.tsx`, `useAuth`, `OracleV2Panel.tsx`, `getActiveOrgId`, `SettingsView.tsx`, `Header.tsx`, `2. Módulos Principais (12 Views)`, `SatisfactionTab.tsx`, `ThemeToggle.tsx`, `downloadCSV`, `WorkflowsView`, `SourceComparisonSummary.tsx`, `hover-card.tsx`, `LuxImage.tsx`, `ScrapeQueuePanel.tsx`, `SafeHTML.tsx`, `NavLink.tsx`, `MFAEnroll.tsx`, `useResilienceSimulator.ts`, `AutomationStatusPanel.tsx`, `chart.tsx`, `CommandPalette.tsx`, `ApiLatencyPanel.tsx`, `DlqAlertSettingsCard.tsx`, `DlqHealthCard`, `Login.tsx`, `toggle-group.tsx`, `EmailVerifyBadge.tsx`, `useDbHealth.ts`, `pagination.tsx`, `AutomationKpiCards.tsx`?**
   _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **What connects `session-start.sh script`, `PATH`, `version` to the rest of the system?**

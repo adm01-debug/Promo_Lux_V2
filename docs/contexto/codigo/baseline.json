@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6e23c2a56fcc2cad5e69d2fac35a11b3a9362eca",
+  "commit": "9894b1d9998d2eea970d30c7b5e3b81ada706367",
   "branch": "main",
-  "data_commit": "2026-11-24T17:35:47-03:00",
+  "data_commit": "2026-11-24T17:39:20-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9894b1d",
+    "data": "2026-11-24",
+    "assunto": "chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)"
+   },
    {
     "sha": "6e23c2a",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "90d7ac8",
     "data": "2026-11-23",
     "assunto": "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)"
-   },
-   {
-    "sha": "6e486a4",
-    "data": "2026-11-23",
-    "assunto": "feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)"
    }
   ],
-  "arquivos_mudados_7d": 266,
+  "arquivos_mudados_7d": 267,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 141
+    "commits": 142
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1144,
+  "arquivos_total": 1145,
   "arquivos_codigo": 710,
   "linhas_codigo": 124553,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 260,
+  "migrations": 261,
   "cron_jobs": 42,
   "testes": 128,
   "workflows": 9,
