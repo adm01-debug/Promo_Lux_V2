@@ -206,9 +206,15 @@ jobs:
         run: supabase migration list --linked
 
       - name: Guarda de schema (banco x replay das migrations)
-        # Estrita aqui: depois do push o banco tem que ter exatamente o que as
-        # migrations declaram. CREATE no diff = objeto declarado e ausente do
-        # banco (o caso que passou batido na 20261124070000 antes da #172).
+        # So roda quando houve push de verdade. Em run superado (frescor != true)
+        # nada foi aplicado e falhar aqui seria o vermelho falso que o
+        # check-run-freshness.sh existe para evitar.
+        if: steps.frescor.outputs.aplicar == 'true'
+        # Estrita aqui: depois do push o banco tem que ter o que as migrations
+        # declaram. CREATE de ESTRUTURA no diff = objeto declarado e ausente do
+        # banco (a classe que passou batido nas migrations de `companies` antes
+        # da #172). `create or replace` de objeto que existe e definicao
+        # diferente (corpo de funcao/metadados) virou aviso dentro do script.
         env:
           STRICT: '1'
         run: bash scripts/check-schema-replay-drift.sh

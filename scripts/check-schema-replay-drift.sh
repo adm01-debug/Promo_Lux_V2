@@ -15,8 +15,12 @@
 #
 # Este script compara ESTADO, nao historico: o CLI monta um banco sombra
 # aplicando `supabase/migrations/` do zero e o diferencia do banco alvo.
-#   * statement que CRIA algo  -> o repo declara, o banco alvo nao tem -> drift
-#                                 perigoso (um rebuild do banco perde o objeto).
+#   * statement que CRIA ESTRUTURA (create table/index/view/type/policy/trigger,
+#     alter table add column) -> o repo declara o objeto e o banco alvo nao tem:
+#     drift perigoso (um rebuild do banco perde o objeto).
+#   * `create or replace X`   -> o diff emite essa forma tambem quando o objeto
+#                                 EXISTE e a definicao difere (corpo de funcao,
+#                                 metadados). Nao prova ausencia: aviso, nao falha.
 #   * statement que REMOVE    -> o banco alvo tem alem do repo (objetos de
 #                                 ferramenta/infra aplicados fora do
 #                                 versionamento, ex: mcp_exec, v_*_audit).
@@ -60,8 +64,14 @@ if [ "$RC" -ne 0 ]; then
   exit 0
 fi
 
-# Statements que o banco alvo precisa receber para ficar igual ao replay.
-FALTA="$(printf '%s\n' "$SAIDA" | grep -Ei '^[[:space:]]*(create[[:space:](]|create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?(table|index|unique|view|materialized|function|procedure|type|trigger|policy|sequence|domain|extension)[[:space:]]|alter[[:space:]]+table[^;]*[[:space:]]add[[:space:]]+(column|constraint))' | grep -vi '^[[:space:]]*--' || true)"
+# Statements que provam AUSENCIA de estrutura no banco alvo. `create or replace`
+# fica de fora de proposito: o diff tambem emite essa forma quando o objeto
+# existe e a definicao difere, entao ela nao prova que o objeto falta.
+FALTA="$(printf '%s\n' "$SAIDA" | grep -Ei '^[[:space:]]*(create[[:space:]]+(table|index|unique|view|materialized|type|domain|sequence|policy|trigger|extension)[[:space:](]|alter[[:space:]]+table[^;]*[[:space:]]add[[:space:]]+(column|constraint))' | grep -vi '^[[:space:]]*--' || true)"
+
+# Objetos que existem nos dois lados com definicao diferente (corpo de funcao ou
+# metadados). Nao prova ausencia: entra como aviso com a contagem.
+DIFERENTES="$(printf '%s\n' "$SAIDA" | grep -Ei '^[[:space:]]*create[[:space:]]+or[[:space:]]+replace[[:space:]]' | grep -vi '^[[:space:]]*--' || true)"
 
 # Statements que o banco alvo precisa perder para ficar igual ao replay.
 EXTRA="$(printf '%s\n' "$SAIDA" | grep -Ei '^[[:space:]]*(drop[[:space:]]|alter[[:space:]]+table[^;]*[[:space:]]drop[[:space:]])' | grep -vi '^[[:space:]]*--' || true)"
@@ -72,16 +82,23 @@ if [ -n "$EXTRA" ]; then
   echo ""
 fi
 
+if [ -n "$DIFERENTES" ]; then
+  TOTAL_DIF="$(printf '%s\n' "$DIFERENTES" | wc -l | tr -d ' ')"
+  echo "::warning::O repositorio e o banco alvo divergem em $TOTAL_DIF objeto(s) que existem nos dois lados com definicao diferente (corpo de funcao/metadados). Nao bloqueia: o diff nao prova ausencia."
+  printf '%s\n' "$DIFERENTES" | head -"$LIMITE_LINHAS" | sed 's/^/  /'
+  echo ""
+fi
+
 if [ -z "$FALTA" ]; then
-  echo "OK: o banco alvo tem tudo que as migrations declaram (schema public)."
+  echo "OK: o banco alvo tem tudo que as migrations declaram (estrutura, schema public)."
   exit 0
 fi
 
 TOTAL="$(printf '%s\n' "$FALTA" | wc -l | tr -d ' ')"
-echo "::error::Drift de schema: $TOTAL objeto(s) que as migrations declaram NAO existem no banco alvo."
+echo "::error::Drift de schema: $TOTAL objeto(s) de estrutura que as migrations declaram e NAO existem no banco alvo."
 printf '%s\n' "$FALTA" | head -"$LIMITE_LINHAS" | sed 's/^/  /'
 echo ""
-echo "Replay limpo (todas as migrations, banco vazio) produz esses objetos; o banco alvo"
+echo "Replay limpo (todas as migrations, banco vazio) produz esses objetos de estrutura; o banco alvo"
 echo "nao. Ou a migration esta registrada como aplicada sem efeito, ou alguem removeu o"
 echo "objeto depois. Um rebuild do banco a partir do repositorio recria o objeto e o"
 echo "banco atual nao: as duas bases ficam diferentes. Corrigir antes de seguir."
