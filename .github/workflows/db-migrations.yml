@@ -25,12 +25,15 @@ on:
       - 'supabase/migrations/**'
       - 'scripts/check-migration-drift.sh'
       - 'scripts/check-migration-target.sh'
+      - 'scripts/check-schema-replay-drift.sh'
       - '.github/workflows/db-migrations.yml'
   push:
     branches: [main, master]
     paths:
       - 'supabase/migrations/**'
       - 'scripts/check-migration-drift.sh'
+      - 'scripts/check-run-freshness.sh'
+      - 'scripts/check-schema-replay-drift.sh'
   workflow_dispatch:
     inputs:
       environment:
@@ -133,6 +136,13 @@ jobs:
           STRICT: '0'
         run: bash scripts/check-migration-drift.sh
 
+      - name: Guarda de schema (banco x replay das migrations)
+        # Informativo em PR: aqui o alvo e producao (read-only) e o objetivo e
+        # ver o diff antes de qualquer push. A assercao estrita roda no `apply`.
+        env:
+          STRICT: '0'
+        run: bash scripts/check-schema-replay-drift.sh
+
       - name: Dry-run (nada é aplicado aqui)
         run: |
           echo "▶ Migrations pendentes em $SUPABASE_PROJECT_REF:"
@@ -170,7 +180,12 @@ jobs:
       - name: Link no projeto alvo
         run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
 
+      - name: Run em dia? (evita vermelho falso de run superado)
+        id: frescor
+        run: bash scripts/check-run-freshness.sh
+
       - name: Dry-run (plano impresso; nada e aplicado aqui)
+        if: steps.frescor.outputs.aplicar == 'true'
         # Veio do job `plan`, que nao roda em push. Mantem o principio 4:
         # todo push em producao imprime o plano antes de aplicar.
         run: |
@@ -179,15 +194,26 @@ jobs:
           supabase db push --dry-run --linked
 
       - name: Aplicar migrations
+        if: steps.frescor.outputs.aplicar == 'true'
         # --yes: sem isso o CLI aborta quando stdout não é TTY (runner GH),
         #         como visto no run 43527722866 ("cannot ask... Nothing was changed").
         #         O dry-run da etapa anterior já imprimiu o plano; -y só confirma.
         run: supabase db push --yes --linked
 
       - name: Estado final do histórico
+        if: steps.frescor.outputs.aplicar == 'true'
         run: supabase migration list --linked
 
+      - name: Guarda de schema (banco x replay das migrations)
+        # Estrita aqui: depois do push o banco tem que ter exatamente o que as
+        # migrations declaram. CREATE no diff = objeto declarado e ausente do
+        # banco (o caso que passou batido na 20261124070000 antes da #172).
+        env:
+          STRICT: '1'
+        run: bash scripts/check-schema-replay-drift.sh
+
       - name: Confere que o push realmente aplicou tudo
+        if: steps.frescor.outputs.aplicar == 'true'
         # Guarda que faltava: o job apply ja reportou success deixando migrations
         # sem aplicar. Falha se qualquer .sql do repo ficar de fora do historico.
         run: bash scripts/check-migration-drift.sh
