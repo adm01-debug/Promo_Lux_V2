@@ -3,9 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://esm.sh/zod@3.23.8";
 
 const ALLOWED_ORIGINS = [
-  "https://lux-ai-company-finder.lovable.app",
   "https://promo-lux-v2.vercel.app",
-  "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
 ];
 
 function isLocalDevOrigin(origin: string): boolean {

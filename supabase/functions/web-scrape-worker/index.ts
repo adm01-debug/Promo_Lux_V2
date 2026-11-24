@@ -40,7 +40,7 @@ const DEFAULT_TIMEOUT_MS = 20_000;
 const MAX_REDIRECTS = 5;
 const ROBOTS_TTL_HOURS = 24;
 const WORKER_ID = `web-worker-${crypto.randomUUID().slice(0, 8)}`;
-const USER_AGENT = "lux-web-scraper/1.0 (+https://lux-ai-finder.lovable.app)";
+const USER_AGENT = "lux-web-scraper/1.0 (+https://promo-lux-v2.vercel.app)";
 
 interface QueueTask {
   id: string;

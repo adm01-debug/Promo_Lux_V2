@@ -2,9 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { RLS_TABLES, RLS_TABLES_EXEMPT, ENV_EXEMPT_TABLES, type AppEnv } from "../_shared/rlsTableRegistry.ts";
 
 const ALLOWED_ORIGINS = [
-  "https://lux-ai-company-finder.lovable.app",
   "https://promo-lux-v2.vercel.app",
-  "https://id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
   "http://localhost:8080",
   "http://localhost:8081",
   "http://localhost:8082",

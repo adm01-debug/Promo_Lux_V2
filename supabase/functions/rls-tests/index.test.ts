@@ -40,7 +40,7 @@ function corsAndJson(extra: Record<string, string> = {}) {
   return {
     apikey: ANON_KEY,
     "Content-Type": "application/json",
-    Origin: "https://lux-ai-company-finder.lovable.app",
+    Origin: "https://promo-lux-v2.vercel.app",
     ...extra,
   };
 }

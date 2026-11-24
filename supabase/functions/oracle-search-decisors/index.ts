@@ -42,11 +42,7 @@ import { buildExistingKeyIndex, dedupeLeads, leadIdentity } from "../_shared/lea
 
 
 const ALLOWED_ORIGINS = [
-  "https://lux-ai-company-finder.lovable.app",
   "https://promo-lux-v2.vercel.app",
-  "https://lux-ai-finder.lovable.app",
-  "https://2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-  "https://id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
   "http://localhost:8080",
   "http://localhost:8081",
   "http://localhost:8082",
