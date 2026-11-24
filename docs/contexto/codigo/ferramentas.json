@@ -8,7 +8,7 @@
    "Markdown (87)",
    "JSON (38)",
    "JavaScript (23)",
-   "Shell (14)",
+   "Shell (16)",
    "YAML (11)",
    "Python (5)"
   ],
@@ -276,7 +276,9 @@
    "scripts_usados": [
     "scripts/check-migration-drift.sh",
     "scripts/check-migration-target.sh",
-    "scripts/check-migrations.sh"
+    "scripts/check-migrations.sh",
+    "scripts/check-run-freshness.sh",
+    "scripts/check-schema-replay-drift.sh"
    ],
    "npm_scripts": [],
    "secrets": [

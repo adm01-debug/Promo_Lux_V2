@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 51,
+ "total": 53,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -88,7 +88,7 @@
   {
    "arquivo": "scripts/check-migration-drift.sh",
    "descricao": "--------------------------------------------------------------------------- check-migration-drift.sh",
-   "linhas": 106,
+   "linhas": 148,
    "env": [],
    "npm_scripts": [],
    "workflows": [
@@ -128,6 +128,28 @@
    "npm_scripts": [],
    "workflows": [
     "ci.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-run-freshness.sh",
+   "descricao": "--------------------------------------------------------------------------- check-run-freshness.sh",
+   "linhas": 54,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "db-migrations.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-schema-replay-drift.sh",
+   "descricao": "--------------------------------------------------------------------------- check-schema-replay-drift.sh",
+   "linhas": 92,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "db-migrations.yml"
    ],
    "orfao": false
   },

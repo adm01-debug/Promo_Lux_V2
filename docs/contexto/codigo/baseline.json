@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7f05370ea5ba4a1d8ebe55d4aa0cb2448d04c551",
+  "commit": "78ec030ed0ee328073c32b90c564ecc54e73fc6a",
   "branch": "main",
-  "data_commit": "2026-11-24T09:37:56-03:00",
+  "data_commit": "2026-11-24T10:07:50-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "78ec030",
+    "data": "2026-11-24",
+    "assunto": "infra: guardas de drift de schema e de run superado no CI de migrations (#173)"
+   },
    {
     "sha": "7f05370",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "5c14e83",
     "data": "2026-11-22",
     "assunto": "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)"
-   },
-   {
-    "sha": "9e9f963",
-    "data": "2026-11-22",
-    "assunto": "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)"
    }
   ],
-  "arquivos_mudados_7d": 250,
+  "arquivos_mudados_7d": 252,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -172,6 +172,10 @@
     "mudancas": 7
    },
    {
+    "pasta": ".github/workflows/db-migrations.yml",
+    "mudancas": 6
+   },
+   {
     "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
@@ -180,19 +184,15 @@
     "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 5
-   },
-   {
     "pasta": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
    {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 4
+    "pasta": "scripts/automation.config.json",
+    "mudancas": 5
    },
    {
-    "pasta": "docs/agentes/lovable-deploy.md",
+    "pasta": ".github/workflows/ci.yml",
     "mudancas": 4
    }
   ],
@@ -222,6 +222,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": ".github/workflows/db-migrations.yml",
+    "mudancas": 6
+   },
+   {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
@@ -230,11 +234,11 @@
     "mudancas": 6
    },
    {
-    "arquivo": ".github/workflows/db-migrations.yml",
+    "arquivo": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
    {
-    "arquivo": "docs/ESTADO_ATUAL.md",
+    "arquivo": "scripts/automation.config.json",
     "mudancas": 5
    },
    {
@@ -243,10 +247,6 @@
    },
    {
     "arquivo": "docs/agentes/lovable-deploy.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 123
+    "commits": 124
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1132,
+  "arquivos_total": 1134,
   "arquivos_codigo": 710,
   "linhas_codigo": 124449,
   "rotas": 12,
@@ -326,7 +326,7 @@
   "cron_jobs": 39,
   "testes": 128,
   "workflows": 9,
-  "scripts": 51,
+  "scripts": 53,
   "docs_md": 87
  },
  "por_pasta": {

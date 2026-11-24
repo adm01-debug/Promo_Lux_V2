@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "7f05370ea5ba4a1d8ebe55d4aa0cb2448d04c551",
+  "sha": "78ec030ed0ee328073c32b90c564ecc54e73fc6a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 12:38 UTC",
-  "files_total": 1151,
+  "generated_at": "2026-11-24 13:08 UTC",
+  "files_total": 1153,
   "code_files": 969,
   "code_lines": 145404
  },
@@ -101394,10 +101394,23 @@
   }
  },
  "git": {
-  "sha": "7f05370ea5ba4a1d8ebe55d4aa0cb2448d04c551",
+  "sha": "78ec030ed0ee328073c32b90c564ecc54e73fc6a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "78ec030",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "infra: guardas de drift de schema e de run superado no CI de migrations (#173)",
+    "files": [
+     ".github/workflows/db-migrations.yml",
+     "scripts/automation.config.json",
+     "scripts/check-migration-drift.sh",
+     "scripts/check-run-freshness.sh",
+     "scripts/check-schema-replay-drift.sh"
+    ]
+   },
    {
     "sha": "7f05370",
     "date": "2026-11-24",
@@ -101803,21 +101816,12 @@
      "supabase/migrations/20261122260000_dlp_pii_masking.sql",
      "supabase/migrations/20261122270000_next_best_action.sql"
     ]
-   },
-   {
-    "sha": "5f42ddf",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "chore(docs): corrige 14 linhas do gaps enterprise que ja existem no codigo (#126)",
-    "files": [
-     "docs/GAPS-ENTERPRISE.md"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    7
+    6
    ],
    [
     "src/integrations/supabase/types.ts",
@@ -101838,6 +101842,14 @@
    [
     "supabase/functions/mcp/index.ts",
     3
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    2
+   ],
+   [
+    "scripts/automation.config.json",
+    2
    ],
    [
     "supabase/config.toml",
@@ -101885,14 +101897,6 @@
    ],
    [
     "prs.json",
-    2
-   ],
-   [
-    "st.json",
-    2
-   ],
-   [
-    "AGENTS.md",
     2
    ]
   ]
