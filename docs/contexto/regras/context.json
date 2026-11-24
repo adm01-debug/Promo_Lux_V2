@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "a8b5edf14c8b3446f9d18132922162819adc1cb0",
+  "sha": "4bb36e5e4cdd7b345396407f3ae24dd7a4637c55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 15:21 UTC",
-  "files_total": 1156,
+  "generated_at": "2026-11-24 15:48 UTC",
+  "files_total": 1157,
   "code_files": 972,
   "code_lines": 145670
  },
@@ -101499,10 +101499,21 @@
   }
  },
  "git": {
-  "sha": "a8b5edf14c8b3446f9d18132922162819adc1cb0",
+  "sha": "4bb36e5e4cdd7b345396407f3ae24dd7a4637c55",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "4bb36e5",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)",
+    "files": [
+     ".github/workflows/db-migrations.yml",
+     "scripts/check-schema-replay-drift.sh",
+     "scripts/schema-drift-baseline.txt"
+    ]
+   },
    {
     "sha": "a8b5edf",
     "date": "2026-11-24",
@@ -101860,19 +101871,13 @@
     "files": [
      "docs/pendencias/_backlog-verificado.md"
     ]
-   },
-   {
-    "sha": "336b228",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "feat: aplica PermissionGate em deals e integracoes (#154)",
-    "files": [
-     "src/components/lux/DealsView.tsx",
-     "src/components/lux/IntegrationsView.tsx"
-    ]
    }
   ],
   "hot_files": [
+   [
+    ".github/workflows/db-migrations.yml",
+    4
+   ],
    [
     "docs/GAPS-ENTERPRISE.md",
     4
@@ -101882,11 +101887,11 @@
     4
    ],
    [
-    "supabase/functions/public-api/index.ts",
+    "scripts/check-schema-replay-drift.sh",
     3
    ],
    [
-    ".github/workflows/db-migrations.yml",
+    "supabase/functions/public-api/index.ts",
     3
    ],
    [
@@ -101896,10 +101901,6 @@
    [
     "src/components/lux/SettingsView.tsx",
     3
-   ],
-   [
-    "scripts/check-schema-replay-drift.sh",
-    2
    ],
    [
     "inventario/estado/edges.json",
@@ -101926,6 +101927,10 @@
     2
    ],
    [
+    "scripts/schema-drift-baseline.txt",
+    1
+   ],
+   [
     "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
     1
    ],
@@ -101947,10 +101952,6 @@
    ],
    [
     "supabase/functions/auth-rate-limit/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/gmaps-proxy/index.ts",
     1
    ]
   ]

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a8b5edf14c8b3446f9d18132922162819adc1cb0",
+  "commit": "4bb36e5e4cdd7b345396407f3ae24dd7a4637c55",
   "branch": "main",
-  "data_commit": "2026-11-24T12:21:26-03:00",
+  "data_commit": "2026-11-24T12:48:00-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "4bb36e5",
+    "data": "2026-11-24",
+    "assunto": "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)"
+   },
    {
     "sha": "a8b5edf",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "c5a2f41",
     "data": "2026-11-23",
     "assunto": "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)"
-   },
-   {
-    "sha": "cf23a12",
-    "data": "2026-11-23",
-    "assunto": "feat: steps de workflow controlam quais fases do engine executam (#158)"
    }
   ],
-  "arquivos_mudados_7d": 259,
+  "arquivos_mudados_7d": 260,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -160,16 +160,16 @@
     "mudancas": 9
    },
    {
+    "pasta": ".github/workflows/db-migrations.yml",
+    "mudancas": 8
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 8
    },
    {
     "pasta": "AGENTS.md",
     "mudancas": 8
-   },
-   {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 7
    },
    {
     "pasta": "supabase/config.toml",
@@ -210,16 +210,16 @@
     "mudancas": 9
    },
    {
+    "arquivo": ".github/workflows/db-migrations.yml",
+    "mudancas": 8
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 8
    },
    {
     "arquivo": "supabase/config.toml",
     "mudancas": 8
-   },
-   {
-    "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 7
    },
    {
     "arquivo": "src/integrations/supabase/types.ts",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 133
+    "commits": 134
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1137,
+  "arquivos_total": 1138,
   "arquivos_codigo": 710,
   "linhas_codigo": 124470,
   "rotas": 12,

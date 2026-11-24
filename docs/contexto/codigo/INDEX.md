@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a8b5edf14c8b3446f9d18132922162819adc1cb0` (2026-11-24T12:21:26-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `4bb36e5e4cdd7b345396407f3ae24dd7a4637c55` (2026-11-24T12:48:00-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1137 |
+| arquivos_total | 1138 |
 | arquivos_codigo | 710 |
 | linhas_codigo | 124470 |
 | rotas | 12 |
@@ -259,8 +259,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7869 nós · 16673 arestas · 699 comunidades · grafo do commit `a8b5edf1`
-- comunidades maiores: Monitoring.tsx (202), react (189), @tanstack/react-query (173), EmailAccountsPanel.tsx (154), framer-motion (116), snapshot.py (102), cn (87), gerar.mjs (80), ref_node_fs (77), generate.py (73), campaign-dispatch/index.ts (67), dependencies (65)
+- 7872 nós · 16677 arestas · 670 comunidades · grafo do commit `4bb36e5e`
+- comunidades maiores: Monitoring.tsx (151), OrganizationsView.tsx (138), cn (130), react (125), snapshot.py (108), badge.tsx (98), @tanstack/react-query (89), DashboardView.tsx (86), gerar.mjs (80), useActiveOrganization (78), generate.py (73), vitest (72)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -268,9 +268,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - package-lock.json (18)
 - package.json (17)
 - docs/GAPS-ENTERPRISE.md (9)
+- .github/workflows/db-migrations.yml (8)
 - AGENTS.md (8)
 - supabase/config.toml (8)
-- .github/workflows/db-migrations.yml (7)
 - src/integrations/supabase/types.ts (7)
 - supabase/functions/gmaps-proxy/index.ts (7)
 - .github/workflows/edge-tests-daily.yml (6)
@@ -376,6 +376,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `4bb36e5` fix: guarda de drift para de fechar o run de producao com falso positivo (#186)
 - 2026-11-24 `a8b5edf` ﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)
 - 2026-11-24 `8444c90` fix: taxa de erro da API conta so falha de servidor (5xx) (#184)
 - 2026-11-24 `8da6120` fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)
@@ -390,7 +391,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `25e2bf3` chore: inventario do estado real (semanal)
 - 2026-11-24 `faad34a` fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)
 - 2026-11-24 `588525f` fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)
-- 2026-11-23 `23e9378` chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
