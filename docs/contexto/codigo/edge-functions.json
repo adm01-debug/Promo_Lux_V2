@@ -1070,7 +1070,7 @@
    "nome": "latency-alerts",
    "entrada": "supabase/functions/latency-alerts/index.ts",
    "arquivos": 1,
-   "linhas": 80,
+   "linhas": 89,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"

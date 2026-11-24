@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4bb36e5e4cdd7b345396407f3ae24dd7a4637c55",
+  "commit": "b7314d44f0ca28ae19faf2f36701ddde92c24c69",
   "branch": "main",
-  "data_commit": "2026-11-24T12:48:00-03:00",
+  "data_commit": "2026-11-24T12:55:34-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b7314d4",
+    "data": "2026-11-24",
+    "assunto": "fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)"
+   },
    {
     "sha": "4bb36e5",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "076479d",
     "data": "2026-11-23",
     "assunto": "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)"
-   },
-   {
-    "sha": "c5a2f41",
-    "data": "2026-11-23",
-    "assunto": "feat(intel): technographics-detect — detecta 41 tecnologias via HTML scraping (#165)"
    }
   ],
   "arquivos_mudados_7d": 260,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 134
+    "commits": 135
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1138,
   "arquivos_codigo": 710,
-  "linhas_codigo": 124470,
+  "linhas_codigo": 124479,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 25018
+   "linhas": 25027
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -710,7 +710,7 @@
   }
  ],
  "qualidade": {
-  "any": 25,
+  "any": 24,
   "console_log": 93,
   "ts_ignore": 0,
   "eslint_disable": 0,
