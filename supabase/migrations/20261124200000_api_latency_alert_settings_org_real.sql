@@ -1,4 +1,4 @@
-﻿-- ---------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------
 -- Habilita a avaliacao de alertas de latencia para a organizacao com trafego
 -- ---------------------------------------------------------------------------
 -- `latency-alerts` (edge function) so itera organizacoes que tem linha
