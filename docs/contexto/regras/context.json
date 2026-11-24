@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "03dbb45138b358f043aeacb82799c00cc27b5d3e",
+  "sha": "c326fd548f8d22ca31fccbbf96db1e67c87e17c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 17:15 UTC",
-  "files_total": 1159,
-  "code_files": 974,
-  "code_lines": 145795
+  "generated_at": "2026-11-24 17:27 UTC",
+  "files_total": 1161,
+  "code_files": 976,
+  "code_lines": 145883
  },
  "version": "1.3.2",
- "facts_hash": "be1460bf80bcfd40",
+ "facts_hash": "7d92c82b7fefae65",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 302,
-   ".sql": 260,
+   ".sql": 262,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -23396,6 +23396,8 @@
    "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
    "supabase/migrations/20261124190000_public_api_smoke_cron.sql",
    "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql",
+   "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
+   "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -34118,8 +34120,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 256,
-   "lines": 19463,
+   "files": 258,
+   "lines": 19551,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -101512,13 +101514,31 @@
   "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql": {
    "path": "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql",
    "lines": 23
+  },
+  "supabase/migrations/20261124210000_public_api_warmup_cron.sql": {
+   "path": "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
+   "lines": 65
+  },
+  "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql": {
+   "path": "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
+   "lines": 23
   }
  },
  "git": {
-  "sha": "03dbb45138b358f043aeacb82799c00cc27b5d3e",
+  "sha": "c326fd548f8d22ca31fccbbf96db1e67c87e17c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c326fd5",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa",
+    "files": [
+     "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
+     "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql"
+    ]
+   },
    {
     "sha": "03dbb45",
     "date": "2026-11-24",
@@ -101861,24 +101881,6 @@
      "supabase/functions/public-api/index.ts",
      "supabase/functions/technographics-detect/index.ts"
     ]
-   },
-   {
-    "sha": "cf23a12",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "feat: steps de workflow controlam quais fases do engine executam (#158)",
-    "files": [
-     "docs/GAPS-ENTERPRISE.md",
-     "src/components/automation/WorkflowEditor.tsx",
-     "src/components/lux/WorkflowsView.tsx",
-     "src/components/lux/__tests__/WorkflowsView.test.tsx",
-     "src/components/lux/monitoring/JobDetailsSheet.tsx",
-     "src/components/lux/workflows/WorkflowCard.tsx",
-     "src/lib/api/workflows.ts",
-     "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
-     "supabase/functions/_shared/workflow-phases.ts",
-     "supabase/functions/workflow-engine/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -101891,15 +101893,7 @@
     4
    ],
    [
-    "docs/GAPS-ENTERPRISE.md",
-    4
-   ],
-   [
     "scripts/check-schema-replay-drift.sh",
-    3
-   ],
-   [
-    "supabase/functions/workflow-engine/index.ts",
     3
    ],
    [
@@ -101907,8 +101901,16 @@
     3
    ],
    [
+    "docs/GAPS-ENTERPRISE.md",
+    3
+   ],
+   [
     "src/integrations/supabase/types.ts",
     3
+   ],
+   [
+    "supabase/functions/workflow-engine/index.ts",
+    2
    ],
    [
     "inventario/estado/edges.json",
@@ -101935,6 +101937,14 @@
     2
    ],
    [
+    "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
+    1
+   ],
+   [
     "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql",
     1
    ],
@@ -101952,14 +101962,6 @@
    ],
    [
     "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql",
-    1
-   ],
-   [
-    "index.html",
     1
    ]
   ]

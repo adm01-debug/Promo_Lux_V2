@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 256,
+ "migrations": 258,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1279,6 +1279,12 @@
    "nome": "public-api-smoke-15min",
    "agenda": "2,17,32,47 * * * *",
    "migration": "20261124190000_public_api_smoke_cron.sql",
+   "chama_edge": "public-api"
+  },
+  {
+   "nome": "public-api-warmup-15min",
+   "agenda": "1,16,31,46 * * * *",
+   "migration": "20261124210000_public_api_warmup_cron.sql",
    "chama_edge": "public-api"
   },
   {

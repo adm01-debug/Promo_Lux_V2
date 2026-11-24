@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "03dbb45138b358f043aeacb82799c00cc27b5d3e",
+  "commit": "c326fd548f8d22ca31fccbbf96db1e67c87e17c4",
   "branch": "main",
-  "data_commit": "2026-11-24T14:14:31-03:00",
+  "data_commit": "2026-11-24T14:27:08-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c326fd5",
+    "data": "2026-11-24",
+    "assunto": "chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa"
+   },
    {
     "sha": "03dbb45",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "f5416a9",
     "data": "2026-11-23",
     "assunto": "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)"
-   },
-   {
-    "sha": "b39b3b2",
-    "data": "2026-11-23",
-    "assunto": "feat: liga a UI de configuracao dos alertas de disjuntor (#153)"
    }
   ],
-  "arquivos_mudados_7d": 262,
+  "arquivos_mudados_7d": 264,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 138
+    "commits": 139
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1140,
+  "arquivos_total": 1142,
   "arquivos_codigo": 710,
   "linhas_codigo": 124507,
   "rotas": 12,
@@ -322,8 +322,8 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 256,
-  "cron_jobs": 41,
+  "migrations": 258,
+  "cron_jobs": 42,
   "testes": 128,
   "workflows": 9,
   "scripts": 53,

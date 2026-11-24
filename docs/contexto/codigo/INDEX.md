@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `03dbb45138b358f043aeacb82799c00cc27b5d3e` (2026-11-24T14:14:31-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c326fd548f8d22ca31fccbbf96db1e67c87e17c4` (2026-11-24T14:27:08-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (683), SQL (260), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (683), SQL (262), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1140 |
+| arquivos_total | 1142 |
 | arquivos_codigo | 710 |
 | linhas_codigo | 124507 |
 | rotas | 12 |
@@ -46,8 +46,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 97 |
 | edge_functions | 65 |
 | tabelas | 120 |
-| migrations | 256 |
-| cron_jobs | 41 |
+| migrations | 258 |
+| cron_jobs | 42 |
 | testes | 128 |
 | workflows | 9 |
 | scripts | 53 |
@@ -213,6 +213,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `prune-qa-reaper-runs-daily` 47 3 * * * (20261121210000_retencao_cron_runs_e_qa_reaper.sql)
 - `prune-scheduled-report-runs-monthly` 53 3 1 * * → edge send-scheduled-reports (20261121230000_scheduled_reports_bulk_imports_role_permissions.sql)
 - `public-api-smoke-15min` 2,17,32,47 * * * * → edge public-api (20261124190000_public_api_smoke_cron.sql)
+- `public-api-warmup-15min` 1,16,31,46 * * * * → edge public-api (20261124210000_public_api_warmup_cron.sql)
 - `purge-dead-letter-daily` 17 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `purge-soft-deleted-daily` 0 3 * * * → edge purge-soft-deleted (20261121190000_version_crons_with_vault_key.sql)
 - `reap-stuck-queue-tasks` * * * * * (20260723134028_4f3b5c29-1e04-4d63-95d1-2bb0f069e917.sql)
@@ -260,7 +261,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7874 nós · 16677 arestas · 672 comunidades · grafo do commit `03dbb451`
+- 7876 nós · 16677 arestas · 674 comunidades · grafo do commit `c326fd54`
 - comunidades maiores: Monitoring.tsx (151), OrganizationsView.tsx (138), cn (130), react (125), snapshot.py (108), badge.tsx (98), @tanstack/react-query (89), DashboardView.tsx (86), gerar.mjs (80), useActiveOrganization (78), generate.py (73), vitest (72)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -377,6 +378,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `c326fd5` chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa
 - 2026-11-24 `03dbb45` perf(api-publica): /me em 1 round-trip em vez de 2
 - 2026-11-24 `8dec4b5` feat: habilita alerta de latencia da organizacao com trafego real (#189)
 - 2026-11-24 `e0648b2` ﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)
@@ -391,7 +393,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `1317d20` chore: inventario do estado real (gerado em 24/11) (#180)
 - 2026-11-24 `8771961` fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)
 - 2026-11-24 `d4ad14d` fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)
-- 2026-11-24 `78ec030` infra: guardas de drift de schema e de run superado no CI de migrations (#173)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
