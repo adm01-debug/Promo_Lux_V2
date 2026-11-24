@@ -14,6 +14,8 @@
 #      gerenciados pelo Supabase).
 #   5. Todo CREATE TABLE em public tem GRANT + ENABLE ROW LEVEL SECURITY na
 #      mesma migration.
+#   6. Arquivo sem BOM UTF-8: com BOM o Postgres recusa o primeiro statement
+#      (SQLSTATE 42601) e qualquer replay limpo para no arquivo.
 # ---------------------------------------------------------------------------
 set -uo pipefail
 
@@ -65,7 +67,7 @@ fi
 
 echo "▶ Validando ${#FILES[@]} migrations em $DIR"
 
-# --- 1 e 3: formato do nome e arquivo não vazio -----------------------------
+# --- 1, 3 e 6: formato do nome, arquivo não vazio e ausência de BOM ---------
 for f in "${FILES[@]}"; do
   base=$(basename "$f")
   if ! [[ "$base" =~ ^[0-9]{14}_[A-Za-z0-9._-]+\.sql$ ]]; then
@@ -73,6 +75,11 @@ for f in "${FILES[@]}"; do
   fi
   if [ ! -s "$f" ]; then
     fail "Migration vazia: $base"
+  fi
+  # BOM UTF-8 (EF BB BF) vira parte do primeiro token e o Postgres aborta o
+  # statement; o Supabase Preview quebrou exatamente assim em 20261124040000.
+  if [ "$(head -c 3 "$f" | od -An -tx1 | tr -d ' \n')" = "efbbbf" ]; then
+    fail "$base: começa com BOM UTF-8 — remova com: sed -i '1s/^\xEF\xBB\xBF//' $f"
   fi
 done
 

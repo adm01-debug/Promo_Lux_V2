@@ -1,4 +1,4 @@
-﻿-- SCIM 2.0 provisioning support
+-- SCIM 2.0 provisioning support
 -- Adds scim_external_id + scim_active to organization_members,
 -- and scim_bearer_token (hashed) to organizations.
 
