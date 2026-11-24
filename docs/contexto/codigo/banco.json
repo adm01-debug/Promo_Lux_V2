@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 261,
+ "migrations": 262,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1672,6 +1672,20 @@
      "default": "now()",
      "ref": null
     },
+    "error_rate": {
+     "tipo": "numeric",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "error_rate_critical_pct": {
+     "tipo": "numeric",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
     "id": {
      "tipo": "uuid",
      "nn": true,
@@ -1706,6 +1720,13 @@
      "pk": false,
      "default": null,
      "ref": null
+    },
+    "requests": {
+     "tipo": "bigint",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
     }
    },
    "rls": true,
@@ -1732,11 +1753,14 @@
     "admins_notified": "number",
     "consecutive": "number",
     "created_at": "string",
+    "error_rate": "number | null",
+    "error_rate_critical_pct": "number | null",
     "id": "string",
     "organization_id": "string",
     "p95_critical_ms": "number",
     "p95_ms": "number",
-    "path": "string"
+    "path": "string",
+    "requests": "number | null"
    },
    "drift": {
     "so_na_migration": [],
@@ -1771,6 +1795,13 @@
      "nn": true,
      "pk": false,
      "default": "true",
+     "ref": null
+    },
+    "error_rate_critical_pct": {
+     "tipo": "numeric",
+     "nn": true,
+     "pk": false,
+     "default": "5",
      "ref": null
     },
     "organization_id": {
@@ -1831,6 +1862,7 @@
     "consecutive": "number",
     "cooldown_hours": "number",
     "enabled": "boolean",
+    "error_rate_critical_pct": "number",
     "organization_id": "string",
     "p95_critical_ms": "number",
     "updated_at": "string"

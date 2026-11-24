@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9894b1d999` · branch `main` · 2026-11-24 20:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9b3dabf47f` · branch `main` · 2026-11-24 21:20 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -9,8 +9,8 @@
 |---|---|---|---|
 | `agent_chat_messages` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `api_keys` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
-| `api_latency_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
-| `api_latency_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
+| `api_latency_alert_history` | _(sem COMMENT ON TABLE — significado não documentado)_ | 11 colunas | migration |
+| `api_latency_alert_settings` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `api_latency_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `api_rate_limits` | _(sem COMMENT ON TABLE — significado não documentado)_ | 6 colunas | migration |
 | `api_request_logs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 15 colunas | migration |

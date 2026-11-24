@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9894b1d9998d2eea970d30c7b5e3b81ada706367",
+  "commit": "9b3dabf47fa0170ba3362c5de3fe8e238b4be13c",
   "branch": "main",
-  "data_commit": "2026-11-24T17:39:20-03:00",
+  "data_commit": "2026-11-24T18:19:08-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9b3dabf",
+    "data": "2026-11-24",
+    "assunto": "fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)"
+   },
    {
     "sha": "9894b1d",
     "data": "2026-11-24",
@@ -126,18 +131,13 @@
     "sha": "23e9378",
     "data": "2026-11-23",
     "assunto": "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)"
-   },
-   {
-    "sha": "90d7ac8",
-    "data": "2026-11-23",
-    "assunto": "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)"
    }
   ],
-  "arquivos_mudados_7d": 267,
+  "arquivos_mudados_7d": 270,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 69
+    "mudancas": 70
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -153,7 +153,7 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 16
+    "mudancas": 17
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -218,12 +218,12 @@
     "mudancas": 8
    },
    {
-    "arquivo": "supabase/config.toml",
+    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 8
    },
    {
-    "arquivo": "src/integrations/supabase/types.ts",
-    "mudancas": 7
+    "arquivo": "supabase/config.toml",
+    "mudancas": 8
    },
    {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 142
+    "commits": 143
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1145,
+  "arquivos_total": 1146,
   "arquivos_codigo": 710,
-  "linhas_codigo": 124553,
+  "linhas_codigo": 124600,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 261,
+  "migrations": 262,
   "cron_jobs": 42,
   "testes": 128,
   "workflows": 9,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 308,
-   "linhas": 51133
+   "linhas": 51158
   },
   "src/contexts": {
    "arquivos": 7,
@@ -564,11 +564,11 @@
   },
   "src/hooks": {
    "arquivos": 103,
-   "linhas": 11613
+   "linhas": 11623
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 8957
+   "linhas": 8969
   },
   "src/lib": {
    "arquivos": 53,
@@ -610,7 +610,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7573
+   "linhas": 7585
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",

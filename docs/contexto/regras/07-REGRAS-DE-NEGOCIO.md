@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9894b1d999` · branch `main` · 2026-11-24 20:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9b3dabf47f` · branch `main` · 2026-11-24 21:20 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `email_sync_log` | `created_at` | default now() |
 | `oauth_sandbox_snapshots` | `id` | PK; default gen_random_uuid() |
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
-| … +834 linhas — lista completa em `context.json` | | |
+| … +835 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -784,7 +784,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `validate_api_latency_alert_settings` | p95_critical_ms deve ser >= 1 | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `validate_api_latency_alert_settings` | consecutive deve estar entre 1 e 24 | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `validate_api_latency_alert_settings` | cooldown_hours deve estar entre 1 e 168 | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
-| `evaluate_api_latency_alerts` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `prune_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql` |
 | `check_oracle_rate_limit` | organization_id é obrigatório | `supabase/migrations/20260715170326_8df3cb34-aee7-4980-903a-e98875f35c75.sql` |
 | `capture_circuit_breaker_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260715190111_34d421ca-d6a1-4754-ad88-4566225925c9.sql` |
@@ -904,6 +903,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fn_lux_save_enriched_contact` | full_name Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql` |
 | `public_api_list` | recurso nao permitido na API publica: % | `supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql` |
+| `evaluate_api_latency_alerts` | Acesso negado | `supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -1389,6 +1389,7 @@ _nenhum item encontrado_
 | `lat-pc` | type=number, min=1, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
 | `lat-cons` | type=number, min=1, max=24, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
 | `lat-cd` | type=number, min=1, max=168, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
+| `lat-er` | type=number, min=1, max=100, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
 | `cb-thr` | type=number, min=1, max=100, disabled=!isAdmin | `src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx` |
 | `cb-cd` | type=number, min=1, max=1440, disabled=!isAdmin | `src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx` |
 | `dlq-pc` | type=number, min=1, disabled=!isAdmin \|\| !state | `src/components/lux/monitoring/DlqAlertSettingsCard.tsx` |
@@ -1899,6 +1900,7 @@ _nenhum item encontrado_
 | `and created_at < now() - interval '1 hour';` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `locked_until = now() + interval '300 seconds',` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `(v_window + interval '1 hour');` | `supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql` |
+| `FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP` | `supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql` |
 
 ### H.3 Limites de paginação
 
@@ -2514,7 +2516,6 @@ _nenhum item encontrado_
 | * Lista snapshots de validação OAuth da organização e permite comparar dois | `src/components/lux/integrations/OAuthSnapshotsPanel.tsx` |
 | Degradado: serviços bloqueantes prontos, apenas opcionais (LinkedIn) com falha. | `src/components/lux/lusha/OracleV2Panel.tsx` |
 | nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(location)}`, | `src/components/lux/map/MapMarkerIcons.tsx` |
-| definem o limite crítico (ms), quantos ciclos consecutivos disparam o alerta | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
 | uma segunda regra de permissão que possa divergir do backend. | `src/components/lux/monitoring/QaHistoryPanel.tsx` |
 | buildCsv exportado apenas para uso externo/testes. | `src/components/lux/monitoring/ResilienceReport.tsx` |
 | RLS restringe SELECT/UPDATE a admins globais — para não-admins, o botão apenas | `src/components/lux/monitoring/SlaAlertSettingsCard.tsx` |
@@ -2527,6 +2528,7 @@ _nenhum item encontrado_
 | - Mostra/edita configurações da org ativa (limite, janela, cooldown). | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | * Acesso: apenas admins (gate feito por `usePermissions` no caller). | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Regras: company_id não vazio; user_id somente dígitos. | `src/hooks/oracleV2Helpers.ts` |
+| * Preenchido apenas quando o disparo veio da taxa de erro 5xx. */ | `src/hooks/useApiLatencyAlertSettings.ts` |
 | apenas administradores enxerguem os registros do próprio workspace. | `src/hooks/useAuditTrail.ts` |
 | * Configuração global (singleton) dos alertas de disjuntor. Somente admins | `src/hooks/useCircuitBreakerAlerts.ts` |
 | * Incrementa usage_count. Best-effort: falhar aqui nao deve travar o envio. */ | `src/hooks/useEmailTemplates.ts` |

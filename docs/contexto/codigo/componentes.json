@@ -1737,7 +1737,7 @@
     "ApiLatencyAlertSettingsCard"
    ],
    "export_default": null,
-   "linhas": 175,
+   "linhas": 200,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",

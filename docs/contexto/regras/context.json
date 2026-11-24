@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9894b1d9998d2eea970d30c7b5e3b81ada706367",
+  "sha": "9b3dabf47fa0170ba3362c5de3fe8e238b4be13c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 20:39 UTC",
-  "files_total": 1164,
-  "code_files": 979,
-  "code_lines": 146310
+  "generated_at": "2026-11-24 21:20 UTC",
+  "files_total": 1165,
+  "code_files": 980,
+  "code_lines": 146441
  },
  "version": "1.3.2",
- "facts_hash": "125c69118566f7c3",
+ "facts_hash": "de2d4b54fd310e39",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 302,
-   ".sql": 265,
+   ".sql": 266,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -5578,6 +5578,13 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
+     },
+     {
+      "name": "error_rate_critical_pct",
+      "type": "numeric NOT NULL DEFAULT 5",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
      }
     ],
     "constraints": [],
@@ -5642,6 +5649,27 @@
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
+     },
+     {
+      "name": "error_rate",
+      "type": "numeric",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
+     },
+     {
+      "name": "error_rate_critical_pct",
+      "type": "number | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
+     },
+     {
+      "name": "requests",
+      "type": "number | null",
+      "fk": "",
+      "generated": "",
+      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [],
@@ -17489,12 +17517,12 @@
     "args": "_p95_critical_ms integer DEFAULT 1500, _consecutive integer DEFAULT 3, _cooldown_hours integer DEFAULT 6",
     "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql",
+    "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_rec record; v_pc integer; v_cons integer; v_cd integer; v_enabled boolean; v_recent integer; v_peak numeric; v_last timestamptz; v_admin uuid; v_notified integer; v_alerts integer := 0; BEGIN IF auth.uid() IS NOT NULL AND NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'Acesso negado: requer papel de administrador'; END IF; FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP SELECT s.p95_critical_ms, s.consecutive, s.cooldown_hours, s.enabled INTO v_pc, v_cons, v_cd, v_enabled FROM public.api_latency_alert_settings s WHERE s.organization_id = v_rec.organization_id; v_pc := COALESCE( …",
+    "body": "DECLARE v_rec record; v_pc integer; v_cons integer; v_cd integer; v_enabled boolean; v_recent integer; v_peak numeric; v_last timestamptz; v_admin uuid; v_notified integer; v_alerts integer := 0; v_er_crit numeric; v_er_recent integer; v_er_peak numeric; v_er_requests bigint; BEGIN IF auth.uid() IS NOT NULL AND NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'Acesso negado'; END IF; FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP SELECT s.p95_critical_ms, s.consecutive, s.cooldown_hours, s.enabled, s.error_rate_critical_pct INTO v_pc, v_cons, v_cd, v_enabled, v_er_crit FROM public.api_lat …",
     "raises": [
-     "Acesso negado: requer papel de administrador"
+     "Acesso negado"
     ],
     "tables": [
      "api_latency_alert_history",
@@ -17502,6 +17530,7 @@
      "api_latency_snapshots",
      "notifications",
      "organization_members",
+     "v_er_recent",
      "v_last",
      "v_pc",
      "v_recent"
@@ -23453,6 +23482,7 @@
    "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
    "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
+   "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29345,11 +29375,6 @@
     "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
    },
    {
-    "function": "evaluate_api_latency_alerts",
-    "msg": "Acesso negado: requer papel de administrador",
-    "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
-   },
-   {
     "function": "prune_api_latency_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
@@ -29943,6 +29968,11 @@
     "function": "public_api_list",
     "msg": "recurso nao permitido na API publica: %",
     "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   },
+   {
+    "function": "evaluate_api_latency_alerts",
+    "msg": "Acesso negado",
+    "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
    }
   ],
   "seed": [],
@@ -33279,7 +33309,7 @@
   {
    "module": "src/components",
    "files": 308,
-   "lines": 51133,
+   "lines": 51158,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33525,7 +33555,7 @@
   {
    "module": "src/hooks",
    "files": 103,
-   "lines": 11613,
+   "lines": 11623,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -33740,7 +33770,7 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 8957,
+   "lines": 8969,
    "tables": [
     "automation_alerts",
     "companies",
@@ -34227,8 +34257,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 261,
-   "lines": 19932,
+   "files": 262,
+   "lines": 20016,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -35746,16 +35776,20 @@
     "admins_notified",
     "consecutive",
     "created_at",
+    "error_rate",
+    "error_rate_critical_pct",
     "id",
     "organization_id",
     "p95_critical_ms",
     "p95_ms",
-    "path"
+    "path",
+    "requests"
    ],
    "api_latency_alert_settings": [
     "consecutive",
     "cooldown_hours",
     "enabled",
+    "error_rate_critical_pct",
     "organization_id",
     "p95_critical_ms"
    ],
@@ -38270,6 +38304,11 @@
     "rules": "type=number, min=1, max=168, disabled=!isAdmin || !state"
    },
    {
+    "file": "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+    "field": "lat-er",
+    "rules": "type=number, min=1, max=100, disabled=!isAdmin || !state"
+   },
+   {
     "file": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
     "field": "cb-thr",
     "rules": "type=number, min=1, max=100, disabled=!isAdmin"
@@ -40238,10 +40277,6 @@
     "text": "nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(location)}`,"
    },
    {
-    "file": "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
-    "text": "definem o limite crítico (ms), quantos ciclos consecutivos disparam o alerta"
-   },
-   {
     "file": "src/components/lux/monitoring/QaHistoryPanel.tsx",
     "text": "uma segunda regra de permissão que possa divergir do backend."
    },
@@ -40288,6 +40323,10 @@
    {
     "file": "src/hooks/oracleV2Helpers.ts",
     "text": "Regras: company_id não vazio; user_id somente dígitos."
+   },
+   {
+    "file": "src/hooks/useApiLatencyAlertSettings.ts",
+    "text": "* Preenchido apenas quando o disparo veio da taxa de erro 5xx. */"
    },
    {
     "file": "src/hooks/useAuditTrail.ts",
@@ -43501,6 +43540,11 @@
     "table": "api_latency_alert_settings",
     "column": "updated_at",
     "rule": "default now()"
+   },
+   {
+    "table": "api_latency_alert_settings",
+    "column": "error_rate_critical_pct",
+    "rule": "default 5"
    },
    {
     "table": "api_latency_alert_history",
@@ -52653,6 +52697,10 @@
    {
     "file": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
     "line": "(v_window + interval '1 hour');"
+   },
+   {
+    "file": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
+    "line": "FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP"
    }
   ],
   "percents": [
@@ -63381,12 +63429,12 @@
     "args": "_p95_critical_ms integer DEFAULT 1500, _consecutive integer DEFAULT 3, _cooldown_hours integer DEFAULT 6",
     "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql",
+    "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_rec record; v_pc integer; v_cons integer; v_cd integer; v_enabled boolean; v_recent integer; v_peak numeric; v_last timestamptz; v_admin uuid; v_notified integer; v_alerts integer := 0; BEGIN IF auth.uid() IS NOT NULL AND NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'Acesso negado: requer papel de administrador'; END IF; FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP SELECT s.p95_critical_ms, s.consecutive, s.cooldown_hours, s.enabled INTO v_pc, v_cons, v_cd, v_enabled FROM public.api_latency_alert_settings s WHERE s.organization_id = v_rec.organization_id; v_pc := COALESCE( …",
+    "body": "DECLARE v_rec record; v_pc integer; v_cons integer; v_cd integer; v_enabled boolean; v_recent integer; v_peak numeric; v_last timestamptz; v_admin uuid; v_notified integer; v_alerts integer := 0; v_er_crit numeric; v_er_recent integer; v_er_peak numeric; v_er_requests bigint; BEGIN IF auth.uid() IS NOT NULL AND NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'Acesso negado'; END IF; FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP SELECT s.p95_critical_ms, s.consecutive, s.cooldown_hours, s.enabled, s.error_rate_critical_pct INTO v_pc, v_cons, v_cd, v_enabled, v_er_crit FROM public.api_lat …",
     "raises": [
-     "Acesso negado: requer papel de administrador"
+     "Acesso negado"
     ],
     "tables": [
      "api_latency_alert_history",
@@ -63394,6 +63442,7 @@
      "api_latency_snapshots",
      "notifications",
      "organization_members",
+     "v_er_recent",
      "v_last",
      "v_pc",
      "v_recent"
@@ -65920,11 +65969,6 @@
     "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
    },
    {
-    "function": "evaluate_api_latency_alerts",
-    "msg": "Acesso negado: requer papel de administrador",
-    "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
-   },
-   {
     "function": "prune_api_latency_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20260712220855_4ed03020-3c5a-4753-b895-59fc25ee7447.sql"
@@ -66518,6 +66562,11 @@
     "function": "public_api_list",
     "msg": "recurso nao permitido na API publica: %",
     "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   },
+   {
+    "function": "evaluate_api_latency_alerts",
+    "msg": "Acesso negado",
+    "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
    }
   ],
   "db_generated": [],
@@ -84029,7 +84078,7 @@
   },
   "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": {
    "path": "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
-   "lines": 175,
+   "lines": 200,
    "exports": [
     "function ApiLatencyAlertSettingsCard"
    ],
@@ -84045,6 +84094,10 @@
     {
      "field": "lat-cd",
      "rules": "type=number, min=1, max=168, disabled=!isAdmin || !state"
+    },
+    {
+     "field": "lat-er",
+     "rules": "type=number, min=1, max=100, disabled=!isAdmin || !state"
     }
    ],
    "status_values": [
@@ -84056,9 +84109,6 @@
    ],
    "role_checks": [
     "admin"
-   ],
-   "rule_comments": [
-    "definem o limite crítico (ms), quantos ciclos consecutivos disparam o alerta"
    ]
   },
   "src/components/lux/monitoring/ApiLatencyPanel.tsx": {
@@ -86564,7 +86614,7 @@
   },
   "src/hooks/useApiLatencyAlertSettings.ts": {
    "path": "src/hooks/useApiLatencyAlertSettings.ts",
-   "lines": 93,
+   "lines": 103,
    "exports": [
     "interface ApiLatencyAlertSettings",
     "const API_LATENCY_ALERT_DEFAULTS",
@@ -86592,6 +86642,7 @@
      "consecutive",
      "cooldown_hours",
      "enabled",
+     "error_rate_critical_pct",
      "organization_id",
      "p95_critical_ms"
     ],
@@ -86599,13 +86650,19 @@
      "admins_notified",
      "consecutive",
      "created_at",
+     "error_rate",
+     "error_rate_critical_pct",
      "id",
      "organization_id",
      "p95_critical_ms",
      "p95_ms",
-     "path"
+     "path",
+     "requests"
     ]
    },
+   "rule_comments": [
+    "* Preenchido apenas quando o disparo veio da taxa de erro 5xx. */"
+   ],
    "hooks": [
     "useApiLatencyAlertSettings",
     "useSaveApiLatencyAlertSettings",
@@ -90299,7 +90356,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 7573,
+   "lines": 7585,
    "exports": [
     "type Json",
     "type Database",
@@ -101728,13 +101785,32 @@
   "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql": {
    "path": "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
    "lines": 82
+  },
+  "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql": {
+   "path": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
+   "lines": 84,
+   "temporal": [
+    "FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP"
+   ]
   }
  },
  "git": {
-  "sha": "9894b1d9998d2eea970d30c7b5e3b81ada706367",
+  "sha": "9b3dabf47fa0170ba3362c5de3fe8e238b4be13c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9b3dabf",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)",
+    "files": [
+     "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+     "src/hooks/useApiLatencyAlertSettings.ts",
+     "src/integrations/supabase/types.ts",
+     "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
+    ]
+   },
    {
     "sha": "9894b1d",
     "date": "2026-11-24",
@@ -102067,15 +102143,6 @@
      "src/pages/Monitoring.tsx",
      "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
     ]
-   },
-   {
-    "sha": "dc01412",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)",
-    "files": [
-     ".github/workflows/db-migrations.yml"
-    ]
    }
   ],
   "hot_files": [
@@ -102084,8 +102151,12 @@
     5
    ],
    [
-    ".github/workflows/db-migrations.yml",
+    "src/integrations/supabase/types.ts",
     4
+   ],
+   [
+    ".github/workflows/db-migrations.yml",
+    3
    ],
    [
     "scripts/check-schema-replay-drift.sh",
@@ -102093,10 +102164,6 @@
    ],
    [
     "src/components/lux/SettingsView.tsx",
-    3
-   ],
-   [
-    "src/integrations/supabase/types.ts",
     3
    ],
    [
@@ -102128,6 +102195,18 @@
     2
    ],
    [
+    "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+    1
+   ],
+   [
+    "src/hooks/useApiLatencyAlertSettings.ts",
+    1
+   ],
+   [
+    "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
+    1
+   ],
+   [
     "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
     1
    ],
@@ -102145,18 +102224,6 @@
    ],
    [
     "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124190000_public_api_smoke_cron.sql",
-    1
-   ],
-   [
-    "supabase/functions/latency-alerts/index.ts",
     1
    ]
   ]
