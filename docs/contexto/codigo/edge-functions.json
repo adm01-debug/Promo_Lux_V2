@@ -1724,14 +1724,16 @@
    "nome": "qa-ingest-run",
    "entrada": "supabase/functions/qa-ingest-run/index.ts",
    "arquivos": 1,
-   "linhas": 110,
+   "linhas": 223,
    "verify_jwt": false,
    "metodos": [
     "OPTIONS",
     "POST"
    ],
    "tabelas": [
-    "qa_test_runs"
+    "qa_ingest_tokens",
+    "qa_test_runs",
+    "user_roles"
    ],
    "rpcs": [],
    "env": [
@@ -1742,7 +1744,9 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [
     "src/components/lux/monitoring/QaHistoryPanel.tsx"
    ],

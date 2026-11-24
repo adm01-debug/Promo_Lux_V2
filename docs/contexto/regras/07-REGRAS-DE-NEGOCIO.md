@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `23e9378798` · branch `main` · 2026-11-23 23:23 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `588525f4e3` · branch `main` · 2026-11-24 09:02 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `email_sync_log` | `created_at` | default now() |
 | `oauth_sandbox_snapshots` | `id` | PK; default gen_random_uuid() |
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
-| … +819 linhas — lista completa em `context.json` | | |
+| … +824 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -1115,7 +1115,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `CEO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CFO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CTO` | escreve | `src/lib/demoData.ts` |
-| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +11 |
+| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +12 |
 | `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
 | `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
 | `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
@@ -1959,6 +1959,7 @@ _nenhum item encontrado_
 | 5 | `supabase/functions/lead-score-ai/index.ts` |
 | 1 | `supabase/functions/lusha-decision-makers/index.ts` |
 | 2000 | `supabase/functions/oracle-search-decisors/index.ts` |
+| 50 | `supabase/functions/qa-ingest-run/index.ts` |
 | 1 | `supabase/functions/reaper-alerts/index.ts` |
 | 5000 | `supabase/functions/retry-policy-tuner/index.ts` |
 | 1 | `supabase/functions/rls-tests/index.ts` |
@@ -2294,6 +2295,7 @@ _nenhum item encontrado_
 | `viewer` | `src/hooks/usePermissions.ts` |
 | `input` | `src/hooks/useRolePermissions.ts` |
 | `admin` | `supabase/functions/hubspot-sync/index.ts` |
+| `admin` | `supabase/functions/qa-ingest-run/index.ts` |
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
@@ -2440,6 +2442,7 @@ _nenhum item encontrado_
 | `invoke(` | `src/components/lux/monitoring/InstagramConnectionPanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
+| `invoke(` | `src/components/lux/monitoring/QaHistoryPanel.tsx` |
 | `invoke(` | `src/components/lux/monitoring/VaultCookiesPanel.tsx` |
 | `invoke(` | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | `invoke(` | `src/components/lux/settings/HubSpotPanel.tsx` |
@@ -2501,6 +2504,7 @@ _nenhum item encontrado_
 | Degradado: serviços bloqueantes prontos, apenas opcionais (LinkedIn) com falha. | `src/components/lux/lusha/OracleV2Panel.tsx` |
 | nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(location)}`, | `src/components/lux/map/MapMarkerIcons.tsx` |
 | definem o limite crítico (ms), quantos ciclos consecutivos disparam o alerta | `src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx` |
+| uma segunda regra de permissão que possa divergir do backend. | `src/components/lux/monitoring/QaHistoryPanel.tsx` |
 | buildCsv exportado apenas para uso externo/testes. | `src/components/lux/monitoring/ResilienceReport.tsx` |
 | RLS restringe SELECT/UPDATE a admins globais — para não-admins, o botão apenas | `src/components/lux/monitoring/SlaAlertSettingsCard.tsx` |
 | sem permissão ou sem row | `src/components/lux/monitoring/SlaAlertSettingsCard.tsx` |
@@ -2661,6 +2665,7 @@ _nenhum item encontrado_
 | Só os campos de negócio legítimos abaixo passam; tudo mais é descartado | `supabase/functions/public-api/index.ts` |
 | Rate limit server-side por API key (janela fixa de 1h, RPC atômica) | `supabase/functions/public-api/index.ts` |
 | Parametros: ?limit=25&after=<id>&table=companies\|deals&action=INSERT\|UPDATE\|DELETE | `supabase/functions/public-api/index.ts` |
+| Devolvido em texto claro uma única vez; o banco guarda apenas o hash. | `supabase/functions/qa-ingest-run/index.ts` |
 | limitado: apenas leituras + inserts em history/notifications com cooldown. | `supabase/functions/reaper-alerts/index.ts` |
 | ignore — cleanup deve ser idempotente */ } | `supabase/functions/rls-tests/_fixtures.ts` |
 | * Classifica se um erro deve ser retentado (transitório) ou não (permanente). */ | `supabase/functions/scrape-queue-worker/index.ts` |

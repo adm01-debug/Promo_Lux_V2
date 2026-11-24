@@ -2607,6 +2607,9 @@
   "supabase/functions/purge-soft-deleted/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],
+  "supabase/functions/qa-ingest-run/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/reaper-alerts/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],

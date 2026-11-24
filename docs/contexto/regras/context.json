@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "23e9378798e8ba93dedf2b85e2e8e3320731c9b0",
+  "sha": "588525f4e3e1390f03965828a987d3a3bf1ab243",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-23 23:23 UTC",
-  "files_total": 1147,
-  "code_files": 965,
-  "code_lines": 144021
+  "generated_at": "2026-11-24 09:02 UTC",
+  "files_total": 1148,
+  "code_files": 966,
+  "code_lines": 144349
  },
  "version": "1.3.2",
- "facts_hash": "d9f29ca3351f018a",
+ "facts_hash": "e999064bf80eae1e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 301,
-   ".sql": 252,
+   ".sql": 253,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -246,6 +246,7 @@
   "monorepo_packages": [],
   "supabase_config": {
    "functions_no_jwt": [
+    "cnpj-enrich-worker",
     "qa-ingest-run",
     "admin-list-companies",
     "migrate-helper",
@@ -11222,6 +11223,63 @@
     ],
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
     "comment": "Integracoes externas por org (HubSpot, Salesforce, Slack, etc.)",
+    "origin": "migration"
+   },
+   "qa_ingest_tokens": {
+    "columns": [
+     {
+      "name": "id",
+      "type": "uuid PRIMARY KEY DEFAULT gen_random_uuid()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     },
+     {
+      "name": "label",
+      "type": "text NOT NULL DEFAULT 'CI'",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     },
+     {
+      "name": "token_hash",
+      "type": "text NOT NULL",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     },
+     {
+      "name": "created_by",
+      "type": "uuid REFERENCES auth.users(id) ON DELETE SET NULL",
+      "fk": "users.id ON DELETE SET NULL",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     },
+     {
+      "name": "created_at",
+      "type": "timestamptz NOT NULL DEFAULT now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     },
+     {
+      "name": "last_used_at",
+      "type": "timestamptz",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     },
+     {
+      "name": "revoked_at",
+      "type": "timestamptz",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
+    "comment": "Tokens de ingestao do pipeline de QA (somente hash SHA-256). Sem policies de RLS: acesso exclusivo da edge function qa-ingest-run via service_role.",
     "origin": "migration"
    },
    "deal_lost_reason_stats": {
@@ -22472,6 +22530,22 @@
     "unique": true,
     "where": "WHERE scim_external_id IS NOT NULL",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "name": "qa_ingest_tokens_token_hash_key",
+    "table": "qa_ingest_tokens",
+    "columns": "token_hash",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   },
+   {
+    "name": "qa_ingest_tokens_active_idx",
+    "table": "qa_ingest_tokens",
+    "columns": "created_at DESC",
+    "unique": false,
+    "where": "WHERE revoked_at IS NULL",
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
    }
   ],
   "cron_jobs": [
@@ -22799,6 +22873,7 @@
    "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
    "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
    "supabase/migrations/20261124040000_scim_provisioning.sql",
+   "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -22923,7 +22998,8 @@
    "warmup_profiles": "enabled",
    "campaign_warmup_state": "enabled",
    "workflow_run_events": "enabled",
-   "org_integrations": "enabled"
+   "org_integrations": "enabled",
+   "qa_ingest_tokens": "enabled"
   },
   "grants": [
    {
@@ -28357,6 +28433,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "qa_ingest_tokens",
+    "objkind": "table",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "qa_ingest_tokens",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
    }
   ],
   "raises": [
@@ -29148,7 +29240,10 @@
    "column:organization_members.scim_external_id": "ID externo do usuario no IdP (Okta, Azure AD, etc.) — preenchido pelo SCIM endpoint",
    "column:organization_members.scim_active": "Status de provisionamento SCIM; false = usuario desprovisionado pelo IdP",
    "column:organizations.scim_token_hash": "SHA-256 do bearer token SCIM da org; comparado pelo edge function scim",
-   "table:org_integrations": "Integracoes externas por org (HubSpot, Salesforce, Slack, etc.)"
+   "table:org_integrations": "Integracoes externas por org (HubSpot, Salesforce, Slack, etc.)",
+   "table:qa_ingest_tokens": "Tokens de ingestao do pipeline de QA (somente hash SHA-256). Sem policies de RLS: acesso exclusivo da edge function qa-ingest-run via service_role.",
+   "column:qa_ingest_tokens.token_hash": "encode(sha256(token::bytea),'hex') — mesmo formato usado por org_integrations/SCIM.",
+   "column:qa_ingest_tokens.revoked_at": "Preenchido no revoke; tokens revogados sao rejeitados e nao podem ser reativados."
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -29255,6 +29350,7 @@
     "invokes_transitive": [
      "instagram-connection-status",
      "instagram-worker-health",
+     "qa-ingest-run",
      "vault-cookie-health"
     ],
     "rpc_transitive": [
@@ -29552,7 +29648,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
      "cnpj_enrich_cache",
      "cnpj_enrich_queue"
@@ -30537,7 +30633,9 @@
     ],
     "auth": "PÚBLICA (verify_jwt=false em config.toml)",
     "tables": [
-     "qa_test_runs"
+     "qa_ingest_tokens",
+     "qa_test_runs",
+     "user_roles"
     ],
     "env": [
      "QA_INGEST_TOKEN",
@@ -30546,7 +30644,7 @@
     ],
     "external": [],
     "invokes": [],
-    "doc": "Edge Function: qa-ingest-run Recebe payloads do CI com resultado de suites (unit/edge/e2e) e grava em qa_test_runs. Autenticação via header x-qa-token (segredo QA_INGEST_TOKEN).",
+    "doc": "Edge Function: qa-ingest-run Recebe payloads do CI com resultado de suites (unit/edge/e2e) e grava em qa_test_runs. Autenticação via header x-qa-token: aceita o segredo de plataforma QA_INGEST_TOKEN (quando existir) ou um token ativo em public.qa_ingest_tokens — só o hash SHA-256 fica no banco, porq …",
     "errors": [],
     "side_effects": [],
     "webhook_events": [],
@@ -32455,7 +32553,7 @@
   {
    "module": "src/components",
    "files": 307,
-   "lines": 50618,
+   "lines": 50781,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33188,7 +33286,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 24884,
+   "lines": 24997,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -33236,6 +33334,7 @@
     "organizations",
     "pg_net_health_snapshots",
     "profiles",
+    "qa_ingest_tokens",
     "qa_reaper_runs",
     "qa_test_runs",
     "reaper_alert_history",
@@ -33402,8 +33501,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 248,
-   "lines": 18384,
+   "files": 249,
+   "lines": 18436,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -34477,6 +34576,17 @@
      "src/hooks/useSkin.ts"
     ]
    },
+   "qa_ingest_tokens": {
+    "select": [
+     "supabase/functions/qa-ingest-run/index.ts"
+    ],
+    "update": [
+     "supabase/functions/qa-ingest-run/index.ts"
+    ],
+    "insert": [
+     "supabase/functions/qa-ingest-run/index.ts"
+    ]
+   },
    "qa_reaper_runs": {
     "select": [
      "src/hooks/useReaperHistory.ts",
@@ -34756,6 +34866,7 @@
    "user_roles": {
     "select": [
      "supabase/functions/pg-net-watchdog/index.ts",
+     "supabase/functions/qa-ingest-run/index.ts",
      "supabase/functions/reaper-alerts/index.ts",
      "supabase/functions/sla-alerts/index.ts",
      "supabase/functions/sla-auto-tune/index.ts"
@@ -35500,6 +35611,14 @@
     "notification_prefs",
     "onboarding_completed",
     "skin"
+   ],
+   "qa_ingest_tokens": [
+    "created_at",
+    "id",
+    "label",
+    "last_used_at",
+    "revoked_at",
+    "token_hash"
    ],
    "qa_reaper_runs": [
     "duration_ms",
@@ -36765,6 +36884,9 @@
    ],
    "other": [
     "scripts/ai-context/cenarios.mjs"
+   ],
+   "qa-ingest-run": [
+    "src/components/lux/monitoring/QaHistoryPanel.tsx"
    ],
    "runtime-fn": [
     "scripts/ai-context/gerar.unit.mjs"
@@ -39274,6 +39396,10 @@
     "value": "admin"
    },
    {
+    "file": "supabase/functions/qa-ingest-run/index.ts",
+    "value": "admin"
+   },
+   {
     "file": "supabase/functions/system-recovery-status/index.ts",
     "value": "true"
    },
@@ -39378,6 +39504,10 @@
    {
     "file": "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
     "text": "definem o limite crítico (ms), quantos ciclos consecutivos disparam o alerta"
+   },
+   {
+    "file": "src/components/lux/monitoring/QaHistoryPanel.tsx",
+    "text": "uma segunda regra de permissão que possa divergir do backend."
    },
    {
     "file": "src/components/lux/monitoring/ResilienceReport.tsx",
@@ -40018,6 +40148,10 @@
    {
     "file": "supabase/functions/public-api/index.ts",
     "text": "Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE"
+   },
+   {
+    "file": "supabase/functions/qa-ingest-run/index.ts",
+    "text": "Devolvido em texto claro uma única vez; o banco guarda apenas o hash."
    },
    {
     "file": "supabase/functions/reaper-alerts/index.ts",
@@ -45512,6 +45646,31 @@
     "rule": "UNIQUE (organization_id, provider)"
    },
    {
+    "table": "qa_ingest_tokens",
+    "column": "id",
+    "rule": "PK; default gen_random_uuid()"
+   },
+   {
+    "table": "qa_ingest_tokens",
+    "column": "label",
+    "rule": "default 'CI'"
+   },
+   {
+    "table": "qa_ingest_tokens",
+    "column": "token_hash",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "qa_ingest_tokens",
+    "column": "created_by",
+    "rule": "FK → users.id ON DELETE SET NULL"
+   },
+   {
+    "table": "qa_ingest_tokens",
+    "column": "created_at",
+    "rule": "default now()"
+   },
+   {
     "table": "org_leaderboard",
     "column": "activities",
     "rule": "obrigatório"
@@ -50517,6 +50676,12 @@
    },
    {
     "file": "supabase/functions/pg-net-watchdog/index.ts",
+    "field": "role",
+    "value": "admin",
+    "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/qa-ingest-run/index.ts",
     "field": "role",
     "value": "admin",
     "kind": "filtra"
@@ -56806,6 +56971,10 @@
    },
    {
     "file": "src/components/lux/monitoring/JobDetailsSheet.tsx",
+    "call": "invoke("
+   },
+   {
+    "file": "src/components/lux/monitoring/QaHistoryPanel.tsx",
     "call": "invoke("
    },
    {
@@ -65584,6 +65753,10 @@
     "limit": "2000"
    },
    {
+    "file": "supabase/functions/qa-ingest-run/index.ts",
+    "limit": "50"
+   },
+   {
     "file": "supabase/functions/reaper-alerts/index.ts",
     "limit": "1"
    },
@@ -66827,6 +67000,7 @@
       "filtra:supabase/functions/latency-alerts/index.ts",
       "filtra:supabase/functions/org-violation-alerts/index.ts",
       "filtra:supabase/functions/pg-net-watchdog/index.ts",
+      "filtra:supabase/functions/qa-ingest-run/index.ts",
       "filtra:supabase/functions/reaper-alerts/index.ts",
       "filtra:supabase/functions/rls-tests/_fixtures.ts",
       "filtra:supabase/functions/rls-tests/index.ts",
@@ -68265,6 +68439,13 @@
      "authenticated: id = auth.uid()"
     ]
    },
+   "qa_ingest_tokens": {
+    "rls": "enabled",
+    "SELECT": [],
+    "INSERT": [],
+    "UPDATE": [],
+    "DELETE": []
+   },
    "qa_reaper_runs": {
     "rls": "enabled",
     "SELECT": [
@@ -68819,6 +69000,11 @@
     ]
    },
    {
+    "table": "qa_ingest_tokens",
+    "issue": "RLS ligado sem nenhuma política → só service_role acessa",
+    "files": []
+   },
+   {
     "table": "retry_policy_advisories",
     "issue": "front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
     "files": [
@@ -69044,7 +69230,8 @@
    "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql",
    "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
    "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
-   "supabase/migrations/20261124040000_scim_provisioning.sql"
+   "supabase/migrations/20261124040000_scim_provisioning.sql",
+   "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -69212,6 +69399,7 @@
    "worker_should_run"
   ],
   "public_functions": [
+   "cnpj-enrich-worker",
    "qa-ingest-run",
    "admin-list-companies",
    "migrate-helper",
@@ -74658,6 +74846,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "qa_ingest_tokens",
+    "objkind": "table",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "all",
+    "object": "qa_ingest_tokens",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
    }
   ],
   "guards": [
@@ -74858,7 +75062,8 @@
    "apollo_search_cache",
    "apollo_rate_state",
    "api_rate_limits",
-   "scheduled_report_runs"
+   "scheduled_report_runs",
+   "qa_ingest_tokens"
   ],
   "tenant_cov": 0.72,
   "soft_delete": [
@@ -75322,6 +75527,10 @@
    "org_integrations": [
     "created_at",
     "updated_at"
+   ],
+   "qa_ingest_tokens": [
+    "created_at",
+    "created_by"
    ],
    "deal_lost_reason_stats": [],
    "org_leaderboard": [],
@@ -76143,6 +76352,11 @@
    },
    {
     "kind": "rls",
+    "msg": "`qa_ingest_tokens`: RLS ligado sem nenhuma política → só service_role acessa",
+    "where": []
+   },
+   {
+    "kind": "rls",
     "msg": "`retry_policy_advisories`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários",
     "where": [
      "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx"
@@ -76300,6 +76514,11 @@
    {
     "kind": "tenant",
     "msg": "`scheduled_report_runs` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto)",
+    "where": []
+   },
+   {
+    "kind": "tenant",
+    "msg": "`qa_ingest_tokens` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto)",
     "where": []
    },
    {
@@ -76527,7 +76746,7 @@
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "120/127 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "120/128 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -83376,7 +83595,7 @@
   },
   "src/components/lux/monitoring/QaHistoryPanel.tsx": {
    "path": "src/components/lux/monitoring/QaHistoryPanel.tsx",
-   "lines": 364,
+   "lines": 527,
    "exports": [
     "const QaHistoryPanel"
    ],
@@ -83403,6 +83622,15 @@
      "tests_total"
     ]
    },
+   "invokes": [
+    "qa-ingest-run"
+   ],
+   "rule_comments": [
+    "uma segunda regra de permissão que possa divergir do backend."
+   ],
+   "side_effects": [
+    "invoke("
+   ],
    "pagination": [
     "200"
    ]
@@ -96935,14 +97163,50 @@
   },
   "supabase/functions/qa-ingest-run/index.ts": {
    "path": "supabase/functions/qa-ingest-run/index.ts",
-   "lines": 110,
+   "lines": 223,
    "tables": [
+    {
+     "table": "qa_ingest_tokens",
+     "op": "select"
+    },
+    {
+     "table": "qa_ingest_tokens",
+     "op": "update"
+    },
+    {
+     "table": "user_roles",
+     "op": "select"
+    },
+    {
+     "table": "qa_ingest_tokens",
+     "op": "select"
+    },
+    {
+     "table": "qa_ingest_tokens",
+     "op": "insert"
+    },
+    {
+     "table": "qa_ingest_tokens",
+     "op": "update"
+    },
     {
      "table": "qa_test_runs",
      "op": "insert,select"
     }
    ],
    "table_cols": {
+    "qa_ingest_tokens": [
+     "created_at",
+     "id",
+     "label",
+     "last_used_at",
+     "revoked_at",
+     "token_hash"
+    ],
+    "user_roles": [
+     "role",
+     "user_id"
+    ],
     "qa_test_runs": [
      "id"
     ]
@@ -96952,13 +97216,29 @@
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
-   "doc": "Edge Function: qa-ingest-run Recebe payloads do CI com resultado de suites (unit/edge/e2e) e grava em qa_test_runs. Autenticação via header x-qa-token (segredo QA_INGEST_TOKEN).",
+   "status_values": [
+    {
+     "field": "role",
+     "value": "admin",
+     "kind": "filtra"
+    }
+   ],
+   "role_checks": [
+    "admin"
+   ],
+   "rule_comments": [
+    "Devolvido em texto claro uma única vez; o banco guarda apenas o hash."
+   ],
+   "doc": "Edge Function: qa-ingest-run Recebe payloads do CI com resultado de suites (unit/edge/e2e) e grava em qa_test_runs. Autenticação via header x-qa-token: aceita o segredo de plataforma QA_INGEST_TOKEN (quando existir) ou um token ativo em public.qa_ingest_tokens — só o hash SHA-256 fica no banco, porq …",
    "calc_fns": [
     {
      "name": "validate",
      "params": "p: unknown",
      "body": "if (!p || typeof p !== \"object\") return false; const r = p as Record<string, unknown>; const kinds = [\"unit\", \"edge\", \"e2e\", \"integration\", \"lint\", \"typecheck\"]; if (typeof r.kind !== \"string\" || !kinds.includes(r.kind)) return false; const nums = [\"tests_total\", \"tests_passed\", \"tests_failed\", \"duration_ms\"]; for (const k of nums) { if (typeof r[k] !== \"number\" || !Number.isFinite(r[k] as number) || (r[k] as number) < 0) return false; } if (r.tests_skipped !== undefined && typeof r.tests_skippe …"
     }
+   ],
+   "pagination": [
+    "50"
    ],
    "uses_service_role": true
   },
@@ -100197,13 +100477,30 @@
    "path": "supabase/migrations/20261124040000_scim_provisioning.sql",
    "lines": 114,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124050000_qa_ingest_token_db.sql": {
+   "path": "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
+   "lines": 52,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "23e9378798e8ba93dedf2b85e2e8e3320731c9b0",
+  "sha": "588525f4e3e1390f03965828a987d3a3bf1ab243",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "588525f",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)",
+    "files": [
+     "src/components/lux/monitoring/QaHistoryPanel.tsx",
+     "supabase/config.toml",
+     "supabase/functions/qa-ingest-run/index.ts",
+     "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+    ]
+   },
    {
     "sha": "23e9378",
     "date": "2026-11-23",
@@ -100605,16 +100902,6 @@
     "files": [
      "docs/ESTADO_ATUAL.md"
     ]
-   },
-   {
-    "sha": "7a94840",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "feat(ui): verificação de entregabilidade do e-mail do contato (#122)",
-    "files": [
-     "src/components/lux/lusha/EmailVerifyBadge.tsx",
-     "src/components/lux/lusha/OracleV2Panel.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -100641,6 +100928,10 @@
    [
     "docs/ESTADO_ATUAL.md",
     3
+   ],
+   [
+    "supabase/config.toml",
+    2
    ],
    [
     "scripts/sql/security-definer-allowlist.txt",
@@ -100692,10 +100983,6 @@
    ],
    [
     "st.json",
-    2
-   ],
-   [
-    "AGENTS.md",
     2
    ]
   ]

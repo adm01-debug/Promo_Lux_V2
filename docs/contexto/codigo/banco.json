@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 248,
+ "migrations": 249,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -13961,6 +13961,84 @@
    "sem_rls": false,
    "nao_usada": false
   },
+  "qa_ingest_tokens": {
+   "colunas": {
+    "created_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "created_by": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": "auth"
+    },
+    "id": {
+     "tipo": "uuid",
+     "nn": false,
+     "pk": true,
+     "default": "gen_random_uuid()",
+     "ref": null
+    },
+    "label": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": "'CI'",
+     "ref": null
+    },
+    "last_used_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "revoked_at": {
+     "tipo": "timestamptz",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "token_hash": {
+     "tipo": "text",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [],
+   "indices": [
+    {
+     "nome": "qa_ingest_tokens_active_idx",
+     "colunas": "created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "qa_ingest_tokens_token_hash_key",
+     "colunas": "token_hash",
+     "unico": true
+    }
+   ],
+   "fks": [
+    "created_by->auth"
+   ],
+   "criada_em": "20261124050000_qa_ingest_token_db.sql",
+   "usada_no_front": 0,
+   "usada_em_edges": [
+    "qa-ingest-run"
+   ],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": false
+  },
   "qa_reaper_runs": {
    "colunas": {
     "duration_ms": {
@@ -17465,6 +17543,7 @@
    "usada_no_front": 0,
    "usada_em_edges": [
     "pg-net-watchdog",
+    "qa-ingest-run",
     "reaper-alerts",
     "sla-alerts",
     "sla-auto-tune"

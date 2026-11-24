@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `23e9378798` · branch `main` · 2026-11-23 23:23 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `588525f4e3` · branch `main` · 2026-11-24 09:02 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -93,6 +93,7 @@
 | `pii_redaction_rules` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `places_api_usage` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `profiles` | _(sem COMMENT ON TABLE — significado não documentado)_ | 8 colunas | migration |
+| `qa_ingest_tokens` | Tokens de ingestao do pipeline de QA (somente hash SHA-256). Sem policies de RLS: acesso exclusivo da edge function qa-ingest-run via service_role. | 7 colunas | migration |
 | `qa_reaper_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 10 colunas | migration |
 | `qa_test_runs` | _(sem COMMENT ON TABLE — significado não documentado)_ | 14 colunas | migration |
 | `queue_sla_defaults` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
@@ -310,6 +311,7 @@ _nenhum item encontrado_
 | rls | `deal_lost_reason_stats`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useLostReasons.ts` |
 | rls | `email_template_stats`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useEmailTemplates.ts` |
 | rls | `org_leaderboard`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useLeaderboard.ts` |
+| rls | `qa_ingest_tokens`: RLS ligado sem nenhuma política → só service_role acessa |  |
 | rls | `retry_policy_advisories`: front faz UPDATE mas nenhuma política RLS permite UPDATE → vai falhar/retornar vazio para usuários | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | rls | `sales_goals_detailed`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useSalesGoals.ts` |
 | rls | `satisfaction_stats`: acessada do front (1 arquivo(s)) sem RLS (não encontrado) | `src/hooks/useSatisfaction.ts` |
@@ -341,6 +343,7 @@ _nenhum item encontrado_
 | tenant | `apollo_rate_state` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `api_rate_limits` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `scheduled_report_runs` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
+| tenant | `qa_ingest_tokens` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | edge | edge function `dashboard-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `fixture-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `ghost-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
@@ -393,7 +396,7 @@ _nenhum item encontrado_
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 120/127 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 120/128 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

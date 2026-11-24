@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "23e9378798e8ba93dedf2b85e2e8e3320731c9b0",
+  "commit": "588525f4e3e1390f03965828a987d3a3bf1ab243",
   "branch": "main",
-  "data_commit": "2026-11-23T20:21:06-03:00",
+  "data_commit": "2026-11-24T06:01:53-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "588525f",
+    "data": "2026-11-24",
+    "assunto": "fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)"
+   },
    {
     "sha": "23e9378",
     "data": "2026-11-23",
@@ -126,18 +131,13 @@
     "sha": "427ec06",
     "data": "2026-11-22",
     "assunto": "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)"
-   },
-   {
-    "sha": "378947c",
-    "data": "2026-11-22",
-    "assunto": "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)"
    }
   ],
-  "arquivos_mudados_7d": 243,
+  "arquivos_mudados_7d": 246,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 67
+    "mudancas": 68
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -168,11 +168,11 @@
     "mudancas": 8
    },
    {
-    "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
+    "pasta": "supabase/config.toml",
+    "mudancas": 7
    },
    {
-    "pasta": "supabase/config.toml",
+    "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
    },
    {
@@ -214,11 +214,11 @@
     "mudancas": 8
    },
    {
-    "arquivo": "src/integrations/supabase/types.ts",
-    "mudancas": 7
+    "arquivo": "supabase/config.toml",
+    "mudancas": 8
    },
    {
-    "arquivo": "supabase/config.toml",
+    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 119
+    "commits": 120
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1128,
+  "arquivos_total": 1129,
   "arquivos_codigo": 709,
-  "linhas_codigo": 123812,
+  "linhas_codigo": 124088,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -321,8 +321,8 @@
   "componentes": 266,
   "hooks": 97,
   "edge_functions": 65,
-  "tabelas": 119,
-  "migrations": 248,
+  "tabelas": 120,
+  "migrations": 249,
   "cron_jobs": 39,
   "testes": 128,
   "workflows": 9,
@@ -556,7 +556,7 @@
   },
   "src/components": {
    "arquivos": 307,
-   "linhas": 50618
+   "linhas": 50781
   },
   "src/contexts": {
    "arquivos": 7,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 24884
+   "linhas": 24997
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -701,12 +701,12 @@
    "linhas": 540
   },
   {
-   "arquivo": "supabase/functions/_shared/hiker-client.ts",
-   "linhas": 523
+   "arquivo": "src/components/lux/monitoring/QaHistoryPanel.tsx",
+   "linhas": 527
   },
   {
-   "arquivo": "src/components/lux/monitoring/DlqHealthCard.tsx",
-   "linhas": 497
+   "arquivo": "supabase/functions/_shared/hiker-client.ts",
+   "linhas": 523
   }
  ],
  "qualidade": {
@@ -715,7 +715,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
-  "arquivos_acima_500_linhas": 24
+  "arquivos_acima_500_linhas": 25
  },
  "todos": [
   {
