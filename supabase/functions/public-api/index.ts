@@ -204,8 +204,34 @@ Deno.serve(async (req) => {
     const supabase = createAdminClient();
     supabaseForLog = supabase;
 
+    // Path is something like /public-api/companies/:id — strip the function prefix
+    const parts = url.pathname.split("/").filter(Boolean);
+    const fnIdx = parts.indexOf("public-api");
+    const segs = fnIdx >= 0 ? parts.slice(fnIdx + 1) : parts;
+    const [resource, id] = segs;
+
+    // /me fecha em 1 round-trip: a linha de api_keys sai JUNTO da RPC de auth.
+    // O prefix e deterministico (`src/hooks/useApiKeys.ts` gera
+    // `prefix: full.slice(0, 11)`), entao da para buscar a linha pelo prefixo do
+    // header enquanto a RPC valida a chave - Promise.all custa o mais lento, nao a
+    // soma. Medido em producao, PostgREST: 2 round-trips sequenciais ~670 ms
+    // contra ~300 ms de um round-trip isolado. O filtro por prefix nao substitui a
+    // validacao: a RPC continua decidindo 401/429 e o handler so aceita a linha
+    // cujo id bate com o key_id autenticado.
+    const isMe = resource === "me" && req.method === "GET";
+    const keyRowPromise = isMe
+      ? supabase
+        .from("api_keys")
+        .select("id, name, prefix, scopes, active, expires_at, last_used_at, created_at, organization_id")
+        .eq("prefix", apiKey.slice(0, 11))
+        .limit(5)
+      : null;
+
     const keyHash = await sha256Hex(apiKey);
-    const auth = await authenticateApiKey(supabase, keyHash);
+    const [auth, keyRowRes] = await Promise.all([
+      authenticateApiKey(supabase, keyHash),
+      keyRowPromise ?? Promise.resolve(null),
+    ]);
     if (!auth) return await respond({ error: "Invalid or expired API key" }, 401);
     const { user_id, scopes, key_id } = auth;
 
@@ -228,11 +254,6 @@ Deno.serve(async (req) => {
     logCtx.api_key_prefix = auth.prefix;
     logCtx.organization_id = auth.organization_id;
 
-    // Path is something like /public-api/companies/:id — strip the function prefix
-    const parts = url.pathname.split("/").filter(Boolean);
-    const fnIdx = parts.indexOf("public-api");
-    const segs = fnIdx >= 0 ? parts.slice(fnIdx + 1) : parts;
-    const [resource, id] = segs;
     logCtx.resource = resource ?? null;
 
     if (!resource) return await respond({ error: "Resource required (me|companies|deals|stakeholders|events)" }, 400);
@@ -240,12 +261,19 @@ Deno.serve(async (req) => {
     // GET /me — return info about the authenticated API key
     if (resource === "me") {
       if (req.method !== "GET") return await respond({ error: "Method not allowed" }, 405);
-      const { data: keyRow, error: meErr } = await supabase
-        .from("api_keys")
-        .select("id, name, prefix, scopes, active, expires_at, last_used_at, created_at, organization_id")
-        .eq("id", key_id)
-        .maybeSingle();
-      if (meErr) return await respond({ error: meErr.message }, 500);
+      // A linha normalmente ja veio em paralelo com a auth (keyRowRes). O find por
+      // id garante que uma colisao de prefixo ou o caminho legado caia no select
+      // por id em vez de responder dado de outra chave.
+      let keyRow = ((keyRowRes?.data ?? []) as Array<Record<string, unknown>>).find((r) => r.id === key_id) ?? null;
+      if (!keyRow) {
+        const { data: fallbackRow, error: meErr } = await supabase
+          .from("api_keys")
+          .select("id, name, prefix, scopes, active, expires_at, last_used_at, created_at, organization_id")
+          .eq("id", key_id)
+          .maybeSingle();
+        if (meErr) return await respond({ error: meErr.message }, 500);
+        keyRow = fallbackRow as Record<string, unknown> | null;
+      }
       if (!keyRow) return await respond({ error: "API key not found" }, 404);
       return await respond({
         data: {
