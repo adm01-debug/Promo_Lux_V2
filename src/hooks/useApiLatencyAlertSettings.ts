@@ -2,13 +2,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-/** Configuração de alertas de latência p95 por rota, por organização. */
+/** Configuração de alertas de latência p95 e de erro 5xx por rota, por organização. */
 export interface ApiLatencyAlertSettings {
   organization_id: string;
   p95_critical_ms: number;
   consecutive: number;
   cooldown_hours: number;
   enabled: boolean;
+  /** Percentual de erro 5xx a partir do qual a rota é considerada crítica. */
+  error_rate_critical_pct: number;
 }
 
 /** Valores padrão aplicados quando a organização ainda não tem configuração. */
@@ -17,6 +19,7 @@ export const API_LATENCY_ALERT_DEFAULTS: Omit<ApiLatencyAlertSettings, "organiza
   consecutive: 3,
   cooldown_hours: 6,
   enabled: true,
+  error_rate_critical_pct: 5,
 };
 
 export function useApiLatencyAlertSettings(orgId: string | null) {
@@ -26,7 +29,7 @@ export function useApiLatencyAlertSettings(orgId: string | null) {
     queryFn: async (): Promise<ApiLatencyAlertSettings> => {
       const { data, error } = await supabase
         .from("api_latency_alert_settings")
-        .select("organization_id, p95_critical_ms, consecutive, cooldown_hours, enabled")
+        .select("organization_id, p95_critical_ms, consecutive, cooldown_hours, enabled, error_rate_critical_pct")
         .eq("organization_id", orgId!)
         .maybeSingle();
       if (error) throw error;
@@ -46,6 +49,7 @@ export function useSaveApiLatencyAlertSettings() {
           consecutive: settings.consecutive,
           cooldown_hours: settings.cooldown_hours,
           enabled: settings.enabled,
+          error_rate_critical_pct: settings.error_rate_critical_pct,
         },
         { onConflict: "organization_id" },
       );
@@ -62,7 +66,7 @@ export function useSaveApiLatencyAlertSettings() {
   });
 }
 
-/** Item do histórico de disparos de alerta de latência. */
+/** Item do histórico de disparos de alerta de latência ou de erro 5xx. */
 export interface ApiLatencyAlertHistoryItem {
   id: string;
   created_at: string;
@@ -71,6 +75,10 @@ export interface ApiLatencyAlertHistoryItem {
   p95_critical_ms: number;
   consecutive: number;
   admins_notified: number;
+  /** Preenchido apenas quando o disparo veio da taxa de erro 5xx. */
+  error_rate: number | null;
+  error_rate_critical_pct: number | null;
+  requests: number | null;
 }
 
 export function useApiLatencyAlertHistory(orgId: string | null, limit = 20) {
@@ -80,7 +88,9 @@ export function useApiLatencyAlertHistory(orgId: string | null, limit = 20) {
     queryFn: async (): Promise<ApiLatencyAlertHistoryItem[]> => {
       const { data, error } = await supabase
         .from("api_latency_alert_history")
-        .select("id, created_at, path, p95_ms, p95_critical_ms, consecutive, admins_notified")
+        .select(
+          "id, created_at, path, p95_ms, p95_critical_ms, consecutive, admins_notified, error_rate, error_rate_critical_pct, requests",
+        )
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false })
         .limit(limit);
