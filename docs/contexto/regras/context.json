@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "8dec4b5965e03ae549580f763d593fbbf0cebaaa",
+  "sha": "03dbb45138b358f043aeacb82799c00cc27b5d3e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 16:56 UTC",
+  "generated_at": "2026-11-24 17:15 UTC",
   "files_total": 1159,
   "code_files": 974,
-  "code_lines": 145767
+  "code_lines": 145795
  },
  "version": "1.3.2",
- "facts_hash": "5cf241c23d0d244b",
+ "facts_hash": "be1460bf80bcfd40",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -33903,7 +33903,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 25027,
+   "lines": 25055,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -40770,6 +40770,10 @@
    {
     "file": "supabase/functions/public-api/index.ts",
     "text": "Autentica a API key e devolve metadados + decisao de rate limit em UM"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
+    "text": "validacao: a RPC continua decidindo 401/429 e o handler so aceita a linha"
    },
    {
     "file": "supabase/functions/public-api/index.ts",
@@ -66656,6 +66660,10 @@
    {
     "file": "supabase/functions/oracle-search-decisors/index.ts",
     "limit": "2000"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
+    "limit": "5"
    },
    {
     "file": "supabase/functions/qa-ingest-run/index.ts",
@@ -98054,7 +98062,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 382,
+   "lines": 410,
    "tables": [
     {
      "table": "api_keys",
@@ -98063,6 +98071,10 @@
     {
      "table": "api_request_logs",
      "op": "ref"
+    },
+    {
+     "table": "api_keys",
+     "op": "select"
     },
     {
      "table": "api_keys",
@@ -98118,10 +98130,14 @@
     "Limite de requisições por API key por hora (janela fixa, server-side)",
     "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado",
     "Autentica a API key e devolve metadados + decisao de rate limit em UM",
+    "validacao: a RPC continua decidindo 401/429 e o handler so aceita a linha",
     "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)",
     "Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE"
    ],
    "doc": "Public REST API authenticated via X-API-Key header Endpoints: GET /me (returns current API key info) GET /companies?limit=&offset= POST /companies (write scope) GET /companies/:id PATCH /companies/:id (write scope) DELETE /companies/:id (write scope)",
+   "pagination": [
+    "5"
+   ],
    "uses_service_role": true
   },
   "supabase/functions/purge-soft-deleted/index.ts": {
@@ -101499,10 +101515,19 @@
   }
  },
  "git": {
-  "sha": "8dec4b5965e03ae549580f763d593fbbf0cebaaa",
+  "sha": "03dbb45138b358f043aeacb82799c00cc27b5d3e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "03dbb45",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "perf(api-publica): /me em 1 round-trip em vez de 2",
+    "files": [
+     "supabase/functions/public-api/index.ts"
+    ]
+   },
    {
     "sha": "8dec4b5",
     "date": "2026-11-24",
@@ -101854,20 +101879,13 @@
      "supabase/functions/_shared/workflow-phases.ts",
      "supabase/functions/workflow-engine/index.ts"
     ]
-   },
-   {
-    "sha": "0b2a228",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "feat: exige significancia estatistica para eleger vencedora A/B (#150)",
-    "files": [
-     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-     "src/integrations/supabase/types.ts",
-     "supabase/migrations/20261122310000_c14_ab_significance.sql"
-    ]
    }
   ],
   "hot_files": [
+   [
+    "supabase/functions/public-api/index.ts",
+    4
+   ],
    [
     ".github/workflows/db-migrations.yml",
     4
@@ -101877,15 +101895,7 @@
     4
    ],
    [
-    "src/integrations/supabase/types.ts",
-    4
-   ],
-   [
     "scripts/check-schema-replay-drift.sh",
-    3
-   ],
-   [
-    "supabase/functions/public-api/index.ts",
     3
    ],
    [
@@ -101894,6 +101904,10 @@
    ],
    [
     "src/components/lux/SettingsView.tsx",
+    3
+   ],
+   [
+    "src/integrations/supabase/types.ts",
     3
    ],
    [

@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "perf(api-publica): /me em 1 round-trip em vez de 2",
    "feat: habilita alerta de latencia da organizacao com trafego real (#189)",
    "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)",
    "fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)",
-   "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)",
-   "﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)"
+   "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)"
   ]
  },
  "pr_template": null,

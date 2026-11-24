@@ -1613,7 +1613,7 @@
    "nome": "public-api",
    "entrada": "supabase/functions/public-api/index.ts",
    "arquivos": 1,
-   "linhas": 382,
+   "linhas": 410,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
