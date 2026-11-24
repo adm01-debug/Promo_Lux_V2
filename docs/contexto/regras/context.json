@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e",
+  "sha": "7f05370ea5ba4a1d8ebe55d4aa0cb2448d04c551",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 11:38 UTC",
-  "files_total": 1150,
-  "code_files": 968,
-  "code_lines": 145043
+  "generated_at": "2026-11-24 12:38 UTC",
+  "files_total": 1151,
+  "code_files": 969,
+  "code_lines": 145404
  },
  "version": "1.3.2",
- "facts_hash": "23c7e272b2b377f3",
+ "facts_hash": "2e4c001250e0f4c6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -236,7 +236,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 381,
-   ".tsx": 301,
+   ".tsx": 302,
    ".sql": 255,
    ".mjs": 21,
    ".py": 5,
@@ -29952,7 +29952,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 121
+    "deps_count": 122
    },
    {
     "path": "",
@@ -32126,7 +32126,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 307,
+  "components_count": 308,
   "hooks": [
    {
     "name": "useContacts",
@@ -33131,8 +33131,8 @@
   },
   {
    "module": "src/components",
-   "files": 307,
-   "lines": 50781,
+   "files": 308,
+   "lines": 51133,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33766,7 +33766,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2234,
+   "lines": 2243,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -39203,6 +39203,18 @@
    {
     "file": "src/components/lux/monitoring/SourceComparisonReport.tsx",
     "msg": "Nada para exportar no período selecionado."
+   },
+   {
+    "file": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+    "msg": ";\nimport {\n  Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from "
+   },
+   {
+    "file": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+    "msg": "Acesso restrito a administradores."
+   },
+   {
+    "file": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+    "msg": "Sessão expirada — entre novamente."
    },
    {
     "file": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
@@ -48613,6 +48625,24 @@
     "file": "src/components/lux/monitoring/SlaCompliancePanel.tsx",
     "field": "status",
     "value": "ok",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+    "field": "status",
+    "value": "succeeded",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+    "field": "status",
+    "value": "failed",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+    "field": "last_status",
+    "value": "failed",
     "kind": "compara"
    },
    {
@@ -67299,6 +67329,7 @@
       "compara:src/components/lux/lusha/SessionsPanel.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
       "compara:src/components/lux/monitoring/JobDetailsSheet.tsx",
+      "compara:src/components/lux/monitoring/SystemRecoveryPanel.tsx",
       "compara:src/hooks/useCnpjEnrich.ts",
       "compara:src/hooks/useRealtimeScrapeJobs.ts",
       "compara:src/pages/Monitoring.tsx",
@@ -67367,6 +67398,7 @@
       "compara:src/components/lux/automations/AutomationEventsFeed.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
       "compara:src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
+      "compara:src/components/lux/monitoring/SystemRecoveryPanel.tsx",
       "escreve:supabase/functions/instagram-worker/index.ts",
       "filtra:src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
       "filtra:supabase/functions/retry-policy-tuner/index.ts"
@@ -67959,6 +67991,11 @@
      ],
      "string": [
       "compara:supabase/functions/email-oauth-callback/index.ts"
+     ]
+    },
+    "last_status": {
+     "failed": [
+      "compara:src/components/lux/monitoring/SystemRecoveryPanel.tsx"
      ]
     },
     "campaign_status": {
@@ -84855,6 +84892,35 @@
     "function SourceComparisonTable"
    ]
   },
+  "src/components/lux/monitoring/SystemRecoveryPanel.tsx": {
+   "path": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+   "lines": 352,
+   "exports": [
+    "function SystemRecoveryPanel"
+   ],
+   "errors": [
+    ";\nimport {\n  Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from ",
+    "Acesso restrito a administradores.",
+    "Sessão expirada — entre novamente."
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "succeeded",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "compara"
+    },
+    {
+     "field": "last_status",
+     "value": "failed",
+     "kind": "compara"
+    }
+   ]
+  },
   "src/components/lux/monitoring/VaultCookiesPanel.tsx": {
    "path": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
    "lines": 475,
@@ -92254,7 +92320,7 @@
   },
   "src/pages/Monitoring.tsx": {
    "path": "src/pages/Monitoring.tsx",
-   "lines": 739,
+   "lines": 748,
    "exports": [
     "default AutomationMonitoring"
    ],
@@ -101328,10 +101394,20 @@
   }
  },
  "git": {
-  "sha": "25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e",
+  "sha": "7f05370ea5ba4a1d8ebe55d4aa0cb2448d04c551",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "7f05370",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)",
+    "files": [
+     "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+     "src/pages/Monitoring.tsx"
+    ]
+   },
    {
     "sha": "25e2bf3",
     "date": "2026-11-24",
@@ -101736,22 +101812,12 @@
     "files": [
      "docs/GAPS-ENTERPRISE.md"
     ]
-   },
-   {
-    "sha": "63a6f3f",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "chore(docs): corrige backlog que listava como ausentes 4 features ja existentes (#125)",
-    "files": [
-     "docs/ESTADO_ATUAL.md",
-     "docs/GAPS-ENTERPRISE.md"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    8
+    7
    ],
    [
     "src/integrations/supabase/types.ts",
@@ -101760,6 +101826,10 @@
    [
     "src/components/lux/SettingsView.tsx",
     4
+   ],
+   [
+    "src/pages/Monitoring.tsx",
+    3
    ],
    [
     "package.json",
@@ -101791,10 +101861,6 @@
    ],
    [
     "src/components/lux/AnalyticsView.tsx",
-    2
-   ],
-   [
-    "src/pages/Monitoring.tsx",
     2
    ],
    [

@@ -874,6 +874,7 @@
     "instagram-enqueue",
     "instagram-worker-health",
     "qa-ingest-run",
+    "system-recovery-status",
     "vault-cookie-health"
    ],
    "canais_realtime": [
@@ -889,7 +890,7 @@
     "img",
     "status"
    ],
-   "arquivos_puxados": 121
+   "arquivos_puxados": 122
   },
   {
    "protegida": false,

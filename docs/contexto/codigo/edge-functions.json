@@ -2084,10 +2084,12 @@
    "chama_edges": [],
    "hosts_externos": [],
    "usa_shared": [],
-   "chamada_pelo_front": [],
+   "chamada_pelo_front": [
+    "src/components/lux/monitoring/SystemRecoveryPanel.tsx"
+   ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": true,
+   "orfa": false,
    "testes": 0
   },
   {

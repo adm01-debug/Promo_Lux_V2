@@ -7,7 +7,7 @@
    "src/pages (11)"
   ],
   "componentes": [
-   "src/components (249)",
+   "src/components (250)",
    "src/pages (11)",
    "src/contexts (3)"
   ],
@@ -47,7 +47,7 @@
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (266)"
+  ".tsx (267)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)",
    "chore: inventario do estado real (semanal)",
    "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)",
    "fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)",
-   "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)",
-   "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)"
+   "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)"
   ]
  },
  "pr_template": null,

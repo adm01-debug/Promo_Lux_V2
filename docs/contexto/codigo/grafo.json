@@ -1,20 +1,20 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 581,
- "arestas": 1824,
+ "nos": 582,
+ "arestas": 1831,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 136
+   "importado_por": 137
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 130
+   "importado_por": 131
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 115
+   "importado_por": 116
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -26,7 +26,7 @@
   },
   {
    "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 60
+   "importado_por": 61
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
@@ -113,16 +113,16 @@
    "importado_por": 12
   },
   {
+   "arquivo": "src/components/ui/table.tsx",
+   "importado_por": 12
+  },
+  {
    "arquivo": "src/lib/demoData.ts",
    "importado_por": 12
   },
   {
    "arquivo": "src/lib/resilience/scenarios.ts",
    "importado_por": 12
-  },
-  {
-   "arquivo": "src/components/ui/table.tsx",
-   "importado_por": 11
   },
   {
    "arquivo": "src/components/ui/sheet.tsx",
@@ -157,11 +157,11 @@
    "importado_por": 7
   },
   {
-   "arquivo": "src/hooks/confirm-context.ts",
+   "arquivo": "src/components/ui/alert.tsx",
    "importado_por": 7
   },
   {
-   "arquivo": "src/hooks/unsaved-changes-context.ts",
+   "arquivo": "src/hooks/confirm-context.ts",
    "importado_por": 7
   }
  ],

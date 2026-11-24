@@ -116,9 +116,9 @@
   },
   {
    "modulo": "components/lux",
-   "arquivos": 218,
+   "arquivos": 219,
    "testes": 31,
-   "linhas": 42922,
+   "linhas": 43274,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -173,7 +173,7 @@
     "workflows"
    ],
    "rotas_http": [],
-   "componentes": 199,
+   "componentes": 200,
    "hooks_locais": [
     "useAcknowledgeAdvisory",
     "useActiveOrganization",
@@ -361,6 +361,7 @@
     "qa-ingest-run",
     "rls-tests",
     "scim",
+    "system-recovery-status",
     "technographics-detect",
     "vault-cookie-health",
     "webhook-dispatcher",
@@ -583,6 +584,7 @@
      "qa-ingest-run",
      "rls-tests",
      "scim",
+     "system-recovery-status",
      "technographics-detect",
      "vault-cookie-health"
     ],
@@ -2207,7 +2209,7 @@
    "modulo": "pages",
    "arquivos": 11,
    "testes": 0,
-   "linhas": 2234,
+   "linhas": 2243,
    "itens_menu": [],
    "telas": [
     "/",
@@ -2420,6 +2422,7 @@
     "qa-ingest-run",
     "rls-tests",
     "scim",
+    "system-recovery-status",
     "technographics-detect",
     "vault-cookie-health",
     "webhook-dispatcher",

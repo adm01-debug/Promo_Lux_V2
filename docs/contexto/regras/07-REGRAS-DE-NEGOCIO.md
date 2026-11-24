@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `25e2bf32cd` · branch `main` · 2026-11-24 11:38 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7f05370ea5` · branch `main` · 2026-11-24 12:38 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1025,7 +1025,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +11 |
+| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +12 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
@@ -1050,7 +1050,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `sent_to_bitrix` | compara, escreve | `src/hooks/useOracleV2.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `status` | `skipped` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/send-scheduled-reports/index.ts`<br>… +2 |
 | `status` | `started` | compara | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
-| `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
+| `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`src/components/lux/monitoring/SystemRecoveryPanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>… +1 |
 | `status` | `success` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>… +4 |
 | `status` | `timeout` | escreve | `src/hooks/useCnpjEnrich.ts` |
 | `status` | `unhealthy` | escreve | `supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts` |
@@ -1146,6 +1146,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `state` | `half-open` | compara, escreve, filtra | `supabase/functions/_shared/circuit-breaker.ts` |
 | `state` | `open` | compara, filtra | `src/components/lux/monitoring/CircuitBreakerPanel.tsx`<br>`supabase/functions/_shared/circuit-breaker.ts` |
 | `state` | `string` | compara | `supabase/functions/email-oauth-callback/index.ts` |
+| `last_status` | `failed` | compara | `src/components/lux/monitoring/SystemRecoveryPanel.tsx` |
 | `campaign_status` | `draft` | escreve | `src/integrations/supabase/types.ts` |
 | `scrape_queue_status` | `queued` | escreve | `src/integrations/supabase/types.ts` |
 | `health_status` | `error` | compara | `supabase/functions/lusha-cookie-health/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/oracle-cookies-preflight/index.ts` |
@@ -2138,6 +2139,9 @@ _nenhum item encontrado_
 | Não foi possível alterar o auto-ajuste | `src/components/lux/monitoring/SlaRecommendationsCard.tsx` |
 | Não foi possível aplicar o SLA | `src/components/lux/monitoring/SlaRecommendationsCard.tsx` |
 | Nada para exportar no período selecionado. | `src/components/lux/monitoring/SourceComparisonReport.tsx` |
+| ; import {   Table,   TableBody,   TableCell,   TableHead,   TableHeader,   TableRow, } from  | `src/components/lux/monitoring/SystemRecoveryPanel.tsx` |
+| Acesso restrito a administradores. | `src/components/lux/monitoring/SystemRecoveryPanel.tsx` |
+| Sessão expirada — entre novamente. | `src/components/lux/monitoring/SystemRecoveryPanel.tsx` |
 | Falha na checagem | `src/components/lux/monitoring/VaultCookiesPanel.tsx` |
 | Falha ao copiar | `src/components/lux/organizations/MembershipAuditDetailSheet.tsx` |
 | Falha ao avaliar | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
@@ -2281,10 +2285,7 @@ _nenhum item encontrado_
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
 | Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
 | HubSpot create failed: ${err} | `supabase/functions/hubspot-sync/index.ts` |
-| results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
-| Configura\xE7\xE3o do backend indispon\xEDvel para esta ferramenta. | `supabase/functions/mcp/index.ts` |
-| unauthorized | `supabase/functions/migrate-helper/index.ts` |
-| … +33 linhas — lista completa em `context.json` | |
+| … +36 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

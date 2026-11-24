@@ -1508,6 +1508,14 @@
    "src/lib/sourceQualityReport.ts",
    "src/lib/utils.ts"
   ],
+  "src/components/lux/monitoring/SystemRecoveryPanel.tsx": [
+   "src/components/ui/alert.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/table.tsx",
+   "src/integrations/supabase/client.ts"
+  ],
   "src/components/lux/monitoring/VaultCookiesPanel.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -2432,6 +2440,7 @@
    "src/components/lux/monitoring/SlaRecommendationsCard.tsx",
    "src/components/lux/monitoring/SlaTrendChart.tsx",
    "src/components/lux/monitoring/SourceComparisonReport.tsx",
+   "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
    "src/components/lux/monitoring/VaultCookiesPanel.tsx",
    "src/components/lux/monitoring/WebScrapeView.tsx",
    "src/components/ui/badge.tsx",

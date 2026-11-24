@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 266,
+ "total": 267,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -2443,6 +2443,22 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+   "exports": [
+    "SystemRecoveryPanel"
+   ],
+   "export_default": "SystemRecoveryPanel",
+   "linhas": 352,
+   "dominio": "components/lux",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [
+    "system-recovery-status"
+   ],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
    "exports": [
     "VaultCookiesPanel"
@@ -3439,7 +3455,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 6,
+   "usado_por": 7,
    "orfao": false
   },
   {
@@ -3470,7 +3486,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 115,
+   "usado_por": 116,
    "orfao": false
   },
   {
@@ -3505,7 +3521,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 136,
+   "usado_por": 137,
    "orfao": false
   },
   {
@@ -3539,7 +3555,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 60,
+   "usado_por": 61,
    "orfao": false
   },
   {
@@ -4120,7 +4136,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 11,
+   "usado_por": 12,
    "orfao": false
   },
   {
@@ -4406,7 +4422,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 739,
+   "linhas": 748,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

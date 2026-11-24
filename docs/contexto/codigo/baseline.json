@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "25e2bf32cda9011b2b5b3890c4060d8bfff3fd1e",
+  "commit": "7f05370ea5ba4a1d8ebe55d4aa0cb2448d04c551",
   "branch": "main",
-  "data_commit": "2026-11-24T08:31:43-03:00",
+  "data_commit": "2026-11-24T09:37:56-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7f05370",
+    "data": "2026-11-24",
+    "assunto": "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)"
+   },
    {
     "sha": "25e2bf3",
     "data": "2026-11-24",
@@ -126,18 +131,13 @@
     "sha": "9e9f963",
     "data": "2026-11-22",
     "assunto": "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)"
-   },
-   {
-    "sha": "b3ecb1b",
-    "data": "2026-11-22",
-    "assunto": "fix(build): impede plugin mcp de gravar caminho absoluto do Windows no bundle (#143)"
    }
   ],
-  "arquivos_mudados_7d": 249,
+  "arquivos_mudados_7d": 250,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 68
+    "mudancas": 69
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -266,6 +266,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "src/pages/Monitoring.tsx",
+    "mudancas": 4
+   },
+   {
     "arquivo": "supabase/functions/campaign-dispatch/index.ts",
     "mudancas": 4
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": ".husky/pre-commit",
     "mudancas": 3
-   },
-   {
-    "arquivo": "docs/agentes/github-ci.md",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 122
+    "commits": 123
    },
    {
     "autor": "dependabot[bot]",
@@ -310,15 +310,15 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1131,
-  "arquivos_codigo": 709,
-  "linhas_codigo": 124088,
+  "arquivos_total": 1132,
+  "arquivos_codigo": 710,
+  "linhas_codigo": 124449,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 26,
   "modulos": 22,
-  "componentes": 266,
+  "componentes": 267,
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
@@ -555,8 +555,8 @@
    "linhas": 339
   },
   "src/components": {
-   "arquivos": 307,
-   "linhas": 50781
+   "arquivos": 308,
+   "linhas": 51133
   },
   "src/contexts": {
    "arquivos": 7,
@@ -580,7 +580,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2234
+   "linhas": 2243
   },
   "src/test": {
    "arquivos": 3,
@@ -662,7 +662,7 @@
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 739
+   "linhas": 748
   },
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
@@ -760,7 +760,6 @@
    "health",
    "instagram-dlq-replay",
    "lusha-reveal",
-   "system-recovery-status",
    "web-dlq-replay",
    "web-scrape-enqueue",
    "web-scrape-extract",
