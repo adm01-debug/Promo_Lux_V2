@@ -110,7 +110,7 @@
   {
    "arquivo": "scripts/check-migrations.sh",
    "descricao": "--------------------------------------------------------------------------- check-migrations.sh",
-   "linhas": 146,
+   "linhas": 153,
    "env": [],
    "npm_scripts": [
     "db:lint"

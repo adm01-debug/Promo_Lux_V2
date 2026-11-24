@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "d4ad14d0c495aedd06c63c61168885b5e2f3a239",
+  "sha": "877196162eee5ad3fd103f0cbbb09cd59684141a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 13:26 UTC",
+  "generated_at": "2026-11-24 13:40 UTC",
   "files_total": 1153,
   "code_files": 969,
   "code_lines": 145404
@@ -101394,10 +101394,20 @@
   }
  },
  "git": {
-  "sha": "d4ad14d0c495aedd06c63c61168885b5e2f3a239",
+  "sha": "877196162eee5ad3fd103f0cbbb09cd59684141a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8771961",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)",
+    "files": [
+     "scripts/check-migrations.sh",
+     "supabase/migrations/20261124040000_scim_provisioning.sql"
+    ]
+   },
    {
     "sha": "d4ad14d",
     "date": "2026-11-24",
@@ -101754,16 +101764,6 @@
     "files": [
      "supabase/migrations/20261122280000_cron_instagram_worker.sql"
     ]
-   },
-   {
-    "sha": "427ec06",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)",
-    "files": [
-     "scripts/check-functions-lint.sh",
-     "supabase/functions/mcp/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -101784,6 +101784,10 @@
     3
    ],
    [
+    "supabase/migrations/20261124040000_scim_provisioning.sql",
+    2
+   ],
+   [
     ".github/workflows/db-migrations.yml",
     2
    ],
@@ -101797,10 +101801,6 @@
    ],
    [
     "supabase/config.toml",
-    2
-   ],
-   [
-    "supabase/functions/mcp/index.ts",
     2
    ],
    [
@@ -101836,15 +101836,15 @@
     2
    ],
    [
+    "scripts/check-migrations.sh",
+    1
+   ],
+   [
     "vercel.json",
     1
    ],
    [
     "scripts/check-migration-drift.sh",
-    1
-   ],
-   [
-    "scripts/check-run-freshness.sh",
     1
    ]
   ]

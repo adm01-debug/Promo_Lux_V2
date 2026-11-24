@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d4ad14d0c495aedd06c63c61168885b5e2f3a239",
+  "commit": "877196162eee5ad3fd103f0cbbb09cd59684141a",
   "branch": "main",
-  "data_commit": "2026-11-24T10:19:00-03:00",
+  "data_commit": "2026-11-24T10:38:56-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8771961",
+    "data": "2026-11-24",
+    "assunto": "fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)"
+   },
    {
     "sha": "d4ad14d",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "4df75d3",
     "data": "2026-11-22",
     "assunto": "chore: remove artefatos temporarios commitados por engano na #146 (#147)"
-   },
-   {
-    "sha": "f9cdd00",
-    "data": "2026-11-22",
-    "assunto": "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)"
    }
   ],
-  "arquivos_mudados_7d": 253,
+  "arquivos_mudados_7d": 254,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 125
+    "commits": 126
    },
    {
     "autor": "dependabot[bot]",
