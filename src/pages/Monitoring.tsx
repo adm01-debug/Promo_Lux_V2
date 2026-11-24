@@ -54,6 +54,7 @@ import { OrgRateLimitsView } from "@/components/lux/monitoring/OrgRateLimitsView
 import { ResilienceReport } from "@/components/lux/monitoring/ResilienceReport";
 import { MultiQueueResilienceCard } from "@/components/lux/monitoring/MultiQueueResilienceCard";
 import { RetryPolicyAdvisoriesPanel } from "@/components/lux/monitoring/RetryPolicyAdvisoriesPanel";
+import { SystemRecoveryPanel } from "@/components/lux/monitoring/SystemRecoveryPanel";
 import { ChaosEngineeringPanel } from "@/components/lux/monitoring/ChaosEngineeringPanel";
 import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloReportPanel";
 import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
@@ -394,7 +395,11 @@ const AutomationMonitoring = () => {
             <Database className="h-4 w-4" />
             SaÃºde do Banco
           </TabsTrigger>
-          <TabsTrigger value="queue" className="gap-2">
+          <TabsTrigger value="recovery" className="gap-2">
+                      <Activity className="h-4 w-4" />
+                      Recuperação &amp; DR
+                    </TabsTrigger>
+                    <TabsTrigger value="queue" className="gap-2">
             <ListChecks className="h-4 w-4" />
             Fila de Scraping
           </TabsTrigger>
@@ -651,7 +656,11 @@ const AutomationMonitoring = () => {
           <DbHealthDashboard />
         </TabsContent>
 
-        <TabsContent value="queue" className="space-y-4">
+        <TabsContent value="recovery" className="space-y-4">
+                  <SystemRecoveryPanel />
+                </TabsContent>
+
+                <TabsContent value="queue" className="space-y-4">
           <ScrapeQueuePanel />
         </TabsContent>
 
