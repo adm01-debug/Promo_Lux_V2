@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "d8c860482044797551941587e78051731da819fc",
+  "sha": "0995c3154142cf5dad596bfd18123714a79a5889",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 14:24 UTC",
+  "generated_at": "2026-11-24 14:42 UTC",
   "files_total": 1154,
   "code_files": 970,
-  "code_lines": 145447
+  "code_lines": 145400
  },
  "version": "1.3.2",
- "facts_hash": "512ae5d0356f9495",
+ "facts_hash": "26887cac5c4b74a4",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -33866,7 +33866,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 25001,
+   "lines": 24954,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -46921,7 +46921,7 @@
    {
     "file": "supabase/functions/web-scrape-worker/index.ts",
     "name": "USER_AGENT",
-    "value": "\"lux-web-scraper/1.0 (+https://lux-ai-finder.lovable.app)\""
+    "value": "\"lux-web-scraper/1.0 (+https://promo-lux-v2.vercel.app)\""
    },
    {
     "file": "supabase/functions/webhook-dispatcher/index.ts",
@@ -94569,7 +94569,7 @@
   },
   "supabase/functions/admin-list-companies/index.ts": {
    "path": "supabase/functions/admin-list-companies/index.ts",
-   "lines": 115,
+   "lines": 113,
    "tables": [
     {
      "table": "organization_members",
@@ -94618,7 +94618,7 @@
   },
   "supabase/functions/ai-agent/index.ts": {
    "path": "supabase/functions/ai-agent/index.ts",
-   "lines": 202,
+   "lines": 200,
    "tables": [
     {
      "table": "companies",
@@ -94790,7 +94790,7 @@
   },
   "supabase/functions/auth-rate-limit/index.ts": {
    "path": "supabase/functions/auth-rate-limit/index.ts",
-   "lines": 126,
+   "lines": 122,
    "tables": [
     {
      "table": "auth_rate_limits",
@@ -95764,7 +95764,7 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 843,
+   "lines": 841,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -96006,7 +96006,7 @@
   },
   "supabase/functions/health/index.ts": {
    "path": "supabase/functions/health/index.ts",
-   "lines": 136,
+   "lines": 134,
    "tables": [
     {
      "table": "organizations",
@@ -96542,7 +96542,7 @@
   },
   "supabase/functions/lusha-cookie-health/index.ts": {
    "path": "supabase/functions/lusha-cookie-health/index.ts",
-   "lines": 174,
+   "lines": 170,
    "env": [
     "EXTERNAL_VAULT_ANON_KEY",
     "SUPABASE_ANON_KEY",
@@ -96600,7 +96600,7 @@
   },
   "supabase/functions/lusha-decision-makers/index.ts": {
    "path": "supabase/functions/lusha-decision-makers/index.ts",
-   "lines": 763,
+   "lines": 759,
    "tables": [
     {
      "table": "organization_members",
@@ -96663,7 +96663,7 @@
   },
   "supabase/functions/lusha-reveal/index.ts": {
    "path": "supabase/functions/lusha-reveal/index.ts",
-   "lines": 317,
+   "lines": 313,
    "rpc": [
     "check_oracle_rate_limit",
     "default_org_for_current_user"
@@ -96688,7 +96688,7 @@
   },
   "supabase/functions/lusha-search/index.ts": {
    "path": "supabase/functions/lusha-search/index.ts",
-   "lines": 581,
+   "lines": 578,
    "tables": [
     {
      "table": "lusha_search_sessions",
@@ -96971,7 +96971,7 @@
   },
   "supabase/functions/oracle-cookies-preflight/index.ts": {
    "path": "supabase/functions/oracle-cookies-preflight/index.ts",
-   "lines": 231,
+   "lines": 227,
    "tables": [
     {
      "table": "automation_execution_logs",
@@ -97031,7 +97031,7 @@
   },
   "supabase/functions/oracle-enrich-contact/index.ts": {
    "path": "supabase/functions/oracle-enrich-contact/index.ts",
-   "lines": 354,
+   "lines": 350,
    "tables": [
     {
      "table": "lusha_contacts",
@@ -97210,7 +97210,7 @@
   },
   "supabase/functions/oracle-push-bitrix/index.ts": {
    "path": "supabase/functions/oracle-push-bitrix/index.ts",
-   "lines": 406,
+   "lines": 402,
    "tables": [
     {
      "table": "lusha_contacts",
@@ -97483,7 +97483,7 @@
   },
   "supabase/functions/oracle-search-decisors/index.ts": {
    "path": "supabase/functions/oracle-search-decisors/index.ts",
-   "lines": 739,
+   "lines": 735,
    "tables": [
     {
      "table": "lusha_search_sessions",
@@ -98401,7 +98401,7 @@
   },
   "supabase/functions/rls-tests/index.ts": {
    "path": "supabase/functions/rls-tests/index.ts",
-   "lines": 479,
+   "lines": 477,
    "tables": [
     {
      "table": "audit_logs",
@@ -99524,7 +99524,7 @@
     },
     {
      "name": "USER_AGENT",
-     "value": "\"lux-web-scraper/1.0 (+https://lux-ai-finder.lovable.app)\""
+     "value": "\"lux-web-scraper/1.0 (+https://promo-lux-v2.vercel.app)\""
     }
    ],
    "status_values": [
@@ -99681,7 +99681,7 @@
   },
   "supabase/functions/workflow-engine/index.ts": {
    "path": "supabase/functions/workflow-engine/index.ts",
-   "lines": 1005,
+   "lines": 1003,
    "tables": [
     {
      "table": "organization_members",
@@ -101397,10 +101397,36 @@
   }
  },
  "git": {
-  "sha": "d8c860482044797551941587e78051731da819fc",
+  "sha": "0995c3154142cf5dad596bfd18123714a79a5889",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "0995c31",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore: remove o dominio Lovable das origens, metadados e user-agent (#182)",
+    "files": [
+     "index.html",
+     "supabase/functions/admin-list-companies/index.ts",
+     "supabase/functions/ai-agent/index.ts",
+     "supabase/functions/auth-rate-limit/index.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/health/index.ts",
+     "supabase/functions/lusha-cookie-health/index.ts",
+     "supabase/functions/lusha-decision-makers/index.ts",
+     "supabase/functions/lusha-reveal/index.ts",
+     "supabase/functions/lusha-search/index.ts",
+     "supabase/functions/oracle-cookies-preflight/index.ts",
+     "supabase/functions/oracle-enrich-contact/index.ts",
+     "supabase/functions/oracle-push-bitrix/index.ts",
+     "supabase/functions/oracle-search-decisors/index.ts",
+     "supabase/functions/rls-tests/index.test.ts",
+     "supabase/functions/rls-tests/index.ts",
+     "supabase/functions/web-scrape-worker/index.ts",
+     "supabase/functions/workflow-engine/index.ts"
+    ]
+   },
    {
     "sha": "d8c8604",
     "date": "2026-11-24",
@@ -101750,18 +101776,6 @@
      "prs.json",
      "st.json"
     ]
-   },
-   {
-    "sha": "5c14e83",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)",
-    "files": [
-     "AGENTS.md",
-     "docs/ESTADO_ATUAL.md",
-     "docs/agentes/lovable-deploy.md",
-     "docs/estado/04-integracoes.md"
-    ]
    }
   ],
   "hot_files": [
@@ -101772,6 +101786,10 @@
    [
     "src/integrations/supabase/types.ts",
     4
+   ],
+   [
+    "supabase/functions/workflow-engine/index.ts",
+    3
    ],
    [
     "src/components/lux/SettingsView.tsx",
@@ -101810,10 +101828,6 @@
     2
    ],
    [
-    "supabase/functions/workflow-engine/index.ts",
-    2
-   ],
-   [
     "ciruns.json",
     2
    ],
@@ -101830,19 +101844,19 @@
     2
    ],
    [
-    "AGENTS.md",
-    2
-   ],
-   [
-    "docs/agentes/lovable-deploy.md",
-    2
-   ],
-   [
-    "supabase/migrations/20261124125500_cron_evaluate_api_latency_15min.sql",
+    "index.html",
     1
    ],
    [
-    "scripts/check-migrations.sh",
+    "supabase/functions/admin-list-companies/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/ai-agent/index.ts",
+    1
+   ],
+   [
+    "supabase/functions/auth-rate-limit/index.ts",
     1
    ]
   ]

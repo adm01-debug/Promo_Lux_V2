@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d8c860482044797551941587e78051731da819fc",
+  "commit": "0995c3154142cf5dad596bfd18123714a79a5889",
   "branch": "main",
-  "data_commit": "2026-11-24T11:24:06-03:00",
+  "data_commit": "2026-11-24T11:41:03-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "0995c31",
+    "data": "2026-11-24",
+    "assunto": "chore: remove o dominio Lovable das origens, metadados e user-agent (#182)"
+   },
    {
     "sha": "d8c8604",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "6cf80c9",
     "data": "2026-11-23",
     "assunto": "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)"
-   },
-   {
-    "sha": "9b85ca6",
-    "data": "2026-11-22",
-    "assunto": "docs: registra gap dos steps de workflow serem decorativos (#157)"
    }
   ],
-  "arquivos_mudados_7d": 255,
+  "arquivos_mudados_7d": 257,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -172,15 +172,15 @@
     "mudancas": 7
    },
    {
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 7
+   },
+   {
     "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 6
    },
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
-   },
-   {
-    "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 6
    },
    {
@@ -192,8 +192,8 @@
     "mudancas": 5
    },
    {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 4
+    "pasta": "supabase/functions/rls-tests",
+    "mudancas": 5
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -222,6 +222,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+    "mudancas": 7
+   },
+   {
     "arquivo": ".github/workflows/db-migrations.yml",
     "mudancas": 6
    },
@@ -230,15 +234,15 @@
     "mudancas": 6
    },
    {
-    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-    "mudancas": 6
-   },
-   {
     "arquivo": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
    {
     "arquivo": "scripts/automation.config.json",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "supabase/functions/workflow-engine/index.ts",
     "mudancas": 5
    },
    {
@@ -282,10 +286,6 @@
     "mudancas": 4
    },
    {
-    "arquivo": "supabase/functions/workflow-engine/index.ts",
-    "mudancas": 4
-   },
-   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 3
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 129
+    "commits": 130
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1135,
   "arquivos_codigo": 710,
-  "linhas_codigo": 124453,
+  "linhas_codigo": 124406,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 25001
+   "linhas": 24954
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -634,7 +634,7 @@
   },
   {
    "arquivo": "supabase/functions/workflow-engine/index.ts",
-   "linhas": 1005
+   "linhas": 1003
   },
   {
    "arquivo": "scripts/maintenance/lib.mjs",
@@ -650,7 +650,7 @@
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 843
+   "linhas": 841
   },
   {
    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
@@ -658,7 +658,7 @@
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
-   "linhas": 763
+   "linhas": 759
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
@@ -666,7 +666,7 @@
   },
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
-   "linhas": 739
+   "linhas": 735
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
@@ -690,7 +690,7 @@
   },
   {
    "arquivo": "supabase/functions/lusha-search/index.ts",
-   "linhas": 581
+   "linhas": 578
   },
   {
    "arquivo": "src/components/lux/settings/RLSVerificationPanel.tsx",

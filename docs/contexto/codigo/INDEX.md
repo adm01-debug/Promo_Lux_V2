@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d8c860482044797551941587e78051731da819fc` (2026-11-24T11:24:06-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `0995c3154142cf5dad596bfd18123714a79a5889` (2026-11-24T11:41:03-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1135 |
 | arquivos_codigo | 710 |
-| linhas_codigo | 124453 |
+| linhas_codigo | 124406 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -231,7 +231,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
-- hosts mais citados: lux-ai-company-finder.lovable.app, promo-lux-v2.vercel.app, 2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com, id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app, lux-ai-finder.lovable.app, linkedin.com, ai.gateway.lovable.dev, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, www.linkedin.com, connector-gateway.lovable.dev
+- hosts mais citados: promo-lux-v2.vercel.app, linkedin.com, ai.gateway.lovable.dev, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, www.linkedin.com, connector-gateway.lovable.dev, empresa.com, gmail.googleapis.com, nominatim.openstreetmap.org, api.cnpja.com
 - webhooks recebidos: admin-list-companies, email-oauth-callback, hubspot-sync, mcp, mcp-query, migrate-helper, public-api, qa-ingest-run, scim, send-scheduled-reports, track-click, track-open
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
@@ -259,7 +259,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7857 nós · 16662 arestas · 665 comunidades · grafo do commit `d8c86048`
+- 7857 nós · 16662 arestas · 665 comunidades · grafo do commit `0995c315`
 - comunidades maiores: Monitoring.tsx (191), input.tsx (168), @tanstack/react-query (145), react (135), cn (126), lucide-react (117), OrgViolationsView.tsx (103), Index.tsx (86), vitest (83), gerar.mjs (80), req (78), generate.py (73)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -271,15 +271,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - AGENTS.md (8)
 - supabase/config.toml (8)
 - src/integrations/supabase/types.ts (7)
+- supabase/functions/gmaps-proxy/index.ts (7)
 - .github/workflows/db-migrations.yml (6)
 - .github/workflows/edge-tests-daily.yml (6)
-- supabase/functions/gmaps-proxy/index.ts (6)
 - docs/ESTADO_ATUAL.md (5)
 - scripts/automation.config.json (5)
+- supabase/functions/workflow-engine/index.ts (5)
 - .github/workflows/ci.yml (4)
 - docs/agentes/lovable-deploy.md (4)
 - inventario/estado/edges.json (4)
-- scripts/ci/eslint-baseline.json (4)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -376,6 +376,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `0995c31` chore: remove o dominio Lovable das origens, metadados e user-agent (#182)
 - 2026-11-24 `d8c8604` fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)
 - 2026-11-24 `69c63ff` fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)
 - 2026-11-24 `1317d20` chore: inventario do estado real (gerado em 24/11) (#180)
@@ -390,7 +391,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `90d7ac8` feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)
 - 2026-11-23 `6e486a4` feat: execucao duravel de workflow com lease e trilha de eventos (D18) ? AGUARDA APROVACAO DO DONO (#149)
 - 2026-11-23 `825b08c` fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)
-- 2026-11-23 `f5416a9` feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

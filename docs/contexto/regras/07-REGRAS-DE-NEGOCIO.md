@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d8c8604820` · branch `main` · 2026-11-24 14:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `0995c31541` · branch `main` · 2026-11-24 14:42 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1789,7 +1789,7 @@ _nenhum item encontrado_
 | `DEFAULT_TIMEOUT_MS` | `20` | `supabase/functions/web-scrape-worker/index.ts` |
 | `MAX_REDIRECTS` | `5` | `supabase/functions/web-scrape-worker/index.ts` |
 | `ROBOTS_TTL_HOURS` | `24` | `supabase/functions/web-scrape-worker/index.ts` |
-| `USER_AGENT` | `"lux-web-scraper/1.0 (+https://lux-ai-finder.lovable.app)"` | `supabase/functions/web-scrape-worker/index.ts` |
+| `USER_AGENT` | `"lux-web-scraper/1.0 (+https://promo-lux-v2.vercel.app)"` | `supabase/functions/web-scrape-worker/index.ts` |
 | `MAX_ATTEMPTS` | `5` | `supabase/functions/webhook-dispatcher/index.ts` |
 | `BATCH` | `25` | `supabase/functions/webhook-dispatcher/index.ts` |
 | `GMAPS_API_BASE` | `"https://gmaps.atomicabr.com.br/api/v1"` | `supabase/functions/workflow-engine/index.ts` |

@@ -724,24 +724,8 @@
   ],
   "hosts_externos": [
    {
-    "host": "lux-ai-company-finder.lovable.app",
-    "arquivos": 16
-   },
-   {
     "host": "promo-lux-v2.vercel.app",
-    "arquivos": 15
-   },
-   {
-    "host": "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "arquivos": 12
-   },
-   {
-    "host": "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "arquivos": 10
-   },
-   {
-    "host": "lux-ai-finder.lovable.app",
-    "arquivos": 10
+    "arquivos": 17
    },
    {
     "host": "linkedin.com",
@@ -1001,10 +985,6 @@
    },
    {
     "host": "horizonte.eng.br",
-    "arquivos": 1
-   },
-   {
-    "host": "id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
     "arquivos": 1
    },
    {

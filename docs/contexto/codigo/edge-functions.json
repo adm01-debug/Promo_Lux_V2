@@ -95,7 +95,7 @@
    "nome": "admin-list-companies",
    "entrada": "supabase/functions/admin-list-companies/index.ts",
    "arquivos": 1,
-   "linhas": 115,
+   "linhas": 113,
    "verify_jwt": false,
    "metodos": [
     "OPTIONS"
@@ -114,8 +114,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
@@ -129,7 +127,7 @@
    "nome": "ai-agent",
    "entrada": "supabase/functions/ai-agent/index.ts",
    "arquivos": 1,
-   "linhas": 202,
+   "linhas": 200,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -152,9 +150,7 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
     "ai.gateway.lovable.dev",
-    "lux-ai-company-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
@@ -226,7 +222,7 @@
    "nome": "auth-rate-limit",
    "entrada": "supabase/functions/auth-rate-limit/index.ts",
    "arquivos": 1,
-   "linhas": 126,
+   "linhas": 122,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -242,10 +238,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
@@ -785,7 +777,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 843,
+   "linhas": 841,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -811,9 +803,7 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
     "gmaps.atomicabr.com.br",
-    "lux-ai-company-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
@@ -839,7 +829,7 @@
    "nome": "health",
    "entrada": "supabase/functions/health/index.ts",
    "arquivos": 1,
-   "linhas": 136,
+   "linhas": 134,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -859,8 +849,6 @@
    "hosts_externos": [
     "ai.gateway.lovable.dev",
     "gmaps.atomicabr.com.br",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
     "places.googleapis.com",
     "promo-lux-v2.vercel.app"
    ],
@@ -1152,7 +1140,7 @@
    "nome": "lusha-cookie-health",
    "entrada": "supabase/functions/lusha-cookie-health/index.ts",
    "arquivos": 1,
-   "linhas": 174,
+   "linhas": 170,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1169,10 +1157,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app",
     "supabase.atomicabr.com.br"
    ],
@@ -1189,7 +1173,7 @@
    "nome": "lusha-decision-makers",
    "entrada": "supabase/functions/lusha-decision-makers/index.ts",
    "arquivos": 1,
-   "linhas": 763,
+   "linhas": 759,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1207,11 +1191,7 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
     "api.lusha.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
@@ -1227,7 +1207,7 @@
    "nome": "lusha-reveal",
    "entrada": "supabase/functions/lusha-reveal/index.ts",
    "arquivos": 1,
-   "linhas": 317,
+   "linhas": 313,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1247,11 +1227,7 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
     "api.lusha.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [],
@@ -1265,7 +1241,7 @@
    "nome": "lusha-search",
    "entrada": "supabase/functions/lusha-search/index.ts",
    "arquivos": 1,
-   "linhas": 581,
+   "linhas": 578,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1290,11 +1266,8 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
     "dashboard-services.lusha.com",
     "dashboard.lusha.com",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app",
     "supabase.atomicabr.com.br"
    ],
@@ -1397,7 +1370,7 @@
    "nome": "oracle-cookies-preflight",
    "entrada": "supabase/functions/oracle-cookies-preflight/index.ts",
    "arquivos": 1,
-   "linhas": 231,
+   "linhas": 227,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1417,10 +1390,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app",
     "supabase.atomicabr.com.br"
    ],
@@ -1437,7 +1406,7 @@
    "nome": "oracle-enrich-contact",
    "entrada": "supabase/functions/oracle-enrich-contact/index.ts",
    "arquivos": 1,
-   "linhas": 354,
+   "linhas": 350,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1455,10 +1424,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
@@ -1482,7 +1447,7 @@
    "nome": "oracle-push-bitrix",
    "entrada": "supabase/functions/oracle-push-bitrix/index.ts",
    "arquivos": 1,
-   "linhas": 406,
+   "linhas": 402,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1504,10 +1469,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
@@ -1529,7 +1490,7 @@
    "nome": "oracle-search-decisors",
    "entrada": "supabase/functions/oracle-search-decisors/index.ts",
    "arquivos": 1,
-   "linhas": 739,
+   "linhas": 735,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -1551,10 +1512,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
-    "id-preview--2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovable.app",
-    "lux-ai-company-finder.lovable.app",
-    "lux-ai-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
@@ -1823,7 +1780,7 @@
    "nome": "rls-tests",
    "entrada": "supabase/functions/rls-tests/index.ts",
    "arquivos": 2,
-   "linhas": 706,
+   "linhas": 704,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -1848,8 +1805,6 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "id-preview--5ca97528-7ced-45bf-b83a-48ae8b7f46fc.lovable.app",
-    "lux-ai-company-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
@@ -2375,7 +2330,7 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "lux-ai-finder.lovable.app"
+    "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
     "chaos.ts",
@@ -2430,7 +2385,7 @@
    "nome": "workflow-engine",
    "entrada": "supabase/functions/workflow-engine/index.ts",
    "arquivos": 1,
-   "linhas": 1005,
+   "linhas": 1003,
    "verify_jwt": true,
    "metodos": [
     "DELETE",
@@ -2464,9 +2419,7 @@
    "buckets": [],
    "chama_edges": [],
    "hosts_externos": [
-    "2e7d5f34-c492-42bd-a233-a5b01098f9b4.lovableproject.com",
     "gmaps.atomicabr.com.br",
-    "lux-ai-company-finder.lovable.app",
     "promo-lux-v2.vercel.app"
    ],
    "usa_shared": [
