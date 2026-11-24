@@ -89,19 +89,90 @@ if [ -n "$DIFERENTES" ]; then
   echo ""
 fi
 
-if [ -z "$FALTA" ]; then
-  echo "OK: o banco alvo tem tudo que as migrations declaram (estrutura, schema public)."
+# ---------------------------------------------------------------------------
+# Baseline de drift conhecido.
+#
+# O diff nao prova ausencia: ele emite CREATE tambem para objeto que EXISTE no
+# alvo com definicao diferente (view e policy nao tem forma "create or replace")
+# e para objeto que nasceu fora do versionamento (`mcp_exec`, `v_*_audit`).
+# Sem baseline esses objetos derrubam todo run de producao com falso positivo,
+# e guarda sempre vermelha deixa de ser guarda, porque ninguem le o aviso.
+#
+# `schema-drift-baseline.txt` lista o drift conhecido e aceito, um objeto por
+# linha na forma "<tipo> <nome>" em minusculas. O guard continua falhando para
+# todo objeto NOVO. Tirar uma linha do baseline so depois que o objeto existir
+# no banco exatamente como o replay das migrations o cria.
+# ---------------------------------------------------------------------------
+BASELINE_ARQUIVO="${BASELINE_ARQUIVO:-$(dirname "$0")/schema-drift-baseline.txt}"
+
+# Reduz um statement a "<tipo> <nome>" para comparar com o baseline sem
+# depender da definicao (que muda com o tempo e nao diz se o objeto existe).
+chave_objeto() {
+  printf '%s' "$1" \
+    | sed -E 's/[[:space:]]+/ /g; s/^ //; s/ $//' \
+    | sed -E 's/[[:space:]]+(ON|AS|USING|IN[[:space:]]+SCHEMA|WITH)[[:space:]].*$//' \
+    | sed -E 's/[[:space:]]*[(].*$//' \
+    | tr '[:upper:]' '[:lower:]'
+}
+
+declare -A BASELINE=()
+TEM_BASELINE=0
+if [ -f "$BASELINE_ARQUIVO" ]; then
+  while IFS= read -r linha_base || [ -n "$linha_base" ]; do
+    case "$linha_base" in ''|\#*) continue ;; esac
+    BASELINE["$linha_base"]=1
+    TEM_BASELINE=1
+  done < "$BASELINE_ARQUIVO"
+else
+  echo "::warning::baseline de drift ausente ($BASELINE_ARQUIVO): todo objeto declarado tem de existir no alvo."
+fi
+
+declare -A VISTOS=()
+NOVOS=""
+CONHECIDOS=0
+while IFS= read -r linha_falta || [ -n "$linha_falta" ]; do
+  [ -z "$linha_falta" ] && continue
+  chave="$(chave_objeto "$linha_falta")"
+  VISTOS["$chave"]=1
+  if [ -n "${BASELINE[$chave]:-}" ]; then
+    CONHECIDOS=$((CONHECIDOS + 1))
+  else
+    NOVOS="${NOVOS}${linha_falta}"$'\n'
+  fi
+done <<< "$FALTA"
+
+# Baseline que envelheceu: o objeto deixou de faltar, a linha tem de sair.
+if [ "$TEM_BASELINE" = "1" ]; then
+  for chave_base in "${!BASELINE[@]}"; do
+    if [ -z "${VISTOS[$chave_base]:-}" ]; then
+      echo "::warning::Baseline obsoleto: '$chave_base' nao falta mais no alvo. Remover a linha de $(basename "$BASELINE_ARQUIVO")."
+    fi
+  done
+fi
+
+if [ "$CONHECIDOS" -gt 0 ]; then
+  TOTAL_DIFF="$(printf '%s\n' "$FALTA" | wc -l | tr -d ' ')"
+  echo "::warning::Drift conhecido e aceito ($(basename "$BASELINE_ARQUIVO")): $CONHECIDOS de $TOTAL_DIFF objeto(s) do diff. Cada linha do arquivo tem a justificativa conferida no catalogo do alvo."
+  echo ""
+fi
+
+if [ -z "$NOVOS" ]; then
+  echo "OK: o alvo tem tudo que as migrations declaram, fora do drift conhecido em $(basename "$BASELINE_ARQUIVO")."
   exit 0
 fi
 
-TOTAL="$(printf '%s\n' "$FALTA" | wc -l | tr -d ' ')"
-echo "::error::Drift de schema: $TOTAL objeto(s) de estrutura que as migrations declaram e NAO existem no banco alvo."
-printf '%s\n' "$FALTA" | head -"$LIMITE_LINHAS" | sed 's/^/  /'
+TOTAL="$(printf '%s' "$NOVOS" | wc -l | tr -d ' ')"
+echo "::error::Drift de schema NOVO: $TOTAL objeto(s) de estrutura que as migrations declaram e NAO existem no banco alvo, fora do baseline."
+printf '%s' "$NOVOS" | head -"$LIMITE_LINHAS" | sed 's/^/  /'
 echo ""
 echo "Replay limpo (todas as migrations, banco vazio) produz esses objetos de estrutura; o banco alvo"
 echo "nao. Ou a migration esta registrada como aplicada sem efeito, ou alguem removeu o"
 echo "objeto depois. Um rebuild do banco a partir do repositorio recria o objeto e o"
 echo "banco atual nao: as duas bases ficam diferentes. Corrigir antes de seguir."
+echo ""
+echo "Antes de acrescentar qualquer linha ao baseline, confirme no catalogo do alvo que o"
+echo "objeto ja existe com outro nome ou outra definicao: o baseline existe para divida de"
+echo "nomenclatura comprovada, nunca para calar ausencia real."
 
 if [ "$STRICT" = "1" ]; then
   exit 1
