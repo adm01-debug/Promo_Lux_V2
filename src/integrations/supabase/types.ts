@@ -88,31 +88,40 @@ export type Database = {
           admins_notified: number
           consecutive: number
           created_at: string
+          error_rate: number | null
+          error_rate_critical_pct: number | null
           id: string
           organization_id: string
           p95_critical_ms: number
           p95_ms: number
           path: string
+          requests: number | null
         }
         Insert: {
           admins_notified?: number
           consecutive: number
           created_at?: string
+          error_rate?: number | null
+          error_rate_critical_pct?: number | null
           id?: string
           organization_id: string
           p95_critical_ms: number
           p95_ms: number
           path: string
+          requests?: number | null
         }
         Update: {
           admins_notified?: number
           consecutive?: number
           created_at?: string
+          error_rate?: number | null
+          error_rate_critical_pct?: number | null
           id?: string
           organization_id?: string
           p95_critical_ms?: number
           p95_ms?: number
           path?: string
+          requests?: number | null
         }
         Relationships: [
           {
@@ -129,6 +138,7 @@ export type Database = {
           consecutive: number
           cooldown_hours: number
           enabled: boolean
+          error_rate_critical_pct: number
           organization_id: string
           p95_critical_ms: number
           updated_at: string
@@ -137,6 +147,7 @@ export type Database = {
           consecutive?: number
           cooldown_hours?: number
           enabled?: boolean
+          error_rate_critical_pct?: number
           organization_id: string
           p95_critical_ms?: number
           updated_at?: string
@@ -145,6 +156,7 @@ export type Database = {
           consecutive?: number
           cooldown_hours?: number
           enabled?: boolean
+          error_rate_critical_pct?: number
           organization_id?: string
           p95_critical_ms?: number
           updated_at?: string

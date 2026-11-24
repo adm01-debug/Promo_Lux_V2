@@ -24,9 +24,10 @@ function fmtMs(ms: number): string {
 }
 
 /**
- * Configuração dos alertas automáticos de latência p95 por rota. Administradores
- * definem o limite crítico (ms), quantos ciclos consecutivos disparam o alerta
- * e o intervalo de silêncio. Mostra também o histórico recente de disparos.
+ * Configuração dos alertas automáticos de latência p95 e de erro 5xx por rota.
+ * Administradores definem os limites críticos, quantos ciclos consecutivos
+ * disparam o alerta e o intervalo de silêncio. Mostra também o histórico
+ * recente de disparos.
  * Fonte: tabelas `api_latency_alert_settings` / `api_latency_alert_history`.
  */
 export function ApiLatencyAlertSettingsCard() {
@@ -52,6 +53,7 @@ export function ApiLatencyAlertSettingsCard() {
       p95_critical_ms: clamp(state.p95_critical_ms, 1, 600000),
       consecutive: clamp(state.consecutive, 1, 24),
       cooldown_hours: clamp(state.cooldown_hours, 1, 168),
+      error_rate_critical_pct: clamp(state.error_rate_critical_pct, 1, 100),
     });
   };
 
@@ -60,11 +62,11 @@ export function ApiLatencyAlertSettingsCard() {
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center gap-2">
           <BellRing className="h-4 w-4 text-primary" />
-          Alertas de latência (p95)
+          Alertas da API (p95 e erros 5xx)
         </CardTitle>
         <CardDescription>
-          Notifique os administradores quando uma rota ultrapassar o limite crítico de p95 por
-          vários ciclos seguidos.
+          Notifique os administradores quando uma rota ultrapassar o limite crítico de p95 ou
+          mantiver erros 5xx acima do limite por vários ciclos seguidos.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -82,7 +84,7 @@ export function ApiLatencyAlertSettingsCard() {
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-1.5">
             <Label htmlFor="lat-pc" className="text-xs">
               p95 crítico (ms)
@@ -124,6 +126,20 @@ export function ApiLatencyAlertSettingsCard() {
               onChange={(e) => state && setForm({ ...state, cooldown_hours: Number(e.target.value) })}
             />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="lat-er" className="text-xs">
+              Erro 5xx crítico (%)
+            </Label>
+            <Input
+              id="lat-er"
+              type="number"
+              min={1}
+              max={100}
+              value={state?.error_rate_critical_pct ?? ""}
+              disabled={!isAdmin || !state}
+              onChange={(e) => state && setForm({ ...state, error_rate_critical_pct: Number(e.target.value) })}
+            />
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
@@ -157,12 +173,21 @@ export function ApiLatencyAlertSettingsCard() {
                       {h.admins_notified} admin(s) notificado(s)
                     </p>
                   </div>
-                  <Badge
-                    variant="outline"
-                    className="shrink-0 border-destructive/30 bg-destructive/10 font-mono text-[10px] text-destructive"
-                  >
-                    p95 {fmtMs(Number(h.p95_ms))}
-                  </Badge>
+                  {h.error_rate != null ? (
+                    <Badge
+                      variant="outline"
+                      className="shrink-0 border-destructive/30 bg-destructive/10 font-mono text-[10px] text-destructive"
+                    >
+                      5xx {Number(h.error_rate).toFixed(0)}% de {Number(h.requests ?? 0)}
+                    </Badge>
+                  ) : (
+                    <Badge
+                      variant="outline"
+                      className="shrink-0 border-destructive/30 bg-destructive/10 font-mono text-[10px] text-destructive"
+                    >
+                      p95 {fmtMs(Number(h.p95_ms))}
+                    </Badge>
+                  )}
                 </div>
               ))}
             </div>
