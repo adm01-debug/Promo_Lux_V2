@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e0648b2efe54de67fcd129917f7591f2546e7cee",
+  "commit": "8dec4b5965e03ae549580f763d593fbbf0cebaaa",
   "branch": "main",
-  "data_commit": "2026-11-24T13:43:52-03:00",
+  "data_commit": "2026-11-24T13:55:31-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8dec4b5",
+    "data": "2026-11-24",
+    "assunto": "feat: habilita alerta de latencia da organizacao com trafego real (#189)"
+   },
    {
     "sha": "e0648b2",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "dc01412",
     "data": "2026-11-23",
     "assunto": "fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)"
-   },
-   {
-    "sha": "f4bf977",
-    "data": "2026-11-23",
-    "assunto": "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)"
    }
   ],
-  "arquivos_mudados_7d": 261,
+  "arquivos_mudados_7d": 262,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 136
+    "commits": 137
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1139,
+  "arquivos_total": 1140,
   "arquivos_codigo": 710,
   "linhas_codigo": 124479,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 255,
+  "migrations": 256,
   "cron_jobs": 41,
   "testes": 128,
   "workflows": 9,

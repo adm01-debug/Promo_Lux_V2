@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e0648b2efe54de67fcd129917f7591f2546e7cee` (2026-11-24T13:43:52-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8dec4b5965e03ae549580f763d593fbbf0cebaaa` (2026-11-24T13:55:31-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (683), SQL (259), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (683), SQL (260), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1139 |
+| arquivos_total | 1140 |
 | arquivos_codigo | 710 |
 | linhas_codigo | 124479 |
 | rotas | 12 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 97 |
 | edge_functions | 65 |
 | tabelas | 120 |
-| migrations | 255 |
+| migrations | 256 |
 | cron_jobs | 41 |
 | testes | 128 |
 | workflows | 9 |
@@ -260,7 +260,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7873 nós · 16677 arestas · 671 comunidades · grafo do commit `e0648b2e`
+- 7874 nós · 16677 arestas · 672 comunidades · grafo do commit `8dec4b59`
 - comunidades maiores: Monitoring.tsx (151), OrganizationsView.tsx (138), cn (130), react (125), snapshot.py (108), badge.tsx (98), @tanstack/react-query (89), DashboardView.tsx (86), gerar.mjs (80), useActiveOrganization (78), generate.py (73), vitest (72)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -377,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `8dec4b5` feat: habilita alerta de latencia da organizacao com trafego real (#189)
 - 2026-11-24 `e0648b2` ﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)
 - 2026-11-24 `b7314d4` fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)
 - 2026-11-24 `4bb36e5` fix: guarda de drift para de fechar o run de producao com falso positivo (#186)
@@ -391,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `d4ad14d` fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)
 - 2026-11-24 `78ec030` infra: guardas de drift de schema e de run superado no CI de migrations (#173)
 - 2026-11-24 `7f05370` feat(monitoramento): aba "Recuperacao & DR" consome system-recovery-status (#175)
-- 2026-11-24 `25e2bf3` chore: inventario do estado real (semanal)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

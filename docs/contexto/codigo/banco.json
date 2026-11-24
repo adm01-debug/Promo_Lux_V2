@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 255,
+ "migrations": 256,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
