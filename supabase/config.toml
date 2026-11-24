@@ -6,8 +6,11 @@ verify_jwt = true
 [functions.cnpj-enrich-worker]
 verify_jwt = true
 
+# verify_jwt = false: o CI não carrega JWT. O gate é o header x-qa-token, validado
+# contra o segredo QA_INGEST_TOKEN ou contra public.qa_ingest_tokens (só hash).
 [functions.qa-ingest-run]
 verify_jwt = false
+
 [functions.admin-list-companies]
 verify_jwt = false
 
