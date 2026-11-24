@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 251,
+ "migrations": 252,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1202,6 +1202,11 @@
    "agenda": "*/5 * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "email-poll-replies"
+  },
+  {
+   "nome": "evaluate-api-latency-15min",
+   "agenda": "5,20,35,50 * * * *",
+   "migration": "20261124125500_cron_evaluate_api_latency_15min.sql"
   },
   {
    "nome": "evaluate-partition-policies-daily",

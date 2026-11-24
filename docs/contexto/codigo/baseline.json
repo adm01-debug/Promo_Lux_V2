@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "1317d2096570fef04e9274a4e9000bd21811f4c4",
+  "commit": "69c63ffec95c0067af872bd1f7c24ec27980184c",
   "branch": "main",
-  "data_commit": "2026-11-24T10:52:17-03:00",
+  "data_commit": "2026-11-24T11:10:04-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "69c63ff",
+    "data": "2026-11-24",
+    "assunto": "fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)"
+   },
    {
     "sha": "1317d20",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "336b228",
     "data": "2026-11-22",
     "assunto": "feat: aplica PermissionGate em deals e integracoes (#154)"
-   },
-   {
-    "sha": "9fdb455",
-    "data": "2026-11-22",
-    "assunto": "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)"
    }
   ],
-  "arquivos_mudados_7d": 254,
+  "arquivos_mudados_7d": 255,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 127
+    "commits": 128
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1134,
+  "arquivos_total": 1135,
   "arquivos_codigo": 710,
   "linhas_codigo": 124449,
   "rotas": 12,
@@ -322,8 +322,8 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 251,
-  "cron_jobs": 39,
+  "migrations": 252,
+  "cron_jobs": 40,
   "testes": 128,
   "workflows": 9,
   "scripts": 53,

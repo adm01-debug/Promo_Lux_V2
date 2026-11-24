@@ -1,17 +1,17 @@
 # Graph Report - Promo_Lux_V2  (2026-11-24)
 
 ## Corpus Check
-- 1115 files · ~783,636 words
+- 1116 files · ~783,808 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 20 file(s) not represented in the graph (top: (none) 10, .toml 5, .css 2)
 
 ## Summary
-- 7856 nodes · 16662 edges · 664 communities (398 shown, 266 thin omitted)
+- 7857 nodes · 16662 edges · 665 communities (398 shown, 267 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 542 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1317d209`
+- Built from commit: `69c63ffe`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -601,7 +601,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (664 total, 266 thin omitted)
+## Communities (665 total, 267 thin omitted)
 
 ### Community 0 - "Monitoring.tsx"
 Cohesion: 0.03
@@ -2197,8 +2197,8 @@ Nodes (3): idx_retry_policy_advisories_applied_by, idx_retry_policy_advisories_r
 
 ## Knowledge Gaps
 - **2469 isolated node(s):** `session-start.sh script`, `PATH`, `version`, `sdk_version`, `path` (+2464 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3557 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **266 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3558 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **267 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
