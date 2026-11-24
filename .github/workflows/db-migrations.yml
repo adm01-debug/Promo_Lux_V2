@@ -26,6 +26,7 @@ on:
       - 'scripts/check-migration-drift.sh'
       - 'scripts/check-migration-target.sh'
       - 'scripts/check-schema-replay-drift.sh'
+      - 'scripts/schema-drift-baseline.txt'
       - '.github/workflows/db-migrations.yml'
   push:
     branches: [main, master]
@@ -34,6 +35,7 @@ on:
       - 'scripts/check-migration-drift.sh'
       - 'scripts/check-run-freshness.sh'
       - 'scripts/check-schema-replay-drift.sh'
+      - 'scripts/schema-drift-baseline.txt'
   workflow_dispatch:
     inputs:
       environment:

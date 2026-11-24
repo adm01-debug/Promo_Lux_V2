@@ -1,0 +1,58 @@
+# ---------------------------------------------------------------------------
+# Drift conhecido entre o replay limpo das migrations e o banco de producao.
+# Lido por scripts/check-schema-replay-drift.sh (variavel BASELINE_ARQUIVO).
+#
+# Por que existe: `supabase db diff` emite CREATE tambem para objeto que
+# EXISTE no alvo com definicao diferente (view e policy nao tem forma
+# "create or replace" no diff) e para objeto que nasceu fora do versionamento.
+# Sem baseline esses objetos derrubam todo run de producao com falso positivo,
+# e guarda sempre vermelha deixa de ser guarda, porque ninguem le.
+#
+# Contrato: uma linha por objeto, na forma "<tipo> <nome>" em minusculas.
+# Objeto NOVO que nao esteja aqui falha o job. Remover uma linha so depois que
+# o objeto existir no banco exatamente como o replay das migrations o cria.
+#
+# Conteudo conferido contra o catalogo real do projeto pttzwlbidamibjssqiqb
+# (pg_class, pg_trigger, pg_policies, pg_index) em 2026-11-24, para os 24
+# objetos que o diff reportava ausentes:
+#   * 14 existem no alvo com o MESMO nome (o diff nao prova ausencia):
+#     v_extensions_audit, v_sec_definer_anon_grants, idx_lcul_operation,
+#     lusha_contacts_org_linkedin_uk, lusha_contacts_org_name_title_no_li_uk,
+#     uq_scrape_queue_idempotent, sync_suppression_on_recipient_status,
+#     scrape_jobs_set_config_hash_trg e as policies lc_select/lc_update/lc_delete
+#     e lss_select/lss_update/lss_delete;
+#   * os 4 indices de lusha_search_sessions e a policy de idempotency_keys tem
+#     equivalente funcional com outro nome no alvo (idx_lss_org, idx_lss_company,
+#     idx_lss_created, idx_lss_status, idx_lusha_search_sessions_org_idem,
+#     idx_lusha_sessions_user, "Users can insert their own idempotency keys");
+#   * as 5 policies restantes tem cobertura equivalente com outro nome e as
+#     5 tabelas estao com RLS habilitado (relrowsecurity = true):
+#     circuit_breaker_alert_settings, feature_flags, health_checks,
+#     idempotency_keys, pii_redaction_rules.
+# Conclusao: divida de nomenclatura/definicao, nao ausencia de objeto nem de
+# protecao. Nenhuma linha aqui pode ser removida sem criar o objeto de verdade.
+# ---------------------------------------------------------------------------
+create view "public"."v_extensions_audit"
+create view "public"."v_sec_definer_anon_grants"
+create index idx_lcul_operation
+create index idx_lss_org_company
+create index idx_lss_org_idem
+create index idx_lss_org_status
+create index idx_lss_user
+create unique index lusha_contacts_org_linkedin_uk
+create unique index lusha_contacts_org_name_title_no_li_uk
+create unique index uq_scrape_queue_idempotent
+create trigger sync_suppression_on_recipient_status
+create trigger scrape_jobs_set_config_hash_trg
+create policy "admins leem settings"
+create policy "feature flags are viewable by org"
+create policy "feature_flags_service_role"
+create policy "health checks are viewable by authenticated users"
+create policy "users can create their own idempotency keys"
+create policy "lc_delete"
+create policy "lc_select"
+create policy "lc_update"
+create policy "lss_delete"
+create policy "lss_select"
+create policy "lss_update"
+create policy "pii_rules_select_admin"
