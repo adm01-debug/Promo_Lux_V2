@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "78ec030ed0ee328073c32b90c564ecc54e73fc6a",
+  "sha": "d4ad14d0c495aedd06c63c61168885b5e2f3a239",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 13:08 UTC",
+  "generated_at": "2026-11-24 13:26 UTC",
   "files_total": 1153,
   "code_files": 969,
   "code_lines": 145404
@@ -101394,10 +101394,19 @@
   }
  },
  "git": {
-  "sha": "78ec030ed0ee328073c32b90c564ecc54e73fc6a",
+  "sha": "d4ad14d0c495aedd06c63c61168885b5e2f3a239",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "d4ad14d",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)",
+    "files": [
+     "vercel.json"
+    ]
+   },
    {
     "sha": "78ec030",
     "date": "2026-11-24",
@@ -101755,92 +101764,23 @@
      "scripts/check-functions-lint.sh",
      "supabase/functions/mcp/index.ts"
     ]
-   },
-   {
-    "sha": "378947c",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "chore(integracao): unifica as 10 features planejadas (seguranca + produto) — AGUARDA APROVACAO DO DONO (#140)",
-    "files": [
-     "docs/GAPS-ENTERPRISE.md",
-     "src/App.tsx",
-     "src/components/lux/AnalyticsView.tsx",
-     "src/components/lux/CampaignsView.tsx",
-     "src/components/lux/DealsView.tsx",
-     "src/components/lux/SettingsView.tsx",
-     "src/components/lux/analytics/GoalsTab.tsx",
-     "src/components/lux/analytics/LeaderboardTab.tsx",
-     "src/components/lux/analytics/SatisfactionTab.tsx",
-     "src/components/lux/campaigns/CampaignFormFields.tsx",
-     "src/components/lux/campaigns/EmailTemplatePicker.tsx",
-     "src/components/lux/campaigns/EmailTemplatesTab.tsx",
-     "src/components/lux/deals/DealDetailDrawer.tsx",
-     "src/components/lux/deals/LostReasonsDialog.tsx",
-     "src/components/lux/monitoring/IncidentsPanel.tsx",
-     "src/components/lux/settings/ActiveSessionsPanel.tsx",
-     "src/components/lux/settings/AuditLogExportPanel.tsx",
-     "src/components/lux/settings/DsarPanel.tsx",
-     "src/components/lux/settings/IpAllowlistPanel.tsx",
-     "src/components/lux/settings/NextBestActionPanel.tsx",
-     "src/components/lux/settings/PiiMaskingPanel.tsx",
-     "src/hooks/useActiveSessions.ts",
-     "src/hooks/useAuditLogExport.ts",
-     "src/hooks/useDeals.ts",
-     "src/hooks/useDsar.ts",
-     "src/hooks/useEmailTemplates.ts",
-     "src/hooks/useIpAllowlist.ts",
-     "src/hooks/useLeaderboard.ts",
-     "src/hooks/useLostReasons.ts",
-     "src/hooks/useNextBestActions.ts",
-     "src/hooks/usePiiRules.ts",
-     "src/hooks/useSalesGoals.ts",
-     "src/hooks/useSatisfaction.ts",
-     "src/hooks/useStatusPage.ts",
-     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
-     "src/integrations/supabase/types.ts",
-     "src/integrations/supabase/withOrg.ts",
-     "src/pages/Monitoring.tsx",
-     "src/pages/StatusPage.tsx",
-     "src/pages/SurveyResponse.tsx",
-     "supabase/functions/mcp/index.ts",
-     "supabase/migrations/20261122160000_deal_lost_reasons.sql",
-     "supabase/migrations/20261122170000_sales_goals.sql",
-     "supabase/migrations/20261122180000_org_leaderboard.sql",
-     "supabase/migrations/20261122190000_satisfaction_surveys.sql",
-     "supabase/migrations/20261122200000_email_templates.sql",
-     "supabase/migrations/20261122210000_status_page.sql",
-     "supabase/migrations/20261122220000_ip_allowlist.sql",
-     "supabase/migrations/20261122230000_session_management.sql",
-     "supabase/migrations/20261122240000_audit_log_export.sql",
-     "supabase/migrations/20261122250000_dsar_lgpd.sql",
-     "supabase/migrations/20261122260000_dlp_pii_masking.sql",
-     "supabase/migrations/20261122270000_next_best_action.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/GAPS-ENTERPRISE.md",
-    6
-   ],
-   [
-    "src/integrations/supabase/types.ts",
     5
    ],
    [
-    "src/components/lux/SettingsView.tsx",
+    "src/integrations/supabase/types.ts",
     4
-   ],
-   [
-    "src/pages/Monitoring.tsx",
-    3
    ],
    [
     "package.json",
     3
    ],
    [
-    "supabase/functions/mcp/index.ts",
+    "src/components/lux/SettingsView.tsx",
     3
    ],
    [
@@ -101852,7 +101792,15 @@
     2
    ],
    [
+    "src/pages/Monitoring.tsx",
+    2
+   ],
+   [
     "supabase/config.toml",
+    2
+   ],
+   [
+    "supabase/functions/mcp/index.ts",
     2
    ],
    [
@@ -101860,31 +101808,7 @@
     2
    ],
    [
-    "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
-    2
-   ],
-   [
-    "src/integrations/supabase/withOrg.ts",
-    2
-   ],
-   [
     "supabase/functions/workflow-engine/index.ts",
-    2
-   ],
-   [
-    "src/components/lux/AnalyticsView.tsx",
-    2
-   ],
-   [
-    "src/components/lux/deals/DealDetailDrawer.tsx",
-    2
-   ],
-   [
-    "src/hooks/useDeals.ts",
-    2
-   ],
-   [
-    "src/components/lux/DealsView.tsx",
     2
    ],
    [
@@ -101898,6 +101822,30 @@
    [
     "prs.json",
     2
+   ],
+   [
+    "st.json",
+    2
+   ],
+   [
+    "AGENTS.md",
+    2
+   ],
+   [
+    "docs/agentes/lovable-deploy.md",
+    2
+   ],
+   [
+    "vercel.json",
+    1
+   ],
+   [
+    "scripts/check-migration-drift.sh",
+    1
+   ],
+   [
+    "scripts/check-run-freshness.sh",
+    1
    ]
   ]
  }

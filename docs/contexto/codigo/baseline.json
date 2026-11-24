@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "78ec030ed0ee328073c32b90c564ecc54e73fc6a",
+  "commit": "d4ad14d0c495aedd06c63c61168885b5e2f3a239",
   "branch": "main",
-  "data_commit": "2026-11-24T10:07:50-03:00",
+  "data_commit": "2026-11-24T10:19:00-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "d4ad14d",
+    "data": "2026-11-24",
+    "assunto": "fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)"
+   },
    {
     "sha": "78ec030",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "f9cdd00",
     "data": "2026-11-22",
     "assunto": "docs: corrige afirmacoes falsas sobre producao, CI e matriz de gaps (#146)"
-   },
-   {
-    "sha": "5c14e83",
-    "data": "2026-11-22",
-    "assunto": "docs: remove referencias ao VITE_ADMIN_LIST_TOKEN eliminado na #144 (#145)"
    }
   ],
-  "arquivos_mudados_7d": 252,
+  "arquivos_mudados_7d": 253,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 124
+    "commits": 125
    },
    {
     "autor": "dependabot[bot]",

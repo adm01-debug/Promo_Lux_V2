@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)",
    "infra: guardas de drift de schema e de run superado no CI de migrations (#173)",
    "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)",
    "chore: inventario do estado real (semanal)",
-   "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)",
-   "fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)"
+   "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)"
   ]
  },
  "pr_template": null,
