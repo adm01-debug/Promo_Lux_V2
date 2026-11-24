@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b7314d44f0ca28ae19faf2f36701ddde92c24c69",
+  "sha": "e0648b2efe54de67fcd129917f7591f2546e7cee",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 15:58 UTC",
-  "files_total": 1157,
-  "code_files": 972,
-  "code_lines": 145679
+  "generated_at": "2026-11-24 16:44 UTC",
+  "files_total": 1158,
+  "code_files": 973,
+  "code_lines": 145744
  },
  "version": "1.3.2",
- "facts_hash": "b831171c17f4beca",
+ "facts_hash": "384ab5e89186a1c1",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 302,
-   ".sql": 258,
+   ".sql": 259,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -23394,6 +23394,7 @@
    "supabase/migrations/20261124125500_cron_evaluate_api_latency_15min.sql",
    "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql",
    "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+   "supabase/migrations/20261124190000_public_api_smoke_cron.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -34116,8 +34117,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 254,
-   "lines": 19375,
+   "files": 255,
+   "lines": 19440,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -101486,13 +101487,26 @@
     "(v_window + interval '1 hour');"
    ],
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124190000_public_api_smoke_cron.sql": {
+   "path": "supabase/migrations/20261124190000_public_api_smoke_cron.sql",
+   "lines": 65
   }
  },
  "git": {
-  "sha": "b7314d44f0ca28ae19faf2f36701ddde92c24c69",
+  "sha": "e0648b2efe54de67fcd129917f7591f2546e7cee",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "e0648b2",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)",
+    "files": [
+     "supabase/migrations/20261124190000_public_api_smoke_cron.sql"
+    ]
+   },
    {
     "sha": "b7314d4",
     "date": "2026-11-24",
@@ -101847,20 +101861,6 @@
      "supabase/functions/instagram-dlq-replay/index.ts",
      "supabase/functions/web-dlq-replay/index.ts"
     ]
-   },
-   {
-    "sha": "6cf80c9",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "chore(qa): auditoria completa de QA e plano de correção em 300 etapas (#159)",
-    "files": [
-     "docs/qa/00-RESUMO.md",
-     "docs/qa/01-INVENTARIO.md",
-     "docs/qa/02-CENARIOS.md",
-     "docs/qa/03-ACHADOS.md",
-     "docs/qa/04-PLANO.md",
-     "docs/qa/05-PROGRESSO.md"
-    ]
    }
   ],
   "hot_files": [
@@ -101917,6 +101917,10 @@
     2
    ],
    [
+    "supabase/migrations/20261124190000_public_api_smoke_cron.sql",
+    1
+   ],
+   [
     "supabase/functions/latency-alerts/index.ts",
     1
    ],
@@ -101938,10 +101942,6 @@
    ],
    [
     "supabase/functions/admin-list-companies/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/ai-agent/index.ts",
     1
    ]
   ]

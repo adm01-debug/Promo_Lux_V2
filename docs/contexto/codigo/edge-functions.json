@@ -1647,7 +1647,7 @@
     "src/components/lux/integrations/ApiDocsCard.tsx"
    ],
    "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
+   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },

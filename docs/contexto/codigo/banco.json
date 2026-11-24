@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 254,
+ "migrations": 255,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1274,6 +1274,12 @@
    "agenda": "53 3 1 * *",
    "migration": "20261121230000_scheduled_reports_bulk_imports_role_permissions.sql",
    "chama_edge": "send-scheduled-reports"
+  },
+  {
+   "nome": "public-api-smoke-15min",
+   "agenda": "2,17,32,47 * * * *",
+   "migration": "20261124190000_public_api_smoke_cron.sql",
+   "chama_edge": "public-api"
   },
   {
    "nome": "purge-dead-letter-daily",

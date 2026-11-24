@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b7314d44f0ca28ae19faf2f36701ddde92c24c69` (2026-11-24T12:55:34-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e0648b2efe54de67fcd129917f7591f2546e7cee` (2026-11-24T13:43:52-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (683), SQL (258), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (683), SQL (259), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1138 |
+| arquivos_total | 1139 |
 | arquivos_codigo | 710 |
 | linhas_codigo | 124479 |
 | rotas | 12 |
@@ -46,8 +46,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 97 |
 | edge_functions | 65 |
 | tabelas | 120 |
-| migrations | 254 |
-| cron_jobs | 40 |
+| migrations | 255 |
+| cron_jobs | 41 |
 | testes | 128 |
 | workflows | 9 |
 | scripts | 53 |
@@ -163,7 +163,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `oracle-search-decisors` — tabelas: companies, lusha_contacts, lusha_search_sessions; chamada por 1 arquivo(s) do front
 - `org-violation-alerts` — tabelas: notifications, org_violation_alerts, organization_members, webhook_deliveries, webhooks; chamada por 1 arquivo(s) do front, por SQL/cron
 - `pg-net-watchdog` — tabelas: notifications, pg_net_health_snapshots, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
-- `public-api` (verify_jwt=false) — tabelas: api_keys, api_request_logs, audit_logs; chamada por 1 arquivo(s) do front
+- `public-api` (verify_jwt=false) — tabelas: api_keys, api_request_logs, audit_logs; chamada por 1 arquivo(s) do front, por SQL/cron
 - `purge-soft-deleted` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
 - `qa-ingest-run` (verify_jwt=false) — tabelas: qa_ingest_tokens, qa_test_runs, user_roles; chamada por 1 arquivo(s) do front
 - `reaper-alerts` — tabelas: notifications, qa_reaper_runs, reaper_alert_history, reaper_alert_settings, user_roles; chamada por 0 arquivo(s) do front, por SQL/cron
@@ -212,6 +212,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `prune-dlq-health-snapshots-daily` 23 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `prune-qa-reaper-runs-daily` 47 3 * * * (20261121210000_retencao_cron_runs_e_qa_reaper.sql)
 - `prune-scheduled-report-runs-monthly` 53 3 1 * * → edge send-scheduled-reports (20261121230000_scheduled_reports_bulk_imports_role_permissions.sql)
+- `public-api-smoke-15min` 2,17,32,47 * * * * → edge public-api (20261124190000_public_api_smoke_cron.sql)
 - `purge-dead-letter-daily` 17 3 * * * (20261124010000_cron_snapshot_org_guard.sql)
 - `purge-soft-deleted-daily` 0 3 * * * → edge purge-soft-deleted (20261121190000_version_crons_with_vault_key.sql)
 - `reap-stuck-queue-tasks` * * * * * (20260723134028_4f3b5c29-1e04-4d63-95d1-2bb0f069e917.sql)
@@ -259,7 +260,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7872 nós · 16677 arestas · 670 comunidades · grafo do commit `b7314d44`
+- 7873 nós · 16677 arestas · 671 comunidades · grafo do commit `e0648b2e`
 - comunidades maiores: Monitoring.tsx (151), OrganizationsView.tsx (138), cn (130), react (125), snapshot.py (108), badge.tsx (98), @tanstack/react-query (89), DashboardView.tsx (86), gerar.mjs (80), useActiveOrganization (78), generate.py (73), vitest (72)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -376,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `e0648b2` ﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)
 - 2026-11-24 `b7314d4` fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)
 - 2026-11-24 `4bb36e5` fix: guarda de drift para de fechar o run de producao com falso positivo (#186)
 - 2026-11-24 `a8b5edf` ﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)
@@ -390,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `78ec030` infra: guardas de drift de schema e de run superado no CI de migrations (#173)
 - 2026-11-24 `7f05370` feat(monitoramento): aba "Recuperacao & DR" consome system-recovery-status (#175)
 - 2026-11-24 `25e2bf3` chore: inventario do estado real (semanal)
-- 2026-11-24 `faad34a` fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

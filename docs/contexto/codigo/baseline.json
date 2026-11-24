@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b7314d44f0ca28ae19faf2f36701ddde92c24c69",
+  "commit": "e0648b2efe54de67fcd129917f7591f2546e7cee",
   "branch": "main",
-  "data_commit": "2026-11-24T12:55:34-03:00",
+  "data_commit": "2026-11-24T13:43:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e0648b2",
+    "data": "2026-11-24",
+    "assunto": "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)"
+   },
    {
     "sha": "b7314d4",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "f4bf977",
     "data": "2026-11-23",
     "assunto": "fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)"
-   },
-   {
-    "sha": "076479d",
-    "data": "2026-11-23",
-    "assunto": "fix(build): aplica o patch do mcp-js no npm install, nao so no prebuild (#169)"
    }
   ],
-  "arquivos_mudados_7d": 260,
+  "arquivos_mudados_7d": 261,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 135
+    "commits": 136
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1138,
+  "arquivos_total": 1139,
   "arquivos_codigo": 710,
   "linhas_codigo": 124479,
   "rotas": 12,
@@ -322,8 +322,8 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 254,
-  "cron_jobs": 40,
+  "migrations": 255,
+  "cron_jobs": 41,
   "testes": 128,
   "workflows": 9,
   "scripts": 53,
