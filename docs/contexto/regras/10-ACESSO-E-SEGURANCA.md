@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `588525f4e3` · branch `main` · 2026-11-24 09:02 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `faad34a424` · branch `main` · 2026-11-24 09:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -8,7 +8,7 @@
 `admin`, `agent`, `granted`, `input`, `sdr`, `user`, `viewer`
 
 - Tabelas de perfil/permissão: `organization_members`, `user_roles`, `role_permissions`
-- Colunas de perfil: `stakeholders.role` (text), `agent_chat_messages.role` (TEXT NOT NULL CHECK (role IN ('user', 'agent'))), `organization_members.role` (public.app_role NOT NULL DEFAULT 'viewer'), `organization_invites.role` (public.app_role NOT NULL DEFAULT 'viewer'), `user_roles.role` (public.app_role NOT NULL), `role_permissions.role` (public.app_role not null)
+- Colunas de perfil: `stakeholders.role` (text), `agent_chat_messages.role` (TEXT NOT NULL CHECK (role IN ('user', 'agent'))), `organization_members.role` (public.app_role NOT NULL SET DEFAULT 'viewer'::public.app_role), `organization_invites.role` (public.app_role NOT NULL SET DEFAULT 'viewer'::public.app_role), `user_roles.role` (public.app_role NOT NULL), `role_permissions.role` (public.app_role not null)
 - Claims do JWT usados em políticas/funções: nenhum
 - Funções usadas dentro de políticas RLS (a regra real está no corpo delas — veja `06`): `default_org_for_current_user`, `has_org_role`, `has_role`, `is_org_member`
 
@@ -26,10 +26,10 @@
 | `apollo_rate_state` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `apollo_search_cache` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `audit_logs` | enabled | service_role: true<br>authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')<br>authenticated: public.has_role(auth.uid(), 'admin'::public.app_role) | service_role: true | service_role: true | service_role: true |
-| `auth_rate_limits` | enabled | service_role: true | service_role: true | service_role: true | service_role: true |
+| `auth_rate_limits` | enabled | service_role: true<br>public: false | service_role: true<br>public: false | service_role: true<br>public: false | service_role: true<br>public: false |
 | `automation_alerts` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `automation_execution_logs` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | — | authenticated: public.has_role(auth.uid(), 'admin') |
-| `automation_steps` | enabled | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | — |
+| `automation_steps` | enabled | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() ) | public: (organization_id IN ( SELECT organization_members.organization_id FROM organization_members WHERE (organization_members.user_id = au |
 | `bulk_imports` | enabled | authenticated: user_id = auth.uid()<br>service_role: true | authenticated: user_id = auth.uid()<br>service_role: true | service_role: true | service_role: true |
 | `campaign_events` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
 | `campaign_messages` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | — | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
@@ -65,8 +65,8 @@
 | `email_sync_log` | enabled | authenticated: EXISTS ( SELECT 1 FROM public.email_accounts ea WHERE ea.id = email_sync_log.email_account_id AND ( (ea.scope_type = 'user' A<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `email_template_stats` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
 | `email_templates` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) and deleted_at is null<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
-| `feature_flags` | enabled | public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()<br>service_role: true | service_role: true | service_role: true | service_role: true |
-| `health_checks` | enabled | public: auth.role() = 'authenticated' | — | — | — |
+| `feature_flags` | enabled | public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()<br>service_role: true<br>public: (auth.uid() IN ( SELECT organization_members.user_id FROM organization_members WHERE (organization_members.organization_id = feature<br>authenticated: organization_id IS NULL | service_role: true | service_role: true | service_role: true |
+| `health_checks` | enabled | public: auth.role() = 'authenticated'<br>public: true | — | — | — |
 | `idempotency_keys` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id<br>public: auth.uid() = user_id | — | — |
 | `incidents` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) and deleted_at is null<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
 | `instagram_scrape_dead_letter` | enabled | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | — | — | — |
@@ -74,7 +74,7 @@
 | `instagram_scrape_results` | enabled | authenticated: organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid()) | — | — | — |
 | `intent_signals` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `ip_allowlist` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role) |
-| `ipc_config` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid())<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') |
+| `ipc_config` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid())<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr')<br>authenticated: user_id = auth.uid() |
 | `job_exports` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `lead_scores` | enabled | authenticated: organization_id is null and user_id = auth.uid() or public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: organization_id is null and user_id = auth.uid() or public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
 | `lusha_contacts` | enabled | public: organization_id = public.default_org_for_current_user()<br>service_role: true | service_role: true<br>authenticated: user_id = auth.uid() AND has_org_role(organization_id, auth.uid(), 'viewer'::app_role) | public: organization_id = public.default_org_for_current_user()<br>service_role: true | public: organization_id = public.default_org_for_current_user()<br>service_role: true |
@@ -91,7 +91,7 @@
 | `org_proxies` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `org_retry_policies` | enabled | authenticated: public.is_org_member(auth.uid(), organization_id) | — | — | — |
 | `org_scrape_rate_limits` | enabled | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin')<br>authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin') | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin') | authenticated: public.has_org_role(auth.uid(), organization_id, 'admin') |
-| `org_violation_alert_settings` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | — |
+| `org_violation_alert_settings` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: has_org_role(organization_id, auth.uid(), 'admin'::app_role) |
 | `org_violation_alerts` | enabled | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | — | — | — |
 | `organization_invites` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') AND created_by = auth.uid() | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `organization_members` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') OR user_id = auth.uid() |
@@ -105,7 +105,7 @@
 | `qa_ingest_tokens` | enabled | — | — | — | — |
 | `qa_reaper_runs` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `qa_test_runs` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
-| `queue_sla_defaults` | enabled | authenticated: true | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | — |
+| `queue_sla_defaults` | enabled | authenticated: true | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
 | `queue_sla_history` | enabled | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | — | — | — |
 | `reaper_alert_history` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `reaper_alert_settings` | enabled | authenticated: public.has_role(auth.uid(), 'admin')<br>service_role: true | service_role: true | authenticated: public.has_role(auth.uid(), 'admin')<br>service_role: true | service_role: true |
@@ -123,10 +123,10 @@
 | `scrape_dead_letter` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
 | `scrape_jobs` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `scrape_queue` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | — | — | — |
-| `scrape_results` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
+| `scrape_results` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>authenticated: user_id = auth.uid() |
 | `scrape_worker_state` | enabled | authenticated: true | — | — | — |
 | `sla_alert_history` | enabled | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | — | — | — |
-| `sla_alert_settings` | enabled | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | — |
+| `sla_alert_settings` | enabled | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | authenticated: has_role(auth.uid(), 'admin'::app_role) |
 | `sla_autotune_runs` | enabled | authenticated: public.has_role(auth.uid(), 'admin'::app_role) | — | — | — |
 | `sla_snapshots` | enabled | authenticated: true | — | — | — |
 | `stakeholders` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
@@ -142,12 +142,12 @@
 | `webhook_deliveries` | enabled | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | service_role: true | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | service_role: true |
 | `webhooks` | enabled | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 | `workflow_run_events` | enabled | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | service_role: true | service_role: true | service_role: true |
-| `workflow_runs` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
+| `workflow_runs` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>authenticated: user_id = auth.uid() |
 | `workflows` | enabled | service_role: true<br>authenticated: public.is_org_member(organization_id, auth.uid()) | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'sdr') | service_role: true<br>authenticated: public.has_org_role(organization_id, auth.uid(), 'admin') |
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 205 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 206 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -299,7 +299,7 @@
 - `supabase/migrations/20260721224926_272e3afc-5f57-4804-89b2-f246c4a8f56b.sql`
 - `supabase/migrations/20260721225534_28c2ba63-b892-4c2a-bcbb-a4b31f0423de.sql`
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
-- … +55 (lista completa em `context.json`)
+- … +56 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -378,6 +378,10 @@
 - `fail_web_scrape_task`
 - `fail_workflow_step`
 - `finish_workflow_run`
+- `fn_lusha_contact_mark_cache_hit`
+- `fn_lux_cache_stats`
+- `fn_lux_enrichment_gate`
+- `fn_lux_save_enriched_contact`
 - `fn_web_scrape_regression_check`
 - `fulfill_dsar_request`
 - `generate_scim_token`
@@ -517,13 +521,13 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated, service_role | select | `oracle_v2_health`, `v_sec_definer_anon_grants`, `v_extensions_audit` |
 | grant | authenticated, service_role, anon | execute | `default_sla_seconds` |
 | grant | service_role | all | `email_suppressions`, `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `partition_policies`, `partition_advisories`, `automation_execution_logs`, `dlq_health_snapshots`, `dlq_alert_settings`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_settings`, `api_latency_alert_history`, `lusha_dm_search_history`, `lusha_contacts` … +61 |
-| grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +99 |
+| grant | service_role | execute | `pg_catalog_rls_tables`, `get_sector_summary`, `purge_soft_deleted`, `advance_recipient_step`, `advance_recipient_step`, `campaign_ab_stats`, `decide_ab_winner`, `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `prune_auth_rate_limits` … +103 |
 | grant | service_role | select | `oracle_v2_health`, `deal_lost_reason_stats`, `sales_goal_progress`, `sales_goals_detailed`, `org_leaderboard`, `satisfaction_stats`, `email_template_stats` |
 | revoke | PUBLIC | all | `capture_db_health_snapshot`, `enqueue_scrape_task`, `claim_scrape_tasks`, `complete_scrape_task`, `fail_scrape_task`, `replay_dead_letter`, `evaluate_partition_policies`, `log_automation_event`, `reset_circuit_breaker`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts`, `record_vault_cookie_snapshots`, `evaluate_vault_cookie_alerts`, `claim_instagram_tasks`, `replay_instagram_dead_letter_batch` … +8 |
 | revoke | PUBLIC | execute | `get_sector_summary`, `get_dashboard_stats`, `enqueue_webhook_event`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages` … +20 |
 | revoke | PUBLIC, anon | all | `replay_dead_letter_batch`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_trend`, `capture_api_latency_snapshots`, `evaluate_api_latency_alerts`, `prune_api_latency_snapshots`, `worker_should_run`, `worker_report_batch`, `dlq_top_reasons`, `api_latency_percentiles`, `apply_retry_advisory`, `rollback_retry_advisory`, `enrichment_funnel_counts`, `sla_deadline` … +1 |
 | revoke | PUBLIC, anon | execute | `get_sector_summary`, `campaign_ab_stats` |
-| revoke | PUBLIC, anon, authenticated | all | `pg_catalog_rls_tables`, `defer_scrape_task`, `dlq_purge_stale_network_errors`, `record_places_api_call`, `claim_web_scrape_tasks`, `complete_web_scrape_task`, `fail_web_scrape_task`, `defer_web_scrape_task`, `prune_api_request_logs`, `prune_audit_logs`, `prune_automation_execution_logs`, `prune_campaign_events`, `prune_email_sync_log`, `worker_report_batch`, `worker_should_run` … +8 |
+| revoke | PUBLIC, anon, authenticated | all | `pg_catalog_rls_tables`, `defer_scrape_task`, `dlq_purge_stale_network_errors`, `record_places_api_call`, `claim_web_scrape_tasks`, `complete_web_scrape_task`, `fail_web_scrape_task`, `defer_web_scrape_task`, `prune_api_request_logs`, `prune_audit_logs`, `prune_automation_execution_logs`, `prune_campaign_events`, `prune_email_sync_log`, `worker_report_batch`, `worker_should_run` … +12 |
 | revoke | PUBLIC, anon, authenticated | execute | `purge_soft_deleted`, `advance_recipient_step`, `decide_ab_winner`, `replay_web_dead_letter_batch`, `web_dlq_health_metrics`, `api_latency_percentiles`, `dlq_top_reasons`, `prune_pg_net_health_snapshots`, `pg_net_watchdog_should_notify`, `pg_net_watchdog_try_lock`, `system_recovery_health`, `normal_two_sided_p`, `ab_two_proportion_test`, `decide_ab_winner` |
 | revoke | PUBLIC, authenticated, anon | execute | `check_oracle_rate_limit`, `check_api_key_rate_limit` |
 | revoke | anon | all | `v_sec_definer_anon_grants`, `v_extensions_audit`, `replay_instagram_dead_letter_batch`, `incidents` |

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `588525f4e3` · branch `main` · 2026-11-24 09:02 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `faad34a424` · branch `main` · 2026-11-24 09:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `sales_goals` | SDR+ insert goals | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | SDR+ update goals | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | Admins delete goals | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
-| … +38 linhas — lista completa em `context.json` | | | | | | |
+| … +49 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -331,7 +331,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `companies` | `version` | default 1 |
 | `scrape_jobs` | `id` | PK; default gen_random_uuid() |
 | `scrape_jobs` | `name` | obrigatório |
-| `scrape_jobs` | `status` | default 'pending' |
+| `scrape_jobs` | `status` | default 'pending'::public.scrape_job_status |
 | `scrape_jobs` | `source` | default 'gmaps' |
 | `scrape_jobs` | `config` | default '{}' |
 | `scrape_jobs` | `results_count` | default 0 |
@@ -359,7 +359,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `ipc_config` | `organization_id` | default public.default_org_for_current_user() |
 | `workflows` | `id` | PK; default gen_random_uuid() |
 | `workflows` | `name` | obrigatório |
-| `workflows` | `status` | default 'draft' |
+| `workflows` | `status` | default 'draft'::public.workflow_status |
 | `workflows` | `steps` | default '[]' |
 | `workflows` | `config` | default '{}' |
 | `workflows` | `leads_processed` | default 0 |
@@ -420,7 +420,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `intent_signals` | `(tabela)` | constraint intent_signals_type_check CHECK (type IN ('website_visit','hiring','funding','tech_adoption','content_engagement')) |
 | `campaigns` | `id` | PK; default gen_random_uuid() |
 | `campaigns` | `name` | obrigatório |
-| `campaigns` | `status` | default 'draft' |
+| `campaigns` | `status` | default 'draft'::public.campaign_status |
 | `campaigns` | `prospects` | default 0 |
 | `campaigns` | `sent` | default 0 |
 | `campaigns` | `opened` | default 0 |
@@ -453,14 +453,14 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `organization_members` | `id` | PK; default gen_random_uuid() |
 | `organization_members` | `organization_id` | obrigatório; FK → organizations.id ON DELETE CASCADE |
 | `organization_members` | `user_id` | obrigatório |
-| `organization_members` | `role` | default 'viewer' |
+| `organization_members` | `role` | default 'viewer'::public.app_role |
 | `organization_members` | `created_at` | default now() |
 | `organization_members` | `scim_active` | obrigatório |
 | `organization_members` | `(tabela)` | UNIQUE (organization_id, user_id) |
 | `organization_invites` | `id` | PK; default gen_random_uuid() |
 | `organization_invites` | `organization_id` | obrigatório; FK → organizations.id ON DELETE CASCADE |
 | `organization_invites` | `token` | único; default encode(gen_random_bytes(24) |
-| `organization_invites` | `role` | default 'viewer' |
+| `organization_invites` | `role` | default 'viewer'::public.app_role |
 | `organization_invites` | `created_by` | obrigatório |
 | `organization_invites` | `expires_at` | default (now() |
 | `organization_invites` | `revoked` | default false |
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `email_sync_log` | `created_at` | default now() |
 | `oauth_sandbox_snapshots` | `id` | PK; default gen_random_uuid() |
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
-| … +824 linhas — lista completa em `context.json` | | |
+| … +834 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -739,6 +739,9 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_warmup_profiles_updated | BEFORE UPDATE | `warmup_profiles` | `update_updated_at_column` |  |
 | trg_campaign_warmup_state_updated | BEFORE UPDATE | `campaign_warmup_state` | `update_updated_at_column` |  |
 | trg_workflow_run_events_no_update | BEFORE UPDATE | `workflow_run_events` | `prevent_workflow_run_events_update` |  |
+| trg_lc_updated_at | BEFORE UPDATE | `lusha_contacts` | `update_updated_at_column` |  |
+| trg_lss_updated_at | BEFORE UPDATE | `lusha_search_sessions` | `update_updated_at_column` |  |
+| update_auth_rate_limits_updated_at | BEFORE UPDATE | `auth_rate_limits` | `update_updated_at_column` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 
@@ -897,6 +900,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fail_workflow_step` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `finish_workflow_run` | run % nao existe | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `generate_scim_token` | permission_denied | `supabase/migrations/20261124040000_scim_provisioning.sql` |
+| `fn_lux_save_enriched_contact` | organization_id Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
+| `fn_lux_save_enriched_contact` | linkedin_url nÃ£o pode ser vazia | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
+| `fn_lux_save_enriched_contact` | full_name Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -905,11 +911,11 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | Tabela | Coluna | Valores permitidos (enum/CHECK) | Default |
 |---|---|---|---|
 | `companies` | `business_status` | **livre (sem enum/CHECK)** |  |
-| `scrape_jobs` | `status` | **livre (sem enum/CHECK)** | `pending` |
-| `workflows` | `status` | **livre (sem enum/CHECK)** | `draft` |
+| `scrape_jobs` | `status` | `pending`, `running`, `working`, `completed`, `failed`, `cancelled` | `pending` |
+| `workflows` | `status` | `draft`, `active`, `paused`, `completed`, `failed`, `running`, `archived` | `draft` |
 | `workflow_runs` | `status` | `cancelled`, `completed`, `failed`, `pending`, `queued`, `running` | `pending` |
 | `workflow_runs` | `current_step` | **livre (sem enum/CHECK)** |  |
-| `campaigns` | `status` | **livre (sem enum/CHECK)** | `draft` |
+| `campaigns` | `status` | `draft`, `active`, `paused`, `completed`, `archived` | `draft` |
 | `webhook_deliveries` | `status` | `failed`, `pending`, `retrying`, `sending`, `success` | `pending` |
 | `campaign_recipients` | `status` | `bounced`, `failed`, `pending`, `queued`, `replied`, `sent`, `unsubscribed` | `pending` |
 | `campaign_recipients` | `current_step` | **livre (sem enum/CHECK)** | `0` |
@@ -927,8 +933,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `automation_execution_logs` | `status` | `cancelled`, `dead`, `failed`, `retrying`, `started`, `succeeded` | `started` |
 | `automation_execution_logs` | `http_status` | **livre (sem enum/CHECK)** |  |
 | `lusha_dm_search_history` | `status` | `cancelled`, `done`, `failed`, `processing`, `queued` |  |
-| `lusha_contacts` | `enrichment_status` | **livre (sem enum/CHECK)** | `pending` |
-| `lusha_search_sessions` | `status` | **livre (sem enum/CHECK)** | `running` |
+| `lusha_contacts` | `enrichment_status` | `bitrix_duplicate`, `empty`, `enriched`, `enriching`, `error`, `error_auth`, `error_rate_limit`, `not_found`, `pending`, `pending_enrichment`, `pushing_bitrix`, `sent_to_bitrix` | `pending` |
+| `lusha_search_sessions` | `status` | `cancelled`, `completed`, `error`, `running` | `running` |
 | `circuit_breaker_snapshots` | `state` | `closed`, `half-open`, `open` |  |
 | `circuit_breaker_alert_history` | `state` | **livre (sem enum/CHECK)** |  |
 | `vault_cookie_snapshots` | `health_status` | **livre (sem enum/CHECK)** |  |
@@ -1427,6 +1433,8 @@ _nenhum item encontrado_
 | `org_leaderboard` | `WITH months AS ( SELECT DISTINCT date_trunc('month', d.closed_at)::date AS month_start, d.organization_id FROM public.deals d WHERE d.closed_at IS NOT NULL AND d.deleted_at IS NULL UNION SELECT DISTINCT date_trunc('month', ac.created_at)::date, ac.organization_id FROM public.deal_activities ac ), ba …` |
 | `satisfaction_stats` | `SELECT s.id AS survey_id, s.organization_id, s.name, s.kind, s.scale_max, s.active, COUNT(r.id) FILTER (WHERE r.responded_at IS NOT NULL) AS responses, ROUND(AVG(r.score) FILTER (WHERE r.responded_at IS NOT NULL)::numeric, 2) AS avg_score, COUNT(r.id) FILTER (WHERE r.responded_at IS NOT NULL AND r.s …` |
 | `email_template_stats` | `select t.organization_id, t.category, count(*)::integer as templates, count(*) filter (where t.usage_count > 0)::integer as usados, coalesce(sum(t.usage_count), 0)::integer as usos_totais, max(t.last_used_at) as ultimo_uso from public.email_templates t where t.deleted_at is null group by t.organizat …` |
+| `v_lusha_cache_stats` | `SELECT organization_id, count(*) AS total_contacts, count(*) FILTER (WHERE has_email) AS with_email, count(*) FILTER (WHERE has_phone) AS with_phone, count(*) FILTER (WHERE last_enriched_at IS NOT NULL AND last_enriched_at > (now() - ((COALESCE(data_freshness_ttl, 90) \|\| ' days'::text)::interval)) A …` |
+| `v_lux_enrichment_health` | `WITH stats AS ( SELECT lusha_contacts.organization_id, count(*) AS total_contacts, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'enriched'::text) AS cnt_enriched, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'pending_enrichment'::text) AS cnt_pending, count(*) FILTER (WHERE …` |
 
 ### G.3 Funções de cálculo/decisão no código
 

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "588525f4e3e1390f03965828a987d3a3bf1ab243",
+  "commit": "faad34a4240afda1e4eabc5a7c8da67d3e378e8b",
   "branch": "main",
-  "data_commit": "2026-11-24T06:01:53-03:00",
+  "data_commit": "2026-11-24T06:53:22-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "faad34a",
+    "data": "2026-11-24",
+    "assunto": "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)"
+   },
    {
     "sha": "588525f",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "fddbb4f",
     "data": "2026-11-22",
     "assunto": "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)"
-   },
-   {
-    "sha": "427ec06",
-    "data": "2026-11-22",
-    "assunto": "fix(functions): restaura bundle inline do mcp e barra import com caminho absoluto (#141)"
    }
   ],
-  "arquivos_mudados_7d": 246,
+  "arquivos_mudados_7d": 248,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 120
+    "commits": 121
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1129,
+  "arquivos_total": 1131,
   "arquivos_codigo": 709,
   "linhas_codigo": 124088,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 249,
+  "migrations": 251,
   "cron_jobs": 39,
   "testes": 128,
   "workflows": 9,
@@ -777,7 +777,6 @@
    "email_suppressions",
    "feature_flags",
    "idempotency_keys",
-   "lusha_contacts",
    "organization_members",
    "sales_goals",
    "webhooks"

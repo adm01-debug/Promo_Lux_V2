@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "588525f4e3e1390f03965828a987d3a3bf1ab243",
+  "sha": "faad34a4240afda1e4eabc5a7c8da67d3e378e8b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 09:02 UTC",
-  "files_total": 1148,
-  "code_files": 966,
-  "code_lines": 144349
+  "generated_at": "2026-11-24 09:53 UTC",
+  "files_total": 1150,
+  "code_files": 968,
+  "code_lines": 145043
  },
  "version": "1.3.2",
- "facts_hash": "e999064bf80eae1e",
+ "facts_hash": "23c7e272b2b377f3",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 301,
-   ".sql": 253,
+   ".sql": 255,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -636,7 +636,7 @@
      },
      {
       "name": "status",
-      "type": "TEXT NOT NULL DEFAULT 'pending'",
+      "type": "TEXT NOT NULL SET DEFAULT 'pending'::public.scrape_job_status",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260329204544_d66f3a77-7ee1-4839-a095-939ec69f31c5.sql"
@@ -898,7 +898,7 @@
      },
      {
       "name": "status",
-      "type": "TEXT NOT NULL DEFAULT 'draft'",
+      "type": "TEXT NOT NULL SET DEFAULT 'draft'::public.workflow_status",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260329204931_19a5a6fe-5bc6-49cb-b527-b0e6c4c00b68.sql"
@@ -1491,7 +1491,7 @@
      },
      {
       "name": "status",
-      "type": "text NOT NULL DEFAULT 'draft'",
+      "type": "text NOT NULL SET DEFAULT 'draft'::public.campaign_status",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260403110857_b35a6a5c-ab23-4bbe-9a31-cfb59de97723.sql"
@@ -1809,7 +1809,7 @@
      },
      {
       "name": "role",
-      "type": "public.app_role NOT NULL DEFAULT 'viewer'",
+      "type": "public.app_role NOT NULL SET DEFAULT 'viewer'::public.app_role",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
@@ -1868,7 +1868,7 @@
      },
      {
       "name": "role",
-      "type": "public.app_role NOT NULL DEFAULT 'viewer'",
+      "type": "public.app_role NOT NULL SET DEFAULT 'viewer'::public.app_role",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260422201601_940b28cc-0f04-4a93-9866-11fd3d1edba5.sql"
@@ -4422,7 +4422,7 @@
      },
      {
       "name": "status",
-      "type": "automation_status DEFAULT 'pending'",
+      "type": "automation_status SET DEFAULT 'pending'::public.automation_status",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260523172609_29822c27-8806-4fbc-93c4-610775a6791f.sql"
@@ -4707,7 +4707,7 @@
      },
      {
       "name": "status",
-      "type": "public.scrape_queue_status NOT NULL DEFAULT 'queued'",
+      "type": "public.scrape_queue_status NOT NULL SET DEFAULT 'queued'::public.scrape_queue_status",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260712184225_7a9e67f2-f6a7-4329-8476-0981fdab6bfb.sql"
@@ -6095,10 +6095,17 @@
      },
      {
       "name": "data_freshness_ttl",
-      "type": "number not null",
+      "type": "integer NOT NULL DEFAULT 90",
       "fk": "",
       "generated": "",
-      "src": "src/integrations/supabase/types.ts"
+      "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+     },
+     {
+      "name": "last_recheck_at",
+      "type": "timestamptz",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
      },
      {
       "name": "enrichment_attempts",
@@ -6120,17 +6127,16 @@
       "fk": "",
       "generated": "",
       "src": "src/integrations/supabase/types.ts"
-     },
-     {
-      "name": "last_recheck_at",
-      "type": "string | null",
-      "fk": "",
-      "generated": "",
-      "src": "src/integrations/supabase/types.ts"
      }
     ],
     "constraints": [
-     "constraint lusha_contacts_contact_source_check CHECK (contact_source IN ('lusha', 'apollo'))"
+     "constraint lusha_contacts_bitrix_exige_dado CHECK (((enrichment_status IS NULL) OR (enrichment_status <> ALL (ARRAY['pushing_bitrix'::text, 'sent_to_bitrix'::text])) OR (email IS NOT NULL) OR (phone_formatted IS NOT NULL)))",
+     "constraint lusha_contacts_bitrix_exige_id CHECK (((enrichment_status IS NULL) OR (enrichment_status <> ALL (ARRAY['sent_to_bitrix'::text, 'bitrix_duplicate'::text])) OR ((bitrix_contact_id IS NOT NULL) AND (bitrix_contact_id <> ''::text))))",
+     "constraint lusha_contacts_confidence_score_check CHECK (((confidence_score >= 0) AND (confidence_score <= 100)))",
+     "constraint lusha_contacts_contact_source_check CHECK ((contact_source = ANY (ARRAY['lusha'::text, 'apollo'::text])))",
+     "constraint lusha_contacts_email_source_chk CHECK (((email_source IS NULL) OR (email_source = ANY (ARRAY['leadcontact'::text, 'payload_emails'::text, 'previous_job'::text, 'lusha_reveal'::text]))))",
+     "constraint lusha_contacts_enrichment_status_chk CHECK (((enrichment_status IS NULL) OR (enrichment_status = ANY (ARRAY['pending'::text, 'pending_enrichment'::text, 'enriching'::text, 'enriched'::text, 'not_found'::text, 'empty'::text, 'error'::text, 'error_auth'::text, 'error_rate_limit'::text, 'err …",
+     "constraint lusha_contacts_phone_source_chk CHECK (((phone_source IS NULL) OR (phone_source = ANY (ARRAY['leadcontact'::text, 'payload_phones'::text, 'lusha_reveal'::text]))))"
     ],
     "src": "supabase/migrations/20260715135053_8bd5f8d2-3d61-4cc7-9fb0-b59a874192f5.sql",
     "comment": "",
@@ -6203,14 +6209,14 @@
      },
      {
       "name": "api_version",
-      "type": "TEXT",
+      "type": "TEXT SET DEFAULT 'v3'",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      },
      {
       "name": "success",
-      "type": "BOOLEAN NOT NULL DEFAULT false",
+      "type": "BOOLEAN NOT NULL SET DEFAULT true",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
@@ -6251,7 +6257,9 @@
       "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql"
      }
     ],
-    "constraints": [],
+    "constraints": [
+     "constraint lusha_credit_usage_log_operation_check CHECK ((operation = ANY (ARRAY['search_contacts'::text, 'enrich_contact'::text, 'enrich_company'::text, 'decision_makers'::text, 'lookalike_contacts'::text, 'lookalike_companies'::text, 'signals_contacts'::text, 'signals_companies'::text, 'website_vi …"
+    ],
     "src": "supabase/migrations/20260715150000_lusha_credit_usage_log_redeclara.sql",
     "comment": "",
     "origin": "migration"
@@ -6295,7 +6303,7 @@
      },
      {
       "name": "search_type",
-      "type": "TEXT NOT NULL DEFAULT 'company'",
+      "type": "TEXT NOT NULL SET DEFAULT 'department_search'",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
@@ -6462,7 +6470,10 @@
       "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql"
      }
     ],
-    "constraints": [],
+    "constraints": [
+     "constraint lusha_search_sessions_search_type_check CHECK ((search_type = ANY (ARRAY['department_search'::text, 'decision_makers_domain'::text])))",
+     "constraint lusha_search_sessions_status_check CHECK ((status = ANY (ARRAY['running'::text, 'completed'::text, 'error'::text, 'cancelled'::text])))"
+    ],
     "src": "supabase/migrations/20260715164000_search_sessions_redeclara.sql",
     "comment": "",
     "origin": "migration"
@@ -7451,7 +7462,7 @@
      },
      {
       "name": "status",
-      "type": "public.web_scrape_status NOT NULL DEFAULT 'queued'",
+      "type": "public.web_scrape_status NOT NULL SET DEFAULT 'queued'::public.web_scrape_status",
       "fk": "",
       "generated": "",
       "src": "supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql"
@@ -15407,6 +15418,116 @@
     "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
     "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "name": "Serviço interno apenas",
+    "table": "auth_rate_limits",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "false",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Users can delete automation steps for their organization",
+    "table": "automation_steps",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "(organization_id IN ( SELECT organization_members.organization_id FROM organization_members WHERE (organization_members.user_id = auth.uid())))",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Users can view their org feature flags",
+    "table": "feature_flags",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "(auth.uid() IN ( SELECT organization_members.user_id FROM organization_members WHERE (organization_members.organization_id = feature_flags.organization_id)))",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Public can view health status",
+    "table": "health_checks",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "true",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Admins can delete settings",
+    "table": "org_violation_alert_settings",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "has_org_role(organization_id, auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "queue_sla_defaults_admin_delete",
+    "table": "queue_sla_defaults",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "sla_alert_settings_admin_delete",
+    "table": "sla_alert_settings",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Users can delete own ipc_config",
+    "table": "ipc_config",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "Users can delete own scrape_results",
+    "table": "scrape_results",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "Users can delete own workflow_runs",
+    "table": "workflow_runs",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "Authenticated users view global feature flags",
+    "table": "feature_flags",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id IS NULL",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "triggers": [
@@ -16453,6 +16574,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "trg_lc_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "lusha_contacts",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "trg_lss_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "lusha_search_sessions",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "update_auth_rate_limits_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "auth_rate_limits",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
    }
   ],
   "functions": {
@@ -19434,6 +19582,105 @@
      "org_integrations"
     ]
    },
+   "fn_lusha_contact_cache_lookup": {
+    "args": "p_linkedin_url text, p_organization_id uuid DEFAULT NULL::uuid",
+    "returns": "SETOF lusha_contacts",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": false,
+    "search_path": true,
+    "body": "BEGIN IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RETURN; END IF; RETURN QUERY SELECT lc.* FROM public.lusha_contacts lc WHERE lower(rtrim(btrim(lc.linkedin_url),'/'))=lower(rtrim(btrim(p_linkedin_url),'/')) AND (p_organization_id IS NULL OR lc.organization_id=p_organization_id) AND lc.last_enriched_at IS NOT NULL AND lc.last_enriched_at>(now()-(coalesce(lc.data_freshness_ttl,90)||' days')::interval) AND lc.enrichment_status NOT IN ('pending_enrichment','pending','error','error_lusha','skipped','cancelled') AND (lc.has_email=true OR lc.has_phone=true) ORDER BY lc.last_enriched_at DESC LIMIT 1; END;",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
+   "fn_lusha_contact_mark_cache_hit": {
+    "args": "p_id uuid",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "BEGIN IF p_id IS NULL THEN RETURN; END IF; UPDATE public.lusha_contacts SET last_recheck_at=now() WHERE id=p_id; END;",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
+   "fn_lux_cache_gate": {
+    "args": "p_linkedin_url text, p_organization_id uuid DEFAULT NULL::uuid",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": false,
+    "search_path": true,
+    "body": "DECLARE hit public.lusha_contacts; BEGIN IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RETURN jsonb_build_object('cache_hit',false,'should_enrich',false,'reason','no_linkedin_url'); END IF; SELECT * INTO hit FROM public.fn_lusha_contact_cache_lookup(p_linkedin_url,p_organization_id); IF FOUND THEN RETURN jsonb_build_object('cache_hit',true,'should_enrich',false,'reason','fresh_cache','contact_id',hit.id,'full_name',hit.full_name,'first_name',hit.first_name,'job_title',hit.job_title,'company',hit.lusha_company_name,'email',hit.email,'has_email',hit.has_email,'has_phone',hit.has_phone,'linkedin_url',hit.linkedin_url,'enrichment_status',hit.enrichment_status,'last_enriched_at',hit.last_e …",
+    "raises": [],
+    "tables": [
+     "fn_lusha_contact_cache_lookup",
+     "hit"
+    ]
+   },
+   "fn_lux_cache_stats": {
+    "args": "p_organization_id uuid DEFAULT NULL::uuid",
+    "returns": "TABLE(metric text, value bigint)",
+    "lang": "sql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "SELECT 'total_contacts'::text, count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organization_id) UNION ALL SELECT 'cache_eligible_90d', count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organization_id) AND last_enriched_at>now()-interval'90 days' AND linkedin_url IS NOT NULL AND btrim(linkedin_url)<>'' UNION ALL SELECT 'cache_hits_recorded', count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organization_id) AND last_recheck_at IS NOT NULL UNION ALL SELECT 'pending_enrichment', count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organi …",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
+   "fn_lux_enrichment_gate": {
+    "args": "p_linkedin_url text, p_organization_id uuid",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_hit public.lusha_contacts; BEGIN IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RETURN jsonb_build_object('action','skip','reason','empty_linkedin_url'); END IF; SELECT lc.* INTO v_hit FROM public.lusha_contacts lc WHERE lower(rtrim(btrim(lc.linkedin_url),'/'))=lower(rtrim(btrim(p_linkedin_url),'/')) AND lc.organization_id=p_organization_id AND lc.last_enriched_at IS NOT NULL AND lc.last_enriched_at>(now()-(coalesce(lc.data_freshness_ttl,90)||' days')::interval) ORDER BY lc.last_enriched_at DESC LIMIT 1; IF FOUND THEN UPDATE public.lusha_contacts SET last_recheck_at=now() WHERE id=v_hit.id; RETURN jsonb_build_object('action','cache_hit','contact_id',v_hit.id,'organization_id' …",
+    "raises": [],
+    "tables": [
+     "lusha_contacts",
+     "v_hit"
+    ]
+   },
+   "fn_lux_save_enriched_contact": {
+    "args": "p_organization_id uuid, p_user_id uuid, p_linkedin_url text, p_lusha_company_name text, p_full_name text, p_enrichment_status text, p_raw_payload jsonb DEFAULT '{}'::jsonb, p_has_email boolean DEFAULT …",
+    "returns": "TABLE(contact_id uuid, was_created boolean, enrichment_status text)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_id uuid; v_was_created boolean; v_status text; BEGIN IF p_organization_id IS NULL THEN RAISE EXCEPTION 'organization_id Ã© obrigatÃ³rio'; END IF; IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RAISE EXCEPTION 'linkedin_url nÃ£o pode ser vazia'; END IF; IF length(btrim(coalesce(p_full_name,'')))=0 THEN RAISE EXCEPTION 'full_name Ã© obrigatÃ³rio'; END IF; INSERT INTO public.lusha_contacts (organization_id,user_id,linkedin_url,lusha_company_name,full_name,enrichment_status,raw_lusha_payload,has_email,has_phone,dedup_hash,session_id,last_enriched_at,enrichment_attempts) VALUES (p_organization_id,coalesce(p_user_id,auth.uid()),p_linkedin_url,coalesce(p_lusha_company_name,'N/A'),p_ …",
+    "raises": [
+     "organization_id Ã© obrigatÃ³rio",
+     "linkedin_url nÃ£o pode ser vazia",
+     "full_name Ã© obrigatÃ³rio"
+    ],
+    "tables": [
+     "SET",
+     "lusha_contacts",
+     "v_id"
+    ]
+   },
+   "fn_mark_contact_rechecked": {
+    "args": "p_id uuid, p_enrichment_status text DEFAULT 'enriched'::text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": false,
+    "search_path": true,
+    "body": "BEGIN IF p_id IS NULL THEN RETURN false; END IF; UPDATE public.lusha_contacts SET last_recheck_at=now(),last_enriched_at=now(),enrichment_status=p_enrichment_status,updated_at=now() WHERE id=p_id; RETURN FOUND; END;",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -19457,83 +19704,6 @@
     "tables": []
    },
    "SetofOptions": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lusha_contact_cache_lookup": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lusha_contact_mark_cache_hit": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_cache_gate": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_cache_stats": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_enrichment_gate": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_save_enriched_contact": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_mark_contact_rechecked": {
     "args": "",
     "returns": "?",
     "lang": "",
@@ -22546,6 +22716,326 @@
     "unique": false,
     "where": "WHERE revoked_at IS NULL",
     "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   },
+   {
+    "name": "idx_api_request_logs_created_brin",
+    "table": "api_request_logs",
+    "columns": "created_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_campaign_events_campaign_occurred",
+    "table": "campaign_events",
+    "columns": "campaign_id, occurred_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_campaign_messages_recipient_step_unique",
+    "table": "campaign_messages",
+    "columns": "recipient_id, step_index",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_campaign_recipients_campaign_status",
+    "table": "campaign_recipients",
+    "columns": "campaign_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_campaign_replies_campaign_received",
+    "table": "campaign_replies",
+    "columns": "campaign_id, received_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_companies_user_id_ipc_score",
+    "table": "companies",
+    "columns": "user_id, ipc_score DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_company_reviews_organization_id",
+    "table": "company_reviews",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_dashboard_layouts_organization_id",
+    "table": "dashboard_layouts",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_email_accounts_org_scope",
+    "table": "email_accounts",
+    "columns": "organization_id, scope_type",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_email_sync_log_created_brin",
+    "table": "email_sync_log",
+    "columns": "created_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_ig_queue_sla_due",
+    "table": "instagram_scrape_queue",
+    "columns": "status, next_run_at, created_at, sla_seconds",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_instagram_scrape_queue_created_by",
+    "table": "instagram_scrape_queue",
+    "columns": "created_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lc_linkedin_url_org",
+    "table": "lusha_contacts",
+    "columns": "organization_id, linkedin_url",
+    "unique": false,
+    "where": "WHERE (linkedin_url IS NOT NULL)",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lss_bitrix",
+    "table": "lusha_search_sessions",
+    "columns": "bitrix_card_id",
+    "unique": false,
+    "where": "WHERE (bitrix_card_id IS NOT NULL)",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lss_company",
+    "table": "lusha_search_sessions",
+    "columns": "company_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lss_created",
+    "table": "lusha_search_sessions",
+    "columns": "created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lss_status",
+    "table": "lusha_search_sessions",
+    "columns": "status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_bitrix_contact_id",
+    "table": "lusha_contacts",
+    "columns": "bitrix_contact_id",
+    "unique": false,
+    "where": "WHERE ((bitrix_contact_id IS NOT NULL) AND (bitrix_contact_id <> ''::text))",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_company_id",
+    "table": "lusha_contacts",
+    "columns": "company_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_dedup_hash",
+    "table": "lusha_contacts",
+    "columns": "dedup_hash",
+    "unique": false,
+    "where": "WHERE ((dedup_hash IS NOT NULL) AND (dedup_hash <> ''::text))",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_linkedin_cache",
+    "table": "lusha_contacts",
+    "columns": "lower(rtrim(btrim(linkedin_url",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_org_status_queue",
+    "table": "lusha_contacts",
+    "columns": "organization_id, enrichment_status, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_push_queue",
+    "table": "lusha_contacts",
+    "columns": "organization_id, enrichment_status",
+    "unique": false,
+    "where": "WHERE (enrichment_status = ANY (ARRAY['enriched'::text, 'pushing_bitrix'::text, 'error_bitrix'::text]))",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_session_id",
+    "table": "lusha_contacts",
+    "columns": "session_id, created_at DESC",
+    "unique": false,
+    "where": "WHERE (session_id IS NOT NULL)",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_stakeholder_id",
+    "table": "lusha_contacts",
+    "columns": "stakeholder_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_unique_per_org",
+    "table": "lusha_contacts",
+    "columns": "organization_id, lower(rtrim(btrim(linkedin_url",
+    "unique": true,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_contacts_user",
+    "table": "lusha_contacts",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_lusha_sessions_user",
+    "table": "lusha_search_sessions",
+    "columns": "user_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_next_best_actions_stakeholder_id",
+    "table": "next_best_actions",
+    "columns": "stakeholder_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_org_retry_policies_source_advisory_id",
+    "table": "org_retry_policies",
+    "columns": "source_advisory_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_org_retry_policies_updated_by",
+    "table": "org_retry_policies",
+    "columns": "updated_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_retry_policy_advisories_applied_by",
+    "table": "retry_policy_advisories",
+    "columns": "applied_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_retry_policy_advisories_rolled_back_by",
+    "table": "retry_policy_advisories",
+    "columns": "rolled_back_by",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_satisfaction_responses_company_id",
+    "table": "satisfaction_responses",
+    "columns": "company_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_scheduled_reports_organization_id",
+    "table": "scheduled_reports",
+    "columns": "organization_id",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_scrape_jobs_org_status",
+    "table": "scrape_jobs",
+    "columns": "organization_id, status",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_scrape_queue_org_status",
+    "table": "scrape_queue",
+    "columns": "organization_id, status, next_run_at",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_scrape_results_org_created",
+    "table": "scrape_results",
+    "columns": "organization_id, created_at DESC",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "idx_scrape_jobs_pending_active",
+    "table": "scrape_jobs",
+    "columns": "created_at DESC, id",
+    "unique": false,
+    "where": "WHERE (status = ANY (ARRAY['pending'::scrape_job_status, 'running'::scrape_job_status, 'working'::scrape_job_status]))",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "scrape_jobs_org_config_active_uk",
+    "table": "scrape_jobs",
+    "columns": "organization_id, config_hash",
+    "unique": true,
+    "where": "WHERE ((status = ANY (ARRAY['pending'::scrape_job_status, 'running'::scrape_job_status, 'working'::scrape_job_status])) AND (config_hash IS NOT NULL))",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "cron_jobs": [
@@ -22622,6 +23112,14 @@
    "email_template_stats": {
     "body": "select t.organization_id, t.category, count(*)::integer as templates, count(*) filter (where t.usage_count > 0)::integer as usados, coalesce(sum(t.usage_count), 0)::integer as usos_totais, max(t.last_used_at) as ultimo_uso from public.email_templates t where t.deleted_at is null group by t.organization_id, t.category",
     "src": "supabase/migrations/20261122200000_email_templates.sql"
+   },
+   "v_lusha_cache_stats": {
+    "body": "SELECT organization_id, count(*) AS total_contacts, count(*) FILTER (WHERE has_email) AS with_email, count(*) FILTER (WHERE has_phone) AS with_phone, count(*) FILTER (WHERE last_enriched_at IS NOT NULL AND last_enriched_at > (now() - ((COALESCE(data_freshness_ttl, 90) || ' days'::text)::interval)) AND (enrichment_status <> ALL (ARRAY['pending_enrichment'::text, 'pending'::text, 'error'::text, 'error_lusha'::text, 'skipped'::text, 'cancelled'::text])) AND (has_email = true OR has_phone = true)) AS cache_eligible_hits, count(*) FILTER (WHERE enrichment_status = 'pending_enrichment'::text) AS pen …",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   "v_lux_enrichment_health": {
+    "body": "WITH stats AS ( SELECT lusha_contacts.organization_id, count(*) AS total_contacts, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'enriched'::text) AS cnt_enriched, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'pending_enrichment'::text) AS cnt_pending, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'pushing_bitrix'::text) AS cnt_pushing_bitrix, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'error_bitrix'::text) AS cnt_error_bitrix, count(*) FILTER (WHERE lusha_contacts.enrichment_status <> ALL (ARRAY['enriched'::text, 'pending_enrichment'::text, …",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   },
   "sources": [
@@ -22874,6 +23372,8 @@
    "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
    "supabase/migrations/20261124040000_scim_provisioning.sql",
    "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
+   "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql",
+   "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -28449,6 +28949,70 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lusha_contact_mark_cache_hit",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lusha_contact_mark_cache_hit",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lux_cache_stats",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lux_cache_stats",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lux_enrichment_gate",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lux_enrichment_gate",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lux_save_enriched_contact",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lux_save_enriched_contact",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "raises": [
@@ -29216,6 +29780,21 @@
     "function": "generate_scim_token",
     "msg": "permission_denied",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "function": "fn_lux_save_enriched_contact",
+    "msg": "organization_id Ã© obrigatÃ³rio",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "function": "fn_lux_save_enriched_contact",
+    "msg": "linkedin_url nÃ£o pode ser vazia",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "function": "fn_lux_save_enriched_contact",
+    "msg": "full_name Ã© obrigatÃ³rio",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "seed": [],
@@ -33501,8 +34080,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 249,
-   "lines": 18436,
+   "files": 251,
+   "lines": 19130,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -40308,7 +40887,7 @@
    {
     "table": "scrape_jobs",
     "column": "status",
-    "rule": "default 'pending'"
+    "rule": "default 'pending'::public.scrape_job_status"
    },
    {
     "table": "scrape_jobs",
@@ -40448,7 +41027,7 @@
    {
     "table": "workflows",
     "column": "status",
-    "rule": "default 'draft'"
+    "rule": "default 'draft'::public.workflow_status"
    },
    {
     "table": "workflows",
@@ -40753,7 +41332,7 @@
    {
     "table": "campaigns",
     "column": "status",
-    "rule": "default 'draft'"
+    "rule": "default 'draft'::public.campaign_status"
    },
    {
     "table": "campaigns",
@@ -40918,7 +41497,7 @@
    {
     "table": "organization_members",
     "column": "role",
-    "rule": "default 'viewer'"
+    "rule": "default 'viewer'::public.app_role"
    },
    {
     "table": "organization_members",
@@ -40953,7 +41532,7 @@
    {
     "table": "organization_invites",
     "column": "role",
-    "rule": "default 'viewer'"
+    "rule": "default 'viewer'::public.app_role"
    },
    {
     "table": "organization_invites",
@@ -42153,7 +42732,7 @@
    {
     "table": "automation_steps",
     "column": "status",
-    "rule": "default 'pending'"
+    "rule": "default 'pending'::public.automation_status"
    },
    {
     "table": "automation_steps",
@@ -42308,7 +42887,7 @@
    {
     "table": "scrape_queue",
     "column": "status",
-    "rule": "default 'queued'"
+    "rule": "default 'queued'::public.scrape_queue_status"
    },
    {
     "table": "scrape_queue",
@@ -42903,7 +43482,7 @@
    {
     "table": "lusha_contacts",
     "column": "data_freshness_ttl",
-    "rule": "obrigatório"
+    "rule": "default 90"
    },
    {
     "table": "lusha_contacts",
@@ -42913,7 +43492,37 @@
    {
     "table": "lusha_contacts",
     "column": "(tabela)",
-    "rule": "constraint lusha_contacts_contact_source_check CHECK (contact_source IN ('lusha', 'apollo'))"
+    "rule": "constraint lusha_contacts_bitrix_exige_dado CHECK (((enrichment_status IS NULL) OR (enrichment_status <> ALL (ARRAY['pushing_bitrix'::text, 'sent_to_bitrix'::text])) OR (email IS NOT NULL) OR (phone_formatted IS NOT NULL)))"
+   },
+   {
+    "table": "lusha_contacts",
+    "column": "(tabela)",
+    "rule": "constraint lusha_contacts_bitrix_exige_id CHECK (((enrichment_status IS NULL) OR (enrichment_status <> ALL (ARRAY['sent_to_bitrix'::text, 'bitrix_duplicate'::text])) OR ((bitrix_contact_id IS NOT NULL) AND (bitrix_contact_id <> ''::text))))"
+   },
+   {
+    "table": "lusha_contacts",
+    "column": "(tabela)",
+    "rule": "constraint lusha_contacts_confidence_score_check CHECK (((confidence_score >= 0) AND (confidence_score <= 100)))"
+   },
+   {
+    "table": "lusha_contacts",
+    "column": "(tabela)",
+    "rule": "constraint lusha_contacts_contact_source_check CHECK ((contact_source = ANY (ARRAY['lusha'::text, 'apollo'::text])))"
+   },
+   {
+    "table": "lusha_contacts",
+    "column": "(tabela)",
+    "rule": "constraint lusha_contacts_email_source_chk CHECK (((email_source IS NULL) OR (email_source = ANY (ARRAY['leadcontact'::text, 'payload_emails'::text, 'previous_job'::text, 'lusha_reveal'::text]))))"
+   },
+   {
+    "table": "lusha_contacts",
+    "column": "(tabela)",
+    "rule": "constraint lusha_contacts_enrichment_status_chk CHECK (((enrichment_status IS NULL) OR (enrichment_status = ANY (ARRAY['pending'::text, 'pending_enrichment'::text, 'enriching'::text, 'enriched'::text, 'not_found'::text, 'empty'::text, 'error'::text, 'error_auth'::text, 'error_rate_limit'::text, 'err …"
+   },
+   {
+    "table": "lusha_contacts",
+    "column": "(tabela)",
+    "rule": "constraint lusha_contacts_phone_source_chk CHECK (((phone_source IS NULL) OR (phone_source = ANY (ARRAY['leadcontact'::text, 'payload_phones'::text, 'lusha_reveal'::text]))))"
    },
    {
     "table": "lusha_credit_usage_log",
@@ -42937,8 +43546,13 @@
    },
    {
     "table": "lusha_credit_usage_log",
+    "column": "api_version",
+    "rule": "default 'v3'"
+   },
+   {
+    "table": "lusha_credit_usage_log",
     "column": "success",
-    "rule": "default false"
+    "rule": "default true"
    },
    {
     "table": "lusha_credit_usage_log",
@@ -42954,6 +43568,11 @@
     "table": "lusha_credit_usage_log",
     "column": "created_at",
     "rule": "default now()"
+   },
+   {
+    "table": "lusha_credit_usage_log",
+    "column": "(tabela)",
+    "rule": "constraint lusha_credit_usage_log_operation_check CHECK ((operation = ANY (ARRAY['search_contacts'::text, 'enrich_contact'::text, 'enrich_company'::text, 'decision_makers'::text, 'lookalike_contacts'::text, 'lookalike_companies'::text, 'signals_contacts'::text, 'signals_companies'::text, 'website_vi …"
    },
    {
     "table": "lusha_search_sessions",
@@ -42983,7 +43602,7 @@
    {
     "table": "lusha_search_sessions",
     "column": "search_type",
-    "rule": "default 'company'"
+    "rule": "default 'department_search'"
    },
    {
     "table": "lusha_search_sessions",
@@ -43054,6 +43673,16 @@
     "table": "lusha_search_sessions",
     "column": "updated_at",
     "rule": "default now()"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "(tabela)",
+    "rule": "constraint lusha_search_sessions_search_type_check CHECK ((search_type = ANY (ARRAY['department_search'::text, 'decision_makers_domain'::text])))"
+   },
+   {
+    "table": "lusha_search_sessions",
+    "column": "(tabela)",
+    "rule": "constraint lusha_search_sessions_status_check CHECK ((status = ANY (ARRAY['running'::text, 'completed'::text, 'error'::text, 'cancelled'::text])))"
    },
    {
     "table": "oracle_rate_limits",
@@ -43553,7 +44182,7 @@
    {
     "table": "web_scrape_queue",
     "column": "status",
-    "rule": "default 'queued'"
+    "rule": "default 'queued'::public.web_scrape_status"
    },
    {
     "table": "web_scrape_queue",
@@ -60486,6 +61115,116 @@
     "using": "public.has_org_role(organization_id, auth.uid(), 'admin')",
     "check": "public.has_org_role(organization_id, auth.uid(), 'admin')",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "name": "Serviço interno apenas",
+    "table": "auth_rate_limits",
+    "cmd": "ALL",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "false",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Users can delete automation steps for their organization",
+    "table": "automation_steps",
+    "cmd": "DELETE",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "(organization_id IN ( SELECT organization_members.organization_id FROM organization_members WHERE (organization_members.user_id = auth.uid())))",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Users can view their org feature flags",
+    "table": "feature_flags",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "(auth.uid() IN ( SELECT organization_members.user_id FROM organization_members WHERE (organization_members.organization_id = feature_flags.organization_id)))",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Public can view health status",
+    "table": "health_checks",
+    "cmd": "SELECT",
+    "roles": "public",
+    "mode": "permissive",
+    "using": "true",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Admins can delete settings",
+    "table": "org_violation_alert_settings",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "has_org_role(organization_id, auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "queue_sla_defaults_admin_delete",
+    "table": "queue_sla_defaults",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "sla_alert_settings_admin_delete",
+    "table": "sla_alert_settings",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "has_role(auth.uid(), 'admin'::app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "Users can delete own ipc_config",
+    "table": "ipc_config",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "Users can delete own scrape_results",
+    "table": "scrape_results",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "Users can delete own workflow_runs",
+    "table": "workflow_runs",
+    "cmd": "DELETE",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "user_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "Authenticated users view global feature flags",
+    "table": "feature_flags",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id IS NULL",
+    "check": "",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "db_triggers": [
@@ -61532,6 +62271,33 @@
     "condition": "",
     "each": "row",
     "src": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
+   },
+   {
+    "name": "trg_lc_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "lusha_contacts",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "trg_lss_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "lusha_search_sessions",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
+   },
+   {
+    "name": "update_auth_rate_limits_updated_at",
+    "when": "BEFORE UPDATE",
+    "table": "auth_rate_limits",
+    "function": "update_updated_at_column",
+    "condition": "",
+    "each": "row",
+    "src": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql"
    }
   ],
   "db_functions": {
@@ -64513,6 +65279,105 @@
      "org_integrations"
     ]
    },
+   "fn_lusha_contact_cache_lookup": {
+    "args": "p_linkedin_url text, p_organization_id uuid DEFAULT NULL::uuid",
+    "returns": "SETOF lusha_contacts",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": false,
+    "search_path": true,
+    "body": "BEGIN IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RETURN; END IF; RETURN QUERY SELECT lc.* FROM public.lusha_contacts lc WHERE lower(rtrim(btrim(lc.linkedin_url),'/'))=lower(rtrim(btrim(p_linkedin_url),'/')) AND (p_organization_id IS NULL OR lc.organization_id=p_organization_id) AND lc.last_enriched_at IS NOT NULL AND lc.last_enriched_at>(now()-(coalesce(lc.data_freshness_ttl,90)||' days')::interval) AND lc.enrichment_status NOT IN ('pending_enrichment','pending','error','error_lusha','skipped','cancelled') AND (lc.has_email=true OR lc.has_phone=true) ORDER BY lc.last_enriched_at DESC LIMIT 1; END;",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
+   "fn_lusha_contact_mark_cache_hit": {
+    "args": "p_id uuid",
+    "returns": "void",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "BEGIN IF p_id IS NULL THEN RETURN; END IF; UPDATE public.lusha_contacts SET last_recheck_at=now() WHERE id=p_id; END;",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
+   "fn_lux_cache_gate": {
+    "args": "p_linkedin_url text, p_organization_id uuid DEFAULT NULL::uuid",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": false,
+    "search_path": true,
+    "body": "DECLARE hit public.lusha_contacts; BEGIN IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RETURN jsonb_build_object('cache_hit',false,'should_enrich',false,'reason','no_linkedin_url'); END IF; SELECT * INTO hit FROM public.fn_lusha_contact_cache_lookup(p_linkedin_url,p_organization_id); IF FOUND THEN RETURN jsonb_build_object('cache_hit',true,'should_enrich',false,'reason','fresh_cache','contact_id',hit.id,'full_name',hit.full_name,'first_name',hit.first_name,'job_title',hit.job_title,'company',hit.lusha_company_name,'email',hit.email,'has_email',hit.has_email,'has_phone',hit.has_phone,'linkedin_url',hit.linkedin_url,'enrichment_status',hit.enrichment_status,'last_enriched_at',hit.last_e …",
+    "raises": [],
+    "tables": [
+     "fn_lusha_contact_cache_lookup",
+     "hit"
+    ]
+   },
+   "fn_lux_cache_stats": {
+    "args": "p_organization_id uuid DEFAULT NULL::uuid",
+    "returns": "TABLE(metric text, value bigint)",
+    "lang": "sql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "SELECT 'total_contacts'::text, count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organization_id) UNION ALL SELECT 'cache_eligible_90d', count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organization_id) AND last_enriched_at>now()-interval'90 days' AND linkedin_url IS NOT NULL AND btrim(linkedin_url)<>'' UNION ALL SELECT 'cache_hits_recorded', count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organization_id) AND last_recheck_at IS NOT NULL UNION ALL SELECT 'pending_enrichment', count(*) FROM public.lusha_contacts WHERE (p_organization_id IS NULL OR organization_id=p_organi …",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
+   "fn_lux_enrichment_gate": {
+    "args": "p_linkedin_url text, p_organization_id uuid",
+    "returns": "jsonb",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_hit public.lusha_contacts; BEGIN IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RETURN jsonb_build_object('action','skip','reason','empty_linkedin_url'); END IF; SELECT lc.* INTO v_hit FROM public.lusha_contacts lc WHERE lower(rtrim(btrim(lc.linkedin_url),'/'))=lower(rtrim(btrim(p_linkedin_url),'/')) AND lc.organization_id=p_organization_id AND lc.last_enriched_at IS NOT NULL AND lc.last_enriched_at>(now()-(coalesce(lc.data_freshness_ttl,90)||' days')::interval) ORDER BY lc.last_enriched_at DESC LIMIT 1; IF FOUND THEN UPDATE public.lusha_contacts SET last_recheck_at=now() WHERE id=v_hit.id; RETURN jsonb_build_object('action','cache_hit','contact_id',v_hit.id,'organization_id' …",
+    "raises": [],
+    "tables": [
+     "lusha_contacts",
+     "v_hit"
+    ]
+   },
+   "fn_lux_save_enriched_contact": {
+    "args": "p_organization_id uuid, p_user_id uuid, p_linkedin_url text, p_lusha_company_name text, p_full_name text, p_enrichment_status text, p_raw_payload jsonb DEFAULT '{}'::jsonb, p_has_email boolean DEFAULT …",
+    "returns": "TABLE(contact_id uuid, was_created boolean, enrichment_status text)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_id uuid; v_was_created boolean; v_status text; BEGIN IF p_organization_id IS NULL THEN RAISE EXCEPTION 'organization_id Ã© obrigatÃ³rio'; END IF; IF length(btrim(coalesce(p_linkedin_url,'')))=0 THEN RAISE EXCEPTION 'linkedin_url nÃ£o pode ser vazia'; END IF; IF length(btrim(coalesce(p_full_name,'')))=0 THEN RAISE EXCEPTION 'full_name Ã© obrigatÃ³rio'; END IF; INSERT INTO public.lusha_contacts (organization_id,user_id,linkedin_url,lusha_company_name,full_name,enrichment_status,raw_lusha_payload,has_email,has_phone,dedup_hash,session_id,last_enriched_at,enrichment_attempts) VALUES (p_organization_id,coalesce(p_user_id,auth.uid()),p_linkedin_url,coalesce(p_lusha_company_name,'N/A'),p_ …",
+    "raises": [
+     "organization_id Ã© obrigatÃ³rio",
+     "linkedin_url nÃ£o pode ser vazia",
+     "full_name Ã© obrigatÃ³rio"
+    ],
+    "tables": [
+     "SET",
+     "lusha_contacts",
+     "v_id"
+    ]
+   },
+   "fn_mark_contact_rechecked": {
+    "args": "p_id uuid, p_enrichment_status text DEFAULT 'enriched'::text",
+    "returns": "boolean",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+    "security_definer": false,
+    "search_path": true,
+    "body": "BEGIN IF p_id IS NULL THEN RETURN false; END IF; UPDATE public.lusha_contacts SET last_recheck_at=now(),last_enriched_at=now(),enrichment_status=p_enrichment_status,updated_at=now() WHERE id=p_id; RETURN FOUND; END;",
+    "raises": [],
+    "tables": [
+     "lusha_contacts"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -64536,83 +65401,6 @@
     "tables": []
    },
    "SetofOptions": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lusha_contact_cache_lookup": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lusha_contact_mark_cache_hit": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_cache_gate": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_cache_stats": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_enrichment_gate": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_lux_save_enriched_contact": {
-    "args": "",
-    "returns": "?",
-    "lang": "",
-    "src": "src/integrations/supabase/types.ts",
-    "security_definer": false,
-    "search_path": false,
-    "body": "",
-    "raises": [],
-    "tables": []
-   },
-   "fn_mark_contact_rechecked": {
     "args": "",
     "returns": "?",
     "lang": "",
@@ -65446,6 +66234,21 @@
     "function": "generate_scim_token",
     "msg": "permission_denied",
     "src": "supabase/migrations/20261124040000_scim_provisioning.sql"
+   },
+   {
+    "function": "fn_lux_save_enriched_contact",
+    "msg": "organization_id Ã© obrigatÃ³rio",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "function": "fn_lux_save_enriched_contact",
+    "msg": "linkedin_url nÃ£o pode ser vazia",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "function": "fn_lux_save_enriched_contact",
+    "msg": "full_name Ã© obrigatÃ³rio",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "db_generated": [],
@@ -65485,6 +66288,14 @@
    "email_template_stats": {
     "body": "select t.organization_id, t.category, count(*)::integer as templates, count(*) filter (where t.usage_count > 0)::integer as usados, coalesce(sum(t.usage_count), 0)::integer as usos_totais, max(t.last_used_at) as ultimo_uso from public.email_templates t where t.deleted_at is null group by t.organization_id, t.category",
     "src": "supabase/migrations/20261122200000_email_templates.sql"
+   },
+   "v_lusha_cache_stats": {
+    "body": "SELECT organization_id, count(*) AS total_contacts, count(*) FILTER (WHERE has_email) AS with_email, count(*) FILTER (WHERE has_phone) AS with_phone, count(*) FILTER (WHERE last_enriched_at IS NOT NULL AND last_enriched_at > (now() - ((COALESCE(data_freshness_ttl, 90) || ' days'::text)::interval)) AND (enrichment_status <> ALL (ARRAY['pending_enrichment'::text, 'pending'::text, 'error'::text, 'error_lusha'::text, 'skipped'::text, 'cancelled'::text])) AND (has_email = true OR has_phone = true)) AS cache_eligible_hits, count(*) FILTER (WHERE enrichment_status = 'pending_enrichment'::text) AS pen …",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   "v_lux_enrichment_health": {
+    "body": "WITH stats AS ( SELECT lusha_contacts.organization_id, count(*) AS total_contacts, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'enriched'::text) AS cnt_enriched, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'pending_enrichment'::text) AS cnt_pending, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'pushing_bitrix'::text) AS cnt_pushing_bitrix, count(*) FILTER (WHERE lusha_contacts.enrichment_status = 'error_bitrix'::text) AS cnt_error_bitrix, count(*) FILTER (WHERE lusha_contacts.enrichment_status <> ALL (ARRAY['enriched'::text, 'pending_enrichment'::text, …",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   },
   "pagination": [
@@ -65814,18 +66625,33 @@
     {
      "table": "scrape_jobs",
      "column": "status",
-     "enum": "",
-     "allowed": [],
+     "enum": "scrape_job_status",
+     "allowed": [
+      "pending",
+      "running",
+      "working",
+      "completed",
+      "failed",
+      "cancelled"
+     ],
      "default": "pending",
-     "type": "TEXT NOT NULL DEFAULT 'pending'"
+     "type": "TEXT NOT NULL SET DEFAULT 'pending'::public.scrape_job_status"
     },
     {
      "table": "workflows",
      "column": "status",
-     "enum": "",
-     "allowed": [],
+     "enum": "workflow_status",
+     "allowed": [
+      "draft",
+      "active",
+      "paused",
+      "completed",
+      "failed",
+      "running",
+      "archived"
+     ],
      "default": "draft",
-     "type": "TEXT NOT NULL DEFAULT 'draft'"
+     "type": "TEXT NOT NULL SET DEFAULT 'draft'::public.workflow_status"
     },
     {
      "table": "workflow_runs",
@@ -65853,10 +66679,16 @@
     {
      "table": "campaigns",
      "column": "status",
-     "enum": "",
-     "allowed": [],
+     "enum": "campaign_status",
+     "allowed": [
+      "draft",
+      "active",
+      "paused",
+      "completed",
+      "archived"
+     ],
      "default": "draft",
-     "type": "text NOT NULL DEFAULT 'draft'"
+     "type": "text NOT NULL SET DEFAULT 'draft'::public.campaign_status"
     },
     {
      "table": "webhook_deliveries",
@@ -65974,7 +66806,7 @@
       "cancelled"
      ],
      "default": "pending",
-     "type": "automation_status DEFAULT 'pending'"
+     "type": "automation_status SET DEFAULT 'pending'::public.automation_status"
     },
     {
      "table": "scrape_queue",
@@ -65987,7 +66819,7 @@
       "dead"
      ],
      "default": "queued",
-     "type": "public.scrape_queue_status NOT NULL DEFAULT 'queued'"
+     "type": "public.scrape_queue_status NOT NULL SET DEFAULT 'queued'::public.scrape_queue_status"
     },
     {
      "table": "automation_execution_logs",
@@ -66062,7 +66894,20 @@
      "table": "lusha_contacts",
      "column": "enrichment_status",
      "enum": "",
-     "allowed": [],
+     "allowed": [
+      "bitrix_duplicate",
+      "empty",
+      "enriched",
+      "enriching",
+      "error",
+      "error_auth",
+      "error_rate_limit",
+      "not_found",
+      "pending",
+      "pending_enrichment",
+      "pushing_bitrix",
+      "sent_to_bitrix"
+     ],
      "default": "pending",
      "type": "TEXT NOT NULL DEFAULT 'pending'"
     },
@@ -66070,7 +66915,12 @@
      "table": "lusha_search_sessions",
      "column": "status",
      "enum": "",
-     "allowed": [],
+     "allowed": [
+      "cancelled",
+      "completed",
+      "error",
+      "running"
+     ],
      "default": "running",
      "type": "TEXT NOT NULL DEFAULT 'running'"
     },
@@ -66114,7 +66964,7 @@
       "dead"
      ],
      "default": "queued",
-     "type": "public.web_scrape_status NOT NULL DEFAULT 'queued'"
+     "type": "public.web_scrape_status NOT NULL SET DEFAULT 'queued'::public.web_scrape_status"
     },
     {
      "table": "web_scrape_results",
@@ -67183,12 +68033,12 @@
    [
     "organization_members",
     "role",
-    "public.app_role NOT NULL DEFAULT 'viewer'"
+    "public.app_role NOT NULL SET DEFAULT 'viewer'::public.app_role"
    ],
    [
     "organization_invites",
     "role",
-    "public.app_role NOT NULL DEFAULT 'viewer'"
+    "public.app_role NOT NULL SET DEFAULT 'viewer'::public.app_role"
    ],
    [
     "user_roles",
@@ -67358,16 +68208,20 @@
    "auth_rate_limits": {
     "rls": "enabled",
     "SELECT": [
-     "service_role: true"
+     "service_role: true",
+     "public: false"
     ],
     "INSERT": [
-     "service_role: true"
+     "service_role: true",
+     "public: false"
     ],
     "UPDATE": [
-     "service_role: true"
+     "service_role: true",
+     "public: false"
     ],
     "DELETE": [
-     "service_role: true"
+     "service_role: true",
+     "public: false"
     ]
    },
    "automation_alerts": {
@@ -67409,7 +68263,9 @@
     "UPDATE": [
      "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() )"
     ],
-    "DELETE": []
+    "DELETE": [
+     "public: (organization_id IN ( SELECT organization_members.organization_id FROM organization_members WHERE (organization_members.user_id = au"
+    ]
    },
    "bulk_imports": {
     "rls": "enabled",
@@ -67908,7 +68764,9 @@
     "rls": "enabled",
     "SELECT": [
      "public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()",
-     "service_role: true"
+     "service_role: true",
+     "public: (auth.uid() IN ( SELECT organization_members.user_id FROM organization_members WHERE (organization_members.organization_id = feature",
+     "authenticated: organization_id IS NULL"
     ],
     "INSERT": [
      "service_role: true"
@@ -67923,7 +68781,8 @@
    "health_checks": {
     "rls": "enabled",
     "SELECT": [
-     "public: auth.role() = 'authenticated'"
+     "public: auth.role() = 'authenticated'",
+     "public: true"
     ],
     "INSERT": [],
     "UPDATE": [],
@@ -68048,7 +68907,8 @@
     "DELETE": [
      "service_role: true",
      "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
-     "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr')"
+     "public: organization_id IN ( SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid() AND role IN ('admin', 'sdr')",
+     "authenticated: user_id = auth.uid()"
     ]
    },
    "job_exports": {
@@ -68308,7 +69168,9 @@
     "UPDATE": [
      "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
     ],
-    "DELETE": []
+    "DELETE": [
+     "authenticated: has_org_role(organization_id, auth.uid(), 'admin'::app_role)"
+    ]
    },
    "org_violation_alerts": {
     "rls": "enabled",
@@ -68489,7 +69351,9 @@
     "UPDATE": [
      "authenticated: public.has_role(auth.uid(), 'admin'::app_role)"
     ],
-    "DELETE": []
+    "DELETE": [
+     "authenticated: has_role(auth.uid(), 'admin'::app_role)"
+    ]
    },
    "queue_sla_history": {
     "rls": "enabled",
@@ -68721,7 +69585,8 @@
     ],
     "DELETE": [
      "service_role: true",
-     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "authenticated: user_id = auth.uid()"
     ]
    },
    "scrape_worker_state": {
@@ -68753,7 +69618,9 @@
     "UPDATE": [
      "authenticated: public.has_role(auth.uid(), 'admin'::app_role)"
     ],
-    "DELETE": []
+    "DELETE": [
+     "authenticated: has_role(auth.uid(), 'admin'::app_role)"
+    ]
    },
    "sla_autotune_runs": {
     "rls": "enabled",
@@ -68954,7 +69821,8 @@
     ],
     "DELETE": [
      "service_role: true",
-     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')"
+     "authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')",
+     "authenticated: user_id = auth.uid()"
     ]
    },
    "workflows": {
@@ -69231,7 +70099,8 @@
    "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
    "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
    "supabase/migrations/20261124040000_scim_provisioning.sql",
-   "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
+   "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -69309,6 +70178,10 @@
    "fail_web_scrape_task",
    "fail_workflow_step",
    "finish_workflow_run",
+   "fn_lusha_contact_mark_cache_hit",
+   "fn_lux_cache_stats",
+   "fn_lux_enrichment_gate",
+   "fn_lux_save_enriched_contact",
    "fn_web_scrape_regression_check",
    "fulfill_dsar_request",
    "generate_scim_token",
@@ -74862,6 +75735,70 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lusha_contact_mark_cache_hit",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lusha_contact_mark_cache_hit",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lux_cache_stats",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lux_cache_stats",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lux_enrichment_gate",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lux_enrichment_gate",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "fn_lux_save_enriched_contact",
+    "objkind": "function",
+    "roles": "PUBLIC, anon, authenticated",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "fn_lux_save_enriched_contact",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
    }
   ],
   "guards": [
@@ -75962,13 +76899,6 @@
    },
    {
     "kind": "status",
-    "msg": "valor `enriching` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/lusha/OracleV2Panel.tsx"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `online` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/components/lux/monitoring/MonitoringView.tsx",
@@ -75987,24 +76917,6 @@
     "msg": "valor `already_completed` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/hooks/useDsar.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `enriched` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:supabase/functions/oracle-enrich-contact/index.ts",
-     "escreve:src/hooks/useOracleV2.ts",
-     "escreve:supabase/functions/oracle-enrich-contact/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `sent_to_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:supabase/functions/oracle-push-bitrix/index.ts",
-     "escreve:src/hooks/useOracleV2.ts",
-     "escreve:supabase/functions/oracle-push-bitrix/index.ts"
     ]
    },
    {
@@ -76032,29 +76944,7 @@
    },
    {
     "kind": "status",
-    "msg": "valor `error_auth` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:supabase/functions/oracle-enrich-contact/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `error_rate_limit` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:supabase/functions/oracle-enrich-contact/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `error_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:supabase/functions/oracle-push-bitrix/index.ts",
-     "escreve:supabase/functions/oracle-push-bitrix/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `bitrix_duplicate` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:supabase/functions/oracle-push-bitrix/index.ts",
      "escreve:supabase/functions/oracle-push-bitrix/index.ts"
@@ -76076,50 +76966,6 @@
    },
    {
     "kind": "status",
-    "msg": "valor `enriched` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/lusha/OracleV2Panel.tsx",
-     "escreve:src/components/lux/LushaIntelligenceView.tsx",
-     "filtra:supabase/functions/oracle-push-bitrix/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `pending_enrichment` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/lusha/OracleV2Panel.tsx",
-     "escreve:supabase/functions/lusha-decision-makers/index.ts",
-     "escreve:supabase/functions/oracle-search-decisors/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `enriching` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/lusha/OracleV2Panel.tsx",
-     "escreve:supabase/functions/oracle-enrich-contact/index.ts",
-     "filtra:supabase/functions/oracle-enrich-contact/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `sent_to_bitrix` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/lusha/OracleV2Panel.tsx",
-     "escreve:supabase/functions/oracle-push-bitrix/index.ts",
-     "filtra:supabase/functions/oracle-push-bitrix/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `bitrix_duplicate` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/lusha/OracleV2Panel.tsx",
-     "escreve:supabase/functions/oracle-push-bitrix/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `error_bitrix` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/components/lux/lusha/OracleV2Panel.tsx",
@@ -76131,13 +76977,6 @@
     "msg": "valor `error_other` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "escreve:supabase/functions/oracle-enrich-contact/index.ts"
-    ]
-   },
-   {
-    "kind": "status",
-    "msg": "valor `pushing_bitrix` para `enrichment_status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "escreve:supabase/functions/oracle-push-bitrix/index.ts"
     ]
    },
    {
@@ -76728,18 +77567,13 @@
   "gaps": [
    "Nenhuma regra manual em `manual/`: prazos, limites, exceções comerciais, quem aprova o quê — só o negócio sabe.",
    "`companies.business_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "`scrape_jobs.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "`workflows.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`workflow_runs.current_step` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "`campaigns.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`campaign_recipients.current_step` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`campaign_recipients.last_step_error` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`campaign_messages.step_index` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`automation_execution_logs.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`automation_execution_logs.step_index` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`automation_execution_logs.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "`lusha_contacts.enrichment_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "`lusha_search_sessions.status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`circuit_breaker_alert_history.state` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`vault_cookie_snapshots.health_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`web_scrape_results.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
@@ -100482,13 +101316,32 @@
    "path": "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
    "lines": 52,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql": {
+   "path": "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql",
+   "lines": 82
+  },
+  "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql": {
+   "path": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+   "lines": 612,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "588525f4e3e1390f03965828a987d3a3bf1ab243",
+  "sha": "faad34a4240afda1e4eabc5a7c8da67d3e378e8b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "faad34a",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)",
+    "files": [
+     "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql",
+     "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+    ]
+   },
    {
     "sha": "588525f",
     "date": "2026-11-24",
@@ -100893,15 +101746,6 @@
     "files": [
      "docs/GAPS-ENTERPRISE.md"
     ]
-   },
-   {
-    "sha": "c07fc7d",
-    "date": "2026-11-21",
-    "author": "adm01-debug",
-    "subject": "docs: atualiza o backlog com o estado medido do banco (#123)",
-    "files": [
-     "docs/ESTADO_ATUAL.md"
-    ]
    }
   ],
   "hot_files": [
@@ -100923,10 +101767,6 @@
    ],
    [
     "supabase/functions/mcp/index.ts",
-    3
-   ],
-   [
-    "docs/ESTADO_ATUAL.md",
     3
    ],
    [
@@ -100983,6 +101823,10 @@
    ],
    [
     "st.json",
+    2
+   ],
+   [
+    "AGENTS.md",
     2
    ]
   ]

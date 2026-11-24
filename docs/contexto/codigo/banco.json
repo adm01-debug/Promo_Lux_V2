@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 249,
+ "migrations": 251,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -20,7 +20,6 @@
  "enums": {
   "app_role": [
    "admin",
-   "moderator",
    "sdr",
    "viewer"
   ],
@@ -37,6 +36,21 @@
    "failed",
    "cancelled"
   ],
+  "campaign_status": [
+   "draft",
+   "active",
+   "paused",
+   "completed",
+   "archived"
+  ],
+  "scrape_job_status": [
+   "pending",
+   "running",
+   "working",
+   "completed",
+   "failed",
+   "cancelled"
+  ],
   "scrape_queue_status": [
    "queued",
    "processing",
@@ -49,6 +63,15 @@
    "succeeded",
    "failed",
    "dead"
+  ],
+  "workflow_status": [
+   "draft",
+   "active",
+   "paused",
+   "completed",
+   "failed",
+   "running",
+   "archived"
   ]
  },
  "views": [
@@ -60,6 +83,8 @@
   "sales_goals_detailed",
   "satisfaction_stats",
   "v_extensions_audit",
+  "v_lusha_cache_stats",
+  "v_lux_enrichment_health",
   "v_sec_definer_anon_grants"
  ],
  "funcoes": [
@@ -145,6 +170,13 @@
   "fail_web_scrape_task",
   "fail_workflow_step",
   "finish_workflow_run",
+  "fn_lusha_contact_cache_lookup",
+  "fn_lusha_contact_mark_cache_hit",
+  "fn_lux_cache_gate",
+  "fn_lux_cache_stats",
+  "fn_lux_enrichment_gate",
+  "fn_lux_save_enriched_contact",
+  "fn_mark_contact_rechecked",
   "fn_web_scrape_regression_check",
   "fulfill_dsar_request",
   "generate_scim_token",
@@ -277,6 +309,13 @@
   },
   {
    "nome": "tr_update_auth_rate_limits_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "auth_rate_limits",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "update_auth_rate_limits_updated_at",
    "quando": "before",
    "evento": "update",
    "tabela": "auth_rate_limits",
@@ -661,6 +700,13 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "trg_lc_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "lusha_contacts",
+   "funcao": "update_updated_at_column"
+  },
+  {
    "nome": "update_lusha_contacts_updated_at",
    "quando": "before",
    "evento": "update",
@@ -672,6 +718,13 @@
    "quando": "before",
    "evento": "update",
    "tabela": "lusha_dm_search_history",
+   "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_lss_updated_at",
+   "quando": "before",
+   "evento": "update",
+   "tabela": "lusha_search_sessions",
    "funcao": "update_updated_at_column"
   },
   {
@@ -2418,7 +2471,7 @@
      "tipo": "jsonb",
      "nn": false,
      "pk": false,
-     "default": null,
+     "default": "'{}'::jsonb",
      "ref": null
     },
     "new_data": {
@@ -2616,6 +2669,12 @@
    "rls": true,
    "policies": [
     {
+     "nome": "Serviço interno apenas",
+     "comando": "all",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
      "nome": "System can manage auth rate limits",
      "comando": "all",
      "para": "service_role",
@@ -2649,7 +2708,8 @@
     "auth-rate-limit"
    ],
    "triggers": [
-    "tr_update_auth_rate_limits_updated_at"
+    "tr_update_auth_rate_limits_updated_at",
+    "update_auth_rate_limits_updated_at"
    ],
    "sem_rls": false,
    "nao_usada": false
@@ -3153,7 +3213,7 @@
      "tipo": "automation_status",
      "nn": false,
      "pk": false,
-     "default": "'pending'",
+     "default": null,
      "ref": null
     },
     "updated_at": {
@@ -3166,6 +3226,12 @@
    },
    "rls": true,
    "policies": [
+    {
+     "nome": "Users can delete automation steps for their organization",
+     "comando": "delete",
+     "para": "public",
+     "tipo": "permissive"
+    },
     {
      "nome": "Users can insert automation steps for their organization",
      "comando": "insert",
@@ -4490,7 +4556,7 @@
      "tipo": "text",
      "nn": true,
      "pk": false,
-     "default": "'draft'",
+     "default": null,
      "ref": null
     },
     "updated_at": {
@@ -5672,7 +5738,7 @@
      "ref": null
     },
     "revenue": {
-     "tipo": "text",
+     "tipo": "numeric",
      "nn": false,
      "pk": false,
      "default": null,
@@ -5868,6 +5934,11 @@
     {
      "nome": "idx_companies_user_id",
      "colunas": "user_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_companies_user_id_ipc_score",
+     "colunas": "user_id, ipc_score DESC",
      "unico": false
     },
     {
@@ -6095,6 +6166,11 @@
      "nome": "company_reviews_ext_uk",
      "colunas": "company_id, external_id",
      "unico": true
+    },
+    {
+     "nome": "idx_company_reviews_organization_id",
+     "colunas": "organization_id",
+     "unico": false
     }
    ],
    "fks": [
@@ -6212,6 +6288,11 @@
     }
    ],
    "indices": [
+    {
+     "nome": "idx_dashboard_layouts_organization_id",
+     "colunas": "organization_id",
+     "unico": false
+    },
     {
      "nome": "idx_dashboard_layouts_user",
      "colunas": "user_id, dashboard_key",
@@ -8804,6 +8885,12 @@
    "rls": true,
    "policies": [
     {
+     "nome": "Authenticated users view global feature flags",
+     "comando": "select",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
      "nome": "Feature flags are viewable by org",
      "comando": "select",
      "para": "public",
@@ -8813,6 +8900,12 @@
      "nome": "feature_flags_service_role",
      "comando": "all",
      "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users can view their org feature flags",
+     "comando": "select",
+     "para": "public",
      "tipo": "permissive"
     }
    ],
@@ -8901,6 +8994,12 @@
    "policies": [
     {
      "nome": "Health checks are viewable by authenticated users",
+     "comando": "select",
+     "para": "public",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Public can view health status",
      "comando": "select",
      "para": "public",
      "tipo": "permissive"
@@ -9533,6 +9632,11 @@
      "nome": "idx_ig_queue_sla_due",
      "colunas": "status, next_run_at, created_at, sla_seconds",
      "unico": false
+    },
+    {
+     "nome": "idx_instagram_scrape_queue_created_by",
+     "colunas": "created_by",
+     "unico": false
     }
    ],
    "fks": [
@@ -10058,6 +10162,12 @@
      "tipo": "permissive"
     },
     {
+     "nome": "Users can delete own ipc_config",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
      "nome": "Users can manage org ipc_config",
      "comando": "all",
      "para": "public",
@@ -10463,6 +10573,13 @@
      "default": "now()",
      "ref": null
     },
+    "data_freshness_ttl": {
+     "tipo": "integer",
+     "nn": true,
+     "pk": false,
+     "default": "90",
+     "ref": null
+    },
     "dedup_hash": {
      "tipo": "text",
      "nn": false,
@@ -10570,6 +10687,13 @@
     },
     "last_error": {
      "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "last_recheck_at": {
+     "tipo": "timestamptz",
      "nn": false,
      "pk": false,
      "default": null,
@@ -10818,6 +10942,11 @@
      "unico": false
     },
     {
+     "nome": "idx_lc_linkedin_url_org",
+     "colunas": "organization_id, linkedin_url",
+     "unico": false
+    },
+    {
      "nome": "idx_lc_raw_payload_gin",
      "colunas": "raw_lusha_payload",
      "unico": false
@@ -10848,6 +10977,26 @@
      "unico": false
     },
     {
+     "nome": "idx_lusha_contacts_bitrix_contact_id",
+     "colunas": "bitrix_contact_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_company_id",
+     "colunas": "company_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_dedup_hash",
+     "colunas": "dedup_hash",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_linkedin_cache",
+     "colunas": "lower(rtrim(btrim(linkedin_url",
+     "unico": false
+    },
+    {
      "nome": "idx_lusha_contacts_org_pending",
      "colunas": "organization_id",
      "unico": false
@@ -10858,8 +11007,38 @@
      "unico": false
     },
     {
+     "nome": "idx_lusha_contacts_org_status_queue",
+     "colunas": "organization_id, enrichment_status, created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_push_queue",
+     "colunas": "organization_id, enrichment_status",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_session_id",
+     "colunas": "session_id, created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_lusha_contacts_source_apollo",
      "colunas": "organization_id, created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_stakeholder_id",
+     "colunas": "stakeholder_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_contacts_unique_per_org",
+     "colunas": "organization_id, lower(rtrim(btrim(linkedin_url",
+     "unico": true
+    },
+    {
+     "nome": "idx_lusha_contacts_user",
+     "colunas": "user_id",
      "unico": false
     },
     {
@@ -10949,10 +11128,7 @@
    },
    "drift": {
     "so_na_migration": [],
-    "so_no_types": [
-     "data_freshness_ttl",
-     "last_recheck_at"
-    ]
+    "so_no_types": []
    },
    "usada_no_front": 3,
    "usada_em_edges": [
@@ -10965,6 +11141,7 @@
     "oracle-search-decisors"
    ],
    "triggers": [
+    "trg_lc_updated_at",
     "update_lusha_contacts_updated_at"
    ],
    "sem_rls": false,
@@ -10976,7 +11153,7 @@
      "tipo": "text",
      "nn": false,
      "pk": false,
-     "default": null,
+     "default": "'v3'",
      "ref": null
     },
     "bitrix_card_id": {
@@ -11074,7 +11251,7 @@
      "tipo": "boolean",
      "nn": true,
      "pk": false,
-     "default": "false",
+     "default": "true",
      "ref": null
     },
     "user_id": {
@@ -11417,7 +11594,7 @@
      "tipo": "text",
      "nn": true,
      "pk": false,
-     "default": "'company'",
+     "default": "'department_search'",
      "ref": null
     },
     "started_at": {
@@ -11526,6 +11703,21 @@
    ],
    "indices": [
     {
+     "nome": "idx_lss_bitrix",
+     "colunas": "bitrix_card_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_lss_company",
+     "colunas": "company_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_lss_created",
+     "colunas": "created_at DESC",
+     "unico": false
+    },
+    {
      "nome": "idx_lss_org_company",
      "colunas": "organization_id, company_id",
      "unico": false
@@ -11541,6 +11733,11 @@
      "unico": false
     },
     {
+     "nome": "idx_lss_status",
+     "colunas": "status",
+     "unico": false
+    },
+    {
      "nome": "idx_lss_user",
      "colunas": "user_id, created_at DESC",
      "unico": false
@@ -11548,6 +11745,11 @@
     {
      "nome": "idx_lusha_search_sessions_org_idem",
      "colunas": "organization_id, idempotency_key",
+     "unico": false
+    },
+    {
+     "nome": "idx_lusha_sessions_user",
+     "colunas": "user_id",
      "unico": false
     },
     {
@@ -11602,6 +11804,7 @@
     "oracle-search-decisors"
    ],
    "triggers": [
+    "trg_lss_updated_at",
     "update_lusha_search_sessions_updated_at"
    ],
    "sem_rls": false,
@@ -11750,6 +11953,11 @@
     {
      "nome": "idx_next_best_actions_pending",
      "colunas": "organization_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_next_best_actions_stakeholder_id",
+     "colunas": "stakeholder_id",
      "unico": false
     }
    ],
@@ -12511,7 +12719,18 @@
      "tipo": "permissive"
     }
    ],
-   "indices": [],
+   "indices": [
+    {
+     "nome": "idx_org_retry_policies_source_advisory_id",
+     "colunas": "source_advisory_id",
+     "unico": false
+    },
+    {
+     "nome": "idx_org_retry_policies_updated_by",
+     "colunas": "updated_by",
+     "unico": false
+    }
+   ],
    "fks": [
     "organization_id->organizations",
     "source_advisory_id->retry_policy_advisories",
@@ -12674,6 +12893,12 @@
    },
    "rls": true,
    "policies": [
+    {
+     "nome": "Admins can delete settings",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
     {
      "nome": "Admins can read settings",
      "comando": "select",
@@ -12906,7 +13131,7 @@
      "tipo": "public",
      "nn": true,
      "pk": false,
-     "default": "'viewer'",
+     "default": null,
      "ref": null
     },
     "token": {
@@ -13011,7 +13236,7 @@
      "tipo": "public",
      "nn": true,
      "pk": false,
-     "default": "'viewer'",
+     "default": null,
      "ref": null
     },
     "scim_active": {
@@ -14378,6 +14603,12 @@
    "rls": true,
    "policies": [
     {
+     "nome": "queue_sla_defaults_admin_delete",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
      "nome": "queue_sla_defaults_admin_insert",
      "comando": "insert",
      "para": "authenticated",
@@ -14917,8 +15148,18 @@
      "unico": false
     },
     {
+     "nome": "idx_retry_policy_advisories_applied_by",
+     "colunas": "applied_by",
+     "unico": false
+    },
+    {
      "nome": "idx_retry_policy_advisories_pending",
      "colunas": "created_at DESC",
+     "unico": false
+    },
+    {
+     "nome": "idx_retry_policy_advisories_rolled_back_by",
+     "colunas": "rolled_back_by",
      "unico": false
     }
    ],
@@ -15431,6 +15672,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_satisfaction_responses_company_id",
+     "colunas": "company_id",
+     "unico": false
+    },
+    {
      "nome": "idx_satisfaction_responses_org",
      "colunas": "organization_id, responded_at DESC",
      "unico": false
@@ -15886,6 +16132,11 @@
      "unico": false
     },
     {
+     "nome": "idx_scheduled_reports_organization_id",
+     "colunas": "organization_id",
+     "unico": false
+    },
+    {
      "nome": "idx_scheduled_reports_user",
      "colunas": "user_id",
      "unico": false
@@ -16160,7 +16411,7 @@
      "tipo": "text",
      "nn": true,
      "pk": false,
-     "default": "'pending'",
+     "default": null,
      "ref": null
     },
     "trace_id": {
@@ -16240,11 +16491,6 @@
      "unico": false
     },
     {
-     "nome": "idx_scrape_jobs_pending_active",
-     "colunas": "created_at DESC, id",
-     "unico": false
-    },
-    {
      "nome": "idx_scrape_jobs_source",
      "colunas": "source",
      "unico": false
@@ -16263,11 +16509,6 @@
      "nome": "idx_scrape_jobs_user_id",
      "colunas": "user_id",
      "unico": false
-    },
-    {
-     "nome": "scrape_jobs_org_config_active_uk",
-     "colunas": "organization_id, config_hash",
-     "unico": true
     },
     {
      "nome": "scrape_jobs_trace_id_idx",
@@ -16448,7 +16689,7 @@
      "tipo": "public",
      "nn": true,
      "pk": false,
-     "default": "'queued'",
+     "default": null,
      "ref": null
     },
     "updated_at": {
@@ -16639,6 +16880,12 @@
      "nome": "Service can manage scrape_results",
      "comando": "all",
      "para": "service_role",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Users can delete own scrape_results",
+     "comando": "delete",
+     "para": "authenticated",
      "tipo": "permissive"
     }
    ],
@@ -16949,6 +17196,12 @@
    },
    "rls": true,
    "policies": [
+    {
+     "nome": "sla_alert_settings_admin_delete",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
     {
      "nome": "sla_alert_settings_admin_insert",
      "comando": "insert",
@@ -18158,7 +18411,7 @@
      "tipo": "public",
      "nn": true,
      "pk": false,
-     "default": "'queued'",
+     "default": null,
      "ref": null
     },
     "trace_id": {
@@ -19123,6 +19376,12 @@
      "comando": "all",
      "para": "service_role",
      "tipo": "permissive"
+    },
+    {
+     "nome": "Users can delete own workflow_runs",
+     "comando": "delete",
+     "para": "authenticated",
+     "tipo": "permissive"
     }
    ],
    "indices": [
@@ -19283,7 +19542,7 @@
      "tipo": "text",
      "nn": true,
      "pk": false,
-     "default": "'draft'",
+     "default": null,
      "ref": null
     },
     "steps": {
