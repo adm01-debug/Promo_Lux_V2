@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "69c63ffec95c0067af872bd1f7c24ec27980184c",
+  "commit": "d8c860482044797551941587e78051731da819fc",
   "branch": "main",
-  "data_commit": "2026-11-24T11:10:04-03:00",
+  "data_commit": "2026-11-24T11:24:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "d8c8604",
+    "data": "2026-11-24",
+    "assunto": "fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)"
+   },
    {
     "sha": "69c63ff",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "9b85ca6",
     "data": "2026-11-22",
     "assunto": "docs: registra gap dos steps de workflow serem decorativos (#157)"
-   },
-   {
-    "sha": "336b228",
-    "data": "2026-11-22",
-    "assunto": "feat: aplica PermissionGate em deals e integracoes (#154)"
    }
   ],
   "arquivos_mudados_7d": 255,
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 128
+    "commits": 129
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1135,
   "arquivos_codigo": 710,
-  "linhas_codigo": 124449,
+  "linhas_codigo": 124453,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 24997
+   "linhas": 25001
   },
   "tailwind.config.ts": {
    "arquivos": 1,

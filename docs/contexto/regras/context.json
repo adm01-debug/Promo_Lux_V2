@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "69c63ffec95c0067af872bd1f7c24ec27980184c",
+  "sha": "d8c860482044797551941587e78051731da819fc",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 14:11 UTC",
+  "generated_at": "2026-11-24 14:24 UTC",
   "files_total": 1154,
   "code_files": 970,
-  "code_lines": 145443
+  "code_lines": 145447
  },
  "version": "1.3.2",
- "facts_hash": "bd2fabacb1b3afc0",
+ "facts_hash": "512ae5d0356f9495",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -33866,7 +33866,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 24997,
+   "lines": 25001,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -35631,8 +35631,7 @@
     "old_data",
     "organization_id",
     "record_id",
-    "table_name",
-    "user_id"
+    "table_name"
    ],
    "auth_rate_limits": [
     "identifier"
@@ -97978,7 +97977,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 314,
+   "lines": 318,
    "tables": [
     {
      "table": "api_request_logs",
@@ -98016,8 +98015,7 @@
      "metadata",
      "new_data",
      "record_id",
-     "table_name",
-     "user_id"
+     "table_name"
     ]
    },
    "dyn_from": 5,
@@ -101399,10 +101397,19 @@
   }
  },
  "git": {
-  "sha": "69c63ffec95c0067af872bd1f7c24ec27980184c",
+  "sha": "d8c860482044797551941587e78051731da819fc",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "d8c8604",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)",
+    "files": [
+     "supabase/functions/public-api/index.ts"
+    ]
+   },
    {
     "sha": "69c63ff",
     "date": "2026-11-24",
@@ -101755,18 +101762,6 @@
      "docs/agentes/lovable-deploy.md",
      "docs/estado/04-integracoes.md"
     ]
-   },
-   {
-    "sha": "9e9f963",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(seguranca): troca token admin vazado por JWT + papel admin (#144)",
-    "files": [
-     ".env.test",
-     "src/pages/AdminCompanies.tsx",
-     "src/vite-env.d.ts",
-     "supabase/functions/admin-list-companies/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -101781,6 +101776,10 @@
    [
     "src/components/lux/SettingsView.tsx",
     3
+   ],
+   [
+    "supabase/functions/public-api/index.ts",
+    2
    ],
    [
     "inventario/estado/edges.json",
@@ -101844,10 +101843,6 @@
    ],
    [
     "scripts/check-migrations.sh",
-    1
-   ],
-   [
-    "vercel.json",
     1
    ]
   ]

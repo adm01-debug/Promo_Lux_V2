@@ -1656,7 +1656,7 @@
    "nome": "public-api",
    "entrada": "supabase/functions/public-api/index.ts",
    "arquivos": 1,
-   "linhas": 314,
+   "linhas": 318,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
