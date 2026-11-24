@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c326fd548f` · branch `main` · 2026-11-24 17:27 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `60535f3d30` · branch `main` · 2026-11-24 17:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1969,7 +1969,6 @@ _nenhum item encontrado_
 | 5 | `supabase/functions/lead-score-ai/index.ts` |
 | 1 | `supabase/functions/lusha-decision-makers/index.ts` |
 | 2000 | `supabase/functions/oracle-search-decisors/index.ts` |
-| 5 | `supabase/functions/public-api/index.ts` |
 | 50 | `supabase/functions/qa-ingest-run/index.ts` |
 | 1 | `supabase/functions/reaper-alerts/index.ts` |
 | 5000 | `supabase/functions/retry-policy-tuner/index.ts` |
@@ -2675,9 +2674,7 @@ _nenhum item encontrado_
 | Limite de requisições por API key por hora (janela fixa, server-side) | `supabase/functions/public-api/index.ts` |
 | Só os campos de negócio legítimos abaixo passam; tudo mais é descartado | `supabase/functions/public-api/index.ts` |
 | Autentica a API key e devolve metadados + decisao de rate limit em UM | `supabase/functions/public-api/index.ts` |
-| validacao: a RPC continua decidindo 401/429 e o handler so aceita a linha | `supabase/functions/public-api/index.ts` |
 | Rate limit server-side por API key (janela fixa de 1h, RPC atômica) | `supabase/functions/public-api/index.ts` |
-| Parametros: ?limit=25&after=<id>&table=companies\|deals&action=INSERT\|UPDATE\|DELETE | `supabase/functions/public-api/index.ts` |
 | Devolvido em texto claro uma única vez; o banco guarda apenas o hash. | `supabase/functions/qa-ingest-run/index.ts` |
 | limitado: apenas leituras + inserts em history/notifications com cooldown. | `supabase/functions/reaper-alerts/index.ts` |
 | ignore — cleanup deve ser idempotente */ } | `supabase/functions/rls-tests/_fixtures.ts` |

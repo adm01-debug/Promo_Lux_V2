@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "perf(api-publica): /me e /events em um unico round-trip e corrige filtro action",
    "chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa",
    "perf(api-publica): /me em 1 round-trip em vez de 2",
    "feat: habilita alerta de latencia da organizacao com trafego real (#189)",
-   "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)",
-   "fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)"
+   "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)"
   ]
  },
  "pr_template": null,

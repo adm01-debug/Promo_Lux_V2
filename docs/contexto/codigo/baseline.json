@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c326fd548f8d22ca31fccbbf96db1e67c87e17c4",
+  "commit": "60535f3d30a566354dd15c98bb17c866f11f6782",
   "branch": "main",
-  "data_commit": "2026-11-24T14:27:08-03:00",
+  "data_commit": "2026-11-24T14:40:09-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "60535f3",
+    "data": "2026-11-24",
+    "assunto": "perf(api-publica): /me e /events em um unico round-trip e corrige filtro action"
+   },
    {
     "sha": "c326fd5",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "825b08c",
     "data": "2026-11-23",
     "assunto": "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)"
-   },
-   {
-    "sha": "f5416a9",
-    "data": "2026-11-23",
-    "assunto": "feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)"
    }
   ],
-  "arquivos_mudados_7d": 264,
+  "arquivos_mudados_7d": 265,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -184,15 +184,15 @@
     "mudancas": 6
    },
    {
+    "pasta": "supabase/functions/public-api",
+    "mudancas": 6
+   },
+   {
     "pasta": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
    {
     "pasta": "scripts/automation.config.json",
-    "mudancas": 5
-   },
-   {
-    "pasta": "supabase/functions/public-api",
     "mudancas": 5
    }
   ],
@@ -234,15 +234,15 @@
     "mudancas": 6
    },
    {
+    "arquivo": "supabase/functions/public-api/index.ts",
+    "mudancas": 6
+   },
+   {
     "arquivo": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
    {
     "arquivo": "scripts/automation.config.json",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "supabase/functions/public-api/index.ts",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 139
+    "commits": 140
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1142,
+  "arquivos_total": 1143,
   "arquivos_codigo": 710,
   "linhas_codigo": 124507,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 258,
+  "migrations": 259,
   "cron_jobs": 42,
   "testes": 128,
   "workflows": 9,

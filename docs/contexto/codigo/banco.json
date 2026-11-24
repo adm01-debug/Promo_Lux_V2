@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 258,
+ "migrations": 259,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -240,6 +240,8 @@
   "prune_pg_net_health_snapshots",
   "prune_qa_reaper_runs",
   "prune_scheduled_report_runs",
+  "public_api_events",
+  "public_api_me",
   "purge_dead_letter",
   "purge_soft_deleted",
   "read_audit_logs_safe",
@@ -2624,7 +2626,6 @@
     "audit-logs-prune",
     "email-oauth-disconnect",
     "lusha-search",
-    "public-api",
     "rls-tests",
     "workflow-engine"
    ],

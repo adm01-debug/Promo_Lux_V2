@@ -1624,8 +1624,7 @@
    ],
    "tabelas": [
     "api_keys",
-    "api_request_logs",
-    "audit_logs"
+    "api_request_logs"
    ],
    "rpcs": [
     "authenticate_api_key",
