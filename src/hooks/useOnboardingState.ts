@@ -59,7 +59,7 @@ export function useOnboardingState() {
     if (user) {
       await supabase
         .from("profiles")
-        .update({ onboarding_completed: true } as Record<string, unknown>)
+        .update({ onboarding_completed: true })
         .eq("id", user.id);
     }
   }, [user]);

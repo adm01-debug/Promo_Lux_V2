@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
 import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard } from "lucide-react";
 import { downloadCSV } from "@/lib/exportCSV";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import { filterHistory, formatDurationMs, findRecentDuplicate, buildHistoryCsvRows, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
 import { LushaCookieHealthBanner } from "@/components/lux/lusha/LushaCookieHealthBanner";
 import { OracleV2Panel } from "@/components/lux/lusha/OracleV2Panel";
@@ -200,7 +201,7 @@ export const LushaIntelligenceView = () => {
     ) => {
       if (!id) return;
       try {
-        const payload: Record<string, unknown> = { status: patch.status };
+        const payload: TablesUpdate<"lusha_dm_search_history"> = { status: patch.status };
         if (patch.total != null) payload.decision_makers_count = patch.total;
         if (patch.message !== undefined) payload.error_message = patch.message;
         if (patch.startedAt) {
@@ -1010,7 +1011,7 @@ export const LushaIntelligenceView = () => {
     const email = entry.emailAddresses?.[0]?.email ?? null;
     const phone = entry.phoneNumbers?.[0]?.number ?? null;
     if (!email && !phone) return;
-    const update: Record<string, unknown> = {
+    const update: TablesUpdate<"lusha_contacts"> = {
       // 'enriched' e não 'found': 'found' não existe na CHECK do banco nem no
       // StatusBadge. has_email/has_phone são colunas GENERATED — o banco calcula
       // sozinho a partir de email/phone_formatted. Escrever nelas dá 428C9.

@@ -20,10 +20,16 @@ api_latency_stats
 api_latency_trend
 apply_retry_advisory
 campaign_ab_stats
+company_analytics_summary
+company_growth_trend
+company_ipc_distribution
+company_sector_distribution
+company_source_distribution
 create_default_deal_stages
 dlq_health_metrics
 dlq_health_trend
 get_dashboard_stats
+get_warmup_slot
 replay_dead_letter
 replay_dead_letter_batch
 reset_circuit_breaker

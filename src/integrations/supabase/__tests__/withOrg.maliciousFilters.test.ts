@@ -90,7 +90,7 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
         db.from("companies").update([
           { name: "ok", organization_id: ORG_A },
           { name: "evil", organization_id: ORG_B },
-        ] as unknown as Record<string, unknown>),
+                  ] as unknown as never),
       ).toThrow(OrgMismatchError);
     });
 
@@ -119,7 +119,7 @@ describe("db (withOrg) — malicious payloads & filter bypass attempts", () => {
       db.from("companies").update({
         name: "x",
         organization_id: null,
-      } as unknown as Record<string, unknown>);
+              } as unknown as never);
       const updateCall = callOrder.find((c) => c.method === "update");
       expect(updateCall?.args).toEqual([{ name: "x" }]);
       expect(orgEqCalls()[0]?.args).toEqual(["organization_id", ORG_A]);

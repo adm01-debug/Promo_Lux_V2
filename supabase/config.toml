@@ -6,8 +6,11 @@ verify_jwt = true
 [functions.cnpj-enrich-worker]
 verify_jwt = true
 
+# verify_jwt = false: o CI não carrega JWT. O gate é o header x-qa-token, validado
+# contra o segredo QA_INGEST_TOKEN ou contra public.qa_ingest_tokens (só hash).
 [functions.qa-ingest-run]
 verify_jwt = false
+
 [functions.admin-list-companies]
 verify_jwt = false
 
@@ -48,4 +51,15 @@ verify_jwt = false
 # vinda do vault; o gate efeito esta em cron-auth (isCronAuthorized), nao no
 # verify_jwt do gateway.
 [functions.send-scheduled-reports]
+verify_jwt = false
+
+# SCIM 2.0 - IdPs (Okta, Azure AD) chamam com Bearer token SCIM proprio
+# (nao um JWT do Supabase). O gate esta no codigo (verify_scim_token RPC).
+# Sem esta secao o gateway responde 401 antes do codigo rodar.
+[functions.scim]
+verify_jwt = false
+
+# hubspot-sync - invocado por cron (CRON_SERVICE_KEY) ou por admin logado.
+# O gate esta no codigo (isCronAuthorized + checagem de role admin).
+[functions.hubspot-sync]
 verify_jwt = false

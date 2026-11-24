@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CheckCircle2, XCircle, Clock, TrendingUp, ShieldCheck, AlertTriangle } from "lucide-react";
+import { CheckCircle2, XCircle, Clock, TrendingUp, ShieldCheck, AlertTriangle, Copy, KeyRound, Trash2 } from "lucide-react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -162,6 +162,8 @@ export const QaHistoryPanel = memo(() => {
           </TabsList>
         </Tabs>
       </div>
+
+      <IngestTokenCard />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
@@ -359,5 +361,166 @@ const EmptyHint = memo(function EmptyHint() {
         <code className="font-mono">x-qa-token</code>. O painel atualiza automaticamente.
       </p>
     </div>
+  );
+});
+
+interface IngestTokenRow {
+  id: string;
+  label: string;
+  created_at: string;
+  last_used_at: string | null;
+  revoked_at: string | null;
+}
+
+const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleString("pt-BR") : "—");
+
+/**
+ * Card admin do token de ingestão do CI em `qa-ingest-run`.
+ *
+ * O gate é do servidor: a primeira chamada é `x-qa-action: list`, que exige JWT de
+ * admin. Quem não é admin recebe 401 e o card não é renderizado — a UI não mantém
+ * uma segunda regra de permissão que possa divergir do backend.
+ */
+const IngestTokenCard = memo(function IngestTokenCard() {
+  const [issued, setIssued] = useState<string | null>(null);
+  const [busy, setBusy] = useState<"rotate" | "revoke" | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const invoke = (action: "list" | "rotate" | "revoke", body: Record<string, unknown> = {}) =>
+    supabase.functions.invoke("qa-ingest-run", { headers: { "x-qa-action": action }, body });
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["qa-ingest-tokens"],
+    queryFn: async () => {
+      const { data: res, error } = await invoke("list");
+      if (error) throw error;
+      return (res?.tokens ?? []) as IngestTokenRow[];
+    },
+    retry: false,
+    staleTime: 30_000,
+  });
+
+  if (isLoading || !data) return null;
+
+  const active = data.filter((t) => !t.revoked_at);
+
+  const rotate = async () => {
+    setBusy("rotate");
+    setMessage(null);
+    setCopied(false);
+    const { data: res, error } = await invoke("rotate");
+    setBusy(null);
+    if (error || !res?.token) {
+      setMessage("Falha ao gerar o token.");
+      return;
+    }
+    setIssued(res.token as string);
+    refetch();
+  };
+
+  const revoke = async (id?: string) => {
+    setBusy("revoke");
+    setMessage(null);
+    const { error } = await invoke("revoke", id ? { id } : {});
+    setBusy(null);
+    if (error) {
+      setMessage("Falha ao revogar.");
+      return;
+    }
+    setIssued(null);
+    refetch();
+  };
+
+  const copy = async () => {
+    if (!issued) return;
+    try {
+      await navigator.clipboard.writeText(issued);
+      setCopied(true);
+    } catch {
+      setMessage("Copie manualmente — o navegador bloqueou a área de transferência.");
+    }
+  };
+
+  return (
+    <Card className="glass">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base flex items-center gap-2">
+          <KeyRound className="h-4 w-4 text-primary" /> Token de ingestão do CI
+          <Badge variant="outline" className="ml-auto text-[10px]">
+            {active.length} ativo(s)
+          </Badge>
+        </CardTitle>
+        <CardDescription>
+          Envie como header <code className="font-mono">x-qa-token</code> ao postar em{" "}
+          <code className="font-mono">/functions/v1/qa-ingest-run</code>. O valor aparece uma única vez.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {issued ? (
+          <div className="rounded border border-success/30 bg-success/10 p-2 space-y-1">
+            <p className="text-[11px] text-foreground">Copie agora — não será exibido novamente.</p>
+            <div className="flex items-center gap-2">
+              <code className="text-[10px] font-mono flex-1 truncate">{issued}</code>
+              <button
+                onClick={copy}
+                className="shrink-0 text-muted-foreground hover:text-foreground"
+                aria-label="Copiar token"
+              >
+                <Copy className="h-3 w-3" aria-hidden="true" />
+              </button>
+              {copied ? <span className="text-[10px] text-success">copiado</span> : null}
+            </div>
+          </div>
+        ) : null}
+
+        {active.length > 0 ? (
+          <ul className="space-y-1">
+            {active.map((t) => (
+              <li
+                key={t.id}
+                className="flex items-center gap-2 text-[11px] p-2 rounded bg-muted/40 border border-border/20"
+              >
+                <span className="font-medium">{t.label}</span>
+                <span className="text-muted-foreground">criado {fmtDate(t.created_at)}</span>
+                <span className="text-muted-foreground">· último uso {fmtDate(t.last_used_at)}</span>
+                <button
+                  onClick={() => revoke(t.id)}
+                  disabled={busy !== null}
+                  className="ml-auto shrink-0 text-muted-foreground hover:text-destructive disabled:opacity-50"
+                  aria-label={`Revogar token ${t.label}`}
+                >
+                  <Trash2 className="h-3 w-3" aria-hidden="true" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            Nenhum token ativo. Sem token, o CI não consegue publicar rodadas no painel.
+          </p>
+        )}
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={rotate}
+            disabled={busy !== null}
+            className="text-xs px-3 py-1.5 rounded bg-primary text-primary-foreground disabled:opacity-50"
+          >
+            {busy === "rotate" ? "Gerando..." : active.length ? "Gerar novo token" : "Gerar token"}
+          </button>
+          {active.length > 0 ? (
+            <button
+              onClick={() => revoke()}
+              disabled={busy !== null}
+              className="text-xs px-3 py-1.5 rounded border border-border/40 text-muted-foreground hover:text-destructive disabled:opacity-50"
+            >
+              {busy === "revoke" ? "Revogando..." : "Revogar todos"}
+            </button>
+          ) : null}
+          {message ? <span className="text-[11px] text-destructive">{message}</span> : null}
+        </div>
+      </CardContent>
+    </Card>
   );
 });

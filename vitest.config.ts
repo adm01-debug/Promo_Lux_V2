@@ -63,6 +63,7 @@ export default defineConfig({
             "**/hiker-normalize.test.ts",
             "**/hiker-normalize-extra.test.ts",
             "**/instagram-config-hash.test.ts",
+            "**/scim-core.test.ts",
           ],
         },
       },
