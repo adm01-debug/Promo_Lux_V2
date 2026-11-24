@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9b3dabf47fa0170ba3362c5de3fe8e238b4be13c",
+  "commit": "fef1ec1e2d87782216b03a422123ddac4631f8f5",
   "branch": "main",
-  "data_commit": "2026-11-24T18:19:08-03:00",
+  "data_commit": "2026-11-24T18:27:47-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "fef1ec1",
+    "data": "2026-11-24",
+    "assunto": "infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)"
+   },
    {
     "sha": "9b3dabf",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "588525f",
     "data": "2026-11-24",
     "assunto": "fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)"
-   },
-   {
-    "sha": "23e9378",
-    "data": "2026-11-23",
-    "assunto": "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)"
    }
   ],
   "arquivos_mudados_7d": 270,
@@ -156,12 +156,12 @@
     "mudancas": 17
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 8
+    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 9
    },
    {
     "pasta": ".gitignore",
@@ -206,12 +206,12 @@
     "mudancas": 17
    },
    {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "arquivo": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
-    "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 8
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 143
+    "commits": 144
    },
    {
     "autor": "dependabot[bot]",

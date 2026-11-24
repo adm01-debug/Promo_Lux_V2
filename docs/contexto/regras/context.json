@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "9b3dabf47fa0170ba3362c5de3fe8e238b4be13c",
+  "sha": "fef1ec1e2d87782216b03a422123ddac4631f8f5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 21:20 UTC",
+  "generated_at": "2026-11-24 21:28 UTC",
   "files_total": 1165,
   "code_files": 980,
   "code_lines": 146441
@@ -101795,10 +101795,19 @@
   }
  },
  "git": {
-  "sha": "9b3dabf47fa0170ba3362c5de3fe8e238b4be13c",
+  "sha": "fef1ec1e2d87782216b03a422123ddac4631f8f5",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "fef1ec1",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)",
+    "files": [
+     ".github/workflows/db-migrations.yml"
+    ]
+   },
    {
     "sha": "9b3dabf",
     "date": "2026-11-24",
@@ -102132,17 +102141,6 @@
      "src/integrations/supabase/types.ts",
      "supabase/migrations/20261124000000_h37_company_analytics.sql"
     ]
-   },
-   {
-    "sha": "b39b3b2",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "feat: liga a UI de configuracao dos alertas de disjuntor (#153)",
-    "files": [
-     "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
-     "src/pages/Monitoring.tsx",
-     "supabase/migrations/20261122340000_cb_alert_settings_grant.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -102151,12 +102149,12 @@
     5
    ],
    [
-    "src/integrations/supabase/types.ts",
+    ".github/workflows/db-migrations.yml",
     4
    ],
    [
-    ".github/workflows/db-migrations.yml",
-    3
+    "src/integrations/supabase/types.ts",
+    4
    ],
    [
     "scripts/check-schema-replay-drift.sh",
@@ -102176,10 +102174,6 @@
    ],
    [
     "supabase/migrations/20261124040000_scim_provisioning.sql",
-    2
-   ],
-   [
-    "src/pages/Monitoring.tsx",
     2
    ],
    [
@@ -102224,6 +102218,10 @@
    ],
    [
     "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql",
     1
    ]
   ]
