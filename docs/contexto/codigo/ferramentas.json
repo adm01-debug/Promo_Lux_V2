@@ -4,7 +4,7 @@
  "stack": {
   "linguagens": [
    "TypeScript (683)",
-   "SQL (257)",
+   "SQL (258)",
    "Markdown (87)",
    "JSON (38)",
    "JavaScript (23)",
@@ -1280,6 +1280,7 @@
    }
   ],
   "rpcs_de_autorizacao": [
+   "authenticate_api_key",
    "default_role_permissions",
    "has_org_role",
    "has_role"

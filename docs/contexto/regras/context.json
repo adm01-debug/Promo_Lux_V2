@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "8444c902696838c5caed1e1dc6bd0507838bde0a",
+  "sha": "a8b5edf14c8b3446f9d18132922162819adc1cb0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 15:05 UTC",
-  "files_total": 1155,
-  "code_files": 971,
-  "code_lines": 145530
+  "generated_at": "2026-11-24 15:21 UTC",
+  "files_total": 1156,
+  "code_files": 972,
+  "code_lines": 145670
  },
  "version": "1.3.2",
- "facts_hash": "cb7f7273637283d1",
+ "facts_hash": "2b4da07f60090595",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -237,7 +237,7 @@
   "languages": {
    ".ts": 381,
    ".tsx": 302,
-   ".sql": 257,
+   ".sql": 258,
    ".mjs": 21,
    ".py": 5,
    ".js": 4,
@@ -19681,6 +19681,23 @@
      "lusha_contacts"
     ]
    },
+   "authenticate_api_key": {
+    "args": "_key_hash TEXT, _limit INTEGER DEFAULT 600",
+    "returns": "TABLE(\n  key_id UUID,\n  user_id UUID,\n  scopes TEXT[],\n  prefix TEXT,\n  organization_id UUID,\n  allowed BOOLEAN,\n  current_count INTEGER,\n  reset_at TIMESTAMPTZ\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_key RECORD; v_window TIMESTAMPTZ := date_trunc('hour', now()); v_count INTEGER; BEGIN SELECT k.id, k.user_id, k.scopes, k.prefix, k.organization_id INTO v_key FROM public.api_keys k WHERE k.key_hash = _key_hash AND k.active = true AND (k.expires_at IS NULL OR k.expires_at > now()) LIMIT 1; IF NOT FOUND THEN RETURN; END IF; UPDATE public.api_keys SET last_used_at = now() WHERE id = v_key.id; INSERT INTO public.api_rate_limits (api_key_id, window_start, count) VALUES (v_key.id, v_window, 1) ON CONFLICT (api_key_id, window_start) DO UPDATE SET count = public.api_rate_limits.count + 1, updated_at = now() RETURNING count INTO v_count; RETURN QUERY SELECT v_key.id, v_key.user_id, v_key.s …",
+    "raises": [],
+    "tables": [
+     "SET",
+     "api_keys",
+     "api_rate_limits",
+     "v_count",
+     "v_key"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -23376,6 +23393,7 @@
    "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
    "supabase/migrations/20261124125500_cron_evaluate_api_latency_15min.sql",
    "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql",
+   "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29015,6 +29033,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "authenticate_api_key",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "authenticate_api_key",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
    }
   ],
   "raises": [
@@ -33867,7 +33901,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 24954,
+   "lines": 25018,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -34082,8 +34116,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 253,
-   "lines": 19299,
+   "files": 254,
+   "lines": 19375,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -37046,6 +37080,9 @@
    ],
    "audit_log_facets": [
     "src/hooks/useAuditLogExport.ts"
+   ],
+   "authenticate_api_key": [
+    "supabase/functions/public-api/index.ts"
    ],
    "auto_tune_queue_slas": [
     "supabase/functions/sla-auto-tune/index.ts"
@@ -40735,6 +40772,10 @@
    },
    {
     "file": "supabase/functions/public-api/index.ts",
+    "text": "Autentica a API key e devolve metadados + decisao de rate limit em UM"
+   },
+   {
+    "file": "supabase/functions/public-api/index.ts",
     "text": "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)"
    },
    {
@@ -40824,6 +40865,10 @@
    {
     "file": "supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql",
     "text": "41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA"
+   },
+   {
+    "file": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+    "text": "janela de rate limit fixa de 1 hora, UPSERT atomico em api_rate_limits"
    }
   ],
   "db_constraints": [
@@ -52489,6 +52534,10 @@
    {
     "file": "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
     "line": "locked_until = now() + interval '300 seconds',"
+   },
+   {
+    "file": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+    "line": "(v_window + interval '1 hour');"
    }
   ],
   "percents": [
@@ -65409,6 +65458,23 @@
      "lusha_contacts"
     ]
    },
+   "authenticate_api_key": {
+    "args": "_key_hash TEXT, _limit INTEGER DEFAULT 600",
+    "returns": "TABLE(\n  key_id UUID,\n  user_id UUID,\n  scopes TEXT[],\n  prefix TEXT,\n  organization_id UUID,\n  allowed BOOLEAN,\n  current_count INTEGER,\n  reset_at TIMESTAMPTZ\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE v_key RECORD; v_window TIMESTAMPTZ := date_trunc('hour', now()); v_count INTEGER; BEGIN SELECT k.id, k.user_id, k.scopes, k.prefix, k.organization_id INTO v_key FROM public.api_keys k WHERE k.key_hash = _key_hash AND k.active = true AND (k.expires_at IS NULL OR k.expires_at > now()) LIMIT 1; IF NOT FOUND THEN RETURN; END IF; UPDATE public.api_keys SET last_used_at = now() WHERE id = v_key.id; INSERT INTO public.api_rate_limits (api_key_id, window_start, count) VALUES (v_key.id, v_window, 1) ON CONFLICT (api_key_id, window_start) DO UPDATE SET count = public.api_rate_limits.count + 1, updated_at = now() RETURNING count INTO v_count; RETURN QUERY SELECT v_key.id, v_key.user_id, v_key.s …",
+    "raises": [],
+    "tables": [
+     "SET",
+     "api_keys",
+     "api_rate_limits",
+     "v_count",
+     "v_key"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -70138,7 +70204,8 @@
    "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql",
    "supabase/migrations/20261124040000_scim_provisioning.sql",
    "supabase/migrations/20261124050000_qa_ingest_token_db.sql",
-   "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
+   "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -70156,6 +70223,7 @@
    "apply_sla_recommendation",
    "assert_service_or_admin",
    "audit_log_facets",
+   "authenticate_api_key",
    "auto_tune_queue_slas",
    "campaign_ab_stats",
    "can_access",
@@ -75837,6 +75905,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "authenticate_api_key",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "authenticate_api_key",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
    }
   ],
   "guards": [
@@ -97978,15 +98062,15 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 318,
+   "lines": 382,
    "tables": [
-    {
-     "table": "api_request_logs",
-     "op": "ref"
-    },
     {
      "table": "api_keys",
      "op": "select"
+    },
+    {
+     "table": "api_request_logs",
+     "op": "ref"
     },
     {
      "table": "api_keys",
@@ -98021,6 +98105,7 @@
    },
    "dyn_from": 5,
    "rpc": [
+    "authenticate_api_key",
     "check_api_key_rate_limit",
     "touch_api_key",
     "verify_api_key"
@@ -98040,6 +98125,7 @@
     "GET    /events?limit=&after=&table=&action=  (Zapier polling trigger)",
     "Limite de requisições por API key por hora (janela fixa, server-side)",
     "Só os campos de negócio legítimos abaixo passam; tudo mais é descartado",
+    "Autentica a API key e devolve metadados + decisao de rate limit em UM",
     "Rate limit server-side por API key (janela fixa de 1h, RPC atômica)",
     "Parametros: ?limit=25&after=<id>&table=companies|deals&action=INSERT|UPDATE|DELETE"
    ],
@@ -101399,13 +101485,34 @@
   "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql": {
    "path": "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql",
    "lines": 130
+  },
+  "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql": {
+   "path": "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+   "lines": 76,
+   "rule_comments": [
+    "janela de rate limit fixa de 1 hora, UPSERT atomico em api_rate_limits"
+   ],
+   "temporal": [
+    "(v_window + interval '1 hour');"
+   ],
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "8444c902696838c5caed1e1dc6bd0507838bde0a",
+  "sha": "a8b5edf14c8b3446f9d18132922162819adc1cb0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "a8b5edf",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)",
+    "files": [
+     "supabase/functions/public-api/index.ts",
+     "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
+    ]
+   },
    {
     "sha": "8444c90",
     "date": "2026-11-24",
@@ -101763,15 +101870,6 @@
      "src/components/lux/DealsView.tsx",
      "src/components/lux/IntegrationsView.tsx"
     ]
-   },
-   {
-    "sha": "9fdb455",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)",
-    "files": [
-     "src/components/lux/ScrapeResultsView.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -101782,6 +101880,10 @@
    [
     "src/integrations/supabase/types.ts",
     4
+   ],
+   [
+    "supabase/functions/public-api/index.ts",
+    3
    ],
    [
     ".github/workflows/db-migrations.yml",
@@ -101797,10 +101899,6 @@
    ],
    [
     "scripts/check-schema-replay-drift.sh",
-    2
-   ],
-   [
-    "supabase/functions/public-api/index.ts",
     2
    ],
    [
@@ -101828,6 +101926,10 @@
     2
    ],
    [
+    "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
+    1
+   ],
+   [
     "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql",
     1
    ],
@@ -101849,10 +101951,6 @@
    ],
    [
     "supabase/functions/gmaps-proxy/index.ts",
-    1
-   ],
-   [
-    "supabase/functions/health/index.ts",
     1
    ]
   ]

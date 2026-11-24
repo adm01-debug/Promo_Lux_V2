@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 253,
+ "migrations": 254,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -104,6 +104,7 @@
   "apply_sla_recommendation",
   "assert_service_or_admin",
   "audit_log_facets",
+  "authenticate_api_key",
   "auto_tune_queue_slas",
   "campaign_ab_stats",
   "can_access",
@@ -19741,6 +19742,11 @@
   },
   {
    "nome": "audit_log_facets",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "authenticate_api_key",
    "definida": true,
    "usada_em": 1
   },

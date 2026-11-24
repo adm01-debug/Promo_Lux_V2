@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8444c90269` · branch `main` · 2026-11-24 15:05 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a8b5edf14c` · branch `main` · 2026-11-24 15:21 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1897,6 +1897,7 @@ _nenhum item encontrado_
 | `interval '1 month'))::date as month_start` | `supabase/migrations/20261124000000_h37_company_analytics.sql` |
 | `and created_at < now() - interval '1 hour';` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `locked_until = now() + interval '300 seconds',` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
+| `(v_window + interval '1 hour');` | `supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql` |
 
 ### H.3 Limites de paginação
 
@@ -2672,6 +2673,7 @@ _nenhum item encontrado_
 | GET    /events?limit=&after=&table=&action=  (Zapier polling trigger) | `supabase/functions/public-api/index.ts` |
 | Limite de requisições por API key por hora (janela fixa, server-side) | `supabase/functions/public-api/index.ts` |
 | Só os campos de negócio legítimos abaixo passam; tudo mais é descartado | `supabase/functions/public-api/index.ts` |
+| Autentica a API key e devolve metadados + decisao de rate limit em UM | `supabase/functions/public-api/index.ts` |
 | Rate limit server-side por API key (janela fixa de 1h, RPC atômica) | `supabase/functions/public-api/index.ts` |
 | Parametros: ?limit=25&after=<id>&table=companies\|deals&action=INSERT\|UPDATE\|DELETE | `supabase/functions/public-api/index.ts` |
 | Devolvido em texto claro uma única vez; o banco guarda apenas o hash. | `supabase/functions/qa-ingest-run/index.ts` |
@@ -2695,3 +2697,4 @@ _nenhum item encontrado_
 | best-effort: falha ao disparar alerta não deve mascarar o erro original */ } | `supabase/functions/workflow-engine/index.ts` |
 | existem apenas no banco de | `supabase/migrations/20260722113909_9c22ae79-0880-44a3-b424-02e5fb532d96.sql` |
 | 41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |
+| janela de rate limit fixa de 1 hora, UPSERT atomico em api_rate_limits | `supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql` |

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8444c902696838c5caed1e1dc6bd0507838bde0a` (2026-11-24T12:04:48-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a8b5edf14c8b3446f9d18132922162819adc1cb0` (2026-11-24T12:21:26-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (683), SQL (257), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (683), SQL (258), Markdown (87), JSON (38), JavaScript (23), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1136 |
+| arquivos_total | 1137 |
 | arquivos_codigo | 710 |
-| linhas_codigo | 124406 |
+| linhas_codigo | 124470 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 97 |
 | edge_functions | 65 |
 | tabelas | 120 |
-| migrations | 253 |
+| migrations | 254 |
 | cron_jobs | 40 |
 | testes | 128 |
 | workflows | 9 |
@@ -259,8 +259,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7862 nós · 16667 arestas · 657 comunidades · grafo do commit `8444c902`
-- comunidades maiores: lucide-react (151), react (141), @tanstack/react-query (139), cn (124), badge.tsx (116), utils.ts (113), snapshot.py (108), ref_https (96), vitest (83), gerar.mjs (80), dialog.tsx (78), generate.py (73)
+- 7869 nós · 16673 arestas · 699 comunidades · grafo do commit `a8b5edf1`
+- comunidades maiores: Monitoring.tsx (202), react (189), @tanstack/react-query (173), EmailAccountsPanel.tsx (154), framer-motion (116), snapshot.py (102), cn (87), gerar.mjs (80), ref_node_fs (77), generate.py (73), campaign-dispatch/index.ts (67), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -376,6 +376,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `a8b5edf` ﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)
 - 2026-11-24 `8444c90` fix: taxa de erro da API conta so falha de servidor (5xx) (#184)
 - 2026-11-24 `8da6120` fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)
 - 2026-11-24 `0995c31` chore: remove o dominio Lovable das origens, metadados e user-agent (#182)
@@ -390,7 +391,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `faad34a` fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)
 - 2026-11-24 `588525f` fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)
 - 2026-11-23 `23e9378` chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)
-- 2026-11-23 `90d7ac8` feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

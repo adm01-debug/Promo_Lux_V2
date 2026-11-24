@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8444c902696838c5caed1e1dc6bd0507838bde0a",
+  "commit": "a8b5edf14c8b3446f9d18132922162819adc1cb0",
   "branch": "main",
-  "data_commit": "2026-11-24T12:04:48-03:00",
+  "data_commit": "2026-11-24T12:21:26-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a8b5edf",
+    "data": "2026-11-24",
+    "assunto": "﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)"
+   },
    {
     "sha": "8444c90",
     "data": "2026-11-24",
@@ -126,14 +131,9 @@
     "sha": "cf23a12",
     "data": "2026-11-23",
     "assunto": "feat: steps de workflow controlam quais fases do engine executam (#158)"
-   },
-   {
-    "sha": "0b2a228",
-    "data": "2026-11-23",
-    "assunto": "feat: exige significancia estatistica para eleger vencedora A/B (#150)"
    }
   ],
-  "arquivos_mudados_7d": 258,
+  "arquivos_mudados_7d": 259,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -286,22 +286,22 @@
     "mudancas": 4
    },
    {
+    "arquivo": "supabase/functions/public-api/index.ts",
+    "mudancas": 4
+   },
+   {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 3
    },
    {
     "arquivo": ".github/workflows/edge-functions-deploy.yml",
     "mudancas": 3
-   },
-   {
-    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 132
+    "commits": 133
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1136,
+  "arquivos_total": 1137,
   "arquivos_codigo": 710,
-  "linhas_codigo": 124406,
+  "linhas_codigo": 124470,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 253,
+  "migrations": 254,
   "cron_jobs": 40,
   "testes": 128,
   "workflows": 9,
@@ -592,7 +592,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 24954
+   "linhas": 25018
   },
   "tailwind.config.ts": {
    "arquivos": 1,
