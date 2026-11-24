@@ -83,6 +83,48 @@ for arq in $ARQUIVOS; do
   esac
 done
 
+# ---------------------------------------------------------------------------
+# Drift inverso: versao registrada no banco alvo que NAO existe no repositorio.
+#
+# O CLI aborta nesse caso com "Remote migration versions not found in local
+# migrations directory" e sugere `migration repair --status reverted`, que
+# marcaria como NAO aplicada uma migration que esta aplicada. Este bloco
+# troca o aborto cego por um diagnostico.
+#
+# Causa mais comum: run de um commit antigo da main que ficou na fila de
+# concorrencia (`cancel-in-progress: false`) e rodou depois que um commit mais
+# novo ja aplicou as migrations. Nesse caso NAO ha nada quebrado: o proximo run
+# da main enxerga os arquivos. Ver `scripts/check-run-freshness.sh`.
+#
+# Causa ruim: arquivo de migration removido/renomeado depois de aplicado. Ai o
+# banco esta a frente do codigo e um rebuild perde os objetos.
+#
+# Deteccao por token, independente do layout da tabela: o `migration list`
+# imprime LOCAL e REMOTE, e o unico lugar de onde podem sair timestamps de 14
+# digitos que nao sejam arquivos locais e a coluna REMOTE.
+# ---------------------------------------------------------------------------
+LOCAIS="$(printf '%s\n' $ARQUIVOS | sed 's/_.*//' | grep -E '^[0-9]{14}$' | sort -u)"
+REMOTAS="$(printf '%s\n' "$LIST" | grep -oE '[0-9]{14}' | sort -u)"
+ORFAS=""
+for ts in $REMOTAS; do
+  printf '%s\n' "$LOCAIS" | grep -qx "$ts" || ORFAS="$ORFAS $ts"
+done
+
+if [ -n "$ORFAS" ]; then
+  echo "::error::Drift inverso: versoes registradas no banco alvo que NAO existem em supabase/migrations/:"
+  printf '  - %s\n' $ORFAS
+  echo ""
+  echo "Se o arquivo existe em outro commit (run antigo da main), nada a fazer: rode de novo"
+  echo "a partir da main atual. NAO rode 'supabase migration repair --status reverted' -"
+  echo "isso desmarca uma migration que esta aplicada."
+  echo "Se o arquivo nao existe em lugar nenhum, o banco esta a frente do repositorio e o"
+  echo "rebuild perde esses objetos: trazer o DDL de volta para uma migration."
+  if [ "$STRICT" = "1" ]; then
+    exit 1
+  fi
+  echo "::warning::STRICT=0 - apenas avisando."
+fi
+
 if [ -n "$PENDENTES" ]; then
   echo "::error::Drift: migrations no repositorio que NAO estao aplicadas no banco alvo:"
   printf '  - %s\n' $PENDENTES

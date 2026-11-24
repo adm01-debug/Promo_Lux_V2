@@ -31,14 +31,7 @@
       "kind": "tool",
       "files": ["scripts/automation.mjs", "package.json"],
       "manual": ["node", "scripts/automation.mjs", "doctor"],
-      "triggers": [
-        "manual",
-        "precommit",
-        "prepush",
-        "PR",
-        "pushmain",
-        "nightly"
-      ]
+      "triggers": ["manual", "precommit", "prepush", "PR", "pushmain", "nightly"]
     },
     {
       "id": "automation-suites",
@@ -62,13 +55,7 @@
         "scripts/maintenance/lib.mjs",
         "scripts/maintenance/typecheck.mjs"
       ],
-      "manual": [
-        "node",
-        "scripts/automation.mjs",
-        "heal",
-        "--ref",
-        "origin/main"
-      ],
+      "manual": ["node", "scripts/automation.mjs", "heal", "--ref", "origin/main"],
       "triggers": ["manual", "nightly"]
     },
     {
@@ -76,14 +63,7 @@
       "kind": "graph",
       "files": ["scripts/graphify-local.mjs"],
       "manual": ["node", "scripts/automation.mjs", "graph", "status"],
-      "triggers": [
-        "manual",
-        "precommit",
-        "postcommit",
-        "postmerge",
-        "postcheckout",
-        "nightly"
-      ]
+      "triggers": ["manual", "precommit", "postcommit", "postmerge", "postcheckout", "nightly"]
     },
     {
       "id": "helper-patch-mcp-plugin",
@@ -172,6 +152,22 @@
       "manual": ["sh", "scripts/check-migration-drift.sh"],
       "triggers": ["manual"],
       "reason": "Guarda de drift entre repo e banco alvo; chamado por .github/workflows/db-migrations.yml (job plan com STRICT=0, job apply estrito apos o db push). O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-7c1e9a4b2f60d135",
+      "kind": "legacy",
+      "files": ["scripts/check-schema-replay-drift.sh"],
+      "manual": ["sh", "scripts/check-schema-replay-drift.sh"],
+      "triggers": ["manual"],
+      "reason": "Guarda de drift de schema: compara o banco alvo com o replay limpo das migrations; referências literais: .github/workflows/db-migrations.yml (job plan informativo, job apply estrito após o db push). O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-3f8d5c2a9b174e60",
+      "kind": "legacy",
+      "files": ["scripts/check-run-freshness.sh"],
+      "manual": ["sh", "scripts/check-run-freshness.sh"],
+      "triggers": ["manual"],
+      "reason": "Guarda de run superado: impede run antigo preso na aprovação do environment de aplicar migrations por cima de um main mais novo; referências literais: .github/workflows/db-migrations.yml (job apply, gate dos steps que tocam o banco). O dispatcher não executa esta operação."
     },
     {
       "id": "legacy-98513bf7a8d2048b",
@@ -385,11 +381,7 @@
       "id": "legacy-90917534123a7cef",
       "kind": "legacy",
       "files": ["scripts/inventario/mudou-conteudo.unit.mjs"],
-      "manual": [
-        "node",
-        "--test",
-        "scripts/inventario/mudou-conteudo.unit.mjs"
-      ],
+      "manual": ["node", "--test", "scripts/inventario/mudou-conteudo.unit.mjs"],
       "triggers": ["manual"],
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/inventario-estado-semanal.yml. O dispatcher não executa esta operação."
     },
@@ -482,29 +474,9 @@
     }
   ],
   "nightly": {
-    "command": [
-      "node",
-      "scripts/automation.mjs",
-      "nightly",
-      "--ref",
-      "origin/main"
-    ]
+    "command": ["node", "scripts/automation.mjs", "nightly", "--ref", "origin/main"]
   },
   "timeoutMs": 900000,
-  "toolingPatterns": [
-    "scripts/**",
-    ".github/**",
-    ".husky/**",
-    "package.json",
-    "*lock*",
-    "graphify.local.json"
-  ],
-  "sourcePatterns": [
-    "src/**",
-    "tests/**",
-    "e2e/**",
-    "api/**",
-    "shared/**",
-    "supabase/functions/**"
-  ]
+  "toolingPatterns": ["scripts/**", ".github/**", ".husky/**", "package.json", "*lock*", "graphify.local.json"],
+  "sourcePatterns": ["src/**", "tests/**", "e2e/**", "api/**", "shared/**", "supabase/functions/**"]
 }
