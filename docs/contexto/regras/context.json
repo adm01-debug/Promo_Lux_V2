@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "877196162eee5ad3fd103f0cbbb09cd59684141a",
+  "sha": "1317d2096570fef04e9274a4e9000bd21811f4c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-24 13:40 UTC",
+  "generated_at": "2026-11-24 13:56 UTC",
   "files_total": 1153,
   "code_files": 969,
   "code_lines": 145404
@@ -101394,10 +101394,19 @@
   }
  },
  "git": {
-  "sha": "877196162eee5ad3fd103f0cbbb09cd59684141a",
+  "sha": "1317d2096570fef04e9274a4e9000bd21811f4c4",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "1317d20",
+    "date": "2026-11-24",
+    "author": "adm01-debug",
+    "subject": "chore: inventario do estado real (gerado em 24/11) (#180)",
+    "files": [
+     "inventario/estado/edges.json"
+    ]
+   },
    {
     "sha": "8771961",
     "date": "2026-11-24",
@@ -101755,15 +101764,6 @@
      "scripts/automation.config.json",
      "scripts/patch-mcp-plugin.mjs"
     ]
-   },
-   {
-    "sha": "fddbb4f",
-    "date": "2026-11-22",
-    "author": "adm01-debug",
-    "subject": "feat(cron): liga instagram-worker a cada minuto (recupera migration da PR #120) (#142)",
-    "files": [
-     "supabase/migrations/20261122280000_cron_instagram_worker.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -101782,6 +101782,10 @@
    [
     "src/components/lux/SettingsView.tsx",
     3
+   ],
+   [
+    "inventario/estado/edges.json",
+    2
    ],
    [
     "supabase/migrations/20261124040000_scim_provisioning.sql",
@@ -101841,10 +101845,6 @@
    ],
    [
     "vercel.json",
-    1
-   ],
-   [
-    "scripts/check-migration-drift.sh",
     1
    ]
   ]

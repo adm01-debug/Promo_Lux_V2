@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `877196162eee5ad3fd103f0cbbb09cd59684141a` (2026-11-24T10:38:56-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `1317d2096570fef04e9274a4e9000bd21811f4c4` (2026-11-24T10:52:17-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -258,7 +258,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7856 nós · 16662 arestas · 664 comunidades · grafo do commit `87719616`
+- 7856 nós · 16662 arestas · 664 comunidades · grafo do commit `1317d209`
 - comunidades maiores: Monitoring.tsx (191), input.tsx (168), @tanstack/react-query (145), react (135), cn (126), lucide-react (117), OrgViolationsView.tsx (103), Index.tsx (86), vitest (83), gerar.mjs (80), req (78), generate.py (73)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -277,8 +277,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - scripts/automation.config.json (5)
 - .github/workflows/ci.yml (4)
 - docs/agentes/lovable-deploy.md (4)
+- inventario/estado/edges.json (4)
 - scripts/ci/eslint-baseline.json (4)
-- src/App.tsx (4)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -375,6 +375,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-24 `1317d20` chore: inventario do estado real (gerado em 24/11) (#180)
 - 2026-11-24 `8771961` fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)
 - 2026-11-24 `d4ad14d` fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)
 - 2026-11-24 `78ec030` infra: guardas de drift de schema e de run superado no CI de migrations (#173)
@@ -389,7 +390,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-23 `f5416a9` feat(analytics): reconstroi H37 com RPCs de agregacao no servidor — AGUARDA APROVACAO DO DONO (#151)
 - 2026-11-23 `b39b3b2` feat: liga a UI de configuracao dos alertas de disjuntor (#153)
 - 2026-11-23 `dc01412` fix(ci): elimina aprovacao dupla do environment Production nas migrations (#168)
-- 2026-11-23 `f4bf977` fix(ci): elimina aprovacao dupla do environment Production no deploy de functions (#167)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

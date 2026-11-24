@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "877196162eee5ad3fd103f0cbbb09cd59684141a",
+  "commit": "1317d2096570fef04e9274a4e9000bd21811f4c4",
   "branch": "main",
-  "data_commit": "2026-11-24T10:38:56-03:00",
+  "data_commit": "2026-11-24T10:52:17-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "1317d20",
+    "data": "2026-11-24",
+    "assunto": "chore: inventario do estado real (gerado em 24/11) (#180)"
+   },
    {
     "sha": "8771961",
     "data": "2026-11-24",
@@ -126,11 +131,6 @@
     "sha": "9fdb455",
     "data": "2026-11-22",
     "assunto": "fix(rbac): aplica PermissionGate nas acoes de scrape results (#156)"
-   },
-   {
-    "sha": "4df75d3",
-    "data": "2026-11-22",
-    "assunto": "chore: remove artefatos temporarios commitados por engano na #146 (#147)"
    }
   ],
   "arquivos_mudados_7d": 254,
@@ -250,6 +250,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "inventario/estado/edges.json",
+    "mudancas": 4
+   },
+   {
     "arquivo": "scripts/ci/eslint-baseline.json",
     "mudancas": 4
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 3
-   },
-   {
-    "arquivo": ".husky/pre-commit",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 126
+    "commits": 127
    },
    {
     "autor": "dependabot[bot]",
