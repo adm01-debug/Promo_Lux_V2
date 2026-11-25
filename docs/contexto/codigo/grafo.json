@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 581,
- "arestas": 1846,
+ "arestas": 1858,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -49,6 +49,10 @@
    "importado_por": 37
   },
   {
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 37
+  },
+  {
    "arquivo": "src/components/ui/dialog.tsx",
    "importado_por": 33
   },
@@ -59,10 +63,6 @@
   {
    "arquivo": "src/components/ui/tooltip.tsx",
    "importado_por": 27
-  },
-  {
-   "arquivo": "src/contexts/active-org-context.ts",
-   "importado_por": 25
   },
   {
    "arquivo": "src/components/ui/scroll-area.tsx",
@@ -149,6 +149,10 @@
    "importado_por": 8
   },
   {
+   "arquivo": "src/hooks/useDeals.ts",
+   "importado_por": 8
+  },
+  {
    "arquivo": "src/lib/exportCSV.ts",
    "importado_por": 8
   },
@@ -158,10 +162,6 @@
   },
   {
    "arquivo": "src/components/ui/alert.tsx",
-   "importado_por": 7
-  },
-  {
-   "arquivo": "src/hooks/confirm-context.ts",
    "importado_por": 7
   }
  ],

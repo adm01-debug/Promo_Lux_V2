@@ -256,7 +256,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 25,
+   "usado_por": 37,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -441,7 +441,7 @@
     "setOrgErrorListener"
    ],
    "export_default": null,
-   "linhas": 453,
+   "linhas": 467,
    "tabelas": [],
    "rpcs": [],
    "edges": [],

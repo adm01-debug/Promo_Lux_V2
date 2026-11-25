@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 138,
+ "total": 139,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 116
+  "unit": 117
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 92
+   "arquivos": 93
   },
   {
    "padrao": "e2e/",
@@ -642,6 +642,31 @@
    "casos": 8
   },
   {
+   "arquivo": "src/hooks/__tests__/orgCacheKeys.test.ts",
+   "tipo": "unit",
+   "linhas": 159,
+   "testa": [
+    "src/hooks/useApiKeys.ts",
+    "src/hooks/useApiLatency.ts",
+    "src/hooks/useAuditTrail.ts",
+    "src/hooks/useAutomationsMonitor.ts",
+    "src/hooks/useDashboardData.ts",
+    "src/hooks/useDeals.ts",
+    "src/hooks/useEmailSuppressions.ts",
+    "src/hooks/useEmailTemplates.ts",
+    "src/hooks/useFeatureFlags.ts",
+    "src/hooks/useICPConfig.ts",
+    "src/hooks/useNotificationCount.ts",
+    "src/hooks/useOracleV2.ts",
+    "src/hooks/useScrapeQueue.ts",
+    "src/hooks/useVirtualCompanies.ts",
+    "src/hooks/useWebScrape.ts",
+    "src/hooks/useWebhooks.ts",
+    "src/hooks/useWeeklyPerformance.ts"
+   ],
+   "casos": 1
+  },
+  {
    "arquivo": "src/hooks/__tests__/orgGateQueries.test.ts",
    "tipo": "unit",
    "linhas": 129,
@@ -784,12 +809,12 @@
   {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
    "tipo": "unit",
-   "linhas": 76,
+   "linhas": 91,
    "testa": [
     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
     "src/integrations/supabase/withOrg.ts"
    ],
-   "casos": 5
+   "casos": 7
   },
   {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
@@ -1342,22 +1367,33 @@
   "src/hooks/confirm-context.ts": 1,
   "src/hooks/oracleV2Helpers.ts": 1,
   "src/hooks/use-mobile.tsx": 1,
-  "src/hooks/useAuditTrail.ts": 2,
+  "src/hooks/useApiKeys.ts": 1,
+  "src/hooks/useApiLatency.ts": 1,
+  "src/hooks/useAuditTrail.ts": 3,
+  "src/hooks/useAutomationsMonitor.ts": 1,
   "src/hooks/useConfirm.tsx": 1,
-  "src/hooks/useDashboardData.ts": 2,
+  "src/hooks/useDashboardData.ts": 3,
+  "src/hooks/useDeals.ts": 1,
   "src/hooks/useDlqHealth.ts": 1,
   "src/hooks/useDlqReplay.ts": 1,
-  "src/hooks/useICPConfig.ts": 2,
-  "src/hooks/useNotificationCount.ts": 1,
+  "src/hooks/useEmailSuppressions.ts": 1,
+  "src/hooks/useEmailTemplates.ts": 1,
+  "src/hooks/useFeatureFlags.ts": 1,
+  "src/hooks/useICPConfig.ts": 3,
+  "src/hooks/useNotificationCount.ts": 2,
   "src/hooks/useOAuthSandboxSnapshots.ts": 1,
-  "src/hooks/useOracleV2.ts": 2,
+  "src/hooks/useOracleV2.ts": 3,
   "src/hooks/usePersistedFilters.ts": 1,
   "src/hooks/useRateLimit.ts": 1,
   "src/hooks/useRealtimeCompanies.ts": 1,
   "src/hooks/useRealtimeScrapeJobs.ts": 1,
   "src/hooks/useRecentViews.ts": 1,
+  "src/hooks/useScrapeQueue.ts": 1,
   "src/hooks/useSidebarState.ts": 1,
-  "src/hooks/useVirtualCompanies.ts": 3,
+  "src/hooks/useVirtualCompanies.ts": 4,
+  "src/hooks/useWebScrape.ts": 1,
+  "src/hooks/useWebhooks.ts": 1,
+  "src/hooks/useWeeklyPerformance.ts": 1,
   "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 1,
   "src/integrations/supabase/client.ts": 1,
   "src/integrations/supabase/withOrg.ts": 11,
@@ -1439,12 +1475,9 @@
    "src/hooks/unsaved-changes-context.ts",
    "src/hooks/use-toast.ts",
    "src/hooks/useActiveSessions.ts",
-   "src/hooks/useApiKeys.ts",
-   "src/hooks/useApiLatency.ts",
    "src/hooks/useApiLatencyAlertSettings.ts",
    "src/hooks/useAuditLogExport.ts",
    "src/hooks/useAutomationLogs.ts",
-   "src/hooks/useAutomationsMonitor.ts",
    "src/hooks/useBottomNavSwipe.ts",
    "src/hooks/useChangelog.ts",
    "src/hooks/useCircuitBreakerAlerts.ts",
@@ -1456,18 +1489,14 @@
    "src/hooks/useDashboardLayout.ts",
    "src/hooks/useDbHealth.ts",
    "src/hooks/useDealPredictions.ts",
-   "src/hooks/useDeals.ts",
    "src/hooks/useDlqAlertSettings.ts",
    "src/hooks/useDlqItems.ts",
    "src/hooks/useDryRunLogs.ts",
    "src/hooks/useDsar.ts",
    "src/hooks/useEmailAccountAuditLog.ts",
-   "src/hooks/useEmailSuppressions.ts",
    "src/hooks/useEmailSyncLog.ts",
-   "src/hooks/useEmailTemplates.ts",
    "src/hooks/useEnvProfiles.ts",
    "src/hooks/useFeatureFlag.ts",
-   "src/hooks/useFeatureFlags.ts",
    "src/hooks/useFocusMode.ts",
    "src/hooks/useIpAllowlist.ts",
    "src/hooks/useKeyboardShortcuts.ts",
@@ -1496,7 +1525,6 @@
    "src/hooks/useSalesGoals.ts",
    "src/hooks/useSatisfaction.ts",
    "src/hooks/useScheduledReports.ts",
-   "src/hooks/useScrapeQueue.ts",
    "src/hooks/useSkin.ts",
    "src/hooks/useStatusPage.ts",
    "src/hooks/useSwipeGesture.ts",
@@ -1504,10 +1532,7 @@
    "src/hooks/useThemeColors.ts",
    "src/hooks/useUnsavedChanges.tsx",
    "src/hooks/useVirtualization.ts",
-   "src/hooks/useWarmupProfile.ts",
-   "src/hooks/useWebhooks.ts",
-   "src/hooks/useWebScrape.ts",
-   "src/hooks/useWeeklyPerformance.ts"
+   "src/hooks/useWarmupProfile.ts"
   ],
   "edges": [
    "admin-list-companies",

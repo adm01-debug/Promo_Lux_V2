@@ -1239,27 +1239,50 @@
    "arquivo": "src/components/lux/automations/AutomationsRealtimeView.tsx",
    "registrada_em": "src/lib/viewRegistry.ts",
    "hooks": [
+    "useActiveOrganization",
     "useAuth",
     "useAutomationsMonitor",
     "useCompanies",
     "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
     "useDeadLetter",
     "useEffect",
     "useEvents",
     "useMemo",
+    "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
     "useQuery",
     "useQueryClient",
     "useQueue",
     "useRealtimeInvalidation",
-    "useState"
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useUpdateMemberRole"
    ],
    "hooks_locais": [
+    "useActiveOrganization",
     "useAuth",
-    "useAutomationsMonitor"
+    "useAutomationsMonitor",
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useUpdateMemberRole"
    ],
    "tabelas": [
     "automation_execution_logs",
     "companies",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles",
     "scrape_dead_letter",
     "scrape_queue"
    ],
@@ -1270,7 +1293,7 @@
    ],
    "flags": [],
    "papeis": [],
-   "arquivos_puxados": 20
+   "arquivos_puxados": 22
   },
   {
    "id": "campaigns",
@@ -2829,28 +2852,50 @@
    "arquivo": "src/components/lux/EmailSuppressionsView.tsx",
    "registrada_em": "src/lib/viewRegistry.ts",
    "hooks": [
+    "useActiveOrganization",
     "useAuth",
     "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
     "useEmailSuppressions",
     "useMemo",
     "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
     "useQuery",
     "useQueryClient",
-    "useState"
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useState",
+    "useUpdateMemberRole"
    ],
    "hooks_locais": [
+    "useActiveOrganization",
     "useAuth",
-    "useEmailSuppressions"
+    "useCreateInvite",
+    "useCreateOrganization",
+    "useEmailSuppressions",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRemoveMember",
+    "useRevokeInvite",
+    "useUpdateMemberRole"
    ],
    "tabelas": [
-    "email_suppressions"
+    "email_suppressions",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
    ],
    "rpcs": [],
    "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
-   "arquivos_puxados": 13
+   "arquivos_puxados": 15
   },
   {
    "id": "workflows",

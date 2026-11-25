@@ -1936,11 +1936,13 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useApiKeys.ts": [
+   "src/contexts/active-org-context.ts",
    "src/contexts/auth-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useApiLatency.ts": [
+   "src/contexts/active-org-context.ts",
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useApiLatencyAlertSettings.ts": [
@@ -1960,6 +1962,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useAutomationsMonitor.ts": [
+   "src/contexts/active-org-context.ts",
    "src/contexts/auth-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/types.ts",
@@ -2017,6 +2020,7 @@
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useDeals.ts": [
+   "src/contexts/active-org-context.ts",
    "src/contexts/auth-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
@@ -2045,6 +2049,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useEmailSuppressions.ts": [
+   "src/contexts/active-org-context.ts",
    "src/contexts/auth-context.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
@@ -2053,6 +2058,7 @@
   ],
   "src/hooks/useEmailTemplates.ts": [
    "src/components/lux/campaigns/CampaignFormFields.tsx",
+   "src/contexts/active-org-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/types.ts"
   ],
@@ -2060,6 +2066,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useFeatureFlags.ts": [
+   "src/contexts/active-org-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/types.ts"
   ],
@@ -2131,6 +2138,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useOracleV2.ts": [
+   "src/contexts/active-org-context.ts",
    "src/hooks/oracleV2Helpers.ts",
    "src/integrations/supabase/client.ts"
   ],
@@ -2224,6 +2232,7 @@
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useScrapeQueue.ts": [
+   "src/contexts/active-org-context.ts",
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useSkin.ts": [
@@ -2250,14 +2259,17 @@
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useWebScrape.ts": [
+   "src/contexts/active-org-context.ts",
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useWebhooks.ts": [
+   "src/contexts/active-org-context.ts",
    "src/contexts/auth-context.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useWeeklyPerformance.ts": [
+   "src/contexts/active-org-context.ts",
    "src/contexts/demo-context.ts",
    "src/integrations/supabase/client.ts",
    "src/lib/demoData.ts"

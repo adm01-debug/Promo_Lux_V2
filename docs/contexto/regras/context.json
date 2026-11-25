@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c",
+  "sha": "8c4a8f1880dd5b0b6a50c9fd4d75f168c9e3442f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 20:49 UTC",
-  "files_total": 1186,
-  "code_files": 997,
-  "code_lines": 148117
+  "generated_at": "2026-11-25 21:08 UTC",
+  "files_total": 1187,
+  "code_files": 998,
+  "code_lines": 148338
  },
  "version": "1.3.2",
- "facts_hash": "9fb93e0a110ef34d",
+ "facts_hash": "654e9191f89d1916",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -244,7 +244,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 382,
+   ".ts": 383,
    ".tsx": 309,
    ".sql": 274,
    ".mjs": 22,
@@ -33733,8 +33733,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 104,
-   "lines": 11773,
+   "files": 105,
+   "lines": 11965,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -33846,6 +33846,7 @@
    ],
    "docs": [
     "oracleV2Helpers.ts: Helpers puros de UI/formatação do Oracle v2. Extraídos para permitir testes unitários sem montar contexto de React/Query.",
+    "orgCacheKeys.test.ts: eslint-disable react-hooks/rules-of-hooks -- os hooks sao chamados dentro de `renderHook`; o lint nao reconhece o callback como componente",
     "orgGateQueries.test.ts: eslint-disable react-hooks/rules-of-hooks -- os hooks sao chamados direto porque `useQuery`, `useActiveOrganization`, `useDemo` e `useAuth` estao todos mockados: nenhum hook real executa."
    ],
    "deps": [
@@ -33950,14 +33951,16 @@
   {
    "module": "src/integrations",
    "files": 10,
-   "lines": 8969,
+   "lines": 8998,
    "tables": [
     "automation_alerts",
     "companies",
     "deals",
     "notifications",
     "organizations",
-    "profiles"
+    "profiles",
+    "scheduled_report_runs",
+    "scheduled_reports"
    ],
    "exports": [
     "index.ts: lovable",
@@ -35629,6 +35632,9 @@
     "select": [
      "src/hooks/useScheduledReports.ts"
     ],
+    "ref": [
+     "src/integrations/supabase/__tests__/withOrg.registry.test.ts"
+    ],
     "insert": [
      "supabase/functions/send-scheduled-reports/index.ts"
     ],
@@ -35647,6 +35653,9 @@
     "update": [
      "src/hooks/useScheduledReports.ts",
      "supabase/functions/send-scheduled-reports/index.ts"
+    ],
+    "ref": [
+     "src/integrations/supabase/__tests__/withOrg.registry.test.ts"
     ]
    },
    "scrape_dead_letter": {
@@ -54827,6 +54836,14 @@
     "name": "mostra "
    },
    {
+    "file": "src/hooks/__tests__/orgCacheKeys.test.ts",
+    "name": "chave de cache escopada por organizacao"
+   },
+   {
+    "file": "src/hooks/__tests__/orgCacheKeys.test.ts",
+    "name": "$nome troca de chave ao trocar de organizacao"
+   },
+   {
     "file": "src/hooks/__tests__/orgGateQueries.test.ts",
     "name": "consultas condicionadas a organizacao ativa"
    },
@@ -55645,6 +55662,14 @@
    {
     "file": "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
     "name": "automation_alerts está escopada (regressão do gap deny-by-default)"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
+    "name": "o wrapper aceita as tabelas consumidas por db.from (sem deny-by-default)"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
+    "name": "mantém o deny-by-default para tabela fora do registry"
    },
    {
     "file": "src/integrations/supabase/__tests__/withOrg.switching.test.ts",
@@ -87186,7 +87211,7 @@
   },
   "src/hooks/useApiKeys.ts": {
    "path": "src/hooks/useApiKeys.ts",
-   "lines": 89,
+   "lines": 91,
    "exports": [
     "interface ApiKey",
     "function useApiKeys"
@@ -87237,7 +87262,7 @@
   },
   "src/hooks/useApiLatency.ts": {
    "path": "src/hooks/useApiLatency.ts",
-   "lines": 93,
+   "lines": 96,
    "exports": [
     "interface ApiLatencyStat",
     "type LatencySeverity",
@@ -87353,7 +87378,7 @@
   },
   "src/hooks/useAuditTrail.ts": {
    "path": "src/hooks/useAuditTrail.ts",
-   "lines": 172,
+   "lines": 173,
    "exports": [
     "type AuditActionFilter",
     "const AUTOMATION_TABLES",
@@ -87436,7 +87461,7 @@
   },
   "src/hooks/useAutomationsMonitor.ts": {
    "path": "src/hooks/useAutomationsMonitor.ts",
-   "lines": 184,
+   "lines": 189,
    "exports": [
     "type CompanyAutomationRow",
     "type QueueRow",
@@ -88052,7 +88077,7 @@
   },
   "src/hooks/useDeals.ts": {
    "path": "src/hooks/useDeals.ts",
-   "lines": 324,
+   "lines": 328,
    "exports": [
     "interface DealStage",
     "interface Deal",
@@ -88463,7 +88488,7 @@
   },
   "src/hooks/useEmailSuppressions.ts": {
    "path": "src/hooks/useEmailSuppressions.ts",
-   "lines": 88,
+   "lines": 90,
    "exports": [
     "type SuppressionReason",
     "interface EmailSuppression",
@@ -88549,7 +88574,7 @@
   },
   "src/hooks/useEmailTemplates.ts": {
    "path": "src/hooks/useEmailTemplates.ts",
-   "lines": 169,
+   "lines": 172,
    "exports": [
     "type EmailTemplate",
     "type EmailTemplateInput",
@@ -88679,7 +88704,7 @@
   },
   "src/hooks/useFeatureFlags.ts": {
    "path": "src/hooks/useFeatureFlags.ts",
-   "lines": 39,
+   "lines": 41,
    "exports": [
     "interface FeatureFlag",
     "const useFeatureFlags",
@@ -89294,7 +89319,7 @@
   },
   "src/hooks/useOracleV2.ts": {
    "path": "src/hooks/useOracleV2.ts",
-   "lines": 268,
+   "lines": 270,
    "exports": [
     "interface OracleServiceReport",
     "interface OraclePreflightResponse",
@@ -90191,7 +90216,7 @@
   },
   "src/hooks/useScrapeQueue.ts": {
    "path": "src/hooks/useScrapeQueue.ts",
-   "lines": 137,
+   "lines": 140,
    "exports": [
     "interface ScrapeQueueItem",
     "interface DeadLetterItem",
@@ -90500,7 +90525,7 @@
   },
   "src/hooks/useWebScrape.ts": {
    "path": "src/hooks/useWebScrape.ts",
-   "lines": 171,
+   "lines": 173,
    "exports": [
     "interface WebScrapeTask",
     "interface WebScrapeResult",
@@ -90560,7 +90585,7 @@
   },
   "src/hooks/useWebhooks.ts": {
    "path": "src/hooks/useWebhooks.ts",
-   "lines": 136,
+   "lines": 138,
    "exports": [
     "interface Webhook",
     "interface WebhookDelivery",
@@ -90640,7 +90665,7 @@
   },
   "src/hooks/useWeeklyPerformance.ts": {
    "path": "src/hooks/useWeeklyPerformance.ts",
-   "lines": 67,
+   "lines": 69,
    "exports": [
     "function useWeeklyPerformance"
    ],
@@ -90675,6 +90700,16 @@
     "error quando errors>0 e sent=0",
     "warning quando parcial (errors>0 + sent>0)",
     "mostra "
+   ]
+  },
+  "src/hooks/__tests__/orgCacheKeys.test.ts": {
+   "path": "src/hooks/__tests__/orgCacheKeys.test.ts",
+   "lines": 159,
+   "is_test": true,
+   "doc": "eslint-disable react-hooks/rules-of-hooks -- os hooks sao chamados dentro de `renderHook`; o lint nao reconhece o callback como componente",
+   "tests": [
+    "chave de cache escopada por organizacao",
+    "$nome troca de chave ao trocar de organizacao"
    ]
   },
   "src/hooks/__tests__/orgGateQueries.test.ts": {
@@ -91065,7 +91100,7 @@
   },
   "src/integrations/supabase/withOrg.ts": {
    "path": "src/integrations/supabase/withOrg.ts",
-   "lines": 453,
+   "lines": 467,
    "exports": [
     "const ACTIVE_ORG_STORAGE_KEY",
     "function setActiveOrgId",
@@ -91371,11 +91406,19 @@
   },
   "src/integrations/supabase/__tests__/withOrg.registry.test.ts": {
    "path": "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
-   "lines": 76,
+   "lines": 91,
    "is_test": true,
    "tables": [
     {
      "table": "automation_alerts",
+     "op": "ref"
+    },
+    {
+     "table": "scheduled_reports",
+     "op": "ref"
+    },
+    {
+     "table": "scheduled_report_runs",
      "op": "ref"
     }
    ],
@@ -91388,7 +91431,9 @@
     "não classifica a mesma tabela em mais de um conjunto",
     "toda tabela ESCOPADA realmente possui organization_id no banco",
     "toda tabela UNSCOPED realmente possui organization_id no banco",
-    "automation_alerts está escopada (regressão do gap deny-by-default)"
+    "automation_alerts está escopada (regressão do gap deny-by-default)",
+    "o wrapper aceita as tabelas consumidas por db.from (sem deny-by-default)",
+    "mantém o deny-by-default para tabela fora do registry"
    ]
   },
   "src/integrations/supabase/__tests__/withOrg.switching.test.ts": {
@@ -102392,10 +102437,40 @@
   }
  },
  "git": {
-  "sha": "d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c",
+  "sha": "8c4a8f1880dd5b0b6a50c9fd4d75f168c9e3442f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8c4a8f1",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: escopo de organizacao nas consultas e no cache do front (#224)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/hooks/__tests__/orgCacheKeys.test.ts",
+     "src/hooks/useApiKeys.ts",
+     "src/hooks/useApiLatency.ts",
+     "src/hooks/useAuditTrail.ts",
+     "src/hooks/useAutomationsMonitor.ts",
+     "src/hooks/useDashboardData.ts",
+     "src/hooks/useDeals.ts",
+     "src/hooks/useEmailSuppressions.ts",
+     "src/hooks/useEmailTemplates.ts",
+     "src/hooks/useFeatureFlags.ts",
+     "src/hooks/useICPConfig.ts",
+     "src/hooks/useNotificationCount.ts",
+     "src/hooks/useOracleV2.ts",
+     "src/hooks/useScrapeQueue.ts",
+     "src/hooks/useVirtualCompanies.ts",
+     "src/hooks/useWebScrape.ts",
+     "src/hooks/useWebhooks.ts",
+     "src/hooks/useWeeklyPerformance.ts",
+     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
+     "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
+     "src/integrations/supabase/withOrg.ts"
+    ]
+   },
    {
     "sha": "d7c7ccf",
     "date": "2026-11-25",
@@ -102718,26 +102793,36 @@
     "files": [
      "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql"
     ]
-   },
-   {
-    "sha": "6e23c2a",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "perf(api-publica): lista de companies/deals/stakeholders em um unico round-trip (#193)",
-    "files": [
-     "supabase/functions/public-api/index.ts",
-     "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    7
+    8
    ],
    [
     "package.json",
     3
+   ],
+   [
+    "src/hooks/useAuditTrail.ts",
+    2
+   ],
+   [
+    "src/hooks/useDashboardData.ts",
+    2
+   ],
+   [
+    "src/hooks/useICPConfig.ts",
+    2
+   ],
+   [
+    "src/hooks/useNotificationCount.ts",
+    2
+   ],
+   [
+    "src/hooks/useVirtualCompanies.ts",
+    2
    ],
    [
     "src/components/lux/DashboardView.tsx",
@@ -102760,55 +102845,35 @@
     2
    ],
    [
-    "src/hooks/__tests__/orgGateQueries.test.ts",
+    "src/hooks/__tests__/orgCacheKeys.test.ts",
     1
    ],
    [
-    "src/hooks/useAuditTrail.ts",
+    "src/hooks/useApiKeys.ts",
     1
    ],
    [
-    "src/hooks/useDashboardData.ts",
+    "src/hooks/useApiLatency.ts",
     1
    ],
    [
-    "src/hooks/useICPConfig.ts",
+    "src/hooks/useAutomationsMonitor.ts",
     1
    ],
    [
-    "src/hooks/useNotificationCount.ts",
+    "src/hooks/useDeals.ts",
     1
    ],
    [
-    "src/hooks/useOAuthSandboxSnapshots.ts",
+    "src/hooks/useEmailSuppressions.ts",
     1
    ],
    [
-    "src/hooks/useVirtualCompanies.ts",
+    "src/hooks/useEmailTemplates.ts",
     1
    ],
    [
-    "src/components/lux/DemoNotice.tsx",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/DemoNotice.test.tsx",
-    1
-   ],
-   [
-    "src/lib/__tests__/demoViews.test.ts",
-    1
-   ],
-   [
-    "src/lib/demoViews.ts",
-    1
-   ],
-   [
-    "src/pages/Index.tsx",
-    1
-   ],
-   [
-    "src/components/lux/CompaniesView.tsx",
+    "src/hooks/useFeatureFlags.ts",
     1
    ]
   ]

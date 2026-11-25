@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c",
+  "commit": "8c4a8f1880dd5b0b6a50c9fd4d75f168c9e3442f",
   "branch": "main",
-  "data_commit": "2026-11-25T17:49:21-03:00",
+  "data_commit": "2026-11-25T18:08:22-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8c4a8f1",
+    "data": "2026-11-25",
+    "assunto": "fix: escopo de organizacao nas consultas e no cache do front (#224)"
+   },
    {
     "sha": "d7c7ccf",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "44c43b4",
     "data": "2026-11-25",
     "assunto": "fix(scripts): resolver executavel no Windows usa as extensoes do PATHEXT (#200)"
-   },
-   {
-    "sha": "0c5b352",
-    "data": "2026-11-25",
-    "assunto": "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)"
    }
   ],
-  "arquivos_mudados_7d": 322,
+  "arquivos_mudados_7d": 333,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -153,7 +153,7 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 17
+    "mudancas": 20
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -164,15 +164,15 @@
     "mudancas": 9
    },
    {
+    "pasta": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 9
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 8
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "pasta": "docs/qa/05-PROGRESSO.md",
     "mudancas": 8
    },
    {
@@ -214,15 +214,15 @@
     "mudancas": 9
    },
    {
+    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 9
+   },
+   {
     "arquivo": "supabase/config.toml",
     "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 8
    },
    {
@@ -251,6 +251,10 @@
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 5
    },
    {
@@ -290,18 +294,14 @@
     "mudancas": 4
    },
    {
-    "arquivo": "src/integrations/supabase/withOrg.ts",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+    "arquivo": "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 170
+    "commits": 171
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1165,
-  "arquivos_codigo": 719,
-  "linhas_codigo": 125690,
+  "arquivos_total": 1166,
+  "arquivos_codigo": 720,
+  "linhas_codigo": 125911,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 138,
+  "testes": 139,
   "workflows": 10,
   "scripts": 53,
   "docs_md": 87
@@ -567,12 +567,12 @@
    "linhas": 398
   },
   "src/hooks": {
-   "arquivos": 104,
-   "linhas": 11773
+   "arquivos": 105,
+   "linhas": 11965
   },
   "src/integrations": {
    "arquivos": 10,
-   "linhas": 8969
+   "linhas": 8998
   },
   "src/lib": {
    "arquivos": 55,

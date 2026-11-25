@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d7c7ccf6e7` · branch `main` · 2026-11-25 20:49 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8c4a8f1880` · branch `main` · 2026-11-25 21:08 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2323,7 +2323,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1247 testes em 123 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1251 testes em 124 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2381,6 +2381,7 @@ _nenhum item encontrado_
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
 | `src/hooks/__tests__/usePersistedFilters.test.ts` | 8 | usePersistedFilters · returns default state on first render · persists state updates to localStorage · restores state from localStorage … |
 | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 8 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · injeta filtro de org mesmo quando chamador encadeia múltiplos .eq/.neq … |
+| `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 8 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
 | `src/lib/__tests__/orgErrorHandler.e2e.test.ts` | 8 | orgErrorHandler — E2E switching de org durante edição · mostra toast quando UPDATE falha após troca de org no meio da edição · ação  · handler global captura unhandledrejection com OrgMismatchError e mostra toast … |
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
 | `supabase/functions/_shared/__tests__/api-rate-limit.test.ts` | 8 | parseRateLimitDecision · aprova quando a RPC devolve allowed=true · bloqueia quando a RPC devolve allowed=false · fail-open em resposta vazia/nula … |
@@ -2407,7 +2408,6 @@ _nenhum item encontrado_
 | `src/components/lux/layout/__tests__/Header.test.tsx` | 6 | Header · renders user initial when no avatar · renders avatar component when url provided · calls onOpenMobileSidebar on menu click … |
 | `src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts` | 6 | buildSlaChartData · retorna vazio para entrada vazia · ordena cronologicamente mesmo com entrada fora de ordem · aplica carry-forward: fila não alterada mantém o último valor … |
 | `src/hooks/__tests__/useSidebarState.test.ts` | 6 | useSidebarState · starts expanded by default · toggles collapse state · persists collapsed state to localStorage … |
-| `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 6 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
 | `src/lib/__tests__/csv.test.ts` | 6 | buildCsv · prepends a UTF-8 BOM for Excel/PT-BR compatibility · quotes cells containing comma, quote, newline or semicolon · neutralizes formula injection (CSV injection) … |
 | `supabase/functions/_shared/__tests__/chaos.chi2.test.ts` | 6 | Chaos — χ² & colisões (Rodada #20) · χ² para rate=${rate} em ${N} tasks (erro relativo < 5%) · rate=0 absoluto (0 hits em 5.000) · rate=1 absoluto (5.000/5.000) … |
 | `supabase/functions/_shared/__tests__/chaos.test.ts` | 6 | shouldInjectChaos · é determinístico para o mesmo task_id · respeita rate=0 (nunca injeta) · respeita rate=1 (sempre injeta) … |
@@ -2449,6 +2449,7 @@ _nenhum item encontrado_
 | `e2e/oracle-decisor-flow.spec.ts` | 2 | Oracle v2 — fluxo end-to-end real (busca → decisores → enriquecimento) · busca decisores em empresa real e enriquece pelo menos um contato |
 | `e2e/oracle-v2.spec.ts` | 2 | Oracle v2 — smoke · painel resiliente: Error Boundary não derruba a aba quando preflight falha |
 | `src/contexts/__tests__/AuthContext.test.tsx` | 2 | AuthProvider.signOut · clears the React Query cache and the active org before calling supabase.auth.signOut |
+| `src/hooks/__tests__/orgCacheKeys.test.ts` | 2 | chave de cache escopada por organizacao · $nome troca de chave ao trocar de organizacao |
 | `src/test/example.test.ts` | 2 | example · should pass |
 
 ## L. Eventos de webhook tratados (contratos com sistemas externos)
