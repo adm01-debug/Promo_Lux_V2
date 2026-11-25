@@ -91,6 +91,18 @@ Os registros `legacy` abaixo preservam ferramentas anteriores e seus chamadores;
 | `scripts/supabase_snapshot/snapshot.py`      | `python3 scripts/supabase_snapshot/snapshot.py`          | package.json:scripts, .github/workflows/contexto.yml, .github/workflows/inventario-estado-semanal.yml |
 | `scripts/supabase_snapshot/test_snapshot.py` | `python3 scripts/supabase_snapshot/test_snapshot.py`     | .github/workflows/contexto.yml                                                                        |
 
+## Formato dos arquivos (prettier)
+
+A config fica versionada na raiz (`.prettierrc`) para o formato não depender de
+configuração fora do repositório: sem ela, um `.prettierrc` em diretório acima do
+clone era aplicado em silêncio e o pre-commit reescrevia arquivos inteiros.
+
+O pre-commit (`scripts/staged-autofix/run.mjs`) formata apenas arquivos que já
+estavam em dia com essa config no último commit. Arquivo que já era dívida antiga
+é preservado, porque reescrevê-lo transformaria um diff de uma linha no arquivo
+todo. Para reformatar de propósito, use `npm run format` (respeita
+`.prettierignore`).
+
 ## Hooks e workflows anteriores
 
 Hooks inventariados: `.husky/_` era o hooksPath observado. A tabela registra os arquivos, sem afirmar bootstrap instalado ou execução efetiva em outro clone. O registro legacy desses hooks limita apenas execução arbitrária pelo dispatcher; o Git e a ponte preservam os gatilhos originais.
