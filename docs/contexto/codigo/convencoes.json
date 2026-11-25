@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (84)",
+   "co-localizado (__tests__) (85)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(config): botao de custo Places API para de mentir (#214)",
    "feat: audita as 5 tabelas criticas fora da trilha (#212)",
    "chore(deps): sobe framer-motion para 14.14.0 (#213)",
    "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)",
-   "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)",
-   "chore(edge): descarta audit-logs-prune, function sem chamador (#209)"
+   "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)"
   ]
  },
  "pr_template": null,

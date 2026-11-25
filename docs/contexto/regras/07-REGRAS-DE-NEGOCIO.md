@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5c5bab72c` · branch `main` · 2026-11-25 18:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b5ca5ecf54` · branch `main` · 2026-11-25 18:22 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -311,7 +311,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `sales_goals` | SDR+ insert goals | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | SDR+ update goals | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | Admins delete goals | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
-| … +49 linhas — lista completa em `context.json` | | | | | | |
+| … +51 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
 
@@ -2092,6 +2092,7 @@ _nenhum item encontrado_
 | Nada para exportar | `src/components/lux/OrganizationsView.tsx` |
 | Nome muito curto | `src/components/lux/OrganizationsView.tsx` |
 | Falha: ${err instanceof Error ? err.message :  | `src/components/lux/PlacesApiNewToggle.tsx` |
+| Sem permissão para alterar esta flag | `src/components/lux/PlacesApiNewToggle.tsx` |
 | Falha ao salvar proxy: ${msg} | `src/components/lux/ProxyFormDialog.tsx` |
 | Erro ao excluir | `src/components/lux/RecycleBinView.tsx` |
 | Erro ao restaurar | `src/components/lux/RecycleBinView.tsx` |
@@ -2295,8 +2296,7 @@ _nenhum item encontrado_
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
 | Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
 | HubSpot create failed: ${err} | `supabase/functions/hubspot-sync/index.ts` |
-| results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
-| … +35 linhas — lista completa em `context.json` | |
+| … +36 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2319,7 +2319,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1209 testes em 115 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1212 testes em 116 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2429,6 +2429,7 @@ _nenhum item encontrado_
 | `e2e/accessibility.spec.ts` | 3 | Acessibilidade (axe-core) · Dashboard não tem violações WCAG 2 A/AA · Configurações não tem violações WCAG 2 A/AA |
 | `e2e/instagram-worker-smoke.spec.ts` | 3 | Instagram motor — smoke · enfileira → worker processa → resultados gravados (profile + hashtag) · deduplicação: mesmo config_hash não cria duplicata em queued/running |
 | `e2e/monitoring-navigation.spec.ts` | 3 | Monitoramento — navegação · carrega a página com o título e as abas de monitoramento · troca de aba atualiza o conteúdo exibido |
+| `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |
 | `supabase/functions/_shared/__tests__/linkedin-url.test.ts` | 3 | publicIdFromLinkedInUrl · extrai de ${nome} · retorna vazio para ${nome} |

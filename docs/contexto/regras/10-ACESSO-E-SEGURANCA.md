@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5c5bab72c` · branch `main` · 2026-11-25 18:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b5ca5ecf54` · branch `main` · 2026-11-25 18:22 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -66,7 +66,7 @@
 | `email_sync_log` | enabled | authenticated: EXISTS ( SELECT 1 FROM public.email_accounts ea WHERE ea.id = email_sync_log.email_account_id AND ( (ea.scope_type = 'user' A<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `email_template_stats` | não encontrado | sem RLS | sem RLS | sem RLS | sem RLS |
 | `email_templates` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) and deleted_at is null<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |
-| `feature_flags` | enabled | public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()<br>service_role: true<br>public: (auth.uid() IN ( SELECT organization_members.user_id FROM organization_members WHERE (organization_members.organization_id = feature<br>authenticated: organization_id IS NULL | service_role: true | service_role: true | service_role: true |
+| `feature_flags` | enabled | public: organization_id IS NULL OR organization_id = public.default_org_for_current_user()<br>service_role: true<br>public: (auth.uid() IN ( SELECT organization_members.user_id FROM organization_members WHERE (organization_members.organization_id = feature<br>authenticated: organization_id IS NULL | service_role: true<br>authenticated: public.has_role(auth.uid(), 'admin'::public.app_role) | service_role: true<br>authenticated: public.has_role(auth.uid(), 'admin'::public.app_role) | service_role: true |
 | `health_checks` | enabled | public: auth.role() = 'authenticated'<br>public: true | — | — | — |
 | `idempotency_keys` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id<br>public: auth.uid() = user_id | — | — |
 | `incidents` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) and deleted_at is null<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.is_org_member(organization_id, auth.uid())<br>service_role: true | authenticated: public.has_org_role(organization_id, auth.uid(), 'admin')<br>service_role: true |

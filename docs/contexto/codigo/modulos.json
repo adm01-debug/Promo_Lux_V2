@@ -117,8 +117,8 @@
   {
    "modulo": "components/lux",
    "arquivos": 219,
-   "testes": 32,
-   "linhas": 43299,
+   "testes": 33,
+   "linhas": 43302,
    "itens_menu": [
     "Agente IA",
     "Analytics",

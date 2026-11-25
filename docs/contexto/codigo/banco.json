@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 269,
+ "migrations": 270,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -9053,6 +9053,18 @@
    },
    "rls": true,
    "policies": [
+    {
+     "nome": "Admins insert feature flags",
+     "comando": "insert",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
+    {
+     "nome": "Admins update feature flags",
+     "comando": "update",
+     "para": "authenticated",
+     "tipo": "permissive"
+    },
     {
      "nome": "Authenticated users view global feature flags",
      "comando": "select",

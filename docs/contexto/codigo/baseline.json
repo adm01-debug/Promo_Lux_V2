@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f5c5bab72cb11732002063427073436912ebb30c",
+  "commit": "b5ca5ecf54fc5541b369528378107be4f80aa7c4",
   "branch": "main",
-  "data_commit": "2026-11-25T15:10:16-03:00",
+  "data_commit": "2026-11-25T15:22:14-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b5ca5ec",
+    "data": "2026-11-25",
+    "assunto": "fix(config): botao de custo Places API para de mentir (#214)"
+   },
    {
     "sha": "f5c5bab",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "8dec4b5",
     "data": "2026-11-24",
     "assunto": "feat: habilita alerta de latencia da organizacao com trafego real (#189)"
-   },
-   {
-    "sha": "e0648b2",
-    "data": "2026-11-24",
-    "assunto": "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)"
    }
   ],
-  "arquivos_mudados_7d": 293,
+  "arquivos_mudados_7d": 296,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 71
+    "mudancas": 73
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 160
+    "commits": 161
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1154,
-  "arquivos_codigo": 709,
-  "linhas_codigo": 124501,
+  "arquivos_total": 1156,
+  "arquivos_codigo": 710,
+  "linhas_codigo": 124589,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,9 +322,9 @@
   "hooks": 97,
   "edge_functions": 62,
   "tabelas": 121,
-  "migrations": 269,
+  "migrations": 270,
   "cron_jobs": 43,
-  "testes": 130,
+  "testes": 131,
   "workflows": 10,
   "scripts": 53,
   "docs_md": 87
@@ -555,8 +555,8 @@
    "linhas": 339
   },
   "src/components": {
-   "arquivos": 309,
-   "linhas": 51217
+   "arquivos": 310,
+   "linhas": 51305
   },
   "src/contexts": {
    "arquivos": 7,
