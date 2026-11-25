@@ -9,9 +9,8 @@ import {
   useLostReasons, useLostReasonStats, useLostReasonSeed,
   CATEGORY_LABEL, type LostReasonCategory,
 } from "@/hooks/useLostReasons";
-
-const fmtBRL = (v: number) =>
-  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+import type { Deal } from "@/hooks/useDeals";
+import { groupByCurrency, formatCurrencyTotals, type CurrencyTotal } from "@/lib/money";
 
 const CATEGORIES = Object.keys(CATEGORY_LABEL) as LostReasonCategory[];
 
@@ -19,7 +18,16 @@ const CATEGORIES = Object.keys(CATEGORY_LABEL) as LostReasonCategory[];
  * Análise de perdas: motivos cadastrados + volume/valor perdido por motivo.
  * Também permite manter o catálogo (adicionar, desativar, remover).
  */
-export function LostReasonsDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+export function LostReasonsDialog({
+  open,
+  onOpenChange,
+  deals,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  /** Negócios da organização ativa; a moeda de cada um vem de `currency`. */
+  deals: Deal[];
+}) {
   const { reasons, isLoading, createReason, updateReason, deleteReason } = useLostReasons();
   const { data: stats = [], isLoading: statsLoading } = useLostReasonStats();
   useLostReasonSeed();
@@ -33,7 +41,30 @@ export function LostReasonsDialog({ open, onOpenChange }: { open: boolean; onOpe
     return m;
   }, [stats]);
 
-  const totalLost = stats.reduce((s, r) => s + Number(r.total_value), 0);
+  // A view `deal_lost_reason_stats` soma valores de moedas diferentes numa
+  // coluna só; o valor por moeda é derivado dos próprios negócios perdidos.
+  const lostDeals = useMemo(() => deals.filter((d) => d.lost_reason_id), [deals]);
+
+  const lostTotalsByReason = useMemo(() => {
+    const byReason = new Map<string, Deal[]>();
+    for (const deal of lostDeals) {
+      const key = deal.lost_reason_id as string;
+      const list = byReason.get(key);
+      if (list) list.push(deal);
+      else byReason.set(key, [deal]);
+    }
+    const totals = new Map<string, CurrencyTotal[]>();
+    for (const [reasonId, list] of byReason) {
+      totals.set(reasonId, groupByCurrency(list, (d) => d.value, (d) => d.currency));
+    }
+    return totals;
+  }, [lostDeals]);
+
+  const lostTotals = useMemo(
+    () => groupByCurrency(lostDeals, (d) => d.value, (d) => d.currency),
+    [lostDeals],
+  );
+
   const totalDeals = stats.reduce((s, r) => s + r.deal_count, 0);
 
   const handleAdd = () => {
@@ -50,7 +81,7 @@ export function LostReasonsDialog({ open, onOpenChange }: { open: boolean; onOpe
           </DialogTitle>
           <DialogDescription>
             {totalDeals > 0
-              ? `${totalDeals} negócio(s) perdido(s) · ${fmtBRL(totalLost)} em valor`
+              ? `${totalDeals} negócio(s) perdido(s)${lostTotals.length > 0 ? ` · ${formatCurrencyTotals(lostTotals)} em valor` : ""}`
               : "Nenhum negócio perdido com motivo registrado ainda."}
           </DialogDescription>
         </DialogHeader>
@@ -98,7 +129,8 @@ export function LostReasonsDialog({ open, onOpenChange }: { open: boolean; onOpe
                     </div>
                     {st && st.count > 0 && (
                       <Badge variant="secondary" className="font-mono text-[11px] shrink-0">
-                        {st.count} · {fmtBRL(st.value)}
+                        {st.count}
+                        {lostTotalsByReason.has(r.id) && ` · ${formatCurrencyTotals(lostTotalsByReason.get(r.id) as CurrencyTotal[])}`}
                       </Badge>
                     )}
                     <Button
