@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(e2e): suite de RLS para de passar verde sem backend real (#226)",
    "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)",
    "fix: escopo de organizacao nas consultas e no cache do front (#224)",
    "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)",
-   "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)",
-   "fix: separa o cache do modo demonstracao do cache real (#221)"
+   "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)"
   ]
  },
  "pr_template": null,

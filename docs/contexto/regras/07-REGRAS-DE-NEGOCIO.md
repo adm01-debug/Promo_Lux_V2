@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f889110c94` · branch `main` · 2026-11-25 21:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `580b952335` · branch `main` · 2026-11-25 21:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2002,6 +2002,8 @@ _nenhum item encontrado_
 |---|---|
 | [lushaMocks] mock  | `e2e/helpers/lushaMocks.ts` |
 | Login E2E falhou para ${creds.email}: ${error.message} | `e2e/helpers/supabase.ts` |
+| [e2e] defina ${names.join( | `e2e/helpers/supabase.ts` |
+| [e2e] não foi possível falar com o backend (código ${error.code ??  | `e2e/helpers/supabase.ts` |
 | falha fixture | `scripts/automation.unit.mjs` |
 | ${msg}: esperado ${JSON.stringify(b)} obtido ${JSON.stringify(a)} | `scripts/ai-context/cenarios.mjs` |
 | ${label} falhou com exit ${result.status}: ${normalizeWhitespace(result.stderr)} | `scripts/ci/lint-ratchet.mjs` |
@@ -2298,9 +2300,7 @@ _nenhum item encontrado_
 | load suppressions: ${supErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
 | token refresh: ${e instanceof Error ? e.message : String(e)} | `supabase/functions/campaign-dispatch/index.ts` |
 | Domínio interno não permitido | `supabase/functions/deliverability-check/index.ts` |
-| Gmail list: ${JSON.stringify(list)} | `supabase/functions/email-poll-replies/index.ts` |
-| No refresh token; reconnect required | `supabase/functions/email-poll-replies/index.ts` |
-| … +44 linhas — lista completa em `context.json` | |
+| … +46 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

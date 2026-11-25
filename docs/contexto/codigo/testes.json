@@ -88,7 +88,7 @@
   {
    "arquivo": "e2e/helpers/supabase.ts",
    "tipo": "e2e",
-   "linhas": 74,
+   "linhas": 97,
    "testa": [],
    "casos": 0
   },

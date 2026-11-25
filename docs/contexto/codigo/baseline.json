@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f889110c94e5d3bf9acc2632d175e95daa046d5f",
+  "commit": "580b95233543d772bfca3d44ed83c56ceef32e9f",
   "branch": "main",
-  "data_commit": "2026-11-25T18:19:04-03:00",
+  "data_commit": "2026-11-25T18:33:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "580b952",
+    "data": "2026-11-25",
+    "assunto": "fix(e2e): suite de RLS para de passar verde sem backend real (#226)"
+   },
    {
     "sha": "f889110",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "4f59248",
     "data": "2026-11-25",
     "assunto": "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)"
-   },
-   {
-    "sha": "aa94815",
-    "data": "2026-11-25",
-    "assunto": "chore: normaliza fim de linha em LF para todo clone (#201)"
    }
   ],
-  "arquivos_mudados_7d": 336,
+  "arquivos_mudados_7d": 337,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -156,11 +156,11 @@
     "mudancas": 20
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 10
+    "pasta": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 11
    },
    {
-    "pasta": "docs/qa/05-PROGRESSO.md",
+    "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
@@ -206,11 +206,11 @@
     "mudancas": 20
    },
    {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 10
+    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 11
    },
    {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 172
+    "commits": 173
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1167,
   "arquivos_codigo": 721,
-  "linhas_codigo": 126050,
+  "linhas_codigo": 126073,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -360,7 +360,7 @@
   },
   "e2e/helpers": {
    "arquivos": 4,
-   "linhas": 419
+   "linhas": 442
   },
   "e2e/instagram-dlq-replay.spec.ts": {
    "arquivos": 1,
@@ -820,7 +820,6 @@
   ],
   "ciclos_de_import": 6,
   "possiveis_segredos_no_codigo": [
-   "e2e/helpers/supabase.ts:7",
    "supabase/functions/_shared/__tests__/lusha-client.test.ts:33",
    "supabase/functions/_shared/__tests__/lusha-client.test.ts:36"
   ]

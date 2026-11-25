@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f889110c94e5d3bf9acc2632d175e95daa046d5f` (2026-11-25T18:19:04-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `580b95233543d772bfca3d44ed83c56ceef32e9f` (2026-11-25T18:33:06-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1167 |
 | arquivos_codigo | 721 |
-| linhas_codigo | 126050 |
+| linhas_codigo | 126073 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -256,19 +256,19 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - scripts_orfaos: 0
 - env_usadas_nao_declaradas: 7 — ex.: DEV, PROD, SUPABASE_PUBLISHABLE_KEY
 - ciclos_de_import: 6
-- possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
+- possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7969 nós · 17009 arestas · 718 comunidades · grafo do commit `f889110c`
-- comunidades maiores: button.tsx (198), Monitoring.tsx (164), cn (128), lucide-react (116), @tanstack/react-query (95), gerar.mjs (80), LushaIntelligenceView.tsx (80), CompaniesView.tsx (75), generate.py (73), hooks/use-toast.ts (67), dependencies (65), ref_https (64)
+- 7971 nós · 17013 arestas · 685 comunidades · grafo do commit `580b9523`
+- comunidades maiores: Button (144), react (122), lucide-react (118), useActiveOrganization (110), Index.tsx (104), snapshot.py (102), vitest (99), cn (93), withOrg.ts (82), gerar.mjs (80), useAuth (74), WorkflowsView.tsx (72)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (20)
 - package.json (20)
+- docs/qa/05-PROGRESSO.md (11)
 - docs/GAPS-ENTERPRISE.md (10)
-- docs/qa/05-PROGRESSO.md (10)
 - .github/workflows/db-migrations.yml (9)
 - supabase/config.toml (9)
 - AGENTS.md (8)
@@ -377,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `580b952` fix(e2e): suite de RLS para de passar verde sem backend real (#226)
 - 2026-11-25 `f889110` fix: leitura sem organizacao ativa falha fechada no wrapper (#225)
 - 2026-11-25 `8c4a8f1` fix: escopo de organizacao nas consultas e no cache do front (#224)
 - 2026-11-25 `d7c7ccf` fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)
@@ -391,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `b5ca5ec` fix(config): botao de custo Places API para de mentir (#214)
 - 2026-11-25 `f5c5bab` feat: audita as 5 tabelas criticas fora da trilha (#212)
 - 2026-11-25 `81ab63d` chore(deps): sobe framer-motion para 14.14.0 (#213)
-- 2026-11-25 `121479c` infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
