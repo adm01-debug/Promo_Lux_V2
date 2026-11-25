@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `8b6a8704b3f353add7c305e51fa2260542916ada` (2026-11-25T17:21:33-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `21eb9dbc30a77c0c795b0b6f2d1d5d455df52e91` (2026-11-25T17:23:54-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1159 |
 | arquivos_codigo | 713 |
-| linhas_codigo | 125298 |
+| linhas_codigo | 125300 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -259,7 +259,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7943 nós · 16785 arestas · 703 comunidades · grafo do commit `8b6a8704`
+- 7943 nós · 16785 arestas · 703 comunidades · grafo do commit `21eb9dbc`
 - comunidades maiores: lucide-react (213), button.tsx (198), framer-motion (121), cn (117), react (106), LushaIntelligenceView.tsx (104), gerar.mjs (80), generate.py (73), campaign-dispatch/index.ts (65), dependencies (65), ref_node_fs (65), Index.tsx (64)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -278,8 +278,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - scripts/automation.config.json (6)
 - .github/workflows/ci.yml (5)
 - docs/ESTADO_ATUAL.md (5)
+- docs/qa/05-PROGRESSO.md (5)
 - src/pages/Monitoring.tsx (5)
-- supabase/functions/workflow-engine/index.ts (5)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -377,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `21eb9db` fix: remove rotulo ambiguo do e2e de login (#219)
 - 2026-11-25 `8b6a870` fix: corrige os textos duplamente codificados da tela de monitoramento (#220)
 - 2026-11-25 `6783576` fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)
 - 2026-11-25 `06193a9` fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)
@@ -391,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `b85b5ad` fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)
 - 2026-11-25 `144df6b` chore(edge): descarta api-latency-alerts, function sem invocador (#208)
 - 2026-11-25 `f60d5cf` feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)
-- 2026-11-25 `a40184e` chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

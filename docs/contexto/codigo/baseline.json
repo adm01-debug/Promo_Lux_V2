@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8b6a8704b3f353add7c305e51fa2260542916ada",
+  "commit": "21eb9dbc30a77c0c795b0b6f2d1d5d455df52e91",
   "branch": "main",
-  "data_commit": "2026-11-25T17:21:33-03:00",
+  "data_commit": "2026-11-25T17:23:54-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "21eb9db",
+    "data": "2026-11-25",
+    "assunto": "fix: remove rotulo ambiguo do e2e de login (#219)"
+   },
    {
     "sha": "8b6a870",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "9b3dabf",
     "data": "2026-11-24",
     "assunto": "fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)"
-   },
-   {
-    "sha": "9894b1d",
-    "data": "2026-11-24",
-    "assunto": "chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)"
    }
   ],
-  "arquivos_mudados_7d": 305,
+  "arquivos_mudados_7d": 306,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -250,6 +250,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 5
+   },
+   {
     "arquivo": "src/pages/Monitoring.tsx",
     "mudancas": 5
    },
@@ -267,10 +271,6 @@
    },
    {
     "arquivo": "docs/pendencias/_backlog-verificado.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 4
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 166
+    "commits": 167
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1159,
   "arquivos_codigo": 713,
-  "linhas_codigo": 125298,
+  "linhas_codigo": 125300,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -388,7 +388,7 @@
   },
   "e2e/navigation.spec.ts": {
    "arquivos": 1,
-   "linhas": 340
+   "linhas": 342
   },
   "e2e/oracle-decisor-flow.spec.ts": {
    "arquivos": 1,

@@ -141,7 +141,7 @@
   {
    "arquivo": "e2e/navigation.spec.ts",
    "tipo": "e2e",
-   "linhas": 340,
+   "linhas": 342,
    "testa": [
     "playwright-fixture.ts"
    ],
