@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a40184e57647e3aca007fa5ce3803e162af1d75d",
+  "commit": "f60d5cf12f17d4c8528c2ad17436b84c314616ae",
   "branch": "main",
-  "data_commit": "2026-11-25T09:14:50-03:00",
+  "data_commit": "2026-11-25T09:42:56-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f60d5cf",
+    "data": "2026-11-25",
+    "assunto": "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)"
+   },
    {
     "sha": "a40184e",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "d8c8604",
     "data": "2026-11-24",
     "assunto": "fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)"
-   },
-   {
-    "sha": "69c63ff",
-    "data": "2026-11-24",
-    "assunto": "fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)"
    }
   ],
-  "arquivos_mudados_7d": 284,
+  "arquivos_mudados_7d": 285,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 152
+    "commits": 153
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1151,
+  "arquivos_total": 1152,
   "arquivos_codigo": 711,
   "linhas_codigo": 124704,
   "rotas": 12,
@@ -321,9 +321,9 @@
   "componentes": 267,
   "hooks": 97,
   "edge_functions": 64,
-  "tabelas": 120,
-  "migrations": 265,
-  "cron_jobs": 42,
+  "tabelas": 121,
+  "migrations": 266,
+  "cron_jobs": 43,
   "testes": 130,
   "workflows": 9,
   "scripts": 53,

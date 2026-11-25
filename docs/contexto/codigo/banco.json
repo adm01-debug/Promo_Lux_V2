@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 265,
+ "migrations": 266,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -102,6 +102,7 @@
   "apollo_rate_disable",
   "apply_retry_advisory",
   "apply_sla_recommendation",
+  "archive_cron_http_results",
   "assert_service_or_admin",
   "audit_log_facets",
   "authenticate_api_key",
@@ -1184,6 +1185,11 @@
    "agenda": "*/2 * * * *",
    "migration": "20261121190000_version_crons_with_vault_key.sql",
    "chama_edge": "cnpj-enrich-worker"
+  },
+  {
+   "nome": "cron-http-archive-10min",
+   "agenda": "*/10 * * * *",
+   "migration": "20261125123000_cron_http_archive_7dias.sql"
   },
   {
    "nome": "daily-campaign-logs-retention",
@@ -6247,6 +6253,87 @@
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
+  },
+  "cron_http_archive": {
+   "colunas": {
+    "archived_at": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": "now()",
+     "ref": null
+    },
+    "error_msg": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "jobid": {
+     "tipo": "bigint",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "jobname": {
+     "tipo": "text",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "response_created": {
+     "tipo": "timestamptz",
+     "nn": true,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "response_id": {
+     "tipo": "bigint",
+     "nn": false,
+     "pk": true,
+     "default": null,
+     "ref": null
+    },
+    "status_code": {
+     "tipo": "integer",
+     "nn": false,
+     "pk": false,
+     "default": null,
+     "ref": null
+    },
+    "timed_out": {
+     "tipo": "boolean",
+     "nn": true,
+     "pk": false,
+     "default": "false",
+     "ref": null
+    }
+   },
+   "rls": true,
+   "policies": [],
+   "indices": [
+    {
+     "nome": "cron_http_archive_created_idx",
+     "colunas": "response_created desc",
+     "unico": false
+    },
+    {
+     "nome": "cron_http_archive_falhas_idx",
+     "colunas": "response_created desc",
+     "unico": false
+    }
+   ],
+   "fks": [],
+   "criada_em": "20261125123000_cron_http_archive_7dias.sql",
+   "usada_no_front": 0,
+   "usada_em_edges": [],
+   "triggers": [],
+   "sem_rls": false,
+   "nao_usada": true
   },
   "dashboard_layouts": {
    "colunas": {

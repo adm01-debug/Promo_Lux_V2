@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a40184e57647e3aca007fa5ce3803e162af1d75d",
+  "sha": "f60d5cf12f17d4c8528c2ad17436b84c314616ae",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 12:16 UTC",
-  "files_total": 1172,
-  "code_files": 984,
-  "code_lines": 146695
+  "generated_at": "2026-11-25 12:43 UTC",
+  "files_total": 1173,
+  "code_files": 985,
+  "code_lines": 146880
  },
  "version": "1.3.2",
- "facts_hash": "5a8314fb761b4ab6",
+ "facts_hash": "8c24237347d6dd47",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -238,7 +238,7 @@
   "languages": {
    ".ts": 380,
    ".tsx": 303,
-   ".sql": 269,
+   ".sql": 270,
    ".mjs": 22,
    ".py": 5,
    ".js": 4,
@@ -11322,6 +11322,70 @@
     "comment": "Tokens de ingestao do pipeline de QA (somente hash SHA-256). Sem policies de RLS: acesso exclusivo da edge function qa-ingest-run via service_role.",
     "origin": "migration"
    },
+   "cron_http_archive": {
+    "columns": [
+     {
+      "name": "response_id",
+      "type": "bigint primary key",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "jobid",
+      "type": "bigint",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "jobname",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "status_code",
+      "type": "integer",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "timed_out",
+      "type": "boolean not null default false",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "error_msg",
+      "type": "text",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "response_created",
+      "type": "timestamptz not null",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     },
+     {
+      "name": "archived_at",
+      "type": "timestamptz not null default now()",
+      "fk": "",
+      "generated": "",
+      "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+     }
+    ],
+    "constraints": [],
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "comment": "Resposta HTTP das edge functions agendadas pelo cron, preservada por 7 dias. O pg_net mantem apenas ~6 h.",
+    "origin": "migration"
+   },
    "deal_lost_reason_stats": {
     "columns": [
      {
@@ -19780,6 +19844,25 @@
      "v_total"
     ]
    },
+   "archive_cron_http_results": {
+    "args": "",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_linhas integer := 0; v_falha record; v_org uuid; v_admin uuid; begin if to_regclass('net._http_response') is null then raise notice 'pg_net ausente: nada a arquivar'; return 0; end if; insert into public.cron_http_archive (response_id, jobid, jobname, status_code, timed_out, error_msg, response_created) select r.id, d.jobid, d.jobname, r.status_code, coalesce(r.timed_out, false), r.error_msg, r.created from net._http_response r left join lateral ( select x.jobid, j.jobname from cron.job_run_details x join cron.job j on j.jobid = x.jobid where x.start_time between r.created - interval '10 seconds' and r.created + interval '2 seconds' order by abs(extract(epoch from (x.start_time - r …",
+    "raises": [],
+    "tables": [
+     "api_latency_alert_settings",
+     "cron",
+     "cron_http_archive",
+     "lateral",
+     "net",
+     "notifications",
+     "organization_members"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -23135,6 +23218,22 @@
     "unique": true,
     "where": "WHERE ((status = ANY (ARRAY['pending'::scrape_job_status, 'running'::scrape_job_status, 'working'::scrape_job_status])) AND (config_hash IS NOT NULL))",
     "src": "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
+   },
+   {
+    "name": "cron_http_archive_created_idx",
+    "table": "cron_http_archive",
+    "columns": "response_created desc",
+    "unique": false,
+    "where": "",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+   },
+   {
+    "name": "cron_http_archive_falhas_idx",
+    "table": "cron_http_archive",
+    "columns": "response_created desc",
+    "unique": false,
+    "where": "where status_code >= 500 or timed_out",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
    }
   ],
   "cron_jobs": [
@@ -23486,6 +23585,7 @@
    "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
    "supabase/migrations/20261125104500_api_alert_p95_800ms.sql",
    "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
+   "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
    "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
    "src/integrations/supabase/types.ts"
   ],
@@ -23612,7 +23712,8 @@
    "campaign_warmup_state": "enabled",
    "workflow_run_events": "enabled",
    "org_integrations": "enabled",
-   "qa_ingest_tokens": "enabled"
+   "qa_ingest_tokens": "enabled",
+   "cron_http_archive": "enabled"
   },
   "grants": [
    {
@@ -29190,6 +29291,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "cron_http_archive",
+    "objkind": "table",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "cron_http_archive",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
    }
   ],
   "raises": [
@@ -30004,7 +30121,8 @@
    "table:org_integrations": "Integracoes externas por org (HubSpot, Salesforce, Slack, etc.)",
    "table:qa_ingest_tokens": "Tokens de ingestao do pipeline de QA (somente hash SHA-256). Sem policies de RLS: acesso exclusivo da edge function qa-ingest-run via service_role.",
    "column:qa_ingest_tokens.token_hash": "encode(sha256(token::bytea),'hex') — mesmo formato usado por org_integrations/SCIM.",
-   "column:qa_ingest_tokens.revoked_at": "Preenchido no revoke; tokens revogados sao rejeitados e nao podem ser reativados."
+   "column:qa_ingest_tokens.revoked_at": "Preenchido no revoke; tokens revogados sao rejeitados e nao podem ser reativados.",
+   "table:cron_http_archive": "Resposta HTTP das edge functions agendadas pelo cron, preservada por 7 dias. O pg_net mantem apenas ~6 h."
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -34233,8 +34351,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 265,
-   "lines": 20166,
+   "files": 266,
+   "lines": 20351,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -37921,6 +38039,7 @@
    "apollo_rate_state",
    "apollo_search_cache",
    "campaign_warmup_state",
+   "cron_http_archive",
    "data_subject_requests",
    "job_exports",
    "lusha_credit_usage_log",
@@ -40988,6 +41107,10 @@
    {
     "file": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
     "text": "ORDER BY created_at DESC com a mesma janela de LIMIT/OFFSET que o header"
+   },
+   {
+    "file": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "text": "`net._http_response` guarda apenas ~6 h (2.509 linhas no momento da"
    }
   ],
   "db_constraints": [
@@ -46479,6 +46602,26 @@
    {
     "table": "qa_ingest_tokens",
     "column": "created_at",
+    "rule": "default now()"
+   },
+   {
+    "table": "cron_http_archive",
+    "column": "response_id",
+    "rule": "PK"
+   },
+   {
+    "table": "cron_http_archive",
+    "column": "timed_out",
+    "rule": "default false"
+   },
+   {
+    "table": "cron_http_archive",
+    "column": "response_created",
+    "rule": "obrigatório"
+   },
+   {
+    "table": "cron_http_archive",
+    "column": "archived_at",
     "rule": "default now()"
    },
    {
@@ -52654,6 +52797,26 @@
    {
     "file": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
     "line": "FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP"
+   },
+   {
+    "file": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "line": "and n.created_at > now() - interval '1 hour'"
+   },
+   {
+    "file": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "line": "where a.response_created > now() - interval '15 minutes'"
+   },
+   {
+    "file": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "line": "where r.created > now() - interval '60 minutes'"
+   },
+   {
+    "file": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "line": "where response_created < now() - interval '7 days';"
+   },
+   {
+    "file": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "line": "where x.start_time between r.created - interval '10 seconds' and r.created + interval '2 seconds'"
    }
   ],
   "percents": [
@@ -65656,6 +65819,25 @@
      "v_total"
     ]
    },
+   "archive_cron_http_results": {
+    "args": "",
+    "returns": "integer",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "declare v_linhas integer := 0; v_falha record; v_org uuid; v_admin uuid; begin if to_regclass('net._http_response') is null then raise notice 'pg_net ausente: nada a arquivar'; return 0; end if; insert into public.cron_http_archive (response_id, jobid, jobname, status_code, timed_out, error_msg, response_created) select r.id, d.jobid, d.jobname, r.status_code, coalesce(r.timed_out, false), r.error_msg, r.created from net._http_response r left join lateral ( select x.jobid, j.jobname from cron.job_run_details x join cron.job j on j.jobid = x.jobid where x.start_time between r.created - interval '10 seconds' and r.created + interval '2 seconds' order by abs(extract(epoch from (x.start_time - r …",
+    "raises": [],
+    "tables": [
+     "api_latency_alert_settings",
+     "cron",
+     "cron_http_archive",
+     "lateral",
+     "net",
+     "notifications",
+     "organization_members"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -68785,6 +68967,13 @@
      "authenticated: public.is_org_member(organization_id, auth.uid())"
     ]
    },
+   "cron_http_archive": {
+    "rls": "enabled",
+    "SELECT": [],
+    "INSERT": [],
+    "UPDATE": [],
+    "DELETE": []
+   },
    "dashboard_layouts": {
     "rls": "enabled",
     "SELECT": [
@@ -70382,7 +70571,8 @@
    "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql",
    "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql",
    "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
-   "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+   "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -70398,6 +70588,7 @@
    "apollo_rate_disable",
    "apply_retry_advisory",
    "apply_sla_recommendation",
+   "archive_cron_http_results",
    "assert_service_or_admin",
    "audit_log_facets",
    "authenticate_api_key",
@@ -76149,6 +76340,22 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "cron_http_archive",
+    "objkind": "table",
+    "roles": "anon, authenticated",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select",
+    "object": "cron_http_archive",
+    "objkind": "table",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
    }
   ],
   "guards": [
@@ -76350,9 +76557,10 @@
    "apollo_rate_state",
    "api_rate_limits",
    "scheduled_report_runs",
-   "qa_ingest_tokens"
+   "qa_ingest_tokens",
+   "cron_http_archive"
   ],
-  "tenant_cov": 0.72,
+  "tenant_cov": 0.71,
   "soft_delete": [
    [
     "companies",
@@ -76433,6 +76641,10 @@
    [
     "incidents",
     "deleted_at"
+   ],
+   [
+    "cron_http_archive",
+    "archived_at"
    ],
    [
     "satisfaction_stats",
@@ -76819,6 +77031,7 @@
     "created_at",
     "created_by"
    ],
+   "cron_http_archive": [],
    "deal_lost_reason_stats": [],
    "org_leaderboard": [],
    "sales_goal_progress": [],
@@ -77706,6 +77919,11 @@
     "where": []
    },
    {
+    "kind": "tenant",
+    "msg": "`cron_http_archive` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto)",
+    "where": []
+   },
+   {
     "kind": "edge",
     "msg": "edge function `dashboard-edge` invocada mas não existe em supabase/functions/",
     "where": [
@@ -77925,7 +78143,7 @@
    "`robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
    "`v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.",
-   "120/128 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
+   "120/129 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …",
    "Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel."
   ]
  },
@@ -101705,16 +101923,40 @@
    "path": "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
    "lines": 48
   },
+  "supabase/migrations/20261125123000_cron_http_archive_7dias.sql": {
+   "path": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+   "lines": 185,
+   "rule_comments": [
+    "`net._http_response` guarda apenas ~6 h (2.509 linhas no momento da"
+   ],
+   "temporal": [
+    "and n.created_at > now() - interval '1 hour'",
+    "where a.response_created > now() - interval '15 minutes'",
+    "where r.created > now() - interval '60 minutes'",
+    "where response_created < now() - interval '7 days';",
+    "where x.start_time between r.created - interval '10 seconds' and r.created + interval '2 seconds'"
+   ],
+   "uses_service_role": true
+  },
   "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql": {
    "path": "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
    "lines": 75
   }
  },
  "git": {
-  "sha": "a40184e57647e3aca007fa5ce3803e162af1d75d",
+  "sha": "f60d5cf12f17d4c8528c2ad17436b84c314616ae",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f60d5cf",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)",
+    "files": [
+     "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+    ]
+   },
    {
     "sha": "a40184e",
     "date": "2026-11-25",
@@ -102021,16 +102263,6 @@
      "scripts/check-run-freshness.sh",
      "scripts/check-schema-replay-drift.sh"
     ]
-   },
-   {
-    "sha": "7f05370",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)",
-    "files": [
-     "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
-     "src/pages/Monitoring.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -102061,6 +102293,10 @@
    [
     "scripts/automation.config.json",
     2
+   ],
+   [
+    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
+    1
    ],
    [
     "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
@@ -102108,10 +102344,6 @@
    ],
    [
     "supabase/migrations/20261125104500_api_alert_p95_800ms.sql",
-    1
-   ],
-   [
-    ".github/workflows/ci.yml",
     1
    ]
   ]

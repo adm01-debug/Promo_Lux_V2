@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a40184e576` · branch `main` · 2026-11-25 12:16 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f60d5cf12f` · branch `main` · 2026-11-25 12:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -38,6 +38,7 @@
 | `cnpj_enrich_rate_state` | _(sem COMMENT ON TABLE — significado não documentado)_ | 5 colunas | migration |
 | `companies` | _(sem COMMENT ON TABLE — significado não documentado)_ | 48 colunas | migration |
 | `company_reviews` | _(sem COMMENT ON TABLE — significado não documentado)_ | 12 colunas | migration |
+| `cron_http_archive` | Resposta HTTP das edge functions agendadas pelo cron, preservada por 7 dias. O pg_net mantem apenas ~6 h. | 8 colunas | migration |
 | `dashboard_layouts` | _(sem COMMENT ON TABLE — significado não documentado)_ | 7 colunas | migration |
 | `data_subject_requests` | _(sem COMMENT ON TABLE — significado não documentado)_ | 17 colunas | migration |
 | `db_health_snapshots` | _(sem COMMENT ON TABLE — significado não documentado)_ | 13 colunas | migration |
@@ -331,6 +332,7 @@ _nenhum item encontrado_
 | tenant | `api_rate_limits` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `scheduled_report_runs` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | tenant | `qa_ingest_tokens` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
+| tenant | `cron_http_archive` não tem coluna `organization_id` (isolamento por tenant pode estar incompleto) |  |
 | edge | edge function `dashboard-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `fixture-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
 | edge | edge function `ghost-edge` invocada mas não existe em supabase/functions/ | `scripts/ai-context/gerar.unit.mjs` |
@@ -378,7 +380,7 @@ _nenhum item encontrado_
 - `robots_cache.http_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `workflow_run_events.step_name` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
 - `v_lux_enrichment_health.cnt_other_status` é uma coluna de status sem enum/CHECK — os valores válidos e as transições permitidas não estão no banco.
-- 120/128 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
+- 120/129 tabelas sem `COMMENT ON TABLE` — o significado de negócio não está no schema: `companies`, `scrape_jobs`, `scrape_results`, `ipc_config`, `workflows`, `workflow_runs`, `stakeholders`, `profiles`, `notifications`, `intent_signals`, `campaigns`, `agent_chat_messages` …
 - Há tabelas usadas no código sem migration no repo — o schema real pode ter sido alterado pelo painel.
 
 ## Regras manuais presentes

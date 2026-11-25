@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a40184e576` · branch `main` · 2026-11-25 12:16 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f60d5cf12f` · branch `main` · 2026-11-25 12:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -617,7 +617,7 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `email_sync_log` | `created_at` | default now() |
 | `oauth_sandbox_snapshots` | `id` | PK; default gen_random_uuid() |
 | `oauth_sandbox_snapshots` | `organization_id` | default public.default_org_for_current_user() |
-| … +835 linhas — lista completa em `context.json` | | |
+| … +839 linhas — lista completa em `context.json` | | |
 
 ## D. Automações no banco (triggers e funções — regras que rodam sozinhas)
 
@@ -1901,6 +1901,11 @@ _nenhum item encontrado_
 | `locked_until = now() + interval '300 seconds',` | `supabase/migrations/20261124030000_d18_durable_workflow_execution.sql` |
 | `(v_window + interval '1 hour');` | `supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql` |
 | `FOR v_rec IN SELECT DISTINCT organization_id, path FROM public.api_latency_snapshots WHERE captured_at >= now() - interval '24 hours' LOOP` | `supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql` |
+| `and n.created_at > now() - interval '1 hour'` | `supabase/migrations/20261125123000_cron_http_archive_7dias.sql` |
+| `where a.response_created > now() - interval '15 minutes'` | `supabase/migrations/20261125123000_cron_http_archive_7dias.sql` |
+| `where r.created > now() - interval '60 minutes'` | `supabase/migrations/20261125123000_cron_http_archive_7dias.sql` |
+| `where response_created < now() - interval '7 days';` | `supabase/migrations/20261125123000_cron_http_archive_7dias.sql` |
+| `where x.start_time between r.created - interval '10 seconds' and r.created + interval '2 seconds'` | `supabase/migrations/20261125123000_cron_http_archive_7dias.sql` |
 
 ### H.3 Limites de paginação
 
@@ -2702,3 +2707,4 @@ _nenhum item encontrado_
 | 41 · Escalonamento EDF (Earliest Deadline First) sensível a SLA | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |
 | janela de rate limit fixa de 1 hora, UPSERT atomico em api_rate_limits | `supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql` |
 | ORDER BY created_at DESC com a mesma janela de LIMIT/OFFSET que o header | `supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql` |
+| `net._http_response` guarda apenas ~6 h (2.509 linhas no momento da | `supabase/migrations/20261125123000_cron_http_archive_7dias.sql` |

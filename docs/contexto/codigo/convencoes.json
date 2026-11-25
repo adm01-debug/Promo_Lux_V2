@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)",
    "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)",
    "chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)",
    "chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)",
-   "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)",
-   "chore: normaliza fim de linha em LF para todo clone (#201)"
+   "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)"
   ]
  },
  "pr_template": null,
