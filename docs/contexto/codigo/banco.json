@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 262,
+ "migrations": 263,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1815,7 +1815,7 @@
      "tipo": "integer",
      "nn": true,
      "pk": false,
-     "default": "1500",
+     "default": "800",
      "ref": null
     },
     "updated_at": {

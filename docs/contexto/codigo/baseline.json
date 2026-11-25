@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "0c5b352c9543a6861297eb9a98934e345fd452a9",
+  "commit": "44c43b4bf603fed0d5da277c7d94f88b5eff537a",
   "branch": "main",
-  "data_commit": "2026-11-25T07:38:24-03:00",
+  "data_commit": "2026-11-25T08:11:10-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "44c43b4",
+    "data": "2026-11-25",
+    "assunto": "fix(scripts): resolver executavel no Windows usa as extensoes do PATHEXT (#200)"
+   },
    {
     "sha": "0c5b352",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "7f05370",
     "data": "2026-11-24",
     "assunto": "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)"
-   },
-   {
-    "sha": "25e2bf3",
-    "data": "2026-11-24",
-    "assunto": "chore: inventario do estado real (semanal)"
    }
   ],
-  "arquivos_mudados_7d": 271,
+  "arquivos_mudados_7d": 274,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -188,11 +188,11 @@
     "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 5
+    "pasta": "scripts/automation.config.json",
+    "mudancas": 6
    },
    {
-    "pasta": "docs/ESTADO_ATUAL.md",
+    "pasta": ".github/workflows/ci.yml",
     "mudancas": 5
    }
   ],
@@ -238,15 +238,15 @@
     "mudancas": 6
    },
    {
+    "arquivo": "scripts/automation.config.json",
+    "mudancas": 6
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 5
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 146
+    "commits": 147
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1147,
-  "arquivos_codigo": 711,
-  "linhas_codigo": 124659,
+  "arquivos_total": 1149,
+  "arquivos_codigo": 712,
+  "linhas_codigo": 124737,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,9 +322,9 @@
   "hooks": 97,
   "edge_functions": 65,
   "tabelas": 120,
-  "migrations": 262,
+  "migrations": 263,
   "cron_jobs": 42,
-  "testes": 129,
+  "testes": 130,
   "workflows": 9,
   "scripts": 53,
   "docs_md": 87
@@ -515,8 +515,8 @@
    "linhas": 182
   },
   "scripts/lib": {
-   "arquivos": 1,
-   "linhas": 101
+   "arquivos": 2,
+   "linhas": 179
   },
   "scripts/maintenance": {
    "arquivos": 4,

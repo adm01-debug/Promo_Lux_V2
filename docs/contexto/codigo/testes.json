@@ -5,11 +5,11 @@
   "vitest",
   "playwright"
  ],
- "total": 129,
+ "total": 130,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 107
+  "unit": 108
  },
  "onde_ficam": [
   {
@@ -26,7 +26,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 10
+   "arquivos": 11
   }
  ],
  "arquivos": [
@@ -215,6 +215,15 @@
     "scripts/inventario/mudou-conteudo.mjs"
    ],
    "casos": 7
+  },
+  {
+   "arquivo": "scripts/lib/seguranca-processo.unit.mjs",
+   "tipo": "unit",
+   "linhas": 57,
+   "testa": [
+    "scripts/lib/seguranca-processo.mjs"
+   ],
+   "casos": 4
   },
   {
    "arquivo": "scripts/maintenance/maintenance.unit.mjs",
@@ -1211,7 +1220,7 @@
   "scripts/ci/lint-ratchet.mjs": 1,
   "scripts/graphify-local.mjs": 1,
   "scripts/inventario/mudou-conteudo.mjs": 1,
-  "scripts/lib/seguranca-processo.mjs": 1,
+  "scripts/lib/seguranca-processo.mjs": 2,
   "scripts/maintenance/lib.mjs": 1,
   "scripts/maintenance/run.mjs": 1,
   "src/components/lux/CampaignsView.tsx": 1,
