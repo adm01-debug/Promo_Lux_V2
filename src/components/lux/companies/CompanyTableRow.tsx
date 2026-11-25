@@ -138,7 +138,7 @@ export const CompanyTableRow = ({ company, index, isSelected, searchQuery, onSel
     </td>
     <td className="p-3 text-right" onClick={(e) => e.stopPropagation()}>
       <div className="hidden sm:flex items-center justify-end gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes">
+        <Button variant="ghost" size="icon" className="h-7 w-7" title="Ver detalhes" onClick={() => onOpen(company)}>
           <Eye className="h-3.5 w-3.5" />
         </Button>
         {canEdit && (
