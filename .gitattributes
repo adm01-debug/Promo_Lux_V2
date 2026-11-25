@@ -1,0 +1,20 @@
+# Fim de linha: LF no repositorio e no working tree, em qualquer clone.
+#
+# Sem esta regra o clone Windows (core.autocrlf=true) entrega CRLF em todo
+# arquivo, e o resultado e falso positivo em serie: `prettier --check` acusa o
+# repositorio inteiro, e scripts shell rodados pelo WSL quebram com
+# "set: Illegal option -" (scripts/maintenance/run.sh).
+* text=auto eol=lf
+
+# Binarios: nunca normalizar.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.lockb binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
