@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "81ab63d850918070e112b428e0c31be16dd99062",
+  "commit": "f5c5bab72cb11732002063427073436912ebb30c",
   "branch": "main",
-  "data_commit": "2026-11-25T13:23:58-03:00",
+  "data_commit": "2026-11-25T15:10:16-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f5c5bab",
+    "data": "2026-11-25",
+    "assunto": "feat: audita as 5 tabelas criticas fora da trilha (#212)"
+   },
    {
     "sha": "81ab63d",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "e0648b2",
     "data": "2026-11-24",
     "assunto": "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)"
-   },
-   {
-    "sha": "b7314d4",
-    "data": "2026-11-24",
-    "assunto": "fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)"
    }
   ],
-  "arquivos_mudados_7d": 292,
+  "arquivos_mudados_7d": 293,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 159
+    "commits": 160
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1153,
+  "arquivos_total": 1154,
   "arquivos_codigo": 709,
   "linhas_codigo": 124501,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 62,
   "tabelas": 121,
-  "migrations": 268,
+  "migrations": 269,
   "cron_jobs": 43,
   "testes": 130,
   "workflows": 10,

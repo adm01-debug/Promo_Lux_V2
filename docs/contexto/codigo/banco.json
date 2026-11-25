@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 268,
+ "migrations": 269,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -206,6 +206,7 @@
   "list_next_best_actions",
   "list_pii_rules",
   "log_audit_event",
+  "log_audit_event_safe",
   "log_automation_event",
   "log_deal_stage_change",
   "log_queue_sla_change",
@@ -297,6 +298,13 @@
    "evento": "update",
    "tabela": "agent_chat_messages",
    "funcao": "prevent_user_id_change"
+  },
+  {
+   "nome": "trg_audit_api_keys",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "api_keys",
+   "funcao": "log_audit_event_safe"
   },
   {
    "nome": "trg_validate_api_latency_alert_settings",
@@ -521,6 +529,13 @@
    "evento": "update",
    "tabela": "dashboard_layouts",
    "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_audit_deal_lost_reasons",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "deal_lost_reasons",
+   "funcao": "log_audit_event_safe"
   },
   {
    "nome": "trg_deal_lost_reasons_updated",
@@ -894,6 +909,13 @@
    "funcao": "update_updated_at_column"
   },
   {
+   "nome": "trg_audit_role_permissions",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "role_permissions",
+   "funcao": "log_audit_event_safe"
+  },
+  {
    "nome": "trg_role_permissions_updated",
    "quando": "before",
    "evento": "update",
@@ -913,6 +935,13 @@
    "evento": "update",
    "tabela": "satisfaction_surveys",
    "funcao": "update_updated_at_column"
+  },
+  {
+   "nome": "trg_audit_scheduled_reports",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "scheduled_reports",
+   "funcao": "log_audit_event_safe"
   },
   {
    "nome": "trg_scheduled_reports_updated",
@@ -1004,6 +1033,13 @@
    "evento": "update",
    "tabela": "stakeholders",
    "funcao": "prevent_user_id_change"
+  },
+  {
+   "nome": "trg_audit_stakeholders",
+   "quando": "after",
+   "evento": "insert or update or delete",
+   "tabela": "stakeholders",
+   "funcao": "log_audit_event_safe"
   },
   {
    "nome": "trg_prevent_user_id_change_stakeholders",
@@ -1651,7 +1687,9 @@
    "usada_em_edges": [
     "public-api"
    ],
-   "triggers": [],
+   "triggers": [
+    "trg_audit_api_keys"
+   ],
    "sem_rls": false,
    "nao_usada": false
   },
@@ -7039,6 +7077,7 @@
    "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [
+    "trg_audit_deal_lost_reasons",
     "trg_deal_lost_reasons_updated"
    ],
    "sem_rls": false,
@@ -15549,6 +15588,7 @@
    "usada_no_front": 1,
    "usada_em_edges": [],
    "triggers": [
+    "trg_audit_role_permissions",
     "trg_role_permissions_updated"
    ],
    "sem_rls": false,
@@ -16300,6 +16340,7 @@
     "send-scheduled-reports"
    ],
    "triggers": [
+    "trg_audit_scheduled_reports",
     "trg_scheduled_reports_updated"
    ],
    "sem_rls": false,
@@ -17858,6 +17899,7 @@
    ],
    "triggers": [
     "prevent_user_id_change_stakeholders",
+    "trg_audit_stakeholders",
     "trg_prevent_user_id_change_stakeholders",
     "trg_stakeholders_prevent_uid_change",
     "trg_stakeholders_updated_at",

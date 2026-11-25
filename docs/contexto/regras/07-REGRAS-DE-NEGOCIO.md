@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `81ab63d850` · branch `main` · 2026-11-25 16:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5c5bab72c` · branch `main` · 2026-11-25 18:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -742,6 +742,11 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | trg_lc_updated_at | BEFORE UPDATE | `lusha_contacts` | `update_updated_at_column` |  |
 | trg_lss_updated_at | BEFORE UPDATE | `lusha_search_sessions` | `update_updated_at_column` |  |
 | update_auth_rate_limits_updated_at | BEFORE UPDATE | `auth_rate_limits` | `update_updated_at_column` |  |
+| trg_audit_api_keys | AFTER INSERT OR UPDATE OR DELETE | `api_keys` | `log_audit_event_safe` |  |
+| trg_audit_role_permissions | AFTER INSERT OR UPDATE OR DELETE | `role_permissions` | `log_audit_event_safe` |  |
+| trg_audit_stakeholders | AFTER INSERT OR UPDATE OR DELETE | `stakeholders` | `log_audit_event_safe` |  |
+| trg_audit_scheduled_reports | AFTER INSERT OR UPDATE OR DELETE | `scheduled_reports` | `log_audit_event_safe` |  |
+| trg_audit_deal_lost_reasons | AFTER INSERT OR UPDATE OR DELETE | `deal_lost_reasons` | `log_audit_event_safe` |  |
 
 Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banco):
 

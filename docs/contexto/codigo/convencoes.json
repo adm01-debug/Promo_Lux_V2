@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat: audita as 5 tabelas criticas fora da trilha (#212)",
    "chore(deps): sobe framer-motion para 14.14.0 (#213)",
    "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)",
    "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)",
-   "chore(edge): descarta audit-logs-prune, function sem chamador (#209)",
-   "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)"
+   "chore(edge): descarta audit-logs-prune, function sem chamador (#209)"
   ]
  },
  "pr_template": null,

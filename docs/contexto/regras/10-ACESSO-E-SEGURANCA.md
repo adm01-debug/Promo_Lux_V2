@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `81ab63d850` · branch `main` · 2026-11-25 16:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f5c5bab72c` · branch `main` · 2026-11-25 18:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -148,7 +148,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 207 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 208 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -300,7 +300,7 @@
 - `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
 - `supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql`
 - `supabase/migrations/20260721230311_59215542-a0b3-4468-b60a-b80b411a334f.sql`
-- … +57 (lista completa em `context.json`)
+- … +58 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -409,6 +409,7 @@
 - `list_next_best_actions`
 - `list_pii_rules`
 - `log_audit_event`
+- `log_audit_event_safe`
 - `log_automation_event`
 - `log_deal_stage_change`
 - `log_queue_sla_change`
