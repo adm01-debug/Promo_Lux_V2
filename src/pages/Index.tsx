@@ -22,7 +22,11 @@ import { ConnectionStatus } from "@/components/lux/ConnectionStatus";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { VIEW_MAP } from "@/lib/viewRegistry";
-import { Minimize2 } from "lucide-react";
+import { shouldShowDemoNotice } from "@/lib/demoViews";
+import { DemoNotice } from "@/components/lux/DemoNotice";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { Minimize2, Eye, LogIn } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   AlertDialog,
@@ -66,7 +70,8 @@ const Index = () => {
   const { collapsed, mobileOpen, toggleCollapse, openMobile, closeMobile } = useSidebarState();
   const { focusMode, toggleFocusMode } = useFocusMode();
   const { user, signOut } = useAuth();
-  const { isDemoMode } = useDemo();
+  const { isDemoMode, exitDemo } = useDemo();
+  const routerNavigate = useNavigate();
   const { confirmNavigation, showConfirmDialog, handleConfirm, handleCancel } = useUnsavedChanges();
   useRealtimeCompanies();
   useRealtimeScrapeJobs();
@@ -117,6 +122,12 @@ const Index = () => {
   const mainMargin = collapsed ? "lg:ml-16" : "lg:ml-64";
   const ActiveComponent = VIEW_MAP[activeView];
   const ActiveSkeleton = getViewSkeleton(activeView);
+  const showDemoNotice = shouldShowDemoNotice(activeView, isDemoMode);
+
+  const handleExitDemo = () => {
+    exitDemo();
+    routerNavigate("/login");
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -194,6 +205,28 @@ const Index = () => {
         )}
 
         <main id="main-content" className="p-4 lg:p-6 pb-24 lg:pb-6" role="main" aria-label={currentLabel} aria-live="polite">
+          {isDemoMode && (
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 flex items-center justify-between gap-3 px-4 py-3 rounded-xl glass border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <Eye className="h-4 w-4 text-primary" aria-hidden="true" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Modo Demonstração</p>
+                  <p className="text-xs text-muted-foreground">Dados fictícios para exploração. Crie uma conta para dados reais.</p>
+                </div>
+              </div>
+              <Button size="sm" className="gap-1.5 text-xs h-8 shrink-0" onClick={handleExitDemo}>
+                <LogIn className="h-3.5 w-3.5" aria-hidden="true" />
+                Criar conta
+              </Button>
+            </motion.div>
+          )}
+
           <Suspense fallback={
             <motion.div
               initial={{ opacity: 0 }}
@@ -220,7 +253,15 @@ const Index = () => {
                   scale: { type: "spring", stiffness: 300, damping: 30 },
                 }}
               >
-                <ActiveComponent />
+                {showDemoNotice ? (
+                  <DemoNotice
+                    area={currentLabel}
+                    onBack={() => handleNav("dashboard")}
+                    onSignUp={handleExitDemo}
+                  />
+                ) : (
+                  <ActiveComponent />
+                )}
               </motion.div>
             </AnimatePresence>
           </Suspense>

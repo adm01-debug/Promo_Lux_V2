@@ -9,14 +9,13 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { QuickActions } from "@/components/lux/QuickActions";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, Eye, LogIn, CheckCircle2 } from "lucide-react";
+import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useWeeklyPerformance } from "@/hooks/useWeeklyPerformance";
 import { useDashboardLayout } from "@/hooks/useDashboardLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
 interface TooltipPayloadItem {
@@ -63,8 +62,7 @@ interface DashboardViewProps {
 
 export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const { user } = useAuth();
-  const { isDemoMode, exitDemo } = useDemo();
-  const navigate = useNavigate();
+  const { isDemoMode } = useDemo();
   const colors = useThemeColors();
   const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
@@ -266,35 +264,9 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
     return "Resumo do dia — veja os destaques antes de encerrar.";
   })();
 
-  const handleExitDemo = () => {
-    exitDemo();
-    navigate("/login");
-  };
-
   return (
     <div className="space-y-6">
-      {/* Demo mode banner */}
-      {isDemoMode && (
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl glass border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent"
-        >
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
-              <Eye className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">Modo Demonstração</p>
-              <p className="text-xs text-muted-foreground">Dados fictícios para exploração. Crie uma conta para dados reais.</p>
-            </div>
-          </div>
-          <Button size="sm" className="gap-1.5 text-xs h-8 shrink-0" onClick={handleExitDemo}>
-            <LogIn className="h-3.5 w-3.5" />
-            Criar conta
-          </Button>
-        </motion.div>
-      )}
+      {/* O aviso de demonstração agora é global, em src/pages/Index.tsx */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <motion.h2
