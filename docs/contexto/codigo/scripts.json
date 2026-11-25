@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 53,
+ "total": 54,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -172,6 +172,18 @@
     "CLAUDE_MD_BASE"
    ],
    "npm_scripts": [],
+   "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/ci/gerar-org-scoped-fixture.mjs",
+   "descricao": "* Gera/valida a \"verdade do banco\" de tabelas multi-tenant a partir das migrations.",
+   "linhas": 139,
+   "env": [],
+   "npm_scripts": [
+    "org:fixture",
+    "org:fixture:check"
+   ],
    "workflows": [],
    "orfao": false
   },

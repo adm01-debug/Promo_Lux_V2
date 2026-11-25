@@ -1647,7 +1647,7 @@
   {
    "modulo": "integrations/supabase",
    "arquivos": 3,
-   "testes": 7,
+   "testes": 8,
    "linhas": 8069,
    "itens_menu": [],
    "telas": [],

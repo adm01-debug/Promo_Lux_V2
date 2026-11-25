@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "580b95233543d772bfca3d44ed83c56ceef32e9f",
+  "commit": "ec5349fc1617150b3033114733080dc8d836cec8",
   "branch": "main",
-  "data_commit": "2026-11-25T18:33:06-03:00",
+  "data_commit": "2026-11-25T18:58:37-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "ec5349f",
+    "data": "2026-11-25",
+    "assunto": "feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)"
+   },
    {
     "sha": "580b952",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "baf9b5f",
     "data": "2026-11-25",
     "assunto": "chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)"
-   },
-   {
-    "sha": "4f59248",
-    "data": "2026-11-25",
-    "assunto": "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)"
    }
   ],
-  "arquivos_mudados_7d": 337,
+  "arquivos_mudados_7d": 339,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -145,19 +145,19 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 22
+    "mudancas": 24
+   },
+   {
+    "pasta": "package.json",
+    "mudancas": 21
    },
    {
     "pasta": "package-lock.json",
     "mudancas": 20
    },
    {
-    "pasta": "package.json",
-    "mudancas": 20
-   },
-   {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -180,6 +180,10 @@
     "mudancas": 8
    },
    {
+    "pasta": "scripts/automation.config.json",
+    "mudancas": 7
+   },
+   {
     "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 7
    },
@@ -190,24 +194,20 @@
    {
     "pasta": ".github/workflows/edge-tests-daily.yml",
     "mudancas": 6
-   },
-   {
-    "pasta": "scripts/automation.config.json",
-    "mudancas": 6
    }
   ],
   "arquivos_mais_mudados_90d": [
+   {
+    "arquivo": "package.json",
+    "mudancas": 21
+   },
    {
     "arquivo": "package-lock.json",
     "mudancas": 20
    },
    {
-    "arquivo": "package.json",
-    "mudancas": 20
-   },
-   {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -230,6 +230,10 @@
     "mudancas": 8
    },
    {
+    "arquivo": "scripts/automation.config.json",
+    "mudancas": 7
+   },
+   {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 7
    },
@@ -239,10 +243,6 @@
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
     "mudancas": 6
    },
    {
@@ -259,6 +259,10 @@
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
     "mudancas": 5
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": "src/components/lux/SettingsView.tsx",
     "mudancas": 4
-   },
-   {
-    "arquivo": "src/components/lux/StakeholderFinderView.tsx",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 173
+    "commits": 174
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1167,
-  "arquivos_codigo": 721,
-  "linhas_codigo": 126073,
+  "arquivos_total": 1169,
+  "arquivos_codigo": 723,
+  "linhas_codigo": 126263,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,9 +324,9 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 140,
+  "testes": 141,
   "workflows": 10,
-  "scripts": 53,
+  "scripts": 54,
   "docs_md": 87
  },
  "por_pasta": {
@@ -435,8 +435,8 @@
    "linhas": 698
   },
   "scripts/ci": {
-   "arquivos": 3,
-   "linhas": 1522
+   "arquivos": 4,
+   "linhas": 1661
   },
   "scripts/gen-current-report.ts": {
    "arquivos": 1,
@@ -571,8 +571,8 @@
    "linhas": 11989
   },
   "src/integrations": {
-   "arquivos": 11,
-   "linhas": 9090
+   "arquivos": 12,
+   "linhas": 9141
   },
   "src/lib": {
    "arquivos": 55,
@@ -715,7 +715,7 @@
  ],
  "qualidade": {
   "any": 24,
-  "console_log": 91,
+  "console_log": 93,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,

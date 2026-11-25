@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (94)",
+   "co-localizado (__tests__) (95)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -30,8 +30,8 @@
   "migrations": "supabase/migrations",
   "scripts": [
    "scripts/maintenance (4)",
-   "scripts/regras_negocio (3)",
-   "scripts/sql (3)"
+   "scripts/ci (3)",
+   "scripts/regras_negocio (3)"
   ],
   "docs": [
    "docs (21)",
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)",
    "fix(e2e): suite de RLS para de passar verde sem backend real (#226)",
    "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)",
    "fix: escopo de organizacao nas consultas e no cache do front (#224)",
-   "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)",
-   "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)"
+   "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)"
   ]
  },
  "pr_template": null,

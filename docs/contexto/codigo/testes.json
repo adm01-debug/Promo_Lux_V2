@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 140,
+ "total": 141,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 118
+  "unit": 119
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 94
+   "arquivos": 95
   },
   {
    "padrao": "e2e/",
@@ -781,6 +781,15 @@
    "casos": 5
   },
   {
+   "arquivo": "src/integrations/supabase/__tests__/orgFixtureSync.test.ts",
+   "tipo": "unit",
+   "linhas": 51,
+   "testa": [
+    "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json"
+   ],
+   "casos": 2
+  },
+  {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
    "tipo": "unit",
    "linhas": 207,
@@ -1405,7 +1414,7 @@
   "src/hooks/useWebScrape.ts": 1,
   "src/hooks/useWebhooks.ts": 1,
   "src/hooks/useWeeklyPerformance.ts": 1,
-  "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 1,
+  "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 2,
   "src/integrations/supabase/client.ts": 1,
   "src/integrations/supabase/withOrg.ts": 12,
   "src/lib/api/workflows.ts": 1,

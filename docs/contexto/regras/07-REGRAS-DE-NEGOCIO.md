@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `580b952335` · branch `main` · 2026-11-25 21:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ec5349fc16` · branch `main` · 2026-11-25 22:00 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2323,7 +2323,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1261 testes em 125 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1264 testes em 126 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2444,6 +2444,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `src/contexts/__tests__/DemoContext.test.tsx` | 3 | DemoProvider · clears the query cache when entering demo mode so real data never shows as demo · clears the query cache when leaving demo mode so sample data never leaks to a real session |
+| `src/integrations/supabase/__tests__/orgFixtureSync.test.ts` | 3 | fixture de tabelas multi-tenant é derivada das migrations · está em dia com supabase/migrations · o gerador produz uma lista não vazia e ordenada |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |
 | `supabase/functions/_shared/__tests__/linkedin-url.test.ts` | 3 | publicIdFromLinkedInUrl · extrai de ${nome} · retorna vazio para ${nome} |
 | `e2e/dlq-web-smoke.spec.ts` | 2 | DLQ web — smoke · ciclo enqueue → DLQ → snapshot → replay |

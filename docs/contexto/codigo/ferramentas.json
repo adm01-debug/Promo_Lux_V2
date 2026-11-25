@@ -3,11 +3,11 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (693)",
+   "TypeScript (694)",
    "SQL (274)",
    "Markdown (87)",
    "JSON (38)",
-   "JavaScript (24)",
+   "JavaScript (25)",
    "Shell (16)",
    "YAML (12)",
    "Python (5)"
@@ -84,6 +84,8 @@
    "maintenance:check": "sh scripts/maintenance/run.sh check --root . --ref origin/main",
    "maintenance:doctor": "sh scripts/maintenance/run.sh doctor --root .",
    "maintenance:heal": "sh scripts/maintenance/run.sh heal --root . --ref origin/main",
+   "org:fixture": "node scripts/ci/gerar-org-scoped-fixture.mjs",
+   "org:fixture:check": "node scripts/ci/gerar-org-scoped-fixture.mjs --check",
    "patch:mcp-plugin": "node scripts/patch-mcp-plugin.mjs",
    "postinstall": "node scripts/patch-mcp-plugin.mjs",
    "prebuild": "node scripts/patch-mcp-plugin.mjs",
