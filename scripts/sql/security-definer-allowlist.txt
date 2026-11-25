@@ -1,42 +1,77 @@
-# Canonical allowlist of SECURITY DEFINER functions in public schema
-# with EXECUTE granted to anon/authenticated. See docs/adr/009-security-baseline.md
-# and docs/adr/017-round23-linter-diagnosis.md for the classification per group.
+# Allowlist das funções SECURITY DEFINER do schema public que o banco expõe a
+# `anon` (execução SEM LOGIN). É a lista fechada de scripts/check-security-definer.sh
+# e de scripts/check-anon-grants-view.sh: o build falha quando aparece exposição
+# fora desta lista OU quando uma linha daqui vira zumbi (não é mais exposta).
 #
-# CI enforcement: scripts/check-security-definer.sh fails the build when the
-# live database exposes a function outside this list, OR when this list
-# contains an entry no longer exposed (drift in either direction).
+# Medido no projeto de produção pttzwlbidamibjssqiqb em 2026-11-25: 178 funções
+# SECURITY DEFINER em public, destas 43 executáveis por anon. Ver
+# docs/adr/009-security-baseline.md.
 #
-# Format: one function name per line, comments start with '#'.
+# Formato: um nome de função por linha; comentários começam com '#'. Os grupos
+# abaixo descrevem por que cada nome está aqui; a classificação de "por desenho"
+# foi confirmada no ACL real (pg_proc.proacl) e no código, não por suposição.
+#
+# Dívida conhecida (endurecimento, não bloqueia o CI): os grupos D e E executam
+# por `anon` apenas porque o ACL ainda carrega grant a PUBLIC ou um grant
+# explícito a anon de migrations antigas; nenhuma delas é chamada sem login.
+# Reduzir isso é REVOKE EXECUTE ... FROM anon + remoção da linha daqui, em
+# migration com aprovação humana.
 
-# --- Group A: RLS helpers (would cause recursive RLS if INVOKER) ------------
+# --- Grupo A: helpers de identidade/RLS (SECURITY DEFINER por necessidade) ---
 has_role
 has_org_role
 is_org_member
-default_org_for_current_user
+pg_catalog_rls_tables
+pg_columns_for_insert
 
-# --- Group B: Frontend-invoked RPCs that must bypass RLS -------------------
+# --- Grupo B: endpoints públicos por desenho (grant explícito, sem PUBLIC) ---
+get_public_status
+get_public_uptime
+get_survey_by_token
+submit_survey_response
+
+# --- Grupo C: RPCs da API pública chamadas por edge function com a anon key ---
+touch_api_key
+verify_api_key
+
+# --- Grupo D: gatilhos e funções de log/domínio (executadas pelo dono da linha) ---
 accept_org_invite
-api_latency_stats
-api_latency_trend
-apply_retry_advisory
-campaign_ab_stats
-company_analytics_summary
-company_growth_trend
-company_ipc_distribution
-company_sector_distribution
-company_source_distribution
-create_default_deal_stages
+count_recent_org_violations
+default_sla_seconds
+duplicate_email_template
+handle_new_organization
+handle_new_user
+log_audit_event
+log_audit_event_safe
+log_automation_event
+log_deal_stage_change
+log_queue_sla_change
+mark_email_template_used
+notify_on_enrichment
+notify_on_workflow_complete
+prevent_user_id_change
+record_campaign_event
+seed_default_lost_reasons
+sync_suppression_from_recipient
+
+# --- Grupo E: métricas internas de observabilidade (uso por cron/painel) ---
+archive_cron_http_results
 dlq_health_metrics
 dlq_health_trend
-get_dashboard_stats
-get_warmup_slot
-replay_dead_letter
-replay_dead_letter_batch
-reset_circuit_breaker
+dlq_top_reasons
+fn_web_scrape_regression_check
+pg_net_health
+pg_net_watchdog_should_notify
 rollback_retry_advisory
+sla_autotune_blocked_streaks
+sla_compliance_stats
+sla_recommendations
+system_recovery_health
+web_dlq_health_metrics
 
-# --- Group C: Lusha enrichment gate (frontend-invoked, org-scoped inside) --
-fn_lusha_contact_mark_cache_hit
-fn_lux_cache_stats
-fn_lux_enrichment_gate
-fn_lux_save_enriched_contact
+# --- Grupo F: exposição a REDUZIR (registrada para o baseline não mentir) ---
+# verify_scim_token é chamada apenas com service_role
+# (supabase/functions/scim/index.ts:63-79), então o EXECUTE para anon é exposição
+# acidental. Mantida aqui só enquanto o REVOKE não é aplicado em produção;
+# ao aplicar, remova esta linha na mesma migration.
+verify_scim_token

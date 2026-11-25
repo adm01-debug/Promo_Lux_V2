@@ -13,8 +13,12 @@ set -euo pipefail
 DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
 
 if [[ -z "$DB_URL" ]]; then
-  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de auditoria ignorado."
-  echo "Adicione a connection string do banco como secret para ativar este guard: Settings → Secrets → Actions."
+  if [[ -n "${CI:-}" ]]; then
+    echo "::error::SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de auditoria NÃO pode ser validado no CI."
+    echo "Cadastre a connection string em Settings → Secrets → Actions (secret SUPABASE_DB_URL)."
+    exit 1
+  fi
+  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) não configurada — guard de auditoria ignorado fora do CI."
   exit 0
 fi
 

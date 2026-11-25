@@ -1,0 +1,55 @@
+# Funcoes public que o papel 'service_role' NAO pode executar (divida registrada)
+#
+# Fonte: pg_proc + has_function_privilege('service_role', oid, 'EXECUTE') no
+# projeto pttzwlbidamjssqiqb (medido em 2026-11-25: 36 de 207 funcoes).
+#
+# O esperado pelo desenho do projeto e service_role executar TODAS as funcoes
+# public (e o papel do backend/edge functions). Estas 36 sao excecao: grants
+# revogados de PUBLIC sem regrant para service_role, incluindo RPCs de PII/DSAR
+# (pii_redact_text, export_subject_data, create_dsar_request, ...) e helpers de
+# auditoria. O guard nao esconde o problema: qualquer funcao public que NAO
+# esteja nesta lista precisa ser executavel por service_role, e remover uma
+# linha daqui sem o GRANT correspondente falha o build.
+#
+# Contrato do guard scripts/check-function-grants.sh:
+#   * funcao public sem EXECUTE para service_role FORA desta lista -> FALHA;
+#   * funcao desta lista que passou a ser executavel               -> FALHA
+#     (remova a linha junto com o GRANT).
+#
+# Fechar esta divida e uma migration de GRANT (regra 8: aprovacao humana).
+_dsar_pseudonymize
+_pii_redact_jsonb
+audit_log_facets
+count_audit_logs
+create_dsar_request
+dismiss_next_best_action
+dsar_sla_alerts
+dsar_token
+erase_subject_data
+export_audit_logs
+export_subject_data
+fulfill_dsar_request
+get_public_status
+get_public_uptime
+get_survey_by_token
+list_dsar_requests
+list_my_sessions
+list_next_best_actions
+list_pii_rules
+nba_recommend
+pii_active_rules
+pii_apply_category
+pii_hash
+pii_redact_jsonb
+pii_redact_text
+pii_regex
+pii_scan
+prevent_workflow_run_events_update
+read_audit_logs_safe
+refresh_next_best_actions
+revoke_my_session
+revoke_other_sessions
+seed_role_permissions
+set_pii_rule
+submit_survey_response
+touch_last_known_ip

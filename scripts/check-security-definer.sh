@@ -3,8 +3,11 @@
 # CI Guard — SECURITY DEFINER anti-regression (Rodada #24 hardening)
 # =============================================================================
 # Bidirecional:
-#   1) Falha se o banco expõe a anon/authenticated uma função SECURITY DEFINER
-#      que NÃO está em scripts/sql/security-definer-allowlist.txt.
+#   1) Falha se o banco expõe a anon uma função SECURITY DEFINER que NÃO está em
+#      scripts/sql/security-definer-allowlist.txt. O critério é anon (execução
+#      SEM LOGIN), e não anon/authenticated: 107 das 178 funções SECURITY
+#      DEFINER são executáveis por authenticated por default do PostgreSQL, e
+#      listar todas transformaria a allowlist em ruído.
 #   2) Falha se a allowlist contém uma função que já não é mais exposta
 #      (evita "allowlist zumbi" que mascara futuras exposições acidentais).
 #
@@ -14,7 +17,12 @@ set -euo pipefail
 
 DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
 if [[ -z "$DB_URL" ]]; then
-  echo "::warning::SUPABASE_DB_URL não configurada — guard de SECURITY DEFINER ignorado."
+  if [[ -n "${CI:-}" ]]; then
+    echo "::error::SUPABASE_DB_URL não configurada — guard de SECURITY DEFINER NÃO pode ser validado no CI."
+    echo "Cadastre a connection string em Settings → Secrets → Actions (secret SUPABASE_DB_URL)."
+    exit 1
+  fi
+  echo "::warning::SUPABASE_DB_URL não configurada — guard de SECURITY DEFINER ignorado fora do CI."
   exit 0
 fi
 
@@ -34,8 +42,7 @@ FROM pg_proc p
 JOIN pg_namespace n ON n.oid = p.pronamespace
 WHERE n.nspname = 'public'
   AND p.prosecdef = true
-  AND (has_function_privilege('anon', p.oid, 'EXECUTE')
-    OR has_function_privilege('authenticated', p.oid, 'EXECUTE'))
+  AND has_function_privilege('anon', p.oid, 'EXECUTE')
 ORDER BY p.proname;
 SQL
 )

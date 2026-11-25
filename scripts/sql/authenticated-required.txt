@@ -1,0 +1,73 @@
+# RPCs do frontend que DEVEM continuar executaveis pelo papel 'authenticated'
+#
+# Fonte: chamadas supabase.rpc('...') em src/** cruzadas com pg_proc do schema
+# public do projeto pttzwlbidamjssqiqb (medido em 2026-11-25: 58 de 58 nomes
+# existem como funcao).
+#
+# Contrato do guard scripts/check-function-grants.sh: falha se alguma destas
+# deixar de ser executavel por 'authenticated' (quebraria a UI em producao).
+# O guard NAO exige exclusividade: o projeto herda o default do PostgreSQL e
+# quase todas as 207 funcoes public sao executaveis por authenticated; exigir a
+# lista completa transformaria o guard em ruido. Exposicao indevida a
+# authenticated e tratada dentro de cada funcao (has_role/has_org_role) e pela
+# allowlist de SECURITY DEFINER exposta a anon.
+#
+# Ao adicionar um supabase.rpc novo no front, adicione o nome aqui.
+accept_org_invite
+api_latency_stats
+api_latency_trend
+apply_retry_advisory
+apply_sla_recommendation
+audit_log_facets
+campaign_ab_stats
+company_analytics_summary
+company_growth_trend
+company_ipc_distribution
+company_sector_distribution
+company_source_distribution
+count_audit_logs
+create_default_deal_stages
+create_dsar_request
+default_org_for_current_user
+default_role_permissions
+dismiss_next_best_action
+dlq_health_metrics
+dlq_health_trend
+dsar_sla_alerts
+duplicate_email_template
+enrichment_funnel_counts
+evaluate_partition_policies
+export_audit_logs
+export_subject_data
+fulfill_dsar_request
+generate_scim_token
+get_dashboard_stats
+get_my_ip_status
+get_public_status
+get_public_uptime
+get_survey_by_token
+list_dsar_requests
+list_my_sessions
+list_next_best_actions
+list_pii_rules
+mark_email_template_used
+pg_catalog_rls_tables
+pg_columns_for_insert
+pii_redact_text
+pii_scan
+purge_dead_letter
+refresh_next_best_actions
+refresh_org_scores
+replay_dead_letter
+replay_dead_letter_batch
+reset_circuit_breaker
+revoke_my_session
+revoke_other_sessions
+rollback_retry_advisory
+set_pii_rule
+sla_autotune_blocked_streaks
+sla_compliance_stats
+sla_recommendations
+source_quality_report
+submit_survey_response
+touch_last_known_ip
