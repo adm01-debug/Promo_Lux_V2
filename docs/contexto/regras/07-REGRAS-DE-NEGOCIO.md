@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `fef1ec1e2d` · branch `main` · 2026-11-24 21:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `2353b88552` · branch `main` · 2026-11-25 10:29 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2312,7 +2312,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1206 testes em 114 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1209 testes em 115 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2422,6 +2422,7 @@ _nenhum item encontrado_
 | `e2e/accessibility.spec.ts` | 3 | Acessibilidade (axe-core) · Dashboard não tem violações WCAG 2 A/AA · Configurações não tem violações WCAG 2 A/AA |
 | `e2e/instagram-worker-smoke.spec.ts` | 3 | Instagram motor — smoke · enfileira → worker processa → resultados gravados (profile + hashtag) · deduplicação: mesmo config_hash não cria duplicata em queued/running |
 | `e2e/monitoring-navigation.spec.ts` | 3 | Monitoramento — navegação · carrega a página com o título e as abas de monitoramento · troca de aba atualiza o conteúdo exibido |
+| `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |
 | `supabase/functions/_shared/__tests__/linkedin-url.test.ts` | 3 | publicIdFromLinkedInUrl · extrai de ${nome} · retorna vazio para ${nome} |
 | `e2e/dlq-web-smoke.spec.ts` | 2 | DLQ web — smoke · ciclo enqueue → DLQ → snapshot → replay |

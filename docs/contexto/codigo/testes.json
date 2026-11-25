@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 128,
+ "total": 129,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 106
+  "unit": 107
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 83
+   "arquivos": 84
   },
   {
    "padrao": "e2e/",
@@ -362,6 +362,15 @@
     "src/components/lux/map/MapFilters.tsx"
    ],
    "casos": 4
+  },
+  {
+   "arquivo": "src/components/lux/__tests__/ProxyFormDialog.test.tsx",
+   "tipo": "unit",
+   "linhas": 59,
+   "testa": [
+    "src/components/lux/ProxyFormDialog.tsx"
+   ],
+   "casos": 2
   },
   {
    "arquivo": "src/components/lux/__tests__/SidebarFooter.test.tsx",
@@ -1213,6 +1222,7 @@
   "src/components/lux/DataError.tsx": 1,
   "src/components/lux/EmptyState.tsx": 1,
   "src/components/lux/ErrorBoundary.tsx": 1,
+  "src/components/lux/ProxyFormDialog.tsx": 1,
   "src/components/lux/SafeHTML.tsx": 1,
   "src/components/lux/StatsGrid.tsx": 1,
   "src/components/lux/WorkflowsView.tsx": 1,
