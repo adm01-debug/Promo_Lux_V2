@@ -182,7 +182,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | ISO 27001 | Não certificado | SGSI documentado |
 | GDPR/LGPD docs | Inexistente | DPA, Privacy Policy, ROPA, DPIA |
 | Data residency | Fixa (Lovable Cloud) | Escolher região (US/EU/BR) por org |
-| Audit log exportável | ✅ `export_audit_logs` + `count_audit_logs` + `audit_log_facets` (`20261122240000`) | Immutable, retention 1+ ano, export SIEM |
+| Audit log exportável | ✅ `export_audit_logs` + `count_audit_logs` + `audit_log_facets` (`20261122240000`) | Immutable, retention 5 anos, export SIEM |
 | DSAR/Right to be Forgotten | Manual | Fluxo automatizado por usuário/org |
 | BYOK (encryption) | Sem opção | Chave gerenciada pelo cliente (KMS) |
 | DLP & PII masking | ✅ `pii_redaction_rules` + `pii_redact_text` + `read_audit_logs_safe` (`20261122260000`) | Mascarar PII em logs e exports |
