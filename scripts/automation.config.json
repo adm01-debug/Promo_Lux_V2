@@ -228,6 +228,14 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
     },
     {
+      "id": "legacy-ci-gerar-org-scoped-fixture",
+      "kind": "legacy",
+      "files": ["scripts/ci/gerar-org-scoped-fixture.mjs"],
+      "manual": ["node", "scripts/ci/gerar-org-scoped-fixture.mjs"],
+      "triggers": ["manual"],
+      "reason": "Gerador do fixture multi-tenant; referências literais: package.json:scripts (org:fixture, org:fixture:check) e src/integrations/supabase/__tests__/orgFixtureSync.test.ts. O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-d9614d949e38b1f0",
       "kind": "legacy",
       "files": ["scripts/gen-current-report.ts"],
