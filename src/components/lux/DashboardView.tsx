@@ -232,7 +232,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             <EnrichmentFunnel />
           </div>
           <div className="xl:col-span-2">
-            <AutomationsList />
+            <AutomationsList onNavigate={onNavigate} />
           </div>
         </div>
       ),

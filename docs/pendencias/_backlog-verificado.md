@@ -90,3 +90,19 @@ pela metade. Duas opcoes, ambas exigem decisao:
 2. Tornar o engine data-driven: iterar `workflow.steps` com um registry de handlers e
    manter o pipeline atual como template padrao. Muda o motor de execucao (arquitetura),
    toca `workflow-engine` (deploy de edge function) -> regra 8.
+
+### RECONFERIDO em 2026-11-25: FECHADO (fases dirigidas por `steps`)
+
+- `supabase/functions/_shared/workflow-phases.ts` — `declaredPhases` / `phaseEnabled`.
+  Workflow legado (`steps` vazio ou sem `phase`) continua rodando todas as fases.
+- `supabase/functions/workflow-engine/index.ts:504,596,719` — as tres fases (`scrape`,
+  `enrich`, `ipc_score`) passaram a ser condicionadas a `phaseEnabled(workflow.steps, ...)`.
+- `src/components/lux/WorkflowsView.tsx:147,157,224` — modo Simples escolhe as fases por
+  switch; modo "Editor Avancado" usa `WorkflowEditor`, que agora e um editor real
+  (`src/components/automation/WorkflowEditor.tsx:37-40,185-196`: adiciona, remove,
+  reordena e carrega `phase` por tipo de step). O stub citado em `lux/automation/` nao existe mais.
+- Consequencia pratica: o campo `steps` deixou de ser decorativo — desligar uma fase na
+  criacao muda o que o engine executa, e nenhum workflow existente muda de comportamento.
+
+Melhoria opcional que continua aberta (nao e gap): o engine respeita **quais** fases rodam,
+nao a ordem livre dos steps nem `config` por step — a opcao 2 completa (registry de handlers).
