@@ -46,6 +46,8 @@
     "lint:ratchet": "node scripts/ci/lint-ratchet.mjs",
     "lint:ratchet:update": "node scripts/ci/lint-ratchet.mjs --update-baseline",
     "lint:ratchet:test": "node --test scripts/ci/lint-ratchet.unit.mjs",
+    "org:fixture": "node scripts/ci/gerar-org-scoped-fixture.mjs",
+    "org:fixture:check": "node scripts/ci/gerar-org-scoped-fixture.mjs --check",
     "automation:doctor": "node scripts/automation.mjs doctor",
     "automation:test": "node scripts/automation.mjs test",
     "automation:check": "node scripts/automation.mjs check --ref HEAD",
