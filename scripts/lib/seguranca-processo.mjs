@@ -42,23 +42,42 @@ export const RAIZES_PERMITIDAS = [RAIZ_REPO, path.resolve(os.tmpdir()), path.res
  */
 export function resolverExecutavel(comando) {
   const diretorios = (process.env.PATH || '').split(path.delimiter).filter(Boolean);
+  const nomes = [comando, ...extensoesDoShell(comando).map((ext) => comando + ext)];
   for (const diretorio of diretorios) {
-    const candidato = path.join(diretorio, comando);
-    try {
-      fs.accessSync(candidato, fs.constants.X_OK);
-      return candidato;
-    } catch {
-      // Nao esta neste diretorio: segue a busca, igual ao shell.
+    for (const nome of nomes) {
+      const candidato = path.join(diretorio, nome);
+      try {
+        fs.accessSync(candidato, fs.constants.X_OK);
+        return candidato;
+      } catch {
+        // Nao esta neste diretorio: segue a busca, igual ao shell.
+      }
     }
   }
   throw new Error('comando nao encontrado no PATH: ' + comando);
 }
 
+/**
+ * Extensoes que o shell tenta quando o comando vem sem extensao.
+ *
+ * No Windows o binario e `git.exe`/`node.exe` e o PATH nao tem o nome sem
+ * extensao: sem este passo `resolverExecutavel('git')` lancava "comando nao
+ * encontrado" e derrubava o pre-commit (lint ratchet) em todo clone Windows.
+ * Fora do Windows `PATHEXT` normalmente nao existe, entao a lista fica vazia e
+ * a busca e identica a do shell Unix.
+ */
+function extensoesDoShell(comando) {
+  if (path.extname(comando)) return [];
+  return (process.env.PATHEXT || '')
+    .split(';')
+    .filter(Boolean)
+    .map((ext) => ext.toLowerCase());
+}
+
 /** Verdadeiro quando `candidato` esta dentro de `raiz` (a propria raiz conta). */
 export function estaDentro(raiz, candidato) {
   const relativo = path.relative(raiz, candidato);
-  return relativo === ''
-    || (!path.isAbsolute(relativo) && relativo !== '..' && !relativo.startsWith('..' + path.sep));
+  return relativo === '' || (!path.isAbsolute(relativo) && relativo !== '..' && !relativo.startsWith('..' + path.sep));
 }
 
 /**
@@ -94,7 +113,9 @@ export function resolverCaminhoPermitido(valor, rotulo, raizes = RAIZES_PERMITID
   const resolvido = caminhoRealMesmoSeAusente(path.resolve(valor));
   const raizesReais = raizes.map((raiz) => caminhoRealMesmoSeAusente(path.resolve(raiz)));
   if (!raizesReais.some((raiz) => estaDentro(raiz, resolvido))) {
-    throw new Error('caminho de ' + rotulo + ' fora das raizes permitidas (repositorio ou diretorio temporario): ' + valor);
+    throw new Error(
+      'caminho de ' + rotulo + ' fora das raizes permitidas (repositorio ou diretorio temporario): ' + valor
+    );
   }
   return resolvido;
 }
