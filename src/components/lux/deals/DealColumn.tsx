@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { Deal, DealStage } from "@/hooks/useDeals";
 import { DealCard } from "./DealCard";
+import { groupByCurrency, formatMoney } from "@/lib/money";
 
 interface Props {
   stage: DealStage;
@@ -17,7 +18,7 @@ interface Props {
 
 export function DealColumn({ stage, deals, onAddDeal, onSelectDeal, predictions }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: stage.id, data: { type: "column", stage } });
-  const total = deals.reduce((s, d) => s + (Number(d.value) || 0), 0);
+  const totals = groupByCurrency(deals, (d) => d.value, (d) => d.currency);
 
   return (
     <div className="flex flex-col w-72 shrink-0 h-full">
@@ -27,8 +28,12 @@ export function DealColumn({ stage, deals, onAddDeal, onSelectDeal, predictions 
           <h3 className="text-sm font-semibold truncate">{stage.name}</h3>
           <span className="text-[10px] text-muted-foreground shrink-0">{deals.length}</span>
         </div>
-        <span className="text-[10px] text-primary font-mono shrink-0">
-          {total.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
+        <span className="flex flex-col items-end gap-0.5 shrink-0">
+          {totals.map((t) => (
+            <span key={t.currency} className="text-[10px] text-primary font-mono leading-tight">
+              {formatMoney(t.total, t.currency)}
+            </span>
+          ))}
         </span>
       </div>
 

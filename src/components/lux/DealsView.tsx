@@ -17,13 +17,14 @@ import { StagesManagerDialog } from "./deals/StagesManagerDialog";
 import { LostReasonsDialog } from "./deals/LostReasonsDialog";
 import { DealDetailDrawer } from "./deals/DealDetailDrawer";
 import { PermissionGate } from "@/components/lux/permissions/PermissionGate";
+import { groupByCurrency, formatCurrencyTotals } from "@/lib/money";
 
 export function DealsView() {
   useTaskReminders();
 
   const { data: stages = [], isLoading: stagesLoading } = useDealStages();
   const { data: deals = [], updateDeal } = useDeals();
-  const { byDealId: predictions, totalWeighted } = useDealPredictions();
+  const { byDealId: predictions } = useDealPredictions();
   const { refresh: refreshScores } = useLeadScores();
 
   const [addOpen, setAddOpen] = useState(false);
@@ -45,7 +46,17 @@ export function DealsView() {
     return map;
   }, [deals, stages]);
 
-  const totalValue = deals.reduce((s, d) => s + (Number(d.value) || 0), 0);
+  const totals = useMemo(() => groupByCurrency(deals, (d) => d.value, (d) => d.currency), [deals]);
+
+  const weightedTotals = useMemo(
+    () =>
+      groupByCurrency(
+        deals,
+        (d) => predictions.get(d.id)?.weighted_value ?? 0,
+        (d) => d.currency,
+      ).filter((t) => t.total > 0),
+    [deals, predictions],
+  );
 
   const onDragStart = (e: DragStartEvent) => {
     const d = deals.find((x) => x.id === e.active.id);
@@ -84,12 +95,12 @@ export function DealsView() {
             <TrendingUp className="h-3 w-3 text-primary" />
             {deals.length} negócios · Total{" "}
             <span className="text-primary font-mono">
-              {totalValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
+              {formatCurrencyTotals(totals)}
             </span>
-            {totalWeighted > 0 && (
+            {weightedTotals.length > 0 && (
               <span className="text-muted-foreground" title="Receita esperada = valor × probabilidade de fechamento">
                 · Ponderado <span className="text-success font-mono">
-                  {totalWeighted.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
+                  {formatCurrencyTotals(weightedTotals)}
                 </span>
               </span>
             )}
@@ -156,7 +167,7 @@ export function DealsView() {
 
       <AddDealDialog open={addOpen} onOpenChange={setAddOpen} stages={stages} defaultStageId={defaultStage} />
       <StagesManagerDialog open={stagesOpen} onOpenChange={setStagesOpen} />
-      <LostReasonsDialog open={lostOpen} onOpenChange={setLostOpen} />
+      <LostReasonsDialog open={lostOpen} onOpenChange={setLostOpen} deals={deals} />
       <DealDetailDrawer deal={activeDeal} open={detailOpen} onOpenChange={setDetailOpen} />
     </div>
   );
