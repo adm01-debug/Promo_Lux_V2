@@ -4,7 +4,7 @@ state="$HOME/.cache/repo-maintenance"
 mkdir -p "$state"
 chmod 700 "$state"
 if ! command -v flock >/dev/null 2>&1; then
-  printf '%s\n' '{"status":"failed","message":"flock indisponível"}'
+  printf '%s\n' '{"status":"failed","message":"flock indisponível (motor exige Linux; no Windows valide com doctor --static e test, ou rode check/heal via WSL/CI)"}'
   exit 1
 fi
 exec 9>"$state/fleet.lock"
