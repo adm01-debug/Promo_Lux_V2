@@ -36,11 +36,14 @@ export const PlacesApiNewToggle = () => {
     setSaving(true);
     try {
       if (flagId) {
-        const { error } = await supabase
+        const { data: updated, error } = await supabase
           .from("feature_flags")
           .update({ is_enabled: next })
-          .eq("id", flagId);
+          .eq("id", flagId)
+          .select("id")
+          .maybeSingle();
         if (error) throw error;
+        if (!updated) throw new Error("Sem permissão para alterar esta flag");
       } else {
         const { data, error } = await supabase
           .from("feature_flags")
