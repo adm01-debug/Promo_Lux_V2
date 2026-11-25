@@ -63,3 +63,161 @@ verify_jwt = false
 # O gate esta no codigo (isCronAuthorized + checagem de role admin).
 [functions.hubspot-sync]
 verify_jwt = false
+
+# ---------------------------------------------------------------------------
+# Restante das functions publicadas no projeto. O valor de verify_jwt abaixo e o
+# que esta de fato em producao (conferido via API de management do Supabase).
+# Ate agora esse gate so existia na configuracao do projeto, nao versionada: um
+# deploy por `supabase functions deploy` (que usa este arquivo) aplicaria o
+# default verify_jwt = true e derrubaria quem chama sem Authorization.
+# ---------------------------------------------------------------------------
+
+# verify_jwt = false (14). Chamadas por pg_cron, pg_net ou de fora do Supabase,
+# sempre sem header Authorization do Supabase. O gate fica no codigo de cada
+# uma (token de cron / secret proprio).
+[functions.campaign-dispatch]
+verify_jwt = false
+
+[functions.circuit-breaker-alerts]
+verify_jwt = false
+
+[functions.dlq-alerts]
+verify_jwt = false
+
+[functions.email-poll-replies]
+verify_jwt = false
+
+[functions.gmaps-proxy]
+verify_jwt = false
+
+[functions.pg-net-watchdog]
+verify_jwt = false
+
+[functions.purge-soft-deleted]
+verify_jwt = false
+
+[functions.reaper-alerts]
+verify_jwt = false
+
+[functions.retry-policy-tuner]
+verify_jwt = false
+
+[functions.scrape-queue-worker]
+verify_jwt = false
+
+[functions.sla-alerts]
+verify_jwt = false
+
+[functions.sla-auto-tune]
+verify_jwt = false
+
+[functions.vault-cookie-health]
+verify_jwt = false
+
+[functions.web-scrape-worker]
+verify_jwt = false
+
+# verify_jwt = true (34). Exigem JWT de usuario do Supabase ou a service_role
+# key (que e um JWT) no header Authorization; sao chamadas pelo app ou por
+# workers internos que ja mandam a service_role.
+[functions.ai-agent]
+verify_jwt = true
+
+[functions.auth-rate-limit]
+verify_jwt = true
+
+[functions.cnpj-enrich]
+verify_jwt = true
+
+[functions.cnpj-settings-status]
+verify_jwt = true
+
+[functions.conversation-intel]
+verify_jwt = true
+
+[functions.deliverability-check]
+verify_jwt = true
+
+[functions.email-oauth-connect]
+verify_jwt = true
+
+[functions.email-oauth-disconnect]
+verify_jwt = true
+
+[functions.email-verify]
+verify_jwt = true
+
+[functions.gmaps-places-search]
+verify_jwt = true
+
+[functions.health]
+verify_jwt = true
+
+[functions.instagram-connection-status]
+verify_jwt = true
+
+[functions.instagram-dlq-replay]
+verify_jwt = true
+
+[functions.instagram-enqueue]
+verify_jwt = true
+
+[functions.instagram-worker]
+verify_jwt = true
+
+[functions.instagram-worker-health]
+verify_jwt = true
+
+[functions.lead-score-ai]
+verify_jwt = true
+
+[functions.lusha-cookie-health]
+verify_jwt = true
+
+[functions.lusha-decision-makers]
+verify_jwt = true
+
+[functions.lusha-reveal]
+verify_jwt = true
+
+[functions.lusha-search]
+verify_jwt = true
+
+[functions.oracle-cookies-preflight]
+verify_jwt = true
+
+[functions.oracle-enrich-contact]
+verify_jwt = true
+
+[functions.oracle-search-decisors]
+verify_jwt = true
+
+[functions.org-violation-alerts]
+verify_jwt = true
+
+[functions.rls-tests]
+verify_jwt = true
+
+[functions.system-recovery-status]
+verify_jwt = true
+
+[functions.technographics-detect]
+verify_jwt = true
+
+[functions.web-dlq-replay]
+verify_jwt = true
+
+[functions.webhook-dispatcher]
+verify_jwt = true
+
+[functions.web-scrape-enqueue]
+verify_jwt = true
+
+[functions.web-scrape-extract]
+verify_jwt = true
+
+[functions.web-scrape-status]
+verify_jwt = true
+
+[functions.workflow-engine]
+verify_jwt = true
