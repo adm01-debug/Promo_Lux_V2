@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 581,
- "arestas": 1858,
+ "arestas": 1865,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -30,7 +30,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
-   "importado_por": 59
+   "importado_por": 60
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
@@ -41,15 +41,15 @@
    "importado_por": 49
   },
   {
+   "arquivo": "src/contexts/active-org-context.ts",
+   "importado_por": 44
+  },
+  {
    "arquivo": "src/contexts/auth-context.ts",
    "importado_por": 39
   },
   {
    "arquivo": "src/components/ui/select.tsx",
-   "importado_por": 37
-  },
-  {
-   "arquivo": "src/contexts/active-org-context.ts",
    "importado_por": 37
   },
   {

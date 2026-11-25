@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "8c4a8f1880dd5b0b6a50c9fd4d75f168c9e3442f",
+  "commit": "f889110c94e5d3bf9acc2632d175e95daa046d5f",
   "branch": "main",
-  "data_commit": "2026-11-25T18:08:22-03:00",
+  "data_commit": "2026-11-25T18:19:04-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f889110",
+    "data": "2026-11-25",
+    "assunto": "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)"
+   },
    {
     "sha": "8c4a8f1",
     "data": "2026-11-25",
@@ -126,22 +131,21 @@
     "sha": "aa94815",
     "data": "2026-11-25",
     "assunto": "chore: normaliza fim de linha em LF para todo clone (#201)"
-   },
-   {
-    "sha": "44c43b4",
-    "data": "2026-11-25",
-    "assunto": "fix(scripts): resolver executavel no Windows usa as extensoes do PATHEXT (#200)"
    }
   ],
-  "arquivos_mudados_7d": 333,
+  "arquivos_mudados_7d": 336,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 96
+    "mudancas": 102
    },
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 26
+   },
+   {
+    "pasta": "src/integrations/supabase",
+    "mudancas": 22
    },
    {
     "pasta": "package-lock.json",
@@ -152,19 +156,15 @@
     "mudancas": 20
    },
    {
-    "pasta": "src/integrations/supabase",
-    "mudancas": 20
-   },
-   {
     "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "pasta": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 10
    },
    {
-    "pasta": "docs/qa/05-PROGRESSO.md",
+    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -210,11 +210,11 @@
     "mudancas": 10
    },
    {
-    "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 10
    },
    {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "arquivo": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -246,19 +246,19 @@
     "mudancas": 6
    },
    {
+    "arquivo": "src/integrations/supabase/withOrg.ts",
+    "mudancas": 6
+   },
+   {
+    "arquivo": "src/pages/Monitoring.tsx",
+    "mudancas": 6
+   },
+   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 5
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "src/integrations/supabase/withOrg.ts",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "src/pages/Monitoring.tsx",
     "mudancas": 5
    },
    {
@@ -294,14 +294,14 @@
     "mudancas": 4
    },
    {
-    "arquivo": "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
+    "arquivo": "src/components/lux/StakeholderFinderView.tsx",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 171
+    "commits": 172
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1166,
-  "arquivos_codigo": 720,
-  "linhas_codigo": 125911,
+  "arquivos_total": 1167,
+  "arquivos_codigo": 721,
+  "linhas_codigo": 126050,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 139,
+  "testes": 140,
   "workflows": 10,
   "scripts": 53,
   "docs_md": 87
@@ -560,7 +560,7 @@
   },
   "src/components": {
    "arquivos": 314,
-   "linhas": 51951
+   "linhas": 51972
   },
   "src/contexts": {
    "arquivos": 8,
@@ -568,11 +568,11 @@
   },
   "src/hooks": {
    "arquivos": 105,
-   "linhas": 11965
+   "linhas": 11989
   },
   "src/integrations": {
-   "arquivos": 10,
-   "linhas": 8998
+   "arquivos": 11,
+   "linhas": 9090
   },
   "src/lib": {
    "arquivos": 55,
@@ -584,7 +584,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2284
+   "linhas": 2287
   },
   "src/test": {
    "arquivos": 3,
@@ -592,7 +592,7 @@
   },
   "src/tests": {
    "arquivos": 3,
-   "linhas": 171
+   "linhas": 170
   },
   "supabase/functions": {
    "arquivos": 135,
@@ -666,7 +666,7 @@
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 748
+   "linhas": 751
   },
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
@@ -674,7 +674,7 @@
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
-   "linhas": 682
+   "linhas": 684
   },
   {
    "arquivo": "scripts/ci/lint-ratchet.mjs",

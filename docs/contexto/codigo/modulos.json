@@ -146,7 +146,7 @@
    "modulo": "components/lux",
    "arquivos": 220,
    "testes": 36,
-   "linhas": 43478,
+   "linhas": 43491,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -903,7 +903,7 @@
    "modulo": "hooks",
    "arquivos": 91,
    "testes": 0,
-   "linhas": 9797,
+   "linhas": 9799,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -1647,7 +1647,7 @@
   {
    "modulo": "integrations/supabase",
    "arquivos": 3,
-   "testes": 6,
+   "testes": 7,
    "linhas": 8069,
    "itens_menu": [],
    "telas": [],
@@ -2237,7 +2237,7 @@
    "modulo": "pages",
    "arquivos": 11,
    "testes": 0,
-   "linhas": 2284,
+   "linhas": 2287,
    "itens_menu": [],
    "telas": [
     "/",

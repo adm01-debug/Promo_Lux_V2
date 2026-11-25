@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `8c4a8f1880` · branch `main` · 2026-11-25 21:08 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f889110c94` · branch `main` · 2026-11-25 21:19 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2323,7 +2323,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1251 testes em 124 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1261 testes em 125 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2395,6 +2395,7 @@ _nenhum item encontrado_
 | `src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx` | 7 | DlqAlertSettingsCard · renderiza título e campos de configuração · chama a mutação de salvar com valores saneados ao clicar em Salvar · desabilita edição para não-administradores … |
 | `src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts` | 7 | detectSlaRisk · sinaliza fila cujo p95 excede o SLA configurado · não sinaliza quando o p95 está dentro do SLA · respeita a tolerância percentual … |
 | `src/hooks/__tests__/useRecentViews.test.ts` | 7 | useRecentViews · starts with empty recent views · tracks a viewed page · deduplicates on revisit and moves to front … |
+| `src/integrations/supabase/__tests__/withOrg.readGuard.test.ts` | 7 | withOrg - leitura sem organizacao ativa · lanca MissingOrgContextError no select em tabela org-escopada · nao chega a montar a consulta no cliente · avisa o handler global antes de lancar … |
 | `src/lib/__tests__/orgErrorHandler.audit.test.ts` | 7 | recordOrgViolation — resiliência fire-and-forget · não quebra quando RLS rejeita o insert (retorno {error}) · não quebra quando o insert rejeita (rede/offline) · não quebra quando supabase.from(...).insert lança síncrono … |
 | `src/lib/__tests__/utils.test.ts` | 7 | cn (class merge utility) · merges class names · handles conditional classes · deduplicates conflicting tailwind classes … |
 | `src/tests/load-stress.test.ts` | 7 | load-stress: motor de resiliência · processa 500 cenários em menos de 5s (throughput >= 100 cenários/s) · mantém sucesso >= 70% no agregado com política default · cenários client_4xx com failureRate 0.95 vão majoritariamente para DLQ (comportamento correto) … |
@@ -2417,6 +2418,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/CompanyTable.integration.test.tsx` | 5 | CompanyTable — integração de virtualização com scroll · renderiza apenas uma janela de linhas, não a lista inteira · mostra os primeiros itens no topo e esconde os itens distantes · revela itens mais abaixo após rolar e recicla os do topo … |
 | `src/components/lux/__tests__/DataError.test.tsx` | 5 | DataError · renders default error message · renders custom error message · renders retry button when onRetry provided … |
 | `src/components/lux/__tests__/MapFilters.test.tsx` | 5 | MapFilters · renders search input and filter count · displays IPC score label with current value · calls onSearchChange when typing … |
+| `src/hooks/__tests__/orgCacheKeys.test.ts` | 5 | chave de cache escopada por organizacao · $nome troca de chave ao trocar de organizacao · relatorios agendados · a lista troca de chave ao trocar de organizacao … |
 | `src/hooks/__tests__/useDlqReplay.test.ts` | 5 | useDlqReplay · invoca instagram-dlq-replay com o payload correto e retorna o result · invoca web-dlq-replay quando motor é  · extrai a mensagem de FunctionsHttpError via context.text() … |
 | `src/lib/__tests__/demoViews.test.ts` | 5 | shouldShowDemoNotice · avisa nas views sem dados de exemplo quando a demonstração está ativa · não avisa nas views que têm dados de exemplo · não avisa fora da demonstração … |
 | `src/lib/resilience/__tests__/compareReport.test.ts` | 5 | buildComparison · classifies improvement, regression and stability · marks new and removed scenarios · computes aggregate deltas and top lists … |
@@ -2432,7 +2434,7 @@ _nenhum item encontrado_
 | `src/hooks/__tests__/useRateLimit.test.ts` | 4 | useRateLimit · should not be locked initially · should lock after exceeding max attempts · should unlock after window windowMs |
 | `src/integrations/supabase/withOrg.test.ts` | 4 | withOrg Multi-tenant Isolation · should block access to unclassified tables (Deny-by-Default) · should allow access to scoped tables when org is active · should block write operations without active organization |
 | `src/tests/fuzzing-validation.test.ts` | 4 | Fuzzing & Validation: Webhooks and Edge Functions · should reject malformed JSON payloads · should reject missing required fields (e.g., event_type) · should handle invalid UUIDs gracefully |
-| `src/tests/multi-tenant.test.ts` | 4 | Multi-Tenant Isolation (SafeOrg) · should automatically inject organization_id into SELECT queries · should warn but not throw on SELECT when no organization is active · should block cross-tenant injection attempts in values |
+| `src/tests/multi-tenant.test.ts` | 4 | Multi-Tenant Isolation (SafeOrg) · should automatically inject organization_id into SELECT queries · should fail closed on SELECT when no organization is active · should block cross-tenant injection attempts in values |
 | `supabase/functions/rls-tests/index.test.ts` | 4 | rls-tests: rejeita 401 quando NÃO há Authorization Bearer · rls-tests: rejeita Bearer JWT corrompido (gateway OU guard) · rls-tests: retorna 403 quando JWT é válido mas user não é admin · rls-tests: retorna relatório estruturado quando admin chama |
 | `e2e/accessibility.spec.ts` | 3 | Acessibilidade (axe-core) · Dashboard não tem violações WCAG 2 A/AA · Configurações não tem violações WCAG 2 A/AA |
 | `e2e/instagram-worker-smoke.spec.ts` | 3 | Instagram motor — smoke · enfileira → worker processa → resultados gravados (profile + hashtag) · deduplicação: mesmo config_hash não cria duplicata em queued/running |
@@ -2449,7 +2451,6 @@ _nenhum item encontrado_
 | `e2e/oracle-decisor-flow.spec.ts` | 2 | Oracle v2 — fluxo end-to-end real (busca → decisores → enriquecimento) · busca decisores em empresa real e enriquece pelo menos um contato |
 | `e2e/oracle-v2.spec.ts` | 2 | Oracle v2 — smoke · painel resiliente: Error Boundary não derruba a aba quando preflight falha |
 | `src/contexts/__tests__/AuthContext.test.tsx` | 2 | AuthProvider.signOut · clears the React Query cache and the active org before calling supabase.auth.signOut |
-| `src/hooks/__tests__/orgCacheKeys.test.ts` | 2 | chave de cache escopada por organizacao · $nome troca de chave ao trocar de organizacao |
 | `src/test/example.test.ts` | 2 | example · should pass |
 
 ## L. Eventos de webhook tratados (contratos com sistemas externos)

@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 139,
+ "total": 140,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 117
+  "unit": 118
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 93
+   "arquivos": 94
   },
   {
    "padrao": "e2e/",
@@ -469,7 +469,7 @@
   {
    "arquivo": "src/components/lux/__tests__/WorkflowsView.test.tsx",
    "tipo": "unit",
-   "linhas": 97,
+   "linhas": 105,
    "testa": [
     "src/components/lux/WorkflowsView.tsx",
     "src/components/ui/tooltip.tsx"
@@ -644,7 +644,7 @@
   {
    "arquivo": "src/hooks/__tests__/orgCacheKeys.test.ts",
    "tipo": "unit",
-   "linhas": 159,
+   "linhas": 181,
    "testa": [
     "src/hooks/useApiKeys.ts",
     "src/hooks/useApiLatency.ts",
@@ -658,13 +658,14 @@
     "src/hooks/useICPConfig.ts",
     "src/hooks/useNotificationCount.ts",
     "src/hooks/useOracleV2.ts",
+    "src/hooks/useScheduledReports.ts",
     "src/hooks/useScrapeQueue.ts",
     "src/hooks/useVirtualCompanies.ts",
     "src/hooks/useWebScrape.ts",
     "src/hooks/useWebhooks.ts",
     "src/hooks/useWeeklyPerformance.ts"
    ],
-   "casos": 1
+   "casos": 3
   },
   {
    "arquivo": "src/hooks/__tests__/orgGateQueries.test.ts",
@@ -805,6 +806,15 @@
     "src/integrations/supabase/withOrg.ts"
    ],
    "casos": 13
+  },
+  {
+   "arquivo": "src/integrations/supabase/__tests__/withOrg.readGuard.test.ts",
+   "tipo": "unit",
+   "linhas": 92,
+   "testa": [
+    "src/integrations/supabase/withOrg.ts"
+   ],
+   "casos": 6
   },
   {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
@@ -1029,7 +1039,7 @@
   {
    "arquivo": "src/tests/multi-tenant.test.ts",
    "tipo": "unit",
-   "linhas": 40,
+   "linhas": 39,
    "testa": [
     "src/integrations/supabase/withOrg.ts"
    ],
@@ -1388,6 +1398,7 @@
   "src/hooks/useRealtimeCompanies.ts": 1,
   "src/hooks/useRealtimeScrapeJobs.ts": 1,
   "src/hooks/useRecentViews.ts": 1,
+  "src/hooks/useScheduledReports.ts": 1,
   "src/hooks/useScrapeQueue.ts": 1,
   "src/hooks/useSidebarState.ts": 1,
   "src/hooks/useVirtualCompanies.ts": 4,
@@ -1396,7 +1407,7 @@
   "src/hooks/useWeeklyPerformance.ts": 1,
   "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 1,
   "src/integrations/supabase/client.ts": 1,
-  "src/integrations/supabase/withOrg.ts": 11,
+  "src/integrations/supabase/withOrg.ts": 12,
   "src/lib/api/workflows.ts": 1,
   "src/lib/csv.ts": 1,
   "src/lib/demoViews.ts": 1,
@@ -1524,7 +1535,6 @@
    "src/hooks/useRolePermissions.ts",
    "src/hooks/useSalesGoals.ts",
    "src/hooks/useSatisfaction.ts",
-   "src/hooks/useScheduledReports.ts",
    "src/hooks/useSkin.ts",
    "src/hooks/useStatusPage.ts",
    "src/hooks/useSwipeGesture.ts",

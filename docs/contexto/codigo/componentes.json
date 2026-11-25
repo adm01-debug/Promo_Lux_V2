@@ -705,9 +705,11 @@
     "CommandPalette"
    ],
    "export_default": null,
-   "linhas": 213,
+   "linhas": 215,
    "dominio": "components/lux",
-   "hooks_locais": [],
+   "hooks_locais": [
+    "useActiveOrganization"
+   ],
    "tabelas": [
     "companies",
     "stakeholders",
@@ -775,9 +777,10 @@
     "CompaniesView"
    ],
    "export_default": null,
-   "linhas": 397,
+   "linhas": 400,
    "dominio": "components/lux",
    "hooks_locais": [
+    "useActiveOrganization",
     "useCan",
     "useDemo",
     "useToast"
@@ -2040,9 +2043,10 @@
     "JobDetailsSheet"
    ],
    "export_default": null,
-   "linhas": 682,
+   "linhas": 684,
    "dominio": "components/lux",
    "hooks_locais": [
+    "useActiveOrganization",
     "useRealtimeJobDetails",
     "useToast"
    ],
@@ -3239,9 +3243,10 @@
     "StakeholderFinderView"
    ],
    "export_default": null,
-   "linhas": 274,
+   "linhas": 277,
    "dominio": "components/lux",
    "hooks_locais": [
+    "useActiveOrganization",
     "useDemo",
     "useLeadScores"
    ],
@@ -3393,9 +3398,10 @@
     "WorkflowsView"
    ],
    "export_default": null,
-   "linhas": 293,
+   "linhas": 296,
    "dominio": "components/lux",
    "hooks_locais": [
+    "useActiveOrganization",
     "useCan",
     "useDemo"
    ],
@@ -4441,9 +4447,10 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 748,
+   "linhas": 751,
    "dominio": "pages",
    "hooks_locais": [
+    "useActiveOrganization",
     "useAuth",
     "useRealtimeScrapeJobs",
     "useToast"

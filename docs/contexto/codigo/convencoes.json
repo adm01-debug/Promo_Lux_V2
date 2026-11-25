@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (93)",
+   "co-localizado (__tests__) (94)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)",
    "fix: escopo de organizacao nas consultas e no cache do front (#224)",
    "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)",
    "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)",
-   "fix: separa o cache do modo demonstracao do cache real (#221)",
-   "fix: remove rotulo ambiguo do e2e de login (#219)"
+   "fix: separa o cache do modo demonstracao do cache real (#221)"
   ]
  },
  "pr_template": null,

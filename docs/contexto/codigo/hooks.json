@@ -107,12 +107,17 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 37,
+   "usado_por": 44,
    "usado_por_arquivos": [
+    "src/components/lux/CommandPalette.tsx",
+    "src/components/lux/CompaniesView.tsx",
     "src/components/lux/CompanyDetailModal.tsx",
+    "src/components/lux/StakeholderFinderView.tsx",
+    "src/components/lux/WorkflowsView.tsx",
     "src/components/lux/analytics/GoalsTab.tsx",
     "src/components/lux/analytics/useAnalyticsData.ts",
     "src/components/lux/monitoring/DLQReplayPanel.tsx",
+    "src/components/lux/monitoring/JobDetailsSheet.tsx",
     "src/components/lux/settings/HubSpotPanel.tsx",
     "src/components/lux/settings/ScimPanel.tsx",
     "src/contexts/ActiveOrgContext.tsx",
@@ -133,12 +138,7 @@
     "src/hooks/useNextBestActions.ts",
     "src/hooks/useOracleV2.ts",
     "src/hooks/useOrgProxies.ts",
-    "src/hooks/useOrgRateLimit.ts",
-    "src/hooks/useOrganizations.ts",
-    "src/hooks/usePiiRules.ts",
-    "src/hooks/usePlacesApiUsage.ts",
-    "src/hooks/useRealtimeCompanies.ts",
-    "src/hooks/useRealtimeJobDetails.ts"
+    "src/hooks/useOrgRateLimit.ts"
    ],
    "coberto_por_testes": 0
   },
@@ -2255,7 +2255,7 @@
    "hooks_exportados": [
     "useScheduledReports"
    ],
-   "linhas": 128,
+   "linhas": 130,
    "dominio": "hooks",
    "tabelas": [
     "scheduled_report_runs",
@@ -2264,6 +2264,7 @@
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useAuth",
     "useMutation",
     "useQuery",
@@ -2274,7 +2275,7 @@
    "usado_por_arquivos": [
     "src/components/lux/analytics/ScheduledReportsTab.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useScrapeQueue.ts",
