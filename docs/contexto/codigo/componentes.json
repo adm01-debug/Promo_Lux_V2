@@ -795,15 +795,19 @@
     "CompanyDetailModal"
    ],
    "export_default": null,
-   "linhas": 453,
+   "linhas": 550,
    "dominio": "components/lux",
    "hooks_locais": [
+    "useActiveOrganization",
+    "useCnpjEnrich",
     "useCompanyDetails"
    ],
    "tabelas": [
     "companies"
    ],
-   "edges": [],
+   "edges": [
+    "hubspot-sync"
+   ],
    "usado_por": 1,
    "orfao": false
   },

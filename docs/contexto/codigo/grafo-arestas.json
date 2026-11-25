@@ -255,9 +255,12 @@
    "src/components/ui/dialog.tsx",
    "src/components/ui/separator.tsx",
    "src/components/ui/tabs.tsx",
+   "src/contexts/active-org-context.ts",
    "src/hooks/use-toast.ts",
+   "src/hooks/useCnpjEnrich.ts",
    "src/hooks/useCompanyDetails.ts",
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/lib/sanitize.ts"
   ],
   "src/components/lux/CompanyFilters.tsx": [
    "src/components/lux/company-filters-utils.ts",

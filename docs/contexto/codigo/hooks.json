@@ -107,8 +107,9 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 24,
+   "usado_por": 25,
    "usado_por_arquivos": [
+    "src/components/lux/CompanyDetailModal.tsx",
     "src/components/lux/analytics/GoalsTab.tsx",
     "src/components/lux/analytics/useAnalyticsData.ts",
     "src/components/lux/monitoring/DLQReplayPanel.tsx",
@@ -703,9 +704,10 @@
     "useCallback"
    ],
    "canais_realtime": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "usado_por_arquivos": [
-    "src/components/lux/AddCompanyDialog.tsx"
+    "src/components/lux/AddCompanyDialog.tsx",
+    "src/components/lux/CompanyDetailModal.tsx"
    ],
    "coberto_por_testes": 0
   },

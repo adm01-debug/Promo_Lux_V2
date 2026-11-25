@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (683)",
+   "TypeScript (684)",
    "SQL (274)",
    "Markdown (87)",
    "JSON (38)",
@@ -870,6 +870,10 @@
     "arquivos": 1
    },
    {
+    "host": "alfa.com.br",
+    "arquivos": 1
+   },
+   {
     "host": "api-docs.lux-ai.com.br",
     "arquivos": 1
    },
@@ -1249,6 +1253,10 @@
     "ocorrencias": 3
    },
    {
+    "papel": "CEO",
+    "ocorrencias": 2
+   },
+   {
     "papel": "CTO",
     "ocorrencias": 2
    },
@@ -1263,10 +1271,6 @@
    {
     "papel": "region",
     "ocorrencias": 2
-   },
-   {
-    "papel": "CEO",
-    "ocorrencias": 1
    },
    {
     "papel": "CFO",

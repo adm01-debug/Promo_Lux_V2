@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b0e85af663` · branch `main` · 2026-11-25 19:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `06193a9779` · branch `main` · 2026-11-25 19:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2052,6 +2052,14 @@ _nenhum item encontrado_
 | Nada para exportar | `src/components/lux/CompaniesView.tsx` |
 | Não é possível ${action} um registro de outra organização. | `src/components/lux/CompaniesView.tsx` |
 | Organização não carregada | `src/components/lux/CompaniesView.tsx` |
+| CNPJ não cadastrado | `src/components/lux/CompanyDetailModal.tsx` |
+| Enriquecimento indisponível | `src/components/lux/CompanyDetailModal.tsx` |
+| Erro ao enriquecer | `src/components/lux/CompanyDetailModal.tsx` |
+| Erro ao enviar ao CRM | `src/components/lux/CompanyDetailModal.tsx` |
+| O CRM recusou o envio. Confira a conexão do HubSpot nas integrações. | `src/components/lux/CompanyDetailModal.tsx` |
+| Organização não selecionada | `src/components/lux/CompanyDetailModal.tsx` |
+| Sem e-mail | `src/components/lux/CompanyDetailModal.tsx` |
+| Site indisponível | `src/components/lux/CompanyDetailModal.tsx` |
 |          >           <WifiOff className= | `src/components/lux/ConnectionStatus.tsx` |
 |              className= | `src/components/lux/EditCompanyDialog.tsx` |
 | Corrija os campos inválidos | `src/components/lux/EditCompanyDialog.tsx` |
@@ -2288,15 +2296,7 @@ _nenhum item encontrado_
 | Domínio interno não permitido | `supabase/functions/deliverability-check/index.ts` |
 | Gmail list: ${JSON.stringify(list)} | `supabase/functions/email-poll-replies/index.ts` |
 | No refresh token; reconnect required | `supabase/functions/email-poll-replies/index.ts` |
-| OAuth credentials not configured for ${acc.provider} | `supabase/functions/email-poll-replies/index.ts` |
-| Outlook list: ${JSON.stringify(data)} | `supabase/functions/email-poll-replies/index.ts` |
-| Refresh failed: ${summary} | `supabase/functions/email-poll-replies/index.ts` |
-| Circuit breaker is open | `supabase/functions/gmaps-proxy/index.ts` |
-| Failed to download results from external API | `supabase/functions/gmaps-proxy/index.ts` |
-| Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
-| Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
-| HubSpot create failed: ${err} | `supabase/functions/hubspot-sync/index.ts` |
-| … +36 linhas — lista completa em `context.json` | |
+| … +44 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2319,7 +2319,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1218 testes em 117 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1228 testes em 118 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2350,11 +2350,11 @@ _nenhum item encontrado_
 | `src/hooks/__tests__/useRealtimeScrapeJobs.test.ts` | 13 | useRealtimeScrapeJobs · uses private channel name scoped to org id · applies organization_id filter for UPDATE events only · does not subscribe when user is null … |
 | `supabase/functions/_shared/__tests__/leadcontact-client.test.ts` | 13 | assertLeadContactOk · deixa passar resposta sem code · deixa passar code 0 · deixa passar code 200 … |
 | `e2e/companies-crud.spec.ts` | 12 | Companies — List & Filters (Demo) · loads company list with header controls · real-time search filters list · filters panel exposes sector and IPC score facets … |
+| `src/components/lux/__tests__/CompanyTableRow.test.tsx` | 12 | HighlightText · highlights matching text · returns plain text when no match · returns plain text for short queries … |
 | `src/components/lux/__tests__/StatsGrid.test.tsx` | 12 | StatsGrid — P1 Visual Differentiation · renders all 5 KPI cards · shows loading skeletons when data is loading · displays unique color themes per card via CARD_STYLES … |
 | `src/lib/__tests__/exportCSV.test.ts` | 12 | sanitizeCell · prefixes formula injection with a quote · does not corrupt legitimate negative numbers · still blocks a non-numeric string that merely starts with - … |
 | `e2e/auth.spec.ts` | 11 | Auth — Login Page · renders login card with brand and core elements · renders both Entrar and Criar Conta tabs · toggles password visibility … |
 | `e2e/rls-guarantees.spec.ts` | 11 | RLS — leitura anônima bloqueada em tabelas multi-tenant · anon não lê linhas de  · RLS — leitura anônima bloqueada em tabelas isentas sensíveis · anon não lê linhas de  … |
-| `src/components/lux/__tests__/CompanyTableRow.test.tsx` | 11 | HighlightText · highlights matching text · returns plain text when no match · returns plain text for short queries … |
 | `src/components/lux/__tests__/SidebarFooter.test.tsx` | 11 | Sidebar — P1 Dynamic Footer · renders all nav items when expanded · renders system status section when expanded · hides system status when collapsed … |
 | `src/components/lux/__tests__/StakeholderCard.test.tsx` | 11 | StakeholderCard utilities · getInitials returns first+last initials · getSeniority returns correct config · getScoreGradient returns gradient classes … |
 | `src/hooks/__tests__/useRealtimeCompanies.test.ts` | 11 | useRealtimeCompanies · uses private channel name scoped to org id · applies organization_id filter in subscription config · does not subscribe when user is null … |
@@ -2362,6 +2362,7 @@ _nenhum item encontrado_
 | `src/components/lux/lusha/StatusBadge.test.tsx` | 10 | StatusBadge — contrato visual (R34) · renderiza status  · cobre exatamente as 13 chaves conhecidas do map · agrupa todos os estados error* sob label  … |
 | `src/hooks/__tests__/oracleV2Helpers.test.ts` | 10 | computeBitrixReadiness · marca pronto quando company_id e user_id numérico estão preenchidos · bloqueia quando company_id vazio · bloqueia quando user_id vazio … |
 | `supabase/functions/_shared/__tests__/scim-core.test.ts` | 10 | normalizeScimPath strips gateway prefix · normalizeScimPath strips bare /scim mount · normalizeScimPath keeps /v2 paths and normalizes leading slash · parseUserNameFilter extracts quoted value … |
+| `src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx` | 9 | CompanyDetailModal — acoes do rodape · nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias) · Enviar Email abre o cliente de e-mail do contato principal · Visitar Site abre o site da empresa … |
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
 | `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
@@ -2451,6 +2452,7 @@ _nenhum item encontrado_
 |---|---|
 | `notify` | `src/components/automation/WorkflowEditor.tsx` |
 | `invoke(` | `src/components/lux/CampaignsView.tsx` |
+| `sendEmail` | `src/components/lux/CompanyDetailModal.tsx` |
 | `invoke(` | `src/components/lux/IntentSignalsView.tsx` |
 | `notifyLongSearch` | `src/components/lux/LushaIntelligenceView.tsx` |
 | `notifyOnCancel` | `src/components/lux/LushaIntelligenceView.tsx` |

@@ -1460,7 +1460,8 @@
     "get_dashboard_stats"
    ],
    "edges": [
-    "cnpj-enrich"
+    "cnpj-enrich",
+    "hubspot-sync"
    ],
    "canais_realtime": [
     "private:${user.id}:${activeOrgId}:dashboard"

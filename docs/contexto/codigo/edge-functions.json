@@ -845,6 +845,7 @@
     "cron-auth.ts"
    ],
    "chamada_pelo_front": [
+    "src/components/lux/CompanyDetailModal.tsx",
     "src/components/lux/settings/HubSpotPanel.tsx"
    ],
    "chamada_por_edges": [],

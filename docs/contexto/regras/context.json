@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b0e85af6631aaae61fdbd3bf0c14b69cfad1b202",
+  "sha": "06193a9779bf4e16a7362cbd8b545dfa551f866e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 19:24 UTC",
-  "files_total": 1178,
-  "code_files": 989,
-  "code_lines": 147183
+  "generated_at": "2026-11-25 19:53 UTC",
+  "files_total": 1179,
+  "code_files": 990,
+  "code_lines": 147575
  },
  "version": "1.3.2",
- "facts_hash": "675f5945db9a1a1a",
+ "facts_hash": "d4e1f6da3112d95c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -245,7 +245,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 378,
-   ".tsx": 305,
+   ".tsx": 306,
    ".sql": 274,
    ".mjs": 22,
    ".py": 5,
@@ -32461,7 +32461,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 311,
+  "components_count": 312,
   "hooks": [
    {
     "name": "useContacts",
@@ -33467,8 +33467,8 @@
   },
   {
    "module": "src/components",
-   "files": 311,
-   "lines": 51472,
+   "files": 312,
+   "lines": 51864,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33664,6 +33664,7 @@
     "src/components/lux/__tests__/AutomationsList.test.tsx",
     "src/components/lux/__tests__/CampaignsView.test.tsx",
     "src/components/lux/__tests__/CompaniesView.test.tsx",
+    "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
     "src/components/lux/__tests__/CompanyFilters.test.tsx",
     "src/components/lux/__tests__/CompanyTable.integration.test.tsx",
     "src/components/lux/__tests__/CompanyTable.test.tsx",
@@ -33672,8 +33673,7 @@
     "src/components/lux/__tests__/DataError.test.tsx",
     "src/components/lux/__tests__/EmptyState.test.tsx",
     "src/components/lux/__tests__/ErrorBoundary.test.tsx",
-    "src/components/lux/__tests__/ICPConfigView.test.tsx",
-    "src/components/lux/__tests__/MapFilters.test.tsx"
+    "src/components/lux/__tests__/ICPConfigView.test.tsx"
    ]
   },
   {
@@ -34786,6 +34786,7 @@
     "update": [
      "src/components/lux/CompaniesMapView.tsx",
      "src/components/lux/CompaniesView.tsx",
+     "src/components/lux/CompanyDetailModal.tsx",
      "src/components/lux/EditCompanyDialog.tsx",
      "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
      "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
@@ -39109,6 +39110,38 @@
    {
     "file": "src/components/lux/CompaniesView.tsx",
     "msg": "Organização não carregada"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "CNPJ não cadastrado"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "Enriquecimento indisponível"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "Erro ao enriquecer"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "Erro ao enviar ao CRM"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "O CRM recusou o envio. Confira a conexão do HubSpot nas integrações."
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "Organização não selecionada"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "Sem e-mail"
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "msg": "Site indisponível"
    },
    {
     "file": "src/components/lux/ConnectionStatus.tsx",
@@ -53664,6 +53697,42 @@
     "name": "has desktop hover actions structure (hidden sm:flex)"
    },
    {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "CompanyDetailModal — acoes do rodape"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias)"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Enviar Email abre o cliente de e-mail do contato principal"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Visitar Site abre o site da empresa"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Adicionar ao CRM sincroniza a empresa pelo hubspot-sync"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Adicionar ao CRM mostra o motivo real quando o HubSpot nao esta configurado"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Enriquecer sem CNPJ avisa e nao chama o provedor"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Enriquecer preenche apenas os campos vazios com os dados do CNPJ"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "Enriquecer nao sobrescreve campos ja preenchidos"
+   },
+   {
     "file": "src/components/lux/__tests__/CompanyFilters.test.tsx",
     "name": "CompanyFilters — P0 Mobile Collapsible"
    },
@@ -53826,6 +53895,10 @@
    {
     "file": "src/components/lux/__tests__/CompanyTableRow.test.tsx",
     "name": "calls onToggleStar when star is clicked"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyTableRow.test.tsx",
+    "name": "abre o detalhe da empresa pelo icone da versao de computador"
    },
    {
     "file": "src/components/lux/__tests__/DashboardView.test.tsx",
@@ -57977,6 +58050,10 @@
    {
     "file": "src/components/lux/CampaignsView.tsx",
     "call": "invoke("
+   },
+   {
+    "file": "src/components/lux/CompanyDetailModal.tsx",
+    "call": "sendEmail"
    },
    {
     "file": "src/components/lux/IntentSignalsView.tsx",
@@ -81059,7 +81136,7 @@
   },
   "src/components/lux/CompanyDetailModal.tsx": {
    "path": "src/components/lux/CompanyDetailModal.tsx",
-   "lines": 453,
+   "lines": 550,
    "exports": [
     "const CompanyDetailModal"
    ],
@@ -81067,6 +81144,10 @@
     {
      "table": "companies",
      "op": "select"
+    },
+    {
+     "table": "companies",
+     "op": "update"
     }
    ],
    "table_cols": {
@@ -81077,12 +81158,25 @@
      "review_count"
     ]
    },
+   "errors": [
+    "CNPJ não cadastrado",
+    "Enriquecimento indisponível",
+    "Erro ao enriquecer",
+    "Erro ao enviar ao CRM",
+    "O CRM recusou o envio. Confira a conexão do HubSpot nas integrações.",
+    "Organização não selecionada",
+    "Sem e-mail",
+    "Site indisponível"
+   ],
    "temporal": [
     "setTimeout(() => setCopied(false), 1500);"
    ],
    "percents": [
     "transition={{ delay: i * 0.04 }}",
     "transition={{ delay: i * 0.05 }}"
+   ],
+   "side_effects": [
+    "sendEmail"
    ]
   },
   "src/components/lux/CompanyFilters.tsx": {
@@ -82492,6 +82586,28 @@
     "has desktop hover actions structure (hidden sm:flex)"
    ]
   },
+  "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx": {
+   "path": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+   "lines": 286,
+   "is_test": true,
+   "params": [
+    {
+     "name": "CNPJ_VALIDO",
+     "value": "\"11222333000181\""
+    }
+   ],
+   "tests": [
+    "CompanyDetailModal — acoes do rodape",
+    "nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias)",
+    "Enviar Email abre o cliente de e-mail do contato principal",
+    "Visitar Site abre o site da empresa",
+    "Adicionar ao CRM sincroniza a empresa pelo hubspot-sync",
+    "Adicionar ao CRM mostra o motivo real quando o HubSpot nao esta configurado",
+    "Enriquecer sem CNPJ avisa e nao chama o provedor",
+    "Enriquecer preenche apenas os campos vazios com os dados do CNPJ",
+    "Enriquecer nao sobrescreve campos ja preenchidos"
+   ]
+  },
   "src/components/lux/__tests__/CompanyFilters.test.tsx": {
    "path": "src/components/lux/__tests__/CompanyFilters.test.tsx",
    "lines": 158,
@@ -82564,7 +82680,7 @@
   },
   "src/components/lux/__tests__/CompanyTableRow.test.tsx": {
    "path": "src/components/lux/__tests__/CompanyTableRow.test.tsx",
-   "lines": 99,
+   "lines": 108,
    "is_test": true,
    "tests": [
     "HighlightText",
@@ -82577,7 +82693,8 @@
     "renders enriched badge",
     "renders pending badge when not enriched",
     "renders correctly for click interaction",
-    "calls onToggleStar when star is clicked"
+    "calls onToggleStar when star is clicked",
+    "abre o detalhe da empresa pelo icone da versao de computador"
    ]
   },
   "src/components/lux/__tests__/DashboardView.test.tsx": {
@@ -102082,10 +102199,23 @@
   }
  },
  "git": {
-  "sha": "b0e85af6631aaae61fdbd3bf0c14b69cfad1b202",
+  "sha": "06193a9779bf4e16a7362cbd8b545dfa551f866e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "06193a9",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/CompanyDetailModal.tsx",
+     "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+     "src/components/lux/__tests__/CompanyTableRow.test.tsx",
+     "src/components/lux/companies/CompanyTableRow.tsx"
+    ]
+   },
    {
     "sha": "b0e85af",
     "date": "2026-11-25",
@@ -102375,17 +102505,6 @@
     "files": [
      "supabase/functions/latency-alerts/index.ts"
     ]
-   },
-   {
-    "sha": "4bb36e5",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)",
-    "files": [
-     ".github/workflows/db-migrations.yml",
-     "scripts/check-schema-replay-drift.sh",
-     "scripts/schema-drift-baseline.txt"
-    ]
    }
   ],
   "hot_files": [
@@ -102410,8 +102529,24 @@
     2
    ],
    [
-    ".github/workflows/db-migrations.yml",
-    2
+    "docs/qa/05-PROGRESSO.md",
+    1
+   ],
+   [
+    "src/components/lux/CompanyDetailModal.tsx",
+    1
+   ],
+   [
+    "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    1
+   ],
+   [
+    "src/components/lux/__tests__/CompanyTableRow.test.tsx",
+    1
+   ],
+   [
+    "src/components/lux/companies/CompanyTableRow.tsx",
+    1
    ],
    [
     "docs/pendencias/_backlog-verificado.md",
@@ -102451,22 +102586,6 @@
    ],
    [
     ".github/workflows/deploy-watchdog.yml",
-    1
-   ],
-   [
-    "docs/GAPS-ENTERPRISE.md",
-    1
-   ],
-   [
-    "docs/LGPD.md",
-    1
-   ],
-   [
-    "docs/adr/008-soft-delete-policy.md",
-    1
-   ],
-   [
-    "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
     1
    ]
   ]
