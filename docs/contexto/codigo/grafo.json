@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 582,
- "arestas": 1866,
+ "nos": 583,
+ "arestas": 1870,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -141,15 +141,15 @@
    "importado_por": 9
   },
   {
+   "arquivo": "src/hooks/useDeals.ts",
+   "importado_por": 9
+  },
+  {
    "arquivo": "src/components/ui/checkbox.tsx",
    "importado_por": 8
   },
   {
    "arquivo": "src/components/ui/progress.tsx",
-   "importado_por": 8
-  },
-  {
-   "arquivo": "src/hooks/useDeals.ts",
    "importado_por": 8
   },
   {

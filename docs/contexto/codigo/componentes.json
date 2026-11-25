@@ -975,7 +975,7 @@
     "DealColumn"
    ],
    "export_default": null,
-   "linhas": 62,
+   "linhas": 67,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -1028,7 +1028,7 @@
     "LostReasonsDialog"
    ],
    "export_default": null,
-   "linhas": 135,
+   "linhas": 167,
    "dominio": "components/lux",
    "hooks_locais": [
     "useLostReasonSeed",
@@ -1063,7 +1063,7 @@
     "DealsView"
    ],
    "export_default": null,
-   "linhas": 163,
+   "linhas": 174,
    "dominio": "components/lux",
    "hooks_locais": [
     "useDealPredictions",

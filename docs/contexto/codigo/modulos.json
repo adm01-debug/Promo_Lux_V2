@@ -145,8 +145,8 @@
   {
    "modulo": "components/lux",
    "arquivos": 220,
-   "testes": 36,
-   "linhas": 43501,
+   "testes": 38,
+   "linhas": 43549,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -1687,9 +1687,9 @@
   },
   {
    "modulo": "lib",
-   "arquivos": 17,
+   "arquivos": 18,
    "testes": 1,
-   "linhas": 2334,
+   "linhas": 2392,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -1989,7 +1989,7 @@
   {
    "modulo": "lib/__tests__",
    "arquivos": 0,
-   "testes": 8,
+   "testes": 9,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

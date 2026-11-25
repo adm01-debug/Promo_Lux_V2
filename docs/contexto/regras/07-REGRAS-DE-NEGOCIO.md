@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `23d4926672` · branch `main` · 2026-11-25 23:04 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `39e3cfb0db` · branch `main` · 2026-11-25 23:19 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1537,6 +1537,14 @@ _nenhum item encontrado_
   ```
   
   ```
+- **formatMoney(value: number, currency: string | null | undefined)** — `src/lib/money.ts`
+  ```
+  const code = normalizeCurrency(currency); const amount = Number.isFinite(value) ? value : 0; try { return amount.toLocaleString("pt-BR", { style: "currency", currency: code, maximumFractionDigits: 0, }); } catch { return `${code} ${amount.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}`; }
+  ```
+- **formatCurrencyTotals(totals: readonly CurrencyTotal[])** — `src/lib/money.ts`
+  ```
+  return totals.map((t) => formatMoney(t.total, t.currency)).join(" · ");
+  ```
 - **totalsForSource(rows: readonly SourceQualityRow[], source: ContactSource,)** — `src/lib/sourceQualityReport.ts`
   ```
   const scoped = rows.filter((row) => row.source === source); const total = scoped.reduce((sum, row) => sum + (row.total ?? 0), 0); const withEmail = scoped.reduce((sum, row) => sum + (row.with_email ?? 0), 0); const brCount = scoped.reduce((sum, row) => sum + (row.br_count ?? 0), 0); const suppressed = scoped.reduce((sum, row) => sum + (row.suppressed ?? 0), 0); return { source, total, with_email: withEmail, br_count: brCount, suppressed, email_rate: rate(withEmail, total), br_rate: rate(brCount, …
@@ -1751,6 +1759,7 @@ _nenhum item encontrado_
 | `MAX_UNREAD` | `99` | `src/hooks/useNotificationCount.ts` |
 | `GOOGLE_MONTHLY_CREDIT_USD` | `200` | `src/hooks/usePlacesApiUsage.ts` |
 | `MAX_RECENT` | `5` | `src/hooks/useRecentViews.ts` |
+| `FALLBACK_CURRENCY` | `"BRL"` | `src/lib/money.ts` |
 | `THROTTLE_MS` | `1500` | `src/lib/orgErrorHandler.ts` |
 | `CORRELATION_WINDOW_MS` | `5` | `src/lib/orgErrorHandler.ts` |
 | `AUDIT_THROTTLE_MS` | `1000` | `src/lib/orgErrorHandler.ts` |
@@ -2322,7 +2331,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1278 testes em 129 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1293 testes em 132 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2396,6 +2405,7 @@ _nenhum item encontrado_
 | `src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts` | 7 | detectSlaRisk · sinaliza fila cujo p95 excede o SLA configurado · não sinaliza quando o p95 está dentro do SLA · respeita a tolerância percentual … |
 | `src/hooks/__tests__/useRecentViews.test.ts` | 7 | useRecentViews · starts with empty recent views · tracks a viewed page · deduplicates on revisit and moves to front … |
 | `src/integrations/supabase/__tests__/withOrg.readGuard.test.ts` | 7 | withOrg - leitura sem organizacao ativa · lanca MissingOrgContextError no select em tabela org-escopada · nao chega a montar a consulta no cliente · avisa o handler global antes de lancar … |
+| `src/lib/__tests__/money.test.ts` | 7 | money — totais por moeda (etapa 120) · agrupa os valores por moeda em vez de somar tudo num número só · trata moeda ausente ou em branco como BRL e valor inválido como zero · formata cada total com o símbolo da própria moeda … |
 | `src/lib/__tests__/orgErrorHandler.audit.test.ts` | 7 | recordOrgViolation — resiliência fire-and-forget · não quebra quando RLS rejeita o insert (retorno {error}) · não quebra quando o insert rejeita (rede/offline) · não quebra quando supabase.from(...).insert lança síncrono … |
 | `src/lib/__tests__/utils.test.ts` | 7 | cn (class merge utility) · merges class names · handles conditional classes · deduplicates conflicting tailwind classes … |
 | `src/tests/load-stress.test.ts` | 7 | load-stress: motor de resiliência · processa 500 cenários em menos de 5s (throughput >= 100 cenários/s) · mantém sucesso >= 70% no agregado com política default · cenários client_4xx com failureRate 0.95 vão majoritariamente para DLQ (comportamento correto) … |
@@ -2425,7 +2435,9 @@ _nenhum item encontrado_
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
 | `e2e/invite-accept.spec.ts` | 4 | Convite — /invite/:token · redireciona visitante não autenticado para /login preservando o token · página de login continua funcional após vir de um convite · não aceita o convite automaticamente (requer ação do usuário) |
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |
+| `src/components/lux/__tests__/DealsView.currency.test.tsx` | 4 | DealsView — total por moeda (etapa 120) · mostra um total rotulado por moeda, nunca a soma das duas · mostra o total ponderado tambem por moeda · mantem um total unico quando todos os negocios estao na mesma moeda |
 | `src/components/lux/__tests__/ICPConfigView.test.tsx` | 4 | useICPConfig (mocked) · returns activeConfig with criteria · returns isLoading false · returns save function |
+| `src/components/lux/__tests__/LostReasonsDialog.currency.test.tsx` | 4 | LostReasonsDialog — valor perdido por moeda (etapa 120) · nao soma moedas diferentes no valor perdido · mostra o valor do motivo por moeda ao lado da contagem · sem negocios perdidos, nao afirma valor nenhum |
 | `src/components/lux/__tests__/WorkflowsView.test.tsx` | 4 | WorkflowsView · renders heading · renders create button · shows workflow cards when data loads |
 | `src/hooks/__tests__/orgGateQueries.test.ts` | 4 | consultas condicionadas a organizacao ativa · nao consulta $nome sem organizacao ativa · consulta $nome quando a organizacao esta ativa · libera as telas com dado de exemplo mesmo sem organizacao ativa |
 | `src/hooks/__tests__/useConfirm.test.tsx` | 4 | useConfirm · resolves true when the user confirms · resolves false when the user cancels · throws when used outside the provider |

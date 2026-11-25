@@ -1,11 +1,11 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 49,
+ "total": 50,
  "por_camada": {
   "contexts": 3,
   "integrations": 4,
-  "lib": 39,
+  "lib": 40,
   "python": 3
  },
  "arquivos": [
@@ -1093,6 +1093,32 @@
     "lib/mcp"
    ],
    "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/money.ts",
+   "camada": "lib",
+   "exports": [
+    "CurrencyTotal",
+    "formatCurrencyTotals",
+    "formatMoney",
+    "groupByCurrency"
+   ],
+   "export_default": null,
+   "linhas": 58,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 3,
+   "usado_por_modulos": [
+    "components/lux"
+   ],
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {

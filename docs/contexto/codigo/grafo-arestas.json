@@ -325,6 +325,7 @@
    "src/hooks/useDeals.ts",
    "src/hooks/useLeadScores.ts",
    "src/hooks/useTaskReminders.ts",
+   "src/lib/money.ts",
    "src/lib/utils.ts"
   ],
   "src/components/lux/DemoNotice.tsx": [
@@ -898,6 +899,7 @@
    "src/components/lux/deals/DealCard.tsx",
    "src/components/ui/button.tsx",
    "src/hooks/useDeals.ts",
+   "src/lib/money.ts",
    "src/lib/utils.ts"
   ],
   "src/components/lux/deals/DealDetailDrawer.tsx": [
@@ -928,7 +930,9 @@
    "src/components/ui/dialog.tsx",
    "src/components/ui/input.tsx",
    "src/components/ui/select.tsx",
-   "src/hooks/useLostReasons.ts"
+   "src/hooks/useDeals.ts",
+   "src/hooks/useLostReasons.ts",
+   "src/lib/money.ts"
   ],
   "src/components/lux/deals/StagesManagerDialog.tsx": [
    "src/components/ui/button.tsx",

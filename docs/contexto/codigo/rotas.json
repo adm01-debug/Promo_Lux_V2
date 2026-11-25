@@ -428,7 +428,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 275
+   "arquivos_puxados": 276
   },
   {
    "protegida": true,
@@ -1876,7 +1876,7 @@
     "user",
     "viewer"
    ],
-   "arquivos_puxados": 235
+   "arquivos_puxados": 236
   },
   {
    "id": "deals",
@@ -1976,7 +1976,7 @@
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 36
+   "arquivos_puxados": 37
   },
   {
    "id": "gmaps",

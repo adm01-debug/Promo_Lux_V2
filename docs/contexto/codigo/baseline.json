@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "23d492667226ee09e9cda15d5a3d92632655fe61",
+  "commit": "39e3cfb0db256a1804687ca4b2e3c77229afd1a3",
   "branch": "main",
-  "data_commit": "2026-11-25T19:59:33-03:00",
+  "data_commit": "2026-11-25T20:15:44-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "39e3cfb",
+    "data": "2026-11-25",
+    "assunto": "fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)"
+   },
    {
     "sha": "23d4926",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "f60d5cf",
     "data": "2026-11-25",
     "assunto": "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)"
-   },
-   {
-    "sha": "a40184e",
-    "data": "2026-11-25",
-    "assunto": "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)"
    }
   ],
-  "arquivos_mudados_7d": 346,
+  "arquivos_mudados_7d": 350,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 112
+    "mudancas": 117
    },
    {
     "pasta": "src/integrations/supabase",
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 14
+    "mudancas": 15
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 14
+    "mudancas": 15
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 176
+    "commits": 177
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1173,
-  "arquivos_codigo": 727,
-  "linhas_codigo": 126708,
+  "arquivos_total": 1177,
+  "arquivos_codigo": 731,
+  "linhas_codigo": 127045,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 145,
+  "testes": 148,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -559,8 +559,8 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 314,
-   "linhas": 52076
+   "arquivos": 316,
+   "linhas": 52295
   },
   "src/contexts": {
    "arquivos": 8,
@@ -575,8 +575,8 @@
    "linhas": 9307
   },
   "src/lib": {
-   "arquivos": 55,
-   "linhas": 6369
+   "arquivos": 57,
+   "linhas": 6487
   },
   "src/main.tsx": {
    "arquivos": 1,
