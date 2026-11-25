@@ -1,34 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+
+// Lista de campanhas devolvida pela consulta — mutável para os testes cobrirem
+// tanto a lista cheia quanto o estado vazio.
+const campanhasMock = vi.hoisted(() => ({ dados: [] as Record<string, unknown>[] }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     from: vi.fn(() => ({
       select: vi.fn(() => ({
-        order: vi.fn(() =>
-          Promise.resolve({
-            data: [
-              {
-                id: "c1",
-                name: "Campanha Teste",
-                status: "active",
-                prospects: 100,
-                sent: 80,
-                opened: 40,
-                replied: 10,
-                meetings: 3,
-                sequence: [],
-                start_date: null,
-                created_at: "2026-03-01",
-                updated_at: "2026-04-01",
-                user_id: "u1",
-              },
-            ],
-            error: null,
-          })
-        ),
+        order: vi.fn(() => Promise.resolve({ data: campanhasMock.dados, error: null })),
       })),
       insert: vi.fn(() => ({
         select: vi.fn(() => ({
@@ -72,6 +55,26 @@ function renderWithProviders(ui: React.ReactElement) {
   );
 }
 
+const CAMPANHA = {
+  id: "c1",
+  name: "Campanha Teste",
+  status: "active",
+  prospects: 100,
+  sent: 80,
+  opened: 40,
+  replied: 10,
+  meetings: 3,
+  sequence: [],
+  start_date: null,
+  created_at: "2026-03-01",
+  updated_at: "2026-04-01",
+  user_id: "u1",
+};
+
+beforeEach(() => {
+  campanhasMock.dados = [CAMPANHA];
+});
+
 describe("CampaignsView", () => {
   it("renders heading", async () => {
     renderWithProviders(<CampaignsView />);
@@ -91,6 +94,21 @@ describe("CampaignsView", () => {
     renderWithProviders(<CampaignsView />);
     await waitFor(() => {
       expect(screen.getByText("Campanha Teste")).toBeInTheDocument();
+    });
+  });
+
+  it("oferece criar a primeira campanha quando nao existe nenhuma", async () => {
+    campanhasMock.dados = [];
+    renderWithProviders(<CampaignsView />);
+
+    const cta = await screen.findByRole("button", { name: /Criar campanha/i });
+    expect(screen.getByText("Nenhuma campanha criada")).toBeInTheDocument();
+    expect(screen.queryByText("Criar Campanha")).toBeNull();
+
+    fireEvent.click(cta);
+
+    await waitFor(() => {
+      expect(screen.getByText("Criar Campanha")).toBeInTheDocument();
     });
   });
 });

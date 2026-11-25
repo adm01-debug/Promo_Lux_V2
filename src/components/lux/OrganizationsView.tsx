@@ -373,6 +373,8 @@ export const OrganizationsView = () => {
           icon={Building2}
           title="Nenhum workspace ainda"
           description="Crie seu primeiro workspace para colaborar com a equipe."
+          actionLabel="Novo workspace"
+          onAction={() => setNewOrgOpen(true)}
         />
       ) : (
         <>

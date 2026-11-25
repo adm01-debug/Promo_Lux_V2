@@ -346,6 +346,8 @@ export const CampaignsView = () => {
             icon={Mail}
             title="Nenhuma campanha criada"
             description="Crie sua primeira campanha de outreach para engajar prospects."
+            actionLabel={canCreate ? "Criar campanha" : undefined}
+            onAction={canCreate ? () => setCreateOpen(true) : undefined}
           />
         </div>
       ) : (
