@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "44c43b4bf603fed0d5da277c7d94f88b5eff537a",
+  "sha": "aa94815329dea340706bd36101771445e95d796e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 11:13 UTC",
-  "files_total": 1168,
+  "generated_at": "2026-11-25 11:30 UTC",
+  "files_total": 1169,
   "code_files": 983,
   "code_lines": 146605
  },
@@ -101838,10 +101838,19 @@
   }
  },
  "git": {
-  "sha": "44c43b4bf603fed0d5da277c7d94f88b5eff537a",
+  "sha": "aa94815329dea340706bd36101771445e95d796e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "aa94815",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore: normaliza fim de linha em LF para todo clone (#201)",
+    "files": [
+     ".gitattributes"
+    ]
+   },
    {
     "sha": "44c43b4",
     "date": "2026-11-25",
@@ -102153,26 +102162,6 @@
      "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
      "supabase/functions/mcp/index.ts"
     ]
-   },
-   {
-    "sha": "90d7ac8",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "feat(scim,hubspot): SCIM 2.0 provisioning e sync HubSpot one-way — AGUARDA APROVACAO DO DONO (#166)",
-    "files": [
-     "docs/GAPS-ENTERPRISE.md",
-     "src/components/lux/SettingsView.tsx",
-     "src/components/lux/settings/HubSpotPanel.tsx",
-     "src/components/lux/settings/ScimPanel.tsx",
-     "src/integrations/supabase/types.ts",
-     "supabase/config.toml",
-     "supabase/functions/_shared/__tests__/scim-core.test.ts",
-     "supabase/functions/_shared/scim-core.ts",
-     "supabase/functions/hubspot-sync/index.ts",
-     "supabase/functions/scim/index.ts",
-     "supabase/migrations/20261124040000_scim_provisioning.sql",
-     "vitest.config.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -102201,24 +102190,12 @@
     2
    ],
    [
-    "src/integrations/supabase/types.ts",
-    2
-   ],
-   [
     "inventario/estado/edges.json",
     2
    ],
    [
-    "supabase/migrations/20261124040000_scim_provisioning.sql",
-    2
-   ],
-   [
-    "supabase/config.toml",
-    2
-   ],
-   [
-    "src/components/lux/SettingsView.tsx",
-    2
+    ".gitattributes",
+    1
    ],
    [
     "scripts/lib/seguranca-processo.mjs",
@@ -102253,7 +102230,19 @@
     1
    ],
    [
+    "src/integrations/supabase/types.ts",
+    1
+   ],
+   [
     "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
     1
    ]
   ]

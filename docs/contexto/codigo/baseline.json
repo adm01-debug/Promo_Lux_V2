@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "44c43b4bf603fed0d5da277c7d94f88b5eff537a",
+  "commit": "aa94815329dea340706bd36101771445e95d796e",
   "branch": "main",
-  "data_commit": "2026-11-25T08:11:10-03:00",
+  "data_commit": "2026-11-25T08:26:03-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "aa94815",
+    "data": "2026-11-25",
+    "assunto": "chore: normaliza fim de linha em LF para todo clone (#201)"
+   },
    {
     "sha": "44c43b4",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "78ec030",
     "data": "2026-11-24",
     "assunto": "infra: guardas de drift de schema e de run superado no CI de migrations (#173)"
-   },
-   {
-    "sha": "7f05370",
-    "data": "2026-11-24",
-    "assunto": "feat(monitoramento): aba \"Recuperacao & DR\" consome system-recovery-status (#175)"
    }
   ],
-  "arquivos_mudados_7d": 274,
+  "arquivos_mudados_7d": 275,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 147
+    "commits": 148
    },
    {
     "autor": "dependabot[bot]",
