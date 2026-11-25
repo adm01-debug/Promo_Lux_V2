@@ -121,8 +121,8 @@ const AutomationMonitoring = () => {
       const activeOrgId = getActiveOrgId();
       if (!activeOrgId) return { data: [], count: 0 };
       
-      // 'estimated' usa pg_class.reltuples (O(1)) â€” evita scan completo em cada pÃ¡gina.
-      // Preciso o suficiente para paginaÃ§Ã£o; ANALYZE mantÃ©m a estimativa atualizada.
+      // 'estimated' usa pg_class.reltuples (O(1)) — evita scan completo em cada página.
+      // Preciso o suficiente para paginação; ANALYZE mantém a estimativa atualizada.
       let query = db
         .from("scrape_jobs")
         .select("*", { count: "estimated" })
@@ -173,7 +173,7 @@ const AutomationMonitoring = () => {
     },
     onSuccess: () => {
       refetchAlerts();
-      toast({ title: "ConfiguraÃ§Ãµes Salvas", description: "Suas preferÃªncias de alerta foram atualizadas." });
+      toast({ title: "Configurações Salvas", description: "Suas preferências de alerta foram atualizadas." });
     }
   });
 
@@ -187,14 +187,14 @@ const AutomationMonitoring = () => {
     refetchJobs();
     toast({
       title: "Sincronizando",
-      description: "Buscando atualizaÃ§Ãµes de status...",
+      description: "Buscando atualizações de status...",
     });
   };
 
   const handleExportAll = () => {
     if (!jobs?.data) return;
     
-    const headers = ["ID", "Nome", "Status", "Empresas", "Criado em", "DuraÃ§Ã£o"];
+    const headers = ["ID", "Nome", "Status", "Empresas", "Criado em", "Duração"];
     const rows = jobs.data.map((job: ScrapeJobRow) => [
       job.id,
       job.name,
@@ -213,7 +213,7 @@ const AutomationMonitoring = () => {
     link.setAttribute("download", `lux_monitoring_report_${format(new Date(), "yyyy-MM-dd")}.csv`);
     link.click();
     
-    toast({ title: "ExportaÃ§Ã£o Iniciada", description: "O relatÃ³rio CSV estÃ¡ sendo baixado." });
+    toast({ title: "Exportação Iniciada", description: "O relatório CSV está sendo baixado." });
   };
 
   const jobsData = jobs?.data || [];
@@ -238,10 +238,10 @@ const AutomationMonitoring = () => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-          Monitoramento de AutomaÃ§Ãµes
+          Monitoramento de Automações
         </h1>
         <p className="text-muted-foreground">
-          Acompanhe o status, logs e auditoria de todas as execuÃ§Ãµes de scraping e enriquecimento.
+          Acompanhe o status, logs e auditoria de todas as execuções de scraping e enriquecimento.
         </p>
       </div>
 
@@ -249,7 +249,7 @@ const AutomationMonitoring = () => {
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
-            placeholder="Buscar execuÃ§Ãµes..." 
+            placeholder="Buscar execuções..." 
             className="pl-9 bg-secondary/20 border-border/40 focus:bg-background transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -265,7 +265,7 @@ const AutomationMonitoring = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
             >
               <option value="all">Todos os Status</option>
-              <option value="completed">ConcluÃ­dos</option>
+              <option value="completed">Concluídos</option>
               <option value="failed">Falhas</option>
               <option value="running">Executando</option>
               <option value="pending">Pendentes</option>
@@ -279,10 +279,10 @@ const AutomationMonitoring = () => {
               value={periodFilter}
               onChange={(e) => setPeriodFilter(e.target.value)}
             >
-              <option value="1">Ãšltimas 24h</option>
-              <option value="7">Ãšltimos 7 dias</option>
-              <option value="30">Ãšltimos 30 dias</option>
-              <option value="all">Todo o PerÃ­odo</option>
+              <option value="1">Últimas 24h</option>
+              <option value="7">Últimos 7 dias</option>
+              <option value="30">Últimos 30 dias</option>
+              <option value="all">Todo o Período</option>
             </select>
           </Badge>
         </div>
@@ -299,19 +299,19 @@ const AutomationMonitoring = () => {
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <Settings2 className="h-5 w-5 text-primary" />
-                  ConfiguraÃ§Ãµes de Alerta
+                  Configurações de Alerta
                 </DialogTitle>
                 <DialogDescription>
-                  Escolha como deseja ser notificado sobre suas automaÃ§Ãµes.
+                  Escolha como deseja ser notificado sobre suas automações.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-6 py-4">
                 <div className="space-y-4">
-                  <h4 className="text-sm font-semibold border-b pb-2">FinalizaÃ§Ã£o com Sucesso</h4>
+                  <h4 className="text-sm font-semibold border-b pb-2">Finalização com Sucesso</h4>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Bell className="h-4 w-4 opacity-70" />
-                      <Label htmlFor="succ-push">NotificaÃ§Ã£o Push</Label>
+                      <Label htmlFor="succ-push">Notificação Push</Label>
                     </div>
                     <Switch 
                       id="succ-push" 
@@ -333,11 +333,11 @@ const AutomationMonitoring = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="text-sm font-semibold border-b pb-2 text-destructive">Falhas na ExecuÃ§Ã£o</h4>
+                  <h4 className="text-sm font-semibold border-b pb-2 text-destructive">Falhas na Execução</h4>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Bell className="h-4 w-4 opacity-70" />
-                      <Label htmlFor="fail-push">NotificaÃ§Ã£o Push</Label>
+                      <Label htmlFor="fail-push">Notificação Push</Label>
                     </div>
                     <Switch 
                       id="fail-push" 
@@ -381,11 +381,11 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="automation-status" className="gap-2">
             <Activity className="h-4 w-4" />
-            Status AutomaÃ§Ãµes
+            Status Automações
           </TabsTrigger>
           <TabsTrigger value="runs" className="gap-2">
             <History className="h-4 w-4" />
-            ExecuÃ§Ãµes
+            Execuções
           </TabsTrigger>
           <TabsTrigger value="audit" className="gap-2">
             <ShieldCheck className="h-4 w-4" />
@@ -393,7 +393,7 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="database" className="gap-2">
             <Database className="h-4 w-4" />
-            SaÃºde do Banco
+            Saúde do Banco
           </TabsTrigger>
           <TabsTrigger value="recovery" className="gap-2">
                       <Activity className="h-4 w-4" />
@@ -417,11 +417,11 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="latency" className="gap-2">
             <Gauge className="h-4 w-4" />
-            LatÃªncia
+            Latência
           </TabsTrigger>
           <TabsTrigger value="automation-logs" className="gap-2">
             <FileText className="h-4 w-4" />
-            Auditoria de ExecuÃ§Ã£o
+            Auditoria de Execução
           </TabsTrigger>
           <TabsTrigger value="vault-cookies" className="gap-2">
             <Cookie className="h-4 w-4" />
@@ -441,7 +441,7 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="scrape-latency" className="gap-2">
             <Timer className="h-4 w-4" />
-            LatÃªncia Motor
+            Latência Motor
           </TabsTrigger>
           <TabsTrigger value="rate-limits" className="gap-2">
             <Gauge className="h-4 w-4" />
@@ -449,7 +449,7 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="resilience-report" className="gap-2">
             <LineChartIcon className="h-4 w-4" />
-            ResiliÃªncia
+            Resiliência
           </TabsTrigger>
           <TabsTrigger value="retry-tuner" className="gap-2">
             <Sparkles className="h-4 w-4" />
@@ -477,7 +477,7 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="qa-history" className="gap-2">
             <FlaskConical className="h-4 w-4" />
-            HistÃ³rico QA
+            Histórico QA
           </TabsTrigger>
           <TabsTrigger value="reaper" className="gap-2">
             <RotateCcw className="h-4 w-4" />
@@ -489,7 +489,7 @@ const AutomationMonitoring = () => {
           </TabsTrigger>
           <TabsTrigger value="source-report" className="gap-2">
             <LineChartIcon className="h-4 w-4" />
-            Lusha Ã— Apollo
+            Lusha × Apollo
           </TabsTrigger>
         </TabsList>
 
@@ -610,7 +610,7 @@ const AutomationMonitoring = () => {
                             </DropdownMenuItem>
                             <DropdownMenuItem className="gap-2 text-xs text-destructive">
                               <XCircle className="h-3 w-3" />
-                              Cancelar ExecuÃ§Ã£o
+                              Cancelar Execução
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -630,7 +630,7 @@ const AutomationMonitoring = () => {
                     Anterior
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    PÃ¡gina {page} de {totalPages}
+                    Página {page} de {totalPages}
                   </span>
                   <Button
                     variant="outline"
@@ -638,7 +638,7 @@ const AutomationMonitoring = () => {
                     onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
                   >
-                    PrÃ³xima
+                    Próxima
                   </Button>
                 </div>
               )}

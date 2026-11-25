@@ -278,7 +278,7 @@
 
 ## Onda 7 — Experiência de uso e consistência
 
-- [ ] **251** — Corrigir o texto corrompido da página de monitoramento — onda 7 — Alta — achados: G3-1
+- [x] **251** — Corrigir o texto corrompido da página de monitoramento — onda 7 — Alta — achados: G3-1 · **FECHADO 2026-11-25** — os textos estavam duplamente codificados (UTF-8 lido como cp1252): 37 linhas corrigidas em `src/pages/Monitoring.tsx` (28: título, abas, botões, toasts, períodos, paginação), `LoginCard.tsx:69,77` (comentário e aria-label), `auth-context.ts:9-10` e `WarmupPanel.tsx:26`; varredura de `src/`, `e2e/` e `scripts/` passou de 33 para **0** ocorrências
 - [ ] **252** — Corrigir o rótulo acessível corrompido na tela de login — onda 7 — Média — achados: G3-1, G26-1
 - [ ] **253** — Corrigir os comentários corrompidos do contexto de autenticação e criar verificação automática — onda 7 — Baixa · **APROV** — achados: G3-1
 - [ ] **254** — Dar rótulo acessível aos controles da lista de automações — onda 7 — Baixa — achados: G26-1

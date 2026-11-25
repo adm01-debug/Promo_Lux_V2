@@ -66,7 +66,7 @@ export function LoginCard(props: LoginCardProps) {
   } = props;
   const { mfaRequired, setMfaRequired } = useAuth();
 
-  // Etapa 2: sessÃ£o em AAL1 com fator ativo — exige o cÃ³digo do autenticador
+  // Etapa 2: sessão em AAL1 com fator ativo — exige o código do autenticador
   // antes de liberar o dashboard. MFAVerify (challenge+verify) eleva a AAL2.
   if (mfaRequired) {
     return (
@@ -74,7 +74,7 @@ export function LoginCard(props: LoginCardProps) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full flex flex-col items-center"
-        aria-label="VerificaÃ§Ã£o em duas etapas"
+        aria-label="Verificação em duas etapas"
       >
         <MFAVerify onSuccess={() => setMfaRequired(false)} onCancel={() => setMfaRequired(false)} />
       </motion.div>
