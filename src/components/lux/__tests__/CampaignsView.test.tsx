@@ -2,25 +2,22 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import type { SupabaseCall } from "@/test/mockSupabaseClient";
 
 // Lista de campanhas devolvida pela consulta — mutável para os testes cobrirem
 // tanto a lista cheia quanto o estado vazio.
 const campanhasMock = vi.hoisted(() => ({ dados: [] as Record<string, unknown>[] }));
+const chamadas = vi.hoisted(() => [] as SupabaseCall[]);
 
-vi.mock("@/integrations/supabase/client", () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: campanhasMock.dados, error: null })),
-      })),
-      insert: vi.fn(() => ({
-        select: vi.fn(() => ({
-          single: vi.fn(() => Promise.resolve({ data: null, error: null })),
-        })),
-      })),
-    })),
-  },
-}));
+vi.mock("@/integrations/supabase/client", async () => {
+  const { createSupabaseClientMock } = await import("@/test/mockSupabaseClient");
+  return {
+    supabase: createSupabaseClientMock({
+      result: () => ({ data: campanhasMock.dados, error: null }),
+      calls: chamadas,
+    }),
+  };
+});
 
 vi.mock("@/contexts/auth-context", () => ({
   useAuth: vi.fn(() => ({ user: { id: "u1" } })),
@@ -45,6 +42,9 @@ vi.mock("framer-motion", async () => {
 });
 
 import { CampaignsView } from "../CampaignsView";
+import { setActiveOrgId } from "@/integrations/supabase/withOrg";
+
+const ORG = "org-teste-campanhas";
 
 function renderWithProviders(ui: React.ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -73,6 +73,8 @@ const CAMPANHA = {
 
 beforeEach(() => {
   campanhasMock.dados = [CAMPANHA];
+  chamadas.length = 0;
+  setActiveOrgId(ORG);
 });
 
 describe("CampaignsView", () => {
@@ -94,6 +96,22 @@ describe("CampaignsView", () => {
     renderWithProviders(<CampaignsView />);
     await waitFor(() => {
       expect(screen.getByText("Campanha Teste")).toBeInTheDocument();
+    });
+  });
+
+  it("le as campanhas escopadas pela organizacao ativa e sem itens na lixeira", async () => {
+    renderWithProviders(<CampaignsView />);
+    await screen.findByText("Campanha Teste");
+
+    expect(chamadas).toContainEqual({
+      table: "campaigns",
+      method: "eq",
+      args: ["organization_id", ORG],
+    });
+    expect(chamadas).toContainEqual({
+      table: "campaigns",
+      method: "is",
+      args: ["deleted_at", null],
     });
   });
 

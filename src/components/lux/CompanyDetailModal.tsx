@@ -20,7 +20,7 @@ import { sanitizeUrl } from "@/lib/sanitize";
 import { CompanyOpenHours } from "@/components/lux/CompanyOpenHours";
 import { CompanyReviewsList } from "@/components/lux/CompanyReviewsList";
 import { supabase } from "@/integrations/supabase/client";
-
+import { db } from "@/integrations/supabase/withOrg";
 
 interface Company {
   id: string;
@@ -130,7 +130,7 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
   useEffect(() => {
     if (!company?.id || !open) { setGmbData(null); return; }
     let cancelled = false;
-    supabase
+    db
       .from("companies")
       .select("open_hours, rating, review_count")
       .eq("id", company.id)

@@ -2,7 +2,7 @@ import { Play, Pause, Clock, CheckCircle2, AlertCircle, Workflow, Zap } from "lu
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
 import { formatDistanceToNow } from "date-fns";
@@ -66,7 +66,7 @@ export const AutomationsList = ({ onNavigate }: AutomationsListProps) => {
     queryKey: ["dashboard-workflows", isDemoMode],
     queryFn: async () => {
       if (isDemoMode) return DEMO_WORKFLOWS;
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("workflows")
         .select("*")
         .order("updated_at", { ascending: false })

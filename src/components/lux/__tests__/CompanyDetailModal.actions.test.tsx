@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { SupabaseCall } from "@/test/mockSupabaseClient";
 
 const { invokeMock, updateMock, toastMock } = vi.hoisted(() => ({
   invokeMock: vi.fn(),
@@ -9,22 +10,18 @@ const { invokeMock, updateMock, toastMock } = vi.hoisted(() => ({
   })),
   toastMock: vi.fn(),
 }));
+const chamadas = vi.hoisted(() => [] as SupabaseCall[]);
 
-vi.mock("@/integrations/supabase/client", () => ({
-  supabase: {
-    functions: { invoke: invokeMock },
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          maybeSingle: vi.fn(() =>
-            Promise.resolve({ data: null, error: null }),
-          ),
-        })),
-      })),
-      update: updateMock,
-    })),
-  },
-}));
+vi.mock("@/integrations/supabase/client", async () => {
+  const { createSupabaseClientMock } = await import("@/test/mockSupabaseClient");
+  return {
+    supabase: createSupabaseClientMock({
+      calls: chamadas,
+      extra: { functions: { invoke: invokeMock } },
+      builderOverrides: { update: updateMock },
+    }),
+  };
+});
 
 vi.mock("@/hooks/use-toast", () => ({
   toast: toastMock,
@@ -73,6 +70,9 @@ vi.mock("framer-motion", async () => {
 });
 
 import { CompanyDetailModal } from "../CompanyDetailModal";
+import { setActiveOrgId } from "@/integrations/supabase/withOrg";
+
+const ORG = "org-1";
 
 const CNPJ_VALIDO = "11222333000181";
 
@@ -130,7 +130,31 @@ describe("CompanyDetailModal — acoes do rodape", () => {
     invokeMock.mockReset();
     updateMock.mockClear();
     toastMock.mockClear();
+    chamadas.length = 0;
+    setActiveOrgId(ORG);
     openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+  });
+
+  it("le os dados do Google Meu Negocio escopados pela organizacao ativa", async () => {
+    renderModal();
+
+    await waitFor(() =>
+      expect(
+        chamadas.some(
+          (c) => c.table === "companies" && c.method === "maybeSingle",
+        ),
+      ).toBe(true),
+    );
+    expect(chamadas).toContainEqual({
+      table: "companies",
+      method: "eq",
+      args: ["organization_id", ORG],
+    });
+    expect(chamadas).toContainEqual({
+      table: "companies",
+      method: "is",
+      args: ["deleted_at", null],
+    });
   });
 
   afterEach(() => {

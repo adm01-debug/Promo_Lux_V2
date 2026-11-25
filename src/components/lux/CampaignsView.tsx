@@ -102,7 +102,7 @@ export const CampaignsView = () => {
     queryFn: isDemoMode
       ? () => DEMO_CAMPAIGNS as unknown as Tables<"campaigns">[]
       : async () => {
-          const { data, error } = await supabase
+          const { data, error } = await db
             .from("campaigns")
             .select("*")
             .order("created_at", { ascending: false });

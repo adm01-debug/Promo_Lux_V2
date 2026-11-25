@@ -9,7 +9,7 @@ import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 import { QuickActions } from "@/components/lux/QuickActions";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, CheckCircle2 } from "lucide-react";
+import { TrendingUp, Calendar, Lock, Unlock, RotateCcw, GripVertical, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useWeeklyPerformance } from "@/hooks/useWeeklyPerformance";
@@ -64,7 +64,7 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
   const { user } = useAuth();
   const { isDemoMode } = useDemo();
   const colors = useThemeColors();
-  const { data: performanceData = [], isLoading: perfLoading } = useWeeklyPerformance();
+  const { data: performanceData = [], isLoading: perfLoading, error: perfError } = useWeeklyPerformance();
   const [editing, setEditing] = useState(false);
   // Layout agora vive no banco por usuário (public.dashboard_layouts); o hook
   // mantém o localStorage como cache síncrono para não piscar no primeiro paint.
@@ -119,6 +119,16 @@ export const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             <div className="p-5 flex-1 min-h-[260px]">
               {perfLoading ? (
                 <Skeleton className="h-full w-full rounded-lg" />
+              ) : perfError ? (
+                <div className="flex h-full min-h-[220px] flex-col items-center justify-center gap-2 text-center">
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                  <p className="text-xs text-muted-foreground">
+                    Não foi possível carregar o desempenho dos últimos 7 dias.
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/70">
+                    Os números ficam ocultos para não exibir zeros falsos.
+                  </p>
+                </div>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
                   <AreaChart data={performanceData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
