@@ -8,24 +8,29 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * disponíveis, credenciais de dois usuários de teste distintos para provar o
  * isolamento multi-tenant.
  *
- * Variáveis de ambiente reconhecidas (todas opcionais, com fallback público):
+ * Variáveis de ambiente reconhecidas (as duas primeiras são obrigatórias — sem
+ * elas a suíte lança em vez de testar um backend que não é o do sistema):
  *   - E2E_SUPABASE_URL | VITE_SUPABASE_URL
  *   - E2E_SUPABASE_ANON_KEY | VITE_SUPABASE_PUBLISHABLE_KEY
  *   - E2E_USER_A_EMAIL / E2E_USER_A_PASSWORD  (tenant A)
  *   - E2E_USER_B_EMAIL / E2E_USER_B_PASSWORD  (tenant B)
  */
 
-const FALLBACK_URL = "https://pesfxhlbsjfmlysdkzhr.supabase.co";
-const FALLBACK_ANON =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlc2Z4aGxic2pmbWx5c2RremhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0ODQzNTgsImV4cCI6MjA5NDA2MDM1OH0.GQ5cVfT064M6Hgml5r3T0ryvkO43wKBSricEMixtedY";
+/** Lê a primeira variável de ambiente definida; lança se nenhuma existir. */
+function requiredEnv(names: string[]): string {
+  for (const name of names) {
+    const value = process.env[name];
+    if (value && value.trim().length > 0) return value;
+  }
+  throw new Error(`[e2e] defina ${names.join(" ou ")}`);
+}
 
-export const SUPABASE_URL =
-  process.env.E2E_SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? FALLBACK_URL;
+export const SUPABASE_URL = requiredEnv(["E2E_SUPABASE_URL", "VITE_SUPABASE_URL"]);
 
-export const SUPABASE_ANON_KEY =
-  process.env.E2E_SUPABASE_ANON_KEY ??
-  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
-  FALLBACK_ANON;
+export const SUPABASE_ANON_KEY = requiredEnv([
+  "E2E_SUPABASE_ANON_KEY",
+  "VITE_SUPABASE_PUBLISHABLE_KEY",
+]);
 
 /** Cria um client anônimo (sem sessão) — usado para provar que RLS bloqueia leituras públicas. */
 export function anonClient(): SupabaseClient {
@@ -62,12 +67,30 @@ export async function authedClient(creds: TestUserCreds): Promise<SupabaseClient
   return client;
 }
 
+/** Códigos que significam "a Data API recusou o acesso", não "backend fora do ar". */
+const PERMISSION_DENIED_CODES = new Set(["42501", "PGRST301", "PGRST302"]);
+
 /**
- * Uma leitura é considerada "bloqueada por RLS" quando a Data API retorna erro
- * (permission denied) OU quando retorna zero linhas (política nega todas as
- * linhas para o papel anônimo).
+ * Uma leitura é considerada "bloqueada por RLS" **apenas** quando a Data API
+ * responde recusando o acesso (permissão/JWT) ou quando responde com zero
+ * linhas — que é a política negando todas as linhas ao papel anônimo.
+ *
+ * Qualquer outro erro (rede, DNS, tabela inexistente, 5xx) lança: a suíte
+ * precisa falhar quando não conseguiu falar com o banco, em vez de contar isso
+ * como "bloqueado" e ficar verde sem nenhuma ida à rede.
  */
 export function isReadBlocked(result: { data: unknown[] | null; error: unknown }): boolean {
-  if (result.error) return true;
+  if (result.error) {
+    const error = result.error as { code?: string; status?: number; message?: string };
+    if (typeof error.status === "number" && (error.status === 401 || error.status === 403)) {
+      return true;
+    }
+    if (typeof error.code === "string" && PERMISSION_DENIED_CODES.has(error.code)) return true;
+    throw new Error(
+      `[e2e] não foi possível falar com o backend (código ${error.code ?? "?"}): ${
+        error.message ?? String(result.error)
+      }`,
+    );
+  }
   return Array.isArray(result.data) && result.data.length === 0;
 }
