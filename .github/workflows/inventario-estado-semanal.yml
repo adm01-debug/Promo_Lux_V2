@@ -38,6 +38,7 @@ jobs:
     permissions:  # zizmor: ignore[excessive-permissions]
       contents: write       # branch do PR
       pull-requests: write  # abrir/atualizar o PR
+      actions: write        # disparar o ci.yml na branch do PR (passo abaixo)
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -95,6 +96,18 @@ jobs:
             Sem auto-merge: merge em `main` dispara deploy em produção pela Lovable.
           add-paths: |
             inventario/estado/edges.json
+
+      - name: Disparar o CI na branch do PR
+        # O PR acima e aberto com GITHUB_TOKEN, e evento de push/pull_request feito com
+        # esse token nao dispara outros workflows. Sem este dispatch o ci.yml (que tem os
+        # 3 checks obrigatorios do ruleset de `main`: quality-gate, Security Scan e
+        # Database Guards) nunca roda no PR do bot e ele so entra com --admin - foi o que
+        # aconteceu na #176. workflow_dispatch e a excecao documentada a essa regra.
+        if: steps.pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run ci.yml --ref automation/inventario-estado
 
       - name: Upload do inventário
         if: always()
