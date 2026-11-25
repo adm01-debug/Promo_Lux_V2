@@ -5,17 +5,31 @@
  "total": 62,
  "verify_jwt_false": [
   "admin-list-companies",
+  "campaign-dispatch",
+  "circuit-breaker-alerts",
+  "dlq-alerts",
   "email-oauth-callback",
+  "email-poll-replies",
+  "gmaps-proxy",
   "hubspot-sync",
   "mcp",
   "mcp-query",
   "migrate-helper",
+  "pg-net-watchdog",
   "public-api",
+  "purge-soft-deleted",
   "qa-ingest-run",
+  "reaper-alerts",
+  "retry-policy-tuner",
   "scim",
+  "scrape-queue-worker",
   "send-scheduled-reports",
+  "sla-alerts",
+  "sla-auto-tune",
   "track-click",
-  "track-open"
+  "track-open",
+  "vault-cookie-health",
+  "web-scrape-worker"
  ],
  "shared": [
   "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
@@ -198,7 +212,7 @@
    "entrada": "supabase/functions/campaign-dispatch/index.ts",
    "arquivos": 1,
    "linhas": 769,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "GET",
     "OPTIONS",
@@ -254,7 +268,7 @@
    "entrada": "supabase/functions/circuit-breaker-alerts/index.ts",
    "arquivos": 1,
    "linhas": 121,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -463,7 +477,7 @@
    "entrada": "supabase/functions/dlq-alerts/index.ts",
    "arquivos": 1,
    "linhas": 128,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -615,7 +629,7 @@
    "entrada": "supabase/functions/email-poll-replies/index.ts",
    "arquivos": 1,
    "linhas": 376,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS",
     "POST"
@@ -722,7 +736,7 @@
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
    "linhas": 841,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "DELETE",
     "GET",
@@ -1490,7 +1504,7 @@
    "entrada": "supabase/functions/pg-net-watchdog/index.ts",
    "arquivos": 1,
    "linhas": 95,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -1567,7 +1581,7 @@
    "entrada": "supabase/functions/purge-soft-deleted/index.ts",
    "arquivos": 1,
    "linhas": 43,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [],
    "tabelas": [],
    "rpcs": [
@@ -1629,7 +1643,7 @@
    "entrada": "supabase/functions/reaper-alerts/index.ts",
    "arquivos": 1,
    "linhas": 200,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -1662,7 +1676,7 @@
    "entrada": "supabase/functions/retry-policy-tuner/index.ts",
    "arquivos": 1,
    "linhas": 163,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -1775,7 +1789,7 @@
    "entrada": "supabase/functions/scrape-queue-worker/index.ts",
    "arquivos": 1,
    "linhas": 480,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -1864,7 +1878,7 @@
    "entrada": "supabase/functions/sla-alerts/index.ts",
    "arquivos": 1,
    "linhas": 150,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -1898,7 +1912,7 @@
    "entrada": "supabase/functions/sla-auto-tune/index.ts",
    "arquivos": 1,
    "linhas": 162,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -2056,7 +2070,7 @@
    "entrada": "supabase/functions/vault-cookie-health/index.ts",
    "arquivos": 1,
    "linhas": 214,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],
@@ -2219,7 +2233,7 @@
    "entrada": "supabase/functions/web-scrape-worker/index.ts",
    "arquivos": 1,
    "linhas": 420,
-   "verify_jwt": true,
+   "verify_jwt": false,
    "metodos": [
     "OPTIONS"
    ],

@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b5ca5ecf54` · branch `main` · 2026-11-25 18:22 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b4dc737fb9` · branch `main` · 2026-11-25 18:34 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -493,6 +493,20 @@
 - `send-scheduled-reports`
 - `scim`
 - `hubspot-sync`
+- `campaign-dispatch`
+- `circuit-breaker-alerts`
+- `dlq-alerts`
+- `email-poll-replies`
+- `gmaps-proxy`
+- `pg-net-watchdog`
+- `purge-soft-deleted`
+- `reaper-alerts`
+- `retry-policy-tuner`
+- `scrape-queue-worker`
+- `sla-alerts`
+- `sla-auto-tune`
+- `vault-cookie-health`
+- `web-scrape-worker`
 
 ## Rotas protegidas no front
 

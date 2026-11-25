@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b5ca5ecf54fc5541b369528378107be4f80aa7c4",
+  "commit": "b4dc737fb9da89299b2ae4eadf53e5e227361f09",
   "branch": "main",
-  "data_commit": "2026-11-25T15:22:14-03:00",
+  "data_commit": "2026-11-25T15:33:35-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b4dc737",
+    "data": "2026-11-25",
+    "assunto": "chore(config): versiona o verify_jwt das 62 edge functions (#215)"
+   },
    {
     "sha": "b5ca5ec",
     "data": "2026-11-25",
@@ -126,11 +131,6 @@
     "sha": "03dbb45",
     "data": "2026-11-24",
     "assunto": "perf(api-publica): /me em 1 round-trip em vez de 2"
-   },
-   {
-    "sha": "8dec4b5",
-    "data": "2026-11-24",
-    "assunto": "feat: habilita alerta de latencia da organizacao com trafego real (#189)"
    }
   ],
   "arquivos_mudados_7d": 296,
@@ -173,7 +173,7 @@
    },
    {
     "pasta": "supabase/config.toml",
-    "mudancas": 7
+    "mudancas": 8
    },
    {
     "pasta": "supabase/functions/gmaps-proxy",
@@ -214,15 +214,15 @@
     "mudancas": 9
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 9
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 8
    },
    {
     "arquivo": "src/integrations/supabase/types.ts",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "supabase/config.toml",
     "mudancas": 8
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 161
+    "commits": 162
    },
    {
     "autor": "dependabot[bot]",

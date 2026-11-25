@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(config): versiona o verify_jwt das 62 edge functions (#215)",
    "fix(config): botao de custo Places API para de mentir (#214)",
    "feat: audita as 5 tabelas criticas fora da trilha (#212)",
    "chore(deps): sobe framer-motion para 14.14.0 (#213)",
-   "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)",
-   "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)"
+   "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)"
   ]
  },
  "pr_template": null,
