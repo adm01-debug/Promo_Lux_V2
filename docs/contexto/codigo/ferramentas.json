@@ -9,7 +9,7 @@
    "JSON (38)",
    "JavaScript (24)",
    "Shell (16)",
-   "YAML (11)",
+   "YAML (12)",
    "Python (5)"
   ],
   "linguagem_principal": "TypeScript",
@@ -315,6 +315,30 @@
     "actions/checkout",
     "actions/dependency-review-action"
    ]
+  },
+  {
+   "arquivo": ".github/workflows/deploy-watchdog.yml",
+   "nome": "Deploy Watchdog",
+   "gatilhos": [
+    "schedule",
+    "workflow_dispatch"
+   ],
+   "crons": [
+    "*/30 * * * *"
+   ],
+   "branches": [],
+   "jobs": [
+    "vigia"
+   ],
+   "permissoes": [
+    "contents: read",
+    "actions: read",
+    "issues: write"
+   ],
+   "scripts_usados": [],
+   "npm_scripts": [],
+   "secrets": [],
+   "actions": []
   },
   {
    "arquivo": ".github/workflows/edge-functions-deploy.yml",

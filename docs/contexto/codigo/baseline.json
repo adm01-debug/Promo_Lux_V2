@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2",
+  "commit": "121479c86e9124734526168eb4aa08b4ff009e1e",
   "branch": "main",
-  "data_commit": "2026-11-25T12:32:46-03:00",
+  "data_commit": "2026-11-25T12:40:25-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "121479c",
+    "data": "2026-11-25",
+    "assunto": "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)"
+   },
    {
     "sha": "9ad49f5",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "4bb36e5",
     "data": "2026-11-24",
     "assunto": "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)"
-   },
-   {
-    "sha": "a8b5edf",
-    "data": "2026-11-24",
-    "assunto": "﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)"
    }
   ],
-  "arquivos_mudados_7d": 291,
+  "arquivos_mudados_7d": 292,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 157
+    "commits": 158
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1152,
+  "arquivos_total": 1153,
   "arquivos_codigo": 709,
   "linhas_codigo": 124501,
   "rotas": 12,
@@ -325,7 +325,7 @@
   "migrations": 268,
   "cron_jobs": 43,
   "testes": 130,
-  "workflows": 9,
+  "workflows": 10,
   "scripts": 53,
   "docs_md": 87
  },

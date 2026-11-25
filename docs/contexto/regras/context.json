@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2",
+  "sha": "121479c86e9124734526168eb4aa08b4ff009e1e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 15:33 UTC",
-  "files_total": 1173,
+  "generated_at": "2026-11-25 15:41 UTC",
+  "files_total": 1174,
   "code_files": 985,
   "code_lines": 146794
  },
  "version": "1.3.2",
- "facts_hash": "369fece802ebf4f0",
+ "facts_hash": "4d0c102d3c5c6f49",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -197,6 +197,14 @@
     "name": "Dependency Review",
     "triggers": [
      "pull_request"
+    ]
+   },
+   {
+    "file": ".github/workflows/deploy-watchdog.yml",
+    "name": "Deploy Watchdog",
+    "triggers": [
+     "schedule",
+     "workflow_dispatch"
     ]
    },
    {
@@ -32337,6 +32345,11 @@
     "kind": "GitHub Actions cron",
     "detail": "3-59/10 * * * *",
     "file": ".github/workflows/contexto.yml"
+   },
+   {
+    "kind": "GitHub Actions cron",
+    "detail": "*/30 * * * *",
+    "file": ".github/workflows/deploy-watchdog.yml"
    },
    {
     "kind": "GitHub Actions cron",
@@ -101777,10 +101790,19 @@
   }
  },
  "git": {
-  "sha": "9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2",
+  "sha": "121479c86e9124734526168eb4aa08b4ff009e1e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "121479c",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)",
+    "files": [
+     ".github/workflows/deploy-watchdog.yml"
+    ]
+   },
    {
     "sha": "9ad49f5",
     "date": "2026-11-25",
@@ -102085,15 +102107,6 @@
     "files": [
      "supabase/functions/public-api/index.ts"
     ]
-   },
-   {
-    "sha": "69c63ff",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)",
-    "files": [
-     "supabase/migrations/20261124125500_cron_evaluate_api_latency_15min.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -102120,6 +102133,10 @@
    [
     "scripts/check-schema-replay-drift.sh",
     2
+   ],
+   [
+    ".github/workflows/deploy-watchdog.yml",
+    1
    ],
    [
     "docs/GAPS-ENTERPRISE.md",
@@ -102171,10 +102188,6 @@
    ],
    [
     "scripts/staged-autofix/run.mjs",
-    1
-   ],
-   [
-    "scripts/automation.mjs",
     1
    ]
   ]

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2` (2026-11-25T12:32:46-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `121479c86e9124734526168eb4aa08b4ff009e1e` (2026-11-25T12:40:25-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (681), SQL (272), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (681), SQL (272), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (12), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1152 |
+| arquivos_total | 1153 |
 | arquivos_codigo | 709 |
 | linhas_codigo | 124501 |
 | rotas | 12 |
@@ -49,7 +49,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | migrations | 268 |
 | cron_jobs | 43 |
 | testes | 130 |
-| workflows | 9 |
+| workflows | 10 |
 | scripts | 53 |
 | docs_md | 87 |
 
@@ -259,7 +259,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7911 nós · 16710 arestas · 683 comunidades · grafo do commit `9ad49f56`
+- 7911 nós · 16710 arestas · 683 comunidades · grafo do commit `121479c8`
 - comunidades maiores: lucide-react (195), react (191), cn (130), snapshot.py (106), @tanstack/react-query (103), LushaIntelligenceView.tsx (85), vitest (85), CampaignsView.tsx (84), gerar.mjs (80), generate.py (75), tooltip.tsx (70), CompaniesView.tsx (69)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -287,6 +287,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `contexto.yml` — Contexto para agentes de IA (10 min) (push, schedule, workflow_dispatch; cron 3-59/10 * * * *)
 - `db-migrations.yml` — Database Migrations (pull_request, push, workflow_dispatch)
 - `dependency-review.yml` — Dependency Review (pull_request)
+- `deploy-watchdog.yml` — Deploy Watchdog (schedule, workflow_dispatch; cron */30 * * * *)
 - `edge-functions-deploy.yml` — Edge Functions Deploy (pull_request, push, workflow_dispatch)
 - `edge-tests-daily.yml` — Edge Functions Daily Tests (Deno) (pull_request, schedule, workflow_dispatch; cron 0 7 * * *)
 - `inventario-estado-semanal.yml` — Inventário do estado real (semanal) (schedule, workflow_dispatch; cron 23 10 * * 1)
@@ -376,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `121479c` infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)
 - 2026-11-25 `9ad49f5` fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)
 - 2026-11-25 `e1331fe` chore(edge): descarta audit-logs-prune, function sem chamador (#209)
 - 2026-11-25 `b85b5ad` fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)
@@ -390,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `0c5b352` infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)
 - 2026-11-25 `2353b88` fix(deps): atualiza @hookform/resolvers para 7.0.9 (#198)
 - 2026-11-24 `fef1ec1` infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)
-- 2026-11-24 `9b3dabf` fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
