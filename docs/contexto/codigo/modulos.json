@@ -144,9 +144,9 @@
   },
   {
    "modulo": "components/lux",
-   "arquivos": 219,
-   "testes": 35,
-   "linhas": 43445,
+   "arquivos": 220,
+   "testes": 36,
+   "linhas": 43478,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -201,7 +201,7 @@
     "workflows"
    ],
    "rotas_http": [],
-   "componentes": 200,
+   "componentes": 201,
    "hooks_locais": [
     "useAcknowledgeAdvisory",
     "useActiveOrganization",
@@ -1687,9 +1687,9 @@
   },
   {
    "modulo": "lib",
-   "arquivos": 16,
+   "arquivos": 17,
    "testes": 1,
-   "linhas": 2301,
+   "linhas": 2334,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -1989,7 +1989,7 @@
   {
    "modulo": "lib/__tests__",
    "arquivos": 0,
-   "testes": 7,
+   "testes": 8,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],
@@ -2237,7 +2237,7 @@
    "modulo": "pages",
    "arquivos": 11,
    "testes": 0,
-   "linhas": 2243,
+   "linhas": 2284,
    "itens_menu": [],
    "telas": [
     "/",

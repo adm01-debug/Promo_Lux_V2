@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "40e6a6ef977bd7b6e670628590652e96571e9c6d",
+  "sha": "d15f85e843832d73da32e239fd74b9a43a330584",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 20:34 UTC",
-  "files_total": 1181,
-  "code_files": 992,
-  "code_lines": 147802
+  "generated_at": "2026-11-25 20:39 UTC",
+  "files_total": 1185,
+  "code_files": 996,
+  "code_lines": 147967
  },
  "version": "1.3.2",
- "facts_hash": "eab0eac5b607f679",
+ "facts_hash": "58d63f7259209091",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -244,8 +244,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 379,
-   ".tsx": 307,
+   ".ts": 381,
+   ".tsx": 309,
    ".sql": 274,
    ".mjs": 22,
    ".py": 5,
@@ -30279,7 +30279,7 @@
     "rpc_transitive": [
      "get_dashboard_stats"
     ],
-    "deps_count": 67
+    "deps_count": 69
    },
    {
     "path": "",
@@ -32461,7 +32461,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 312,
+  "components_count": 314,
   "hooks": [
    {
     "name": "useContacts",
@@ -33486,8 +33486,8 @@
   },
   {
    "module": "src/components",
-   "files": 312,
-   "lines": 51890,
+   "files": 314,
+   "lines": 51951,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33554,6 +33554,7 @@
     "DashboardView.tsx: DashboardView",
     "DataError.tsx: DataError",
     "DealsView.tsx: DealsView",
+    "DemoNotice.tsx: DemoNotice",
     "EditCompanyDialog.tsx: EditCompanyDialog",
     "EmailSuppressionsView.tsx: EmailSuppressionsView",
     "EmptyState.tsx: EmptyState",
@@ -33567,8 +33568,7 @@
     "KeyboardShortcutsDialog.tsx: KeyboardShortcutsDialog",
     "LushaIntelligenceView.tsx: LushaIntelligenceView",
     "LuxImage.tsx: LuxImage",
-    "NotificationsPanel.tsx: NotificationsPanel",
-    "OnboardingTour.tsx: OnboardingTour"
+    "NotificationsPanel.tsx: NotificationsPanel"
    ],
    "docs": [
     "historyUtils.ts: Utilitários puros para o histórico do Oráculo. Extraídos do componente para viabilizar testes unitários determinísticos.",
@@ -33639,6 +33639,7 @@
     "src/components/lux/DashboardView.tsx",
     "src/components/lux/DataError.tsx",
     "src/components/lux/DealsView.tsx",
+    "src/components/lux/DemoNotice.tsx",
     "src/components/lux/EditCompanyDialog.tsx",
     "src/components/lux/EmailSuppressionsView.tsx",
     "src/components/lux/EmptyState.tsx",
@@ -33690,9 +33691,8 @@
     "src/components/lux/__tests__/CompanyTableRow.test.tsx",
     "src/components/lux/__tests__/DashboardView.test.tsx",
     "src/components/lux/__tests__/DataError.test.tsx",
-    "src/components/lux/__tests__/EmptyState.test.tsx",
-    "src/components/lux/__tests__/ErrorBoundary.test.tsx",
-    "src/components/lux/__tests__/ICPConfigView.test.tsx"
+    "src/components/lux/__tests__/DemoNotice.test.tsx",
+    "src/components/lux/__tests__/EmptyState.test.tsx"
    ]
   },
   {
@@ -33989,8 +33989,8 @@
   },
   {
    "module": "src/lib",
-   "files": 53,
-   "lines": 6306,
+   "files": 55,
+   "lines": 6369,
    "tables": [
     "audit_logs",
     "campaigns",
@@ -34004,6 +34004,7 @@
     "constants.ts: BUNDLE_BUDGETS, APP_CONFIG",
     "csv.ts: CsvValue, buildCsv, downloadCsv",
     "demoData.ts: DEMO_STATS, DEMO_PERFORMANCE, DEMO_COMPANIES, DEMO_ACTIVITY, DEMO_WORKFLOWS, DEMO_FUNNEL",
+    "demoViews.ts: DEMO_UNSUPPORTED_VIEWS, shouldShowDemoNotice",
     "emailErrorMessages.ts: EmailErrorKind, EmailErrorSeverity, EmailErrorInfo, describeEmailError, isAuthErrorMessage",
     "exportAnalyticsPDF.ts: exportAnalyticsPDF",
     "exportCSV.ts: DANGEROUS_PREFIXES, sanitizeCell, downloadCSV",
@@ -34068,6 +34069,7 @@
     "src/lib/constants.ts",
     "src/lib/csv.ts",
     "src/lib/demoData.ts",
+    "src/lib/demoViews.ts",
     "src/lib/emailErrorMessages.ts",
     "src/lib/exportAnalyticsPDF.ts",
     "src/lib/exportCSV.ts",
@@ -34082,6 +34084,7 @@
     "src/lib/utils.ts",
     "src/lib/viewRegistry.ts",
     "src/lib/__tests__/csv.test.ts",
+    "src/lib/__tests__/demoViews.test.ts",
     "src/lib/__tests__/exportCSV.test.ts",
     "src/lib/__tests__/orgErrorHandler.audit.test.ts",
     "src/lib/__tests__/orgErrorHandler.e2e.test.ts",
@@ -34122,7 +34125,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2243,
+   "lines": 2284,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -40610,6 +40613,10 @@
    {
     "file": "src/lib/cnpj.ts",
     "text": "* Utilitários de CNPJ — normalização e validação dos dígitos verificadores."
+   },
+   {
+    "file": "src/lib/demoViews.ts",
+    "text": "* A view deve trocar o conteúdo pelo aviso de demonstração? */"
    },
    {
     "file": "src/lib/orgErrorHandler.ts",
@@ -52315,6 +52322,12 @@
     "body": "const sum = base.split(\"\").reduce((acc, d, i) => acc + Number(d) * weights[i], 0); const rest = sum % 11; return rest < 2 ? 0 : 11 - rest;"
    },
    {
+    "file": "src/lib/demoViews.ts",
+    "name": "shouldShowDemoNotice",
+    "params": "view: View, isDemoMode: boolean",
+    "body": ""
+   },
+   {
     "file": "src/lib/sourceQualityReport.ts",
     "name": "totalsForSource",
     "params": "rows: readonly SourceQualityRow[], source: ContactSource,",
@@ -53983,6 +53996,18 @@
    {
     "file": "src/components/lux/__tests__/DataError.test.tsx",
     "name": "does not render retry button when onRetry is not provided"
+   },
+   {
+    "file": "src/components/lux/__tests__/DemoNotice.test.tsx",
+    "name": "DemoNotice"
+   },
+   {
+    "file": "src/components/lux/__tests__/DemoNotice.test.tsx",
+    "name": "explica qual área não tem demonstração e leva para criar conta"
+   },
+   {
+    "file": "src/components/lux/__tests__/DemoNotice.test.tsx",
+    "name": "oferece voltar ao painel quando o layout passa a navegação"
    },
    {
     "file": "src/components/lux/__tests__/EmptyState.test.tsx",
@@ -55719,6 +55744,26 @@
    {
     "file": "src/lib/__tests__/csv.test.ts",
     "name": "treats null/undefined as empty cells"
+   },
+   {
+    "file": "src/lib/__tests__/demoViews.test.ts",
+    "name": "shouldShowDemoNotice"
+   },
+   {
+    "file": "src/lib/__tests__/demoViews.test.ts",
+    "name": "avisa nas views sem dados de exemplo quando a demonstração está ativa"
+   },
+   {
+    "file": "src/lib/__tests__/demoViews.test.ts",
+    "name": "não avisa nas views que têm dados de exemplo"
+   },
+   {
+    "file": "src/lib/__tests__/demoViews.test.ts",
+    "name": "não avisa fora da demonstração"
+   },
+   {
+    "file": "src/lib/__tests__/demoViews.test.ts",
+    "name": "cobre todas as views registradas: cada uma tem demonstração ou aviso"
    },
    {
     "file": "src/lib/__tests__/exportCSV.test.ts",
@@ -81319,12 +81364,9 @@
   },
   "src/components/lux/DashboardView.tsx": {
    "path": "src/components/lux/DashboardView.tsx",
-   "lines": 401,
+   "lines": 373,
    "exports": [
     "const DashboardView"
-   ],
-   "navigates": [
-    "/login"
    ],
    "status_values": [
     {
@@ -81349,6 +81391,13 @@
    "lines": 163,
    "exports": [
     "function DealsView"
+   ]
+  },
+  "src/components/lux/DemoNotice.tsx": {
+   "path": "src/components/lux/DemoNotice.tsx",
+   "lines": 61,
+   "exports": [
+    "const DemoNotice"
    ]
   },
   "src/components/lux/EditCompanyDialog.tsx": {
@@ -82786,6 +82835,16 @@
     "renders custom error message",
     "renders retry button when onRetry provided",
     "does not render retry button when onRetry is not provided"
+   ]
+  },
+  "src/components/lux/__tests__/DemoNotice.test.tsx": {
+   "path": "src/components/lux/__tests__/DemoNotice.test.tsx",
+   "lines": 28,
+   "is_test": true,
+   "tests": [
+    "DemoNotice",
+    "explica qual área não tem demonstração e leva para criar conta",
+    "oferece voltar ao painel quando o layout passa a navegação"
    ]
   },
   "src/components/lux/__tests__/EmptyState.test.tsx": {
@@ -91844,6 +91903,24 @@
     }
    ]
   },
+  "src/lib/demoViews.ts": {
+   "path": "src/lib/demoViews.ts",
+   "lines": 33,
+   "exports": [
+    "const DEMO_UNSUPPORTED_VIEWS",
+    "const shouldShowDemoNotice"
+   ],
+   "rule_comments": [
+    "* A view deve trocar o conteúdo pelo aviso de demonstração? */"
+   ],
+   "calc_fns": [
+    {
+     "name": "shouldShowDemoNotice",
+     "params": "view: View, isDemoMode: boolean",
+     "body": ""
+    }
+   ]
+  },
   "src/lib/emailErrorMessages.ts": {
    "path": "src/lib/emailErrorMessages.ts",
    "lines": 262,
@@ -92187,6 +92264,18 @@
     "neutralizes formula injection (CSV injection)",
     "does not corrupt legitimate negative numbers",
     "treats null/undefined as empty cells"
+   ]
+  },
+  "src/lib/__tests__/demoViews.test.ts": {
+   "path": "src/lib/__tests__/demoViews.test.ts",
+   "lines": 30,
+   "is_test": true,
+   "tests": [
+    "shouldShowDemoNotice",
+    "avisa nas views sem dados de exemplo quando a demonstração está ativa",
+    "não avisa nas views que têm dados de exemplo",
+    "não avisa fora da demonstração",
+    "cobre todas as views registradas: cada uma tem demonstração ou aviso"
    ]
   },
   "src/lib/__tests__/exportCSV.test.ts": {
@@ -93229,7 +93318,7 @@
   },
   "src/pages/Index.tsx": {
    "path": "src/pages/Index.tsx",
-   "lines": 243,
+   "lines": 284,
    "exports": [
     "default Index"
    ],
@@ -102274,10 +102363,25 @@
   }
  },
  "git": {
-  "sha": "40e6a6ef977bd7b6e670628590652e96571e9c6d",
+  "sha": "d15f85e843832d73da32e239fd74b9a43a330584",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "d15f85e",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/DashboardView.tsx",
+     "src/components/lux/DemoNotice.tsx",
+     "src/components/lux/__tests__/DemoNotice.test.tsx",
+     "src/lib/__tests__/demoViews.test.ts",
+     "src/lib/demoViews.ts",
+     "src/pages/Index.tsx"
+    ]
+   },
    {
     "sha": "40e6a6e",
     "date": "2026-11-25",
@@ -102589,26 +102693,20 @@
      "supabase/functions/public-api/index.ts",
      "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql"
     ]
-   },
-   {
-    "sha": "c326fd5",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa",
-    "files": [
-     "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
-     "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    5
+    6
    ],
    [
     "package.json",
     3
+   ],
+   [
+    "src/components/lux/DashboardView.tsx",
+    2
    ],
    [
     "src/components/lux/CampaignsView.tsx",
@@ -102629,6 +102727,26 @@
    [
     "supabase/functions/public-api/index.ts",
     2
+   ],
+   [
+    "src/components/lux/DemoNotice.tsx",
+    1
+   ],
+   [
+    "src/components/lux/__tests__/DemoNotice.test.tsx",
+    1
+   ],
+   [
+    "src/lib/__tests__/demoViews.test.ts",
+    1
+   ],
+   [
+    "src/lib/demoViews.ts",
+    1
+   ],
+   [
+    "src/pages/Index.tsx",
+    1
    ],
    [
     "src/components/lux/CompaniesView.tsx",
@@ -102656,30 +102774,6 @@
    ],
    [
     "e2e/navigation.spec.ts",
-    1
-   ],
-   [
-    "src/components/lux/auth/LoginCard.tsx",
-    1
-   ],
-   [
-    "src/components/lux/settings/WarmupPanel.tsx",
-    1
-   ],
-   [
-    "src/contexts/auth-context.ts",
-    1
-   ],
-   [
-    "src/pages/Monitoring.tsx",
-    1
-   ],
-   [
-    "src/__tests__/botoes-com-manipulador.test.ts",
-    1
-   ],
-   [
-    "src/components/lux/OrganizationsView.tsx",
     1
    ]
   ]

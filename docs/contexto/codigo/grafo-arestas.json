@@ -325,6 +325,9 @@
    "src/hooks/useTaskReminders.ts",
    "src/lib/utils.ts"
   ],
+  "src/components/lux/DemoNotice.tsx": [
+   "src/components/ui/button.tsx"
+  ],
   "src/components/lux/EditCompanyDialog.tsx": [
    "src/components/ui/button.tsx",
    "src/components/ui/dialog.tsx",
@@ -2277,6 +2280,9 @@
   "src/lib/demoData.ts": [
    "src/hooks/useDashboardData.ts"
   ],
+  "src/lib/demoViews.ts": [
+   "src/hooks/useNavigationHistory.ts"
+  ],
   "src/lib/exportAnalyticsPDF.ts": [
    "src/integrations/supabase/withOrg.ts"
   ],
@@ -2379,6 +2385,7 @@
   "src/pages/Index.tsx": [
    "src/components/lux/CommandPalette.tsx",
    "src/components/lux/ConnectionStatus.tsx",
+   "src/components/lux/DemoNotice.tsx",
    "src/components/lux/KeyboardShortcutsDialog.tsx",
    "src/components/lux/OnboardingTour.tsx",
    "src/components/lux/TopProgressBar.tsx",
@@ -2387,6 +2394,7 @@
    "src/components/lux/layout/Sidebar.tsx",
    "src/components/lux/view-skeleton-map.tsx",
    "src/components/ui/alert-dialog.tsx",
+   "src/components/ui/button.tsx",
    "src/components/ui/tooltip.tsx",
    "src/contexts/auth-context.ts",
    "src/contexts/demo-context.ts",
@@ -2399,6 +2407,7 @@
    "src/hooks/useRealtimeScrapeJobs.ts",
    "src/hooks/useRecentViews.ts",
    "src/hooks/useSidebarState.ts",
+   "src/lib/demoViews.ts",
    "src/lib/utils.ts",
    "src/lib/viewRegistry.ts"
   ],

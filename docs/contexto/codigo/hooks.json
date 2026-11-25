@@ -1523,7 +1523,7 @@
     "useState"
    ],
    "canais_realtime": [],
-   "usado_por": 14,
+   "usado_por": 15,
    "usado_por_arquivos": [
     "src/components/lux/AppBreadcrumbs.tsx",
     "src/components/lux/CommandPalette.tsx",
@@ -1537,6 +1537,7 @@
     "src/hooks/useBottomNavSwipe.ts",
     "src/hooks/useKeyboardShortcuts.ts",
     "src/hooks/useRecentViews.ts",
+    "src/lib/demoViews.ts",
     "src/lib/viewRegistry.ts",
     "src/pages/Index.tsx"
    ],

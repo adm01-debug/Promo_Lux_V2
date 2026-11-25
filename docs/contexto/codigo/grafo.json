@@ -1,12 +1,12 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 579,
- "arestas": 1836,
+ "nos": 581,
+ "arestas": 1841,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 137
+   "importado_por": 139
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
@@ -102,7 +102,7 @@
   },
   {
    "arquivo": "src/hooks/useNavigationHistory.ts",
-   "importado_por": 14
+   "importado_por": 15
   },
   {
    "arquivo": "src/components/lux/DataError.tsx",

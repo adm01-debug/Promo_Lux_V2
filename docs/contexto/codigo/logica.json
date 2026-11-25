@@ -1,11 +1,11 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 48,
+ "total": 49,
  "por_camada": {
   "contexts": 3,
   "integrations": 4,
-  "lib": 38,
+  "lib": 39,
   "python": 3
  },
  "arquivos": [
@@ -634,6 +634,30 @@
     "hooks"
    ],
    "coberto_por_testes": 0,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/demoViews.ts",
+   "camada": "lib",
+   "exports": [
+    "DEMO_UNSUPPORTED_VIEWS",
+    "shouldShowDemoNotice"
+   ],
+   "export_default": null,
+   "linhas": 33,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 1,
+   "usado_por_modulos": [
+    "pages"
+   ],
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -1589,7 +1613,7 @@
     "hooks",
     "pages"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   }
  ]

@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 267,
+ "total": 268,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -909,7 +909,7 @@
     "DashboardView"
    ],
    "export_default": null,
-   "linhas": 401,
+   "linhas": 373,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -1069,6 +1069,20 @@
     "useLeadScores",
     "useTaskReminders"
    ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/components/lux/DemoNotice.tsx",
+   "exports": [
+    "DemoNotice"
+   ],
+   "export_default": null,
+   "linhas": 61,
+   "dominio": "components/lux",
+   "hooks_locais": [],
    "tabelas": [],
    "edges": [],
    "usado_por": 1,
@@ -3526,7 +3540,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 137,
+   "usado_por": 139,
    "orfao": false
   },
   {
@@ -4384,7 +4398,7 @@
     "Index"
    ],
    "export_default": "Index",
-   "linhas": 243,
+   "linhas": 284,
    "dominio": "pages",
    "hooks_locais": [
     "useAuth",

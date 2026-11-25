@@ -7,7 +7,7 @@
    "src/pages (11)"
   ],
   "componentes": [
-   "src/components (250)",
+   "src/components (251)",
    "src/pages (11)",
    "src/contexts (3)"
   ],
@@ -17,12 +17,12 @@
    "src/contexts (3)"
   ],
   "servicos_logica": [
-   "src/lib (38)",
+   "src/lib (39)",
    "src/integrations (4)",
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (89)",
+   "co-localizado (__tests__) (91)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -41,13 +41,13 @@
  "nomenclatura": {
   "componentes": "PascalCase (82%)",
   "hooks": "use + PascalCase",
-  "servicos": "camelCase (81%)",
+  "servicos": "camelCase (82%)",
   "edge_functions": "kebab-case (95%)",
   "tabelas": "snake_case (91%)"
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (267)"
+  ".tsx (268)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)",
    "fix: separa o cache do modo demonstracao do cache real (#221)",
    "fix: remove rotulo ambiguo do e2e de login (#219)",
    "fix: corrige os textos duplamente codificados da tela de monitoramento (#220)",
-   "fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)",
-   "fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)"
+   "fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)"
   ]
  },
  "pr_template": null,

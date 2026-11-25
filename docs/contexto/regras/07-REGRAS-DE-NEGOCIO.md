@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `40e6a6ef97` · branch `main` · 2026-11-25 20:34 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d15f85e843` · branch `main` · 2026-11-25 20:39 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1534,6 +1534,10 @@ _nenhum item encontrado_
   ```
   const sum = base.split("").reduce((acc, d, i) => acc + Number(d) * weights[i], 0); const rest = sum % 11; return rest < 2 ? 0 : 11 - rest;
   ```
+- **shouldShowDemoNotice(view: View, isDemoMode: boolean)** — `src/lib/demoViews.ts`
+  ```
+  
+  ```
 - **totalsForSource(rows: readonly SourceQualityRow[], source: ContactSource,)** — `src/lib/sourceQualityReport.ts`
   ```
   const scoped = rows.filter((row) => row.source === source); const total = scoped.reduce((sum, row) => sum + (row.total ?? 0), 0); const withEmail = scoped.reduce((sum, row) => sum + (row.with_email ?? 0), 0); const brCount = scoped.reduce((sum, row) => sum + (row.br_count ?? 0), 0); const suppressed = scoped.reduce((sum, row) => sum + (row.suppressed ?? 0), 0); return { source, total, with_email: withEmail, br_count: brCount, suppressed, email_rate: rate(withEmail, total), br_rate: rate(brCount, …
@@ -2319,7 +2323,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1235 testes em 120 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1243 testes em 122 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2414,6 +2418,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/DataError.test.tsx` | 5 | DataError · renders default error message · renders custom error message · renders retry button when onRetry provided … |
 | `src/components/lux/__tests__/MapFilters.test.tsx` | 5 | MapFilters · renders search input and filter count · displays IPC score label with current value · calls onSearchChange when typing … |
 | `src/hooks/__tests__/useDlqReplay.test.ts` | 5 | useDlqReplay · invoca instagram-dlq-replay com o payload correto e retorna o result · invoca web-dlq-replay quando motor é  · extrai a mensagem de FunctionsHttpError via context.text() … |
+| `src/lib/__tests__/demoViews.test.ts` | 5 | shouldShowDemoNotice · avisa nas views sem dados de exemplo quando a demonstração está ativa · não avisa nas views que têm dados de exemplo · não avisa fora da demonstração … |
 | `src/lib/resilience/__tests__/compareReport.test.ts` | 5 | buildComparison · classifies improvement, regression and stability · marks new and removed scenarios · computes aggregate deltas and top lists … |
 | `supabase/functions/_shared/__tests__/hiker-normalize.test.ts` | 5 | normalize(profile) — business + creator sem undefined · normalize(posts) — image, reel, carousel, sponsored sem undefined · normalize(hashtag) — inclui tag e cobre reel/carousel · normalize(comments) — root + reply sem undefined … |
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
@@ -2432,6 +2437,7 @@ _nenhum item encontrado_
 | `e2e/instagram-worker-smoke.spec.ts` | 3 | Instagram motor — smoke · enfileira → worker processa → resultados gravados (profile + hashtag) · deduplicação: mesmo config_hash não cria duplicata em queued/running |
 | `e2e/monitoring-navigation.spec.ts` | 3 | Monitoramento — navegação · carrega a página com o título e as abas de monitoramento · troca de aba atualiza o conteúdo exibido |
 | `src/__tests__/botoes-com-manipulador.test.ts` | 3 | varredura de botões sem manipulador (etapa 080) · acusa botão oco e absolve botão com ação, gatilho asChild e link · nenhum <Button> de src/ e um controle morto |
+| `src/components/lux/__tests__/DemoNotice.test.tsx` | 3 | DemoNotice · explica qual área não tem demonstração e leva para criar conta · oferece voltar ao painel quando o layout passa a navegação |
 | `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `src/contexts/__tests__/DemoContext.test.tsx` | 3 | DemoProvider · clears the query cache when entering demo mode so real data never shows as demo · clears the query cache when leaving demo mode so sample data never leaks to a real session |
@@ -2572,6 +2578,7 @@ _nenhum item encontrado_
 | `any`, modelamos apenas o contrato realmente usado pelo wrapper e a cadeia de | `src/integrations/supabase/withOrg.ts` |
 | ou apenas por edge functions / admin). Ficam sob RLS específica e NÃO | `src/integrations/supabase/withOrg.ts` |
 | * Utilitários de CNPJ — normalização e validação dos dígitos verificadores. | `src/lib/cnpj.ts` |
+| * A view deve trocar o conteúdo pelo aviso de demonstração? */ | `src/lib/demoViews.ts` |
 | Também limpa o banner. Se a tabela não tiver mapeamento, apenas | `src/lib/orgErrorHandler.ts` |
 | pistas concretas do que o usuário deve fazer. | `src/lib/orgErrorHandler.ts` |
 | - sdr    : day-to-day operator — can create/edit business data, cannot delete or manage workspace | `src/lib/permissions.ts` |
