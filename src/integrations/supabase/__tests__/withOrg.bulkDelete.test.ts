@@ -31,7 +31,13 @@ vi.mock("../client", () => ({
   supabase: { from: vi.fn(() => builder) },
 }));
 
-import { db, setActiveOrgId, MissingOrgContextError } from "../withOrg";
+import {
+  db,
+  setActiveOrgId,
+  MissingOrgContextError,
+  TRASH_LABEL_COLUMN,
+  type SoftDeleteTable,
+} from "../withOrg";
 
 const ORG_A = "00000000-0000-0000-0000-0000000000aa";
 const ORG_B = "00000000-0000-0000-0000-0000000000bb";
@@ -76,6 +82,36 @@ describe("db (withOrg) — bulk DELETE scope guards", () => {
 
     const eqCall = callOrder.find((c) => c.method === "eq");
     expect(eqCall?.args).toEqual(["organization_id", ORG_A]);
+  });
+
+  // Etapa 047: as oito tabelas da lixeira precisam ser marcadas, não apagadas.
+  // Sem o fix, as quatro últimas (email_suppressions, email_accounts, api_keys,
+  // webhooks) emitiam DELETE real.
+  it("soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real", () => {
+    const tables = Object.keys(TRASH_LABEL_COLUMN) as SoftDeleteTable[];
+    expect(tables.sort()).toEqual(
+      [
+        "api_keys",
+        "campaigns",
+        "companies",
+        "deals",
+        "email_accounts",
+        "email_suppressions",
+        "webhooks",
+        "workflows",
+      ].sort(),
+    );
+
+    for (const table of tables) {
+      reset();
+      db.from(table).delete().in("id", ["c1"]);
+      expect({ table, methods: callOrder.map((c) => c.method) }).toEqual({
+        table,
+        methods: ["update", "eq", "is", "in"],
+      });
+      const updateCall = callOrder.find((c) => c.method === "update");
+      expect((updateCall?.args[0] as Record<string, unknown>)?.deleted_at).toBeDefined();
+    }
   });
 
   it("injeta filtro de org mesmo quando chamador encadeia múltiplos .eq/.neq", () => {

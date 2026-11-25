@@ -134,13 +134,24 @@ export const ORG_SCOPED_TABLES = new Set<string>([
  *   - SELECT filtra automaticamente `deleted_at IS NULL`.
  * A lixeira e restauração usam helpers dedicados (`db.trash`, `db.restore`,
  * `db.hardDelete`).
+ * Lista única: o tipo `SoftDeleteTable` e o Set usado pelo wrapper saem daqui.
+ * Antes eram duas listas mantidas à mão (4 aqui, 8 no tipo) e elas divergiram —
+ * as quatro últimas apagavam em definitivo e as abas da lixeira ficavam vazias.
  */
-const SOFT_DELETE_TABLES = new Set<string>([
+const SOFT_DELETE_TABLE_LIST = [
   "companies",
   "deals",
   "campaigns",
   "workflows",
-]);
+  "email_suppressions",
+  "email_accounts",
+  "api_keys",
+  "webhooks",
+] as const;
+
+const SOFT_DELETE_TABLES: ReadonlySet<string> = new Set(
+  SOFT_DELETE_TABLE_LIST,
+);
 
 /** Tabelas globais ou que gerenciam o próprio escopo via RLS específica. */
 export const EXEMPT_TABLES = new Set<string>([
@@ -393,23 +404,18 @@ export function fromOrg<T extends TableName>(table: T) {
 }
 
 /** Nomes de tabelas com soft delete (para a UI de lixeira). */
-export type SoftDeleteTable =
-  | "companies"
-  | "deals"
-  | "campaigns"
-  | "workflows"
-  | "email_suppressions"
-  | "email_accounts"
-  | "api_keys"
-  | "webhooks";
+export type SoftDeleteTable = (typeof SOFT_DELETE_TABLE_LIST)[number];
 
 /**
  * Coluna usada como rotulo de cada tabela na lixeira. As tabelas que nao
- * tem coluna `name` (email_accounts/email_suppressions) usam `email`.
+ * tem coluna `name` usam `email` (email_accounts/email_suppressions) ou
+ * `title` (deals); `RecycleBinView` monta o `select` a partir daqui, entao
+ * um nome errado faz a aba inteira falhar — ha teste de sincronia contra
+ * `types.ts` em `__tests__/trashLabelColumns.test.ts`.
  */
 export const TRASH_LABEL_COLUMN: Record<SoftDeleteTable, string> = {
   companies: "name",
-  deals: "name",
+  deals: "title",
   campaigns: "name",
   workflows: "name",
   email_suppressions: "email",

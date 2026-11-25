@@ -59,10 +59,10 @@
 
 ## Onda 2 — Fluxos principais quebrados
 
-- [ ] **047** — Incluir as quatro tabelas que faltam na lista de exclusão reversível do wrapper — onda 2 — Alta — achados: G31-1
+- [x] **047** — Incluir as quatro tabelas que faltam na lista de exclusão reversível do wrapper — onda 2 — Alta — achados: G31-1 · **FECHADO 2026-11-26 -- `src/integrations/supabase/withOrg.ts`: as duas listas mantidas à mão viraram uma (`SOFT_DELETE_TABLE_LIST` com as 8 tabelas, `as const`); o `Set` do wrapper e o tipo `SoftDeleteTable` saem dela, então não há mais como divergirem. `email_suppressions`, `email_accounts`, `api_keys` e `webhooks` passam a marcar `deleted_at` em vez de apagar de vez (as quatro estavam em `ORG_SCOPED_TABLES`, então o `.eq("organization_id")` continua sendo injetado). Colunas conferidas na produção (Management API, `information_schema.columns`, projeto `pttzwlbidamibjssqiqb`): as 8 tabelas têm `deleted_at` e `organization_id`. Prova comportamental nova em `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts`: para cada uma das 8 tabelas, `delete().in("id", [...])` emite exatamente `update(deleted_at) → eq(organization_id) → is(deleted_at,null) → in(id)`; fail-first reduzindo a lista às 4 antigas → 1 failed (o teste novo), restaurado → 8/8 e o diretório inteiro 68/68. tsc 0, eslint 0
 - [ ] **048** — Garantir que a lista de descadastros de e-mail nunca seja consultada sem o filtro de excluídos — onda 2 — Alta · **APROV** — achados: G31-1
-- [ ] **049** — Corrigir a coluna de rótulo da aba Negócios na lixeira — onda 2 — Média — achados: G31-2
-- [ ] **050** — Criar um teste que compare o mapa de rótulos da lixeira com o schema — onda 2 — Baixa — achados: G31-2
+- [x] **049** — Corrigir a coluna de rótulo da aba Negócios na lixeira — onda 2 — Média — achados: G31-2 · **FECHADO 2026-11-26 -- `withOrg.ts`: `TRASH_LABEL_COLUMN.deals` passou de `"name"` para `"title"`. Conferido na produção (`information_schema.columns`): `deals` tem `title` e NÃO tem `name`, então a aba Negócios dava erro sempre e o negócio excluído nunca podia ser restaurado. As outras sete entradas do mapa foram passadas pela mesma régua e estão corretas (name/name/name/email/email/name/name). `RecycleBinView.tsx` não mudou: ele monta o `select` a partir do mapa (`id, title, deleted_at`). tsc 0, eslint 0, `src/integrations/supabase/__tests__` 68/68
+- [x] **050** — Criar um teste que compare o mapa de rótulos da lixeira com o schema — onda 2 — Baixa — achados: G31-2 · **FECHADO 2026-11-26 -- novo `src/integrations/supabase/__tests__/trashLabelColumns.test.ts` (10 casos, sem banco): lê `src/integrations/supabase/types.ts` como texto e extrai o bloco `Row` de cada tabela, então compara com `TRASH_LABEL_COLUMN`. Cobre as 8 chaves (falha se alguém adicionar tabela sem rótulo), exige a coluna de rótulo dentro do `Row` de cada tabela (nome do teste carrega a coluna, ex. "a coluna de rotulo de deals (title) existe no schema") e um caso explícito de que `deals` usa `title` e não `name`. Fail-first conforme a etapa pede: `TRASH_LABEL_COLUMN.deals` de volta para `"name"` → `2 failed | 8 passed`; restaurado → 10/10. `npx vitest run src/integrations/supabase/__tests__` 68/68, tsc 0, eslint 0
 - [ ] **051** — Gravar os resultados obtidos no caminho de contingência da raspagem — onda 2 — Crítica · **APROV** — achados: G16-1
 - [ ] **052** — Gravar os resultados no segundo caminho de contingência, dentro do proxy de raspagem — onda 2 — Alta · **APROV** — achados: G16-1
 - [ ] **053** — Parar de pagar duas vezes pela mesma busca na sincronização de resultados — onda 2 — Alta · **APROV** — achados: G16-1
@@ -340,7 +340,7 @@
 
 | Data | Etapa em curso | Arquivo:linha | O que foi encontrado | Severidade estimada |
 | ---- | -------------- | ------------- | -------------------- | ------------------- |
-|      |                |               |                      |                     |
+| 2026-11-26 | 047 | `src/integrations/supabase/types.ts` (blocos `Row` de `email_suppressions`, `email_accounts`, `api_keys`, `webhooks`) | Os tipos gerados não listam a coluna `deleted_at` nessas quatro tabelas, mas a produção tem (`information_schema.columns`, projeto `pttzwlbidamibjssqiqb`). O banco está à frente do arquivo de tipos: quem se guiar por `types.ts` conclui que essas tabelas não têm exclusão reversível e escreve o código errado — foi o que produziu o G31-1. | Média |
 
 ---
 
