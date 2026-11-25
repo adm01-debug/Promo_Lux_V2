@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { View } from "@/hooks/useNavigationHistory";
-import { NAV_ITEMS } from "@/components/lux/layout/nav-items";
+import { NAV_ITEMS, isNavLink } from "@/components/lux/layout/nav-items";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +36,7 @@ interface AppBreadcrumbsProps {
 function getViewIcon(view?: View) {
   if (!view) return null;
   if (view === "dashboard") return <Home className="h-3.5 w-3.5" />;
-  const item = NAV_ITEMS.find((n) => n.id === view);
+  const item = NAV_ITEMS.find((n) => !isNavLink(n) && n.id === view);
   if (!item) return null;
   const Icon = item.icon;
   return <Icon className="h-3.5 w-3.5" />;

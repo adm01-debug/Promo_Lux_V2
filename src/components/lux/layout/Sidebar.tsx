@@ -8,7 +8,9 @@ import { Sparkles, X, PanelLeftClose, PanelLeft } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { View } from "@/hooks/useNavigationHistory";
-import { NAV_ITEMS, type NavItem } from "./nav-items";
+import { NAV_ITEMS, isNavLink, type NavItem } from "./nav-items";
+import { usePermissions } from "@/hooks/usePermissions";
+import { navigateToPath } from "@/lib/deepLink";
 
 
 const SHORTCUT_VIEWS: View[] = [
@@ -16,7 +18,8 @@ const SHORTCUT_VIEWS: View[] = [
   "stakeholders", "workflows", "gmaps", "settings",
 ];
 
-const getShortcut = (id: View): string | null => {
+const getShortcut = (id: View | null): string | null => {
+  if (!id) return null;
   const idx = SHORTCUT_VIEWS.indexOf(id);
   return idx >= 0 ? `Alt+${idx + 1}` : null;
 };
@@ -56,12 +59,30 @@ export const Sidebar = memo(({
     refetchInterval: 60_000,
   });
   // Pre-compute grouped nav items to avoid mutable variable during render
+  const { isAdmin } = usePermissions();
   const groupedItems = useMemo(() => {
     let lastSection = "";
     return NAV_ITEMS.map((item) => {
       const showSection = !!item.section && item.section !== lastSection;
       if (item.section) lastSection = item.section;
-      return { ...item, showSection };
+      if (isNavLink(item)) {
+        return {
+          item,
+          key: item.path,
+          linkPath: item.path,
+          viewId: null as View | null,
+          adminOnly: !!item.adminOnly,
+          showSection,
+        };
+      }
+      return {
+        item,
+        key: item.id,
+        linkPath: null as string | null,
+        viewId: item.id as View | null,
+        adminOnly: false,
+        showSection,
+      };
     });
   }, []);
 
@@ -113,9 +134,21 @@ export const Sidebar = memo(({
 
       {/* Navigation */}
       <nav className={cn("flex-1 overflow-y-auto", collapsed ? "p-2 space-y-1" : "p-3 space-y-0.5")}>
-        {groupedItems.map((item) => (
-          <div key={item.id} role={item.showSection ? "group" : undefined} aria-label={item.showSection && !collapsed ? item.section : undefined}>
-            {item.showSection && !collapsed && (
+        {groupedItems.map(({ item, key, linkPath, viewId, adminOnly, showSection }) => {
+          if (adminOnly && !isAdmin) return null;
+          const isActive = linkPath
+            ? typeof window !== "undefined" && window.location.pathname === linkPath
+            : viewId !== null && activeView === viewId;
+          const handleClick = () => {
+            if (linkPath) navigateToPath(linkPath);
+            else if (viewId) onNavigate(viewId);
+          };
+          const handlePrefetch = () => {
+            if (viewId) prefetchView(viewId);
+          };
+          return (
+          <div key={key} role={showSection ? "group" : undefined} aria-label={showSection && !collapsed ? item.section : undefined}>
+            {showSection && !collapsed && (
               <div className="px-3 pt-5 pb-2 flex items-center gap-2" role="presentation">
                 <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/90 font-semibold" id={`nav-section-${item.section?.replace(/\s/g, "-").toLowerCase()}`}>
                   {item.section}
@@ -126,21 +159,22 @@ export const Sidebar = memo(({
             {collapsed ? (
               <CollapsedNavButton
                 item={item}
-                isActive={activeView === item.id}
-                onClick={() => onNavigate(item.id)}
-                onPrefetch={() => prefetchView(item.id)}
+                isActive={isActive}
+                onClick={handleClick}
+                onPrefetch={handlePrefetch}
               />
             ) : (
               <ExpandedNavButton
                 item={item}
-                isActive={activeView === item.id}
-                onClick={() => onNavigate(item.id)}
-                onPrefetch={() => prefetchView(item.id)}
-                intentCount={item.id === "intent" ? intentCount : 0}
+                isActive={isActive}
+                onClick={handleClick}
+                onPrefetch={handlePrefetch}
+                intentCount={viewId === "intent" ? intentCount : 0}
               />
             )}
           </div>
-        ))}
+          );
+        })}
       </nav>
 
       {/* Footer */}
@@ -214,7 +248,7 @@ function CollapsedNavButton({
     <Tooltip>
       <TooltipTrigger asChild>
         <motion.button
-          data-tour={item.id}
+          data-tour={isNavLink(item) ? item.path : item.id}
           onClick={onClick}
           onMouseEnter={onPrefetch}
           aria-current={isActive ? "page" : undefined}
@@ -250,11 +284,12 @@ function ExpandedNavButton({
   intentCount?: number;
 }) {
   const Icon = item.icon;
-  const shortcut = getShortcut(item.id);
+  const shortcut = getShortcut(isNavLink(item) ? null : item.id);
+  const tourId = isNavLink(item) ? item.path : item.id;
 
   const btn = (
     <motion.button
-      data-tour={item.id}
+      data-tour={tourId}
       onClick={onClick}
       onMouseEnter={onPrefetch}
       aria-current={isActive ? "page" : undefined}
@@ -289,7 +324,7 @@ function ExpandedNavButton({
           {shortcut}
         </kbd>
       )}
-      {item.id === "intent" && intentCount > 0 && (
+      {!isNavLink(item) && item.id === "intent" && intentCount > 0 && (
         <motion.span
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}

@@ -19,6 +19,20 @@ vi.mock("@/lib/viewRegistry", () => ({
   prefetchView: vi.fn(),
 }));
 
+const permissoes = vi.hoisted(() => ({ isAdmin: true }));
+
+vi.mock("@/hooks/usePermissions", () => ({
+  usePermissions: () => ({
+    role: permissoes.isAdmin ? "admin" : "viewer",
+    isOwner: false,
+    isAdmin: permissoes.isAdmin,
+    isSDR: false,
+    isViewer: !permissoes.isAdmin,
+    can: () => permissoes.isAdmin,
+  }),
+  useCan: () => permissoes.isAdmin,
+}));
+
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 const defaultProps = {
@@ -89,5 +103,58 @@ describe("Sidebar", () => {
     expect(screen.getByText("Prospecção")).toBeInTheDocument();
     expect(screen.getByText("Automação")).toBeInTheDocument();
     expect(screen.getByText("Sistema")).toBeInTheDocument();
+  });
+
+  it("mostra as rotas de administrador para quem é admin", () => {
+    permissoes.isAdmin = true;
+    renderSidebar();
+    expect(screen.getByText("Monitoramento")).toBeInTheDocument();
+    expect(screen.getByText("Empresas (Admin)")).toBeInTheDocument();
+    permissoes.isAdmin = true;
+  });
+
+  it("esconde as rotas de administrador de quem não é admin", () => {
+    permissoes.isAdmin = false;
+    try {
+      renderSidebar();
+      expect(screen.queryByText("Monitoramento")).not.toBeInTheDocument();
+      expect(screen.queryByText("Empresas (Admin)")).not.toBeInTheDocument();
+      // itens de view continuam visíveis
+      expect(screen.getByText("Empresas")).toBeInTheDocument();
+    } finally {
+      permissoes.isAdmin = true;
+    }
+  });
+
+  it("abre a rota /monitoring pelo canal de deep link, sem chamar onNavigate", () => {
+    permissoes.isAdmin = true;
+    const onNavigate = vi.fn();
+    const recebidos: string[] = [];
+    const handler = (e: Event) => recebidos.push((e as CustomEvent<{ url: string }>).detail.url);
+    window.addEventListener("lux:deep-link", handler);
+    try {
+      renderSidebar({ onNavigate });
+      fireEvent.click(screen.getByText("Monitoramento"));
+      expect(recebidos).toEqual(["/monitoring"]);
+      expect(onNavigate).not.toHaveBeenCalled();
+    } finally {
+      window.removeEventListener("lux:deep-link", handler);
+    }
+  });
+
+  it("não dispara deep link ao clicar em item de view", () => {
+    permissoes.isAdmin = true;
+    const onNavigate = vi.fn();
+    const recebidos: string[] = [];
+    const handler = (e: Event) => recebidos.push((e as CustomEvent<{ url: string }>).detail.url);
+    window.addEventListener("lux:deep-link", handler);
+    try {
+      renderSidebar({ onNavigate });
+      fireEvent.click(screen.getByText("Dashboard"));
+      expect(onNavigate).toHaveBeenCalledWith("dashboard");
+      expect(recebidos).toEqual([]);
+    } finally {
+      window.removeEventListener("lux:deep-link", handler);
+    }
   });
 });

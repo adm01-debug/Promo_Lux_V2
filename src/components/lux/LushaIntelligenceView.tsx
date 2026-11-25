@@ -13,6 +13,7 @@ import { useFeatureFlag } from "@/hooks/useFeatureFlags";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -395,7 +396,7 @@ export const LushaIntelligenceView = () => {
           const { data: userRes } = await supabase.auth.getUser();
           const uid = userRes?.user?.id;
           if (!uid) return;
-          const { error: insertErr } = await supabase.from("notifications").insert({
+          const { error: insertErr } = await db.from("notifications").insert({
             user_id: uid,
             title,
             message: description,

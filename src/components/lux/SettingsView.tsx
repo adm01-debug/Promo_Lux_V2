@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Settings, User, Bell, Link2, Key, Shield, ShieldCheck, Save, Check, Loader2, RotateCcw } from "lucide-react";
+import { Settings, User, Bell, Link2, Key, Shield, ShieldCheck, Save, Check, Loader2, RotateCcw, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,7 @@ import { PiiMaskingPanel } from "@/components/lux/settings/PiiMaskingPanel";
 import { NextBestActionPanel } from "@/components/lux/settings/NextBestActionPanel";
 import { WarmupPanel } from "@/components/lux/settings/WarmupPanel";
 import { useUnsavedChanges } from "@/hooks/unsaved-changes-context";
+import { navigateToPath } from "@/lib/deepLink";
 import { StickySaveBar } from "./StickySaveBar";
 
 type SettingsTab = "account" | "notifications" | "integrations" | "security" | "api";
@@ -360,6 +361,29 @@ export const SettingsView = () => {
               <div className="border-t border-border/20 pt-6">
                 <HubSpotPanel />
               </div>
+
+              {isAdmin && (
+                <div className="border-t border-border/20 pt-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+                        <Building2 className="h-4 w-4 text-primary" /> Configurações de CNPJ
+                      </h4>
+                      <p className="text-xs text-muted-foreground">
+                        Credencial da CNPJá e o interruptor que liga e desliga o enriquecimento pago de empresas.
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => navigateToPath("/settings/cnpj")}
+                    >
+                      Abrir configurações
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
