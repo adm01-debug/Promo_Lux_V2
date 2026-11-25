@@ -106,8 +106,9 @@ export const MonitoringView = memo(() => {
   if (dbSnapshot) fontes.push(dbState);
   if (dlq) fontes.push(fromSeverity(dlqState));
   if (latency.length > 0) fontes.push(fromSeverity(worstLatencySeverity));
-  const overall: ComponentState = fontes.length > 0 ? fontes.reduce(worstState) : "unknown";
-  if (loadingStatus || loadingDb || loadingDlq || loadingLatency) overall = "unknown";
+  const carregando = loadingStatus || loadingDb || loadingDlq || loadingLatency;
+  const overall: ComponentState =
+    carregando || fontes.length === 0 ? "unknown" : fontes.reduce(worstState);
 
   const performanceData = (latencyTrend ?? []).map((point) => ({
     time: new Date(point.bucket).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
