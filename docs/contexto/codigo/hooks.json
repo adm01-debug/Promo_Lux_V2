@@ -307,12 +307,13 @@
     "useEffect"
    ],
    "canais_realtime": [],
-   "usado_por": 54,
+   "usado_por": 55,
    "usado_por_arquivos": [
     "src/components/auth/MFAEnroll.tsx",
     "src/components/lux/AIAgentView.tsx",
     "src/components/lux/AddCompanyDialog.tsx",
     "src/components/lux/AnalyticsView.tsx",
+    "src/components/lux/AutomationsList.tsx",
     "src/components/lux/CampaignsView.tsx",
     "src/components/lux/CommandPalette.tsx",
     "src/components/lux/CompaniesMapView.tsx",
@@ -337,8 +338,7 @@
     "src/components/lux/integrations/EnvProfilesPanel.tsx",
     "src/components/lux/integrations/OAuthSandboxPanel.tsx",
     "src/components/lux/integrations/OAuthSnapshotsPanel.tsx",
-    "src/components/lux/integrations/RedirectUriChecklist.tsx",
-    "src/components/lux/lusha/SessionsPanel.tsx"
+    "src/components/lux/integrations/RedirectUriChecklist.tsx"
    ],
    "coberto_por_testes": 0
   },
@@ -1833,8 +1833,9 @@
     "useRolePermissions"
    ],
    "canais_realtime": [],
-   "usado_por": 9,
+   "usado_por": 10,
    "usado_por_arquivos": [
+    "src/components/lux/AutomationsList.tsx",
     "src/components/lux/CampaignsView.tsx",
     "src/components/lux/CompaniesView.tsx",
     "src/components/lux/OrgViolationsView.tsx",

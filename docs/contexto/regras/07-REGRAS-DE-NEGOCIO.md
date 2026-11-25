@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b4dc737fb9` · branch `main` · 2026-11-25 18:34 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b0e85af663` · branch `main` · 2026-11-25 19:24 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1040,7 +1040,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `not_found` | compara, escreve | `src/hooks/useCnpjEnrich.ts`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx` |
 | `status` | `online` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx` |
-| `status` | `paused` | compara, escreve | `src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
+| `status` | `paused` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
 | `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +7 |
 | `status` | `processing` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts` |
 | `status` | `queued` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts`<br>`src/hooks/useScrapeQueue.ts`<br>… +6 |
@@ -2319,7 +2319,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1212 testes em 116 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1218 testes em 117 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2396,6 +2396,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/chaos.stress.test.ts` | 7 | Chaos determinístico — stress · A1: Determinismo em 1.000 amostras · A2: Distribuição rate=0.01 em 20.000 tasks dentro de [0.005, 0.020] · A3: Bordas rate=0 e rate=1 em 500 tasks … |
 | `supabase/functions/_shared/__tests__/companies-upsert.test.ts` | 7 | upsertCompanies: usa place_id quando o banco aceita · upsertCompanies: cai para name_source quando place_id da 42P10 · upsertCompanies: sem constraint, insere quando a empresa ainda nao existe · upsertCompanies: sem constraint, atualiza quando a empresa ja existe … |
 | `supabase/functions/_shared/__tests__/places-fallback.test.ts` | 7 | placeToRow maps Places API place to gosom-compatible row · placeToRow tolerates places with only required fields · fetchPlacesResults returns null when API key is absent · fetchPlacesResults returns null when every keyword call fails … |
+| `src/components/lux/__tests__/AutomationsList.test.tsx` | 6 | AutomationsList · navega para a tela de automacoes pelo botao Nova · mostra botao de criar workflow no estado vazio e navega · pausa o workflow ativo … |
 | `src/components/lux/__tests__/EmptyState.test.tsx` | 6 | EmptyState · renders title and description · renders action button when actionLabel and onAction provided · renders multiple action buttons … |
 | `src/components/lux/__tests__/WorkflowCard.test.tsx` | 6 | WorkflowCard · renders workflow name and description · renders status badge · calls onToggleExpand when clicked … |
 | `src/components/lux/layout/__tests__/Header.test.tsx` | 6 | Header · renders user initial when no avatar · renders avatar component when url provided · calls onOpenMobileSidebar on menu click … |

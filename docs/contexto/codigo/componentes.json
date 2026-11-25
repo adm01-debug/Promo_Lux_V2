@@ -560,9 +560,10 @@
     "AutomationsList"
    ],
    "export_default": null,
-   "linhas": 200,
+   "linhas": 238,
    "dominio": "components/lux",
    "hooks_locais": [
+    "useCan",
     "useDemo"
    ],
    "tabelas": [

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b4dc737fb9da89299b2ae4eadf53e5e227361f09",
+  "commit": "b0e85af6631aaae61fdbd3bf0c14b69cfad1b202",
   "branch": "main",
-  "data_commit": "2026-11-25T15:33:35-03:00",
+  "data_commit": "2026-11-25T16:23:30-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b0e85af",
+    "data": "2026-11-25",
+    "assunto": "fix: liga os botoes do card de Automacoes no painel inicial (#216)"
+   },
    {
     "sha": "b4dc737",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "c326fd5",
     "data": "2026-11-24",
     "assunto": "chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa"
-   },
-   {
-    "sha": "03dbb45",
-    "data": "2026-11-24",
-    "assunto": "perf(api-publica): /me em 1 round-trip em vez de 2"
    }
   ],
-  "arquivos_mudados_7d": 296,
+  "arquivos_mudados_7d": 298,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 73
+    "mudancas": 76
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -262,6 +262,10 @@
     "mudancas": 4
    },
    {
+    "arquivo": "docs/pendencias/_backlog-verificado.md",
+    "mudancas": 4
+   },
+   {
     "arquivo": "inventario/estado/edges.json",
     "mudancas": 4
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "supabase/functions/mcp/index.ts",
     "mudancas": 4
-   },
-   {
-    "arquivo": ".github/workflows/contexto.yml",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 162
+    "commits": 163
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1156,
-  "arquivos_codigo": 710,
-  "linhas_codigo": 124589,
+  "arquivos_total": 1157,
+  "arquivos_codigo": 711,
+  "linhas_codigo": 124756,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 131,
+  "testes": 132,
   "workflows": 10,
   "scripts": 53,
   "docs_md": 87
@@ -555,8 +555,8 @@
    "linhas": 339
   },
   "src/components": {
-   "arquivos": 310,
-   "linhas": 51305
+   "arquivos": 311,
+   "linhas": 51472
   },
   "src/contexts": {
    "arquivos": 7,

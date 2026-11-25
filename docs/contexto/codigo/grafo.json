@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 579,
- "arestas": 1830,
+ "arestas": 1833,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -34,7 +34,7 @@
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
-   "importado_por": 54
+   "importado_por": 55
   },
   {
    "arquivo": "src/components/ui/label.tsx",
@@ -133,11 +133,11 @@
    "importado_por": 10
   },
   {
-   "arquivo": "src/components/lux/lusha/types.ts",
-   "importado_por": 9
+   "arquivo": "src/hooks/usePermissions.ts",
+   "importado_por": 10
   },
   {
-   "arquivo": "src/hooks/usePermissions.ts",
+   "arquivo": "src/components/lux/lusha/types.ts",
    "importado_por": 9
   },
   {

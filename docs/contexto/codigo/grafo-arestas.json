@@ -163,7 +163,10 @@
    "src/components/ui/button.tsx",
    "src/components/ui/skeleton.tsx",
    "src/contexts/demo-context.ts",
+   "src/hooks/use-toast.ts",
+   "src/hooks/usePermissions.ts",
    "src/integrations/supabase/client.ts",
+   "src/lib/api/workflows.ts",
    "src/lib/demoData.ts",
    "src/lib/utils.ts"
   ],

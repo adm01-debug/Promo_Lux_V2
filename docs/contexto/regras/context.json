@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b4dc737fb9da89299b2ae4eadf53e5e227361f09",
+  "sha": "b0e85af6631aaae61fdbd3bf0c14b69cfad1b202",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 18:34 UTC",
-  "files_total": 1177,
-  "code_files": 988,
-  "code_lines": 147016
+  "generated_at": "2026-11-25 19:24 UTC",
+  "files_total": 1178,
+  "code_files": 989,
+  "code_lines": 147183
  },
  "version": "1.3.2",
- "facts_hash": "ca9361b16fa4e801",
+ "facts_hash": "675f5945db9a1a1a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -245,7 +245,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 378,
-   ".tsx": 304,
+   ".tsx": 305,
    ".sql": 274,
    ".mjs": 22,
    ".py": 5,
@@ -32461,7 +32461,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 310,
+  "components_count": 311,
   "hooks": [
    {
     "name": "useContacts",
@@ -33467,8 +33467,8 @@
   },
   {
    "module": "src/components",
-   "files": 310,
-   "lines": 51305,
+   "files": 311,
+   "lines": 51472,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33661,6 +33661,7 @@
     "src/components/lux/company-filters-utils.ts",
     "src/components/lux/motion-variants.ts",
     "src/components/lux/view-skeleton-map.tsx",
+    "src/components/lux/__tests__/AutomationsList.test.tsx",
     "src/components/lux/__tests__/CampaignsView.test.tsx",
     "src/components/lux/__tests__/CompaniesView.test.tsx",
     "src/components/lux/__tests__/CompanyFilters.test.tsx",
@@ -33672,8 +33673,7 @@
     "src/components/lux/__tests__/EmptyState.test.tsx",
     "src/components/lux/__tests__/ErrorBoundary.test.tsx",
     "src/components/lux/__tests__/ICPConfigView.test.tsx",
-    "src/components/lux/__tests__/MapFilters.test.tsx",
-    "src/components/lux/__tests__/PlacesApiNewToggle.test.tsx"
+    "src/components/lux/__tests__/MapFilters.test.tsx"
    ]
   },
   {
@@ -47502,6 +47502,18 @@
     "kind": "compara"
    },
    {
+    "file": "src/components/lux/AutomationsList.tsx",
+    "field": "status",
+    "value": "active",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/AutomationsList.tsx",
+    "field": "status",
+    "value": "paused",
+    "kind": "compara"
+   },
+   {
     "file": "src/components/lux/CampaignsView.tsx",
     "field": "type",
     "value": "email",
@@ -53582,6 +53594,30 @@
    {
     "file": "src/components/lux/SafeHTML.test.tsx",
     "name": "should convert newlines to <br />"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "AutomationsList"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "navega para a tela de automacoes pelo botao Nova"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "mostra botao de criar workflow no estado vazio e navega"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "pausa o workflow ativo"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "retoma o workflow pausado"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "nao mostra controle de pausa em estado sem efeito"
    },
    {
     "file": "src/components/lux/__tests__/CampaignsView.test.tsx",
@@ -67793,6 +67829,11 @@
       "filtra:src/components/lux/layout/Sidebar.tsx",
       "filtra:supabase/functions/campaign-dispatch/index.ts"
      ],
+     "paused": [
+      "compara:src/components/lux/AutomationsList.tsx",
+      "compara:src/components/lux/workflows/WorkflowCard.tsx",
+      "escreve:src/lib/demoData.ts"
+     ],
      "draft": [
       "escreve:src/components/lux/CampaignsView.tsx",
       "escreve:src/lib/demoData.ts"
@@ -68044,10 +68085,6 @@
      ],
      "warn": [
       "compara:src/components/lux/monitoring/SlaCompliancePanel.tsx"
-     ],
-     "paused": [
-      "compara:src/components/lux/workflows/WorkflowCard.tsx",
-      "escreve:src/lib/demoData.ts"
      ],
      "timeout": [
       "escreve:src/hooks/useCnpjEnrich.ts"
@@ -80735,7 +80772,7 @@
   },
   "src/components/lux/AutomationsList.tsx": {
    "path": "src/components/lux/AutomationsList.tsx",
-   "lines": 200,
+   "lines": 238,
    "exports": [
     "const AutomationsList"
    ],
@@ -80754,6 +80791,16 @@
     {
      "field": "status",
      "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "active",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "paused",
      "kind": "compara"
     }
    ],
@@ -82399,6 +82446,25 @@
    "lines": 47,
    "exports": [
     "function getViewSkeleton"
+   ]
+  },
+  "src/components/lux/__tests__/AutomationsList.test.tsx": {
+   "path": "src/components/lux/__tests__/AutomationsList.test.tsx",
+   "lines": 129,
+   "is_test": true,
+   "transition_maps": [
+    {
+     "name": "baseWorkflow",
+     "body": "id: \"w1\", name: \"Workflow Alfa\", description: null, status: \"active\", success_rate: 50, last_run_at: null, leads_processed: 10, leads_qualified: 2, config: {}, steps: [], created_at: \"2026-01-01T00:00:00Z\", updated_at: \"2026-01-01T00:00:00Z\", user_id: \"u1\","
+    }
+   ],
+   "tests": [
+    "AutomationsList",
+    "navega para a tela de automacoes pelo botao Nova",
+    "mostra botao de criar workflow no estado vazio e navega",
+    "pausa o workflow ativo",
+    "retoma o workflow pausado",
+    "nao mostra controle de pausa em estado sem efeito"
    ]
   },
   "src/components/lux/__tests__/CampaignsView.test.tsx": {
@@ -102016,10 +102082,22 @@
   }
  },
  "git": {
-  "sha": "b4dc737fb9da89299b2ae4eadf53e5e227361f09",
+  "sha": "b0e85af6631aaae61fdbd3bf0c14b69cfad1b202",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b0e85af",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: liga os botoes do card de Automacoes no painel inicial (#216)",
+    "files": [
+     "docs/pendencias/_backlog-verificado.md",
+     "src/components/lux/AutomationsList.tsx",
+     "src/components/lux/DashboardView.tsx",
+     "src/components/lux/__tests__/AutomationsList.test.tsx"
+    ]
+   },
    {
     "sha": "b4dc737",
     "date": "2026-11-25",
@@ -102308,25 +102386,15 @@
      "scripts/check-schema-replay-drift.sh",
      "scripts/schema-drift-baseline.txt"
     ]
-   },
-   {
-    "sha": "a8b5edf",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)",
-    "files": [
-     "supabase/functions/public-api/index.ts",
-     "supabase/migrations/20261124180000_api_key_auth_roundtrip_unico.sql"
-    ]
    }
   ],
   "hot_files": [
    [
-    "supabase/functions/public-api/index.ts",
-    4
+    "package.json",
+    3
    ],
    [
-    "package.json",
+    "supabase/functions/public-api/index.ts",
     3
    ],
    [
@@ -102344,6 +102412,22 @@
    [
     ".github/workflows/db-migrations.yml",
     2
+   ],
+   [
+    "docs/pendencias/_backlog-verificado.md",
+    1
+   ],
+   [
+    "src/components/lux/AutomationsList.tsx",
+    1
+   ],
+   [
+    "src/components/lux/DashboardView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/__tests__/AutomationsList.test.tsx",
+    1
    ],
    [
     "supabase/config.toml",
@@ -102383,22 +102467,6 @@
    ],
    [
     "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
-    1
-   ],
-   [
-    "supabase/functions/audit-logs-prune/index.ts",
-    1
-   ],
-   [
-    "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
-    1
-   ],
-   [
-    "supabase/functions/api-latency-alerts/index.ts",
-    1
-   ],
-   [
-    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
     1
    ]
   ]
