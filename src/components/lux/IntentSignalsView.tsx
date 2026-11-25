@@ -346,6 +346,8 @@ export const IntentSignalsView = () => {
             icon={Radar}
             title="Nenhum sinal registrado"
             description="Sinais de intenção aparecerão aqui. Clique em 'Registrar Sinal' para adicionar manualmente."
+            actionLabel="Registrar sinal"
+            onAction={() => setCreateOpen(true)}
           />
         ) : (
           <div className="divide-y divide-border/20">

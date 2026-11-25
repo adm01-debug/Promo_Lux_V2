@@ -37,6 +37,8 @@ export function CompanyAutomationTable({ companies }: { companies: CompanyAutoma
           icon={Search}
           title="Nenhuma empresa encontrada"
           description="Ajuste a busca ou inicie uma raspagem para ver o progresso das automações aqui."
+          actionLabel={term ? "Limpar busca" : undefined}
+          onAction={term ? () => setTerm("") : undefined}
         />
       ) : (
         <ScrollArea className="h-[420px] rounded-lg border border-border/40">
