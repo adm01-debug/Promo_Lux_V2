@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { 
   History, 
   Terminal, 
@@ -107,6 +108,7 @@ const AutomationMonitoring = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
   const queryClient = useQueryClient();
 
   // Enable realtime updates for scrape jobs
@@ -149,12 +151,13 @@ const AutomationMonitoring = () => {
   });
 
   const { data: alertSettings, refetch: refetchAlerts } = useQuery({
-    queryKey: ["automation-alerts"],
+    queryKey: ["automation-alerts", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("automation_alerts").select("*");
       if (error) throw error;
       return data;
-    }
+    },
+    enabled: !!activeOrgId,
   });
 
   const updateAlertMutation = useMutation({

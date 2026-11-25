@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { db, setActiveOrgId, getActiveOrgId } from "@/integrations/supabase/withOrg";
+import { db, setActiveOrgId, getActiveOrgId, MissingOrgContextError } from "@/integrations/supabase/withOrg";
 
 describe("Multi-Tenant Isolation (SafeOrg)", () => {
   beforeEach(() => {
@@ -17,13 +17,12 @@ describe("Multi-Tenant Isolation (SafeOrg)", () => {
     expect(query).toBeDefined();
   });
 
-  it("should warn but not throw on SELECT when no organization is active", () => {
+  it("should fail closed on SELECT when no organization is active", () => {
     setActiveOrgId(null);
 
-    // This implementation only warns on SELECT (see withOrg.ts line 245)
-    // but we check it returns a builder
-    const query = db.from("companies").select("*");
-    expect(query).toBeDefined();
+    // Etapa 010: sem organização ativa a leitura não sai — mesmo contrato das
+    // escritas. Antes o wrapper apenas avisava e consultava sem escopo.
+    expect(() => db.from("companies").select("*")).toThrowError(MissingOrgContextError);
   });
 
   it("should block cross-tenant injection attempts in values", () => {

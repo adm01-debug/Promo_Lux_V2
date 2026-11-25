@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/auth-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "sonner";
 
 export type ReportMetric = "conversion" | "enrichment" | "pipeline" | "campaigns";
@@ -43,12 +44,13 @@ const SELECT = "id,name,metric,frequency,day_of_week,day_of_month,hour_utc,recip
 
 export function useScheduledReports() {
   const { user } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
   const qc = useQueryClient();
-  const key = ["scheduled_reports", user?.id];
+  const key = ["scheduled_reports", user?.id, activeOrgId];
 
   const query = useQuery({
     queryKey: key,
-    enabled: !!user,
+    enabled: !!user && !!activeOrgId,
     queryFn: async () => {
       const { data, error } = await db
         .from("scheduled_reports")
