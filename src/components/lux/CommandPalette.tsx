@@ -7,6 +7,7 @@ import { View } from "@/hooks/useNavigationHistory";
 import { RecentView } from "@/hooks/useRecentViews";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { VIEW_LABELS, sections, helpItems } from "./command-palette/commandPaletteData";
@@ -26,37 +27,38 @@ interface QuickAction {
 export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { activeOrgId } = useActiveOrganization();
 
   const { data: companies = [], isLoading: companiesLoading } = useQuery({
-    queryKey: ["command-palette-companies"],
+    queryKey: ["command-palette-companies", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("companies").select("id, name, sector, location, ipc_score").order("ipc_score", { ascending: false }).limit(100);
       if (error) throw error;
       return data ?? [];
     },
-    enabled: open,
+    enabled: open && !!activeOrgId,
     staleTime: 30_000,
   });
 
   const { data: stakeholders = [] } = useQuery({
-    queryKey: ["command-palette-stakeholders"],
+    queryKey: ["command-palette-stakeholders", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("stakeholders").select("id, full_name, role, company_id, email").order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
       return data ?? [];
     },
-    enabled: open,
+    enabled: open && !!activeOrgId,
     staleTime: 30_000,
   });
 
   const { data: workflows = [] } = useQuery({
-    queryKey: ["command-palette-workflows"],
+    queryKey: ["command-palette-workflows", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("workflows").select("id, name, status, description").order("created_at", { ascending: false }).limit(50);
       if (error) throw error;
       return data ?? [];
     },
-    enabled: open,
+    enabled: open && !!activeOrgId,
     staleTime: 30_000,
   });
 

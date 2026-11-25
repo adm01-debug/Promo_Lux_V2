@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { usePersistedFilters } from "@/hooks/usePersistedFilters";
 import { useDemo } from "@/contexts/demo-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { DEMO_COMPANIES_FULL } from "@/lib/demoData";
 import { AddCompanyDialog } from "@/components/lux/AddCompanyDialog";
 import { ImportCompaniesDialog } from "@/components/lux/companies/ImportCompaniesDialog";
@@ -49,6 +50,7 @@ interface Company {
 
 export const CompaniesView = () => {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
   const { toast } = useToast();
   const canDelete = useCan("companies", "delete");
   const canCreate = useCan("companies", "create");
@@ -73,7 +75,7 @@ export const CompaniesView = () => {
   const itemsPerPage = 20;
 
   const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery<Company[]>({
-    queryKey: ["companies-list", isDemoMode],
+    queryKey: ["companies-list", isDemoMode, activeOrgId],
     queryFn: isDemoMode
       ? () => DEMO_COMPANIES_FULL as unknown as Company[]
       : async () => {
@@ -88,6 +90,7 @@ export const CompaniesView = () => {
           })) as Company[];
         },
     staleTime: 15_000,
+    enabled: isDemoMode || !!activeOrgId,
   });
 
   const companies = useMemo(() => rawCompanies ?? [], [rawCompanies]);

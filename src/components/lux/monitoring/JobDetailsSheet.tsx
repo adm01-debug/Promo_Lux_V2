@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { supabase } from "@/integrations/supabase/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -74,6 +75,7 @@ type JobStage = {
 
 export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetailsSheetProps) => {
   const { toast } = useToast();
+  const { activeOrgId } = useActiveOrganization();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedStep, setSelectedStep] = useState<JobStage | null>(null);
@@ -82,19 +84,19 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
   useRealtimeJobDetails(jobId);
 
   const { data: job, refetch: refetchJob } = useQuery({
-    queryKey: ["scrape-job", jobId],
+    queryKey: ["scrape-job", jobId, activeOrgId],
     queryFn: async () => {
       if (!jobId) return null;
       const { data, error } = await db.from("scrape_jobs").select("*").eq("id", jobId).single();
       if (error) throw error;
       return data;
     },
-    enabled: !!jobId && open,
+    enabled: !!jobId && open && !!activeOrgId,
   });
 
     // Cabecalho alternativo para runs de workflow (sem scrape_job associado)
     const { data: workflowRun } = useQuery({
-      queryKey: ["workflow-run", runId],
+      queryKey: ["workflow-run", runId, activeOrgId],
     queryFn: async () => {
         if (!runId || !!jobId) return null;
       const { data, error } = await db
@@ -105,11 +107,11 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
       if (error) throw error;
         return data;
       },
-      enabled: !!runId && !jobId && open,
+      enabled: !!runId && !jobId && open && !!activeOrgId,
     });
 
     const { data: steps = [], isLoading: stepsLoading } = useQuery({
-      queryKey: ["automation-steps", jobId, runId],
+      queryKey: ["automation-steps", jobId, runId, activeOrgId],
       queryFn: async () => {
         if (!jobId && !runId) return [];
         let q = db.from("automation_steps").select("*");
@@ -123,11 +125,11 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
         if (error) throw error;
       return data || [];
     },
-      enabled: (!!jobId || !!runId) && open,
+      enabled: (!!jobId || !!runId) && open && !!activeOrgId,
   });
 
   const { data: results, isLoading: resultsLoading } = useQuery({
-    queryKey: ["scrape-results", jobId],
+    queryKey: ["scrape-results", jobId, activeOrgId],
     queryFn: async () => {
       if (!jobId) return [];
       const { data, error } = await db
@@ -139,7 +141,7 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
       if (error) throw error;
       return data || [];
     },
-    enabled: !!jobId && open,
+    enabled: !!jobId && open && !!activeOrgId,
   });
 
   const exportCSV = () => {

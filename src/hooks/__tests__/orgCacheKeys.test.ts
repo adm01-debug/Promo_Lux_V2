@@ -100,6 +100,7 @@ import { useApiLatency, useApiLatencyTrend } from "@/hooks/useApiLatency";
 import { useAuditTables, useAuditTrail } from "@/hooks/useAuditTrail";
 import { useRecentActivity, useRecentCompanies } from "@/hooks/useDashboardData";
 import { useAutomationsMonitor } from "@/hooks/useAutomationsMonitor";
+import { useScheduledReports } from "@/hooks/useScheduledReports";
 
 const CASOS: Array<{ nome: string; rodar: () => unknown }> = [
   { nome: "negocios", rodar: () => useDeals() },
@@ -155,5 +156,26 @@ describe("chave de cache escopada por organizacao", () => {
     for (const key of daOrg1) expect(key).toContain("org-1");
     for (const key of daOrg2) expect(key).toContain("org-2");
     expect(daOrg1).not.toEqual(daOrg2);
+  });
+});
+
+describe("relatorios agendados", () => {
+  it("a lista troca de chave ao trocar de organizacao", () => {
+    const daOrg1 = keysFor(() => useScheduledReports(), "org-1");
+    const daOrg2 = keysFor(() => useScheduledReports(), "org-2");
+    const lista = (keys: string[]) => keys.filter((key) => key.includes("scheduled_reports\""));
+    expect(lista(daOrg1)).toHaveLength(1);
+    expect(lista(daOrg1)[0]).toContain("org-1");
+    expect(lista(daOrg2)[0]).toContain("org-2");
+    expect(lista(daOrg1)).not.toEqual(lista(daOrg2));
+  });
+
+  it("sem organizacao ativa a consulta de relatorios nao roda", () => {
+    state.currentOrgId = null;
+    captured.length = 0;
+    renderHook(() => useScheduledReports());
+    const lista = captured.filter((o) => JSON.stringify(o.queryKey).includes("scheduled_reports\""));
+    expect(lista).toHaveLength(1);
+    expect(lista[0].enabled).toBe(false);
   });
 });

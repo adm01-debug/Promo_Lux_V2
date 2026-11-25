@@ -221,10 +221,10 @@ export class OrgMismatchError extends Error {
 }
 
 /**
- * Lançado quando uma operação que escreve dados (insert/update/delete) é
- * tentada em uma tabela org-escopada SEM uma organização ativa definida.
- * Falhar fechado evita que um bug de bootstrap (org ainda carregando)
- * resulte em escrita ou deleção sem filtro.
+ * Lançado quando uma operação em tabela org-escopada (leitura ou escrita) é
+ * tentada SEM uma organização ativa definida. Falhar fechado evita que um bug
+ * de bootstrap (org ainda carregando) resulte em leitura, escrita ou deleção
+ * fora do escopo da organização.
  */
 export class MissingOrgContextError extends Error {
   constructor(public table: string, public op: string) {
@@ -374,10 +374,10 @@ export function fromOrg<T extends TableName>(table: T) {
 
       if (prop === "select" && isScoped) {
         return (...args: unknown[]) => {
-          if (!orgId) {
-            console.warn(`[withOrg] Tentativa de select em "${tableName}" sem org ativa. Retornando builder sem filtro automático para evitar MissingOrgContextError imediato.`);
-            return dispatch.select(...args);
-          }
+          // Falha fechada: sem organização ativa a leitura não sai. O erro é
+          // capturado pelo React Query/handler global (`src/lib/orgErrorHandler.ts`),
+          // então a consulta nunca chega ao banco sem `.eq("organization_id", ...)`.
+          if (!orgId) raise(new MissingOrgContextError(tableName, "select"));
           const q = dispatch.select(...args).eq("organization_id", orgId);
           // Soft delete: por padrão, esconde registros na lixeira.
           if (SOFT_DELETE_TABLES.has(tableName)) {

@@ -51,6 +51,14 @@ vi.mock("@/hooks/usePermissions", () => ({
   usePermissions: () => ({ role: "admin", isAdmin: true, can: () => true }),
 }));
 
+vi.mock("@/contexts/active-org-context", () => ({
+  useActiveOrganization: () => ({
+    activeOrgId: "org-test",
+    activeOrg: { id: "org-test", name: "Org Teste" },
+    setActive: vi.fn(),
+  }),
+}));
+
 vi.mock("@/hooks/use-toast", () => ({
   toast: vi.fn(),
   useToast: () => ({ toast: vi.fn(), dismiss: vi.fn(), toasts: [] }),

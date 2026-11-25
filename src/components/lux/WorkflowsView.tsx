@@ -19,6 +19,7 @@ import type { Json, Tables } from "@/integrations/supabase/types";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
 import { WorkflowEditor, type WorkflowStep } from "@/components/automation/WorkflowEditor";
 import { useDemo } from "@/contexts/demo-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
 import { toast } from "@/hooks/use-toast";
 import { WorkflowCard } from "./workflows/WorkflowCard";
@@ -61,6 +62,7 @@ const phaseOptions: { phase: WorkflowPhase; label: string; hint: string }[] = [
 
 export const WorkflowsView = () => {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
   const canCreate = useCan("workflows", "create");
   const canEdit = useCan("workflows", "edit");
   const canDelete = useCan("workflows", "delete");
@@ -79,7 +81,7 @@ export const WorkflowsView = () => {
   const [enabledPhases, setEnabledPhases] = useState<WorkflowPhase[]>(["scrape", "enrich", "ipc_score"]);
 
   const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
-    queryKey: ["workflows", isDemoMode],
+    queryKey: ["workflows", isDemoMode, activeOrgId],
     queryFn: isDemoMode
       ? () => DEMO_WORKFLOWS as unknown as Workflow[]
       : async () => {
@@ -93,6 +95,7 @@ export const WorkflowsView = () => {
         },
     refetchInterval: 15000,
     retry: 1,
+    enabled: isDemoMode || !!activeOrgId,
   });
 
   const createMutation = useMutation({

@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { ViewSkeleton } from "@/components/lux/ViewSkeleton";
 import { useDemo } from "@/contexts/demo-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { DEMO_STAKEHOLDERS } from "@/lib/demoData";
 import { DataError } from "@/components/lux/DataError";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -51,6 +52,7 @@ const getSeniority = (s: string | null) => seniorityConfig[s || "unknown"] || se
 
 export const StakeholderFinderView = () => {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
   const [search, setSearch] = useState("");
   const [selectedDepts, setSelectedDepts] = useState<Set<string>>(new Set());
   const [selectedSeniority, setSelectedSeniority] = useState<Set<string>>(new Set());
@@ -80,7 +82,7 @@ export const StakeholderFinderView = () => {
   });
 
   const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
-    queryKey: ["stakeholders", isDemoMode],
+    queryKey: ["stakeholders", isDemoMode, activeOrgId],
     queryFn: isDemoMode
       ? () => DEMO_STAKEHOLDERS as Stakeholder[]
       : async () => {
@@ -88,6 +90,7 @@ export const StakeholderFinderView = () => {
           if (error) throw error;
           return data as Stakeholder[];
         },
+    enabled: isDemoMode || !!activeOrgId,
   });
 
   const departments = useMemo(() => {
