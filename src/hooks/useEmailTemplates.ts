@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import type { SequenceStep } from "@/components/lux/campaigns/CampaignFormFields";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 
 export type EmailTemplate = {
   id: string;
@@ -68,8 +69,9 @@ function normalize(row: Record<string, unknown>): EmailTemplate {
 }
 
 export function useEmailTemplates() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["email-templates"],
+    queryKey: ["email-templates", activeOrgId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("email_templates")
@@ -83,8 +85,9 @@ export function useEmailTemplates() {
 }
 
 export function useEmailTemplateStats() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["email-template-stats"],
+    queryKey: ["email-template-stats", activeOrgId],
     queryFn: async () => {
       const { data, error } = await supabase.from("email_template_stats").select("*");
       if (error) throw error;

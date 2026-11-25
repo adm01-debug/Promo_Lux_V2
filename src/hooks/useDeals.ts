@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/auth-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "sonner";
 
 export interface DealStage {
@@ -37,10 +38,11 @@ export interface Deal {
 
 export function useDealStages() {
   const { user } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
   const qc = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["deal_stages", user?.id],
+    queryKey: ["deal_stages", user?.id, activeOrgId],
     enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -111,10 +113,11 @@ export function useDealStages() {
 
 export function useDeals() {
   const { user } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
   const qc = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["deals", user?.id],
+    queryKey: ["deals", user?.id, activeOrgId],
     enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -173,14 +176,14 @@ export function useDeals() {
     },
     onMutate: async ({ id, version: _v, ...patch }) => {
       await qc.cancelQueries({ queryKey: ["deals", user?.id] });
-      const prev = qc.getQueryData<Deal[]>(["deals", user?.id]);
-      qc.setQueryData<Deal[]>(["deals", user?.id], (old) =>
+      const prev = qc.getQueryData<Deal[]>(["deals", user?.id, activeOrgId]);
+      qc.setQueryData<Deal[]>(["deals", user?.id, activeOrgId], (old) =>
         (old ?? []).map((d) => (d.id === id ? { ...d, ...patch } as Deal : d)),
       );
       return { prev };
     },
     onError: (err, _v, ctx) => {
-      if (ctx?.prev) qc.setQueryData(["deals", user?.id], ctx.prev);
+      if (ctx?.prev) qc.setQueryData(["deals", user?.id, activeOrgId], ctx.prev);
       const isStale = (err as { code?: string })?.code === "STALE_WRITE";
       toast.error(
         isStale ? "Este negócio foi atualizado por outra pessoa. Recarregando…" : "Erro ao atualizar negócio",
@@ -266,10 +269,11 @@ export interface DealTask {
 
 export function useDealTasks(dealId?: string | null) {
   const { user } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
   const qc = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["deal_tasks", user?.id, dealId ?? "all"],
+    queryKey: ["deal_tasks", user?.id, dealId ?? "all", activeOrgId],
     enabled: !!user,
     queryFn: async () => {
       let q = db.from("deal_tasks").select("*").order("due_at", { ascending: true, nullsFirst: false });

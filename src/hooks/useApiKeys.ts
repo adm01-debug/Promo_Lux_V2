@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/auth-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "sonner";
 
 export interface ApiKey {
@@ -30,10 +31,11 @@ function generateKey(): { full: string; prefix: string } {
 
 export function useApiKeys() {
   const { user } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
   const qc = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["api_keys", user?.id],
+    queryKey: ["api_keys", user?.id, activeOrgId],
     enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase

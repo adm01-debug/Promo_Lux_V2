@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useDemo } from "@/contexts/demo-context";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { DEMO_PERFORMANCE } from "@/lib/demoData";
 
 interface DayPerformance {
@@ -13,9 +14,10 @@ const DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export function useWeeklyPerformance() {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
 
   return useQuery({
-    queryKey: ["weekly-performance", isDemoMode],
+    queryKey: ["weekly-performance", isDemoMode, activeOrgId],
     queryFn: isDemoMode
       ? () => DEMO_PERFORMANCE
       : async (): Promise<DayPerformance[]> => {

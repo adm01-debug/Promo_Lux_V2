@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "sonner";
 import { formatPushResumo } from "./oracleV2Helpers";
 
@@ -31,8 +32,9 @@ export interface OraclePreflightResponse {
 
 
 export function useOraclePreflight() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery<OraclePreflightResponse>({
-    queryKey: ["oracle", "preflight"],
+    queryKey: ["oracle", "preflight", activeOrgId],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke<OraclePreflightResponse>(
         "oracle-cookies-preflight",

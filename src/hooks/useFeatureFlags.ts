@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import type { Json } from "@/integrations/supabase/types";
 
 export interface FeatureFlag {
@@ -11,8 +12,9 @@ export interface FeatureFlag {
 }
 
 export const useFeatureFlags = () => {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["feature-flags"],
+    queryKey: ["feature-flags", activeOrgId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("feature_flags")

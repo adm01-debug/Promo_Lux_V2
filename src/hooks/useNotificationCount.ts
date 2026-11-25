@@ -9,7 +9,7 @@ export const useNotificationCount = () => {
   const { isDemoMode } = useDemo();
   const { activeOrgId } = useActiveOrganization();
   const { data } = useQuery({
-    queryKey: ["notifications-count", isDemoMode],
+    queryKey: ["notifications-count", isDemoMode, activeOrgId],
     enabled: isDemoMode || !!activeOrgId,
     queryFn: isDemoMode
       ? () => DEMO_NOTIFICATIONS.filter((n) => !n.read).length

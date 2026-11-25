@@ -135,7 +135,7 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
 export function useAuditTables() {
   const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["audit-trail", "tables"],
+    queryKey: ["audit-trail", "tables", activeOrgId],
     enabled: !!activeOrgId,
     queryFn: async (): Promise<string[]> => {
       const { data, error } = await db
@@ -162,6 +162,7 @@ export function useAuditTrail(filters: AuditTrailFilters) {
       filters.pageSize,
       filters.dateFrom ?? "",
       filters.dateTo ?? "",
+      activeOrgId,
     ],
     queryFn: () => fetchAuditTrail(filters),
     enabled: !!activeOrgId,

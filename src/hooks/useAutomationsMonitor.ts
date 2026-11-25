@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { useAuth } from "@/contexts/auth-context";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -38,8 +39,9 @@ export function stageStatus(c: CompanyAutomationRow): Record<AutomationStage, St
 }
 
 function useCompanies() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["automations", "companies"],
+    queryKey: ["automations", "companies", activeOrgId],
     queryFn: async (): Promise<CompanyAutomationRow[]> => {
       if (!getActiveOrgId()) return [];
       const { data, error } = await db
@@ -56,8 +58,9 @@ function useCompanies() {
 }
 
 function useQueue() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["automations", "queue"],
+    queryKey: ["automations", "queue", activeOrgId],
     queryFn: async (): Promise<QueueRow[]> => {
       if (!getActiveOrgId()) return [];
       const { data, error } = await db
@@ -73,8 +76,9 @@ function useQueue() {
 }
 
 function useEvents() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["automations", "events"],
+    queryKey: ["automations", "events", activeOrgId],
     queryFn: async (): Promise<EventRow[]> => {
       if (!getActiveOrgId()) return [];
       const { data, error } = await db
@@ -90,8 +94,9 @@ function useEvents() {
 }
 
 function useDeadLetter() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["automations", "dead-letter"],
+    queryKey: ["automations", "dead-letter", activeOrgId],
     queryFn: async (): Promise<DeadLetterRow[]> => {
       if (!getActiveOrgId()) return [];
       const { data, error } = await db

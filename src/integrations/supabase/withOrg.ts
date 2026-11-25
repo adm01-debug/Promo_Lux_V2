@@ -116,6 +116,7 @@ export const ORG_SCOPED_TABLES = new Set<string>([
   "sales_goals",
   "satisfaction_responses",
   "satisfaction_surveys",
+  "scheduled_reports",
   "scrape_jobs",
   "scrape_results",
   "stakeholders",
@@ -147,6 +148,8 @@ export const EXEMPT_TABLES = new Set<string>([
   "organizations",
   "organization_members",
   "organization_invites",
+  "changelog_entries",      // changelog global: leitura para todo autenticado (RLS)
+  "scheduled_report_runs",  // sem organization_id no banco: escopo próprio por user_id (RLS)
 ]);
 
 /**
@@ -189,6 +192,17 @@ export const ORG_UNSCOPED_TABLES = new Set<string>([
   "scrape_dead_letter",        // DLQ: leitura via supabase.from + RPC de replay
   "scrape_queue",              // fila: escrita via RPC, leitura via supabase.from + RLS
   "campaign_warmup_state",     // contador de aquecimento: leitura via supabase.from + RLS; escrita SO por RPC get/consume_warmup_slot (SECURITY DEFINER)
+  "bulk_imports",              // historico de importacao CSV: leitura/escrita via supabase.from + RLS (ImportCompaniesDialog)
+  "instagram_scrape_dead_letter", // DLQ do motor Instagram: leitura via supabase.from + RPC de replay
+  "instagram_scrape_queue",    // fila do motor Instagram: escrita por edge instagram-enqueue, leitura por edge/worker
+  "instagram_scrape_results",  // resultado do motor Instagram: gravado pelas edges instagram-worker
+  "org_integrations",          // integracoes por org (HubSpot): leitura/escrita via supabase.from + RLS; edge hubspot-sync
+  "places_api_usage",          // consumo da Places API por org: leitura via supabase.from + RLS (usePlacesApiUsage)
+  "retry_policy_advisories",   // recomendacoes do ajustador de retry: leitura via supabase.from + RLS; escrito por edge retry-policy-tuner
+  "role_permissions",          // matriz de permissoes por org: leitura/escrita via supabase.from com organization_id explicito + RLS (useRolePermissions)
+  "web_scrape_dead_letter",    // DLQ do motor de scraping nativo: leitura via supabase.from + RPC de replay
+  "web_scrape_queue",          // fila do motor de scraping nativo: leitura via supabase.from + RLS (useWebScrape)
+  "web_scrape_results",        // resultado do scraping nativo: gravado pelas edges web-scrape-*
 ]);
 
 
