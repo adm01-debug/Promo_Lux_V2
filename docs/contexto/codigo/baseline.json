@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "2353b88552c4a5562f2f184921ef695401274b9f",
+  "commit": "0c5b352c9543a6861297eb9a98934e345fd452a9",
   "branch": "main",
-  "data_commit": "2026-11-25T07:28:13-03:00",
+  "data_commit": "2026-11-25T07:38:24-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "0c5b352",
+    "data": "2026-11-25",
+    "assunto": "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)"
+   },
    {
     "sha": "2353b88",
     "data": "2026-11-25",
@@ -126,11 +131,6 @@
     "sha": "25e2bf3",
     "data": "2026-11-24",
     "assunto": "chore: inventario do estado real (semanal)"
-   },
-   {
-    "sha": "faad34a",
-    "data": "2026-11-24",
-    "assunto": "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)"
    }
   ],
   "arquivos_mudados_7d": 271,
@@ -188,11 +188,11 @@
     "mudancas": 6
    },
    {
-    "pasta": "docs/ESTADO_ATUAL.md",
+    "pasta": ".github/workflows/ci.yml",
     "mudancas": 5
    },
    {
-    "pasta": "scripts/automation.config.json",
+    "pasta": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    }
   ],
@@ -238,6 +238,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 5
+   },
+   {
     "arquivo": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
@@ -250,7 +254,7 @@
     "mudancas": 5
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
+    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
     "mudancas": 4
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": ".github/workflows/contexto.yml",
     "mudancas": 3
-   },
-   {
-    "arquivo": ".github/workflows/edge-functions-deploy.yml",
-    "mudancas": 3
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 145
+    "commits": 146
    },
    {
     "autor": "dependabot[bot]",

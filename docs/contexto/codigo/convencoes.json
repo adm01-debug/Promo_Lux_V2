@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)",
    "fix(deps): atualiza @hookform/resolvers para 7.0.9 (#198)",
    "infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)",
    "fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)",
-   "chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)",
-   "perf(api-publica): lista de companies/deals/stakeholders em um unico round-trip (#193)"
+   "chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)"
   ]
  },
  "pr_template": null,

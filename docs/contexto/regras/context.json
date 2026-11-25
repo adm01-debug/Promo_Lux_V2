@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "2353b88552c4a5562f2f184921ef695401274b9f",
+  "sha": "0c5b352c9543a6861297eb9a98934e345fd452a9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 10:29 UTC",
+  "generated_at": "2026-11-25 10:39 UTC",
   "files_total": 1166,
   "code_files": 981,
   "code_lines": 146500
  },
  "version": "1.3.2",
- "facts_hash": "ffd2206c165905dc",
+ "facts_hash": "48034a98b19a046b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -170,7 +170,8 @@
     "name": "CI Pipeline",
     "triggers": [
      "pull_request",
-     "push"
+     "push",
+     "workflow_dispatch"
     ]
    },
    {
@@ -101817,10 +101818,20 @@
   }
  },
  "git": {
-  "sha": "2353b88552c4a5562f2f184921ef695401274b9f",
+  "sha": "0c5b352c9543a6861297eb9a98934e345fd452a9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "0c5b352",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)",
+    "files": [
+     ".github/workflows/ci.yml",
+     ".github/workflows/inventario-estado-semanal.yml"
+    ]
+   },
    {
     "sha": "2353b88",
     "date": "2026-11-25",
@@ -102150,15 +102161,6 @@
      "supabase/migrations/20261124020000_c13_warmup_throttling.sql",
      "supabase/migrations/20261124030000_d18_durable_workflow_execution.sql"
     ]
-   },
-   {
-    "sha": "825b08c",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "fix(crons): snapshoters ignoram org orfa e versiona 8 crons ausentes (#152)",
-    "files": [
-     "supabase/migrations/20261124010000_cron_snapshot_org_guard.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -102211,6 +102213,14 @@
     2
    ],
    [
+    ".github/workflows/ci.yml",
+    1
+   ],
+   [
+    ".github/workflows/inventario-estado-semanal.yml",
+    1
+   ],
+   [
     "src/components/lux/__tests__/ProxyFormDialog.test.tsx",
     1
    ],
@@ -102232,14 +102242,6 @@
    ],
    [
     "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
     1
    ]
   ]

@@ -178,7 +178,8 @@
    "nome": "CI Pipeline",
    "gatilhos": [
     "pull_request",
-    "push"
+    "push",
+    "workflow_dispatch"
    ],
    "crons": [],
    "branches": [
