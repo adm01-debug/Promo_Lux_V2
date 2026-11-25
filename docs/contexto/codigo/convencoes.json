@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)",
    "chore: normaliza fim de linha em LF para todo clone (#201)",
    "fix(scripts): resolver executavel no Windows usa as extensoes do PATHEXT (#200)",
    "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)",
-   "fix(deps): atualiza @hookform/resolvers para 7.0.9 (#198)",
-   "infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)"
+   "fix(deps): atualiza @hookform/resolvers para 7.0.9 (#198)"
   ]
  },
  "pr_template": null,

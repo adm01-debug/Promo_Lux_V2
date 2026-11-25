@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "aa94815329dea340706bd36101771445e95d796e",
+  "commit": "4f59248a5b02db3f2707600ff7d4e10bff4fb047",
   "branch": "main",
-  "data_commit": "2026-11-25T08:26:03-03:00",
+  "data_commit": "2026-11-25T08:31:53-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "4f59248",
+    "data": "2026-11-25",
+    "assunto": "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)"
+   },
    {
     "sha": "aa94815",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "d4ad14d",
     "data": "2026-11-24",
     "assunto": "fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)"
-   },
-   {
-    "sha": "78ec030",
-    "data": "2026-11-24",
-    "assunto": "infra: guardas de drift de schema e de run superado no CI de migrations (#173)"
    }
   ],
-  "arquivos_mudados_7d": 275,
+  "arquivos_mudados_7d": 279,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 148
+    "commits": 149
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1149,
   "arquivos_codigo": 712,
-  "linhas_codigo": 124737,
+  "linhas_codigo": 124746,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -432,7 +432,7 @@
   },
   "scripts/automation.unit.mjs": {
    "arquivos": 1,
-   "linhas": 689
+   "linhas": 698
   },
   "scripts/ci": {
    "arquivos": 3,

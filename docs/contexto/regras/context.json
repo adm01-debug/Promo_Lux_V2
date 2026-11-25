@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "aa94815329dea340706bd36101771445e95d796e",
+  "sha": "4f59248a5b02db3f2707600ff7d4e10bff4fb047",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 11:30 UTC",
+  "generated_at": "2026-11-25 11:39 UTC",
   "files_total": 1169,
   "code_files": 983,
-  "code_lines": 146605
+  "code_lines": 146614
  },
  "version": "1.3.2",
- "facts_hash": "254a3bc58300ba36",
+ "facts_hash": "d8564bcf5a5c203c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -33143,7 +33143,7 @@
   {
    "module": "scripts",
    "files": 50,
-   "lines": 17380,
+   "lines": 17389,
    "tables": [
     "a",
     "contacts",
@@ -78702,7 +78702,7 @@
   },
   "scripts/automation.unit.mjs": {
    "path": "scripts/automation.unit.mjs",
-   "lines": 689,
+   "lines": 698,
    "env": [
     "FIXTURE_GRAPH_EXIT"
    ],
@@ -101838,10 +101838,22 @@
   }
  },
  "git": {
-  "sha": "aa94815329dea340706bd36101771445e95d796e",
+  "sha": "4f59248a5b02db3f2707600ff7d4e10bff4fb047",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "4f59248",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)",
+    "files": [
+     "docs/AUTOMACAO_LOCAL.md",
+     "scripts/automation.mjs",
+     "scripts/automation.unit.mjs",
+     "scripts/maintenance/run.sh"
+    ]
+   },
    {
     "sha": "aa94815",
     "date": "2026-11-25",
@@ -102145,23 +102157,6 @@
      "supabase/functions/qa-ingest-run/index.ts",
      "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
     ]
-   },
-   {
-    "sha": "23e9378",
-    "date": "2026-11-23",
-    "author": "adm01-debug",
-    "subject": "chore: atualiza dependencias de producao (grupo minor/patch do Dependabot) (#171)",
-    "files": [
-     "package-lock.json",
-     "package.json",
-     "src/components/lux/EditCompanyDialog.tsx",
-     "src/components/lux/LushaIntelligenceView.tsx",
-     "src/components/lux/SettingsView.tsx",
-     "src/hooks/useOnboardingState.ts",
-     "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
-     "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
-     "supabase/functions/mcp/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -102182,16 +102177,24 @@
     2
    ],
    [
-    "package-lock.json",
-    2
-   ],
-   [
-    "package.json",
-    2
-   ],
-   [
     "inventario/estado/edges.json",
     2
+   ],
+   [
+    "docs/AUTOMACAO_LOCAL.md",
+    1
+   ],
+   [
+    "scripts/automation.mjs",
+    1
+   ],
+   [
+    "scripts/automation.unit.mjs",
+    1
+   ],
+   [
+    "scripts/maintenance/run.sh",
+    1
    ],
    [
     ".gitattributes",
@@ -102218,6 +102221,14 @@
     1
    ],
    [
+    "package-lock.json",
+    1
+   ],
+   [
+    "package.json",
+    1
+   ],
+   [
     "src/components/lux/__tests__/ProxyFormDialog.test.tsx",
     1
    ],
@@ -102227,22 +102238,6 @@
    ],
    [
     "src/hooks/useApiLatencyAlertSettings.ts",
-    1
-   ],
-   [
-    "src/integrations/supabase/types.ts",
-    1
-   ],
-   [
-    "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
     1
    ]
   ]

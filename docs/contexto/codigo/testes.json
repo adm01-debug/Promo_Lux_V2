@@ -182,11 +182,11 @@
   {
    "arquivo": "scripts/automation.unit.mjs",
    "tipo": "unit",
-   "linhas": 689,
+   "linhas": 698,
    "testa": [
     "scripts/automation.mjs"
    ],
-   "casos": 32
+   "casos": 33
   },
   {
    "arquivo": "scripts/ci/lint-ratchet.unit.mjs",
