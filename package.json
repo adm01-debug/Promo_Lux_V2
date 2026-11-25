@@ -61,7 +61,7 @@
       "node scripts/staged-autofix/run.mjs"
     ],
     "*.{json,css,md}": [
-      "prettier --write"
+      "node scripts/staged-autofix/run.mjs --format-only"
     ]
   },
   "dependencies": {

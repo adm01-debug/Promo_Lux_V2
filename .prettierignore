@@ -1,0 +1,19 @@
+# Artefatos gerados e binarios: nao entram na formatacao.
+node_modules/
+dist/
+build/
+coverage/
+graphify-out/
+.playwright/
+supabase/.temp/
+inventario/estado/
+public/
+.lovable/
+
+# Sem parser no prettier ou conteudo gerado.
+*.lock
+bun.lockb
+*.sh
+*.sql
+*.snap
+*.min.js
