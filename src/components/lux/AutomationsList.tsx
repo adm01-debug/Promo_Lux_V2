@@ -1,7 +1,7 @@
-import { Play, Pause, RotateCcw, Clock, CheckCircle2, AlertCircle, Workflow, Zap } from "lucide-react";
+import { Play, Pause, Clock, CheckCircle2, AlertCircle, Workflow, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/lux/EmptyState";
@@ -11,6 +11,9 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_WORKFLOWS } from "@/lib/demoData";
+import { workflowApi } from "@/lib/api/workflows";
+import { useCan } from "@/hooks/usePermissions";
+import { toast } from "@/hooks/use-toast";
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ReactNode; glow: string }> = {
   running: { label: "Executando", color: "bg-success/20 text-success border-success/30", icon: <Play className="h-3 w-3" />, glow: "shadow-[0_0_12px_hsl(var(--success)/0.2)]" },
@@ -47,8 +50,17 @@ const ProgressRing = ({ value, size = 28, stroke = 2.5 }: { value: number; size?
   );
 };
 
-export const AutomationsList = () => {
+interface AutomationsListProps {
+  /** Navega para outra tela do app — mesmo contrato usado pelo DashboardView. */
+  onNavigate?: (view: string) => void;
+}
+
+export const AutomationsList = ({ onNavigate }: AutomationsListProps) => {
   const { isDemoMode } = useDemo();
+  const queryClient = useQueryClient();
+  const canEdit = useCan("workflows", "edit");
+
+  const openWorkflows = () => onNavigate?.("workflows");
 
   const { data: workflows, isLoading } = useQuery({
     queryKey: ["dashboard-workflows", isDemoMode],
@@ -70,6 +82,15 @@ export const AutomationsList = () => {
     staleTime: isDemoMode ? Infinity : 15_000,
   });
 
+  const toggleMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) => workflowApi.toggleStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dashboard-workflows"] });
+      queryClient.invalidateQueries({ queryKey: ["workflows"] });
+    },
+    onError: (err: Error) => toast({ title: "Erro", description: err.message, variant: "destructive" }),
+  });
+
   return (
     <div className="glass rounded-lg overflow-hidden">
       <div className="p-5 border-b border-border/50">
@@ -83,7 +104,7 @@ export const AutomationsList = () => {
               <p className="text-xs text-muted-foreground">Workflows ativos e raspagens</p>
             </div>
           </div>
-          <Button size="sm" className="gap-2 text-xs h-8">
+          <Button size="sm" className="gap-2 text-xs h-8" onClick={openWorkflows}>
             <Play className="h-3.5 w-3.5" />
             Nova
           </Button>
@@ -108,6 +129,7 @@ export const AutomationsList = () => {
           title="Nenhuma automação"
           description="Crie seu primeiro workflow para começar a automatizar a prospecção."
           actionLabel="Criar Workflow"
+          onAction={openWorkflows}
         />
       ) : (
         <div className="divide-y divide-border/20">
@@ -115,6 +137,11 @@ export const AutomationsList = () => {
             const config = statusConfig[wf.status] ?? statusConfig.draft;
             const progress = wf.success_rate ?? 0;
             const isRunning = wf.status === "running" || wf.status === "active";
+            const isActive = wf.status === "active";
+            /* Pausar/retomar so aparece para quem pode editar o workflow e para
+               workflow em estado estavel (ativo ou pausado) — nos demais status
+               (rascunho, executando, erro) o controle nao teria efeito real. */
+            const canToggle = canEdit && !isDemoMode && (isActive || wf.status === "paused");
 
             return (
               <motion.div
@@ -127,6 +154,7 @@ export const AutomationsList = () => {
                   "p-4 transition-all cursor-pointer group",
                   isRunning && config.glow
                 )}
+                onClick={openWorkflows}
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
@@ -158,14 +186,24 @@ export const AutomationsList = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
-                      {isRunning ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
-                      <RotateCcw className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
+                  {canToggle && (
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                        title={isActive ? "Pausar automação" : "Retomar automação"}
+                        aria-label={isActive ? "Pausar automação" : "Retomar automação"}
+                        disabled={toggleMutation.isPending}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMutation.mutate({ id: wf.id, status: isActive ? "paused" : "active" });
+                        }}
+                      >
+                        {isActive ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-muted-foreground ml-10">
