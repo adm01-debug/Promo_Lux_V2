@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f60d5cf12f17d4c8528c2ad17436b84c314616ae",
+  "commit": "144df6bef8bca42a9a09df1eb7fa8ff91056b933",
   "branch": "main",
-  "data_commit": "2026-11-25T09:42:56-03:00",
+  "data_commit": "2026-11-25T09:52:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "144df6b",
+    "data": "2026-11-25",
+    "assunto": "chore(edge): descarta api-latency-alerts, function sem invocador (#208)"
+   },
    {
     "sha": "f60d5cf",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "0995c31",
     "data": "2026-11-24",
     "assunto": "chore: remove o dominio Lovable das origens, metadados e user-agent (#182)"
-   },
-   {
-    "sha": "d8c8604",
-    "data": "2026-11-24",
-    "assunto": "fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)"
    }
   ],
-  "arquivos_mudados_7d": 285,
+  "arquivos_mudados_7d": 286,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 153
+    "commits": 154
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1152,
-  "arquivos_codigo": 711,
-  "linhas_codigo": 124704,
+  "arquivos_total": 1151,
+  "arquivos_codigo": 710,
+  "linhas_codigo": 124579,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,7 +320,7 @@
   "modulos": 22,
   "componentes": 267,
   "hooks": 97,
-  "edge_functions": 64,
+  "edge_functions": 63,
   "tabelas": 121,
   "migrations": 266,
   "cron_jobs": 43,
@@ -591,8 +591,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 137,
-   "linhas": 25012
+   "arquivos": 136,
+   "linhas": 24887
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -711,7 +711,7 @@
  ],
  "qualidade": {
   "any": 24,
-  "console_log": 93,
+  "console_log": 92,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
@@ -754,7 +754,6 @@
   "componentes_ambiguos": [],
   "menu_sem_destino": [],
   "edges_orfas": [
-   "api-latency-alerts",
    "audit-logs-prune",
    "gmaps-places-search",
    "health",

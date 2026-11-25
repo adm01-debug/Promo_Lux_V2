@@ -19886,11 +19886,6 @@
    "usada_em": 1
   },
   {
-   "nome": "capture_api_latency_snapshots",
-   "definida": true,
-   "usada_em": 1
-  },
-  {
    "nome": "capture_circuit_breaker_snapshots",
    "definida": true,
    "usada_em": 1
@@ -20052,11 +20047,6 @@
   },
   {
    "nome": "enrichment_funnel_counts",
-   "definida": true,
-   "usada_em": 1
-  },
-  {
-   "nome": "evaluate_api_latency_alerts",
    "definida": true,
    "usada_em": 1
   },

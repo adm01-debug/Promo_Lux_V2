@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f60d5cf12f` · branch `main` · 2026-11-25 12:43 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `144df6bef8` · branch `main` · 2026-11-25 12:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2635,8 +2635,6 @@ _nenhum item encontrado_
 | * Segundos entre requests (Crawl-delay). Não aplicado aqui — apenas exposto. */ | `supabase/functions/_shared/web-scrape/robots.ts` |
 | * Parse muito enxuto: usa apenas grupos User-agent: * e User-agent: lux-web-scraper. */ | `supabase/functions/_shared/web-scrape/robots.ts` |
 | Precedência: o rule com prefixo mais específico vence (comprimento). | `supabase/functions/_shared/web-scrape/robots.ts` |
-| 2. Avalia se alguma rota cruzou o limite crítico de p95 por N ciclos | `supabase/functions/api-latency-alerts/index.ts` |
-| * Não retorna dados sensíveis: apenas contadores agregados. Toda a lógica | `supabase/functions/api-latency-alerts/index.ts` |
 | Prune email_sync_log (fecha gap de retenção — crescia sem limite) | `supabase/functions/audit-logs-prune/index.ts` |
 | limite de email por RFC 5321 | `supabase/functions/auth-rate-limit/index.ts` |
 | { campaign_id } processa apenas aquela campanha (trigger manual). | `supabase/functions/campaign-dispatch/index.ts` |
