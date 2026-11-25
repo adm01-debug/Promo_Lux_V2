@@ -95,4 +95,13 @@ describe("CompanyTableRow", () => {
     fireEvent.click(starCells[1]); // Star is the 2nd cell
     expect(onToggleStar).toHaveBeenCalledWith("c1", true);
   });
+
+  it("abre o detalhe da empresa pelo icone da versao de computador", () => {
+    const onOpen = vi.fn();
+    renderInTable({ ...defaultProps, onOpen });
+
+    fireEvent.click(screen.getByTitle("Ver detalhes"));
+
+    expect(onOpen).toHaveBeenCalledWith(company);
+  });
 });

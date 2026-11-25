@@ -86,12 +86,12 @@
 - [ ] **071** — Fazer aparecer o botão "Criar Workflow" para quem ainda não tem nenhum — onda 2 — Alta — achados: G16-6
 - [ ] **072** — Varrer o repositório por outros estados vazios sem ação — onda 2 — Média — achados: G16-6
 - [ ] **073** — Cobrir a lista de automações do painel com teste de verdade — onda 2 — Média — achados: G16-6
-- [ ] **074** — Ligar a ação "Visitar Site" no detalhe da empresa — onda 2 — Média — achados: G16-6
-- [ ] **075** — Ligar a ação "Enriquecer" no detalhe da empresa — onda 2 — Média — achados: G16-6
-- [ ] **076** — Ligar ou remover a ação "Adicionar ao CRM" no detalhe da empresa — onda 2 — Média · **APROV** — achados: G16-6
-- [ ] **077** — Ligar ou remover a ação "Enviar Email" no detalhe da empresa — onda 2 — Média — achados: G16-6
-- [ ] **078** — Ligar ou remover a ação "Iniciar Sequência" no detalhe da empresa — onda 2 — Média — achados: G16-6
-- [ ] **079** — Fazer o ícone "Ver detalhes" funcionar na versão de computador da lista — onda 2 — Média — achados: G16-6
+- [x] **074** — Ligar a ação "Visitar Site" no detalhe da empresa — onda 2 — Média — achados: G16-6 · **FECHADO 2026-11-25** — `CompanyDetailModal.tsx:visitSite` abre `sanitizeUrl(website)` em nova aba; avisa quando o site é inválido
+- [x] **075** — Ligar a ação "Enriquecer" no detalhe da empresa — onda 2 — Média — achados: G16-6 · **FECHADO 2026-11-25** — usa `useCnpjEnrich` (edge `cnpj-enrich`) e grava só os campos vazios, com `enriched: true`; sem CNPJ avisa e não chama o provedor
+- [x] **076** — Ligar ou remover a ação "Adicionar ao CRM" no detalhe da empresa — onda 2 — Média · **APROV** — achados: G16-6 · **FECHADO 2026-11-25** — ligado ao `hubspot-sync` (single-company, JWT de admin); mostra o motivo real quando o HubSpot não está configurado
+- [x] **077** — Ligar ou remover a ação "Enviar Email" no detalhe da empresa — onda 2 — Média — achados: G16-6 · **FECHADO 2026-11-25** — abre `mailto:` do primeiro contato com e-mail (ou do e-mail da empresa); avisa quando não há e-mail
+- [x] **078** — Ligar ou remover a ação "Iniciar Sequência" no detalhe da empresa — onda 2 — Média — achados: G16-6 · **FECHADO 2026-11-25** — removida: não existe motor de sequências no repositório (0 referências a `sequences`/`EnrollInSequence`), então era um botão que não fazia nada
+- [x] **079** — Fazer o ícone "Ver detalhes" funcionar na versão de computador da lista — onda 2 — Média — achados: G16-6 · **FECHADO 2026-11-25** — `CompanyTableRow.tsx` ganhou `onClick={() => onOpen(company)}` (o menu do celular já funcionava)
 - [ ] **080** — Varrer o repositório por botões sem manipulador — onda 2 — Média — achados: G16-6
 - [ ] **081** — Corrigir o teste de interface que quebra por rótulo ambíguo — onda 2 — Média — achados: G2-3
 - [ ] **082** — Confirmar que o teste do painel de monitoramento volta a passar — onda 2 — Baixa — achados: G2-3, G3-1

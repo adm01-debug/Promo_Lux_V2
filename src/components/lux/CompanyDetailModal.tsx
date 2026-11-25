@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import {
-  Building2, MapPin, Tag, Globe, Mail, Phone, TrendingUp, Radar, ExternalLink,
-  Briefcase, DollarSign, Users, Star, Copy, Check, Send,
+  Building2, MapPin, Tag, Globe, Mail, Phone, Radar, ExternalLink,
+  Briefcase, DollarSign, Users, Star, Copy, Check, Send, Loader2,
   Eye, Clock, Zap, Database, User, Shield
 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { LinkedinIcon as Linkedin } from "@/components/lux/icons/LinkedinIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { useCompanyDetails } from "@/hooks/useCompanyDetails";
+import { useCnpjEnrich } from "@/hooks/useCnpjEnrich";
+import { useActiveOrganization } from "@/contexts/active-org-context";
+import { sanitizeUrl } from "@/lib/sanitize";
 import { CompanyOpenHours } from "@/components/lux/CompanyOpenHours";
 import { CompanyReviewsList } from "@/components/lux/CompanyReviewsList";
 import { supabase } from "@/integrations/supabase/client";
@@ -116,6 +120,11 @@ const CopyButton = ({ text }: { text: string }) => {
 
 export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetailModalProps) => {
   const { data, isLoading } = useCompanyDetails(company?.id, open && !!company);
+  const queryClient = useQueryClient();
+  const { activeOrgId } = useActiveOrganization();
+  const { enrich: enrichCnpj } = useCnpjEnrich();
+  const [enriching, setEnriching] = useState(false);
+  const [crmSyncing, setCrmSyncing] = useState(false);
   const [gmbData, setGmbData] = useState<{ open_hours: unknown; rating: number | null; review_count: number | null } | null>(null);
 
   useEffect(() => {
@@ -138,6 +147,87 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
   const signals = data?.signals ?? [];
   const timeline = data?.timeline ?? [];
   const technologies = data?.technologies ?? [];
+
+  const visitSite = () => {
+    const url = sanitizeUrl(company.website ?? "");
+    if (!url) {
+      toast({ title: "Site indisponível", description: "Esta empresa não tem um site válido cadastrado.", variant: "destructive" });
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const sendEmail = () => {
+    const to = contacts.find((c) => c.email)?.email ?? company.email ?? "";
+    if (!to) {
+      toast({ title: "Sem e-mail", description: "Nenhum contato desta empresa tem e-mail cadastrado.", variant: "destructive" });
+      return;
+    }
+    window.open(`mailto:${to}`, "_blank", "noopener,noreferrer");
+  };
+
+  const enrichCompany = async () => {
+    if (!company.cnpj) {
+      toast({ title: "CNPJ não cadastrado", description: "Cadastre o CNPJ da empresa para enriquecer pelo provedor.", variant: "destructive" });
+      return;
+    }
+    setEnriching(true);
+    try {
+      const result = await enrichCnpj(company.cnpj);
+      if (!result) {
+        toast({ title: "Enriquecimento indisponível", description: "O provedor não retornou dados para este CNPJ. Tente novamente em alguns minutos.", variant: "destructive" });
+        return;
+      }
+      const patch: Record<string, string> = {};
+      if (!company.sector && result.sector) patch.sector = result.cnae_code ? `${result.sector} (CNAE ${result.cnae_code})` : result.sector;
+      if (!company.location && result.location) patch.location = result.location;
+      if (!company.email && result.email) patch.email = result.email;
+      if (!company.phone && result.phone) patch.phone = result.phone;
+      if (!company.employees && result.size) patch.employees = result.size;
+      const filled = Object.keys(patch).length;
+      const { error } = await supabase.from("companies").update({ ...patch, enriched: true }).eq("id", company.id);
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["company-details", company.id] });
+      toast({
+        title: "Empresa enriquecida",
+        description: filled > 0 ? `${filled} campo(s) preenchido(s) com dados oficiais do CNPJ.` : "CNPJ conferido: nenhum campo vazio para preencher.",
+      });
+    } catch (err) {
+      toast({ title: "Erro ao enriquecer", description: err instanceof Error ? err.message : "Falha ao salvar os dados enriquecidos.", variant: "destructive" });
+    } finally {
+      setEnriching(false);
+    }
+  };
+
+  const addToCrm = async () => {
+    if (!activeOrgId) {
+      toast({ title: "Organização não selecionada", description: "Selecione uma organização para enviar ao CRM.", variant: "destructive" });
+      return;
+    }
+    setCrmSyncing(true);
+    try {
+      const { data: resp, error } = await supabase.functions.invoke<{ error?: string; created?: number; updated?: number; failed?: number }>("hubspot-sync", {
+        body: { org_id: activeOrgId, company_id: company.id },
+      });
+      if (error) {
+        const ctx = (error as { context?: Response }).context;
+        const body = ctx ? await ctx.json().catch(() => null) : null;
+        throw new Error((body as { error?: string } | null)?.error ?? error.message);
+      }
+      if (resp?.error) throw new Error(resp.error);
+      if (resp?.failed) throw new Error("O CRM recusou o envio. Confira a conexão do HubSpot nas integrações.");
+      queryClient.invalidateQueries({ queryKey: ["company-details", company.id] });
+      toast({
+        title: resp?.created ? "Empresa criada no CRM" : "Empresa atualizada no CRM",
+        description: "Sincronização com o HubSpot concluída.",
+      });
+    } catch (err) {
+      toast({ title: "Erro ao enviar ao CRM", description: err instanceof Error ? err.message : "Falha na sincronização.", variant: "destructive" });
+    } finally {
+      setCrmSyncing(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -428,20 +518,27 @@ export const CompanyDetailModal = ({ company, open, onOpenChange }: CompanyDetai
 
         {/* Actions */}
         <div className="p-4 flex gap-2 flex-wrap flex-shrink-0">
-          <Button size="sm" className="gap-1.5 text-xs">
+          <Button size="sm" className="gap-1.5 text-xs" onClick={sendEmail}>
             <Mail className="h-3.5 w-3.5" />Enviar Email
           </Button>
-          <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-            <Send className="h-3.5 w-3.5" />Iniciar Sequência
+          <Button size="sm" variant="outline" className="gap-1.5 text-xs" onClick={addToCrm} disabled={crmSyncing} aria-busy={crmSyncing}>
+            {crmSyncing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Briefcase className="h-3.5 w-3.5" />}
+            {crmSyncing ? "Enviando..." : "Adicionar ao CRM"}
           </Button>
-          <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-            <Briefcase className="h-3.5 w-3.5" />Adicionar ao CRM
-          </Button>
-          <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-            <TrendingUp className="h-3.5 w-3.5" />Enriquecer
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-1.5 text-xs"
+            onClick={enrichCompany}
+            disabled={enriching}
+            aria-busy={enriching}
+            title={company.cnpj ? "Preencher campos vazios com dados oficiais do CNPJ" : "Cadastre o CNPJ para enriquecer"}
+          >
+            {enriching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
+            {enriching ? "Enriquecendo..." : "Enriquecer"}
           </Button>
           {company.website && (
-            <Button size="sm" variant="ghost" className="gap-1.5 text-xs ml-auto">
+            <Button size="sm" variant="ghost" className="gap-1.5 text-xs ml-auto" onClick={visitSite}>
               <ExternalLink className="h-3.5 w-3.5" />Visitar Site
             </Button>
           )}
