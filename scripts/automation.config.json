@@ -140,6 +140,14 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
     },
     {
+      "id": "legacy-1dfade0578eb4e44",
+      "kind": "legacy",
+      "files": ["scripts/check-hardcoded-secrets.sh"],
+      "manual": ["sh", "scripts/check-hardcoded-secrets.sh"],
+      "triggers": ["manual"],
+      "reason": "Varredura de segredos hardcoded chamada pelo job security-scan; referência literal: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-e2e3f28bab9a8e4a",
       "kind": "legacy",
       "files": ["scripts/check-migration-target.sh"],
@@ -202,6 +210,14 @@
       "manual": ["sh", "scripts/check-queue-kind-coverage.sh"],
       "triggers": ["manual"],
       "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-0aa12c2c8f701f43",
+      "kind": "legacy",
+      "files": ["scripts/check-no-secret-echo.sh"],
+      "manual": ["sh", "scripts/check-no-secret-echo.sh"],
+      "triggers": ["manual"],
+      "reason": "Guarda de segredo no corpo de resposta, chamada antes do deploy; referências literais: .github/workflows/ci.yml, .github/workflows/edge-functions-deploy.yml. O dispatcher não executa esta operação."
     },
     {
       "id": "legacy-57c30fa982e3ca8a",
