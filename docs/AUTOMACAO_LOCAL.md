@@ -16,7 +16,7 @@ O dispatcher `scripts/automation.mjs` liga as suites, o motor de manutenção e 
 | `automation:install-hooks`   | `node scripts/automation.mjs install-hooks`             | Instala pontes locais reversíveis, encadeando hooks originais.                        |
 | `automation:uninstall-hooks` | `node scripts/automation.mjs uninstall-hooks`           | Restaura o hooksPath anterior, recusando sobrescrever alteração de terceiros.         |
 
-O comando estático para CI é `node scripts/automation.mjs doctor --static`. Ele verifica contratos; não comprova merge, execução remota, timer ou ponte instalada. `doctor` sem `--static` também exige a instalação local. Ausência de dependência é erro explícito; o dispatcher não instala pacotes automaticamente.
+O comando estático para CI é `node scripts/automation.mjs doctor --static`. Ele verifica contratos; não comprova merge, execução remota, timer ou ponte instalada. `doctor` sem `--static` também exige a instalação local. Ausência de dependência é erro explícito; o dispatcher não instala pacotes automaticamente. Fora do Linux (WSL ou CI), `check`, `heal` e o heal do `nightly` não rodam: o motor exige `flock` e `unshare`; nesse ambiente valide o contrato com `doctor --static` e `test`.
 
 ## Gatilhos e ativação
 

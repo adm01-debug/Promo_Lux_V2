@@ -172,6 +172,15 @@ process.exit(Number(process.env.FIXTURE_GRAPH_EXIT||0));\n`,
   return { root, config, write, run, git, save, cli, install };
 }
 
+test("doctor static le workflow com fim de linha CRLF sem falso positivo", (t) => {
+  const f = fixture(t);
+  const ci = ".github/workflows/ci.yml";
+  f.write(ci, text(join(f.root, ci)).replace(/\n/g, "\r\n"));
+  const result = f.cli("doctor", "--static");
+  assert.equal(result.status, 0, result.stdout);
+  assert.doesNotMatch(result.stdout, /workflow sem run encadeado/);
+});
+
 test("doctor static verifica alias, arquivos, eventos e run real sem ativar Git", (t) => {
   const f = fixture(t);
   const before = f.git("config", "core.hooksPath");

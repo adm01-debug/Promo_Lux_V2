@@ -616,7 +616,7 @@ async function doctor(ctx, staticOnly) {
       issues.push(`testes sem gatilho CI ${event}`);
   for (const item of c.ci) {
     const path = check(() => locate(root, c, config, item.file));
-    const text = path ? readFileSync(path, "utf8") : "";
+    const text = path ? readFileSync(path, "utf8").replace(/\r\n?/g, "\n") : "";
     for (const event of item.events)
       if (!workflowEvent(text, event))
         issues.push(`workflow sem evento ${event}: ${item.file}`);
