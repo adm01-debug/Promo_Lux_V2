@@ -127,6 +127,7 @@
  "configs": [
   ".github/dependabot.yml",
   ".husky/pre-commit",
+  ".prettierrc",
   "ai-context.config.json",
   "commitlint.config.cjs",
   "commitlint.config.js",
@@ -491,7 +492,7 @@
   {
    "arquivo": "docs/AUTOMACAO_LOCAL.md",
    "titulo": "Automação local — Promo_Lux_V2",
-   "linhas": 111
+   "linhas": 123
   },
   {
    "arquivo": "docs/ESTADO_ATUAL.md",

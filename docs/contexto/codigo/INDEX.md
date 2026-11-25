@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `4f59248a5b02db3f2707600ff7d4e10bff4fb047` (2026-11-25T08:31:53-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `baf9b5f000763aa679887871ae44bd71d04ce962` (2026-11-25T08:55:37-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1149 |
+| arquivos_total | 1150 |
 | arquivos_codigo | 712 |
-| linhas_codigo | 124746 |
+| linhas_codigo | 124793 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -261,14 +261,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7901 nós · 16704 arestas · 714 comunidades · grafo do commit `4f59248a`
-- comunidades maiores: lucide-react (173), button.tsx (172), react (109), badge.tsx (106), cn (101), JobDetailsSheet.tsx (87), gerar.mjs (80), CompaniesView.tsx (76), generate.py (73), DealDetailDrawer.tsx (69), req (65), dependencies (65)
+- 7903 nós · 16708 arestas · 702 comunidades · grafo do commit `baf9b5f0`
+- comunidades maiores: react (226), lucide-react (205), @tanstack/react-query (142), OrgViolationsView.tsx (103), cn (86), LushaIntelligenceView.tsx (82), gerar.mjs (80), NotificationsPanel.tsx (74), generate.py (73), DealDetailDrawer.tsx (69), campaign-dispatch/index.ts (67), dependencies (65)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package-lock.json (19)
-- package.json (18)
+- package.json (19)
 - .github/workflows/db-migrations.yml (9)
 - docs/GAPS-ENTERPRISE.md (9)
 - AGENTS.md (8)
@@ -358,7 +358,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/AUDITORIA_FINAL_LUX_IA.md` — 📝 Relatório de Auditoria Enterprise — LUX IA (v10.0) (89 linhas)
 - `docs/AUDITORIA_FIRECRAWL.md` — Auditoria de Paridade — LUX IA vs Firecrawl (199 linhas)
 - `docs/AUDITORIA_TECNICA_SCORECARD.md` (223 linhas)
-- `docs/AUTOMACAO_LOCAL.md` — Automação local — Promo_Lux_V2 (111 linhas)
+- `docs/AUTOMACAO_LOCAL.md` — Automação local — Promo_Lux_V2 (123 linhas)
 - `docs/ESTADO_ATUAL.md` — ESTADO ATUAL DO SISTEMA — LUX IA (181 linhas)
 - `docs/FUNCIONALIDADES.md` — LUX IA — Análise Executiva de Funcionalidades (455 linhas)
 - `docs/GAPS-ENTERPRISE.md` — LUX IA — Gaps Enterprise (433 linhas)
@@ -378,6 +378,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `baf9b5f` chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)
 - 2026-11-25 `4f59248` fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)
 - 2026-11-25 `aa94815` chore: normaliza fim de linha em LF para todo clone (#201)
 - 2026-11-25 `44c43b4` fix(scripts): resolver executavel no Windows usa as extensoes do PATHEXT (#200)
@@ -392,7 +393,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `03dbb45` perf(api-publica): /me em 1 round-trip em vez de 2
 - 2026-11-24 `8dec4b5` feat: habilita alerta de latencia da organizacao com trafego real (#189)
 - 2026-11-24 `e0648b2` ﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)
-- 2026-11-24 `b7314d4` fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

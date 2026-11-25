@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "4f59248a5b02db3f2707600ff7d4e10bff4fb047",
+  "commit": "baf9b5f000763aa679887871ae44bd71d04ce962",
   "branch": "main",
-  "data_commit": "2026-11-25T08:31:53-03:00",
+  "data_commit": "2026-11-25T08:55:37-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "baf9b5f",
+    "data": "2026-11-25",
+    "assunto": "chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)"
+   },
    {
     "sha": "4f59248",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "8771961",
     "data": "2026-11-24",
     "assunto": "fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)"
-   },
-   {
-    "sha": "d4ad14d",
-    "data": "2026-11-24",
-    "assunto": "fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)"
    }
   ],
-  "arquivos_mudados_7d": 279,
+  "arquivos_mudados_7d": 282,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -149,7 +149,7 @@
    },
    {
     "pasta": "package.json",
-    "mudancas": 18
+    "mudancas": 19
    },
    {
     "pasta": "src/integrations/supabase",
@@ -203,7 +203,7 @@
    },
    {
     "arquivo": "package.json",
-    "mudancas": 18
+    "mudancas": 19
    },
    {
     "arquivo": ".github/workflows/db-migrations.yml",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 149
+    "commits": 150
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1149,
+  "arquivos_total": 1150,
   "arquivos_codigo": 712,
-  "linhas_codigo": 124746,
+  "linhas_codigo": 124793,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -544,7 +544,7 @@
   },
   "scripts/staged-autofix": {
    "arquivos": 2,
-   "linhas": 203
+   "linhas": 250
   },
   "scripts/supabase_snapshot": {
    "arquivos": 2,

@@ -545,8 +545,8 @@
   },
   {
    "arquivo": "scripts/staged-autofix/run.mjs",
-   "descricao": null,
-   "linhas": 42,
+   "descricao": "* Arquivo cuja versao no indice ja estava fora do formato nao e reformatado:",
+   "linhas": 89,
    "env": [],
    "npm_scripts": [],
    "workflows": [],

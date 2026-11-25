@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "4f59248a5b02db3f2707600ff7d4e10bff4fb047",
+  "sha": "baf9b5f000763aa679887871ae44bd71d04ce962",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 11:39 UTC",
-  "files_total": 1169,
+  "generated_at": "2026-11-25 11:58 UTC",
+  "files_total": 1171,
   "code_files": 983,
-  "code_lines": 146614
+  "code_lines": 146661
  },
  "version": "1.3.2",
- "facts_hash": "d8564bcf5a5c203c",
+ "facts_hash": "70fa1086c29bdb43",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -33143,7 +33143,7 @@
   {
    "module": "scripts",
    "files": 50,
-   "lines": 17389,
+   "lines": 17436,
    "tables": [
     "a",
     "contacts",
@@ -33208,8 +33208,8 @@
     "node:test",
     "node:url",
     "path",
-    "react",
-    "react-router-dom"
+    "prettier",
+    "react"
    ],
    "imports_modules": [
     "src/b",
@@ -79838,7 +79838,7 @@
   },
   "scripts/staged-autofix/run.mjs": {
    "path": "scripts/staged-autofix/run.mjs",
-   "lines": 42,
+   "lines": 89,
    "errors": [
     "ESLint encontrou erro de analise; correcao interrompida.",
     "Nenhum arquivo staged recebido."
@@ -101838,10 +101838,23 @@
   }
  },
  "git": {
-  "sha": "4f59248a5b02db3f2707600ff7d4e10bff4fb047",
+  "sha": "baf9b5f000763aa679887871ae44bd71d04ce962",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "baf9b5f",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)",
+    "files": [
+     ".prettierignore",
+     ".prettierrc",
+     "docs/AUTOMACAO_LOCAL.md",
+     "package.json",
+     "scripts/staged-autofix/run.mjs"
+    ]
+   },
    {
     "sha": "4f59248",
     "date": "2026-11-25",
@@ -102145,18 +102158,6 @@
      "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql",
      "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
     ]
-   },
-   {
-    "sha": "588525f",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: token de ingestão do QA persistido no banco (mata o 400 em produção) (#170)",
-    "files": [
-     "src/components/lux/monitoring/QaHistoryPanel.tsx",
-     "supabase/config.toml",
-     "supabase/functions/qa-ingest-run/index.ts",
-     "supabase/migrations/20261124050000_qa_ingest_token_db.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -102173,6 +102174,14 @@
     3
    ],
    [
+    "docs/AUTOMACAO_LOCAL.md",
+    2
+   ],
+   [
+    "package.json",
+    2
+   ],
+   [
     "scripts/automation.config.json",
     2
    ],
@@ -102181,7 +102190,15 @@
     2
    ],
    [
-    "docs/AUTOMACAO_LOCAL.md",
+    ".prettierignore",
+    1
+   ],
+   [
+    ".prettierrc",
+    1
+   ],
+   [
+    "scripts/staged-autofix/run.mjs",
     1
    ],
    [
@@ -102222,22 +102239,6 @@
    ],
    [
     "package-lock.json",
-    1
-   ],
-   [
-    "package.json",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/ProxyFormDialog.test.tsx",
-    1
-   ],
-   [
-    "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
-    1
-   ],
-   [
-    "src/hooks/useApiLatencyAlertSettings.ts",
     1
    ]
   ]
