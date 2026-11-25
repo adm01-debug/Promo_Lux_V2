@@ -1,13 +1,16 @@
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_NOTIFICATIONS } from "@/lib/demoData";
 import { db } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { useQuery } from "@tanstack/react-query";
 
 /** Unread notifications count (real or demo mode), polled every 30s. */
 export const useNotificationCount = () => {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
   const { data } = useQuery({
     queryKey: ["notifications-count", isDemoMode],
+    enabled: isDemoMode || !!activeOrgId,
     queryFn: isDemoMode
       ? () => DEMO_NOTIFICATIONS.filter((n) => !n.read).length
       : async () => {
