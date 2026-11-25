@@ -20,12 +20,12 @@
 - [ ] **008** — Fazer o teste de classificação de tabelas comparar com o banco, não com uma lista escrita à mão — onda 1 — Alta — achados: G30-2, G1-3
 - [ ] **009** — Classificar as quatro tabelas de organização que faltam no wrapper — onda 1 — Alta — achados: G30-1, G1-3
 - [ ] **010** — Fazer a leitura sem organização ativa falhar fechada no wrapper — onda 1 — Crítica — achados: G1-1
-- [ ] **011** — Condicionar as consultas do painel inicial à existência da organização ativa — onda 1 — Crítica — achados: G1-1
-- [ ] **012** — Condicionar a contagem de notificações à organização ativa — onda 1 — Alta — achados: G1-1
-- [ ] **013** — Condicionar a lista virtualizada de empresas à organização ativa — onda 1 — Alta — achados: G1-1
-- [ ] **014** — Condicionar a leitura do perfil de cliente ideal à organização ativa — onda 1 — Alta — achados: G1-1
-- [ ] **015** — Condicionar a trilha de auditoria à organização ativa — onda 1 — Alta — achados: G1-1
-- [ ] **016** — Varrer os hooks restantes em busca de consulta sem condição de organização — onda 1 — Alta — achados: G1-1
+- [x] **011** — Condicionar as consultas do painel inicial à existência da organização ativa — onda 1 — Crítica — achados: G1-1 · **FECHADO 2026-11-25 -- `useDashboardData.ts`: `useRecentCompanies` e `useRecentActivity` passam a ler `useActiveOrganization` e a declarar `enabled: isDemoMode || !!activeOrgId` (a consulta de estatisticas ja tinha); sem organizacao, nenhuma das tres sai
+- [x] **012** — Condicionar a contagem de notificações à organização ativa — onda 1 — Alta — achados: G1-1 · **FECHADO 2026-11-25 -- `useNotificationCount.ts:11` `enabled: isDemoMode || !!activeOrgId`; o selo do cabecalho (`Header.tsx:245`) so desenha quando a contagem e maior que zero, entao sem organizacao ele aparece vazio, nao zerado
+- [x] **013** — Condicionar a lista virtualizada de empresas à organização ativa — onda 1 — Alta — achados: G1-1 · **FECHADO 2026-11-25 -- `useVirtualCompanies.ts:11` `enabled: !!activeOrgId`; virtualizacao e tamanho de pagina intactos
+- [x] **014** — Condicionar a leitura do perfil de cliente ideal à organização ativa — onda 1 — Alta — achados: G1-1 · **FECHADO 2026-11-25 -- `useICPConfig.ts:41` `enabled: !!activeOrgId` na consulta das configuracoes; a chave de cache fica para a etapa 017 e o formato de `criteria` para a 093
+- [x] **015** — Condicionar a trilha de auditoria à organização ativa — onda 1 — Alta — achados: G1-1 · **FECHADO 2026-11-25 -- `useAuditTrail.ts`: `useAuditTables` e `useAuditTrail` com `enabled: !!activeOrgId`; filtros e paginacao no servidor intactos
+- [x] **016** — Varrer os hooks restantes em busca de consulta sem condição de organização — onda 1 — Alta — achados: G1-1 · **FECHADO 2026-11-25 -- varredura: `useAutomationsMonitor` ja falhava fechado (`getActiveOrgId()` dentro dos 4 `queryFn`, `:44/62/79/96`); `useOAuthSandboxSnapshots` ganhou `enabled: !!activeOrgId`; guarda novo `src/hooks/__tests__/orgGateQueries.test.ts` cobre as 8 consultas e falha 17/17 sem as condicoes
 - [ ] **017** — Incluir a organização na chave de cache das famílias de consulta que a ignoram — onda 1 — Alta — achados: G1-2
 - [ ] **018** — Remover a política global que dá acesso à auditoria de todas as organizações — onda 1 — Crítica · **APROV** — achados: G14-1
 - [ ] **019** — Escopar por organização a exclusão de registros de execução de automação — onda 1 — Alta · **APROV** — achados: G14-1

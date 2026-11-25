@@ -1,5 +1,6 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
 import type { Tables } from "@/integrations/supabase/types";
 
 /**
@@ -132,8 +133,10 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
 
 /** Lista de tabelas distintas presentes na trilha, para popular o filtro. */
 export function useAuditTables() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
     queryKey: ["audit-trail", "tables"],
+    enabled: !!activeOrgId,
     queryFn: async (): Promise<string[]> => {
       const { data, error } = await db
         .from("audit_logs")
@@ -148,6 +151,7 @@ export function useAuditTables() {
 }
 
 export function useAuditTrail(filters: AuditTrailFilters) {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
     queryKey: [
       "audit-trail",
@@ -160,6 +164,7 @@ export function useAuditTrail(filters: AuditTrailFilters) {
       filters.dateTo ?? "",
     ],
     queryFn: () => fetchAuditTrail(filters),
+    enabled: !!activeOrgId,
     placeholderData: keepPreviousData,
     refetchInterval: 30_000,
   });

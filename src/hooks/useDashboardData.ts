@@ -138,6 +138,7 @@ export interface RecentCompany {
 
 export function useRecentCompanies(limit = 6) {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
 
   return useQuery({
     queryKey: ["recent-companies", limit, isDemoMode],
@@ -152,6 +153,7 @@ export function useRecentCompanies(limit = 6) {
           if (error) throw error;
           return (data ?? []) as RecentCompany[];
         },
+    enabled: isDemoMode || !!activeOrgId,
     staleTime: isDemoMode ? Infinity : 30_000,
   });
 }
@@ -168,6 +170,7 @@ export interface ActivityItem {
 
 export function useRecentActivity() {
   const { isDemoMode } = useDemo();
+  const { activeOrgId } = useActiveOrganization();
 
   return useQuery<ActivityItem[]>({
     queryKey: ["recent-activity", isDemoMode],
@@ -183,6 +186,7 @@ export function useRecentActivity() {
           if (error) throw error;
           return (data ?? []) as ActivityItem[];
         },
+    enabled: isDemoMode || !!activeOrgId,
     staleTime: isDemoMode ? Infinity : 30_000,
   });
 }

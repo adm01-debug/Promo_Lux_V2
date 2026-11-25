@@ -4,6 +4,7 @@ import { db } from "@/integrations/supabase/withOrg";
 import { toast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/auth-context";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
 
 export type ICPValue = string | string[] | number[];
 
@@ -35,9 +36,11 @@ const DEFAULT_CRITERIA: ICPCriterion[] = [
 export function useICPConfig() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { activeOrgId } = useActiveOrganization();
 
   const queryAll = useQuery({
     queryKey: ["ipc-configs"],
+    enabled: !!activeOrgId,
     queryFn: async (): Promise<ICPConfig[]> => {
       const { data, error } = await db
         .from("ipc_config")

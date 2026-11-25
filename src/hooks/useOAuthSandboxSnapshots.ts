@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { db } from "@/integrations/supabase/withOrg";
+import { useActiveOrganization } from "@/hooks/useOrganizations";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface OAuthSnapshot {
@@ -42,8 +43,10 @@ const KEY = ["oauth_sandbox_snapshots"] as const;
  * para manter a UI leve.
  */
 export function useOAuthSandboxSnapshots() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
     queryKey: KEY,
+    enabled: !!activeOrgId,
     queryFn: async (): Promise<OAuthSnapshot[]> => {
       const { data, error } = await db
         .from("oauth_sandbox_snapshots")
