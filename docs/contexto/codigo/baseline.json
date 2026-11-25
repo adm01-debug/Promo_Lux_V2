@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "ec5349fc1617150b3033114733080dc8d836cec8",
+  "commit": "488f67cfbaee57c9abe8aac8063737d813b23bfd",
   "branch": "main",
-  "data_commit": "2026-11-25T18:58:37-03:00",
+  "data_commit": "2026-11-25T19:36:48-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "488f67c",
+    "data": "2026-11-25",
+    "assunto": "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)"
+   },
    {
     "sha": "ec5349f",
     "data": "2026-11-25",
@@ -126,26 +131,21 @@
     "sha": "7a7d1cc",
     "data": "2026-11-25",
     "assunto": "chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)"
-   },
-   {
-    "sha": "baf9b5f",
-    "data": "2026-11-25",
-    "assunto": "chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)"
    }
   ],
-  "arquivos_mudados_7d": 339,
+  "arquivos_mudados_7d": 341,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
     "mudancas": 102
    },
    {
-    "pasta": "supabase/functions/_shared",
-    "mudancas": 26
+    "pasta": "src/integrations/supabase",
+    "mudancas": 27
    },
    {
-    "pasta": "src/integrations/supabase",
-    "mudancas": 24
+    "pasta": "supabase/functions/_shared",
+    "mudancas": 26
    },
    {
     "pasta": "package.json",
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 12
+    "mudancas": 13
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -234,6 +234,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": "src/integrations/supabase/withOrg.ts",
+    "mudancas": 7
+   },
+   {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 7
    },
@@ -243,10 +247,6 @@
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
-    "mudancas": 6
-   },
-   {
-    "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 6
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 174
+    "commits": 175
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1169,
-  "arquivos_codigo": 723,
-  "linhas_codigo": 126263,
+  "arquivos_total": 1170,
+  "arquivos_codigo": 724,
+  "linhas_codigo": 126375,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 141,
+  "testes": 142,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -571,8 +571,8 @@
    "linhas": 11989
   },
   "src/integrations": {
-   "arquivos": 12,
-   "linhas": 9141
+   "arquivos": 13,
+   "linhas": 9253
   },
   "src/lib": {
    "arquivos": 55,

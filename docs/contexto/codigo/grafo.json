@@ -30,7 +30,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
-   "importado_por": 60
+   "importado_por": 61
   },
   {
    "arquivo": "src/hooks/use-toast.ts",

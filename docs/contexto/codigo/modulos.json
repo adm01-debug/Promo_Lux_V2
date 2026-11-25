@@ -1647,8 +1647,8 @@
   {
    "modulo": "integrations/supabase",
    "arquivos": 3,
-   "testes": 8,
-   "linhas": 8069,
+   "testes": 9,
+   "linhas": 8075,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],

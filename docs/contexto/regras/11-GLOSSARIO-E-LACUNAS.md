@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ec5349fc16` · branch `main` · 2026-11-25 22:00 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `488f67cfba` · branch `main` · 2026-11-25 22:38 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -184,7 +184,6 @@
 | `Skin` (TS) | gold \| blue \| green \| red \| purple \| orange |  | `src/hooks/useSkin.ts` |
 | `ComponentState` (TS) | operational \| degraded \| outage \| unknown |  | `src/hooks/useStatusPage.ts` |
 | `WEBHOOK_EVENTS` (TS) | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … |  | `src/hooks/useWebhooks.ts` |
-| `SoftDeleteTable` (TS) | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks |  | `src/integrations/supabase/withOrg.ts` |
 | `EmailErrorKind` (TS) | auth \| sync |  | `src/lib/emailErrorMessages.ts` |
 | `EmailErrorSeverity` (TS) | warning \| error \| fatal |  | `src/lib/emailErrorMessages.ts` |
 | `AppRole` (TS) | admin \| sdr \| viewer |  | `src/lib/permissions.ts` |
@@ -357,7 +356,7 @@ _nenhum item encontrado_
 | dinâmico | 2 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
 | dinâmico | 4 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/withOrg.ts` |
 | dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/__tests__/withOrg.batch.test.ts` |
-| dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` |
+| dinâmico | 2 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` |
 | dinâmico | 5 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/public-api/index.ts` |
 | dinâmico | 5 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/rls-tests/index.ts` |
 | segurança | função `prune_auth_rate_limits` é SECURITY DEFINER sem `set search_path` (risco de escalação) | `supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql` |

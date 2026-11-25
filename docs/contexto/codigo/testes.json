@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 141,
+ "total": 142,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 119
+  "unit": 120
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 95
+   "arquivos": 96
   },
   {
    "padrao": "e2e/",
@@ -790,6 +790,15 @@
    "casos": 2
   },
   {
+   "arquivo": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+   "tipo": "unit",
+   "linhas": 70,
+   "testa": [
+    "src/integrations/supabase/withOrg.ts"
+   ],
+   "casos": 3
+  },
+  {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
    "tipo": "unit",
    "linhas": 207,
@@ -801,11 +810,11 @@
   {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
    "tipo": "unit",
-   "linhas": 147,
+   "linhas": 183,
    "testa": [
     "src/integrations/supabase/withOrg.ts"
    ],
-   "casos": 7
+   "casos": 8
   },
   {
    "arquivo": "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
@@ -1416,7 +1425,7 @@
   "src/hooks/useWeeklyPerformance.ts": 1,
   "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 2,
   "src/integrations/supabase/client.ts": 1,
-  "src/integrations/supabase/withOrg.ts": 12,
+  "src/integrations/supabase/withOrg.ts": 13,
   "src/lib/api/workflows.ts": 1,
   "src/lib/csv.ts": 1,
   "src/lib/demoViews.ts": 1,

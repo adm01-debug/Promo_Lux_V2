@@ -442,7 +442,7 @@
     "setOrgErrorListener"
    ],
    "export_default": null,
-   "linhas": 467,
+   "linhas": 473,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
@@ -460,7 +460,7 @@
     "lib/api",
     "pages"
    ],
-   "coberto_por_testes": 12,
+   "coberto_por_testes": 13,
    "orfao": false
   },
   {

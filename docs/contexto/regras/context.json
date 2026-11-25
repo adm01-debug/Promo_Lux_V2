@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "ec5349fc1617150b3033114733080dc8d836cec8",
+  "sha": "488f67cfbaee57c9abe8aac8063737d813b23bfd",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 22:00 UTC",
-  "files_total": 1190,
-  "code_files": 1001,
-  "code_lines": 148690
+  "generated_at": "2026-11-25 22:38 UTC",
+  "files_total": 1191,
+  "code_files": 1002,
+  "code_lines": 148802
  },
  "version": "1.3.2",
- "facts_hash": "b90dfebeef3ce6ed",
+ "facts_hash": "a2a177052734c4fc",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -246,7 +246,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 385,
+   ".ts": 386,
    ".tsx": 309,
    ".sql": 274,
    ".mjs": 23,
@@ -33954,8 +33954,8 @@
   },
   {
    "module": "src/integrations",
-   "files": 12,
-   "lines": 9141,
+   "files": 13,
+   "lines": 9253,
    "tables": [
     "automation_alerts",
     "changelog_entries",
@@ -33983,7 +33983,9 @@
     "@lovable.dev/cloud-auth-js",
     "@supabase/supabase-js",
     "node:child_process",
+    "node:fs",
     "node:path",
+    "node:url",
     "vitest"
    ],
    "imports_modules": [],
@@ -33994,6 +33996,7 @@
     "src/integrations/supabase/withOrg.test.ts",
     "src/integrations/supabase/withOrg.ts",
     "src/integrations/supabase/__tests__/orgFixtureSync.test.ts",
+    "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
     "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
     "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
     "src/integrations/supabase/__tests__/withOrg.maliciousFilters.test.ts",
@@ -37944,7 +37947,7 @@
    },
    {
     "file": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
-    "count": 1
+    "count": 2
    },
    {
     "file": "supabase/functions/public-api/index.ts",
@@ -38795,11 +38798,6 @@
     "file": "src/hooks/useWebhooks.ts",
     "name": "WEBHOOK_EVENTS",
     "values": "\"companies.insert\", \"companies.update\", \"companies.delete\", \"deals.insert\", \"deals.update\", \"deals.delete\", \"stakeholders.insert\", \"stakeholders.update\", \"stakeholders.delete\", \"security.org_violation_threshold\", \"scrape_jobs.completed\", \"scrape_jobs.failed\", \"workflows.completed\", \"workflows.failed …"
-   },
-   {
-    "file": "src/integrations/supabase/withOrg.ts",
-    "name": "SoftDeleteTable",
-    "values": "companies | deals | campaigns | workflows | email_suppressions | email_accounts | api_keys | webhooks"
    },
    {
     "file": "src/lib/emailErrorMessages.ts",
@@ -55512,6 +55510,22 @@
     "name": "o gerador produz uma lista não vazia e ordenada"
    },
    {
+    "file": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+    "name": "TRASH_LABEL_COLUMN ↔ types.ts"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+    "name": "cobre as oito tabelas com soft delete"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+    "name": "a coluna de rotulo de %s (%s) existe no schema"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+    "name": "deals usa title, nao name"
+   },
+   {
     "file": "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
     "name": "db (withOrg) — batch operations atomic rejection"
    },
@@ -55586,6 +55600,10 @@
    {
     "file": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
     "name": "soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
+    "name": "soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real"
    },
    {
     "file": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
@@ -78531,7 +78549,7 @@
    },
    {
     "kind": "dinâmico",
-    "msg": "1 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
+    "msg": "2 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
     "where": [
      "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts"
     ]
@@ -91173,7 +91191,7 @@
   },
   "src/integrations/supabase/withOrg.ts": {
    "path": "src/integrations/supabase/withOrg.ts",
-   "lines": 467,
+   "lines": 473,
    "exports": [
     "const ACTIVE_ORG_STORAGE_KEY",
     "function setActiveOrgId",
@@ -91209,12 +91227,6 @@
    "errors": [
     "[withOrg] Acesso bloqueado: tabela "
    ],
-   "enums": [
-    {
-     "name": "SoftDeleteTable",
-     "values": "companies | deals | campaigns | workflows | email_suppressions | email_accounts | api_keys | webhooks"
-    }
-   ],
    "rule_comments": [
     "`any`, modelamos apenas o contrato realmente usado pelo wrapper e a cadeia de",
     "ou apenas por edge functions / admin). Ficam sob RLS específica e NÃO"
@@ -91229,6 +91241,21 @@
     "fixture de tabelas multi-tenant é derivada das migrations",
     "está em dia com supabase/migrations",
     "o gerador produz uma lista não vazia e ordenada"
+   ]
+  },
+  "src/integrations/supabase/__tests__/trashLabelColumns.test.ts": {
+   "path": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+   "lines": 70,
+   "is_test": true,
+   "errors": [
+    "types.ts nao tem Row de ${tabela}",
+    "types.ts nao tem a tabela ${tabela}"
+   ],
+   "tests": [
+    "TRASH_LABEL_COLUMN ↔ types.ts",
+    "cobre as oito tabelas com soft delete",
+    "a coluna de rotulo de %s (%s) existe no schema",
+    "deals usa title, nao name"
    ]
   },
   "src/integrations/supabase/__tests__/withOrg.batch.test.ts": {
@@ -91319,7 +91346,7 @@
   },
   "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts": {
    "path": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
-   "lines": 147,
+   "lines": 183,
    "is_test": true,
    "tables": [
     {
@@ -91358,7 +91385,7 @@
      "starred"
     ]
    },
-   "dyn_from": 1,
+   "dyn_from": 2,
    "params": [
     {
      "name": "ORG_A",
@@ -91377,6 +91404,7 @@
     "db (withOrg) — bulk DELETE scope guards",
     "injeta organization_id ANTES de filtros adicionais (.in)",
     "soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org",
+    "soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real",
     "injeta filtro de org mesmo quando chamador encadeia múltiplos .eq/.neq",
     "bloqueia bulk delete quando não há org ativa (MissingOrgContextError)",
     "aplica o filtro de org mesmo quando o chamador tenta divergir via .eq(",
@@ -102577,10 +102605,22 @@
   }
  },
  "git": {
-  "sha": "ec5349fc1617150b3033114733080dc8d836cec8",
+  "sha": "488f67cfbaee57c9abe8aac8063737d813b23bfd",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "488f67c",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+     "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
+     "src/integrations/supabase/withOrg.ts"
+    ]
+   },
    {
     "sha": "ec5349f",
     "date": "2026-11-25",
@@ -102937,27 +102977,20 @@
      ".github/workflows/ci.yml",
      ".github/workflows/inventario-estado-semanal.yml"
     ]
-   },
-   {
-    "sha": "2353b88",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(deps): atualiza @hookform/resolvers para 7.0.9 (#198)",
-    "files": [
-     "package-lock.json",
-     "package.json",
-     "src/components/lux/__tests__/ProxyFormDialog.test.tsx"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    11
+    12
+   ],
+   [
+    "src/integrations/supabase/withOrg.ts",
+    3
    ],
    [
     "package.json",
-    4
+    3
    ],
    [
     "scripts/automation.config.json",
@@ -102981,10 +103014,6 @@
    ],
    [
     "src/hooks/__tests__/orgCacheKeys.test.ts",
-    2
-   ],
-   [
-    "src/integrations/supabase/withOrg.ts",
     2
    ],
    [
@@ -103024,12 +103053,12 @@
     2
    ],
    [
-    "package-lock.json",
+    "docs/AUTOMACAO_LOCAL.md",
     2
    ],
    [
-    "docs/AUTOMACAO_LOCAL.md",
-    2
+    "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
+    1
    ]
   ]
  }

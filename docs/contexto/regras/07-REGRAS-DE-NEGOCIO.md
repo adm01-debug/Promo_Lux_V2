@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ec5349fc16` · branch `main` · 2026-11-25 22:00 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `488f67cfba` · branch `main` · 2026-11-25 22:38 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1215,7 +1215,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | Skin | gold \| blue \| green \| red \| purple \| orange | `src/hooks/useSkin.ts` |
 | ComponentState | operational \| degraded \| outage \| unknown | `src/hooks/useStatusPage.ts` |
 | WEBHOOK_EVENTS | "companies.insert", "companies.update", "companies.delete", "deals.insert", "deals.update", "deals.delete", "stakeholders.insert", "stakeholders.update", "stakeholders.delete", "security.org_violation_threshold", "scrape_jobs.completed", "scrape_jobs.failed", "workflows.completed", "workflows.failed … | `src/hooks/useWebhooks.ts` |
-| SoftDeleteTable | companies \| deals \| campaigns \| workflows \| email_suppressions \| email_accounts \| api_keys \| webhooks | `src/integrations/supabase/withOrg.ts` |
 | EmailErrorKind | auth \| sync | `src/lib/emailErrorMessages.ts` |
 | EmailErrorSeverity | warning \| error \| fatal | `src/lib/emailErrorMessages.ts` |
 | AppRole | admin \| sdr \| viewer | `src/lib/permissions.ts` |
@@ -2323,7 +2322,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1264 testes em 126 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1269 testes em 127 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2370,6 +2369,7 @@ _nenhum item encontrado_
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
 | `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
+| `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 9 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real … |
 | `src/integrations/supabase/__tests__/withOrg.switching.test.ts` | 9 | withOrg — E2E switching de organização ativa · fluxo completo: opera em Org A, troca para Org B, e o filtro de leitura acompanha · bloqueia leitura cross-org: estando em Org A, cliente NÃO consegue forçar SELECT em Org B · bloqueia escrita cross-org após switch: tentar inserir com org antiga é interceptado … |
 | `src/lib/dlq/__tests__/classify.test.ts` | 9 | classifyDlqReason · classifica rede · classifica rate limit · classifica auth … |
 | `src/lib/resilience/simulator.test.ts` | 9 | simulator - backoff · cresce exponencialmente e respeita o cap · simulator - cenários · erro permanente (4xx) sempre vai para DLQ quando falha … |
@@ -2380,7 +2380,6 @@ _nenhum item encontrado_
 | `src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts` | 8 | R35 fuzz — historyUtils robusto contra payloads adversos · filterHistory nunca lança e retorna subconjunto válido · filterHistory com janelas inválidas não estoura · formatDurationMs blindado contra NaN/negativos/infinito … |
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
 | `src/hooks/__tests__/usePersistedFilters.test.ts` | 8 | usePersistedFilters · returns default state on first render · persists state updates to localStorage · restores state from localStorage … |
-| `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 8 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · injeta filtro de org mesmo quando chamador encadeia múltiplos .eq/.neq … |
 | `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 8 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
 | `src/lib/__tests__/orgErrorHandler.e2e.test.ts` | 8 | orgErrorHandler — E2E switching de org durante edição · mostra toast quando UPDATE falha após troca de org no meio da edição · ação  · handler global captura unhandledrejection com OrgMismatchError e mostra toast … |
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
@@ -2433,6 +2432,7 @@ _nenhum item encontrado_
 | `src/hooks/__tests__/useOraclePushBitrix.test.ts` | 4 | useOraclePushBitrix — contrato da edge oracle-push-bitrix · envia payload com contact_ids + destino Bitrix opcional · propaga erro da edge (bitrix_open) para onError · aceita resposta com status variados no results[] |
 | `src/hooks/__tests__/useRateLimit.test.ts` | 4 | useRateLimit · should not be locked initially · should lock after exceeding max attempts · should unlock after window windowMs |
 | `src/integrations/supabase/withOrg.test.ts` | 4 | withOrg Multi-tenant Isolation · should block access to unclassified tables (Deny-by-Default) · should allow access to scoped tables when org is active · should block write operations without active organization |
+| `src/integrations/supabase/__tests__/trashLabelColumns.test.ts` | 4 | TRASH_LABEL_COLUMN ↔ types.ts · cobre as oito tabelas com soft delete · a coluna de rotulo de %s (%s) existe no schema · deals usa title, nao name |
 | `src/tests/fuzzing-validation.test.ts` | 4 | Fuzzing & Validation: Webhooks and Edge Functions · should reject malformed JSON payloads · should reject missing required fields (e.g., event_type) · should handle invalid UUIDs gracefully |
 | `src/tests/multi-tenant.test.ts` | 4 | Multi-Tenant Isolation (SafeOrg) · should automatically inject organization_id into SELECT queries · should fail closed on SELECT when no organization is active · should block cross-tenant injection attempts in values |
 | `supabase/functions/rls-tests/index.test.ts` | 4 | rls-tests: rejeita 401 quando NÃO há Authorization Bearer · rls-tests: rejeita Bearer JWT corrompido (gateway OU guard) · rls-tests: retorna 403 quando JWT é válido mas user não é admin · rls-tests: retorna relatório estruturado quando admin chama |
