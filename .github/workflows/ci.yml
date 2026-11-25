@@ -5,6 +5,11 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  # O inventario semanal abre o PR dele com GITHUB_TOKEN e, por regra do GitHub, esse
+  # token nao dispara evento de push/pull_request - logo este workflow nunca rodava no
+  # PR do bot e os 3 checks obrigatorios do ruleset de `main` nunca apareciam.
+  # workflow_dispatch e a excecao documentada a essa regra.
+  workflow_dispatch:
 
 jobs:
   quality-gate:
@@ -95,7 +100,9 @@ jobs:
   db-guards:
     name: Database Guards (Grants/RLS + Audit Triggers)
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    # workflow_dispatch so existe em branch do proprio repositorio (fork nao tem dispatch)
+    # e exige permissao de escrita - mesma garantia de um PR interno. PR de fork segue fora.
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
       - uses: actions/checkout@v7
 
