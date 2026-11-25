@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d15f85e843` · branch `main` · 2026-11-25 20:39 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d7c7ccf6e7` · branch `main` · 2026-11-25 20:49 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2323,7 +2323,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1243 testes em 122 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1247 testes em 123 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2426,6 +2426,7 @@ _nenhum item encontrado_
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |
 | `src/components/lux/__tests__/ICPConfigView.test.tsx` | 4 | useICPConfig (mocked) · returns activeConfig with criteria · returns isLoading false · returns save function |
 | `src/components/lux/__tests__/WorkflowsView.test.tsx` | 4 | WorkflowsView · renders heading · renders create button · shows workflow cards when data loads |
+| `src/hooks/__tests__/orgGateQueries.test.ts` | 4 | consultas condicionadas a organizacao ativa · nao consulta $nome sem organizacao ativa · consulta $nome quando a organizacao esta ativa · libera as telas com dado de exemplo mesmo sem organizacao ativa |
 | `src/hooks/__tests__/useConfirm.test.tsx` | 4 | useConfirm · resolves true when the user confirms · resolves false when the user cancels · throws when used outside the provider |
 | `src/hooks/__tests__/useOraclePushBitrix.test.ts` | 4 | useOraclePushBitrix — contrato da edge oracle-push-bitrix · envia payload com contact_ids + destino Bitrix opcional · propaga erro da edge (bitrix_open) para onError · aceita resposta com status variados no results[] |
 | `src/hooks/__tests__/useRateLimit.test.ts` | 4 | useRateLimit · should not be locked initially · should lock after exceeding max attempts · should unlock after window windowMs |

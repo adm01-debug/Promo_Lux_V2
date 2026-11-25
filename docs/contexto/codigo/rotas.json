@@ -2019,32 +2019,54 @@
    "arquivo": "src/components/lux/ICPConfigView.tsx",
    "registrada_em": "src/lib/viewRegistry.ts",
    "hooks": [
+    "useActiveOrganization",
     "useAuth",
     "useContext",
+    "useCreateInvite",
+    "useCreateOrganization",
     "useEffect",
     "useICPConfig",
     "useMutation",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
     "useQuery",
     "useQueryClient",
+    "useRemoveMember",
+    "useRevokeInvite",
     "useState",
     "useToast",
-    "useUnsavedChanges"
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
    ],
    "hooks_locais": [
+    "useActiveOrganization",
     "useAuth",
+    "useCreateInvite",
+    "useCreateOrganization",
     "useICPConfig",
+    "useMyOrganizations",
+    "useOrgInvites",
+    "useOrgMembers",
+    "useRemoveMember",
+    "useRevokeInvite",
     "useToast",
-    "useUnsavedChanges"
+    "useUnsavedChanges",
+    "useUpdateMemberRole"
    ],
    "tabelas": [
-    "ipc_config"
+    "ipc_config",
+    "organization_invites",
+    "organization_members",
+    "organizations",
+    "profiles"
    ],
    "rpcs": [],
    "edges": [],
    "canais_realtime": [],
    "flags": [],
    "papeis": [],
-   "arquivos_puxados": 21
+   "arquivos_puxados": 23
   },
   {
    "id": "integrations",

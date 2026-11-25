@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d15f85e843832d73da32e239fd74b9a43a330584",
+  "commit": "d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c",
   "branch": "main",
-  "data_commit": "2026-11-25T17:39:23-03:00",
+  "data_commit": "2026-11-25T17:49:21-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "d7c7ccf",
+    "data": "2026-11-25",
+    "assunto": "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)"
+   },
    {
     "sha": "d15f85e",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "0c5b352",
     "data": "2026-11-25",
     "assunto": "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)"
-   },
-   {
-    "sha": "2353b88",
-    "data": "2026-11-25",
-    "assunto": "fix(deps): atualiza @hookform/resolvers para 7.0.9 (#198)"
    }
   ],
-  "arquivos_mudados_7d": 315,
+  "arquivos_mudados_7d": 322,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -172,12 +172,12 @@
     "mudancas": 8
    },
    {
-    "pasta": "supabase/config.toml",
+    "pasta": "docs/qa/05-PROGRESSO.md",
     "mudancas": 8
    },
    {
-    "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 7
+    "pasta": "supabase/config.toml",
+    "mudancas": 8
    },
    {
     "pasta": "supabase/functions/gmaps-proxy",
@@ -222,12 +222,12 @@
     "mudancas": 8
    },
    {
-    "arquivo": "src/integrations/supabase/types.ts",
+    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 8
    },
    {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 7
+    "arquivo": "src/integrations/supabase/types.ts",
+    "mudancas": 8
    },
    {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 169
+    "commits": 170
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1164,
-  "arquivos_codigo": 718,
-  "linhas_codigo": 125540,
+  "arquivos_total": 1165,
+  "arquivos_codigo": 719,
+  "linhas_codigo": 125690,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 137,
+  "testes": 138,
   "workflows": 10,
   "scripts": 53,
   "docs_md": 87
@@ -567,8 +567,8 @@
    "linhas": 398
   },
   "src/hooks": {
-   "arquivos": 103,
-   "linhas": 11623
+   "arquivos": 104,
+   "linhas": 11773
   },
   "src/integrations": {
    "arquivos": 10,

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d15f85e843832d73da32e239fd74b9a43a330584` (2026-11-25T17:39:23-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c` (2026-11-25T17:49:21-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (690), SQL (274), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (12), Python (5)
+- linguagens: TypeScript (691), SQL (274), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (12), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1164 |
-| arquivos_codigo | 718 |
-| linhas_codigo | 125540 |
+| arquivos_total | 1165 |
+| arquivos_codigo | 719 |
+| linhas_codigo | 125690 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 121 |
 | migrations | 270 |
 | cron_jobs | 43 |
-| testes | 137 |
+| testes | 138 |
 | workflows | 10 |
 | scripts | 53 |
 | docs_md | 87 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (251), src/pages (11), src/contexts (3)
 - hooks: src/hooks (90), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (39), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (91), e2e/ (19), co-localizado (*.test) (16)
+- testes: co-localizado (__tests__) (92), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/regras_negocio (3), scripts/sql (3)
@@ -259,8 +259,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7954 nós · 16830 arestas · 700 comunidades · grafo do commit `d15f85e8`
-- comunidades maiores: Monitoring.tsx (194), @tanstack/react-query (183), react (167), lucide-react (122), cn (110), framer-motion (86), CompaniesView.tsx (83), package.json (83), JobDetailsSheet.tsx (81), gerar.mjs (80), campaign-dispatch/index.ts (67), dependencies (65)
+- 7959 nós · 16875 arestas · 700 comunidades · grafo do commit `d7c7ccf6`
+- comunidades maiores: lucide-react (207), react (189), @tanstack/react-query (136), hooks/use-toast.ts (121), snapshot.py (108), LushaIntelligenceView.tsx (105), useActiveOrganization (99), cn (98), gerar.mjs (80), generate.py (73), Index.tsx (73), OrganizationsView.tsx (69)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -271,8 +271,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - .github/workflows/db-migrations.yml (9)
 - supabase/config.toml (9)
 - AGENTS.md (8)
+- docs/qa/05-PROGRESSO.md (8)
 - src/integrations/supabase/types.ts (8)
-- docs/qa/05-PROGRESSO.md (7)
 - supabase/functions/gmaps-proxy/index.ts (7)
 - supabase/functions/public-api/index.ts (7)
 - .github/workflows/edge-tests-daily.yml (6)
@@ -377,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `d7c7ccf` fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)
 - 2026-11-25 `d15f85e` feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)
 - 2026-11-25 `40e6a6e` fix: separa o cache do modo demonstracao do cache real (#221)
 - 2026-11-25 `21eb9db` fix: remove rotulo ambiguo do e2e de login (#219)
@@ -391,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `121479c` infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)
 - 2026-11-25 `9ad49f5` fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)
 - 2026-11-25 `e1331fe` chore(edge): descarta audit-logs-prune, function sem chamador (#209)
-- 2026-11-25 `b85b5ad` fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

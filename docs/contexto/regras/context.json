@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "d15f85e843832d73da32e239fd74b9a43a330584",
+  "sha": "d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 20:39 UTC",
-  "files_total": 1185,
-  "code_files": 996,
-  "code_lines": 147967
+  "generated_at": "2026-11-25 20:49 UTC",
+  "files_total": 1186,
+  "code_files": 997,
+  "code_lines": 148117
  },
  "version": "1.3.2",
- "facts_hash": "58d63f7259209091",
+ "facts_hash": "9fb93e0a110ef34d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -244,7 +244,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 381,
+   ".ts": 382,
    ".tsx": 309,
    ".sql": 274,
    ".mjs": 22,
@@ -33733,8 +33733,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 103,
-   "lines": 11623,
+   "files": 104,
+   "lines": 11773,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -33845,7 +33845,8 @@
     "useFeatureFlags.ts: FeatureFlag, useFeatureFlags, useFeatureFlag"
    ],
    "docs": [
-    "oracleV2Helpers.ts: Helpers puros de UI/formatação do Oracle v2. Extraídos para permitir testes unitários sem montar contexto de React/Query."
+    "oracleV2Helpers.ts: Helpers puros de UI/formatação do Oracle v2. Extraídos para permitir testes unitários sem montar contexto de React/Query.",
+    "orgGateQueries.test.ts: eslint-disable react-hooks/rules-of-hooks -- os hooks sao chamados direto porque `useQuery`, `useActiveOrganization`, `useDemo` e `useAuth` estao todos mockados: nenhum hook real executa."
    ],
    "deps": [
     "@supabase/supabase-js",
@@ -54824,6 +54825,22 @@
    {
     "file": "src/hooks/__tests__/oracleV2Helpers.test.ts",
     "name": "mostra "
+   },
+   {
+    "file": "src/hooks/__tests__/orgGateQueries.test.ts",
+    "name": "consultas condicionadas a organizacao ativa"
+   },
+   {
+    "file": "src/hooks/__tests__/orgGateQueries.test.ts",
+    "name": "nao consulta $nome sem organizacao ativa"
+   },
+   {
+    "file": "src/hooks/__tests__/orgGateQueries.test.ts",
+    "name": "consulta $nome quando a organizacao esta ativa"
+   },
+   {
+    "file": "src/hooks/__tests__/orgGateQueries.test.ts",
+    "name": "libera as telas com dado de exemplo mesmo sem organizacao ativa"
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
@@ -87336,7 +87353,7 @@
   },
   "src/hooks/useAuditTrail.ts": {
    "path": "src/hooks/useAuditTrail.ts",
-   "lines": 167,
+   "lines": 172,
    "exports": [
     "type AuditActionFilter",
     "const AUTOMATION_TABLES",
@@ -87879,7 +87896,7 @@
   },
   "src/hooks/useDashboardData.ts": {
    "path": "src/hooks/useDashboardData.ts",
-   "lines": 189,
+   "lines": 193,
    "exports": [
     "interface DashboardStats",
     "function useDashboardStats",
@@ -88691,7 +88708,7 @@
   },
   "src/hooks/useICPConfig.ts": {
    "path": "src/hooks/useICPConfig.ts",
-   "lines": 123,
+   "lines": 126,
    "exports": [
     "type ICPValue",
     "interface ICPCriterion",
@@ -89177,7 +89194,7 @@
   },
   "src/hooks/useNotificationCount.ts": {
    "path": "src/hooks/useNotificationCount.ts",
-   "lines": 29,
+   "lines": 32,
    "exports": [
     "const useNotificationCount"
    ],
@@ -89208,7 +89225,7 @@
   },
   "src/hooks/useOAuthSandboxSnapshots.ts": {
    "path": "src/hooks/useOAuthSandboxSnapshots.ts",
-   "lines": 139,
+   "lines": 142,
    "exports": [
     "interface OAuthSnapshot",
     "interface SaveSnapshotInput",
@@ -90405,7 +90422,7 @@
   },
   "src/hooks/useVirtualCompanies.ts": {
    "path": "src/hooks/useVirtualCompanies.ts",
-   "lines": 27,
+   "lines": 30,
    "exports": [
     "function useVirtualCompanies"
    ],
@@ -90658,6 +90675,18 @@
     "error quando errors>0 e sent=0",
     "warning quando parcial (errors>0 + sent>0)",
     "mostra "
+   ]
+  },
+  "src/hooks/__tests__/orgGateQueries.test.ts": {
+   "path": "src/hooks/__tests__/orgGateQueries.test.ts",
+   "lines": 129,
+   "is_test": true,
+   "doc": "eslint-disable react-hooks/rules-of-hooks -- os hooks sao chamados direto porque `useQuery`, `useActiveOrganization`, `useDemo` e `useAuth` estao todos mockados: nenhum hook real executa.",
+   "tests": [
+    "consultas condicionadas a organizacao ativa",
+    "nao consulta $nome sem organizacao ativa",
+    "consulta $nome quando a organizacao esta ativa",
+    "libera as telas com dado de exemplo mesmo sem organizacao ativa"
    ]
   },
   "src/hooks/__tests__/useAuditTrail.test.ts": {
@@ -102363,10 +102392,26 @@
   }
  },
  "git": {
-  "sha": "d15f85e843832d73da32e239fd74b9a43a330584",
+  "sha": "d7c7ccf6e78e0e367eeedaf604d5644d67ecee6c",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "d7c7ccf",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/hooks/__tests__/orgGateQueries.test.ts",
+     "src/hooks/useAuditTrail.ts",
+     "src/hooks/useDashboardData.ts",
+     "src/hooks/useICPConfig.ts",
+     "src/hooks/useNotificationCount.ts",
+     "src/hooks/useOAuthSandboxSnapshots.ts",
+     "src/hooks/useVirtualCompanies.ts"
+    ]
+   },
    {
     "sha": "d15f85e",
     "date": "2026-11-25",
@@ -102683,22 +102728,12 @@
      "supabase/functions/public-api/index.ts",
      "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
     ]
-   },
-   {
-    "sha": "60535f3",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "perf(api-publica): /me e /events em um unico round-trip e corrige filtro action",
-    "files": [
-     "supabase/functions/public-api/index.ts",
-     "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    6
+    7
    ],
    [
     "package.json",
@@ -102725,8 +102760,32 @@
     2
    ],
    [
-    "supabase/functions/public-api/index.ts",
-    2
+    "src/hooks/__tests__/orgGateQueries.test.ts",
+    1
+   ],
+   [
+    "src/hooks/useAuditTrail.ts",
+    1
+   ],
+   [
+    "src/hooks/useDashboardData.ts",
+    1
+   ],
+   [
+    "src/hooks/useICPConfig.ts",
+    1
+   ],
+   [
+    "src/hooks/useNotificationCount.ts",
+    1
+   ],
+   [
+    "src/hooks/useOAuthSandboxSnapshots.ts",
+    1
+   ],
+   [
+    "src/hooks/useVirtualCompanies.ts",
+    1
    ],
    [
     "src/components/lux/DemoNotice.tsx",
@@ -102750,30 +102809,6 @@
    ],
    [
     "src/components/lux/CompaniesView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/NotificationsPanel.tsx",
-    1
-   ],
-   [
-    "src/components/lux/StakeholderFinderView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/WorkflowsView.tsx",
-    1
-   ],
-   [
-    "src/contexts/DemoContext.tsx",
-    1
-   ],
-   [
-    "src/contexts/__tests__/DemoContext.test.tsx",
-    1
-   ],
-   [
-    "e2e/navigation.spec.ts",
     1
    ]
   ]

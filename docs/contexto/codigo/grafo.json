@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 581,
- "arestas": 1841,
+ "arestas": 1846,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -69,6 +69,10 @@
    "importado_por": 24
   },
   {
+   "arquivo": "src/hooks/useOrganizations.ts",
+   "importado_por": 24
+  },
+  {
    "arquivo": "src/components/ui/switch.tsx",
    "importado_por": 22
   },
@@ -78,10 +82,6 @@
   },
   {
    "arquivo": "src/components/lux/EmptyState.tsx",
-   "importado_por": 19
-  },
-  {
-   "arquivo": "src/hooks/useOrganizations.ts",
    "importado_por": 19
   },
   {

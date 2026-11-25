@@ -1952,6 +1952,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useAuditTrail.ts": [
+   "src/hooks/useOrganizations.ts",
    "src/integrations/supabase/types.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
@@ -2065,6 +2066,7 @@
   "src/hooks/useICPConfig.ts": [
    "src/contexts/auth-context.ts",
    "src/hooks/use-toast.ts",
+   "src/hooks/useOrganizations.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/types.ts",
    "src/integrations/supabase/withOrg.ts"
@@ -2115,10 +2117,12 @@
   ],
   "src/hooks/useNotificationCount.ts": [
    "src/contexts/demo-context.ts",
+   "src/hooks/useOrganizations.ts",
    "src/integrations/supabase/withOrg.ts",
    "src/lib/demoData.ts"
   ],
   "src/hooks/useOAuthSandboxSnapshots.ts": [
+   "src/hooks/useOrganizations.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
@@ -2238,6 +2242,7 @@
    "src/hooks/unsaved-changes-context.ts"
   ],
   "src/hooks/useVirtualCompanies.ts": [
+   "src/hooks/useOrganizations.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useWarmupProfile.ts": [

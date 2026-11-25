@@ -481,7 +481,7 @@
     "useAuditTables",
     "useAuditTrail"
    ],
-   "linhas": 167,
+   "linhas": 172,
    "dominio": "hooks",
    "tabelas": [
     "audit_logs",
@@ -490,6 +490,7 @@
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useQuery"
    ],
    "canais_realtime": [],
@@ -497,7 +498,7 @@
    "usado_por_arquivos": [
     "src/components/lux/monitoring/AuditTrailPanel.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useAutomationLogs.ts",
@@ -782,7 +783,7 @@
     "useRecentActivity",
     "useRecentCompanies"
    ],
-   "linhas": 189,
+   "linhas": 193,
    "dominio": "hooks",
    "tabelas": [
     "companies",
@@ -809,7 +810,7 @@
     "src/components/lux/StatsGrid.tsx",
     "src/lib/demoData.ts"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useDashboardLayout.ts",
@@ -1282,7 +1283,7 @@
    "hooks_exportados": [
     "useICPConfig"
    ],
-   "linhas": 123,
+   "linhas": 126,
    "dominio": "hooks",
    "tabelas": [
     "ipc_config"
@@ -1290,6 +1291,7 @@
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useAuth",
     "useMutation",
     "useQuery",
@@ -1300,7 +1302,7 @@
    "usado_por_arquivos": [
     "src/components/lux/ICPConfigView.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useIpAllowlist.ts",
@@ -1577,7 +1579,7 @@
    "hooks_exportados": [
     "useNotificationCount"
    ],
-   "linhas": 29,
+   "linhas": 32,
    "dominio": "hooks",
    "tabelas": [
     "notifications"
@@ -1585,6 +1587,7 @@
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useDemo",
     "useQuery"
    ],
@@ -1593,7 +1596,7 @@
    "usado_por_arquivos": [
     "src/components/lux/layout/Header.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useOAuthSandboxSnapshots.ts",
@@ -1602,7 +1605,7 @@
     "useOAuthSandboxSnapshots",
     "useSaveOAuthSnapshot"
    ],
-   "linhas": 139,
+   "linhas": 142,
    "dominio": "hooks",
    "tabelas": [
     "oauth_sandbox_snapshots"
@@ -1610,6 +1613,7 @@
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useMutation",
     "useQuery",
     "useQueryClient"
@@ -1620,7 +1624,7 @@
     "src/components/lux/integrations/OAuthSandboxPanel.tsx",
     "src/components/lux/integrations/OAuthSnapshotsPanel.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useOnboardingState.ts",
@@ -1707,7 +1711,7 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 19,
+   "usado_por": 24,
    "usado_por_arquivos": [
     "src/components/lux/OrgViolationsView.tsx",
     "src/components/lux/OrganizationsView.tsx",
@@ -1725,9 +1729,14 @@
     "src/components/lux/security/OrgViolationAlertsPanel.tsx",
     "src/contexts/ActiveOrgContext.tsx",
     "src/contexts/active-org-context.ts",
+    "src/hooks/useAuditTrail.ts",
     "src/hooks/useDashboardData.ts",
+    "src/hooks/useICPConfig.ts",
+    "src/hooks/useNotificationCount.ts",
+    "src/hooks/useOAuthSandboxSnapshots.ts",
     "src/hooks/usePermissions.ts",
-    "src/hooks/useRolePermissions.ts"
+    "src/hooks/useRolePermissions.ts",
+    "src/hooks/useVirtualCompanies.ts"
    ],
    "coberto_por_testes": 0
   },
@@ -2457,7 +2466,7 @@
    "hooks_exportados": [
     "useVirtualCompanies"
    ],
-   "linhas": 27,
+   "linhas": 30,
    "dominio": "hooks",
    "tabelas": [
     "companies"
@@ -2465,6 +2474,7 @@
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
+    "useActiveOrganization",
     "useQuery"
    ],
    "canais_realtime": [],
@@ -2472,7 +2482,7 @@
    "usado_por_arquivos": [
     "src/components/lux/CompanyTable.tsx"
    ],
-   "coberto_por_testes": 2
+   "coberto_por_testes": 3
   },
   {
    "arquivo": "src/hooks/useVirtualization.ts",
