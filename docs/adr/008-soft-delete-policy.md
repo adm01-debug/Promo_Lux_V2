@@ -19,8 +19,9 @@ Adotar uma política híbrida de deleção:
    - Dados de organizações deletadas (via cascata) são removidos fisicamente.
 
 3. **Arquivamento de Logs**:
-   - `audit_logs` e `api_request_logs` são mantidos por 90 dias.
-   - Após 90 dias, os dados são agregados em métricas diárias e os registros detalhados são removidos (hard delete).
+   - `api_request_logs` são mantidos por 90 dias.
+   - `audit_logs` (trilha de auditoria de quem fez o quê) são mantidos por **5 anos** (1.827 dias) — decisão de negócio de 25/11/2026: o registro tem uso legal e não pode ser truncado em 90/180 dias. Expurgo automático pelo job `daily-log-retention` (`prune_audit_logs(1827)`).
+   - Após o prazo de cada tabela, os registros detalhados são removidos (hard delete).
 
 ## Consequências
 - **Positivo**: Capacidade de recuperação de desastres causados por erro humano.

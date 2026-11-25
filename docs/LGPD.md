@@ -36,7 +36,7 @@ A plataforma LUX IA garante aos titulares (via painel de Configurações):
 - **Audit Logs**: Registro de todas as ações sensíveis (acesso, alteração, exportação).
 
 ## 6. Retenção de Dados
-- **Logs de Auditoria**: Retidos por 90 dias (prune automático via Edge Function).
+- **Logs de Auditoria**: Retidos por **5 anos** (1.827 dias) — prazo necessário para uso legal do registro de quem fez o quê no sistema. O expurgo é automático, diário, pelo job `daily-log-retention`; nada é removido antes disso.
 - **Dados de CRM**: Mantidos enquanto a conta estiver ativa.
 - **Dados Pós-Exclusão**: Backup mantido por até 90 dias para fins de Disaster Recovery, sem acesso operacional.
 
