@@ -3,7 +3,6 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +26,7 @@ export const CompaniesMapView = () => {
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies-map"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("companies")
         .select("id, name, sector, location, email, phone, website, ipc_score, enriched, raw_data, lat, lng")
         .order("ipc_score", { ascending: false });

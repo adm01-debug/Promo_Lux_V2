@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,14 +26,19 @@ vi.mock("@/hooks/useDashboardData", () => ({
   useRecentCompanies: () => ({ data: [], isLoading: false }),
 }));
 
-vi.mock("@/hooks/useWeeklyPerformance", () => ({
-  useWeeklyPerformance: () => ({
+const perfState = vi.hoisted(() => ({
+  atual: {
     data: [
       { day: "Seg", raspadas: 10, qualificadas: 5 },
       { day: "Ter", raspadas: 15, qualificadas: 8 },
     ],
     isLoading: false,
-  }),
+    error: null as unknown,
+  },
+}));
+
+vi.mock("@/hooks/useWeeklyPerformance", () => ({
+  useWeeklyPerformance: () => perfState.atual,
 }));
 
 vi.mock("@/hooks/useThemeColors", () => ({
@@ -106,6 +111,17 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 describe("DashboardView — P1 Chart Legibility", () => {
+  beforeEach(() => {
+    perfState.atual = {
+      data: [
+        { day: "Seg", raspadas: 10, qualificadas: 5 },
+        { day: "Ter", raspadas: 15, qualificadas: 8 },
+      ],
+      isLoading: false,
+      error: null,
+    };
+  });
+
   it("renders Performance Semanal chart section", () => {
     render(<DashboardView />, { wrapper });
     expect(screen.getByText("Performance Semanal")).toBeInTheDocument();
@@ -139,5 +155,19 @@ describe("DashboardView — P1 Chart Legibility", () => {
   it("renders greeting message", () => {
     render(<DashboardView />, { wrapper });
     expect(screen.getByText(/👋/)).toBeInTheDocument();
+  });
+
+  it("mostra aviso e esconde o grafico quando a consulta de desempenho falha", () => {
+    perfState.atual = {
+      data: [],
+      isLoading: false,
+      error: new Error("falha na consulta"),
+    };
+
+    render(<DashboardView />, { wrapper });
+
+    expect(screen.getByText(/carregar o desempenho/)).toBeInTheDocument();
+    expect(screen.queryByTestId("area-raspadas")).toBeNull();
+    expect(screen.queryByTestId("area-qualificadas")).toBeNull();
   });
 });

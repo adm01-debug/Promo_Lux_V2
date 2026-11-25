@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -133,7 +134,7 @@ export const CampaignTrackingDrawer = ({
     queryKey: ["campaign-ab-config", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("campaigns")
         .select(
           "ab_test_enabled,ab_winner_metric,ab_winner_variant,ab_winner_decided_at,ab_winner_p_value,ab_winner_lift,ab_winner_reason,ab_min_sample,ab_min_confidence",

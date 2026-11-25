@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useDemo } from "@/contexts/demo-context";
 import { useActiveOrganization } from "@/contexts/active-org-context";
 import { DEMO_PERFORMANCE } from "@/lib/demoData";
@@ -26,11 +26,13 @@ export function useWeeklyPerformance() {
           sevenDaysAgo.setDate(now.getDate() - 6);
           sevenDaysAgo.setHours(0, 0, 0, 0);
 
-          const { data: companies } = await supabase
+          const { data: companies, error } = await db
             .from("companies")
             .select("created_at, ipc_score")
             .gte("created_at", sevenDaysAgo.toISOString())
             .order("created_at", { ascending: true });
+
+          if (error) throw error;
 
           const dayMap = new Map<string, { raspadas: number; qualificadas: number }>();
 

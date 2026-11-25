@@ -1,23 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { SupabaseCall } from "@/test/mockSupabaseClient";
 
 const { toggleStatus, rows } = vi.hoisted(() => ({
   toggleStatus: vi.fn(() => Promise.resolve()),
   rows: [] as Array<Record<string, unknown>>,
 }));
+const chamadas = vi.hoisted(() => [] as SupabaseCall[]);
 
-vi.mock("@/integrations/supabase/client", () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        order: vi.fn(() => ({
-          limit: vi.fn(() => Promise.resolve({ data: rows, error: null })),
-        })),
-      })),
-    })),
-  },
-}));
+vi.mock("@/integrations/supabase/client", async () => {
+  const { createSupabaseClientMock } = await import("@/test/mockSupabaseClient");
+  return {
+    supabase: createSupabaseClientMock({
+      result: () => ({ data: rows, error: null }),
+      calls: chamadas,
+    }),
+  };
+});
 
 vi.mock("@/lib/api/workflows", () => ({ workflowApi: { toggleStatus } }));
 
@@ -34,6 +34,9 @@ vi.mock("framer-motion", async () => {
 });
 
 import { AutomationsList } from "../AutomationsList";
+import { setActiveOrgId } from "@/integrations/supabase/withOrg";
+
+const ORG = "org-teste-automacoes";
 
 const baseWorkflow = {
   id: "w1",
@@ -67,7 +70,26 @@ function renderList(props: { onNavigate?: (view: string) => void } = {}) {
 describe("AutomationsList", () => {
   beforeEach(() => {
     toggleStatus.mockClear();
+    chamadas.length = 0;
+    setActiveOrgId(ORG);
     setRows([]);
+  });
+
+  it("le os workflows escopados pela organizacao ativa e sem itens na lixeira", async () => {
+    setRows([baseWorkflow]);
+    renderList();
+    await screen.findByText("Workflow Alfa");
+
+    expect(chamadas).toContainEqual({
+      table: "workflows",
+      method: "eq",
+      args: ["organization_id", ORG],
+    });
+    expect(chamadas).toContainEqual({
+      table: "workflows",
+      method: "is",
+      args: ["deleted_at", null],
+    });
   });
 
   it("navega para a tela de automacoes pelo botao Nova", async () => {
