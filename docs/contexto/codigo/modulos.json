@@ -814,7 +814,7 @@
    "modulo": "contexts",
    "arquivos": 6,
    "testes": 0,
-   "linhas": 266,
+   "linhas": 272,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -874,7 +874,7 @@
   {
    "modulo": "contexts/__tests__",
    "arquivos": 0,
-   "testes": 1,
+   "testes": 2,
    "linhas": 0,
    "itens_menu": [],
    "telas": [],

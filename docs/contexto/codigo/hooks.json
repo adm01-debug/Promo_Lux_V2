@@ -220,7 +220,7 @@
     "src/pages/Index.tsx",
     "src/pages/Login.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/confirm-context.ts",

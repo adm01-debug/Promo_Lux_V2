@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "21eb9dbc30a77c0c795b0b6f2d1d5d455df52e91",
+  "sha": "40e6a6ef977bd7b6e670628590652e96571e9c6d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 20:30 UTC",
-  "files_total": 1180,
-  "code_files": 991,
-  "code_lines": 147727
+  "generated_at": "2026-11-25 20:34 UTC",
+  "files_total": 1181,
+  "code_files": 992,
+  "code_lines": 147802
  },
  "version": "1.3.2",
- "facts_hash": "8ac88b5f73734c58",
+ "facts_hash": "eab0eac5b607f679",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -245,7 +245,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 379,
-   ".tsx": 306,
+   ".tsx": 307,
    ".sql": 274,
    ".mjs": 22,
    ".py": 5,
@@ -33697,8 +33697,8 @@
   },
   {
    "module": "src/contexts",
-   "files": 7,
-   "lines": 323,
+   "files": 8,
+   "lines": 398,
    "tables": [],
    "exports": [
     "ActiveOrgContext.tsx: ActiveOrgProvider",
@@ -33727,7 +33727,8 @@
     "src/contexts/active-org-context.ts",
     "src/contexts/auth-context.ts",
     "src/contexts/demo-context.ts",
-    "src/contexts/__tests__/AuthContext.test.tsx"
+    "src/contexts/__tests__/AuthContext.test.tsx",
+    "src/contexts/__tests__/DemoContext.test.tsx"
    ]
   },
   {
@@ -54746,6 +54747,18 @@
    {
     "file": "src/contexts/__tests__/AuthContext.test.tsx",
     "name": "clears the React Query cache and the active org before calling supabase.auth.signOut"
+   },
+   {
+    "file": "src/contexts/__tests__/DemoContext.test.tsx",
+    "name": "DemoProvider"
+   },
+   {
+    "file": "src/contexts/__tests__/DemoContext.test.tsx",
+    "name": "clears the query cache when entering demo mode so real data never shows as demo"
+   },
+   {
+    "file": "src/contexts/__tests__/DemoContext.test.tsx",
+    "name": "clears the query cache when leaving demo mode so sample data never leaks to a real session"
    },
    {
     "file": "src/hooks/__tests__/oracleV2Helpers.test.ts",
@@ -86883,7 +86896,7 @@
   },
   "src/contexts/DemoContext.tsx": {
    "path": "src/contexts/DemoContext.tsx",
-   "lines": 25,
+   "lines": 31,
    "exports": [
     "function DemoProvider"
    ]
@@ -86932,6 +86945,16 @@
    "tests": [
     "AuthProvider.signOut",
     "clears the React Query cache and the active org before calling supabase.auth.signOut"
+   ]
+  },
+  "src/contexts/__tests__/DemoContext.test.tsx": {
+   "path": "src/contexts/__tests__/DemoContext.test.tsx",
+   "lines": 69,
+   "is_test": true,
+   "tests": [
+    "DemoProvider",
+    "clears the query cache when entering demo mode so real data never shows as demo",
+    "clears the query cache when leaving demo mode so sample data never leaks to a real session"
    ]
   },
   "src/hooks/confirm-context.ts": {
@@ -102251,10 +102274,27 @@
   }
  },
  "git": {
-  "sha": "21eb9dbc30a77c0c795b0b6f2d1d5d455df52e91",
+  "sha": "40e6a6ef977bd7b6e670628590652e96571e9c6d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "40e6a6e",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: separa o cache do modo demonstracao do cache real (#221)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/CampaignsView.tsx",
+     "src/components/lux/CompaniesView.tsx",
+     "src/components/lux/IntentSignalsView.tsx",
+     "src/components/lux/NotificationsPanel.tsx",
+     "src/components/lux/StakeholderFinderView.tsx",
+     "src/components/lux/WorkflowsView.tsx",
+     "src/contexts/DemoContext.tsx",
+     "src/contexts/__tests__/DemoContext.test.tsx"
+    ]
+   },
    {
     "sha": "21eb9db",
     "date": "2026-11-25",
@@ -102559,29 +102599,24 @@
      "supabase/migrations/20261124210000_public_api_warmup_cron.sql",
      "supabase/migrations/20261124211000_api_latency_alert_settings_all_active_orgs.sql"
     ]
-   },
-   {
-    "sha": "03dbb45",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "perf(api-publica): /me em 1 round-trip em vez de 2",
-    "files": [
-     "supabase/functions/public-api/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    4
+    5
    ],
    [
     "package.json",
     3
    ],
    [
-    "supabase/functions/public-api/index.ts",
-    3
+    "src/components/lux/CampaignsView.tsx",
+    2
+   ],
+   [
+    "src/components/lux/IntentSignalsView.tsx",
+    2
    ],
    [
     "package-lock.json",
@@ -102590,6 +102625,34 @@
    [
     "docs/AUTOMACAO_LOCAL.md",
     2
+   ],
+   [
+    "supabase/functions/public-api/index.ts",
+    2
+   ],
+   [
+    "src/components/lux/CompaniesView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/NotificationsPanel.tsx",
+    1
+   ],
+   [
+    "src/components/lux/StakeholderFinderView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/WorkflowsView.tsx",
+    1
+   ],
+   [
+    "src/contexts/DemoContext.tsx",
+    1
+   ],
+   [
+    "src/contexts/__tests__/DemoContext.test.tsx",
+    1
    ],
    [
     "e2e/navigation.spec.ts",
@@ -102616,39 +102679,7 @@
     1
    ],
    [
-    "src/components/lux/CampaignsView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/IntentSignalsView.tsx",
-    1
-   ],
-   [
     "src/components/lux/OrganizationsView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/CampaignsView.test.tsx",
-    1
-   ],
-   [
-    "src/components/lux/automations/CompanyAutomationTable.tsx",
-    1
-   ],
-   [
-    "src/components/lux/CompanyDetailModal.tsx",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/CompanyTableRow.test.tsx",
-    1
-   ],
-   [
-    "src/components/lux/companies/CompanyTableRow.tsx",
     1
    ]
   ]

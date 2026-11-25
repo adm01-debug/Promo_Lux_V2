@@ -85,12 +85,12 @@
    "importado_por": 19
   },
   {
-   "arquivo": "src/integrations/supabase/types.ts",
+   "arquivo": "src/contexts/demo-context.ts",
    "importado_por": 18
   },
   {
-   "arquivo": "src/contexts/demo-context.ts",
-   "importado_por": 17
+   "arquivo": "src/integrations/supabase/types.ts",
+   "importado_por": 18
   },
   {
    "arquivo": "src/lib/resilience/simulator.ts",

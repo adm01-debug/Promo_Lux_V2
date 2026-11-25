@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "21eb9dbc30a77c0c795b0b6f2d1d5d455df52e91",
+  "commit": "40e6a6ef977bd7b6e670628590652e96571e9c6d",
   "branch": "main",
-  "data_commit": "2026-11-25T17:23:54-03:00",
+  "data_commit": "2026-11-25T17:34:06-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "40e6a6e",
+    "data": "2026-11-25",
+    "assunto": "fix: separa o cache do modo demonstracao do cache real (#221)"
+   },
    {
     "sha": "21eb9db",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "fef1ec1",
     "data": "2026-11-24",
     "assunto": "infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)"
-   },
-   {
-    "sha": "9b3dabf",
-    "data": "2026-11-24",
-    "assunto": "fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)"
    }
   ],
-  "arquivos_mudados_7d": 306,
+  "arquivos_mudados_7d": 310,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 87
+    "mudancas": 93
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -188,12 +188,12 @@
     "mudancas": 6
    },
    {
-    "pasta": "scripts/automation.config.json",
+    "pasta": "docs/qa/05-PROGRESSO.md",
     "mudancas": 6
    },
    {
-    "pasta": ".github/workflows/ci.yml",
-    "mudancas": 5
+    "pasta": "scripts/automation.config.json",
+    "mudancas": 6
    }
   ],
   "arquivos_mais_mudados_90d": [
@@ -238,6 +238,10 @@
     "mudancas": 6
    },
    {
+    "arquivo": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 6
+   },
+   {
     "arquivo": "scripts/automation.config.json",
     "mudancas": 6
    },
@@ -247,10 +251,6 @@
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
-    "mudancas": 5
-   },
-   {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 5
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 167
+    "commits": 168
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1159,
-  "arquivos_codigo": 713,
-  "linhas_codigo": 125300,
+  "arquivos_total": 1160,
+  "arquivos_codigo": 714,
+  "linhas_codigo": 125375,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 134,
+  "testes": 135,
   "workflows": 10,
   "scripts": 53,
   "docs_md": 87
@@ -563,8 +563,8 @@
    "linhas": 51890
   },
   "src/contexts": {
-   "arquivos": 7,
-   "linhas": 323
+   "arquivos": 8,
+   "linhas": 398
   },
   "src/hooks": {
    "arquivos": 103,
