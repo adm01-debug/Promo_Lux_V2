@@ -59,7 +59,7 @@ export const IntentSignalsView = () => {
   };
 
   const { data: signals = [], isLoading, error: signalsError, refetch } = useQuery({
-    queryKey: ["intent-signals"],
+    queryKey: ["intent-signals", isDemoMode],
     queryFn: isDemoMode
       ? () => DEMO_INTENT_SIGNALS as unknown as Tables<"intent_signals">[]
       : async () => {
@@ -88,7 +88,7 @@ export const IntentSignalsView = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      queryClient.invalidateQueries({ queryKey: ["intent-signals", isDemoMode] });
       toast({ title: "Sinal registrado!" });
       setCreateOpen(false);
       resetForm();
@@ -109,7 +109,7 @@ export const IntentSignalsView = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      queryClient.invalidateQueries({ queryKey: ["intent-signals", isDemoMode] });
       toast({ title: "Sinal atualizado!" });
       setEditOpen(false);
       setEditingSignal(null);
@@ -124,7 +124,7 @@ export const IntentSignalsView = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      queryClient.invalidateQueries({ queryKey: ["intent-signals", isDemoMode] });
       toast({ title: "Sinal removido" });
     },
   });
@@ -141,7 +141,7 @@ export const IntentSignalsView = () => {
       return data as { detected: { name: string; category: string; strength: string }[]; already_known: number };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["intent-signals"] });
+      queryClient.invalidateQueries({ queryKey: ["intent-signals", isDemoMode] });
       setDetectResult(data.detected);
       if (data.detected.length === 0) {
         toast({ title: "Nenhuma tecnologia nova detectada", description: `${data.already_known} já conhecidas.` });

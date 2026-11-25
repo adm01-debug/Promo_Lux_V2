@@ -54,7 +54,7 @@ interface NotificationsPanelProps {
   onClose: () => void;
 }
 
-const NOTIFICATIONS_KEY = ["notifications"];
+const notificationsKey = (isDemoMode: boolean) => ["notifications", isDemoMode];
 
 export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) => {
   const { isDemoMode } = useDemo();
@@ -63,7 +63,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
   const { user } = useAuth();
 
   const { data: rawNotifications, isLoading } = useQuery({
-    queryKey: NOTIFICATIONS_KEY,
+    queryKey: notificationsKey(isDemoMode),
     queryFn: isDemoMode
       ? () => DEMO_NOTIFICATIONS as unknown as Notification[]
       : async () => {
@@ -92,7 +92,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
         "postgres_changes",
         { event: "*", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
         (payload) => {
-          queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+          queryClient.invalidateQueries({ queryKey: notificationsKey(isDemoMode) });
           queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
 
           if (payload.eventType === "INSERT") {
@@ -125,7 +125,7 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, user?.id]);
+  }, [queryClient, user?.id, isDemoMode]);
 
   const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
@@ -135,9 +135,9 @@ export const NotificationsPanel = ({ open, onClose }: NotificationsPanelProps) =
   }, [notifications, activeTab]);
 
   const invalidateAll = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
+    queryClient.invalidateQueries({ queryKey: notificationsKey(isDemoMode) });
     queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
-  }, [queryClient]);
+  }, [queryClient, isDemoMode]);
 
   const markAllRead = useCallback(async () => {
     const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
