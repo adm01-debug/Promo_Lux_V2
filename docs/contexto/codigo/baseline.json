@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e1331fe5c9938fb9075e96270c76c9edb75a5df1",
+  "commit": "9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2",
   "branch": "main",
-  "data_commit": "2026-11-25T10:32:07-03:00",
+  "data_commit": "2026-11-25T12:32:46-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9ad49f5",
+    "data": "2026-11-25",
+    "assunto": "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)"
+   },
    {
     "sha": "e1331fe",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "a8b5edf",
     "data": "2026-11-24",
     "assunto": "﻿perf: autenticacao da API publica em um round-trip (5 -> 1) (#185)"
-   },
-   {
-    "sha": "8444c90",
-    "data": "2026-11-24",
-    "assunto": "fix: taxa de erro da API conta so falha de servidor (5xx) (#184)"
    }
   ],
-  "arquivos_mudados_7d": 288,
+  "arquivos_mudados_7d": 291,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -156,11 +156,11 @@
     "mudancas": 17
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 10
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
+    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -206,11 +206,11 @@
     "mudancas": 19
    },
    {
-    "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 10
    },
    {
-    "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "arquivo": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 156
+    "commits": 157
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1151,
+  "arquivos_total": 1152,
   "arquivos_codigo": 709,
   "linhas_codigo": 124501,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 62,
   "tabelas": 121,
-  "migrations": 267,
+  "migrations": 268,
   "cron_jobs": 43,
   "testes": 130,
   "workflows": 9,

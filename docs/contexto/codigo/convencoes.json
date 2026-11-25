@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)",
    "chore(edge): descarta audit-logs-prune, function sem chamador (#209)",
    "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)",
    "chore(edge): descarta api-latency-alerts, function sem invocador (#208)",
-   "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)",
-   "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)"
+   "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)"
   ]
  },
  "pr_template": null,

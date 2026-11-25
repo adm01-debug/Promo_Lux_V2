@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "e1331fe5c9938fb9075e96270c76c9edb75a5df1",
+  "sha": "9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 13:32 UTC",
-  "files_total": 1172,
-  "code_files": 984,
-  "code_lines": 146731
+  "generated_at": "2026-11-25 15:33 UTC",
+  "files_total": 1173,
+  "code_files": 985,
+  "code_lines": 146794
  },
  "version": "1.3.2",
- "facts_hash": "60c1e92c7fad7a4a",
+ "facts_hash": "369fece802ebf4f0",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -238,7 +238,7 @@
   "languages": {
    ".ts": 378,
    ".tsx": 303,
-   ".sql": 271,
+   ".sql": 272,
    ".mjs": 22,
    ".py": 5,
    ".js": 4,
@@ -18043,10 +18043,10 @@
     ]
    },
    "prune_audit_logs": {
-    "args": "retention_days int DEFAULT 180",
-    "returns": "int",
+    "args": "retention_days integer default 1827",
+    "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql",
+    "src": "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE deleted_count int; BEGIN DELETE FROM public.audit_logs WHERE created_at < now() - (retention_days || ' days')::interval; GET DIAGNOSTICS deleted_count = ROW_COUNT; RETURN deleted_count; END;",
@@ -23588,6 +23588,7 @@
    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
    "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
    "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
+   "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -34305,8 +34306,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 267,
-   "lines": 20405,
+   "files": 268,
+   "lines": 20468,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -63919,10 +63920,10 @@
     ]
    },
    "prune_audit_logs": {
-    "args": "retention_days int DEFAULT 180",
-    "returns": "int",
+    "args": "retention_days integer default 1827",
+    "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql",
+    "src": "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE deleted_count int; BEGIN DELETE FROM public.audit_logs WHERE created_at < now() - (retention_days || ' days')::interval; GET DIAGNOSTICS deleted_count = ROW_COUNT; RETURN deleted_count; END;",
@@ -101769,13 +101770,29 @@
   "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql": {
    "path": "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
    "lines": 54
+  },
+  "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql": {
+   "path": "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
+   "lines": 63
   }
  },
  "git": {
-  "sha": "e1331fe5c9938fb9075e96270c76c9edb75a5df1",
+  "sha": "9ad49f5613fa4cbce808f2b6d30b98bd033dfcc2",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9ad49f5",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "docs/LGPD.md",
+     "docs/adr/008-soft-delete-policy.md",
+     "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql"
+    ]
+   },
    {
     "sha": "e1331fe",
     "date": "2026-11-25",
@@ -102077,15 +102094,6 @@
     "files": [
      "supabase/migrations/20261124125500_cron_evaluate_api_latency_15min.sql"
     ]
-   },
-   {
-    "sha": "1317d20",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "chore: inventario do estado real (gerado em 24/11) (#180)",
-    "files": [
-     "inventario/estado/edges.json"
-    ]
    }
   ],
   "hot_files": [
@@ -102112,6 +102120,22 @@
    [
     "scripts/check-schema-replay-drift.sh",
     2
+   ],
+   [
+    "docs/GAPS-ENTERPRISE.md",
+    1
+   ],
+   [
+    "docs/LGPD.md",
+    1
+   ],
+   [
+    "docs/adr/008-soft-delete-policy.md",
+    1
+   ],
+   [
+    "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
+    1
    ],
    [
     "supabase/functions/audit-logs-prune/index.ts",
@@ -102151,22 +102175,6 @@
    ],
    [
     "scripts/automation.mjs",
-    1
-   ],
-   [
-    "scripts/automation.unit.mjs",
-    1
-   ],
-   [
-    "scripts/maintenance/run.sh",
-    1
-   ],
-   [
-    ".gitattributes",
-    1
-   ],
-   [
-    "scripts/automation.config.json",
     1
    ]
   ]
