@@ -18,6 +18,20 @@ vi.mock("@/lib/viewRegistry", () => ({
   prefetchView: vi.fn(),
 }));
 
+// O rodapé também renderiza a lista completa do menu; os itens `adminOnly`
+// (Empresas (Admin) e Monitoramento) só aparecem para administrador.
+vi.mock("@/hooks/usePermissions", () => ({
+  usePermissions: () => ({
+    role: "admin",
+    isOwner: false,
+    isAdmin: true,
+    isSDR: false,
+    isViewer: false,
+    can: () => true,
+  }),
+  useCan: () => true,
+}));
+
 import { Sidebar } from "../layout/Sidebar";
 import { NAV_ITEMS } from "../layout/nav-items";
 

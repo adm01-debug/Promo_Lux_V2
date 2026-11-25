@@ -21,15 +21,32 @@ import {
   ShieldOff,
   Activity,
   Trash2,
+  Gauge,
+  Building,
 } from "lucide-react";
 import { View } from "@/hooks/useNavigationHistory";
 
-export interface NavItem {
-  id: View;
+interface NavItemBase {
   label: string;
   icon: React.ElementType;
   section?: string;
 }
+
+/** Item que abre uma view do registry (`/?view=<id>`). */
+export interface NavViewItem extends NavItemBase {
+  id: View;
+}
+
+/** Item que abre uma rota real do SPA, fora do registry de views. */
+export interface NavLinkItem extends NavItemBase {
+  path: string;
+  /** Só aparece para administrador da organização ativa. */
+  adminOnly?: boolean;
+}
+
+export type NavItem = NavViewItem | NavLinkItem;
+
+export const isNavLink = (item: NavItem): item is NavLinkItem => "path" in item;
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, section: "Principal" },
@@ -49,10 +66,12 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "ai-agent", label: "Agente IA", icon: Bot },
   { id: "automations", label: "Automações (Tempo Real)", icon: Activity },
   { id: "organizations", label: "Workspaces", icon: Users2, section: "Sistema" },
+  { path: "/admin/companies", label: "Empresas (Admin)", icon: Building, adminOnly: true },
   { id: "integrations", label: "API & Webhooks", icon: Webhook },
   { id: "org-violations", label: "Violações de Org", icon: ShieldAlert },
   { id: "rls-discovery", label: "RLS Discovery", icon: ShieldCheck },
   { id: "monitoring", label: "Status do Sistema", icon: Activity },
+  { path: "/monitoring", label: "Monitoramento", icon: Gauge, adminOnly: true },
   { id: "settings", label: "Configurações", icon: Settings },
   { id: "recycle-bin", label: "Lixeira", icon: Trash2 },
 ];
