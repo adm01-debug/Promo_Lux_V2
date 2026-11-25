@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "sonner";
 
 export interface ScrapeQueueItem {
@@ -34,8 +35,9 @@ export interface DeadLetterItem {
 }
 
 export function useScrapeQueue() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["scrape-queue"],
+    queryKey: ["scrape-queue", activeOrgId],
     queryFn: async (): Promise<ScrapeQueueItem[]> => {
       const { data, error } = await supabase
         .from("scrape_queue")
@@ -50,8 +52,9 @@ export function useScrapeQueue() {
 }
 
 export function useDeadLetterQueue() {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["scrape-dead-letter"],
+    queryKey: ["scrape-dead-letter", activeOrgId],
     queryFn: async (): Promise<DeadLetterItem[]> => {
       const { data, error } = await supabase
         .from("scrape_dead_letter")

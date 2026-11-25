@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 
 /** Estatística de latência agregada por rota da API/edge function. */
 export interface ApiLatencyStat {
@@ -47,8 +48,9 @@ export function latencySeverity(stat: ApiLatencyStat): LatencySeverity {
  * isolada por organização).
  */
 export function useApiLatency(hours = 24, limit = 20) {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["api-latency-stats", hours, limit],
+    queryKey: ["api-latency-stats", hours, limit, activeOrgId],
     queryFn: async (): Promise<ApiLatencyStat[]> => {
       const { data, error } = await supabase.rpc("api_latency_stats", {
         _hours: hours,
@@ -77,8 +79,9 @@ export interface ApiLatencyTrendPoint {
  * (SECURITY DEFINER, isolada por organização).
  */
 export function useApiLatencyTrend(hours = 24, bucketMinutes = 60) {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["api-latency-trend", hours, bucketMinutes],
+    queryKey: ["api-latency-trend", hours, bucketMinutes, activeOrgId],
     queryFn: async (): Promise<ApiLatencyTrendPoint[]> => {
       const { data, error } = await supabase.rpc("api_latency_trend", {
         _hours: hours,

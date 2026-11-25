@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "sonner";
 
 export interface WebScrapeTask {
@@ -79,8 +80,9 @@ export function useEnqueueWebScrape() {
 
 /** Lista as tasks recentes da organização ativa. */
 export function useWebScrapeTasks(limit = 50) {
+  const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["web-scrape-tasks", limit],
+    queryKey: ["web-scrape-tasks", limit, activeOrgId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("web_scrape_queue")

@@ -39,7 +39,7 @@ export function useICPConfig() {
   const { activeOrgId } = useActiveOrganization();
 
   const queryAll = useQuery({
-    queryKey: ["ipc-configs"],
+    queryKey: ["ipc-configs", activeOrgId],
     enabled: !!activeOrgId,
     queryFn: async (): Promise<ICPConfig[]> => {
       const { data, error } = await db

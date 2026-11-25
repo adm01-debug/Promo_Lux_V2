@@ -3,6 +3,7 @@ import {
   ORG_SCOPED_TABLES,
   EXEMPT_TABLES,
   ORG_UNSCOPED_TABLES,
+  db,
 } from "../withOrg";
 import fixture from "./org-scoped-tables.fixture.json";
 
@@ -71,5 +72,19 @@ describe("withOrg registry ↔ banco (sincronia multi-tenant)", () => {
     // Bug real: Monitoring.tsx usa db.from("automation_alerts"); sem estar
     // no registry, o wrapper lançava erro deny-by-default em runtime.
     expect(ORG_SCOPED_TABLES.has("automation_alerts")).toBe(true);
+  });
+
+  it("o wrapper aceita as tabelas consumidas por db.from (sem deny-by-default)", () => {
+    // Bug real (etapa 009): useScheduledReports usa db.from em
+    // scheduled_reports e scheduled_report_runs; sem classificação, as seis
+    // chamadas lançavam "não possui classificação de escopo definida" e a
+    // aba de relatórios agendados nunca funcionou.
+    expect(() => db.from("scheduled_reports")).not.toThrow();
+    expect(() => db.from("scheduled_report_runs")).not.toThrow();
+  });
+
+  it("mantém o deny-by-default para tabela fora do registry", () => {
+    const from = db.from as unknown as (table: string) => unknown;
+    expect(() => from("tabela_fora_do_registry")).toThrow(/classificação de escopo definida/);
   });
 });

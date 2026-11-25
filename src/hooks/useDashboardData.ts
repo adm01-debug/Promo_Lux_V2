@@ -141,7 +141,7 @@ export function useRecentCompanies(limit = 6) {
   const { activeOrgId } = useActiveOrganization();
 
   return useQuery({
-    queryKey: ["recent-companies", limit, isDemoMode],
+    queryKey: ["recent-companies", limit, isDemoMode, activeOrgId],
     queryFn: isDemoMode
       ? () => DEMO_COMPANIES.slice(0, limit)
       : async () => {
@@ -173,7 +173,7 @@ export function useRecentActivity() {
   const { activeOrgId } = useActiveOrganization();
 
   return useQuery<ActivityItem[]>({
-    queryKey: ["recent-activity", isDemoMode],
+    queryKey: ["recent-activity", isDemoMode, activeOrgId],
     queryFn: isDemoMode
       ? () => DEMO_ACTIVITY as ActivityItem[]
       : async () => {

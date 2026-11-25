@@ -9,7 +9,7 @@ import { useActiveOrganization } from "@/hooks/useOrganizations";
 export function useVirtualCompanies(limit = 1000) {
   const { activeOrgId } = useActiveOrganization();
   return useQuery({
-    queryKey: ["companies-virtual", limit],
+    queryKey: ["companies-virtual", limit, activeOrgId],
     enabled: !!activeOrgId,
     queryFn: async () => {
       // In a real 10/10 app, we'd use pagination or infinite query, 
