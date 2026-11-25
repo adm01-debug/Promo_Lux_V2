@@ -12,7 +12,7 @@
 
 - [ ] **001** — Fazer os guardas de banco do CI falharem quando não houver conexão com o banco — onda 1 — Crítica · **APROV** — achados: G13-1
 - [ ] **002** — Cadastrar o segredo de conexão de leitura do banco para o CI — onda 1 — Crítica · **APROV** — achados: G13-1, G13-3
-- [ ] **003** — Remover a função `migrate-helper` do repositório — onda 1 — Crítica · **APROV** — achados: G10-2
+- [A] **003** — Remover a função `migrate-helper` do repositório — onda 1 — Crítica · **APROV** — achados: G10-2 · **PR ABERTA 2026-11-25 -- a funcao foi apagada em producao pela Management API (DELETE em /v1/projects/pttzwlbidamibjssqiqb/functions/migrate-helper; o projeto caiu de 62 para 61 funcoes) e o endpoint devolve 404 mesmo enviando o x-access-key antigo. Antes da remocao ele devolvia 200 com url, service_role (chave sb_secret_ de 41 caracteres, a default do projeto) e db_url para quem tivesse a chave de acesso, que esta em texto no index.ts deste repositorio publico. Repo purgado nesta PR: pasta, bloco do config.toml, inventario de prod-readiness (61 deployaveis, lista refeita a partir das pastas e conferida contra producao, zero drift) e a linha do lovable-deploy. Falta o dono rotacionar a chave secreta default, que continua valida e ja foi exposta**
 - [ ] **004** — Adicionar ao deploy de edge functions uma trava que recusa função que devolva segredo — onda 1 — Crítica · **APROV** — achados: G10-2, G13-2
 - [ ] **005** — Ampliar a varredura de segredos do CI para chaves de banco, JWT e tokens — onda 1 — Alta · **APROV** — achados: G13-2
 - [x] **006** — Remover endereço e chave cravados da suíte de garantias de acesso — onda 1 — Alta — achados: G2-1, G13-2 · **FECHADO 2026-11-25 -- `e2e/helpers/supabase.ts`: as constantes `FALLBACK_URL` (`pesfxhlbsjfmlysdkzhr`, que o AGENTS.md diz nao ser o projeto do sistema) e `FALLBACK_ANON` foram apagadas; `SUPABASE_URL` e `SUPABASE_ANON_KEY` agora vem de `requiredEnv([...])`, que lanca `[e2e] defina E2E_SUPABASE_URL ou VITE_SUPABASE_URL`. Prova: sem as variaveis, `npx playwright test rls-guarantees.spec.ts -g sanidade` falha na coleta com a mensagem nova (antes as duas constantes faziam a suite falar com outro banco). tsc 0, eslint 0
@@ -340,7 +340,7 @@
 
 | Data | Etapa em curso | Arquivo:linha | O que foi encontrado | Severidade estimada |
 | ---- | -------------- | ------------- | -------------------- | ------------------- |
-|      |                |               |                      |                     |
+| 2026-11-25 | 003 | supabase/functions/migrate-helper/index.ts:5,24-29 (e .github/workflows/edge-functions-deploy.yml:137) | A chave secreta default do projeto (sb_secret_, privilegio total na API) esteve exposta a qualquer leitor deste repositorio publico: a funcao devolvia service_role e db_url com um x-access-key que estava em texto no proprio arquivo. O deploy nao usa --prune, entao apagar a pasta nao apagava producao; a funcao ficou ACTIVE (version 66) ate hoje. Endpoint removido; a chave ainda precisa ser rotacionada | Critica |
 
 ---
 
