@@ -73,7 +73,7 @@ export const CompaniesView = () => {
   const itemsPerPage = 20;
 
   const { data: rawCompanies, isLoading, error: companiesError, refetch } = useQuery<Company[]>({
-    queryKey: ["companies-list"],
+    queryKey: ["companies-list", isDemoMode],
     queryFn: isDemoMode
       ? () => DEMO_COMPANIES_FULL as unknown as Company[]
       : async () => {
@@ -189,11 +189,11 @@ export const CompaniesView = () => {
       const { error } = await db.from("companies").delete().eq("id", deleteTarget.id);
       if (error) throw error;
       toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida.` });
-      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
     finally { setIsDeleting(false); setDeleteTarget(null); }
-  }, [deleteTarget, toast, queryClient]);
+  }, [deleteTarget, toast, queryClient, isDemoMode]);
 
   const toggleSelectId = (id: string) => setSelectedIds((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   const toggleSelectAll = () => { if (selectedIds.size === paginatedItems.length) setSelectedIds(new Set()); else setSelectedIds(new Set(paginatedItems.map((c) => c.id))); };
@@ -206,10 +206,10 @@ export const CompaniesView = () => {
       if (error) throw error;
       toast({ title: "Empresas removidas", description: `${selectedIds.size} removida(s).` });
       setSelectedIds(new Set());
-      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
     } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
     finally { setIsBulkDeleting(false); }
-  }, [selectedIds, toast, queryClient]);
+  }, [selectedIds, toast, queryClient, isDemoMode]);
 
   const handleBulkEnrich = useCallback(async () => {
     if (selectedIds.size === 0) return;
@@ -219,15 +219,15 @@ export const CompaniesView = () => {
       if (error) throw error;
       toast({ title: "Empresas enriquecidas", description: `${selectedIds.size} enriquecida(s).` });
       setSelectedIds(new Set());
-      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
     } catch { toast({ title: "Erro ao enriquecer", variant: "destructive" }); }
     finally { setIsBulkEnriching(false); }
-  }, [selectedIds, toast, queryClient]);
+  }, [selectedIds, toast, queryClient, isDemoMode]);
 
   const handleToggleStar = useCallback(async (id: string, starred: boolean) => {
     const company = companies.find((c) => c.id === id);
     if (!company) return;
-    queryClient.setQueryData(["companies-list"], (old: Company[] | undefined) => old?.map((c) => (c.id === id ? { ...c, starred } : c)));
+    queryClient.setQueryData(["companies-list", isDemoMode], (old: Company[] | undefined) => old?.map((c) => (c.id === id ? { ...c, starred } : c)));
     toast({ title: starred ? "⭐ Empresa favoritada" : "Favorito removido", description: `"${company.name}"` });
     const { error } = await db.from("companies").update({ starred, version: company.version }).eq("id", id);
     if (error) {
@@ -236,9 +236,9 @@ export const CompaniesView = () => {
       } else {
         toast({ title: "Erro ao favoritar", variant: "destructive" });
       }
-      queryClient.invalidateQueries({ queryKey: ["companies-list"] });
+      queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
     }
-  }, [companies, queryClient, toast]);
+  }, [companies, queryClient, toast, isDemoMode]);
 
   const activeFilterChips: { label: string; onRemove: () => void }[] = [];
   filters.selectedSectors.forEach((v) => activeFilterChips.push({ label: v, onRemove: () => setFilters((f) => ({ ...f, selectedSectors: toggleSet(f.selectedSectors, v) })) }));

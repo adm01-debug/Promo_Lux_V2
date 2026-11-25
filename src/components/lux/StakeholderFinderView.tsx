@@ -80,7 +80,7 @@ export const StakeholderFinderView = () => {
   });
 
   const { data: stakeholders = [], isLoading, error: stakeholdersError, refetch } = useQuery({
-    queryKey: ["stakeholders"],
+    queryKey: ["stakeholders", isDemoMode],
     queryFn: isDemoMode
       ? () => DEMO_STAKEHOLDERS as Stakeholder[]
       : async () => {

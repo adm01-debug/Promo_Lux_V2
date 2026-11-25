@@ -95,13 +95,13 @@
 - [x] **080** — Varrer o repositório por botões sem manipulador — onda 2 — Média — achados: G16-6 · **FECHADO 2026-11-25** — 407 tags `<Button>` em 136 arquivos `src/**/*.tsx`: 19 candidatos brutos sem `onClick` (18 gatilho do Radix com `asChild`, 1 dentro de `<Link>`), 0 confirmados; teste-guarda `src/__tests__/botoes-com-manipulador.test.ts` reprova botão sem manipulador (provado fail-first: acusa `CompanyTableRow.tsx:141` com o `onClick` removido)
 - [x] **081** — Corrigir o teste de interface que quebra por rótulo ambíguo — onda 2 — Média — achados: G2-3 · **FECHADO 2026-11-25** — `e2e/navigation.spec.ts` passou a usar `getByRole("tab")` na aba e `getByRole("button")` no envio: a aba "Criar Conta" e o botão de envio do cadastro têm o mesmo texto, então `getByText` casava 2 elementos e estourava o strict mode assim que o painel montava (medido: 1 elemento antes do clique, 2 depois); suíte "Login Page" 5/5 verde
 - [ ] **082** — Confirmar que o teste do painel de monitoramento volta a passar — onda 2 — Baixa — achados: G2-3, G3-1
-- [ ] **083** — Incluir o estado de demonstração na chave de cache das campanhas — onda 2 — Alta — achados: G4-1
-- [ ] **084** — Incluir o estado de demonstração na chave de cache da lista de empresas — onda 2 — Alta — achados: G4-1
-- [ ] **085** — Incluir o estado de demonstração na chave dos sinais de intenção — onda 2 — Média — achados: G4-1
-- [ ] **086** — Incluir o estado de demonstração na chave dos fluxos automatizados — onda 2 — Média — achados: G4-1
-- [ ] **087** — Incluir o estado de demonstração na chave dos contatos — onda 2 — Média — achados: G4-1
-- [ ] **088** — Incluir o estado de demonstração na chave das notificações — onda 2 — Média — achados: G4-1
-- [ ] **089** — Limpar o cache ao entrar e ao sair do modo demonstração — onda 2 — Alta — achados: G4-1
+- [x] **083** — Incluir o estado de demonstração na chave de cache das campanhas — onda 2 — Alta — achados: G4-1 · **FECHADO 2026-11-25** — chave da consulta e as 5 invalidações passaram a ser `["campaigns", isDemoMode]`
+- [x] **084** — Incluir o estado de demonstração na chave de cache da lista de empresas — onda 2 — Alta — achados: G4-1 · **FECHADO 2026-11-25** — `["companies-list", isDemoMode]` na consulta, nas 4 invalidações e no `setQueryData` do favorito
+- [x] **085** — Incluir o estado de demonstração na chave dos sinais de intenção — onda 2 — Média — achados: G4-1 · **FECHADO 2026-11-25** — `["intent-signals", isDemoMode]` na consulta e nas 4 invalidações
+- [x] **086** — Incluir o estado de demonstração na chave dos fluxos automatizados — onda 2 — Média — achados: G4-1 · **FECHADO 2026-11-25** — `["workflows", isDemoMode]` na consulta e nas 4 invalidações
+- [x] **087** — Incluir o estado de demonstração na chave dos contatos — onda 2 — Média — achados: G4-1 · **FECHADO 2026-11-25** — `["stakeholders", isDemoMode]` na consulta
+- [x] **088** — Incluir o estado de demonstração na chave das notificações — onda 2 — Média — achados: G4-1 · **FECHADO 2026-11-25** — `NOTIFICATIONS_KEY` virou `notificationsKey(isDemoMode)` na consulta e nas 2 invalidações; `useNotificationCount` já usava `["notifications-count", isDemoMode]`
+- [x] **089** — Limpar o cache ao entrar e ao sair do modo demonstração — onda 2 — Alta — achados: G4-1 · **FECHADO 2026-11-25** — `DemoProvider` chama `queryClient.clear()` ao entrar e ao sair; teste `src/contexts/__tests__/DemoContext.test.tsx` (2 casos, falham sem a mudança)
 - [ ] **090** — Dar estado de demonstração às telas que não têm — onda 2 — Média — achados: G6-2, G4-2
 - [ ] **091** — Mostrar o aviso e o botão de sair da demonstração em todas as telas — onda 2 — Baixa — achados: G4-2
 - [ ] **092** — Decidir com o dono se a demonstração deve continuar liberando as rotas protegidas — onda 2 — Média · **APROV** — achados: G4-2

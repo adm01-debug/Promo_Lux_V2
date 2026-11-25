@@ -79,7 +79,7 @@ export const WorkflowsView = () => {
   const [enabledPhases, setEnabledPhases] = useState<WorkflowPhase[]>(["scrape", "enrich", "ipc_score"]);
 
   const { data: workflows = [], isLoading, error: workflowsError, refetch } = useQuery({
-    queryKey: ["workflows"],
+    queryKey: ["workflows", isDemoMode],
     queryFn: isDemoMode
       ? () => DEMO_WORKFLOWS as unknown as Workflow[]
       : async () => {
@@ -110,13 +110,13 @@ export const WorkflowsView = () => {
         return row as unknown as Workflow;
       }
     },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); toast({ title: "Workflow criado!" }); setCreateOpen(false); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows", isDemoMode] }); toast({ title: "Workflow criado!" }); setCreateOpen(false); },
     onError: (err) => { toast({ title: "Erro", description: err.message, variant: "destructive" }); },
   });
 
   const runMutation = useMutation({
     mutationFn: workflowApi.run,
-    onSuccess: (result) => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); const s = result.results?.summary; toast({ title: "Workflow executado!", description: s ? `${s.total_companies} processadas, ${s.qualified} qualificadas` : "Concluído." }); },
+    onSuccess: (result) => { queryClient.invalidateQueries({ queryKey: ["workflows", isDemoMode] }); const s = result.results?.summary; toast({ title: "Workflow executado!", description: s ? `${s.total_companies} processadas, ${s.qualified} qualificadas` : "Concluído." }); },
     onError: (err) => { toast({ title: "Erro ao executar", description: err.message, variant: "destructive" }); },
   });
 
@@ -129,7 +129,7 @@ export const WorkflowsView = () => {
         if (error) throw error;
       }
     },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows", isDemoMode] }); },
   });
 
   const deleteMutation = useMutation({
@@ -141,7 +141,7 @@ export const WorkflowsView = () => {
         if (error) throw error;
       }
     },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows"] }); toast({ title: "Workflow removido" }); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows", isDemoMode] }); toast({ title: "Workflow removido" }); },
   });
 
   const selectedSteps = defaultSteps.filter(s => !s.phase || enabledPhases.includes(s.phase));

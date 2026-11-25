@@ -98,7 +98,7 @@ export const CampaignsView = () => {
   };
 
   const { data: campaigns = [], isLoading, error: campaignsError, refetch } = useQuery({
-    queryKey: ["campaigns"],
+    queryKey: ["campaigns", isDemoMode],
     queryFn: isDemoMode
       ? () => DEMO_CAMPAIGNS as unknown as Tables<"campaigns">[]
       : async () => {
@@ -134,7 +134,7 @@ export const CampaignsView = () => {
 
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaigns", isDemoMode] });
       toast({ title: "Campanha criada!" });
       setDirty(false);
       setCreateOpen(false);
@@ -158,7 +158,7 @@ export const CampaignsView = () => {
 
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaigns", isDemoMode] });
       toast({ title: "Campanha atualizada!" });
       setDirty(false);
       setEditOpen(false);
@@ -175,7 +175,7 @@ export const CampaignsView = () => {
       if (error) throw error;
     },
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaigns", isDemoMode] });
       const action = variables.status === "active" ? "pausada" : "ativada";
       toast({ title: `Campanha ${action}` });
     },
@@ -188,7 +188,7 @@ export const CampaignsView = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaigns", isDemoMode] });
       toast({ title: "Campanha removida" });
     },
   });
@@ -202,7 +202,7 @@ export const CampaignsView = () => {
       return data as { results?: Array<{ sent?: number; failed?: number; reason?: string }> };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaigns", isDemoMode] });
       const r = data?.results?.[0];
       if (r?.reason && !r.sent) {
         toast({ title: "Nada enviado", description: r.reason === "no active email account for organization" ? "Conecte uma conta de e-mail nas Integrações." : "Sem destinatários pendentes." });
