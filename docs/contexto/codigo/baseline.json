@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "144df6bef8bca42a9a09df1eb7fa8ff91056b933",
+  "commit": "b85b5ad258d67f6510b974ed161d8d7b93292839",
   "branch": "main",
-  "data_commit": "2026-11-25T09:52:52-03:00",
+  "data_commit": "2026-11-25T10:23:05-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "b85b5ad",
+    "data": "2026-11-25",
+    "assunto": "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)"
+   },
    {
     "sha": "144df6b",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "8da6120",
     "data": "2026-11-24",
     "assunto": "fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)"
-   },
-   {
-    "sha": "0995c31",
-    "data": "2026-11-24",
-    "assunto": "chore: remove o dominio Lovable das origens, metadados e user-agent (#182)"
    }
   ],
-  "arquivos_mudados_7d": 286,
+  "arquivos_mudados_7d": 287,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 154
+    "commits": 155
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1151,
+  "arquivos_total": 1152,
   "arquivos_codigo": 710,
   "linhas_codigo": 124579,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 63,
   "tabelas": 121,
-  "migrations": 266,
+  "migrations": 267,
   "cron_jobs": 43,
   "testes": 130,
   "workflows": 9,

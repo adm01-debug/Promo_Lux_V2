@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "144df6bef8bca42a9a09df1eb7fa8ff91056b933",
+  "sha": "b85b5ad258d67f6510b974ed161d8d7b93292839",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 12:53 UTC",
-  "files_total": 1172,
-  "code_files": 984,
-  "code_lines": 146755
+  "generated_at": "2026-11-25 13:24 UTC",
+  "files_total": 1173,
+  "code_files": 985,
+  "code_lines": 146809
  },
  "version": "1.3.2",
- "facts_hash": "e57a398e87dbc505",
+ "facts_hash": "671732d572282527",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -238,7 +238,7 @@
   "languages": {
    ".ts": 379,
    ".tsx": 303,
-   ".sql": 270,
+   ".sql": 271,
    ".mjs": 22,
    ".py": 5,
    ".js": 4,
@@ -23587,6 +23587,7 @@
    "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
    "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
+   "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -34331,8 +34332,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 266,
-   "lines": 20351,
+   "files": 267,
+   "lines": 20405,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -101887,13 +101888,26 @@
   "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql": {
    "path": "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
    "lines": 75
+  },
+  "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql": {
+   "path": "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
+   "lines": 54
   }
  },
  "git": {
-  "sha": "144df6bef8bca42a9a09df1eb7fa8ff91056b933",
+  "sha": "b85b5ad258d67f6510b974ed161d8d7b93292839",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "b85b5ad",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)",
+    "files": [
+     "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql"
+    ]
+   },
    {
     "sha": "144df6b",
     "date": "2026-11-25",
@@ -102196,15 +102210,6 @@
      "scripts/check-migrations.sh",
      "supabase/migrations/20261124040000_scim_provisioning.sql"
     ]
-   },
-   {
-    "sha": "d4ad14d",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: adiciona fallback SPA no vercel.json para nao 404 em link direto (#177)",
-    "files": [
-     "vercel.json"
-    ]
    }
   ],
   "hot_files": [
@@ -102231,6 +102236,10 @@
    [
     "scripts/check-schema-replay-drift.sh",
     2
+   ],
+   [
+    "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
+    1
    ],
    [
     "supabase/functions/api-latency-alerts/index.ts",
@@ -102282,10 +102291,6 @@
    ],
    [
     "scripts/lib/seguranca-processo.mjs",
-    1
-   ],
-   [
-    "scripts/lib/seguranca-processo.unit.mjs",
     1
    ]
   ]
