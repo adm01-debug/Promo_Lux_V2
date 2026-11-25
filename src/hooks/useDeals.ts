@@ -1,4 +1,4 @@
-﻿import { useEffect } from "react";
+﻿import { useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/integrations/supabase/withOrg";
@@ -54,16 +54,29 @@ export function useDealStages() {
     },
   });
 
-  // Auto-seed default stages
+  // Auto-seed default stages. Roda no máximo uma vez por montagem e por
+  // (usuário, organização): o efeito depende do resultado da própria consulta
+  // que ele invalida, então sem a marca ele dependeria da biblioteca manter a
+  // identidade da lista vazia para não entrar em laço. A marca é posta antes da
+  // chamada para que uma falha do banco também não repita a tentativa.
+  const seedKeyRef = useRef<string | null>(null);
   useEffect(() => {
     if (!user || query.isLoading || query.data === undefined) return;
-    if (query.data.length === 0) {
-      (async () => {
-        await supabase.rpc("create_default_deal_stages", { _user_id: user.id });
-        qc.invalidateQueries({ queryKey: ["deal_stages", user.id] });
-      })();
-    }
-  }, [user, query.data, query.isLoading, qc]);
+    if (query.data.length > 0) return;
+    const seedKey = `${user.id}:${activeOrgId ?? "sem-organizacao"}`;
+    if (seedKeyRef.current === seedKey) return;
+    seedKeyRef.current = seedKey;
+    (async () => {
+      const { error } = await supabase.rpc("create_default_deal_stages", { _user_id: user.id });
+      if (error) {
+        toast.error("Não foi possível criar as etapas padrão do funil", {
+          description: error.message,
+        });
+        return;
+      }
+      qc.invalidateQueries({ queryKey: ["deal_stages", user.id] });
+    })();
+  }, [user, activeOrgId, query.data, query.isLoading, qc]);
 
   const createStage = useMutation({
     mutationFn: async (input: Partial<DealStage> & { name: string }) => {
@@ -94,6 +107,7 @@ export function useDealStages() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["deal_stages", user?.id] }),
+    onError: (e: Error) => toast.error("Erro ao atualizar estágio", { description: e.message }),
   });
 
   const deleteStage = useMutation({
@@ -201,6 +215,7 @@ export function useDeals() {
       qc.invalidateQueries({ queryKey: ["deals", user?.id] });
       toast.success("Negócio removido");
     },
+    onError: (e: Error) => toast.error("Não foi possível remover o negócio", { description: e.message }),
   });
 
   return { ...query, createDeal, updateDeal, deleteDeal };
@@ -249,6 +264,8 @@ export function useDealActivities(dealId: string | null) {
       qc.invalidateQueries({ queryKey: ["deal_activities", dealId] });
       toast.success("Atividade adicionada");
     },
+    onError: (e: Error) =>
+      toast.error("Não foi possível adicionar a atividade", { description: e.message }),
   });
 
   return { ...query, addActivity };
@@ -300,6 +317,7 @@ export function useDealTasks(dealId?: string | null) {
       qc.invalidateQueries({ queryKey: ["deal_tasks"] });
       toast.success("Tarefa criada");
     },
+    onError: (e: Error) => toast.error("Não foi possível criar a tarefa", { description: e.message }),
   });
 
   const toggleTask = useMutation({
@@ -311,6 +329,8 @@ export function useDealTasks(dealId?: string | null) {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["deal_tasks"] }),
+    onError: (e: Error) =>
+      toast.error("Não foi possível atualizar a tarefa", { description: e.message }),
   });
 
   const deleteTask = useMutation({
@@ -322,6 +342,7 @@ export function useDealTasks(dealId?: string | null) {
       qc.invalidateQueries({ queryKey: ["deal_tasks"] });
       toast.success("Tarefa removida");
     },
+    onError: (e: Error) => toast.error("Não foi possível remover a tarefa", { description: e.message }),
   });
 
   return { ...query, createTask, toggleTask, deleteTask };

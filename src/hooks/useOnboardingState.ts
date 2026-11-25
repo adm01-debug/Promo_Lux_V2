@@ -29,21 +29,27 @@ export function useOnboardingState() {
     // Check database
     const check = async () => {
       try {
-        const { data } = await supabase
+        // O cliente devolve `{ data, error }` em vez de lançar em erro de
+        // resposta: ler só `data` faria o bloco `catch` nunca rodar e a tela
+        // mostrar o passo a passo para quem já concluiu (etapa 197).
+        const { data, error } = await supabase
           .from("profiles")
           .select("onboarding_completed")
           .eq("id", user.id)
           .maybeSingle();
 
-        if (data?.onboarding_completed) {
+        if (error) {
+          // Falha de leitura: na dúvida não incomodar quem já concluiu.
+          setShouldShow(false);
+        } else if (data?.onboarding_completed) {
           localStorage.setItem(LOCAL_KEY, "true");
           setShouldShow(false);
         } else {
           setShouldShow(true);
         }
       } catch {
-        // If profile doesn't exist yet, show onboarding
-        setShouldShow(true);
+        // Falha de rede (o cliente lança aqui): mesmo critério do erro lido.
+        setShouldShow(false);
       } finally {
         setLoading(false);
       }
