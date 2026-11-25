@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "baf9b5f000763aa679887871ae44bd71d04ce962",
+  "commit": "7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000",
   "branch": "main",
-  "data_commit": "2026-11-25T08:55:37-03:00",
+  "data_commit": "2026-11-25T09:06:16-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7a7d1cc",
+    "data": "2026-11-25",
+    "assunto": "chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)"
+   },
    {
     "sha": "baf9b5f",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "1317d20",
     "data": "2026-11-24",
     "assunto": "chore: inventario do estado real (gerado em 24/11) (#180)"
-   },
-   {
-    "sha": "8771961",
-    "data": "2026-11-24",
-    "assunto": "fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)"
    }
   ],
-  "arquivos_mudados_7d": 282,
+  "arquivos_mudados_7d": 283,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 150
+    "commits": 151
    },
    {
     "autor": "dependabot[bot]",
@@ -311,8 +311,8 @@
  },
  "contagens": {
   "arquivos_total": 1150,
-  "arquivos_codigo": 712,
-  "linhas_codigo": 124793,
+  "arquivos_codigo": 711,
+  "linhas_codigo": 124704,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,9 +320,9 @@
   "modulos": 22,
   "componentes": 267,
   "hooks": 97,
-  "edge_functions": 65,
+  "edge_functions": 64,
   "tabelas": 120,
-  "migrations": 263,
+  "migrations": 264,
   "cron_jobs": 42,
   "testes": 130,
   "workflows": 9,
@@ -591,8 +591,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 138,
-   "linhas": 25101
+   "arquivos": 137,
+   "linhas": 25012
   },
   "tailwind.config.ts": {
    "arquivos": 1,

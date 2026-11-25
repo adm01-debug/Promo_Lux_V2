@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 65,
+ "total": 64,
  "verify_jwt_false": [
   "admin-list-companies",
   "email-oauth-callback",
@@ -1063,39 +1063,6 @@
    ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,
-   "orfa": false,
-   "testes": 0
-  },
-  {
-   "nome": "latency-alerts",
-   "entrada": "supabase/functions/latency-alerts/index.ts",
-   "arquivos": 1,
-   "linhas": 89,
-   "verify_jwt": true,
-   "metodos": [
-    "OPTIONS"
-   ],
-   "tabelas": [
-    "api_latency_alert_history",
-    "api_latency_alert_settings",
-    "api_latency_snapshots",
-    "notifications",
-    "organization_members"
-   ],
-   "rpcs": [],
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "buckets": [],
-   "chama_edges": [],
-   "hosts_externos": [],
-   "usa_shared": [
-    "cron-auth.ts"
-   ],
-   "chamada_pelo_front": [],
-   "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
   },

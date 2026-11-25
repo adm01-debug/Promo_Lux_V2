@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `baf9b5f000` · branch `main` · 2026-11-25 11:58 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7a7d1cc510` · branch `main` · 2026-11-25 12:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -147,7 +147,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 209 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 208 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -190,7 +190,6 @@
 - `supabase/functions/instagram-enqueue/index.ts`
 - `supabase/functions/instagram-worker-health/index.ts`
 - `supabase/functions/instagram-worker/index.ts`
-- `supabase/functions/latency-alerts/index.ts`
 - `supabase/functions/lead-score-ai/index.ts`
 - `supabase/functions/lusha-reveal/index.ts`
 - `supabase/functions/lusha-search/index.ts`
@@ -299,7 +298,8 @@
 - `supabase/migrations/20260721224926_272e3afc-5f57-4804-89b2-f246c4a8f56b.sql`
 - `supabase/migrations/20260721225534_28c2ba63-b892-4c2a-bcbb-a4b31f0423de.sql`
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
-- … +59 (lista completa em `context.json`)
+- `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
+- … +58 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `baf9b5f000763aa679887871ae44bd71d04ce962` (2026-11-25T08:55:37-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000` (2026-11-25T09:06:16-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (684), SQL (267), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (683), SQL (268), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -35,8 +35,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | item | qtd |
 |---|---|
 | arquivos_total | 1150 |
-| arquivos_codigo | 712 |
-| linhas_codigo | 124793 |
+| arquivos_codigo | 711 |
+| linhas_codigo | 124704 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -44,9 +44,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 22 |
 | componentes | 267 |
 | hooks | 97 |
-| edge_functions | 65 |
+| edge_functions | 64 |
 | tabelas | 120 |
-| migrations | 263 |
+| migrations | 264 |
 | cron_jobs | 42 |
 | testes | 130 |
 | workflows | 9 |
@@ -148,7 +148,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `instagram-enqueue` — tabelas: instagram_scrape_queue, organization_members; chamada por 1 arquivo(s) do front
 - `instagram-worker` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue, instagram_scrape_results; chamada por 0 arquivo(s) do front, por SQL/cron
 - `instagram-worker-health` — tabelas: instagram_scrape_dead_letter, instagram_scrape_queue; chamada por 1 arquivo(s) do front
-- `latency-alerts` — tabelas: api_latency_alert_history, api_latency_alert_settings, api_latency_snapshots, notifications, organization_members; chamada por 0 arquivo(s) do front, por SQL/cron
 - `lead-score-ai` — tabelas: deals, intent_signals, lead_scores, organization_members, stakeholders; chamada por 1 arquivo(s) do front
 - `lusha-cookie-health` — tabelas: -; chamada por 1 arquivo(s) do front
 - `lusha-decision-makers` — tabelas: lusha_contacts, organization_members; chamada por 1 arquivo(s) do front
@@ -261,8 +260,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7903 nós · 16708 arestas · 702 comunidades · grafo do commit `baf9b5f0`
-- comunidades maiores: react (226), lucide-react (205), @tanstack/react-query (142), OrgViolationsView.tsx (103), cn (86), LushaIntelligenceView.tsx (82), gerar.mjs (80), NotificationsPanel.tsx (74), generate.py (73), DealDetailDrawer.tsx (69), campaign-dispatch/index.ts (67), dependencies (65)
+- 7902 nós · 16703 arestas · 690 comunidades · grafo do commit `7a7d1cc5`
+- comunidades maiores: react (225), lucide-react (201), button.tsx (124), cn (124), @tanstack/react-query (109), snapshot.py (102), gerar.mjs (80), framer-motion (78), Index.tsx (77), ref_node_fs (69), OrganizationsView.tsx (69), req (66)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -378,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `7a7d1cc` chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)
 - 2026-11-25 `baf9b5f` chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)
 - 2026-11-25 `4f59248` fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)
 - 2026-11-25 `aa94815` chore: normaliza fim de linha em LF para todo clone (#201)
@@ -392,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `c326fd5` chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa
 - 2026-11-24 `03dbb45` perf(api-publica): /me em 1 round-trip em vez de 2
 - 2026-11-24 `8dec4b5` feat: habilita alerta de latencia da organizacao com trafego real (#189)
-- 2026-11-24 `e0648b2` ﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

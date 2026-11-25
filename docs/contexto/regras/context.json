@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "baf9b5f000763aa679887871ae44bd71d04ce962",
+  "sha": "7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 11:58 UTC",
+  "generated_at": "2026-11-25 12:10 UTC",
   "files_total": 1171,
   "code_files": 983,
-  "code_lines": 146661
+  "code_lines": 146620
  },
  "version": "1.3.2",
- "facts_hash": "70fa1086c29bdb43",
+ "facts_hash": "0c52ed85a7ed6d57",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -236,9 +236,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 381,
+   ".ts": 380,
    ".tsx": 303,
-   ".sql": 267,
+   ".sql": 268,
    ".mjs": 22,
    ".py": 5,
    ".js": 4,
@@ -23485,6 +23485,7 @@
    "supabase/migrations/20261124231000_public_api_smoke_cobre_filtro_action.sql",
    "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
    "supabase/migrations/20261125104500_api_alert_p95_800ms.sql",
+   "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -30942,32 +30943,6 @@
     "idempotency": false
    },
    {
-    "name": "latency-alerts",
-    "file": "supabase/functions/latency-alerts/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "service_role (ignora RLS) — NÃO valida usuário no código",
-    "tables": [
-     "api_latency_alert_history",
-     "api_latency_alert_settings",
-     "api_latency_snapshots",
-     "notifications",
-     "organization_members"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "Alertas proativos de latência de API — cron a cada 15 min.",
-    "errors": [],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
     "name": "lead-score-ai",
     "file": "supabase/functions/lead-score-ai/index.ts",
     "methods": [
@@ -34044,13 +34019,10 @@
   },
   {
    "module": "supabase/functions",
-   "files": 138,
-   "lines": 25101,
+   "files": 137,
+   "lines": 25012,
    "tables": [
     "api_keys",
-    "api_latency_alert_history",
-    "api_latency_alert_settings",
-    "api_latency_snapshots",
     "api_request_logs",
     "audit_logs",
     "auth_rate_limits",
@@ -34260,8 +34232,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 263,
-   "lines": 20043,
+   "files": 264,
+   "lines": 20091,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -34386,25 +34358,15 @@
    },
    "api_latency_alert_history": {
     "select": [
-     "src/hooks/useApiLatencyAlertSettings.ts",
-     "supabase/functions/latency-alerts/index.ts"
-    ],
-    "insert": [
-     "supabase/functions/latency-alerts/index.ts"
+     "src/hooks/useApiLatencyAlertSettings.ts"
     ]
    },
    "api_latency_alert_settings": {
     "select": [
-     "src/hooks/useApiLatencyAlertSettings.ts",
-     "supabase/functions/latency-alerts/index.ts"
+     "src/hooks/useApiLatencyAlertSettings.ts"
     ],
     "upsert": [
      "src/hooks/useApiLatencyAlertSettings.ts"
-    ]
-   },
-   "api_latency_snapshots": {
-    "select": [
-     "supabase/functions/latency-alerts/index.ts"
     ]
    },
    "api_request_logs": {
@@ -35121,7 +35083,6 @@
      "src/hooks/useRealtimeScrapeJobs.ts",
      "supabase/functions/dlq-alerts/index.ts",
      "supabase/functions/gmaps-proxy/index.ts",
-     "supabase/functions/latency-alerts/index.ts",
      "supabase/functions/lusha-search/index.ts",
      "supabase/functions/org-violation-alerts/index.ts",
      "supabase/functions/pg-net-watchdog/index.ts",
@@ -35237,7 +35198,6 @@
      "supabase/functions/hubspot-sync/index.ts",
      "supabase/functions/instagram-dlq-replay/index.ts",
      "supabase/functions/instagram-enqueue/index.ts",
-     "supabase/functions/latency-alerts/index.ts",
      "supabase/functions/lead-score-ai/index.ts",
      "supabase/functions/lusha-decision-makers/index.ts",
      "supabase/functions/org-violation-alerts/index.ts",
@@ -35795,9 +35755,6 @@
     "error_rate_critical_pct",
     "organization_id",
     "p95_critical_ms"
-   ],
-   "api_latency_snapshots": [
-    "organization_id"
    ],
    "api_request_logs": [
     "created_at"
@@ -37033,7 +36990,6 @@
     "supabase/functions/instagram-enqueue/index.ts",
     "supabase/functions/instagram-worker-health/index.ts",
     "supabase/functions/instagram-worker/index.ts",
-    "supabase/functions/latency-alerts/index.ts",
     "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/lusha-reveal/index.ts",
     "supabase/functions/lusha-search/index.ts",
@@ -37102,7 +37058,6 @@
     "supabase/functions/instagram-enqueue/index.ts",
     "supabase/functions/instagram-worker-health/index.ts",
     "supabase/functions/instagram-worker/index.ts",
-    "supabase/functions/latency-alerts/index.ts",
     "supabase/functions/lead-score-ai/index.ts",
     "supabase/functions/lusha-cookie-health/index.ts",
     "supabase/functions/lusha-decision-makers/index.ts",
@@ -37960,6 +37915,7 @@
    "tx"
   ],
   "tables_only_in_schema": [
+   "api_latency_snapshots",
    "api_rate_limits",
    "apollo_rate_state",
    "apollo_search_cache",
@@ -50591,18 +50547,6 @@
     "field": "status",
     "value": "dead",
     "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/latency-alerts/index.ts",
-    "field": "type",
-    "value": "system",
-    "kind": "escreve"
-   },
-   {
-    "file": "supabase/functions/latency-alerts/index.ts",
-    "field": "role",
-    "value": "admin",
-    "kind": "filtra"
    },
    {
     "file": "supabase/functions/lead-score-ai/index.ts",
@@ -66874,14 +66818,6 @@
     "limit": "10"
    },
    {
-    "file": "supabase/functions/latency-alerts/index.ts",
-    "limit": "1"
-   },
-   {
-    "file": "supabase/functions/latency-alerts/index.ts",
-    "limit": "10"
-   },
-   {
     "file": "supabase/functions/lead-score-ai/index.ts",
     "limit": "1"
    },
@@ -68092,7 +68028,6 @@
      "system": [
       "escreve:src/lib/demoData.ts",
       "escreve:supabase/functions/dlq-alerts/index.ts",
-      "escreve:supabase/functions/latency-alerts/index.ts",
       "escreve:supabase/functions/lusha-search/index.ts",
       "escreve:supabase/functions/pg-net-watchdog/index.ts",
       "escreve:supabase/functions/reaper-alerts/index.ts",
@@ -68187,7 +68122,6 @@
       "escreve:supabase/functions/rls-tests/_fixtures.ts",
       "filtra:supabase/functions/admin-list-companies/index.ts",
       "filtra:supabase/functions/dlq-alerts/index.ts",
-      "filtra:supabase/functions/latency-alerts/index.ts",
       "filtra:supabase/functions/org-violation-alerts/index.ts",
       "filtra:supabase/functions/pg-net-watchdog/index.ts",
       "filtra:supabase/functions/qa-ingest-run/index.ts",
@@ -70281,7 +70215,6 @@
    "supabase/functions/instagram-enqueue/index.ts",
    "supabase/functions/instagram-worker-health/index.ts",
    "supabase/functions/instagram-worker/index.ts",
-   "supabase/functions/latency-alerts/index.ts",
    "supabase/functions/lead-score-ai/index.ts",
    "supabase/functions/lusha-reveal/index.ts",
    "supabase/functions/lusha-search/index.ts",
@@ -96785,75 +96718,6 @@
    ],
    "uses_service_role": true
   },
-  "supabase/functions/latency-alerts/index.ts": {
-   "path": "supabase/functions/latency-alerts/index.ts",
-   "lines": 89,
-   "tables": [
-    {
-     "table": "api_latency_alert_settings",
-     "op": "select"
-    },
-    {
-     "table": "api_latency_snapshots",
-     "op": "select"
-    },
-    {
-     "table": "api_latency_alert_history",
-     "op": "select"
-    },
-    {
-     "table": "organization_members",
-     "op": "select"
-    },
-    {
-     "table": "notifications",
-     "op": "insert"
-    },
-    {
-     "table": "api_latency_alert_history",
-     "op": "insert"
-    }
-   ],
-   "table_cols": {
-    "api_latency_alert_settings": [
-     "enabled"
-    ],
-    "api_latency_snapshots": [
-     "organization_id"
-    ],
-    "api_latency_alert_history": [
-     "created_at",
-     "organization_id"
-    ],
-    "organization_members": [
-     "organization_id",
-     "role",
-     "user_id"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "status_values": [
-    {
-     "field": "type",
-     "value": "system",
-     "kind": "escreve"
-    },
-    {
-     "field": "role",
-     "value": "admin",
-     "kind": "filtra"
-    }
-   ],
-   "doc": "Alertas proativos de latência de API — cron a cada 15 min.",
-   "pagination": [
-    "1",
-    "10"
-   ],
-   "uses_service_role": true
-  },
   "supabase/functions/lead-score-ai/index.ts": {
    "path": "supabase/functions/lead-score-ai/index.ts",
    "lines": 173,
@@ -101835,13 +101699,27 @@
   "supabase/migrations/20261125104500_api_alert_p95_800ms.sql": {
    "path": "supabase/migrations/20261125104500_api_alert_p95_800ms.sql",
    "lines": 27
+  },
+  "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql": {
+   "path": "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
+   "lines": 48
   }
  },
  "git": {
-  "sha": "baf9b5f000763aa679887871ae44bd71d04ce962",
+  "sha": "7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "7a7d1cc",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)",
+    "files": [
+     "supabase/functions/latency-alerts/index.ts",
+     "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql"
+    ]
+   },
    {
     "sha": "baf9b5f",
     "date": "2026-11-25",
@@ -102148,16 +102026,6 @@
     "files": [
      "inventario/estado/edges.json"
     ]
-   },
-   {
-    "sha": "faad34a",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix(migrations): versiona o drift de producao e corrige 2 migrations que nunca rodaram (#172)",
-    "files": [
-     "supabase/migrations/20261124060000_baseline_drift_indexes_policies_triggers.sql",
-     "supabase/migrations/20261124070000_baseline_drift_schema_logico.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -102174,6 +102042,10 @@
     3
    ],
    [
+    "supabase/functions/latency-alerts/index.ts",
+    2
+   ],
+   [
     "docs/AUTOMACAO_LOCAL.md",
     2
    ],
@@ -102188,6 +102060,10 @@
    [
     "inventario/estado/edges.json",
     2
+   ],
+   [
+    "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
+    1
    ],
    [
     ".prettierignore",
@@ -102231,14 +102107,6 @@
    ],
    [
     ".github/workflows/ci.yml",
-    1
-   ],
-   [
-    ".github/workflows/inventario-estado-semanal.yml",
-    1
-   ],
-   [
-    "package-lock.json",
     1
    ]
   ]

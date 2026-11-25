@@ -2568,9 +2568,6 @@
    "supabase/functions/_shared/apify-fixtures.ts",
    "supabase/functions/_shared/hiker-client.ts"
   ],
-  "supabase/functions/latency-alerts/index.ts": [
-   "supabase/functions/_shared/cron-auth.ts"
-  ],
   "supabase/functions/lusha-search/index.ts": [
    "supabase/functions/_shared/departmentMap.ts"
   ],

@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 263,
+ "migrations": 264,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1767,9 +1767,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "latency-alerts"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
    "nao_usada": false
@@ -1872,9 +1870,7 @@
     "so_no_types": []
    },
    "usada_no_front": 1,
-   "usada_em_edges": [
-    "latency-alerts"
-   ],
+   "usada_em_edges": [],
    "triggers": [
     "trg_validate_api_latency_alert_settings"
    ],
@@ -1996,12 +1992,10 @@
     "so_no_types": []
    },
    "usada_no_front": 0,
-   "usada_em_edges": [
-    "latency-alerts"
-   ],
+   "usada_em_edges": [],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": false
+   "nao_usada": true
   },
   "api_rate_limits": {
    "colunas": {
@@ -12191,7 +12185,6 @@
    "usada_em_edges": [
     "dlq-alerts",
     "gmaps-proxy",
-    "latency-alerts",
     "lusha-search",
     "org-violation-alerts",
     "pg-net-watchdog",
@@ -13390,7 +13383,6 @@
     "hubspot-sync",
     "instagram-dlq-replay",
     "instagram-enqueue",
-    "latency-alerts",
     "lead-score-ai",
     "lusha-decision-makers",
     "org-violation-alerts",

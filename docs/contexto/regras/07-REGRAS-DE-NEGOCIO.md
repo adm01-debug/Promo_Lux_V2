@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `baf9b5f000` · branch `main` · 2026-11-25 11:58 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7a7d1cc510` · branch `main` · 2026-11-25 12:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1109,7 +1109,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `type` | `spring` | escreve | `src/components/lux/ActivityFeed.tsx`<br>`src/components/lux/AnalyticsView.tsx`<br>`src/components/lux/AppBreadcrumbs.tsx`<br>`src/components/lux/CompanyTable.tsx`<br>`src/components/lux/ConnectionStatus.tsx`<br>… +10 |
 | `type` | `string` | compara | `supabase/functions/_shared/hiker-client.ts`<br>`supabase/functions/_shared/leadcontact-client.ts` |
 | `type` | `success` | compara, escreve | `src/components/lux/StepProgress.tsx`<br>`src/lib/demoData.ts` |
-| `type` | `system` | escreve | `src/lib/demoData.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>`supabase/functions/latency-alerts/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/pg-net-watchdog/index.ts`<br>… +3 |
+| `type` | `system` | escreve | `src/lib/demoData.ts`<br>`supabase/functions/dlq-alerts/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/pg-net-watchdog/index.ts`<br>`supabase/functions/reaper-alerts/index.ts`<br>… +2 |
 | `type` | `tag` | compara | `src/components/automation/WorkflowEditor.tsx` |
 | `type` | `tags` | compara, escreve | `src/components/lux/ICPConfigView.tsx`<br>`src/hooks/useICPConfig.ts` |
 | `type` | `tech_adoption` | escreve, filtra | `supabase/functions/technographics-detect/index.ts` |
@@ -1122,7 +1122,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `role` | `CEO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CFO` | escreve | `src/lib/demoData.ts` |
 | `role` | `CTO` | escreve | `src/lib/demoData.ts` |
-| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +12 |
+| `role` | `admin` | compara, escreve, filtra | `src/components/lux/OrganizationsView.tsx`<br>`src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx`<br>`src/components/lux/monitoring/DlqAlertSettingsCard.tsx`<br>`src/hooks/usePermissions.ts`<br>… +11 |
 | `role` | `agent` | compara, escreve | `src/components/lux/AIAgentView.tsx` |
 | `role` | `sdr` | compara | `src/hooks/usePermissions.ts` |
 | `role` | `system` | escreve | `supabase/functions/ai-agent/index.ts`<br>`supabase/functions/conversation-intel/index.ts`<br>`supabase/functions/lead-score-ai/index.ts`<br>`supabase/functions/web-scrape-extract/index.ts` |
@@ -1965,8 +1965,6 @@ _nenhum item encontrado_
 | 100 | `supabase/functions/hubspot-sync/index.ts` |
 | 1 | `supabase/functions/instagram-enqueue/index.ts` |
 | 10 | `supabase/functions/instagram-worker-health/index.ts` |
-| 1 | `supabase/functions/latency-alerts/index.ts` |
-| 10 | `supabase/functions/latency-alerts/index.ts` |
 | 1 | `supabase/functions/lead-score-ai/index.ts` |
 | 10 | `supabase/functions/lead-score-ai/index.ts` |
 | 5 | `supabase/functions/lead-score-ai/index.ts` |
