@@ -2612,7 +2612,7 @@
    "hooks_exportados": [
     "useWeeklyPerformance"
    ],
-   "linhas": 69,
+   "linhas": 71,
    "dominio": "hooks",
    "tabelas": [
     "companies"
@@ -2629,7 +2629,7 @@
    "usado_por_arquivos": [
     "src/components/lux/DashboardView.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   }
  ]
 }

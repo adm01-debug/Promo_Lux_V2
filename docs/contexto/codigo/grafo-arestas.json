@@ -165,7 +165,7 @@
    "src/contexts/demo-context.ts",
    "src/hooks/use-toast.ts",
    "src/hooks/usePermissions.ts",
-   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
    "src/lib/api/workflows.ts",
    "src/lib/demoData.ts",
    "src/lib/utils.ts"
@@ -217,7 +217,6 @@
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/hooks/use-toast.ts",
-   "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/components/lux/CompaniesView.tsx": [
@@ -262,6 +261,7 @@
    "src/hooks/useCnpjEnrich.ts",
    "src/hooks/useCompanyDetails.ts",
    "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
    "src/lib/sanitize.ts"
   ],
   "src/components/lux/CompanyFilters.tsx": [
@@ -841,7 +841,8 @@
    "src/components/ui/badge.tsx",
    "src/components/ui/sheet.tsx",
    "src/components/ui/skeleton.tsx",
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/components/lux/campaigns/EmailTemplatePicker.tsx": [
    "src/components/lux/campaigns/CampaignFormFields.tsx",
@@ -2277,7 +2278,7 @@
   "src/hooks/useWeeklyPerformance.ts": [
    "src/contexts/active-org-context.ts",
    "src/contexts/demo-context.ts",
-   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts",
    "src/lib/demoData.ts"
   ],
   "src/integrations/lovable/index.ts": [

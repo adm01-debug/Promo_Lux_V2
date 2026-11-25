@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "488f67cfbaee57c9abe8aac8063737d813b23bfd",
+  "sha": "23d492667226ee09e9cda15d5a3d92632655fe61",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 22:38 UTC",
-  "files_total": 1191,
-  "code_files": 1002,
-  "code_lines": 148802
+  "generated_at": "2026-11-25 23:04 UTC",
+  "files_total": 1194,
+  "code_files": 1005,
+  "code_lines": 149135
  },
  "version": "1.3.2",
- "facts_hash": "a2a177052734c4fc",
+ "facts_hash": "c3469e1541332f1b",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -246,8 +246,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 386,
-   ".tsx": 309,
+   ".ts": 388,
+   ".tsx": 310,
    ".sql": 274,
    ".mjs": 23,
    ".py": 5,
@@ -33491,7 +33491,7 @@
   {
    "module": "src/components",
    "files": 314,
-   "lines": 51972,
+   "lines": 52076,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33737,8 +33737,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 105,
-   "lines": 11989,
+   "files": 106,
+   "lines": 12077,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -33867,7 +33867,8 @@
     "src/components",
     "src/contexts",
     "src/integrations",
-    "src/lib"
+    "src/lib",
+    "src/test"
    ],
    "file_list": [
     "src/hooks/confirm-context.ts",
@@ -33954,8 +33955,8 @@
   },
   {
    "module": "src/integrations",
-   "files": 13,
-   "lines": 9253,
+   "files": 14,
+   "lines": 9307,
    "tables": [
     "automation_alerts",
     "changelog_entries",
@@ -33996,6 +33997,7 @@
     "src/integrations/supabase/withOrg.test.ts",
     "src/integrations/supabase/withOrg.ts",
     "src/integrations/supabase/__tests__/orgFixtureSync.test.ts",
+    "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
     "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
     "src/integrations/supabase/__tests__/withOrg.batch.test.ts",
     "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
@@ -34194,11 +34196,12 @@
   },
   {
    "module": "src/test",
-   "files": 3,
-   "lines": 87,
+   "files": 4,
+   "lines": 174,
    "tables": [],
    "exports": [
-    "mockFramerMotion.ts: mockFramerMotion"
+    "mockFramerMotion.ts: mockFramerMotion",
+    "mockSupabaseClient.ts: SupabaseCall, createSupabaseClientMock"
    ],
    "docs": [
     "mockFramerMotion.ts: Shared framer-motion mock factory for Vitest. Usage in test files: vi.mock(\"framer-motion\", () => mockFramerMotion()); Supports all motion.* elements including SVG (circle, path, etc.) and all commonly used hooks (useInView, useMotionValue, etc.)."
@@ -34212,6 +34215,7 @@
    "file_list": [
     "src/test/example.test.ts",
     "src/test/mockFramerMotion.ts",
+    "src/test/mockSupabaseClient.ts",
     "src/test/setup.ts"
    ]
   },
@@ -37948,6 +37952,10 @@
    {
     "file": "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
     "count": 2
+   },
+   {
+    "file": "src/test/mockSupabaseClient.ts",
+    "count": 1
    },
    {
     "file": "supabase/functions/public-api/index.ts",
@@ -53703,6 +53711,10 @@
    },
    {
     "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
+    "name": "le os workflows escopados pela organizacao ativa e sem itens na lixeira"
+   },
+   {
+    "file": "src/components/lux/__tests__/AutomationsList.test.tsx",
     "name": "navega para a tela de automacoes pelo botao Nova"
    },
    {
@@ -53739,6 +53751,10 @@
    },
    {
     "file": "src/components/lux/__tests__/CampaignsView.test.tsx",
+    "name": "le as campanhas escopadas pela organizacao ativa e sem itens na lixeira"
+   },
+   {
+    "file": "src/components/lux/__tests__/CampaignsView.test.tsx",
     "name": "oferece criar a primeira campanha quando nao existe nenhuma"
    },
    {
@@ -53772,6 +53788,10 @@
    {
     "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
     "name": "CompanyDetailModal — acoes do rodape"
+   },
+   {
+    "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    "name": "le os dados do Google Meu Negocio escopados pela organizacao ativa"
    },
    {
     "file": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
@@ -54000,6 +54020,10 @@
    {
     "file": "src/components/lux/__tests__/DashboardView.test.tsx",
     "name": "renders greeting message"
+   },
+   {
+    "file": "src/components/lux/__tests__/DashboardView.test.tsx",
+    "name": "mostra aviso e esconde o grafico quando a consulta de desempenho falha"
    },
    {
     "file": "src/components/lux/__tests__/DataError.test.tsx",
@@ -55482,6 +55506,18 @@
     "name": "controls mobile open/close"
    },
    {
+    "file": "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
+    "name": "useWeeklyPerformance — escopo multi-tenant e erro"
+   },
+   {
+    "file": "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
+    "name": "le as empresas da organizacao ativa, fora da lixeira"
+   },
+   {
+    "file": "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
+    "name": "propaga o erro da consulta em vez de devolver series zeradas"
+   },
+   {
     "file": "src/integrations/supabase/withOrg.test.ts",
     "name": "withOrg Multi-tenant Isolation"
    },
@@ -55508,6 +55544,14 @@
    {
     "file": "src/integrations/supabase/__tests__/orgFixtureSync.test.ts",
     "name": "o gerador produz uma lista não vazia e ordenada"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
+    "name": "telas do painel consultam tabelas multi-tenant pelo wrapper"
+   },
+   {
+    "file": "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
+    "name": "${arquivo} le ${tabela} com escopo"
    },
    {
     "file": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
@@ -78556,6 +78600,13 @@
    },
    {
     "kind": "dinâmico",
+    "msg": "1 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
+    "where": [
+     "src/test/mockSupabaseClient.ts"
+    ]
+   },
+   {
+    "kind": "dinâmico",
     "msg": "5 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
     "where": [
      "supabase/functions/public-api/index.ts"
@@ -81295,7 +81346,7 @@
   },
   "src/components/lux/CompaniesMapView.tsx": {
    "path": "src/components/lux/CompaniesMapView.tsx",
-   "lines": 173,
+   "lines": 172,
    "exports": [
     "const CompaniesMapView"
    ],
@@ -81494,7 +81545,7 @@
   },
   "src/components/lux/DashboardView.tsx": {
    "path": "src/components/lux/DashboardView.tsx",
-   "lines": 373,
+   "lines": 383,
    "exports": [
     "const DashboardView"
    ],
@@ -82787,8 +82838,14 @@
   },
   "src/components/lux/__tests__/AutomationsList.test.tsx": {
    "path": "src/components/lux/__tests__/AutomationsList.test.tsx",
-   "lines": 129,
+   "lines": 151,
    "is_test": true,
+   "params": [
+    {
+     "name": "ORG",
+     "value": "\"org-teste-automacoes\""
+    }
+   ],
    "transition_maps": [
     {
      "name": "baseWorkflow",
@@ -82797,6 +82854,7 @@
    ],
    "tests": [
     "AutomationsList",
+    "le os workflows escopados pela organizacao ativa e sem itens na lixeira",
     "navega para a tela de automacoes pelo botao Nova",
     "mostra botao de criar workflow no estado vazio e navega",
     "pausa o workflow ativo",
@@ -82806,13 +82864,20 @@
   },
   "src/components/lux/__tests__/CampaignsView.test.tsx": {
    "path": "src/components/lux/__tests__/CampaignsView.test.tsx",
-   "lines": 115,
+   "lines": 133,
    "is_test": true,
+   "params": [
+    {
+     "name": "ORG",
+     "value": "\"org-teste-campanhas\""
+    }
+   ],
    "tests": [
     "CampaignsView",
     "renders heading",
     "renders create button",
     "shows campaign card when data loads",
+    "le as campanhas escopadas pela organizacao ativa e sem itens na lixeira",
     "oferece criar a primeira campanha quando nao existe nenhuma"
    ]
   },
@@ -82832,9 +82897,13 @@
   },
   "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx": {
    "path": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
-   "lines": 286,
+   "lines": 310,
    "is_test": true,
    "params": [
+    {
+     "name": "ORG",
+     "value": "\"org-1\""
+    },
     {
      "name": "CNPJ_VALIDO",
      "value": "\"11222333000181\""
@@ -82842,6 +82911,7 @@
    ],
    "tests": [
     "CompanyDetailModal — acoes do rodape",
+    "le os dados do Google Meu Negocio escopados pela organizacao ativa",
     "nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias)",
     "Enviar Email abre o cliente de e-mail do contato principal",
     "Visitar Site abre o site da empresa",
@@ -82943,7 +83013,7 @@
   },
   "src/components/lux/__tests__/DashboardView.test.tsx": {
    "path": "src/components/lux/__tests__/DashboardView.test.tsx",
-   "lines": 144,
+   "lines": 174,
    "is_test": true,
    "tests": [
     "DashboardView — P1 Chart Legibility",
@@ -82952,7 +83022,8 @@
     "renders chart dots for data points",
     "renders both area series (raspadas + qualificadas)",
     "renders StatsGrid section",
-    "renders greeting message"
+    "renders greeting message",
+    "mostra aviso e esconde o grafico quando a consulta de desempenho falha"
    ]
   },
   "src/components/lux/__tests__/DataError.test.tsx": {
@@ -83549,7 +83620,7 @@
   },
   "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": {
    "path": "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-   "lines": 378,
+   "lines": 379,
    "exports": [
     "const CampaignTrackingDrawer"
    ],
@@ -90753,7 +90824,7 @@
   },
   "src/hooks/useWeeklyPerformance.ts": {
    "path": "src/hooks/useWeeklyPerformance.ts",
-   "lines": 69,
+   "lines": 71,
    "exports": [
     "function useWeeklyPerformance"
    ],
@@ -91122,6 +91193,25 @@
     "controls mobile open/close"
    ]
   },
+  "src/hooks/__tests__/useWeeklyPerformance.test.tsx": {
+   "path": "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
+   "lines": 86,
+   "is_test": true,
+   "params": [
+    {
+     "name": "ORG",
+     "value": "\"org-teste-semana\""
+    }
+   ],
+   "rule_comments": [
+    "Cache novo por teste: a mesma queryKey nao pode reaproveitar o sucesso"
+   ],
+   "tests": [
+    "useWeeklyPerformance — escopo multi-tenant e erro",
+    "le as empresas da organizacao ativa, fora da lixeira",
+    "propaga o erro da consulta em vez de devolver series zeradas"
+   ]
+  },
   "src/integrations/lovable/index.ts": {
    "path": "src/integrations/lovable/index.ts",
    "lines": 39,
@@ -91241,6 +91331,15 @@
     "fixture de tabelas multi-tenant é derivada das migrations",
     "está em dia com supabase/migrations",
     "o gerador produz uma lista não vazia e ordenada"
+   ]
+  },
+  "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts": {
+   "path": "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
+   "lines": 54,
+   "is_test": true,
+   "tests": [
+    "telas do painel consultam tabelas multi-tenant pelo wrapper",
+    "${arquivo} le ${tabela} com escopo"
    ]
   },
   "src/integrations/supabase/__tests__/trashLabelColumns.test.ts": {
@@ -93747,6 +93846,16 @@
     "function mockFramerMotion"
    ],
    "doc": "Shared framer-motion mock factory for Vitest. Usage in test files: vi.mock(\"framer-motion\", () => mockFramerMotion()); Supports all motion.* elements including SVG (circle, path, etc.) and all commonly used hooks (useInView, useMotionValue, etc.)."
+  },
+  "src/test/mockSupabaseClient.ts": {
+   "path": "src/test/mockSupabaseClient.ts",
+   "lines": 87,
+   "is_test": true,
+   "exports": [
+    "interface SupabaseCall",
+    "function createSupabaseClientMock"
+   ],
+   "dyn_from": 1
   },
   "src/test/setup.ts": {
    "path": "src/test/setup.ts",
@@ -102605,10 +102714,33 @@
   }
  },
  "git": {
-  "sha": "488f67cfbaee57c9abe8aac8063737d813b23bfd",
+  "sha": "23d492667226ee09e9cda15d5a3d92632655fe61",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "23d4926",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/AutomationsList.tsx",
+     "src/components/lux/CampaignsView.tsx",
+     "src/components/lux/CompaniesMapView.tsx",
+     "src/components/lux/CompanyDetailModal.tsx",
+     "src/components/lux/DashboardView.tsx",
+     "src/components/lux/__tests__/AutomationsList.test.tsx",
+     "src/components/lux/__tests__/CampaignsView.test.tsx",
+     "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+     "src/components/lux/__tests__/DashboardView.test.tsx",
+     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+     "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
+     "src/hooks/useWeeklyPerformance.ts",
+     "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
+     "src/test/mockSupabaseClient.ts"
+    ]
+   },
    {
     "sha": "488f67c",
     "date": "2026-11-25",
@@ -102967,22 +103099,20 @@
      "scripts/lib/seguranca-processo.unit.mjs",
      "supabase/migrations/20261125104500_api_alert_p95_800ms.sql"
     ]
-   },
-   {
-    "sha": "0c5b352",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "infra(ci): inventario semanal dispara o ci.yml na branch do PR (#197)",
-    "files": [
-     ".github/workflows/ci.yml",
-     ".github/workflows/inventario-estado-semanal.yml"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    12
+    13
+   ],
+   [
+    "src/components/lux/CampaignsView.tsx",
+    3
+   ],
+   [
+    "src/components/lux/DashboardView.tsx",
+    3
    ],
    [
     "src/integrations/supabase/withOrg.ts",
@@ -102991,6 +103121,30 @@
    [
     "package.json",
     3
+   ],
+   [
+    "src/components/lux/AutomationsList.tsx",
+    2
+   ],
+   [
+    "src/components/lux/CompanyDetailModal.tsx",
+    2
+   ],
+   [
+    "src/components/lux/__tests__/AutomationsList.test.tsx",
+    2
+   ],
+   [
+    "src/components/lux/__tests__/CampaignsView.test.tsx",
+    2
+   ],
+   [
+    "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
+    2
+   ],
+   [
+    "src/hooks/useWeeklyPerformance.ts",
+    2
    ],
    [
     "scripts/automation.config.json",
@@ -103027,38 +103181,6 @@
    [
     "src/hooks/useDashboardData.ts",
     2
-   ],
-   [
-    "src/hooks/useICPConfig.ts",
-    2
-   ],
-   [
-    "src/hooks/useNotificationCount.ts",
-    2
-   ],
-   [
-    "src/hooks/useVirtualCompanies.ts",
-    2
-   ],
-   [
-    "src/components/lux/DashboardView.tsx",
-    2
-   ],
-   [
-    "src/components/lux/CampaignsView.tsx",
-    2
-   ],
-   [
-    "src/components/lux/IntentSignalsView.tsx",
-    2
-   ],
-   [
-    "docs/AUTOMACAO_LOCAL.md",
-    2
-   ],
-   [
-    "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
-    1
    ]
   ]
  }

@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `488f67cfba` · branch `main` · 2026-11-25 22:38 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `23d4926672` · branch `main` · 2026-11-25 23:04 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -357,6 +357,7 @@ _nenhum item encontrado_
 | dinâmico | 4 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/withOrg.ts` |
 | dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/__tests__/withOrg.batch.test.ts` |
 | dinâmico | 2 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` |
+| dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/test/mockSupabaseClient.ts` |
 | dinâmico | 5 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/public-api/index.ts` |
 | dinâmico | 5 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/rls-tests/index.ts` |
 | segurança | função `prune_auth_rate_limits` é SECURITY DEFINER sem `set search_path` (risco de escalação) | `supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql` |

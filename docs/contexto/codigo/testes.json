@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 142,
+ "total": 145,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 120
+  "unit": 123
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 96
+   "arquivos": 98
   },
   {
    "padrao": "e2e/",
@@ -26,7 +26,7 @@
   },
   {
    "padrao": "outro",
-   "arquivos": 11
+   "arquivos": 12
   }
  ],
  "arquivos": [
@@ -266,21 +266,23 @@
   {
    "arquivo": "src/components/lux/__tests__/AutomationsList.test.tsx",
    "tipo": "unit",
-   "linhas": 129,
+   "linhas": 151,
    "testa": [
-    "src/components/lux/AutomationsList.tsx"
+    "src/components/lux/AutomationsList.tsx",
+    "src/integrations/supabase/withOrg.ts"
    ],
-   "casos": 5
+   "casos": 6
   },
   {
    "arquivo": "src/components/lux/__tests__/CampaignsView.test.tsx",
    "tipo": "unit",
-   "linhas": 115,
+   "linhas": 133,
    "testa": [
     "src/components/lux/CampaignsView.tsx",
-    "src/components/ui/tooltip.tsx"
+    "src/components/ui/tooltip.tsx",
+    "src/integrations/supabase/withOrg.ts"
    ],
-   "casos": 4
+   "casos": 5
   },
   {
    "arquivo": "src/components/lux/__tests__/CompaniesView.test.tsx",
@@ -295,11 +297,12 @@
   {
    "arquivo": "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
    "tipo": "unit",
-   "linhas": 286,
+   "linhas": 310,
    "testa": [
-    "src/components/lux/CompanyDetailModal.tsx"
+    "src/components/lux/CompanyDetailModal.tsx",
+    "src/integrations/supabase/withOrg.ts"
    ],
-   "casos": 8
+   "casos": 9
   },
   {
    "arquivo": "src/components/lux/__tests__/CompanyFilters.test.tsx",
@@ -345,12 +348,12 @@
   {
    "arquivo": "src/components/lux/__tests__/DashboardView.test.tsx",
    "tipo": "unit",
-   "linhas": 144,
+   "linhas": 174,
    "testa": [
     "src/components/lux/DashboardView.tsx",
     "src/components/ui/tooltip.tsx"
    ],
-   "casos": 6
+   "casos": 7
   },
   {
    "arquivo": "src/components/lux/__tests__/DataError.test.tsx",
@@ -781,6 +784,16 @@
    "casos": 5
   },
   {
+   "arquivo": "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
+   "tipo": "unit",
+   "linhas": 86,
+   "testa": [
+    "src/hooks/useWeeklyPerformance.ts",
+    "src/integrations/supabase/withOrg.ts"
+   ],
+   "casos": 2
+  },
+  {
    "arquivo": "src/integrations/supabase/__tests__/orgFixtureSync.test.ts",
    "tipo": "unit",
    "linhas": 51,
@@ -788,6 +801,15 @@
     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json"
    ],
    "casos": 2
+  },
+  {
+   "arquivo": "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
+   "tipo": "unit",
+   "linhas": 54,
+   "testa": [
+    "src/integrations/supabase/withOrg.ts"
+   ],
+   "casos": 1
   },
   {
    "arquivo": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
@@ -1027,6 +1049,13 @@
    "arquivo": "src/test/mockFramerMotion.ts",
    "tipo": "unit",
    "linhas": 50,
+   "testa": [],
+   "casos": 0
+  },
+  {
+   "arquivo": "src/test/mockSupabaseClient.ts",
+   "tipo": "unit",
+   "linhas": 87,
    "testa": [],
    "casos": 0
   },
@@ -1422,10 +1451,10 @@
   "src/hooks/useVirtualCompanies.ts": 4,
   "src/hooks/useWebScrape.ts": 1,
   "src/hooks/useWebhooks.ts": 1,
-  "src/hooks/useWeeklyPerformance.ts": 1,
+  "src/hooks/useWeeklyPerformance.ts": 2,
   "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 2,
   "src/integrations/supabase/client.ts": 1,
-  "src/integrations/supabase/withOrg.ts": 13,
+  "src/integrations/supabase/withOrg.ts": 18,
   "src/lib/api/workflows.ts": 1,
   "src/lib/csv.ts": 1,
   "src/lib/demoViews.ts": 1,

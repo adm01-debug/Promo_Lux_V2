@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (96)",
+   "co-localizado (__tests__) (98)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)",
    "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)",
    "feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)",
    "fix(e2e): suite de RLS para de passar verde sem backend real (#226)",
-   "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)",
-   "fix: escopo de organizacao nas consultas e no cache do front (#224)"
+   "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)"
   ]
  },
  "pr_template": null,

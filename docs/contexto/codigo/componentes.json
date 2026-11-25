@@ -610,7 +610,7 @@
     "CampaignTrackingDrawer"
    ],
    "export_default": null,
-   "linhas": 378,
+   "linhas": 379,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -759,7 +759,7 @@
     "CompaniesMapView"
    ],
    "export_default": null,
-   "linhas": 173,
+   "linhas": 172,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast"
@@ -912,7 +912,7 @@
     "DashboardView"
    ],
    "export_default": null,
-   "linhas": 373,
+   "linhas": 383,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",

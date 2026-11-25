@@ -374,7 +374,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 130,
+   "usado_por": 127,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -451,7 +451,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 48,
+   "usado_por": 52,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -460,7 +460,7 @@
     "lib/api",
     "pages"
    ],
-   "coberto_por_testes": 13,
+   "coberto_por_testes": 18,
    "orfao": false
   },
   {

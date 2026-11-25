@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `488f67cfba` · branch `main` · 2026-11-25 22:38 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `23d4926672` · branch `main` · 2026-11-25 23:04 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2322,7 +2322,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1269 testes em 127 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1278 testes em 129 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2362,10 +2362,10 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/StakeholderCard.test.tsx` | 11 | StakeholderCard utilities · getInitials returns first+last initials · getSeniority returns correct config · getScoreGradient returns gradient classes … |
 | `src/hooks/__tests__/useRealtimeCompanies.test.ts` | 11 | useRealtimeCompanies · uses private channel name scoped to org id · applies organization_id filter in subscription config · does not subscribe when user is null … |
 | `supabase/functions/_shared/__tests__/web-scrape.test.ts` | 11 | robots.txt parser · permite quando não há regras · aplica Disallow para User-agent: * · prefere grupo específico do UA sobre wildcard … |
+| `src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx` | 10 | CompanyDetailModal — acoes do rodape · le os dados do Google Meu Negocio escopados pela organizacao ativa · nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias) · Enviar Email abre o cliente de e-mail do contato principal … |
 | `src/components/lux/lusha/StatusBadge.test.tsx` | 10 | StatusBadge — contrato visual (R34) · renderiza status  · cobre exatamente as 13 chaves conhecidas do map · agrupa todos os estados error* sob label  … |
 | `src/hooks/__tests__/oracleV2Helpers.test.ts` | 10 | computeBitrixReadiness · marca pronto quando company_id e user_id numérico estão preenchidos · bloqueia quando company_id vazio · bloqueia quando user_id vazio … |
 | `supabase/functions/_shared/__tests__/scim-core.test.ts` | 10 | normalizeScimPath strips gateway prefix · normalizeScimPath strips bare /scim mount · normalizeScimPath keeps /v2 paths and normalizes leading slash · parseUserNameFilter extracts quoted value … |
-| `src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx` | 9 | CompanyDetailModal — acoes do rodape · nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias) · Enviar Email abre o cliente de e-mail do contato principal · Visitar Site abre o site da empresa … |
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
 | `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
@@ -2376,6 +2376,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/dns-guard.test.ts` | 9 | isBlockedLookupDomain · permite %s · MX nulo (RFC 7505) · reconhece  … |
 | `supabase/functions/_shared/__tests__/tracking-signature.test.ts` | 9 | tracking-signature · round-trips a click URL · round-trips an open pixel (null url) · rejects a tampered url … |
 | `src/components/lux/__tests__/CompanyTable.test.tsx` | 8 | CompanyTable — Virtualized list · renders Score IPC header · renders company names · applies correct score color classes … |
+| `src/components/lux/__tests__/DashboardView.test.tsx` | 8 | DashboardView — P1 Chart Legibility · renders Performance Semanal chart section · renders chart with strokeWidth 2.5 for better legibility · renders chart dots for data points … |
 | `src/components/lux/layout/__tests__/Sidebar.test.tsx` | 8 | Sidebar · renders all nav items when expanded · hides labels when collapsed · calls onNavigate when a nav item is clicked … |
 | `src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts` | 8 | R35 fuzz — historyUtils robusto contra payloads adversos · filterHistory nunca lança e retorna subconjunto válido · filterHistory com janelas inválidas não estoura · formatDurationMs blindado contra NaN/negativos/infinito … |
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
@@ -2387,8 +2388,8 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/instagram-config-hash.test.ts` | 8 | normalizeTarget: trim, lowercase, remove @ e # · clampLimit: default, floor, ceil e truncamento · computeConfigHash: mesma tupla ⇒ mesmo hash (estabilidade) · computeConfigHash: invariante a variações de forma do target … |
 | `supabase/functions/_shared/__tests__/workflow-phases.test.ts` | 8 | declaredPhases · devolve vazio para steps ausente, nulo ou nao-array · ignora entradas sem phase ou com phase nao-string · coleta as fases declaradas … |
 | `e2e/protected-navigation.spec.ts` | 7 | Navegação protegida — redirecionamento · rota protegida ${route} redireciona para /login sem sessão · rota inexistente renderiza página 404 · Navegação protegida — modo demo … |
+| `src/components/lux/__tests__/AutomationsList.test.tsx` | 7 | AutomationsList · le os workflows escopados pela organizacao ativa e sem itens na lixeira · navega para a tela de automacoes pelo botao Nova · mostra botao de criar workflow no estado vazio e navega … |
 | `src/components/lux/__tests__/CompaniesView.test.tsx` | 7 | CompaniesView — P0 Mobile Actions & P1 Score Tooltip · renders the view title · renders Score column header with HelpCircle tooltip · renders export CSV button … |
-| `src/components/lux/__tests__/DashboardView.test.tsx` | 7 | DashboardView — P1 Chart Legibility · renders Performance Semanal chart section · renders chart with strokeWidth 2.5 for better legibility · renders chart dots for data points … |
 | `src/components/lux/__tests__/ErrorBoundary.test.tsx` | 7 | ErrorBoundary · renders children when no error · renders error UI when child throws · shows error message in details … |
 | `src/components/lux/lusha/constants.test.ts` | 7 | DEPT_GROUPS (R34) — estrutura e invariantes · expõe exatamente 5 grupos · labels PT-BR canônicos em ordem estável · grupo  … |
 | `src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx` | 7 | DlqAlertSettingsCard · renderiza título e campos de configuração · chama a mutação de salvar com valores saneados ao clicar em Salvar · desabilita edição para não-administradores … |
@@ -2402,7 +2403,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/chaos.stress.test.ts` | 7 | Chaos determinístico — stress · A1: Determinismo em 1.000 amostras · A2: Distribuição rate=0.01 em 20.000 tasks dentro de [0.005, 0.020] · A3: Bordas rate=0 e rate=1 em 500 tasks … |
 | `supabase/functions/_shared/__tests__/companies-upsert.test.ts` | 7 | upsertCompanies: usa place_id quando o banco aceita · upsertCompanies: cai para name_source quando place_id da 42P10 · upsertCompanies: sem constraint, insere quando a empresa ainda nao existe · upsertCompanies: sem constraint, atualiza quando a empresa ja existe … |
 | `supabase/functions/_shared/__tests__/places-fallback.test.ts` | 7 | placeToRow maps Places API place to gosom-compatible row · placeToRow tolerates places with only required fields · fetchPlacesResults returns null when API key is absent · fetchPlacesResults returns null when every keyword call fails … |
-| `src/components/lux/__tests__/AutomationsList.test.tsx` | 6 | AutomationsList · navega para a tela de automacoes pelo botao Nova · mostra botao de criar workflow no estado vazio e navega · pausa o workflow ativo … |
+| `src/components/lux/__tests__/CampaignsView.test.tsx` | 6 | CampaignsView · renders heading · renders create button · shows campaign card when data loads … |
 | `src/components/lux/__tests__/EmptyState.test.tsx` | 6 | EmptyState · renders title and description · renders action button when actionLabel and onAction provided · renders multiple action buttons … |
 | `src/components/lux/__tests__/WorkflowCard.test.tsx` | 6 | WorkflowCard · renders workflow name and description · renders status badge · calls onToggleExpand when clicked … |
 | `src/components/lux/layout/__tests__/Header.test.tsx` | 6 | Header · renders user initial when no avatar · renders avatar component when url provided · calls onOpenMobileSidebar on menu click … |
@@ -2413,7 +2414,6 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/chaos.test.ts` | 6 | shouldInjectChaos · é determinístico para o mesmo task_id · respeita rate=0 (nunca injeta) · respeita rate=1 (sempre injeta) … |
 | `supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts` | 6 | hashtags/mentions: unicode preservado, case lowercased, dedup · hashtags: extraídos do caption combinam com o campo  · hashtag(): tag do contexto entra como primeira hashtag sem duplicar · reply threads: parentCommentId resolvido em N níveis … |
 | `supabase/functions/_shared/__tests__/tracking-links.test.ts` | 6 | tracking-links · abre pixel com parâmetros assinados que o track-open aceita · gera link de click assinado para a URL destino · aplica pixel e reescreve links no corpo, preservando o texto original … |
-| `src/components/lux/__tests__/CampaignsView.test.tsx` | 5 | CampaignsView · renders heading · renders create button · shows campaign card when data loads … |
 | `src/components/lux/__tests__/CompanyTable.integration.test.tsx` | 5 | CompanyTable — integração de virtualização com scroll · renderiza apenas uma janela de linhas, não a lista inteira · mostra os primeiros itens no topo e esconde os itens distantes · revela itens mais abaixo após rolar e recicla os do topo … |
 | `src/components/lux/__tests__/DataError.test.tsx` | 5 | DataError · renders default error message · renders custom error message · renders retry button when onRetry provided … |
 | `src/components/lux/__tests__/MapFilters.test.tsx` | 5 | MapFilters · renders search input and filter count · displays IPC score label with current value · calls onSearchChange when typing … |
@@ -2444,6 +2444,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `src/contexts/__tests__/DemoContext.test.tsx` | 3 | DemoProvider · clears the query cache when entering demo mode so real data never shows as demo · clears the query cache when leaving demo mode so sample data never leaks to a real session |
+| `src/hooks/__tests__/useWeeklyPerformance.test.tsx` | 3 | useWeeklyPerformance — escopo multi-tenant e erro · le as empresas da organizacao ativa, fora da lixeira · propaga o erro da consulta em vez de devolver series zeradas |
 | `src/integrations/supabase/__tests__/orgFixtureSync.test.ts` | 3 | fixture de tabelas multi-tenant é derivada das migrations · está em dia com supabase/migrations · o gerador produz uma lista não vazia e ordenada |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |
 | `supabase/functions/_shared/__tests__/linkedin-url.test.ts` | 3 | publicIdFromLinkedInUrl · extrai de ${nome} · retorna vazio para ${nome} |
@@ -2452,6 +2453,7 @@ _nenhum item encontrado_
 | `e2e/oracle-decisor-flow.spec.ts` | 2 | Oracle v2 — fluxo end-to-end real (busca → decisores → enriquecimento) · busca decisores em empresa real e enriquece pelo menos um contato |
 | `e2e/oracle-v2.spec.ts` | 2 | Oracle v2 — smoke · painel resiliente: Error Boundary não derruba a aba quando preflight falha |
 | `src/contexts/__tests__/AuthContext.test.tsx` | 2 | AuthProvider.signOut · clears the React Query cache and the active org before calling supabase.auth.signOut |
+| `src/integrations/supabase/__tests__/orgScopedCallSites.test.ts` | 2 | telas do painel consultam tabelas multi-tenant pelo wrapper · ${arquivo} le ${tabela} com escopo |
 | `src/test/example.test.ts` | 2 | example · should pass |
 
 ## L. Eventos de webhook tratados (contratos com sistemas externos)

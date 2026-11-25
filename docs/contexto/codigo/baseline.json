@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "488f67cfbaee57c9abe8aac8063737d813b23bfd",
+  "commit": "23d492667226ee09e9cda15d5a3d92632655fe61",
   "branch": "main",
-  "data_commit": "2026-11-25T19:36:48-03:00",
+  "data_commit": "2026-11-25T19:59:33-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "23d4926",
+    "data": "2026-11-25",
+    "assunto": "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)"
+   },
    {
     "sha": "488f67c",
     "data": "2026-11-25",
@@ -126,22 +131,17 @@
     "sha": "a40184e",
     "data": "2026-11-25",
     "assunto": "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)"
-   },
-   {
-    "sha": "7a7d1cc",
-    "data": "2026-11-25",
-    "assunto": "chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)"
    }
   ],
-  "arquivos_mudados_7d": 341,
+  "arquivos_mudados_7d": 346,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 102
+    "mudancas": 112
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 27
+    "mudancas": 28
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 13
+    "mudancas": 14
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -294,14 +294,14 @@
     "mudancas": 4
    },
    {
-    "arquivo": "src/components/lux/SettingsView.tsx",
+    "arquivo": "src/components/lux/CampaignsView.tsx",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 175
+    "commits": 176
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1170,
-  "arquivos_codigo": 724,
-  "linhas_codigo": 126375,
+  "arquivos_total": 1173,
+  "arquivos_codigo": 727,
+  "linhas_codigo": 126708,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 142,
+  "testes": 145,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -560,19 +560,19 @@
   },
   "src/components": {
    "arquivos": 314,
-   "linhas": 51972
+   "linhas": 52076
   },
   "src/contexts": {
    "arquivos": 8,
    "linhas": 398
   },
   "src/hooks": {
-   "arquivos": 105,
-   "linhas": 11989
+   "arquivos": 106,
+   "linhas": 12077
   },
   "src/integrations": {
-   "arquivos": 13,
-   "linhas": 9253
+   "arquivos": 14,
+   "linhas": 9307
   },
   "src/lib": {
    "arquivos": 55,
@@ -587,8 +587,8 @@
    "linhas": 2287
   },
   "src/test": {
-   "arquivos": 3,
-   "linhas": 87
+   "arquivos": 4,
+   "linhas": 174
   },
   "src/tests": {
    "arquivos": 3,
