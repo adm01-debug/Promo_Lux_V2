@@ -6,8 +6,8 @@ export type AuthContextType = {
   session: Session | null;
   loading: boolean;
   /**
-   * true enquanto o usuÃ¡rio possuir fator TOTP verificado mas a sessÃ£o
-   * ainda nÃ£o elevou a AAL2 (senha correta, cÃ³digo pendente).
+   * true enquanto o usuário possuir fator TOTP verificado mas a sessão
+   * ainda não elevou a AAL2 (senha correta, código pendente).
    */
   mfaRequired: boolean;
   setMfaRequired: (v: boolean) => void;

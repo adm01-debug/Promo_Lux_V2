@@ -23,7 +23,7 @@ const EMPTY: WarmupInput = {
   enabled: true,
 };
 
-/** Painel de aquecimento de domínio: teto diário de envio por organizaÃ§Ã£o. */
+/** Painel de aquecimento de domínio: teto diário de envio por organização. */
 export function WarmupPanel() {
   const { data: profile, isLoading, save, remove } = useWarmupProfile();
   const [form, setForm] = useState<WarmupInput>(EMPTY);
