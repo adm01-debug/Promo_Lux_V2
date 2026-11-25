@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix: corrige os textos duplamente codificados da tela de monitoramento (#220)",
    "fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)",
    "fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)",
    "fix: liga os botoes do card de Automacoes no painel inicial (#216)",
-   "chore(config): versiona o verify_jwt das 62 edge functions (#215)",
-   "fix(config): botao de custo Places API para de mentir (#214)"
+   "chore(config): versiona o verify_jwt das 62 edge functions (#215)"
   ]
  },
  "pr_template": null,

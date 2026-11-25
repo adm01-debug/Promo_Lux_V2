@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "6783576e0e19b0cc2bde385d0b6d9013947c24cb",
+  "sha": "8b6a8704b3f353add7c305e51fa2260542916ada",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 20:13 UTC",
+  "generated_at": "2026-11-25 20:23 UTC",
   "files_total": 1180,
   "code_files": 991,
   "code_lines": 147725
@@ -102251,10 +102251,23 @@
   }
  },
  "git": {
-  "sha": "6783576e0e19b0cc2bde385d0b6d9013947c24cb",
+  "sha": "8b6a8704b3f353add7c305e51fa2260542916ada",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "8b6a870",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: corrige os textos duplamente codificados da tela de monitoramento (#220)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/auth/LoginCard.tsx",
+     "src/components/lux/settings/WarmupPanel.tsx",
+     "src/contexts/auth-context.ts",
+     "src/pages/Monitoring.tsx"
+    ]
+   },
    {
     "sha": "6783576",
     "date": "2026-11-25",
@@ -102554,18 +102567,13 @@
     "files": [
      "supabase/migrations/20261124200000_api_latency_alert_settings_org_real.sql"
     ]
-   },
-   {
-    "sha": "e0648b2",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "﻿feat: agenda smoke recorrente da API publica a cada 15 min (#188)",
-    "files": [
-     "supabase/migrations/20261124190000_public_api_smoke_cron.sql"
-    ]
    }
   ],
   "hot_files": [
+   [
+    "docs/qa/05-PROGRESSO.md",
+    3
+   ],
    [
     "package.json",
     3
@@ -102575,16 +102583,28 @@
     3
    ],
    [
-    "docs/qa/05-PROGRESSO.md",
-    2
-   ],
-   [
     "package-lock.json",
     2
    ],
    [
     "docs/AUTOMACAO_LOCAL.md",
     2
+   ],
+   [
+    "src/components/lux/auth/LoginCard.tsx",
+    1
+   ],
+   [
+    "src/components/lux/settings/WarmupPanel.tsx",
+    1
+   ],
+   [
+    "src/contexts/auth-context.ts",
+    1
+   ],
+   [
+    "src/pages/Monitoring.tsx",
+    1
    ],
    [
     "src/__tests__/botoes-com-manipulador.test.ts",
@@ -102628,22 +102648,6 @@
    ],
    [
     "docs/pendencias/_backlog-verificado.md",
-    1
-   ],
-   [
-    "src/components/lux/AutomationsList.tsx",
-    1
-   ],
-   [
-    "src/components/lux/DashboardView.tsx",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/AutomationsList.test.tsx",
-    1
-   ],
-   [
-    "supabase/config.toml",
     1
    ]
   ]

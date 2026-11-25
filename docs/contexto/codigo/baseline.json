@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6783576e0e19b0cc2bde385d0b6d9013947c24cb",
+  "commit": "8b6a8704b3f353add7c305e51fa2260542916ada",
   "branch": "main",
-  "data_commit": "2026-11-25T17:11:36-03:00",
+  "data_commit": "2026-11-25T17:21:33-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "8b6a870",
+    "data": "2026-11-25",
+    "assunto": "fix: corrige os textos duplamente codificados da tela de monitoramento (#220)"
+   },
    {
     "sha": "6783576",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "9894b1d",
     "data": "2026-11-24",
     "assunto": "chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)"
-   },
-   {
-    "sha": "6e23c2a",
-    "data": "2026-11-24",
-    "assunto": "perf(api-publica): lista de companies/deals/stakeholders em um unico round-trip (#193)"
    }
   ],
   "arquivos_mudados_7d": 305,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 85
+    "mudancas": 87
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -250,6 +250,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "src/pages/Monitoring.tsx",
+    "mudancas": 5
+   },
+   {
     "arquivo": "supabase/functions/workflow-engine/index.ts",
     "mudancas": 5
    },
@@ -263,6 +267,10 @@
    },
    {
     "arquivo": "docs/pendencias/_backlog-verificado.md",
+    "mudancas": 4
+   },
+   {
+    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 4
    },
    {
@@ -286,22 +294,14 @@
     "mudancas": 4
    },
    {
-    "arquivo": "src/pages/Monitoring.tsx",
-    "mudancas": 4
-   },
-   {
     "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "supabase/functions/mcp/index.ts",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 165
+    "commits": 166
    },
    {
     "autor": "dependabot[bot]",
