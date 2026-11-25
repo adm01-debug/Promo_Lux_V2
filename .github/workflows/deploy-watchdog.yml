@@ -1,0 +1,99 @@
+name: Deploy Watchdog
+
+# ---------------------------------------------------------------------------
+# Avisa quando um deploy de edge functions fica preso sem ninguem notar.
+#
+# Por que este workflow existe: em 24/11/2026 o run 45482461803 ficou em
+# `waiting` por 17 h aguardando aprovacao do environment `Production`. O
+# environment exige revisor humano (2 protection rules), e o concurrency group
+# `edge-fn-deploy-production` roda com `cancel-in-progress: false` — ou seja,
+# aquele run travou a fila de todos os deploys seguintes e nenhuma edge
+# function chegou a producao pelo canal oficial ate alguem abrir o Actions.
+# Nada avisava: nao havia issue, e-mail ou check vermelho.
+#
+# Dois modos de "preso" sao cobertos:
+#   waiting -> aguardando aprovacao de revisor no environment
+#   pending -> aguardando o concurrency group liberar (fila)
+#
+# O aviso e uma issue com titulo fixo. Enquanto ela estiver aberta o workflow
+# nao abre outra (idempotente); quando nao houver mais run preso, ele comenta
+# e fecha sozinho. `staging` nao tem revisor obrigatorio, entao waiting/pending
+# so nasce de producao ou de fila — nao ha ruido de PR.
+# ---------------------------------------------------------------------------
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+concurrency:
+  group: deploy-watchdog
+  cancel-in-progress: false
+
+jobs:
+  vigia:
+    name: Detectar deploy preso
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      LIMITE_MIN: '60'
+      TITULO: '[infra] Deploy de edge functions preso aguardando aprovacao'
+
+    steps:
+      - name: Procurar deploys parados e avisar
+        shell: bash
+        run: |
+          set -uo pipefail
+
+          AGORA=$(date -u +%s)
+          LIMITE=$(( LIMITE_MIN * 60 ))
+          PRESOS=""
+          QUANTOS=0
+
+          for STATUS in waiting pending; do
+            JSON=$(gh api "repos/$REPO/actions/workflows/edge-functions-deploy.yml/runs?status=$STATUS&per_page=100" 2>/dev/null || echo '{"workflow_runs":[]}')
+            while IFS=$'\t' read -r ID CRIADO EVENTO BRANCH URL; do
+              [ -n "${ID:-}" ] || continue
+              INICIO=$(date -u -d "$CRIADO" +%s 2>/dev/null || echo "$AGORA")
+              IDADE=$(( AGORA - INICIO ))
+              if [ "$IDADE" -ge "$LIMITE" ]; then
+                MIN=$(( IDADE / 60 ))
+                PRESOS="${PRESOS}- [#${ID}](${URL}) — \`${STATUS}\` (${EVENTO} em \`${BRANCH}\`), criado em ${CRIADO}, parado ha ${MIN} min"$'\n'
+                QUANTOS=$(( QUANTOS + 1 ))
+              fi
+            done < <(printf '%s' "$JSON" | jq -r '.workflow_runs[]? | [.id, .created_at, .event, .head_branch, .html_url] | @tsv')
+          done
+
+          # Este job nao faz checkout: sem --repo o gh nao tem de onde inferir
+          # o repositorio e falha com "not a git repository".
+          EXISTENTE=$(gh issue list --repo "$REPO" --state open --limit 100 --json number,title \
+            | jq -r --arg t "$TITULO" '.[] | select(.title == $t) | .number' | head -1)
+
+          if [ "$QUANTOS" -eq 0 ]; then
+            echo "Nenhum deploy preso ha mais de ${LIMITE_MIN} min."
+            if [ -n "${EXISTENTE:-}" ]; then
+              gh issue comment "$EXISTENTE" --repo "$REPO" --body "Resolvido: nenhum run de \`edge-functions-deploy.yml\` em \`waiting\`/\`pending\` ha mais de ${LIMITE_MIN} min."
+              gh issue close "$EXISTENTE" --repo "$REPO"
+              echo "Issue #$EXISTENTE fechada."
+            fi
+            exit 0
+          fi
+
+          echo "Deploys presos: $QUANTOS"
+          printf '%s' "$PRESOS"
+
+          if [ -n "${EXISTENTE:-}" ]; then
+            echo "Issue #$EXISTENTE ja esta aberta; sem comentario repetido."
+            exit 0
+          fi
+
+          BODY="Run(s) de \`edge-functions-deploy.yml\` parados ha mais de ${LIMITE_MIN} min:"$'\n\n'"${PRESOS}"$'\n'"Como destravar:"$'\n'"- Aprovar: no run, botao **Review deployments** -> marcar \`Production\` -> **Approve and deploy**."$'\n'"- Descartar: \`gh run cancel <id>\` (libera o concurrency group para o proximo deploy)."$'\n\n'"Este aviso e automatico (\`.github/workflows/deploy-watchdog.yml\`, a cada 30 min) e fecha sozinho quando o run sair de \`waiting\`/\`pending\`."
+
+          gh issue create --repo "$REPO" --title "$TITULO" --body "$BODY"
