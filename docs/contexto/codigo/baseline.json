@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "121479c86e9124734526168eb4aa08b4ff009e1e",
+  "commit": "81ab63d850918070e112b428e0c31be16dd99062",
   "branch": "main",
-  "data_commit": "2026-11-25T12:40:25-03:00",
+  "data_commit": "2026-11-25T13:23:58-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "81ab63d",
+    "data": "2026-11-25",
+    "assunto": "chore(deps): sobe framer-motion para 14.14.0 (#213)"
+   },
    {
     "sha": "121479c",
     "data": "2026-11-25",
@@ -126,11 +131,6 @@
     "sha": "b7314d4",
     "data": "2026-11-24",
     "assunto": "fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)"
-   },
-   {
-    "sha": "4bb36e5",
-    "data": "2026-11-24",
-    "assunto": "fix: guarda de drift para de fechar o run de producao com falso positivo (#186)"
    }
   ],
   "arquivos_mudados_7d": 292,
@@ -145,11 +145,11 @@
    },
    {
     "pasta": "package-lock.json",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "pasta": "package.json",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "pasta": "src/integrations/supabase",
@@ -199,11 +199,11 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "package-lock.json",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "arquivo": "package.json",
-    "mudancas": 19
+    "mudancas": 20
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 158
+    "commits": 159
    },
    {
     "autor": "dependabot[bot]",

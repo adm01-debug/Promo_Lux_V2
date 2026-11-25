@@ -1,9 +1,9 @@
 {
  "meta": {
-  "sha": "121479c86e9124734526168eb4aa08b4ff009e1e",
+  "sha": "81ab63d850918070e112b428e0c31be16dd99062",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 15:41 UTC",
+  "generated_at": "2026-11-25 16:24 UTC",
   "files_total": 1174,
   "code_files": 985,
   "code_lines": 146794
@@ -101790,10 +101790,20 @@
   }
  },
  "git": {
-  "sha": "121479c86e9124734526168eb4aa08b4ff009e1e",
+  "sha": "81ab63d850918070e112b428e0c31be16dd99062",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "81ab63d",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore(deps): sobe framer-motion para 14.14.0 (#213)",
+    "files": [
+     "package-lock.json",
+     "package.json"
+    ]
+   },
    {
     "sha": "121479c",
     "date": "2026-11-25",
@@ -102098,25 +102108,24 @@
      "supabase/functions/web-scrape-worker/index.ts",
      "supabase/functions/workflow-engine/index.ts"
     ]
-   },
-   {
-    "sha": "d8c8604",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: corrige GET /events da API publica (audit_logs.user_id inexistente) (#181)",
-    "files": [
-     "supabase/functions/public-api/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "supabase/functions/public-api/index.ts",
-    5
+    4
+   ],
+   [
+    "package.json",
+    3
    ],
    [
     ".github/workflows/db-migrations.yml",
     3
+   ],
+   [
+    "package-lock.json",
+    2
    ],
    [
     "supabase/functions/latency-alerts/index.ts",
@@ -102124,10 +102133,6 @@
    ],
    [
     "docs/AUTOMACAO_LOCAL.md",
-    2
-   ],
-   [
-    "package.json",
     2
    ],
    [
@@ -102184,10 +102189,6 @@
    ],
    [
     ".prettierrc",
-    1
-   ],
-   [
-    "scripts/staged-autofix/run.mjs",
     1
    ]
   ]
