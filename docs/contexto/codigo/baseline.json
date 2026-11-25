@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "b85b5ad258d67f6510b974ed161d8d7b93292839",
+  "commit": "e1331fe5c9938fb9075e96270c76c9edb75a5df1",
   "branch": "main",
-  "data_commit": "2026-11-25T10:23:05-03:00",
+  "data_commit": "2026-11-25T10:32:07-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e1331fe",
+    "data": "2026-11-25",
+    "assunto": "chore(edge): descarta audit-logs-prune, function sem chamador (#209)"
+   },
    {
     "sha": "b85b5ad",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "8444c90",
     "data": "2026-11-24",
     "assunto": "fix: taxa de erro da API conta so falha de servidor (5xx) (#184)"
-   },
-   {
-    "sha": "8da6120",
-    "data": "2026-11-24",
-    "assunto": "fix: guarda de drift nao confunde funcao existente com objeto ausente (#183)"
    }
   ],
-  "arquivos_mudados_7d": 287,
+  "arquivos_mudados_7d": 288,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 155
+    "commits": 156
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1152,
-  "arquivos_codigo": 710,
-  "linhas_codigo": 124579,
+  "arquivos_total": 1151,
+  "arquivos_codigo": 709,
+  "linhas_codigo": 124501,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,7 +320,7 @@
   "modulos": 22,
   "componentes": 267,
   "hooks": 97,
-  "edge_functions": 63,
+  "edge_functions": 62,
   "tabelas": 121,
   "migrations": 267,
   "cron_jobs": 43,
@@ -591,8 +591,8 @@
    "linhas": 171
   },
   "supabase/functions": {
-   "arquivos": 136,
-   "linhas": 24887
+   "arquivos": 135,
+   "linhas": 24809
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -711,7 +711,7 @@
  ],
  "qualidade": {
   "any": 24,
-  "console_log": 92,
+  "console_log": 91,
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
@@ -754,7 +754,6 @@
   "componentes_ambiguos": [],
   "menu_sem_destino": [],
   "edges_orfas": [
-   "audit-logs-prune",
    "gmaps-places-search",
    "health",
    "instagram-dlq-replay",

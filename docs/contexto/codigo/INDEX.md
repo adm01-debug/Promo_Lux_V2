@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `b85b5ad258d67f6510b974ed161d8d7b93292839` (2026-11-25T10:23:05-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e1331fe5c9938fb9075e96270c76c9edb75a5df1` (2026-11-25T10:32:07-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (682), SQL (271), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (681), SQL (271), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1152 |
-| arquivos_codigo | 710 |
-| linhas_codigo | 124579 |
+| arquivos_total | 1151 |
+| arquivos_codigo | 709 |
+| linhas_codigo | 124501 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -44,7 +44,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 22 |
 | componentes | 267 |
 | hooks | 97 |
-| edge_functions | 63 |
+| edge_functions | 62 |
 | tabelas | 121 |
 | migrations | 267 |
 | cron_jobs | 43 |
@@ -123,7 +123,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Edge functions
 - `admin-list-companies` (verify_jwt=false) — tabelas: companies, organization_members; chamada por 0 arquivo(s) do front
 - `ai-agent` — tabelas: companies, ipc_config, scrape_jobs, workflows; chamada por 1 arquivo(s) do front
-- `audit-logs-prune` — tabelas: api_request_logs, audit_logs, email_sync_log, health_checks; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `auth-rate-limit` — tabelas: auth_rate_limits; chamada por 1 arquivo(s) do front
 - `campaign-dispatch` — tabelas: campaign_messages, campaign_recipients, campaigns, email_accounts, email_suppressions; chamada por 1 arquivo(s) do front, por SQL/cron
 - `circuit-breaker-alerts` — tabelas: -; chamada por 0 arquivo(s) do front, por SQL/cron
@@ -246,7 +245,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rotas_sem_arquivo: 0
 - componentes_ambiguos: 0
 - menu_sem_destino: 0
-- edges_orfas: 9 — ex.: audit-logs-prune, gmaps-places-search, health
+- edges_orfas: 8 — ex.: gmaps-places-search, health, instagram-dlq-replay
 - edges_chamadas_sem_pasta: 0
 - tabelas_sem_rls: 0
 - tabelas_usadas_sem_definicao: 0
@@ -260,8 +259,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7910 nós · 16710 arestas · 701 comunidades · grafo do commit `b85b5ad2`
-- comunidades maiores: Monitoring.tsx (226), @tanstack/react-query (171), input.tsx (130), react (127), cn (103), CompaniesView.tsx (98), useActiveOrganization (84), gerar.mjs (80), ref_node_fs (77), generate.py (73), NotificationsPanel.tsx (73), req (71)
+- 7909 nós · 16709 arestas · 721 comunidades · grafo do commit `e1331fe5`
+- comunidades maiores: input.tsx (97), client.ts (95), cn (85), react (80), gerar.mjs (80), OrgViolationsView.tsx (76), CompaniesView.tsx (74), ref_node_fs (74), generate.py (73), @tanstack/react-query (72), db (71), campaign-dispatch/index.ts (67)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -377,6 +376,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `e1331fe` chore(edge): descarta audit-logs-prune, function sem chamador (#209)
 - 2026-11-25 `b85b5ad` fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)
 - 2026-11-25 `144df6b` chore(edge): descarta api-latency-alerts, function sem invocador (#208)
 - 2026-11-25 `f60d5cf` feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)
@@ -391,7 +391,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `fef1ec1` infra(ci): db-migrations deixa de prender a fila e assume a integracao Supabase (#196)
 - 2026-11-24 `9b3dabf` fix(api-publica): alerta de saude passa a olhar erro 5xx, nao so p95 (#195)
 - 2026-11-24 `9894b1d` chore(api-publica): smoke de 15 min passa a cobrir o filtro action de /events (#194)
-- 2026-11-24 `6e23c2a` perf(api-publica): lista de companies/deals/stakeholders em um unico round-trip (#193)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

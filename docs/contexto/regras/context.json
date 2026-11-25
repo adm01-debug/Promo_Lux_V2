@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "b85b5ad258d67f6510b974ed161d8d7b93292839",
+  "sha": "e1331fe5c9938fb9075e96270c76c9edb75a5df1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 13:24 UTC",
-  "files_total": 1173,
-  "code_files": 985,
-  "code_lines": 146809
+  "generated_at": "2026-11-25 13:32 UTC",
+  "files_total": 1172,
+  "code_files": 984,
+  "code_lines": 146731
  },
  "version": "1.3.2",
- "facts_hash": "671732d572282527",
+ "facts_hash": "60c1e92c7fad7a4a",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -236,7 +236,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 379,
+   ".ts": 378,
    ".tsx": 303,
    ".sql": 271,
    ".mjs": 22,
@@ -30386,33 +30386,6 @@
     "idempotency": false
    },
    {
-    "name": "audit-logs-prune",
-    "file": "supabase/functions/audit-logs-prune/index.ts",
-    "methods": [
-     "POST?"
-    ],
-    "auth": "service_role (ignora RLS) + valida JWT do usuário",
-    "tables": [
-     "api_request_logs",
-     "audit_logs",
-     "email_sync_log",
-     "health_checks"
-    ],
-    "env": [
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "",
-    "errors": [
-     "Unauthorized"
-    ],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
     "name": "auth-rate-limit",
     "file": "supabase/functions/auth-rate-limit/index.ts",
     "methods": [
@@ -34119,8 +34092,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 136,
-   "lines": 24887,
+   "files": 135,
+   "lines": 24809,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -34321,13 +34294,13 @@
     "supabase/functions/_shared/web-scrape/robots.ts",
     "supabase/functions/admin-list-companies/index.ts",
     "supabase/functions/ai-agent/index.ts",
-    "supabase/functions/audit-logs-prune/index.ts",
     "supabase/functions/auth-rate-limit/index.ts",
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/circuit-breaker-alerts/index.ts",
     "supabase/functions/cnpj-enrich/index.ts",
     "supabase/functions/cnpj-enrich-worker/index.ts",
-    "supabase/functions/cnpj-settings-status/index.ts"
+    "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/conversation-intel/index.ts"
    ]
   },
   {
@@ -34470,9 +34443,6 @@
     ]
    },
    "api_request_logs": {
-    "delete": [
-     "supabase/functions/audit-logs-prune/index.ts"
-    ],
     "ref": [
      "supabase/functions/public-api/index.ts"
     ]
@@ -34492,9 +34462,6 @@
      "supabase/functions/lusha-search/index.ts",
      "supabase/functions/rls-tests/index.ts",
      "supabase/functions/workflow-engine/index.ts"
-    ],
-    "delete": [
-     "supabase/functions/audit-logs-prune/index.ts"
     ]
    },
    "auth_rate_limits": {
@@ -34924,9 +34891,6 @@
     "select": [
      "src/hooks/useEmailSyncLog.ts"
     ],
-    "delete": [
-     "supabase/functions/audit-logs-prune/index.ts"
-    ],
     "insert": [
      "supabase/functions/email-poll-replies/index.ts"
     ]
@@ -34986,9 +34950,6 @@
     ]
    },
    "health_checks": {
-    "delete": [
-     "supabase/functions/audit-logs-prune/index.ts"
-    ],
     "ref": [
      "supabase/functions/health/index.ts"
     ]
@@ -35856,9 +35817,6 @@
     "organization_id",
     "p95_critical_ms"
    ],
-   "api_request_logs": [
-    "created_at"
-   ],
    "audit_logs": [
     "action",
     "actor_id",
@@ -36194,9 +36152,6 @@
     "is_enabled",
     "organization_id",
     "updated_at"
-   ],
-   "health_checks": [
-    "created_at"
    ],
    "idempotency_keys": [
     "key",
@@ -37069,7 +37024,6 @@
     "supabase/functions/_shared/cron-auth.ts",
     "supabase/functions/admin-list-companies/index.ts",
     "supabase/functions/ai-agent/index.ts",
-    "supabase/functions/audit-logs-prune/index.ts",
     "supabase/functions/auth-rate-limit/index.ts",
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/circuit-breaker-alerts/index.ts",
@@ -37132,7 +37086,6 @@
     "src/lib/mcp/supabase.ts",
     "supabase/functions/admin-list-companies/index.ts",
     "supabase/functions/ai-agent/index.ts",
-    "supabase/functions/audit-logs-prune/index.ts",
     "supabase/functions/auth-rate-limit/index.ts",
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/circuit-breaker-alerts/index.ts",
@@ -38047,10 +38000,6 @@
    {
     "table": "deals",
     "column": "company_name"
-   },
-   {
-    "table": "health_checks",
-    "column": "created_at"
    }
   ]
  },
@@ -39942,10 +39891,6 @@
     "msg": "AI API error: ${aiResponse.status}"
    },
    {
-    "file": "supabase/functions/audit-logs-prune/index.ts",
-    "msg": "Unauthorized"
-   },
-   {
     "file": "supabase/functions/campaign-dispatch/index.ts",
     "msg": "Gmail send [${res.status}]: ${JSON.stringify(data)}"
    },
@@ -40792,10 +40737,6 @@
    {
     "file": "supabase/functions/_shared/web-scrape/robots.ts",
     "text": "Precedência: o rule com prefixo mais específico vence (comprimento)."
-   },
-   {
-    "file": "supabase/functions/audit-logs-prune/index.ts",
-    "text": "Prune email_sync_log (fecha gap de retenção — crescia sem limite)"
    },
    {
     "file": "supabase/functions/auth-rate-limit/index.ts",
@@ -47035,11 +46976,6 @@
     "file": "supabase/functions/_shared/tracking-links.ts",
     "name": "MAX_TRACKED_LINKS",
     "value": "50"
-   },
-   {
-    "file": "supabase/functions/audit-logs-prune/index.ts",
-    "name": "RETENTION_DAYS",
-    "value": "90"
    },
    {
     "file": "supabase/functions/auth-rate-limit/index.ts",
@@ -70348,7 +70284,6 @@
    "supabase/functions/_shared/rlsTableRegistry.ts",
    "supabase/functions/admin-list-companies/index.ts",
    "supabase/functions/ai-agent/index.ts",
-   "supabase/functions/audit-logs-prune/index.ts",
    "supabase/functions/auth-rate-limit/index.ts",
    "supabase/functions/campaign-dispatch/index.ts",
    "supabase/functions/circuit-breaker-alerts/index.ts",
@@ -77578,11 +77513,6 @@
    {
     "kind": "coluna",
     "msg": "coluna `company_name` usada no código não existe no schema de `deals`",
-    "where": []
-   },
-   {
-    "kind": "coluna",
-    "msg": "coluna `created_at` usada no código não existe no schema de `health_checks`",
     "where": []
    },
    {
@@ -95235,59 +95165,6 @@
    ],
    "uses_service_role": true
   },
-  "supabase/functions/audit-logs-prune/index.ts": {
-   "path": "supabase/functions/audit-logs-prune/index.ts",
-   "lines": 78,
-   "tables": [
-    {
-     "table": "audit_logs",
-     "op": "delete"
-    },
-    {
-     "table": "api_request_logs",
-     "op": "delete"
-    },
-    {
-     "table": "health_checks",
-     "op": "delete"
-    },
-    {
-     "table": "email_sync_log",
-     "op": "delete"
-    }
-   ],
-   "table_cols": {
-    "audit_logs": [
-     "created_at"
-    ],
-    "api_request_logs": [
-     "created_at"
-    ],
-    "health_checks": [
-     "created_at"
-    ],
-    "email_sync_log": [
-     "created_at"
-    ]
-   },
-   "env": [
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "errors": [
-    "Unauthorized"
-   ],
-   "params": [
-    {
-     "name": "RETENTION_DAYS",
-     "value": "90"
-    }
-   ],
-   "rule_comments": [
-    "Prune email_sync_log (fecha gap de retenção — crescia sem limite)"
-   ],
-   "uses_service_role": true
-  },
   "supabase/functions/auth-rate-limit/index.ts": {
    "path": "supabase/functions/auth-rate-limit/index.ts",
    "lines": 122,
@@ -101895,10 +101772,19 @@
   }
  },
  "git": {
-  "sha": "b85b5ad258d67f6510b974ed161d8d7b93292839",
+  "sha": "e1331fe5c9938fb9075e96270c76c9edb75a5df1",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "e1331fe",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore(edge): descarta audit-logs-prune, function sem chamador (#209)",
+    "files": [
+     "supabase/functions/audit-logs-prune/index.ts"
+    ]
+   },
    {
     "sha": "b85b5ad",
     "date": "2026-11-25",
@@ -102200,16 +102086,6 @@
     "files": [
      "inventario/estado/edges.json"
     ]
-   },
-   {
-    "sha": "8771961",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: remove BOM da migration SCIM e barra BOM no lint de migrations (#179)",
-    "files": [
-     "scripts/check-migrations.sh",
-     "supabase/migrations/20261124040000_scim_provisioning.sql"
-    ]
    }
   ],
   "hot_files": [
@@ -102236,6 +102112,10 @@
    [
     "scripts/check-schema-replay-drift.sh",
     2
+   ],
+   [
+    "supabase/functions/audit-logs-prune/index.ts",
+    1
    ],
    [
     "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql",
@@ -102287,10 +102167,6 @@
    ],
    [
     "scripts/automation.config.json",
-    1
-   ],
-   [
-    "scripts/lib/seguranca-processo.mjs",
     1
    ]
   ]

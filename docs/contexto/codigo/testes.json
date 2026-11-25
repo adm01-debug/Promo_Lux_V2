@@ -1428,7 +1428,6 @@
   "edges": [
    "admin-list-companies",
    "ai-agent",
-   "audit-logs-prune",
    "auth-rate-limit",
    "campaign-dispatch",
    "circuit-breaker-alerts",

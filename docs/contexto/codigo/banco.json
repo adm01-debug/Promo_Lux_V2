@@ -2262,7 +2262,6 @@
    },
    "usada_no_front": 0,
    "usada_em_edges": [
-    "audit-logs-prune",
     "public-api"
    ],
    "triggers": [],
@@ -2656,7 +2655,6 @@
    },
    "usada_no_front": 7,
    "usada_em_edges": [
-    "audit-logs-prune",
     "email-oauth-disconnect",
     "lusha-search",
     "rls-tests",
@@ -8752,7 +8750,6 @@
    },
    "usada_no_front": 1,
    "usada_em_edges": [
-    "audit-logs-prune",
     "email-poll-replies"
    ],
    "triggers": [],
@@ -9155,7 +9152,6 @@
    },
    "usada_no_front": 0,
    "usada_em_edges": [
-    "audit-logs-prune",
     "health"
    ],
    "triggers": [],

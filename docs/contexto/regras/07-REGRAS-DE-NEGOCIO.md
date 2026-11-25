@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b85b5ad258` · branch `main` · 2026-11-25 13:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e1331fe5c9` · branch `main` · 2026-11-25 13:32 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1759,7 +1759,6 @@ _nenhum item encontrado_
 | `SCIM_USER_SCHEMA` | `"urn:ietf:params:scim:schemas:core:2.0:User"` | `supabase/functions/_shared/scim-core.ts` |
 | `SCIM_LIST_SCHEMA` | `"urn:ietf:params:scim:api:messages:2.0:ListResponse"` | `supabase/functions/_shared/scim-core.ts` |
 | `MAX_TRACKED_LINKS` | `50` | `supabase/functions/_shared/tracking-links.ts` |
-| `RETENTION_DAYS` | `90` | `supabase/functions/audit-logs-prune/index.ts` |
 | `MAX_ATTEMPTS` | `5` | `supabase/functions/auth-rate-limit/index.ts` |
 | `WINDOW_MINUTES` | `15` | `supabase/functions/auth-rate-limit/index.ts` |
 | `MAX_IDENTIFIER_LEN` | `254` | `supabase/functions/auth-rate-limit/index.ts` |
@@ -2270,7 +2269,6 @@ _nenhum item encontrado_
 | linkedin_url sem publicId utilizável | `supabase/functions/_shared/leadcontact-client.ts` |
 | departamento inválido para a Lusha: ${bad.join( | `supabase/functions/_shared/lusha-departments.ts` |
 | AI API error: ${aiResponse.status} | `supabase/functions/ai-agent/index.ts` |
-| Unauthorized | `supabase/functions/audit-logs-prune/index.ts` |
 | Gmail send [${res.status}]: ${JSON.stringify(data)} | `supabase/functions/campaign-dispatch/index.ts` |
 | No refresh token; reconnect required | `supabase/functions/campaign-dispatch/index.ts` |
 | OAuth credentials not configured for ${acc.provider} | `supabase/functions/campaign-dispatch/index.ts` |
@@ -2292,7 +2290,8 @@ _nenhum item encontrado_
 | Job not found or has no external ID | `supabase/functions/gmaps-proxy/index.ts` |
 | Places API returned no results | `supabase/functions/gmaps-proxy/index.ts` |
 | HubSpot create failed: ${err} | `supabase/functions/hubspot-sync/index.ts` |
-| … +36 linhas — lista completa em `context.json` | |
+| results_insert_failed: ${insErr.message} | `supabase/functions/instagram-worker/index.ts` |
+| … +35 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2635,7 +2634,6 @@ _nenhum item encontrado_
 | * Segundos entre requests (Crawl-delay). Não aplicado aqui — apenas exposto. */ | `supabase/functions/_shared/web-scrape/robots.ts` |
 | * Parse muito enxuto: usa apenas grupos User-agent: * e User-agent: lux-web-scraper. */ | `supabase/functions/_shared/web-scrape/robots.ts` |
 | Precedência: o rule com prefixo mais específico vence (comprimento). | `supabase/functions/_shared/web-scrape/robots.ts` |
-| Prune email_sync_log (fecha gap de retenção — crescia sem limite) | `supabase/functions/audit-logs-prune/index.ts` |
 | limite de email por RFC 5321 | `supabase/functions/auth-rate-limit/index.ts` |
 | { campaign_id } processa apenas aquela campanha (trigger manual). | `supabase/functions/campaign-dispatch/index.ts` |
 | limite defensivo por ciclo para respeitar rate limits do provedor | `supabase/functions/campaign-dispatch/index.ts` |

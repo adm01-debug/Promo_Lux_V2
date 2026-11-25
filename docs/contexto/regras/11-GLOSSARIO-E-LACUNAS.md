@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `b85b5ad258` · branch `main` · 2026-11-25 13:24 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e1331fe5c9` · branch `main` · 2026-11-25 13:32 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -280,7 +280,6 @@ _nenhum item encontrado_
 | coluna | coluna `source` usada no código não existe no schema de `intent_signals` |  |
 | coluna | coluna `stakeholder_id` usada no código não existe no schema de `intent_signals` |  |
 | coluna | coluna `company_name` usada no código não existe no schema de `deals` |  |
-| coluna | coluna `created_at` usada no código não existe no schema de `health_checks` |  |
 | tabela | tabela `a` usada no código não existe nas migrations/types do repo | `scripts/ai-context/cenarios.mjs` |
 | tabela | tabela `contacts` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |
 | tabela | tabela `dashboard_table` usada no código não existe nas migrations/types do repo | `scripts/ai-context/gerar.unit.mjs` |

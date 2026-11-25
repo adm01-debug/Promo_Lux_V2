@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "chore(edge): descarta audit-logs-prune, function sem chamador (#209)",
    "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)",
    "chore(edge): descarta api-latency-alerts, function sem invocador (#208)",
    "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)",
-   "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)",
-   "chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)"
+   "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)"
   ]
  },
  "pr_template": null,
