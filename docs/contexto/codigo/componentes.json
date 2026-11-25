@@ -546,7 +546,7 @@
     "CompanyAutomationTable"
    ],
    "export_default": null,
-   "linhas": 85,
+   "linhas": 87,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -665,7 +665,7 @@
     "CampaignsView"
    ],
    "export_default": null,
-   "linhas": 471,
+   "linhas": 473,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -1472,7 +1472,7 @@
     "IntentSignalsView"
    ],
    "export_default": null,
-   "linhas": 404,
+   "linhas": 406,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -2694,7 +2694,7 @@
     "OrganizationsView"
    ],
    "export_default": null,
-   "linhas": 540,
+   "linhas": 542,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `06193a9779` · branch `main` · 2026-11-25 19:53 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6783576e0e` · branch `main` · 2026-11-25 20:13 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2319,7 +2319,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1228 testes em 118 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1232 testes em 119 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2409,6 +2409,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/chaos.test.ts` | 6 | shouldInjectChaos · é determinístico para o mesmo task_id · respeita rate=0 (nunca injeta) · respeita rate=1 (sempre injeta) … |
 | `supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts` | 6 | hashtags/mentions: unicode preservado, case lowercased, dedup · hashtags: extraídos do caption combinam com o campo  · hashtag(): tag do contexto entra como primeira hashtag sem duplicar · reply threads: parentCommentId resolvido em N níveis … |
 | `supabase/functions/_shared/__tests__/tracking-links.test.ts` | 6 | tracking-links · abre pixel com parâmetros assinados que o track-open aceita · gera link de click assinado para a URL destino · aplica pixel e reescreve links no corpo, preservando o texto original … |
+| `src/components/lux/__tests__/CampaignsView.test.tsx` | 5 | CampaignsView · renders heading · renders create button · shows campaign card when data loads … |
 | `src/components/lux/__tests__/CompanyTable.integration.test.tsx` | 5 | CompanyTable — integração de virtualização com scroll · renderiza apenas uma janela de linhas, não a lista inteira · mostra os primeiros itens no topo e esconde os itens distantes · revela itens mais abaixo após rolar e recicla os do topo … |
 | `src/components/lux/__tests__/DataError.test.tsx` | 5 | DataError · renders default error message · renders custom error message · renders retry button when onRetry provided … |
 | `src/components/lux/__tests__/MapFilters.test.tsx` | 5 | MapFilters · renders search input and filter count · displays IPC score label with current value · calls onSearchChange when typing … |
@@ -2418,7 +2419,6 @@ _nenhum item encontrado_
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
 | `e2e/invite-accept.spec.ts` | 4 | Convite — /invite/:token · redireciona visitante não autenticado para /login preservando o token · página de login continua funcional após vir de um convite · não aceita o convite automaticamente (requer ação do usuário) |
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |
-| `src/components/lux/__tests__/CampaignsView.test.tsx` | 4 | CampaignsView · renders heading · renders create button · shows campaign card when data loads |
 | `src/components/lux/__tests__/ICPConfigView.test.tsx` | 4 | useICPConfig (mocked) · returns activeConfig with criteria · returns isLoading false · returns save function |
 | `src/components/lux/__tests__/WorkflowsView.test.tsx` | 4 | WorkflowsView · renders heading · renders create button · shows workflow cards when data loads |
 | `src/hooks/__tests__/useConfirm.test.tsx` | 4 | useConfirm · resolves true when the user confirms · resolves false when the user cancels · throws when used outside the provider |
@@ -2431,6 +2431,7 @@ _nenhum item encontrado_
 | `e2e/accessibility.spec.ts` | 3 | Acessibilidade (axe-core) · Dashboard não tem violações WCAG 2 A/AA · Configurações não tem violações WCAG 2 A/AA |
 | `e2e/instagram-worker-smoke.spec.ts` | 3 | Instagram motor — smoke · enfileira → worker processa → resultados gravados (profile + hashtag) · deduplicação: mesmo config_hash não cria duplicata em queued/running |
 | `e2e/monitoring-navigation.spec.ts` | 3 | Monitoramento — navegação · carrega a página com o título e as abas de monitoramento · troca de aba atualiza o conteúdo exibido |
+| `src/__tests__/botoes-com-manipulador.test.ts` | 3 | varredura de botões sem manipulador (etapa 080) · acusa botão oco e absolve botão com ação, gatilho asChild e link · nenhum <Button> de src/ e um controle morto |
 | `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |

@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 133,
+ "total": 134,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 111
+  "unit": 112
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 87
+   "arquivos": 88
   },
   {
    "padrao": "e2e/",
@@ -257,6 +257,13 @@
    "casos": 0
   },
   {
+   "arquivo": "src/__tests__/botoes-com-manipulador.test.ts",
+   "tipo": "unit",
+   "linhas": 124,
+   "testa": [],
+   "casos": 5
+  },
+  {
    "arquivo": "src/components/lux/__tests__/AutomationsList.test.tsx",
    "tipo": "unit",
    "linhas": 129,
@@ -268,12 +275,12 @@
   {
    "arquivo": "src/components/lux/__tests__/CampaignsView.test.tsx",
    "tipo": "unit",
-   "linhas": 97,
+   "linhas": 115,
    "testa": [
     "src/components/lux/CampaignsView.tsx",
     "src/components/ui/tooltip.tsx"
    ],
-   "casos": 3
+   "casos": 4
   },
   {
    "arquivo": "src/components/lux/__tests__/CompaniesView.test.tsx",

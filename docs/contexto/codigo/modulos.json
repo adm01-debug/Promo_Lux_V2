@@ -4,6 +4,34 @@
  "descricao": "menu → módulo (pasta de domínio) → telas/rotas → hooks → edge functions → tabelas → dependências entre módulos. edges/tabelas/rpcs são TRANSITIVOS (tudo que os arquivos do módulo puxam); `diretos` tem só o que está escrito nos arquivos do próprio módulo.",
  "modulos": [
   {
+   "modulo": "__tests__",
+   "arquivos": 0,
+   "testes": 1,
+   "linhas": 0,
+   "itens_menu": [],
+   "telas": [],
+   "rotas_http": [],
+   "componentes": 0,
+   "hooks_locais": [],
+   "hooks_definidos": [],
+   "edges": [],
+   "tabelas": [],
+   "rpcs": [],
+   "buckets": [],
+   "canais_realtime": [],
+   "env": [],
+   "flags": [],
+   "papeis": [],
+   "diretos": {
+    "edges": [],
+    "tabelas": [],
+    "rpcs": []
+   },
+   "importado_por_outros_modulos": [],
+   "depende_de_modulos": [],
+   "pacotes_externos": []
+  },
+  {
    "modulo": "components",
    "arquivos": 1,
    "testes": 0,
@@ -118,7 +146,7 @@
    "modulo": "components/lux",
    "arquivos": 219,
    "testes": 35,
-   "linhas": 43437,
+   "linhas": 43445,
    "itens_menu": [
     "Agente IA",
     "Analytics",

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "06193a9779bf4e16a7362cbd8b545dfa551f866e",
+  "sha": "6783576e0e19b0cc2bde385d0b6d9013947c24cb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 19:53 UTC",
-  "files_total": 1179,
-  "code_files": 990,
-  "code_lines": 147575
+  "generated_at": "2026-11-25 20:13 UTC",
+  "files_total": 1180,
+  "code_files": 991,
+  "code_lines": 147725
  },
  "version": "1.3.2",
- "facts_hash": "d4e1f6da3112d95c",
+ "facts_hash": "2210ffe6967f31cd",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -244,7 +244,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 378,
+   ".ts": 379,
    ".tsx": 306,
    ".sql": 274,
    ".mjs": 22,
@@ -33466,9 +33466,28 @@
    ]
   },
   {
+   "module": "src/__tests__",
+   "files": 1,
+   "lines": 124,
+   "tables": [],
+   "exports": [
+    "botoes-com-manipulador.test.ts: botoesSemManipulador"
+   ],
+   "docs": [],
+   "deps": [
+    "node:fs",
+    "node:path",
+    "vitest"
+   ],
+   "imports_modules": [],
+   "file_list": [
+    "src/__tests__/botoes-com-manipulador.test.ts"
+   ]
+  },
+  {
    "module": "src/components",
    "files": 312,
-   "lines": 51864,
+   "lines": 51890,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -53613,6 +53632,18 @@
     "name": "um usuário autenticado consulta suas próprias empresas sem erro de permissão"
    },
    {
+    "file": "src/__tests__/botoes-com-manipulador.test.ts",
+    "name": "varredura de botões sem manipulador (etapa 080)"
+   },
+   {
+    "file": "src/__tests__/botoes-com-manipulador.test.ts",
+    "name": "acusa botão oco e absolve botão com ação, gatilho asChild e link"
+   },
+   {
+    "file": "src/__tests__/botoes-com-manipulador.test.ts",
+    "name": "nenhum <Button> de src/ e um controle morto"
+   },
+   {
     "file": "src/components/lux/SafeHTML.test.tsx",
     "name": "SafeHTML XSS Protection"
    },
@@ -53667,6 +53698,10 @@
    {
     "file": "src/components/lux/__tests__/CampaignsView.test.tsx",
     "name": "shows campaign card when data loads"
+   },
+   {
+    "file": "src/components/lux/__tests__/CampaignsView.test.tsx",
+    "name": "oferece criar a primeira campanha quando nao existe nenhuma"
    },
    {
     "file": "src/components/lux/__tests__/CompaniesView.test.tsx",
@@ -80501,6 +80536,22 @@
    "lines": 12,
    "doc": "/ <reference types=\"vite/client\" />"
   },
+  "src/__tests__/botoes-com-manipulador.test.ts": {
+   "path": "src/__tests__/botoes-com-manipulador.test.ts",
+   "lines": 124,
+   "is_test": true,
+   "exports": [
+    "function botoesSemManipulador"
+   ],
+   "errors": [
+    "Diretório src/ nao encontrado a partir de ${process.cwd()}"
+   ],
+   "tests": [
+    "varredura de botões sem manipulador (etapa 080)",
+    "acusa botão oco e absolve botão com ação, gatilho asChild e link",
+    "nenhum <Button> de src/ e um controle morto"
+   ]
+  },
   "src/components/NavLink.tsx": {
    "path": "src/components/NavLink.tsx",
    "lines": 33
@@ -80891,7 +80942,7 @@
   },
   "src/components/lux/CampaignsView.tsx": {
    "path": "src/components/lux/CampaignsView.tsx",
-   "lines": 471,
+   "lines": 473,
    "exports": [
     "const CampaignsView"
    ],
@@ -81508,7 +81559,7 @@
   },
   "src/components/lux/IntentSignalsView.tsx": {
    "path": "src/components/lux/IntentSignalsView.tsx",
-   "lines": 404,
+   "lines": 406,
    "exports": [
     "const IntentSignalsView"
    ],
@@ -81999,7 +82050,7 @@
   },
   "src/components/lux/OrganizationsView.tsx": {
    "path": "src/components/lux/OrganizationsView.tsx",
-   "lines": 540,
+   "lines": 542,
    "exports": [
     "const OrganizationsView"
    ],
@@ -82563,13 +82614,14 @@
   },
   "src/components/lux/__tests__/CampaignsView.test.tsx": {
    "path": "src/components/lux/__tests__/CampaignsView.test.tsx",
-   "lines": 97,
+   "lines": 115,
    "is_test": true,
    "tests": [
     "CampaignsView",
     "renders heading",
     "renders create button",
-    "shows campaign card when data loads"
+    "shows campaign card when data loads",
+    "oferece criar a primeira campanha quando nao existe nenhuma"
    ]
   },
   "src/components/lux/__tests__/CompaniesView.test.tsx": {
@@ -83238,7 +83290,7 @@
   },
   "src/components/lux/automations/CompanyAutomationTable.tsx": {
    "path": "src/components/lux/automations/CompanyAutomationTable.tsx",
-   "lines": 85,
+   "lines": 87,
    "exports": [
     "function CompanyAutomationTable"
    ]
@@ -102199,10 +102251,25 @@
   }
  },
  "git": {
-  "sha": "06193a9779bf4e16a7362cbd8b545dfa551f866e",
+  "sha": "6783576e0e19b0cc2bde385d0b6d9013947c24cb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6783576",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/__tests__/botoes-com-manipulador.test.ts",
+     "src/components/lux/CampaignsView.tsx",
+     "src/components/lux/IntentSignalsView.tsx",
+     "src/components/lux/OrganizationsView.tsx",
+     "src/components/lux/__tests__/CampaignsView.test.tsx",
+     "src/components/lux/automations/CompanyAutomationTable.tsx"
+    ]
+   },
    {
     "sha": "06193a9",
     "date": "2026-11-25",
@@ -102496,15 +102563,6 @@
     "files": [
      "supabase/migrations/20261124190000_public_api_smoke_cron.sql"
     ]
-   },
-   {
-    "sha": "b7314d4",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "fix: alertas de latencia por organizacao usam as colunas reais do banco (#187)",
-    "files": [
-     "supabase/functions/latency-alerts/index.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -102517,11 +102575,11 @@
     3
    ],
    [
-    "package-lock.json",
+    "docs/qa/05-PROGRESSO.md",
     2
    ],
    [
-    "supabase/functions/latency-alerts/index.ts",
+    "package-lock.json",
     2
    ],
    [
@@ -102529,7 +102587,27 @@
     2
    ],
    [
-    "docs/qa/05-PROGRESSO.md",
+    "src/__tests__/botoes-com-manipulador.test.ts",
+    1
+   ],
+   [
+    "src/components/lux/CampaignsView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/IntentSignalsView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/OrganizationsView.tsx",
+    1
+   ],
+   [
+    "src/components/lux/__tests__/CampaignsView.test.tsx",
+    1
+   ],
+   [
+    "src/components/lux/automations/CompanyAutomationTable.tsx",
     1
    ],
    [
@@ -102566,26 +102644,6 @@
    ],
    [
     "supabase/config.toml",
-    1
-   ],
-   [
-    "src/components/lux/PlacesApiNewToggle.tsx",
-    1
-   ],
-   [
-    "src/components/lux/__tests__/PlacesApiNewToggle.test.tsx",
-    1
-   ],
-   [
-    "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
-    1
-   ],
-   [
-    ".github/workflows/deploy-watchdog.yml",
     1
    ]
   ]

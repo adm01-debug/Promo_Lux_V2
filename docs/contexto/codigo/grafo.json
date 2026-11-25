@@ -329,6 +329,11 @@
    "importado_por": 1
   },
   {
+   "modulo": "__tests__",
+   "depende_de": 0,
+   "importado_por": 0
+  },
+  {
    "modulo": "contexts/__tests__",
    "depende_de": 0,
    "importado_por": 0
@@ -340,11 +345,6 @@
   },
   {
    "modulo": "lib/__tests__",
-   "depende_de": 0,
-   "importado_por": 0
-  },
-  {
-   "modulo": "lib/mcp",
    "depende_de": 0,
    "importado_por": 0
   }
