@@ -194,7 +194,13 @@ export const CompaniesView = () => {
       toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida.` });
       queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
+    } catch (err) {
+      toast({
+        title: "Erro ao remover",
+        description: err instanceof Error ? err.message : "Motivo desconhecido.",
+        variant: "destructive",
+      });
+    }
     finally { setIsDeleting(false); setDeleteTarget(null); }
   }, [deleteTarget, toast, queryClient, isDemoMode]);
 

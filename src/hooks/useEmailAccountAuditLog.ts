@@ -168,6 +168,8 @@ export function useEmailAccountAuditLog(
         new Set(entries.map((e) => e.actor_id).filter((x): x is string => !!x)),
       );
       if (ids.length > 0) {
+        // Erro ignorado de proposito: enriquecimento de nome/avatar; sem ele a
+        // entrada aparece com o id abreviado (fallback logo abaixo).
         const { data: profs } = await supabase
           .from("profiles")
           .select("id, full_name, avatar_url")

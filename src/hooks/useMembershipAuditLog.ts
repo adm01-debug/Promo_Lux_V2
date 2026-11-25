@@ -111,6 +111,8 @@ export function useMembershipAuditLog(orgId: string | null, limit = 25) {
       ));
       if (ids.length === 0) return entries;
 
+      // Erro ignorado de proposito: enriquecimento de nome/avatar; sem ele a
+      // entrada aparece com o id abreviado (fallback logo abaixo).
       const { data: profs } = await db
         .from("profiles")
         .select("id, full_name, avatar_url")
@@ -193,6 +195,8 @@ export function useMembershipAuditLogPaged(
       ));
       let enriched = entries;
       if (ids.length > 0) {
+        // Erro ignorado de proposito: enriquecimento de nome/avatar; sem ele a
+        // entrada aparece com o id abreviado (fallback logo abaixo).
         const { data: profs } = await db
           .from("profiles")
           .select("id, full_name, avatar_url")

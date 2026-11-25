@@ -97,6 +97,8 @@ export function useAcknowledgeAdvisory() {
   const { toast } = useToast();
   return useMutation({
     mutationFn: async (id: string) => {
+      // Erro ignorado de proposito: `acknowledged_by` e so a assinatura de quem
+      // reconheceu; sem ele o update continua valido (a RLS garante o resto).
       const { data: userRes } = await supabase.auth.getUser();
       const { error } = await supabase
         .from("partition_advisories")

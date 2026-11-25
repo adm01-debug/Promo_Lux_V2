@@ -74,6 +74,7 @@ export function useApiKeys() {
       qc.invalidateQueries({ queryKey: ["api_keys", user?.id] });
       toast.success("Chave revogada");
     },
+    onError: (e: Error) => toast.error("Não foi possível revogar a chave", { description: e.message }),
   });
 
   const deleteKey = useMutation({
@@ -85,6 +86,7 @@ export function useApiKeys() {
       qc.invalidateQueries({ queryKey: ["api_keys", user?.id] });
       toast.success("Chave excluída");
     },
+    onError: (e: Error) => toast.error("Não foi possível excluir a chave", { description: e.message }),
   });
 
   return { ...query, createKey, revokeKey, deleteKey };

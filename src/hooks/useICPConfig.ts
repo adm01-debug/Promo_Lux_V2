@@ -98,6 +98,9 @@ export function useICPConfig() {
       queryClient.invalidateQueries({ queryKey: ["ipc-configs"] });
       toast({ title: "Configuração ativada", description: "O novo perfil IPC está agora em uso." });
     },
+    onError: (err: Error) => {
+      toast({ title: "Erro ao ativar", description: err.message, variant: "destructive" });
+    },
   });
 
   const deleteMutation = useMutation({
@@ -108,6 +111,9 @@ export function useICPConfig() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ipc-configs"] });
       toast({ title: "Configuração removida" });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Erro ao remover", description: err.message, variant: "destructive" });
     },
   });
 
