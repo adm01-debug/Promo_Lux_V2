@@ -1,4 +1,4 @@
-﻿# Prod-Readiness — LUX IA (`adm01-debug/Promo_Lux_V2`)
+# Prod-Readiness — LUX IA (`adm01-debug/Promo_Lux_V2`)
 
 > **Objetivo**: provar, com evidência, que o `main` atual está pronto para produção — ou listar exatamente o que impede.
 > **Commit auditado**: `3e8633a` (HEAD = origin/main após merges #34/#35/#37, 2026-11-14).
@@ -72,9 +72,9 @@ Rotas em `src/App.tsx` (todas dinâmicas via lazy + `ProtectedRoute`/`PublicRout
 
 23 views registradas em `src/lib/viewRegistry.ts` (dashboard, icp, workflows, companies, intent, campaigns, ai-agent, analytics, settings, gmaps, scrape-results, map, stakeholders, organizations, deals, integrations, org-violations, rls-discovery, monitoring, automations, recycle-bin, suppressions, lusha). ✅ todas com lazy import + componente no `VIEW_MAP`.
 
-### 3.2 Edge Functions (58 deployáveis em `supabase/functions/`, excluindo `_shared/`)
+### 3.2 Edge Functions (61 deployáveis em `supabase/functions/`, excluindo `_shared/`)
 
-`admin-list-companies, ai-agent, api-latency-alerts, audit-logs-prune, auth-rate-limit, campaign-dispatch, circuit-breaker-alerts, cnpj-enrich, cnpj-enrich-worker, cnpj-settings-status, deliverability-check, dlq-alerts, email-oauth-callback, email-oauth-connect, email-oauth-disconnect, email-poll-replies, email-verify, gmaps-places-search, gmaps-proxy, health, instagram-connection-status, instagram-dlq-replay, instagram-enqueue, instagram-worker, instagram-worker-health, latency-alerts, lusha-cookie-health, lusha-decision-makers, lusha-reveal, lusha-search, mcp, migrate-helper, oracle-cookies-preflight, oracle-enrich-contact, oracle-push-bitrix, oracle-search-decisors, org-violation-alerts, pg-net-watchdog, public-api, purge-soft-deleted, qa-ingest-run, reaper-alerts, retry-policy-tuner, rls-tests, scrape-queue-worker, sla-alerts, sla-auto-tune, system-recovery-status, track-click, track-open, vault-cookie-health, web-dlq-replay, webhook-dispatcher, web-scrape-enqueue, web-scrape-extract, web-scrape-status, web-scrape-worker, workflow-engine`.
+admin-list-companies, ai-agent, auth-rate-limit, campaign-dispatch, circuit-breaker-alerts, cnpj-enrich, cnpj-enrich-worker, cnpj-settings-status, conversation-intel, deliverability-check, dlq-alerts, email-oauth-callback, email-oauth-connect, email-oauth-disconnect, email-poll-replies, email-verify, gmaps-places-search, gmaps-proxy, health, hubspot-sync, instagram-connection-status, instagram-dlq-replay, instagram-enqueue, instagram-worker, instagram-worker-health, lead-score-ai, lusha-cookie-health, lusha-decision-makers, lusha-reveal, lusha-search, mcp, mcp-query, oracle-cookies-preflight, oracle-enrich-contact, oracle-push-bitrix, oracle-search-decisors, org-violation-alerts, pg-net-watchdog, public-api, purge-soft-deleted, qa-ingest-run, reaper-alerts, retry-policy-tuner, rls-tests, scim, scrape-queue-worker, send-scheduled-reports, sla-alerts, sla-auto-tune, system-recovery-status, technographics-detect, track-click, track-open, vault-cookie-health, web-dlq-replay, webhook-dispatcher, web-scrape-enqueue, web-scrape-extract, web-scrape-status, web-scrape-worker, workflow-engine.
 
 Sondagem em produção (project `pttzwlbidamibjssqiqb`):
 
