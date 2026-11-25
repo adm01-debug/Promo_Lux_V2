@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000",
+  "sha": "a40184e57647e3aca007fa5ce3803e162af1d75d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 12:10 UTC",
-  "files_total": 1171,
-  "code_files": 983,
-  "code_lines": 146620
+  "generated_at": "2026-11-25 12:16 UTC",
+  "files_total": 1172,
+  "code_files": 984,
+  "code_lines": 146695
  },
  "version": "1.3.2",
- "facts_hash": "0c52ed85a7ed6d57",
+ "facts_hash": "5a8314fb761b4ab6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -238,7 +238,7 @@
   "languages": {
    ".ts": 380,
    ".tsx": 303,
-   ".sql": 268,
+   ".sql": 269,
    ".mjs": 22,
    ".py": 5,
    ".js": 4,
@@ -23486,6 +23486,7 @@
    "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql",
    "supabase/migrations/20261125104500_api_alert_p95_800ms.sql",
    "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
+   "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -34232,8 +34233,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 264,
-   "lines": 20091,
+   "files": 265,
+   "lines": 20166,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -101703,13 +101704,26 @@
   "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql": {
    "path": "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",
    "lines": 48
+  },
+  "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql": {
+   "path": "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
+   "lines": 75
   }
  },
  "git": {
-  "sha": "7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000",
+  "sha": "a40184e57647e3aca007fa5ce3803e162af1d75d",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "a40184e",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)",
+    "files": [
+     "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql"
+    ]
+   },
    {
     "sha": "7a7d1cc",
     "date": "2026-11-25",
@@ -102017,15 +102031,6 @@
      "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
      "src/pages/Monitoring.tsx"
     ]
-   },
-   {
-    "sha": "25e2bf3",
-    "date": "2026-11-24",
-    "author": "adm01-debug",
-    "subject": "chore: inventario do estado real (semanal)",
-    "files": [
-     "inventario/estado/edges.json"
-    ]
    }
   ],
   "hot_files": [
@@ -102058,8 +102063,8 @@
     2
    ],
    [
-    "inventario/estado/edges.json",
-    2
+    "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql",
+    1
    ],
    [
     "supabase/migrations/20261125120000_consolida_alerta_latencia_na_funcao_sql.sql",

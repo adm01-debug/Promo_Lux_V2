@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000",
+  "commit": "a40184e57647e3aca007fa5ce3803e162af1d75d",
   "branch": "main",
-  "data_commit": "2026-11-25T09:06:16-03:00",
+  "data_commit": "2026-11-25T09:14:50-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a40184e",
+    "data": "2026-11-25",
+    "assunto": "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)"
+   },
    {
     "sha": "7a7d1cc",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "69c63ff",
     "data": "2026-11-24",
     "assunto": "fix: agenda evaluate_api_latency_alerts a cada 15 min (#178)"
-   },
-   {
-    "sha": "1317d20",
-    "data": "2026-11-24",
-    "assunto": "chore: inventario do estado real (gerado em 24/11) (#180)"
    }
   ],
-  "arquivos_mudados_7d": 283,
+  "arquivos_mudados_7d": 284,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 151
+    "commits": 152
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1150,
+  "arquivos_total": 1151,
   "arquivos_codigo": 711,
   "linhas_codigo": 124704,
   "rotas": 12,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 64,
   "tabelas": 120,
-  "migrations": 264,
+  "migrations": 265,
   "cron_jobs": 42,
   "testes": 130,
   "workflows": 9,

@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `7a7d1cc510828aa7a0a66bbab20d3d4e7aeb1000` (2026-11-25T09:06:16-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a40184e57647e3aca007fa5ce3803e162af1d75d` (2026-11-25T09:14:50-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (683), SQL (268), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
+- linguagens: TypeScript (683), SQL (269), Markdown (87), JSON (38), JavaScript (24), Shell (16), YAML (11), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1150 |
+| arquivos_total | 1151 |
 | arquivos_codigo | 711 |
 | linhas_codigo | 124704 |
 | rotas | 12 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 97 |
 | edge_functions | 64 |
 | tabelas | 120 |
-| migrations | 264 |
+| migrations | 265 |
 | cron_jobs | 42 |
 | testes | 130 |
 | workflows | 9 |
@@ -260,7 +260,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 3 — ex.: e2e/helpers/supabase.ts:7, supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 7902 nós · 16703 arestas · 690 comunidades · grafo do commit `7a7d1cc5`
+- 7903 nós · 16703 arestas · 691 comunidades · grafo do commit `a40184e5`
 - comunidades maiores: react (225), lucide-react (201), button.tsx (124), cn (124), @tanstack/react-query (109), snapshot.py (102), gerar.mjs (80), framer-motion (78), Index.tsx (77), ref_node_fs (69), OrganizationsView.tsx (69), req (66)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -377,6 +377,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `a40184e` chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)
 - 2026-11-25 `7a7d1cc` chore(alertas): consolida o alerta de latencia na funcao SQL e remove a duplicata (#204)
 - 2026-11-25 `baf9b5f` chore(formato): versiona config do prettier e para de reformatar dívida antiga (#203)
 - 2026-11-25 `4f59248` fix(automation): doctor aceita CRLF e motor explica bloqueio fora do Linux (#202)
@@ -391,7 +392,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-24 `60535f3` perf(api-publica): /me e /events em um unico round-trip e corrige filtro action
 - 2026-11-24 `c326fd5` chore(api-publica): aquece o smoke antes de medir e alerta toda org com chave ativa
 - 2026-11-24 `03dbb45` perf(api-publica): /me em 1 round-trip em vez de 2
-- 2026-11-24 `8dec4b5` feat: habilita alerta de latencia da organizacao com trafego real (#189)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
