@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `39e3cfb0db` · branch `main` · 2026-11-25 23:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `59db346ccb` · branch `main` · 2026-11-25 23:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1018,7 +1018,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `connected` | escreve | `src/components/lux/SettingsView.tsx` |
 | `status` | `crit` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
 | `status` | `dead` | compara, escreve | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
-| `status` | `degraded` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/oracle-search-decisors/index.ts` |
+| `status` | `degraded` | escreve | `supabase/functions/health/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/oracle-search-decisors/index.ts` |
 | `status` | `done` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationStageBadge.tsx` |
 | `status` | `draft` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/lib/demoData.ts` |
 | `status` | `empty` | compara | `supabase/functions/_shared/apollo-cache.ts` |
@@ -1033,13 +1033,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
 | `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +12 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
-| `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`src/components/lux/monitoring/MonitoringView.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
+| `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
 | `status` | `investigating` | escreve | `src/components/lux/monitoring/IncidentsPanel.tsx`<br>`src/hooks/useStatusPage.ts` |
 | `status` | `masked` | compara, escreve | `supabase/functions/_shared/lusha-client.ts` |
 | `status` | `not_found` | compara, escreve | `src/hooks/useCnpjEnrich.ts`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx` |
-| `status` | `online` | compara, escreve | `src/components/lux/monitoring/MonitoringView.tsx` |
 | `status` | `paused` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
 | `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +7 |
 | `status` | `processing` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts` |
@@ -1148,9 +1147,12 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `stage` | `startActorRun` | escreve | `supabase/functions/_shared/apify-gateway.ts` |
 | `state` | `closed` | compara, escreve | `src/components/lux/monitoring/CircuitBreakerPanel.tsx`<br>`supabase/functions/_shared/circuit-breaker.ts` |
 | `state` | `collapsed` | compara | `src/components/ui/sidebar.tsx` |
+| `state` | `degraded` | compara | `src/components/lux/monitoring/MonitoringView.tsx` |
 | `state` | `expanded` | escreve | `src/components/ui/use-sidebar.ts` |
 | `state` | `half-open` | compara, escreve, filtra | `supabase/functions/_shared/circuit-breaker.ts` |
 | `state` | `open` | compara, filtra | `src/components/lux/monitoring/CircuitBreakerPanel.tsx`<br>`supabase/functions/_shared/circuit-breaker.ts` |
+| `state` | `operational` | compara | `src/components/lux/monitoring/MonitoringView.tsx` |
+| `state` | `outage` | compara | `src/components/lux/monitoring/MonitoringView.tsx` |
 | `state` | `string` | compara | `supabase/functions/email-oauth-callback/index.ts` |
 | `last_status` | `failed` | compara | `src/components/lux/monitoring/SystemRecoveryPanel.tsx` |
 | `campaign_status` | `draft` | escreve | `src/integrations/supabase/types.ts` |
@@ -1944,7 +1946,6 @@ _nenhum item encontrado_
 | 25 | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
 | 20 | `src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
 | 100 | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
-| 10 | `src/components/lux/monitoring/MonitoringView.tsx` |
 | 1 | `src/components/lux/monitoring/MultiQueueResilienceCard.tsx` |
 | 5000 | `src/components/lux/monitoring/MultiQueueResilienceCard.tsx` |
 | 200 | `src/components/lux/monitoring/QaHistoryPanel.tsx` |
@@ -2331,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1293 testes em 132 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1303 testes em 133 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2364,6 +2365,7 @@ _nenhum item encontrado_
 | `e2e/companies-crud.spec.ts` | 12 | Companies — List & Filters (Demo) · loads company list with header controls · real-time search filters list · filters panel exposes sector and IPC score facets … |
 | `src/components/lux/__tests__/CompanyTableRow.test.tsx` | 12 | HighlightText · highlights matching text · returns plain text when no match · returns plain text for short queries … |
 | `src/components/lux/__tests__/StatsGrid.test.tsx` | 12 | StatsGrid — P1 Visual Differentiation · renders all 5 KPI cards · shows loading skeletons when data is loading · displays unique color themes per card via CARD_STYLES … |
+| `src/components/lux/layout/__tests__/Sidebar.test.tsx` | 12 | Sidebar · renders all nav items when expanded · hides labels when collapsed · calls onNavigate when a nav item is clicked … |
 | `src/lib/__tests__/exportCSV.test.ts` | 12 | sanitizeCell · prefixes formula injection with a quote · does not corrupt legitimate negative numbers · still blocks a non-numeric string that merely starts with - … |
 | `e2e/auth.spec.ts` | 11 | Auth — Login Page · renders login card with brand and core elements · renders both Entrar and Criar Conta tabs · toggles password visibility … |
 | `e2e/rls-guarantees.spec.ts` | 11 | RLS — leitura anônima bloqueada em tabelas multi-tenant · anon não lê linhas de  · RLS — leitura anônima bloqueada em tabelas isentas sensíveis · anon não lê linhas de  … |
@@ -2386,7 +2388,6 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/tracking-signature.test.ts` | 9 | tracking-signature · round-trips a click URL · round-trips an open pixel (null url) · rejects a tampered url … |
 | `src/components/lux/__tests__/CompanyTable.test.tsx` | 8 | CompanyTable — Virtualized list · renders Score IPC header · renders company names · applies correct score color classes … |
 | `src/components/lux/__tests__/DashboardView.test.tsx` | 8 | DashboardView — P1 Chart Legibility · renders Performance Semanal chart section · renders chart with strokeWidth 2.5 for better legibility · renders chart dots for data points … |
-| `src/components/lux/layout/__tests__/Sidebar.test.tsx` | 8 | Sidebar · renders all nav items when expanded · hides labels when collapsed · calls onNavigate when a nav item is clicked … |
 | `src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts` | 8 | R35 fuzz — historyUtils robusto contra payloads adversos · filterHistory nunca lança e retorna subconjunto válido · filterHistory com janelas inválidas não estoura · formatDurationMs blindado contra NaN/negativos/infinito … |
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
 | `src/hooks/__tests__/usePersistedFilters.test.ts` | 8 | usePersistedFilters · returns default state on first render · persists state updates to localStorage · restores state from localStorage … |
@@ -2417,6 +2418,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/EmptyState.test.tsx` | 6 | EmptyState · renders title and description · renders action button when actionLabel and onAction provided · renders multiple action buttons … |
 | `src/components/lux/__tests__/WorkflowCard.test.tsx` | 6 | WorkflowCard · renders workflow name and description · renders status badge · calls onToggleExpand when clicked … |
 | `src/components/lux/layout/__tests__/Header.test.tsx` | 6 | Header · renders user initial when no avatar · renders avatar component when url provided · calls onOpenMobileSidebar on menu click … |
+| `src/components/lux/monitoring/__tests__/MonitoringView.test.tsx` | 6 | MonitoringView com fontes reais · sem nenhuma fonte: selo fica em  · fila morta em nível crítico derruba o selo · saturação de conexões do banco derruba o selo mesmo com demais fontes saudáveis … |
 | `src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts` | 6 | buildSlaChartData · retorna vazio para entrada vazia · ordena cronologicamente mesmo com entrada fora de ordem · aplica carry-forward: fila não alterada mantém o último valor … |
 | `src/hooks/__tests__/useSidebarState.test.ts` | 6 | useSidebarState · starts expanded by default · toggles collapse state · persists collapsed state to localStorage … |
 | `src/lib/__tests__/csv.test.ts` | 6 | buildCsv · prepends a UTF-8 BOM for Excel/PT-BR compatibility · quotes cells containing comma, quote, newline or semicolon · neutralizes formula injection (CSV injection) … |

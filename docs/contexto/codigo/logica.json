@@ -1,11 +1,11 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 50,
+ "total": 51,
  "por_camada": {
   "contexts": 3,
   "integrations": 4,
-  "lib": 40,
+  "lib": 41,
   "python": 3
  },
  "arquivos": [
@@ -374,7 +374,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 127,
+   "usado_por": 126,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -451,7 +451,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 52,
+   "usado_por": 53,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -597,6 +597,29 @@
     "components/lux"
    ],
    "coberto_por_testes": 1,
+   "orfao": false
+  },
+  {
+   "arquivo": "src/lib/deepLink.ts",
+   "camada": "lib",
+   "exports": [
+    "navigateToPath"
+   ],
+   "export_default": null,
+   "linhas": 10,
+   "tabelas": [],
+   "rpcs": [],
+   "edges": [],
+   "env": [],
+   "externos": [],
+   "zod_schemas": 0,
+   "flags": [],
+   "papeis": [],
+   "usado_por": 2,
+   "usado_por_modulos": [
+    "components/lux"
+   ],
+   "coberto_por_testes": 0,
    "orfao": false
   },
   {

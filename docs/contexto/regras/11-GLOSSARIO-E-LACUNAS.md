@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `39e3cfb0db` · branch `main` · 2026-11-25 23:19 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `59db346ccb` · branch `main` · 2026-11-25 23:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -256,7 +256,6 @@ _nenhum item encontrado_
 | status | valor `CLOSED` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/LushaIntelligenceView.tsx` |
 | status | valor `fulfilled` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/StakeholderFinderView.tsx`<br>`compara:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `expiring_soon` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| status | valor `online` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/monitoring/MonitoringView.tsx`<br>`escreve:src/components/lux/monitoring/MonitoringView.tsx` |
 | status | valor `crit` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/components/lux/monitoring/SlaCompliancePanel.tsx` |
 | status | valor `already_completed` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/hooks/useDsar.ts` |
 | status | valor `accepting` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/AcceptInvite.tsx` |

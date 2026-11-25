@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `39e3cfb0db256a1804687ca4b2e3c77229afd1a3` (2026-11-25T20:15:44-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `59db346ccbc184e56aded68ff2c7469c8e0885ec` (2026-11-25T20:52:43-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (702), SQL (274), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
+- linguagens: TypeScript (704), SQL (274), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,13 +34,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1177 |
-| arquivos_codigo | 731 |
-| linhas_codigo | 127045 |
+| arquivos_total | 1179 |
+| arquivos_codigo | 733 |
+| linhas_codigo | 127490 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
-| itens_menu | 26 |
+| itens_menu | 28 |
 | modulos | 23 |
 | componentes | 268 |
 | hooks | 97 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 121 |
 | migrations | 270 |
 | cron_jobs | 43 |
-| testes | 148 |
+| testes | 149 |
 | workflows | 10 |
 | scripts | 54 |
 | docs_md | 87 |
@@ -57,8 +57,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - telas: src/components (23), src/pages (11)
 - componentes: src/components (251), src/pages (11), src/contexts (3)
 - hooks: src/hooks (90), src/components (4), src/contexts (3)
-- servicos_logica: src/lib (40), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (101), e2e/ (19), co-localizado (*.test) (16)
+- servicos_logica: src/lib (41), src/integrations (4), src/contexts (3)
+- testes: co-localizado (__tests__) (102), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -73,10 +73,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
 | hooks | 0 | 0 | 91 | 157 | 28 | 83 |
-| lib | 0 | 0 | 18 | 91 | 27 | 63 |
+| lib | 0 | 0 | 19 | 103 | 27 | 65 |
 | lib/mcp | 0 | 0 | 7 | 0 | 0 | 3 |
 | lib/resilience | 0 | 0 | 5 | 0 | 0 | 0 |
-| pages | 0 | 11 | 11 | 162 | 35 | 94 |
+| pages | 2 | 11 | 11 | 162 | 35 | 94 |
 
 ## Rotas (url → arquivo)
 - `/` [tela] → src/pages/Index.tsx (protegida)
@@ -236,7 +236,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
 ## Permissões / papéis
-- papéis no código: admin (11), alert (11), status (11), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CEO (2), CTO (2), navigation (2), presentation (2), region (2), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1)
+- papéis no código: admin (12), alert (11), status (11), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CEO (2), CTO (2), navigation (2), presentation (2), region (2), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1)
 - enums de papel: app_role: admin|sdr|viewer
 - guards: nenhum · rotas protegidas: 5 · públicas: /*, /invite/:token, /login, /reset-password, /status, /survey/:token
 - feature flags: oracle_v2
@@ -259,15 +259,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8029 nós · 17162 arestas · 708 comunidades · grafo do commit `39e3cfb0`
-- comunidades maiores: react (185), lucide-react (180), button.tsx (173), snapshot.py (100), hooks/use-toast.ts (100), cn (99), LushaIntelligenceView.tsx (98), vitest (86), framer-motion (85), gerar.mjs (80), req (76), utils.ts (69)
+- 8054 nós · 17257 arestas · 727 comunidades · grafo do commit `59db346c`
+- comunidades maiores: lucide-react (158), react (157), useActiveOrganization (119), LushaIntelligenceView.tsx (112), vitest (101), @tanstack/react-query (96), App.tsx (94), gerar.mjs (80), withOrg.ts (79), cn (76), CompanyDetailModal.tsx (75), Header.tsx (75)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (21)
 - package-lock.json (20)
-- docs/qa/05-PROGRESSO.md (15)
+- docs/qa/05-PROGRESSO.md (16)
 - docs/GAPS-ENTERPRISE.md (10)
 - .github/workflows/db-migrations.yml (9)
 - supabase/config.toml (9)
@@ -379,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `59db346` feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)
 - 2026-11-25 `39e3cfb` fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)
 - 2026-11-25 `23d4926` fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)
 - 2026-11-25 `488f67c` fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)
@@ -393,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `8b6a870` fix: corrige os textos duplamente codificados da tela de monitoramento (#220)
 - 2026-11-25 `6783576` fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)
 - 2026-11-25 `06193a9` fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)
-- 2026-11-25 `b0e85af` fix: liga os botoes do card de Automacoes no painel inicial (#216)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

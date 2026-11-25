@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "39e3cfb0db256a1804687ca4b2e3c77229afd1a3",
+  "sha": "59db346ccbc184e56aded68ff2c7469c8e0885ec",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-25 23:19 UTC",
-  "files_total": 1198,
-  "code_files": 1009,
-  "code_lines": 149472
+  "generated_at": "2026-11-25 23:53 UTC",
+  "files_total": 1200,
+  "code_files": 1011,
+  "code_lines": 149917
  },
  "version": "1.3.2",
- "facts_hash": "b2cbfa727c5bbf3f",
+ "facts_hash": "e0d5e3e68d0883aa",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -246,8 +246,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 390,
-   ".tsx": 312,
+   ".ts": 391,
+   ".tsx": 313,
    ".sql": 274,
    ".mjs": 23,
    ".py": 5,
@@ -30274,14 +30274,16 @@
      "organization_members",
      "organizations",
      "profiles",
+     "role_permissions",
      "stakeholders",
      "workflows"
     ],
     "invokes_transitive": [],
     "rpc_transitive": [
+     "default_role_permissions",
      "get_dashboard_stats"
     ],
-    "deps_count": 69
+    "deps_count": 73
    },
    {
     "path": "",
@@ -32463,7 +32465,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 316,
+  "components_count": 317,
   "hooks": [
    {
     "name": "useContacts",
@@ -33490,8 +33492,8 @@
   },
   {
    "module": "src/components",
-   "files": 316,
-   "lines": 52295,
+   "files": 317,
+   "lines": 52730,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -34009,8 +34011,8 @@
   },
   {
    "module": "src/lib",
-   "files": 57,
-   "lines": 6487,
+   "files": 58,
+   "lines": 6497,
    "tables": [
     "audit_logs",
     "campaigns",
@@ -34023,6 +34025,7 @@
     "cnpj.ts: normalizeCnpj, formatCnpj, isValidCnpj",
     "constants.ts: BUNDLE_BUDGETS, APP_CONFIG",
     "csv.ts: CsvValue, buildCsv, downloadCsv",
+    "deepLink.ts: navigateToPath",
     "demoData.ts: DEMO_STATS, DEMO_PERFORMANCE, DEMO_COMPANIES, DEMO_ACTIVITY, DEMO_WORKFLOWS, DEMO_FUNNEL",
     "demoViews.ts: DEMO_UNSUPPORTED_VIEWS, shouldShowDemoNotice",
     "emailErrorMessages.ts: EmailErrorKind, EmailErrorSeverity, EmailErrorInfo, describeEmailError, isAuthErrorMessage",
@@ -34064,9 +34067,9 @@
     "cnpj.ts: Utilitários de CNPJ — normalização e validação dos dígitos verificadores. Espelha a lógica usada na edge function `cnpj-enrich`.",
     "constants.ts: Definições de constantes gerais do sistema. Evita magic numbers espalhados pelo codebase. O scoring IPC (pesos/thresholds) vive só em supabase/functions/_shared/domain/ipc/scoring.ts — é a única implementação que roda de verdade (persiste ipc_score via gmaps-proxy). Chegou a existir uma cópia fronte …",
     "csv.ts: Utilitário de exportação CSV compatível com Excel/PT-BR (BOM UTF-8), com escape correto de vírgulas, aspas e quebras de linha.",
+    "deepLink.ts: Navega para uma rota real do SPA pelo mesmo canal dos deep links de notificação (`lux:deep-link`), que o `DeepLinkBridge` (`src/App.tsx`) converte em `navigate()` do react-router — mantém o SPA, sem recarregar a página nem perder o cache das consultas.",
     "emailErrorMessages.ts: Tradução e padronização de mensagens de erro de OAuth/sync de e-mail. Recebe a string crua retornada pelos provedores (Google, Microsoft) ou pela Edge Function de polling e devolve uma versão amigável em PT-BR explicando o que aconteceu e qual ação o usuário precisa tomar. Mantida fora dos component …",
-    "exportCSV.ts: Converts an array of objects to a CSV string and triggers download. Includes CSV injection protection against formula injection attacks.",
-    "money.ts: Dinheiro no front: `deals.currency` não tem restrição no banco, então um funil pode ter negócios em moedas diferentes. Todo total precisa ser agrupado por moeda antes de ser somado e rotulado — somar tudo e chamar de real é o defeito que este módulo evita (achado G29-4)."
+    "exportCSV.ts: Converts an array of objects to a CSV string and triggers download. Includes CSV injection protection against formula injection attacks."
    ],
    "deps": [
     "@lovable.dev/mcp-js",
@@ -34089,6 +34092,7 @@
     "src/lib/cnpj.ts",
     "src/lib/constants.ts",
     "src/lib/csv.ts",
+    "src/lib/deepLink.ts",
     "src/lib/demoData.ts",
     "src/lib/demoViews.ts",
     "src/lib/emailErrorMessages.ts",
@@ -34606,7 +34610,6 @@
    "audit_logs": {
     "select": [
      "src/components/lux/OrgViolationsView.tsx",
-     "src/components/lux/monitoring/MonitoringView.tsx",
      "src/components/lux/settings/RLSVerificationPanel.tsx",
      "src/hooks/useAuditTrail.ts",
      "src/hooks/useEmailAccountAuditLog.ts",
@@ -48965,56 +48968,38 @@
    },
    {
     "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "healthy",
-    "kind": "escreve"
-   },
-   {
-    "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "online",
-    "kind": "escreve"
-   },
-   {
-    "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "healthy",
+    "field": "state",
+    "value": "operational",
     "kind": "compara"
    },
    {
     "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "healthy",
-    "kind": "compara"
-   },
-   {
-    "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "healthy",
-    "kind": "compara"
-   },
-   {
-    "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "online",
-    "kind": "compara"
-   },
-   {
-    "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
+    "field": "state",
     "value": "degraded",
     "kind": "compara"
    },
    {
     "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "online",
+    "field": "state",
+    "value": "outage",
     "kind": "compara"
    },
    {
     "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "field": "status",
-    "value": "online",
+    "field": "state",
+    "value": "operational",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/MonitoringView.tsx",
+    "field": "state",
+    "value": "degraded",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/MonitoringView.tsx",
+    "field": "state",
+    "value": "outage",
     "kind": "compara"
    },
    {
@@ -54454,6 +54439,22 @@
     "name": "shows section headers when expanded"
    },
    {
+    "file": "src/components/lux/layout/__tests__/Sidebar.test.tsx",
+    "name": "mostra as rotas de administrador para quem é admin"
+   },
+   {
+    "file": "src/components/lux/layout/__tests__/Sidebar.test.tsx",
+    "name": "esconde as rotas de administrador de quem não é admin"
+   },
+   {
+    "file": "src/components/lux/layout/__tests__/Sidebar.test.tsx",
+    "name": "abre a rota /monitoring pelo canal de deep link, sem chamar onNavigate"
+   },
+   {
+    "file": "src/components/lux/layout/__tests__/Sidebar.test.tsx",
+    "name": "não dispara deep link ao clicar em item de view"
+   },
+   {
     "file": "src/components/lux/lusha/DecisionMakersGrid.test.tsx",
     "name": "DecisionMakersGrid"
    },
@@ -54812,6 +54813,30 @@
    {
     "file": "src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx",
     "name": "não exibe o painel de correlação quando não há logs relacionados"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+    "name": "MonitoringView com fontes reais"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+    "name": "sem nenhuma fonte: selo fica em "
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+    "name": "fila morta em nível crítico derruba o selo"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+    "name": "saturação de conexões do banco derruba o selo mesmo com demais fontes saudáveis"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+    "name": "todas as fontes saudáveis: selo verde com dados reais"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+    "name": "mostra "
    },
    {
     "file": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -67394,10 +67419,6 @@
     "limit": "100"
    },
    {
-    "file": "src/components/lux/monitoring/MonitoringView.tsx",
-    "limit": "10"
-   },
-   {
     "file": "src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
     "limit": "1"
    },
@@ -68452,10 +68473,8 @@
      ],
      "healthy": [
       "compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx",
-      "compara:src/components/lux/monitoring/MonitoringView.tsx",
       "compara:supabase/functions/health/index.ts",
       "escreve:src/components/lux/lusha/LushaCookieHealthBanner.tsx",
-      "escreve:src/components/lux/monitoring/MonitoringView.tsx",
       "escreve:supabase/functions/_shared/places-fallback.ts",
       "escreve:supabase/functions/health/index.ts",
       "escreve:supabase/functions/lusha-cookie-health/index.ts"
@@ -68491,16 +68510,6 @@
       "compara:src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
       "compara:supabase/functions/retry-policy-tuner/index.ts",
       "escreve:supabase/functions/instagram-worker/index.ts"
-     ],
-     "online": [
-      "compara:src/components/lux/monitoring/MonitoringView.tsx",
-      "escreve:src/components/lux/monitoring/MonitoringView.tsx"
-     ],
-     "degraded": [
-      "compara:src/components/lux/monitoring/MonitoringView.tsx",
-      "escreve:supabase/functions/health/index.ts",
-      "escreve:supabase/functions/oracle-push-bitrix/index.ts",
-      "escreve:supabase/functions/oracle-search-decisors/index.ts"
      ],
      "crit": [
       "compara:src/components/lux/monitoring/SlaCompliancePanel.tsx"
@@ -68557,6 +68566,11 @@
      "unhealthy": [
       "escreve:supabase/functions/_shared/places-fallback.ts",
       "escreve:supabase/functions/health/index.ts"
+     ],
+     "degraded": [
+      "escreve:supabase/functions/health/index.ts",
+      "escreve:supabase/functions/oracle-push-bitrix/index.ts",
+      "escreve:supabase/functions/oracle-search-decisors/index.ts"
      ],
      "retry": [
       "escreve:supabase/functions/instagram-worker/index.ts"
@@ -68964,6 +68978,15 @@
       "compara:src/components/lux/monitoring/CircuitBreakerPanel.tsx",
       "compara:supabase/functions/_shared/circuit-breaker.ts",
       "escreve:supabase/functions/_shared/circuit-breaker.ts"
+     ],
+     "operational": [
+      "compara:src/components/lux/monitoring/MonitoringView.tsx"
+     ],
+     "degraded": [
+      "compara:src/components/lux/monitoring/MonitoringView.tsx"
+     ],
+     "outage": [
+      "compara:src/components/lux/monitoring/MonitoringView.tsx"
      ],
      "collapsed": [
       "compara:src/components/ui/sidebar.tsx"
@@ -78040,14 +78063,6 @@
    },
    {
     "kind": "status",
-    "msg": "valor `online` para `status` usado no código não existe em nenhum enum do banco/TS",
-    "where": [
-     "compara:src/components/lux/monitoring/MonitoringView.tsx",
-     "escreve:src/components/lux/monitoring/MonitoringView.tsx"
-    ]
-   },
-   {
-    "kind": "status",
     "msg": "valor `crit` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:src/components/lux/monitoring/SlaCompliancePanel.tsx"
@@ -81938,7 +81953,7 @@
   },
   "src/components/lux/LushaIntelligenceView.tsx": {
    "path": "src/components/lux/LushaIntelligenceView.tsx",
-   "lines": 2329,
+   "lines": 2330,
    "exports": [
     "const LushaIntelligenceView"
    ],
@@ -82593,7 +82608,7 @@
   },
   "src/components/lux/SettingsView.tsx": {
    "path": "src/components/lux/SettingsView.tsx",
-   "lines": 408,
+   "lines": 432,
    "exports": [
     "const SettingsView"
    ],
@@ -83225,7 +83240,7 @@
   },
   "src/components/lux/__tests__/SidebarFooter.test.tsx": {
    "path": "src/components/lux/__tests__/SidebarFooter.test.tsx",
-   "lines": 106,
+   "lines": 120,
    "is_test": true,
    "tests": [
     "Sidebar — P1 Dynamic Footer",
@@ -84369,7 +84384,7 @@
   },
   "src/components/lux/layout/Sidebar.tsx": {
    "path": "src/components/lux/layout/Sidebar.tsx",
-   "lines": 324,
+   "lines": 359,
    "exports": [
     "const Sidebar"
    ],
@@ -84430,9 +84445,12 @@
   },
   "src/components/lux/layout/nav-items.ts": {
    "path": "src/components/lux/layout/nav-items.ts",
-   "lines": 59,
+   "lines": 78,
    "exports": [
-    "interface NavItem",
+    "interface NavViewItem",
+    "interface NavLinkItem",
+    "type NavItem",
+    "const isNavLink",
     "const NAV_ITEMS"
    ]
   },
@@ -84451,7 +84469,7 @@
   },
   "src/components/lux/layout/__tests__/Sidebar.test.tsx": {
    "path": "src/components/lux/layout/__tests__/Sidebar.test.tsx",
-   "lines": 94,
+   "lines": 161,
    "is_test": true,
    "tests": [
     "Sidebar",
@@ -84461,7 +84479,11 @@
     "calls onToggleCollapse when collapse button is clicked",
     "highlights the active view",
     "shows mobile close button when mobileOpen",
-    "shows section headers when expanded"
+    "shows section headers when expanded",
+    "mostra as rotas de administrador para quem é admin",
+    "esconde as rotas de administrador de quem não é admin",
+    "abre a rota /monitoring pelo canal de deep link, sem chamar onNavigate",
+    "não dispara deep link ao clicar em item de view"
    ]
   },
   "src/components/lux/lusha/DecisionMakersGrid.test-d.ts": {
@@ -85590,65 +85612,41 @@
   },
   "src/components/lux/monitoring/MonitoringView.tsx": {
    "path": "src/components/lux/monitoring/MonitoringView.tsx",
-   "lines": 230,
+   "lines": 354,
    "exports": [
     "const MonitoringView"
    ],
-   "tables": [
-    {
-     "table": "audit_logs",
-     "op": "select"
-    }
-   ],
    "status_values": [
     {
-     "field": "status",
-     "value": "healthy",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "online",
-     "kind": "escreve"
-    },
-    {
-     "field": "status",
-     "value": "healthy",
+     "field": "state",
+     "value": "operational",
      "kind": "compara"
     },
     {
-     "field": "status",
-     "value": "healthy",
-     "kind": "compara"
-    },
-    {
-     "field": "status",
-     "value": "healthy",
-     "kind": "compara"
-    },
-    {
-     "field": "status",
-     "value": "online",
-     "kind": "compara"
-    },
-    {
-     "field": "status",
+     "field": "state",
      "value": "degraded",
      "kind": "compara"
     },
     {
-     "field": "status",
-     "value": "online",
+     "field": "state",
+     "value": "outage",
      "kind": "compara"
     },
     {
-     "field": "status",
-     "value": "online",
+     "field": "state",
+     "value": "operational",
+     "kind": "compara"
+    },
+    {
+     "field": "state",
+     "value": "degraded",
+     "kind": "compara"
+    },
+    {
+     "field": "state",
+     "value": "outage",
      "kind": "compara"
     }
-   ],
-   "pagination": [
-    "10"
    ]
   },
   "src/components/lux/monitoring/MonteCarloReportPanel.tsx": {
@@ -86323,6 +86321,19 @@
     "exporta CSV quando há dados e informa quando não há",
     "exibe o painel de correlação de picos com logs de automação",
     "não exibe o painel de correlação quando não há logs relacionados"
+   ]
+  },
+  "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx": {
+   "path": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+   "lines": 151,
+   "is_test": true,
+   "tests": [
+    "MonitoringView com fontes reais",
+    "sem nenhuma fonte: selo fica em ",
+    "fila morta em nível crítico derruba o selo",
+    "saturação de conexões do banco derruba o selo mesmo com demais fontes saudáveis",
+    "todas as fontes saudáveis: selo verde com dados reais",
+    "mostra "
    ]
   },
   "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": {
@@ -91958,6 +91969,14 @@
     "function downloadCsv"
    ],
    "doc": "Utilitário de exportação CSV compatível com Excel/PT-BR (BOM UTF-8), com escape correto de vírgulas, aspas e quebras de linha."
+  },
+  "src/lib/deepLink.ts": {
+   "path": "src/lib/deepLink.ts",
+   "lines": 10,
+   "exports": [
+    "const navigateToPath"
+   ],
+   "doc": "Navega para uma rota real do SPA pelo mesmo canal dos deep links de notificação (`lux:deep-link`), que o `DeepLinkBridge` (`src/App.tsx`) converte em `navigate()` do react-router — mantém o SPA, sem recarregar a página nem perder o cache das consultas."
   },
   "src/lib/demoData.ts": {
    "path": "src/lib/demoData.ts",
@@ -102859,10 +102878,29 @@
   }
  },
  "git": {
-  "sha": "39e3cfb0db256a1804687ca4b2e3c77229afd1a3",
+  "sha": "59db346ccbc184e56aded68ff2c7469c8e0885ec",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "59db346",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/AppBreadcrumbs.tsx",
+     "src/components/lux/LushaIntelligenceView.tsx",
+     "src/components/lux/SettingsView.tsx",
+     "src/components/lux/__tests__/SidebarFooter.test.tsx",
+     "src/components/lux/layout/Sidebar.tsx",
+     "src/components/lux/layout/__tests__/Sidebar.test.tsx",
+     "src/components/lux/layout/nav-items.ts",
+     "src/components/lux/monitoring/MonitoringView.tsx",
+     "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+     "src/lib/deepLink.ts"
+    ]
+   },
    {
     "sha": "39e3cfb",
     "date": "2026-11-25",
@@ -103240,21 +103278,12 @@
      "scripts/automation.unit.mjs",
      "scripts/maintenance/run.sh"
     ]
-   },
-   {
-    "sha": "aa94815",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "chore: normaliza fim de linha em LF para todo clone (#201)",
-    "files": [
-     ".gitattributes"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    14
+    15
    ],
    [
     "src/components/lux/CampaignsView.tsx",

@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 148,
+ "total": 149,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 126
+  "unit": 127
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 101
+   "arquivos": 102
   },
   {
    "padrao": "e2e/",
@@ -448,7 +448,7 @@
   {
    "arquivo": "src/components/lux/__tests__/SidebarFooter.test.tsx",
    "tipo": "unit",
-   "linhas": 106,
+   "linhas": 120,
    "testa": [
     "src/components/lux/layout/Sidebar.tsx",
     "src/components/lux/layout/nav-items.ts",
@@ -510,13 +510,13 @@
   {
    "arquivo": "src/components/lux/layout/__tests__/Sidebar.test.tsx",
    "tipo": "unit",
-   "linhas": 94,
+   "linhas": 161,
    "testa": [
     "src/components/lux/layout/Sidebar.tsx",
     "src/components/lux/layout/nav-items.ts",
     "src/components/ui/tooltip.tsx"
    ],
-   "casos": 7
+   "casos": 11
   },
   {
    "arquivo": "src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts",
@@ -603,6 +603,19 @@
     "src/hooks/useDlqHealth.ts"
    ],
    "casos": 7
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+   "tipo": "unit",
+   "linhas": 151,
+   "testa": [
+    "src/components/lux/monitoring/MonitoringView.tsx",
+    "src/hooks/useAuditTrail.ts",
+    "src/hooks/useDbHealth.ts",
+    "src/hooks/useDlqHealth.ts",
+    "src/hooks/useStatusPage.ts"
+   ],
+   "casos": 5
   },
   {
    "arquivo": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -1440,6 +1453,7 @@
   "src/components/lux/map/MapFilters.tsx": 1,
   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": 1,
   "src/components/lux/monitoring/DlqHealthCard.tsx": 1,
+  "src/components/lux/monitoring/MonitoringView.tsx": 1,
   "src/components/lux/monitoring/slaHistoryChartData.ts": 1,
   "src/components/lux/monitoring/slaRiskAnalysis.ts": 1,
   "src/components/lux/stakeholders/StakeholderCard.tsx": 1,
@@ -1455,12 +1469,13 @@
   "src/hooks/use-mobile.tsx": 1,
   "src/hooks/useApiKeys.ts": 1,
   "src/hooks/useApiLatency.ts": 1,
-  "src/hooks/useAuditTrail.ts": 3,
+  "src/hooks/useAuditTrail.ts": 4,
   "src/hooks/useAutomationsMonitor.ts": 1,
   "src/hooks/useConfirm.tsx": 1,
   "src/hooks/useDashboardData.ts": 3,
+  "src/hooks/useDbHealth.ts": 1,
   "src/hooks/useDeals.ts": 1,
-  "src/hooks/useDlqHealth.ts": 1,
+  "src/hooks/useDlqHealth.ts": 2,
   "src/hooks/useDlqReplay.ts": 1,
   "src/hooks/useEmailSuppressions.ts": 1,
   "src/hooks/useEmailTemplates.ts": 1,
@@ -1477,6 +1492,7 @@
   "src/hooks/useScheduledReports.ts": 1,
   "src/hooks/useScrapeQueue.ts": 1,
   "src/hooks/useSidebarState.ts": 1,
+  "src/hooks/useStatusPage.ts": 1,
   "src/hooks/useVirtualCompanies.ts": 4,
   "src/hooks/useWebScrape.ts": 1,
   "src/hooks/useWebhooks.ts": 1,
@@ -1575,7 +1591,6 @@
    "src/hooks/useCompanyDetails.ts",
    "src/hooks/useCompanyReviews.ts",
    "src/hooks/useDashboardLayout.ts",
-   "src/hooks/useDbHealth.ts",
    "src/hooks/useDealPredictions.ts",
    "src/hooks/useDlqAlertSettings.ts",
    "src/hooks/useDlqItems.ts",
@@ -1613,7 +1628,6 @@
    "src/hooks/useSalesGoals.ts",
    "src/hooks/useSatisfaction.ts",
    "src/hooks/useSkin.ts",
-   "src/hooks/useStatusPage.ts",
    "src/hooks/useSwipeGesture.ts",
    "src/hooks/useTaskReminders.ts",
    "src/hooks/useThemeColors.ts",

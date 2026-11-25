@@ -420,10 +420,11 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 3,
+   "usado_por": 4,
    "usado_por_arquivos": [
     "src/components/lux/monitoring/ApiLatencyPanel.tsx",
     "src/components/lux/monitoring/LatencySparkline.tsx",
+    "src/components/lux/monitoring/MonitoringView.tsx",
     "src/components/lux/monitoring/ScrapeLatencyPanel.tsx"
    ],
    "coberto_por_testes": 1
@@ -501,11 +502,12 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "usado_por_arquivos": [
-    "src/components/lux/monitoring/AuditTrailPanel.tsx"
+    "src/components/lux/monitoring/AuditTrailPanel.tsx",
+    "src/components/lux/monitoring/MonitoringView.tsx"
    ],
-   "coberto_por_testes": 3
+   "coberto_por_testes": 4
   },
   {
    "arquivo": "src/hooks/useAutomationLogs.ts",
@@ -863,11 +865,12 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "usado_por_arquivos": [
-    "src/components/lux/monitoring/DbHealthDashboard.tsx"
+    "src/components/lux/monitoring/DbHealthDashboard.tsx",
+    "src/components/lux/monitoring/MonitoringView.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useDealPredictions.ts",
@@ -980,11 +983,12 @@
     "useQuery"
    ],
    "canais_realtime": [],
-   "usado_por": 1,
+   "usado_por": 2,
    "usado_por_arquivos": [
-    "src/components/lux/monitoring/DlqHealthCard.tsx"
+    "src/components/lux/monitoring/DlqHealthCard.tsx",
+    "src/components/lux/monitoring/MonitoringView.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useDlqItems.ts",
@@ -1859,7 +1863,7 @@
     "useRolePermissions"
    ],
    "canais_realtime": [],
-   "usado_por": 10,
+   "usado_por": 11,
    "usado_por_arquivos": [
     "src/components/lux/AutomationsList.tsx",
     "src/components/lux/CampaignsView.tsx",
@@ -1870,6 +1874,7 @@
     "src/components/lux/integrations/EmailAccountsPanel.tsx",
     "src/components/lux/integrations/OAuthSandboxPanel.tsx",
     "src/components/lux/integrations/OAuthSnapshotsPanel.tsx",
+    "src/components/lux/layout/Sidebar.tsx",
     "src/components/lux/permissions/PermissionGate.tsx"
    ],
    "coberto_por_testes": 0
@@ -2382,12 +2387,13 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 2,
+   "usado_por": 3,
    "usado_por_arquivos": [
     "src/components/lux/monitoring/IncidentsPanel.tsx",
+    "src/components/lux/monitoring/MonitoringView.tsx",
     "src/pages/StatusPage.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useSwipeGesture.ts",

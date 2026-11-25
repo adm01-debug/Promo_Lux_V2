@@ -461,6 +461,7 @@
    "src/hooks/useFeatureFlags.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts",
    "src/lib/exportCSV.ts"
   ],
   "src/components/lux/LuxImage.tsx": [
@@ -623,7 +624,8 @@
    "src/hooks/unsaved-changes-context.ts",
    "src/hooks/use-toast.ts",
    "src/hooks/usePermissions.ts",
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/lib/deepLink.ts"
   ],
   "src/components/lux/StakeholderFinderView.tsx": [
    "src/components/lux/DataError.tsx",
@@ -1099,8 +1101,10 @@
    "src/components/lux/layout/nav-items.ts",
    "src/components/ui/tooltip.tsx",
    "src/hooks/useNavigationHistory.ts",
+   "src/hooks/usePermissions.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts",
+   "src/lib/deepLink.ts",
    "src/lib/utils.ts",
    "src/lib/viewRegistry.ts"
   ],
@@ -1358,7 +1362,11 @@
   "src/components/lux/monitoring/MonitoringView.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
-   "src/integrations/supabase/client.ts",
+   "src/hooks/useApiLatency.ts",
+   "src/hooks/useAuditTrail.ts",
+   "src/hooks/useDbHealth.ts",
+   "src/hooks/useDlqHealth.ts",
+   "src/hooks/useStatusPage.ts",
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/MonteCarloReportPanel.tsx": [

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "39e3cfb0db256a1804687ca4b2e3c77229afd1a3",
+  "commit": "59db346ccbc184e56aded68ff2c7469c8e0885ec",
   "branch": "main",
-  "data_commit": "2026-11-25T20:15:44-03:00",
+  "data_commit": "2026-11-25T20:52:43-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "59db346",
+    "data": "2026-11-25",
+    "assunto": "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)"
+   },
    {
     "sha": "39e3cfb",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "144df6b",
     "data": "2026-11-25",
     "assunto": "chore(edge): descarta api-latency-alerts, function sem invocador (#208)"
-   },
-   {
-    "sha": "f60d5cf",
-    "data": "2026-11-25",
-    "assunto": "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)"
    }
   ],
-  "arquivos_mudados_7d": 350,
+  "arquivos_mudados_7d": 358,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 117
+    "mudancas": 126
    },
    {
     "pasta": "src/integrations/supabase",
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 15
+    "mudancas": 16
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -262,6 +262,10 @@
     "mudancas": 5
    },
    {
+    "arquivo": "src/components/lux/SettingsView.tsx",
+    "mudancas": 5
+   },
+   {
     "arquivo": "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
     "mudancas": 5
    },
@@ -292,16 +296,12 @@
    {
     "arquivo": "src/App.tsx",
     "mudancas": 4
-   },
-   {
-    "arquivo": "src/components/lux/CampaignsView.tsx",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 177
+    "commits": 178
    },
    {
     "autor": "dependabot[bot]",
@@ -310,13 +310,13 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1177,
-  "arquivos_codigo": 731,
-  "linhas_codigo": 127045,
+  "arquivos_total": 1179,
+  "arquivos_codigo": 733,
+  "linhas_codigo": 127490,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
-  "itens_menu": 26,
+  "itens_menu": 28,
   "modulos": 23,
   "componentes": 268,
   "hooks": 97,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 148,
+  "testes": 149,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -559,8 +559,8 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 316,
-   "linhas": 52295
+   "arquivos": 317,
+   "linhas": 52730
   },
   "src/contexts": {
    "arquivos": 8,
@@ -575,8 +575,8 @@
    "linhas": 9307
   },
   "src/lib": {
-   "arquivos": 57,
-   "linhas": 6487
+   "arquivos": 58,
+   "linhas": 6497
   },
   "src/main.tsx": {
    "arquivos": 1,
@@ -618,7 +618,7 @@
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
-   "linhas": 2329
+   "linhas": 2330
   },
   {
    "arquivo": "scripts/regras_negocio/generate.py",

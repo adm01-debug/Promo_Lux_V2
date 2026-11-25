@@ -1,8 +1,8 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 583,
- "arestas": 1870,
+ "nos": 584,
+ "arestas": 1878,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -10,7 +10,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 128
+   "importado_por": 127
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
@@ -22,7 +22,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/withOrg.ts",
-   "importado_por": 70
+   "importado_por": 71
   },
   {
    "arquivo": "src/components/ui/input.tsx",
@@ -125,15 +125,15 @@
    "importado_por": 12
   },
   {
+   "arquivo": "src/hooks/usePermissions.ts",
+   "importado_por": 11
+  },
+  {
    "arquivo": "src/components/ui/sheet.tsx",
    "importado_por": 10
   },
   {
    "arquivo": "src/components/ui/textarea.tsx",
-   "importado_por": 10
-  },
-  {
-   "arquivo": "src/hooks/usePermissions.ts",
    "importado_por": 10
   },
   {

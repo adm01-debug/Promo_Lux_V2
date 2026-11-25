@@ -1556,9 +1556,11 @@
     "Sidebar"
    ],
    "export_default": null,
-   "linhas": 324,
+   "linhas": 359,
    "dominio": "components/lux",
-   "hooks_locais": [],
+   "hooks_locais": [
+    "usePermissions"
+   ],
    "tabelas": [
     "intent_signals",
     "workflows"
@@ -1693,7 +1695,7 @@
     "LushaIntelligenceView"
    ],
    "export_default": "LushaIntelligenceView",
-   "linhas": 2329,
+   "linhas": 2330,
    "dominio": "components/lux",
    "hooks_locais": [
     "useFeatureFlag"
@@ -2080,12 +2082,18 @@
     "MonitoringView"
    ],
    "export_default": null,
-   "linhas": 230,
+   "linhas": 354,
    "dominio": "components/lux",
-   "hooks_locais": [],
-   "tabelas": [
-    "audit_logs"
+   "hooks_locais": [
+    "useApiLatency",
+    "useApiLatencyTrend",
+    "useAuditTrail",
+    "useDbHealth",
+    "useDlqHealth",
+    "usePublicStatus",
+    "usePublicUptime"
    ],
+   "tabelas": [],
    "edges": [],
    "usado_por": 1,
    "orfao": false
@@ -3168,7 +3176,7 @@
     "SettingsView"
    ],
    "export_default": null,
-   "linhas": 408,
+   "linhas": 432,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
