@@ -12,14 +12,16 @@ test.describe("Login Page", () => {
     await expect(page.locator("text=SALES INTELLIGENCE PLATFORM")).toBeVisible();
     await expect(page.getByPlaceholder("seu@email.com")).toBeVisible();
     await expect(page.getByText("Entrar com Google")).toBeVisible();
-    await expect(page.getByText("Criar Conta")).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Criar Conta" })).toBeVisible();
     await expect(page.getByText("Esqueceu a senha?")).toBeVisible();
   });
 
   test("switches between login and signup tabs", async ({ page }) => {
     await page.goto("/login");
-    await page.getByText("Criar Conta").click();
-    await expect(page.getByText("Criar Conta")).toBeVisible();
+    // Aba e botão de envio do cadastro têm o mesmo texto: por texto o locator
+    // casaria os dois e violaria o strict mode assim que o painel monta.
+    await page.getByRole("tab", { name: "Criar Conta" }).click();
+    await expect(page.getByRole("button", { name: "Criar Conta" })).toBeVisible();
     await page.getByRole("tab", { name: "Entrar" }).click();
     await expect(page.getByPlaceholder("seu@email.com")).toBeVisible();
   });
