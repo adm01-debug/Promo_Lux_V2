@@ -152,6 +152,34 @@ Deno.serve(async (req) => {
     }
   } catch { /* ignore */ }
 
+  // Etapa 031 (G12-1): o gate acima so provava que existe JWT. O client de
+  // service_role abaixo ignora RLS, entao um membro de qualquer organizacao
+  // disparava campanha de qualquer outra (ou todas, sem filtro no corpo).
+  // Agora o caminho de usuario exige identificador explicito de campanha E
+  // papel 'sdr' ou superior na organizacao dela — o mesmo papel que a policy
+  // "SDR+ update campaigns" exige para mexer na campanha. O agendamento (cron)
+  // nao tem usuario e continua processando todas as organizacoes ativas, que e
+  // o comportamento correto. O unico chamador de usuario e o botao "Enviar
+  // agora" de src/components/lux/CampaignsView.tsx, que sempre envia
+  // campaign_id.
+  if (!isServiceRole) {
+    if (!campaignFilter) return json({ ok: false, error: "forbidden_bulk_dispatch" }, 403);
+    const { data: alvo, error: alvoErr } = await admin
+      .from("campaigns")
+      .select("organization_id")
+      .eq("id", campaignFilter)
+      .maybeSingle();
+    if (alvoErr) return json({ error: alvoErr.message }, 500);
+    if (!alvo) return json({ ok: false, error: "campaign_not_found" }, 404);
+    const { data: autorizado, error: permErr } = await admin.rpc("has_org_role", {
+      _org_id: (alvo as { organization_id: string }).organization_id,
+      _user_id: authedUserId!,
+      _min_role: "sdr",
+    });
+    if (permErr) return json({ error: permErr.message }, 500);
+    if (!autorizado) return json({ ok: false, error: "forbidden_organization" }, 403);
+  }
+
   let cq = admin
     .from("campaigns")
     .select("id, name, status, organization_id, sequence, ab_test_enabled, ab_winner_variant")
