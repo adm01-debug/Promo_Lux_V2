@@ -12,7 +12,12 @@
 //   GET    /events?limit=&after=&table=&action=  (Zapier polling trigger)
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { parseRateLimitDecision, retryAfterSeconds } from "../_shared/api-rate-limit.ts";
+import {
+  noteRateLimitSuccess,
+  parseRateLimitDecision,
+  retryAfterSeconds,
+  withinFailOpenTolerance,
+} from "../_shared/api-rate-limit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -109,6 +114,14 @@ type OneRoundTripResult = {
 // round-trip (RPC authenticate_api_key: valida, marca last_used_at, conta a
 // janela e devolve prefix/org). Enquanto a migration dessa RPC nao estiver
 // aplicada na instancia, cai no caminho historico de 4 round-trips.
+// Etapa 038: distingue falha de infraestrutura (503) de chave invalida (401).
+class RateLimitUnavailableError extends Error {
+  constructor(detail: string) {
+    super(`rate limit unavailable: ${detail}`);
+    this.name = "RateLimitUnavailableError";
+  }
+}
+
 async function authenticateApiKey(supabase: SupabaseApiClient, keyHash: string): Promise<ApiKeyAuth | null> {
   const { data, error } = await supabase.rpc("authenticate_api_key", {
     _key_hash: keyHash,
@@ -127,6 +140,7 @@ async function authenticateApiKey(supabase: SupabaseApiClient, keyHash: string):
       reset_at: string | null;
     } | undefined;
     if (!row) return null;
+    if (typeof row.allowed === "boolean") noteRateLimitSuccess();
     return {
       key_id: row.key_id,
       user_id: row.user_id,
@@ -138,16 +152,22 @@ async function authenticateApiKey(supabase: SupabaseApiClient, keyHash: string):
   }
 
   const missingFunction = error.code === "PGRST202" || /Could not find the function/i.test(error.message ?? "");
-  if (!missingFunction) return null;
+  if (!missingFunction) {
+    // Etapa 038: erro de infraestrutura nao e "chave invalida". Esta RPC faz
+    // autenticacao e contagem no mesmo statement, entao sem ela nao ha como
+    // saber de quem e a chave: 503 e a resposta honesta.
+    throw new RateLimitUnavailableError(error.message ?? "rpc error");
+  }
 
   const { data: keyRows, error: keyErr } = await supabase.rpc("verify_api_key", { _key_hash: keyHash });
   if (keyErr || !keyRows?.length) return null;
   const legacy = keyRows[0] as { user_id: string; scopes: string[] | null; key_id: string };
   await supabase.rpc("touch_api_key", { _key_id: legacy.key_id });
-  const { data: rl } = await supabase.rpc("check_api_key_rate_limit", {
+  const { data: rl, error: rlErr } = await supabase.rpc("check_api_key_rate_limit", {
     _api_key_id: legacy.key_id,
     _limit: API_RATE_LIMIT_PER_HOUR,
   });
+  if (!rlErr) noteRateLimitSuccess();
   const { data: meta } = await supabase
     .from("api_keys")
     .select("prefix, organization_id")
@@ -351,13 +371,39 @@ Deno.serve(async (req) => {
       }
     }
 
-    const auth = await authenticateApiKey(supabase, keyHash);
+    let auth: ApiKeyAuth | null;
+    try {
+      auth = await authenticateApiKey(supabase, keyHash);
+    } catch (e) {
+      if (!(e instanceof RateLimitUnavailableError)) throw e;
+      // Etapa 038: falha de infraestrutura nao e chave invalida (401). O
+      // cliente precisa saber que pode tentar de novo.
+      return await respond(
+        { error: "Rate limit service unavailable. Retry shortly." },
+        503,
+        "rate_limit_unavailable",
+        { "Retry-After": "5" },
+      );
+    }
     if (!auth) return await respond({ error: "Invalid or expired API key" }, 401);
     const { user_id, scopes, key_id } = auth;
 
     // Rate limit server-side por API key (janela fixa de 1h, RPC atômica)
     const rlDecision = parseRateLimitDecision(auth.rateLimit);
-    if (!rlDecision.allowed) {
+    if (rlDecision.available) {
+      noteRateLimitSuccess();
+    } else if (!withinFailOpenTolerance()) {
+      // Etapa 038: sem decisao de quota e sem contagem bem-sucedida nos ultimos
+      // 60 s, servir a resposta seria servir sem teto — uma integracao em laco
+      // derruba o banco de todos os clientes.
+      return await respond(
+        { error: "Rate limit service unavailable. Retry shortly." },
+        503,
+        "rate_limit_unavailable",
+        { "Retry-After": "5" },
+      );
+    }
+    if (rlDecision.available && !rlDecision.allowed) {
       return await respond(
         {
           error: "Rate limit exceeded. Retry after the current window resets.",
