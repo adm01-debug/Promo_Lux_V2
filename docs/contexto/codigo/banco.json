@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 271,
+ "migrations": 272,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -2617,7 +2617,7 @@
    "rls": true,
    "policies": [
     {
-     "nome": "Admins view audit logs",
+     "nome": "Actor view own orgless audit logs",
      "comando": "select",
      "para": "authenticated",
      "tipo": "permissive"

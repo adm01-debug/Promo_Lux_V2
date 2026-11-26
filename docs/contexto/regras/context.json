@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "1e5a847785ed2b5ca2428563fdcd093365498579",
+  "sha": "5e6fd0244b8edcab2dbb719201fb54c9ea30e9b8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 09:52 UTC",
-  "files_total": 1219,
-  "code_files": 1030,
-  "code_lines": 152955
+  "generated_at": "2026-11-26 10:03 UTC",
+  "files_total": 1220,
+  "code_files": 1031,
+  "code_lines": 152987
  },
  "version": "1.3.2",
- "facts_hash": "19a615cf052e610e",
+ "facts_hash": "56137099c05f8202",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -248,7 +248,7 @@
   "languages": {
    ".ts": 401,
    ".tsx": 321,
-   ".sql": 275,
+   ".sql": 276,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -13157,16 +13157,6 @@
     "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
    },
    {
-    "name": "Admins view org audit logs",
-    "table": "audit_logs",
-    "cmd": "SELECT",
-    "roles": "authenticated",
-    "mode": "permissive",
-    "using": "organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
-   },
-   {
     "name": "Org members view recipients",
     "table": "campaign_recipients",
     "cmd": "SELECT",
@@ -13535,16 +13525,6 @@
     "using": "",
     "check": "auth.uid() = user_id",
     "src": "supabase/migrations/20260513140150_d44106d4-96e5-428a-912a-640f138f2e57.sql"
-   },
-   {
-    "name": "Admins view audit logs",
-    "table": "audit_logs",
-    "cmd": "SELECT",
-    "roles": "authenticated",
-    "mode": "permissive",
-    "using": "public.has_role(auth.uid(), 'admin'::public.app_role)",
-    "check": "",
-    "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
    },
    {
     "name": "Health checks are viewable by authenticated users",
@@ -15665,6 +15645,26 @@
     "using": "public.has_role(auth.uid(), 'admin'::public.app_role)",
     "check": "public.has_role(auth.uid(), 'admin'::public.app_role)",
     "src": "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql"
+   },
+   {
+    "name": "Admins view org audit logs",
+    "table": "audit_logs",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql"
+   },
+   {
+    "name": "Actor view own orgless audit logs",
+    "table": "audit_logs",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id IS NULL AND actor_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql"
    }
   ],
   "triggers": [
@@ -23693,6 +23693,7 @@
    "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
    "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
    "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql",
+   "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql",
    "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "src/integrations/supabase/types.ts"
   ],
@@ -34494,8 +34495,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 271,
-   "lines": 20708,
+   "files": 272,
+   "lines": 20740,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -40520,6 +40521,10 @@
    },
    {
     "file": "supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql",
+    "value": "admin"
+   },
+   {
+    "file": "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql",
     "value": "admin"
    }
   ],
@@ -60173,16 +60178,6 @@
     "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
    },
    {
-    "name": "Admins view org audit logs",
-    "table": "audit_logs",
-    "cmd": "SELECT",
-    "roles": "authenticated",
-    "mode": "permissive",
-    "using": "organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')",
-    "check": "",
-    "src": "supabase/migrations/20260422204526_286c913d-1700-481d-81e7-69451cae177c.sql"
-   },
-   {
     "name": "Org members view recipients",
     "table": "campaign_recipients",
     "cmd": "SELECT",
@@ -60551,16 +60546,6 @@
     "using": "",
     "check": "auth.uid() = user_id",
     "src": "supabase/migrations/20260513140150_d44106d4-96e5-428a-912a-640f138f2e57.sql"
-   },
-   {
-    "name": "Admins view audit logs",
-    "table": "audit_logs",
-    "cmd": "SELECT",
-    "roles": "authenticated",
-    "mode": "permissive",
-    "using": "public.has_role(auth.uid(), 'admin'::public.app_role)",
-    "check": "",
-    "src": "supabase/migrations/20260513140617_b297b75c-dc97-41c5-a31f-6a57a39bd94e.sql"
    },
    {
     "name": "Health checks are viewable by authenticated users",
@@ -62681,6 +62666,26 @@
     "using": "public.has_role(auth.uid(), 'admin'::public.app_role)",
     "check": "public.has_role(auth.uid(), 'admin'::public.app_role)",
     "src": "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql"
+   },
+   {
+    "name": "Admins view org audit logs",
+    "table": "audit_logs",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)",
+    "check": "",
+    "src": "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql"
+   },
+   {
+    "name": "Actor view own orgless audit logs",
+    "table": "audit_logs",
+    "cmd": "SELECT",
+    "roles": "authenticated",
+    "mode": "permissive",
+    "using": "organization_id IS NULL AND actor_id = auth.uid()",
+    "check": "",
+    "src": "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql"
    }
   ],
   "db_triggers": [
@@ -69802,8 +69807,8 @@
     "rls": "enabled",
     "SELECT": [
      "service_role: true",
-     "authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')",
-     "authenticated: public.has_role(auth.uid(), 'admin'::public.app_role)"
+     "authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)",
+     "authenticated: organization_id IS NULL AND actor_id = auth.uid()"
     ],
     "INSERT": [
      "service_role: true"
@@ -103858,6 +103863,13 @@
    "path": "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql",
    "lines": 38
   },
+  "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql": {
+   "path": "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql",
+   "lines": 32,
+   "role_checks": [
+    "admin"
+   ]
+  },
   "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql": {
    "path": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "lines": 106,
@@ -103865,10 +103877,19 @@
   }
  },
  "git": {
-  "sha": "1e5a847785ed2b5ca2428563fdcd093365498579",
+  "sha": "5e6fd0244b8edcab2dbb719201fb54c9ea30e9b8",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "5e6fd02",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)",
+    "files": [
+     "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql"
+    ]
+   },
    {
     "sha": "1e5a847",
     "date": "2026-11-26",
@@ -104313,22 +104334,12 @@
      "src/contexts/DemoContext.tsx",
      "src/contexts/__tests__/DemoContext.test.tsx"
     ]
-   },
-   {
-    "sha": "21eb9db",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: remove rotulo ambiguo do e2e de login (#219)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "e2e/navigation.spec.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    29
+    28
    ],
    [
     "supabase/functions/gmaps-proxy/index.ts",

@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `1e5a847785` · branch `main` · 2026-11-26 09:52 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5e6fd0244b` · branch `main` · 2026-11-26 10:03 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -25,7 +25,7 @@
 | `api_request_logs` | enabled | authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin'::app_role)<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `apollo_rate_state` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
 | `apollo_search_cache` | enabled | authenticated: true<br>service_role: true | service_role: true | service_role: true | service_role: true |
-| `audit_logs` | enabled | service_role: true<br>authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')<br>authenticated: public.has_role(auth.uid(), 'admin'::public.app_role) | service_role: true | service_role: true | service_role: true |
+| `audit_logs` | enabled | service_role: true<br>authenticated: organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)<br>authenticated: organization_id IS NULL AND actor_id = auth.uid() | service_role: true | service_role: true | service_role: true |
 | `auth_rate_limits` | enabled | service_role: true<br>public: false | service_role: true<br>public: false | service_role: true<br>public: false | service_role: true<br>public: false |
 | `automation_alerts` | enabled | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id | public: auth.uid() = user_id |
 | `automation_execution_logs` | enabled | authenticated: public.is_org_member(organization_id, auth.uid()) | authenticated: public.is_org_member(organization_id, auth.uid()) | — | authenticated: public.has_role(auth.uid(), 'admin') |

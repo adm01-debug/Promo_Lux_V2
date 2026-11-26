@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `1e5a847785` · branch `main` · 2026-11-26 09:52 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5e6fd0244b` · branch `main` · 2026-11-26 10:03 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -111,7 +111,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `webhooks` | Admins update webhooks | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` | `public.has_org_role(organization_id, auth.uid(), 'admin')` |
 | `webhooks` | Admins delete webhooks | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
 | `webhook_deliveries` | Admins view deliveries | SELECT | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
-| `audit_logs` | Admins view org audit logs | SELECT | authenticated | permissive | `organization_id IS NOT NULL AND public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
 | `campaign_recipients` | Org members view recipients | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
 | `campaign_recipients` | SDR+ insert recipients | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `campaign_recipients` | SDR+ update recipients | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
@@ -149,7 +148,6 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `ponto_banco_horas` | Users can view their own balance | SELECT | public | permissive | `auth.uid() = user_id` |  |
 | `ponto_banco_horas` | Admins can view and update balance | ALL | public | permissive | `EXISTS ( SELECT 1 FROM public.organization_members WHERE organization_id = public.ponto_banco_horas.organization_id AND user_id = auth.uid() AND role = 'admin' )` |  |
 | `idempotency_keys` | Users can insert their own idempotency keys | INSERT | public | permissive |  | `auth.uid() = user_id` |
-| `audit_logs` | Admins view audit logs | SELECT | authenticated | permissive | `public.has_role(auth.uid(), 'admin'::public.app_role)` |  |
 | `health_checks` | Health checks are viewable by authenticated users | SELECT | public | permissive | `auth.role() = 'authenticated'` |  |
 | `feature_flags` | Feature flags are viewable by org | SELECT | public | permissive | `organization_id IS NULL OR organization_id = public.default_org_for_current_user()` |  |
 | `feature_flags` | feature_flags_service_role | ALL | service_role | permissive | `true` | `true` |
@@ -311,6 +309,8 @@ _Nenhum arquivo em `manual/`. Copie `manual/TEMPLATE-regras-de-negocio.md` para 
 | `sales_goals` | SDR+ insert goals | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | SDR+ update goals | UPDATE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'sdr')` | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | `sales_goals` | Admins delete goals | DELETE | authenticated | permissive | `public.has_org_role(organization_id, auth.uid(), 'admin')` |  |
+| `satisfaction_surveys` | Members view surveys | SELECT | authenticated | permissive | `public.is_org_member(organization_id, auth.uid())` |  |
+| `satisfaction_surveys` | SDR+ insert surveys | INSERT | authenticated | permissive |  | `public.has_org_role(organization_id, auth.uid(), 'sdr')` |
 | … +51 linhas — lista completa em `context.json` | | | | | | |
 
 ## C. Restrições de dados (obrigatório / único / default / CHECK / FK / calculada)
@@ -2333,6 +2333,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/functions/qa-ingest-run/index.ts` |
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
+| `admin` | `supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql` |
 
 ## K. Testes como especificação (1396 testes em 149 arquivos — nomes completos em `context.json`)
 
