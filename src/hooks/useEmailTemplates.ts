@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import type { SequenceStep } from "@/components/lux/campaigns/CampaignFormFields";
 import { useActiveOrganization } from "@/contexts/active-org-context";
+import { toast } from "sonner";
 
 export type EmailTemplate = {
   id: string;
@@ -127,6 +128,7 @@ export function useSaveEmailTemplate() {
       qc.invalidateQueries({ queryKey: ["email-templates"] });
       qc.invalidateQueries({ queryKey: ["email-template-stats"] });
     },
+    onError: (e: Error) => toast.error("Não foi possível salvar o modelo", { description: e.message }),
   });
 }
 
@@ -145,6 +147,7 @@ export function useDeleteEmailTemplate() {
       qc.invalidateQueries({ queryKey: ["email-templates"] });
       qc.invalidateQueries({ queryKey: ["email-template-stats"] });
     },
+    onError: (e: Error) => toast.error("Não foi possível excluir o modelo", { description: e.message }),
   });
 }
 
@@ -162,6 +165,7 @@ export function useDuplicateEmailTemplate() {
       qc.invalidateQueries({ queryKey: ["email-templates"] });
       qc.invalidateQueries({ queryKey: ["email-template-stats"] });
     },
+    onError: (e: Error) => toast.error("Não foi possível duplicar o modelo", { description: e.message }),
   });
 }
 

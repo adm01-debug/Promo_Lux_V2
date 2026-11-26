@@ -100,6 +100,8 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
 
   let profiles: ProfileLite[] = [];
   if (actorIds.length > 0) {
+    // Erro ignorado de proposito: so decora a linha com nome/avatar; sem isso o
+    // registro continua listado com o id abreviado (fallback logo abaixo).
     const { data } = await db
       .from("profiles")
       .select("id, full_name, avatar_url")

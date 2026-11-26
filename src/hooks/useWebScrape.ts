@@ -45,7 +45,10 @@ export interface EnqueueOptions {
 async function invoke<T>(fn: string, body?: unknown, query?: Record<string, string>): Promise<T> {
   const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${fn}`);
   if (query) Object.entries(query).forEach(([k, v]) => url.searchParams.set(k, v));
-  const { data: session } = await supabase.auth.getSession();
+  const { data: session, error: sessionError } = await supabase.auth.getSession();
+  // Sem sessao o fetch iria sem `Authorization` e voltaria 401 generico: falha
+  // aqui com o motivo real, que o caller ja exibe.
+  if (sessionError) throw new Error(`Sessão indisponível: ${sessionError.message}`);
   const token = session.session?.access_token;
   const res = await fetch(url.toString(), {
     method: body ? "POST" : "GET",

@@ -194,7 +194,20 @@ export const CompaniesView = () => {
       toast({ title: "Empresa removida", description: `"${deleteTarget.name}" foi removida.` });
       queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
+    } catch (err) {
+      console.error("Falha ao excluir empresa", deleteTarget.id, err);
+      // Erros do PostgREST são objetos simples (`{ message }`), não `Error`.
+      const motivo = typeof (err as { message?: unknown })?.message === "string"
+        ? (err as { message: string }).message
+        : String(err ?? "");
+      toast({
+        title: "Erro ao remover",
+        description: /permission|policy|row-level security/i.test(motivo)
+          ? "Sem permissão para excluir esta empresa."
+          : "Não foi possível excluir a empresa agora. Tente novamente.",
+        variant: "destructive",
+      });
+    }
     finally { setIsDeleting(false); setDeleteTarget(null); }
   }, [deleteTarget, toast, queryClient, isDemoMode]);
 
@@ -210,6 +223,7 @@ export const CompaniesView = () => {
       toast({ title: "Empresas removidas", description: `${selectedIds.size} removida(s).` });
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: ["companies-list", isDemoMode] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     } catch { toast({ title: "Erro ao remover", variant: "destructive" }); }
     finally { setIsBulkDeleting(false); }
   }, [selectedIds, toast, queryClient, isDemoMode]);

@@ -80,6 +80,7 @@ export function useFeatureFlag(
 
       if (organizationId) {
         // Tentar flag específico da org primeiro
+        // Erro de leitura ignorado de proposito: a flag fica no `defaultValue`.
         const { data: orgFlag } = await supabase
           .from("feature_flags")
           .select("is_enabled")
@@ -91,6 +92,7 @@ export function useFeatureFlag(
           value = (orgFlag as { is_enabled: boolean }).is_enabled;
         } else {
           // Fallback para flag global (organization_id = NULL)
+          // Erro de leitura ignorado de proposito: a flag fica no `defaultValue`.
           const { data: globalFlag } = await supabase
             .from("feature_flags")
             .select("is_enabled")
@@ -104,6 +106,7 @@ export function useFeatureFlag(
         }
       } else {
         // Apenas flag global
+        // Erro de leitura ignorado de proposito: a flag fica no `defaultValue`.
         const { data: globalFlag } = await supabase
           .from("feature_flags")
           .select("is_enabled")
@@ -154,6 +157,8 @@ export function useFeatureFlags(keys: string[], organizationId?: string | null) 
 
     (async () => {
       // buscar flags globais
+      // Erro de leitura ignorado de proposito: a chave ausente fica de fora do
+      // resultado e o consumidor cai no valor padrao.
       const { data: globalFlags } = await supabase
         .from("feature_flags")
         .select("flag_key, is_enabled")
@@ -167,6 +172,7 @@ export function useFeatureFlags(keys: string[], organizationId?: string | null) 
       }
 
       if (organizationId) {
+        // Erro de leitura ignorado de proposito: sem a flag da org vale o valor global.
         const { data: orgFlags } = await supabase
           .from("feature_flags")
           .select("flag_key, is_enabled")

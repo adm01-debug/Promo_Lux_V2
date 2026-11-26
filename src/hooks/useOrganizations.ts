@@ -69,6 +69,7 @@ export function useOrgMembers(orgId: string | null) {
       // user's own row, so co-members will fall back to a truncated user_id label.
       const ids = rows.map(r => r.user_id);
       if (ids.length === 0) return rows;
+      // Erro ignorado de proposito: enriquecimento best-effort de nome/avatar (ver comentario acima).
       const { data: profs } = await supabase
         .from("profiles")
         .select("id, full_name, avatar_url")
@@ -102,6 +103,7 @@ export function useOrgInvites(orgId: string | null) {
         )
       );
       if (ids.length === 0) return rows;
+      // Erro ignorado de proposito: enriquecimento best-effort de nome/avatar (ver comentario acima).
       const { data: profs } = await supabase
         .from("profiles")
         .select("id, full_name, avatar_url")
