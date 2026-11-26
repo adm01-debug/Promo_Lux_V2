@@ -251,10 +251,13 @@ async function processCampaign(admin: SupabaseClient, campaign: Campaign) {
   );
   const suppressed = new Set<string>();
   if (batchEmails.length > 0) {
+    // Regra: só o descadastro ATIVO bloqueia envio. Registro na lixeira
+    // (`deleted_at` preenchido) foi removido da lista pela equipe e não vale.
     const { data: supRows, error: supErr } = await admin
       .from("email_suppressions")
       .select("email")
       .eq("organization_id", campaign.organization_id)
+      .is("deleted_at", null)
       .in("email", batchEmails);
     if (supErr) throw new Error(`load suppressions: ${supErr.message}`);
     for (const row of supRows ?? []) {
