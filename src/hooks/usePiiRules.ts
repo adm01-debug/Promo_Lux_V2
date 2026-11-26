@@ -42,6 +42,31 @@ export const PII_ACTION_LABEL: Record<PiiAction, string> = {
   hash: "Pseudonimizar",
 };
 
+/** Regras ligadas: sao as unicas que mudam de fato o que sai do sistema. */
+export function regrasAtivasPii(rules: PiiRule[] | undefined | null): PiiRule[] {
+  return (rules ?? []).filter((r) => r.enabled);
+}
+
+/**
+ * Resumo do que o mascaramento vai fazer no proximo arquivo exportado.
+ * Devolve string vazia quando nao ha regra ligada (nenhum efeito).
+ */
+export function resumoMascaramentoPii(rules: PiiRule[] | undefined | null): string {
+  const ativas = regrasAtivasPii(rules);
+  if (ativas.length === 0) return "";
+
+  const acoes = [
+    ...new Set(ativas.map((r) => PII_ACTION_LABEL[r.action] ?? r.action)),
+  ]
+    .join(", ")
+    .toLowerCase();
+  const categorias = ativas
+    .map((r) => PII_CATEGORY_LABEL[r.category] ?? r.category)
+    .join(", ");
+
+  return `${ativas.length} regra(s) ativa(s) — ${acoes}: ${categorias}`;
+}
+
 export function usePiiRules() {
   const { activeOrgId } = useActiveOrganization();
   const qc = useQueryClient();
