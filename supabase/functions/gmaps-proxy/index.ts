@@ -628,6 +628,35 @@ serve(async (req) => {
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
 
+      // G16-1 / etapa 053: se este job JA tem resultados gravados, a
+      // sincronizacao so reconcilia — nao refaz a consulta paga (Places API no
+      // caminho `places:` ou download no provedor externo). O caso tipico era o
+      // fallback da etapa 052: o create ja pagou a Places API e gravou, e o
+      // auto_sync logo em seguida pagava a MESMA busca de novo para chegar ao
+      // mesmo resultado.
+      const { count: jaGravados } = await supabase
+        .from("scrape_results")
+        .select("id", { count: "exact", head: true })
+        .eq("job_id", job_id);
+
+      if ((jaGravados ?? 0) > 0) {
+        await supabase
+          .from("scrape_jobs")
+          .update({
+            results_count: jaGravados,
+            status: "completed",
+            completed_at: job.completed_at ?? new Date().toISOString(),
+          })
+          .eq("id", job_id)
+          .eq("user_id", userId);
+
+        log.info("sync_results_reconciled", { job_id, results: jaGravados });
+        return new Response(
+          JSON.stringify({ companies_created: 0, total_results: jaGravados, reconciled: true }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
       let results: RawGmapsRow[] = [];
       const jobConfig = (job.config ?? {}) as { keywords?: string[]; lang?: string; max_results?: number };
       const isPlacesJob = String(job.external_id).startsWith("places:");
