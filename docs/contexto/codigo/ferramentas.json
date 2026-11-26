@@ -3,12 +3,12 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (722)",
+   "TypeScript (721)",
    "SQL (276)",
    "Markdown (87)",
    "JSON (38)",
    "JavaScript (25)",
-   "Shell (16)",
+   "Shell (18)",
    "YAML (12)",
    "Python (5)"
   ],
@@ -199,6 +199,8 @@
     "scripts/check-anon-grants-view.sh",
     "scripts/check-audit-triggers.sh",
     "scripts/check-function-grants.sh",
+    "scripts/check-hardcoded-secrets.sh",
+    "scripts/check-no-secret-echo.sh",
     "scripts/check-queue-kind-coverage.sh",
     "scripts/check-security-definer.sh",
     "scripts/ci/lint-ratchet.mjs"
@@ -208,7 +210,8 @@
     "test"
    ],
    "secrets": [
-    "SUPABASE_DB_URL"
+    "SUPABASE_DB_URL",
+    "sh"
    ],
    "actions": [
     "actions/checkout",
@@ -363,7 +366,8 @@
    "permissoes": [],
    "scripts_usados": [
     "scripts/check-edge-fn-target.sh",
-    "scripts/check-functions-lint.sh"
+    "scripts/check-functions-lint.sh",
+    "scripts/check-no-secret-echo.sh"
    ],
    "npm_scripts": [],
    "secrets": [
@@ -582,7 +586,7 @@
   },
   {
    "arquivo": "docs/prod-readiness.md",
-   "titulo": null,
+   "titulo": "Prod-Readiness — LUX IA (`adm01-debug/Promo_Lux_V2`)",
    "linhas": 137
   },
   {
@@ -672,7 +676,6 @@
    "PUBLIC_SUPABASE_URL",
    "QA_INGEST_TOKEN",
    "SUPABASE_ANON_KEY",
-   "SUPABASE_DB_URL",
    "SUPABASE_EXTERNAL_ANON_KEY",
    "SUPABASE_EXTERNAL_URL",
    "SUPABASE_PUBLISHABLE_KEY",
@@ -713,7 +716,8 @@
   "secrets_em_workflows": [
    "SUPABASE_ACCESS_TOKEN",
    "SUPABASE_DB_PASSWORD",
-   "SUPABASE_DB_URL"
+   "SUPABASE_DB_URL",
+   "sh"
   ]
  },
  "deploy": {
@@ -1179,7 +1183,6 @@
    "hubspot-sync",
    "mcp",
    "mcp-query",
-   "migrate-helper",
    "pg-net-watchdog",
    "public-api",
    "purge-soft-deleted",

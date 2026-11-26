@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5e6fd0244b8edcab2dbb719201fb54c9ea30e9b8` (2026-11-26T07:02:43-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a0f07094e6909ae9cbe049788a7497a3afc68c7b` (2026-11-26T07:10:32-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (722), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
+- linguagens: TypeScript (721), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (18), YAML (12), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1199 |
-| arquivos_codigo | 751 |
-| linhas_codigo | 130422 |
+| arquivos_total | 1201 |
+| arquivos_codigo | 750 |
+| linhas_codigo | 130387 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -44,13 +44,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 23 |
 | componentes | 269 |
 | hooks | 97 |
-| edge_functions | 62 |
+| edge_functions | 61 |
 | tabelas | 121 |
 | migrations | 272 |
 | cron_jobs | 43 |
 | testes | 165 |
 | workflows | 10 |
-| scripts | 54 |
+| scripts | 56 |
 | docs_md | 87 |
 
 ## Onde ficam as coisas
@@ -153,7 +153,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `lusha-search` — tabelas: audit_logs, lusha_contacts, lusha_search_sessions, notifications; chamada por 2 arquivo(s) do front
 - `mcp` (verify_jwt=false) — tabelas: companies, lusha_contacts, scrape_jobs; chamada por 0 arquivo(s) do front
 - `mcp-query` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
-- `migrate-helper` (verify_jwt=false) — tabelas: -; chamada por 0 arquivo(s) do front
 - `oracle-cookies-preflight` — tabelas: automation_execution_logs; chamada por 1 arquivo(s) do front
 - `oracle-enrich-contact` — tabelas: lusha_contacts; chamada por 1 arquivo(s) do front
 - `oracle-push-bitrix` — tabelas: lusha_contacts, lusha_search_sessions; chamada por 1 arquivo(s) do front
@@ -232,7 +231,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Integrações externas
 - SDKs: Supabase, react-query, zod
 - hosts mais citados: promo-lux-v2.vercel.app, linkedin.com, ai.gateway.lovable.dev, graph.microsoft.com, login.microsoftonline.com, oauth2.googleapis.com, supabase.atomicabr.com.br, br.linkedin.com, gmaps.atomicabr.com.br, www.linkedin.com, connector-gateway.lovable.dev, empresa.com, gmail.googleapis.com, nominatim.openstreetmap.org, api.cnpja.com
-- webhooks recebidos: admin-list-companies, campaign-dispatch, circuit-breaker-alerts, dlq-alerts, email-oauth-callback, email-poll-replies, gmaps-proxy, hubspot-sync, mcp, mcp-query, migrate-helper, pg-net-watchdog, public-api, purge-soft-deleted, qa-ingest-run, reaper-alerts, retry-policy-tuner, scim, scrape-queue-worker, send-scheduled-reports, sla-alerts, sla-auto-tune, track-click, track-open, vault-cookie-health, web-scrape-worker
+- webhooks recebidos: admin-list-companies, campaign-dispatch, circuit-breaker-alerts, dlq-alerts, email-oauth-callback, email-poll-replies, gmaps-proxy, hubspot-sync, mcp, mcp-query, pg-net-watchdog, public-api, purge-soft-deleted, qa-ingest-run, reaper-alerts, retry-policy-tuner, scim, scrape-queue-worker, send-scheduled-reports, sla-alerts, sla-auto-tune, track-click, track-open, vault-cookie-health, web-scrape-worker
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
 ## Permissões / papéis
@@ -259,27 +258,27 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8147 nós · 17568 arestas · 716 comunidades · grafo do commit `5e6fd024`
-- comunidades maiores: lucide-react (181), react (155), @tanstack/react-query (121), vitest (119), cn (119), button.tsx (100), OrgViolationsView.tsx (89), Button (84), gerar.mjs (80), useActiveOrganization (75), DealsView.tsx (74), withOrg.ts (73)
+- 8150 nós · 17570 arestas · 696 comunidades · grafo do commit `a0f07094`
+- comunidades maiores: lucide-react (148), react (147), OrganizationsView.tsx (104), cn (104), snapshot.py (102), @tanstack/react-query (91), withOrg.ts (90), req (87), badge.tsx (83), gerar.mjs (80), useActiveOrganization (78), DealDetailDrawer.tsx (78)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- docs/qa/05-PROGRESSO.md (33)
+- docs/qa/05-PROGRESSO.md (34)
 - package.json (21)
 - package-lock.json (20)
 - docs/GAPS-ENTERPRISE.md (10)
+- supabase/config.toml (10)
 - supabase/functions/gmaps-proxy/index.ts (10)
 - .github/workflows/db-migrations.yml (9)
 - src/integrations/supabase/types.ts (9)
-- supabase/config.toml (9)
 - supabase/functions/public-api/index.ts (9)
 - AGENTS.md (8)
+- scripts/automation.config.json (8)
 - src/pages/Monitoring.tsx (8)
-- scripts/automation.config.json (7)
 - src/integrations/supabase/withOrg.ts (7)
+- .github/workflows/ci.yml (6)
 - .github/workflows/edge-tests-daily.yml (6)
-- supabase/functions/campaign-dispatch/index.ts (6)
 
 ## Workflows
 - `automation-local.yml` — Automação local (pull_request, push, workflow_dispatch)
@@ -372,13 +371,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `docs/edge-functions.md` — Edge Functions — Documentação (202 linhas)
 - `docs/erd.md` — 🗺️ Diagrama Entidade-Relacionamento (ERD) (78 linhas)
 - `docs/pesquisa-oss-linkedin-enrichment.md` — Levantamento OSS — Descoberta de Email/Telefone a partir do LinkedIn (184 linhas)
-- `docs/prod-readiness.md` (137 linhas)
+- `docs/prod-readiness.md` — Prod-Readiness — LUX IA (`adm01-debug/Promo_Lux_V2`) (137 linhas)
 - `docs/schema-tabelas-principais.md` — Schema das Tabelas Principais — LUX IA (1189 linhas)
 - `docs/webhooks.md` — Webhooks — Guia de Integração (115 linhas)
 - subpastas de docs/: docs/adr (29), docs/agentes (6), docs/qa (6), docs/estado (5), docs/runbooks (4), docs/pendencias (3), docs/contexto (1)
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `a0f0709` fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)
 - 2026-11-26 `5e6fd02` fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)
 - 2026-11-26 `1e5a847` fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)
 - 2026-11-26 `f2a4df6` fix(supressao): so o descadastro ativo bloqueia envio (etapa 048) (#258)
@@ -393,7 +393,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `9036246` feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (et
 - 2026-11-25 `6d4546e` feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)
 - 2026-11-25 `068b4ca` fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e
-- 2026-11-25 `44f05b1` fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5e6fd0244b8edcab2dbb719201fb54c9ea30e9b8",
+  "commit": "a0f07094e6909ae9cbe049788a7497a3afc68c7b",
   "branch": "main",
-  "data_commit": "2026-11-26T07:02:43-03:00",
+  "data_commit": "2026-11-26T07:10:32-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a0f0709",
+    "data": "2026-11-26",
+    "assunto": "fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)"
+   },
    {
     "sha": "5e6fd02",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "ec5349f",
     "data": "2026-11-25",
     "assunto": "feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)"
-   },
-   {
-    "sha": "580b952",
-    "data": "2026-11-25",
-    "assunto": "fix(e2e): suite de RLS para de passar verde sem backend real (#226)"
    }
   ],
-  "arquivos_mudados_7d": 401,
+  "arquivos_mudados_7d": 405,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 33
+    "mudancas": 34
    },
    {
     "pasta": "src/integrations/supabase",
@@ -176,6 +176,10 @@
     "mudancas": 9
    },
    {
+    "pasta": "supabase/config.toml",
+    "mudancas": 9
+   },
+   {
     "pasta": "supabase/functions/public-api",
     "mudancas": 9
    },
@@ -188,18 +192,14 @@
     "mudancas": 8
    },
    {
-    "pasta": "src/pages/Monitoring.tsx",
-    "mudancas": 8
-   },
-   {
-    "pasta": "supabase/config.toml",
+    "pasta": "scripts/automation.config.json",
     "mudancas": 8
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 33
+    "mudancas": 34
    },
    {
     "arquivo": "package.json",
@@ -211,6 +211,10 @@
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
+    "mudancas": 10
+   },
+   {
+    "arquivo": "supabase/config.toml",
     "mudancas": 10
    },
    {
@@ -226,10 +230,6 @@
     "mudancas": 9
    },
    {
-    "arquivo": "supabase/config.toml",
-    "mudancas": 9
-   },
-   {
     "arquivo": "supabase/functions/public-api/index.ts",
     "mudancas": 9
    },
@@ -238,16 +238,20 @@
     "mudancas": 8
    },
    {
+    "arquivo": "scripts/automation.config.json",
+    "mudancas": 8
+   },
+   {
     "arquivo": "src/pages/Monitoring.tsx",
     "mudancas": 8
    },
    {
-    "arquivo": "scripts/automation.config.json",
+    "arquivo": "src/integrations/supabase/withOrg.ts",
     "mudancas": 7
    },
    {
-    "arquivo": "src/integrations/supabase/withOrg.ts",
-    "mudancas": 7
+    "arquivo": ".github/workflows/ci.yml",
+    "mudancas": 6
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
@@ -258,11 +262,11 @@
     "mudancas": 6
    },
    {
-    "arquivo": ".github/workflows/ci.yml",
+    "arquivo": "docs/ESTADO_ATUAL.md",
     "mudancas": 5
    },
    {
-    "arquivo": "docs/ESTADO_ATUAL.md",
+    "arquivo": "docs/agentes/lovable-deploy.md",
     "mudancas": 5
    },
    {
@@ -286,22 +290,18 @@
     "mudancas": 5
    },
    {
+    "arquivo": ".github/workflows/edge-functions-deploy.yml",
+    "mudancas": 4
+   },
+   {
     "arquivo": ".github/workflows/inventario-estado-semanal.yml",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/agentes/lovable-deploy.md",
-    "mudancas": 4
-   },
-   {
-    "arquivo": "docs/pendencias/_backlog-verificado.md",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 197
+    "commits": 198
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1199,
-  "arquivos_codigo": 751,
-  "linhas_codigo": 130422,
+  "arquivos_total": 1201,
+  "arquivos_codigo": 750,
+  "linhas_codigo": 130387,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,13 +320,13 @@
   "modulos": 23,
   "componentes": 269,
   "hooks": 97,
-  "edge_functions": 62,
+  "edge_functions": 61,
   "tabelas": 121,
   "migrations": 272,
   "cron_jobs": 43,
   "testes": 165,
   "workflows": 10,
-  "scripts": 54,
+  "scripts": 56,
   "docs_md": 87
  },
  "por_pasta": {
@@ -595,8 +595,8 @@
    "linhas": 170
   },
   "supabase/functions": {
-   "arquivos": 140,
-   "linhas": 25604
+   "arquivos": 139,
+   "linhas": 25569
   },
   "tailwind.config.ts": {
    "arquivos": 1,

@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 62,
+ "total": 61,
  "verify_jwt_false": [
   "admin-list-companies",
   "campaign-dispatch",
@@ -14,7 +14,6 @@
   "hubspot-sync",
   "mcp",
   "mcp-query",
-  "migrate-helper",
   "pg-net-watchdog",
   "public-api",
   "purge-soft-deleted",
@@ -1257,32 +1256,6 @@
    "rpcs": [],
    "env": [
     "MCP_SECRET",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "buckets": [],
-   "chama_edges": [],
-   "hosts_externos": [],
-   "usa_shared": [],
-   "chamada_pelo_front": [],
-   "chamada_por_edges": [],
-   "chamada_por_sql_ou_cron": false,
-   "orfa": false,
-   "testes": 0
-  },
-  {
-   "nome": "migrate-helper",
-   "entrada": "supabase/functions/migrate-helper/index.ts",
-   "arquivos": 1,
-   "linhas": 35,
-   "verify_jwt": false,
-   "metodos": [
-    "OPTIONS"
-   ],
-   "tabelas": [],
-   "rpcs": [],
-   "env": [
-    "SUPABASE_DB_URL",
     "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],

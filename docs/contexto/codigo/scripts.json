@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 54,
+ "total": 56,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -86,6 +86,17 @@
    "orfao": false
   },
   {
+   "arquivo": "scripts/check-hardcoded-secrets.sh",
+   "descricao": "Etapa 005 do docs/qa/04-PLANO.md (achado G13-2). Varredura de segredos hardcoded do CI. Substitui o bloco inline do job",
+   "linhas": 76,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "ci.yml"
+   ],
+   "orfao": false
+  },
+  {
    "arquivo": "scripts/check-migration-drift.sh",
    "descricao": "--------------------------------------------------------------------------- check-migration-drift.sh",
    "linhas": 148,
@@ -117,6 +128,20 @@
    ],
    "workflows": [
     "db-migrations.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-no-secret-echo.sh",
+   "descricao": "Etapa 004 do docs/qa/04-PLANO.md (achados G10-2 e G13-2). Recusa edge function que devolva segredo do projeto no corpo da resposta.",
+   "linhas": 78,
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY"
+   ],
+   "npm_scripts": [],
+   "workflows": [
+    "ci.yml",
+    "edge-functions-deploy.yml"
    ],
    "orfao": false
   },

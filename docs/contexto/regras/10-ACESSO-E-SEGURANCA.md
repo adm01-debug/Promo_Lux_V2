@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5e6fd0244b` · branch `main` · 2026-11-26 10:03 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a0f07094e6` · branch `main` · 2026-11-26 10:11 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -148,7 +148,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 210 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 209 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -194,7 +194,6 @@
 - `supabase/functions/lusha-reveal/index.ts`
 - `supabase/functions/lusha-search/index.ts`
 - `supabase/functions/mcp-query/index.ts`
-- `supabase/functions/migrate-helper/index.ts`
 - `supabase/functions/oracle-cookies-preflight/index.ts`
 - `supabase/functions/oracle-enrich-contact/index.ts`
 - `supabase/functions/oracle-push-bitrix/index.ts`
@@ -300,7 +299,8 @@
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
 - `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
 - `supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql`
-- … +60 (lista completa em `context.json`)
+- `supabase/migrations/20260721230311_59215542-a0b3-4468-b60a-b80b411a334f.sql`
+- … +59 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -483,7 +483,6 @@
 - `cnpj-enrich-worker`
 - `qa-ingest-run`
 - `admin-list-companies`
-- `migrate-helper`
 - `track-open`
 - `track-click`
 - `public-api`

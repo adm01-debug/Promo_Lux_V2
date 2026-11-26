@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)",
    "fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)",
    "fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)",
    "fix(supressao): so o descadastro ativo bloqueia envio (etapa 048) (#258)",
-   "fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)",
-   "fix(raspagem): recupera a gravacao na contingencia, o sync sem consulta dupla e o escopo por organizacao (etapas 052/053/054) (#267)"
+   "fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)"
   ]
  },
  "pr_template": null,

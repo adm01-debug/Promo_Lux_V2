@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5e6fd0244b` · branch `main` · 2026-11-26 10:03 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a0f07094e6` · branch `main` · 2026-11-26 10:11 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2311,7 +2311,7 @@ _nenhum item encontrado_
 | [apify-gateway timeout] getDatasetItems: exceeded ${fault.timeoutMs ?? 50}ms (mock fault) | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway timeout] startActorRun: exceeded ${fault.timeoutMs ?? 50}ms (mock fault) | `supabase/functions/_shared/apify-gateway.ts` |
 | ${method}: ${code} — ${desc} | `supabase/functions/_shared/bitrix-client.ts` |
-| … +69 linhas — lista completa em `context.json` | |
+| … +67 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 

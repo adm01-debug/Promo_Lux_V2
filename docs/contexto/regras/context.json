@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "5e6fd0244b8edcab2dbb719201fb54c9ea30e9b8",
+  "sha": "a0f07094e6909ae9cbe049788a7497a3afc68c7b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 10:03 UTC",
-  "files_total": 1220,
-  "code_files": 1031,
-  "code_lines": 152987
+  "generated_at": "2026-11-26 10:11 UTC",
+  "files_total": 1222,
+  "code_files": 1030,
+  "code_lines": 152952
  },
  "version": "1.3.2",
- "facts_hash": "56137099c05f8202",
+ "facts_hash": "389a6c5a877d9747",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -246,7 +246,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 401,
+   ".ts": 400,
    ".tsx": 321,
    ".sql": 276,
    ".mjs": 23,
@@ -260,7 +260,6 @@
     "cnpj-enrich-worker",
     "qa-ingest-run",
     "admin-list-companies",
-    "migrate-helper",
     "track-open",
     "track-click",
     "public-api",
@@ -31320,30 +31319,6 @@
     "idempotency": true
    },
    {
-    "name": "migrate-helper",
-    "file": "supabase/functions/migrate-helper/index.ts",
-    "methods": [
-     "OPTIONS"
-    ],
-    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
-    "tables": [],
-    "env": [
-     "SUPABASE_DB_URL",
-     "SUPABASE_SERVICE_ROLE_KEY",
-     "SUPABASE_URL"
-    ],
-    "external": [],
-    "invokes": [],
-    "doc": "Edge function temporária para migração de banco. Cole em: Cloud > Edge Functions > migrate-helper > View code Após a migração, remova esta função.",
-    "errors": [
-     "unauthorized",
-     "unknown_action"
-    ],
-    "side_effects": [],
-    "webhook_events": [],
-    "idempotency": false
-   },
-   {
     "name": "oracle-cookies-preflight",
     "file": "supabase/functions/oracle-cookies-preflight/index.ts",
     "methods": [
@@ -34281,8 +34256,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 140,
-   "lines": 25604,
+   "files": 139,
+   "lines": 25569,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -37196,8 +37171,7 @@
     "supabase/functions/workflow-engine/index.ts"
    ],
    "SUPABASE_DB_URL": [
-    "scripts/supabase_snapshot/snapshot.py",
-    "supabase/functions/migrate-helper/index.ts"
+    "scripts/supabase_snapshot/snapshot.py"
    ],
    "SUPABASE_EXTERNAL_ANON_KEY": [
     "supabase/functions/_shared/cookies.ts",
@@ -37251,7 +37225,6 @@
     "supabase/functions/lusha-reveal/index.ts",
     "supabase/functions/lusha-search/index.ts",
     "supabase/functions/mcp-query/index.ts",
-    "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/oracle-cookies-preflight/index.ts",
     "supabase/functions/oracle-enrich-contact/index.ts",
     "supabase/functions/oracle-push-bitrix/index.ts",
@@ -37320,7 +37293,6 @@
     "supabase/functions/lusha-search/index.ts",
     "supabase/functions/mcp-query/index.ts",
     "supabase/functions/mcp/index.ts",
-    "supabase/functions/migrate-helper/index.ts",
     "supabase/functions/oracle-cookies-preflight/index.ts",
     "supabase/functions/oracle-enrich-contact/index.ts",
     "supabase/functions/oracle-push-bitrix/index.ts",
@@ -40320,14 +40292,6 @@
    {
     "file": "supabase/functions/mcp/index.ts",
     "msg": "Configura\\xE7\\xE3o do backend indispon\\xEDvel para esta ferramenta."
-   },
-   {
-    "file": "supabase/functions/migrate-helper/index.ts",
-    "msg": "unauthorized"
-   },
-   {
-    "file": "supabase/functions/migrate-helper/index.ts",
-    "msg": "unknown_action"
    },
    {
     "file": "supabase/functions/oracle-cookies-preflight/index.ts",
@@ -71563,7 +71527,6 @@
    "supabase/functions/lusha-reveal/index.ts",
    "supabase/functions/lusha-search/index.ts",
    "supabase/functions/mcp-query/index.ts",
-   "supabase/functions/migrate-helper/index.ts",
    "supabase/functions/oracle-cookies-preflight/index.ts",
    "supabase/functions/oracle-enrich-contact/index.ts",
    "supabase/functions/oracle-push-bitrix/index.ts",
@@ -71909,7 +71872,6 @@
    "cnpj-enrich-worker",
    "qa-ingest-run",
    "admin-list-companies",
-   "migrate-helper",
    "track-open",
    "track-click",
    "public-api",
@@ -99334,21 +99296,6 @@
    "doc": "mcp-query — Gateway MCP para SUPABASE PROMO LUX V2 Suporta: sql, sql_b64, admin (storage/auth proxy) Autenticação: x-mcp-secret header Deploy: supabase functions deploy mcp-query --project-ref pttzwlbidamibjssqiqb --no-verify-jwt",
    "uses_service_role": true
   },
-  "supabase/functions/migrate-helper/index.ts": {
-   "path": "supabase/functions/migrate-helper/index.ts",
-   "lines": 35,
-   "env": [
-    "SUPABASE_DB_URL",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "SUPABASE_URL"
-   ],
-   "errors": [
-    "unauthorized",
-    "unknown_action"
-   ],
-   "doc": "Edge function temporária para migração de banco. Cole em: Cloud > Edge Functions > migrate-helper > View code Após a migração, remova esta função.",
-   "uses_service_role": true
-  },
   "supabase/functions/oracle-cookies-preflight/index.ts": {
    "path": "supabase/functions/oracle-cookies-preflight/index.ts",
    "lines": 227,
@@ -103877,10 +103824,29 @@
   }
  },
  "git": {
-  "sha": "5e6fd0244b8edcab2dbb719201fb54c9ea30e9b8",
+  "sha": "a0f07094e6909ae9cbe049788a7497a3afc68c7b",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "a0f0709",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)",
+    "files": [
+     ".github/workflows/ci.yml",
+     ".github/workflows/edge-functions-deploy.yml",
+     "docs/agentes/lovable-deploy.md",
+     "docs/prod-readiness.md",
+     "docs/qa/05-PROGRESSO.md",
+     "scripts/automation.config.json",
+     "scripts/check-hardcoded-secrets.sh",
+     "scripts/check-no-secret-echo.sh",
+     "scripts/secrets-allowlist.txt",
+     "supabase/config.toml",
+     "supabase/functions/migrate-helper/index.ts"
+    ]
+   },
    {
     "sha": "5e6fd02",
     "date": "2026-11-26",
@@ -104317,23 +104283,6 @@
      "src/lib/demoViews.ts",
      "src/pages/Index.tsx"
     ]
-   },
-   {
-    "sha": "40e6a6e",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: separa o cache do modo demonstracao do cache real (#221)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/CampaignsView.tsx",
-     "src/components/lux/CompaniesView.tsx",
-     "src/components/lux/IntentSignalsView.tsx",
-     "src/components/lux/NotificationsPanel.tsx",
-     "src/components/lux/StakeholderFinderView.tsx",
-     "src/components/lux/WorkflowsView.tsx",
-     "src/contexts/DemoContext.tsx",
-     "src/contexts/__tests__/DemoContext.test.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -104350,23 +104299,11 @@
     3
    ],
    [
-    "src/components/lux/CampaignsView.tsx",
-    3
-   ],
-   [
-    "src/components/lux/WorkflowsView.tsx",
-    3
-   ],
-   [
     "src/hooks/useApiKeys.ts",
     3
    ],
    [
     "src/hooks/useEmailTemplates.ts",
-    3
-   ],
-   [
-    "src/components/lux/CompaniesView.tsx",
     3
    ],
    [
@@ -104384,6 +104321,10 @@
    [
     "src/integrations/supabase/withOrg.ts",
     3
+   ],
+   [
+    "scripts/automation.config.json",
+    2
    ],
    [
     "supabase/functions/public-api/index.ts",
@@ -104415,6 +104356,14 @@
    ],
    [
     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/JobDetailsSheet.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
     2
    ]
   ]
