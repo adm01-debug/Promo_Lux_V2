@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { evaluateCronFreshness, type CronFreshness } from "./cronFreshness";
 
 interface RecoveryCron {
   jobname: string;
@@ -139,6 +140,44 @@ function CronStatusBadge({ status }: { status: string | null }) {
 }
 
 /**
+ * "ok" da última execução não prova que o job continua rodando: um schedule
+ * removido deixa `last_status = 'succeeded'` para sempre. Este badge compara a
+ * idade da última execução com a cadência da própria expressão cron, para que um
+ * cron morto (inclusive o expurgo diário dos exports) apareça em vez de se
+ * confundir com "nada vencido".
+ */
+function CronFreshnessBadge({ freshness }: { freshness: CronFreshness }) {
+  if (freshness.ageSecs === null) {
+    return (
+      <Badge variant="outline" className="gap-1 border-muted-foreground/40 text-muted-foreground">
+        <Clock className="h-3 w-3" /> sem registro
+      </Badge>
+    );
+  }
+  if (freshness.limitSecs === null) {
+    return (
+      <Badge variant="outline" className="gap-1 text-muted-foreground">
+        {formatAge(freshness.ageSecs)} (cadência não avaliada)
+      </Badge>
+    );
+  }
+  if (freshness.stale) {
+    return (
+      <Badge variant="destructive" className="gap-1">
+        <XCircle className="h-3 w-3" /> parado há {formatAge(freshness.ageSecs)} (espera ≤{" "}
+        {formatAge(freshness.limitSecs)})
+      </Badge>
+    );
+  }
+  return (
+    <Badge className="gap-1 bg-primary/20 text-primary hover:bg-primary/30">
+      <CheckCircle2 className="h-3 w-3" /> há {formatAge(freshness.ageSecs)} (espera ≤{" "}
+      {formatAge(freshness.limitSecs)})
+    </Badge>
+  );
+}
+
+/**
  * Consome a edge function `system-recovery-status` (admin-only), que por sua vez
  * chama a RPC `system_recovery_health`: panorama de crons ativos, filas e
  * snapshots de saúde usados no diagnóstico de recuperação de desastre.
@@ -166,6 +205,9 @@ export function SystemRecoveryPanel() {
 
   const crons = [...(data?.crons ?? [])].sort((a, b) => a.jobname.localeCompare(b.jobname));
   const failing = crons.filter((c) => c.last_status === "failed").length;
+  const agora = Date.now();
+  const freshness = new Map(crons.map((c) => [c.jobname, evaluateCronFreshness(c, agora)]));
+  const stale = crons.filter((c) => freshness.get(c.jobname)?.stale).length;
   const pgNetAge = toSeconds(data?.snapshots.pg_net_age_secs ?? null);
   const dbHealthAge = toSeconds(data?.snapshots.db_health_age_secs ?? null);
 
@@ -295,16 +337,20 @@ export function SystemRecoveryPanel() {
                   <div>
                     <CardTitle className="text-base">Agendamentos ativos</CardTitle>
                     <CardDescription className="text-xs">
-                      {crons.length} job(s) ativo(s) no pg_cron, com o status da última execução.
+                      {crons.length} job(s) ativo(s) no pg_cron, com o status e a idade da última
+                      execução.
                     </CardDescription>
                   </div>
-                  {failing > 0 ? (
+                  {failing > 0 || stale > 0 ? (
                     <Badge variant="destructive" className="gap-1">
-                      <XCircle className="h-3 w-3" /> {failing} com falha na última execução
+                      <XCircle className="h-3 w-3" />{" "}
+                      {failing > 0 && `${failing} com falha na última execução`}
+                      {failing > 0 && stale > 0 && " · "}
+                      {stale > 0 && `${stale} sem executar no prazo`}
                     </Badge>
                   ) : (
                     <Badge className="gap-1 bg-primary/20 text-primary hover:bg-primary/30">
-                      <CheckCircle2 className="h-3 w-3" /> nenhuma falha registrada
+                      <CheckCircle2 className="h-3 w-3" /> todos executando no prazo
                     </Badge>
                   )}
                 </div>
@@ -318,6 +364,7 @@ export function SystemRecoveryPanel() {
                         <TableHead>Agenda</TableHead>
                         <TableHead>Última execução</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>Frescor</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -334,6 +381,13 @@ export function SystemRecoveryPanel() {
                           </TableCell>
                           <TableCell>
                             <CronStatusBadge status={cron.last_status} />
+                          </TableCell>
+                          <TableCell>
+                            <CronFreshnessBadge
+                              freshness={
+                                freshness.get(cron.jobname) ?? evaluateCronFreshness(cron, agora)
+                              }
+                            />
                           </TableCell>
                         </TableRow>
                       ))}
