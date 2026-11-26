@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 61,
+ "total": 62,
  "verify_jwt_false": [
   "admin-list-companies",
   "campaign-dispatch",
@@ -694,6 +694,38 @@
    ],
    "chamada_pelo_front": [
     "src/components/lux/lusha/EmailVerifyBadge.tsx"
+   ],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": false,
+   "orfa": false,
+   "testes": 0
+  },
+  {
+   "nome": "export-scrape-job",
+   "entrada": "supabase/functions/export-scrape-job/index.ts",
+   "arquivos": 1,
+   "linhas": 142,
+   "verify_jwt": true,
+   "metodos": [
+    "OPTIONS",
+    "POST"
+   ],
+   "tabelas": [
+    "job_exports",
+    "scrape_jobs",
+    "scrape_results"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [],
+   "chamada_pelo_front": [
+    "src/components/lux/ScrapeResultsView.tsx"
    ],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,

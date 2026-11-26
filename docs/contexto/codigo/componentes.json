@@ -2933,17 +2933,20 @@
     "ScrapeResultsView"
    ],
    "export_default": null,
-   "linhas": 404,
+   "linhas": 501,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth"
    ],
    "tabelas": [
     "companies",
+    "job_exports",
     "scrape_jobs",
     "scrape_results"
    ],
-   "edges": [],
+   "edges": [
+    "export-scrape-job"
+   ],
    "usado_por": 1,
    "orfao": false
   },

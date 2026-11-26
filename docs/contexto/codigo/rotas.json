@@ -317,6 +317,7 @@
     "intent_signals",
     "ip_allowlist",
     "ipc_config",
+    "job_exports",
     "lead_scores",
     "lusha_contacts",
     "lusha_dm_search_history",
@@ -408,6 +409,7 @@
     "email-oauth-disconnect",
     "email-poll-replies",
     "email-verify",
+    "export-scrape-job",
     "gmaps-proxy",
     "hubspot-sync",
     "lead-score-ai",
@@ -1808,6 +1810,7 @@
     "intent_signals",
     "ip_allowlist",
     "ipc_config",
+    "job_exports",
     "lead_scores",
     "lusha_contacts",
     "lusha_dm_search_history",
@@ -1899,6 +1902,7 @@
     "email-oauth-disconnect",
     "email-poll-replies",
     "email-verify",
+    "export-scrape-job",
     "gmaps-proxy",
     "hubspot-sync",
     "lead-score-ai",
@@ -2754,6 +2758,7 @@
    ],
    "tabelas": [
     "companies",
+    "job_exports",
     "organization_invites",
     "organization_members",
     "organizations",
@@ -2765,7 +2770,9 @@
    "rpcs": [
     "default_role_permissions"
    ],
-   "edges": [],
+   "edges": [
+    "export-scrape-job"
+   ],
    "canais_realtime": [
     "private:${user.id}:scrape-results"
    ],

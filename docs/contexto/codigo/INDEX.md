@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5f536770e11fac09157b536b4808cd9bd5ea5c43` (2026-11-26T07:46:22-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `10dc090b0467df041b7a8c93006b8ca0f56778d0` (2026-11-26T08:15:00-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (721), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (19), YAML (13), Python (5)
+- linguagens: TypeScript (722), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (19), YAML (13), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1204 |
-| arquivos_codigo | 750 |
-| linhas_codigo | 130387 |
+| arquivos_total | 1205 |
+| arquivos_codigo | 751 |
+| linhas_codigo | 130626 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -44,7 +44,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | modulos | 23 |
 | componentes | 269 |
 | hooks | 97 |
-| edge_functions | 61 |
+| edge_functions | 62 |
 | tabelas | 121 |
 | migrations | 272 |
 | cron_jobs | 43 |
@@ -69,14 +69,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components/lux | 26 | 23 | 221 | 153 | 33 | 93 |
+| components/lux | 26 | 23 | 221 | 153 | 34 | 94 |
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
-| hooks | 0 | 0 | 91 | 157 | 28 | 83 |
-| lib | 0 | 0 | 19 | 103 | 27 | 65 |
+| hooks | 0 | 0 | 91 | 157 | 29 | 84 |
+| lib | 0 | 0 | 19 | 103 | 28 | 66 |
 | lib/mcp | 0 | 0 | 7 | 0 | 0 | 3 |
 | lib/resilience | 0 | 0 | 5 | 0 | 0 | 0 |
-| pages | 2 | 11 | 11 | 162 | 35 | 94 |
+| pages | 2 | 11 | 11 | 162 | 36 | 95 |
 
 ## Rotas (url → arquivo)
 - `/` [tela] → src/pages/Index.tsx (protegida)
@@ -137,6 +137,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `email-oauth-disconnect` — tabelas: audit_logs, email_accounts; chamada por 1 arquivo(s) do front
 - `email-poll-replies` (verify_jwt=false) — tabelas: email_accounts, email_sync_log; chamada por 1 arquivo(s) do front, por SQL/cron
 - `email-verify` — tabelas: -; chamada por 1 arquivo(s) do front
+- `export-scrape-job` — tabelas: job_exports, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front
 - `gmaps-places-search` — tabelas: -; chamada por 0 arquivo(s) do front — **ÓRFÃ**
 - `gmaps-proxy` (verify_jwt=false) — tabelas: idempotency_keys, notifications, org_proxies, scrape_jobs, scrape_results; chamada por 1 arquivo(s) do front, por SQL/cron
 - `health` — tabelas: health_checks, organizations; chamada por 0 arquivo(s) do front — **ÓRFÃ**
@@ -258,8 +259,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8152 nós · 17571 arestas · 709 comunidades · grafo do commit `5f536770`
-- comunidades maiores: Monitoring.tsx (216), input.tsx (136), cn (132), snapshot.py (102), react (102), OrganizationsView.tsx (90), hooks/use-toast.ts (85), LushaIntelligenceView.tsx (83), gerar.mjs (80), withOrg.ts (78), req (75), ref_https (75)
+- 8158 nós · 17576 arestas · 709 comunidades · grafo do commit `10dc090b`
+- comunidades maiores: react (159), lucide-react (146), vitest (107), utils.ts (106), snapshot.py (102), cn (99), @tanstack/react-query (94), Button (92), useActiveOrganization (91), useAuth (83), badge.tsx (80), gerar.mjs (80)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -379,6 +380,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `10dc090` feat(raspagem): exporta leads do job em CSV e grava historico em job_exports (#270)
 - 2026-11-26 `5f53677` infra: aposenta functions no projeto (a migrate-helper segue ativa em producao) (#269)
 - 2026-11-26 `a0f0709` fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)
 - 2026-11-26 `5e6fd02` fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)
@@ -393,7 +395,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-26 `735410e` test(mcp): trava o emissor de autenticacao no projeto oficial (#257)
 - 2026-11-25 `ab29fc2` chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)
 - 2026-11-25 `9036246` feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (et
-- 2026-11-25 `6d4546e` feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

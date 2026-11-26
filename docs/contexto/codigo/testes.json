@@ -1821,6 +1821,7 @@
    "email-oauth-disconnect",
    "email-poll-replies",
    "email-verify",
+   "export-scrape-job",
    "gmaps-places-search",
    "health",
    "hubspot-sync",

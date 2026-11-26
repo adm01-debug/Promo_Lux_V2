@@ -10510,11 +10510,13 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
-   "usada_em_edges": [],
+   "usada_no_front": 1,
+   "usada_em_edges": [
+    "export-scrape-job"
+   ],
    "triggers": [],
    "sem_rls": false,
-   "nao_usada": true
+   "nao_usada": false
   },
   "lead_scores": {
    "colunas": {
@@ -16726,6 +16728,7 @@
    "usada_no_front": 6,
    "usada_em_edges": [
     "ai-agent",
+    "export-scrape-job",
     "gmaps-proxy",
     "mcp",
     "scrape-queue-worker",
@@ -17123,6 +17126,7 @@
    "usada_no_front": 2,
    "usada_em_edges": [
     "_shared",
+    "export-scrape-job",
     "gmaps-proxy",
     "workflow-engine"
    ],

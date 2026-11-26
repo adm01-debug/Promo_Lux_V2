@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "5f536770e11fac09157b536b4808cd9bd5ea5c43",
+  "sha": "10dc090b0467df041b7a8c93006b8ca0f56778d0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 10:47 UTC",
-  "files_total": 1225,
-  "code_files": 1030,
-  "code_lines": 152952
+  "generated_at": "2026-11-26 11:15 UTC",
+  "files_total": 1226,
+  "code_files": 1031,
+  "code_lines": 153191
  },
  "version": "1.3.2",
- "facts_hash": "fce676eb2bfa38bf",
+ "facts_hash": "83bc1659160bc54d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -254,7 +254,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 400,
+   ".ts": 401,
    ".tsx": 321,
    ".sql": 276,
    ".mjs": 23,
@@ -30906,6 +30906,30 @@
     "idempotency": false
    },
    {
+    "name": "export-scrape-job",
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "methods": [
+     "OPTIONS"
+    ],
+    "auth": "JWT do usuário",
+    "tables": [
+     "job_exports",
+     "scrape_jobs",
+     "scrape_results"
+    ],
+    "env": [
+     "SUPABASE_ANON_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario. Body: { job_id: uuid, status?: \"all\" | \"processed\" | \"unprocessed\" } Grava a linha em job_exports (historico) e devolve o arquivo direto na resposta: o projeto nao tem bucket de storage (docs/qa/01-INVENTARIO.md:169), entao …",
+    "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": false
+   },
+   {
     "name": "gmaps-places-search",
     "file": "supabase/functions/gmaps-places-search/index.ts",
     "methods": [
@@ -33498,7 +33522,7 @@
   {
    "module": "src/components",
    "files": 322,
-   "lines": 53961,
+   "lines": 54058,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33514,6 +33538,7 @@
     "email_accounts",
     "feature_flags",
     "intent_signals",
+    "job_exports",
     "lusha_contacts",
     "lusha_dm_search_history",
     "lusha_search_sessions",
@@ -34264,8 +34289,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 139,
-   "lines": 25569,
+   "files": 140,
+   "lines": 25711,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -34299,6 +34324,7 @@
     "instagram_scrape_results",
     "intent_signals",
     "ipc_config",
+    "job_exports",
     "lead_scores",
     "lusha_contacts",
     "lusha_search_sessions",
@@ -35249,6 +35275,15 @@
      "src/hooks/useICPConfig.ts"
     ]
    },
+   "job_exports": {
+    "select": [
+     "src/components/lux/ScrapeResultsView.tsx",
+     "supabase/functions/export-scrape-job/index.ts"
+    ],
+    "insert": [
+     "supabase/functions/export-scrape-job/index.ts"
+    ]
+   },
    "lead_scores": {
     "select": [
      "src/hooks/useLeadScores.ts"
@@ -35721,6 +35756,7 @@
      "src/lib/mcp/tools/list-scrape-jobs.ts",
      "src/pages/Monitoring.tsx",
      "supabase/functions/ai-agent/index.ts",
+     "supabase/functions/export-scrape-job/index.ts",
      "supabase/functions/gmaps-proxy/index.ts",
      "supabase/functions/mcp/index.ts",
      "supabase/functions/workflow-engine/index.ts"
@@ -35751,6 +35787,7 @@
     "select": [
      "src/components/lux/ScrapeResultsView.tsx",
      "src/components/lux/monitoring/JobDetailsSheet.tsx",
+     "supabase/functions/export-scrape-job/index.ts",
      "supabase/functions/gmaps-proxy/index.ts",
      "supabase/functions/workflow-engine/index.ts"
     ],
@@ -36413,6 +36450,13 @@
     "is_active",
     "organization_id",
     "user_id"
+   ],
+   "job_exports": [
+    "created_at",
+    "format",
+    "id",
+    "job_id",
+    "status"
    ],
    "lead_scores": [
     "computed_at",
@@ -37153,6 +37197,7 @@
     "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
     "supabase/functions/email-verify/index.ts",
+    "supabase/functions/export-scrape-job/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/instagram-connection-status/index.ts",
@@ -37285,6 +37330,7 @@
     "supabase/functions/email-oauth-disconnect/index.ts",
     "supabase/functions/email-poll-replies/index.ts",
     "supabase/functions/email-verify/index.ts",
+    "supabase/functions/export-scrape-job/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
@@ -37357,6 +37403,7 @@
     "scripts/maintenance/maintenance.unit.mjs",
     "src/components/lux/AIAgentView.tsx",
     "src/components/lux/LushaIntelligenceView.tsx",
+    "src/components/lux/ScrapeResultsView.tsx",
     "src/components/lux/SettingsView.tsx",
     "src/integrations/supabase/client.ts",
     "src/lib/api/gmaps.ts",
@@ -37371,6 +37418,7 @@
     "scripts/maintenance/maintenance.unit.mjs",
     "src/components/lux/AIAgentView.tsx",
     "src/components/lux/LushaIntelligenceView.tsx",
+    "src/components/lux/ScrapeResultsView.tsx",
     "src/components/lux/SettingsView.tsx",
     "src/components/lux/integrations/ApiDocsCard.tsx",
     "src/components/lux/settings/ScimPanel.tsx",
@@ -38155,7 +38203,6 @@
    "campaign_warmup_state",
    "cron_http_archive",
    "data_subject_requests",
-   "job_exports",
    "lusha_credit_usage_log",
    "next_best_actions",
    "oracle_rate_limits",
@@ -39412,6 +39459,18 @@
    {
     "file": "src/components/lux/ScrapeResultsView.tsx",
     "msg": "Erro ao converter"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
+    "msg": "Falha na exportacao"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
+    "msg": "Selecione um job"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
+    "msg": "Sessao expirada - entre novamente."
    },
    {
     "file": "src/components/lux/SettingsView.tsx",
@@ -47371,6 +47430,16 @@
     "value": "24"
    },
    {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "name": "MAX_ROWS",
+    "value": "20000"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "name": "PAGE",
+    "value": "1000"
+   },
+   {
     "file": "supabase/functions/gmaps-places-search/index.ts",
     "name": "GATEWAY",
     "value": "\"https://connector-gateway.lovable.dev/google_maps\""
@@ -48172,6 +48241,12 @@
     "file": "src/components/lux/OrganizationsView.tsx",
     "field": "role",
     "value": "admin",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
+    "field": "status",
+    "value": "completed",
     "kind": "compara"
    },
    {
@@ -50777,6 +50852,36 @@
     "field": "status",
     "value": "error",
     "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "status",
+    "value": "all",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "status",
+    "value": "completed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "etapa",
+    "value": "job_exports",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "status",
+    "value": "processed",
+    "kind": "compara"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "status",
+    "value": "unprocessed",
+    "kind": "compara"
    },
    {
     "file": "supabase/functions/gmaps-proxy/index.ts",
@@ -67918,6 +68023,10 @@
    },
    {
     "file": "src/components/lux/ScrapeResultsView.tsx",
+    "limit": "10"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
     "limit": "500"
    },
    {
@@ -68821,6 +68930,7 @@
      ],
      "completed": [
       "compara:src/components/lux/GmapsScraperView.tsx",
+      "compara:src/components/lux/ScrapeResultsView.tsx",
       "compara:src/components/lux/analytics/useAnalyticsData.ts",
       "compara:src/components/lux/automations/AutomationEventsFeed.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
@@ -68838,6 +68948,7 @@
       "escreve:src/hooks/useCnpjEnrich.ts",
       "escreve:src/lib/demoData.ts",
       "escreve:supabase/functions/cnpj-enrich-worker/index.ts",
+      "escreve:supabase/functions/export-scrape-job/index.ts",
       "escreve:supabase/functions/gmaps-proxy/index.ts",
       "escreve:supabase/functions/lusha-search/index.ts",
       "escreve:supabase/functions/oracle-search-decisors/index.ts",
@@ -68923,7 +69034,8 @@
       "compara:src/components/lux/lusha/SessionsPanel.tsx",
       "compara:src/components/lux/lusha/historyUtils.ts",
       "escreve:src/components/lux/LushaIntelligenceView.tsx",
-      "escreve:src/components/lux/lusha/historyUtils.ts"
+      "escreve:src/components/lux/lusha/historyUtils.ts",
+      "escreve:supabase/functions/export-scrape-job/index.ts"
      ],
      "processing": [
       "compara:src/components/lux/LushaIntelligenceView.tsx",
@@ -69106,6 +69218,12 @@
      "unhealthy": [
       "escreve:supabase/functions/_shared/places-fallback.ts",
       "escreve:supabase/functions/health/index.ts"
+     ],
+     "processed": [
+      "compara:supabase/functions/export-scrape-job/index.ts"
+     ],
+     "unprocessed": [
+      "compara:supabase/functions/export-scrape-job/index.ts"
      ],
      "degraded": [
       "escreve:supabase/functions/health/index.ts",
@@ -69572,6 +69690,11 @@
      ],
      "expiring_soon": [
       "compara:supabase/functions/lusha-cookie-health/index.ts"
+     ]
+    },
+    "etapa": {
+     "job_exports": [
+      "escreve:supabase/functions/export-scrape-job/index.ts"
      ]
     },
     "current_step": {
@@ -78648,6 +78771,20 @@
    },
    {
     "kind": "status",
+    "msg": "valor `processed` para `status` usado no código não existe em nenhum enum do banco/TS",
+    "where": [
+     "compara:supabase/functions/export-scrape-job/index.ts"
+    ]
+   },
+   {
+    "kind": "status",
+    "msg": "valor `unprocessed` para `status` usado no código não existe em nenhum enum do banco/TS",
+    "where": [
+     "compara:supabase/functions/export-scrape-job/index.ts"
+    ]
+   },
+   {
+    "kind": "status",
     "msg": "valor `error_other` para `status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:supabase/functions/oracle-enrich-contact/index.ts",
@@ -78731,6 +78868,13 @@
     "msg": "valor `expiring_soon` para `health_status` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "compara:supabase/functions/lusha-cookie-health/index.ts"
+    ]
+   },
+   {
+    "kind": "status",
+    "msg": "valor `job_exports` para `etapa` usado no código não existe em nenhum enum do banco/TS",
+    "where": [
+     "escreve:supabase/functions/export-scrape-job/index.ts"
     ]
    },
    {
@@ -83097,7 +83241,7 @@
   },
   "src/components/lux/ScrapeResultsView.tsx": {
    "path": "src/components/lux/ScrapeResultsView.tsx",
-   "lines": 404,
+   "lines": 501,
    "exports": [
     "const ScrapeResultsView"
    ],
@@ -83125,6 +83269,10 @@
     {
      "table": "scrape_results",
      "op": "update"
+    },
+    {
+     "table": "job_exports",
+     "op": "select"
     }
    ],
    "table_cols": {
@@ -83142,13 +83290,34 @@
     ],
     "companies": [
      "id"
+    ],
+    "job_exports": [
+     "created_at",
+     "format",
+     "id",
+     "job_id",
+     "status"
     ]
    },
    "channels": [
     "private:${user.id}:scrape-results"
    ],
+   "env": [
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL"
+   ],
    "errors": [
-    "Erro ao converter"
+    "Erro ao converter",
+    "Falha na exportacao",
+    "Selecione um job",
+    "Sessao expirada - entre novamente."
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "completed",
+     "kind": "compara"
+    }
    ],
    "calc_fns": [
     {
@@ -83161,6 +83330,7 @@
     "transition={{ delay: Math.min(i * 0.02, 0.3) }}"
    ],
    "pagination": [
+    "10",
     "500"
    ]
   },
@@ -98081,6 +98251,84 @@
     }
    ]
   },
+  "supabase/functions/export-scrape-job/index.ts": {
+   "path": "supabase/functions/export-scrape-job/index.ts",
+   "lines": 142,
+   "tables": [
+    {
+     "table": "scrape_jobs",
+     "op": "select"
+    },
+    {
+     "table": "scrape_results",
+     "op": "select"
+    },
+    {
+     "table": "job_exports",
+     "op": "insert,select"
+    }
+   ],
+   "table_cols": {
+    "scrape_jobs": [
+     "id",
+     "name",
+     "organization_id"
+    ],
+    "scrape_results": [
+     "company_id",
+     "created_at",
+     "id",
+     "job_id",
+     "processed",
+     "raw_data"
+    ],
+    "job_exports": [
+     "id"
+    ]
+   },
+   "env": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL"
+   ],
+   "params": [
+    {
+     "name": "MAX_ROWS",
+     "value": "20000"
+    },
+    {
+     "name": "PAGE",
+     "value": "1000"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "all",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "completed",
+     "kind": "escreve"
+    },
+    {
+     "field": "etapa",
+     "value": "job_exports",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "processed",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "unprocessed",
+     "kind": "compara"
+    }
+   ],
+   "doc": "Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario. Body: { job_id: uuid, status?: \"all\" | \"processed\" | \"unprocessed\" } Grava a linha em job_exports (historico) e devolve o arquivo direto na resposta: o projeto nao tem bucket de storage (docs/qa/01-INVENTARIO.md:169), entao …"
+  },
   "supabase/functions/gmaps-places-search/index.ts": {
    "path": "supabase/functions/gmaps-places-search/index.ts",
    "lines": 122,
@@ -103832,10 +104080,20 @@
   }
  },
  "git": {
-  "sha": "5f536770e11fac09157b536b4808cd9bd5ea5c43",
+  "sha": "10dc090b0467df041b7a8c93006b8ca0f56778d0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "10dc090",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat(raspagem): exporta leads do job em CSV e grava historico em job_exports (#270)",
+    "files": [
+     "src/components/lux/ScrapeResultsView.tsx",
+     "supabase/functions/export-scrape-job/index.ts"
+    ]
+   },
    {
     "sha": "5f53677",
     "date": "2026-11-26",
@@ -104272,28 +104530,12 @@
      "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
      "src/integrations/supabase/withOrg.ts"
     ]
-   },
-   {
-    "sha": "d7c7ccf",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/hooks/__tests__/orgGateQueries.test.ts",
-     "src/hooks/useAuditTrail.ts",
-     "src/hooks/useDashboardData.ts",
-     "src/hooks/useICPConfig.ts",
-     "src/hooks/useNotificationCount.ts",
-     "src/hooks/useOAuthSandboxSnapshots.ts",
-     "src/hooks/useVirtualCompanies.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    27
+    26
    ],
    [
     "scripts/automation.config.json",
@@ -104316,15 +104558,7 @@
     3
    ],
    [
-    "src/hooks/useAuditTrail.ts",
-    3
-   ],
-   [
     "src/hooks/useDeals.ts",
-    3
-   ],
-   [
-    "src/hooks/useICPConfig.ts",
     3
    ],
    [
@@ -104369,6 +104603,14 @@
    ],
    [
     "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/MonitoringView.tsx",
+    2
+   ],
+   [
+    "src/components/lux/CampaignsView.tsx",
     2
    ]
   ]

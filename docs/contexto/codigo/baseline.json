@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "5f536770e11fac09157b536b4808cd9bd5ea5c43",
+  "commit": "10dc090b0467df041b7a8c93006b8ca0f56778d0",
   "branch": "main",
-  "data_commit": "2026-11-26T07:46:22-03:00",
+  "data_commit": "2026-11-26T08:15:00-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "10dc090",
+    "data": "2026-11-26",
+    "assunto": "feat(raspagem): exporta leads do job em CSV e grava historico em job_exports (#270)"
+   },
    {
     "sha": "5f53677",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "23d4926",
     "data": "2026-11-25",
     "assunto": "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)"
-   },
-   {
-    "sha": "488f67c",
-    "data": "2026-11-25",
-    "assunto": "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)"
    }
   ],
-  "arquivos_mudados_7d": 408,
+  "arquivos_mudados_7d": 409,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 158
+    "mudancas": 159
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 199
+    "commits": 200
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1204,
-  "arquivos_codigo": 750,
-  "linhas_codigo": 130387,
+  "arquivos_total": 1205,
+  "arquivos_codigo": 751,
+  "linhas_codigo": 130626,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,7 +320,7 @@
   "modulos": 23,
   "componentes": 269,
   "hooks": 97,
-  "edge_functions": 61,
+  "edge_functions": 62,
   "tabelas": 121,
   "migrations": 272,
   "cron_jobs": 43,
@@ -560,7 +560,7 @@
   },
   "src/components": {
    "arquivos": 322,
-   "linhas": 53961
+   "linhas": 54058
   },
   "src/contexts": {
    "arquivos": 9,
@@ -595,8 +595,8 @@
    "linhas": 170
   },
   "supabase/functions": {
-   "arquivos": 139,
-   "linhas": 25569
+   "arquivos": 140,
+   "linhas": 25711
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -719,7 +719,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 6,
-  "arquivos_acima_500_linhas": 29
+  "arquivos_acima_500_linhas": 30
  },
  "todos": [
   {

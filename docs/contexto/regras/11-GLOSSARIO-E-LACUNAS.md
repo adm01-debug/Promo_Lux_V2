@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `5f536770e1` · branch `main` · 2026-11-26 10:47 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `10dc090b04` · branch `main` · 2026-11-26 11:15 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -260,6 +260,8 @@ _nenhum item encontrado_
 | status | valor `already_completed` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/hooks/useDsar.ts` |
 | status | valor `accepting` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:src/pages/AcceptInvite.tsx` |
 | status | valor `masked` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/_shared/lusha-client.ts`<br>`escreve:supabase/functions/_shared/lusha-client.ts` |
+| status | valor `processed` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/export-scrape-job/index.ts` |
+| status | valor `unprocessed` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/export-scrape-job/index.ts` |
 | status | valor `error_other` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-enrich-contact/index.ts`<br>`escreve:supabase/functions/oracle-enrich-contact/index.ts` |
 | status | valor `error_bitrix` para `status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/oracle-push-bitrix/index.ts`<br>`escreve:supabase/functions/oracle-push-bitrix/index.ts` |
 | status | valor `blocked` para `status` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/webhook-dispatcher/index.ts` |
@@ -272,6 +274,7 @@ _nenhum item encontrado_
 | status | valor `expanded` para `state` usado no código não existe em nenhum enum do banco/TS | `escreve:src/components/ui/use-sidebar.ts` |
 | status | valor `string` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/email-oauth-callback/index.ts` |
 | status | valor `expiring_soon` para `health_status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/lusha-cookie-health/index.ts` |
+| status | valor `job_exports` para `etapa` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/export-scrape-job/index.ts` |
 | status | valor `save` para `current_step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/workflow-engine/index.ts` |
 | coluna | coluna `error_reason` usada no código não existe no schema de `instagram_scrape_dead_letter` |  |
 | coluna | coluna `score` usada no código não existe no schema de `intent_signals` |  |
