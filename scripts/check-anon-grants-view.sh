@@ -22,12 +22,14 @@ set -euo pipefail
 DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
 
 if [[ -z "$DB_URL" ]]; then
-  if [[ -n "${CI:-}" ]]; then
-    echo "::error::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard da view v_sec_definer_anon_grants NAO pode ser validado no CI."
+  # Fail-closed apenas nos eventos que sempre recebem o secret; em pull_request ele
+  # nao existe, e falhar aqui deixaria todo PR vermelho sem validar o banco.
+  if [[ "${GITHUB_EVENT_NAME:-}" =~ ^(push|schedule|workflow_dispatch)$ ]]; then
+    echo "::error::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard da view v_sec_definer_anon_grants NAO pode ser validado no evento ${GITHUB_EVENT_NAME}."
     echo "Cadastre a connection string em Settings -> Secrets -> Actions (secret SUPABASE_DB_URL)."
     exit 1
   fi
-  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard da view v_sec_definer_anon_grants ignorado fora do CI."
+  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard da view v_sec_definer_anon_grants ignorado (evento: ${GITHUB_EVENT_NAME:-local}); a validacao roda no push para main."
   exit 0
 fi
 

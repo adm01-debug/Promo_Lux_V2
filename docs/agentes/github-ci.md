@@ -61,9 +61,11 @@ A tabela abaixo cobre só os 3 originais.
 2. **Consertar o base64 não basta.** No arquivo decodificado, 2 steps leem `secrets.SUPAAASE_DB_URL`
    (três letras A) em vez de `SUPABASE_DB_URL`.
 3. **Os guards de banco passavam em verde com a variável vazia — corrigido em 2026-11-25 (etapas 001/002 do
-   `docs/qa/04-PLANO.md`).** O `exit 0` com `::warning::` saiu dos cinco scripts: com `CI` definido e
-   `SUPABASE_DB_URL` vazia o guard emite `::error::` e sai com 1; fora do CI avisa e sai com 0. Ao rodar
-   esses guards localmente, exporte `SUPABASE_DB_URL` — a saída só vale com conexão real.
+   `docs/qa/04-PLANO.md`).** O `exit 0` com `::warning::` saiu dos cinco scripts: nos eventos `push`, `schedule` e `workflow_dispatch` a ausência da URL emite `::error::` e
+   sai com 1; em `pull_request` (onde o secret não chega ao runner) e localmente avisa e sai com 0. O que
+   resta é criar o secret `SUPABASE_DB_URL` no repositório: sem ele o guard nunca consulta o banco e todo
+   push para `main` fica vermelho. Ao rodar esses guards localmente, exporte `SUPABASE_DB_URL` — a saída só
+   vale com conexão real.
 4. **`scripts/check-anon-grants-view.sh` também está em base64** (2.784 bytes, 0 linhas) — inexecutável.
 5. **`edge-tests-daily.yml` roda o runner errado**: executa `deno test` sobre arquivos que são testes
    **Vitest** (`import { describe, it, expect } from "vitest"`), registrados em `vitest.config.ts`. Daí as

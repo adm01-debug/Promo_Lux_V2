@@ -16,20 +16,22 @@
 # Requer connection string em SUPABASE_DB_URL (ou DATABASE_URL).
 # Configure como secret no repositorio: Settings -> Secrets -> Actions.
 #
-# Fail-closed: no CI (variavel CI definida) a ausencia da URL FALHA o build;
-# fora do CI apenas avisa, para permitir rodar o guard em maquina sem o segredo.
+# Fail-closed: nos eventos push/schedule/workflow_dispatch a ausencia da URL FALHA o
+# build; em pull_request e na maquina local apenas avisa (o secret nao existe em PR).
 # =============================================================================
 set -euo pipefail
 
 DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
 
 if [[ -z "$DB_URL" ]]; then
-  if [[ -n "${CI:-}" ]]; then
-    echo "::error::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard de grants/RLS NAO pode ser validado no CI."
+  # Fail-closed apenas nos eventos que sempre recebem o secret; em pull_request ele
+  # nao existe, e falhar aqui deixaria todo PR vermelho sem validar o banco.
+  if [[ "${GITHUB_EVENT_NAME:-}" =~ ^(push|schedule|workflow_dispatch)$ ]]; then
+    echo "::error::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard de grants/RLS NAO pode ser validado no evento ${GITHUB_EVENT_NAME}."
     echo "Cadastre a connection string em Settings -> Secrets -> Actions (secret SUPABASE_DB_URL)."
     exit 1
   fi
-  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard de grants/RLS ignorado fora do CI."
+  echo "::warning::SUPABASE_DB_URL (ou DATABASE_URL) nao configurada -- guard de grants/RLS ignorado (evento: ${GITHUB_EVENT_NAME:-local}); a validacao roda no push para main."
   echo "Adicione a connection string do banco como secret para ativar este guard: Settings -> Secrets -> Actions."
   exit 0
 fi
