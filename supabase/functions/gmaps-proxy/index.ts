@@ -381,11 +381,15 @@ serve(async (req) => {
       const body = { name: parsed.data.name, ...parsed.data.config };
 
       // G4: injeta proxies ativos da organização quando o usuário não passou explícitos.
+      // Etapa 033 (G12-3): o client acima é service_role e ignora RLS, então sem o
+      // filtro abaixo a raspagem de uma organização usava (e entregava ao scraper
+      // externo) as credenciais de proxy de outra. `org_proxies` é admin-only.
       let orgProxies: string[] = [];
-      if (!parsed.data.config.proxies?.length) {
+      if (userOrgId && !parsed.data.config.proxies?.length) {
         const { data: proxyRows } = await supabase
           .from("org_proxies")
           .select("url")
+          .eq("organization_id", userOrgId)
           .eq("is_active", true)
           .order("last_used_at", { ascending: true, nullsFirst: true })
           .limit(10);
