@@ -164,20 +164,25 @@ const AutomationMonitoring = () => {
     mutationFn: async ({ type, method, active }: { type: string, method: string, active: boolean }) => {
       const existing = alertSettings?.find(a => a.event_type === type && a.delivery_method === method);
       if (existing) {
-        return await db.from("automation_alerts").update({ is_active: active }).eq("id", existing.id);
+        const { error } = await db.from("automation_alerts").update({ is_active: active }).eq("id", existing.id);
+        if (error) throw error;
       } else if (user?.id) {
-        return await db.from("automation_alerts").insert([{
+        const { error } = await db.from("automation_alerts").insert([{
           event_type: type,
           delivery_method: method,
           is_active: active,
           user_id: user.id
         }]);
+        if (error) throw error;
+      } else {
+        throw new Error("Sessão sem usuário autenticado: entre novamente para salvar as preferências.");
       }
     },
     onSuccess: () => {
       refetchAlerts();
       toast({ title: "Configurações Salvas", description: "Suas preferências de alerta foram atualizadas." });
-    }
+    },
+    onError: (err: Error) => toast({ title: "Erro ao salvar as preferências de alerta", description: err.message, variant: "destructive" }),
   });
 
 

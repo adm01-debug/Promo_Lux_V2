@@ -37,6 +37,11 @@ export function useRolePermissions() {
   const query = useQuery({
     queryKey: key,
     enabled: !!activeOrgId,
+    // Dado de segurança: no padrão global (2 min, src/App.tsx:51) tirar o
+    // acesso de alguém levava até 2 min para aparecer na tela. Só as consultas
+    // de papel/permissão usam janela curta e nova busca ao focar a janela.
+    staleTime: 15_000,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("role_permissions")

@@ -63,6 +63,11 @@ export function ChaosEngineeringPanel() {
         variant: enabled ? "destructive" : "default",
       });
     },
+    onError: (err: Error) => toast({
+      title: "Erro ao ligar ou desligar o chaos",
+      description: err.message,
+      variant: "destructive",
+    }),
   });
 
   return (

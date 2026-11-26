@@ -57,6 +57,10 @@ export function useOrgMembers(orgId: string | null) {
   return useQuery({
     queryKey: ["org-members", orgId],
     enabled: !!orgId,
+    // Mesmo motivo de useRolePermissions: papel de membro é dado de segurança
+    // e não pode esperar a janela global de 2 min (src/App.tsx:51).
+    staleTime: 15_000,
+    refetchOnWindowFocus: true,
     queryFn: async (): Promise<Member[]> => {
       const { data, error } = await supabase
         .from("organization_members")
