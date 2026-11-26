@@ -7,10 +7,10 @@ name: Database Migrations
 #
 #  1. O ambiente NUNCA é escolhido por um input livre. Ele é derivado do
 #     gatilho: pull_request -> staging (somente validação), push em main ->
-#     production (aplica). Isso elimina a classe de erro "rodei a migration
+#     Production (aplica). Isso elimina a classe de erro "rodei a migration
 #     no banco errado".
-#  2. Credenciais vivem em GitHub Environments (`staging` / `production`),
-#     não em secrets de repositório. O Environment `production` deve ter
+#  2. Credenciais vivem em GitHub Environments (`staging` / `Production`),
+#     não em secrets de repositório. O Environment `Production` deve ter
 #     "Required reviewers" ativado, então nenhuma migration chega em prod sem
 #     aprovação humana explícita.
 #  3. Nada de SQL arbitrário vindo de fora. A única fonte de verdade é o
@@ -20,7 +20,7 @@ name: Database Migrations
 #  5. Quem aplica migration em produção é a INTEGRAÇÃO SUPABASE do GitHub, no
 #     merge para main. O job `apply` daqui é o caminho manual de recuperação
 #     (`workflow_dispatch`) e por isso não roda em push: enquanto rodava, o run
-#     ficava `waiting` no Environment `production` esperando um reviewer que
+#     ficava `waiting` no Environment `Production` esperando um reviewer que
 #     nunca aparece, prendia o grupo de concurrency e deixava todo push
 #     seguinte `pending` com 0 jobs (runs 45483069837, 45482589084...). Em
 #     push/PR este workflow só valida: lint + replay em banco efêmero.
@@ -51,7 +51,7 @@ on:
         type: choice
         options:
           - staging
-          - production
+          - Production
 
 concurrency:
   # Serializa quem APLICA migration, por ambiente. Duas aplicações simultâneas
@@ -69,7 +69,7 @@ jobs:
     name: Lint das migrations
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Validar nomes, ordem e conteúdo das migrations
         run: bash scripts/check-migrations.sh
@@ -84,9 +84,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@1dedf2c611547ede7232d26866dd3c56ab903bbb # v1.7.3
         with:
           version: v3.1.0
 
@@ -111,7 +111,7 @@ jobs:
   # 3. Plano (dry-run) contra o banco alvo. Em PR o alvo é SEMPRE staging.
   # -------------------------------------------------------------------------
   # `plan` so roda em PR: em push na main ele era um job read-only que tambem
-  # pedia aprovacao do environment `production`. Como roda ANTES do `apply`,
+  # pedia aprovacao do environment `Production`. Como roda ANTES do `apply`,
   # cada push exigia DUAS aprovacoes e a fila parava aqui (runs 45167250585,
   # 45160431382 ficaram `waiting` por horas). Em push, o dry-run virou step do
   # `apply` (ver job 4), entao o plano continua sendo impresso antes do push.
@@ -127,9 +127,9 @@ jobs:
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@1dedf2c611547ede7232d26866dd3c56ab903bbb # v1.7.3
         with:
           version: v3.1.0
 
@@ -165,26 +165,26 @@ jobs:
   # 4. Apply — MANUAL (`workflow_dispatch`), nunca em PR nem em push. Em push
   #    na main quem aplica é a integração Supabase do GitHub; este job existe
   #    como caminho de recuperação e mantém a aprovação de reviewer no
-  #    Environment `production`.
+  #    Environment `Production`.
   # -------------------------------------------------------------------------
   apply:
-    name: Aplicar em ${{ inputs.environment || 'production' }}
+    name: Aplicar em ${{ inputs.environment || 'Production' }}
     runs-on: ubuntu-latest
     # needs: shadow (e nao `plan`) porque o `plan` so roda em PR e um job que
     # depende de job pulado tambem e pulado - o apply nunca rodaria.
     needs: shadow
     if: github.event_name == 'workflow_dispatch'
     environment:
-      name: ${{ inputs.environment || 'production' }}
+      name: ${{ inputs.environment || 'Production' }}
       url: https://supabase.com/dashboard/project/${{ vars.SUPABASE_PROJECT_REF }}
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@1dedf2c611547ede7232d26866dd3c56ab903bbb # v1.7.3
         with:
           version: v3.1.0
 
