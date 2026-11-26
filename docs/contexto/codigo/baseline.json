@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "6d4546e5545344e017d753aa056ec7b7fb9a0697",
+  "commit": "9036246667e0b6986039746bf652c4630ebaee9e",
   "branch": "main",
-  "data_commit": "2026-11-25T22:37:30-03:00",
+  "data_commit": "2026-11-25T23:02:04-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9036246",
+    "data": "2026-11-25",
+    "assunto": "feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (et"
+   },
    {
     "sha": "6d4546e",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "b4dc737",
     "data": "2026-11-25",
     "assunto": "chore(config): versiona o verify_jwt das 62 edge functions (#215)"
-   },
-   {
-    "sha": "b5ca5ec",
-    "data": "2026-11-25",
-    "assunto": "fix(config): botao de custo Places API para de mentir (#214)"
    }
   ],
-  "arquivos_mudados_7d": 383,
+  "arquivos_mudados_7d": 390,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 150
+    "mudancas": 158
    },
    {
     "pasta": "src/integrations/supabase",
@@ -149,7 +149,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 23
+    "mudancas": 24
    },
    {
     "pasta": "package.json",
@@ -168,15 +168,15 @@
     "mudancas": 9
    },
    {
+    "pasta": "src/hooks/__tests__",
+    "mudancas": 9
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 8
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "pasta": "src/hooks/__tests__",
     "mudancas": 8
    },
    {
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 23
+    "mudancas": 24
    },
    {
     "arquivo": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 185
+    "commits": 186
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1188,
-  "arquivos_codigo": 742,
-  "linhas_codigo": 129118,
+  "arquivos_total": 1189,
+  "arquivos_codigo": 743,
+  "linhas_codigo": 129372,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 157,
+  "testes": 158,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -560,15 +560,15 @@
   },
   "src/components": {
    "arquivos": 322,
-   "linhas": 53834
+   "linhas": 53961
   },
   "src/contexts": {
    "arquivos": 9,
    "linhas": 515
   },
   "src/hooks": {
-   "arquivos": 109,
-   "linhas": 12450
+   "arquivos": 110,
+   "linhas": 12577
   },
   "src/integrations": {
    "arquivos": 14,

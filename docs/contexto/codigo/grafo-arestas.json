@@ -1184,6 +1184,7 @@
    "src/components/lux/map/MapMarkerIcons.tsx"
   ],
   "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
@@ -1202,6 +1203,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/AuditTrailPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
@@ -1239,6 +1241,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
@@ -1249,6 +1252,7 @@
    "src/hooks/useOrganizations.ts"
   ],
   "src/components/lux/monitoring/CircuitBreakerPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
@@ -1278,6 +1282,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/input.tsx",
@@ -1399,6 +1404,7 @@
    "src/components/ui/button.tsx"
   ],
   "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
@@ -1417,6 +1423,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/ReaperHistoryPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/scroll-area.tsx",
@@ -1570,6 +1577,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/WebScrapeView.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",

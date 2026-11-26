@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 585,
- "arestas": 1896,
+ "arestas": 1904,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -109,6 +109,10 @@
    "importado_por": 15
   },
   {
+   "arquivo": "src/components/lux/monitoring/PainelComEstado.tsx",
+   "importado_por": 13
+  },
+  {
    "arquivo": "src/components/ui/alert-dialog.tsx",
    "importado_por": 12
   },
@@ -159,10 +163,6 @@
   {
    "arquivo": "src/lib/exportCSV.ts",
    "importado_por": 8
-  },
-  {
-   "arquivo": "playwright-fixture.ts",
-   "importado_por": 7
   }
  ],
  "ciclos": {

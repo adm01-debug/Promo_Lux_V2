@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "6d4546e5545344e017d753aa056ec7b7fb9a0697",
+  "sha": "9036246667e0b6986039746bf652c4630ebaee9e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 01:38 UTC",
-  "files_total": 1209,
-  "code_files": 1020,
-  "code_lines": 151545
+  "generated_at": "2026-11-26 02:05 UTC",
+  "files_total": 1210,
+  "code_files": 1021,
+  "code_lines": 151799
  },
  "version": "1.3.2",
- "facts_hash": "49eb4d3837d7d5a6",
+ "facts_hash": "36f20f9871ced45d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -247,7 +247,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 393,
-   ".tsx": 320,
+   ".tsx": 321,
    ".sql": 274,
    ".mjs": 23,
    ".py": 5,
@@ -33494,7 +33494,7 @@
   {
    "module": "src/components",
    "files": 322,
-   "lines": 53834,
+   "lines": 53961,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33742,8 +33742,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 109,
-   "lines": 12450,
+   "files": 110,
+   "lines": 12577,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -40742,6 +40742,10 @@
    {
     "file": "src/hooks/useRolePermissions.ts",
     "text": "Desfaz a alteração otimista: a matriz não pode divergir do banco."
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "text": "tela mostra uma permissao que o banco recusou. Coberto por"
    },
    {
     "file": "src/hooks/useWarmupProfile.ts",
@@ -55876,6 +55880,22 @@
    {
     "file": "src/hooks/__tests__/useRecentViews.test.ts",
     "name": "loads from localStorage on mount"
+   },
+   {
+    "file": "src/hooks/__tests__/useRolePermissions.test.tsx",
+    "name": "useRolePermissions"
+   },
+   {
+    "file": "src/hooks/__tests__/useRolePermissions.test.tsx",
+    "name": "aplica a mudanca antes da resposta do banco"
+   },
+   {
+    "file": "src/hooks/__tests__/useRolePermissions.test.tsx",
+    "name": "desfaz a mudanca otimista e avisa quando a gravacao falha"
+   },
+   {
+    "file": "src/hooks/__tests__/useRolePermissions.test.tsx",
+    "name": "mantem a mudanca quando a gravacao conclui sem erro"
    },
    {
     "file": "src/hooks/__tests__/useSidebarState.test.ts",
@@ -85404,7 +85424,7 @@
   },
   "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx": {
    "path": "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
-   "lines": 200,
+   "lines": 212,
    "exports": [
     "function ApiLatencyAlertSettingsCard"
    ],
@@ -85446,7 +85466,7 @@
   },
   "src/components/lux/monitoring/AuditTrailPanel.tsx": {
    "path": "src/components/lux/monitoring/AuditTrailPanel.tsx",
-   "lines": 257,
+   "lines": 268,
    "exports": [
     "function AuditTrailPanel"
    ]
@@ -85604,7 +85624,7 @@
   },
   "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx": {
    "path": "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
-   "lines": 179,
+   "lines": 191,
    "exports": [
     "function CircuitBreakerAlertSettingsCard"
    ],
@@ -85631,7 +85651,7 @@
   },
   "src/components/lux/monitoring/CircuitBreakerPanel.tsx": {
    "path": "src/components/lux/monitoring/CircuitBreakerPanel.tsx",
-   "lines": 220,
+   "lines": 233,
    "exports": [
     "function CircuitBreakerPanel"
    ],
@@ -85668,7 +85688,7 @@
   },
   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": {
    "path": "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
-   "lines": 475,
+   "lines": 486,
    "exports": [
     "function DlqAlertSettingsCard"
    ],
@@ -86127,7 +86147,7 @@
   },
   "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": {
    "path": "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
-   "lines": 181,
+   "lines": 207,
    "exports": [
     "function PartitionAdvisoryPanel"
    ]
@@ -86176,7 +86196,7 @@
   },
   "src/components/lux/monitoring/ReaperHistoryPanel.tsx": {
    "path": "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
-   "lines": 219,
+   "lines": 239,
    "exports": [
     "function ReaperHistoryPanel"
    ]
@@ -86638,7 +86658,7 @@
   },
   "src/components/lux/monitoring/WebScrapeView.tsx": {
    "path": "src/components/lux/monitoring/WebScrapeView.tsx",
-   "lines": 280,
+   "lines": 302,
    "exports": [
     "function WebScrapeView"
    ],
@@ -90675,7 +90695,7 @@
   },
   "src/hooks/useRolePermissions.ts": {
    "path": "src/hooks/useRolePermissions.ts",
-   "lines": 125,
+   "lines": 130,
    "exports": [
     "interface RolePermissionRow",
     "type PermissionFlag",
@@ -90723,7 +90743,8 @@
    ],
    "rule_comments": [
     "de papel/permissão usam janela curta e nova busca ao focar a janela.",
-    "Desfaz a alteração otimista: a matriz não pode divergir do banco."
+    "Desfaz a alteração otimista: a matriz não pode divergir do banco.",
+    "tela mostra uma permissao que o banco recusou. Coberto por"
    ],
    "hooks": [
     "useRolePermissions"
@@ -91796,6 +91817,17 @@
     "limits to 5 recent views",
     "persists to localStorage",
     "loads from localStorage on mount"
+   ]
+  },
+  "src/hooks/__tests__/useRolePermissions.test.tsx": {
+   "path": "src/hooks/__tests__/useRolePermissions.test.tsx",
+   "lines": 122,
+   "is_test": true,
+   "tests": [
+    "useRolePermissions",
+    "aplica a mudanca antes da resposta do banco",
+    "desfaz a mudanca otimista e avisa quando a gravacao falha",
+    "mantem a mudanca quando a gravacao conclui sem erro"
    ]
   },
   "src/hooks/__tests__/useSidebarState.test.ts": {
@@ -103387,10 +103419,29 @@
   }
  },
  "git": {
-  "sha": "6d4546e5545344e017d753aa056ec7b7fb9a0697",
+  "sha": "9036246667e0b6986039746bf652c4630ebaee9e",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9036246",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (etapas 227-230) (#242)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/monitoring/ApiLatencyAlertSettingsCard.tsx",
+     "src/components/lux/monitoring/AuditTrailPanel.tsx",
+     "src/components/lux/monitoring/CircuitBreakerAlertSettingsCard.tsx",
+     "src/components/lux/monitoring/CircuitBreakerPanel.tsx",
+     "src/components/lux/monitoring/DlqAlertSettingsCard.tsx",
+     "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
+     "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
+     "src/components/lux/monitoring/WebScrapeView.tsx",
+     "src/hooks/__tests__/useRolePermissions.test.tsx",
+     "src/hooks/useRolePermissions.ts"
+    ]
+   },
    {
     "sha": "6d4546e",
     "date": "2026-11-25",
@@ -103824,21 +103875,12 @@
      "docs/adr/008-soft-delete-policy.md",
      "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql"
     ]
-   },
-   {
-    "sha": "e1331fe",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "chore(edge): descarta audit-logs-prune, function sem chamador (#209)",
-    "files": [
-     "supabase/functions/audit-logs-prune/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    22
+    23
    ],
    [
     "src/pages/Monitoring.tsx",
@@ -103889,6 +103931,10 @@
     3
    ],
    [
+    "src/hooks/useRolePermissions.ts",
+    2
+   ],
+   [
     "src/components/lux/CommandPalette.tsx",
     2
    ],
@@ -103910,10 +103956,6 @@
    ],
    [
     "src/components/lux/monitoring/MonitoringView.tsx",
-    2
-   ],
-   [
-    "src/hooks/useOrganizations.ts",
     2
    ]
   ]

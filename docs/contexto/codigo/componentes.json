@@ -1761,7 +1761,7 @@
     "ApiLatencyAlertSettingsCard"
    ],
    "export_default": null,
-   "linhas": 200,
+   "linhas": 212,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
@@ -1797,7 +1797,7 @@
     "AuditTrailPanel"
    ],
    "export_default": null,
-   "linhas": 257,
+   "linhas": 268,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuditTables",
@@ -1865,7 +1865,7 @@
     "CircuitBreakerAlertSettingsCard"
    ],
    "export_default": null,
-   "linhas": 179,
+   "linhas": 191,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
@@ -1884,7 +1884,7 @@
     "CircuitBreakerPanel"
    ],
    "export_default": null,
-   "linhas": 220,
+   "linhas": 233,
    "dominio": "components/lux",
    "hooks_locais": [
     "useCircuitBreakers",
@@ -1917,7 +1917,7 @@
     "DlqAlertSettingsCard"
    ],
    "export_default": null,
-   "linhas": 475,
+   "linhas": 486,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
@@ -2160,7 +2160,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 4,
+   "usado_por": 12,
    "orfao": false
   },
   {
@@ -2169,7 +2169,7 @@
     "PartitionAdvisoryPanel"
    ],
    "export_default": null,
-   "linhas": 181,
+   "linhas": 207,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAcknowledgeAdvisory",
@@ -2206,7 +2206,7 @@
     "ReaperHistoryPanel"
    ],
    "export_default": null,
-   "linhas": 219,
+   "linhas": 239,
    "dominio": "components/lux",
    "hooks_locais": [
     "useReaperAlerts",
@@ -2530,7 +2530,7 @@
     "WebScrapeView"
    ],
    "export_default": null,
-   "linhas": 280,
+   "linhas": 302,
    "dominio": "components/lux",
    "hooks_locais": [
     "useEnqueueWebScrape",

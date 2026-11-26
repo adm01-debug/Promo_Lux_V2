@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (110)",
+   "co-localizado (__tests__) (111)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (etapas 227-230) (#242)",
    "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)",
    "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (etapas 222-225) (#240)",
    "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)",
-   "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)",
-   "fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)"
+   "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)"
   ]
  },
  "pr_template": null,

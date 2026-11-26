@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6d4546e554` · branch `main` · 2026-11-26 01:38 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9036246667` · branch `main` · 2026-11-26 02:05 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1355 testes em 141 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1359 testes em 142 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2452,6 +2452,7 @@ _nenhum item encontrado_
 | `src/hooks/__tests__/useOnboardingState.test.tsx` | 4 | useOnboardingState (etapa 197) · nao mostra o passo a passo quando a leitura do perfil falha · mostra quando o perfil existe e o passo a passo nao foi concluido · nao mostra e grava o cache local quando ja foi concluido |
 | `src/hooks/__tests__/useOraclePushBitrix.test.ts` | 4 | useOraclePushBitrix — contrato da edge oracle-push-bitrix · envia payload com contact_ids + destino Bitrix opcional · propaga erro da edge (bitrix_open) para onError · aceita resposta com status variados no results[] |
 | `src/hooks/__tests__/useRateLimit.test.ts` | 4 | useRateLimit · should not be locked initially · should lock after exceeding max attempts · should unlock after window windowMs |
+| `src/hooks/__tests__/useRolePermissions.test.tsx` | 4 | useRolePermissions · aplica a mudanca antes da resposta do banco · desfaz a mudanca otimista e avisa quando a gravacao falha · mantem a mudanca quando a gravacao conclui sem erro |
 | `src/integrations/supabase/withOrg.test.ts` | 4 | withOrg Multi-tenant Isolation · should block access to unclassified tables (Deny-by-Default) · should allow access to scoped tables when org is active · should block write operations without active organization |
 | `src/integrations/supabase/__tests__/trashLabelColumns.test.ts` | 4 | TRASH_LABEL_COLUMN ↔ types.ts · cobre as oito tabelas com soft delete · a coluna de rotulo de %s (%s) existe no schema · deals usa title, nao name |
 | `src/tests/fuzzing-validation.test.ts` | 4 | Fuzzing & Validation: Webhooks and Edge Functions · should reject malformed JSON payloads · should reject missing required fields (e.g., event_type) · should handle invalid UUIDs gracefully |
@@ -2605,6 +2606,7 @@ _nenhum item encontrado_
 | * GAP-4: Reseta o estado de rate limit para esta chave. | `src/hooks/useRateLimit.ts` |
 | de papel/permissão usam janela curta e nova busca ao focar a janela. | `src/hooks/useRolePermissions.ts` |
 | Desfaz a alteração otimista: a matriz não pode divergir do banco. | `src/hooks/useRolePermissions.ts` |
+| tela mostra uma permissao que o banco recusou. Coberto por | `src/hooks/useRolePermissions.ts` |
 | perfil, `get_warmup_slot` barra o envio diario acima do limite, fora da | `src/hooks/useWarmupProfile.ts` |
 | * Limite do dia para um dia do ramp-up: start + incremento*(dia-1), truncado em max. */ | `src/hooks/useWarmupProfile.ts` |
 | `any`, modelamos apenas o contrato realmente usado pelo wrapper e a cadeia de | `src/integrations/supabase/withOrg.ts` |

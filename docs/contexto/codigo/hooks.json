@@ -2170,7 +2170,7 @@
    "hooks_exportados": [
     "useRolePermissions"
    ],
-   "linhas": 125,
+   "linhas": 130,
    "dominio": "hooks",
    "tabelas": [
     "role_permissions"
@@ -2191,7 +2191,7 @@
     "src/components/lux/permissions/PermissionsMatrix.tsx",
     "src/hooks/usePermissions.ts"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useSalesGoals.ts",

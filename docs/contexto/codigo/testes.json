@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 157,
+ "total": 158,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 135
+  "unit": 136
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 110
+   "arquivos": 111
   },
   {
    "padrao": "e2e/",
@@ -899,6 +899,15 @@
    "casos": 6
   },
   {
+   "arquivo": "src/hooks/__tests__/useRolePermissions.test.tsx",
+   "tipo": "unit",
+   "linhas": 122,
+   "testa": [
+    "src/hooks/useRolePermissions.ts"
+   ],
+   "casos": 3
+  },
+  {
    "arquivo": "src/hooks/__tests__/useSidebarState.test.ts",
    "tipo": "unit",
    "linhas": 44,
@@ -1597,6 +1606,7 @@
   "src/hooks/useRealtimeCompanies.ts": 1,
   "src/hooks/useRealtimeScrapeJobs.ts": 1,
   "src/hooks/useRecentViews.ts": 1,
+  "src/hooks/useRolePermissions.ts": 1,
   "src/hooks/useScheduledReports.ts": 1,
   "src/hooks/useScrapeQueue.ts": 1,
   "src/hooks/useSidebarState.ts": 1,
@@ -1730,7 +1740,6 @@
    "src/hooks/useReaperHistory.ts",
    "src/hooks/useResilienceComparison.ts",
    "src/hooks/useResilienceSimulator.ts",
-   "src/hooks/useRolePermissions.ts",
    "src/hooks/useSalesGoals.ts",
    "src/hooks/useSatisfaction.ts",
    "src/hooks/useSkin.ts",
