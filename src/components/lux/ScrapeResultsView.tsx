@@ -5,7 +5,7 @@ import { db } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/auth-context";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { DatabaseIcon, RefreshCw, Trash2, CheckCircle2, Building2, Loader2, Search, FileJson, Eye, RotateCcw } from "lucide-react";
+import { DatabaseIcon, RefreshCw, Trash2, CheckCircle2, Building2, Loader2, Search, FileJson, Eye, RotateCcw, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,13 @@ interface ScrapeResultRow {
   created_at: string;
 }
 interface JobLite { id: string; name: string }
+interface JobExportRow {
+  id: string;
+  job_id: string;
+  format: string;
+  status: string;
+  created_at: string;
+}
 
 const pickString = (raw: RawData, keys: string[]): string => {
   for (const k of keys) {
@@ -52,6 +59,7 @@ export const ScrapeResultsView = () => {
   const [statusFilter, setStatusFilter] = useState<"all" | "processed" | "unprocessed">("all");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const { data: jobs } = useQuery({
     queryKey: ["scrape-jobs-lite"],
@@ -186,6 +194,71 @@ export const ScrapeResultsView = () => {
     onError: (err) => toast({ title: "Erro ao converter", description: err.message, variant: "destructive" }),
   });
 
+  const { data: exportsList } = useQuery({
+    queryKey: ["job-exports", jobFilter],
+    queryFn: async (): Promise<JobExportRow[]> => {
+      let q = supabase
+        .from("job_exports")
+        .select("id, job_id, format, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (jobFilter !== "all") q = q.eq("job_id", jobFilter);
+      const { data, error } = await q;
+      if (error) throw error;
+      return (data ?? []) as JobExportRow[];
+    },
+  });
+
+  const handleExport = async () => {
+    if (jobFilter === "all") {
+      toast({ title: "Selecione um job", description: "A exportacao sai por job: escolha um na lista de jobs.", variant: "destructive" });
+      return;
+    }
+    setIsExporting(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new Error("Sessao expirada - entre novamente.");
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-scrape-job`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({ job_id: jobFilter, status: statusFilter }),
+      });
+      if (!res.ok) {
+        const detail = await res.text();
+        throw new Error(detail.slice(0, 300) || `HTTP ${res.status}`);
+      }
+      const blob = await res.blob();
+      const rows = Number(res.headers.get("X-Export-Rows") ?? "0");
+      const truncated = res.headers.get("X-Export-Truncated") === "1";
+      const recorded = res.headers.get("X-Export-Recorded") !== "0";
+      const name = (res.headers.get("Content-Disposition") ?? "").match(/filename="([^"]+)"/)?.[1] ?? "leads.csv";
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(href);
+      queryClient.invalidateQueries({ queryKey: ["job-exports"] });
+      toast({
+        title: rows > 0 ? `${rows} leads exportados` : "Nenhum lead nesse filtro",
+        description: truncated
+          ? "Limite de 20.000 linhas por exportacao - refine o filtro para o restante."
+          : recorded ? name : `${name} (baixado, mas nao registrado no historico)`,
+      });
+    } catch (err) {
+      toast({ title: "Falha na exportacao", description: (err as Error).message, variant: "destructive" });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -245,7 +318,31 @@ export const ScrapeResultsView = () => {
             <SelectItem value="unprocessed">Pendentes</SelectItem>
           </SelectContent>
         </Select>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleExport}
+          disabled={isExporting || jobFilter === "all"}
+          title={jobFilter === "all" ? "Escolha um job para exportar" : "Baixar os leads deste job em CSV"}
+          className="gap-1.5 text-xs h-9"
+        >
+          {isExporting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+          Exportar CSV
+        </Button>
       </div>
+
+      {jobFilter !== "all" && (exportsList?.length ?? 0) > 0 && (
+        <div className="flex items-center gap-2 flex-wrap text-[10px] text-muted-foreground">
+          <span className="uppercase tracking-widest">Exportacoes recentes:</span>
+          {(exportsList ?? []).map(e => (
+            <Badge key={e.id} variant="outline" className="text-[10px] gap-1">
+              <FileJson className="h-3 w-3" />
+              {new Date(e.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+              {e.status === "completed" ? " ok" : ` ${e.status}`}
+            </Badge>
+          ))}
+        </div>
+      )}
 
       {/* List */}
       <div className="glass rounded-lg overflow-hidden">
