@@ -380,7 +380,7 @@
    "hooks_exportados": [
     "useApiKeys"
    ],
-   "linhas": 91,
+   "linhas": 93,
    "dominio": "hooks",
    "tabelas": [
     "api_keys"
@@ -489,7 +489,7 @@
     "useAuditTables",
     "useAuditTrail"
    ],
-   "linhas": 173,
+   "linhas": 175,
    "dominio": "hooks",
    "tabelas": [
     "audit_logs",
@@ -903,7 +903,7 @@
     "useDealTasks",
     "useDeals"
    ],
-   "linhas": 328,
+   "linhas": 349,
    "dominio": "hooks",
    "tabelas": [
     "deal_activities",
@@ -935,7 +935,7 @@
     "src/components/lux/deals/LostReasonsDialog.tsx",
     "src/components/lux/deals/StagesManagerDialog.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useDlqAlertSettings.ts",
@@ -1103,7 +1103,7 @@
    "hooks_exportados": [
     "useEmailAccountAuditLog"
    ],
-   "linhas": 197,
+   "linhas": 199,
    "dominio": "hooks",
    "tabelas": [
     "audit_logs",
@@ -1178,7 +1178,7 @@
     "useEmailTemplates",
     "useSaveEmailTemplate"
    ],
-   "linhas": 172,
+   "linhas": 176,
    "dominio": "hooks",
    "tabelas": [
     "email_template_stats",
@@ -1232,7 +1232,7 @@
     "useFeatureFlag",
     "useFeatureFlags"
    ],
-   "linhas": 193,
+   "linhas": 199,
    "dominio": "hooks",
    "tabelas": [
     "feature_flags"
@@ -1300,7 +1300,7 @@
    "hooks_exportados": [
     "useICPConfig"
    ],
-   "linhas": 126,
+   "linhas": 132,
    "dominio": "hooks",
    "tabelas": [
     "ipc_config"
@@ -1482,7 +1482,7 @@
     "useMembershipAuditLog",
     "useMembershipAuditLogPaged"
    ],
-   "linhas": 216,
+   "linhas": 220,
    "dominio": "hooks",
    "tabelas": [
     "audit_logs",
@@ -1648,7 +1648,7 @@
    "hooks_exportados": [
     "useOnboardingState"
    ],
-   "linhas": 69,
+   "linhas": 75,
    "dominio": "hooks",
    "tabelas": [
     "profiles"
@@ -1666,7 +1666,7 @@
    "usado_por_arquivos": [
     "src/components/lux/OnboardingTour.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useOracleV2.ts",
@@ -1712,7 +1712,7 @@
     "useRevokeInvite",
     "useUpdateMemberRole"
    ],
-   "linhas": 204,
+   "linhas": 206,
    "dominio": "hooks",
    "tabelas": [
     "organization_invites",
@@ -1821,7 +1821,7 @@
     "usePartitionAdvisories",
     "usePartitionPolicies"
    ],
-   "linhas": 129,
+   "linhas": 131,
    "dominio": "hooks",
    "tabelas": [
     "partition_advisories",
@@ -2593,7 +2593,7 @@
     "useWebScrapeStatus",
     "useWebScrapeTasks"
    ],
-   "linhas": 173,
+   "linhas": 176,
    "dominio": "hooks",
    "tabelas": [
     "web_scrape_queue"

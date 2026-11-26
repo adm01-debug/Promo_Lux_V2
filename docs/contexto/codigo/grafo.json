@@ -62,7 +62,7 @@
   },
   {
    "arquivo": "src/components/ui/tooltip.tsx",
-   "importado_por": 27
+   "importado_por": 28
   },
   {
    "arquivo": "src/components/ui/scroll-area.tsx",
@@ -137,11 +137,11 @@
    "importado_por": 10
   },
   {
-   "arquivo": "src/components/lux/lusha/types.ts",
-   "importado_por": 9
+   "arquivo": "src/hooks/useDeals.ts",
+   "importado_por": 10
   },
   {
-   "arquivo": "src/hooks/useDeals.ts",
+   "arquivo": "src/components/lux/lusha/types.ts",
    "importado_por": 9
   },
   {

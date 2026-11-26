@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `59db346ccb` · branch `main` · 2026-11-25 23:53 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `112265499a` · branch `main` · 2026-11-26 00:15 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2201,19 +2201,33 @@ _nenhum item encontrado_
 | Falha ao encerrar sessões | `src/hooks/useActiveSessions.ts` |
 | Sessão não encontrada ou já encerrada | `src/hooks/useActiveSessions.ts` |
 | Erro ao criar chave | `src/hooks/useApiKeys.ts` |
+| Não foi possível excluir a chave | `src/hooks/useApiKeys.ts` |
+| Não foi possível revogar a chave | `src/hooks/useApiKeys.ts` |
 | Export truncado em ${MAX_PAGES * PAGE} linhas — refine o período. | `src/hooks/useAuditLogExport.ts` |
 | Falha na exportação | `src/hooks/useAuditLogExport.ts` |
 | Organização não selecionada | `src/hooks/useAuditLogExport.ts` |
 | Falha ao reiniciar disjuntor: ${err.message} | `src/hooks/useCircuitBreakers.ts` |
 | Não foi possível salvar o layout no servidor | `src/hooks/useDashboardLayout.ts` |
+| Erro ao atualizar estágio | `src/hooks/useDeals.ts` |
 | Erro ao criar estágio | `src/hooks/useDeals.ts` |
 | No deal selected | `src/hooks/useDeals.ts` |
+| Não foi possível adicionar a atividade | `src/hooks/useDeals.ts` |
+| Não foi possível atualizar a tarefa | `src/hooks/useDeals.ts` |
+| Não foi possível criar a tarefa | `src/hooks/useDeals.ts` |
+| Não foi possível criar as etapas padrão do funil | `src/hooks/useDeals.ts` |
 | Não foi possível remover | `src/hooks/useDeals.ts` |
+| Não foi possível remover a tarefa | `src/hooks/useDeals.ts` |
+| Não foi possível remover o negócio | `src/hooks/useDeals.ts` |
 | Falha ao atender pedido | `src/hooks/useDsar.ts` |
 | Falha ao exportar | `src/hooks/useDsar.ts` |
 | Falha ao registrar pedido | `src/hooks/useDsar.ts` |
 | Organização não selecionada | `src/hooks/useDsar.ts` |
 | Informe um e-mail válido. | `src/hooks/useEmailSuppressions.ts` |
+| Não foi possível duplicar o modelo | `src/hooks/useEmailTemplates.ts` |
+| Não foi possível excluir o modelo | `src/hooks/useEmailTemplates.ts` |
+| Não foi possível salvar o modelo | `src/hooks/useEmailTemplates.ts` |
+| Erro ao ativar | `src/hooks/useICPConfig.ts` |
+| Erro ao remover | `src/hooks/useICPConfig.ts` |
 | Erro ao salvar | `src/hooks/useICPConfig.ts` |
 | Falha ao adicionar | `src/hooks/useIpAllowlist.ts` |
 | Falha ao alterar | `src/hooks/useIpAllowlist.ts` |
@@ -2268,6 +2282,7 @@ _nenhum item encontrado_
 | Falha ao enfileirar: ${e.message} | `src/hooks/useWebScrape.ts` |
 | Falha ao reprocessar DLQ: ${e.message} | `src/hooks/useWebScrape.ts` |
 | Falha na extração: ${e.message} | `src/hooks/useWebScrape.ts` |
+| Sessão indisponível: ${sessionError.message} | `src/hooks/useWebScrape.ts` |
 | Falha no reenvio | `src/hooks/useWebhooks.ts` |
 | [withOrg] Acesso bloqueado: tabela  | `src/integrations/supabase/withOrg.ts` |
 | Bloqueado por pop-up. Permita pop-ups para exportar PDF. | `src/lib/exportRLSReport.ts` |
@@ -2294,22 +2309,7 @@ _nenhum item encontrado_
 | vault HTTP ${res.status}: ${body.slice(0, 200)} | `supabase/functions/_shared/cookies.ts` |
 | cookie linkedin sem JSESSIONID (csrfToken) | `supabase/functions/_shared/leadcontact-client.ts` |
 | leadcontact ${path} ${res.status}: ${text.slice(0, 200)} | `supabase/functions/_shared/leadcontact-client.ts` |
-| leadcontact ${path}: code ${code} — ${msg} | `supabase/functions/_shared/leadcontact-client.ts` |
-| linkedin_url sem publicId utilizável | `supabase/functions/_shared/leadcontact-client.ts` |
-| departamento inválido para a Lusha: ${bad.join( | `supabase/functions/_shared/lusha-departments.ts` |
-| AI API error: ${aiResponse.status} | `supabase/functions/ai-agent/index.ts` |
-| Gmail send [${res.status}]: ${JSON.stringify(data)} | `supabase/functions/campaign-dispatch/index.ts` |
-| No refresh token; reconnect required | `supabase/functions/campaign-dispatch/index.ts` |
-| OAuth credentials not configured for ${acc.provider} | `supabase/functions/campaign-dispatch/index.ts` |
-| Outlook send [${res.status}]: ${txt} | `supabase/functions/campaign-dispatch/index.ts` |
-| Refresh failed: ${summary} | `supabase/functions/campaign-dispatch/index.ts` |
-| get_warmup_slot: ${warmupErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
-| load email account: ${accErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
-| load recipients: ${recErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
-| load suppressions: ${supErr.message} | `supabase/functions/campaign-dispatch/index.ts` |
-| token refresh: ${e instanceof Error ? e.message : String(e)} | `supabase/functions/campaign-dispatch/index.ts` |
-| Domínio interno não permitido | `supabase/functions/deliverability-check/index.ts` |
-| … +46 linhas — lista completa em `context.json` | |
+| … +61 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1303 testes em 133 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1318 testes em 136 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2404,6 +2404,7 @@ _nenhum item encontrado_
 | `src/components/lux/lusha/constants.test.ts` | 7 | DEPT_GROUPS (R34) — estrutura e invariantes · expõe exatamente 5 grupos · labels PT-BR canônicos em ordem estável · grupo  … |
 | `src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx` | 7 | DlqAlertSettingsCard · renderiza título e campos de configuração · chama a mutação de salvar com valores saneados ao clicar em Salvar · desabilita edição para não-administradores … |
 | `src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts` | 7 | detectSlaRisk · sinaliza fila cujo p95 excede o SLA configurado · não sinaliza quando o p95 está dentro do SLA · respeita a tolerância percentual … |
+| `src/hooks/__tests__/useDealsSeed.test.ts` | 7 | useDealStages - auto-preenchimento (etapas 195/196) · cria as etapas padrao uma unica vez mesmo com lista vazia nova a cada render · avisa o usuario e nao repete a tentativa quando a funcao do banco falha · nao semeia quando o funil ja tem etapas … |
 | `src/hooks/__tests__/useRecentViews.test.ts` | 7 | useRecentViews · starts with empty recent views · tracks a viewed page · deduplicates on revisit and moves to front … |
 | `src/integrations/supabase/__tests__/withOrg.readGuard.test.ts` | 7 | withOrg - leitura sem organizacao ativa · lanca MissingOrgContextError no select em tabela org-escopada · nao chega a montar a consulta no cliente · avisa o handler global antes de lancar … |
 | `src/lib/__tests__/money.test.ts` | 7 | money — totais por moeda (etapa 120) · agrupa os valores por moeda em vez de somar tudo num número só · trata moeda ausente ou em branco como BRL e valor inválido como zero · formata cada total com o símbolo da própria moeda … |
@@ -2437,12 +2438,14 @@ _nenhum item encontrado_
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
 | `e2e/invite-accept.spec.ts` | 4 | Convite — /invite/:token · redireciona visitante não autenticado para /login preservando o token · página de login continua funcional após vir de um convite · não aceita o convite automaticamente (requer ação do usuário) |
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |
+| `src/components/lux/__tests__/CompaniesViewDelete.test.tsx` | 4 | CompaniesView — falha ao excluir empresa (etapas 204/205) · mostra um resumo e registra o detalhe quando a exclusão individual falha por permissão · não promete motivo técnico: falha genérica vira resumo neutro · invalida os indicadores do painel depois da exclusão em lote |
 | `src/components/lux/__tests__/DealsView.currency.test.tsx` | 4 | DealsView — total por moeda (etapa 120) · mostra um total rotulado por moeda, nunca a soma das duas · mostra o total ponderado tambem por moeda · mantem um total unico quando todos os negocios estao na mesma moeda |
 | `src/components/lux/__tests__/ICPConfigView.test.tsx` | 4 | useICPConfig (mocked) · returns activeConfig with criteria · returns isLoading false · returns save function |
 | `src/components/lux/__tests__/LostReasonsDialog.currency.test.tsx` | 4 | LostReasonsDialog — valor perdido por moeda (etapa 120) · nao soma moedas diferentes no valor perdido · mostra o valor do motivo por moeda ao lado da contagem · sem negocios perdidos, nao afirma valor nenhum |
 | `src/components/lux/__tests__/WorkflowsView.test.tsx` | 4 | WorkflowsView · renders heading · renders create button · shows workflow cards when data loads |
 | `src/hooks/__tests__/orgGateQueries.test.ts` | 4 | consultas condicionadas a organizacao ativa · nao consulta $nome sem organizacao ativa · consulta $nome quando a organizacao esta ativa · libera as telas com dado de exemplo mesmo sem organizacao ativa |
 | `src/hooks/__tests__/useConfirm.test.tsx` | 4 | useConfirm · resolves true when the user confirms · resolves false when the user cancels · throws when used outside the provider |
+| `src/hooks/__tests__/useOnboardingState.test.tsx` | 4 | useOnboardingState (etapa 197) · nao mostra o passo a passo quando a leitura do perfil falha · mostra quando o perfil existe e o passo a passo nao foi concluido · nao mostra e grava o cache local quando ja foi concluido |
 | `src/hooks/__tests__/useOraclePushBitrix.test.ts` | 4 | useOraclePushBitrix — contrato da edge oracle-push-bitrix · envia payload com contact_ids + destino Bitrix opcional · propaga erro da edge (bitrix_open) para onError · aceita resposta com status variados no results[] |
 | `src/hooks/__tests__/useRateLimit.test.ts` | 4 | useRateLimit · should not be locked initially · should lock after exceeding max attempts · should unlock after window windowMs |
 | `src/integrations/supabase/withOrg.test.ts` | 4 | withOrg Multi-tenant Isolation · should block access to unclassified tables (Deny-by-Default) · should allow access to scoped tables when org is active · should block write operations without active organization |
@@ -2571,6 +2574,7 @@ _nenhum item encontrado_
 | * Preenchido apenas quando o disparo veio da taxa de erro 5xx. */ | `src/hooks/useApiLatencyAlertSettings.ts` |
 | apenas administradores enxerguem os registros do próprio workspace. | `src/hooks/useAuditTrail.ts` |
 | * Configuração global (singleton) dos alertas de disjuntor. Somente admins | `src/hooks/useCircuitBreakerAlerts.ts` |
+| Auto-seed default stages. Roda no máximo uma vez por montagem e por | `src/hooks/useDeals.ts` |
 | * Incrementa usage_count. Best-effort: falhar aqui nao deve travar o envio. */ | `src/hooks/useEmailTemplates.ts` |
 | Apenas flag global | `src/hooks/useFeatureFlag.ts` |
 | Only if not in a modal or menu (those handle Esc themselves) | `src/hooks/useKeyboardShortcuts.ts` |

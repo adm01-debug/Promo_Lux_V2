@@ -777,7 +777,7 @@
     "CompaniesView"
    ],
    "export_default": null,
-   "linhas": 400,
+   "linhas": 414,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
