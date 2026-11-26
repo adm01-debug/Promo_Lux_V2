@@ -1543,7 +1543,7 @@
    "nome": "public-api",
    "entrada": "supabase/functions/public-api/index.ts",
    "arquivos": 1,
-   "linhas": 502,
+   "linhas": 528,
    "verify_jwt": false,
    "metodos": [
     "DELETE",

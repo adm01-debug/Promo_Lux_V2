@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f2a4df6403bcabfe57e853d4fa35fa38b28b8ba1",
+  "sha": "1e5a847785ed2b5ca2428563fdcd093365498579",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 05:28 UTC",
-  "files_total": 1218,
-  "code_files": 1029,
-  "code_lines": 152823
+  "generated_at": "2026-11-26 09:52 UTC",
+  "files_total": 1219,
+  "code_files": 1030,
+  "code_lines": 152955
  },
  "version": "1.3.2",
- "facts_hash": "00cfffc1a88a6040",
+ "facts_hash": "19a615cf052e610e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -248,7 +248,7 @@
   "languages": {
    ".ts": 401,
    ".tsx": 321,
-   ".sql": 274,
+   ".sql": 275,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -19918,7 +19918,7 @@
     "args": "_key_hash TEXT, _table_name TEXT, _limit INTEGER DEFAULT 50, _offset INTEGER DEFAULT 0, _name TEXT DEFAULT NULL, _sector TEXT DEFAULT NULL",
     "returns": "JSON",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_auth RECORD; v_limit INTEGER := greatest(coalesce(_limit, 50), 1); v_offset INTEGER := greatest(coalesce(_offset, 0), 0); v_where TEXT; v_items JSON; v_total BIGINT; BEGIN PERFORM set_config('TimeZone', 'UTC', true); IF _table_name IS NULL OR _table_name NOT IN ('companies', 'deals', 'stakeholders') THEN RAISE EXCEPTION 'recurso nao permitido na API publica: %', _table_name; END IF; SELECT * INTO v_auth FROM public.authenticate_api_key(_key_hash, 600); IF v_auth.key_id IS NULL THEN RETURN json_build_object('status', 401); END IF; IF v_auth.allowed IS NOT TRUE THEN RETURN json_build_object( 'status', 429, 'current_count', v_auth.current_count, 'reset_at', v_auth.reset_at ); END IF; …",
@@ -23693,6 +23693,7 @@
    "supabase/migrations/20261125150000_auditoria_retencao_5_anos.sql",
    "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
    "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql",
+   "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29413,6 +29414,22 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
    }
   ],
   "raises": [
@@ -30192,14 +30209,14 @@
     "src": "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql"
    },
    {
-    "function": "public_api_list",
-    "msg": "recurso nao permitido na API publica: %",
-    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
-   },
-   {
     "function": "evaluate_api_latency_alerts",
     "msg": "Acesso negado",
     "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
+   },
+   {
+    "function": "public_api_list",
+    "msg": "recurso nao permitido na API publica: %",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
    }
   ],
   "seed": [],
@@ -34264,7 +34281,7 @@
   {
    "module": "supabase/functions",
    "files": 140,
-   "lines": 25578,
+   "lines": 25604,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -34477,8 +34494,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 270,
-   "lines": 20602,
+   "files": 271,
+   "lines": 20708,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -66917,7 +66934,7 @@
     "args": "_key_hash TEXT, _table_name TEXT, _limit INTEGER DEFAULT 50, _offset INTEGER DEFAULT 0, _name TEXT DEFAULT NULL, _sector TEXT DEFAULT NULL",
     "returns": "JSON",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
     "security_definer": true,
     "search_path": true,
     "body": "DECLARE v_auth RECORD; v_limit INTEGER := greatest(coalesce(_limit, 50), 1); v_offset INTEGER := greatest(coalesce(_offset, 0), 0); v_where TEXT; v_items JSON; v_total BIGINT; BEGIN PERFORM set_config('TimeZone', 'UTC', true); IF _table_name IS NULL OR _table_name NOT IN ('companies', 'deals', 'stakeholders') THEN RAISE EXCEPTION 'recurso nao permitido na API publica: %', _table_name; END IF; SELECT * INTO v_auth FROM public.authenticate_api_key(_key_hash, 600); IF v_auth.key_id IS NULL THEN RETURN json_build_object('status', 401); END IF; IF v_auth.allowed IS NOT TRUE THEN RETURN json_build_object( 'status', 429, 'current_count', v_auth.current_count, 'reset_at', v_auth.reset_at ); END IF; …",
@@ -67832,14 +67849,14 @@
     "src": "supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql"
    },
    {
-    "function": "public_api_list",
-    "msg": "recurso nao permitido na API publica: %",
-    "src": "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql"
-   },
-   {
     "function": "evaluate_api_latency_alerts",
     "msg": "Acesso negado",
     "src": "supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql"
+   },
+   {
+    "function": "public_api_list",
+    "msg": "recurso nao permitido na API publica: %",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
    }
   ],
   "db_generated": [],
@@ -71705,7 +71722,8 @@
    "supabase/migrations/20261124220000_public_api_roundtrip_unico.sql",
    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
-   "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql"
+   "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
+   "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -77504,6 +77522,22 @@
     "objkind": "table",
     "roles": "service_role",
     "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "PUBLIC, authenticated, anon",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "public_api_list",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
    }
   ],
   "guards": [
@@ -100318,7 +100352,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 502,
+   "lines": 528,
    "tables": [
     {
      "table": "api_keys",
@@ -103823,13 +103857,29 @@
   "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql": {
    "path": "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql",
    "lines": 38
+  },
+  "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql": {
+   "path": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
+   "lines": 106,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "f2a4df6403bcabfe57e853d4fa35fa38b28b8ba1",
+  "sha": "1e5a847785ed2b5ca2428563fdcd093365498579",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "1e5a847",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "supabase/functions/public-api/index.ts",
+     "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+    ]
+   },
    {
     "sha": "f2a4df6",
     "date": "2026-11-26",
@@ -104273,19 +104323,6 @@
      "docs/qa/05-PROGRESSO.md",
      "e2e/navigation.spec.ts"
     ]
-   },
-   {
-    "sha": "8b6a870",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: corrige os textos duplamente codificados da tela de monitoramento (#220)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/auth/LoginCard.tsx",
-     "src/components/lux/settings/WarmupPanel.tsx",
-     "src/contexts/auth-context.ts",
-     "src/pages/Monitoring.tsx"
-    ]
    }
   ],
   "hot_files": [
@@ -104294,11 +104331,11 @@
     29
    ],
    [
-    "src/pages/Monitoring.tsx",
-    4
+    "supabase/functions/gmaps-proxy/index.ts",
+    3
    ],
    [
-    "supabase/functions/gmaps-proxy/index.ts",
+    "src/pages/Monitoring.tsx",
     3
    ],
    [
@@ -104338,6 +104375,10 @@
     3
    ],
    [
+    "supabase/functions/public-api/index.ts",
+    2
+   ],
+   [
     "src/hooks/useEmailSuppressions.ts",
     2
    ],
@@ -104363,10 +104404,6 @@
    ],
    [
     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
-    2
-   ],
-   [
-    "src/components/lux/monitoring/JobDetailsSheet.tsx",
     2
    ]
   ]

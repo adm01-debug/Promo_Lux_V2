@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f2a4df6403bcabfe57e853d4fa35fa38b28b8ba1",
+  "commit": "1e5a847785ed2b5ca2428563fdcd093365498579",
   "branch": "main",
-  "data_commit": "2026-11-26T02:28:24-03:00",
+  "data_commit": "2026-11-26T06:51:38-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "1e5a847",
+    "data": "2026-11-26",
+    "assunto": "fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)"
+   },
    {
     "sha": "f2a4df6",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "f889110",
     "data": "2026-11-25",
     "assunto": "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)"
-   },
-   {
-    "sha": "8c4a8f1",
-    "data": "2026-11-25",
-    "assunto": "fix: escopo de organizacao nas consultas e no cache do front (#224)"
    }
   ],
-  "arquivos_mudados_7d": 399,
+  "arquivos_mudados_7d": 400,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 32
+    "mudancas": 33
    },
    {
     "pasta": "src/integrations/supabase",
@@ -176,6 +176,10 @@
     "mudancas": 9
    },
    {
+    "pasta": "supabase/functions/public-api",
+    "mudancas": 9
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 8
    },
@@ -190,16 +194,12 @@
    {
     "pasta": "supabase/config.toml",
     "mudancas": 8
-   },
-   {
-    "pasta": "supabase/functions/public-api",
-    "mudancas": 8
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 32
+    "mudancas": 33
    },
    {
     "arquivo": "package.json",
@@ -230,15 +230,15 @@
     "mudancas": 9
    },
    {
+    "arquivo": "supabase/functions/public-api/index.ts",
+    "mudancas": 9
+   },
+   {
     "arquivo": "AGENTS.md",
     "mudancas": 8
    },
    {
     "arquivo": "src/pages/Monitoring.tsx",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "supabase/functions/public-api/index.ts",
     "mudancas": 8
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 195
+    "commits": 196
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1197,
+  "arquivos_total": 1198,
   "arquivos_codigo": 751,
-  "linhas_codigo": 130396,
+  "linhas_codigo": 130422,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 62,
   "tabelas": 121,
-  "migrations": 270,
+  "migrations": 271,
   "cron_jobs": 43,
   "testes": 165,
   "workflows": 10,
@@ -596,7 +596,7 @@
   },
   "supabase/functions": {
    "arquivos": 140,
-   "linhas": 25578
+   "linhas": 25604
   },
   "tailwind.config.ts": {
    "arquivos": 1,

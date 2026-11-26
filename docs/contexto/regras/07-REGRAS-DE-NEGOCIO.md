@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f2a4df6403` · branch `main` · 2026-11-26 05:28 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `1e5a847785` · branch `main` · 2026-11-26 09:52 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -907,8 +907,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fn_lux_save_enriched_contact` | linkedin_url nÃ£o pode ser vazia | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `fn_lux_save_enriched_contact` | full_name Ã© obrigatÃ³rio | `supabase/migrations/20261124070000_baseline_drift_schema_logico.sql` |
 | `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql` |
-| `public_api_list` | recurso nao permitido na API publica: % | `supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql` |
 | `evaluate_api_latency_alerts` | Acesso negado | `supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql` |
+| `public_api_list` | recurso nao permitido na API publica: % | `supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
