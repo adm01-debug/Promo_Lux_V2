@@ -283,23 +283,23 @@ serve(async (req) => {
           for (const job of externalJobs) {
             const status = (job.Status as string) === "ok" ? "completed" : job.Status as string;
             
+            // G16-3 / etapa 054: a listagem do fornecedor e COMPARTILHADA entre
+            // clientes (o endpoint nao aceita credencial), entao ela so serve
+            // para ATUALIZAR o estado dos jobs que a organizacao ja tem. Antes,
+            // todo job devolvido era inserido como se fosse do solicitante e o
+            // cliente passava a ver o nome e a config das buscas de outro
+            // cliente. Filtrar por nome nao resolve — nomes colidem entre
+            // clientes: o vinculo e o `external_id` ja associado aqui na base.
             const { data: existing } = await supabase
               .from("scrape_jobs")
               .select("id, status, auto_sync")
               .eq("external_id", job.ID as string)
-              .eq("user_id", userId)
+              .eq("organization_id", userOrgId)
               .maybeSingle();
-              
+
             if (!existing) {
-              await supabase.from("scrape_jobs").insert({
-                user_id: userId,
-                organization_id: userOrgId,
+              log.warn("external_job_sem_vinculo_local", {
                 external_id: job.ID as string,
-                name: job.Name as string,
-                status: status,
-                source: "gmaps",
-                config: job.Data as Record<string, unknown>,
-                started_at: job.Date as string,
               });
             } else {
               // If status changed to completed and auto_sync is true, we could trigger sync
@@ -313,11 +313,14 @@ serve(async (req) => {
                 // or we can do it right here since we have the data.
               }
 
+              // Atualiza o job LOCAL (por id): o `external_id` sozinho nao
+              // identifica uma linha e o filtro por `user_id` errava quando
+              // outro membro da organizacao foi quem criou a busca.
               await supabase
                 .from("scrape_jobs")
                 .update({ status: status })
-                .eq("external_id", job.ID as string)
-                .eq("user_id", userId);
+                .eq("id", existing.id)
+                .eq("organization_id", userOrgId);
             }
           }
         }
@@ -627,6 +630,35 @@ serve(async (req) => {
         .single();
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
+
+      // G16-1 / etapa 053: se este job JA tem resultados gravados, a
+      // sincronizacao so reconcilia — nao refaz a consulta paga (Places API no
+      // caminho `places:` ou download no provedor externo). O caso tipico era o
+      // fallback da etapa 052: o create ja pagou a Places API e gravou, e o
+      // auto_sync logo em seguida pagava a MESMA busca de novo para chegar ao
+      // mesmo resultado.
+      const { count: jaGravados } = await supabase
+        .from("scrape_results")
+        .select("id", { count: "exact", head: true })
+        .eq("job_id", job_id);
+
+      if ((jaGravados ?? 0) > 0) {
+        await supabase
+          .from("scrape_jobs")
+          .update({
+            results_count: jaGravados,
+            status: "completed",
+            completed_at: job.completed_at ?? new Date().toISOString(),
+          })
+          .eq("id", job_id)
+          .eq("user_id", userId);
+
+        log.info("sync_results_reconciled", { job_id, results: jaGravados });
+        return new Response(
+          JSON.stringify({ companies_created: 0, total_results: jaGravados, reconciled: true }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
 
       let results: RawGmapsRow[] = [];
       const jobConfig = (job.config ?? {}) as { keywords?: string[]; lang?: string; max_results?: number };
