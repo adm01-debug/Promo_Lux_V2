@@ -90,6 +90,9 @@ verify_jwt = false
 [functions.pg-net-watchdog]
 verify_jwt = false
 
+[functions.prune-job-exports]
+verify_jwt = false
+
 [functions.purge-soft-deleted]
 verify_jwt = false
 
