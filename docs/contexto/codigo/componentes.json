@@ -665,7 +665,7 @@
     "CampaignsView"
    ],
    "export_default": null,
-   "linhas": 473,
+   "linhas": 474,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -1489,7 +1489,7 @@
     "IntentSignalsView"
    ],
    "export_default": null,
-   "linhas": 406,
+   "linhas": 407,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth",
@@ -1846,7 +1846,7 @@
     "ChaosEngineeringPanel"
    ],
    "export_default": null,
-   "linhas": 125,
+   "linhas": 130,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast"
@@ -3406,7 +3406,7 @@
     "WorkflowsView"
    ],
    "export_default": null,
-   "linhas": 296,
+   "linhas": 298,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
@@ -4455,7 +4455,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 751,
+   "linhas": 756,
    "dominio": "pages",
    "hooks_locais": [
     "useActiveOrganization",

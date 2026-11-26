@@ -145,8 +145,8 @@
   {
    "modulo": "components/lux",
    "arquivos": 220,
-   "testes": 40,
-   "linhas": 43766,
+   "testes": 41,
+   "linhas": 43775,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -903,7 +903,7 @@
    "modulo": "hooks",
    "arquivos": 91,
    "testes": 0,
-   "linhas": 9880,
+   "linhas": 9889,
    "itens_menu": [],
    "telas": [],
    "rotas_http": [],
@@ -2257,7 +2257,7 @@
    "modulo": "pages",
    "arquivos": 11,
    "testes": 0,
-   "linhas": 2287,
+   "linhas": 2292,
    "itens_menu": [
     "Empresas (Admin)",
     "Monitoramento"

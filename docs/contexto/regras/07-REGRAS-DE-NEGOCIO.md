@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `aeaea4023a` · branch `main` · 2026-11-26 00:50 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e0e485ee1b` · branch `main` · 2026-11-26 01:03 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2058,6 +2058,7 @@ _nenhum item encontrado_
 | Erro ao exportar | `src/components/lux/AnalyticsView.tsx` |
 | Erro ao alternar status | `src/components/lux/CampaignsView.tsx` |
 | Erro ao atualizar | `src/components/lux/CampaignsView.tsx` |
+| Erro ao remover a campanha | `src/components/lux/CampaignsView.tsx` |
 | Erro no envio | `src/components/lux/CampaignsView.tsx` |
 | Conflito detectado | `src/components/lux/CompaniesView.tsx` |
 | Erro ao enriquecer | `src/components/lux/CompaniesView.tsx` |
@@ -2091,6 +2092,7 @@ _nenhum item encontrado_
 | Falha ao importar: ${err.message} | `src/components/lux/GmapsScraperView.tsx` |
 | Erro ao atualizar | `src/components/lux/IntentSignalsView.tsx` |
 | Erro ao detectar | `src/components/lux/IntentSignalsView.tsx` |
+| Erro ao remover o sinal | `src/components/lux/IntentSignalsView.tsx` |
 |            className= | `src/components/lux/LushaIntelligenceView.tsx` |
 | ${msg} Você poderá tentar novamente em ${wait}s. | `src/components/lux/LushaIntelligenceView.tsx` |
 | Domínio inválido | `src/components/lux/LushaIntelligenceView.tsx` |
@@ -2125,6 +2127,8 @@ _nenhum item encontrado_
 | Erro ao salvar | `src/components/lux/SettingsView.tsx` |
 | Erro no score IA | `src/components/lux/StakeholderFinderView.tsx` |
 | Erro ao executar | `src/components/lux/WorkflowsView.tsx` |
+| Erro ao ligar ou desligar o fluxo | `src/components/lux/WorkflowsView.tsx` |
+| Erro ao remover o workflow | `src/components/lux/WorkflowsView.tsx` |
 | Organizacao ativa nao definida | `src/components/lux/analytics/useAnalyticsData.ts` |
 |        aria-live= | `src/components/lux/auth/RateLimitWarning.tsx` |
 | CSV precisa de uma coluna de nome (ex:  | `src/components/lux/companies/ImportCompaniesDialog.tsx` |
@@ -2155,6 +2159,7 @@ _nenhum item encontrado_
 | Não foi possível copiar. Copie manualmente. | `src/components/lux/lusha/OracleV2Panel.tsx` |
 |                className= | `src/components/lux/lusha/SessionsPanel.tsx` |
 | ${session.company_name}: ${msg} | `src/components/lux/lusha/SessionsPanel.tsx` |
+| Erro ao ligar ou desligar o chaos | `src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
 | Flag não inicializada | `src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
 | Falha no replay: ${err instanceof Error ? err.message : String(err)} | `src/components/lux/monitoring/DLQReplayPanel.tsx` |
 | Selecione uma organização ativa. | `src/components/lux/monitoring/DLQReplayPanel.tsx` |
@@ -2291,6 +2296,8 @@ _nenhum item encontrado_
 | Not authenticated | `src/lib/api/gmaps.ts` |
 | Not authenticated | `src/lib/api/workflows.ts` |
 | Configuração do backend indisponível para esta ferramenta. | `src/lib/mcp/supabase.ts` |
+| Erro ao salvar as preferências de alerta | `src/pages/Monitoring.tsx` |
+| Sessão sem usuário autenticado: entre novamente para salvar as preferências. | `src/pages/Monitoring.tsx` |
 | >As senhas não coincidem.</p>           )}            <Button type= | `src/pages/ResetPassword.tsx` |
 | Dados inválidos | `src/pages/ResetPassword.tsx` |
 | Apify não configurado: defina APIFY_MOCK_MODE=true ou conecte o Apify (LOVABLE_API_KEY + APIFY_API_KEY). | `supabase/functions/_shared/apify-gateway.ts` |
@@ -2302,14 +2309,7 @@ _nenhum item encontrado_
 | [apify-gateway timeout] startActorRun: exceeded ${fault.timeoutMs ?? 50}ms (mock fault) | `supabase/functions/_shared/apify-gateway.ts` |
 | ${method}: ${code} — ${desc} | `supabase/functions/_shared/bitrix-client.ts` |
 | ${method}: HTTP ${res.status} — ${text.slice(0, 180)} | `supabase/functions/_shared/bitrix-client.ts` |
-| ${method}: resposta não-JSON (${res.status}): ${text.slice(0, 180)} | `supabase/functions/_shared/bitrix-client.ts` |
-| BITRIX_WEBHOOK_BASE ausente nos secrets | `supabase/functions/_shared/bitrix-client.ts` |
-| crm.contact.add: id inválido na resposta (${JSON.stringify(id)}) | `supabase/functions/_shared/bitrix-client.ts` |
-| crm.item.add: id inválido na resposta (${JSON.stringify(result)}) | `supabase/functions/_shared/bitrix-client.ts` |
-| vault HTTP ${res.status}: ${body.slice(0, 200)} | `supabase/functions/_shared/cookies.ts` |
-| cookie linkedin sem JSESSIONID (csrfToken) | `supabase/functions/_shared/leadcontact-client.ts` |
-| leadcontact ${path} ${res.status}: ${text.slice(0, 200)} | `supabase/functions/_shared/leadcontact-client.ts` |
-| … +61 linhas — lista completa em `context.json` | |
+| … +68 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1327 testes em 138 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1335 testes em 139 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2389,6 +2389,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/tracking-signature.test.ts` | 9 | tracking-signature · round-trips a click URL · round-trips an open pixel (null url) · rejects a tampered url … |
 | `src/components/lux/__tests__/CompanyTable.test.tsx` | 8 | CompanyTable — Virtualized list · renders Score IPC header · renders company names · applies correct score color classes … |
 | `src/components/lux/__tests__/DashboardView.test.tsx` | 8 | DashboardView — P1 Chart Legibility · renders Performance Semanal chart section · renders chart with strokeWidth 2.5 for better legibility · renders chart dots for data points … |
+| `src/components/lux/__tests__/MutationsErroAviso.test.tsx` | 8 | avisos de erro nas mutacoes (etapa 215) · avisa quando pausar o workflow falha, com o motivo do banco · avisa quando remover o workflow falha · avisos de erro nas mutacoes (etapa 216) … |
 | `src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts` | 8 | R35 fuzz — historyUtils robusto contra payloads adversos · filterHistory nunca lança e retorna subconjunto válido · filterHistory com janelas inválidas não estoura · formatDurationMs blindado contra NaN/negativos/infinito … |
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
 | `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 8 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
@@ -2589,6 +2590,7 @@ _nenhum item encontrado_
 | * Lista snapshots de validação OAuth da organização ativa. | `src/hooks/useOAuthSandboxSnapshots.ts` |
 | * true somente quando TODOS os serviços, inclusive o opcional linkedin, estão prontos. */ | `src/hooks/useOracleV2.ts` |
 | HTTP 429 do rate-limit por organização vem com Retry-After em segundos. | `src/hooks/useOracleV2.ts` |
+| e não pode esperar a janela global de 2 min (src/App.tsx:51). | `src/hooks/useOrganizations.ts` |
 | * A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a | `src/hooks/usePermissions.ts` |
 | * Hook de Rate Limit Híbrido: | `src/hooks/useRateLimit.ts` |
 | GAP-5: validação de parâmetros em modo de desenvolvimento. | `src/hooks/useRateLimit.ts` |
@@ -2598,6 +2600,7 @@ _nenhum item encontrado_
 | Cap mantém as entradas mais recentes (mais relevantes para o rate limit). | `src/hooks/useRateLimit.ts` |
 | - Semanticamente: "lock expira em 13/09/2285" (≈285 anos) — intent de "permanente" | `src/hooks/useRateLimit.ts` |
 | * GAP-4: Reseta o estado de rate limit para esta chave. | `src/hooks/useRateLimit.ts` |
+| de papel/permissão usam janela curta e nova busca ao focar a janela. | `src/hooks/useRolePermissions.ts` |
 | Desfaz a alteração otimista: a matriz não pode divergir do banco. | `src/hooks/useRolePermissions.ts` |
 | perfil, `get_warmup_slot` barra o envio diario acima do limite, fora da | `src/hooks/useWarmupProfile.ts` |
 | * Limite do dia para um dia do ramp-up: start + incremento*(dia-1), truncado em max. */ | `src/hooks/useWarmupProfile.ts` |

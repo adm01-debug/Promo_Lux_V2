@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "aeaea4023a80ac80f1ce36d860c21220406f4c53",
+  "sha": "e0e485ee1ba9756de7c5633b8c0118edacee5e94",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 00:50 UTC",
-  "files_total": 1205,
-  "code_files": 1016,
-  "code_lines": 150589
+  "generated_at": "2026-11-26 01:03 UTC",
+  "files_total": 1206,
+  "code_files": 1017,
+  "code_lines": 150920
  },
  "version": "1.3.2",
- "facts_hash": "9d85930daddfb35e",
+ "facts_hash": "6b30ba0ca7c94bfe",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -247,7 +247,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 393,
-   ".tsx": 316,
+   ".tsx": 317,
    ".sql": 274,
    ".mjs": 23,
    ".py": 5,
@@ -32466,7 +32466,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 318,
+  "components_count": 319,
   "hooks": [
    {
     "name": "useContacts",
@@ -33493,8 +33493,8 @@
   },
   {
    "module": "src/components",
-   "files": 318,
-   "lines": 52907,
+   "files": 319,
+   "lines": 53224,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33617,6 +33617,7 @@
     "src/hooks",
     "src/integrations",
     "src/lib",
+    "src/pages",
     "src/test"
    ],
    "file_list": [
@@ -33742,7 +33743,7 @@
   {
    "module": "src/hooks",
    "files": 109,
-   "lines": 12441,
+   "lines": 12450,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -34154,7 +34155,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2287,
+   "lines": 2292,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -39140,6 +39141,10 @@
    },
    {
     "file": "src/components/lux/CampaignsView.tsx",
+    "msg": "Erro ao remover a campanha"
+   },
+   {
+    "file": "src/components/lux/CampaignsView.tsx",
     "msg": "Erro no envio"
    },
    {
@@ -39269,6 +39274,10 @@
    {
     "file": "src/components/lux/IntentSignalsView.tsx",
     "msg": "Erro ao detectar"
+   },
+   {
+    "file": "src/components/lux/IntentSignalsView.tsx",
+    "msg": "Erro ao remover o sinal"
    },
    {
     "file": "src/components/lux/LushaIntelligenceView.tsx",
@@ -39407,6 +39416,14 @@
     "msg": "Erro ao executar"
    },
    {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "msg": "Erro ao ligar ou desligar o fluxo"
+   },
+   {
+    "file": "src/components/lux/WorkflowsView.tsx",
+    "msg": "Erro ao remover o workflow"
+   },
+   {
     "file": "src/components/lux/analytics/useAnalyticsData.ts",
     "msg": "Organizacao ativa nao definida"
    },
@@ -39525,6 +39542,10 @@
    {
     "file": "src/components/lux/lusha/SessionsPanel.tsx",
     "msg": "${session.company_name}: ${msg}"
+   },
+   {
+    "file": "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+    "msg": "Erro ao ligar ou desligar o chaos"
    },
    {
     "file": "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
@@ -40069,6 +40090,14 @@
    {
     "file": "src/lib/mcp/supabase.ts",
     "msg": "Configuração do backend indisponível para esta ferramenta."
+   },
+   {
+    "file": "src/pages/Monitoring.tsx",
+    "msg": "Erro ao salvar as preferências de alerta"
+   },
+   {
+    "file": "src/pages/Monitoring.tsx",
+    "msg": "Sessão sem usuário autenticado: entre novamente para salvar as preferências."
    },
    {
     "file": "src/pages/ResetPassword.tsx",
@@ -40659,6 +40688,10 @@
     "text": "HTTP 429 do rate-limit por organização vem com Retry-After em segundos."
    },
    {
+    "file": "src/hooks/useOrganizations.ts",
+    "text": "e não pode esperar a janela global de 2 min (src/App.tsx:51)."
+   },
+   {
     "file": "src/hooks/usePermissions.ts",
     "text": "* A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a"
    },
@@ -40693,6 +40726,10 @@
    {
     "file": "src/hooks/useRateLimit.ts",
     "text": "* GAP-4: Reseta o estado de rate limit para esta chave."
+   },
+   {
+    "file": "src/hooks/useRolePermissions.ts",
+    "text": "de papel/permissão usam janela curta e nova busca ao focar a janela."
    },
    {
     "file": "src/hooks/useRolePermissions.ts",
@@ -54263,6 +54300,38 @@
    {
     "file": "src/components/lux/__tests__/MapFilters.test.tsx",
     "name": "renders legend items"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisos de erro nas mutacoes (etapa 215)"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisa quando pausar o workflow falha, com o motivo do banco"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisa quando remover o workflow falha"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisos de erro nas mutacoes (etapa 216)"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisa quando excluir a campanha falha"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisa quando excluir o sinal de intencao falha"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisa quando ligar o chaos falha"
+   },
+   {
+    "file": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+    "name": "avisa quando salvar as preferencias de alerta falha"
    },
    {
     "file": "src/components/lux/__tests__/PlacesApiNewToggle.test.tsx",
@@ -81438,7 +81507,7 @@
   },
   "src/components/lux/CampaignsView.tsx": {
    "path": "src/components/lux/CampaignsView.tsx",
-   "lines": 473,
+   "lines": 474,
    "exports": [
     "const CampaignsView"
    ],
@@ -81475,6 +81544,7 @@
    "errors": [
     "Erro ao alternar status",
     "Erro ao atualizar",
+    "Erro ao remover a campanha",
     "Erro no envio"
    ],
    "status_values": [
@@ -82059,7 +82129,7 @@
   },
   "src/components/lux/IntentSignalsView.tsx": {
    "path": "src/components/lux/IntentSignalsView.tsx",
-   "lines": 406,
+   "lines": 407,
    "exports": [
     "const IntentSignalsView"
    ],
@@ -82091,7 +82161,8 @@
    ],
    "errors": [
     "Erro ao atualizar",
-    "Erro ao detectar"
+    "Erro ao detectar",
+    "Erro ao remover o sinal"
    ],
    "percents": [
     "transition={{ delay: i * 0.03 }}"
@@ -82965,7 +83036,7 @@
   },
   "src/components/lux/WorkflowsView.tsx": {
    "path": "src/components/lux/WorkflowsView.tsx",
-   "lines": 296,
+   "lines": 298,
    "exports": [
     "const WorkflowsView"
    ],
@@ -82993,7 +83064,9 @@
     ]
    },
    "errors": [
-    "Erro ao executar"
+    "Erro ao executar",
+    "Erro ao ligar ou desligar o fluxo",
+    "Erro ao remover o workflow"
    ],
    "status_values": [
     {
@@ -83396,6 +83469,40 @@
     "displays IPC score label with current value",
     "calls onSearchChange when typing",
     "renders legend items"
+   ]
+  },
+  "src/components/lux/__tests__/MutationsErroAviso.test.tsx": {
+   "path": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+   "lines": 308,
+   "is_test": true,
+   "params": [
+    {
+     "name": "AGORA",
+     "value": "\"2026-04-01T10:00:00.000Z\""
+    }
+   ],
+   "transition_maps": [
+    {
+     "name": "WORKFLOW",
+     "body": "id: \"w1\", name: \"Test Workflow\", description: \"Desc\", status: \"active\", steps: [], config: {}, leads_processed: 10, leads_qualified: 5, success_rate: 50, last_run_at: null, created_at: AGORA, updated_at: AGORA, user_id: \"u1\","
+    }
+   ],
+   "calc_fns": [
+    {
+     "name": "apply",
+     "params": "",
+     "body": "return proxy;"
+    }
+   ],
+   "tests": [
+    "avisos de erro nas mutacoes (etapa 215)",
+    "avisa quando pausar o workflow falha, com o motivo do banco",
+    "avisa quando remover o workflow falha",
+    "avisos de erro nas mutacoes (etapa 216)",
+    "avisa quando excluir a campanha falha",
+    "avisa quando excluir o sinal de intencao falha",
+    "avisa quando ligar o chaos falha",
+    "avisa quando salvar as preferencias de alerta falha"
    ]
   },
   "src/components/lux/__tests__/PlacesApiNewToggle.test.tsx": {
@@ -85359,7 +85466,7 @@
   },
   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": {
    "path": "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
-   "lines": 125,
+   "lines": 130,
    "exports": [
     "function ChaosEngineeringPanel"
    ],
@@ -85394,6 +85501,7 @@
     ]
    },
    "errors": [
+    "Erro ao ligar ou desligar o chaos",
     "Flag não inicializada"
    ],
    "percents": [
@@ -89932,7 +90040,7 @@
   },
   "src/hooks/useOrganizations.ts": {
    "path": "src/hooks/useOrganizations.ts",
-   "lines": 206,
+   "lines": 210,
    "exports": [
     "type AppRole",
     "interface OrgMembership",
@@ -90023,6 +90131,9 @@
    "errors": [
     "Não autenticado",
     "Org ou usuário ausente"
+   ],
+   "rule_comments": [
+    "e não pode esperar a janela global de 2 min (src/App.tsx:51)."
    ],
    "hooks": [
     "useMyOrganizations",
@@ -90425,7 +90536,7 @@
   },
   "src/hooks/useRolePermissions.ts": {
    "path": "src/hooks/useRolePermissions.ts",
-   "lines": 120,
+   "lines": 125,
    "exports": [
     "interface RolePermissionRow",
     "type PermissionFlag",
@@ -90472,6 +90583,7 @@
     "input"
    ],
    "rule_comments": [
+    "de papel/permissão usam janela curta e nova busca ao focar a janela.",
     "Desfaz a alteração otimista: a matriz não pode divergir do banco."
    ],
    "hooks": [
@@ -94101,7 +94213,7 @@
   },
   "src/pages/Monitoring.tsx": {
    "path": "src/pages/Monitoring.tsx",
-   "lines": 751,
+   "lines": 756,
    "exports": [
     "default AutomationMonitoring"
    ],
@@ -94128,6 +94240,10 @@
      "id"
     ]
    },
+   "errors": [
+    "Erro ao salvar as preferências de alerta",
+    "Sessão sem usuário autenticado: entre novamente para salvar as preferências."
+   ],
    "status_values": [
     {
      "field": "type",
@@ -103132,10 +103248,27 @@
   }
  },
  "git": {
-  "sha": "aeaea4023a80ac80f1ce36d860c21220406f4c53",
+  "sha": "e0e485ee1ba9756de7c5633b8c0118edacee5e94",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "e0e485e",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/CampaignsView.tsx",
+     "src/components/lux/IntentSignalsView.tsx",
+     "src/components/lux/WorkflowsView.tsx",
+     "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+     "src/hooks/useOrganizations.ts",
+     "src/hooks/useRolePermissions.ts",
+     "src/pages/Monitoring.tsx"
+    ]
+   },
    {
     "sha": "aeaea40",
     "date": "2026-11-25",
@@ -103543,21 +103676,28 @@
     "files": [
      "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
     ]
-   },
-   {
-    "sha": "a40184e",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "chore(api): aquecimento da API publica passa a usar a chave do Vault (#206)",
-    "files": [
-     "supabase/migrations/20261125130000_warmup_api_publica_com_chave.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    18
+    19
+   ],
+   [
+    "src/components/lux/CampaignsView.tsx",
+    4
+   ],
+   [
+    "src/components/lux/IntentSignalsView.tsx",
+    3
+   ],
+   [
+    "src/components/lux/WorkflowsView.tsx",
+    3
+   ],
+   [
+    "src/pages/Monitoring.tsx",
+    3
    ],
    [
     "src/hooks/useApiKeys.ts",
@@ -103584,16 +103724,16 @@
     3
    ],
    [
-    "src/components/lux/CampaignsView.tsx",
-    3
-   ],
-   [
     "src/components/lux/DashboardView.tsx",
     3
    ],
    [
     "src/integrations/supabase/withOrg.ts",
     3
+   ],
+   [
+    "src/hooks/useOrganizations.ts",
+    2
    ],
    [
     "src/hooks/useAutomationsMonitor.ts",
@@ -103617,22 +103757,6 @@
    ],
    [
     "src/components/lux/__tests__/AutomationsList.test.tsx",
-    2
-   ],
-   [
-    "src/components/lux/__tests__/CampaignsView.test.tsx",
-    2
-   ],
-   [
-    "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
-    2
-   ],
-   [
-    "src/hooks/useWeeklyPerformance.ts",
-    2
-   ],
-   [
-    "package.json",
     2
    ]
   ]

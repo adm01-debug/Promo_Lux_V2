@@ -1712,7 +1712,7 @@
     "useRevokeInvite",
     "useUpdateMemberRole"
    ],
-   "linhas": 206,
+   "linhas": 210,
    "dominio": "hooks",
    "tabelas": [
     "organization_invites",
@@ -2170,7 +2170,7 @@
    "hooks_exportados": [
     "useRolePermissions"
    ],
-   "linhas": 120,
+   "linhas": 125,
    "dominio": "hooks",
    "tabelas": [
     "role_permissions"

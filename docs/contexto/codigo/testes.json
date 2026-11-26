@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 154,
+ "total": 155,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 132
+  "unit": 133
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 107
+   "arquivos": 108
   },
   {
    "padrao": "e2e/",
@@ -436,6 +436,20 @@
     "src/components/lux/map/MapFilters.tsx"
    ],
    "casos": 4
+  },
+  {
+   "arquivo": "src/components/lux/__tests__/MutationsErroAviso.test.tsx",
+   "tipo": "unit",
+   "linhas": 308,
+   "testa": [
+    "src/components/lux/CampaignsView.tsx",
+    "src/components/lux/IntentSignalsView.tsx",
+    "src/components/lux/WorkflowsView.tsx",
+    "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+    "src/components/ui/tooltip.tsx",
+    "src/pages/Monitoring.tsx"
+   ],
+   "casos": 6
   },
   {
    "arquivo": "src/components/lux/__tests__/PlacesApiNewToggle.test.tsx",
@@ -1471,7 +1485,7 @@
   "scripts/maintenance/lib.mjs": 1,
   "scripts/maintenance/run.mjs": 1,
   "src/components/lux/AutomationsList.tsx": 1,
-  "src/components/lux/CampaignsView.tsx": 1,
+  "src/components/lux/CampaignsView.tsx": 2,
   "src/components/lux/CompaniesView.tsx": 2,
   "src/components/lux/CompanyDetailModal.tsx": 1,
   "src/components/lux/CompanyFilters.tsx": 1,
@@ -1482,11 +1496,12 @@
   "src/components/lux/DemoNotice.tsx": 1,
   "src/components/lux/EmptyState.tsx": 1,
   "src/components/lux/ErrorBoundary.tsx": 1,
+  "src/components/lux/IntentSignalsView.tsx": 1,
   "src/components/lux/PlacesApiNewToggle.tsx": 1,
   "src/components/lux/ProxyFormDialog.tsx": 1,
   "src/components/lux/SafeHTML.tsx": 1,
   "src/components/lux/StatsGrid.tsx": 1,
-  "src/components/lux/WorkflowsView.tsx": 1,
+  "src/components/lux/WorkflowsView.tsx": 2,
   "src/components/lux/companies/CompanyTableRow.tsx": 1,
   "src/components/lux/deals/LostReasonsDialog.tsx": 1,
   "src/components/lux/layout/Header.tsx": 1,
@@ -1499,6 +1514,7 @@
   "src/components/lux/lusha/historyUtils.ts": 2,
   "src/components/lux/lusha/types.ts": 4,
   "src/components/lux/map/MapFilters.tsx": 1,
+  "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": 1,
   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": 1,
   "src/components/lux/monitoring/DlqHealthCard.tsx": 1,
   "src/components/lux/monitoring/MonitoringView.tsx": 1,
@@ -1507,7 +1523,7 @@
   "src/components/lux/stakeholders/StakeholderCard.tsx": 1,
   "src/components/lux/stakeholders/stakeholder-utils.ts": 1,
   "src/components/lux/workflows/WorkflowCard.tsx": 1,
-  "src/components/ui/tooltip.tsx": 12,
+  "src/components/ui/tooltip.tsx": 13,
   "src/contexts/ActiveOrgContext.tsx": 1,
   "src/contexts/AuthContext.tsx": 1,
   "src/contexts/DemoContext.tsx": 1,
@@ -1573,6 +1589,7 @@
   "src/lib/sourceQualityReport.ts": 1,
   "src/lib/utils.ts": 1,
   "src/lib/viewRegistry.ts": 1,
+  "src/pages/Monitoring.tsx": 1,
   "supabase/functions/_shared/api-rate-limit.ts": 1,
   "supabase/functions/_shared/apify-fixtures.ts": 2,
   "supabase/functions/_shared/apify-gateway.ts": 1,
@@ -1614,7 +1631,6 @@
    "src/pages/CnpjSettingsPage.tsx",
    "src/pages/Index.tsx",
    "src/pages/Login.tsx",
-   "src/pages/Monitoring.tsx",
    "src/pages/NotFound.tsx",
    "src/pages/OAuthConsent.tsx",
    "src/pages/ResetPassword.tsx",

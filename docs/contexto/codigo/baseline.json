@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "aeaea4023a80ac80f1ce36d860c21220406f4c53",
+  "commit": "e0e485ee1ba9756de7c5633b8c0118edacee5e94",
   "branch": "main",
-  "data_commit": "2026-11-25T21:49:37-03:00",
+  "data_commit": "2026-11-25T21:57:00-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e0e485e",
+    "data": "2026-11-25",
+    "assunto": "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)"
+   },
    {
     "sha": "aeaea40",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "121479c",
     "data": "2026-11-25",
     "assunto": "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)"
-   },
-   {
-    "sha": "9ad49f5",
-    "data": "2026-11-25",
-    "assunto": "fix(lgpd): trilha de auditoria passa a ser retida por 5 anos (#210)"
    }
   ],
-  "arquivos_mudados_7d": 372,
+  "arquivos_mudados_7d": 374,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 128
+    "mudancas": 133
    },
    {
     "pasta": "src/integrations/supabase",
@@ -152,12 +152,12 @@
     "mudancas": 21
    },
    {
-    "pasta": "package-lock.json",
+    "pasta": "docs/qa/05-PROGRESSO.md",
     "mudancas": 20
    },
    {
-    "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 19
+    "pasta": "package-lock.json",
+    "mudancas": 20
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -188,11 +188,11 @@
     "mudancas": 7
    },
    {
-    "pasta": "supabase/functions/gmaps-proxy",
+    "pasta": "src/pages/Monitoring.tsx",
     "mudancas": 7
    },
    {
-    "pasta": "supabase/functions/public-api",
+    "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 7
    }
   ],
@@ -202,12 +202,12 @@
     "mudancas": 21
    },
    {
-    "arquivo": "package-lock.json",
+    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 20
    },
    {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 19
+    "arquivo": "package-lock.json",
+    "mudancas": 20
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -238,6 +238,10 @@
     "mudancas": 7
    },
    {
+    "arquivo": "src/pages/Monitoring.tsx",
+    "mudancas": 7
+   },
+   {
     "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 7
    },
@@ -250,15 +254,15 @@
     "mudancas": 6
    },
    {
-    "arquivo": "src/pages/Monitoring.tsx",
-    "mudancas": 6
-   },
-   {
     "arquivo": ".github/workflows/ci.yml",
     "mudancas": 5
    },
    {
     "arquivo": "docs/ESTADO_ATUAL.md",
+    "mudancas": 5
+   },
+   {
+    "arquivo": "src/components/lux/CampaignsView.tsx",
     "mudancas": 5
    },
    {
@@ -292,16 +296,12 @@
    {
     "arquivo": "inventario/estado/edges.json",
     "mudancas": 4
-   },
-   {
-    "arquivo": "scripts/ci/eslint-baseline.json",
-    "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 181
+    "commits": 182
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1184,
-  "arquivos_codigo": 738,
-  "linhas_codigo": 128162,
+  "arquivos_total": 1185,
+  "arquivos_codigo": 739,
+  "linhas_codigo": 128493,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 154,
+  "testes": 155,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -559,8 +559,8 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 318,
-   "linhas": 52907
+   "arquivos": 319,
+   "linhas": 53224
   },
   "src/contexts": {
    "arquivos": 9,
@@ -568,7 +568,7 @@
   },
   "src/hooks": {
    "arquivos": 109,
-   "linhas": 12441
+   "linhas": 12450
   },
   "src/integrations": {
    "arquivos": 14,
@@ -584,7 +584,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2287
+   "linhas": 2292
   },
   "src/test": {
    "arquivos": 4,
@@ -666,7 +666,7 @@
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 751
+   "linhas": 756
   },
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
