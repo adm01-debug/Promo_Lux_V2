@@ -2,11 +2,11 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 584,
- "arestas": 1886,
+ "arestas": 1891,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 139
+   "importado_por": 140
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
@@ -73,6 +73,10 @@
    "importado_por": 24
   },
   {
+   "arquivo": "src/components/lux/DataError.tsx",
+   "importado_por": 22
+  },
+  {
    "arquivo": "src/components/ui/switch.tsx",
    "importado_por": 22
   },
@@ -83,10 +87,6 @@
   {
    "arquivo": "src/components/lux/EmptyState.tsx",
    "importado_por": 19
-  },
-  {
-   "arquivo": "src/components/lux/DataError.tsx",
-   "importado_por": 18
   },
   {
    "arquivo": "src/contexts/demo-context.ts",

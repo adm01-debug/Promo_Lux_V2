@@ -610,7 +610,7 @@
     "CampaignTrackingDrawer"
    ],
    "export_default": null,
-   "linhas": 379,
+   "linhas": 432,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -705,7 +705,7 @@
     "CommandPalette"
    ],
    "export_default": null,
-   "linhas": 215,
+   "linhas": 221,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization"
@@ -936,7 +936,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 17,
+   "usado_por": 21,
    "orfao": false
   },
   {
@@ -1146,7 +1146,7 @@
     "EnrichmentFunnel"
    ],
    "export_default": null,
-   "linhas": 148,
+   "linhas": 160,
    "dominio": "components/lux",
    "hooks_locais": [
     "useDemo"
@@ -1846,7 +1846,7 @@
     "ChaosEngineeringPanel"
    ],
    "export_default": null,
-   "linhas": 130,
+   "linhas": 153,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast"
@@ -2045,7 +2045,7 @@
     "JobDetailsSheet"
    ],
    "export_default": null,
-   "linhas": 684,
+   "linhas": 707,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",
@@ -3554,7 +3554,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 139,
+   "usado_por": 140,
    "orfao": false
   },
   {

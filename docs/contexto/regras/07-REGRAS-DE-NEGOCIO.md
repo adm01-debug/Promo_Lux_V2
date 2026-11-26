@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `44f05b1c7e` · branch `main` · 2026-11-26 01:12 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `068b4ca297` · branch `main` · 2026-11-26 01:29 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1342 testes em 140 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1346 testes em 140 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2371,6 +2371,7 @@ _nenhum item encontrado_
 | `e2e/rls-guarantees.spec.ts` | 11 | RLS — leitura anônima bloqueada em tabelas multi-tenant · anon não lê linhas de  · RLS — leitura anônima bloqueada em tabelas isentas sensíveis · anon não lê linhas de  … |
 | `src/components/lux/__tests__/SidebarFooter.test.tsx` | 11 | Sidebar — P1 Dynamic Footer · renders all nav items when expanded · renders system status section when expanded · hides system status when collapsed … |
 | `src/components/lux/__tests__/StakeholderCard.test.tsx` | 11 | StakeholderCard utilities · getInitials returns first+last initials · getSeniority returns correct config · getScoreGradient returns gradient classes … |
+| `src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx` | 11 | painéis de monitoramento: erro não se confunde com vazio · tendência de SLA mostra erro e não a mensagem de vazio · tendência de SLA: nova tentativa dispara outra leitura · resiliência multi-fila mostra erro e não  … |
 | `src/hooks/__tests__/useRealtimeCompanies.test.ts` | 11 | useRealtimeCompanies · uses private channel name scoped to org id · applies organization_id filter in subscription config · does not subscribe when user is null … |
 | `supabase/functions/_shared/__tests__/web-scrape.test.ts` | 11 | robots.txt parser · permite quando não há regras · aplica Disallow para User-agent: * · prefere grupo específico do UA sobre wildcard … |
 | `src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx` | 10 | CompanyDetailModal — acoes do rodape · le os dados do Google Meu Negocio escopados pela organizacao ativa · nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias) · Enviar Email abre o cliente de e-mail do contato principal … |
@@ -2404,7 +2405,6 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/ErrorBoundary.test.tsx` | 7 | ErrorBoundary · renders children when no error · renders error UI when child throws · shows error message in details … |
 | `src/components/lux/lusha/constants.test.ts` | 7 | DEPT_GROUPS (R34) — estrutura e invariantes · expõe exatamente 5 grupos · labels PT-BR canônicos em ordem estável · grupo  … |
 | `src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx` | 7 | DlqAlertSettingsCard · renderiza título e campos de configuração · chama a mutação de salvar com valores saneados ao clicar em Salvar · desabilita edição para não-administradores … |
-| `src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx` | 7 | painéis de monitoramento: erro não se confunde com vazio · tendência de SLA mostra erro e não a mensagem de vazio · tendência de SLA: nova tentativa dispara outra leitura · resiliência multi-fila mostra erro e não  … |
 | `src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts` | 7 | detectSlaRisk · sinaliza fila cujo p95 excede o SLA configurado · não sinaliza quando o p95 está dentro do SLA · respeita a tolerância percentual … |
 | `src/hooks/__tests__/useDealsSeed.test.ts` | 7 | useDealStages - auto-preenchimento (etapas 195/196) · cria as etapas padrao uma unica vez mesmo com lista vazia nova a cada render · avisa o usuario e nao repete a tentativa quando a funcao do banco falha · nao semeia quando o funil ja tem etapas … |
 | `src/hooks/__tests__/useRecentViews.test.ts` | 7 | useRecentViews · starts with empty recent views · tracks a viewed page · deduplicates on revisit and moves to front … |
@@ -2559,6 +2559,7 @@ _nenhum item encontrado_
 | apenas conveniência para evitar 400 previsível. | `src/components/lux/LushaIntelligenceView.tsx` |
 | confiável, o que fazia o "cancelar" ser apenas cosmético. | `src/components/lux/LushaIntelligenceView.tsx` |
 | Variantes A/B — apenas na primeira etapa de e-mail. */} | `src/components/lux/campaigns/CampaignFormFields.tsx` |
+| Falha de carregamento não pode virar "zero" silencioso: os KPIs abaixo | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx` |
 | Dispara validação automática para feedback rápido por perfil | `src/components/lux/integrations/OAuthSandboxPanel.tsx` |
 | * Lista snapshots de validação OAuth da organização e permite comparar dois | `src/components/lux/integrations/OAuthSnapshotsPanel.tsx` |
 | Degradado: serviços bloqueantes prontos, apenas opcionais (LinkedIn) com falha. | `src/components/lux/lusha/OracleV2Panel.tsx` |

@@ -358,6 +358,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/EnrichmentFunnel.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/skeleton.tsx",
    "src/contexts/demo-context.ts",
    "src/integrations/supabase/client.ts",
@@ -841,7 +842,9 @@
    "src/components/ui/textarea.tsx"
   ],
   "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
    "src/components/ui/sheet.tsx",
    "src/components/ui/skeleton.tsx",
    "src/integrations/supabase/client.ts",
@@ -1227,6 +1230,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/label.tsx",
@@ -1339,6 +1343,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/JobDetailsSheet.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/dialog.tsx",

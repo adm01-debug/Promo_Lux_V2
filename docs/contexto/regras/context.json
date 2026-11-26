@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "44f05b1c7e36a4e63c8dbbd1151ef6a14d560b39",
+  "sha": "068b4ca297ad2c84e75e354d56b31974b902c3d0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 01:12 UTC",
+  "generated_at": "2026-11-26 01:29 UTC",
   "files_total": 1207,
   "code_files": 1018,
-  "code_lines": 151113
+  "code_lines": 151264
  },
  "version": "1.3.2",
- "facts_hash": "9245e2ba6b6320e6",
+ "facts_hash": "f2f3fe3c1169367c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -33494,7 +33494,7 @@
   {
    "module": "src/components",
    "files": 320,
-   "lines": 53417,
+   "lines": 53568,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -40558,6 +40558,10 @@
    {
     "file": "src/components/lux/campaigns/CampaignFormFields.tsx",
     "text": "Variantes A/B — apenas na primeira etapa de e-mail. */}"
+   },
+   {
+    "file": "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+    "text": "Falha de carregamento não pode virar \"zero\" silencioso: os KPIs abaixo"
    },
    {
     "file": "src/components/lux/integrations/OAuthSandboxPanel.tsx",
@@ -55016,6 +55020,22 @@
    {
     "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
     "name": "painel de auditoria mostra erro e não "
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "painéis do lote 222–225: erro não se confunde com vazio"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "simulador de caos mostra erro e não o estado desligado"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "detalhes da execução mostram erro nas etapas e não "
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "funil de enriquecimento mostra erro e não zeros"
    },
    {
     "file": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -81654,7 +81674,7 @@
   },
   "src/components/lux/CommandPalette.tsx": {
    "path": "src/components/lux/CommandPalette.tsx",
-   "lines": 215,
+   "lines": 221,
    "exports": [
     "const CommandPalette"
    ],
@@ -81993,7 +82013,7 @@
   },
   "src/components/lux/EnrichmentFunnel.tsx": {
    "path": "src/components/lux/EnrichmentFunnel.tsx",
-   "lines": 148,
+   "lines": 160,
    "exports": [
     "const EnrichmentFunnel"
    ],
@@ -84052,7 +84072,7 @@
   },
   "src/components/lux/campaigns/CampaignTrackingDrawer.tsx": {
    "path": "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-   "lines": 379,
+   "lines": 432,
    "exports": [
     "const CampaignTrackingDrawer"
    ],
@@ -84163,6 +84183,9 @@
      "value": "pending",
      "kind": "compara"
     }
+   ],
+   "rule_comments": [
+    "Falha de carregamento não pode virar \"zero\" silencioso: os KPIs abaixo"
    ],
    "pagination": [
     "100",
@@ -85494,7 +85517,7 @@
   },
   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": {
    "path": "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
-   "lines": 130,
+   "lines": 153,
    "exports": [
     "function ChaosEngineeringPanel"
    ],
@@ -85729,7 +85752,7 @@
   },
   "src/components/lux/monitoring/JobDetailsSheet.tsx": {
    "path": "src/components/lux/monitoring/JobDetailsSheet.tsx",
-   "lines": 684,
+   "lines": 707,
    "exports": [
     "const JobDetailsSheet"
    ],
@@ -86654,7 +86677,7 @@
   },
   "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx": {
    "path": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
-   "lines": 128,
+   "lines": 162,
    "is_test": true,
    "tests": [
     "painéis de monitoramento: erro não se confunde com vazio",
@@ -86663,7 +86686,11 @@
     "resiliência multi-fila mostra erro e não ",
     "histórico de QA mostra erro e não a mensagem de nenhuma rodada",
     "conformidade de SLA mostra erro e não ",
-    "painel de auditoria mostra erro e não "
+    "painel de auditoria mostra erro e não ",
+    "painéis do lote 222–225: erro não se confunde com vazio",
+    "simulador de caos mostra erro e não o estado desligado",
+    "detalhes da execução mostram erro nas etapas e não ",
+    "funil de enriquecimento mostra erro e não zeros"
    ]
   },
   "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": {
@@ -103290,10 +103317,25 @@
   }
  },
  "git": {
-  "sha": "44f05b1c7e36a4e63c8dbbd1151ef6a14d560b39",
+  "sha": "068b4ca297ad2c84e75e354d56b31974b902c3d0",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "068b4ca",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (etapas 222-225) (#240)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/CommandPalette.tsx",
+     "src/components/lux/EnrichmentFunnel.tsx",
+     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+     "src/components/lux/monitoring/JobDetailsSheet.tsx",
+     "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx"
+    ]
+   },
    {
     "sha": "44f05b1",
     "date": "2026-11-25",
@@ -103715,21 +103757,12 @@
     "files": [
      "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql"
     ]
-   },
-   {
-    "sha": "144df6b",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "chore(edge): descarta api-latency-alerts, function sem invocador (#208)",
-    "files": [
-     "supabase/functions/api-latency-alerts/index.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    20
+    21
    ],
    [
     "src/components/lux/CampaignsView.tsx",
@@ -103780,31 +103813,31 @@
     3
    ],
    [
+    "src/components/lux/CommandPalette.tsx",
+    2
+   ],
+   [
+    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/JobDetailsSheet.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    2
+   ],
+   [
     "src/components/lux/monitoring/MonitoringView.tsx",
     2
    ],
    [
     "src/hooks/useOrganizations.ts",
-    2
-   ],
-   [
-    "src/hooks/useAutomationsMonitor.ts",
-    2
-   ],
-   [
-    "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
-    2
-   ],
-   [
-    "src/hooks/useWebScrape.ts",
-    2
-   ],
-   [
-    "src/components/lux/AutomationsList.tsx",
-    2
-   ],
-   [
-    "src/components/lux/CompanyDetailModal.tsx",
     2
    ]
   ]

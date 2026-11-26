@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "44f05b1c7e36a4e63c8dbbd1151ef6a14d560b39",
+  "commit": "068b4ca297ad2c84e75e354d56b31974b902c3d0",
   "branch": "main",
-  "data_commit": "2026-11-25T22:06:52-03:00",
+  "data_commit": "2026-11-25T22:26:35-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "068b4ca",
+    "data": "2026-11-25",
+    "assunto": "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e"
+   },
    {
     "sha": "44f05b1",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "f5c5bab",
     "data": "2026-11-25",
     "assunto": "feat: audita as 5 tabelas criticas fora da trilha (#212)"
-   },
-   {
-    "sha": "81ab63d",
-    "data": "2026-11-25",
-    "assunto": "chore(deps): sobe framer-motion para 14.14.0 (#213)"
    }
   ],
-  "arquivos_mudados_7d": 378,
+  "arquivos_mudados_7d": 379,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 139
+    "mudancas": 145
    },
    {
     "pasta": "src/integrations/supabase",
@@ -149,7 +149,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 21
+    "mudancas": 22
    },
    {
     "pasta": "package.json",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 21
+    "mudancas": 22
    },
    {
     "arquivo": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 183
+    "commits": 184
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1186,
   "arquivos_codigo": 740,
-  "linhas_codigo": 128686,
+  "linhas_codigo": 128837,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -560,7 +560,7 @@
   },
   "src/components": {
    "arquivos": 320,
-   "linhas": 53417
+   "linhas": 53568
   },
   "src/contexts": {
    "arquivos": 9,
@@ -674,7 +674,7 @@
   },
   {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
-   "linhas": 684
+   "linhas": 707
   },
   {
    "arquivo": "scripts/ci/lint-ratchet.mjs",
