@@ -9,6 +9,8 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useReaperHistory } from "@/hooks/useReaperHistory";
 import { useReaperAlerts } from "@/hooks/useReaperAlerts";
+import { usePermissions } from "@/hooks/usePermissions";
+import { ReaperAlertSettingsCard } from "./ReaperAlertSettingsCard";
 import { PainelComEstado } from "./PainelComEstado";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +27,7 @@ export function ReaperHistoryPanel() {
     refetch: refetchRuns,
   } = useReaperHistory(50);
   const { data: alerts, isError: falhaAlerts, refetch: refetchAlerts } = useReaperAlerts(10);
+  const { isAdmin } = usePermissions();
 
   const kpis = useMemo(() => {
     if (!runs?.length) return { totalRequeued: 0, totalDead: 0, avgDuration: 0, runsCount: 0 };
@@ -115,6 +118,8 @@ export function ReaperHistoryPanel() {
         </Card>
       )}
 
+
+      {isAdmin && <ReaperAlertSettingsCard />}
 
       <PainelComEstado
         carregando={isLoading}
