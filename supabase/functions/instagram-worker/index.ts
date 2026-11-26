@@ -15,6 +15,7 @@
  */
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 import { HikerClient, HikerError, computeBackoff } from "../_shared/hiker-client.ts";
 import type { NormalizedInstagramItem } from "../_shared/apify-fixtures.ts";
 
@@ -52,6 +53,11 @@ async function runJob(client: HikerClient, job: Job): Promise<NormalizedInstagra
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  // Etapa 034: o worker consome credito pago (HikerAPI/Apify) e usava o client de
+  // service_role sem nenhum portao. `verify_jwt = true` nao serve: a chave publica
+  // do site e um JWT valido. Sem credencial de servico -> 401.
+  if (!isCronAuthorized(req)) return json(401, { error: "unauthorized" });
 
   const workerId = req.headers.get("x-worker-id") ?? `edge-${crypto.randomUUID().slice(0, 8)}`;
   const service = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {

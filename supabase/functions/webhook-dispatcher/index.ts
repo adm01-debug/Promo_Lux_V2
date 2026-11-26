@@ -39,7 +39,9 @@ Deno.serve(async (req) => {
   // qualquer anonimo a disparar webhooks externos.
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  if (!isCronAuthorized(req)) {
+  const isCron = isCronAuthorized(req);
+  let authedUserId: string | null = null;
+  if (!isCron) {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "unauthorized" }), {
@@ -57,6 +59,7 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    authedUserId = user.id;
   }
 
   const supabase = createClient(supabaseUrl, serviceKey);
@@ -69,6 +72,58 @@ Deno.serve(async (req) => {
   if (req.method === "POST") {
     const body = await req.json().catch(() => ({}));
     if (body?.delivery_id) deliveryIds = [body.delivery_id];
+  }
+
+  // Etapa 032 (G12-2): alem de autenticado, o chamador de usuario precisa ser
+  // admin da organizacao dona da entrega. O client de service_role acima
+  // ignora RLS, entao a policy "Admins replay deliveries"
+  // (has_org_role(organization_id, auth.uid(), 'admin')) nao protegia nada
+  // aqui: qualquer sessao autenticada reenviava entrega de qualquer
+  // organizacao. O agendamento (cron) nao tem usuario e continua processando
+  // todas as organizacoes, que e o comportamento correto; disparo em lote por
+  // sessao de usuario fica fora, porque o unico chamador de usuario e o replay
+  // manual de uma entrega especifica (src/hooks/useWebhooks.ts).
+  if (authedUserId) {
+    if (!deliveryIds) {
+      return new Response(JSON.stringify({ error: "forbidden_bulk_dispatch" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { data: alvo, error: alvoErr } = await supabase
+      .from("webhook_deliveries")
+      .select("organization_id")
+      .eq("id", deliveryIds[0])
+      .maybeSingle();
+    if (alvoErr) {
+      return new Response(JSON.stringify({ error: alvoErr.message }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (!alvo) {
+      return new Response(JSON.stringify({ error: "delivery_not_found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { data: podeReenviar, error: permErr } = await supabase.rpc("has_org_role", {
+      _org_id: (alvo as { organization_id: string }).organization_id,
+      _user_id: authedUserId,
+      _min_role: "admin",
+    });
+    if (permErr) {
+      return new Response(JSON.stringify({ error: permErr.message }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (!podeReenviar) {
+      return new Response(JSON.stringify({ error: "forbidden_organization" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
   }
 
   let candidatesQ = supabase
