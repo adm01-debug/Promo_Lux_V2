@@ -14,9 +14,6 @@ verify_jwt = false
 [functions.admin-list-companies]
 verify_jwt = false
 
-[functions.migrate-helper]
-verify_jwt = false
-
 # Functions publicas por design: autenticam por conta propria (assinatura HMAC
 # ou X-API-Key) e sao chamadas de fora do Supabase, sem header Authorization.
 # Sem esta secao, o deploy aplica o default verify_jwt = true e o gateway
