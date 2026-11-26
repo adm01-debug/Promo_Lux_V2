@@ -65,6 +65,7 @@ export default defineConfig({
             "**/instagram-config-hash.test.ts",
             "**/scim-core.test.ts",
             "**/scrape-results-save.test.ts",
+            "**/selecao-de-orfaos.test.ts",
           ],
         },
       },
