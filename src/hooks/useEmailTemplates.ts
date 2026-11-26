@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import type { Json } from "@/integrations/supabase/types";
 import type { SequenceStep } from "@/components/lux/campaigns/CampaignFormFields";
 import { useActiveOrganization } from "@/contexts/active-org-context";
@@ -73,8 +74,10 @@ export function useEmailTemplates() {
   const { activeOrgId } = useActiveOrganization();
   return useQuery({
     queryKey: ["email-templates", activeOrgId],
+    // O wrapper falha fechado sem organizacao ativa (MissingOrgContextError).
+    enabled: !!activeOrgId,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("email_templates")
         .select("*")
         .is("deleted_at", null)
@@ -90,6 +93,7 @@ export function useEmailTemplateStats() {
   return useQuery({
     queryKey: ["email-template-stats", activeOrgId],
     queryFn: async () => {
+      // View agregada (`email_template_stats`): security_invoker + RLS da tabela base.
       const { data, error } = await supabase.from("email_template_stats").select("*");
       if (error) throw error;
       return (data ?? []) as EmailTemplateStat[];
@@ -112,11 +116,11 @@ export function useSaveEmailTemplate() {
         tags: input.tags ?? [],
       };
       if (id) {
-        const { error } = await supabase.from("email_templates").update(payload).eq("id", id);
+        const { error } = await db.from("email_templates").update(payload).eq("id", id);
         if (error) throw error;
         return id;
       }
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("email_templates")
         .insert(payload)
         .select("id")
@@ -137,7 +141,7 @@ export function useDeleteEmailTemplate() {
   return useMutation({
     mutationFn: async (id: string) => {
       // soft delete: o historico de uso continua auditavel
-      const { error } = await supabase
+      const { error } = await db
         .from("email_templates")
         .update({ deleted_at: new Date().toISOString() })
         .eq("id", id);

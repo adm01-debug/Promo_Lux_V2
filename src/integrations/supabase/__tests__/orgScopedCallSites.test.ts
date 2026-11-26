@@ -20,6 +20,8 @@ const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 interface TelaEscopada {
   arquivo: string;
   tabela: string;
+  /** `write` cobre hooks que só gravam (update/delete) a tabela. */
+  op?: "select" | "write";
 }
 
 const TELAS: TelaEscopada[] = [
@@ -32,6 +34,11 @@ const TELAS: TelaEscopada[] = [
   },
   { arquivo: "components/lux/AutomationsList.tsx", tabela: "workflows" },
   { arquivo: "hooks/useWeeklyPerformance.ts", tabela: "companies" },
+  { arquivo: "hooks/useEmailTemplates.ts", tabela: "email_templates" },
+  { arquivo: "hooks/useApiKeys.ts", tabela: "api_keys" },
+  { arquivo: "hooks/useTaskReminders.ts", tabela: "deal_tasks" },
+  { arquivo: "hooks/useSatisfaction.ts", tabela: "satisfaction_surveys", op: "write" },
+  { arquivo: "hooks/useSalesGoals.ts", tabela: "sales_goals", op: "write" },
 ];
 
 /** Fonte sem quebras de linha: a cadeia de metodos pode estar quebrada. */
@@ -41,13 +48,20 @@ function fontePlana(arquivo: string): string {
 }
 
 describe("telas do painel consultam tabelas multi-tenant pelo wrapper", () => {
-  for (const { arquivo, tabela } of TELAS) {
-    it(`${arquivo} le ${tabela} com escopo`, () => {
+  for (const { arquivo, tabela, op = "select" } of TELAS) {
+    it(`${arquivo} ${op === "write" ? "grava" : "le"} ${tabela} com escopo`, () => {
       expect(ORG_SCOPED_TABLES.has(tabela)).toBe(true);
 
       const fonte = fontePlana(arquivo);
-      expect(fonte).toContain(`db .from("${tabela}") .select(`);
-      expect(fonte).not.toContain(`supabase .from("${tabela}") .select(`);
+      const chamada = (alvo: "db" | "supabase", metodo: string) =>
+        new RegExp(`${alvo}\\s*\\.from\\("${tabela}"\\)\\s*\\.${metodo}\\(`).test(fonte);
+      if (op === "write") {
+        expect(chamada("db", "update") || chamada("db", "delete")).toBe(true);
+        expect(chamada("supabase", "update") || chamada("supabase", "delete")).toBe(false);
+      } else {
+        expect(chamada("db", "select")).toBe(true);
+        expect(chamada("supabase", "select")).toBe(false);
+      }
     });
   }
 });

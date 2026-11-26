@@ -36,9 +36,9 @@ export function useApiKeys() {
 
   const query = useQuery({
     queryKey: ["api_keys", user?.id, activeOrgId],
-    enabled: !!user,
+    enabled: !!user && !!activeOrgId,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("api_keys")
         .select("id,name,prefix,scopes,last_used_at,expires_at,active,created_at")
         .order("created_at", { ascending: false });

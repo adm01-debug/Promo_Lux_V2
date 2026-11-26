@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { db } from "@/integrations/supabase/withOrg";
+import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useAuth } from "@/contexts/auth-context";
 import { toast } from "sonner";
 
@@ -21,8 +20,11 @@ export function useTaskReminders() {
     let cancelled = false;
 
     const check = async () => {
+      // Sem organizacao ativa o wrapper falha fechado (MissingOrgContextError);
+      // nao ha lembrete a mostrar antes de a org carregar.
+      if (!getActiveOrgId()) return;
       const nowIso = new Date().toISOString();
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("deal_tasks")
         .select("id,title,remind_at,reminded,completed")
         .eq("user_id", user.id)
@@ -52,8 +54,10 @@ export function useTaskReminders() {
       if (data.length && !cancelled) qc.invalidateQueries({ queryKey: ["deal_tasks"] });
     };
 
-    check();
-    const i = window.setInterval(check, 60_000);
+    void check().catch(() => { /* falha transitoria: proximo ciclo tenta de novo */ });
+    const i = window.setInterval(() => {
+      void check().catch(() => { /* idem */ });
+    }, 60_000);
     return () => {
       cancelled = true;
       window.clearInterval(i);
