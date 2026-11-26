@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 57,
+ "total": 58,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -83,6 +83,17 @@
    "npm_scripts": [],
    "workflows": [
     "edge-functions-deploy.yml"
+   ],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/check-functions-orphans.sh",
+   "descricao": "--------------------------------------------------------------------------- check-functions-orphans.sh",
+   "linhas": 133,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "functions-retirement.yml"
    ],
    "orfao": false
   },

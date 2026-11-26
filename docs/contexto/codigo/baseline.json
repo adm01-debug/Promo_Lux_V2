@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "10dc090b0467df041b7a8c93006b8ca0f56778d0",
+  "commit": "594348f54d6a78625df4e0146bcee67bac84c26a",
   "branch": "main",
-  "data_commit": "2026-11-26T08:15:00-03:00",
+  "data_commit": "2026-11-26T08:55:05-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "594348f",
+    "data": "2026-11-26",
+    "assunto": "infra(functions): detector de function publicada fora do repositorio (#271)"
+   },
    {
     "sha": "10dc090",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "39e3cfb",
     "data": "2026-11-25",
     "assunto": "fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)"
-   },
-   {
-    "sha": "23d4926",
-    "data": "2026-11-25",
-    "assunto": "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)"
    }
   ],
-  "arquivos_mudados_7d": 409,
+  "arquivos_mudados_7d": 410,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -172,11 +172,11 @@
     "mudancas": 10
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "pasta": "scripts/automation.config.json",
+    "mudancas": 10
    },
    {
-    "pasta": "scripts/automation.config.json",
+    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -214,6 +214,10 @@
     "mudancas": 10
    },
    {
+    "arquivo": "scripts/automation.config.json",
+    "mudancas": 10
+   },
+   {
     "arquivo": "supabase/config.toml",
     "mudancas": 10
    },
@@ -223,10 +227,6 @@
    },
    {
     "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
     "mudancas": 9
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 200
+    "commits": 201
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1205,
+  "arquivos_total": 1206,
   "arquivos_codigo": 751,
   "linhas_codigo": 130626,
   "rotas": 12,
@@ -326,7 +326,7 @@
   "cron_jobs": 43,
   "testes": 165,
   "workflows": 11,
-  "scripts": 57,
+  "scripts": 58,
   "docs_md": 87
  },
  "por_pasta": {

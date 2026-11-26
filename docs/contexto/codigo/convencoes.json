@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "infra(functions): detector de function publicada fora do repositorio (#271)",
    "feat(raspagem): exporta leads do job em CSV e grava historico em job_exports (#270)",
    "infra: aposenta functions no projeto (a migrate-helper segue ativa em producao) (#269)",
    "fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)",
-   "fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)",
-   "fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)"
+   "fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)"
   ]
  },
  "pr_template": null,

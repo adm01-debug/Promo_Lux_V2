@@ -8,7 +8,7 @@
    "Markdown (87)",
    "JSON (38)",
    "JavaScript (25)",
-   "Shell (19)",
+   "Shell (20)",
    "YAML (13)",
    "Python (5)"
   ],
@@ -426,6 +426,7 @@
    ],
    "scripts_usados": [
     "scripts/check-edge-fn-target.sh",
+    "scripts/check-functions-orphans.sh",
     "scripts/retire-functions.sh"
    ],
    "npm_scripts": [],

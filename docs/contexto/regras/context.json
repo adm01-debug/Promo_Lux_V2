@@ -1,10 +1,10 @@
 {
  "meta": {
-  "sha": "10dc090b0467df041b7a8c93006b8ca0f56778d0",
+  "sha": "594348f54d6a78625df4e0146bcee67bac84c26a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 11:15 UTC",
-  "files_total": 1226,
+  "generated_at": "2026-11-26 11:55 UTC",
+  "files_total": 1227,
   "code_files": 1031,
   "code_lines": 153191
  },
@@ -104080,10 +104080,21 @@
   }
  },
  "git": {
-  "sha": "10dc090b0467df041b7a8c93006b8ca0f56778d0",
+  "sha": "594348f54d6a78625df4e0146bcee67bac84c26a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "594348f",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "infra(functions): detector de function publicada fora do repositorio (#271)",
+    "files": [
+     ".github/workflows/functions-retirement.yml",
+     "scripts/automation.config.json",
+     "scripts/check-functions-orphans.sh"
+    ]
+   },
    {
     "sha": "10dc090",
     "date": "2026-11-26",
@@ -104500,46 +104511,16 @@
      "src/pages/Monitoring.tsx",
      "src/tests/multi-tenant.test.ts"
     ]
-   },
-   {
-    "sha": "8c4a8f1",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: escopo de organizacao nas consultas e no cache do front (#224)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/hooks/__tests__/orgCacheKeys.test.ts",
-     "src/hooks/useApiKeys.ts",
-     "src/hooks/useApiLatency.ts",
-     "src/hooks/useAuditTrail.ts",
-     "src/hooks/useAutomationsMonitor.ts",
-     "src/hooks/useDashboardData.ts",
-     "src/hooks/useDeals.ts",
-     "src/hooks/useEmailSuppressions.ts",
-     "src/hooks/useEmailTemplates.ts",
-     "src/hooks/useFeatureFlags.ts",
-     "src/hooks/useICPConfig.ts",
-     "src/hooks/useNotificationCount.ts",
-     "src/hooks/useOracleV2.ts",
-     "src/hooks/useScrapeQueue.ts",
-     "src/hooks/useVirtualCompanies.ts",
-     "src/hooks/useWebScrape.ts",
-     "src/hooks/useWebhooks.ts",
-     "src/hooks/useWeeklyPerformance.ts",
-     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
-     "src/integrations/supabase/__tests__/withOrg.registry.test.ts",
-     "src/integrations/supabase/withOrg.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    26
+    25
    ],
    [
     "scripts/automation.config.json",
-    3
+    4
    ],
    [
     "supabase/functions/gmaps-proxy/index.ts",
@@ -104550,27 +104531,11 @@
     3
    ],
    [
-    "src/hooks/useApiKeys.ts",
-    3
-   ],
-   [
-    "src/hooks/useEmailTemplates.ts",
-    3
-   ],
-   [
-    "src/hooks/useDeals.ts",
-    3
-   ],
-   [
-    "src/integrations/supabase/withOrg.ts",
-    3
-   ],
-   [
-    "supabase/functions/public-api/index.ts",
+    ".github/workflows/functions-retirement.yml",
     2
    ],
    [
-    "src/hooks/useEmailSuppressions.ts",
+    "supabase/functions/public-api/index.ts",
     2
    ],
    [
@@ -104611,6 +104576,22 @@
    ],
    [
     "src/components/lux/CampaignsView.tsx",
+    2
+   ],
+   [
+    "src/components/lux/WorkflowsView.tsx",
+    2
+   ],
+   [
+    "src/hooks/useOrganizations.ts",
+    2
+   ],
+   [
+    "src/hooks/useApiKeys.ts",
+    2
+   ],
+   [
+    "src/hooks/useEmailTemplates.ts",
     2
    ]
   ]
