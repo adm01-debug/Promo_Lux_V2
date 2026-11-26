@@ -2139,7 +2139,7 @@
   {
    "modulo": "lib/mcp",
    "arquivos": 7,
-   "testes": 0,
+   "testes": 1,
    "linhas": 389,
    "itens_menu": [],
    "telas": [],

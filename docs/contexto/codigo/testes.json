@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 158,
+ "total": 159,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 136
+  "unit": 137
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 111
+   "arquivos": 112
   },
   {
    "padrao": "e2e/",
@@ -1130,6 +1130,13 @@
    "casos": 12
   },
   {
+   "arquivo": "src/lib/mcp/__tests__/emissor-projeto.test.ts",
+   "tipo": "unit",
+   "linhas": 53,
+   "testa": [],
+   "casos": 2
+  },
+  {
    "arquivo": "src/lib/resilience/__tests__/compareReport.test.ts",
    "tipo": "unit",
    "linhas": 51,
@@ -1780,7 +1787,6 @@
    "lusha-decision-makers",
    "lusha-reveal",
    "lusha-search",
-   "mcp",
    "mcp-query",
    "migrate-helper",
    "oracle-cookies-preflight",

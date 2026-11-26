@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `ab29fc2245` · branch `main` · 2026-11-26 02:11 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `735410e89c` · branch `main` · 2026-11-26 04:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1359 testes em 142 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1362 testes em 143 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2469,6 +2469,7 @@ _nenhum item encontrado_
 | `src/hooks/__tests__/useAutomationsMonitor.test.ts` | 3 | useAutomationsMonitor — canal em tempo real · abre o canal com a organização ativa · recria o canal com a organização nova quando ela muda |
 | `src/hooks/__tests__/useWeeklyPerformance.test.tsx` | 3 | useWeeklyPerformance — escopo multi-tenant e erro · le as empresas da organizacao ativa, fora da lixeira · propaga o erro da consulta em vez de devolver series zeradas |
 | `src/integrations/supabase/__tests__/orgFixtureSync.test.ts` | 3 | fixture de tabelas multi-tenant é derivada das migrations · está em dia com supabase/migrations · o gerador produz uma lista não vazia e ordenada |
+| `src/lib/mcp/__tests__/emissor-projeto.test.ts` | 3 | emissor de autenticacao do MCP (etapa 046) · usa o mesmo projeto do config.toml · aponta para um project ref plausivel, nunca para um projeto de teste |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |
 | `supabase/functions/_shared/__tests__/linkedin-url.test.ts` | 3 | publicIdFromLinkedInUrl · extrai de ${nome} · retorna vazio para ${nome} |
 | `e2e/dlq-web-smoke.spec.ts` | 2 | DLQ web — smoke · ciclo enqueue → DLQ → snapshot → replay |

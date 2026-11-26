@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "ab29fc224578cff4a4dc89b0662cbb72c15c8266",
+  "sha": "735410e89c0196c4364208ceb8429e6cabff551a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 02:11 UTC",
-  "files_total": 1210,
-  "code_files": 1021,
-  "code_lines": 151818
+  "generated_at": "2026-11-26 04:43 UTC",
+  "files_total": 1211,
+  "code_files": 1022,
+  "code_lines": 151871
  },
  "version": "1.3.2",
- "facts_hash": "4b0eca2ee47328a8",
+ "facts_hash": "b590c99bd07ab1e1",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -246,7 +246,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 393,
+   ".ts": 394,
    ".tsx": 321,
    ".sql": 274,
    ".mjs": 23,
@@ -34014,8 +34014,8 @@
   },
   {
    "module": "src/lib",
-   "files": 58,
-   "lines": 6497,
+   "files": 59,
+   "lines": 6550,
    "tables": [
     "audit_logs",
     "campaigns",
@@ -34081,6 +34081,8 @@
     "clsx",
     "jspdf",
     "jspdf-autotable",
+    "node:fs",
+    "node:path",
     "react",
     "sonner",
     "tailwind-merge",
@@ -34132,6 +34134,7 @@
     "src/lib/lusha/__tests__/departmentMap.test.ts",
     "src/lib/mcp/index.ts",
     "src/lib/mcp/supabase.ts",
+    "src/lib/mcp/__tests__/emissor-projeto.test.ts",
     "src/lib/mcp/tools/get-company.ts",
     "src/lib/mcp/tools/get-dashboard-stats.ts",
     "src/lib/mcp/tools/list-companies.ts",
@@ -56956,6 +56959,18 @@
    {
     "file": "src/lib/lusha/__tests__/departmentMap.test.ts",
     "name": "faz fallback para o enum EN quando não encontra"
+   },
+   {
+    "file": "src/lib/mcp/__tests__/emissor-projeto.test.ts",
+    "name": "emissor de autenticacao do MCP (etapa 046)"
+   },
+   {
+    "file": "src/lib/mcp/__tests__/emissor-projeto.test.ts",
+    "name": "usa o mesmo projeto do config.toml"
+   },
+   {
+    "file": "src/lib/mcp/__tests__/emissor-projeto.test.ts",
+    "name": "aponta para um project ref plausivel, nunca para um projeto de teste"
    },
    {
     "file": "src/lib/resilience/autotune.test.ts",
@@ -93782,6 +93797,20 @@
    ],
    "uses_service_role": true
   },
+  "src/lib/mcp/__tests__/emissor-projeto.test.ts": {
+   "path": "src/lib/mcp/__tests__/emissor-projeto.test.ts",
+   "lines": 53,
+   "is_test": true,
+   "errors": [
+    "artefato do MCP sem projectRef",
+    "supabase/config.toml sem project_id"
+   ],
+   "tests": [
+    "emissor de autenticacao do MCP (etapa 046)",
+    "usa o mesmo projeto do config.toml",
+    "aponta para um project ref plausivel, nunca para um projeto de teste"
+   ]
+  },
   "src/lib/mcp/tools/get-company.ts": {
    "path": "src/lib/mcp/tools/get-company.ts",
    "lines": 46,
@@ -103419,10 +103448,20 @@
   }
  },
  "git": {
-  "sha": "ab29fc224578cff4a4dc89b0662cbb72c15c8266",
+  "sha": "735410e89c0196c4364208ceb8429e6cabff551a",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "735410e",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "test(mcp): trava o emissor de autenticacao no projeto oficial (#257)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/lib/mcp/__tests__/emissor-projeto.test.ts"
+    ]
+   },
    {
     "sha": "ab29fc2",
     "date": "2026-11-25",
@@ -103863,21 +103902,12 @@
      "package-lock.json",
      "package.json"
     ]
-   },
-   {
-    "sha": "121479c",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)",
-    "files": [
-     ".github/workflows/deploy-watchdog.yml"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    23
+    24
    ],
    [
     "src/pages/Monitoring.tsx",
