@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { EmptyState } from "@/components/lux/EmptyState";
+import { PermissionGate } from "@/components/lux/permissions/PermissionGate";
 import { useActiveOrganization } from "@/contexts/active-org-context";
 import {
   useDlqReplay,
@@ -169,27 +170,37 @@ function MotorView({ motor }: MotorViewProps) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => doReplay("selected")}
-          disabled={replay.isPending || selectedCount === 0}
-          className="gap-1.5"
+        <PermissionGate
+          entity="scrape_jobs"
+          action="manage"
+          fallback={
+            <p className="text-xs text-muted-foreground">
+              Somente administradores podem reprocessar a fila.
+            </p>
+          }
         >
-          {replay.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-          <RotateCcw className="h-3.5 w-3.5" />
-          Reprocessar selecionados ({selectedCount})
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => doReplay("batch")}
-          disabled={replay.isPending}
-          className="gap-1.5"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          Reprocessar {limit} mais antigos
-        </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => doReplay("selected")}
+            disabled={replay.isPending || selectedCount === 0}
+            className="gap-1.5"
+          >
+            {replay.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reprocessar selecionados ({selectedCount})
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => doReplay("batch")}
+            disabled={replay.isPending}
+            className="gap-1.5"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reprocessar {limit} mais antigos
+          </Button>
+        </PermissionGate>
         <div className="ml-auto flex items-center gap-2">
           <Badge variant="outline" className="text-[10px]">
             {items.length} itens
