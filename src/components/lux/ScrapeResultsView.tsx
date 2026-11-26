@@ -32,6 +32,7 @@ interface JobExportRow {
   format: string;
   status: string;
   created_at: string;
+  file_url: string | null;
 }
 
 const pickString = (raw: RawData, keys: string[]): string => {
@@ -60,6 +61,7 @@ export const ScrapeResultsView = () => {
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const { data: jobs } = useQuery({
     queryKey: ["scrape-jobs-lite"],
@@ -199,7 +201,7 @@ export const ScrapeResultsView = () => {
     queryFn: async (): Promise<JobExportRow[]> => {
       let q = supabase
         .from("job_exports")
-        .select("id, job_id, format, status, created_at")
+        .select("id, job_id, format, status, created_at, file_url")
         .order("created_at", { ascending: false })
         .limit(10);
       if (jobFilter !== "all") q = q.eq("job_id", jobFilter);
@@ -209,6 +211,35 @@ export const ScrapeResultsView = () => {
     },
   });
 
+  const callExport = async (payload: Record<string, string>) => {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) throw new Error("Sessao expirada - entre novamente.");
+    return fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-scrape-job`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      },
+      body: JSON.stringify(payload),
+    });
+  };
+
+  const saveBlob = async (res: Response) => {
+    const blob = await res.blob();
+    const name = (res.headers.get("Content-Disposition") ?? "").match(/filename="([^"]+)"/)?.[1] ?? "leads.csv";
+    const href = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(href);
+    return name;
+  };
+
   const handleExport = async () => {
     if (jobFilter === "all") {
       toast({ title: "Selecione um job", description: "A exportacao sai por job: escolha um na lista de jobs.", variant: "destructive" });
@@ -216,46 +247,47 @@ export const ScrapeResultsView = () => {
     }
     setIsExporting(true);
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) throw new Error("Sessao expirada - entre novamente.");
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-scrape-job`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-        },
-        body: JSON.stringify({ job_id: jobFilter, status: statusFilter }),
-      });
+      const res = await callExport({ job_id: jobFilter, status: statusFilter });
       if (!res.ok) {
         const detail = await res.text();
         throw new Error(detail.slice(0, 300) || `HTTP ${res.status}`);
       }
-      const blob = await res.blob();
       const rows = Number(res.headers.get("X-Export-Rows") ?? "0");
       const truncated = res.headers.get("X-Export-Truncated") === "1";
       const recorded = res.headers.get("X-Export-Recorded") !== "0";
-      const name = (res.headers.get("Content-Disposition") ?? "").match(/filename="([^"]+)"/)?.[1] ?? "leads.csv";
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = href;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(href);
+      const stored = res.headers.get("X-Export-Stored") === "1";
+      const name = await saveBlob(res);
       queryClient.invalidateQueries({ queryKey: ["job-exports"] });
+      const partes = [
+        truncated ? "Limite de 20.000 linhas por exportacao - refine o filtro para o restante." : "",
+        stored ? "Guardado no historico - da para baixar de novo depois." : "",
+        recorded ? "" : "Baixado, mas nao registrado no historico.",
+      ].filter(Boolean);
       toast({
         title: rows > 0 ? `${rows} leads exportados` : "Nenhum lead nesse filtro",
-        description: truncated
-          ? "Limite de 20.000 linhas por exportacao - refine o filtro para o restante."
-          : recorded ? name : `${name} (baixado, mas nao registrado no historico)`,
+        description: partes.join(" ") || name,
       });
     } catch (err) {
       toast({ title: "Falha na exportacao", description: (err as Error).message, variant: "destructive" });
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleRedownload = async (row: JobExportRow) => {
+    setDownloadingId(row.id);
+    try {
+      const res = await callExport({ export_id: row.id });
+      if (!res.ok) {
+        const detail = await res.text();
+        throw new Error(detail.slice(0, 300) || `HTTP ${res.status}`);
+      }
+      const name = await saveBlob(res);
+      toast({ title: "Arquivo baixado", description: name });
+    } catch (err) {
+      toast({ title: "Falha ao baixar", description: (err as Error).message, variant: "destructive" });
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -339,6 +371,20 @@ export const ScrapeResultsView = () => {
               <FileJson className="h-3 w-3" />
               {new Date(e.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
               {e.status === "completed" ? " ok" : ` ${e.status}`}
+              {e.file_url ? (
+                <button
+                  type="button"
+                  onClick={() => handleRedownload(e)}
+                  disabled={downloadingId === e.id}
+                  className="ml-0.5 inline-flex items-center gap-0.5 underline underline-offset-2 hover:text-primary disabled:opacity-50"
+                  title="Baixar novamente o arquivo guardado desta exportacao"
+                >
+                  {downloadingId === e.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
+                  baixar
+                </button>
+              ) : (
+                <span className="opacity-60">sem arquivo</span>
+              )}
             </Badge>
           ))}
         </div>

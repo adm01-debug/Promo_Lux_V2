@@ -1,12 +1,16 @@
 // Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario.
-// Body: { job_id: uuid, status?: "all" | "processed" | "unprocessed" }
-// Grava a linha em job_exports (historico) e devolve o arquivo direto na resposta:
-// o projeto nao tem bucket de storage (docs/qa/01-INVENTARIO.md:169), entao nao ha file_url.
+// Modo criar:    body { job_id: uuid, status?: "all" | "processed" | "unprocessed" }
+// Modo rebaixar: body { export_id: uuid }
+// O CSV e gravado no bucket privado job-exports com a service role (o cliente nao
+// tem acesso ao bucket) e o caminho fica em job_exports.file_url, alem de voltar
+// direto na resposta do modo criar.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MAX_ROWS = 20000;
 const PAGE = 1000;
+const BUCKET = "job-exports";
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 // Colunas conhecidas do lead primeiro; o resto de raw_data entra depois, na ordem em que aparece.
 const KNOWN = ["name", "address", "phone", "website", "email", "rating"];
 
@@ -44,15 +48,55 @@ Deno.serve(async (req) => {
   if (userErr || !userData?.user) return json(401, { error: "Sessao invalida", trace_id });
   const userId = userData.user.id;
 
-  let body: { job_id?: string; status?: string };
+  // A service role e usada so para o bucket privado. Se ela faltar, o export nao
+  // quebra: o CSV continua saindo na resposta, apenas sem arquivo guardado.
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  const service = serviceKey
+    ? createClient(Deno.env.get("SUPABASE_URL")!, serviceKey, { auth: { persistSession: false } })
+    : null;
+
+  let body: { job_id?: string; status?: string; export_id?: string };
   try {
     body = await req.json();
   } catch {
     return json(400, { error: "JSON invalido", trace_id });
   }
 
+  // Modo rebaixar: devolve o CSV ja guardado. A RLS de job_exports garante que a
+  // linha so aparece para o dono; o objeto em si e lido com a service role.
+  const exportId = String(body.export_id ?? "").trim();
+  if (exportId) {
+    if (!UUID_RE.test(exportId)) return json(400, { error: "export_id invalido", trace_id });
+    const { data: exp, error: expErr } = await supabase
+      .from("job_exports")
+      .select("id, job_id, file_url")
+      .eq("id", exportId)
+      .maybeSingle();
+    if (expErr) return json(500, { error: expErr.message, trace_id });
+    if (!exp) return json(404, { error: "Exportacao nao encontrada", trace_id });
+    const path = typeof exp.file_url === "string" ? exp.file_url : "";
+    if (!path) return json(409, { error: "Exportacao sem arquivo guardado - gere o CSV de novo", trace_id });
+    const { data: file, error: dlErr } = service
+      ? await service.storage.from(BUCKET).download(path)
+      : { data: null, error: { message: "SUPABASE_SERVICE_ROLE_KEY ausente no ambiente" } };
+    if (dlErr || !file) return json(500, { error: dlErr?.message ?? "Falha ao ler o arquivo", trace_id });
+    const { data: jobRow } = await supabase.from("scrape_jobs").select("name").eq("id", exp.job_id).maybeSingle();
+    const name = `leads-${slug(String(jobRow?.name ?? "job"))}-${new Date().toISOString().slice(0, 10)}.csv`;
+    return new Response(file, {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="${name}"`,
+        "Access-Control-Expose-Headers": "Content-Disposition, X-Export-Id, X-Trace-Id",
+        "X-Export-Id": exportId,
+        "X-Trace-Id": trace_id,
+      },
+    });
+  }
+
   const jobId = String(body.job_id ?? "").trim();
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(jobId)) {
+  if (!UUID_RE.test(jobId)) {
     return json(400, { error: "job_id invalido", trace_id });
   }
   const filter = body.status === "processed" || body.status === "unprocessed" ? body.status : "all";
@@ -116,12 +160,36 @@ Deno.serve(async (req) => {
       user_id: userId,
       organization_id: job.organization_id ?? null,
       format: "csv",
-      status: "completed",
+      status: "pending",
       file_url: null,
     })
     .select("id")
     .maybeSingle();
   if (recErr) console.error(JSON.stringify({ trace_id, etapa: "job_exports", erro: recErr.message }));
+
+  // Guarda o arquivo no bucket privado: o historico passa a ter o CSV, nao so a linha.
+  // Falha de storage nao derruba a resposta - o CSV continua indo no corpo.
+  let stored = false;
+  const createdId = recorded?.id ? String(recorded.id) : "";
+  if (createdId) {
+    const path = `${userId}/${jobId}/${createdId}.csv`;
+    const { error: upErr } = service
+      ? await service.storage
+        .from(BUCKET)
+        .upload(path, new Blob([csv], { type: "text/csv; charset=utf-8" }), { upsert: true })
+      : { error: { message: "SUPABASE_SERVICE_ROLE_KEY ausente no ambiente" } };
+    if (upErr) {
+      console.error(JSON.stringify({ trace_id, etapa: "storage", erro: upErr.message }));
+      await supabase.from("job_exports").update({ status: "failed" }).eq("id", createdId);
+    } else {
+      const { error: updErr } = await supabase
+        .from("job_exports")
+        .update({ file_url: path, status: "completed" })
+        .eq("id", createdId);
+      if (updErr) console.error(JSON.stringify({ trace_id, etapa: "job_exports:update", erro: updErr.message }));
+      stored = !updErr;
+    }
+  }
 
   const filename = `leads-${slug(String(job.name ?? "job"))}-${new Date().toISOString().slice(0, 10)}.csv`;
   return new Response(csv, {
@@ -131,11 +199,12 @@ Deno.serve(async (req) => {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${filename}"`,
       "Access-Control-Expose-Headers":
-        "Content-Disposition, X-Export-Id, X-Export-Rows, X-Export-Truncated, X-Export-Recorded, X-Trace-Id",
-      "X-Export-Id": recorded?.id ?? "",
+        "Content-Disposition, X-Export-Id, X-Export-Rows, X-Export-Truncated, X-Export-Recorded, X-Export-Stored, X-Trace-Id",
+      "X-Export-Id": createdId,
       "X-Export-Rows": String(rows.length),
       "X-Export-Truncated": truncated ? "1" : "0",
       "X-Export-Recorded": recErr ? "0" : "1",
+      "X-Export-Stored": stored ? "1" : "0",
       "X-Trace-Id": trace_id,
     },
   });
