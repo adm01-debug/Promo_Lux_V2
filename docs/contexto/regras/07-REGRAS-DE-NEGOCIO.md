@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a14f8c3b00` · branch `main` · 2026-11-26 05:07 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e739571358` · branch `main` · 2026-11-26 05:10 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1767,6 +1767,7 @@ _nenhum item encontrado_
 | `AUDIT_THROTTLE_MS` | `1000` | `src/lib/orgErrorHandler.ts` |
 | `IMPROVE_SUCCESS_DELTA` | `0.02` | `src/lib/resilience/compareReport.ts` |
 | `IMPROVE_P95_PCT` | `0.05` | `src/lib/resilience/compareReport.ts` |
+| `FAIL_OPEN_TOLERANCE_MS` | `60` | `supabase/functions/_shared/api-rate-limit.ts` |
 | `APOLLO_CACHE_TTL_HIT_SECONDS` | `7` | `supabase/functions/_shared/apollo-cache.ts` |
 | `APOLLO_CACHE_TTL_EMPTY_SECONDS` | `24` | `supabase/functions/_shared/apollo-cache.ts` |
 | `APOLLO_COOLDOWN_FORBIDDEN_SECONDS` | `6` | `supabase/functions/_shared/apollo-cache.ts` |
@@ -2333,7 +2334,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1384 testes em 147 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1389 testes em 147 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2362,6 +2363,7 @@ _nenhum item encontrado_
 | `src/lib/sourceQualityReport.test.ts` | 14 | totalsForSource · soma linhas e recalcula taxas sobre os totais · retorna taxas nulas sem amostra · ignora linhas de outra fonte … |
 | `src/lib/__tests__/orgErrorHandler.test.ts` | 14 | handleOrgError → toast · dispara toast específico para INSERT sem org · dispara toast específico para UPDATE sem org · dispara toast específico para DELETE sem org … |
 | `src/hooks/__tests__/useRealtimeScrapeJobs.test.ts` | 13 | useRealtimeScrapeJobs · uses private channel name scoped to org id · applies organization_id filter for UPDATE events only · does not subscribe when user is null … |
+| `supabase/functions/_shared/__tests__/api-rate-limit.test.ts` | 13 | parseRateLimitDecision · aprova quando a RPC devolve allowed=true · bloqueia quando a RPC devolve allowed=false · marca indisponivel (e nao  … |
 | `supabase/functions/_shared/__tests__/leadcontact-client.test.ts` | 13 | assertLeadContactOk · deixa passar resposta sem code · deixa passar code 0 · deixa passar code 200 … |
 | `e2e/companies-crud.spec.ts` | 12 | Companies — List & Filters (Demo) · loads company list with header controls · real-time search filters list · filters panel exposes sector and IPC score facets … |
 | `src/components/lux/__tests__/CompanyTableRow.test.tsx` | 12 | HighlightText · highlights matching text · returns plain text when no match · returns plain text for short queries … |
@@ -2398,7 +2400,6 @@ _nenhum item encontrado_
 | `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 8 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
 | `src/lib/__tests__/orgErrorHandler.e2e.test.ts` | 8 | orgErrorHandler — E2E switching de org durante edição · mostra toast quando UPDATE falha após troca de org no meio da edição · ação  · handler global captura unhandledrejection com OrgMismatchError e mostra toast … |
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
-| `supabase/functions/_shared/__tests__/api-rate-limit.test.ts` | 8 | parseRateLimitDecision · aprova quando a RPC devolve allowed=true · bloqueia quando a RPC devolve allowed=false · fail-open em resposta vazia/nula … |
 | `supabase/functions/_shared/__tests__/instagram-config-hash.test.ts` | 8 | normalizeTarget: trim, lowercase, remove @ e # · clampLimit: default, floor, ceil e truncamento · computeConfigHash: mesma tupla ⇒ mesmo hash (estabilidade) · computeConfigHash: invariante a variações de forma do target … |
 | `supabase/functions/_shared/__tests__/scrape-results-save.test.ts` | 8 | saveScrapeResults: grava empresas e resultados com org e job do chamador · saveScrapeResults: linha recusada nao vira resultado nem some do log · saveScrapeResults: sem job grava a empresa e nao tenta scrape_results · saveScrapeResults: lote vazio devolve zero sem tocar no banco … |
 | `supabase/functions/_shared/__tests__/workflow-phases.test.ts` | 8 | declaredPhases · devolve vazio para steps ausente, nulo ou nao-array · ignora entradas sem phase ou com phase nao-string · coleta as fases declaradas … |

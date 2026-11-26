@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a14f8c3b00b1199f49071a742051422e09c039ca",
+  "sha": "e739571358188621a29bba70e29d637540884a71",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 05:07 UTC",
+  "generated_at": "2026-11-26 05:10 UTC",
   "files_total": 1216,
   "code_files": 1027,
-  "code_lines": 152523
+  "code_lines": 152638
  },
  "version": "1.3.2",
- "facts_hash": "244b032af26ca314",
+ "facts_hash": "8270ef4fc6e8782e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -34262,7 +34262,7 @@
   {
    "module": "supabase/functions",
    "files": 140,
-   "lines": 25460,
+   "lines": 25575,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -34331,7 +34331,7 @@
     "workflows"
    ],
    "exports": [
-    "api-rate-limit.ts: RateLimitDecision, parseRateLimitDecision, retryAfterSeconds",
+    "api-rate-limit.ts: RateLimitDecision, parseRateLimitDecision, retryAfterSeconds, FAIL_OPEN_TOLERANCE_MS, noteRateLimitSuccess, withinFailOpenTolerance",
     "apify-fixtures.ts: NormalizedInstagramItem, MOCK_DATASET_FIXTURES",
     "apify-gateway.ts: FaultKind, FaultSpec, FaultConfig, _resetFaultRegistry, getMockStats, _resetMockStats",
     "apollo-cache.ts: APOLLO_CACHE_TTL_HIT_SECONDS, APOLLO_CACHE_TTL_EMPTY_SECONDS, APOLLO_COOLDOWN_FORBIDDEN_SECONDS, APOLLO_COOLDOWN_RATE_LIMIT_SECONDS, ApolloCacheKeyInput, buildApolloCacheKey",
@@ -47264,6 +47264,11 @@
     "value": "0.05"
    },
    {
+    "file": "supabase/functions/_shared/api-rate-limit.ts",
+    "name": "FAIL_OPEN_TOLERANCE_MS",
+    "value": "60"
+   },
+   {
     "file": "supabase/functions/_shared/apollo-cache.ts",
     "name": "APOLLO_CACHE_TTL_HIT_SECONDS",
     "value": "7"
@@ -57266,11 +57271,11 @@
    },
    {
     "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
-    "name": "fail-open em resposta vazia/nula"
+    "name": "marca indisponivel (e nao "
    },
    {
     "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
-    "name": "trata objeto ?nico e array de uma linha da mesma forma"
+    "name": "trata objeto unico e array de uma linha da mesma forma"
    },
    {
     "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
@@ -57283,6 +57288,26 @@
    {
     "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
     "name": "fallback de 1h sem reset_at"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "tolerancia de fail-open (etapa 038)"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "sem contagem bem-sucedida nao ha tolerancia"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "tolera falha dentro de 60 s da ultima contagem boa"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "deixa de tolerar depois de 60 s"
+   },
+   {
+    "file": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "name": "reset volta ao estado sem tolerancia"
    },
    {
     "file": "supabase/functions/_shared/__tests__/apollo-cache.test.ts",
@@ -94786,11 +94811,21 @@
   },
   "supabase/functions/_shared/api-rate-limit.ts": {
    "path": "supabase/functions/_shared/api-rate-limit.ts",
-   "lines": 31,
+   "lines": 67,
    "exports": [
     "interface RateLimitDecision",
     "function parseRateLimitDecision",
-    "function retryAfterSeconds"
+    "function retryAfterSeconds",
+    "const FAIL_OPEN_TOLERANCE_MS",
+    "function noteRateLimitSuccess",
+    "function withinFailOpenTolerance",
+    "function resetRateLimitTolerance"
+   ],
+   "params": [
+    {
+     "name": "FAIL_OPEN_TOLERANCE_MS",
+     "value": "60"
+    }
    ],
    "rule_comments": [
     "Logic-a pura de decisao de rate-limit da public-api, extraida para teste"
@@ -96079,17 +96114,22 @@
   },
   "supabase/functions/_shared/__tests__/api-rate-limit.test.ts": {
    "path": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
-   "lines": 37,
+   "lines": 70,
    "is_test": true,
    "tests": [
     "parseRateLimitDecision",
     "aprova quando a RPC devolve allowed=true",
     "bloqueia quando a RPC devolve allowed=false",
-    "fail-open em resposta vazia/nula",
-    "trata objeto ?nico e array de uma linha da mesma forma",
+    "marca indisponivel (e nao ",
+    "trata objeto unico e array de uma linha da mesma forma",
     "retryAfterSeconds",
     "usa resetAt futuro e nunca devolve 0",
-    "fallback de 1h sem reset_at"
+    "fallback de 1h sem reset_at",
+    "tolerancia de fail-open (etapa 038)",
+    "sem contagem bem-sucedida nao ha tolerancia",
+    "tolera falha dentro de 60 s da ultima contagem boa",
+    "deixa de tolerar depois de 60 s",
+    "reset volta ao estado sem tolerancia"
    ]
   },
   "supabase/functions/_shared/__tests__/apollo-cache.test.ts": {
@@ -100192,7 +100232,7 @@
   },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
-   "lines": 456,
+   "lines": 502,
    "tables": [
     {
      "table": "api_keys",
@@ -103700,10 +103740,22 @@
   }
  },
  "git": {
-  "sha": "a14f8c3b00b1199f49071a742051422e09c039ca",
+  "sha": "e739571358188621a29bba70e29d637540884a71",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "e739571",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+     "supabase/functions/_shared/api-rate-limit.ts",
+     "supabase/functions/public-api/index.ts"
+    ]
+   },
    {
     "sha": "a14f8c3",
     "date": "2026-11-26",
@@ -104148,19 +104200,6 @@
      "src/components/lux/OrganizationsView.tsx",
      "src/components/lux/__tests__/CampaignsView.test.tsx",
      "src/components/lux/automations/CompanyAutomationTable.tsx"
-    ]
-   },
-   {
-    "sha": "06193a9",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/CompanyDetailModal.tsx",
-     "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
-     "src/components/lux/__tests__/CompanyTableRow.test.tsx",
-     "src/components/lux/companies/CompanyTableRow.tsx"
     ]
    }
   ],

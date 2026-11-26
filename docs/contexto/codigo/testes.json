@@ -1244,11 +1244,11 @@
   {
    "arquivo": "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
    "tipo": "unit",
-   "linhas": 37,
+   "linhas": 70,
    "testa": [
     "supabase/functions/_shared/api-rate-limit.ts"
    ],
-   "casos": 6
+   "casos": 10
   },
   {
    "arquivo": "supabase/functions/_shared/__tests__/apollo-cache.test.ts",

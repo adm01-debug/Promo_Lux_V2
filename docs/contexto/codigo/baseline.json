@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a14f8c3b00b1199f49071a742051422e09c039ca",
+  "commit": "e739571358188621a29bba70e29d637540884a71",
   "branch": "main",
-  "data_commit": "2026-11-26T02:07:03-03:00",
+  "data_commit": "2026-11-26T02:09:54-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e739571",
+    "data": "2026-11-26",
+    "assunto": "fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)"
+   },
    {
     "sha": "a14f8c3",
     "data": "2026-11-26",
@@ -126,11 +131,6 @@
     "sha": "d7c7ccf",
     "data": "2026-11-25",
     "assunto": "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)"
-   },
-   {
-    "sha": "d15f85e",
-    "data": "2026-11-25",
-    "assunto": "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)"
    }
   ],
   "arquivos_mudados_7d": 397,
@@ -141,15 +141,15 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 31
+   },
+   {
+    "pasta": "supabase/functions/_shared",
     "mudancas": 30
    },
    {
     "pasta": "src/integrations/supabase",
     "mudancas": 29
-   },
-   {
-    "pasta": "supabase/functions/_shared",
-    "mudancas": 28
    },
    {
     "pasta": "package.json",
@@ -192,14 +192,14 @@
     "mudancas": 8
    },
    {
-    "pasta": "scripts/automation.config.json",
-    "mudancas": 7
+    "pasta": "supabase/functions/public-api",
+    "mudancas": 8
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 30
+    "mudancas": 31
    },
    {
     "arquivo": "package.json",
@@ -238,15 +238,15 @@
     "mudancas": 8
    },
    {
+    "arquivo": "supabase/functions/public-api/index.ts",
+    "mudancas": 8
+   },
+   {
     "arquivo": "scripts/automation.config.json",
     "mudancas": 7
    },
    {
     "arquivo": "src/integrations/supabase/withOrg.ts",
-    "mudancas": 7
-   },
-   {
-    "arquivo": "supabase/functions/public-api/index.ts",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 193
+    "commits": 194
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1195,
   "arquivos_codigo": 749,
-  "linhas_codigo": 130096,
+  "linhas_codigo": 130211,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -596,7 +596,7 @@
   },
   "supabase/functions": {
    "arquivos": 140,
-   "linhas": 25460
+   "linhas": 25575
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -719,7 +719,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 6,
-  "arquivos_acima_500_linhas": 28
+  "arquivos_acima_500_linhas": 29
  },
  "todos": [
   {

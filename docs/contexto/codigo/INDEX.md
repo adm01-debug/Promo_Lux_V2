@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a14f8c3b00b1199f49071a742051422e09c039ca` (2026-11-26T02:07:03-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `e739571358188621a29bba70e29d637540884a71` (2026-11-26T02:09:54-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1195 |
 | arquivos_codigo | 749 |
-| linhas_codigo | 130096 |
+| linhas_codigo | 130211 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -259,13 +259,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8126 nós · 17527 arestas · 702 comunidades · grafo do commit `a14f8c3b`
-- comunidades maiores: @tanstack/react-query (205), Monitoring.tsx (201), react (171), useAuth (105), cn (103), snapshot.py (100), vitest (96), CompaniesView.tsx (95), gerar.mjs (80), NotificationsPanel.tsx (78), lushaMocks.ts (71), utils.ts (68)
+- 8132 nós · 17547 arestas · 716 comunidades · grafo do commit `e7395713`
+- comunidades maiores: Monitoring.tsx (174), button.tsx (135), utils.ts (114), cn (112), client.ts (108), gerar.mjs (80), @tanstack/react-query (77), lucide-react (76), generate.py (75), DealsView.tsx (75), LushaIntelligenceView.tsx (74), useActiveOrganization (68)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- docs/qa/05-PROGRESSO.md (30)
+- docs/qa/05-PROGRESSO.md (31)
 - package.json (21)
 - package-lock.json (20)
 - docs/GAPS-ENTERPRISE.md (10)
@@ -275,9 +275,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - AGENTS.md (8)
 - src/integrations/supabase/types.ts (8)
 - src/pages/Monitoring.tsx (8)
+- supabase/functions/public-api/index.ts (8)
 - scripts/automation.config.json (7)
 - src/integrations/supabase/withOrg.ts (7)
-- supabase/functions/public-api/index.ts (7)
 - .github/workflows/edge-tests-daily.yml (6)
 - .github/workflows/ci.yml (5)
 
@@ -379,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `e739571` fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)
 - 2026-11-26 `a14f8c3` fix(raspagem): recupera a gravacao na contingencia, o sync sem consulta dupla e o escopo por organizacao (etapas 052/053
 - 2026-11-26 `a2f31f0` fix(seguranca): fecha o worker de Instagram atras de credencial de servico (etapa 034) (#249)
 - 2026-11-26 `2c9d9fc` fix(seguranca): exige pertencimento a organizacao em campanhas, webhooks e proxies (etapas 031/032/033) (#248)
@@ -393,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `e0e485e` fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)
 - 2026-11-25 `aeaea40` fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)
 - 2026-11-25 `965bba8` fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)
-- 2026-11-25 `1122654` fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`
