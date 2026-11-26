@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `a0f07094e6909ae9cbe049788a7497a3afc68c7b` (2026-11-26T07:10:32-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `5f536770e11fac09157b536b4808cd9bd5ea5c43` (2026-11-26T07:46:22-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (721), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (18), YAML (12), Python (5)
+- linguagens: TypeScript (721), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (19), YAML (13), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1201 |
+| arquivos_total | 1204 |
 | arquivos_codigo | 750 |
 | linhas_codigo | 130387 |
 | rotas | 12 |
@@ -49,8 +49,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | migrations | 272 |
 | cron_jobs | 43 |
 | testes | 165 |
-| workflows | 10 |
-| scripts | 56 |
+| workflows | 11 |
+| scripts | 57 |
 | docs_md | 87 |
 
 ## Onde ficam as coisas
@@ -258,8 +258,8 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8150 nós · 17570 arestas · 696 comunidades · grafo do commit `a0f07094`
-- comunidades maiores: lucide-react (148), react (147), OrganizationsView.tsx (104), cn (104), snapshot.py (102), @tanstack/react-query (91), withOrg.ts (90), req (87), badge.tsx (83), gerar.mjs (80), useActiveOrganization (78), DealDetailDrawer.tsx (78)
+- 8152 nós · 17571 arestas · 709 comunidades · grafo do commit `5f536770`
+- comunidades maiores: Monitoring.tsx (216), input.tsx (136), cn (132), snapshot.py (102), react (102), OrganizationsView.tsx (90), hooks/use-toast.ts (85), LushaIntelligenceView.tsx (83), gerar.mjs (80), withOrg.ts (78), req (75), ref_https (75)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -271,10 +271,10 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - supabase/config.toml (10)
 - supabase/functions/gmaps-proxy/index.ts (10)
 - .github/workflows/db-migrations.yml (9)
+- scripts/automation.config.json (9)
 - src/integrations/supabase/types.ts (9)
 - supabase/functions/public-api/index.ts (9)
 - AGENTS.md (8)
-- scripts/automation.config.json (8)
 - src/pages/Monitoring.tsx (8)
 - src/integrations/supabase/withOrg.ts (7)
 - .github/workflows/ci.yml (6)
@@ -289,6 +289,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - `deploy-watchdog.yml` — Deploy Watchdog (schedule, workflow_dispatch; cron */30 * * * *)
 - `edge-functions-deploy.yml` — Edge Functions Deploy (pull_request, push, workflow_dispatch)
 - `edge-tests-daily.yml` — Edge Functions Daily Tests (Deno) (pull_request, schedule, workflow_dispatch; cron 0 7 * * *)
+- `functions-retirement.yml` — Functions Retirement (push, workflow_dispatch)
 - `inventario-estado-semanal.yml` — Inventário do estado real (semanal) (schedule, workflow_dispatch; cron 23 10 * * 1)
 - `production-smoke.yml` — Production Smoke Test (schedule, workflow_dispatch; cron 0 9 * * *)
 
@@ -378,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `5f53677` infra: aposenta functions no projeto (a migrate-helper segue ativa em producao) (#269)
 - 2026-11-26 `a0f0709` fix(security): remove migrate-helper e o vazamento da chave mestra (etapa 003) (#229)
 - 2026-11-26 `5e6fd02` fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)
 - 2026-11-26 `1e5a847` fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)
@@ -392,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `ab29fc2` chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)
 - 2026-11-25 `9036246` feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (et
 - 2026-11-25 `6d4546e` feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)
-- 2026-11-25 `068b4ca` fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

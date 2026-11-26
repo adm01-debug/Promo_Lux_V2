@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 56,
+ "total": 57,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -57,7 +57,8 @@
    "env": [],
    "npm_scripts": [],
    "workflows": [
-    "edge-functions-deploy.yml"
+    "edge-functions-deploy.yml",
+    "functions-retirement.yml"
    ],
    "orfao": false
   },
@@ -533,6 +534,17 @@
    "env": [],
    "npm_scripts": [],
    "workflows": [],
+   "orfao": false
+  },
+  {
+   "arquivo": "scripts/retire-functions.sh",
+   "descricao": "--------------------------------------------------------------------------- retire-functions.sh",
+   "linhas": 88,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [
+    "functions-retirement.yml"
+   ],
    "orfao": false
   },
   {

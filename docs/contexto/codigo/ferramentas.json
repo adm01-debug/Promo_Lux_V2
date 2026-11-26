@@ -8,8 +8,8 @@
    "Markdown (87)",
    "JSON (38)",
    "JavaScript (25)",
-   "Shell (18)",
-   "YAML (12)",
+   "Shell (19)",
+   "YAML (13)",
    "Python (5)"
   ],
   "linguagem_principal": "TypeScript",
@@ -405,6 +405,35 @@
     "actions/checkout",
     "denoland/setup-deno",
     "supabase/setup-cli"
+   ]
+  },
+  {
+   "arquivo": ".github/workflows/functions-retirement.yml",
+   "nome": "Functions Retirement",
+   "gatilhos": [
+    "push",
+    "workflow_dispatch"
+   ],
+   "crons": [],
+   "branches": [
+    "main"
+   ],
+   "jobs": [
+    "retire"
+   ],
+   "permissoes": [
+    "contents: read"
+   ],
+   "scripts_usados": [
+    "scripts/check-edge-fn-target.sh",
+    "scripts/retire-functions.sh"
+   ],
+   "npm_scripts": [],
+   "secrets": [
+    "SUPABASE_ACCESS_TOKEN"
+   ],
+   "actions": [
+    "actions/checkout"
    ]
   },
   {

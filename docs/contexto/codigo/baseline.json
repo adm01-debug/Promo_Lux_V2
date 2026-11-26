@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a0f07094e6909ae9cbe049788a7497a3afc68c7b",
+  "commit": "5f536770e11fac09157b536b4808cd9bd5ea5c43",
   "branch": "main",
-  "data_commit": "2026-11-26T07:10:32-03:00",
+  "data_commit": "2026-11-26T07:46:22-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "5f53677",
+    "data": "2026-11-26",
+    "assunto": "infra: aposenta functions no projeto (a migrate-helper segue ativa em producao) (#269)"
+   },
    {
     "sha": "a0f0709",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "488f67c",
     "data": "2026-11-25",
     "assunto": "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)"
-   },
-   {
-    "sha": "ec5349f",
-    "data": "2026-11-25",
-    "assunto": "feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)"
    }
   ],
-  "arquivos_mudados_7d": 405,
+  "arquivos_mudados_7d": 408,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -176,6 +176,10 @@
     "mudancas": 9
    },
    {
+    "pasta": "scripts/automation.config.json",
+    "mudancas": 9
+   },
+   {
     "pasta": "supabase/config.toml",
     "mudancas": 9
    },
@@ -189,10 +193,6 @@
    },
    {
     "pasta": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "pasta": "scripts/automation.config.json",
     "mudancas": 8
    }
   ],
@@ -226,6 +226,10 @@
     "mudancas": 9
    },
    {
+    "arquivo": "scripts/automation.config.json",
+    "mudancas": 9
+   },
+   {
     "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 9
    },
@@ -235,10 +239,6 @@
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "scripts/automation.config.json",
     "mudancas": 8
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 198
+    "commits": 199
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1201,
+  "arquivos_total": 1204,
   "arquivos_codigo": 750,
   "linhas_codigo": 130387,
   "rotas": 12,
@@ -325,8 +325,8 @@
   "migrations": 272,
   "cron_jobs": 43,
   "testes": 165,
-  "workflows": 10,
-  "scripts": 56,
+  "workflows": 11,
+  "scripts": 57,
   "docs_md": 87
  },
  "por_pasta": {
