@@ -39,12 +39,14 @@ function recordFailure() {
 import { z } from "https://esm.sh/zod@3.23.8";
 import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
-import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ipc/scoring.ts";
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
-import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
+import { parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
 import { fetchPlacesResults } from "../_shared/places-fallback.ts";
 import { getUserOrgIds } from "../_shared/org-membership.ts";
-import { upsertCompanies } from "../_shared/companies-upsert.ts";
+import {
+  loadIpcCriteria,
+  saveScrapeResults,
+} from "../_shared/scrape-results-save.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -638,99 +640,16 @@ serve(async (req) => {
         throw new Error("Failed to download results from external API");
       }
 
-      const { data: ipcConfig } = await supabase
-        .from("ipc_config")
-        .select("*")
-        .eq("is_active", true)
-        .eq("user_id", userId)
-        .limit(1)
-        .maybeSingle();
-
-      let companiesCreated = 0;
-
-      for (const rawRow of results) {
-        const mapped = mapGmapsRow(rawRow);
-        const ipcScore = calculateIPCScore(
-          {
-            category: mapped.sector,
-            address: mapped.location,
-            email: mapped.email,
-            phone: mapped.phone,
-            website: mapped.website,
-            rating: mapped.rating ?? undefined,
-          },
-          ipcConfig?.criteria as IPCHittingCriteria | undefined,
-        );
-
-        // G9: deduplicação por place_id quando disponível (o Google garante
-        // unicidade global); senão cai no par legado (org, name, source).
-        // A escolha da chave e o fallback vivem em upsertCompanies: o schema de
-        // producao pode estar com indice unico PARCIAL, que o PostgREST recusa
-        // em ON CONFLICT (42P10) e fazia o lote inteiro ser descartado.
-
-        // organization_id vem do job (não do DEFAULT da coluna): o client
-        // service_role não repassa Authorization, então auth.uid() é NULL.
-        const payload = {
-          user_id: userId,
-          organization_id: job.organization_id,
-          name: mapped.name,
-          sector: mapped.sector,
-          location: mapped.location,
-          website: mapped.website,
-          phone: mapped.phone,
-          email: mapped.email,
-          source: "gmaps",
-          ipc_score: ipcScore,
-          enriched: !!(mapped.email || mapped.phone),
-          raw_data: rawRow,
-          latitude: mapped.latitude,
-          longitude: mapped.longitude,
-          place_id: mapped.place_id,
-          cid: mapped.cid,
-          plus_code: mapped.plus_code,
-          google_maps_url: mapped.google_maps_url,
-          street_view_url: mapped.street_view_url,
-          rating: mapped.rating,
-          review_count: mapped.review_count,
-          price_range: mapped.price_range,
-          business_status: mapped.business_status,
-          thumbnail_url: mapped.thumbnail_url,
-          images: mapped.images,
-          open_hours: mapped.open_hours,
-          popular_times: mapped.popular_times,
-          timezone: mapped.timezone,
-          descriptions: mapped.descriptions,
-          owner_claimed: mapped.owner_claimed,
-          reservations_url: mapped.reservations_url,
-          order_online_url: mapped.order_online_url,
-          menu_url: mapped.menu_url,
-        };
-
-        const { data: upserted, error: upsertError } = await upsertCompanies<{ id: string }>(
-          supabase,
-          payload,
-          { hasPlaceId: !!mapped.place_id },
-        );
-        const company = upserted[0];
-
-        if (upsertError) {
-          log.warn("company_upsert_failed", { error: upsertError.message, name: mapped.name });
-          continue;
-        }
-
-        if (company) {
-          companiesCreated++;
-          await supabase.from("scrape_results").insert({
-            user_id: userId,
-            organization_id: job.organization_id,
-            job_id: job_id,
-            company_id: company.id,
-            raw_data: rawRow,
-            processed: true,
-          });
-        }
-      }
-
+      // Gravacao unica (G16-1): vive em _shared/scrape-results-save.ts.
+      const { saved: companiesCreated } = await saveScrapeResults(supabase, {
+        organizationId: job.organization_id,
+        userId,
+        jobId: job_id,
+        rows: results,
+        ipcCriteria: await loadIpcCriteria(supabase, userId),
+        onRowError: (error, name) =>
+          log.warn("company_upsert_failed", { error: error.message, name }),
+      });
 
       await supabase
         .from("scrape_jobs")
