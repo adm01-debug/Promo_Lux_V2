@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "a2f31f05a9dfbe6506b0bcbeee420a6dd4195e94",
+  "sha": "a14f8c3b00b1199f49071a742051422e09c039ca",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 05:00 UTC",
-  "files_total": 1214,
-  "code_files": 1025,
-  "code_lines": 152406
+  "generated_at": "2026-11-26 05:07 UTC",
+  "files_total": 1216,
+  "code_files": 1027,
+  "code_lines": 152523
  },
  "version": "1.3.2",
- "facts_hash": "82caddc3e046a9aa",
+ "facts_hash": "244b032af26ca314",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -246,7 +246,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 397,
+   ".ts": 399,
    ".tsx": 321,
    ".sql": 274,
    ".mjs": 23,
@@ -34261,8 +34261,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 138,
-   "lines": 25343,
+   "files": 140,
+   "lines": 25460,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -35727,6 +35727,7 @@
      "supabase/functions/gmaps-proxy/index.ts"
     ],
     "insert": [
+     "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
      "supabase/functions/gmaps-proxy/index.ts",
      "supabase/functions/workflow-engine/index.ts"
     ]
@@ -50821,6 +50822,12 @@
    },
    {
     "file": "supabase/functions/gmaps-proxy/index.ts",
+    "field": "status",
+    "value": "completed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/index.ts",
     "field": "type",
     "value": "scrape",
     "kind": "escreve"
@@ -58824,6 +58831,42 @@
    {
     "file": "supabase/functions/gmaps-proxy/__tests__/contingencia-grava.test.ts",
     "name": "results_count reflete o que foi gravado, nao o que a API devolveu"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+    "name": "gmaps-proxy: listagem do fornecedor nao importa jobs alheios"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+    "name": "nao insere job novo a partir da listagem compartilhada"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+    "name": "casa o job local pela organizacao, nao pelo usuario que pediu"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+    "name": "atualiza o estado do job local pelo id"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+    "name": "registra o job externo que nao tem vinculo local"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+    "name": "gmaps-proxy: sync-results nao paga duas vezes pela mesma busca"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+    "name": "confere o que ja esta gravado antes de chamar o provedor"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+    "name": "conta sem baixar as linhas"
+   },
+   {
+    "file": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+    "name": "devolve o sync reconciliado, sem inventar empresas criadas"
    },
    {
     "file": "supabase/functions/rls-tests/index.test.ts",
@@ -97940,7 +97983,7 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 792,
+   "lines": 824,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -97953,10 +97996,6 @@
     {
      "table": "scrape_jobs",
      "op": "select"
-    },
-    {
-     "table": "scrape_jobs",
-     "op": "insert"
     },
     {
      "table": "scrape_jobs",
@@ -98011,6 +98050,14 @@
      "op": "select"
     },
     {
+     "table": "scrape_results",
+     "op": "select"
+    },
+    {
+     "table": "scrape_jobs",
+     "op": "update"
+    },
+    {
      "table": "scrape_jobs",
      "op": "update"
     },
@@ -98052,6 +98099,7 @@
     ],
     "scrape_results": [
      "company_id",
+     "id",
      "job_id"
     ]
    },
@@ -98151,6 +98199,11 @@
      "kind": "escreve"
     },
     {
+     "field": "status",
+     "value": "completed",
+     "kind": "escreve"
+    },
+    {
      "field": "type",
      "value": "scrape",
      "kind": "escreve"
@@ -98194,6 +98247,40 @@
     "grava antes de dar o job como concluido",
     "nao conclui a tarefa quando nada foi gravado",
     "results_count reflete o que foi gravado, nao o que a API devolveu"
+   ]
+  },
+  "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts": {
+   "path": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+   "lines": 41,
+   "is_test": true,
+   "tables": [
+    {
+     "table": "scrape_jobs",
+     "op": "insert"
+    }
+   ],
+   "rule_comments": [
+    "contrato agora e usar a listagem apenas para atualizar o estado dos jobs que"
+   ],
+   "doc": "Teste estrutural do action de listagem do proxy (etapa 054 / G16-3). A listagem de jobs do fornecedor e compartilhada entre clientes e nao aceita credencial: o codigo importava TODO job devolvido como se fosse do usuario que pediu, entao o cliente via nome e config das buscas de outro cliente. O con …",
+   "tests": [
+    "gmaps-proxy: listagem do fornecedor nao importa jobs alheios",
+    "nao insere job novo a partir da listagem compartilhada",
+    "casa o job local pela organizacao, nao pelo usuario que pediu",
+    "atualiza o estado do job local pelo id",
+    "registra o job externo que nao tem vinculo local"
+   ]
+  },
+  "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts": {
+   "path": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+   "lines": 44,
+   "is_test": true,
+   "doc": "Teste estrutural da sincronizacao de resultados (etapa 053 / G16-1). O `sync-results` foi escrito como \"buscar de novo\": para um job cujo fallback ja pagou a Places API e gravou as empresas, o auto_sync chamava a MESMA busca paga outra vez para chegar ao mesmo resultado. O contrato agora e reconcili …",
+   "tests": [
+    "gmaps-proxy: sync-results nao paga duas vezes pela mesma busca",
+    "confere o que ja esta gravado antes de chamar o provedor",
+    "conta sem baixar as linhas",
+    "devolve o sync reconciliado, sem inventar empresas criadas"
    ]
   },
   "supabase/functions/health/index.ts": {
@@ -103613,10 +103700,22 @@
   }
  },
  "git": {
-  "sha": "a2f31f05a9dfbe6506b0bcbeee420a6dd4195e94",
+  "sha": "a14f8c3b00b1199f49071a742051422e09c039ca",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "a14f8c3",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(raspagem): recupera a gravacao na contingencia, o sync sem consulta dupla e o escopo por organizacao (etapas 052/053/054) (#267)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+     "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+     "supabase/functions/gmaps-proxy/index.ts"
+    ]
+   },
    {
     "sha": "a2f31f0",
     "date": "2026-11-26",
@@ -104063,24 +104162,12 @@
      "src/components/lux/__tests__/CompanyTableRow.test.tsx",
      "src/components/lux/companies/CompanyTableRow.tsx"
     ]
-   },
-   {
-    "sha": "b0e85af",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: liga os botoes do card de Automacoes no painel inicial (#216)",
-    "files": [
-     "docs/pendencias/_backlog-verificado.md",
-     "src/components/lux/AutomationsList.tsx",
-     "src/components/lux/DashboardView.tsx",
-     "src/components/lux/__tests__/AutomationsList.test.tsx"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    28
+    29
    ],
    [
     "src/pages/Monitoring.tsx",
@@ -104089,6 +104176,10 @@
    [
     "src/components/lux/CampaignsView.tsx",
     4
+   ],
+   [
+    "supabase/functions/gmaps-proxy/index.ts",
+    3
    ],
    [
     "src/components/lux/IntentSignalsView.tsx",
@@ -104123,16 +104214,8 @@
     3
    ],
    [
-    "src/components/lux/DashboardView.tsx",
-    3
-   ],
-   [
     "src/integrations/supabase/withOrg.ts",
     3
-   ],
-   [
-    "supabase/functions/gmaps-proxy/index.ts",
-    2
    ],
    [
     "src/hooks/__tests__/useRolePermissions.test.tsx",
@@ -104156,6 +104239,10 @@
    ],
    [
     "src/components/lux/monitoring/JobDetailsSheet.tsx",
+    2
+   ],
+   [
+    "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
     2
    ]
   ]

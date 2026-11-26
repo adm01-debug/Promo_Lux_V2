@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a2f31f05a9` · branch `main` · 2026-11-26 05:00 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `a14f8c3b00` · branch `main` · 2026-11-26 05:07 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2333,7 +2333,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1375 testes em 145 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1384 testes em 147 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2441,6 +2441,7 @@ _nenhum item encontrado_
 | `src/lib/resilience/__tests__/compareReport.test.ts` | 5 | buildComparison · classifies improvement, regression and stability · marks new and removed scenarios · computes aggregate deltas and top lists … |
 | `supabase/functions/_shared/__tests__/hiker-normalize.test.ts` | 5 | normalize(profile) — business + creator sem undefined · normalize(posts) — image, reel, carousel, sponsored sem undefined · normalize(hashtag) — inclui tag e cobre reel/carousel · normalize(comments) — root + reply sem undefined … |
 | `supabase/functions/gmaps-proxy/__tests__/contingencia-grava.test.ts` | 5 | gmaps-proxy: contingencia com Places grava antes de concluir · usa o gravador compartilhado da etapa 051 · grava antes de dar o job como concluido · nao conclui a tarefa quando nada foi gravado … |
+| `supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts` | 5 | gmaps-proxy: listagem do fornecedor nao importa jobs alheios · nao insere job novo a partir da listagem compartilhada · casa o job local pela organizacao, nao pelo usuario que pediu · atualiza o estado do job local pelo id … |
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
 | `e2e/invite-accept.spec.ts` | 4 | Convite — /invite/:token · redireciona visitante não autenticado para /login preservando o token · página de login continua funcional após vir de um convite · não aceita o convite automaticamente (requer ação do usuário) |
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |
@@ -2460,6 +2461,7 @@ _nenhum item encontrado_
 | `src/integrations/supabase/__tests__/trashLabelColumns.test.ts` | 4 | TRASH_LABEL_COLUMN ↔ types.ts · cobre as oito tabelas com soft delete · a coluna de rotulo de %s (%s) existe no schema · deals usa title, nao name |
 | `src/tests/fuzzing-validation.test.ts` | 4 | Fuzzing & Validation: Webhooks and Edge Functions · should reject malformed JSON payloads · should reject missing required fields (e.g., event_type) · should handle invalid UUIDs gracefully |
 | `src/tests/multi-tenant.test.ts` | 4 | Multi-Tenant Isolation (SafeOrg) · should automatically inject organization_id into SELECT queries · should fail closed on SELECT when no organization is active · should block cross-tenant injection attempts in values |
+| `supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts` | 4 | gmaps-proxy: sync-results nao paga duas vezes pela mesma busca · confere o que ja esta gravado antes de chamar o provedor · conta sem baixar as linhas · devolve o sync reconciliado, sem inventar empresas criadas |
 | `supabase/functions/rls-tests/index.test.ts` | 4 | rls-tests: rejeita 401 quando NÃO há Authorization Bearer · rls-tests: rejeita Bearer JWT corrompido (gateway OU guard) · rls-tests: retorna 403 quando JWT é válido mas user não é admin · rls-tests: retorna relatório estruturado quando admin chama |
 | `e2e/accessibility.spec.ts` | 3 | Acessibilidade (axe-core) · Dashboard não tem violações WCAG 2 A/AA · Configurações não tem violações WCAG 2 A/AA |
 | `e2e/instagram-worker-smoke.spec.ts` | 3 | Instagram motor — smoke · enfileira → worker processa → resultados gravados (profile + hashtag) · deduplicação: mesmo config_hash não cria duplicata em queued/running |

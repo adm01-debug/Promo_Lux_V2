@@ -738,7 +738,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 792,
+   "linhas": 824,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
@@ -782,7 +782,7 @@
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": true,
    "orfa": false,
-   "testes": 1
+   "testes": 3
   },
   {
    "nome": "health",

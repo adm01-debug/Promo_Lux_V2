@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 161,
+ "total": 163,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 139
+  "unit": 141
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 114
+   "arquivos": 116
   },
   {
    "padrao": "e2e/",
@@ -1526,6 +1526,20 @@
    "linhas": 45,
    "testa": [],
    "casos": 4
+  },
+  {
+   "arquivo": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+   "tipo": "unit",
+   "linhas": 41,
+   "testa": [],
+   "casos": 4
+  },
+  {
+   "arquivo": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
+   "tipo": "unit",
+   "linhas": 44,
+   "testa": [],
+   "casos": 3
   },
   {
    "arquivo": "supabase/functions/rls-tests/index.test.ts",

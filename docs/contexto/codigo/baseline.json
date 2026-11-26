@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "a2f31f05a9dfbe6506b0bcbeee420a6dd4195e94",
+  "commit": "a14f8c3b00b1199f49071a742051422e09c039ca",
   "branch": "main",
-  "data_commit": "2026-11-26T01:59:46-03:00",
+  "data_commit": "2026-11-26T02:07:03-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a14f8c3",
+    "data": "2026-11-26",
+    "assunto": "fix(raspagem): recupera a gravacao na contingencia, o sync sem consulta dupla e o escopo por organizacao (etapas 052/053"
+   },
    {
     "sha": "a2f31f0",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "d15f85e",
     "data": "2026-11-25",
     "assunto": "feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)"
-   },
-   {
-    "sha": "40e6a6e",
-    "data": "2026-11-25",
-    "assunto": "fix: separa o cache do modo demonstracao do cache real (#221)"
    }
   ],
-  "arquivos_mudados_7d": 395,
+  "arquivos_mudados_7d": 397,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 29
+    "mudancas": 30
    },
    {
     "pasta": "src/integrations/supabase",
@@ -160,15 +160,15 @@
     "mudancas": 20
    },
    {
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 13
+   },
+   {
     "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
     "pasta": "src/hooks/__tests__",
-    "mudancas": 10
-   },
-   {
-    "pasta": "supabase/functions/gmaps-proxy",
     "mudancas": 10
    },
    {
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 29
+    "mudancas": 30
    },
    {
     "arquivo": "package.json",
@@ -214,15 +214,15 @@
     "mudancas": 10
    },
    {
+    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+    "mudancas": 10
+   },
+   {
     "arquivo": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
     "arquivo": "supabase/config.toml",
-    "mudancas": 9
-   },
-   {
-    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 9
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 192
+    "commits": 193
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1193,
-  "arquivos_codigo": 747,
-  "linhas_codigo": 129979,
+  "arquivos_total": 1195,
+  "arquivos_codigo": 749,
+  "linhas_codigo": 130096,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 161,
+  "testes": 163,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -595,8 +595,8 @@
    "linhas": 170
   },
   "supabase/functions": {
-   "arquivos": 138,
-   "linhas": 25343
+   "arquivos": 140,
+   "linhas": 25460
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -653,12 +653,12 @@
    "linhas": 873
   },
   {
-   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-   "linhas": 797
+   "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+   "linhas": 824
   },
   {
-   "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 792
+   "arquivo": "supabase/functions/campaign-dispatch/index.ts",
+   "linhas": 797
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
@@ -718,7 +718,7 @@
   "console_log": 93,
   "ts_ignore": 0,
   "eslint_disable": 0,
-  "todos": 5,
+  "todos": 6,
   "arquivos_acima_500_linhas": 28
  },
  "todos": [
@@ -745,6 +745,12 @@
    "linha": 10,
    "tipo": "TODO",
    "texto": "enum de LUSHA_DEPARTMENTS tem entrada aqui."
+  },
+  {
+   "arquivo": "supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts",
+   "linha": 4,
+   "tipo": "TODO",
+   "texto": "job devolvido como se fosse do usuario"
   },
   {
    "arquivo": "scripts/regras_negocio/generate.py",
