@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "2c3abb82602544c411b0a1f012c005328e65fe14",
+  "sha": "9c59a910d5297542620536c87c23cf6851045276",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 15:44 UTC",
-  "files_total": 1233,
-  "code_files": 1037,
-  "code_lines": 154035
+  "generated_at": "2026-11-26 15:52 UTC",
+  "files_total": 1235,
+  "code_files": 1039,
+  "code_lines": 154262
  },
  "version": "1.3.2",
- "facts_hash": "c2c72e4f6795f298",
+ "facts_hash": "82dfe3880fd50686",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -254,7 +254,7 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 404,
+   ".ts": 406,
    ".tsx": 321,
    ".sql": 279,
    ".mjs": 23,
@@ -30491,7 +30491,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 127
+    "deps_count": 128
    },
    {
     "path": "",
@@ -32600,6 +32600,41 @@
     "file": "scripts/regras_negocio/test_generate.py"
    },
    {
+    "kind": "cron (código)",
+    "detail": "*/10 * * * *",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
+    "kind": "cron (código)",
+    "detail": "*/10 * * * *",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
+    "kind": "cron (código)",
+    "detail": "20 4 * * *",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
+    "kind": "cron (código)",
+    "detail": "0 4 1 * * */2",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
+    "kind": "cron (código)",
+    "detail": "*/5 * * * *",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
+    "kind": "cron (código)",
+    "detail": "*/15 * * * *",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
+    "kind": "cron (código)",
+    "detail": "*/15 * * * *",
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts"
+   },
+   {
     "kind": "GitHub Actions cron",
     "detail": "3-59/10 * * * *",
     "file": ".github/workflows/contexto.yml"
@@ -32625,7 +32660,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 322,
+  "components_count": 324,
   "hooks": [
    {
     "name": "useContacts",
@@ -33652,8 +33687,8 @@
   },
   {
    "module": "src/components",
-   "files": 322,
-   "lines": 54115,
+   "files": 324,
+   "lines": 54342,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33741,9 +33776,9 @@
     "historyUtils.ts: Utilitários puros para o histórico do Oráculo. Extraídos do componente para viabilizar testes unitários determinísticos.",
     "types.ts: Tipos compartilhados do módulo Lusha Intelligence. Extraídos de LushaIntelligenceView.tsx na Rodada #30 (refactor safety).",
     "MultiQueueResilienceCard.tsx: MultiQueueResilienceCard — Panorama unificado das duas filas (scrape/web). Read-only: usa snapshots existentes + advisories + web_scrape_queue direta.",
+    "cronFreshness.ts: Frescor dos agendamentos do pg_cron. O painel já mostra `last_status`, mas \"succeeded\" de cinco dias atrás é indistinguível de \"ok\": um job que parou de rodar (cron.deschedule acidental, worker morto, migração que não recriou o schedule) mantém `succeeded` na última linha para sempre. A morte só apa …",
     "slaHistoryChartData.ts: Transformação pura dos registros de histórico de SLA em séries de gráfico. Extraída do componente para permitir teste unitário determinístico do carry-forward (manter o último valor conhecido de cada fila em cada ponto).",
-    "slaRiskAnalysis.ts: Análise pura de risco de SLA. Um SLA padrão configurado **abaixo** do p95 observado significa que, por definição, mais de 5% dos itens da fila estouram o prazo — é um alvo inatingível, não uma meta ambiciosa. Isolamos a regra aqui para permitir teste determinístico e reuso fora do componente.",
-    "OrgViolationAlertsPanel.tsx: Painel admin para o sistema de alertas de OrgMismatchError: - Mostra/edita configurações da org ativa (limite, janela, cooldown). - Lista os últimos alertas disparados. - Botão \"Avaliar agora\" invoca a edge function `org-violation-alerts`. Acesso: apenas admins (gate feito por `usePermissions` no ca …"
+    "slaRiskAnalysis.ts: Análise pura de risco de SLA. Um SLA padrão configurado **abaixo** do p95 observado significa que, por definição, mais de 5% dos itens da fila estouram o prazo — é um alvo inatingível, não uma meta ambiciosa. Isolamos a regra aqui para permitir teste determinístico e reuso fora do componente."
    ],
    "deps": [
     "@dnd-kit/core",
@@ -40834,6 +40869,10 @@
     "text": "* Limite de execuções consecutivas bloqueadas antes de tratar como alerta. */"
    },
    {
+    "file": "src/components/lux/monitoring/cronFreshness.ts",
+    "text": "* true quando a idade passou do limite — job provavelmente morto. */"
+   },
+   {
     "file": "src/components/lux/monitoring/slaRiskAnalysis.ts",
     "text": "definição, mais de 5% dos itens da fila estouram o prazo — é um alvo"
    },
@@ -47387,6 +47426,21 @@
     "value": "\"__all__\""
    },
    {
+    "file": "src/components/lux/monitoring/cronFreshness.ts",
+    "name": "MINUTE",
+    "value": "60"
+   },
+   {
+    "file": "src/components/lux/monitoring/cronFreshness.ts",
+    "name": "HOUR",
+    "value": "60"
+   },
+   {
+    "file": "src/components/lux/monitoring/cronFreshness.ts",
+    "name": "DAY",
+    "value": "24"
+   },
+   {
     "file": "src/components/lux/organizations/MembershipAuditLog.tsx",
     "name": "PAGE_SIZE",
     "value": "50"
@@ -53624,6 +53678,10 @@
     "line": "Mais de 5% dos itens estouram o prazo por definição — aplicar a recomendação"
    },
    {
+    "file": "src/components/lux/monitoring/cronFreshness.ts",
+    "line": "* Avalia um agendamento contra o relógio. Tolerância de 50% da cadência com"
+   },
+   {
     "file": "src/components/lux/monitoring/slaRiskAnalysis.ts",
     "line": "* definição, mais de 5% dos itens da fila estouram o prazo — é um alvo"
    },
@@ -55496,6 +55554,42 @@
    {
     "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
     "name": "VaultCookiesPanel aponta falha nos cards e no historico de alertas"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "expectedIntervalSecs"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "lê a cadência das formas usadas no projeto"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "devolve null para expressão fora do subconjunto suportado"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "evaluateCronFreshness"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "não marca job de 10 min executado há 8 min"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "marca job de 10 min parado há 3 h — o caso que o last_status esconde"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "deixa o expurgo diário passar até 36 h e marca depois disso"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "não inventa alerta sem cadência conhecida nem sem execução registrada"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+    "name": "lista somente os nomes parados"
    },
    {
     "file": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -87385,7 +87479,7 @@
   },
   "src/components/lux/monitoring/SystemRecoveryPanel.tsx": {
    "path": "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
-   "lines": 352,
+   "lines": 406,
    "exports": [
     "function SystemRecoveryPanel"
    ],
@@ -87474,6 +87568,38 @@
      "field": "ws-max",
      "rules": "max, type=number, min=1024, max=10 * 1024 * 1024, max"
     }
+   ]
+  },
+  "src/components/lux/monitoring/cronFreshness.ts": {
+   "path": "src/components/lux/monitoring/cronFreshness.ts",
+   "lines": 108,
+   "exports": [
+    "interface CronScheduleEntry",
+    "interface CronFreshness",
+    "function expectedIntervalSecs",
+    "function evaluateCronFreshness",
+    "function staleCronNames"
+   ],
+   "params": [
+    {
+     "name": "MINUTE",
+     "value": "60"
+    },
+    {
+     "name": "HOUR",
+     "value": "60"
+    },
+    {
+     "name": "DAY",
+     "value": "24"
+    }
+   ],
+   "rule_comments": [
+    "* true quando a idade passou do limite — job provavelmente morto. */"
+   ],
+   "doc": "Frescor dos agendamentos do pg_cron. O painel já mostra `last_status`, mas \"succeeded\" de cinco dias atrás é indistinguível de \"ok\": um job que parou de rodar (cron.deschedule acidental, worker morto, migração que não recriou o schedule) mantém `succeeded` na última linha para sempre. A morte só apa …",
+   "percents": [
+    "* Avalia um agendamento contra o relógio. Tolerância de 50% da cadência com"
    ]
   },
   "src/components/lux/monitoring/slaHistoryChartData.ts": {
@@ -87584,6 +87710,31 @@
     "InstagramEnqueuePanel nao anuncia fila vazia quando a leitura falha",
     "RetryPolicyAdvisoriesPanel nao anuncia politica calibrada quando a leitura falha",
     "VaultCookiesPanel aponta falha nos cards e no historico de alertas"
+   ]
+  },
+  "src/components/lux/monitoring/__tests__/cronFreshness.test.ts": {
+   "path": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+   "lines": 65,
+   "is_test": true,
+   "cron": [
+    "*/10 * * * *",
+    "*/10 * * * *",
+    "20 4 * * *",
+    "0 4 1 * * */2",
+    "*/5 * * * *",
+    "*/15 * * * *",
+    "*/15 * * * *"
+   ],
+   "tests": [
+    "expectedIntervalSecs",
+    "lê a cadência das formas usadas no projeto",
+    "devolve null para expressão fora do subconjunto suportado",
+    "evaluateCronFreshness",
+    "não marca job de 10 min executado há 8 min",
+    "marca job de 10 min parado há 3 h — o caso que o last_status esconde",
+    "deixa o expurgo diário passar até 36 h e marca depois disso",
+    "não inventa alerta sem cadência conhecida nem sem execução registrada",
+    "lista somente os nomes parados"
    ]
   },
   "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": {
@@ -104682,10 +104833,21 @@
   }
  },
  "git": {
-  "sha": "2c3abb82602544c411b0a1f012c005328e65fe14",
+  "sha": "9c59a910d5297542620536c87c23cf6851045276",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9c59a91",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat(monitoramento): cron parado deixa de se confundir com nada vencido (#274)",
+    "files": [
+     "src/components/lux/monitoring/SystemRecoveryPanel.tsx",
+     "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+     "src/components/lux/monitoring/cronFreshness.ts"
+    ]
+   },
    {
     "sha": "2c3abb8",
     "date": "2026-11-26",
@@ -105093,24 +105255,12 @@
      "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
      "src/test/mockSupabaseClient.ts"
     ]
-   },
-   {
-    "sha": "488f67c",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",
-     "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
-     "src/integrations/supabase/withOrg.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    23
+    22
    ],
    [
     "src/components/lux/ScrapeResultsView.tsx",

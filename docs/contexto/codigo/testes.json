@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 166,
+ "total": 167,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 144
+  "unit": 145
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 119
+   "arquivos": 120
   },
   {
    "padrao": "e2e/",
@@ -608,6 +608,15 @@
     "src/components/lux/lusha/types.ts"
    ],
    "casos": 8
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/__tests__/cronFreshness.test.ts",
+   "tipo": "unit",
+   "linhas": 65,
+   "testa": [
+    "src/components/lux/monitoring/cronFreshness.ts"
+   ],
+   "casos": 7
   },
   {
    "arquivo": "src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx",
@@ -1630,6 +1639,7 @@
   "src/components/lux/monitoring/SlaCompliancePanel.tsx": 1,
   "src/components/lux/monitoring/SlaTrendChart.tsx": 1,
   "src/components/lux/monitoring/VaultCookiesPanel.tsx": 1,
+  "src/components/lux/monitoring/cronFreshness.ts": 1,
   "src/components/lux/monitoring/slaHistoryChartData.ts": 1,
   "src/components/lux/monitoring/slaRiskAnalysis.ts": 1,
   "src/components/lux/stakeholders/StakeholderCard.tsx": 1,

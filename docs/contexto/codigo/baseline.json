@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "2c3abb82602544c411b0a1f012c005328e65fe14",
+  "commit": "9c59a910d5297542620536c87c23cf6851045276",
   "branch": "main",
-  "data_commit": "2026-11-26T12:43:31-03:00",
+  "data_commit": "2026-11-26T12:50:45-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9c59a91",
+    "data": "2026-11-26",
+    "assunto": "feat(monitoramento): cron parado deixa de se confundir com nada vencido (#274)"
+   },
    {
     "sha": "2c3abb8",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "aeaea40",
     "data": "2026-11-25",
     "assunto": "fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)"
-   },
-   {
-    "sha": "965bba8",
-    "data": "2026-11-25",
-    "assunto": "fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)"
    }
   ],
-  "arquivos_mudados_7d": 417,
+  "arquivos_mudados_7d": 419,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 162
+    "mudancas": 165
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 204
+    "commits": 205
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1212,
-  "arquivos_codigo": 754,
-  "linhas_codigo": 131132,
+  "arquivos_total": 1214,
+  "arquivos_codigo": 756,
+  "linhas_codigo": 131359,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 275,
   "cron_jobs": 44,
-  "testes": 166,
+  "testes": 167,
   "workflows": 11,
   "scripts": 58,
   "docs_md": 87
@@ -559,8 +559,8 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 322,
-   "linhas": 54115
+   "arquivos": 324,
+   "linhas": 54342
   },
   "src/contexts": {
    "arquivos": 9,

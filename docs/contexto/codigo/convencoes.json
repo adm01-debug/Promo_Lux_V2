@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (119)",
+   "co-localizado (__tests__) (120)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(monitoramento): cron parado deixa de se confundir com nada vencido (#274)",
    "fix(dlq): reprocessar fila morta exige papel de administrador (#256)",
    "infra: expurgo dos CSVs de exportacao depois de 90 dias (#273)",
    "feat(exportacao): guarda o CSV exportado no bucket privado e permite baixar de novo (#272)",
-   "infra(functions): detector de function publicada fora do repositorio (#271)",
-   "feat(raspagem): exporta leads do job em CSV e grava historico em job_exports (#270)"
+   "infra(functions): detector de function publicada fora do repositorio (#271)"
   ]
  },
  "pr_template": null,

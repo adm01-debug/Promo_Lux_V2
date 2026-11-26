@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `2c3abb8260` · branch `main` · 2026-11-26 15:44 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9c59a910d5` · branch `main` · 2026-11-26 15:52 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1699,6 +1699,7 @@ _nenhum item encontrado_
 | `Quando habilitado, o worker injeta 1% de falhas sintéticas (rate limit, unavailable, timeout)` | `src/components/lux/monitoring/ChaosEngineeringPanel.tsx` |
 | `* Filas com meta inatingível: p95 acima do SLA configurado. Tolerância de 5%` | `src/components/lux/monitoring/SlaHistoryCard.tsx` |
 | `Mais de 5% dos itens estouram o prazo por definição — aplicar a recomendação` | `src/components/lux/monitoring/SlaHistoryCard.tsx` |
+| `* Avalia um agendamento contra o relógio. Tolerância de 50% da cadência com` | `src/components/lux/monitoring/cronFreshness.ts` |
 | `* definição, mais de 5% dos itens da fila estouram o prazo — é um alvo` | `src/components/lux/monitoring/slaRiskAnalysis.ts` |
 | `delay: Math.random() * 0.5,` | `src/components/lux/onboarding/ConfettiEffect.tsx` |
 | `transition={{ delay: index * 0.03 }}` | `src/components/lux/organizations/MemberRow.tsx` |
@@ -1750,6 +1751,9 @@ _nenhum item encontrado_
 | `PAGE_SIZE` | `30` | `src/components/lux/monitoring/SlaHistoryCard.tsx` |
 | `MAX_ROWS` | `300` | `src/components/lux/monitoring/SlaHistoryCard.tsx` |
 | `ALL_QUEUES` | `"__all__"` | `src/components/lux/monitoring/SourceComparisonReport.tsx` |
+| `MINUTE` | `60` | `src/components/lux/monitoring/cronFreshness.ts` |
+| `HOUR` | `60` | `src/components/lux/monitoring/cronFreshness.ts` |
+| `DAY` | `24` | `src/components/lux/monitoring/cronFreshness.ts` |
 | `PAGE_SIZE` | `50` | `src/components/lux/organizations/MembershipAuditLog.tsx` |
 | `SIDEBAR_COOKIE_MAX_AGE` | `60` | `src/components/ui/sidebar.tsx` |
 | `SIDEBAR_WIDTH` | `"16rem"` | `src/components/ui/sidebar.tsx` |
@@ -2354,7 +2358,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 | `admin` | `supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql` |
 
-## K. Testes como especificação (1401 testes em 150 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1410 testes em 151 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2405,6 +2409,7 @@ _nenhum item encontrado_
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
 | `src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx` | 9 | PainelComEstado · mostra a falha com nova tentativa e esconde o conteudo · mostra o esqueleto enquanto carrega · mostra o vazio no lugar do conteudo … |
+| `src/components/lux/monitoring/__tests__/cronFreshness.test.ts` | 9 | expectedIntervalSecs · lê a cadência das formas usadas no projeto · devolve null para expressão fora do subconjunto suportado · evaluateCronFreshness … |
 | `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
 | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 9 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real … |
 | `src/integrations/supabase/__tests__/withOrg.switching.test.ts` | 9 | withOrg — E2E switching de organização ativa · fluxo completo: opera em Org A, troca para Org B, e o filtro de leitura acompanha · bloqueia leitura cross-org: estando em Org A, cliente NÃO consegue forçar SELECT em Org B · bloqueia escrita cross-org após switch: tentar inserir com org antiga é interceptado … |
@@ -2601,6 +2606,7 @@ _nenhum item encontrado_
 | RLS restringe SELECT/UPDATE a admins globais — para não-admins, o botão apenas | `src/components/lux/monitoring/SlaAlertSettingsCard.tsx` |
 | sem permissão ou sem row | `src/components/lux/monitoring/SlaAlertSettingsCard.tsx` |
 | * Limite de execuções consecutivas bloqueadas antes de tratar como alerta. */ | `src/components/lux/monitoring/SlaAutoTuneBlockedCard.tsx` |
+| * true quando a idade passou do limite — job provavelmente morto. */ | `src/components/lux/monitoring/cronFreshness.ts` |
 | definição, mais de 5% dos itens da fila estouram o prazo — é um alvo | `src/components/lux/monitoring/slaRiskAnalysis.ts` |
 | inatingível, não uma meta ambiciosa. Isolamos a regra aqui para permitir | `src/components/lux/monitoring/slaRiskAnalysis.ts` |
 | * Render this when the user lacks the permission instead of nothing. */ | `src/components/lux/permissions/PermissionGate.tsx` |

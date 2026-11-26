@@ -2493,7 +2493,7 @@
     "SystemRecoveryPanel"
    ],
    "export_default": "SystemRecoveryPanel",
-   "linhas": 352,
+   "linhas": 406,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
