@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
+import { PainelComEstado } from "./PainelComEstado";
 
 interface PolicyShape {
   maxAttempts: number;
@@ -54,7 +55,7 @@ export function RetryPolicyAdvisoriesPanel() {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [kindFilter, setKindFilter] = useState<KindFilter>("all");
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error: erroAdvisories, refetch } = useQuery({
     queryKey: ["retry-policy-advisories"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -158,13 +159,20 @@ export function RetryPolicyAdvisoriesPanel() {
               ))}
             </div>
           </div>
-          {isLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
-          {!isLoading && pending.length === 0 && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <ShieldCheck className="h-4 w-4 text-emerald-500" />
-              Nenhuma recomendação pendente — a política atual está bem calibrada.
-            </div>
-          )}
+          <PainelComEstado
+            carregando={isLoading}
+            falhou={!!erroAdvisories}
+            mensagemErro={erroAdvisories ? `Não foi possível carregar as recomendações: ${erroAdvisories.message}` : undefined}
+            aoTentarNovamente={() => refetch()}
+            vazio={!isLoading && pending.length === 0}
+            conteudoVazio={
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                Nenhuma recomendação pendente — a política atual está bem calibrada.
+              </div>
+            }
+            esqueleto={<p className="text-sm text-muted-foreground">Carregando…</p>}
+          >
           {pending.map((a) => (
             <div key={a.id} className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-3">
               <div className="flex items-start justify-between gap-3">
@@ -237,6 +245,7 @@ export function RetryPolicyAdvisoriesPanel() {
               </div>
             </div>
           ))}
+          </PainelComEstado>
         </CardContent>
       </Card>
 

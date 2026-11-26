@@ -33,6 +33,7 @@ import { ptBR } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { JobDetailsSheet } from "@/components/lux/monitoring/JobDetailsSheet";
+import { PainelComEstado } from "@/components/lux/monitoring/PainelComEstado";
 import { DbHealthDashboard } from "@/components/lux/monitoring/DbHealthDashboard";
 import { ScrapeQueuePanel } from "@/components/lux/monitoring/ScrapeQueuePanel";
 import { ListChecks, Layers, ShieldAlert, FileText, Gauge, Activity } from "lucide-react";
@@ -117,7 +118,7 @@ const AutomationMonitoring = () => {
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
-  const { data: jobs, isLoading: jobsLoading, refetch: refetchJobs } = useQuery({
+  const { data: jobs, isLoading: jobsLoading, error: jobsError, refetch: refetchJobs } = useQuery({
     queryKey: ["automation-jobs", page, searchTerm, statusFilter, periodFilter, user?.id],
     queryFn: async () => {
       const activeOrgId = getActiveOrgId();
@@ -150,7 +151,7 @@ const AutomationMonitoring = () => {
     }
   });
 
-  const { data: alertSettings, refetch: refetchAlerts } = useQuery({
+  const { data: alertSettings, error: alertsError, refetch: refetchAlerts } = useQuery({
     queryKey: ["automation-alerts", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("automation_alerts").select("*");
@@ -314,6 +315,11 @@ const AutomationMonitoring = () => {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-6 py-4">
+                <PainelComEstado
+                  falhou={!!alertsError}
+                  mensagemErro="Não foi possível ler suas preferências de alerta — os interruptores não refletem o que está salvo."
+                  aoTentarNovamente={() => refetchAlerts()}
+                >
                 <div className="space-y-4">
                   <h4 className="text-sm font-semibold border-b pb-2">Finalização com Sucesso</h4>
                   <div className="flex items-center justify-between">
@@ -365,6 +371,7 @@ const AutomationMonitoring = () => {
                     />
                   </div>
                 </div>
+                </PainelComEstado>
               </div>
             </DialogContent>
           </Dialog>
@@ -542,11 +549,19 @@ const AutomationMonitoring = () => {
 
 
         <TabsContent value="runs" className="space-y-4">
-          {jobsLoading ? (
-             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-               {[1,2,3].map(i => <div key={i} className="h-48 glass rounded-xl animate-pulse" />)}
-             </div>
-          ) : (
+          <PainelComEstado
+            carregando={jobsLoading}
+            falhou={!!jobsError}
+            mensagemErro={jobsError ? `Falha ao carregar as execuções: ${jobsError.message}` : undefined}
+            aoTentarNovamente={() => refetchJobs()}
+            vazio={jobsData.length === 0}
+            mensagemVazio="Nenhuma execução encontrada com os filtros atuais."
+            esqueleto={
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {[1,2,3].map(i => <div key={i} className="h-48 glass rounded-xl animate-pulse" />)}
+              </div>
+            }
+          >
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {jobsData.map((job: ScrapeJobRow) => (
                 <motion.div
@@ -651,7 +666,7 @@ const AutomationMonitoring = () => {
                 </div>
               )}
             </div>
-          )}
+          </PainelComEstado>
         </TabsContent>
 
         <TabsContent value="audit">

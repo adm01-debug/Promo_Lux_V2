@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { ListChecks, Loader2, Send, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { PainelComEstado } from "./PainelComEstado";
 
 type TargetType = "profile" | "posts" | "hashtag" | "comments";
 
@@ -153,22 +154,28 @@ export function InstagramEnqueuePanel() {
 
         <div className="space-y-2 border-t border-border/50 pt-3">
           <p className="text-xs font-medium text-muted-foreground">Estado da fila</p>
-          <div className="flex flex-wrap gap-2">
-            {queueEntries.length === 0 ? (
-              <span className="text-xs text-muted-foreground">Fila vazia.</span>
-            ) : (
-              queueEntries.map(([status, count]) => (
+          <PainelComEstado
+            carregando={health.isLoading}
+            falhou={health.isError}
+            mensagemErro="Não foi possível ler o estado da fila do Instagram — os números abaixo podem estar desatualizados."
+            aoTentarNovamente={() => health.refetch()}
+            vazio={queueEntries.length === 0}
+            mensagemVazio="Fila vazia."
+            esqueleto={<p className="text-xs text-muted-foreground">Carregando…</p>}
+          >
+            <div className="flex flex-wrap gap-2">
+              {queueEntries.map(([status, count]) => (
                 <Badge key={status} variant={status === "dead" ? "destructive" : "secondary"}>
                   {status}: {count}
                 </Badge>
-              ))
+              ))}
+            </div>
+            {dlqCount > 0 && (
+              <p className="text-xs text-destructive">
+                {dlqCount} tarefa(s) na dead-letter - verifique a aba DLQ.
+              </p>
             )}
-          </div>
-          {dlqCount > 0 && (
-            <p className="text-xs text-destructive">
-              {dlqCount} tarefa(s) na dead-letter - verifique a aba DLQ.
-            </p>
-          )}
+          </PainelComEstado>
         </div>
       </CardContent>
     </Card>

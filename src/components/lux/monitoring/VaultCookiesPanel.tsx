@@ -22,6 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { PainelComEstado } from "./PainelComEstado";
 
 // ============================================================================
 // Tipos
@@ -332,25 +333,38 @@ function CookieCard({ servico, snap }: CookieCardProps) {
   );
 }
 
-function AlertHistoryTable({ rows, isLoading }: { rows: AlertRow[]; isLoading: boolean }) {
-  if (isLoading) {
-    return (
-      <div className="space-y-2">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-12 glass rounded-lg animate-pulse" />
-        ))}
-      </div>
-    );
-  }
-  if (rows.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-        <CheckCircle2 className="h-8 w-8 mb-2 text-emerald-400" />
-        <p className="text-sm">Nenhum alerta disparado nos registros recentes.</p>
-      </div>
-    );
-  }
+function AlertHistoryTable({
+  rows,
+  isLoading,
+  erro,
+  aoTentarNovamente,
+}: {
+  rows: AlertRow[];
+  isLoading: boolean;
+  erro?: Error | null;
+  aoTentarNovamente?: () => void;
+}) {
   return (
+    <PainelComEstado
+      carregando={isLoading}
+      falhou={!!erro}
+      mensagemErro="Não foi possível carregar o histórico de alertas — a ausência de alertas abaixo não é confiável."
+      aoTentarNovamente={aoTentarNovamente}
+      vazio={rows.length === 0}
+      conteudoVazio={
+        <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+          <CheckCircle2 className="h-8 w-8 mb-2 text-emerald-400" />
+          <p className="text-sm">Nenhum alerta disparado nos registros recentes.</p>
+        </div>
+      }
+      esqueleto={
+        <div className="space-y-2">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-12 glass rounded-lg animate-pulse" />
+          ))}
+        </div>
+      }
+    >
     <ScrollArea className="h-[320px] pr-3">
       <div className="space-y-2">
         {rows.map((r) => {
@@ -404,6 +418,7 @@ function AlertHistoryTable({ rows, isLoading }: { rows: AlertRow[]; isLoading: b
         })}
       </div>
     </ScrollArea>
+    </PainelComEstado>
   );
 }
 
@@ -440,19 +455,25 @@ export function VaultCookiesPanel() {
       </div>
 
       {/* Cards de status */}
-      {snaps.isLoading ? (
-        <div className="grid gap-4 md:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-56 glass rounded-xl animate-pulse" />
-          ))}
-        </div>
-      ) : (
+      <PainelComEstado
+        carregando={snaps.isLoading}
+        falhou={snaps.isError}
+        mensagemErro="Não foi possível carregar a saúde dos cookies do Vault — o estado abaixo não reflete a realidade."
+        aoTentarNovamente={() => snaps.refetch()}
+        esqueleto={
+          <div className="grid gap-4 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-56 glass rounded-xl animate-pulse" />
+            ))}
+          </div>
+        }
+      >
         <div className="grid gap-4 md:grid-cols-3">
           {SERVICOS.map((s) => (
             <CookieCard key={s} servico={s} snap={snaps.data?.[s]} />
           ))}
         </div>
-      )}
+      </PainelComEstado>
 
       {/* Histórico de alertas */}
       <Card className="glass-card">
@@ -466,7 +487,12 @@ export function VaultCookiesPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AlertHistoryTable rows={alerts.data ?? []} isLoading={alerts.isLoading} />
+          <AlertHistoryTable
+            rows={alerts.data ?? []}
+            isLoading={alerts.isLoading}
+            erro={alerts.error}
+            aoTentarNovamente={() => alerts.refetch()}
+          />
         </CardContent>
       </Card>
     </div>
