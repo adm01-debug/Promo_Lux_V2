@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c5a45b8afc826700c14234cb31ef2fb30d683018",
+  "sha": "2c9d9fcf93c668b591fb1698c79f739131f7a997",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 04:54 UTC",
+  "generated_at": "2026-11-26 04:57 UTC",
   "files_total": 1214,
   "code_files": 1025,
-  "code_lines": 152313
+  "code_lines": 152400
  },
  "version": "1.3.2",
- "facts_hash": "d9237e74616fb1d0",
+ "facts_hash": "b94452ebee1a1cd6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -34262,7 +34262,7 @@
   {
    "module": "supabase/functions",
    "files": 138,
-   "lines": 25250,
+   "lines": 25337,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -36806,6 +36806,7 @@
    "webhook_deliveries": [
     "attempts",
     "id",
+    "organization_id",
     "status",
     "webhook_id"
    ],
@@ -37603,11 +37604,13 @@
     "scripts/ai-context/gerar.unit.mjs"
    ],
    "has_org_role": [
+    "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-connect/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
     "supabase/functions/instagram-dlq-replay/index.ts",
-    "supabase/functions/web-dlq-replay/index.ts"
+    "supabase/functions/web-dlq-replay/index.ts",
+    "supabase/functions/webhook-dispatcher/index.ts"
    ],
    "has_role": [
     "supabase/functions/system-recovery-status/index.ts"
@@ -97003,8 +97006,12 @@
   },
   "supabase/functions/campaign-dispatch/index.ts": {
    "path": "supabase/functions/campaign-dispatch/index.ts",
-   "lines": 769,
+   "lines": 797,
    "tables": [
+    {
+     "table": "campaigns",
+     "op": "select"
+    },
     {
      "table": "campaigns",
      "op": "select"
@@ -97094,6 +97101,7 @@
     "consume_warmup_slot",
     "decide_ab_winner",
     "get_warmup_slot",
+    "has_org_role",
     "record_campaign_event"
    ],
    "external_urls": [
@@ -97932,7 +97940,7 @@
   },
   "supabase/functions/gmaps-proxy/index.ts": {
    "path": "supabase/functions/gmaps-proxy/index.ts",
-   "lines": 788,
+   "lines": 792,
    "tables": [
     {
      "table": "scrape_jobs",
@@ -98039,6 +98047,7 @@
     ],
     "org_proxies": [
      "is_active",
+     "organization_id",
      "url"
     ],
     "scrape_results": [
@@ -101651,8 +101660,12 @@
   },
   "supabase/functions/webhook-dispatcher/index.ts": {
    "path": "supabase/functions/webhook-dispatcher/index.ts",
-   "lines": 208,
+   "lines": 263,
    "tables": [
+    {
+     "table": "webhook_deliveries",
+     "op": "select"
+    },
     {
      "table": "webhook_deliveries",
      "op": "select"
@@ -101702,12 +101715,16 @@
     "webhook_deliveries": [
      "attempts",
      "id",
+     "organization_id",
      "status"
     ],
     "webhooks": [
      "id"
     ]
    },
+   "rpc": [
+    "has_org_role"
+   ],
    "env": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
@@ -103596,10 +103613,22 @@
   }
  },
  "git": {
-  "sha": "c5a45b8afc826700c14234cb31ef2fb30d683018",
+  "sha": "2c9d9fcf93c668b591fb1698c79f739131f7a997",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "2c9d9fc",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(seguranca): exige pertencimento a organizacao em campanhas, webhooks e proxies (etapas 031/032/033) (#248)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "supabase/functions/campaign-dispatch/index.ts",
+     "supabase/functions/gmaps-proxy/index.ts",
+     "supabase/functions/webhook-dispatcher/index.ts"
+    ]
+   },
    {
     "sha": "c5a45b8",
     "date": "2026-11-26",
@@ -104045,23 +104074,12 @@
     "files": [
      "supabase/config.toml"
     ]
-   },
-   {
-    "sha": "b5ca5ec",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(config): botao de custo Places API para de mentir (#214)",
-    "files": [
-     "src/components/lux/PlacesApiNewToggle.tsx",
-     "src/components/lux/__tests__/PlacesApiNewToggle.test.tsx",
-     "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    26
+    27
    ],
    [
     "src/pages/Monitoring.tsx",
@@ -104112,6 +104130,10 @@
     3
    ],
    [
+    "supabase/functions/gmaps-proxy/index.ts",
+    2
+   ],
+   [
     "src/hooks/__tests__/useRolePermissions.test.tsx",
     2
    ],
@@ -104133,10 +104155,6 @@
    ],
    [
     "src/components/lux/monitoring/JobDetailsSheet.tsx",
-    2
-   ],
-   [
-    "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
     2
    ]
   ]

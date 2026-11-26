@@ -213,7 +213,7 @@
    "nome": "campaign-dispatch",
    "entrada": "supabase/functions/campaign-dispatch/index.ts",
    "arquivos": 1,
-   "linhas": 769,
+   "linhas": 797,
    "verify_jwt": false,
    "metodos": [
     "GET",
@@ -232,6 +232,7 @@
     "consume_warmup_slot",
     "decide_ab_winner",
     "get_warmup_slot",
+    "has_org_role",
     "record_campaign_event"
    ],
    "env": [
@@ -737,7 +738,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 788,
+   "linhas": 792,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
@@ -2280,7 +2281,7 @@
    "nome": "webhook-dispatcher",
    "entrada": "supabase/functions/webhook-dispatcher/index.ts",
    "arquivos": 1,
-   "linhas": 208,
+   "linhas": 263,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -2290,7 +2291,9 @@
     "webhook_deliveries",
     "webhooks"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "has_org_role"
+   ],
    "env": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY",
