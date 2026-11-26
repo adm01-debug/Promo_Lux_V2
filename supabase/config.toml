@@ -37,13 +37,14 @@ verify_jwt = false
 [functions.mcp]
 verify_jwt = false
 
-# mcp-query - gateway SQL/admin com gate proprio (header x-mcp-secret comparado
-# com o secret MCP_SECRET). Roda com verify_jwt = false porque quem chama e um
-# cliente MCP externo sem Authorization do Supabase; o gate esta no codigo.
-# Sem esta secao o deploy aplica verify_jwt = true e o gateway responde 401
-# antes do codigo rodar.
+# mcp-query - gateway SQL/admin. Autenticacao no codigo (etapa 026): sessao de
+# usuario com papel admin em organization_members OU credencial de servico via
+# isCronAuthorized (comparacao de tempo constante). O header x-mcp-secret deixou
+# de ser gate unico — e fixo, sem expiracao e vazado dava SQL livre com a chave
+# mestra. Com verify_jwt = true o gateway recusa antes do codigo qualquer chamada
+# sem JWT valido, o que fecha o caminho do segredo puro.
 [functions.mcp-query]
-verify_jwt = false
+verify_jwt = true
 # Envio dos relatorios agendados. Chamada por pg_cron com a service_role key
 # vinda do vault; o gate efeito esta em cron-auth (isCronAuthorized), nao no
 # verify_jwt do gateway.
