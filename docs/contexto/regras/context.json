@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7ea526849571ae20691de592c0018a3df08d43f7",
+  "sha": "72c71be28191aecd0840be910ccd8c7b73a140b9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 19:41 UTC",
-  "files_total": 1238,
-  "code_files": 1042,
-  "code_lines": 155155
+  "generated_at": "2026-11-26 19:52 UTC",
+  "files_total": 1241,
+  "code_files": 1045,
+  "code_lines": 155723
  },
  "version": "1.3.2",
- "facts_hash": "b6e2692d8e0517eb",
+ "facts_hash": "cb6f2391eefbcbe0",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -254,8 +254,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 408,
-   ".tsx": 322,
+   ".ts": 410,
+   ".tsx": 323,
    ".sql": 279,
    ".mjs": 23,
    ".py": 5,
@@ -30452,6 +30452,7 @@
      "queue_sla_defaults",
      "queue_sla_history",
      "reaper_alert_history",
+     "reaper_alert_settings",
      "retry_policy_advisories",
      "role_permissions",
      "scrape_dead_letter",
@@ -30493,7 +30494,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 130
+    "deps_count": 132
    },
    {
     "path": "",
@@ -32662,7 +32663,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 325,
+  "components_count": 326,
   "hooks": [
    {
     "name": "useContacts",
@@ -33167,6 +33168,14 @@
    {
     "name": "useRealtimeScrapeJobs",
     "file": "src/hooks/useRealtimeScrapeJobs.ts"
+   },
+   {
+    "name": "useReaperAlertSettings",
+    "file": "src/hooks/useReaperAlertSettings.ts"
+   },
+   {
+    "name": "useUpdateReaperAlertSettings",
+    "file": "src/hooks/useReaperAlertSettings.ts"
    },
    {
     "name": "useReaperAlerts",
@@ -33697,8 +33706,8 @@
   },
   {
    "module": "src/components",
-   "files": 325,
-   "lines": 54731,
+   "files": 326,
+   "lines": 54947,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33947,8 +33956,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 113,
-   "lines": 13238,
+   "files": 115,
+   "lines": 13590,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -34001,6 +34010,7 @@
     "profiles",
     "qa_reaper_runs",
     "reaper_alert_history",
+    "reaper_alert_settings",
     "role_permissions",
     "sales_goals",
     "sales_goals_detailed",
@@ -34152,6 +34162,7 @@
     "src/hooks/useRealtimeCompanies.ts",
     "src/hooks/useRealtimeJobDetails.ts",
     "src/hooks/useRealtimeScrapeJobs.ts",
+    "src/hooks/useReaperAlertSettings.ts",
     "src/hooks/useReaperAlerts.ts",
     "src/hooks/useReaperHistory.ts",
     "src/hooks/useRecentViews.ts",
@@ -34161,8 +34172,7 @@
     "src/hooks/useSalesGoals.ts",
     "src/hooks/useSatisfaction.ts",
     "src/hooks/useScheduledReports.ts",
-    "src/hooks/useScrapeQueue.ts",
-    "src/hooks/useSidebarState.ts"
+    "src/hooks/useScrapeQueue.ts"
    ]
   },
   {
@@ -35810,7 +35820,11 @@
    },
    "reaper_alert_settings": {
     "select": [
+     "src/hooks/useReaperAlertSettings.ts",
      "supabase/functions/reaper-alerts/index.ts"
+    ],
+    "update": [
+     "src/hooks/useReaperAlertSettings.ts"
     ]
    },
    "retry_policy_advisories": {
@@ -36878,7 +36892,8 @@
     "cooldown_hours",
     "enabled",
     "min_dead_per_run",
-    "no_run_hours"
+    "no_run_hours",
+    "singleton"
    ],
    "retry_policy_advisories": [
     "created_at",
@@ -39882,6 +39897,10 @@
     "msg": "\n        className="
    },
    {
+    "file": "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx",
+    "msg": "Não foi possível salvar os limiares"
+   },
+   {
     "file": "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
     "msg": "Falha ao aplicar"
    },
@@ -41028,6 +41047,10 @@
    {
     "file": "src/hooks/useRateLimit.ts",
     "text": "* GAP-4: Reseta o estado de rate limit para esta chave."
+   },
+   {
+    "file": "src/hooks/useReaperAlertSettings.ts",
+    "text": "SELECT/UPDATE liberados por RLS apenas para quem tem o papel global `admin`."
    },
    {
     "file": "src/hooks/useRolePermissions.ts",
@@ -52979,6 +53002,12 @@
     "body": "if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);"
    },
    {
+    "file": "src/hooks/useReaperAlertSettings.ts",
+    "name": "validarAjustesReaper",
+    "params": "input: ReaperAlertSettingsInput,",
+    "body": "const erros: ReaperAlertSettingsErrors = {}; const checks: Array<[keyof typeof REAPER_SETTINGS_LIMITS, string]> = [ [\"consecutive\", \"Execuções consecutivas\"], [\"min_dead_per_run\", \"Mínimo de tarefas mortas\"], [\"no_run_hours\", \"Horas sem execução\"], [\"cooldown_hours\", \"Intervalo entre alertas\"], ]; for (const [campo, rotulo] of checks) { const erro = dentroDaFaixa(input[campo], REAPER_SETTINGS_LIMITS[campo], rotulo); if (erro) erros[campo] = erro; } return erros;"
+   },
+   {
     "file": "src/hooks/useWarmupProfile.ts",
     "name": "validate",
     "params": "input: WarmupInput",
@@ -56525,6 +56554,66 @@
    {
     "file": "src/hooks/__tests__/useRealtimeScrapeJobs.test.ts",
     "name": "handles missing error_message gracefully"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "validarAjustesReaper"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "aceita os valores padrão e valores no limite das faixas"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "recusa execuções consecutivas fora de 1–20"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "recusa tarefas mortas negativas e aceita zero"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "recusa horas fora de 1–168"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "recusa valor fracionado"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "useReaperAlertSettings"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "lê a linha singleton de reaper_alert_settings"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "devolve null quando a tabela está vazia"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "propaga o erro do banco em vez de fingir padrão"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "não consulta quando desabilitado"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "useUpdateReaperAlertSettings"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "grava os cinco campos na linha singleton e invalida a consulta"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "recusa valor fora da faixa sem tocar no banco"
+   },
+   {
+    "file": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+    "name": "propaga erro do banco"
    },
    {
     "file": "src/hooks/__tests__/useRecentViews.test.ts",
@@ -68686,6 +68775,10 @@
    {
     "file": "src/hooks/usePartitionAdvisories.ts",
     "limit": "50"
+   },
+   {
+    "file": "src/hooks/useReaperAlertSettings.ts",
+    "limit": "1"
    },
    {
     "file": "src/hooks/useScheduledReports.ts",
@@ -87271,9 +87364,19 @@
     "200"
    ]
   },
+  "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx": {
+   "path": "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx",
+   "lines": 211,
+   "exports": [
+    "function ReaperAlertSettingsCard"
+   ],
+   "errors": [
+    "Não foi possível salvar os limiares"
+   ]
+  },
   "src/components/lux/monitoring/ReaperHistoryPanel.tsx": {
    "path": "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
-   "lines": 239,
+   "lines": 244,
    "exports": [
     "function ReaperHistoryPanel"
    ]
@@ -91798,6 +91901,52 @@
     "notify"
    ]
   },
+  "src/hooks/useReaperAlertSettings.ts": {
+   "path": "src/hooks/useReaperAlertSettings.ts",
+   "lines": 123,
+   "exports": [
+    "interface ReaperAlertSettings",
+    "type ReaperAlertSettingsInput",
+    "type ReaperAlertSettingsErrors",
+    "const REAPER_SETTINGS_LIMITS",
+    "const REAPER_SETTINGS_DEFAULTS",
+    "function validarAjustesReaper",
+    "function useReaperAlertSettings",
+    "function useUpdateReaperAlertSettings"
+   ],
+   "tables": [
+    {
+     "table": "reaper_alert_settings",
+     "op": "select"
+    },
+    {
+     "table": "reaper_alert_settings",
+     "op": "select,update"
+    }
+   ],
+   "table_cols": {
+    "reaper_alert_settings": [
+     "singleton"
+    ]
+   },
+   "rule_comments": [
+    "SELECT/UPDATE liberados por RLS apenas para quem tem o papel global `admin`."
+   ],
+   "hooks": [
+    "useReaperAlertSettings",
+    "useUpdateReaperAlertSettings"
+   ],
+   "calc_fns": [
+    {
+     "name": "validarAjustesReaper",
+     "params": "input: ReaperAlertSettingsInput,",
+     "body": "const erros: ReaperAlertSettingsErrors = {}; const checks: Array<[keyof typeof REAPER_SETTINGS_LIMITS, string]> = [ [\"consecutive\", \"Execuções consecutivas\"], [\"min_dead_per_run\", \"Mínimo de tarefas mortas\"], [\"no_run_hours\", \"Horas sem execução\"], [\"cooldown_hours\", \"Intervalo entre alertas\"], ]; for (const [campo, rotulo] of checks) { const erro = dentroDaFaixa(input[campo], REAPER_SETTINGS_LIMITS[campo], rotulo); if (erro) erros[campo] = erro; } return erros;"
+    }
+   ],
+   "pagination": [
+    "1"
+   ]
+  },
   "src/hooks/useReaperAlerts.ts": {
    "path": "src/hooks/useReaperAlerts.ts",
    "lines": 40,
@@ -93061,6 +93210,28 @@
     "persists failed notification",
     "invalidates scrape-jobs and dashboard queries",
     "handles missing error_message gracefully"
+   ]
+  },
+  "src/hooks/__tests__/useReaperAlertSettings.test.ts": {
+   "path": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+   "lines": 229,
+   "is_test": true,
+   "tests": [
+    "validarAjustesReaper",
+    "aceita os valores padrão e valores no limite das faixas",
+    "recusa execuções consecutivas fora de 1–20",
+    "recusa tarefas mortas negativas e aceita zero",
+    "recusa horas fora de 1–168",
+    "recusa valor fracionado",
+    "useReaperAlertSettings",
+    "lê a linha singleton de reaper_alert_settings",
+    "devolve null quando a tabela está vazia",
+    "propaga o erro do banco em vez de fingir padrão",
+    "não consulta quando desabilitado",
+    "useUpdateReaperAlertSettings",
+    "grava os cinco campos na linha singleton e invalida a consulta",
+    "recusa valor fora da faixa sem tocar no banco",
+    "propaga erro do banco"
    ]
   },
   "src/hooks/__tests__/useRecentViews.test.ts": {
@@ -105117,10 +105288,22 @@
   }
  },
  "git": {
-  "sha": "7ea526849571ae20691de592c0018a3df08d43f7",
+  "sha": "72c71be28191aecd0840be910ccd8c7b73a140b9",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "72c71be",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat(monitoramento): admin ajusta os limiares do alerta do reaper (#277)",
+    "files": [
+     "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx",
+     "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
+     "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+     "src/hooks/useReaperAlertSettings.ts"
+    ]
+   },
    {
     "sha": "7ea5268",
     "date": "2026-11-26",
@@ -105511,29 +105694,12 @@
      "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
      "src/lib/deepLink.ts"
     ]
-   },
-   {
-    "sha": "39e3cfb",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/DealsView.tsx",
-     "src/components/lux/__tests__/DealsView.currency.test.tsx",
-     "src/components/lux/__tests__/LostReasonsDialog.currency.test.tsx",
-     "src/components/lux/deals/DealColumn.tsx",
-     "src/components/lux/deals/LostReasonsDialog.tsx",
-     "src/hooks/useDeals.ts",
-     "src/lib/__tests__/money.test.ts",
-     "src/lib/money.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    21
+    20
    ],
    [
     "src/pages/Monitoring.tsx",
@@ -105550,6 +105716,10 @@
    [
     "supabase/functions/gmaps-proxy/index.ts",
     3
+   ],
+   [
+    "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
+    2
    ],
    [
     "supabase/config.toml",
@@ -105605,10 +105775,6 @@
    ],
    [
     "src/hooks/useEmailTemplates.ts",
-    2
-   ],
-   [
-    "src/hooks/useDeals.ts",
     2
    ]
   ]

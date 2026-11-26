@@ -1,20 +1,20 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 591,
- "arestas": 1927,
+ "nos": 593,
+ "arestas": 1938,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 142
+   "importado_por": 143
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 127
+   "importado_por": 128
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 117
+   "importado_por": 118
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -26,11 +26,11 @@
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 65
+   "importado_por": 66
   },
   {
    "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 62
+   "importado_por": 63
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
@@ -38,7 +38,7 @@
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 50
+   "importado_por": 51
   },
   {
    "arquivo": "src/contexts/active-org-context.ts",
@@ -73,12 +73,12 @@
    "importado_por": 24
   },
   {
-   "arquivo": "src/hooks/useOrganizations.ts",
+   "arquivo": "src/components/ui/switch.tsx",
    "importado_por": 24
   },
   {
-   "arquivo": "src/components/ui/switch.tsx",
-   "importado_por": 23
+   "arquivo": "src/hooks/useOrganizations.ts",
+   "importado_por": 24
   },
   {
    "arquivo": "src/components/lux/DataError.tsx",
@@ -101,16 +101,16 @@
    "importado_por": 16
   },
   {
+   "arquivo": "src/components/lux/monitoring/PainelComEstado.tsx",
+   "importado_por": 15
+  },
+  {
    "arquivo": "src/components/ui/tabs.tsx",
    "importado_por": 15
   },
   {
    "arquivo": "src/hooks/useNavigationHistory.ts",
    "importado_por": 15
-  },
-  {
-   "arquivo": "src/components/lux/monitoring/PainelComEstado.tsx",
-   "importado_por": 14
   },
   {
    "arquivo": "src/components/ui/table.tsx",
@@ -121,16 +121,16 @@
    "importado_por": 12
   },
   {
+   "arquivo": "src/hooks/usePermissions.ts",
+   "importado_por": 12
+  },
+  {
    "arquivo": "src/lib/demoData.ts",
    "importado_por": 12
   },
   {
    "arquivo": "src/lib/resilience/scenarios.ts",
    "importado_por": 12
-  },
-  {
-   "arquivo": "src/hooks/usePermissions.ts",
-   "importado_por": 11
   },
   {
    "arquivo": "src/components/ui/sheet.tsx",

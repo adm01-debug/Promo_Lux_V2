@@ -1436,12 +1436,24 @@
    "src/components/ui/tabs.tsx",
    "src/integrations/supabase/client.ts"
   ],
+  "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/switch.tsx",
+   "src/hooks/useReaperAlertSettings.ts"
+  ],
   "src/components/lux/monitoring/ReaperHistoryPanel.tsx": [
    "src/components/lux/monitoring/PainelComEstado.tsx",
+   "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/scroll-area.tsx",
    "src/components/ui/skeleton.tsx",
+   "src/hooks/usePermissions.ts",
    "src/hooks/useReaperAlerts.ts",
    "src/hooks/useReaperHistory.ts",
    "src/lib/utils.ts"
@@ -2257,6 +2269,9 @@
    "src/hooks/use-toast.ts",
    "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
+  ],
+  "src/hooks/useReaperAlertSettings.ts": [
+   "src/integrations/supabase/client.ts"
   ],
   "src/hooks/useReaperAlerts.ts": [
    "src/integrations/supabase/client.ts"

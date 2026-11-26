@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 168,
+ "total": 169,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 146
+  "unit": 147
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 121
+   "arquivos": 122
   },
   {
    "padrao": "e2e/",
@@ -917,6 +917,15 @@
    "casos": 12
   },
   {
+   "arquivo": "src/hooks/__tests__/useReaperAlertSettings.test.ts",
+   "tipo": "unit",
+   "linhas": 229,
+   "testa": [
+    "src/hooks/useReaperAlertSettings.ts"
+   ],
+   "casos": 12
+  },
+  {
    "arquivo": "src/hooks/__tests__/useRecentViews.test.ts",
    "tipo": "unit",
    "linhas": 66,
@@ -1687,6 +1696,7 @@
   "src/hooks/useRateLimit.ts": 1,
   "src/hooks/useRealtimeCompanies.ts": 1,
   "src/hooks/useRealtimeScrapeJobs.ts": 1,
+  "src/hooks/useReaperAlertSettings.ts": 1,
   "src/hooks/useRecentViews.ts": 1,
   "src/hooks/useRolePermissions.ts": 1,
   "src/hooks/useScheduledReports.ts": 1,

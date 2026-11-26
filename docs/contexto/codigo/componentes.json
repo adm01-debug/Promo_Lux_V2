@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 270,
+ "total": 271,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -2177,7 +2177,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 13,
+   "usado_por": 14,
    "orfao": false
   },
   {
@@ -2218,14 +2218,32 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx",
+   "exports": [
+    "ReaperAlertSettingsCard"
+   ],
+   "export_default": null,
+   "linhas": 211,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useReaperAlertSettings",
+    "useUpdateReaperAlertSettings"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
    "exports": [
     "ReaperHistoryPanel"
    ],
    "export_default": null,
-   "linhas": 239,
+   "linhas": 244,
    "dominio": "components/lux",
    "hooks_locais": [
+    "usePermissions",
     "useReaperAlerts",
     "useReaperHistory"
    ],
@@ -3553,7 +3571,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 117,
+   "usado_por": 118,
    "orfao": false
   },
   {
@@ -3588,7 +3606,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 142,
+   "usado_por": 143,
    "orfao": false
   },
   {
@@ -3622,7 +3640,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 62,
+   "usado_por": 63,
    "orfao": false
   },
   {
@@ -3867,7 +3885,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 65,
+   "usado_por": 66,
    "orfao": false
   },
   {
@@ -3881,7 +3899,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 50,
+   "usado_por": 51,
    "orfao": false
   },
   {
@@ -4182,7 +4200,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 23,
+   "usado_por": 24,
    "orfao": false
   },
   {

@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 98,
+ "total": 99,
  "hooks": [
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
@@ -1888,7 +1888,7 @@
     "useRolePermissions"
    ],
    "canais_realtime": [],
-   "usado_por": 11,
+   "usado_por": 12,
    "usado_por_arquivos": [
     "src/components/lux/AutomationsList.tsx",
     "src/components/lux/CampaignsView.tsx",
@@ -1900,6 +1900,7 @@
     "src/components/lux/integrations/OAuthSandboxPanel.tsx",
     "src/components/lux/integrations/OAuthSnapshotsPanel.tsx",
     "src/components/lux/layout/Sidebar.tsx",
+    "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
     "src/components/lux/permissions/PermissionGate.tsx"
    ],
    "coberto_por_testes": 0
@@ -2107,6 +2108,31 @@
     "src/components/lux/monitoring/ReaperHistoryPanel.tsx"
    ],
    "coberto_por_testes": 0
+  },
+  {
+   "arquivo": "src/hooks/useReaperAlertSettings.ts",
+   "hooks_exportados": [
+    "useReaperAlertSettings",
+    "useUpdateReaperAlertSettings"
+   ],
+   "linhas": 123,
+   "dominio": "hooks",
+   "tabelas": [
+    "reaper_alert_settings"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useMutation",
+    "useQuery",
+    "useQueryClient"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/monitoring/ReaperAlertSettingsCard.tsx"
+   ],
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useReaperHistory.ts",

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "7ea526849571ae20691de592c0018a3df08d43f7",
+  "commit": "72c71be28191aecd0840be910ccd8c7b73a140b9",
   "branch": "main",
-  "data_commit": "2026-11-26T16:38:32-03:00",
+  "data_commit": "2026-11-26T16:51:04-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "72c71be",
+    "data": "2026-11-26",
+    "assunto": "feat(monitoramento): admin ajusta os limiares do alerta do reaper (#277)"
+   },
    {
     "sha": "7ea5268",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "44f05b1",
     "data": "2026-11-25",
     "assunto": "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)"
-   },
-   {
-    "sha": "e0e485e",
-    "data": "2026-11-25",
-    "assunto": "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)"
    }
   ],
-  "arquivos_mudados_7d": 422,
+  "arquivos_mudados_7d": 425,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 166
+    "mudancas": 168
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -160,12 +160,12 @@
     "mudancas": 20
    },
    {
-    "pasta": "supabase/functions/gmaps-proxy",
+    "pasta": "src/hooks/__tests__",
     "mudancas": 13
    },
    {
-    "pasta": "src/hooks/__tests__",
-    "mudancas": 12
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 13
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 206
+    "commits": 207
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1217,
-  "arquivos_codigo": 759,
-  "linhas_codigo": 132252,
+  "arquivos_total": 1220,
+  "arquivos_codigo": 762,
+  "linhas_codigo": 132820,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 28,
   "modulos": 23,
-  "componentes": 270,
-  "hooks": 98,
+  "componentes": 271,
+  "hooks": 99,
   "edge_functions": 63,
   "tabelas": 121,
   "migrations": 275,
   "cron_jobs": 44,
-  "testes": 168,
+  "testes": 169,
   "workflows": 11,
   "scripts": 58,
   "docs_md": 87
@@ -559,16 +559,16 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 325,
-   "linhas": 54731
+   "arquivos": 326,
+   "linhas": 54947
   },
   "src/contexts": {
    "arquivos": 9,
    "linhas": 515
   },
   "src/hooks": {
-   "arquivos": 113,
-   "linhas": 13238
+   "arquivos": 115,
+   "linhas": 13590
   },
   "src/integrations": {
    "arquivos": 15,

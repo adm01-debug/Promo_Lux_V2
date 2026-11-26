@@ -738,6 +738,7 @@
     "useRealtimeInvalidation",
     "useRealtimeJobDetails",
     "useRealtimeScrapeJobs",
+    "useReaperAlertSettings",
     "useReaperAlerts",
     "useReaperHistory",
     "useRef",
@@ -763,6 +764,7 @@
     "useTriggerHealthCheck",
     "useUpdateMemberRole",
     "useUpdateProxy",
+    "useUpdateReaperAlertSettings",
     "useUpsertOrgRateLimit",
     "useWebDlqHealth",
     "useWebScrapeExtract",
@@ -819,6 +821,7 @@
     "usePurgeDeadLetter",
     "useRealtimeJobDetails",
     "useRealtimeScrapeJobs",
+    "useReaperAlertSettings",
     "useReaperAlerts",
     "useReaperHistory",
     "useRemoveMember",
@@ -840,6 +843,7 @@
     "useToast",
     "useUpdateMemberRole",
     "useUpdateProxy",
+    "useUpdateReaperAlertSettings",
     "useUpsertOrgRateLimit",
     "useWebDlqHealth",
     "useWebScrapeExtract",
@@ -882,6 +886,7 @@
     "queue_sla_defaults",
     "queue_sla_history",
     "reaper_alert_history",
+    "reaper_alert_settings",
     "retry_policy_advisories",
     "role_permissions",
     "scrape_dead_letter",
@@ -941,7 +946,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 130
+   "arquivos_puxados": 132
   },
   {
    "protegida": false,

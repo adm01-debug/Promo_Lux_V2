@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ea5268495` · branch `main` · 2026-11-26 19:41 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `72c71be281` · branch `main` · 2026-11-26 19:52 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1535,6 +1535,10 @@ _nenhum item encontrado_
   ```
   if (!role) return false; const row = byKey.get(`${entity}|${role}`); if (row) return row[FLAG[action]]; return can(role, entity, action);
   ```
+- **validarAjustesReaper(input: ReaperAlertSettingsInput,)** — `src/hooks/useReaperAlertSettings.ts`
+  ```
+  const erros: ReaperAlertSettingsErrors = {}; const checks: Array<[keyof typeof REAPER_SETTINGS_LIMITS, string]> = [ ["consecutive", "Execuções consecutivas"], ["min_dead_per_run", "Mínimo de tarefas mortas"], ["no_run_hours", "Horas sem execução"], ["cooldown_hours", "Intervalo entre alertas"], ]; for (const [campo, rotulo] of checks) { const erro = dentroDaFaixa(input[campo], REAPER_SETTINGS_LIMITS[campo], rotulo); if (erro) erros[campo] = erro; } return erros;
+  ```
 - **validate(input: WarmupInput)** — `src/hooks/useWarmupProfile.ts`
   ```
   if (!Number.isInteger(input.start_per_day) || input.start_per_day < 1) return "Envios no dia 1 deve ser >= 1."; if (!Number.isInteger(input.daily_increment) || input.daily_increment < 0) return "Incremento diário inválido."; if (!Number.isInteger(input.max_per_day) || input.max_per_day < input.start_per_day) return "Teto diário deve ser >= envios do dia 1."; if (!Number.isInteger(input.ramp_days) || input.ramp_days < 1) return "Duração do ramp-up deve ser >= 1 dia."; if (input.allowed_weekdays.l …
@@ -1996,6 +2000,7 @@ _nenhum item encontrado_
 | 10 | `src/hooks/useDashboardData.ts` |
 | 50 | `src/hooks/useOAuthSandboxSnapshots.ts` |
 | 50 | `src/hooks/usePartitionAdvisories.ts` |
+| 1 | `src/hooks/useReaperAlertSettings.ts` |
 | 20 | `src/hooks/useScheduledReports.ts` |
 | 200 | `src/hooks/useScrapeQueue.ts` |
 | 1 | `src/hooks/useWarmupProfile.ts` |
@@ -2204,6 +2209,7 @@ _nenhum item encontrado_
 | Falha ao reiniciar etapa. | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | Falha ao salvar: ${e instanceof Error ? e.message :  | `src/components/lux/monitoring/OrgRateLimitsView.tsx` |
 |          className= | `src/components/lux/monitoring/PainelComEstado.tsx` |
+| Não foi possível salvar os limiares | `src/components/lux/monitoring/ReaperAlertSettingsCard.tsx` |
 | Falha ao aplicar | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | Falha ao dispensar | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | Falha ao reverter | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
@@ -2337,8 +2343,7 @@ _nenhum item encontrado_
 | Apify não configurado: defina APIFY_MOCK_MODE=true ou conecte o Apify (LOVABLE_API_KEY + APIFY_API_KEY). | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway ${response.status}] getDatasetItems: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway ${response.status}] getRunStatus: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
-| [apify-gateway ${response.status}] startActorRun: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
-| … +72 linhas — lista completa em `context.json` | |
+| … +73 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2362,7 +2367,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 | `admin` | `supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql` |
 
-## K. Testes como especificação (1431 testes em 152 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1446 testes em 153 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2385,6 +2390,7 @@ _nenhum item encontrado_
 | `src/lib/schemas/__tests__/validation.test.ts` | 16 | validateScrapeJob · accepts valid input · rejects empty name · rejects empty keywords … |
 | `supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts` | 16 | calculateIPCScore · returns baseline 50 with no criteria and no enrichment signals · matches sector case-insensitively (substring) · matches sector as a substring, not just exact … |
 | `e2e/lusha-flows.spec.ts` | 15 | Lusha Intelligence — fluxos ampliados (R33) · A · Busca · 1) sucesso rápido devolve SearchResponse mínimo · 2) resposta lenta (2s) resolve sem erro … |
+| `src/hooks/__tests__/useReaperAlertSettings.test.ts` | 15 | validarAjustesReaper · aceita os valores padrão e valores no limite das faixas · recusa execuções consecutivas fora de 1–20 · recusa tarefas mortas negativas e aceita zero … |
 | `src/lib/lusha/__tests__/departmentMap.test.ts` | 15 | departmentMap — fonte de verdade compartilhada · congela DEPT_MAP e sugestões (imutabilidade) · mantém pelo menos 12 sugestões PT sem duplicatas · mapeia todas as sugestões PT canônicas para um enum EN válido … |
 | `supabase/functions/_shared/__tests__/bitrix-client.test.ts` | 15 | resolveDeptEnum · resolve Compras · resolve Marketing · resolve Recursos Humanos … |
 | `supabase/functions/_shared/__tests__/cron-auth.test.ts` | 15 | timingSafeEqual · compara conteudo, nao referencia · rejeita tamanhos diferentes · requestToken … |
@@ -2645,6 +2651,7 @@ _nenhum item encontrado_
 | Cap mantém as entradas mais recentes (mais relevantes para o rate limit). | `src/hooks/useRateLimit.ts` |
 | - Semanticamente: "lock expira em 13/09/2285" (≈285 anos) — intent de "permanente" | `src/hooks/useRateLimit.ts` |
 | * GAP-4: Reseta o estado de rate limit para esta chave. | `src/hooks/useRateLimit.ts` |
+| SELECT/UPDATE liberados por RLS apenas para quem tem o papel global `admin`. | `src/hooks/useReaperAlertSettings.ts` |
 | de papel/permissão usam janela curta e nova busca ao focar a janela. | `src/hooks/useRolePermissions.ts` |
 | Desfaz a alteração otimista: a matriz não pode divergir do banco. | `src/hooks/useRolePermissions.ts` |
 | tela mostra uma permissao que o banco recusou. Coberto por | `src/hooks/useRolePermissions.ts` |
