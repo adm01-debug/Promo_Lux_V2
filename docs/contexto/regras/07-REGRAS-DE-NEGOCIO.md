@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `735410e89c` · branch `main` · 2026-11-26 04:43 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d7ef7935e2` · branch `main` · 2026-11-26 04:50 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1031,7 +1031,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +12 |
+| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +13 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
@@ -1973,6 +1973,7 @@ _nenhum item encontrado_
 | 1 | `src/hooks/useWarmupProfile.ts` |
 | 50 | `src/hooks/useWebhooks.ts` |
 | 1 | `supabase/functions/_shared/companies-upsert.ts` |
+| 1 | `supabase/functions/_shared/scrape-results-save.ts` |
 | 1 | `supabase/functions/admin-list-companies/index.ts` |
 | 1 | `supabase/functions/ai-agent/index.ts` |
 | 10 | `supabase/functions/ai-agent/index.ts` |
@@ -2332,7 +2333,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1362 testes em 143 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1375 testes em 145 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2399,6 +2400,7 @@ _nenhum item encontrado_
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
 | `supabase/functions/_shared/__tests__/api-rate-limit.test.ts` | 8 | parseRateLimitDecision · aprova quando a RPC devolve allowed=true · bloqueia quando a RPC devolve allowed=false · fail-open em resposta vazia/nula … |
 | `supabase/functions/_shared/__tests__/instagram-config-hash.test.ts` | 8 | normalizeTarget: trim, lowercase, remove @ e # · clampLimit: default, floor, ceil e truncamento · computeConfigHash: mesma tupla ⇒ mesmo hash (estabilidade) · computeConfigHash: invariante a variações de forma do target … |
+| `supabase/functions/_shared/__tests__/scrape-results-save.test.ts` | 8 | saveScrapeResults: grava empresas e resultados com org e job do chamador · saveScrapeResults: linha recusada nao vira resultado nem some do log · saveScrapeResults: sem job grava a empresa e nao tenta scrape_results · saveScrapeResults: lote vazio devolve zero sem tocar no banco … |
 | `supabase/functions/_shared/__tests__/workflow-phases.test.ts` | 8 | declaredPhases · devolve vazio para steps ausente, nulo ou nao-array · ignora entradas sem phase ou com phase nao-string · coleta as fases declaradas … |
 | `e2e/protected-navigation.spec.ts` | 7 | Navegação protegida — redirecionamento · rota protegida ${route} redireciona para /login sem sessão · rota inexistente renderiza página 404 · Navegação protegida — modo demo … |
 | `src/components/lux/__tests__/AutomationsList.test.tsx` | 7 | AutomationsList · le os workflows escopados pela organizacao ativa e sem itens na lixeira · navega para a tela de automacoes pelo botao Nova · mostra botao de criar workflow no estado vazio e navega … |
@@ -2438,6 +2440,7 @@ _nenhum item encontrado_
 | `src/lib/__tests__/demoViews.test.ts` | 5 | shouldShowDemoNotice · avisa nas views sem dados de exemplo quando a demonstração está ativa · não avisa nas views que têm dados de exemplo · não avisa fora da demonstração … |
 | `src/lib/resilience/__tests__/compareReport.test.ts` | 5 | buildComparison · classifies improvement, regression and stability · marks new and removed scenarios · computes aggregate deltas and top lists … |
 | `supabase/functions/_shared/__tests__/hiker-normalize.test.ts` | 5 | normalize(profile) — business + creator sem undefined · normalize(posts) — image, reel, carousel, sponsored sem undefined · normalize(hashtag) — inclui tag e cobre reel/carousel · normalize(comments) — root + reply sem undefined … |
+| `supabase/functions/gmaps-proxy/__tests__/contingencia-grava.test.ts` | 5 | gmaps-proxy: contingencia com Places grava antes de concluir · usa o gravador compartilhado da etapa 051 · grava antes de dar o job como concluido · nao conclui a tarefa quando nada foi gravado … |
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
 | `e2e/invite-accept.spec.ts` | 4 | Convite — /invite/:token · redireciona visitante não autenticado para /login preservando o token · página de login continua funcional após vir de um convite · não aceita o convite automaticamente (requer ação do usuário) |
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |

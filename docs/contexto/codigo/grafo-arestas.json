@@ -2596,6 +2596,11 @@
   "supabase/functions/_shared/safe-update.ts": [
    "supabase/functions/_shared/oracle-logger.ts"
   ],
+  "supabase/functions/_shared/scrape-results-save.ts": [
+   "supabase/functions/_shared/companies-upsert.ts",
+   "supabase/functions/_shared/domain/ipc/scoring.ts",
+   "supabase/functions/_shared/gmaps-mapper.ts"
+  ],
   "supabase/functions/_shared/tracking-links.ts": [
    "supabase/functions/_shared/tracking-signature.ts"
   ],
@@ -2623,13 +2628,12 @@
   ],
   "supabase/functions/gmaps-proxy/index.ts": [
    "supabase/functions/_shared/circuit-breaker.ts",
-   "supabase/functions/_shared/companies-upsert.ts",
    "supabase/functions/_shared/cron-auth.ts",
-   "supabase/functions/_shared/domain/ipc/scoring.ts",
    "supabase/functions/_shared/gmaps-mapper.ts",
    "supabase/functions/_shared/org-membership.ts",
    "supabase/functions/_shared/places-fallback.ts",
    "supabase/functions/_shared/schemas.ts",
+   "supabase/functions/_shared/scrape-results-save.ts",
    "supabase/functions/_shared/tracing.ts"
   ],
   "supabase/functions/hubspot-sync/index.ts": [
@@ -2712,7 +2716,8 @@
    "supabase/functions/_shared/circuit-breaker.ts",
    "supabase/functions/_shared/cron-auth.ts",
    "supabase/functions/_shared/omkar-gmaps-config.ts",
-   "supabase/functions/_shared/places-fallback.ts"
+   "supabase/functions/_shared/places-fallback.ts",
+   "supabase/functions/_shared/scrape-results-save.ts"
   ],
   "supabase/functions/send-scheduled-reports/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"

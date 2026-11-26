@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "735410e89c0196c4364208ceb8429e6cabff551a",
+  "commit": "d7ef7935e22fd6f95aeac4e0e8d9242dc5677851",
   "branch": "main",
-  "data_commit": "2026-11-26T01:43:07-03:00",
+  "data_commit": "2026-11-26T01:49:56-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "d7ef793",
+    "data": "2026-11-26",
+    "assunto": "fix(raspagem): grava os resultados no caminho de contingencia (etapa 051) (#259)"
+   },
    {
     "sha": "735410e",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "6783576",
     "data": "2026-11-25",
     "assunto": "fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)"
-   },
-   {
-    "sha": "06193a9",
-    "data": "2026-11-25",
-    "assunto": "fix: liga as acoes do detalhe da empresa e o Ver detalhes da lista (#217)"
    }
   ],
-  "arquivos_mudados_7d": 391,
+  "arquivos_mudados_7d": 394,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -145,11 +145,11 @@
    },
    {
     "pasta": "supabase/functions/_shared",
-    "mudancas": 26
+    "mudancas": 28
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 25
+    "mudancas": 26
    },
    {
     "pasta": "package.json",
@@ -172,6 +172,10 @@
     "mudancas": 9
    },
    {
+    "pasta": "supabase/functions/gmaps-proxy",
+    "mudancas": 9
+   },
+   {
     "pasta": ".gitignore",
     "mudancas": 8
    },
@@ -190,16 +194,12 @@
    {
     "pasta": "scripts/automation.config.json",
     "mudancas": 7
-   },
-   {
-    "pasta": "supabase/functions/gmaps-proxy",
-    "mudancas": 7
    }
   ],
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 25
+    "mudancas": 26
    },
    {
     "arquivo": "package.json",
@@ -234,15 +234,15 @@
     "mudancas": 8
    },
    {
+    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
+    "mudancas": 8
+   },
+   {
     "arquivo": "scripts/automation.config.json",
     "mudancas": 7
    },
    {
     "arquivo": "src/integrations/supabase/withOrg.ts",
-    "mudancas": 7
-   },
-   {
-    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 188
+    "commits": 189
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1190,
-  "arquivos_codigo": 744,
-  "linhas_codigo": 129444,
+  "arquivos_total": 1193,
+  "arquivos_codigo": 747,
+  "linhas_codigo": 129873,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 159,
+  "testes": 161,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -595,8 +595,8 @@
    "linhas": 170
   },
   "supabase/functions": {
-   "arquivos": 135,
-   "linhas": 24809
+   "arquivos": 138,
+   "linhas": 25237
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -608,7 +608,7 @@
   },
   "vitest.config.ts": {
    "arquivos": 1,
-   "linhas": 73
+   "linhas": 74
   }
  },
  "maiores_arquivos": [
@@ -654,7 +654,7 @@
   },
   {
    "arquivo": "supabase/functions/gmaps-proxy/index.ts",
-   "linhas": 841
+   "linhas": 788
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
@@ -719,7 +719,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
-  "arquivos_acima_500_linhas": 27
+  "arquivos_acima_500_linhas": 28
  },
  "todos": [
   {

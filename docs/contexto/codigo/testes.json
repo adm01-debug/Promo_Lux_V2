@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 159,
+ "total": 161,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 137
+  "unit": 139
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 112
+   "arquivos": 114
   },
   {
    "padrao": "e2e/",
@@ -1447,6 +1447,15 @@
    "casos": 10
   },
   {
+   "arquivo": "supabase/functions/_shared/__tests__/scrape-results-save.test.ts",
+   "tipo": "unit",
+   "linhas": 233,
+   "testa": [
+    "supabase/functions/_shared/scrape-results-save.ts"
+   ],
+   "casos": 8
+  },
+  {
    "arquivo": "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
    "tipo": "unit",
    "linhas": 151,
@@ -1510,6 +1519,13 @@
     "supabase/functions/_shared/domain/ipc/scoring.ts"
    ],
    "casos": 15
+  },
+  {
+   "arquivo": "supabase/functions/gmaps-proxy/__tests__/contingencia-grava.test.ts",
+   "tipo": "unit",
+   "linhas": 45,
+   "testa": [],
+   "casos": 4
   },
   {
    "arquivo": "supabase/functions/rls-tests/index.test.ts",
@@ -1672,6 +1688,7 @@
   "supabase/functions/_shared/phone-br.ts": 1,
   "supabase/functions/_shared/places-fallback.ts": 1,
   "supabase/functions/_shared/scim-core.ts": 1,
+  "supabase/functions/_shared/scrape-results-save.ts": 1,
   "supabase/functions/_shared/ssrf-guard.ts": 1,
   "supabase/functions/_shared/tracking-links.ts": 1,
   "supabase/functions/_shared/tracking-signature.ts": 1,
@@ -1775,7 +1792,6 @@
    "email-poll-replies",
    "email-verify",
    "gmaps-places-search",
-   "gmaps-proxy",
    "health",
    "hubspot-sync",
    "instagram-connection-status",

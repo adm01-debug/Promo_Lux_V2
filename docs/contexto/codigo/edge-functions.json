@@ -54,6 +54,7 @@
   "supabase/functions/_shared/__tests__/phone-br.test.ts",
   "supabase/functions/_shared/__tests__/places-fallback.test.ts",
   "supabase/functions/_shared/__tests__/scim-core.test.ts",
+  "supabase/functions/_shared/__tests__/scrape-results-save.test.ts",
   "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
   "supabase/functions/_shared/__tests__/tracking-links.test.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts",
@@ -94,6 +95,7 @@
   "supabase/functions/_shared/safe-update.ts",
   "supabase/functions/_shared/schemas.ts",
   "supabase/functions/_shared/scim-core.ts",
+  "supabase/functions/_shared/scrape-results-save.ts",
   "supabase/functions/_shared/ssrf-guard.ts",
   "supabase/functions/_shared/tracing.ts",
   "supabase/functions/_shared/tracking-links.ts",
@@ -735,7 +737,7 @@
    "nome": "gmaps-proxy",
    "entrada": "supabase/functions/gmaps-proxy/index.ts",
    "arquivos": 1,
-   "linhas": 841,
+   "linhas": 788,
    "verify_jwt": false,
    "metodos": [
     "DELETE",
@@ -745,7 +747,6 @@
    ],
    "tabelas": [
     "idempotency_keys",
-    "ipc_config",
     "notifications",
     "org_proxies",
     "scrape_jobs",
@@ -766,13 +767,12 @@
    ],
    "usa_shared": [
     "circuit-breaker.ts",
-    "companies-upsert.ts",
     "cron-auth.ts",
     "gmaps-mapper.ts",
     "org-membership.ts",
     "places-fallback.ts",
     "schemas.ts",
-    "scoring.ts",
+    "scrape-results-save.ts",
     "tracing.ts"
    ],
    "chamada_pelo_front": [
@@ -781,7 +781,7 @@
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": true,
    "orfa": false,
-   "testes": 0
+   "testes": 1
   },
   {
    "nome": "health",
@@ -1789,7 +1789,7 @@
    "nome": "scrape-queue-worker",
    "entrada": "supabase/functions/scrape-queue-worker/index.ts",
    "arquivos": 1,
-   "linhas": 480,
+   "linhas": 511,
    "verify_jwt": false,
    "metodos": [
     "OPTIONS"
@@ -1823,7 +1823,8 @@
     "circuit-breaker.ts",
     "cron-auth.ts",
     "omkar-gmaps-config.ts",
-    "places-fallback.ts"
+    "places-fallback.ts",
+    "scrape-results-save.ts"
    ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],

@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (112)",
+   "co-localizado (__tests__) (114)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(raspagem): grava os resultados no caminho de contingencia (etapa 051) (#259)",
    "test(mcp): trava o emissor de autenticacao no projeto oficial (#257)",
    "chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)",
    "feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (etapas 227-230) (#242)",
-   "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)",
-   "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (etapas 222-225) (#240)"
+   "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)"
   ]
  },
  "pr_template": null,
